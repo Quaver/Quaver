@@ -55,7 +55,16 @@ namespace Wenzil.Console.Commands
                                     "Source: " + beatmap.Source + "\n" +
                                     "Tags: " + beatmap.Tags + "\n" +
                                     "BeatmapID: " + beatmap.BeatmapID + "\n" +
-                                    "BeatmapSetID: " + beatmap.BeatmapSetID + "\n";
+                                    "BeatmapSetID: " + beatmap.BeatmapSetID + "\n\n" +
+
+                                    "HPDrainRate: " + beatmap.HPDrainRate + "\n" +
+                                    "KeyCount: " + beatmap.KeyCount + "\n" +
+                                    "OverallDifficulty: " + beatmap.OverallDifficulty + "\n" +
+                                    "ApproachRate: " + beatmap.ApproachRate + "\n" +
+                                    "SliderMultiplier: " + beatmap.SliderMultiplier + "\n" +
+                                    "SliderTickRate: " + beatmap.SliderTickRate + "\n\n" +
+
+                                    "Background: " + beatmap.Background;
 
             return beatmapLogData;
             
