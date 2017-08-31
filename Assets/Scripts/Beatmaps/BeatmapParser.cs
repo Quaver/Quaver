@@ -40,6 +40,9 @@ public class BeatmapParser : MonoBehaviour
                 case "[Metadata]":
                     section = "[Metadata]";
                     break;
+                case "[Difficulty]":
+                    section = "[Difficulty]";
+                    break;
                 case "[Events]":
                     section = "[Events]";
                     break;
@@ -180,6 +183,52 @@ public class BeatmapParser : MonoBehaviour
                 }
 
             }
+
+            // Parse [Difficulty] Data
+            if (section.Equals("[Difficulty]"))
+            {
+                if (line.Contains(":"))
+                {
+                    string key = line.Substring(0, line.IndexOf(':'));
+                    string value = line.Split(':').Last();
+
+                    switch (key.Trim())
+                    {
+                        case "HPDrainRate":
+                            beatmap.HPDrainRate = float.Parse(value);
+                            break;
+                        case "CircleSize":
+                            beatmap.KeyCount = Int32.Parse(value);
+                            break;
+                        case "OverallDifficulty":
+                            beatmap.OverallDifficulty = float.Parse(value);
+                            break;
+                        case "ApproachRate":
+                            beatmap.ApproachRate = float.Parse(value);
+                            break;
+                        case "SliderMultiplier":
+                            beatmap.SliderMultiplier = float.Parse(value);
+                            break;
+                        case "SliderTickRate":
+                            beatmap.SliderTickRate = float.Parse(value);
+                            break;
+                    }
+                }
+
+            }
+
+            // Parse [Events] Data
+            if (section.Equals("[Events]"))
+            {
+                // We only care about parsing the background path,
+                // So there's no need to parse the storyboard data.
+                if (line.Contains("png") || line.Contains("jpg") || line.Contains("jpeg"))
+                {
+                    string[] values = line.Split(',');
+                    beatmap.Background = values[2];
+                }
+            }
+
 
         }
 
