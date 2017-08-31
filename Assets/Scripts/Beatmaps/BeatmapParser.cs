@@ -107,13 +107,20 @@ public class BeatmapParser : MonoBehaviour
                             beatmap.sampleLength = 0.0f;
                         }
                         break;
-                    case "DISPLAYBPM":
-                        if (!float.TryParse(line.Substring(line.IndexOf(':')).Trim(':').Trim(';'), out beatmap.bpm) || beatmap.bpm <= 0)
-                        {
-                            //Error Parsing - BPM not valid
-                            beatmap.valid = false;
-                            beatmap.bpm = 0.0f;
-                        }
+                    case "BPMS":
+                        // We'll need to do some work here if we want to support songs with multiple bpms.
+                        // I've gone ahead and set it up to just parse the first bpm and offset. 
+                        // See: bpm.cs
+                        beatmap.bpms = new List<Bpm>();
+
+                        Bpm bpmData = new Bpm();
+                        bpmData.offset = float.Parse(line.Split(':', '=')[1]);
+                        bpmData.bpm = float.Parse(line.Split('=', ';')[1]);
+
+                        Debug.Log(bpmData.offset);
+                        Debug.Log(bpmData.bpm);
+
+                        beatmap.bpms.Add(bpmData);
                         break;
                     case "NOTES":
                         inNotes = true;
@@ -130,7 +137,8 @@ public class BeatmapParser : MonoBehaviour
 
         }
 
-        string beatmapLogData = "Displaying Parsed Beatmap Information: \n" +
+        string beatmapLogData = "----------- Beatmap Metadata -----------\n" +
+                                "Beatmap Valid: " + beatmap.valid + "\n" +
                                 "Title: " + beatmap.title + "\n" + 
                                 "Subtitle: " + beatmap.subtitle + "\n" +
                                 "Artist: " + beatmap.artist + "\n" + 
@@ -139,8 +147,12 @@ public class BeatmapParser : MonoBehaviour
                                 "Music: " + beatmap.musicPath + "\n" + 
                                 "Offset:" + beatmap.offset + "\n" + 
                                 "Sample Start: " + beatmap.sampleStart + "\n" +
-                                "Sample Length: " + beatmap.sampleLength + "\n" +
-                                "BPM: " + beatmap.bpm + "\n";
+                                "Sample Length: " + beatmap.sampleLength + "\n\n" +
+
+                                // Display BPM Data. TODO: Parse multiple bpm changes, right now we only get the first
+                                // offset and bpm. See bpms.cs & the BPMS case in the switch statement above.
+                                "----------- BPM Data -----------\n" +
+                                "[0] Offset: " + beatmap.bpms[0].offset + " | BPM: " + beatmap.bpms[0].bpm + "\n";
         Console.Log(beatmapLogData);
 
         return beatmap;
