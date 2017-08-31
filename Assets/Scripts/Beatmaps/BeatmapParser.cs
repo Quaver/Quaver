@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,130 +10,99 @@ public class BeatmapParser : MonoBehaviour
 {
     public static Beatmap Parse(string filePath)
     {
-        // Check if the file path is empty.
-        if (Strings.IsNullOrEmptyOrWhiteSpace(filePath))
+        if (!File.Exists(filePath.Trim()))
         {
-            // If it is, we'll return invalid data.
             Beatmap tempBeatmap = new Beatmap();
-            tempBeatmap.valid = false;
+            tempBeatmap.IsValid = false;
+
+            Wenzil.Console.Console.Log("ERROR: The beatmap file specified could not be found.");
             return tempBeatmap;
         }
 
-        // Create a boolean value that we'll use to check whether
-        // we are currently parsing the notes or other metadata.
-        bool inNotes = false;
+        Wenzil.Console.Console.Log("Success: Beatmap Found! Beginning to Parse.");
 
+        // Create a new beatmap object and default the validity to true.
         Beatmap beatmap = new Beatmap();
-        // Initialize beatmap data
-        // If it encounters any major erros during parsing, valid is set to false,
-        // and the song cannot be selected.
-        beatmap.valid = true;
-        beatmap.beginnerExists = false;
-        beatmap.easyExists = false;
-        beatmap.mediumExists = false;
-        beatmap.hardExists = false;
-        beatmap.challengeExists = false;
+        beatmap.IsValid = true;
 
-        // Collect the raw data from the .sm formatted file all at once.
-        List<string> fileData = File.ReadAllLines(filePath).ToList();
+        // This will hold the section of the beatmap that we are parsing.
+        string section = "";
 
-        // Get the file directoryu and make sure it ends with either a forward or backslash
-        string fileDir = Path.GetDirectoryName(filePath);
-        if (!fileDir.EndsWith("\\") && !fileDir.EndsWith("/"))
+        foreach (string line in File.ReadAllLines(filePath))
         {
-            fileDir += "\\";
-        }
-
-        // Go through the file data
-        for (int i = 0; i < fileData.Count; i++)
-        {
-            // Parse the data from the document
-            string line = fileData[i].Trim();
-
-            if (line.StartsWith("//"))
+            switch(line.Trim())
             {
-                // If the line starts with //, it's a comment, so move on to the next line.
-                continue;
+                case "[General]":
+                    section = "[General]";
+                    break;
+                case "[Editor]":
+                    section = "[Editor]";
+                    break;
+                case "[Metadata]":
+                    section = "[Metadata]";
+                    break;
+                case "[Events]":
+                    section = "[Events]";
+                    break;
+                case "[TimingPoints]":
+                    section = "[TimingPoints]";
+                    break;
+                case "[HitObjects]":
+                    section = "[HitObjects]";
+                    break;
             }
-            else if (line.StartsWith("#"))
+
+            // Parse osu! file format
+            if (line.StartsWith("osu file format"))
             {
-                // The # symbol denotes generic metadata for the song.
-                string key = line.Substring(0, line.IndexOf(':')).Trim('#').Trim(':');
+                beatmap.OsuFileFormat = line;
+            }
 
-                switch(key.ToUpper())
+            // Parse [General] Section
+            if (section.Equals("[General]"))
+            {
+                if (line.Contains(":"))
                 {
-                    case "TITLE":
-                        beatmap.title = line.Substring(line.IndexOf(':')).Trim(':').Trim(';');
-                        break;
-                    case "SUBTITLE":
-                        beatmap.subtitle = line.Substring(line.IndexOf(':')).Trim(':').Trim(';');
-                        break;
-                    case "ARTIST":
-                        beatmap.artist = line.Substring(line.IndexOf(':')).Trim(':').Trim(';');
-                        break;
-                    case "BANNER":
-                        beatmap.bannerPath = fileDir + line.Substring(line.IndexOf(':')).Trim(':').Trim(';');
-                        break;
-                    case "BACKGROUND":
-                        beatmap.backgroundPath = fileDir + line.Substring(line.IndexOf(':')).Trim(':').Trim(';');
-                        break;
-                    case "MUSIC":
-                        beatmap.musicPath = fileDir + line.Substring(line.IndexOf(':')).Trim(':').Trim(';');
+                    string key = line.Substring(0, line.IndexOf(':'));
+                    string value = line.Split(':').Last();
 
-                        if (Strings.IsNullOrEmptyOrWhiteSpace(beatmap.musicPath) || !File.Exists(beatmap.musicPath))
-                        {
-                            // No music file found, so we'll return an invalid beatmap
-                            beatmap.musicPath = null;
-                            beatmap.valid = false;
-                        }
-                        break;
-                    case "OFFSET":
-                        if (!float.TryParse(line.Substring(line.IndexOf(':')).Trim(':').Trim(';'), out beatmap.offset))
-                        {
-                            //Error Parsing
-                            beatmap.offset = 0.0f;
-                        }
-                        break;
-                    case "SAMPLESTART":
-                        if (!float.TryParse(line.Substring(line.IndexOf(':')).Trim(':').Trim(';'), out beatmap.sampleStart))
-                        {
-                            //Error Parsing
-                            beatmap.sampleStart = 0.0f;
-                        }
-                        break;
-                    case "SAMPLELENGTH":
-                        if (!float.TryParse(line.Substring(line.IndexOf(':')).Trim(':').Trim(';'), out beatmap.sampleLength))
-                        {
-                            //Error Parsing
-                            beatmap.sampleLength = 0.0f;
-                        }
-                        break;
-                    case "BPMS":
-                        // We'll need to do some work here if we want to support songs with multiple bpms.
-                        // I've gone ahead and set it up to just parse the first bpm and offset. 
-                        // See: bpm.cs
-                        beatmap.bpms = new List<Bpm>();
-
-                        Bpm bpmData = new Bpm();
-                        bpmData.offset = float.Parse(line.Split(':', '=')[1]);
-                        bpmData.bpm = float.Parse(line.Split('=', ';')[1]);
-
-                        Debug.Log(bpmData.offset);
-                        Debug.Log(bpmData.bpm);
-
-                        beatmap.bpms.Add(bpmData);
-                        break;
-                    case "NOTES":
-                        inNotes = true;
-                        break;
-                    default:
-                        break;
+                    switch (key)
+                    {
+                        case "AudioFilename":
+                            beatmap.AudioFilename = value;
+                            break;
+                        case "AudioLeadIn":
+                            beatmap.AudioLeadIn = Int32.Parse(value);
+                            break;
+                        case "PreviewTime":
+                            beatmap.PreviewTime = Int32.Parse(value);
+                            break;
+                        case "Countdown":
+                            beatmap.Countdown = Int32.Parse(value);
+                            break;
+                        case "SampleSet":
+                            beatmap.SampleSet = value;
+                            break;
+                        case "StackLeniency":
+                            beatmap.StackLeniency = float.Parse(value);
+                            break;
+                        case "Mode":
+                            beatmap.Mode = Int32.Parse(value);
+                            break;
+                        case "LetterboxInBreaks":
+                            beatmap.LetterboxInBreaks = Int32.Parse(value);
+                            break;
+                        case "SpecialStyle":
+                            beatmap.SpecialStyle = Int32.Parse(value);
+                            break;
+                        case "WidescreenStoryboard":
+                            beatmap.WidescreenStoryboard = Int32.Parse(value);
+                            break;
+                        
+                    }
+           
                 }
-
-                // If we're now parsing the step data.
-                if (inNotes)
-                {
-                }
+                
             }
 
         }

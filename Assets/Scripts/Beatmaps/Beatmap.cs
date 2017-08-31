@@ -3,44 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public struct Beatmap {
-    // Is the beatmap's structure valid?
-    public bool valid;
 
-    // Song Title, Subtitle, & Artist
-    public string title;
-    public string subtitle;
-    public string artist;
+    public bool IsValid;
+    public string OsuFileFormat;
 
-    // The file paths for the beatmap images
-    public string bannerPath;
-    public string backgroundPath;
+    // [General]
+    public string AudioFilename;
+    public int AudioLeadIn;
+    public int PreviewTime;
+    public int Countdown;
+    public string SampleSet;
+    public float StackLeniency;
+    public int Mode;
+    public int LetterboxInBreaks;
+    public int SpecialStyle;
+    public int WidescreenStoryboard;
 
-    // Path for the MP3
-    public string musicPath;
+    // [Editor]
+    public string Bookmarks;
+    public float DistanceSpacing;
+    public int BeatDivisor;
+    public int GridSize;
+    public float TimelineZoom;
 
-    // The offset that the song starts at compared to the hit objects
-    public float offset;
+    // [Metadata]
+    public string Title;
+    public string TitleUnicode;
+    public string Artist;
+    public string ArtistUnicode;
+    public string Creator;
+    public string Version;
+    public string Source;
+    public string Tags;
+    public int BeatmapID;
+    public int BeatmapSetID;
 
-    // The start and length of the sample that is played when selecting a song (PreviewTime in osu!)
-    public float sampleStart;
-    public float sampleLength;
+    // [Difficulty]
+    public float HPDrainRate;
+    public int KeyCount;
+    public float OverallDifficulty;
+    public float ApproachRate;
+    public float SliderMultiplier;
+    public float SliderTickRate;
 
-    // The BPM the song is played at
-    public List<Bpm> bpms;
+    // [Events]
+    public string Background;
 
-    // The note data for each difficulty
-    public NoteData beginner;
-    public bool beginnerExists;
+    // [TimingPoints]
+    List<TimingPoint> TimingPoints;
 
-    public NoteData easy;
-    public bool easyExists;
-
-    public NoteData medium;
-    public bool mediumExists;
-
-    public NoteData hard;
-    public bool hardExists;
-
-    public NoteData challenge;
-    public bool challengeExists;
+    // [HitObjects]
+    List<HitObject> HitObjects;
 }
