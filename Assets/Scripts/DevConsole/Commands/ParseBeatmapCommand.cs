@@ -22,23 +22,21 @@ namespace Wenzil.Console.Commands
             Beatmap beatmap = BeatmapParser.Parse(args[0]);
 
             string beatmapLogData = "----------- Beatmap Metadata -----------\n" +
-                                "Beatmap Valid: " + beatmap.valid + "\n" +
-                                "Title: " + beatmap.title + "\n" +
-                                "Subtitle: " + beatmap.subtitle + "\n" +
-                                "Artist: " + beatmap.artist + "\n" +
-                                "Banner: " + beatmap.bannerPath + "\n" +
-                                "Background: " + beatmap.backgroundPath + "\n" +
-                                "Music: " + beatmap.musicPath + "\n" +
-                                "Offset:" + beatmap.offset + "\n" +
-                                "Sample Start: " + beatmap.sampleStart + "\n" +
-                                "Sample Length: " + beatmap.sampleLength + "\n\n" +
-
-                                // Display BPM Data. TODO: Parse multiple bpm changes, right now we only get the first
-                                // offset and bpm. See bpms.cs & the BPMS case in the switch statement above.
-                                "----------- BPM Data -----------\n" +
-                                "[0] Offset: " + beatmap.bpms[0].offset + " | BPM: " + beatmap.bpms[0].bpm + "\n";
+                                    "Valid Beatmap: " + beatmap.IsValid + "\n" +
+                                    "Osu File Format: " + beatmap.OsuFileFormat + "\n" +
+                                    "AudioFilename: " + beatmap.AudioFilename + "\n" +
+                                    "AudioLeadIn: " + beatmap.AudioLeadIn + "\n" +
+                                    "PreviewTime: " + beatmap.PreviewTime + "\n" +
+                                    "Countdown: " + beatmap.Countdown + "\n" +
+                                    "SampleSet: " + beatmap.SampleSet + "\n" +
+                                    "StackLeniency" + beatmap.StackLeniency + "\n" +
+                                    "Mode: " + beatmap.Mode + "\n" +
+                                    "LetterboxInBreaks: " + beatmap.LetterboxInBreaks + "\n" +
+                                    "SpecialStyle: " + beatmap.SpecialStyle + "\n" +
+                                    "WidescreenStoryboard: " + beatmap.WidescreenStoryboard;
 
             return beatmapLogData;
+            
         }
     }
 }
