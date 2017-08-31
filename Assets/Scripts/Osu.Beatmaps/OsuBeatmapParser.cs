@@ -276,7 +276,7 @@ public class OsuBeatmapParser : MonoBehaviour
                         hitObject.Type = Int32.Parse(values[3]);
                         hitObject.HitSound = Int32.Parse(values[4]);
                         hitObject.EndTime = Int32.Parse(endTime);
-                        hitObject.Additions = "0:0:0:0:";
+                        hitObject.Additions = ":0:0:0:0:";
                     }
                     else
                     {
