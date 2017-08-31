@@ -137,24 +137,6 @@ public class BeatmapParser : MonoBehaviour
 
         }
 
-        string beatmapLogData = "----------- Beatmap Metadata -----------\n" +
-                                "Beatmap Valid: " + beatmap.valid + "\n" +
-                                "Title: " + beatmap.title + "\n" + 
-                                "Subtitle: " + beatmap.subtitle + "\n" +
-                                "Artist: " + beatmap.artist + "\n" + 
-                                "Banner: " + beatmap.bannerPath + "\n" + 
-                                "Background: " + beatmap.backgroundPath + "\n" +
-                                "Music: " + beatmap.musicPath + "\n" + 
-                                "Offset:" + beatmap.offset + "\n" + 
-                                "Sample Start: " + beatmap.sampleStart + "\n" +
-                                "Sample Length: " + beatmap.sampleLength + "\n\n" +
-
-                                // Display BPM Data. TODO: Parse multiple bpm changes, right now we only get the first
-                                // offset and bpm. See bpms.cs & the BPMS case in the switch statement above.
-                                "----------- BPM Data -----------\n" +
-                                "[0] Offset: " + beatmap.bpms[0].offset + " | BPM: " + beatmap.bpms[0].bpm + "\n";
-        Console.Log(beatmapLogData);
-
         return beatmap;
     }
 }
