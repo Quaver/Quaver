@@ -104,6 +104,7 @@ public class BeatmapParser : MonoBehaviour
                 
             }
 
+            // Parse [Editor] Data
             if (section.Equals("[Editor]"))
             {
                 if (line.Contains(":"))
@@ -113,6 +114,9 @@ public class BeatmapParser : MonoBehaviour
 
                     switch (key.Trim())
                     {
+                        case "Bookmarks":
+                            beatmap.Bookmarks = value;
+                            break;
                         case "DistanceSpacing":
                             beatmap.DistanceSpacing = float.Parse(value);
                             break;
@@ -124,6 +128,53 @@ public class BeatmapParser : MonoBehaviour
                             break;
                         case "TimelineZoom":
                             beatmap.TimelineZoom = float.Parse(value);
+                            break;
+                    }
+                }
+
+            }
+
+            // Parse [Editor] Data
+            if (section.Equals("[Metadata]"))
+            {
+                if (line.Contains(":"))
+                {
+                    string key = line.Substring(0, line.IndexOf(':'));
+                    string value = line.Split(':').Last();
+
+                    switch (key.Trim())
+                    {
+                        case "Title":
+                            beatmap.Title = value;
+                            break;
+                        case "TitleUnicode":
+                            beatmap.TitleUnicode = value;
+                            break;
+                        case "Artist":
+                            beatmap.Artist = value;
+                            break;
+                        case "ArtistUnicode":
+                            beatmap.ArtistUnicode = value;
+                            break;
+                        case "Creator":
+                            beatmap.Creator = value;
+                            break;
+                        case "Version":
+                            beatmap.Version = value;
+                            break;
+                        case "Source":
+                            beatmap.Source = value;
+                            break;
+                        case "Tags":
+                            beatmap.Tags = value;
+                            break;
+                        case "BeatmapID":
+                            beatmap.BeatmapID = Int32.Parse(value);
+                            break;
+                        case "BeatmapSetID":
+                            beatmap.BeatmapSetID = Int32.Parse(value);
+                            break;
+                        default:
                             break;
                     }
                 }

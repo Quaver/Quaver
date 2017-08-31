@@ -40,10 +40,22 @@ namespace Wenzil.Console.Commands
                                     "SpecialStyle: " + beatmap.SpecialStyle + "\n" +
                                     "WidescreenStoryboard: " + beatmap.WidescreenStoryboard + "\n\n" +
 
-                                    "DistanceSpacing: " + beatmap.DistanceSpacing + "\n" + 
+                                    "Bookmarks: " + beatmap.Bookmarks + "\n" +
+                                    "DistanceSpacing: " + beatmap.DistanceSpacing + "\n" +
                                     "BeatDivisor: " + beatmap.BeatDivisor + "\n" +
                                     "GridSize: " + beatmap.GridSize + "\n" +
-                                    "TimelineZoom: " + beatmap.TimelineZoom;
+                                    "TimelineZoom: " + beatmap.TimelineZoom + "\n\n" +
+
+                                    "Title: " + beatmap.Title + "\n" +
+                                    "TitleUnicode: " + beatmap.TitleUnicode + "\n" +
+                                    "Artist: " + beatmap.Artist + "\n" +
+                                    "ArtistUnicode: " + beatmap.ArtistUnicode + "\n" +
+                                    "Creator: " + beatmap.Creator + "\n" +
+                                    "Version: " + beatmap.Version + "\n" +
+                                    "Source: " + beatmap.Source + "\n" +
+                                    "Tags: " + beatmap.Tags + "\n" +
+                                    "BeatmapID: " + beatmap.BeatmapID + "\n" +
+                                    "BeatmapSetID: " + beatmap.BeatmapSetID + "\n";
 
             return beatmapLogData;
             
