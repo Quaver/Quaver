@@ -24,6 +24,9 @@ public class BeatmapParser : MonoBehaviour
         Beatmap beatmap = new Beatmap();
         beatmap.IsValid = true;
 
+        // Create a new list of timing points which we wll add to below.
+        beatmap.TimingPoints = new List<TimingPoint>();
+
         // This will hold the section of the beatmap that we are parsing.
         string section = "";
 
@@ -229,6 +232,28 @@ public class BeatmapParser : MonoBehaviour
                 }
             }
 
+            // Parse [TimingPoints] Data
+            if (section.Equals("[TimingPoints]"))
+            {
+                if (line.Contains(","))
+                {
+                    Debug.Log(line);
+                    string[] values = line.Split(',');
+
+                    TimingPoint timingPoint = new TimingPoint();
+
+                    timingPoint.Offset = Int32.Parse(values[0]);
+                    timingPoint.MillisecondsPerBeat = float.Parse(values[1]);
+                    timingPoint.Meter = Int32.Parse(values[2]);
+                    timingPoint.SampleType = Int32.Parse(values[3]);
+                    timingPoint.SampleSet = Int32.Parse(values[4]);
+                    timingPoint.Volume = Int32.Parse(values[5]);
+                    timingPoint.Inherited = Int32.Parse(values[6]);
+                    timingPoint.KiaiMode = Int32.Parse(values[7]);
+
+                    beatmap.TimingPoints.Add(timingPoint);
+                }
+            }
 
         }
 
