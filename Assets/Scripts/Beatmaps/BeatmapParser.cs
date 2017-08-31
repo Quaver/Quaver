@@ -15,7 +15,6 @@ public class BeatmapParser : MonoBehaviour
             Beatmap tempBeatmap = new Beatmap();
             tempBeatmap.IsValid = false;
 
-            Wenzil.Console.Console.Log("ERROR: The beatmap file specified could not be found.");
             return tempBeatmap;
         }
 
@@ -103,6 +102,11 @@ public class BeatmapParser : MonoBehaviour
            
                 }
                 
+            }
+
+            if (section.Equals("[Editor]"))
+            {
+
             }
 
         }
