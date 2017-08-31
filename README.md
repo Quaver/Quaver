@@ -1,2 +1,2 @@
 # Quaver
-Fun &amp; Unique rhythm game for Windows, Linux, and OS X. Including server connection &amp; rankings.
+Unique mania rhythm game for Windows, Linux, and OS X. Including multiplayer server connection & online rankings.
