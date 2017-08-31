@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using Wenzil.Console;
 
 public class BeatmapParser : MonoBehaviour
 {
@@ -18,14 +17,15 @@ public class BeatmapParser : MonoBehaviour
             return tempBeatmap;
         }
 
-        Wenzil.Console.Console.Log("Success: Beatmap Found! Beginning to Parse.");
-
         // Create a new beatmap object and default the validity to true.
         Beatmap beatmap = new Beatmap();
         beatmap.IsValid = true;
 
         // Create a new list of timing points which we wll add to below.
         beatmap.TimingPoints = new List<TimingPoint>();
+
+        // Create a new list of Hit Objects which we'll add to below as well.
+        beatmap.HitObjects = new List<HitObject>();
 
         // This will hold the section of the beatmap that we are parsing.
         string section = "";
@@ -237,7 +237,6 @@ public class BeatmapParser : MonoBehaviour
             {
                 if (line.Contains(","))
                 {
-                    Debug.Log(line);
                     string[] values = line.Split(',');
 
                     TimingPoint timingPoint = new TimingPoint();
@@ -252,6 +251,45 @@ public class BeatmapParser : MonoBehaviour
                     timingPoint.KiaiMode = Int32.Parse(values[7]);
 
                     beatmap.TimingPoints.Add(timingPoint);
+                }
+            }
+
+            // Parse [HitObjects] Data
+            if (section.Equals("[HitObjects]"))
+            {
+                if (line.Contains(","))
+                {
+                    string[] values = line.Split(',');
+
+                    // We'll need to parse LNs differently than normal HitObjects,
+                    // as they have a different syntax. 128 in the object's type
+                    // signifies that it is an LN
+                    HitObject hitObject = new HitObject();
+
+                    if (line.Contains("128"))
+                    {
+                        string endTime = values[5].Substring(0, values[5].IndexOf(":"));
+
+                        hitObject.X = Int32.Parse(values[0]);
+                        hitObject.Y = Int32.Parse(values[1]);
+                        hitObject.StartTime = Int32.Parse(values[2]);
+                        hitObject.Type = Int32.Parse(values[3]);
+                        hitObject.HitSound = Int32.Parse(values[4]);
+                        hitObject.EndTime = Int32.Parse(endTime);
+                        hitObject.Additions = "0:0:0:0:";
+                    }
+                    else
+                    {
+                        hitObject.X = Int32.Parse(values[0]);
+                        hitObject.Y = Int32.Parse(values[1]);
+                        hitObject.StartTime = Int32.Parse(values[2]);
+                        hitObject.Type = Int32.Parse(values[3]);
+                        hitObject.HitSound = Int32.Parse(values[4]);
+                        hitObject.Additions = "0:0:0:0:";
+                    }
+
+                    beatmap.HitObjects.Add(hitObject);
+                                   
                 }
             }
 
