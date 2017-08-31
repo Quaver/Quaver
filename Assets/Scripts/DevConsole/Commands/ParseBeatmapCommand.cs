@@ -8,9 +8,9 @@ namespace Wenzil.Console.Commands
     /// </summary>
     public static class ParseBeatmapCommand
     {
-        public static readonly string name = "PARSEBEATMAP";
+        public static readonly string name = "BEATMAP";
         public static readonly string description = "Parses a beatmap and returns data about it | Arguments: (filePath)";
-        public static readonly string usage = "PARSEBEATMAP";
+        public static readonly string usage = "BEATMAP";
 
         public static string Execute(params string[] args)
         {
@@ -19,7 +19,12 @@ namespace Wenzil.Console.Commands
                 return "ERROR: You need to specify a file path!";
             }
 
-            Beatmap beatmap = BeatmapParser.Parse(args[0]);
+            Beatmap beatmap = BeatmapParser.Parse(String.Join(" ", args));
+
+            if (beatmap.IsValid == false)
+            {
+                return "ERROR: The specified beatmap could not be found or is not valid.";
+            }
 
             string beatmapLogData = "----------- Beatmap Metadata -----------\n" +
                                     "Valid Beatmap: " + beatmap.IsValid + "\n" +
@@ -29,7 +34,7 @@ namespace Wenzil.Console.Commands
                                     "PreviewTime: " + beatmap.PreviewTime + "\n" +
                                     "Countdown: " + beatmap.Countdown + "\n" +
                                     "SampleSet: " + beatmap.SampleSet + "\n" +
-                                    "StackLeniency" + beatmap.StackLeniency + "\n" +
+                                    "StackLeniency: " + beatmap.StackLeniency + "\n" +
                                     "Mode: " + beatmap.Mode + "\n" +
                                     "LetterboxInBreaks: " + beatmap.LetterboxInBreaks + "\n" +
                                     "SpecialStyle: " + beatmap.SpecialStyle + "\n" +
