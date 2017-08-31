@@ -19,7 +19,7 @@ namespace Wenzil.Console.Commands
                 return "ERROR: You need to specify a file path!";
             }
 
-            Beatmap beatmap = BeatmapParser.Parse(String.Join(" ", args));
+            Beatmap beatmap = OsuBeatmapParser.Parse(String.Join(" ", args));
 
             if (beatmap.IsValid == false)
             {
