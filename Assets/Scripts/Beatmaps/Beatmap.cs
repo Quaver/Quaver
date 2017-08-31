@@ -26,7 +26,7 @@ public struct Beatmap {
     public float sampleLength;
 
     // The BPM the song is played at
-    public float bpm;
+    public List<Bpm> bpms;
 
     // The note data for each difficulty
     public NoteData beginner;
