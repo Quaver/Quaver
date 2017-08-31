@@ -9,7 +9,7 @@ namespace Wenzil.Console.Commands
     public static class PingCommand
     {
         public static readonly string name = "PING";
-        public static readonly string description = "Checks if the console is working.";
+        public static readonly string description = "Ping the developer console. | Arguments: (name)";
         public static readonly string usage = "PING";
 
         public static string Execute(params string[] args)
