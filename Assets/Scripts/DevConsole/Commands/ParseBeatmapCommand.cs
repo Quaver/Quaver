@@ -38,7 +38,12 @@ namespace Wenzil.Console.Commands
                                     "Mode: " + beatmap.Mode + "\n" +
                                     "LetterboxInBreaks: " + beatmap.LetterboxInBreaks + "\n" +
                                     "SpecialStyle: " + beatmap.SpecialStyle + "\n" +
-                                    "WidescreenStoryboard: " + beatmap.WidescreenStoryboard;
+                                    "WidescreenStoryboard: " + beatmap.WidescreenStoryboard + "\n\n" +
+
+                                    "DistanceSpacing: " + beatmap.DistanceSpacing + "\n" + 
+                                    "BeatDivisor: " + beatmap.BeatDivisor + "\n" +
+                                    "GridSize: " + beatmap.GridSize + "\n" +
+                                    "TimelineZoom: " + beatmap.TimelineZoom;
 
             return beatmapLogData;
             
