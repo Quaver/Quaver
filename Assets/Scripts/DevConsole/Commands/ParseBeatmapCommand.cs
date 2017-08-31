@@ -66,16 +66,8 @@ namespace Wenzil.Console.Commands
 
                                     "Background: " + beatmap.Background + "\n\n" + 
 
-                                    "--- Timing Points --- \n";
-
-            Console.Log("TIMING POINTS COUNT: " + beatmap.TimingPoints.Count.ToString());
-            foreach(TimingPoint timingPoint in beatmap.TimingPoints)
-            {
-                beatmapLogData += timingPoint.Offset + "," + timingPoint.MillisecondsPerBeat + "," +
-                                  timingPoint.Meter + "," + timingPoint.SampleType + "," +
-                                  timingPoint.SampleSet + "," + timingPoint.Volume + "," + 
-                                  timingPoint.Inherited + "," + timingPoint.KiaiMode + "\n";
-            }
+                                    "TimingPoints: " + beatmap.TimingPoints.Count + "\n" +
+                                    "HitObjects: " + beatmap.HitObjects.Count;
 
             return beatmapLogData;
             

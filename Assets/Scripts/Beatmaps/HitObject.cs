@@ -6,7 +6,7 @@ public struct HitObject
 {
     public int X;
     public int Y;
-    public int Time;
+    public int StartTime;
     public int Type;
     public int HitSound;
     public int EndTime;
