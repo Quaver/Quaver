@@ -50,8 +50,8 @@ public struct Beatmap {
     public string Background;
 
     // [TimingPoints]
-    List<TimingPoint> TimingPoints;
+    public List<TimingPoint> TimingPoints;
 
     // [HitObjects]
-    List<HitObject> HitObjects;
+    public List<HitObject> HitObjects;
 }
