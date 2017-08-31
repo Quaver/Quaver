@@ -65,7 +65,7 @@ public class BeatmapParser : MonoBehaviour
                     string key = line.Substring(0, line.IndexOf(':'));
                     string value = line.Split(':').Last();
 
-                    switch (key)
+                    switch (key.Trim())
                     {
                         case "AudioFilename":
                             beatmap.AudioFilename = value;
@@ -106,6 +106,27 @@ public class BeatmapParser : MonoBehaviour
 
             if (section.Equals("[Editor]"))
             {
+                if (line.Contains(":"))
+                {
+                    string key = line.Substring(0, line.IndexOf(':'));
+                    string value = line.Split(':').Last();
+
+                    switch (key.Trim())
+                    {
+                        case "DistanceSpacing":
+                            beatmap.DistanceSpacing = float.Parse(value);
+                            break;
+                        case "BeatDivisor":
+                            beatmap.BeatDivisor = Int32.Parse(value);
+                            break;
+                        case "GridSize":
+                            beatmap.GridSize = Int32.Parse(value);
+                            break;
+                        case "TimelineZoom":
+                            beatmap.TimelineZoom = float.Parse(value);
+                            break;
+                    }
+                }
 
             }
 
