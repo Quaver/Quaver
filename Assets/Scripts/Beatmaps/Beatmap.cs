@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct Metadata {
+public struct Beatmap {
     // Is the beatmap's structure valid?
     public bool valid;
 
