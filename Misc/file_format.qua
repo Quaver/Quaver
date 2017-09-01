@@ -20,8 +20,8 @@ MapSetID:
 HPDrain:
 AccuracyStrain:
 
-# Timing (StartTime|BPM|Volume)
+# Timing (StartTime|BPM)
 
-# SV (StartTime|Multiplier)
+# SV (StartTime|Multiplier|Volume)
 
-# HitObject (StartTime|Key|IsLN|EndTime)
+# HitObject (StartTime|Key|EndTime)
