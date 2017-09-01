@@ -67,7 +67,15 @@ namespace Wenzil.Console.Commands
                                     "Background: " + beatmap.Background + "\n\n" + 
 
                                     "TimingPoints: " + beatmap.TimingPoints.Count + "\n" +
-                                    "HitObjects: " + beatmap.HitObjects.Count;
+                                    "HitObjects: " + beatmap.HitObjects.Count + "\n";
+
+            // Print the first 10 HitObjects to Console.
+            for (int i = 0; i < 10; i++) {
+                beatmapLogData += "[" + i + "] " + beatmap.HitObjects[i].Key1 + " | " + 
+                beatmap.HitObjects[i].Key2 + " | " +
+                beatmap.HitObjects[i].Key3 + " | " +
+                beatmap.HitObjects[i].Key4 + "\n";
+            }
 
             return beatmapLogData;
             

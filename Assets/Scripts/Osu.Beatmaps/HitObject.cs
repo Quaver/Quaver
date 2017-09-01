@@ -11,4 +11,8 @@ public struct HitObject
     public int HitSound;
     public int EndTime;
     public string Additions;
+    public bool Key1;
+    public bool Key2;
+    public bool Key3;
+    public bool Key4;
 }
