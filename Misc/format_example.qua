@@ -27,8 +27,8 @@ AccuracyStrain: 7.4
 23843|0.30|45
 23894|0.40|45
 
-# HitObject (StartTime|KeyLane|IsLN|EndTime)
-8945|1|0|
-9047|2|0|
-9149|3|1|9200
-9251|1|0|
+# HitObject (StartTime|KeyLane|EndTime)
+8945|1|0
+9047|2|0
+9149|3|9200
+9251|1|0
