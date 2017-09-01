@@ -1,0 +1,30 @@
+# General
+AudioFile: 12 PLANET__SHAPER.mp3
+AudioLeadIn: 0
+SongPreviewTime: 90169
+BackgroundFile: ds.jpg
+
+# Metadata
+Title: PLANET//SHAPER
+TitleUnicode: PLANET//SHAPER
+Artist: Camellia
+ArtistUnicode: かめりあ
+Source: 
+Tags: electronic drumstep dubstep complextro かめるかめりあ CTCD-011 C88 KamelCamellia cametek
+Creator: Evening
+DifficultyName: GEOLOGICAL//IRRESOLUTION
+MapID: -1
+MapSetID: -1
+
+# Difficulty
+HPDrain: 9.3
+AccuracyStrain: 7.4
+
+# Timing (StartTime|BPM|Volume|SV)
+374|147.0|100|1.0
+
+# HitObject (StartTime|KeyLane|IsLN|EndTime)
+8945|1|0|
+9047|2|0|
+9149|3|1|9200
+9251|1|0|
