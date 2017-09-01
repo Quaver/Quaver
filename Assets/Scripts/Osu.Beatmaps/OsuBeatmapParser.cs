@@ -271,6 +271,27 @@ public class OsuBeatmapParser : MonoBehaviour
                         string endTime = values[5].Substring(0, values[5].IndexOf(":"));
 
                         hitObject.X = Int32.Parse(values[0]);
+
+                        // Find which key the object is. TODO: DRY this up.
+                        if (hitObject.X >= 0 && hitObject.X <= 127) 
+                        {
+                            hitObject.Key1 = true;
+
+                        } else if (hitObject.X >= 128 && hitObject.X <= 255) 
+                        {
+
+                            hitObject.Key2 = true;
+
+                        } else if (hitObject.X >= 256 && hitObject.X <= 383)
+                        {
+                            hitObject.Key3 = true;
+
+                        } else if (hitObject.X >= 384 && hitObject.X <= 511) 
+                        {
+                            hitObject.Key4 = true;
+                        }
+                        
+
                         hitObject.Y = Int32.Parse(values[1]);
                         hitObject.StartTime = Int32.Parse(values[2]);
                         hitObject.Type = Int32.Parse(values[3]);
@@ -281,6 +302,26 @@ public class OsuBeatmapParser : MonoBehaviour
                     else
                     {
                         hitObject.X = Int32.Parse(values[0]);
+
+                        // Find which key the object is. TODO: DRY this up.
+                        if (hitObject.X >= 0 && hitObject.X <= 127) 
+                        {
+                            hitObject.Key1 = true;
+
+                        } else if (hitObject.X >= 128 && hitObject.X <= 255) 
+                        {
+
+                            hitObject.Key2 = true;
+
+                        } else if (hitObject.X >= 256 && hitObject.X <= 383)
+                        {
+                            hitObject.Key3 = true;
+
+                        } else if (hitObject.X >= 384 && hitObject.X <= 511) 
+                        {
+                            hitObject.Key4 = true;
+                        }
+
                         hitObject.Y = Int32.Parse(values[1]);
                         hitObject.StartTime = Int32.Parse(values[2]);
                         hitObject.Type = Int32.Parse(values[3]);
@@ -289,7 +330,7 @@ public class OsuBeatmapParser : MonoBehaviour
                     }
 
                     beatmap.HitObjects.Add(hitObject);
-                                   
+                                                       
                 }
             }
 
