@@ -1,0 +1,25 @@
+# General
+AudioFile:
+AudioLeadIn:
+SongPreviewTime:
+BackgroundFile:
+
+# Metadata
+Title:
+TitleUnicode:
+Artist:
+ArtistUnicode:
+Source:
+Tags:
+Creator:
+DifficultyName:
+MapID:
+MapSetID:
+
+# Difficulty
+HPDrain:
+AccuracyStrain:
+
+# Timing (StartTime|BPM|Volume|SV)
+
+# HitObject (StartTime|Key|IsLN|EndTime)
