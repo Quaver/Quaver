@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using Osu.Beatmap;
 
 namespace Wenzil.Console.Commands
 {
@@ -19,7 +20,7 @@ namespace Wenzil.Console.Commands
                 return "Invalid arguments passed. Usage: cvq ./cool_beatmap.osu cooler_beatmap.qua";
             }
 
-			Beatmap osuBeatmap = OsuBeatmapParser.Parse(args[0]);
+			OsuBeatmap osuBeatmap = OsuBeatmapParser.Parse(args[0]);
 
             if (!osuBeatmap.IsValid)
             {
