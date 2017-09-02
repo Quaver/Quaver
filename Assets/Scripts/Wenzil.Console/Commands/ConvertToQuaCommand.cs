@@ -27,7 +27,7 @@ namespace Wenzil.Console.Commands
                 return "Invalid osu! beatmap specified. Please give a correct beatmap.";
             }
 
-            bool hasConverted = OsuToQua.Convert(osuBeatmap, args[1]);
+            bool hasConverted = OsuQuaConverter.Convert(osuBeatmap, args[1]);
 
             if (hasConverted) 
             {
