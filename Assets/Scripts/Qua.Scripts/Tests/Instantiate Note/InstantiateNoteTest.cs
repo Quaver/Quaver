@@ -6,7 +6,6 @@ public class InstantiateNoteTest : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        ParseQua parsedNotes = new ParseQua();
 
 	}
 	
