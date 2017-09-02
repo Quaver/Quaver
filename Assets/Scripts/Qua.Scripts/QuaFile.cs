@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace Qua.Scripts {
 
-	public static class QuaParser {
+	public class QuaFile {
 
-		//public static 
 
 	}
-
+	
 }
+
