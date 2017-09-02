@@ -4,10 +4,11 @@ using UnityEngine;
 
 namespace Qua.Scripts {
 
-	public class QuaFile {
-
-
+	public struct SliderVelocity 
+	{
+		public int StartTime;
+		public float Multiplier;
+		public int Volume;
 	}
-	
-}
 
+}
