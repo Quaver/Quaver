@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using Osu.Beatmap;
 
 namespace Wenzil.Console.Commands
 {
@@ -19,7 +20,7 @@ namespace Wenzil.Console.Commands
                 return "ERROR: You need to specify a file path!";
             }
 
-            Beatmap beatmap = OsuBeatmapParser.Parse(String.Join(" ", args));
+            OsuBeatmap beatmap = OsuBeatmapParser.Parse(String.Join(" ", args));
 
             if (beatmap.IsValid == false)
             {
