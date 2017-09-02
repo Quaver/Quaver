@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Osu.Beatmap {
 
-	public static class OsuToQua {
+	public static class OsuQuaConverter {
 
 		// We want to take an osu! beatmap
 		// Parse it to the Beatmap class, then take that data
