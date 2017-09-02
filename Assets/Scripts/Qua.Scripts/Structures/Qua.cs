@@ -4,9 +4,10 @@ using UnityEngine;
 
 namespace Qua.Scripts {
 
-	public struct Qua {
+	public struct QuaFile {
 
 		// # General
+		public bool IsValidQua;
 		public string AudioFile;
 		public int AudioLeadIn;
 		public int SongPreviewTime;
