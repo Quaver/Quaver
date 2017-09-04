@@ -87,16 +87,25 @@ namespace Osu.Beatmap {
 				else if(hitObject.Key4)
 					keyLane = 4;
 
+				
+
 				// Normal HitObjects
-				if (hitObject.Type == 1)
+				if (hitObject.Type == 1) {
 					fileString.Append(hitObject.StartTime + "|" + keyLane + "|" + "0\n");
-				else if (hitObject.Type == 128)
+				}
+					
+					
+				else if (hitObject.Type == 128) {
 					fileString.Append(hitObject.StartTime + "|" + keyLane + "|" + hitObject.EndTime + "\n");
+				}
+					
 			}
 
 			try 
 			{
 				StreamWriter file = new StreamWriter(outputName);
+				file.AutoFlush = true; 
+				Debug.Log(fileString.ToString());
 				file.WriteLine(fileString.ToString());
 
 				return true;
