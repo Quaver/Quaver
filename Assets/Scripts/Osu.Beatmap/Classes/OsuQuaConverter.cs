@@ -72,7 +72,7 @@ namespace Osu.Beatmap {
 			}
 
 			// # HitObject (StartTime|KeyLane|EndTime)
-			fileString.Append("\n#HitObject (StartTime|KeyLane|EndTime)\n");
+			fileString.Append("\n# HitObject (StartTime|KeyLane|EndTime)\n");
 			foreach(HitObject hitObject in osuBeatmap.HitObjects)
 			{
 				// Get the keyLane the hitObject is in
