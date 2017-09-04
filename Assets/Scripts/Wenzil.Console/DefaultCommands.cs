@@ -15,6 +15,7 @@ namespace Wenzil.Console
             ConsoleCommandsDatabase.RegisterCommand(ParseBeatmapCommand.name, ParseBeatmapCommand.description, ParseBeatmapCommand.usage, ParseBeatmapCommand.Execute);
             ConsoleCommandsDatabase.RegisterCommand(ConvertToQuaCommand.name, ConvertToQuaCommand.description, ConvertToQuaCommand.usage, ConvertToQuaCommand.Execute);
             ConsoleCommandsDatabase.RegisterCommand(ParseQuaCommand.name, ParseQuaCommand.description, ParseQuaCommand.usage, ParseQuaCommand.Execute);
+            ConsoleCommandsDatabase.RegisterCommand(ParseConfigCommand.name, ParseConfigCommand.description, ParseConfigCommand.usage, ParseConfigCommand.Execute);
         }
     }
 }
