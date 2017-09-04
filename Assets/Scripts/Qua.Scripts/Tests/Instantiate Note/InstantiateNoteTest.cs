@@ -1,16 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Qua.Scripts;
 
 public class InstantiateNoteTest : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    void Start () {
+        QuaFile quafile = QuaParser.Parse("E:\\GitHub\\Quaver\\TestFiles\\Qua\\format_example.qua");
 
-	}
+
+    }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	
 }
