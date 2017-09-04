@@ -48,7 +48,7 @@ namespace Qua.Scripts {
 					case "# Timing (StartTime|BPM)":
 						section = "Timing";
 						break;
-					case "# SV (StartTime|Multiplier|Volume)":
+					case "# SV (StartTime|Mulitplier|Volume)":
 						section = "SV";
 						break;
 					case "# HitObject (StartTime|KeyLane|EndTime)":
@@ -150,7 +150,7 @@ namespace Qua.Scripts {
 				// Parse Timing Section
 				if (section.Equals("Timing"))
 				{
-					if (line.Contains("|") && !line.Contains("Timing"))
+					if (line.Contains("|") && !line.Contains("#"))
 					{
 						string[] values = line.Split('|');
 						TimingPoint timing = new TimingPoint();
@@ -165,7 +165,7 @@ namespace Qua.Scripts {
 				// Parse SV
 				if (section.Equals("SV"))
 				{
-					if (line.Contains("|") && !line.Contains("SV"))
+					if (line.Contains("|") && !line.Contains("#"))
 					{
 						string[] values = line.Split('|');
 						SliderVelocity sv = new SliderVelocity();

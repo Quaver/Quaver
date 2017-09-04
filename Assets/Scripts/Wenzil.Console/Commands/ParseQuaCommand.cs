@@ -45,26 +45,9 @@ namespace Wenzil.Console.Commands
 							"AccuracyStrain: " + quaFile.AccuracyStrain + "\n";
 
 			// Add timing points to string
-			foreach(TimingPoint timingPoint in quaFile.TimingPoints)
-			{
-				quaLog += timingPoint.StartTime + "|" + timingPoint.BPM + "\n";
-			}
-
-			quaLog += "\n";
-
-			// SVs to string
-			foreach(SliderVelocity sv in quaFile.SliderVelocities)
-			{
-				quaLog += sv.StartTime + "|" + sv.Multiplier + "|" + sv.Volume + "\n";
-			}
-
-			quaLog += "\n";
-
-			// HOs to string - lol, hos.
-			foreach(HitObject ho in quaFile.HitObjects)
-			{
-				quaLog += ho.StartTime + "|" + ho.KeyLane + "|" + ho.EndTime + "\n";
-			}
+			quaLog += "\nTiming Points Count: " + quaFile.TimingPoints.Count + "\n";
+			quaLog += "\nSVs Count: " + quaFile.SliderVelocities.Count + "\n";
+			quaLog += "\nHitObjects Count: " + quaFile.HitObjects.Count + "\n";
 
 			return quaLog;
         }

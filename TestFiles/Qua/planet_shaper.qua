@@ -1404,7 +1404,7 @@ AccuracyStrain: 7.4
 393843|0.85|45
 413027|1|45
 
-#HitObject (StartTime|KeyLane|EndTime)
+# HitObject (StartTime|KeyLane|EndTime)
 2006|1|2057
 2618|3|2669
 3639|4|3690
@@ -6330,4 +6330,4 @@ AccuracyStrain: 7.4
 347925|2|0
 347925|4|0
 348027|4|0
-348027|2
+348027|2|0
