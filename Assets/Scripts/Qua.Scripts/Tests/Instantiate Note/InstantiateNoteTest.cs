@@ -12,9 +12,9 @@ public class InstantiateNoteTest : MonoBehaviour {
 
     /*CONFIG VALUES*/
     private const int noteSize = 128; //temp, size of noteskin in pixels
-    private const int columnSize = 240; //temp
-    private const int scrollSpeed = 26; //temp
-    private const int receptorOffset = 565; //temp
+    private const int columnSize = 220; //temp
+    private const int scrollSpeed = 24; //temp
+    private const int receptorOffset = 575; //temp
     private const bool upScroll = true; //true = upscroll, false = downscroll
     private KeyCode[] maniaKeyBindings = new KeyCode[] { KeyCode.A, KeyCode.S, KeyCode.K, KeyCode.L };
     private const int maxNoteCount = 200; //temp
@@ -78,8 +78,7 @@ public class InstantiateNoteTest : MonoBehaviour {
                 averageBpm = timingQueue[0].BPM;
             }
 
-            //Create and modify SV's to normalized bpm
-            i = 0;
+            //Create and converts timing points to SV's
             foreach (TimingPoint tp in timingQueue)
             {
                 for (i = 0; i < SvQueue.Count; i++)
@@ -89,7 +88,6 @@ public class InstantiateNoteTest : MonoBehaviour {
                         SliderVelocity newTp = new SliderVelocity();
                         newTp.StartTime = tp.StartTime;
                         newTp.Multiplier = averageBpm / tp.BPM;
-                        print(newTp.Multiplier);
                         SvQueue.Insert(i, newTp);
                     }
                     else if (tp.StartTime > SvQueue[i].StartTime)
@@ -97,20 +95,47 @@ public class InstantiateNoteTest : MonoBehaviour {
                         SliderVelocity newTp = new SliderVelocity();
                         newTp.StartTime = tp.StartTime;
                         newTp.Multiplier = averageBpm / tp.BPM;
-                        print(newTp.Multiplier);
                         SvQueue.Insert(i, newTp);
-                        if (i + 1 < SvQueue.Count)
+                        if (SvQueue[i].StartTime == SvQueue[i + 1].StartTime)
                         {
-                            if (SvQueue[i].StartTime == SvQueue[i + 1].StartTime)
+                            SvQueue.RemoveAt(i + 1);
+                        }
+                        else
+                        {
+                            i++;
+                        }
+                    }
+                }
+            }
+            //Normalizes SV's in between each BPM change interval
+            if (timingQueue.Count > 1)
+            {
+                i = 0;
+                for (i= 0;i < timingQueue.Count;i++)
+                {
+                    if (i+1 < timingQueue.Count)
+                    {
+                        for (int j = 0; j < SvQueue.Count; j++)
+                        {
+                            //Check if SV point is between timing point to normalize bpm
+                            if (SvQueue[j].StartTime >= timingQueue[i].StartTime && SvQueue[j].StartTime < timingQueue[i + 1].StartTime)
                             {
-                                SvQueue.RemoveAt(i + 1);
-                            }
-                            else
-                            {
-                                i++;
+                                SliderVelocity newTp = new SliderVelocity();
+                                newTp.StartTime = SvQueue[j].StartTime;
+                                newTp.Multiplier = SvQueue[j].Multiplier * (averageBpm / timingQueue[i].BPM);
+                                SvQueue.Insert(i, newTp);
+                                if (SvQueue[i].StartTime == SvQueue[i + 1].StartTime)
+                                {
+                                    SvQueue.RemoveAt(i + 1);
+                                }
+                                else
+                                {
+                                    i++;
+                                }
                             }
                         }
                     }
+                    i++;
                 }
             }
 
