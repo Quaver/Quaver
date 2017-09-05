@@ -29,7 +29,7 @@ public class InstantiateNoteTest : MonoBehaviour {
     private List<SliderVelocity> SvQueue;
     private List<TimingPoint> timingQueue;
     private List<HitObject> hitQueue;
-    private List<HitObject> barQueue;
+    //private List<HitObject> barQueue;
     private float curSongTime;
     private const float waitTilPlay = 0.5f; //waits 2 seconds until song starts
     private float[] noteRot = new float[4] { -90f, 0f, 180f, 90f }; //Rotation of arrows if arrow skin is used
@@ -51,7 +51,7 @@ public class InstantiateNoteTest : MonoBehaviour {
             SvQueue = qFile.SliderVelocities;
             timingQueue = qFile.TimingPoints;
             hitQueue = new List<HitObject>();
-            barQueue = new List<HitObject>();
+            //barQueue = new List<HitObject>();
 
             averageBpm = 147f; //Change later
 
