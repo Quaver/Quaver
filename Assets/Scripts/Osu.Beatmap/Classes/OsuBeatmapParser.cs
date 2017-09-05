@@ -262,6 +262,7 @@ namespace Osu.Beatmap {
                     }
                 } catch (Exception e)
                 {
+                    Debug.Log(e);
                     Debug.Log(line);
                     return beatmap;
                 }
