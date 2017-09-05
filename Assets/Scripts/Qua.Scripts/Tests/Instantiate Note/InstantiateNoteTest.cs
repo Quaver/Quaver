@@ -17,7 +17,7 @@ public class InstantiateNoteTest : MonoBehaviour {
     private const int columnSize = 220; //temp
     private const int scrollSpeed = 24; //temp
     private const int receptorOffset = 605; //temp
-    private const bool upScroll = true; //true = upscroll, false = downscroll
+    private const bool upScroll = false; //true = upscroll, false = downscroll
     private KeyCode[] maniaKeyBindings = new KeyCode[] { KeyCode.A, KeyCode.S, KeyCode.K, KeyCode.L };
     private const int maxNoteCount = 100; //temp
     private const int playerOffset = 0;
@@ -51,12 +51,12 @@ public class InstantiateNoteTest : MonoBehaviour {
         //Changes the transparency mode of the camera so images dont clip
         GameObject.Find("Main Camera").GetComponent<Camera>().transparencySortMode = TransparencySortMode.Orthographic;
 
-        qFile = QuaParser.Parse("E:\\GitHub\\Quaver\\TestFiles\\Qua\\planet_shaper.qua");
-        if (qFile.IsValidQua == false)
+        qFile = QuaParser.Parse("E:\\GitHub\\Quaver\\TestFiles\\Qua\\backbeat_maniac.qua");
+        if (!qFile.IsValidQua)
         {
             print("IS NOT VALID QUA FILE");
         }
-        else if (qFile.IsValidQua == true)
+        else if (qFile.IsValidQua)
         {
             //Declare Reference Values
             noteQueue = qFile.HitObjects;
@@ -74,6 +74,7 @@ public class InstantiateNoteTest : MonoBehaviour {
             int i = 0;
 
             //Calculate Average BPM of map
+            
             if (timingQueue.Count > 1)
             {
                 foreach (TimingPoint tp in timingQueue)
@@ -93,68 +94,79 @@ public class InstantiateNoteTest : MonoBehaviour {
             {
                 averageBpm = timingQueue[0].BPM;
             }
+            print("AVERAGE BPM: " + averageBpm);
 
             //Create and converts timing points to SV's
-            foreach (TimingPoint tp in timingQueue)
+            int j = 0;
+            for(j= 0;j< timingQueue.Count;j++)
             {
                 for (i = 0; i < SvQueue.Count; i++)
                 {
-                    if (i == 0 && tp.StartTime < SvQueue[i].StartTime)
+
+                    if (i == 0 && timingQueue[j].StartTime < SvQueue[i].StartTime)
                     {
+                        print("X");
                         SliderVelocity newTp = new SliderVelocity();
-                        newTp.StartTime = tp.StartTime;
-                        newTp.Multiplier = averageBpm / tp.BPM;
+                        newTp.StartTime = timingQueue[j].StartTime;
+                        newTp.Multiplier = 1f;
                         SvQueue.Insert(i, newTp);
+                        break;
                     }
-                    else if (tp.StartTime > SvQueue[i].StartTime)
+                    else if (i + 1 < SvQueue.Count)
                     {
-                        SliderVelocity newTp = new SliderVelocity();
-                        newTp.StartTime = tp.StartTime;
-                        newTp.Multiplier = averageBpm / tp.BPM;
-                        SvQueue.Insert(i, newTp);
-                        if (SvQueue[i].StartTime == SvQueue[i + 1].StartTime)
+
+                        if (timingQueue[j].StartTime >= SvQueue[i].StartTime && timingQueue[j].StartTime < SvQueue[i + 1].StartTime)
                         {
-                            SvQueue.RemoveAt(i + 1);
-                        }
-                        else
-                        {
-                            i++;
-                        }
-                    }
-                }
-            }
-            //Normalizes SV's in between each BPM change interval
-            if (timingQueue.Count > 1)
-            {
-                i = 0;
-                for (i= 0;i < timingQueue.Count;i++)
-                {
-                    if (i+1 < timingQueue.Count)
-                    {
-                        for (int j = 0; j < SvQueue.Count; j++)
-                        {
-                            //Check if SV point is between timing point to normalize bpm
-                            if (SvQueue[j].StartTime >= timingQueue[i].StartTime && SvQueue[j].StartTime < timingQueue[i + 1].StartTime)
+                            if (Mathf.Abs(timingQueue[j].StartTime - SvQueue[i+1].StartTime) <1f)
                             {
+                                print("Y1");
                                 SliderVelocity newTp = new SliderVelocity();
-                                newTp.StartTime = SvQueue[j].StartTime;
-                                newTp.Multiplier = SvQueue[j].Multiplier * (averageBpm / timingQueue[i].BPM);
+                                newTp.StartTime = timingQueue[j].StartTime;
+                                newTp.Multiplier = 1f;
+                                SvQueue.RemoveAt(i);
                                 SvQueue.Insert(i, newTp);
-                                if (SvQueue[i].StartTime == SvQueue[i + 1].StartTime)
-                                {
-                                    SvQueue.RemoveAt(i + 1);
-                                }
-                                else
-                                {
-                                    i++;
-                                }
+                                break;
                             }
                         }
                     }
-                    i++;
+                    else if(i == SvQueue.Count)
+                    {
+                        if (timingQueue[j].StartTime >= SvQueue[i].StartTime + 1f)
+                        {
+                            print("Z");
+                            SliderVelocity newTp = new SliderVelocity();
+                            newTp.StartTime = timingQueue[j].StartTime;
+                            newTp.Multiplier = Mathf.Min(Mathf.Max(SvQueue[i].Multiplier, 0f), 20f);
+                            SvQueue.Add(newTp);
+                            break;
+                        }
+                    }
                 }
             }
-
+            //print("ASD " + laka);
+            //Normalizes SV's in between each BPM change interval
+            
+            if (timingQueue.Count > 1)
+            {
+                for (i= 0;i < timingQueue.Count;i++)
+                {
+                    for (j = 0; j < SvQueue.Count; j++)
+                    {
+                        if (SvQueue[j].StartTime >= timingQueue[i].StartTime)
+                        {
+                            SliderVelocity newTp = new SliderVelocity();
+                            newTp.StartTime = SvQueue[j].StartTime;
+                            newTp.Multiplier = Mathf.Max(SvQueue[j].Multiplier * timingQueue[i].BPM / averageBpm,0.1f); //SvQueue[j].Multiplier * (timingQueue[i].BPM /averageBpm);
+                            if (newTp.Multiplier > 0) print(newTp.Multiplier);
+                            SvQueue.Insert(j, newTp);
+                            SvQueue.RemoveAt(j + 1);
+                            break;
+                            //print("A");
+                        }
+                    }
+                }
+            }
+            
             //Declare Receptor Values
             if (upScroll) uScrollFloat = -1f;
             receptorBar.transform.localPosition = new Vector3(0, -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 1f);
@@ -189,6 +201,7 @@ public class InstantiateNoteTest : MonoBehaviour {
             }
 
             //Create Timing bars
+            
             float curBarTime = 0;
             i = 0;
             for (i = 0; i < timingQueue.Count; i++)
@@ -218,6 +231,7 @@ public class InstantiateNoteTest : MonoBehaviour {
                 }
                 else
                 {
+                    
                     while (curBarTime < transform.GetComponent<AudioSource>().clip.length*1000f)
                     {
                         curBar = Instantiate(timingBar, hitContainer.transform);
@@ -228,14 +242,28 @@ public class InstantiateNoteTest : MonoBehaviour {
                         barQueue.Insert(0, curTiming);
                         curBarTime += 1000f * 4f * 60f / (timingQueue[i].BPM);
                     }
-                    print(barQueue.Count);
+                    //print(barQueue.Count);
                 }
             }
-
+            
             //Plays the song, but delayed
             curSongTime = -waitTilPlay;
             actualSongTime = -waitTilPlay;
             transform.GetComponent<AudioSource>().PlayDelayed(waitTilPlay);
+
+            print("TOTAL SV CHANGES: " + SvQueue.Count);
+            
+            for (i = 0; i < SvQueue.Count; i++)
+            {
+                if (i+1 < SvQueue.Count)
+                {
+                    if (SvQueue[i].StartTime > SvQueue[i+1].StartTime)
+                    {
+                        print("ERROR: " + SvQueue[i].StartTime);
+                    }
+                    //print(SvQueue[i].StartTime / 1000f + " / " + SvQueue[i].Multiplier);
+                }
+            }
         }
     }
 
@@ -265,7 +293,7 @@ public class InstantiateNoteTest : MonoBehaviour {
             {
                 if (curSongTime- missTime > Mathf.Max(hitQueue[k].StartTime,hitQueue[k].EndTime)) //Todo: Update miss offset later
                 {
-                    print("MISS");
+                    //print("MISS");
                     Destroy(hitQueue[k].note);
                     hitQueue.RemoveAt(k);
                     k--;
@@ -487,26 +515,33 @@ public class InstantiateNoteTest : MonoBehaviour {
         float svPos = 0;
         int i = 0;
         bool endLoop = false;
-        while (!endLoop && i < SvQueue.Count)
+        while ((!endLoop && i < SvQueue.Count) && i < 5100)
         {
             if (i + 1 < SvQueue.Count)
             {
                 if(timePos > SvQueue[i+1].StartTime)
                 {
-                    svPos += (SvQueue[i + 1].StartTime - SvQueue[i].StartTime)/1000f * SvQueue[i].Multiplier;
+                    svPos += Mathf.Min((SvQueue[i + 1].StartTime - SvQueue[i].StartTime) * SvQueue[i].Multiplier / 1000f, 1000f + (SvQueue[i + 1].StartTime - SvQueue[i].StartTime)*4f);
                 }
                 else
                 {
-                    svPos += (timePos - SvQueue[i].StartTime)/1000f * SvQueue[i].Multiplier;
+                    svPos += Mathf.Min((timePos - SvQueue[i].StartTime)* SvQueue[i].Multiplier / 1000f, 1000f + (timePos - SvQueue[i].StartTime)*4f);
                     endLoop = true;
                 }
             }
             else
             {
-                svPos += (timePos - SvQueue[i].StartTime)/1000f * SvQueue[i].Multiplier;
+                if (i < SvQueue.Count)
+                {
+                    svPos += Mathf.Min((timePos - SvQueue[i].StartTime) * SvQueue[i].Multiplier / 1000f, 1000f+ (timePos - SvQueue[i].StartTime)*4f);
+                }
                 endLoop = true;
             }
             i++;
+        }
+        if (i >= 5100)
+        {
+            //print("OVERFLOW @ POSFROMSV, "+svPos+", "+SvQueue.Count);
         }
         //print(i+ "/ "+svPos);
         return svPos;
