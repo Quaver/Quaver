@@ -45,13 +45,13 @@ namespace Qua.Scripts {
 					case "# Difficulty":
 						section = "Difficulty";
 						break;
-					case "# Timing (StartTime|BPM)":
+					case "# Timing":
 						section = "Timing";
 						break;
-					case "# SV (StartTime|Mulitplier|Volume)":
+					case "# SV":
 						section = "SV";
 						break;
-					case "# HitObject (StartTime|KeyLane|EndTime)":
+					case "# HitObjects":
 						section = "HitObjects";
 						break;
 				}
@@ -194,7 +194,7 @@ namespace Qua.Scripts {
 				// Parse Hit Objects
 				if (section.Equals("HitObjects"))
 				{	
-					if (line.Contains("|") && !line.Contains("HitObject"))
+					if (line.Contains("|") && !line.Contains("HitObjects"))
 					{
 						string[] values = line.Split('|');	
 
