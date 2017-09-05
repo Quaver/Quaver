@@ -11,6 +11,9 @@ namespace Osu.Beatmap {
     {
         public static OsuBeatmap Parse(string filePath)
         {
+
+            byte osuOffset = 170;
+
             if (!File.Exists(filePath.Trim()))
             {
                 OsuBeatmap tempBeatmap = new OsuBeatmap();
@@ -245,7 +248,7 @@ namespace Osu.Beatmap {
 
                             TimingPoint timingPoint = new TimingPoint();
 
-                            timingPoint.Offset = float.Parse(values[0]);
+                            timingPoint.Offset = float.Parse(values[0]) + osuOffset;
                             timingPoint.MillisecondsPerBeat = float.Parse(values[1]);
                             timingPoint.Meter = Int32.Parse(values[2]);
                             timingPoint.SampleType = Int32.Parse(values[3]);
@@ -259,6 +262,7 @@ namespace Osu.Beatmap {
                     }
                 } catch (Exception e)
                 {
+                    Debug.Log(e);
                     Debug.Log(line);
                     return beatmap;
                 }
@@ -303,10 +307,10 @@ namespace Osu.Beatmap {
                             
 
                             hitObject.Y = Int32.Parse(values[1]);
-                            hitObject.StartTime = Int32.Parse(values[2]);
+                            hitObject.StartTime = Int32.Parse(values[2]) + osuOffset;
                             hitObject.Type = Int32.Parse(values[3]);
                             hitObject.HitSound = Int32.Parse(values[4]);
-                            hitObject.EndTime = Int32.Parse(endTime);
+                            hitObject.EndTime = Int32.Parse(endTime) + osuOffset;
                             hitObject.Additions = ":0:0:0:0:";
                         }
                         else
@@ -333,7 +337,7 @@ namespace Osu.Beatmap {
                             }
 
                             hitObject.Y = Int32.Parse(values[1]);
-                            hitObject.StartTime = Int32.Parse(values[2]);
+                            hitObject.StartTime = Int32.Parse(values[2]) + osuOffset;
                             hitObject.Type = Int32.Parse(values[3]);
                             hitObject.HitSound = Int32.Parse(values[4]);
                             hitObject.Additions = "0:0:0:0:";
