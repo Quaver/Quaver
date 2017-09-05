@@ -161,7 +161,7 @@ namespace Qua.Scripts {
 
 						TimingPoint timing = new TimingPoint();
 
-						timing.StartTime = Int32.Parse(values[0]);
+						timing.StartTime = float.Parse(values[0]);
 						timing.BPM = float.Parse(values[1]);
 
 						quaFile.TimingPoints.Add(timing);
@@ -183,7 +183,7 @@ namespace Qua.Scripts {
 
 						SliderVelocity sv = new SliderVelocity();
 
-						sv.StartTime = Int32.Parse(values[0]);
+						sv.StartTime = float.Parse(values[0]);
 						sv.Multiplier = float.Parse(values[1]);
 						sv.Volume = Int32.Parse(values[2]);
 

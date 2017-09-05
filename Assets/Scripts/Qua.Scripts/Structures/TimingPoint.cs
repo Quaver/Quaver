@@ -6,7 +6,7 @@ namespace Qua.Scripts {
 
 	public struct TimingPoint 
 	{
-		public int StartTime;
+		public float StartTime;
 		public float BPM;
 	}
 

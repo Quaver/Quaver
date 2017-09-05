@@ -6,7 +6,7 @@ namespace Qua.Scripts {
 
 	public struct SliderVelocity 
 	{
-		public int StartTime;
+		public float StartTime;
 		public float Multiplier;
 		public int Volume;
 	}

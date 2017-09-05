@@ -234,27 +234,35 @@ namespace Osu.Beatmap {
                     }
                 }
 
-                // Parse [TimingPoints] Data
-                if (section.Equals("[TimingPoints]"))
+                try 
                 {
-                    if (line.Contains(","))
+                    // Parse [TimingPoints] Data
+                    if (section.Equals("[TimingPoints]"))
                     {
-                        string[] values = line.Split(',');
+                        if (line.Contains(","))
+                        {
+                            string[] values = line.Split(',');
 
-                        TimingPoint timingPoint = new TimingPoint();
+                            TimingPoint timingPoint = new TimingPoint();
 
-                        timingPoint.Offset = Int32.Parse(values[0]);
-                        timingPoint.MillisecondsPerBeat = float.Parse(values[1]);
-                        timingPoint.Meter = Int32.Parse(values[2]);
-                        timingPoint.SampleType = Int32.Parse(values[3]);
-                        timingPoint.SampleSet = Int32.Parse(values[4]);
-                        timingPoint.Volume = Int32.Parse(values[5]);
-                        timingPoint.Inherited = Int32.Parse(values[6]);
-                        timingPoint.KiaiMode = Int32.Parse(values[7]);
+                            timingPoint.Offset = float.Parse(values[0]);
+                            timingPoint.MillisecondsPerBeat = float.Parse(values[1]);
+                            timingPoint.Meter = Int32.Parse(values[2]);
+                            timingPoint.SampleType = Int32.Parse(values[3]);
+                            timingPoint.SampleSet = Int32.Parse(values[4]);
+                            timingPoint.Volume = Int32.Parse(values[5]);
+                            timingPoint.Inherited = Int32.Parse(values[6]);
+                            timingPoint.KiaiMode = Int32.Parse(values[7]);
 
-                        beatmap.TimingPoints.Add(timingPoint);
+                            beatmap.TimingPoints.Add(timingPoint);
+                        }
                     }
+                } catch (Exception e)
+                {
+                    Debug.Log(line);
+                    return beatmap;
                 }
+
 
                 // Parse [HitObjects] Data
                 if (section.Equals("[HitObjects]"))
