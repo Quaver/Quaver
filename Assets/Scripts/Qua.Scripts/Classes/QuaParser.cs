@@ -153,6 +153,12 @@ namespace Qua.Scripts {
 					if (line.Contains("|") && !line.Contains("#"))
 					{
 						string[] values = line.Split('|');
+
+						if (values.Length != 2) {
+							quaFile.IsValidQua = false;
+							return quaFile;
+						}
+
 						TimingPoint timing = new TimingPoint();
 
 						timing.StartTime = Int32.Parse(values[0]);
@@ -168,6 +174,13 @@ namespace Qua.Scripts {
 					if (line.Contains("|") && !line.Contains("#"))
 					{
 						string[] values = line.Split('|');
+
+						// There should only be 3 values in an SV, if not, it's an invalid map.
+						if (values.Length != 3) {
+							quaFile.IsValidQua = false;
+							return quaFile;
+						}
+
 						SliderVelocity sv = new SliderVelocity();
 
 						sv.StartTime = Int32.Parse(values[0]);
@@ -184,6 +197,11 @@ namespace Qua.Scripts {
 					if (line.Contains("|") && !line.Contains("HitObject"))
 					{
 						string[] values = line.Split('|');	
+
+						if (values.Length != 3) {
+							quaFile.IsValidQua = false;
+							return quaFile;
+						}
 
 						HitObject ho = new HitObject(); // lol, ho. 
 
