@@ -11,7 +11,8 @@ Artist: Hatsune Miku
 ArtistUnicode: Hatsune Miku
 Source: 
 Tags: vibro dnb 180bpm swan maps vibration
-Creator: DifficultyName: Dawn
+Creator: 
+DifficultyName: Dawn
 MapID: -1
 MapSetID: -1
 
@@ -19,17 +20,17 @@ MapSetID: -1
 HPDrain: 8
 AccuracyStrain: 0
 
-# Timing (StartTime|BPM)
+# Timing
 4000|180
 
-# SV (StartTime|Mulitplier|Volume)
+# SV
 45999|0.75|5
 57333|0.85|20
 62670|0.95|46
 68010|1|56
 131999|1|56
 
-# HitObject (StartTime|KeyLane|EndTime)
+# HitObjects
 46666|2|0
 46666|4|47999
 47999|2|49333
