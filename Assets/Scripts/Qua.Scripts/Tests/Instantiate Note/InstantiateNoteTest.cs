@@ -12,8 +12,8 @@ public class InstantiateNoteTest : MonoBehaviour {
 
     /*CONFIG VALUES*/
     private const int noteSize = 128; //temp, size of noteskin in pixels
-    private const int columnSize = 200; //temp
-    private const int scrollSpeed = 15; //temp
+    private const int columnSize = 240; //temp
+    private const int scrollSpeed = 26; //temp
     private const int receptorOffset = 565; //temp
     private const bool upScroll = true; //true = upscroll, false = downscroll
     private KeyCode[] maniaKeyBindings = new KeyCode[] { KeyCode.A, KeyCode.S, KeyCode.K, KeyCode.L };
@@ -29,9 +29,13 @@ public class InstantiateNoteTest : MonoBehaviour {
     private List<SliderVelocity> SvQueue;
     private List<TimingPoint> timingQueue;
     private List<HitObject> hitQueue;
+    private List<HitObject> barQueue;
     private float[] noteRot = new float[4] { -90f, 0f, 180f, 90f }; //Rotation of arrows if arrow skin is used
     private float uScrollFloat = 1f;
     private bool[] keyDown = new bool[4];
+    private float averageBpm;
+    private int[] judgeTimes = new int[5] { 16, 37, 70, 100, 124}; //OD9 judge times in ms
+    private const int missTime = 200; //after 200ms, if the player doesn't press it will count as a miss.
 
     void Start () {
         //Changes the transparency mode of the camera so images dont clip
@@ -44,6 +48,7 @@ public class InstantiateNoteTest : MonoBehaviour {
             SvQueue = qFile.SliderVelocities;
             timingQueue = qFile.TimingPoints;
             hitQueue = new List<HitObject>();
+            barQueue = new List<HitObject>();
             //Declaring Receptor Values
             if (upScroll) uScrollFloat = -1f;
             receptorBar.transform.localPosition = new Vector3(0, -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 1f);
@@ -92,8 +97,9 @@ public class InstantiateNoteTest : MonoBehaviour {
             int k = 0;
             for (k = 0; k < hitQueue.Count; k++)
             {
-                if (curSongTime * 1000f - osuOffset > hitQueue[k].StartTime) //Todo: Update miss offset later
+                if (curSongTime * 1000f - osuOffset - missTime > hitQueue[k].StartTime) //Todo: Update miss offset later
                 {
+                    print("MISS");
                     Destroy(hitQueue[k].note);
                     hitQueue.RemoveAt(k);
                     k--;
@@ -114,6 +120,7 @@ public class InstantiateNoteTest : MonoBehaviour {
                         keyDown[k] = true;
                         receptors[k].transform.localScale = Vector3.one * (128f / noteSize * (columnSize / 128f)) * 1.1f;
                         receptors[k].transform.GetComponent<SpriteRenderer>().sprite = receptorSprite[1];
+                        JudgeNote(k+1, curSongTime - osuOffset/1000f);
                     }
                 }
                 else
@@ -163,6 +170,56 @@ public class InstantiateNoteTest : MonoBehaviour {
         hitQueue.Add(ho);
         noteQueue.RemoveAt(0);
     }
+
+    void JudgeNote(int kkey,float timePos)
+    {
+        int curNote = 0; //Cannot create null struct :(
+        float closestTime = 1f;
+        int i = 0;
+        for (i = 0; i < hitQueue.Count; i++)
+        {
+            float curNoteTime = hitQueue[i].StartTime / 1000f - timePos;
+            if (hitQueue[i].KeyLane == kkey && curNoteTime < closestTime && Mathf.Abs(curNoteTime) < judgeTimes[4]/1000f)
+            {
+                closestTime = curNoteTime;
+                curNote = i;
+            }
+        }
+        closestTime = Mathf.Abs(closestTime);
+        if (closestTime < judgeTimes[4] / 1000f)
+        {
+            if (closestTime < judgeTimes[0] / 1000f)
+            {
+                Destroy(hitQueue[curNote].note);
+                hitQueue.RemoveAt(curNote);
+                print("MARV");
+            }
+            else if (closestTime < judgeTimes[1] / 1000f)
+            {
+                Destroy(hitQueue[curNote].note);
+                hitQueue.RemoveAt(curNote);
+                print("PERF");
+            }
+            else if (closestTime < judgeTimes[2] / 1000f)
+            {
+                Destroy(hitQueue[curNote].note);
+                hitQueue.RemoveAt(curNote);
+                print("GREAT");
+            }
+            else if (closestTime < judgeTimes[3] / 1000f)
+            {
+                Destroy(hitQueue[curNote].note);
+                hitQueue.RemoveAt(curNote);
+                print("GOOD");
+            }
+            else
+            {
+                Destroy(hitQueue[curNote].note);
+                hitQueue.RemoveAt(curNote);
+                print("BAD");
+            }
+        }
+    }
 	
     float PosFromSV(float timePos)
     {
@@ -188,7 +245,6 @@ public class InstantiateNoteTest : MonoBehaviour {
             {
                 svPos += (timePos - SvQueue[i].StartTime)/1000f * SvQueue[i].Multiplier;
                 endLoop = true;
-                print(timePos);
             }
             i++;
         }
