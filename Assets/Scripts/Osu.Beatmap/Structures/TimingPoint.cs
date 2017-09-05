@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Osu.Beatmap {
 
     public struct TimingPoint {
-        public int Offset;
+        public float Offset;
         public float MillisecondsPerBeat;
         public int Meter;
         public int SampleType;

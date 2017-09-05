@@ -64,7 +64,7 @@ public class InstantiateNoteTest : MonoBehaviour {
 
             averageBpm = 147f; //Change later
 
-            int longestBpmTime = 0;
+            float longestBpmTime = 0;
             int avgBpmPos = 0;
             int i = 0;
 
