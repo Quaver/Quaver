@@ -26,6 +26,7 @@ public class InstantiateNoteTest : MonoBehaviour {
     /*SKINNING VALUES*/
     public Sprite[] receptorSprite;
     public GameObject circleParticleSystem;
+    public GameObject hitBurst;
 
     /*Referencing Values*/
     private List<HitObject> noteQueue;
@@ -147,7 +148,7 @@ public class InstantiateNoteTest : MonoBehaviour {
             //Declare Receptor Values
             if (upScroll) uScrollFloat = -1f;
             receptorBar.transform.localPosition = new Vector3(0, -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 1f);
-            arrowParticles.transform.localPosition = new Vector3(0, -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 5f);
+            arrowParticles.transform.localPosition = new Vector3(0, -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 0f);
             receptors = new GameObject[4];
             receptors[0] = receptorBar.transform.Find("R1").gameObject;
             receptors[1] = receptorBar.transform.Find("R2").gameObject;
@@ -319,7 +320,12 @@ public class InstantiateNoteTest : MonoBehaviour {
             Destroy(hitQueue[curNote].note);
             hitQueue.RemoveAt(curNote);
             GameObject cp = Instantiate(circleParticleSystem, arrowParticles.transform);
-            cp.transform.localPosition = receptors[kkey - 1].transform.localPosition;
+            cp.transform.localPosition = receptors[kkey - 1].transform.localPosition + new Vector3(0,0,2f);
+            GameObject hb = Instantiate(hitBurst, arrowParticles.transform);
+            hb.GetComponent<NoteBurst>().startSize = hb.transform.localScale.x;
+            hb.transform.localPosition = receptors[kkey - 1].transform.localPosition + new Vector3(0, 0, -2f);
+            hb.transform.eulerAngles = receptors[kkey - 1].transform.eulerAngles;
+            hb.transform.localScale = receptors[kkey - 1].transform.localScale;
         }
     }
 	
