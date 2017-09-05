@@ -21,25 +21,25 @@ namespace Wenzil.Console.Commands
             }
             else
             {
-                return LoadLevel(args[0]);
+                return "Unused"; 
             }
         }
 
-        private static string LoadLevel(string scene)
-        {
-            try
-            {
-                Application.LoadLevel(scene);
-            }
-            catch
-            {
-                return string.Format("Failed to load {0}.", scene);
-            }
+        // private static string LoadLevel(string scene)
+        // {
+        //     try
+        //     {
+        //         //Application.LoadLevel(scene);
+        //     }
+        //     catch
+        //     {
+        //         return string.Format("Failed to load {0}.", scene);
+        //     }
 
-            if (Application.loadedLevelName == scene) // Assume success if we had to load the scene we were already in
-                return string.Format("Success loading {0}.", scene);
-            else
-                return string.Format("Failed to load {0}. Are you sure it's in the list of levels in Build Settings?", scene);
-        }
+        //     /*if (Application.loadedLevelName == scene) // Assume success if we had to load the scene we were already in
+        //         return string.Format("Success loading {0}.", scene);
+        //     else
+        //         return string.Format("Failed to load {0}. Are you sure it's in the list of levels in Build Settings?", scene);*/
+        // }/
     }
 }

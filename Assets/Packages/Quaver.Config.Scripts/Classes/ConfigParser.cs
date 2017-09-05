@@ -218,77 +218,77 @@ namespace Config.Scripts {
 						case "KeyManiaLane1":
 							if (value == "")
 							{
-								cfg.KeyLaneMania1 = "D";
+								cfg.KeyLaneMania1 = "d";
 							}
 							cfg.KeyLaneMania1 = value;
 							break;
 						case "KeyManiaLane2":
 							if (value == "")
 							{
-								cfg.KeyLaneMania2 = "F";
+								cfg.KeyLaneMania2 = "f";
 							}
 							cfg.KeyLaneMania2 = value;
 							break;
 						case "KeyManiaLane3":
 							if (value == "")
 							{
-								cfg.KeyLaneMania3 = "J";
+								cfg.KeyLaneMania3 = "k";
 							}
 							cfg.KeyLaneMania3 = value;
 							break;
 						case "KeyManiaLane4":
 							if (value == "")
 							{
-								cfg.KeyLaneMania4 = "K";
+								cfg.KeyLaneMania4 = "k";
 							}
 							cfg.KeyLaneMania4 = value;
 							break;	
 						case "KeyScreenshot":
 							if (value == "")
 							{
-								cfg.KeyScreenshot = "F12";
+								cfg.KeyScreenshot = "f12";
 							}
 							cfg.KeyScreenshot = value;
 							break;	
 						case "KeyQuickRetry":
 							if (value == "")
 							{
-								cfg.KeyQuickRetry = "F12";
+								cfg.KeyQuickRetry = "`";
 							}
 							cfg.KeyQuickRetry = value;
 							break;
 						case "KeyIncreaseScrollSpeed":
 							if (value == "")
 							{
-								cfg.KeyIncreaseScrollSpeed = "F4";
+								cfg.KeyIncreaseScrollSpeed = "f4";
 							}
 							cfg.KeyIncreaseScrollSpeed = value;
 							break;	
 						case "KeyDecreaseScrollSpeed":
 							if (value == "")
 							{
-								cfg.KeyDecreaseScrollSpeed = "F3";
+								cfg.KeyDecreaseScrollSpeed = "f3";
 							}
 							cfg.KeyDecreaseScrollSpeed = value;
 							break;
 						case "KeyPause":
 							if (value == "")
 							{
-								cfg.KeyPause = "ESC";
+								cfg.KeyPause = "escape";
 							}
 							cfg.KeyPause = value;
 							break;		
 						case "KeyVolumeUp":
 							if (value == "")
 							{
-								cfg.KeyVolumeUp = "UpArrow";
+								cfg.KeyVolumeUp = "up";
 							}
 							cfg.KeyVolumeUp = value;
 							break;
 						case "KeyVolumeDown":
 							if (value == "")
 							{
-								cfg.KeyVolumeDown = "DownArrow";
+								cfg.KeyVolumeDown = "down";
 							}
 							cfg.KeyVolumeDown = value;
 							break;																																																							

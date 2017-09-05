@@ -110,8 +110,9 @@ namespace Osu.Beatmap {
 
 				return true;
 
-			} catch (Exception ex) 
+			} catch (Exception e) 
 			{
+				Debug.Log(e);
 				return false;
 			}
 		}
