@@ -19,7 +19,7 @@ namespace Wenzil.Console.Commands
 
 			if (hasGenerated)
 			{
-				return "Config file was successfully generated at: " + ConfigDefault.GameDirectory + "/quaver.cfg";
+				return "Config file was successfully generated at: " + ConfigDefault.ConfigDirectory;
 			}
 
 			return "File could not be generated.";

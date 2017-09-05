@@ -12,9 +12,7 @@ namespace Config.Scripts {
 
 		public static bool Generate()
 		{
-			string configPath = ConfigDefault.GameDirectory + "/quaver.cfg";
-
-			if (File.Exists(configPath))
+			if (File.Exists(ConfigDefault.ConfigDirectory))
 			{
 				Debug.Log("Config File Already Exists!");
 				return false;
@@ -63,7 +61,7 @@ namespace Config.Scripts {
 			// Write to config file.
 			try 
 			{
-				StreamWriter file = new StreamWriter(configPath);
+				StreamWriter file = new StreamWriter(ConfigDefault.ConfigDirectory);
 				file.AutoFlush = true; 
 				Debug.Log(fileString.ToString());
 				file.WriteLine(fileString.ToString());
