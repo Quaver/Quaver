@@ -42,7 +42,8 @@ namespace Wenzil.Console.Commands
 							"MapID: " + quaFile.MapID + "\n" + 
 							"MapSetID: " + quaFile.MapSetID + "\n" + 
 							"HPDrain: " + quaFile.HPDrain + "\n" +
-							"AccuracyStrain: " + quaFile.AccuracyStrain + "\n";
+							"AccuracyStrain: " + quaFile.AccuracyStrain + "\n" +
+                            "IsValidQua: " + quaFile.IsValidQua;
 
 			// Add timing points to string
 			quaLog += "\nTiming Points Count: " + quaFile.TimingPoints.Count + "\n";
