@@ -30,6 +30,8 @@ public class InstantiateNoteTest : MonoBehaviour {
     private List<TimingPoint> timingQueue;
     private List<HitObject> hitQueue;
     private List<HitObject> barQueue;
+    private float curSongTime;
+    private const float waitTilPlay = 0.5f; //waits 2 seconds until song starts
     private float[] noteRot = new float[4] { -90f, 0f, 180f, 90f }; //Rotation of arrows if arrow skin is used
     private float uScrollFloat = 1f;
     private bool[] keyDown = new bool[4];
@@ -161,7 +163,7 @@ public class InstantiateNoteTest : MonoBehaviour {
             i = 0;
             for (i=0;i< maxNoteCount; i++)
             {
-                if (noteQueue.Count > 0) //Only 500 for testing
+                if (noteQueue.Count > 0)
                 {
                     InstantiateNote();
                 }
@@ -170,17 +172,29 @@ public class InstantiateNoteTest : MonoBehaviour {
                     break;
                 }
             }
+
+            //Plays the song, but delayed
+            curSongTime = -waitTilPlay;
+            transform.GetComponent<AudioSource>().PlayDelayed(waitTilPlay);
         }
     }
 
-    private float curSongTime;
     void Update()
     {
         if (qFile.IsValidQua == true)//Check if map is done or if qFile is valid
         {
             //Song Time Calculation
             //HitBar offset is 6 (+0.5) units. Osu parses notes 0.07seconds late so 0.07seconds is subtracted to counteract.
-            curSongTime = transform.GetComponent<AudioSource>().time; //NOT SMOOTH; NORMALIZE WITH FPS LATER
+            
+            if (curSongTime<0)
+            {
+                curSongTime += Time.deltaTime;
+            }
+            else
+            {
+                //Averages between frame + music time!
+                curSongTime = ((transform.GetComponent<AudioSource>().time)+(curSongTime+Time.deltaTime))/2f;
+            }
             transform.Find("HitContainer").transform.localPosition = new Vector3(0, -uScrollFloat * (PosFromSV(curSongTime - osuOffset / 1000f)) * (float)scrollSpeed - uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 0);
 
             //NotePos/NoteMiss Check
@@ -238,7 +252,7 @@ public class InstantiateNoteTest : MonoBehaviour {
         HitObject ho = noteQueue[0];
         GameObject hoo = Instantiate(hitObjectTest, transform.Find("HitContainer"));
         hoo.transform.Find("HitImage").transform.localScale = Vector3.one * (128f / noteSize * (columnSize / 128f));
-        hoo.transform.localPosition = new Vector3(ho.KeyLane * (columnSize / 128f) - (columnSize / 128f * 2.5f), uScrollFloat * PosFromSV(ho.StartTime/1000f) * scrollSpeed, 0);
+        hoo.transform.localPosition = new Vector3(ho.KeyLane * (columnSize / 128f) - (columnSize / 128f * 2.5f), uScrollFloat * PosFromSV(ho.StartTime/ 1000f) * scrollSpeed, 0);
         hoo.transform.Find("HitImage").transform.eulerAngles = new Vector3(0, 0, noteRot[ho.KeyLane - 1]); //Rotation
         if (false ||(ho.EndTime > 0 && ho.EndTime > ho.StartTime))
         {
