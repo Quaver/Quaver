@@ -33,6 +33,8 @@ public class InstantiateNoteTest : MonoBehaviour {
     private List<SliderVelocity> SvQueue;
     private List<TimingPoint> timingQueue;
     private List<HitObject> hitQueue;
+    private List<HitObject> lnQueue;
+    private List<HitObject> offLNQueue;
     //private List<HitObject> barQueue;
     private float curSongTime;
     private const float waitTilPlay = 0.5f; //waits 2 seconds until song starts
@@ -40,7 +42,7 @@ public class InstantiateNoteTest : MonoBehaviour {
     private float uScrollFloat = 1f;
     private bool[] keyDown = new bool[4];
     private float averageBpm;
-    private int[] judgeTimes = new int[5] { 16, 37, 70, 100, 124}; //OD9 judge times in ms
+    private int[] judgeTimes = new int[6] { 16, 37, 70, 100, 124, 80}; //OD9 judge times in ms (0,1,2,3,4), LN offset 5
     private const int missTime = 200; //after 200ms, if the player doesn't press it will count as a miss.
 
     void Start () {
@@ -55,6 +57,8 @@ public class InstantiateNoteTest : MonoBehaviour {
             SvQueue = qFile.SliderVelocities;
             timingQueue = qFile.TimingPoints;
             hitQueue = new List<HitObject>();
+            lnQueue = new List<HitObject>();
+            offLNQueue = new List<HitObject>();
             //barQueue = new List<HitObject>();
 
             averageBpm = 147f; //Change later
@@ -204,23 +208,66 @@ public class InstantiateNoteTest : MonoBehaviour {
 
             //NotePos/NoteMiss Check
             int k = 0;
-            /* MISS CHECK
             for (k = 0; k < hitQueue.Count; k++)
             {
-                if (curSongTime * 1000f - osuOffset - missTime > hitQueue[k].StartTime) //Todo: Update miss offset later
+                if (curSongTime * 1000f - osuOffset - missTime > Mathf.Max(hitQueue[k].StartTime,hitQueue[k].EndTime)) //Todo: Update miss offset later
                 {
                     print("MISS");
                     Destroy(hitQueue[k].note);
                     hitQueue.RemoveAt(k);
                     k--;
                 }
-            }*/
+            }
             //Autoplay
+            /*
             for (k = 0; k < hitQueue.Count; k++)
             {
                 if (curSongTime * 1000f - osuOffset > hitQueue[k].StartTime) //Todo: Update miss offset later
                 {
                     JudgeNote(hitQueue[k].KeyLane, curSongTime - osuOffset/1000f);
+                }
+            }
+            */
+
+            //LN Check
+            for(k=0;k<lnQueue.Count;k++)
+            {
+                HitObject ln = lnQueue[k];
+                //Places LNs on top of the receptors
+                ln.note.transform.localPosition = new Vector3(receptors[ln.KeyLane-1].transform.localPosition.x, uScrollFloat * (PosFromSV(curSongTime - osuOffset / 1000f)) * (float)scrollSpeed, 0);
+
+                float lnSize = Mathf.Max(Mathf.Min(PosFromSV(ln.EndTime) - PosFromSV(curSongTime * 1000f - osuOffset), PosFromSV(ln.EndTime) - PosFromSV(ln.StartTime)),0);
+                //float lnSize = Mathf.Max(realSize,0);
+                ln.note.transform.Find("SliderMiddle").transform.localScale = Vector3.one * (128f / noteSize * (columnSize / 128f));
+                ln.note.transform.Find("SliderEnd").transform.localScale = Vector3.one * (128f / noteSize * (columnSize / 128f));
+
+                ln.note.transform.Find("SliderMiddle").GetComponent<SpriteRenderer>().size = new Vector2(1f, -uScrollFloat * lnSize / 1000f * scrollSpeed * (128f / columnSize));
+                if (uScrollFloat >= 1f) ln.note.transform.Find("SliderEnd").GetComponent<SpriteRenderer>().flipY = true;
+                ln.note.transform.Find("SliderEnd").transform.localPosition = new Vector3(0f, uScrollFloat * lnSize / 1000f * scrollSpeed, 0.1f);
+                if (lnSize == 0)
+                {
+                    ln.note.transform.Find("SliderEnd").transform.localScale = new Vector2(1f, Mathf.Max((ln.EndTime-curSongTime * 1000f)/judgeTimes[5]*0.5f,0));
+                }
+                if (curSongTime * 1000f - osuOffset - judgeTimes[5] > ln.EndTime)
+                {
+                    ln.note.transform.Find("HitImage").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    Destroy(ln.note.transform.Find("SliderMiddle").gameObject);
+                    Destroy(ln.note.transform.Find("SliderEnd").gameObject);
+
+                    offLNQueue.Add(lnQueue[k]);
+                    lnQueue.RemoveAt(k);
+                    k--;
+                    print("LATE LN RELEASE");
+                }
+
+            }
+            for (k=0;k<offLNQueue.Count;k++)
+            {
+                if (curSongTime * 1000f - osuOffset - missTime > offLNQueue[k].EndTime)
+                {
+                    Destroy(offLNQueue[k].note);
+                    offLNQueue.RemoveAt(k);
+                    k--;
                 }
             }
 
@@ -247,6 +294,7 @@ public class InstantiateNoteTest : MonoBehaviour {
                     {
                         keyDown[k] = false;
                         receptors[k].transform.GetComponent<SpriteRenderer>().sprite = receptorSprite[0];
+                        JudgeLN(k + 1, curSongTime - osuOffset / 1000f);
 
                     }
                 }
@@ -289,6 +337,39 @@ public class InstantiateNoteTest : MonoBehaviour {
         noteQueue.RemoveAt(0);
     }
 
+    void JudgeLN(int kkey, float timePos)
+    {
+        int curNote = -1; //Cannot create null struct :(
+        float closestTime = 0f;
+        for (int i = 0; i < lnQueue.Count; i++)
+        {
+            if (lnQueue[i].KeyLane == kkey)
+            {
+                closestTime = timePos - lnQueue[i].EndTime / 1000f;
+                curNote = i;
+            }
+        }
+        if (curNote >= 0 && curNote < lnQueue.Count)
+        {
+            if (closestTime < -judgeTimes[5]/1000f)
+            {
+                //Darkens early/mis-released LNs. Use skin images instead later
+                lnQueue[curNote].note.transform.Find("HitImage").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                lnQueue[curNote].note.transform.Find("SliderMiddle").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                lnQueue[curNote].note.transform.Find("SliderEnd").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                offLNQueue.Add(lnQueue[curNote]);
+                lnQueue.RemoveAt(curNote);
+                print("EARLY LN RELEASE");
+            }
+            else
+            {
+                Destroy(lnQueue[curNote].note);
+                lnQueue.RemoveAt(curNote);
+                print("PERFECT LN RELEASE");
+            }
+        }
+    }
+
     void JudgeNote(int kkey,float timePos)
     {
         int curNote = 0; //Cannot create null struct :(
@@ -326,8 +407,18 @@ public class InstantiateNoteTest : MonoBehaviour {
             {
                 print("BAD");
             }
-            Destroy(hitQueue[curNote].note);
-            hitQueue.RemoveAt(curNote);
+            //Check if LN
+            if (hitQueue[curNote].EndTime > 0)
+            {
+                lnQueue.Add(hitQueue[curNote]);
+                hitQueue.RemoveAt(curNote);
+            } 
+            else
+            {
+                Destroy(hitQueue[curNote].note);
+                hitQueue.RemoveAt(curNote);
+            }
+            //Create particles
             GameObject cp = Instantiate(circleParticleSystem, arrowParticles.transform);
             cp.transform.localPosition = receptors[kkey - 1].transform.localPosition + new Vector3(0,0,2f);
             GameObject hb = Instantiate(hitBurst, arrowParticles.transform);
