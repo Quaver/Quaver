@@ -27,20 +27,17 @@ namespace Wenzil.Console.Commands
                 return "ERROR: The specified beatmap could not be found or is not valid.";
             }
 
-			string logString = "SongDirectory: " + cfg.SongDirectory + "\n" + 
+			string logString =  "GameDirectory: " + cfg.GameDirectory + "\n" + 
+								"SongDirectory: " + cfg.SongDirectory + "\n" + 
 								"SkinsDirectory: " + cfg.SkinsDirectory + "\n" + 
 								"VolumeGlobal: " + cfg.VolumeGlobal + "\n" + 
 								"VolumeEffect: " + cfg.VolumeEffect + "\n" + 
 								"VolumeMusic: " + cfg.VolumeMusic + "\n" + 
 								"BackgroundDim: " + cfg.BackgroundDim + "\n" + 
-								"MonitorDisplay: " + cfg.MonitorDisplay + "\n" + 
-								"MonitorRefreshRate: " + cfg.MonitorRefreshRate + "\n" + 
 								"WindowHeight: " + cfg.WindowHeight + "\n" + 
 								"WindowWidth: " + cfg.WindowWidth + "\n" + 
 								"WindowFullScreen: " + cfg.WindowFullScreen + "\n" + 
 								"WindowLetterboxed: " + cfg.WindowLetterboxed + "\n" +
-								"FullScreenHeight: " + cfg.FullScreenHeight + "\n" + 
-								"FullScreenWidth: " + cfg.FullScreenWidth +  "\n" + 
 								"CustomFrameLimit: " + cfg.CustomFrameLimit + "\n" +
 								"FPSCounter: " + cfg.FPSCounter + "\n" + 
 								"FrameTimeDisplay: " + cfg.FrameTimeDisplay + "\n" +
