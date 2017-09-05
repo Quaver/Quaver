@@ -40,7 +40,7 @@ namespace Osu.Beatmap {
 			fileString.Append("ArtistUnicode: " + osuBeatmap.ArtistUnicode + "\n");
 			fileString.Append("Source: " + osuBeatmap.Source + "\n");
 			fileString.Append("Tags: " + osuBeatmap.Tags + "\n");
-			fileString.Append("Creator: ");
+			fileString.Append("Creator: " + "\n");
 			fileString.Append("DifficultyName: " + osuBeatmap.Version + "\n");
 			fileString.Append("MapID: -1\n");
 			fileString.Append("MapSetID: -1\n\n");
@@ -51,7 +51,7 @@ namespace Osu.Beatmap {
 			fileString.Append("AccuracyStrain: " + osuBeatmap.OverallDifficulty + "\n\n");
 
 			// # Timing (StartTime | BPM)
-			fileString.Append("# Timing (StartTime|BPM)\n");
+			fileString.Append("# Timing\n");
 			foreach(TimingPoint timingPoint in osuBeatmap.TimingPoints) 
 			{
 				// Find all of the red lined timing points and add their data to the string.
@@ -61,7 +61,7 @@ namespace Osu.Beatmap {
 			}
 
 			// # SV (StartTime|Multiplier|Volume)
-			fileString.Append("\n# SV (StartTime|Mulitplier|Volume)\n");
+			fileString.Append("\n# SV\n");
 			foreach(TimingPoint timingPoint in osuBeatmap.TimingPoints)
 			{
 				if (timingPoint.Inherited == 0) 
@@ -72,7 +72,7 @@ namespace Osu.Beatmap {
 			}
 
 			// # HitObject (StartTime|KeyLane|EndTime)
-			fileString.Append("\n# HitObject (StartTime|KeyLane|EndTime)\n");
+			fileString.Append("\n# HitObjects\n");
 			foreach(HitObject hitObject in osuBeatmap.HitObjects)
 			{
 				// Get the keyLane the hitObject is in
