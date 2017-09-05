@@ -16,10 +16,10 @@ public class InstantiateNoteTest : MonoBehaviour {
     private const int noteSize = 128; //temp, size of noteskin in pixels
     private const int columnSize = 220; //temp
     private const int scrollSpeed = 24; //temp
-    private const int receptorOffset = 575; //temp
+    private const int receptorOffset = 605; //temp
     private const bool upScroll = true; //true = upscroll, false = downscroll
     private KeyCode[] maniaKeyBindings = new KeyCode[] { KeyCode.A, KeyCode.S, KeyCode.K, KeyCode.L };
-    private const int maxNoteCount = 200; //temp
+    private const int maxNoteCount = 100; //temp
     private const int playerOffset = 0;
     private const int osuOffset = 170;
 
@@ -204,6 +204,7 @@ public class InstantiateNoteTest : MonoBehaviour {
 
             //NotePos/NoteMiss Check
             int k = 0;
+            /* MISS CHECK
             for (k = 0; k < hitQueue.Count; k++)
             {
                 if (curSongTime * 1000f - osuOffset - missTime > hitQueue[k].StartTime) //Todo: Update miss offset later
@@ -212,6 +213,14 @@ public class InstantiateNoteTest : MonoBehaviour {
                     Destroy(hitQueue[k].note);
                     hitQueue.RemoveAt(k);
                     k--;
+                }
+            }*/
+            //Autoplay
+            for (k = 0; k < hitQueue.Count; k++)
+            {
+                if (curSongTime * 1000f - osuOffset > hitQueue[k].StartTime) //Todo: Update miss offset later
+                {
+                    JudgeNote(hitQueue[k].KeyLane, curSongTime - osuOffset/1000f);
                 }
             }
 
