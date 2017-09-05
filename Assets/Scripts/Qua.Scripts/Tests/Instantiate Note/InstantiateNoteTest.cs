@@ -44,12 +44,77 @@ public class InstantiateNoteTest : MonoBehaviour {
         qFile = QuaParser.Parse("E:\\GitHub\\Quaver\\TestFiles\\Qua\\planet_shaper.qua");
         if (qFile.IsValidQua == true)
         {
+            //Declare Reference Values
             noteQueue = qFile.HitObjects;
             SvQueue = qFile.SliderVelocities;
             timingQueue = qFile.TimingPoints;
             hitQueue = new List<HitObject>();
             barQueue = new List<HitObject>();
-            //Declaring Receptor Values
+
+            averageBpm = 147f; //Change later
+
+            int longestBpmTime = 0;
+            int avgBpmPos = 0;
+            int i = 0;
+
+            //Calculate Average BPM of map
+            if (timingQueue.Count > 1)
+            {
+                foreach (TimingPoint tp in timingQueue)
+                {
+                    if (i+1 < timingQueue.Count)
+                    {
+                        if (timingQueue[i+1].StartTime - timingQueue[i].StartTime > longestBpmTime)
+                        {
+                            avgBpmPos = i;
+                            longestBpmTime = timingQueue[i + 1].StartTime - timingQueue[i].StartTime;
+                        }
+                    }
+                }
+                averageBpm = timingQueue[avgBpmPos].BPM;
+            }
+            else
+            {
+                averageBpm = timingQueue[0].BPM;
+            }
+
+            //Create and modify SV's to normalized bpm
+            i = 0;
+            foreach (TimingPoint tp in timingQueue)
+            {
+                for (i = 0; i < SvQueue.Count; i++)
+                {
+                    if (i == 0 && tp.StartTime < SvQueue[i].StartTime)
+                    {
+                        SliderVelocity newTp = new SliderVelocity();
+                        newTp.StartTime = tp.StartTime;
+                        newTp.Multiplier = averageBpm / tp.BPM;
+                        print(newTp.Multiplier);
+                        SvQueue.Insert(i, newTp);
+                    }
+                    else if (tp.StartTime > SvQueue[i].StartTime)
+                    {
+                        SliderVelocity newTp = new SliderVelocity();
+                        newTp.StartTime = tp.StartTime;
+                        newTp.Multiplier = averageBpm / tp.BPM;
+                        print(newTp.Multiplier);
+                        SvQueue.Insert(i, newTp);
+                        if (i + 1 < SvQueue.Count)
+                        {
+                            if (SvQueue[i].StartTime == SvQueue[i + 1].StartTime)
+                            {
+                                SvQueue.RemoveAt(i + 1);
+                            }
+                            else
+                            {
+                                i++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //Declare Receptor Values
             if (upScroll) uScrollFloat = -1f;
             receptorBar.transform.localPosition = new Vector3(0, -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 1f);
             receptors = new GameObject[4];
@@ -58,7 +123,7 @@ public class InstantiateNoteTest : MonoBehaviour {
             receptors[2] = receptorBar.transform.Find("R3").gameObject;
             receptors[3] = receptorBar.transform.Find("R4").gameObject;
 
-            int i = 0;
+            i = 0;
             foreach (GameObject r0 in receptors)
             {
                 r0.transform.localScale = Vector3.one * (128f / noteSize * (columnSize / 128f));
@@ -67,9 +132,9 @@ public class InstantiateNoteTest : MonoBehaviour {
                 i++;
             }
 
+            //Create starting notes
             i = 0;
-            //Creates note + rotates it
-            for(i=0;i< maxNoteCount; i++)
+            for (i=0;i< maxNoteCount; i++)
             {
                 if (noteQueue.Count > 0) //Only 500 for testing
                 {
