@@ -8,7 +8,9 @@ public class InstantiateNoteTest : MonoBehaviour {
     private QuaFile qFile;
     public GameObject hitObjectTest;
     public GameObject receptorBar;
-    private GameObject[] receptors; 
+    private GameObject[] receptors;
+    public GameObject arrowParticles;
+    public GameObject hitContainer;
 
     /*CONFIG VALUES*/
     private const int noteSize = 128; //temp, size of noteskin in pixels
@@ -23,6 +25,7 @@ public class InstantiateNoteTest : MonoBehaviour {
 
     /*SKINNING VALUES*/
     public Sprite[] receptorSprite;
+    public GameObject circleParticleSystem;
 
     /*Referencing Values*/
     private List<HitObject> noteQueue;
@@ -144,6 +147,7 @@ public class InstantiateNoteTest : MonoBehaviour {
             //Declare Receptor Values
             if (upScroll) uScrollFloat = -1f;
             receptorBar.transform.localPosition = new Vector3(0, -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 1f);
+            arrowParticles.transform.localPosition = new Vector3(0, -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 5f);
             receptors = new GameObject[4];
             receptors[0] = receptorBar.transform.Find("R1").gameObject;
             receptors[1] = receptorBar.transform.Find("R2").gameObject;
@@ -195,7 +199,7 @@ public class InstantiateNoteTest : MonoBehaviour {
                 //Averages between frame + music time!
                 curSongTime = ((transform.GetComponent<AudioSource>().time)+(curSongTime+Time.deltaTime))/2f;
             }
-            transform.Find("HitContainer").transform.localPosition = new Vector3(0, -uScrollFloat * (PosFromSV(curSongTime - osuOffset / 1000f)) * (float)scrollSpeed - uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 0);
+            hitContainer.transform.localPosition = new Vector3(0, -uScrollFloat * (PosFromSV(curSongTime - osuOffset / 1000f)) * (float)scrollSpeed - uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 0);
 
             //NotePos/NoteMiss Check
             int k = 0;
@@ -250,7 +254,7 @@ public class InstantiateNoteTest : MonoBehaviour {
     void InstantiateNote()
     {
         HitObject ho = noteQueue[0];
-        GameObject hoo = Instantiate(hitObjectTest, transform.Find("HitContainer"));
+        GameObject hoo = Instantiate(hitObjectTest, hitContainer.transform);
         hoo.transform.Find("HitImage").transform.localScale = Vector3.one * (128f / noteSize * (columnSize / 128f));
         hoo.transform.localPosition = new Vector3(ho.KeyLane * (columnSize / 128f) - (columnSize / 128f * 2.5f), uScrollFloat * PosFromSV(ho.StartTime/ 1000f) * scrollSpeed, 0);
         hoo.transform.Find("HitImage").transform.eulerAngles = new Vector3(0, 0, noteRot[ho.KeyLane - 1]); //Rotation
@@ -294,34 +298,28 @@ public class InstantiateNoteTest : MonoBehaviour {
         {
             if (closestTime < judgeTimes[0] / 1000f)
             {
-                Destroy(hitQueue[curNote].note);
-                hitQueue.RemoveAt(curNote);
                 print("MARV");
             }
             else if (closestTime < judgeTimes[1] / 1000f)
             {
-                Destroy(hitQueue[curNote].note);
-                hitQueue.RemoveAt(curNote);
                 print("PERF");
             }
             else if (closestTime < judgeTimes[2] / 1000f)
             {
-                Destroy(hitQueue[curNote].note);
-                hitQueue.RemoveAt(curNote);
                 print("GREAT");
             }
             else if (closestTime < judgeTimes[3] / 1000f)
             {
-                Destroy(hitQueue[curNote].note);
-                hitQueue.RemoveAt(curNote);
                 print("GOOD");
             }
             else
             {
-                Destroy(hitQueue[curNote].note);
-                hitQueue.RemoveAt(curNote);
                 print("BAD");
             }
+            Destroy(hitQueue[curNote].note);
+            hitQueue.RemoveAt(curNote);
+            GameObject cp = Instantiate(circleParticleSystem, arrowParticles.transform);
+            cp.transform.localPosition = receptors[kkey - 1].transform.localPosition;
         }
     }
 	
