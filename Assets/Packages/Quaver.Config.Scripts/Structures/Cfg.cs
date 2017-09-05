@@ -7,6 +7,7 @@ namespace Config.Scripts {
 	public struct Cfg
 	{
 		public bool IsValid;
+		public string GameDirectory;
 		public string SongDirectory;
 		public string SkinsDirectory;
 
@@ -16,16 +17,10 @@ namespace Config.Scripts {
 
 		public byte BackgroundDim;
 
-		public byte MonitorDisplay;
-		public short MonitorRefreshRate;
-
-		public short WindowHeight;
-		public short WindowWidth;
+		public int WindowHeight;
+		public int WindowWidth;
 		public bool WindowFullScreen;
 		public bool WindowLetterboxed;
-		
-		public short FullScreenHeight;
-		public short FullScreenWidth;
 
 		public short CustomFrameLimit;
 		public bool FPSCounter;
