@@ -11,7 +11,8 @@ Artist: Camellia
 ArtistUnicode: かめりあ
 Source: 
 Tags: electronic drumstep dubstep complextro かめるかめりあ CTCD-011 C88 KamelCamellia cametek
-Creator: DifficultyName: GEOLOGICAL//IRRESOLUTION
+Creator: 
+DifficultyName: GEOLOGICAL//IRRESOLUTION
 MapID: -1
 MapSetID: -1
 
@@ -19,10 +20,10 @@ MapSetID: -1
 HPDrain: 9.3
 AccuracyStrain: 7.4
 
-# Timing (StartTime|BPM)
+# Timing
 374|147
 
-# SV (StartTime|Mulitplier|Volume)
+# SV
 23843|0.3|45
 23894|0.4|45
 23945|0.5|45
@@ -1404,7 +1405,7 @@ AccuracyStrain: 7.4
 393843|0.85|45
 413027|1|45
 
-# HitObject (StartTime|KeyLane|EndTime)
+# HitObjects
 2006|1|2057
 2618|3|2669
 3639|4|3690
