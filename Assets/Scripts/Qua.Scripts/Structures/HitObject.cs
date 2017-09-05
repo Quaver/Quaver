@@ -9,7 +9,7 @@ namespace Qua.Scripts {
 		public int StartTime;
 		public int KeyLane;
 		public int EndTime;
-        public GameObject note;
+        	public GameObject note;
 	}
 
 }
