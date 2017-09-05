@@ -8,6 +8,7 @@ namespace Config.Scripts {
 	{
 		public static bool IsValid = false;
 		public static string GameDirectory = Application.dataPath;
+		public static string ConfigDirectory = Application.dataPath + "/quaver.cfg";
 		public static string SongDirectory = GameDirectory + "/songs/";
 		public static string SkinsDirectory = GameDirectory + "/skins/";
 
