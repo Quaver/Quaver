@@ -52,7 +52,11 @@ public class InstantiateNoteTest : MonoBehaviour {
         GameObject.Find("Main Camera").GetComponent<Camera>().transparencySortMode = TransparencySortMode.Orthographic;
 
         qFile = QuaParser.Parse("E:\\GitHub\\Quaver\\TestFiles\\Qua\\planet_shaper.qua");
-        if (qFile.IsValidQua == true)
+        if (qFile.IsValidQua == false)
+        {
+            print("IS NOT VALID QUA FILE");
+        }
+        else if (qFile.IsValidQua == true)
         {
             //Declare Reference Values
             noteQueue = qFile.HitObjects;
