@@ -189,6 +189,14 @@ namespace Qua.Scripts {
 
 						ho.StartTime = Int32.Parse(values[0]);
 						ho.KeyLane = Int32.Parse(values[1]);
+
+						// If the key lane isn't in 1-4, then we'll consider the map to be invalid.
+						if (ho.KeyLane < 1 || ho.KeyLane > 4) 
+						{
+							quaFile.IsValidQua = false;
+							return quaFile;
+						}
+
 						ho.EndTime = Int32.Parse(values[2]);
 
 						quaFile.HitObjects.Add(ho);
@@ -197,6 +205,13 @@ namespace Qua.Scripts {
 				}
 
 			}		
+
+			// If there are zero timing points in the beatmap we'll consider that invalid.
+			if (quaFile.TimingPoints.Count == 0)
+			{
+				quaFile.IsValidQua = false;
+				return quaFile;
+			}
 
 			return quaFile;
 		}
