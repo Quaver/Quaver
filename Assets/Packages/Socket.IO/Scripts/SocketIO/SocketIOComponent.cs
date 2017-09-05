@@ -308,7 +308,7 @@ namespace SocketIO
 			try {
 				ws.Send(encoder.Encode(packet));
 			} catch(SocketIOException ex) {
-				ex = ex;
+				Debug.Log(ex);
 				#if SOCKET_IO_DEBUG
 				debugMethod.Invoke(ex.ToString());
 				#endif
@@ -400,7 +400,7 @@ namespace SocketIO
 				try{
 					handler(ev);
 				} catch(Exception ex){
-                    ex = ex;
+                    Debug.Log(ex);
 					#if SOCKET_IO_DEBUG
 					debugMethod.Invoke(ex.ToString());
 					#endif
