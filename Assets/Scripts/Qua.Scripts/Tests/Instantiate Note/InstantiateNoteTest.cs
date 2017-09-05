@@ -27,6 +27,7 @@ public class InstantiateNoteTest : MonoBehaviour {
     public Sprite[] receptorSprite;
     public GameObject circleParticleSystem;
     public GameObject hitBurst;
+    public GameObject timingBar;
 
     /*Referencing Values*/
     private List<HitObject> noteQueue;
@@ -35,7 +36,7 @@ public class InstantiateNoteTest : MonoBehaviour {
     private List<HitObject> hitQueue;
     private List<HitObject> lnQueue;
     private List<HitObject> offLNQueue;
-    //private List<HitObject> barQueue;
+    private List<HitObject> barQueue;
     private float actualSongTime;
     private float curSongTime;
     private const float waitTilPlay = 0.5f; //waits 2 seconds until song starts
@@ -60,7 +61,7 @@ public class InstantiateNoteTest : MonoBehaviour {
             hitQueue = new List<HitObject>();
             lnQueue = new List<HitObject>();
             offLNQueue = new List<HitObject>();
-            //barQueue = new List<HitObject>();
+            barQueue = new List<HitObject>();
 
             averageBpm = 147f; //Change later
 
@@ -180,6 +181,50 @@ public class InstantiateNoteTest : MonoBehaviour {
                 else
                 {
                     break;
+                }
+            }
+
+            //Create Timing bars
+            float curBarTime = 0;
+            i = 0;
+            for (i = 0; i < timingQueue.Count; i++)
+            {
+                curBarTime = timingQueue[i].StartTime;
+
+                if (barQueue.Count > 0 && barQueue[0].StartTime+2 > curBarTime)
+                {
+                    Destroy(barQueue[0].note);
+                    barQueue.RemoveAt(0);
+                }
+
+                GameObject curBar;
+                HitObject curTiming;
+                if (i+1 < timingQueue.Count)
+                {
+                    while (curBarTime < timingQueue[i+1].StartTime)
+                    {
+                        curBar = Instantiate(timingBar, hitContainer.transform);
+                        curBar.transform.localPosition = new Vector3(0f, uScrollFloat * (float)scrollSpeed * PosFromSV(curBarTime), 2f);//change X value later
+                        curTiming = new HitObject();
+                        curTiming.StartTime = (int)Mathf.Floor(curBarTime);
+                        curTiming.note = curBar;
+                        barQueue.Insert(0, curTiming);
+                        curBarTime += 1000f *4f * 60f / (timingQueue[i].BPM);
+                    }
+                }
+                else
+                {
+                    while (curBarTime < transform.GetComponent<AudioSource>().clip.length*1000f)
+                    {
+                        curBar = Instantiate(timingBar, hitContainer.transform);
+                        curBar.transform.localPosition = new Vector3(0f, uScrollFloat * (float)scrollSpeed * PosFromSV(curBarTime), 2f);//change X value later
+                        curTiming = new HitObject();
+                        curTiming.StartTime = (int)Mathf.Floor(curBarTime);
+                        curTiming.note = curBar;
+                        barQueue.Insert(0, curTiming);
+                        curBarTime += 1000f * 4f * 60f / (timingQueue[i].BPM);
+                    }
+                    print(barQueue.Count);
                 }
             }
 
@@ -424,7 +469,7 @@ public class InstantiateNoteTest : MonoBehaviour {
             }
             //Create particles
             GameObject cp = Instantiate(circleParticleSystem, arrowParticles.transform);
-            cp.transform.localPosition = receptors[kkey - 1].transform.localPosition + new Vector3(0,0,2f);
+            cp.transform.localPosition = receptors[kkey - 1].transform.localPosition + new Vector3(0,0,4f);
             GameObject hb = Instantiate(hitBurst, arrowParticles.transform);
             hb.GetComponent<NoteBurst>().startSize = hb.transform.localScale.x;
             hb.transform.localPosition = receptors[kkey - 1].transform.localPosition + new Vector3(0, 0, -2f);
