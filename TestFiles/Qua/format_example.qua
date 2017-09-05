@@ -20,14 +20,14 @@ MapSetID: -1
 HPDrain: 9.3
 AccuracyStrain: 7.4
 
-# Timing (StartTime|BPM)
+# Timing
 374|147.0
 
-# SV (StartTime|Multiplier|Volume)
+# SV
 23843|0.30|45
 23894|0.40|45
 
-# HitObject (StartTime|KeyLane|EndTime)
+# HitObjects
 8945|1|0
 9047|2|0
 9149|3|9200
