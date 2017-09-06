@@ -249,7 +249,7 @@ namespace Quaver.Config {
 		// in our Cfg instance.
 		private static void ParseSkin(out string valueHolder, string valueToParse, string defaultValue)
 		{
-			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse) || !Directory.Exists(ConfigDefault.GameDirectory + "/" + valueToParse))
+			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse) || !Directory.Exists(Application.dataPath + "/" + valueToParse))
 			{
 				valueHolder = defaultValue;
 				Debug.LogWarning("Invalid skin value: " + valueToParse + " detected in config. Updating to default value.");
