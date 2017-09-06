@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-namespace Osu.Beatmap {
+namespace Quaver.Osu.Beatmap {
 
 	public static class OsuQuaConverter {
 

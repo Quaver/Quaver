@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Osu.Beatmap {
+namespace Quaver.Osu.Beatmap {
 
     public struct OsuBeatmap {
 
