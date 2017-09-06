@@ -1,6 +1,6 @@
 using UnityEngine;
 using System;
-using Osu.Beatmap;
+using Quaver.Osu.Beatmap;
 
 namespace Wenzil.Console.Commands
 {

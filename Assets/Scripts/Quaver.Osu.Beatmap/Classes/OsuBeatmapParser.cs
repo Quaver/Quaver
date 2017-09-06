@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-namespace Osu.Beatmap {
+namespace Quaver.Osu.Beatmap {
 
     public class OsuBeatmapParser : MonoBehaviour
     {
