@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System;
 using UnityEngine;
+using Quaver.Utils;
 
 namespace Quaver.Config {
 
@@ -33,308 +35,247 @@ namespace Quaver.Config {
                     string value = line.Split('=').Last().Trim();
 
 					switch(key)
-					{
-						case "GameDirectory":
-							if (value == "")
-							{
-								cfg.GameDirectory = ConfigDefault.GameDirectory;
-								continue;
-							}
-							cfg.GameDirectory = value;
-							break;						
+					{					
 						case "SongDirectory":
-							if (value == "")
-							{
-								cfg.SongDirectory = ConfigDefault.SongDirectory;
-								continue;
-							}
-							cfg.SongDirectory = value;
+							ParseDirectory(out cfg.SongDirectory, value, ConfigDefault.SongDirectory);
 							break;
 						case "SkinsDirectory":
-							if (value == "")
-							{
-								cfg.SkinsDirectory = ConfigDefault.SkinsDirectory;
-								continue;
-							}
-							cfg.SkinsDirectory = value;
+							ParseDirectory(out cfg.SkinsDirectory, value, ConfigDefault.SkinsDirectory);
 							break;
 						case "ScreenshotsDirectory":
-							if (value == "")
-							{
-								cfg.ScreenshotsDirectory = ConfigDefault.ScreenshotsDirectory;
-								continue;
-							}
-							cfg.ScreenshotsDirectory = value;
+							ParseDirectory(out cfg.ScreenshotsDirectory, value, ConfigDefault.ScreenshotsDirectory);
 							break;
 						case "ReplaysDirectory":
-							if (value == "")
-							{
-								cfg.ReplaysDirectory = ConfigDefault.ReplaysDirectory;
-								continue;
-							}
-							cfg.ReplaysDirectory = value;
+							ParseDirectory(out cfg.ReplaysDirectory, value, ConfigDefault.ReplaysDirectory);
 							break;
 						case "LogsDirectory":
-							if (value == "")
-							{
-								cfg.LogsDirectory = ConfigDefault.LogsDirectory;
-								continue;
-							}
-							cfg.LogsDirectory = value;
+							ParseDirectory(out cfg.LogsDirectory, value, ConfigDefault.LogsDirectory);
 							break;																					
 						case "VolumeGlobal":
-							if (value == "")
-							{
-								cfg.VolumeGlobal = ConfigDefault.VolumeGlobal;
-								continue;
-							}
-							cfg.VolumeGlobal = byte.Parse(value);
+							ParseByte(out cfg.VolumeGlobal, value, ConfigDefault.VolumeGlobal);
 							break;	
 						case "VolumeEffect":
-							if (value == "")
-							{
-								cfg.VolumeEffect = ConfigDefault.VolumeEffect;
-								continue;
-							}
-							cfg.VolumeEffect = byte.Parse(value);
+							ParseByte(out cfg.VolumeEffect, value, ConfigDefault.VolumeEffect);
 							break;
 						case "VolumeMusic":
-							if (value == "")
-							{
-								cfg.VolumeMusic = ConfigDefault.VolumeMusic;
-								continue;
-							}
-							cfg.VolumeMusic = byte.Parse(value);
+							ParseByte(out cfg.VolumeMusic, value, ConfigDefault.VolumeMusic);
 							break;							
 						case "BackgroundDim":
-							if (value == "")
-							{
-								cfg.BackgroundDim = ConfigDefault.BackgroundDim;
-								continue;
-							}
-							cfg.BackgroundDim = byte.Parse(value);
+							ParseByte(out cfg.BackgroundDim, value, ConfigDefault.BackgroundDim);
 							break;	
 						case "WindowHeight":
-							if (value == "")
-							{
-								cfg.WindowHeight = ConfigDefault.WindowHeight;
-								continue;
-							}
-							cfg.WindowHeight = short.Parse(value);
+							ParseInt(out cfg.WindowHeight, value, ConfigDefault.WindowHeight);
 							break;
 						case "WindowWidth":
-							if (value == "")
-							{
-								cfg.WindowWidth = ConfigDefault.WindowWidth;
-								continue;
-							}
-							cfg.WindowWidth = short.Parse(value);
+							ParseInt(out cfg.WindowWidth, value, ConfigDefault.WindowWidth);
 							break;
 						case "WindowFullScreen":
-							if (value == "")
-							{
-								cfg.WindowFullScreen = ConfigDefault.WindowFullScreen;
-								continue;
-							}
-							cfg.WindowFullScreen = bool.Parse(value);
+							ParseBool(out cfg.WindowFullScreen, value, ConfigDefault.WindowFullScreen);
 							break;
 						case "WindowLetterboxed":
-							if (value == "")
-							{
-								cfg.WindowLetterboxed = ConfigDefault.WindowLetterboxed;
-								continue;
-							}
-							cfg.WindowLetterboxed = bool.Parse(value);
+							ParseBool(out cfg.WindowLetterboxed, value, ConfigDefault.WindowLetterboxed);
 							break;
 						case "CustomFrameLimit":
-							if (value == "")
-							{
-								cfg.CustomFrameLimit = ConfigDefault.CustomFrameLimit;
-								continue;
-							}
-							cfg.CustomFrameLimit = short.Parse(value);
+							ParseShort(out cfg.CustomFrameLimit, value, ConfigDefault.CustomFrameLimit);
 							break;
 						case "FPSCounter":
-							if (value == "")
-							{
-								cfg.FPSCounter = ConfigDefault.FPSCounter;
-								continue;
-							}
-							cfg.FPSCounter = bool.Parse(value);
+							ParseBool(out cfg.FPSCounter, value, ConfigDefault.FPSCounter);
 							break;
 						case "FrameTimeDisplay":
-							if (value == "")
-							{
-								cfg.FrameTimeDisplay = ConfigDefault.FrameTimeDisplay;
-								continue;
-							}
-							cfg.FrameTimeDisplay = bool.Parse(value);
+							ParseBool(out cfg.FrameTimeDisplay, value, ConfigDefault.FrameTimeDisplay);
 							break;
 						case "Language":
-							if (value == "")
-							{
-								cfg.Language = ConfigDefault.Language;
-								continue;
-							}
-							cfg.Language = value;
+							ParseString(out cfg.Language, value, ConfigDefault.Language);
 							break;
 						case "QuaverVersion":
-							if (value == "")
-							{
-								cfg.QuaverVersion = ConfigDefault.QuaverVersion;
-								continue;
-							}
-							cfg.QuaverVersion = value;
+							ParseString(out cfg.QuaverVersion, value, ConfigDefault.QuaverVersion);
 							break;
 						case "QuaverBuildHash":
-							if (value == "")
-							{
-								cfg.QuaverBuildHash = ConfigDefault.QuaverBuildHash;
-								continue;
-							}
-							cfg.QuaverBuildHash = value;
+							ParseString(out cfg.QuaverBuildHash, value, ConfigDefault.QuaverBuildHash);
 							break;
 						case "ScrollSpeed":
-							if (value == "")
-							{
-								cfg.ScrollSpeed = ConfigDefault.ScrollSpeed;
-								continue;
-							}
-							cfg.ScrollSpeed = byte.Parse(value);
+							ParseByte(out cfg.ScrollSpeed, value, ConfigDefault.ScrollSpeed);
 							break;		
 						case "ScrollSpeedBPMScale":
-							if (value == "")
-							{
-								cfg.ScrollSpeedBPMScale = ConfigDefault.ScrollSpeedBPMScale;
-								continue;
-							}
-							cfg.ScrollSpeedBPMScale = bool.Parse(value);
+							ParseBool(out cfg.ScrollSpeedBPMScale, value, ConfigDefault.ScrollSpeedBPMScale);
 							break;
 						case "DownScroll":
-							if (value == "")
-							{
-								cfg.DownScroll = ConfigDefault.DownScroll;
-								continue;
-							}
-							cfg.DownScroll = bool.Parse(value);
+							ParseBool(out cfg.DownScroll, value, ConfigDefault.DownScroll);
 							break;
 						case "GlobalOffset":
-							if (value == "")
-							{
-								cfg.GlobalOffset = ConfigDefault.GlobalOffset;
-								continue;
-							}
-							cfg.GlobalOffset = byte.Parse(value);
+							ParseByte(out cfg.GlobalOffset, value, ConfigDefault.GlobalOffset);
 							break;
 						case "LeaderboardVisible":
-							if (value == "")
-							{
-								cfg.LeaderboardVisible = ConfigDefault.LeaderboardVisible;
-								continue;
-							}
-							cfg.LeaderboardVisible = bool.Parse(value);
+							ParseBool(out cfg.LeaderboardVisible, value, ConfigDefault.LeaderboardVisible);
 							break;	
 						case "Skin":
-							if (value == "")
-							{
-								cfg.Skin = ConfigDefault.Skin;
-								continue;
-							}
-							cfg.Skin = value;
+							ParseSkin(out cfg.Skin, value, ConfigDefault.Skin);
 							break;						
 						case "KeyManiaLane1":
-							if (value == "")
-							{
-								cfg.KeyLaneMania1 = ConfigDefault.KeyLaneMania1;
-								continue;
-							}
-							cfg.KeyLaneMania1 = value;
+							ParseKeyCode(out cfg.KeyLaneMania1, value, ConfigDefault.KeyLaneMania1);
 							break;
 						case "KeyManiaLane2":
-							if (value == "")
-							{
-								cfg.KeyLaneMania2 = ConfigDefault.KeyLaneMania2;
-								continue;
-							}
-							cfg.KeyLaneMania2 = value;
+							ParseKeyCode(out cfg.KeyLaneMania2, value, ConfigDefault.KeyLaneMania2);
 							break;
 						case "KeyManiaLane3":
-							if (value == "")
-							{
-								cfg.KeyLaneMania3 = ConfigDefault.KeyLaneMania3;
-								continue;
-							}
-							cfg.KeyLaneMania3 = value;
+							ParseKeyCode(out cfg.KeyLaneMania3, value, ConfigDefault.KeyLaneMania3);
 							break;
 						case "KeyManiaLane4":
-							if (value == "")
-							{
-								cfg.KeyLaneMania4 = ConfigDefault.KeyLaneMania4;
-								continue;
-							}
-							cfg.KeyLaneMania4 = value;
+							ParseKeyCode(out cfg.KeyLaneMania4, value, ConfigDefault.KeyLaneMania4);
 							break;	
 						case "KeyScreenshot":
-							if (value == "")
-							{
-								cfg.KeyScreenshot = ConfigDefault.KeyScreenshot;
-								continue;
-							}
-							cfg.KeyScreenshot = value;
+							ParseKeyCode(out cfg.KeyScreenshot, value, ConfigDefault.KeyScreenshot);
 							break;	
 						case "KeyQuickRetry":
-							if (value == "")
-							{
-								cfg.KeyQuickRetry = ConfigDefault.KeyQuickRetry;
-								continue;
-							}
-							cfg.KeyQuickRetry = value;
+							ParseKeyCode(out cfg.KeyQuickRetry, value, ConfigDefault.KeyQuickRetry);
 							break;
 						case "KeyIncreaseScrollSpeed":
-							if (value == "")
-							{
-								cfg.KeyIncreaseScrollSpeed = ConfigDefault.KeyIncreaseScrollSpeed;
-								continue;
-							}
-							cfg.KeyIncreaseScrollSpeed = value;
+							ParseKeyCode(out cfg.KeyIncreaseScrollSpeed, value, ConfigDefault.KeyIncreaseScrollSpeed);
 							break;	
 						case "KeyDecreaseScrollSpeed":
-							if (value == "")
-							{
-								cfg.KeyDecreaseScrollSpeed = ConfigDefault.KeyDecreaseScrollSpeed;
-								continue;
-							}
-							cfg.KeyDecreaseScrollSpeed = value;
+							ParseKeyCode(out cfg.KeyDecreaseScrollSpeed, value, ConfigDefault.KeyDecreaseScrollSpeed);
 							break;
 						case "KeyPause":
-							if (value == "")
-							{
-								cfg.KeyPause = ConfigDefault.KeyPause;
-								continue;
-							}
-							cfg.KeyPause = value;
+							ParseKeyCode(out cfg.KeyPause, value, ConfigDefault.KeyPause);
 							break;		
 						case "KeyVolumeUp":
-							if (value == "")
-							{
-								cfg.KeyVolumeUp = ConfigDefault.KeyVolumeUp;
-								continue;
-							}
-							cfg.KeyVolumeUp = value;
+							ParseKeyCode(out cfg.KeyVolumeUp, value, ConfigDefault.KeyVolumeUp);
 							break;
 						case "KeyVolumeDown":
-							if (value == "")
-							{
-								cfg.KeyVolumeDown = ConfigDefault.KeyVolumeDown;
-								continue;
-							}
-							cfg.KeyVolumeDown = value;
+							ParseKeyCode(out cfg.KeyVolumeDown, value, ConfigDefault.KeyVolumeDown);
 							break;																																																							
 					}
 				}				
 			}
 
 			return cfg;
+		}
+
+
+		// Responsible for correctly parsing a directory and setting it's default value if it isn't valid.
+		// If the directory doesn't exist, then it will create it at the default value.
+		private static void ParseDirectory(out string valueHolder, string valueToParse, string defaultValue)
+		{
+			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse) || !Directory.Exists(valueToParse))
+			{
+				valueHolder = defaultValue;
+				Directory.CreateDirectory(defaultValue);
+				Debug.LogWarning("Invalid or non-existant directory detected. Updating value & creating directory.");
+				return;
+			}
+
+			valueHolder = valueToParse;
+			return;
+		}
+
+		// Responsible for taking a byte configuration value, validating it, and setting that value
+		// in our Cfg instance.
+		private static void ParseByte(out byte valueHolder, string valueToParse, byte defaultValue)
+		{
+			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse))
+			{
+				valueHolder = defaultValue;
+				Debug.LogWarning("Invalid Byte value: " + valueToParse + " detected in config. Updating to default value.");
+				return;
+			}
+
+			valueHolder = byte.Parse(valueToParse);
+			return;			
+		}
+
+		// Responsible for taking a int configuration value, validating it, and setting that value
+		// in our Cfg instance.
+		private static void ParseInt(out int valueHolder, string valueToParse, int defaultValue)
+		{
+			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse))
+			{
+				valueHolder = defaultValue;
+				Debug.LogWarning("Invalid int value: " + valueToParse + " detected in config. Updating to default value.");
+				return;
+			}
+
+			valueHolder = Int32.Parse(valueToParse);
+			return;			
+		}
+
+
+		// Responsible for taking a short configuration value, validating it, and setting that value
+		// in our Cfg instance.
+		private static void ParseShort(out short valueHolder, string valueToParse, short defaultValue)
+		{
+			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse))
+			{
+				valueHolder = defaultValue;
+				Debug.LogWarning("Invalid short value: " + valueToParse + " detected in config. Updating to default value.");
+				return;
+			}
+
+			valueHolder = short.Parse(valueToParse);
+			return;			
+		}
+
+
+		// Responsible for taking a bool configuration value, validating it, and setting that value
+		// in our Cfg instance.
+		private static void ParseBool(out bool valueHolder, string valueToParse, bool defaultValue)
+		{
+			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse))
+			{
+				valueHolder = defaultValue;
+				Debug.LogWarning("Invalid bool value: " + valueToParse + " detected in config. Updating to default value.");
+				return;
+			}
+
+			valueHolder = bool.Parse(valueToParse);
+			return;			
+		}
+
+		// Responsible for taking a string configuration value, validating it, and setting that value
+		// in our Cfg instance.
+		private static void ParseString(out string valueHolder, string valueToParse, string defaultValue)
+		{
+			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse))
+			{
+				valueHolder = defaultValue;
+				Debug.LogWarning("Invalid string value: " + valueToParse + " detected in config. Updating to default value.");
+				return;
+			}
+
+			valueHolder = valueToParse;
+			return;			
+		}
+
+		// Responsible for taking a skin string configuration value, validating it, and setting that value
+		// in our Cfg instance.
+		private static void ParseSkin(out string valueHolder, string valueToParse, string defaultValue)
+		{
+			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse) || !Directory.Exists(ConfigDefault.GameDirectory + "/" + valueToParse))
+			{
+				valueHolder = defaultValue;
+				Debug.LogWarning("Invalid skin value: " + valueToParse + " detected in config. Updating to default value.");
+				return;
+			}
+
+			valueHolder = valueToParse;
+			return;			
+		}
+
+		// Responsible for taking a KeyCode string configuration value, validating it, and setting that value
+		// in our Cfg instance.
+		private static void ParseKeyCode(out KeyCode valueHolder, string valueToParse, KeyCode defaultValue)
+		{
+			try {
+				KeyCode key = (KeyCode) Enum.Parse(typeof(KeyCode), valueToParse);
+				valueHolder = key;
+
+			} catch (Exception e)
+			{
+				Debug.Log(e);
+				Debug.LogWarning("Invalid KeyCode value: " + valueToParse + " detected in config. Updating to default value.");
+				valueHolder = defaultValue;
+			}
+
+			return;			
 		}
 
 	}

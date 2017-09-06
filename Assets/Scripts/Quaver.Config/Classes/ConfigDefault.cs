@@ -42,18 +42,18 @@ namespace Quaver.Config {
 		public static bool LeaderboardVisible = false;
 		public static string Skin = "";
 
-		public static string KeyLaneMania1 = "d";
-		public static string KeyLaneMania2 = "f";
-		public static string KeyLaneMania3 = "j";
-		public static string KeyLaneMania4 = "k";
+		public static KeyCode KeyLaneMania1 = KeyCode.D;
+		public static KeyCode KeyLaneMania2 = KeyCode.F;
+		public static KeyCode KeyLaneMania3 = KeyCode.J;
+		public static KeyCode KeyLaneMania4 = KeyCode.K;
 
-		public static string KeyScreenshot = "f12";
-		public static string KeyQuickRetry = "`";
-		public static string KeyIncreaseScrollSpeed = "f4";
-		public static string KeyDecreaseScrollSpeed = "f5";
-		public static string KeyPause = "escape";
-		public static string KeyVolumeUp = "up";
-		public static string KeyVolumeDown = "down";
+		public static KeyCode KeyScreenshot = KeyCode.F12;
+		public static KeyCode KeyQuickRetry = KeyCode.BackQuote;
+		public static KeyCode KeyIncreaseScrollSpeed = KeyCode.F4;
+		public static KeyCode KeyDecreaseScrollSpeed = KeyCode.F5;
+		public static KeyCode KeyPause = KeyCode.Escape;
+		public static KeyCode KeyVolumeUp = KeyCode.UpArrow;
+		public static KeyCode KeyVolumeDown = KeyCode.DownArrow;
 
 	}
 }
