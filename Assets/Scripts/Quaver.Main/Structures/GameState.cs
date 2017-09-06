@@ -2,15 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameState : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+namespace Quaver.Main
+{
+    public class GameState : MonoBehaviour
+    {
+        public bool isActive = false;
+        public GameState StateObject;
+        public void StateStart()
+        {
+            if (StateObject == null)
+            {
+                StateObject = Instantiate(this);
+                isActive = true;
+            }
+        }
+        public void StateEnd()
+        {
+            if (StateObject != null)
+            {
+                Destroy(StateObject);
+                isActive = false;
+            }
+        }
+    }
 }
