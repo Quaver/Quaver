@@ -26,6 +26,9 @@ namespace Quaver.Config {
 			fileString.Append("GameDirectory = " + ConfigDefault.GameDirectory + "\n");
 			fileString.Append("SongDirectory = " + ConfigDefault.SongDirectory + "\n");
 			fileString.Append("SkinsDirectory = " + ConfigDefault.SkinsDirectory + "\n");
+			fileString.Append("ScreenshotsDirectory = " + ConfigDefault.ScreenshotsDirectory + "\n");
+			fileString.Append("ReplaysDirectory = " + ConfigDefault.ReplaysDirectory + "\n");
+			fileString.Append("LogsDirectory = " + ConfigDefault.LogsDirectory + "\n");
 			fileString.Append("VolumeGlobal = " + ConfigDefault.VolumeGlobal + "\n");
 			fileString.Append("VolumeEffect = " + ConfigDefault.VolumeEffect + "\n");		
 			fileString.Append("VolumeMusic = " + ConfigDefault.VolumeMusic + "\n");				
@@ -65,6 +68,24 @@ namespace Quaver.Config {
 				file.AutoFlush = true; 
 				Debug.Log(fileString.ToString());
 				file.WriteLine(fileString.ToString());
+
+				// Create directories if they don't exist.
+				DirectoryInfo songsDir = Directory.CreateDirectory(ConfigDefault.SongDirectory);
+				Debug.Log("Songs directory was successfully created!");
+
+				DirectoryInfo skinsDir = Directory.CreateDirectory(ConfigDefault.SkinsDirectory);
+				Debug.Log("Skins directory was successfully created!");
+
+				DirectoryInfo screenshotsDir = Directory.CreateDirectory(ConfigDefault.ScreenshotsDirectory);
+				Debug.Log("Screenshots directory was successfully created!");
+
+				DirectoryInfo replaysDir = Directory.CreateDirectory(ConfigDefault.ReplaysDirectory);
+				Debug.Log("Replays directory was successfully created!");
+
+				DirectoryInfo logsDir = Directory.CreateDirectory(ConfigDefault.LogsDirectory);
+				Debug.Log("Logs directory was successfully created!");
+
+
 				return true;
 
 			} catch (Exception e) 
