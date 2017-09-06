@@ -30,6 +30,9 @@ namespace Wenzil.Console.Commands
 			string logString =  "GameDirectory: " + cfg.GameDirectory + "\n" + 
 								"SongDirectory: " + cfg.SongDirectory + "\n" + 
 								"SkinsDirectory: " + cfg.SkinsDirectory + "\n" + 
+								"ScreenshotsDirectory: " + cfg.ScreenshotsDirectory + "\n" +
+								"ReplaysDirectory: " + cfg.ReplaysDirectory + "\n" +
+								"LogsDirectory: " + cfg.LogsDirectory + "\n" +
 								"VolumeGlobal: " + cfg.VolumeGlobal + "\n" + 
 								"VolumeEffect: " + cfg.VolumeEffect + "\n" + 
 								"VolumeMusic: " + cfg.VolumeMusic + "\n" + 

@@ -33,7 +33,15 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
-/songs/
-/skins/
+/Songs/
+Songs.meta
+/Skins/
+Skins.meta
+/Replays/
+Replays.meta
+/Screenshots/
+Screenshots.meta
+/Logs/
+Logs.meta
 quaver.cfg
 quaver.cfg.meta

@@ -9,8 +9,11 @@ namespace Quaver.Config {
 		public static bool IsValid = false;
 		public static string GameDirectory = Application.dataPath;
 		public static string ConfigDirectory = Application.dataPath + "/quaver.cfg";
-		public static string SongDirectory = GameDirectory + "/songs/";
-		public static string SkinsDirectory = GameDirectory + "/skins/";
+		public static string SongDirectory = GameDirectory + "/Songs/";
+		public static string SkinsDirectory = GameDirectory + "/Skins/";
+		public static string ScreenshotsDirectory = GameDirectory + "/Screenshots/";
+		public static string ReplaysDirectory = GameDirectory + "/Replays/";
+		public static string LogsDirectory = GameDirectory + "/Logs/";
 
 		public static byte VolumeGlobal = 100;
 		public static byte VolumeEffect = 50;
