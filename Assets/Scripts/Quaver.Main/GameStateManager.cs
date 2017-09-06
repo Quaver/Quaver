@@ -8,13 +8,21 @@ public class GameStateManager : MonoBehaviour {
     //public GameObject[] GameStates;
     // Use this for initialization
 
-    private GameState swag;
 	void Start () {
-        swag = States[0];
-        swag.StateStart();
+        States[0].StateStart();
     }
-	
-	// Update is called once per frame
+
+    // Update is called once per frame
+    float test = 0;
+    bool tested = false;
 	void Update () {
+        test+= Time.deltaTime;
+        if (!tested && test > 5)
+        {
+            States[0].StateEnd();
+            //print("endded");
+            //States[0].StateStart();
+            tested = true;
+        }
     }
 }

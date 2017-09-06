@@ -7,21 +7,22 @@ namespace Quaver.Main
     public class GameState : MonoBehaviour
     {
         public bool isActive = false;
-        public GameState StateObject;
+        public GameObject StateObject;
         public void StateStart()
         {
             if (StateObject == null)
             {
-                StateObject = Instantiate(this);
                 isActive = true;
+                StateObject = Instantiate(this.gameObject);
             }
         }
         public void StateEnd()
         {
             if (StateObject != null)
             {
-                Destroy(StateObject);
                 isActive = false;
+                print("State Ended");
+                Destroy(StateObject);
             }
         }
     }
