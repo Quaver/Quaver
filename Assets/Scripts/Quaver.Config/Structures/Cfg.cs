@@ -41,18 +41,18 @@ namespace Quaver.Config {
 		public bool LeaderboardVisible;
 		public string Skin;
 
-		public string KeyLaneMania1;
-		public string KeyLaneMania2;
-		public string KeyLaneMania3;
-		public string KeyLaneMania4;
+		public KeyCode KeyLaneMania1;
+		public KeyCode KeyLaneMania2;
+		public KeyCode KeyLaneMania3;
+		public KeyCode KeyLaneMania4;
 
-		public string KeyScreenshot;
-		public string KeyQuickRetry;
-		public string KeyIncreaseScrollSpeed;
-		public string KeyDecreaseScrollSpeed;
-		public string KeyPause;
-		public string KeyVolumeUp;
-		public string KeyVolumeDown;
+		public KeyCode KeyScreenshot;
+		public KeyCode KeyQuickRetry;
+		public KeyCode KeyIncreaseScrollSpeed;
+		public KeyCode KeyDecreaseScrollSpeed;
+		public KeyCode KeyPause;
+		public KeyCode KeyVolumeUp;
+		public KeyCode KeyVolumeDown;
 	}
 
 }
