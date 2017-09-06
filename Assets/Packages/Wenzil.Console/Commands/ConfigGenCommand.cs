@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System;
-using Config.Scripts;
+using Quaver.Config;
 
 namespace Wenzil.Console.Commands
 {
