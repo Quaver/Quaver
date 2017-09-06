@@ -34,9 +34,14 @@ sysinfo.txt
 *.unitypackage
 
 /Songs/
+Songs.meta
 /Skins/
+Skins.meta
 /Replays/
+Replays.meta
 /Screenshots/
+Screenshots.meta
 /Logs/
+Logs.meta
 quaver.cfg
 quaver.cfg.meta
