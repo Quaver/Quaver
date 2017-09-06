@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Config.Scripts {
+namespace Quaver.Config {
 
 	public struct Cfg
 	{

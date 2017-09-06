@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-namespace Config.Scripts {
+namespace Quaver.Config {
 
 	public class ConfigParser
 	{
