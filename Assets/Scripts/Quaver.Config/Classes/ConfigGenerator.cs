@@ -5,7 +5,7 @@ using System;
 using System.Text;
 using UnityEngine;
 
-namespace Config.Scripts {
+namespace Quaver.Config {
 
 	public static class ConfigGenerator
 	{
