@@ -70,6 +70,7 @@ namespace Quaver.Config {
 			} catch (Exception e) 
 			{	
 				Debug.Log("Could not generate config file!");
+				Debug.Log(e);
 				return false;
 			}							
 		}
