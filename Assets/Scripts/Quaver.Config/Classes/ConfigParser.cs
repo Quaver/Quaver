@@ -148,6 +148,7 @@ namespace Quaver.Config {
 				}				
 			}
 
+			ConfigUpdater.Update(cfg);
 			return cfg;
 		}
 
