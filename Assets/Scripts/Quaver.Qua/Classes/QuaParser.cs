@@ -5,7 +5,7 @@ using System;
 using UnityEngine;
 using System.Linq;
 
-namespace Qua.Scripts {
+namespace Quaver.Qua {
 
 	public static class QuaParser 
 	{
