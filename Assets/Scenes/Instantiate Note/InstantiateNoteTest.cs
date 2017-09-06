@@ -62,9 +62,6 @@ namespace Quaver.Gameplay
 
         public void Start()
         {
-            print("A");
-            //Changes the transparency mode of the camera so images dont clip
-            GameObject.Find("Main Camera").GetComponent<Camera>().transparencySortMode = TransparencySortMode.Orthographic;
 
             qFile = QuaParser.Parse("E:\\GitHub\\Quaver\\TestFiles\\Qua\\backbeat_maniac.qua");
             if (!qFile.IsValidQua)

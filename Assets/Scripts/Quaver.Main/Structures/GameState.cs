@@ -8,6 +8,7 @@ namespace Quaver.Main
     {
         public bool isActive = false;
         public GameObject StateObject;
+        //State Start
         public void StateStart()
         {
             if (StateObject == null)
@@ -16,12 +17,12 @@ namespace Quaver.Main
                 StateObject = Instantiate(this.gameObject);
             }
         }
+        //State End
         public void StateEnd()
         {
             if (StateObject != null)
             {
                 isActive = false;
-                print("State Ended");
                 Destroy(StateObject);
             }
         }
