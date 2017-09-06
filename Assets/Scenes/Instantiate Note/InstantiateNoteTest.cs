@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Quaver.Qua;
 using Quaver.Graphics;
+using Quaver.Main;
 
 namespace Quaver.Gameplay
 {
-    public class InstantiateNoteTest : MonoBehaviour {
+    public class InstantiateNoteTest : GameState
+    {
         /*Classes/Gameobjects*/
         private QuaFile qFile;
         public GameObject hitObjectTest;
@@ -25,6 +27,9 @@ namespace Quaver.Gameplay
         private const int maxNoteCount = 60; //temp
         private const int playerOffset = 0;
         private const int osuOffset = 0;
+
+        /*GAME MODS*/
+        private const bool noSV = true;
 
         /*SKINNING VALUES*/
         public Sprite[] receptorSprite;
@@ -55,7 +60,9 @@ namespace Quaver.Gameplay
         private float hitYPos;
         private ulong curSVPos;
 
-        void Start () {
+        public void Start()
+        {
+            print("A");
             //Changes the transparency mode of the camera so images dont clip
             GameObject.Find("Main Camera").GetComponent<Camera>().transparencySortMode = TransparencySortMode.Orthographic;
 
@@ -113,9 +120,9 @@ namespace Quaver.Gameplay
                 {
                     foreach (TimingPoint tp in timingQueue)
                     {
-                        if (i+1 < timingQueue.Count)
+                        if (i + 1 < timingQueue.Count)
                         {
-                            if (timingQueue[i+1].StartTime - timingQueue[i].StartTime > longestBpmTime)
+                            if (timingQueue[i + 1].StartTime - timingQueue[i].StartTime > longestBpmTime)
                             {
                                 avgBpmPos = i;
                                 longestBpmTime = timingQueue[i + 1].StartTime - timingQueue[i].StartTime;
@@ -131,9 +138,9 @@ namespace Quaver.Gameplay
                 print("AVERAGE BPM: " + averageBpm);
 
                 //Create and converts timing points to SV's
-                
+
                 int j = 0;
-                for(j= 0;j< timingQueue.Count;j++)
+                for (j = 0; j < timingQueue.Count; j++)
                 {
                     for (i = 0; i < SvQueue.Count; i++)
                     {
@@ -151,7 +158,7 @@ namespace Quaver.Gameplay
 
                             if (timingQueue[j].StartTime >= SvQueue[i].StartTime && timingQueue[j].StartTime < SvQueue[i + 1].StartTime)
                             {
-                                if (Mathf.Abs(timingQueue[j].StartTime - SvQueue[i].StartTime) <1f)
+                                if (Mathf.Abs(timingQueue[j].StartTime - SvQueue[i].StartTime) < 1f)
                                 {
                                     SliderVelocity newTp = new SliderVelocity();
                                     newTp.StartTime = timingQueue[j].StartTime;
@@ -167,10 +174,10 @@ namespace Quaver.Gameplay
                                     SvQueue.Insert(i, newTp);
                                     i++;
                                 }
-                            break;
+                                break;
                             }
                         }
-                        else if(i == SvQueue.Count)
+                        else if (i == SvQueue.Count)
                         {
                             if (Mathf.Abs(timingQueue[j].StartTime - SvQueue[i].StartTime) < 1f)
                             {
@@ -200,7 +207,7 @@ namespace Quaver.Gameplay
                 if (timingQueue.Count > 1)
                 {
                     int hij = 0;
-                    for (i= 0;i < timingQueue.Count;i++)
+                    for (i = 0; i < timingQueue.Count; i++)
                     {
                         for (j = hij; j < SvQueue.Count; j++)
                         {
@@ -217,7 +224,7 @@ namespace Quaver.Gameplay
                         }
                     }
                 }
-                
+
 
                 //Calculates SV for efficiency
                 svCalc = new ulong[SvQueue.Count];
@@ -228,7 +235,7 @@ namespace Quaver.Gameplay
                     if (i + 1 < SvQueue.Count)
                     {
                         svPosTime += (ulong)((SvQueue[i + 1].StartTime - SvQueue[i].StartTime) * SvQueue[i].Multiplier);
-                        svCalc[i+1] = svPosTime;
+                        svCalc[i + 1] = svPosTime;
                     }
                     else break;
                 }
@@ -238,22 +245,22 @@ namespace Quaver.Gameplay
                 {
                     curBarTime = timingQueue[i].StartTime;
 
-                    if (barQueue.Count > 0 && barQueue[0].StartTime+2 > curBarTime) barQueue.RemoveAt(0);
+                    if (barQueue.Count > 0 && barQueue[0].StartTime + 2 > curBarTime) barQueue.RemoveAt(0);
 
                     HitObject curTiming;
-                    if (i+1 < timingQueue.Count)
+                    if (i + 1 < timingQueue.Count)
                     {
-                        while (curBarTime < timingQueue[i+1].StartTime)
+                        while (curBarTime < timingQueue[i + 1].StartTime)
                         {
                             curTiming = new HitObject();
                             curTiming.StartTime = (int)Mathf.Floor(curBarTime);
                             barQueue.Insert(0, curTiming);
-                            curBarTime += 1000f *4f * 60f / (timingQueue[i].BPM);
+                            curBarTime += 1000f * 4f * 60f / (timingQueue[i].BPM);
                         }
                     }
                     else
                     {
-                        while (curBarTime < songAudio.clip.length*1000f)
+                        while (curBarTime < songAudio.clip.length * 1000f)
                         {
                             curTiming = new HitObject();
                             curTiming.StartTime = (int)Mathf.Floor(curBarTime);
@@ -288,11 +295,11 @@ namespace Quaver.Gameplay
 
                 for (i = 0; i < SvQueue.Count; i++)
                 {
-                    if (i+1 < SvQueue.Count)
+                    if (i + 1 < SvQueue.Count)
                     {
-                        if (SvQueue[i].StartTime >= SvQueue[i+1].StartTime)
+                        if (SvQueue[i].StartTime >= SvQueue[i + 1].StartTime)
                         {
-                            print("ERROR: " + SvQueue[i].StartTime + " > "+ SvQueue[i + 1].StartTime);
+                            print("ERROR: " + SvQueue[i].StartTime + " > " + SvQueue[i + 1].StartTime);
                             //SvQueue.Sort()
                         }
                     }
@@ -300,10 +307,11 @@ namespace Quaver.Gameplay
             }
         }
 
-        void Update()
+        public void Update()
         {
-            if (qFile.IsValidQua)
+            if (qFile.IsValidQua && isActive)
             {
+                if (!songAudio.isPlaying) songAudio.UnPause();
                 //Song Time Calculation (ms)
                 if (actualSongTime < 0)
                 {
@@ -448,10 +456,14 @@ namespace Quaver.Gameplay
                     InstantiateNote();
                 }
                 //Bar Add Check
-                if (barQueue.Count > 0 && activeBars.Count < maxNoteCount)
+                if (barQueue.Count > 0) //&& activeBars.Count < maxNoteCount)
                 {
                     InstantiateBar();
                 }
+            }
+            else
+            {
+                if (songAudio.isPlaying) songAudio.Pause();
             }
         }
 
@@ -599,26 +611,33 @@ namespace Quaver.Gameplay
         
         float PosFromSV(float timePos)
         {
-            ulong svPosTime = 0;
-            int curPos = 0;
-            if (timePos >= SvQueue[SvQueue.Count - 1].StartTime)
+            if (!noSV)
             {
-                curPos = SvQueue.Count - 1;
+                ulong svPosTime = 0;
+                int curPos = 0;
+                if (timePos >= SvQueue[SvQueue.Count - 1].StartTime)
+                {
+                    curPos = SvQueue.Count - 1;
+                }
+                else
+                {
+                    for (int i = 0; i < SvQueue.Count - 1; i++)
+                    {
+                        if (timePos < SvQueue[i + 1].StartTime)
+                        {
+                            curPos = i;
+                            break;
+                        }
+                    }
+                }
+                svPosTime = svCalc[curPos] + 15000 + (ulong)((timePos - SvQueue[curPos].StartTime) * SvQueue[curPos].Multiplier);
+                //5000ms added for negative, since svPos is a ulong
+                return ((float)(svPosTime - curSVPos) - 5000f) / 1000f * (float)scrollSpeed * (1 / songAudio.pitch) * uScrollFloat + hitYPos; //Will ignore anything under 20 units
             }
             else
             {
-                for (int i = 0; i < SvQueue.Count - 1; i++)
-                {
-                    if (timePos < SvQueue[i + 1].StartTime)
-                    {
-                        curPos = i;
-                        break;
-                    }
-                }
+                return ((timePos- curSongTime)) / 1000f * (float)scrollSpeed * (1 / songAudio.pitch) * uScrollFloat + hitYPos;
             }
-            svPosTime = svCalc[curPos] + 15000 + (ulong)((timePos - SvQueue[curPos].StartTime) * SvQueue[curPos].Multiplier);
-            //5000ms added for negative, since svPos is a ulong
-            return ((float)(svPosTime - curSVPos)-5000f) / 1000f * (float)scrollSpeed * 1/(songAudio.pitch) * uScrollFloat + hitYPos; //Will ignore anything under 20 units
         }
 
     }
