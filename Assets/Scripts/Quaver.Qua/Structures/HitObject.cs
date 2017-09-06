@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Qua.Scripts {
+namespace Quaver.Qua {
 
 	public struct HitObject
 	{

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System;
-using Qua.Scripts;
+using Quaver.Qua;
 
 namespace Wenzil.Console.Commands
 {
