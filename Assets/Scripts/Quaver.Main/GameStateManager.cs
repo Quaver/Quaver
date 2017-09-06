@@ -5,21 +5,31 @@ using UnityEngine;
 
 public class GameStateManager : MonoBehaviour {
     public GameState[] States;
-    //public GameObject[] GameStates;
-    // Use this for initialization
+    private float test = 0;
+    private bool tested = false;
 
-	void Start () {
+    private void Start () {
+        //Changes the cameramode so sprites dont clip
+        GameObject.Find("Main Camera").GetComponent<Camera>().transparencySortMode = TransparencySortMode.Orthographic;
+
+        //Do game start stuff here
+
+
+
+
+
+        //Starts play mode (TEST)
         States[0].StateStart();
     }
 
-    // Update is called once per frame
-    float test = 0;
-    bool tested = false;
-	void Update () {
+    private void Update () {
+
+        //TEST. Remove later.
         test+= Time.deltaTime;
         if (!tested && test > 5)
         {
             States[0].StateEnd();
+            States[1].StateStart();
             //print("endded");
             //States[0].StateStart();
             tested = true;
