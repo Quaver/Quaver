@@ -65,6 +65,9 @@ namespace Quaver.Config {
 				file.AutoFlush = true; 
 				Debug.Log(fileString.ToString());
 				file.WriteLine(fileString.ToString());
+
+				// Create directories if they don't exist.
+
 				return true;
 
 			} catch (Exception e) 

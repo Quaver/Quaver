@@ -10,6 +10,9 @@ namespace Quaver.Config {
 		public string GameDirectory;
 		public string SongDirectory;
 		public string SkinsDirectory;
+		public string ScreenshotsDirectory;
+		public string ReplaysDirectory;
+		public string LogsDirectory;		
 
 		public byte VolumeGlobal;
 		public byte VolumeEffect;

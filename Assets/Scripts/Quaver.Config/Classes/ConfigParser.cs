@@ -58,6 +58,30 @@ namespace Quaver.Config {
 							}
 							cfg.SkinsDirectory = value;
 							break;
+						case "ScreenshotsDirectory":
+							if (value == "")
+							{
+								cfg.ScreenshotsDirectory = ConfigDefault.ScreenshotsDirectory;
+								continue;
+							}
+							cfg.ScreenshotsDirectory = value;
+							break;
+						case "ReplaysDirectory":
+							if (value == "")
+							{
+								cfg.ReplaysDirectory = ConfigDefault.ReplaysDirectory;
+								continue;
+							}
+							cfg.ReplaysDirectory = value;
+							break;
+						case "LogsDirectory":
+							if (value == "")
+							{
+								cfg.LogsDirectory = ConfigDefault.LogsDirectory;
+								continue;
+							}
+							cfg.LogsDirectory = value;
+							break;																					
 						case "VolumeGlobal":
 							if (value == "")
 							{
