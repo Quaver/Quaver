@@ -15,13 +15,13 @@ public class InstantiateNoteTest : MonoBehaviour {
     /*CONFIG VALUES*/
     private const int noteSize = 128; //temp, size of noteskin in pixels
     private const int columnSize = 220; //temp
-    private const int scrollSpeed = 24; //temp
+    private const int scrollSpeed = 12; //temp
     private const int receptorOffset = 605; //temp
-    private const bool upScroll = false; //true = upscroll, false = downscroll
+    private const bool upScroll = true; //true = upscroll, false = downscroll
     private KeyCode[] maniaKeyBindings = new KeyCode[] { KeyCode.A, KeyCode.S, KeyCode.K, KeyCode.L };
-    private const int maxNoteCount = 100; //temp
+    private const int maxNoteCount = 60; //temp
     private const int playerOffset = 0;
-    private const int osuOffset = 170;
+    private const int osuOffset = 0;
 
     /*SKINNING VALUES*/
     public Sprite[] receptorSprite;
@@ -33,10 +33,12 @@ public class InstantiateNoteTest : MonoBehaviour {
     private List<HitObject> noteQueue;
     private List<SliderVelocity> SvQueue;
     private List<TimingPoint> timingQueue;
+    private List<HitObject> barQueue;
+    private List<HitObject> activeBars;
     private List<HitObject> hitQueue;
     private List<HitObject> lnQueue;
     private List<HitObject> offLNQueue;
-    private List<HitObject> barQueue;
+    private ulong[] svCalc; //Stores SV position data for efficiency
     private float actualSongTime;
     private float curSongTime;
     private const float waitTilPlay = 0.5f; //waits 2 seconds until song starts
@@ -46,6 +48,8 @@ public class InstantiateNoteTest : MonoBehaviour {
     private float averageBpm;
     private int[] judgeTimes = new int[6] { 16, 37, 70, 100, 124, 80}; //OD9 judge times in ms (0,1,2,3,4), LN offset 5
     private const int missTime = 200; //after 200ms, if the player doesn't press it will count as a miss.
+    private float hitYPos;
+    private ulong curSVPos;
 
     void Start () {
         //Changes the transparency mode of the camera so images dont clip
@@ -66,15 +70,40 @@ public class InstantiateNoteTest : MonoBehaviour {
             lnQueue = new List<HitObject>();
             offLNQueue = new List<HitObject>();
             barQueue = new List<HitObject>();
+            activeBars = new List<HitObject>();
 
-            averageBpm = 147f; //Change later
+            averageBpm = 120f; //Change later
 
             float longestBpmTime = 0;
             int avgBpmPos = 0;
             int i = 0;
 
+            //Declare Receptor Values
+            if (upScroll) uScrollFloat = -1f;
+            receptorBar.transform.localPosition = new Vector3(0, -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 1f);
+            arrowParticles.transform.localPosition = new Vector3(0, -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 0f);
+            receptors = new GameObject[4];
+            receptors[0] = receptorBar.transform.Find("R1").gameObject;
+            receptors[1] = receptorBar.transform.Find("R2").gameObject;
+            receptors[2] = receptorBar.transform.Find("R3").gameObject;
+            receptors[3] = receptorBar.transform.Find("R4").gameObject;
+
+            //Declare Other Values
+            curSongTime = -waitTilPlay;
+            actualSongTime = -waitTilPlay;
+            curSVPos = (ulong)(-waitTilPlay * 1000f + 10000f); //10000ms added since curSVPos is a uLong
+            hitYPos = -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f);
+
+            i = 0;
+            foreach (GameObject r0 in receptors)
+            {
+                r0.transform.localScale = Vector3.one * (128f / noteSize * (columnSize / 128f));
+                r0.transform.localPosition = new Vector3((i + 1) * (columnSize / 128f) - (columnSize / 128f * 2.5f), 0, 0);
+                r0.transform.transform.eulerAngles = new Vector3(0, 0, noteRot[i]); //Rotation
+                i++;
+            }
+
             //Calculate Average BPM of map
-            
             if (timingQueue.Count > 1)
             {
                 foreach (TimingPoint tp in timingQueue)
@@ -97,6 +126,7 @@ public class InstantiateNoteTest : MonoBehaviour {
             print("AVERAGE BPM: " + averageBpm);
 
             //Create and converts timing points to SV's
+            
             int j = 0;
             for(j= 0;j< timingQueue.Count;j++)
             {
@@ -105,7 +135,6 @@ public class InstantiateNoteTest : MonoBehaviour {
 
                     if (i == 0 && timingQueue[j].StartTime < SvQueue[i].StartTime)
                     {
-                        print("X");
                         SliderVelocity newTp = new SliderVelocity();
                         newTp.StartTime = timingQueue[j].StartTime;
                         newTp.Multiplier = 1f;
@@ -117,151 +146,150 @@ public class InstantiateNoteTest : MonoBehaviour {
 
                         if (timingQueue[j].StartTime >= SvQueue[i].StartTime && timingQueue[j].StartTime < SvQueue[i + 1].StartTime)
                         {
-                            if (Mathf.Abs(timingQueue[j].StartTime - SvQueue[i+1].StartTime) <1f)
+                            if (Mathf.Abs(timingQueue[j].StartTime - SvQueue[i].StartTime) <1f)
                             {
-                                print("Y1");
+                                SliderVelocity newTp = new SliderVelocity();
+                                newTp.StartTime = timingQueue[j].StartTime;
+                                newTp.Multiplier = SvQueue[i].Multiplier;
+                                SvQueue.RemoveAt(i);
+                                SvQueue.Insert(i, newTp);
+                            }
+                            else
+                            {
                                 SliderVelocity newTp = new SliderVelocity();
                                 newTp.StartTime = timingQueue[j].StartTime;
                                 newTp.Multiplier = 1f;
-                                SvQueue.RemoveAt(i);
                                 SvQueue.Insert(i, newTp);
-                                break;
+                                i++;
                             }
+                        break;
                         }
                     }
                     else if(i == SvQueue.Count)
                     {
-                        if (timingQueue[j].StartTime >= SvQueue[i].StartTime + 1f)
+                        if (Mathf.Abs(timingQueue[j].StartTime - SvQueue[i].StartTime) < 1f)
                         {
-                            print("Z");
                             SliderVelocity newTp = new SliderVelocity();
                             newTp.StartTime = timingQueue[j].StartTime;
-                            newTp.Multiplier = Mathf.Min(Mathf.Max(SvQueue[i].Multiplier, 0f), 20f);
-                            SvQueue.Add(newTp);
-                            break;
+                            newTp.Multiplier = SvQueue[i].Multiplier;
+                            SvQueue.RemoveAt(i);
+                            SvQueue.Insert(i, newTp);
+                            //print("A "+newTp.StartTime);
                         }
+                        else
+                        {
+                            SliderVelocity newTp = new SliderVelocity();
+                            newTp.StartTime = timingQueue[j].StartTime;
+                            newTp.Multiplier = 1f;
+                            SvQueue.Insert(i, newTp);
+                            i++;
+                        }
+                        break;
                     }
                 }
             }
-            //print("ASD " + laka);
+
             //Normalizes SV's in between each BPM change interval
-            
+            //I can't find where the notes aren't getting sorted properly, so I added this :/
+            SvQueue.Sort(delegate (SliderVelocity p1, SliderVelocity p2) { return p1.StartTime.CompareTo(p2.StartTime); });
             if (timingQueue.Count > 1)
             {
+                int hij = 0;
                 for (i= 0;i < timingQueue.Count;i++)
                 {
-                    for (j = 0; j < SvQueue.Count; j++)
+                    for (j = hij; j < SvQueue.Count; j++)
                     {
                         if (SvQueue[j].StartTime >= timingQueue[i].StartTime)
                         {
                             SliderVelocity newTp = new SliderVelocity();
                             newTp.StartTime = SvQueue[j].StartTime;
-                            newTp.Multiplier = Mathf.Max(SvQueue[j].Multiplier * timingQueue[i].BPM / averageBpm,0.1f); //SvQueue[j].Multiplier * (timingQueue[i].BPM /averageBpm);
-                            if (newTp.Multiplier > 0) print(newTp.Multiplier);
+                            newTp.Multiplier = Mathf.Min(SvQueue[j].Multiplier * timingQueue[i].BPM / averageBpm, 1000f); //SvQueue[j].Multiplier * (timingQueue[i].BPM /averageBpm);
                             SvQueue.Insert(j, newTp);
                             SvQueue.RemoveAt(j + 1);
+                            hij++;
                             break;
-                            //print("A");
                         }
                     }
                 }
             }
             
-            //Declare Receptor Values
-            if (upScroll) uScrollFloat = -1f;
-            receptorBar.transform.localPosition = new Vector3(0, -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 1f);
-            arrowParticles.transform.localPosition = new Vector3(0, -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 0f);
-            receptors = new GameObject[4];
-            receptors[0] = receptorBar.transform.Find("R1").gameObject;
-            receptors[1] = receptorBar.transform.Find("R2").gameObject;
-            receptors[2] = receptorBar.transform.Find("R3").gameObject;
-            receptors[3] = receptorBar.transform.Find("R4").gameObject;
 
-            i = 0;
-            foreach (GameObject r0 in receptors)
+            //Calculates SV for efficiency
+            svCalc = new ulong[SvQueue.Count];
+            ulong svPosTime = 0;
+            svCalc[0] = 0;
+            for (i = 0; i < SvQueue.Count; i++)
             {
-                r0.transform.localScale = Vector3.one * (128f / noteSize * (columnSize / 128f));
-                r0.transform.localPosition = new Vector3((i + 1) * (columnSize / 128f) - (columnSize / 128f * 2.5f), 0, 0);
-                r0.transform.transform.eulerAngles = new Vector3(0, 0, noteRot[i]); //Rotation
-                i++;
-            }
-
-            //Create starting notes
-            i = 0;
-            for (i=0;i< maxNoteCount; i++)
-            {
-                if (noteQueue.Count > 0)
+                if (i + 1 < SvQueue.Count)
                 {
-                    InstantiateNote();
+                    svPosTime += (ulong)((SvQueue[i + 1].StartTime - SvQueue[i].StartTime) * SvQueue[i].Multiplier);
+                    svCalc[i+1] = svPosTime;
                 }
-                else
-                {
-                    break;
-                }
+                else break;
             }
-
             //Create Timing bars
-            
             float curBarTime = 0;
-            i = 0;
             for (i = 0; i < timingQueue.Count; i++)
             {
                 curBarTime = timingQueue[i].StartTime;
 
-                if (barQueue.Count > 0 && barQueue[0].StartTime+2 > curBarTime)
-                {
-                    Destroy(barQueue[0].note);
-                    barQueue.RemoveAt(0);
-                }
+                if (barQueue.Count > 0 && barQueue[0].StartTime+2 > curBarTime) barQueue.RemoveAt(0);
 
-                GameObject curBar;
                 HitObject curTiming;
                 if (i+1 < timingQueue.Count)
                 {
                     while (curBarTime < timingQueue[i+1].StartTime)
                     {
-                        curBar = Instantiate(timingBar, hitContainer.transform);
-                        curBar.transform.localPosition = new Vector3(0f, uScrollFloat * (float)scrollSpeed * PosFromSV(curBarTime), 2f);//change X value later
                         curTiming = new HitObject();
                         curTiming.StartTime = (int)Mathf.Floor(curBarTime);
-                        curTiming.note = curBar;
                         barQueue.Insert(0, curTiming);
                         curBarTime += 1000f *4f * 60f / (timingQueue[i].BPM);
                     }
                 }
                 else
                 {
-                    
                     while (curBarTime < transform.GetComponent<AudioSource>().clip.length*1000f)
                     {
-                        curBar = Instantiate(timingBar, hitContainer.transform);
-                        curBar.transform.localPosition = new Vector3(0f, uScrollFloat * (float)scrollSpeed * PosFromSV(curBarTime), 2f);//change X value later
                         curTiming = new HitObject();
                         curTiming.StartTime = (int)Mathf.Floor(curBarTime);
-                        curTiming.note = curBar;
                         barQueue.Insert(0, curTiming);
                         curBarTime += 1000f * 4f * 60f / (timingQueue[i].BPM);
                     }
-                    //print(barQueue.Count);
                 }
             }
-            
-            //Plays the song, but delayed
-            curSongTime = -waitTilPlay;
-            actualSongTime = -waitTilPlay;
-            transform.GetComponent<AudioSource>().PlayDelayed(waitTilPlay);
 
+            barQueue.Reverse();
+
+            //Create starting notes
+            for (i = 0; i < maxNoteCount; i++)
+            {
+                if (noteQueue.Count > 0) InstantiateNote();
+                else break;
+            }
+
+            //Create starting bars
+            for (i = 0; i < noteQueue.Count; i++)
+            {
+                if (i < maxNoteCount) InstantiateBar();
+                else break;
+            }
+
+
+
+            //Plays the song, but delayed
+            transform.GetComponent<AudioSource>().PlayDelayed(waitTilPlay);
             print("TOTAL SV CHANGES: " + SvQueue.Count);
-            
+
+
             for (i = 0; i < SvQueue.Count; i++)
             {
                 if (i+1 < SvQueue.Count)
                 {
-                    if (SvQueue[i].StartTime > SvQueue[i+1].StartTime)
+                    if (SvQueue[i].StartTime >= SvQueue[i+1].StartTime)
                     {
-                        print("ERROR: " + SvQueue[i].StartTime);
+                        print("ERROR: " + SvQueue[i].StartTime + " > "+ SvQueue[i + 1].StartTime);
+                        //SvQueue.Sort()
                     }
-                    //print(SvQueue[i].StartTime / 1000f + " / " + SvQueue[i].Multiplier);
                 }
             }
         }
@@ -269,29 +297,52 @@ public class InstantiateNoteTest : MonoBehaviour {
 
     void Update()
     {
-        if (qFile.IsValidQua == true)//Check if map is done or if qFile is valid
+        if (qFile.IsValidQua)
         {
-            //Song Time Calculation
-            //HitBar offset is 6 (+0.5) units. Osu parses notes 0.07seconds late so 0.07seconds is subtracted to counteract.
-            
+            //Song Time Calculation (ms)
             if (actualSongTime < 0)
             {
                 actualSongTime += Time.deltaTime;
             }
             else
             {
-                //Averages between frame + music time!
                 actualSongTime = ((transform.GetComponent<AudioSource>().time)+(actualSongTime + Time.deltaTime))/2f;
             }
-            //curSongTime in ms
-            curSongTime = actualSongTime*1000f - osuOffset;
-            hitContainer.transform.localPosition = new Vector3(0, -uScrollFloat * (PosFromSV(curSongTime)) * (float)scrollSpeed - uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 0);
 
-            //NotePos/NoteMiss Check
+            //Calculates curSV Position
+            curSongTime = actualSongTime*1000f - osuOffset;
+            curSVPos = 10000;
             int k = 0;
+            while (k < SvQueue.Count)
+            {
+                if (k + 1 < SvQueue.Count)
+                {
+                    if (curSongTime > SvQueue[k + 1].StartTime)
+                    {
+                        curSVPos += (ulong)((SvQueue[k + 1].StartTime - SvQueue[k].StartTime) * SvQueue[k].Multiplier);
+                    }
+                    else
+                    {
+                        curSVPos += (ulong)((curSongTime - SvQueue[k].StartTime) * SvQueue[k].Multiplier);
+                        break;
+                    }
+                }
+                else
+                {
+                    if (k < SvQueue.Count)
+                    {
+                        curSVPos += (ulong)((curSongTime - SvQueue[k].StartTime) * SvQueue[k].Multiplier);
+                    }
+                    break;
+                }
+                k++;
+            }
+
+            //Move notes and check if miss
             for (k = 0; k < hitQueue.Count; k++)
             {
-                if (curSongTime- missTime > Mathf.Max(hitQueue[k].StartTime,hitQueue[k].EndTime)) //Todo: Update miss offset later
+                hitQueue[k].note.transform.localPosition = new Vector3(receptors[hitQueue[k].KeyLane - 1].transform.localPosition.x, Mathf.Max(Mathf.Min(PosFromSV(hitQueue[k].StartTime),100f),-100f), 0);
+                if (curSongTime > Mathf.Max(hitQueue[k].StartTime,hitQueue[k].EndTime) + missTime) //Todo: Update miss offset later
                 {
                     //print("MISS");
                     Destroy(hitQueue[k].note);
@@ -299,52 +350,57 @@ public class InstantiateNoteTest : MonoBehaviour {
                     k--;
                 }
             }
-            //Autoplay
-            /*
-            for (k = 0; k < hitQueue.Count; k++)
+            //Move bars
+            for (k = 0; k < activeBars.Count; k++)
             {
-                if (curSongTime * 1000f - osuOffset > hitQueue[k].StartTime) //Todo: Update miss offset later
+                activeBars[k].note.transform.localPosition = new Vector3(0f, Mathf.Max(Mathf.Min(PosFromSV(activeBars[k].StartTime), 100f), -100f), 2f);
+                if (curSongTime > activeBars[k].StartTime + missTime) //Todo: Update miss offset later
                 {
-                    JudgeNote(hitQueue[k].KeyLane, curSongTime - osuOffset/1000f);
+                    Destroy(activeBars[k].note);
+                    activeBars.RemoveAt(k);
+                    k--;
                 }
             }
-            */
 
             //LN Check
-            for(k=0;k<lnQueue.Count;k++)
+            for (k=0;k<lnQueue.Count;k++)
             {
                 HitObject ln = lnQueue[k];
                 //Places LNs on top of the receptors
-                ln.note.transform.localPosition = new Vector3(receptors[ln.KeyLane-1].transform.localPosition.x, uScrollFloat * (PosFromSV(curSongTime)) * (float)scrollSpeed, 0);
-
-                float lnSize = Mathf.Max(Mathf.Min(PosFromSV(ln.EndTime) - PosFromSV(curSongTime), PosFromSV(ln.EndTime) - PosFromSV(ln.StartTime)),0);
-                //print((PosFromSV(ln.EndTime) - PosFromSV(ln.StartTime))-lnSize);
-                //float lnSize = Mathf.Max(realSize,0);
-                ln.note.transform.Find("SliderMiddle").transform.localScale = Vector3.one * (128f / noteSize * (columnSize / 128f));
-                ln.note.transform.Find("SliderEnd").transform.localScale = Vector3.one * (128f / noteSize * (columnSize / 128f));
-                ln.note.transform.Find("SliderMiddle").GetComponent<SpriteRenderer>().size = new Vector2(1f, -uScrollFloat * lnSize * (float)scrollSpeed * (128f / columnSize));
+                ln.note.transform.localPosition = receptors[ln.KeyLane - 1].transform.localPosition + new Vector3(0,hitYPos,0);
+                float lnSize = 0;
+                if (lnQueue[k].EndTime > curSongTime) lnSize = Mathf.Min((PosFromSV(lnQueue[k].EndTime) - hitYPos) * uScrollFloat, 25f);
+                ln.note.transform.Find("SliderMiddle").GetComponent<SpriteRenderer>().size = new Vector2(1f, -uScrollFloat * lnSize * (128f / columnSize));
                 if (uScrollFloat >= 1f) ln.note.transform.Find("SliderEnd").GetComponent<SpriteRenderer>().flipY = true;
-                ln.note.transform.Find("SliderEnd").transform.localPosition = new Vector3(0f, uScrollFloat * lnSize * (float)scrollSpeed, 0.1f);
+                ln.note.transform.Find("SliderEnd").transform.localPosition = new Vector3(0f, uScrollFloat * lnSize, 0.1f);
                 if (lnSize == 0)
                 {
-                    ln.note.transform.Find("SliderEnd").GetComponent<SpriteRenderer>().size = new Vector2(1f, Mathf.Max((ln.EndTime-curSongTime)/judgeTimes[5]*0.5f,0));
+                    ln.note.transform.Find("SliderEnd").GetComponent<SpriteRenderer>().size = new Vector2(1f, Mathf.Max((ln.EndTime-curSongTime)/judgeTimes[5],0));
                 }
                 if (curSongTime - judgeTimes[5] > ln.EndTime)
                 {
-                    ln.note.transform.Find("HitImage").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                    Destroy(ln.note.transform.Find("SliderMiddle").gameObject);
-                    Destroy(ln.note.transform.Find("SliderEnd").gameObject);
-
-                    offLNQueue.Add(lnQueue[k]);
+                    HitObject removedLN = new HitObject();
+                    removedLN.note = Instantiate(ln.note,hitContainer.transform);
+                    removedLN.StartTime = (int)Mathf.Floor(curSongTime);
+                    removedLN.KeyLane = ln.KeyLane;
+                    removedLN.note.transform.Find("HitImage").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                    Destroy(removedLN.note.transform.Find("SliderMiddle").gameObject);
+                    Destroy(removedLN.note.transform.Find("SliderEnd").gameObject);
+                    offLNQueue.Add(removedLN);
+                    
+                    Destroy(ln.note);
                     lnQueue.RemoveAt(k);
                     k--;
                     print("LATE LN RELEASE");
                 }
 
             }
-            for (k=0;k<offLNQueue.Count;k++)
+
+            //Ghost LN keys
+            for (k = 0; k < offLNQueue.Count; k++)
             {
-                if (curSongTime - missTime > offLNQueue[k].EndTime)
+                offLNQueue[k].note.transform.localPosition = new Vector3(receptors[offLNQueue[k].KeyLane - 1].transform.localPosition.x, PosFromSV(offLNQueue[k].StartTime), 0);
+                if (curSongTime - missTime > Mathf.Max(offLNQueue[k].StartTime, offLNQueue[k].EndTime))
                 {
                     Destroy(offLNQueue[k].note);
                     offLNQueue.RemoveAt(k);
@@ -386,27 +442,46 @@ public class InstantiateNoteTest : MonoBehaviour {
             {
                 InstantiateNote();
             }
+            //Bar Add Check
+            if (barQueue.Count > 0 && activeBars.Count < maxNoteCount)
+            {
+                InstantiateBar();
+            }
         }
     }
 
+    void InstantiateBar()
+    {
+        HitObject ho = barQueue[0];
+        HitObject hoo = new HitObject();
+        GameObject curBar;
+        curBar = Instantiate(timingBar, hitContainer.transform);
+        curBar.transform.localPosition = new Vector3(0f, PosFromSV(ho.StartTime), 2f);
+
+        hoo.StartTime = ho.StartTime;
+        hoo.note = curBar;
+        activeBars.Add(hoo);
+        barQueue.RemoveAt(0);
+    }
 
     void InstantiateNote()
     {
         HitObject ho = noteQueue[0];
         GameObject hoo = Instantiate(hitObjectTest, hitContainer.transform);
         hoo.transform.Find("HitImage").transform.localScale = Vector3.one * (128f / noteSize * (columnSize / 128f));
-        hoo.transform.localPosition = new Vector3(ho.KeyLane * (columnSize / 128f) - (columnSize / 128f * 2.5f), uScrollFloat * PosFromSV(ho.StartTime) * (float)scrollSpeed, 0);
+        hoo.transform.localPosition = new Vector3(ho.KeyLane * (columnSize / 128f) - (columnSize / 128f * 2.5f), PosFromSV(ho.StartTime), 0);
         hoo.transform.Find("HitImage").transform.eulerAngles = new Vector3(0, 0, noteRot[ho.KeyLane - 1]); //Rotation
         if (false ||(ho.EndTime > 0 && ho.EndTime > ho.StartTime))
         {
-            float lnSize = PosFromSV(ho.EndTime) - PosFromSV(ho.StartTime);
+            
+            float lnSize = Mathf.Min(Mathf.Abs(PosFromSV(ho.EndTime) - PosFromSV(ho.StartTime)),25f);
 
             hoo.transform.Find("SliderMiddle").transform.localScale = Vector3.one * (128f / noteSize * (columnSize / 128f));
             hoo.transform.Find("SliderEnd").transform.localScale = Vector3.one * (128f / noteSize * (columnSize / 128f));
 
-            hoo.transform.Find("SliderMiddle").GetComponent<SpriteRenderer>().size = new Vector2(1f, -uScrollFloat * lnSize * (float)scrollSpeed * (128f / columnSize));
+            hoo.transform.Find("SliderMiddle").GetComponent<SpriteRenderer>().size = new Vector2(1f, -uScrollFloat*lnSize * (128f / columnSize));
             if (uScrollFloat >= 1f) hoo.transform.Find("SliderEnd").GetComponent<SpriteRenderer>().flipY = true;
-            hoo.transform.Find("SliderEnd").transform.localPosition = new Vector3(0f, uScrollFloat * lnSize * (float)scrollSpeed, 0.1f);
+            hoo.transform.Find("SliderEnd").transform.localPosition = new Vector3(0f, uScrollFloat * lnSize, 0.1f);
         }
         else
         {
@@ -435,10 +510,17 @@ public class InstantiateNoteTest : MonoBehaviour {
             if (closestTime < -judgeTimes[5])
             {
                 //Darkens early/mis-released LNs. Use skin images instead later
-                lnQueue[curNote].note.transform.Find("HitImage").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                lnQueue[curNote].note.transform.Find("SliderMiddle").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                lnQueue[curNote].note.transform.Find("SliderEnd").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                offLNQueue.Add(lnQueue[curNote]);
+                HitObject removedLN = new HitObject();
+                removedLN.note = Instantiate(lnQueue[curNote].note, hitContainer.transform);
+                removedLN.KeyLane = lnQueue[curNote].KeyLane;
+                removedLN.EndTime = lnQueue[curNote].EndTime;
+                removedLN.StartTime = (int)Mathf.Floor(curSongTime);
+                removedLN.note.transform.Find("HitImage").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                removedLN.note.transform.Find("SliderMiddle").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                removedLN.note.transform.Find("SliderEnd").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f, 1f);
+
+                Destroy(lnQueue[curNote].note);
+                offLNQueue.Add(removedLN);
                 lnQueue.RemoveAt(curNote);
                 print("EARLY LN RELEASE");
             }
@@ -512,39 +594,26 @@ public class InstantiateNoteTest : MonoBehaviour {
 	
     float PosFromSV(float timePos)
     {
-        float svPos = 0;
-        int i = 0;
-        bool endLoop = false;
-        while ((!endLoop && i < SvQueue.Count) && i < 5100)
+        ulong svPosTime = 0;
+        int curPos = 0;
+        if (timePos >= SvQueue[SvQueue.Count - 1].StartTime)
         {
-            if (i + 1 < SvQueue.Count)
+            curPos = SvQueue.Count - 1;
+        }
+        else
+        {
+            for (int i = 0; i < SvQueue.Count - 1; i++)
             {
-                if(timePos > SvQueue[i+1].StartTime)
+                if (timePos < SvQueue[i + 1].StartTime)
                 {
-                    svPos += Mathf.Min((SvQueue[i + 1].StartTime - SvQueue[i].StartTime) * SvQueue[i].Multiplier / 1000f, 1000f + (SvQueue[i + 1].StartTime - SvQueue[i].StartTime)*4f);
-                }
-                else
-                {
-                    svPos += Mathf.Min((timePos - SvQueue[i].StartTime)* SvQueue[i].Multiplier / 1000f, 1000f + (timePos - SvQueue[i].StartTime)*4f);
-                    endLoop = true;
+                    curPos = i;
+                    break;
                 }
             }
-            else
-            {
-                if (i < SvQueue.Count)
-                {
-                    svPos += Mathf.Min((timePos - SvQueue[i].StartTime) * SvQueue[i].Multiplier / 1000f, 1000f+ (timePos - SvQueue[i].StartTime)*4f);
-                }
-                endLoop = true;
-            }
-            i++;
         }
-        if (i >= 5100)
-        {
-            //print("OVERFLOW @ POSFROMSV, "+svPos+", "+SvQueue.Count);
-        }
-        //print(i+ "/ "+svPos);
-        return svPos;
+        svPosTime = svCalc[curPos] + 15000 + (ulong)((timePos - SvQueue[curPos].StartTime) * SvQueue[curPos].Multiplier);
+        //5000ms added for negative, since svPos is a ulong
+        return ((float)(svPosTime - curSVPos)-5000f) / 1000f * (float)scrollSpeed * uScrollFloat + hitYPos; //Will ignore anything under 20 units
     }
 
 }
