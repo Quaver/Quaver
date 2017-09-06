@@ -18,7 +18,7 @@ namespace Quaver.Gameplay
         /*CONFIG VALUES*/
         private const int noteSize = 128; //temp, size of noteskin in pixels
         private const int columnSize = 220; //temp
-        private const int scrollSpeed = 12; //temp
+        private const int scrollSpeed = 22; //temp
         private const int receptorOffset = 605; //temp
         private const bool upScroll = true; //true = upscroll, false = downscroll
         private KeyCode[] maniaKeyBindings = new KeyCode[] { KeyCode.A, KeyCode.S, KeyCode.K, KeyCode.L };
@@ -33,6 +33,7 @@ namespace Quaver.Gameplay
         public GameObject timingBar;
 
         /*Referencing Values*/
+        private AudioSource songAudio;
         private List<HitObject> noteQueue;
         private List<SliderVelocity> SvQueue;
         private List<TimingPoint> timingQueue;
@@ -76,6 +77,7 @@ namespace Quaver.Gameplay
                 activeBars = new List<HitObject>();
 
                 averageBpm = 120f; //Change later
+                songAudio = transform.GetComponent<AudioSource>();
 
                 float longestBpmTime = 0;
                 int avgBpmPos = 0;
@@ -251,7 +253,7 @@ namespace Quaver.Gameplay
                     }
                     else
                     {
-                        while (curBarTime < transform.GetComponent<AudioSource>().clip.length*1000f)
+                        while (curBarTime < songAudio.clip.length*1000f)
                         {
                             curTiming = new HitObject();
                             curTiming.StartTime = (int)Mathf.Floor(curBarTime);
@@ -280,7 +282,7 @@ namespace Quaver.Gameplay
 
 
                 //Plays the song, but delayed
-                transform.GetComponent<AudioSource>().PlayDelayed(waitTilPlay);
+                songAudio.PlayDelayed(waitTilPlay);
                 print("TOTAL SV CHANGES: " + SvQueue.Count);
 
 
@@ -309,7 +311,7 @@ namespace Quaver.Gameplay
                 }
                 else
                 {
-                    actualSongTime = ((transform.GetComponent<AudioSource>().time)+(actualSongTime + Time.deltaTime))/2f;
+                    actualSongTime = ((songAudio.time)+(actualSongTime + Time.deltaTime))/2f;
                 }
 
                 //Calculates curSV Position
@@ -616,7 +618,7 @@ namespace Quaver.Gameplay
             }
             svPosTime = svCalc[curPos] + 15000 + (ulong)((timePos - SvQueue[curPos].StartTime) * SvQueue[curPos].Multiplier);
             //5000ms added for negative, since svPos is a ulong
-            return ((float)(svPosTime - curSVPos)-5000f) / 1000f * (float)scrollSpeed * uScrollFloat + hitYPos; //Will ignore anything under 20 units
+            return ((float)(svPosTime - curSVPos)-5000f) / 1000f * (float)scrollSpeed * 1/(songAudio.pitch) * uScrollFloat + hitYPos; //Will ignore anything under 20 units
         }
 
     }
