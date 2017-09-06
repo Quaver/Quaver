@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Qua.Scripts;
+using Quaver.Qua;
 
 public class InstantiateNoteTest : MonoBehaviour {
     /*Classes/Gameobjects*/
