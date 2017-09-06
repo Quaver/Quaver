@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Placeholder : MonoBehaviour {
+namespace Quaver.Gameplay
+{
+	public class Placeholder : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+		// Use this for initialization
+		void Start () {
+			
+		}
 		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+		// Update is called once per frame
+		void Update () {
+			
+		}
+	}	
 }
+
