@@ -26,6 +26,9 @@ namespace Quaver.Config {
 			fileString.Append("GameDirectory = " + ConfigDefault.GameDirectory + "\n");
 			fileString.Append("SongDirectory = " + ConfigDefault.SongDirectory + "\n");
 			fileString.Append("SkinsDirectory = " + ConfigDefault.SkinsDirectory + "\n");
+			fileString.Append("ScreenshotsDirectory = " + ConfigDefault.ScreenshotsDirectory + "\n");
+			fileString.Append("ReplaysDirectory = " + ConfigDefault.ReplaysDirectory + "\n");
+			fileString.Append("LogsDirectory = " + ConfigDefault.LogsDirectory + "\n");
 			fileString.Append("VolumeGlobal = " + ConfigDefault.VolumeGlobal + "\n");
 			fileString.Append("VolumeEffect = " + ConfigDefault.VolumeEffect + "\n");		
 			fileString.Append("VolumeMusic = " + ConfigDefault.VolumeMusic + "\n");				
