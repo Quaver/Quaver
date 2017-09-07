@@ -85,6 +85,7 @@ namespace Quaver.Config {
 				Directory.CreateDirectory(ConfigDefault.LogsDirectory);
 				Debug.Log("Logs directory was successfully created!");
 
+				file.Close();
 
 				return true;
 
