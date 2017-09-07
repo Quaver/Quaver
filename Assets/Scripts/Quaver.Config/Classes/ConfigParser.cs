@@ -253,7 +253,7 @@ namespace Quaver.Config {
 			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse) || !Directory.Exists(Application.dataPath + "/" + valueToParse))
 			{
 				valueHolder = defaultValue;
-				Debug.LogWarning("Invalid skin value: " + valueToParse + " detected in config. Updating to default value.");
+				Debug.LogWarning("Invalid skin value detected in config, resorting to default skin.");
 				return;
 			}
 
