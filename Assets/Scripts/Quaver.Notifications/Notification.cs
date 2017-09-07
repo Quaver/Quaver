@@ -50,6 +50,8 @@ namespace Quaver.Notifications
 			this.Color = color;
 			this.Content = content;
 			this.URL = url;
+
+			this.DisplayNotification();
 		}		
 
 		// Display the notification with the given details above.
