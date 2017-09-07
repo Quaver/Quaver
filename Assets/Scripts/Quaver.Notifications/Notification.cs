@@ -40,7 +40,17 @@ namespace Quaver.Notifications
 		/// The URL of the notification, if necessary.
 		/// </summary>
 		public string URL;
-		
+
+		// The constructor, set values for notification.
+		public Notification(string name, NotificationType type, NotificationAction action, Color color, string content, string url = "")
+		{
+			this.Name = name;
+			this.Type =  type;
+			this.Action = action;
+			this.Color = color;
+			this.Content = content;
+			this.URL = url;
+		}		
 
 		// Display the notification with the given details above.
 		public void DisplayNotification()
@@ -49,9 +59,9 @@ namespace Quaver.Notifications
 		}
 
 		// Implement later, this'll be the method that defines what to do when a notification is clicked.
-		public void ClickHandler(NotificationAction notificationAction, string notificationContent, string URL)
+		public void ClickHandler()
 		{
-			switch (notificationAction)
+			switch (this.Action)
 			{
 				case NotificationAction.Disappear:
 					// Make notification disappear
