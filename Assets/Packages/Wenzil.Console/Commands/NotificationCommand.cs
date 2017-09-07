@@ -22,8 +22,7 @@ namespace Wenzil.Console.Commands
 			string notifName = "Test";
 			string notifContent = String.Join(" ", args);
 
-			Notification notif = new Notification(notifName, NotificationType.Message, NotificationAction.Disappear, 
-													new Color(0.2F, 0.3F, 0.4F), notifContent);
+			Notification notif = new Notification(notifName, NotificationType.Message, NotificationAction.Disappear, notifContent);
 
 			return "Notification successfully sent.";
         }

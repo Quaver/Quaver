@@ -42,14 +42,34 @@ namespace Quaver.Notifications
 		public string URL;
 
 		// The constructor, set values for notification.
-		public Notification(string name, NotificationType type, NotificationAction action, Color color, string content, string url = "")
+		public Notification(string name, NotificationType type, NotificationAction action, string content, string url = "")
 		{
 			this.Name = name;
 			this.Type =  type;
 			this.Action = action;
-			this.Color = color;
 			this.Content = content;
 			this.URL = url;
+
+			// Define the notification color depending on the NotificationType that was passed.
+			switch (this.Type)
+			{
+				case NotificationType.Alert:
+					this.Color = new Color(0, 1, 0, 1);
+					break;
+				case NotificationType.Error:
+					this.Color = new Color(1, 0, 0, 1);
+					break;
+				case NotificationType.Message:
+					this.Color = new Color(0, 0, 1, 1);
+					break;
+				case NotificationType.Screenshot:
+					this.Color = new Color(1, 0, 1, 1);
+					break;
+				case NotificationType.Warning:
+					this.Color = new Color(1, 0.92f, 0.016f, 1);
+					break;
+				
+			}
 
 			this.DisplayNotification();
 		}		
