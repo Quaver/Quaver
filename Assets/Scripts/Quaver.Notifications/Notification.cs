@@ -55,7 +55,7 @@ namespace Quaver.Notifications
 		// Display the notification with the given details above.
 		public void DisplayNotification()
 		{
-			
+			Debug.Log("<color=green>New Notification Received! Content: " + this.Content + "</color>");
 		}
 
 		// Implement later, this'll be the method that defines what to do when a notification is clicked.
