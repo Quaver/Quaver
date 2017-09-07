@@ -62,6 +62,7 @@ namespace Quaver.Config
 				Debug.Log(fileString.ToString());
 				file.WriteLine(fileString.ToString());
 				Debug.Log("Success! Config file successfully updated!");
+				file.Close();
 
 			} catch (Exception e) 
 			{	
