@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Quaver.Config;
+using Quaver.Main.Screenshots;
 
 public class GameStateManager : MonoBehaviour {
+    // Config File
+    public Cfg GameConfig;
     public GameState[] States;
     public GameObject loadingScreenTest;
     private float test = 0;
@@ -12,7 +15,8 @@ public class GameStateManager : MonoBehaviour {
 
     void Awake()
     {
-        LoadConfig();
+        // The first thing we want to do is load our config before anything else.
+        GameConfig = LoadConfig();
     }
 
     private void Start () {
@@ -21,10 +25,13 @@ public class GameStateManager : MonoBehaviour {
 
         //Do game start stuff here
         //Starts play mode (TEST)
-        //States[0].StateStart();
+        States[0].StateStart();
     }
 
     private void Update () {
+
+        // Handle screenshots
+        ScreenshotService.Capture(GameConfig);
 
         //TEST. Remove later.
         test+= Time.deltaTime;
@@ -39,7 +46,7 @@ public class GameStateManager : MonoBehaviour {
     }
 
     // Responsible for loading/creating a quaver.cfg file. Quaver configs should always be at the root directory.
-    void LoadConfig()
+    private Cfg LoadConfig()
     {
         string configPath = Application.dataPath + "/quaver.cfg";
 
@@ -64,11 +71,14 @@ public class GameStateManager : MonoBehaviour {
                 if (!config.IsValid)
                 {
                     Debug.LogError("Could not generate and parse config file after attempting to!");
+                    Application.Quit(); // Quit the program if we cannot generate a configuration file. -- MAJOR BUG IF WE GET HERE!
                 }
 
-                Debug.Log("Config file successfully created and parsed!");
+             Debug.Log("Config file successfully created and parsed!");
 
             }      
-        }   
+        }
+
+        return config;   
     }
 }
