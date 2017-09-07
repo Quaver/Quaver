@@ -32,6 +32,7 @@ namespace Quaver.Gameplay
         private const bool noSV = false;
         private const bool pull = true;
         private const bool split = true;
+        private const bool spin = true;
 
         /*SKINNING VALUES*/
         public Sprite[] receptorSprite;
@@ -89,8 +90,6 @@ namespace Quaver.Gameplay
 
                 float longestBpmTime = 0;
                 int avgBpmPos = 0;
-                int i = 0;
-
                 //Declare Other Values
                 curSongTime = -waitTilPlay;
                 actualSongTime = -waitTilPlay;
@@ -99,7 +98,6 @@ namespace Quaver.Gameplay
 
                 //Declare Receptor Values
                 if (upScroll) uScrollFloat = -1f;
-                arrowParticles.transform.localPosition = new Vector3(0, -uScrollFloat * receptorOffset / 100f + uScrollFloat * (columnSize / 256f), 0f);
                 receptors = new GameObject[4];
                 receptors[0] = receptorBar.transform.Find("R1").gameObject;
                 receptors[1] = receptorBar.transform.Find("R2").gameObject;
@@ -108,7 +106,8 @@ namespace Quaver.Gameplay
                 hitBursts = new GameObject[4];
 
 
-                i = 0;
+                int i = 0;
+                int j = 0;
                 foreach (GameObject r0 in receptors)
                 {
                     if (i>=2 && split) r0.transform.localPosition = new Vector3((i + 1) * (columnSize / 128f) - (columnSize / 128f * 2.5f), -hitYPos, 0);
@@ -148,11 +147,8 @@ namespace Quaver.Gameplay
                 {
                     averageBpm = timingQueue[0].BPM;
                 }
-                print("AVERAGE BPM: " + averageBpm);
 
                 //Create and converts timing points to SV's
-
-                int j = 0;
                 for (j = 0; j < timingQueue.Count; j++)
                 {
                     for (i = 0; i < SvQueue.Count; i++)
@@ -363,12 +359,23 @@ namespace Quaver.Gameplay
                     k++;
                 }
 
+
+                //Spin+Moves Receptors if mod is on
+                if (spin)
+                {
+                    foreach (GameObject r0 in receptors)
+                    {
+                        r0.transform.Rotate(new Vector3(0f, 0f, 0.7f));
+                    }
+
+                }
                 //Move notes and check if miss
                 for (k = 0; k < hitQueue.Count; k++)
                 {
                     float splitFactor = 1f;
                     if (split && hitQueue[k].KeyLane >= 3) splitFactor = -1f;
                     hitQueue[k].note.transform.localPosition = new Vector3(receptors[hitQueue[k].KeyLane - 1].transform.localPosition.x, Mathf.Max(Mathf.Min(splitFactor*PosFromSV(hitQueue[k].StartTime),100f),-100f), 0);
+                    hitQueue[k].note.transform.Find("HitImage").transform.eulerAngles = receptors[hitQueue[k].KeyLane-1].transform.eulerAngles;
                     if (pull && hitQueue[k].EndTime >= hitQueue[k].StartTime)
                     {
                         float lnSize = Mathf.Max(Mathf.Min(Mathf.Abs(PosFromSV(hitQueue[k].EndTime) - PosFromSV(hitQueue[k].StartTime)), 25f),0);
