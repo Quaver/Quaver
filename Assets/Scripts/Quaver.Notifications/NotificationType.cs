@@ -6,9 +6,10 @@ namespace Quaver.Notifications
 {
 	public enum NotificationType
 	{
-		ClientError,
-		ClientWarning,
-		ServerAlert,
-		ServerMessage
+		Error,
+		Warning,
+		Alert,
+		Message,
+		Screenshot
 	}
 }
