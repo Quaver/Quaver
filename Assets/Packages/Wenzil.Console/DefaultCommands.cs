@@ -17,6 +17,7 @@ namespace Wenzil.Console
             ConsoleCommandsDatabase.RegisterCommand(ParseQuaCommand.name, ParseQuaCommand.description, ParseQuaCommand.usage, ParseQuaCommand.Execute);
             ConsoleCommandsDatabase.RegisterCommand(ParseConfigCommand.name, ParseConfigCommand.description, ParseConfigCommand.usage, ParseConfigCommand.Execute);
             ConsoleCommandsDatabase.RegisterCommand(ConfigGenCommand.name, ConfigGenCommand.description, ConfigGenCommand.usage, ConfigGenCommand.Execute);
+            ConsoleCommandsDatabase.RegisterCommand(NotificationCommand.name, NotificationCommand.description, NotificationCommand.usage, NotificationCommand.Execute);
         }
     }
 }
