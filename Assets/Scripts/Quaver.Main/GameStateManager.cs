@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GameStateManager : MonoBehaviour {
     public GameState[] States;
+    public GameObject loadingScreenTest;
     private float test = 0;
     private bool tested = false;
 
@@ -28,10 +29,10 @@ public class GameStateManager : MonoBehaviour {
         test+= Time.deltaTime;
         if (!tested && test > 5)
         {
+            //loadingScreenTest.active = true; // SHOW LOADING SCREEN
             States[0].StateEnd();
             States[1].StateStart();
-            //print("endded");
-            //States[0].StateStart();
+            print("LOADED");
             tested = true;
         }
     }
