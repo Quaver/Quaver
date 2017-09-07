@@ -17,7 +17,7 @@ namespace Quaver.Config
 			StringBuilder fileString = new StringBuilder();
 
 			fileString.Append("# Quaver Configuration File\n");
-			fileString.Append("# Last Updated On = " + DateTime.Today + "\n");
+			fileString.Append("# Last Updated On = " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\n");
 			fileString.Append("SongDirectory = " + configFile.SongDirectory + "\n");
 			fileString.Append("SkinsDirectory = " + configFile.SkinsDirectory + "\n");
 			fileString.Append("ScreenshotsDirectory = " + configFile.ScreenshotsDirectory + "\n");
