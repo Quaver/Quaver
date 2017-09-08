@@ -74,11 +74,15 @@ namespace Quaver.Osu.Beatmap {
                     if (line.Contains(":"))
                     {
                         string key = line.Substring(0, line.IndexOf(':'));
-                        string value = line.Split(':').Last();
+                        string value = line.Split(':').Last().Trim();
 
                         switch (key.Trim())
                         {
                             case "AudioFilename":
+                                if (value.Contains(".mp3"))
+                                {
+                                    value = value.Replace(".mp3", ".ogg");
+                                }
                                 beatmap.AudioFilename = value;
                                 break;
                             case "AudioLeadIn":
