@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using Quaver.Config;
 
 public class TitleSoundVisualizer : MonoBehaviour {
     private float[] spectrum = new float[512];
@@ -11,8 +13,31 @@ public class TitleSoundVisualizer : MonoBehaviour {
 
     public GameObject[] emitters;
     public GameObject logo;
+    public GameObject titleScreen;
+    public AudioSource gameAudio;
+
 	void Start () {
-		
+
+        // This is just a test for the songs folder, we'll choose a random beatmap later instead of just choosing a 
+        // random song, but here's sample code for loading a .WAV
+        string[] files = Directory.GetFiles(ConfigDefault.SongDirectory, "*.wav", SearchOption.AllDirectories);
+        string url = "file:///" + files[Random.Range(0, files.Length)];
+        gameAudio = GetComponent<AudioSource>();
+
+        WWW audioLoader = new WWW(url);
+
+                 while (!audioLoader.isDone)
+         {
+             Debug.Log("uploading");
+         }
+
+        gameAudio.clip = audioLoader.GetAudioClip(false, false, AudioType.WAV);
+
+        if (!gameAudio.isPlaying && gameAudio.clip.isReadyToPlay)
+        {
+             Debug.Log("playing");
+             gameAudio.Play();
+        }
 	}
 
     void Update()
