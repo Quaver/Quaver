@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Quaver.Main.Mods
+namespace Quaver.Mods
 {
 	public enum ModIdentifier
 	{
