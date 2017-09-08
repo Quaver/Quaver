@@ -97,7 +97,7 @@ namespace Quaver.Notifications
 			// Instantiate the new notification
 			GameObject newNotification = GameObject.Instantiate(NotificationObject, GameObject.Find("Main Canvas").transform);
 
-			//Put the new notification in a List<GameObjects> to be animated.
+			// Put the new notification in a List<GameObjects> to be animated.
 			Debug.Log(newNotification);
 			
 			// Leave a log of the new notification
