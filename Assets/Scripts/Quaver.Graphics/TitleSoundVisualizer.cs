@@ -69,7 +69,7 @@ public class TitleSoundVisualizer : MonoBehaviour {
         for (i = 0; i < emitters.Length; i++)
         {
             emitters[i].transform.GetComponent<ParticleSystem>().emissionRate = bassScale * 20f + 2f;
-            emitters[i].transform.GetComponent<ParticleSystem>().playbackSpeed = bassScale * 4f;
+            emitters[i].transform.GetComponent<ParticleSystem>().playbackSpeed = bassScale * 4f+0.1F;
         }
 
     }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Quaver.Config;
 using Quaver.Screenshot;
+using UnityEngine.UI;
 
 namespace Quaver.Main
 {
@@ -14,6 +15,13 @@ namespace Quaver.Main
         public Cfg GameConfig;
         public GameState[] States;
         public GameObject loadingScreenTest;
+
+        //Declare display ui text
+        private float FpsTextWeen;
+        private float LatencyTextTween;
+
+        public Text FpsText;
+        public Text LatencyText;
 
         //Temp Variable
         private bool tested = false;
@@ -40,6 +48,12 @@ namespace Quaver.Main
 
             // Handle screenshots
             ScreenshotService.Capture(GameConfig);
+
+            //Set Text of fps/latency ui
+            LatencyTextTween += (500 * Time.deltaTime - LatencyTextTween) /100f;
+            FpsTextWeen += (1 / Time.deltaTime - FpsTextWeen)/100f;
+            FpsText.text = Mathf.Round(FpsTextWeen * 10)/10f + " fps";
+            LatencyText.text = "±"+Mathf.Round(LatencyTextTween*100f) /100f + " ms";
         }
         
         public void SwitchState()
