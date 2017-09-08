@@ -38,8 +38,8 @@ public class GameStateManager : MonoBehaviour {
         if (!tested && test > 5)
         {
             //loadingScreenTest.active = true; // SHOW LOADING SCREEN
-           // States[0].StateEnd();
-            //States[1].StateStart();
+            States[0].StateEnd();
+            States[1].StateStart();
             print("LOADED");
             tested = true;
         }
