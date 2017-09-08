@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Quaver.Config;
-using Quaver.Main.Screenshots;
+using Quaver.Screenshot;
 
 namespace Quaver.Main
 {
