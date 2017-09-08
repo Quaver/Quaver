@@ -5,7 +5,7 @@ using System;
 using Quaver.Config;
 using Quaver.Notifications;
 
-namespace Quaver.Main.Screenshots
+namespace Quaver.Screenshot
 {
 	public static class ScreenshotService
 	{
