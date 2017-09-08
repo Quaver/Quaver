@@ -14,7 +14,7 @@ namespace Quaver.Main.Screenshots
 			if (Input.GetKeyDown(config.KeyScreenshot))
 			{
 				string screenshotPath = config.ScreenshotsDirectory + DateTime.Now.ToString("yyyyMMddHHmmss") + ".png";
-				Application.CaptureScreenshot(screenshotPath);
+				ScreenCapture.CaptureScreenshot(screenshotPath);
 
 				string notifName = "Test";
 				string notifContent = "Screenshot successfully saved at: " + screenshotPath;
