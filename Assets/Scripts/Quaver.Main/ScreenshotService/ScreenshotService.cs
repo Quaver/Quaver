@@ -20,7 +20,7 @@ namespace Quaver.Main.Screenshots
 				string notifContent = "Screenshot successfully saved at: " + screenshotPath;
 
 				// Send new notification 
-				Notification notif = new Notification(notifName, NotificationType.Screenshot, NotificationAction.OpenScreenshot, notifContent);
+				new Notification(notifName, NotificationType.Screenshot, NotificationAction.OpenScreenshot, notifContent);
 			}
 		}
 	}
