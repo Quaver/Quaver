@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.IO;
 using Quaver.Config;
 using Quaver.Notifications;
 
@@ -13,7 +14,9 @@ namespace Quaver.Screenshot
 		{
 			if (Input.GetKeyDown(config.KeyScreenshot))
 			{
-				string screenshotPath = config.ScreenshotsDirectory + DateTime.Now.ToString("yyyyMMddHHmmss") + ".png";
+				string[] files = Directory.GetFiles(ConfigDefault.ScreenshotsDirectory, "*.png", SearchOption.AllDirectories);
+
+				string screenshotPath = config.ScreenshotsDirectory + DateTime.Now.ToString("yyyy-MM-dd") + " Screenshot" + (files.Length + 1) + ".png";
 				Application.CaptureScreenshot(screenshotPath);
 
 				string notifName = "Test";
