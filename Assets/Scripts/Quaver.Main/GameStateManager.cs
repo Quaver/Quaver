@@ -5,43 +5,53 @@ using UnityEngine;
 using Quaver.Config;
 using Quaver.Main.Screenshots;
 
-public class GameStateManager : MonoBehaviour {
-    // Config File
-    public Cfg GameConfig;
-    public GameState[] States;
-    public GameObject loadingScreenTest;
-    private float test = 0;
-    private bool tested = false;
+namespace Quaver.Main
+{
 
-    void Awake()
+    public class GameStateManager : MonoBehaviour
     {
-        // The first thing we want to do is load our config before anything else.
-        GameConfig = ConfigLoader.Load();
-    }
+        // Config File
+        public Cfg GameConfig;
+        public GameState[] States;
+        public GameObject loadingScreenTest;
 
-    private void Start () {
-        //Changes the cameramode so sprites dont clip
-        GameObject.Find("Main Camera").GetComponent<Camera>().transparencySortMode = TransparencySortMode.Orthographic;
+        //Temp Variable
+        private bool tested = false;
 
-        //Do game start stuff here
-        //Starts play mode (TEST)
-        States[0].StateStart();
-    }
-
-    private void Update () {
-
-        // Handle screenshots
-        ScreenshotService.Capture(GameConfig);
-
-        //TEST. Remove later.
-        test+= Time.deltaTime;
-        if (!tested && test > 5)
+        private void Awake()
         {
-            //loadingScreenTest.active = true; // SHOW LOADING SCREEN
-            States[0].StateEnd();
-            States[1].StateStart();
-            print("LOADED");
-            tested = true;
+            // The first thing we want to do is load our config before anything else.
+            GameConfig = ConfigLoader.Load();
+        }
+
+        private void Start()
+        {
+            //Changes the cameramode so sprites dont clip
+            GameObject.Find("Main Camera").GetComponent<Camera>().transparencySortMode = TransparencySortMode.Orthographic;
+
+            //Do game start stuff here
+            //Starts play mode (TEST)
+            States[0].StateStart();
+
+        }
+
+        private void Update()
+        {
+
+            // Handle screenshots
+            ScreenshotService.Capture(GameConfig);
+        }
+        public void SwitchState()
+        {
+            //Test button click
+            if (!tested)
+            {
+                tested = true;
+                int nextState = 1;
+                int curState = 0;
+                States[curState].StateEnd();
+                States[nextState].StateStart();
+            }
         }
     }
 }
