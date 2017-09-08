@@ -9,14 +9,6 @@ namespace Quaver.Qua {
 		public int StartTime;
 		public int KeyLane;
 		public int EndTime;
-        //I'll make a new class for notes later. I'm trying to optimize frame rate :p
-    	public GameObject note;
-        public GameObject hitObject;
-        public GameObject sliderMiddleObject;
-        public GameObject sliderEndObject;
-        public SpriteRenderer hitSprite;
-        public SpriteRenderer sliderMiddleSprite;
-        public SpriteRenderer sliderEndSprite;
     }
 
 }
