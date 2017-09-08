@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Quaver.Notifications
 {
@@ -13,35 +14,38 @@ namespace Quaver.Notifications
 		/// <summary>
 		///	The name of the notification.
 		/// </summary>
-		public string Name;
+		private string Name;
 
 		/// <summary>
 		/// The type of notification defined in the NotificationType enum
 		/// </summary>
-		public NotificationType Type;
+		private NotificationType Type;
 		
 		/// <summary>
 		/// The action that will take place when a notification is clicked.
 		/// </summary>
-		public NotificationAction Action;
+		private NotificationAction Action;
 
 		/// <summary>
 		/// The specific color of the notification for when it will be displayed to
 		/// the user.
 		/// </summary>
-		public Color Color;
+		private Color Color;
 		
 		/// <summary>
 		/// The content or text of the notification.
 		/// </summary>
-		public string Content;
+		private string Content;
 
 		/// <summary>
 		/// The URL of the notification, if necessary.
 		/// </summary>
-		public string URL;
+		private string URL;
 
-        private GameObject n_Object;
+		/// <summary>
+		/// The physical notification object.
+		/// </summary>
+        private GameObject NotificationObject;
 
 		// The constructor, set values for notification.
 		public Notification(string name, NotificationType type, NotificationAction action, string content, string url ="")
@@ -79,12 +83,25 @@ namespace Quaver.Notifications
 		// Display the notification with the given details above.
 		public void DisplayNotification()
 		{
-            //Creates GameObject of notification
-            n_Object = GameObject.Instantiate(
-                (GameObject)Resources.Load("NotificationObject", typeof(GameObject))
-                , GameObject.Find("Main Canvas").transform
-            ); //Its returning null for some reason.
-            Debug.Log("<color=green>New Notification Received! Content: " + this.Content + "</color>");
+			// Load the NotificationObject prefab from the Resources folder.
+            NotificationObject = (GameObject)Resources.Load("NotificationObject", typeof(GameObject));
+
+			// Change the text of the notification
+			Text notificationText = NotificationObject.GetComponentInChildren<Text>();
+			notificationText.text = this.Content;
+
+			// Change the color of the notification
+			Color notificationColor = NotificationObject.GetComponentInChildren<RawImage>().color;
+			notificationColor = this.Color;
+
+			// Instantiate the new notification
+			GameObject newNotification = GameObject.Instantiate(NotificationObject, GameObject.Find("Main Canvas").transform);
+
+			//Put the new notification in a List<GameObjects> to be animated.
+			Debug.Log(newNotification);
+			
+			// Leave a log of the new notification
+            Debug.Log("<color=green>New Notification Received! Name: " + this.Name + " Content: " + this.Content + "URL: " + this.URL + "</color>");
 		}
 
 		// Implement later, this'll be the method that defines what to do when a notification is clicked.
