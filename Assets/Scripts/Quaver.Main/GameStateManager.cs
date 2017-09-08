@@ -41,6 +41,7 @@ namespace Quaver.Main
             // Handle screenshots
             ScreenshotService.Capture(GameConfig);
         }
+        
         public void SwitchState()
         {
             //Test button click
