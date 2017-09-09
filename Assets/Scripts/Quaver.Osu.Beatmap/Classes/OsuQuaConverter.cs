@@ -16,7 +16,7 @@ namespace Quaver.Osu.Beatmap {
 		public static bool Convert(OsuBeatmap osuBeatmap, string outputName) 
 		{
 			string fileExtension = ".qua";
-
+			
 			if (!outputName.Contains(fileExtension)) {
 				return false;
 			}
@@ -87,15 +87,13 @@ namespace Quaver.Osu.Beatmap {
 				else if(hitObject.Key4)
 					keyLane = 4;
 
-				
-
 				// Normal HitObjects
-				if (hitObject.Type == 1) {
+				if (hitObject.Type == 1 || hitObject.Type == 5) {
 					fileString.Append(hitObject.StartTime + "|" + keyLane + "|" + "0\n");
 				}
-					
-					
-				else if (hitObject.Type == 128) {
+
+				// LNs
+				else if (hitObject.Type == 128 || hitObject.Type == 22) {
 					fileString.Append(hitObject.StartTime + "|" + keyLane + "|" + hitObject.EndTime + "\n");
 				}
 					
