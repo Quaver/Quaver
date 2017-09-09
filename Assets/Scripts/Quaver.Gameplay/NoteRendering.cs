@@ -80,7 +80,7 @@ namespace Quaver.Gameplay
 
         public void Start()
         {
-            qFile = QuaParser.Parse("E:\\GitHub\\Quaver\\TestFiles\\Qua\\345.qua");
+            qFile = QuaParser.Parse("E:\\GitHub\\Quaver\\Assets\\Songs\\BerserkerzWarefare345\\vibro345.qua");
             if (!qFile.IsValidQua)
             {
                 print("IS NOT VALID QUA FILE");
