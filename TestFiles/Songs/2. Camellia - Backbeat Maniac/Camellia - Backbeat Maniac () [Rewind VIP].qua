@@ -1,5 +1,5 @@
 # General
-AudioFile:  audio.ogg
+AudioFile: audio.ogg
 AudioLeadIn: 0
 SongPreviewTime: 59769
 BackgroundFile: "back.jpg"
@@ -11987,6 +11987,7 @@ AccuracyStrain: 7
 213418|0.55|15
 
 # HitObjects
+1139|4|0
 1139|2|0
 1139|1|0
 1139|3|1539
