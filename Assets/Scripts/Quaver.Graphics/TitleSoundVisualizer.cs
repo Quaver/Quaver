@@ -32,17 +32,20 @@ public class TitleSoundVisualizer : MonoBehaviour {
 
         WWW audioLoader = new WWW(url);
 
-                 while (!audioLoader.isDone)
-         {
-             Debug.Log("uploading");
-         }
-
-        gameAudio.clip = audioLoader.GetAudioClip(false, false, AudioType.OGGVORBIS);
-
-        if (!gameAudio.isPlaying && gameAudio.clip.isReadyToPlay)
+        while (!audioLoader.isDone)
         {
-             Debug.Log("playing");
-             gameAudio.Play();
+            Debug.Log("Loading beatmap & audio track...");
+        }
+
+        if (audioLoader.isDone)
+        {
+            gameAudio.clip = audioLoader.GetAudioClip(false, false, AudioType.OGGVORBIS);
+
+            if (!gameAudio.isPlaying && gameAudio.clip.isReadyToPlay)
+            {
+                Debug.Log("Beatmap & Audio Track have been loaded, beginning to play.");
+                gameAudio.Play();
+            }
         }
 	}
 
