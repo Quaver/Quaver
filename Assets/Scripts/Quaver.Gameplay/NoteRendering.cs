@@ -14,19 +14,26 @@ namespace Quaver.Gameplay
         public GameObject hitObjectTest;
         public GameObject receptorBar;
         private GameObject[] receptors;
-        public GameObject particleContainer;
-        public GameObject hitContainer;
+        public GameObject particleContainer; 
+        public GameObject hitContainer; 
+        public GameObject bgImage; 
+        public GameObject bgMask; 
 
         /*CONFIG VALUES*/
-        private const float config_columnSize = 230; //temp
-        private const int config_scrollSpeed = 22; //temp
-        private const int config_receptorOffset = 605; //temp
+        private const float config_columnSize = 280; //temp
+        private const int config_scrollSpeed = 25; //temp
+        private const int config_receptorOffset = 905; //temp
+        private const bool config_timingBars = true;
         private const bool config_upScroll = true; //true = upscroll, false = downscroll
         private KeyCode[] config_KeyBindings = new KeyCode[] { KeyCode.A, KeyCode.S, KeyCode.K, KeyCode.L };
         private const int config_offset = 0;
+        private const int config_playStartDelayed = 3000; //waits 2 seconds until song starts
+
+        private float screenHeight;
+        private float screenWidth;
 
         private const int maxNoteCount = 64; //dont know if this should be config or not
-        private const float notePixelSize = 128; //pixels to units. 128 pixels = 1 unit.
+        private const float config_PixelUnitSize = 128; //pixels to units. 128 pixels = 1 unit.
 
         /*GAME MODS*/
         private const bool mod_noSV = false;
@@ -41,6 +48,10 @@ namespace Quaver.Gameplay
         public GameObject circleParticleSystem;
         public GameObject timingBar;
 
+        /*SKIN.INI VALUES*/
+        private const int skin_bgMaskBufferSize = 20;
+        private const int skin_noteBufferSpacing = -50;
+
         /*Referencing Values*/
         private const int missTime = 500; //after 500ms, the note will be removed
         private AudioSource songAudio;
@@ -51,10 +62,8 @@ namespace Quaver.Gameplay
         private ulong[] svCalc; //Stores SV position data for efficiency
         private float actualSongTime;
         private float curSongTime;
-        private const float waitTilPlay = 0.5f; //waits 2 seconds until song starts
-        private float uScrollFloat = 1f;
+        private float scrollNegativeFactor = 1f;
         private bool[] keyDown = new bool[4];
-        private float averageBpm;
         private int[] judgeTimes = new int[6] { 16, 37, 70, 100, 124, 80}; //OD9 judge times in ms (0,1,2,3,4), LN offset 5
         private float receptorYPos;
         private float[] receptorXPos = new float[4];
@@ -66,7 +75,7 @@ namespace Quaver.Gameplay
 
         public void Start()
         {
-            qFile = QuaParser.Parse("E:\\GitHub\\Quaver\\TestFiles\\Qua\\backbeat_maniac.qua");
+            qFile = QuaParser.Parse("E:\\GitHub\\Quaver\\TestFiles\\Qua\\345.qua");
             if (!qFile.IsValidQua)
             {
                 print("IS NOT VALID QUA FILE");
@@ -114,23 +123,25 @@ namespace Quaver.Gameplay
                 barQueue = new List<TimingObject>();
                 activeNotes = new GameObject[maxNoteCount];
 
-                averageBpm = 150f; //Change later
                 songAudio = transform.GetComponent<AudioSource>();
+                screenHeight = Screen.height;
+                screenWidth = Screen.width;
 
                 //TempValues
                 float longestBpmTime = 0;
                 int avgBpmPos = 0;
+                float averageBpm = 100; //Change later
 
 
                 //Declare Other Values
-                curSongTime = -waitTilPlay;
-                actualSongTime = -waitTilPlay;
-                curSVPos = (ulong)(-waitTilPlay * 1000f + 10000f); //10000ms added since curSVPos is a uLong
+                curSongTime = -config_playStartDelayed;
+                actualSongTime = -(float)config_playStartDelayed/1000f;
+                curSVPos = (ulong)(-config_playStartDelayed + 10000f); //10000ms added since curSVPos is a uLong
                 curSVint = 0;
 
                 //Declare Receptor Values
-                if (config_upScroll) uScrollFloat = -1f;
-                receptorYPos = -uScrollFloat * config_receptorOffset / 100f + uScrollFloat * (config_columnSize / 256f);
+                if (config_upScroll) scrollNegativeFactor = -1f;
+                receptorYPos = -scrollNegativeFactor * config_receptorOffset / 100f + scrollNegativeFactor * (config_columnSize / 256f);
                 receptors = new GameObject[4];
                 receptors[0] = receptorBar.transform.Find("R1").gameObject;
                 receptors[1] = receptorBar.transform.Find("R2").gameObject;
@@ -139,14 +150,22 @@ namespace Quaver.Gameplay
 
                 for (i = 0; i < 4; i++)
                 {
-                    receptorXPos[i] = (i + 1) * (config_columnSize / notePixelSize) - (config_columnSize / notePixelSize * 2.5f);
+                    receptorXPos[i] = (i - 1.5f) * ((config_columnSize + (float)skin_noteBufferSpacing) / config_PixelUnitSize);
                     if (i >= 2 && mod_split) receptors[i].transform.localPosition = new Vector3(receptorXPos[i], -receptorYPos, 1);
-                    else receptors[i].transform.localPosition = new Vector3((i - 1.5f) * (config_columnSize / notePixelSize), receptorYPos, 1);
-                    receptors[i].transform.localScale = Vector3.one * (config_columnSize / notePixelSize);
+                    else receptors[i].transform.localPosition = new Vector3(receptorXPos[i], receptorYPos, 1);
+                    receptors[i].transform.localScale = Vector3.one * (config_columnSize / config_PixelUnitSize);
                     receptors[i].transform.transform.eulerAngles = new Vector3(0, 0, receptorRot[i]);
 
                     hitQueue[i] = new List<NoteObject>();
                 }
+
+                //Set UI Stuff
+                bgImage.transform.localScale = Vector3.one * (20f*(config_PixelUnitSize/(float)bgImage.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y)); //Scales the bg to y axis
+                bgMask.transform.localScale = new Vector3(
+                    ((float)(config_columnSize + skin_bgMaskBufferSize + skin_noteBufferSpacing) / config_PixelUnitSize) * 4f * (config_PixelUnitSize / (float)bgMask.transform.GetComponent<SpriteRenderer>().sprite.rect.size.x),
+                    20f * (config_PixelUnitSize / (float)bgMask.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y)
+                    ,1f);
+                //SNAP TO X AXIS bg.transform.localScale = Vector3.one * ((float)screenWidth/(float)screenHeight)*20f * (config_PixelUnitSize / (float)bg.transform.GetComponent<SpriteRenderer>().sprite.rect.size.x);
 
                 //Calculate Average BPM of map
                 if (!mod_noSV)
@@ -266,7 +285,7 @@ namespace Quaver.Gameplay
                 }
 
                 //Create Timing bars
-                if (!mod_split) { 
+                if (!mod_split && config_timingBars) { 
                     float curBarTime = 0;
                     for (i = 0; i < timingQueue.Count; i++)
                     {
@@ -304,7 +323,7 @@ namespace Quaver.Gameplay
                     {
                         TimingObject hoo = new TimingObject();
                         GameObject curBar = Instantiate(timingBar, hitContainer.transform);
-                        curBar.transform.localPosition = new Vector3(0f, Mathf.Max(Mathf.Min(PosFromSV(barQueue[i].StartTime),20),-20), 2f);
+                        curBar.transform.localPosition = new Vector3(0f, PosFromSV(barQueue[i].StartTime), 2f);
 
                         hoo.StartTime = barQueue[i].StartTime;
                         hoo.TimingBar = curBar;
@@ -322,13 +341,8 @@ namespace Quaver.Gameplay
                 }
 
                 //Plays the song, but delayed
-                songAudio.PlayDelayed(waitTilPlay);
+                songAudio.PlayDelayed((float)config_playStartDelayed/1000f);
                 print("TOTAL SV CHANGES: " + SvQueue.Count);
-
-                foreach (TimingObject sv in SvQueue)
-                {
-                    //print(sv.StartTime + " | " + sv.Multiplier);
-                }
 
                 loaded = true;
 
@@ -347,7 +361,6 @@ namespace Quaver.Gameplay
                 if (actualSongTime < 0) actualSongTime += Time.deltaTime;
                 else actualSongTime = ((songAudio.time)+(actualSongTime + Time.deltaTime))/2f;
                 curSongTime = actualSongTime * 1000f - config_offset;
-
 
                 //Calculates curSV Position
                 int k = 0; int j = 0;
@@ -378,16 +391,19 @@ namespace Quaver.Gameplay
                 }
 
                 //Move bars
-                if (barQueue.Count > 0 && curSongTime > barQueue[0].StartTime + missTime)
+                if (config_timingBars && !mod_split)
                 {
-                    Destroy(barQueue[0].TimingBar);
-                    barQueue.RemoveAt(0);
-                }
-                else
-                {
-                    for (k = 0; k < Mathf.Min(barQueue.Count, maxNoteCount); k++)
+                    if (barQueue.Count > 0 && curSongTime > barQueue[0].StartTime + missTime)
                     {
-                        barQueue[k].TimingBar.transform.localPosition = new Vector3(0f,PosFromSV(barQueue[k].StartTime), 2f);
+                        Destroy(barQueue[0].TimingBar);
+                        barQueue.RemoveAt(0);
+                    }
+                    else
+                    {
+                        for (k = 0; k < Mathf.Min(barQueue.Count, maxNoteCount); k++)
+                        {
+                            barQueue[k].TimingBar.transform.localPosition = new Vector3(0f, PosFromSV(barQueue[k].StartTime), 2f);
+                        }
                     }
                 }
 
@@ -448,8 +464,7 @@ namespace Quaver.Gameplay
                         SetNotePos(lnQueue[k], 2);
                     }
                 }
-                
-                
+
                 //Ghost LN keys
                 if (offLNQueue.Count > 0) {
                     for (k = 0; k < offLNQueue.Count; k++)
@@ -474,7 +489,7 @@ namespace Quaver.Gameplay
                         if (Input.GetKeyDown(config_KeyBindings[k]))
                         {
                             keyDown[k] = true;
-                            receptors[k].transform.localScale = Vector3.one * (config_columnSize / notePixelSize) * 1.1f;
+                            receptors[k].transform.localScale = Vector3.one * (config_columnSize / config_PixelUnitSize) * 1.1f;
                             receptors[k].transform.GetComponent<SpriteRenderer>().sprite = receptorSprite[1];
                             JudgeNote(k+1, curSongTime);
                         }
@@ -515,7 +530,7 @@ namespace Quaver.Gameplay
             ho.SliderEndSprite = hoo.transform.Find("SliderEnd").GetComponent<SpriteRenderer>();
 
             ho.HitNote.SetActive(true);
-            ho.HitNote.transform.localScale = Vector3.one * (config_columnSize / notePixelSize);
+            ho.HitNote.transform.localScale = Vector3.one * (config_columnSize / config_PixelUnitSize);
             ho.HitSprite.color = new Color(1f, 1f, 1f, 1f);
 
 
@@ -659,14 +674,14 @@ namespace Quaver.Gameplay
             //XOff Receptors
             if (mod_shuffle)
             {
-                if (k == 0 || k == 2) receptorXOffset[k] = (Mathf.Pow(Mathf.Sin(curSongTime * (Mathf.PI / 180f) / 10f), 3) + 1f) * config_columnSize / notePixelSize / 2f;
-                else receptorXOffset[k] = -(Mathf.Pow(Mathf.Sin(curSongTime * (Mathf.PI / 180f) / 10f), 3) + 1f) * config_columnSize / notePixelSize / 2f;
+                if (k == 0 || k == 2) receptorXOffset[k] = (Mathf.Pow(Mathf.Sin(curSongTime * (Mathf.PI / 180f) / 10f), 3) + 1f) * config_columnSize / config_PixelUnitSize / 2f;
+                else receptorXOffset[k] = -(Mathf.Pow(Mathf.Sin(curSongTime * (Mathf.PI / 180f) / 10f), 3) + 1f) * config_columnSize / config_PixelUnitSize / 2f;
             }
 
             //Set Receptor Transform
             if (mod_spin) receptors[k].transform.localEulerAngles = new Vector3(0, 0, receptorRot[k]);
             if (mod_shuffle) receptors[k].transform.localPosition = new Vector3(receptorXPos[k] + receptorXOffset[k], receptorYPos, 1);
-            receptors[k].transform.localScale = Vector3.one * (receptors[k].transform.localScale.x + ((config_columnSize / notePixelSize) - receptors[k].transform.localScale.x) / 3f);
+            receptors[k].transform.localScale = Vector3.one * (receptors[k].transform.localScale.x + ((config_columnSize / config_PixelUnitSize) - receptors[k].transform.localScale.x) / 3f);
         }
 
         //Sets the GameObject position of the note
@@ -678,24 +693,24 @@ namespace Quaver.Gameplay
             if (mod_split && curNote.KeyLane >= 3) splitFactor = -1f;
             if (lnMode != 2 || mod_shuffle)
                 curNote.HitSet.transform.localPosition =new Vector3(receptorXPos[curNote.KeyLane - 1] + receptorXOffset[curNote.KeyLane - 1], splitFactor * PosFromSV(StartTime), 0);
-            else curNote.HitSet.transform.localPosition = new Vector3((curNote.KeyLane - 2.5f) * (config_columnSize / notePixelSize), receptorYPos * splitFactor, 0);
+            else curNote.HitSet.transform.localPosition = new Vector3(receptorXPos[curNote.KeyLane - 1] + receptorXOffset[curNote.KeyLane - 1], receptorYPos * splitFactor, 0);
             if (mod_spin) curNote.HitSprite.transform.eulerAngles = new Vector3(0, 0, receptorRot[curNote.KeyLane - 1]);
             if ((lnMode != 1 || mod_pull) && lnMode != 3 && curNote.EndTime > 0 && curNote.EndTime > StartTime)
             {
 
-                float lnSize = splitFactor * Mathf.Min(Mathf.Abs(PosFromSV(curNote.EndTime) - PosFromSV(StartTime)), 25f);
+                float lnSize = splitFactor * Mathf.Min(Mathf.Abs(PosFromSV(curNote.EndTime) - PosFromSV(StartTime)), 50f);
 
-                curNote.SliderMiddleSprite.size = new Vector2(1f, -uScrollFloat * lnSize * (notePixelSize / config_columnSize));
-                curNote.SliderEndObject.transform.localPosition = new Vector3(0f, uScrollFloat * lnSize, 0.1f);
+                curNote.SliderMiddleSprite.size = new Vector2(1f, -scrollNegativeFactor * lnSize * (config_PixelUnitSize / config_columnSize));
+                curNote.SliderEndObject.transform.localPosition = new Vector3(0f, scrollNegativeFactor * lnSize, 0.1f);
 
                 if (lnMode == 0)
                 {
-                    curNote.SliderMiddleObject.transform.localScale = Vector3.one * (config_columnSize / notePixelSize);
+                    curNote.SliderMiddleObject.transform.localScale = Vector3.one * (config_columnSize / config_PixelUnitSize);
                     curNote.SliderMiddleSprite.color = new Color(1f, 1f, 1f, 1f);
                     curNote.SliderMiddleObject.SetActive(true);
 
                     curNote.SliderEndSprite.color = new Color(1f, 1f, 1f, 1f);
-                    curNote.SliderEndObject.transform.localScale = Vector3.one * (config_columnSize / notePixelSize);
+                    curNote.SliderEndObject.transform.localScale = Vector3.one * (config_columnSize / config_PixelUnitSize);
                     curNote.SliderEndObject.SetActive(true);
                     if (splitFactor >= 1) curNote.SliderEndSprite.flipY = !config_upScroll;
                     else curNote.SliderEndSprite.flipY = config_upScroll;
@@ -739,7 +754,7 @@ namespace Quaver.Gameplay
 
             if (mod_pull) returnVal = 2f * Mathf.Max(Mathf.Pow(returnVal, 0.6f),0) + Mathf.Min(timePos- curSongTime, 0f) / 1000f * (float)config_scrollSpeed * (1 / songAudio.pitch);
 
-            return returnVal * uScrollFloat + receptorYPos;
+            return returnVal * scrollNegativeFactor + receptorYPos;
         }
 
     }

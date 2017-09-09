@@ -17,7 +17,7 @@ namespace Quaver.Screenshot
 				string[] files = Directory.GetFiles(ConfigDefault.ScreenshotsDirectory, "*.png", SearchOption.AllDirectories);
 
 				string screenshotPath = config.ScreenshotsDirectory + DateTime.Now.ToString("yyyy-MM-dd") + " Screenshot" + (files.Length + 1) + ".png";
-				Application.CaptureScreenshot(screenshotPath);
+				ScreenCapture.CaptureScreenshot(screenshotPath);
 
 				string notifName = "Test";
 				string notifContent = "Screenshot successfully saved at: " + screenshotPath;
