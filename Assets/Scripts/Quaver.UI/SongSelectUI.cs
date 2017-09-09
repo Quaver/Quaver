@@ -31,6 +31,7 @@ namespace Quaver.Main
                 SongList[i].SelectObject.GetComponent<Button>().onClick.AddListener(() => { print("A"); Clicked(curPos); });
                 ObjectYSize += SongList[i].sizeY+5;
             }
+            SelectYPos = ObjectYSize;
 
         }
 
