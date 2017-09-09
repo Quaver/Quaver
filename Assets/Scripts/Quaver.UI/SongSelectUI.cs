@@ -28,7 +28,7 @@ namespace Quaver.Main
                 SongList[i] = new SongSelectObject(SongSelect, SelectionSet.transform, ObjectYSize, i, this.GetComponent<SongSelectUI>());
                 int curPos = i;
                 //DONT FORGET TO REMOVE THE EVENT LISTENER AFTER DESTROYING OBJECTS
-                SongList[i].SelectObject.GetComponent<Button>().onClick.AddListener(() => { print("A"); Clicked(curPos); });
+                SongList[i].SelectObject.GetComponent<Button>().onClick.AddListener(() => { Clicked(curPos); });
                 ObjectYSize += SongList[i].sizeY+5;
             }
             SelectYPos = ObjectYSize;

@@ -5,6 +5,7 @@ using UnityEngine;
 using Quaver.Config;
 using Quaver.Screenshot;
 using UnityEngine.UI;
+using UnityStandardAssets.ImageEffects;
 
 namespace Quaver.Main
 {
@@ -15,6 +16,7 @@ namespace Quaver.Main
         public Cfg GameConfig;
         public GameState[] States;
         public GameObject loadingScreenTest;
+        public Camera CameraBlur;
 
         //Declare display ui text
         private float FpsTextWeen;
@@ -23,8 +25,7 @@ namespace Quaver.Main
         public Text FpsText;
         public Text LatencyText;
 
-        //Temp Variable
-        private bool tested = false;
+        private int testState = 0;
 
         private void Awake()
         {
@@ -54,19 +55,31 @@ namespace Quaver.Main
             FpsTextWeen += (1 / Time.deltaTime - FpsTextWeen)/100f;
             FpsText.text = Mathf.Round(FpsTextWeen * 10)/10f + " fps";
             LatencyText.text = "±"+Mathf.Round(LatencyTextTween*100f) /100f + " ms";
+
+            if (testState == 2 && CameraBlur.GetComponent<Blur>().iterations > 0 )
+            {
+                CameraBlur.GetComponent<Blur>().iterations--;
+            }
+            else if (CameraBlur.GetComponent<Blur>().enabled && CameraBlur.GetComponent<Blur>().iterations == 0)
+            {
+                CameraBlur.GetComponent<Blur>().enabled = false;
+            }
+
         }
         
         public void SwitchState()
         {
             //Test button click
-            if (!tested)
+            if (testState <= 1)
             {
-                tested = true;
-                int nextState = 1;
-                int curState = 0;
+                print(testState);
+                int nextState = testState+1;
+                int curState = testState;
                 States[curState].StateEnd();
                 States[nextState].StateStart();
+                testState++;
             }
+
         }
     }
 }
