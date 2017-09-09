@@ -15,12 +15,37 @@ namespace Quaver.Cache
 		void Start () {
 			// Where quaver.db is stored.
 			connectionString = "URI=file:" + Application.dataPath + "/quaver.db";
-			GetBeatmaps();		
+			GetBeatmaps();
+			WriteNewBeatmap(Application.dataPath, Application.dataPath + "\\memes.qua", -1, -1, "Camellias", "Backbeat Maniacs", 5.28f, 'S', 0, DateTime.Now);
 		}
 		
 		// Update is called once per frame
 		void Update () {
 			
+		}
+
+		void WriteNewBeatmap(string directory, string path, int beatmapSetId, int beatmapId, string artist, string title, float difficulty, char rank, int status, DateTime date)
+		{
+			// Create db connection
+			using(IDbConnection dbConnection = new SqliteConnection(connectionString))
+			{
+				// Open db connection
+				dbConnection.Open();
+
+				// Use connection to create an SQL Query we can execute
+				using(IDbCommand dbCmd = dbConnection.CreateCommand())
+				{
+					string query = String.Format("INSERT INTO beatmaps(directory,path,beatmapsetid,beatmapid,artist,title,difficulty,rank,status) " + 
+									"VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')", 
+									directory, path, beatmapSetId, beatmapId, artist, title, difficulty, rank, status);
+
+					dbCmd.CommandText = query;
+
+					dbCmd.ExecuteScalar(); // Execute scalar when inserting
+
+					dbConnection.Close();
+				}
+			}			
 		}
 
 		void GetBeatmaps()
