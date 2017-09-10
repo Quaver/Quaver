@@ -18,7 +18,7 @@ namespace Quaver.Gameplay
         private GameObject[] hitLighting;
         public GameObject particleContainer; 
         public GameObject hitContainer; 
-        public GameObject bgImage; 
+        private GameObject bgImage; 
         public GameObject bgMask;
 
         /*CONFIG VALUES*/
@@ -135,6 +135,10 @@ namespace Quaver.Gameplay
                 receptorXOffset = new float[4];
                 receptorSize = new float[4];
                 keyDown = new bool[4];
+                bgImage = Manager.bgImage;
+                songAudio = Manager.SongAudioSource;
+                //songAudio.clip = qFile.audi; get audio from qfile.
+
 
                 //TempValues
                 float longestBpmTime = 0;
@@ -172,7 +176,7 @@ namespace Quaver.Gameplay
                 }
 
                 //Set Skin Values
-                //bgImage.transform.localScale = Vector3.one * (20f*(config_PixelUnitSize/(float)bgImage.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y)); //Scales the bg to y axis
+                bgImage.transform.localScale = Vector3.one * (20f*(config_PixelUnitSize/(float)bgImage.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y)); //Scales the bg to y axis
                 bgMask.transform.localScale = new Vector3(
                     ((float)(config_columnSize + skin_bgMaskBufferSize + skin_noteBufferSpacing) / config_PixelUnitSize) * 4f * (config_PixelUnitSize / (float)bgMask.transform.GetComponent<SpriteRenderer>().sprite.rect.size.x),
                     20f * (config_PixelUnitSize / (float)bgMask.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y)
@@ -619,21 +623,22 @@ namespace Quaver.Gameplay
             if (hitQueue[kkey - 1].Count > 0 && hitQueue[kkey - 1][0].StartTime - curSongTime < judgeTimes[4])
             {
                 float closestTime = hitQueue[kkey - 1][0].StartTime - curSongTime;
-                if (closestTime < judgeTimes[4])
+                float absTime = Mathf.Abs(closestTime);
+                if (absTime < judgeTimes[4])
                 {
-                    if (closestTime < judgeTimes[0])
+                    if (absTime < judgeTimes[0])
                     {
                         print("MARV");
                     }
-                    else if (closestTime < judgeTimes[1])
+                    else if (absTime < judgeTimes[1])
                     {
                         print("PERF");
                     }
-                    else if (closestTime < judgeTimes[2])
+                    else if (absTime < judgeTimes[2])
                     {
                         print("GREAT");
                     }
-                    else if (closestTime < judgeTimes[3])
+                    else if (absTime < judgeTimes[3])
                     {
                         print("GOOD");
                     }

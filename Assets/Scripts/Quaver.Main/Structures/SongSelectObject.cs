@@ -45,10 +45,5 @@ namespace Quaver.Main
 
             ParentTransform.localPosition = new Vector2(5, posY);
         }
-        void Destroy()
-        {
-            ParentTransform.GetComponent<Button>().onClick.RemoveAllListeners();
-        }
-
     }
 }
