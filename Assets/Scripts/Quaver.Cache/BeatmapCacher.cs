@@ -15,14 +15,37 @@ namespace Quaver.Cache
 		void Start () {
 			// Where quaver.db is stored.
 			connectionString = "URI=file:" + Application.dataPath + "/quaver.db";
+			CreateTable();
 			//GetBeatmaps();
 			//WriteNewBeatmap(Application.dataPath, Application.dataPath + "\\memes.qua", -1, -1, "Camellias", "Backbeat Maniacs", 5.28f, 'S', 0, DateTime.Now);
-			DeleteBeatmap(@"C:\Beatmap.qua");
+			//DeleteBeatmap(@"C:\Beatmap.qua");
 		}
 		
 		// Update is called once per frame
 		void Update () {
 			
+		}
+
+		void CreateTable()
+		{
+			// Create db connection
+			using(IDbConnection dbConnection = new SqliteConnection(connectionString))
+			{
+				// Open db connection
+				dbConnection.Open();
+
+				// Use connection to create an SQL Query we can execute
+				using(IDbCommand dbCmd = dbConnection.CreateCommand())
+				{
+					string query = "CREATE TABLE if not exists \"main\".\"beatmaps\" (\"id\" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , \"directory\" TEXT NOT NULL , \"path\" TEXT NOT NULL  UNIQUE , \"beatmapsetid\" INTEGER NOT NULL , \"beatmapid\" INTEGER NOT NULL , \"artist\" TEXT NOT NULL , \"title\" TEXT NOT NULL , \"difficulty\" TEXT NOT NULL , \"rank\" TEXT NOT NULL , \"status\" INTEGER NOT NULL  DEFAULT 0, \"lastplayed\" DATETIME NOT NULL  DEFAULT CURRENT_DATE)";
+
+					dbCmd.CommandText = query;
+
+					dbCmd.ExecuteScalar(); // Execute scalar when inserting
+
+					dbConnection.Close();
+				}
+			}				
 		}
 
 		void DeleteBeatmap(string filePath)
