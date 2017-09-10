@@ -9,9 +9,12 @@ namespace Quaver.Main
         public bool isActive = false;
         public bool loaded = false;
         public GameObject StateObject;
+        public GameStateManager Manager;
+
         //State Start
-        public bool StateStart()
+        public bool StateStart(GameStateManager newManager)
         {
+            Manager = newManager;
             if (StateObject == null)
             {
                 isActive = true;

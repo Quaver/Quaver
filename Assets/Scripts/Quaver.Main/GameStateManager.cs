@@ -14,17 +14,21 @@ namespace Quaver.Main
     {
         // Config File
         public Cfg GameConfig;
-        public GameState[] States;
-        public GameObject loadingScreenTest;
-        public ParticleSystem DustRenderer;
 
-        //Declare display ui text
+        // Reference Varialbes
+        public GameState[] States;
+        public ParticleSystem DustRenderer;
+        public GameObject bgImage;
+        public AudioSource SongAudioSource;
+
+        // Display ui text
         private float FpsTextWeen;
         private float LatencyTextTween;
-
         public Text FpsText;
         public Text LatencyText;
 
+        // Test (remove later)
+        public GameObject loadingScreenTest;
         private int testState = 0;
 
         private void Awake()
@@ -40,7 +44,7 @@ namespace Quaver.Main
 
             //Do game start stuff here
             //Starts play mode (TEST)
-            States[0].StateStart();
+            States[0].StateStart(this);
 
         }
 
@@ -73,7 +77,7 @@ namespace Quaver.Main
                 int nextState = testState+1;
                 int curState = testState;
                 States[curState].StateEnd();
-                States[nextState].StateStart();
+                States[nextState].StateStart(this);
                 testState++;
             }
 
