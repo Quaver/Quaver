@@ -20,7 +20,7 @@ public class GameLoader : MonoBehaviour
 
 		// Load Beatmaps into the list of LoadedBeatmaps
 		LoadedBeatmaps = BeatmapCacheIndex.LoadBeatmaps();
-		Debug.LogWarning(LoadedBeatmaps.Count);
+		Debug.Log("[CACHE] Beatmaps Loaded: " + LoadedBeatmaps.Count);
 
 	}
 }

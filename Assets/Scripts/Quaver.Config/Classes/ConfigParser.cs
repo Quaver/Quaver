@@ -161,7 +161,7 @@ namespace Quaver.Config {
 			{
 				valueHolder = defaultValue;
 				Directory.CreateDirectory(defaultValue);
-				Debug.LogWarning("Invalid or non-existant directory detected. Updating value & creating directory.");
+				Debug.LogWarning("[CONFIG] Invalid or non-existant directory detected. Updating value & creating directory.");
 				return;
 			}
 
@@ -176,7 +176,7 @@ namespace Quaver.Config {
 			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse))
 			{
 				valueHolder = defaultValue;
-				Debug.LogWarning("Invalid Byte value: " + valueToParse + " detected in config. Updating to default value.");
+				Debug.LogWarning("[CONFIG] Invalid Byte value: " + valueToParse + " detected in config. Updating to default value.");
 				return;
 			}
 
@@ -191,7 +191,7 @@ namespace Quaver.Config {
 			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse))
 			{
 				valueHolder = defaultValue;
-				Debug.LogWarning("Invalid int value: " + valueToParse + " detected in config. Updating to default value.");
+				Debug.LogWarning("[CONFIG] Invalid int value: " + valueToParse + " detected in config. Updating to default value.");
 				return;
 			}
 
@@ -207,7 +207,7 @@ namespace Quaver.Config {
 			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse))
 			{
 				valueHolder = defaultValue;
-				Debug.LogWarning("Invalid short value: " + valueToParse + " detected in config. Updating to default value.");
+				Debug.LogWarning("[CONFIG] Invalid short value: " + valueToParse + " detected in config. Updating to default value.");
 				return;
 			}
 
@@ -223,7 +223,7 @@ namespace Quaver.Config {
 			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse))
 			{
 				valueHolder = defaultValue;
-				Debug.LogWarning("Invalid bool value: " + valueToParse + " detected in config. Updating to default value.");
+				Debug.LogWarning("[CONFIG] Invalid bool value: " + valueToParse + " detected in config. Updating to default value.");
 				return;
 			}
 
@@ -238,7 +238,7 @@ namespace Quaver.Config {
 			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse))
 			{
 				valueHolder = defaultValue;
-				Debug.LogWarning("Invalid string value: " + valueToParse + " detected in config. Updating to default value.");
+				Debug.LogWarning("[CONFIG] Invalid string value: " + valueToParse + " detected in config. Updating to default value.");
 				return;
 			}
 
@@ -253,7 +253,7 @@ namespace Quaver.Config {
 			if (Strings.IsNullOrEmptyOrWhiteSpace(valueToParse) || !Directory.Exists(Application.dataPath + "/" + valueToParse))
 			{
 				valueHolder = defaultValue;
-				Debug.LogWarning("Invalid skin value detected in config, resorting to default skin.");
+				Debug.LogWarning("[CONFIG] Invalid skin value detected in config, resorting to default skin.");
 				return;
 			}
 
@@ -272,7 +272,7 @@ namespace Quaver.Config {
 			} catch (Exception e)
 			{
 				Debug.Log(e);
-				Debug.LogWarning("Invalid KeyCode value: " + valueToParse + " detected in config. Updating to default value.");
+				Debug.LogWarning("[CONFIG] Invalid KeyCode value: " + valueToParse + " detected in config. Updating to default value.");
 				valueHolder = defaultValue;
 			}
 
