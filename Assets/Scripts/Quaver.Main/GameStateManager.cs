@@ -56,14 +56,15 @@ namespace Quaver.Main
             FpsText.text = Mathf.Round(FpsTextWeen * 10)/10f + " fps";
             LatencyText.text = "±"+Mathf.Round(LatencyTextTween*100f) /100f + " ms";
 
+            /*
             if (testState == 2 && CameraBlur.GetComponent<Blur>().iterations > 0 )
             {
-                CameraBlur.GetComponent<Blur>().iterations--;
+                //CameraBlur.GetComponent<Blur>().iterations--;
             }
             else if (CameraBlur.GetComponent<Blur>().enabled && CameraBlur.GetComponent<Blur>().iterations == 0)
             {
-                CameraBlur.GetComponent<Blur>().enabled = false;
-            }
+                //CameraBlur.GetComponent<Blur>().enabled = false;
+            }*/
 
         }
         

@@ -172,7 +172,7 @@ namespace Quaver.Gameplay
                 }
 
                 //Set Skin Values
-                bgImage.transform.localScale = Vector3.one * (20f*(config_PixelUnitSize/(float)bgImage.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y)); //Scales the bg to y axis
+                //bgImage.transform.localScale = Vector3.one * (20f*(config_PixelUnitSize/(float)bgImage.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y)); //Scales the bg to y axis
                 bgMask.transform.localScale = new Vector3(
                     ((float)(config_columnSize + skin_bgMaskBufferSize + skin_noteBufferSpacing) / config_PixelUnitSize) * 4f * (config_PixelUnitSize / (float)bgMask.transform.GetComponent<SpriteRenderer>().sprite.rect.size.x),
                     20f * (config_PixelUnitSize / (float)bgMask.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y)
