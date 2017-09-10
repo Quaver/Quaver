@@ -16,7 +16,7 @@ namespace Quaver.Main
         public Cfg GameConfig;
         public GameState[] States;
         public GameObject loadingScreenTest;
-        public Camera CameraBlur;
+        public ParticleSystem DustRenderer;
 
         //Declare display ui text
         private float FpsTextWeen;
@@ -56,15 +56,11 @@ namespace Quaver.Main
             FpsText.text = Mathf.Round(FpsTextWeen * 10)/10f + " fps";
             LatencyText.text = "±"+Mathf.Round(LatencyTextTween*100f) /100f + " ms";
 
-            /*
-            if (testState == 2 && CameraBlur.GetComponent<Blur>().iterations > 0 )
+            
+            if (testState >= 1)
             {
-                //CameraBlur.GetComponent<Blur>().iterations--;
+                DustRenderer.emissionRate = 120;
             }
-            else if (CameraBlur.GetComponent<Blur>().enabled && CameraBlur.GetComponent<Blur>().iterations == 0)
-            {
-                //CameraBlur.GetComponent<Blur>().enabled = false;
-            }*/
 
         }
         
