@@ -59,14 +59,13 @@ namespace Quaver.Config
 			{
 				StreamWriter file = new StreamWriter(outputPath);
 				file.AutoFlush = true; 
-				Debug.Log(fileString.ToString());
 				file.WriteLine(fileString.ToString());
-				Debug.Log("Success! Config file successfully updated!");
+				Debug.Log("[CONFIG] Config file successfully updated!\n" + fileString);
 				file.Close();
 
 			} catch (Exception e) 
 			{	
-				Debug.LogError("Could not generate config file!");
+				Debug.LogError("[CONFIG] Could not generate config file!");
 				Debug.Log(e);
 			}						
 		}

@@ -29,7 +29,7 @@ namespace Quaver.Cache
 					dbCmd.CommandText = query;
 					dbCmd.ExecuteScalar(); // Execute scalar when inserting
 					dbConnection.Close();
-					Debug.LogWarning("User does not have a valid beatmap database file, creating one...");
+					Debug.Log("[CACHE] Beatmap Database Loaded/Generated!");
 				}
 			}	
 		}
@@ -67,7 +67,7 @@ namespace Quaver.Cache
 																reader.GetInt32(9), reader.GetDateTime(10));
 
 							// Log that shit for now, because i already know some fucking thing is going to go wrong.
-							Debug.Log(String.Format("Beatmap Loaded: Dir: {0}, Path: {1}, BSID: {2}, BID: {3}, Artist: {4}, Title: {5}, Diff: {6}, Rank: {7}, Status: {8}, LP: {9}", 
+							Debug.Log(String.Format("[CACHE] Beatmap Loaded: Dir: {0}, Path: {1}, BSID: {2}, BID: {3}, Artist: {4}, Title: {5}, Diff: {6}, Rank: {7}, Status: {8}, LP: {9}", 
 													loadedBeatmap.DirectoryMD5, loadedBeatmap.PathMD5, loadedBeatmap.BeatmapSetID, loadedBeatmap.BeatmapID,
 													loadedBeatmap.Artist, loadedBeatmap.Title, loadedBeatmap.Difficulty, loadedBeatmap.Rank, loadedBeatmap.Status,
 													loadedBeatmap.LastPlayed));
