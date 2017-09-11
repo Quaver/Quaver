@@ -95,7 +95,7 @@ namespace Quaver.Notifications
 			notificationColor = this.Color;
 
 			// Instantiate the new notification
-			GameObject newNotification = GameObject.Instantiate(NotificationObject, GameObject.Find("Main Canvas").transform);
+			GameObject newNotification = GameObject.Instantiate(NotificationObject, GameObject.Find("Debugging Canvas").transform);
 
 			// Put the new notification in a List<GameObjects> to be animated.
 			Debug.Log(newNotification);
