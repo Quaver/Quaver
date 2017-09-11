@@ -10,9 +10,9 @@ namespace Wenzil.Console.Commands
     /// </summary>
     public static class CalculateDifficultyCommand
     {
-        public static readonly string name = "DIFFICULTY";
+        public static readonly string name = "DIFF";
         public static readonly string description = "Calculates a beatmap's difficulty and returns the difficulty values. | Arguments: (filePath)";
-        public static readonly string usage = "DIFFICULTY";
+        public static readonly string usage = "DIFF";
 
         public static string Execute(params string[] args)
         {
@@ -32,13 +32,22 @@ namespace Wenzil.Console.Commands
                 Difficulty CalculatedDifficulty = DifficultyCalculator.CalculateDifficulty(qFile.HitObjects);
                 string beatmapLogData = "----------- Beatmap Difficulty Stats -----------\n" +
                     "Beatmap: "+qFile.Artist+" - "+qFile.Title+", " + qFile.DifficultyName+ "\n" +
-                    "Star Difficulty: " + CalculatedDifficulty.StarDifficulty + "\n" +
-                    "ControlS train: " + CalculatedDifficulty.ControlStrain + "\n" +
-                    "Jack Strain: " + CalculatedDifficulty.JackStrain + "\n" +
-                    "Speed Strain: " + CalculatedDifficulty.SpeedStrain + "\n" +
-                    "Stamina Strain: " + CalculatedDifficulty.StaminaStrain + "\n" +
-                    "Tech Strain: " + CalculatedDifficulty.TechStrain + "\n";
+                    "STAR DIFF: " + CalculatedDifficulty.StarDifficulty + "\n" +
+                    "Ctrl: " + CalculatedDifficulty.ControlStrain + " | " +
+                    "Jack: " + CalculatedDifficulty.JackStrain + " | " +
+                    "Sped: " + CalculatedDifficulty.SpeedStrain + " | " +
+                    "Stam: " + CalculatedDifficulty.StaminaStrain + " | " +
+                    "Tech: " + CalculatedDifficulty.TechStrain + "\n" +
+                    "Average NPS: " + CalculatedDifficulty.AverageNPS + "\n" +
+                    "     NPS INTERVAL LIST:";
+
+                for (int i=0; i < CalculatedDifficulty.npsInterval.Length; i++)
+                {
+                    if (i%30 == 0) beatmapLogData = beatmapLogData + "\n "+i+" |    ";
+                    beatmapLogData = beatmapLogData + CalculatedDifficulty.npsInterval[i] + ", ";
+                }
                 return beatmapLogData;
+
             }
             
         }
