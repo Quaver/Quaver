@@ -40,7 +40,7 @@ namespace Quaver.Main
         void Awake()
         {
             // TODO: We'll want to initialize a state here which will be our loading screen
-            // before the game begin. Only the will we continue forward to the main menu
+            // before the game begin. Only then will we continue forward to the main menu
             // when everything has loaded.
             // States[0].StateStart(this);
             LoadConfiguration();
