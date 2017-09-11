@@ -25,7 +25,7 @@ namespace Quaver.UI
         public int posY;
         public int sizeY;
 
-        public SongSelectObject(bool SubSelection, GameObject newSObject, Transform newParent, int newPosY, int newSelectPos, SongSelectUI SongList)
+        public SongSelectObject(int SubSelection, GameObject newSObject, Transform newParent, int newPosY, int newSelectPos, SongSelectUI SongList)
         {
             diffCount = (int)Random.Range(1, 12); //TEMP
 
@@ -35,15 +35,16 @@ namespace Quaver.UI
             posY = newPosY;
             TitleText = SelectObject.transform.Find("SongTitle").GetComponent<Text>();
             rankingImage = SelectObject.transform.Find("Ranking").GetComponent<RawImage>();
-            if (!SubSelection)
+            if (SubSelection == 0)
             {
                 ArtistText = SelectObject.transform.Find("SongArtist").GetComponent<Text>();
                 bgImage = SelectObject.transform.Find("bgThumbnail").GetComponent<RawImage>();
+                ParentTransform.localPosition = new Vector2(5, posY);
             }
+            else ParentTransform.localPosition = new Vector2(450 + SubSelection*60f, posY);
             SelectParent = SongList;
             selectPos = newSelectPos;
 
-            ParentTransform.localPosition = new Vector2(5, posY);
         }
     }
 }
