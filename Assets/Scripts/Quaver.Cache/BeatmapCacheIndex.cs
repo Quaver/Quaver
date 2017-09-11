@@ -72,7 +72,7 @@ namespace Quaver.Cache
 
 							// Log that shit for now, because i already know some fucking thing is going to go wrong.
 							/*Debug.Log(String.Format("[CACHE] Beatmap Loaded: Dir: {0}, Path: {1}, BSID: {2}, BID: {3}, Artist: {4}, Title: {5}, Diff: {6}, Rank: {7}, Status: {8}, LP: {9}, Stars: {10}", 
-													loadedBeatmap.DirectoryMD5, loadedBeatmap.PathMD5, loadedBeatmap.BeatmapSetID, loadedBeatmap.BeatmapID,
+													loadedBeatmap.Directory, loadedBeatmap.Path, loadedBeatmap.BeatmapSetID, loadedBeatmap.BeatmapID,
 													loadedBeatmap.Artist, loadedBeatmap.Title, loadedBeatmap.Difficulty, loadedBeatmap.Rank, loadedBeatmap.Status,
 													loadedBeatmap.LastPlayed, loadedBeatmap.Stars));*/
 
