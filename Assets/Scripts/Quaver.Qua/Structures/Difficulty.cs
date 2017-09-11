@@ -6,7 +6,9 @@ namespace Quaver.Qua
 {
     public struct Difficulty
     {
-        public float[] npsInterval;
+        public int[] npsInterval;
+        public float AverageNPS;
+
         public float StarDifficulty;
         public float StaminaStrain;
         public float JackStrain;
