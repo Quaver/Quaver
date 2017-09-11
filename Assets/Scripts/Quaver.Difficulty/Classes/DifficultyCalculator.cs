@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Quaver.Qua;
 
-namespace Quaver.Qua
+namespace Quaver.Difficulty
 {
 
     public static class DifficultyCalculator
