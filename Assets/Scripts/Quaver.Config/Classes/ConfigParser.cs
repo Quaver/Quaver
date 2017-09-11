@@ -143,7 +143,10 @@ namespace Quaver.Config {
 							break;
 						case "KeyVolumeDown":
 							ParseKeyCode(out cfg.KeyVolumeDown, value, ConfigDefault.KeyVolumeDown);
-							break;																																																							
+							break;
+						case "TimingBars":
+							ParseBool(out cfg.TimingBars, value, ConfigDefault.TimingBars);
+							break;																																																						
 					}
 				}				
 			}

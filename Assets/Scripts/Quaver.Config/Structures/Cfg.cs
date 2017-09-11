@@ -53,6 +53,8 @@ namespace Quaver.Config {
 		public KeyCode KeyPause;
 		public KeyCode KeyVolumeUp;
 		public KeyCode KeyVolumeDown;
+
+		public bool TimingBars;
 	}
 
 }

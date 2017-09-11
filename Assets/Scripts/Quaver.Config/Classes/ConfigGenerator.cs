@@ -59,7 +59,8 @@ namespace Quaver.Config {
 			fileString.Append("KeyDecreaseScrollSpeed = " + ConfigDefault.KeyDecreaseScrollSpeed + "\n");					
 			fileString.Append("KeyPause = " + ConfigDefault.KeyPause + "\n");				
 			fileString.Append("KeyVolumeUp = " + ConfigDefault.KeyVolumeUp + "\n");					
-			fileString.Append("KeyVolumeDown = " + ConfigDefault.KeyVolumeDown + "\n");					
+			fileString.Append("KeyVolumeDown = " + ConfigDefault.KeyVolumeDown + "\n");
+			fileString.Append("TimingBars = " + ConfigDefault.TimingBars + "\n");			
 
 			// Write to config file.
 			try 

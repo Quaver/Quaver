@@ -53,7 +53,8 @@ namespace Quaver.Config
 			fileString.Append("KeyDecreaseScrollSpeed = " + configFile.KeyDecreaseScrollSpeed + "\n");					
 			fileString.Append("KeyPause = " + configFile.KeyPause + "\n");				
 			fileString.Append("KeyVolumeUp = " + configFile.KeyVolumeUp + "\n");					
-			fileString.Append("KeyVolumeDown = " + configFile.KeyVolumeDown + "\n");	
+			fileString.Append("KeyVolumeDown = " + configFile.KeyVolumeDown + "\n");
+			fileString.Append("TimingBars = " + configFile.TimingBars + "\n");	
 
 			try 
 			{

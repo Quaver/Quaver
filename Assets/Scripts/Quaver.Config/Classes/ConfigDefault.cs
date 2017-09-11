@@ -55,5 +55,7 @@ namespace Quaver.Config {
 		public static KeyCode KeyVolumeUp = KeyCode.UpArrow;
 		public static KeyCode KeyVolumeDown = KeyCode.DownArrow;
 
+		public static bool TimingBars = true;
+
 	}
 }
