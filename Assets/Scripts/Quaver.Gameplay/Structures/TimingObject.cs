@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Quaver.Main
+namespace Quaver.Gameplay
 {
 
     public struct TimingObject
