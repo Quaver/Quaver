@@ -43,8 +43,8 @@ namespace Wenzil.Console.Commands
 
                 for (int i=0; i < CalculatedDifficulty.npsInterval.Length; i++)
                 {
-                    if (i%30 == 0) beatmapLogData = beatmapLogData + "\n "+i+" |    ";
-                    beatmapLogData = beatmapLogData + CalculatedDifficulty.npsInterval[i] + ", ";
+                    if (i%50 == 0) beatmapLogData = beatmapLogData + "\n "+i+" |    ";
+                    beatmapLogData = beatmapLogData + CalculatedDifficulty.npsInterval[i] + "/";
                 }
                 return beatmapLogData;
 
