@@ -203,7 +203,7 @@ namespace Quaver.Cache
 				using(IDbCommand dbCmd = dbConnection.CreateCommand())
 				{
 					string query = String.Format("INSERT INTO beatmaps(directory,path,beatmapsetid,beatmapid,artist,title,difficulty,rank,status,lastplayed,stars) " + 
-									"VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}')", 
+									"VALUES(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", \"{7}\", \"{8}\", \"{9}\", \"{10}\")", 
 									cachedMap.Directory, cachedMap.Path, cachedMap.BeatmapSetID, cachedMap.BeatmapID, 
 									cachedMap.Artist, cachedMap.Title, cachedMap.Difficulty, cachedMap.Rank, cachedMap.Status,
 									cachedMap.LastPlayed, cachedMap.Stars);
@@ -230,7 +230,7 @@ namespace Quaver.Cache
 				// Use connection to create an SQL Query we can execute
 				using(IDbCommand dbCmd = dbConnection.CreateCommand())
 				{
-					string query = "DELETE FROM beatmaps WHERE path='" + mapToDelete.Path + "'";
+					string query = "DELETE FROM beatmaps WHERE path=\"" + mapToDelete.Path + "\"";
 
 					dbCmd.CommandText = query;
 
