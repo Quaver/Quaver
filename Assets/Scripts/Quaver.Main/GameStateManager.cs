@@ -6,6 +6,7 @@ using Quaver.Config;
 using Quaver.Screenshot;
 using Quaver.SongSelect;
 using Quaver.Cache;
+using Quaver.Audio;
 using UnityEngine.UI;
 using UnityStandardAssets.ImageEffects;
 
@@ -55,37 +56,7 @@ namespace Quaver.Main
             //Starts play mode (TEST)
             States[0].StateStart(this);
 
-            /*
-            // This is just a test for the songs folder, we'll choose a random beatmap later instead of just choosing a 
-            // random song, but here's sample code for loading a .WAV
-            string[] files = Directory.GetFiles(ConfigDefault.SongDirectory, "*.ogg", SearchOption.AllDirectories);
-
-            if (files.Length == 0)
-            {
-                Debug.LogError("No .ogg files detected in folder!");
-            }
-
-            string url = "file:///" + files[Random.Range(0, files.Length)];
-            gameAudio = GetComponent<AudioSource>();
-
-            WWW audioLoader = new WWW(url);
-
-            while (!audioLoader.isDone)
-            {
-                Debug.Log("Loading beatmap & audio track...");
-            }
-
-            if (audioLoader.isDone)
-            {
-                gameAudio.clip = audioLoader.GetAudioClip(false, false, AudioType.OGGVORBIS);
-
-                if (!gameAudio.isPlaying && gameAudio.clip.isReadyToPlay)
-                {
-                    Debug.Log("Beatmap & Audio Track have been loaded, beginning to play.");
-                    gameAudio.Play();
-                }
-            }*/
-
+            AudioPlayer.LoadSong(currentMap, SongAudioSource);
         }
 
         private void Update()
@@ -140,11 +111,12 @@ namespace Quaver.Main
                         mapsLookedThrough++;
                     }
                 }
+
+                Debug.Log("[CONFIG LOADER] The random map selected on start up is: " + currentMap.Path);
             }
 
             // This is all that we need to load, so we can continue on with the main menu state.
-            Debug.Log("[CONFIG LOADER] There were: " + LoadedBeatmaps.Count + " beatmaps in " + MapDirectories.Count + " directories loaded."); 
-            Debug.Log("[CONFIG LOADER] The random map selected on start up is: " + currentMap.Path);
+            Debug.Log("[CONFIG LOADER] There were: " + LoadedBeatmaps.Count + " beatmaps in " + MapDirectories.Count + " directories loaded.");
         }
 
         // This is a method used for testing to switch our state to the next one. This will eventually
