@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Quaver.Main
+namespace Quaver.UI
 {
 
     public class SongSelectObject : MonoBehaviour {

@@ -4,7 +4,7 @@ using UnityEngine;
 using Quaver.Main;
 using UnityEngine.UI;
 
-namespace Quaver.Main
+namespace Quaver.UI
 {
     public class SongSelectUI : MonoBehaviour
     {
