@@ -18,35 +18,6 @@ public class TitleSoundVisualizer : MonoBehaviour {
 
 	void Start () {
 
-        // This is just a test for the songs folder, we'll choose a random beatmap later instead of just choosing a 
-        // random song, but here's sample code for loading a .WAV
-        string[] files = Directory.GetFiles(ConfigDefault.SongDirectory, "*.ogg", SearchOption.AllDirectories);
-
-        if (files.Length == 0)
-        {
-            Debug.LogError("No .ogg files detected in folder!");
-        }
-
-        string url = "file:///" + files[Random.Range(0, files.Length)];
-        gameAudio = GetComponent<AudioSource>();
-
-        WWW audioLoader = new WWW(url);
-
-        while (!audioLoader.isDone)
-        {
-            Debug.Log("Loading beatmap & audio track...");
-        }
-
-        if (audioLoader.isDone)
-        {
-            gameAudio.clip = audioLoader.GetAudioClip(false, false, AudioType.OGGVORBIS);
-
-            if (!gameAudio.isPlaying && gameAudio.clip.isReadyToPlay)
-            {
-                Debug.Log("Beatmap & Audio Track have been loaded, beginning to play.");
-                gameAudio.Play();
-            }
-        }
 	}
 
     void Update()

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
-using Quaver.Osu.Beatmap;
 using Quaver.Qua;
+using Quaver.Difficulty;
 
 namespace Wenzil.Console.Commands
 {
