@@ -53,8 +53,8 @@ namespace Quaver.Qua
                         npsInterval[0][curTime]+= 1;
                         npsInterval[ObjectList[notePos].KeyLane][curTime]+= 1;
 
-                        //If LNs are larger than 100ms, adds to LN count
-                        if (ObjectList[notePos].EndTime > ObjectList[notePos].StartTime + 120) lnCount++;
+                        //If LNs are larger than 220ms, adds to LN count
+                        if (ObjectList[notePos].EndTime > ObjectList[notePos].StartTime + 220) lnCount++;
 
                         //If current note is a chord, adds to chord count
                         if (notePos-1 >= 0)
@@ -97,7 +97,7 @@ namespace Quaver.Qua
             }
 
             //Sets the NPS Tolerance (Any value below this will be ignored when calculating mean NPS.)
-            npsTolerance = (int)(avgNps[0] / 3f);
+            npsTolerance = (int)(avgNps[0] / 5f);
 
             //Calculates Mean NPS of Keylane
             List<int> MeanNpsInterval;
@@ -137,7 +137,7 @@ namespace Quaver.Qua
             }
 
             //Calculate Stamina Strain
-            stamina = 5f * Mathf.Pow(Mathf.Max(Mathf.Sqrt(avgNps[0]/4f+1) * 100f / Mathf.Max(npsConsistancy[0], 1f),0.1f),0.95f);
+            stamina = Mathf.Pow(1f / Mathf.Max(npsConsistancy[0], 0.1f),1/10f)*Mathf.Pow(avgNps[0]/10f,0.94f)*20f;
 
             //Calculate Jack Strain
             //jack = Mathf.Sqrt(Mathf.Pow(npsConsistancy[1]*npsConsistancy[2]*npsConsistancy[3]*npsConsistancy[4]/100f, 2) / 4f);
@@ -151,7 +151,7 @@ namespace Quaver.Qua
             //tech = 15f * Mathf.Pow(Mathf.Max(tech/100f,0.1f), 0.35f);
 
             //Calculate Control Strain
-            control = Mathf.Pow(Mathf.Pow(20f * Mathf.Max((chordCount*3f + chordCount*2f)/ObjectList.Count,0.1f),0.7f) + 4f*(npsConsistancy[1] + npsConsistancy[2] + npsConsistancy[3] + npsConsistancy[4])/4f,0.65f);
+            //control = Mathf.Pow((npsConsistancy[1] + npsConsistancy[2] + npsConsistancy[3] + npsConsistancy[4]) / 200f , 0.75f) * Mathf.Pow((Mathf.Max(lnCount*1.2f+chordCount*0.8f,1)/ ObjectList.Count),0.55f) * Mathf.Pow(meanNps[0] / 10f, 0.7f) * 60f;
 
             //LN Strain * Chord Strain - consistancy
 
@@ -161,10 +161,9 @@ namespace Quaver.Qua
             newDifficulty.AverageNPS = avgNps[0];
             newDifficulty.npsInterval = npsInterval[0];
 
-            newDifficulty.StarDifficulty = (control+stamina)/2f;
-            newDifficulty.ControlStrain = control;
+            //newDifficulty.StarDifficulty = (control+stamina)/2f;
+            //newDifficulty.ControlStrain = control;
             newDifficulty.StaminaStrain = stamina;
-            //newDifficulty.JackStrain = jack;
             //newDifficulty.SpeedStrain = speed;
             //newDifficulty.TechStrain = tech;
 
