@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Quaver.Cache;
 using Quaver.Config;
+using Quaver.SongSelect;
 
 public class GameLoader : MonoBehaviour 
 {
@@ -20,7 +22,10 @@ public class GameLoader : MonoBehaviour
 
 		// Load Beatmaps into the list of LoadedBeatmaps
 		LoadedBeatmaps = BeatmapCacheIndex.LoadBeatmaps(UserConfig);
-		Debug.Log("[CACHE] Beatmaps Loaded: " + LoadedBeatmaps.Count);
 
+		// Get the list of maps ordered by directory.
+		// These are the beatmaps that will be used during song select.
+		List<MapDirectory> mapDirectories = OrderMapsBy.Directory(LoadedBeatmaps);
+		Debug.Log("[CACHE] There were: " + LoadedBeatmaps.Count + " beatmaps in " + mapDirectories.Count + " directories loaded.");
 	}
 }
