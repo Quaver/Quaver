@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using Quaver.Osu.Beatmap;
+using Quaver.Qua;
 
 namespace Wenzil.Console.Commands
 {
@@ -20,17 +21,25 @@ namespace Wenzil.Console.Commands
                 return "ERROR: You need to specify a file path!";
             }
 
-            OsuBeatmap beatmap = OsuBeatmapParser.Parse(String.Join(" ", args));
+            QuaFile qFile = QuaParser.Parse(String.Join(" ", args));
 
-            if (beatmap.IsValid == false)
+            if (qFile.IsValidQua == false)
             {
                 return "ERROR: The specified beatmap could not be found or is not valid.";
             }
-
-            string beatmapLogData = "----------- Beatmap Metadata -----------\n" +
-                                    "Valid Beatmap: " + beatmap.IsValid + "\n";
-
-            return beatmapLogData;
+            else
+            {
+                Difficulty CalculatedDifficulty = DifficultyCalculator.CalculateDifficulty(qFile.HitObjects);
+                string beatmapLogData = "----------- Beatmap Difficulty Stats -----------\n" +
+                    "Beatmap: "+qFile.Artist+" - "+qFile.Title+", " + qFile.DifficultyName+ "\n" +
+                    "Star Difficulty: " + CalculatedDifficulty.StarDifficulty + "\n" +
+                    "ControlS train: " + CalculatedDifficulty.ControlStrain + "\n" +
+                    "Jack Strain: " + CalculatedDifficulty.JackStrain + "\n" +
+                    "Speed Strain: " + CalculatedDifficulty.SpeedStrain + "\n" +
+                    "Stamina Strain: " + CalculatedDifficulty.StaminaStrain + "\n" +
+                    "Tech Strain: " + CalculatedDifficulty.TechStrain + "\n";
+                return beatmapLogData;
+            }
             
         }
     }
