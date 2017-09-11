@@ -21,12 +21,6 @@ namespace Quaver.Main
         public GameObject bgImage;
         public AudioSource SongAudioSource;
 
-        // Display ui text
-        private float FpsTextWeen;
-        private float LatencyTextTween;
-        public Text FpsText;
-        public Text LatencyText;
-
         // Test (remove later)
         public GameObject loadingScreenTest;
         private int testState = 0;
@@ -86,13 +80,6 @@ namespace Quaver.Main
 
             // Handle screenshots
             ScreenshotService.Capture(GameConfig);
-
-            //Set Text of fps/latency ui
-            LatencyTextTween += (500 * Time.deltaTime - LatencyTextTween) /100f;
-            FpsTextWeen += (1 / Time.deltaTime - FpsTextWeen)/100f;
-            FpsText.text = Mathf.Round(FpsTextWeen * 10)/10f + " fps";
-            LatencyText.text = "±"+Mathf.Round(LatencyTextTween*100f) /100f + " ms";
-
             
             if (testState >= 1)
             {
