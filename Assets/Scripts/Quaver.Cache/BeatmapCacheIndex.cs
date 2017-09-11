@@ -122,7 +122,7 @@ namespace Quaver.Cache
 					bool foundMap = false;
 					for (int i = 0; i < loadedBeatmaps.Count; i++)
 					{
-						if (Strings.GetMD5Hash(quaFile) == loadedBeatmaps[i].PathMD5)
+						if (quaFile == loadedBeatmaps[i].Path)
 						{
 							foundMap = true;
 							break;
@@ -142,11 +142,9 @@ namespace Quaver.Cache
 					if (qua.IsValidQua)
 					{
 						// Convert the parsed qua file into a CachedBeatmap and add it to our loadedBeatmaps.
-						// Our paths will always be stored in MD5.
-						string quaDirMd5 = Strings.GetMD5Hash(Path.GetDirectoryName(quaFile));
-						string quaPathMd5 = Strings.GetMD5Hash(quaFile);
+						string quaDir = Path.GetDirectoryName(quaFile);
 
-						CachedBeatmap foundMissingMap = new CachedBeatmap(quaDirMd5, quaPathMd5, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,
+						CachedBeatmap foundMissingMap = new CachedBeatmap(quaDir, quaFile, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,
 																		"", 0, DateTime.Now, 0.00f);
 
 						// Add the missing map to our loaded map, when the beatmap is selected, we'll have to get the BeatmapSetID + BeatmapId
@@ -165,7 +163,7 @@ namespace Quaver.Cache
 					bool foundMapInDb = false;
 					for (int i = 0; i < quaFilesInDir.Length; i++)
 					{
-						if (mapInDb.PathMD5 == Strings.GetMD5Hash(quaFilesInDir[i]))
+						if (mapInDb.Path == quaFilesInDir[i])
 						{
 							foundMapInDb = true;
 
@@ -182,7 +180,7 @@ namespace Quaver.Cache
 					// Delete the map from the database.
 					DeleteFromDatabase(mapInDb);
 
-					Debug.LogWarning("[CACHE] Extra map: " + mapInDb.PathMD5 + " in database found, removed from loaded beatmaps & database!");
+					Debug.LogWarning("[CACHE] Extra map: " + mapInDb.Path + " in database found, removed from loaded beatmaps & database!");
 				}
 
 			} catch (Exception err)
@@ -206,7 +204,7 @@ namespace Quaver.Cache
 				{
 					string query = String.Format("INSERT INTO beatmaps(directory,path,beatmapsetid,beatmapid,artist,title,difficulty,rank,status,lastplayed,stars) " + 
 									"VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}')", 
-									cachedMap.DirectoryMD5, cachedMap.PathMD5, cachedMap.BeatmapSetID, cachedMap.BeatmapID, 
+									cachedMap.Directory, cachedMap.Path, cachedMap.BeatmapSetID, cachedMap.BeatmapID, 
 									cachedMap.Artist, cachedMap.Title, cachedMap.Difficulty, cachedMap.Rank, cachedMap.Status,
 									cachedMap.LastPlayed, cachedMap.Stars);
 
@@ -232,7 +230,7 @@ namespace Quaver.Cache
 				// Use connection to create an SQL Query we can execute
 				using(IDbCommand dbCmd = dbConnection.CreateCommand())
 				{
-					string query = "DELETE FROM beatmaps WHERE path='" + mapToDelete.PathMD5 + "'";
+					string query = "DELETE FROM beatmaps WHERE path='" + mapToDelete.Path + "'";
 
 					dbCmd.CommandText = query;
 
