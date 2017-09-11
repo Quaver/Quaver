@@ -45,6 +45,11 @@ namespace Quaver.Main
             // States[0].StateStart(this);
             LoadConfiguration();
 
+            // IMPORTANT! This will make the game not pause when it loses focus. This 
+            // should be set to true at the beginning of the game, so songs can be heard even when
+            // the game is minimized.
+            Application.runInBackground = true;
+
         }
 
         private void Start()
