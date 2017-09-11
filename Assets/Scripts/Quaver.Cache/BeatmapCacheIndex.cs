@@ -243,44 +243,5 @@ namespace Quaver.Cache
 			}	
 		}
 	}
-
-	/*(public class BeatmapCacher : MonoBehaviour {
-
-		private string connectionString;
-		
-
-		void DeleteBeatmap(string filePath)
-		{
-			// Create db connection
-			using(IDbConnection dbConnection = new SqliteConnection(connectionString))
-			{
-				// Open db connection
-				dbConnection.Open();
-
-				// Use connection to create an SQL Query we can execute
-				using(IDbCommand dbCmd = dbConnection.CreateCommand())
-				{
-					string query = "DELETE FROM beatmaps WHERE path='" + filePath + "'";
-
-					dbCmd.CommandText = query;
-
-					dbCmd.ExecuteScalar(); // Execute scalar when inserting
-
-					dbConnection.Close();
-				}
-			}				
-		}
-
-		void WriteNewBeatmap(string directory, string path, int beatmapSetId, int beatmapId, string artist, string title, float difficulty, char rank, int status, DateTime date)
-		{
-			// Create db connection
-		
-		}
-
-		void GetBeatmaps()
-		{
-
-		}
-	}*/
 }
 
