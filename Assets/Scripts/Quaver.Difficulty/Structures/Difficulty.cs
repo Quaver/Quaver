@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Quaver.Qua
+namespace Quaver.Difficulty
 {
     public struct Difficulty
     {

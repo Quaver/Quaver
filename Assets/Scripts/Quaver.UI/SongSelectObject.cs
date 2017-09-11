@@ -35,10 +35,10 @@ namespace Quaver.UI
             posY = newPosY;
             TitleText = SelectObject.transform.Find("SongTitle").GetComponent<Text>();
             rankingImage = SelectObject.transform.Find("Ranking").GetComponent<RawImage>();
+            bgImage = SelectObject.GetComponent<RawImage>();
             if (SubSelection == 0)
             {
                 ArtistText = SelectObject.transform.Find("SongArtist").GetComponent<Text>();
-                bgImage = SelectObject.transform.Find("bgThumbnail").GetComponent<RawImage>();
                 ParentTransform.localPosition = new Vector2(5, posY);
             }
             else ParentTransform.localPosition = new Vector2(450 + SubSelection*60f, posY);
