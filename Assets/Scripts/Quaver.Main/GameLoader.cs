@@ -19,8 +19,10 @@ public class GameLoader : MonoBehaviour
 		UserConfig = ConfigLoader.Load();
 
 		// Load Beatmaps into the list of LoadedBeatmaps
-		LoadedBeatmaps = BeatmapCacheIndex.LoadBeatmaps();
+		LoadedBeatmaps = BeatmapCacheIndex.LoadBeatmaps(UserConfig);
 		Debug.Log("[CACHE] Beatmaps Loaded: " + LoadedBeatmaps.Count);
+
+		// Run a check for beatmaps that are in the song directory, that aren't in the database.
 
 	}
 }
