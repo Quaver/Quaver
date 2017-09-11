@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.Text;
 using UnityEngine;
+using System.Security.Cryptography;
 
 namespace Quaver.Utils
 {
@@ -38,6 +41,24 @@ namespace Quaver.Utils
             int index = value.LastIndexOf(" ");
             if (index > -1) result = value.Remove(index);
             return result;
+        }
+
+        // Gets the MD5 Hash of a string.
+        public static String GetMD5Hash(String TextToHash)
+        {
+            //Check wether data was passed
+            if((TextToHash == null) || (TextToHash.Length == 0))
+            {
+                return String.Empty;
+            }
+
+            //Calculate MD5 hash. This requires that the string is splitted into a byte[].
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte[] textToHash = Encoding.Default.GetBytes(TextToHash);
+            byte[] result = md5.ComputeHash(textToHash);
+
+            //Convert result back to string.
+            return System.BitConverter.ToString(result); 
         }
         
     }    
