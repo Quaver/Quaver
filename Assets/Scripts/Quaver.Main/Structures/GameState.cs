@@ -14,10 +14,10 @@ namespace Quaver.Main
         //State Start
         public bool StateStart(GameStateManager newManager)
         {
-            Manager = newManager;
             if (StateObject == null)
             {
                 isActive = true;
+                Manager = newManager;
                 StateObject = Instantiate(this.gameObject);
             }
             return true;
