@@ -20,12 +20,12 @@ namespace Quaver.Main
         // VERY IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         public Cfg GameConfig;
         public List<CachedBeatmap> LoadedBeatmaps = new List<CachedBeatmap>();
-        List<MapDirectory> MapDirectories = new List<MapDirectory>();
+        public List<MapDirectory> MapDirectories = new List<MapDirectory>();
 
         // IMPORTANT! This will hold the currently selected map in our MapDirectories list.
         // It will be used to boot up the main menu music & auto-select the map when the user
         // goes to the song selection screen.
-        CachedBeatmap currentMap;
+        public CachedBeatmap currentMap;
         
         // Reference Variables
         public GameState[] States;
