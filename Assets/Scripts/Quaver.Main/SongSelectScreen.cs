@@ -4,6 +4,8 @@ using UnityEngine;
 using Quaver.Main;
 using Quaver.UI;
 using UnityEngine.UI;
+using Quaver.Cache;
+using Quaver.SongSelect;
 
 namespace Quaver.Main
 {
@@ -13,12 +15,14 @@ namespace Quaver.Main
 
         //UI Object Variables
         public GameObject SongSelectUI;
-
-        //Reference Values
-        private GameObject SelectionUI;
-        private GameObject SelectionSet;
         public GameObject SongSelect;
         public GameObject DiffSelect;
+
+        //Reference Values
+        private List<MapDirectory> SortedMapSets; //Change this list when sorting;
+        private List<CachedBeatmap> MapSetDifficulties;
+        private GameObject SelectionUI;
+        private GameObject SelectionSet;
         private SongSelectObject[] SongList;
         private SongSelectObject[] DifficultyList;
         private int totalBeatmaps;
@@ -38,28 +42,32 @@ namespace Quaver.Main
         private float posTween = 0;
         private float offsetTween = 0;
 
-        //TEST
-        private int testSelectionSize = 20; //use this to stress test
+        void SortBeatmaps()
+        {
+            //Sorts Beatmaps. SortedBeatmaps = new sorted beatmap list;
+        }
 
         void Start()
         {
+            SortedMapSets = Manager.MapDirectories;
+            totalBeatmaps = SortedMapSets.Count;
+
             SelectionUI = Instantiate(SongSelectUI, this.transform.Find("SongSelect Canvas").transform);
-            SelectionSet = SelectionUI.transform.Find("SelectionWindow").transform.Find("SelectionCapture").gameObject;
-            print("A");
-            SongList = new SongSelectObject[testSelectionSize];
+            SelectionSet = SelectionUI.transform.Find("SelectionWindow").transform.transform.Find("SelectionCapture").gameObject;
+            SongList = new SongSelectObject[totalBeatmaps];
             DifficultyList = new SongSelectObject[0];
-            for (int i = 0; i < testSelectionSize; i++)
+            for (int i = 0; i < totalBeatmaps; i++)
             {
-                SongList[i] = new SongSelectObject(0, SongSelect, SelectionSet.transform, ObjectYSize, i);
+                SongList[i] = new SongSelectObject(0, SongSelect, SelectionSet.transform, ObjectYSize);
                 int curPos = i;
                 //DONT FORGET TO REMOVE THE EVENT LISTENER AFTER DESTROYING OBJECTS
                 SongList[i].SelectObject.GetComponent<Button>().onClick.AddListener(() => { Clicked(curPos, false); });
-                SongList[i].TitleText.text = "Song Name " + (i + 1); // temp
+                SongList[i].TitleText.text = SortedMapSets[i].Beatmaps[0].Title;
+                SongList[i].SubText.text = SortedMapSets[i].Beatmaps[0].Artist; //+ " | " + SortedBeatmaps[i].;
+                //SongList[i].bgImage.texture = SortedBeatmaps[i].
                 ObjectYSize += SongList[i].sizeY + 5;
             }
             SelectYPos = ObjectYSize;
-            totalBeatmaps = SongList.Length;
-
         }
 
 
@@ -71,7 +79,7 @@ namespace Quaver.Main
             if (Input.GetMouseButtonDown(1)) mouseRightDown = true;
             else if (Input.GetMouseButtonUp(1)) mouseRightDown = false;
             if (mouseRightDown) SelectYPos = (int)((Input.mousePosition.y / Screen.height) * (float)(ObjectYSize));
-            SelectYPos = Mathf.Min(Mathf.Max(480 - offsetFromSelection, SelectYPos), ObjectYSize - 520); //540 - 100 (ui Size)
+            SelectYPos = Mathf.Min(Mathf.Max(400 - offsetFromSelection, SelectYPos), ObjectYSize - 520); //Set Max pos
 
             //Set Selection Position
             posTween += (SelectYPos - posTween) * Mathf.Min(Time.deltaTime * 5f, 1);
@@ -115,12 +123,14 @@ namespace Quaver.Main
                     DifficultyList[i].SelectObject.GetComponent<Button>().onClick.RemoveAllListeners();
                     Destroy(DifficultyList[i].SelectObject);
                 }
-                DifficultyList = new SongSelectObject[SongList[pos].diffCount];
+                SelectionDiffCount = SortedMapSets[pos].Beatmaps.Count;
+                DifficultyList = new SongSelectObject[SelectionDiffCount];
                 int newSongPos = -5;
-                for (int i = 0; i < SongList[pos].diffCount; i++)
+                for (int i = 0; i < SelectionDiffCount; i++)
                 {
-                    DifficultyList[i] = new SongSelectObject(i + 1, DiffSelect, SelectionSet.transform, SongList[pos].posY - 75 - newSongPos, i);
-                    DifficultyList[i].TitleText.text = "Random Difficulty " + (i + 1);
+                    DifficultyList[i] = new SongSelectObject(i + 1, DiffSelect, SelectionSet.transform, SongList[pos].posY - 75 - newSongPos);
+                    DifficultyList[i].TitleText.text = SortedMapSets[pos].Beatmaps[i].Difficulty;
+                    DifficultyList[i].SubText.text = "★"+ string.Format("{0:f2}", SortedMapSets[pos].Beatmaps[i].Stars/100f);
                     int curPos = i;
                     DifficultyList[i].SelectObject.GetComponent<Button>().onClick.AddListener(() => { Clicked(curPos, true); });
                     newSongPos += DifficultyList[i].sizeY + 5;

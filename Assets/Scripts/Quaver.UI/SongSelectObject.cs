@@ -9,25 +9,20 @@ namespace Quaver.UI
     public class SongSelectObject : MonoBehaviour {
 
         //Song Variables
-        //public Beatmap SelectBeatmap; BEATMAP REFERENCE
-        public int diffCount; // temp
 
         //UI Variables
         public GameObject SelectObject;
         public Transform ParentTransform;
-        public GameObject SelectParent;
         public RawImage bgImage;
         public RawImage rankingImage;
 
         public Text TitleText;
-        public Text ArtistText;
-        public int selectPos;
+        public Text SubText;
         public int posY;
         public int sizeY;
 
-        public SongSelectObject(int SubSelection, GameObject newSObject, Transform newParent, int newPosY, int newSelectPos)
+        public SongSelectObject(int SubSelection, GameObject newSObject, Transform newParent, int newPosY)
         {
-            diffCount = (int)Random.Range(1, 12); //TEMP
 
             SelectObject = Instantiate(newSObject, newParent);
             ParentTransform = SelectObject.transform.GetComponent<Transform>();
@@ -38,11 +33,14 @@ namespace Quaver.UI
             bgImage = SelectObject.GetComponent<RawImage>();
             if (SubSelection == 0)
             {
-                ArtistText = SelectObject.transform.Find("SongArtist").GetComponent<Text>();
+                SubText = SelectObject.transform.Find("SongArtist").GetComponent<Text>();
                 ParentTransform.localPosition = new Vector2(5, posY);
             }
-            else ParentTransform.localPosition = new Vector2(450 + SubSelection*60f, posY);
-            selectPos = newSelectPos;
+            else
+            {
+                ParentTransform.localPosition = new Vector2(450 + SubSelection * 60f, posY);
+                SubText = SelectObject.transform.Find("SongDiff").GetComponent<Text>();
+            }
 
         }
     }
