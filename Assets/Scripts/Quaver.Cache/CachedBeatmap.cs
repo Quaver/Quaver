@@ -18,10 +18,14 @@ namespace Quaver.Cache
 		public int Status;
 		public DateTime LastPlayed;
 		public float Stars;
+		public string Creator;
+		public string BackgroundPath;
+		public string AudioPath;
 
 		// Set all the cached beatmap values in the constructor
 		public CachedBeatmap(string directory, string path, int beatmapSetID, int beatmapID, string artist,
-							string title, string difficulty, string rank, int status, DateTime lastPlayed, float stars = 0)
+							string title, string difficulty, string rank, int status, DateTime lastPlayed, float stars, 
+							string creator, string bgPath, string audioPath)
 		{
 			this.Directory = directory;
 			this.Path = path;
@@ -34,6 +38,9 @@ namespace Quaver.Cache
 			this.Status = status;
 			this.LastPlayed = lastPlayed;
 			this.Stars = stars;
+			this.Creator = creator;
+			this.BackgroundPath = bgPath;
+			this.AudioPath = audioPath;
 		}
 
 	}
