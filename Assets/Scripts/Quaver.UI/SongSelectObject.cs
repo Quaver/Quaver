@@ -15,7 +15,7 @@ namespace Quaver.UI
         //UI Variables
         public GameObject SelectObject;
         public Transform ParentTransform;
-        public SongSelectUI SelectParent;
+        public GameObject SelectParent;
         public RawImage bgImage;
         public RawImage rankingImage;
 
@@ -25,7 +25,7 @@ namespace Quaver.UI
         public int posY;
         public int sizeY;
 
-        public SongSelectObject(int SubSelection, GameObject newSObject, Transform newParent, int newPosY, int newSelectPos, SongSelectUI SongList)
+        public SongSelectObject(int SubSelection, GameObject newSObject, Transform newParent, int newPosY, int newSelectPos)
         {
             diffCount = (int)Random.Range(1, 12); //TEMP
 
@@ -42,7 +42,6 @@ namespace Quaver.UI
                 ParentTransform.localPosition = new Vector2(5, posY);
             }
             else ParentTransform.localPosition = new Vector2(450 + SubSelection*60f, posY);
-            SelectParent = SongList;
             selectPos = newSelectPos;
 
         }
