@@ -15,16 +15,13 @@ namespace Quaver.Audio
 		public static void LoadSong(CachedBeatmap map, AudioSource gameAudio)
 		{
 			// Parse the cached beatmap, and find the audio file from it
-			QuaFile beatmap = QuaParser.Parse(map.Path);
-			string audioPath = map.Directory + "/" + beatmap.AudioFile;
-
-			if (!File.Exists(audioPath))
+			if (!File.Exists(map.AudioPath))
 			{
 				Debug.LogError("[AUDIO PLAYER] Error: File cannot be played because it was not found!");
 				return;
 			}
 
-            string url = "file:///" + audioPath;
+            string url = "file:///" + map.AudioPath;
 
             WWW audioLoader = new WWW(url);
 
