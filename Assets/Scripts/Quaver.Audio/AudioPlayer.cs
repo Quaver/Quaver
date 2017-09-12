@@ -12,7 +12,7 @@ namespace Quaver.Audio
 	{
 		// This is purely responsible for loading a beatmap's audio file.
 		// It will take in a cached map, parse it, and load it's audio from the file system.
-		public static void LoadSong(CachedBeatmap map, AudioSource gameAudio)
+		public static void LoadSong(CachedBeatmap map, AudioSource gameAudio, bool usePreviewTime = false)
 		{
 			// Parse the cached beatmap, and find the audio file from it
 			if (!File.Exists(map.AudioPath))
@@ -37,6 +37,14 @@ namespace Quaver.Audio
                 if (!gameAudio.isPlaying && gameAudio.clip.isReadyToPlay)
                 {
                     Debug.Log("[AUDIO PLAYER] Audio Track Loaded! Starting Song.");
+
+					// TODO: If usePreviewTime is equal to true, then we'll start the song from the preview time of the cachedmap
+					if (usePreviewTime)
+					{
+						// play audio starting at CachedMap.PreviewTime
+						gameAudio.timeSamples = map.AudioPreviewTime;
+					}
+					
                     gameAudio.Play();
                 }
             }
