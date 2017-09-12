@@ -42,7 +42,7 @@ namespace Quaver.Audio
 					if (usePreviewTime)
 					{
 						// play audio starting at CachedMap.PreviewTime
-						gameAudio.timeSamples = map.AudioPreviewTime;
+						gameAudio.time = map.AudioPreviewTime / 1000f;
 					}
 					
                     gameAudio.Play();

@@ -78,7 +78,7 @@ namespace Quaver.Main
             if (Input.GetMouseButtonDown(1)) mouseRightDown = true;
             else if (Input.GetMouseButtonUp(1)) mouseRightDown = false;
             if (mouseRightDown) SelectYPos = (int)((Input.mousePosition.y / Screen.height) * (float)(ObjectYSize));
-            SelectYPos = Mathf.Min(Mathf.Max(485 - offsetFromSelection, SelectYPos), ObjectYSize - 485); //Set position boundary. (485,485)
+            SelectYPos = Mathf.Min(Mathf.Max(390 - offsetFromSelection, SelectYPos), ObjectYSize - 485); //Set position boundary. (485-95,485)
 
             //Set Selection Position
             posTween += (SelectYPos - posTween) * Mathf.Min(Time.deltaTime * 5f, 1);
@@ -117,7 +117,7 @@ namespace Quaver.Main
             if (!subSelection)
             {
                 SongSelection = pos;
-                AudioPlayer.LoadSong(SortedMapSets[SongSelection].Beatmaps[0], Manager.SongAudioSource);
+                AudioPlayer.LoadSong(SortedMapSets[pos].Beatmaps[0], Manager.SongAudioSource,true);
                 //Manager.SongAudioSource.Play();
                 for (int i = 0; i < DifficultyList.Length; i++)
                 {
@@ -128,7 +128,7 @@ namespace Quaver.Main
                 int newSongPos = -5;
                 for (int i = 0; i < SortedMapSets[pos].Beatmaps.Count; i++)
                 {
-                    DifficultyList[i] = new SongSelectObject(i + 1, DiffSelect, SelectionSet.transform, SongList[pos].posY - 75 - newSongPos, SortedMapSets[pos]);
+                    DifficultyList[i] = new SongSelectObject(i + 1, DiffSelect, SelectionSet.transform, SongList[pos].posY - 75 - newSongPos, SortedMapSets[pos], SortedMapSets[pos].Beatmaps[i]);
                     DifficultyList[i].TitleText.text = SortedMapSets[pos].Beatmaps[i].Difficulty;
                     DifficultyList[i].SubText.text = "★" + string.Format("{0:f2}", SortedMapSets[pos].Beatmaps[i].Stars / 100f);
                     int curPos = i;
@@ -144,7 +144,7 @@ namespace Quaver.Main
             {
                 SelectYPos = DifficultyList[pos].posY;
                 Manager.currentMap = DifficultyList[pos].Beatmap;
-                AudioPlayer.LoadSong(DifficultyList[pos].Beatmap, Manager.SongAudioSource);
+                AudioPlayer.LoadSong(DifficultyList[pos].Beatmap, Manager.SongAudioSource,true);
                 //Manager.SongAudioSource.Play();
             }
         }
