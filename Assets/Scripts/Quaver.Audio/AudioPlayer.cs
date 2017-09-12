@@ -20,33 +20,10 @@ namespace Quaver.Audio
 				Debug.LogError("[AUDIO PLAYER] Error: File cannot be played because it was not found!");
 				return;
 			}
-
-            string url = "file:///" + map.AudioPath;
-
-            WWW audioLoader = new WWW(url);
-
-            while (!audioLoader.isDone)
+            else
             {
-                Debug.Log("[AUDIO PLAYER] Loading Audio Track: " + url);
-            }
-
-            if (audioLoader.isDone)
-            {
-                gameAudio.clip = audioLoader.GetAudioClip(false, false, AudioType.OGGVORBIS);
-
-                if (!gameAudio.isPlaying && gameAudio.clip.isReadyToPlay)
-                {
-                    Debug.Log("[AUDIO PLAYER] Audio Track Loaded! Starting Song.");
-
-					// TODO: If usePreviewTime is equal to true, then we'll start the song from the preview time of the cachedmap
-					if (usePreviewTime)
-					{
-						// play audio starting at CachedMap.PreviewTime
-						gameAudio.time = map.AudioPreviewTime / 1000f;
-					}
-					
-                    gameAudio.Play();
-                }
+                Debug.Log("[AUDIO PLAYER] Created AudioBufferer");
+                AudioBufferer buffer = new AudioBufferer(map, gameAudio, usePreviewTime);
             }
 			
 		}
