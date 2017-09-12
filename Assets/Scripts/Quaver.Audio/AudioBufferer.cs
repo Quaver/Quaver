@@ -46,6 +46,7 @@ namespace Quaver.Audio
             //Removes game object
             Debug.Log("[AUDIO BUFFER] DONE!");
             Destroy(obj);
+            Destroy(this);
         }
     }
 }
