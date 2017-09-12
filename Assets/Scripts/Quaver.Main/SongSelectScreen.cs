@@ -6,6 +6,7 @@ using Quaver.UI;
 using UnityEngine.UI;
 using Quaver.Cache;
 using Quaver.SongSelect;
+using Quaver.Audio;
 
 namespace Quaver.Main
 {
@@ -118,6 +119,8 @@ namespace Quaver.Main
             if (!subSelection)
             {
                 SongSelection = pos;
+                AudioPlayer.LoadSong(SortedMapSets[SongSelection].Beatmaps[0], Manager.SongAudioSource);
+                //Manager.SongAudioSource.Play();
                 for (int i = 0; i < DifficultyList.Length; i++)
                 {
                     DifficultyList[i].SelectObject.GetComponent<Button>().onClick.RemoveAllListeners();
@@ -130,7 +133,7 @@ namespace Quaver.Main
                 {
                     DifficultyList[i] = new SongSelectObject(i + 1, DiffSelect, SelectionSet.transform, SongList[pos].posY - 75 - newSongPos);
                     DifficultyList[i].TitleText.text = SortedMapSets[pos].Beatmaps[i].Difficulty;
-                    DifficultyList[i].SubText.text = "★"+ string.Format("{0:f2}", SortedMapSets[pos].Beatmaps[i].Stars/100f);
+                    DifficultyList[i].SubText.text = "★" + string.Format("{0:f2}", SortedMapSets[pos].Beatmaps[i].Stars / 100f);
                     int curPos = i;
                     DifficultyList[i].SelectObject.GetComponent<Button>().onClick.AddListener(() => { Clicked(curPos, true); });
                     newSongPos += DifficultyList[i].sizeY + 5;
@@ -144,6 +147,8 @@ namespace Quaver.Main
             {
                 SelectYPos = DifficultyList[pos].posY;
                 DiffSelection = pos;
+                AudioPlayer.LoadSong(SortedMapSets[SongSelection].Beatmaps[DiffSelection], Manager.SongAudioSource);
+                //Manager.SongAudioSource.Play();
             }
         }
 
