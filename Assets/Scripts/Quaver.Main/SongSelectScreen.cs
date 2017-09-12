@@ -118,11 +118,12 @@ namespace Quaver.Main
             {
                 SongSelection = pos;
                 AudioPlayer.LoadSong(SortedMapSets[pos].Beatmaps[0], Manager.SongAudioSource,true);
-                //Manager.SongAudioSource.Play();
+                BackgroundLoader.Load(SortedMapSets[pos].Beatmaps[0], Manager.bgImage);
                 for (int i = 0; i < DifficultyList.Length; i++)
                 {
                     DifficultyList[i].SelectObject.GetComponent<Button>().onClick.RemoveAllListeners();
                     Destroy(DifficultyList[i].SelectObject);
+                    Destroy(DifficultyList[i]);
                 }
                 DifficultyList = new SongSelectObject[SortedMapSets[pos].Beatmaps.Count];
                 int newSongPos = -5;
@@ -144,8 +145,8 @@ namespace Quaver.Main
             {
                 SelectYPos = DifficultyList[pos].posY;
                 Manager.currentMap = DifficultyList[pos].Beatmap;
+                BackgroundLoader.Load(Manager.currentMap, Manager.bgImage);
                 AudioPlayer.LoadSong(DifficultyList[pos].Beatmap, Manager.SongAudioSource,true);
-                //Manager.SongAudioSource.Play();
             }
         }
 

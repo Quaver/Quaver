@@ -22,7 +22,6 @@ namespace Quaver.Gameplay
         /*GSM REFERENCES (Anything that references the game state manager)*/
         private QuaFile qFile;
         private AudioSource songAudio;
-        private GameObject bgImage;
 
         /*CONFIG VALUES*/
         private int config_scrollSpeed;
@@ -133,7 +132,6 @@ namespace Quaver.Gameplay
                 receptorSize = new float[4];
                 keyDown = new bool[4];
 
-                bgImage = Manager.bgImage;
                 songAudio = Manager.SongAudioSource;
                 //songAudio.clip = qFile.audi; get audio from qfile.
 
@@ -181,7 +179,6 @@ namespace Quaver.Gameplay
                 }
 
                 //Set Skin Values
-                bgImage.transform.localScale = Vector3.one * (20f * (config_PixelUnitSize / (float)bgImage.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y)); //Scales the bg to y axis
                 bgMask.transform.localScale = new Vector3(
                     ((float)(skin_columnSize + skin_bgMaskBufferSize + skin_noteBufferSpacing) / config_PixelUnitSize) * 4f * (config_PixelUnitSize / (float)bgMask.transform.GetComponent<SpriteRenderer>().sprite.rect.size.x),
                     20f * (config_PixelUnitSize / (float)bgMask.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y)
