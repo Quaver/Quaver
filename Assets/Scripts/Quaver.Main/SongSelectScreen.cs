@@ -30,14 +30,12 @@ namespace Quaver.Main
 
         //Diff/Song Selection
         private int SongSelection = 0;
-        private int DiffSelection = 0;
 
         //Beatmap display Variables
         private bool mouseRightDown = false;
         private int ObjectYSize = 0;
         private int offsetFromSelection = 0;
         private float SelectYPos = 0;
-        private int SelectionDiffCount;
 
         //Animatioon
         private float posTween = 0;
@@ -59,7 +57,7 @@ namespace Quaver.Main
             DifficultyList = new SongSelectObject[0];
             for (int i = 0; i < totalBeatmaps; i++)
             {
-                SongList[i] = new SongSelectObject(0, SongSelect, SelectionSet.transform, ObjectYSize);
+                SongList[i] = new SongSelectObject(0, SongSelect, SelectionSet.transform, ObjectYSize,SortedMapSets[i]);
                 int curPos = i;
                 //DONT FORGET TO REMOVE THE EVENT LISTENER AFTER DESTROYING OBJECTS
                 SongList[i].SelectObject.GetComponent<Button>().onClick.AddListener(() => { Clicked(curPos, false); });
@@ -80,7 +78,7 @@ namespace Quaver.Main
             if (Input.GetMouseButtonDown(1)) mouseRightDown = true;
             else if (Input.GetMouseButtonUp(1)) mouseRightDown = false;
             if (mouseRightDown) SelectYPos = (int)((Input.mousePosition.y / Screen.height) * (float)(ObjectYSize));
-            SelectYPos = Mathf.Min(Mathf.Max(400 - offsetFromSelection, SelectYPos), ObjectYSize - 520); //Set Max pos
+            SelectYPos = Mathf.Min(Mathf.Max(485 - offsetFromSelection, SelectYPos), ObjectYSize - 485); //Set position boundary. (485,485)
 
             //Set Selection Position
             posTween += (SelectYPos - posTween) * Mathf.Min(Time.deltaTime * 5f, 1);
@@ -126,12 +124,11 @@ namespace Quaver.Main
                     DifficultyList[i].SelectObject.GetComponent<Button>().onClick.RemoveAllListeners();
                     Destroy(DifficultyList[i].SelectObject);
                 }
-                SelectionDiffCount = SortedMapSets[pos].Beatmaps.Count;
-                DifficultyList = new SongSelectObject[SelectionDiffCount];
+                DifficultyList = new SongSelectObject[SortedMapSets[pos].Beatmaps.Count];
                 int newSongPos = -5;
-                for (int i = 0; i < SelectionDiffCount; i++)
+                for (int i = 0; i < SortedMapSets[pos].Beatmaps.Count; i++)
                 {
-                    DifficultyList[i] = new SongSelectObject(i + 1, DiffSelect, SelectionSet.transform, SongList[pos].posY - 75 - newSongPos);
+                    DifficultyList[i] = new SongSelectObject(i + 1, DiffSelect, SelectionSet.transform, SongList[pos].posY - 75 - newSongPos, SortedMapSets[pos]);
                     DifficultyList[i].TitleText.text = SortedMapSets[pos].Beatmaps[i].Difficulty;
                     DifficultyList[i].SubText.text = "★" + string.Format("{0:f2}", SortedMapSets[pos].Beatmaps[i].Stars / 100f);
                     int curPos = i;
@@ -146,8 +143,8 @@ namespace Quaver.Main
             else
             {
                 SelectYPos = DifficultyList[pos].posY;
-                DiffSelection = pos;
-                AudioPlayer.LoadSong(SortedMapSets[SongSelection].Beatmaps[DiffSelection], Manager.SongAudioSource);
+                Manager.currentMap = DifficultyList[pos].Beatmap;
+                AudioPlayer.LoadSong(DifficultyList[pos].Beatmap, Manager.SongAudioSource);
                 //Manager.SongAudioSource.Play();
             }
         }
