@@ -17,7 +17,7 @@ namespace Quaver.UI
 				string bgPath = map.BackgroundPath.Replace("\"", "");
 				Sprite sprite = new Sprite();
 
-				if (File.Exists(bgPath));
+				if (File.Exists(bgPath))
 				{
 					byte[] data = File.ReadAllBytes(bgPath);
 					Texture2D texture = new Texture2D(64, 64, TextureFormat.ARGB32, false);
