@@ -6,7 +6,7 @@ using UnityEngine;
 using Quaver.Cache;
 using UnityEngine.UI;
 
-namespace Quaver.UI
+namespace Quaver.Graphics
 {
 	public class BackgroundLoader
 	{
