@@ -8,45 +8,47 @@ using Quaver.Cache;
 namespace Quaver.UI
 {
 
-    public class SongSelectObject : MonoBehaviour {
+    public class SongSelectObject : ScriptableObject {
 
         //Song Variables
         public MapDirectory MapSet;
         public CachedBeatmap Beatmap;
 
-        //UI Variables
+        //UI Object Variables
         public GameObject SelectObject;
         public Transform ParentTransform;
         public RawImage bgImage;
         public RawImage rankingImage;
 
+        //Hiarchy Variables
         public Text TitleText;
         public Text SubText;
         public int posY;
         public int sizeY;
+        public int diffPos;
 
-        public SongSelectObject(int SubSelection, GameObject newSObject, Transform newParent, int newPosY, MapDirectory newMapSet, CachedBeatmap newBeatmap = null)
+        public void init(int SubSelection, GameObject newSObject, Transform newParent, int newPosY, MapDirectory newMapSet, CachedBeatmap newBeatmap = null)
         {
-            MapSet = newMapSet;
-            Beatmap = newBeatmap;
+
+            //Set UI Object Variables
             SelectObject = Instantiate(newSObject, newParent);
             ParentTransform = SelectObject.transform.GetComponent<Transform>();
-            sizeY = (int)ParentTransform.GetComponent<RectTransform>().rect.size.y;
-            posY = newPosY;
             TitleText = SelectObject.transform.Find("SongTitle").GetComponent<Text>();
             rankingImage = SelectObject.transform.Find("Ranking").GetComponent<RawImage>();
             bgImage = SelectObject.transform.Find("bgImage").GetComponent<RawImage>();
-            if (SubSelection == 0)
-            {
-                SubText = SelectObject.transform.Find("SongArtist").GetComponent<Text>();
-                ParentTransform.localPosition = new Vector2(5, posY);
-            }
-            else
-            {
-                ParentTransform.localPosition = new Vector2(450 + SubSelection * 60f, posY);
-                SubText = SelectObject.transform.Find("SongDiff").GetComponent<Text>();
-            }
 
+            //Set Hiarchy Variables
+            MapSet = newMapSet;
+            Beatmap = newBeatmap;
+            diffPos = SubSelection;
+            sizeY = (int)ParentTransform.GetComponent<RectTransform>().rect.size.y;
+            posY = newPosY;
+
+            //Set SubText (Depending if it's a mapset or diff)
+            if (SubSelection == 0)
+                SubText = SelectObject.transform.Find("SongArtist").GetComponent<Text>();
+            else
+                SubText = SelectObject.transform.Find("SongDiff").GetComponent<Text>();
         }
     }
 }
