@@ -38,7 +38,7 @@ namespace Quaver.Gameplay
         private int[] judgeTimes = new int[6] { 16, 37, 70, 100, 124, 80 }; //OD9 judge times in ms (0,1,2,3,4), LN offset 5
 
         /*GAME MODS*/
-        private const bool mod_noSV = false;
+        private const bool mod_noSV = true;
         private const bool mod_pull = false;
         private const bool mod_split = false;
         private const bool mod_spin = false;
@@ -187,7 +187,7 @@ namespace Quaver.Gameplay
                 //SNAP TO X AXIS bg.transform.localScale = Vector3.one * ((float)screenWidth/(float)screenHeight)*20f * (config_PixelUnitSize / (float)bg.transform.GetComponent<SpriteRenderer>().sprite.rect.size.x);
 
                 //Calculate Average BPM of map
-                if (!mod_noSV)
+                if (!mod_noSV || SvQueue.Count > 1)
                 {
 
                     if (timingQueue.Count > 1)
@@ -277,7 +277,7 @@ namespace Quaver.Gameplay
                         }
                     }
                 }
-                //IF NO_SV is disabled
+                //IF NO_SV is disabled or if there's no SV
                 else
                 {
                     TimingObject newTp = new TimingObject();
