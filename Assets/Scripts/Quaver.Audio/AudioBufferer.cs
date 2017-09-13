@@ -11,15 +11,13 @@ namespace Quaver.Audio
     {
 
         private WWW audioLoader;
-        private GameObject obj;
         private AudioSource bufferAudio;
         private CachedBeatmap bufferMap;
         private bool bufferPreview;
         private float bufferPlayDelay;
 
-        public AudioBufferer(CachedBeatmap map, AudioSource gameAudio, bool usePreviewTime = false, float playDelay = 0f)
+        public void init(CachedBeatmap map, AudioSource gameAudio, bool usePreviewTime = false, float playDelay = 0f)
         {
-
             bufferAudio = gameAudio;
             bufferMap = map;
             bufferPreview = usePreviewTime;
@@ -27,8 +25,7 @@ namespace Quaver.Audio
 
             string url = "file:///" + map.AudioPath;
             audioLoader = new WWW(url);
-            obj = new GameObject();
-            obj.AddComponent<AudioBufferer>().StartCoroutine(BufferAudio());
+            StartCoroutine(BufferAudio());
         }
 
         private IEnumerator BufferAudio()
@@ -48,7 +45,6 @@ namespace Quaver.Audio
 
             //Removes game object
             Debug.Log("[AUDIO BUFFER] DONE!");
-            Destroy(obj);
             Destroy(this);
         }
     }

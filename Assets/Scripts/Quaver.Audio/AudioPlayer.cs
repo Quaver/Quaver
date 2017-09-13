@@ -23,7 +23,8 @@ namespace Quaver.Audio
             else
             {
                 Debug.Log("[AUDIO PLAYER] Created AudioBufferer");
-                AudioBufferer buffer = new AudioBufferer(map, gameAudio, usePreviewTime,playDelay);
+                GameObject obj = new GameObject();
+                obj.AddComponent<AudioBufferer>().init(map, gameAudio, usePreviewTime, playDelay);
             }
 			
 		}
