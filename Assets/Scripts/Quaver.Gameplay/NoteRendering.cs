@@ -38,7 +38,7 @@ namespace Quaver.Gameplay
         private int[] judgeTimes = new int[6] { 16, 37, 70, 100, 124, 80 }; //OD9 judge times in ms (0,1,2,3,4), LN offset 5
 
         /*GAME MODS*/
-        private const bool mod_noSV = true;
+        private const bool mod_noSV = false;
         private const bool mod_pull = false;
         private const bool mod_split = false;
         private const bool mod_spin = false;
@@ -76,9 +76,12 @@ namespace Quaver.Gameplay
         private float modInterval;
         private ulong curSVPos;
         private int curSVint;
+        private bool songDone;
+        private float songEndOffset;
 
         public void Start()
         {
+            //Check if beatmap is valid
             qFile = QuaParser.Parse(Manager.currentMap.Path);
             if (!qFile.IsValidQua)
             {
@@ -184,12 +187,10 @@ namespace Quaver.Gameplay
                     ((float)(skin_columnSize + skin_bgMaskBufferSize + skin_noteBufferSpacing) / config_PixelUnitSize) * 4f * (config_PixelUnitSize / (float)bgMask.transform.GetComponent<SpriteRenderer>().sprite.rect.size.x),
                     20f * (config_PixelUnitSize / (float)bgMask.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y)
                     , 1f);
-                //SNAP TO X AXIS bg.transform.localScale = Vector3.one * ((float)screenWidth/(float)screenHeight)*20f * (config_PixelUnitSize / (float)bg.transform.GetComponent<SpriteRenderer>().sprite.rect.size.x);
 
                 //Calculate Average BPM of map
-                if (!mod_noSV || SvQueue.Count > 1)
+                if (!mod_noSV && SvQueue.Count > 1)
                 {
-
                     if (timingQueue.Count > 1)
                     {
                         foreach (TimingObject tp in timingQueue)
@@ -209,46 +210,43 @@ namespace Quaver.Gameplay
 
                     //Create and converts timing points to SV's
                     int hij = 0;
-                    if (SvQueue.Count > 0)
+                    for (j = 0; j < timingQueue.Count; j++)
                     {
-                        for (j = 0; j < timingQueue.Count; j++)
-                        {
 
-                            if (timingQueue[j].StartTime < SvQueue[0].StartTime)
+                        if (timingQueue[j].StartTime < SvQueue[0].StartTime)
+                        {
+                            TimingObject newTp = new TimingObject();
+                            newTp.StartTime = timingQueue[j].StartTime;
+                            newTp.Multiplier = 1f;
+                            SvQueue.Insert(0, newTp);
+                        }
+                        else if (timingQueue[j].StartTime >= SvQueue[SvQueue.Count - 1].StartTime)
+                        {
+                            if (timingQueue[j].StartTime - SvQueue[SvQueue.Count - 1].StartTime > 0.001f)
                             {
                                 TimingObject newTp = new TimingObject();
                                 newTp.StartTime = timingQueue[j].StartTime;
                                 newTp.Multiplier = 1f;
-                                SvQueue.Insert(0, newTp);
+                                SvQueue.Add(newTp);
                             }
-                            else if (timingQueue[j].StartTime >= SvQueue[SvQueue.Count - 1].StartTime)
+                        }
+                        else
+                        {
+                            for (i = hij; i < SvQueue.Count; i++)
                             {
-                                if (timingQueue[j].StartTime - SvQueue[SvQueue.Count - 1].StartTime > 0.001f)
+                                if (i + 1 < SvQueue.Count && timingQueue[j].StartTime < SvQueue[i + 1].StartTime)
                                 {
-                                    TimingObject newTp = new TimingObject();
-                                    newTp.StartTime = timingQueue[j].StartTime;
-                                    newTp.Multiplier = 1f;
-                                    SvQueue.Add(newTp);
-                                }
-                            }
-                            else
-                            {
-                                for (i = hij; i < SvQueue.Count; i++)
-                                {
-                                    if (i + 1 < SvQueue.Count && timingQueue[j].StartTime < SvQueue[i + 1].StartTime)
+                                    if (Mathf.Abs(timingQueue[j].StartTime - SvQueue[i + 1].StartTime) > 0.001f)
                                     {
-                                        if (Mathf.Abs(timingQueue[j].StartTime - SvQueue[i + 1].StartTime) > 0.001f)
-                                        {
-                                            TimingObject newTp = new TimingObject();
-                                            newTp.StartTime = timingQueue[j].StartTime;
-                                            newTp.Multiplier = 1f;
-                                            SvQueue.Add(newTp);
-                                            i++;
-                                            hij = i;
-                                        }
+                                        TimingObject newTp = new TimingObject();
+                                        newTp.StartTime = timingQueue[j].StartTime;
+                                        newTp.Multiplier = 1f;
+                                        SvQueue.Add(newTp);
+                                        i++;
+                                        hij = i;
                                     }
-                                    else break;
                                 }
+                                else break;
                             }
                         }
                     }
@@ -256,7 +254,7 @@ namespace Quaver.Gameplay
                     //Normalizes SV's in between each BPM change interval
                     hij = 0;
                     SvQueue.Sort(delegate (TimingObject p1, TimingObject p2) { return p1.StartTime.CompareTo(p2.StartTime); });
-                    if (timingQueue.Count > 1)
+                    if (timingQueue.Count >= 1)
                     {
                         for (i = 0; i < timingQueue.Count; i++)
                         {
@@ -373,12 +371,22 @@ namespace Quaver.Gameplay
             if (qFile.IsValidQua && isActive)
             {
                 //Check what to do after unpaused
-                if (!songAudio.isPlaying) songAudio.UnPause();
+                if (songAudio.time >= songAudio.clip.length && !songDone) songDone = true;
+
+                if (!songDone && !songAudio.isPlaying && songAudio.time < songAudio.clip.length) songAudio.UnPause();
+                else if (songDone) songEndOffset += Time.deltaTime;
 
 
                 //Song Time Calculation (ms)
-                if (actualSongTime < 0) actualSongTime += Time.deltaTime;
-                else actualSongTime = ((songAudio.time) + (actualSongTime + Time.deltaTime)) / 2f;
+                if (songDone)
+                {
+                    actualSongTime = songAudio.clip.length + songEndOffset;
+                }
+                else
+                {
+                    if (actualSongTime < 0) actualSongTime += Time.deltaTime;
+                    else actualSongTime = ((songAudio.time) + (actualSongTime + Time.deltaTime)) / 2f;
+                }
                 curSongTime = actualSongTime * 1000f - config_offset;
 
                 //Calculates curSV Position
@@ -534,6 +542,7 @@ namespace Quaver.Gameplay
             }
         }
 
+        //Creates/receycles new note
         GameObject InstantiateNote(GameObject hoo)
         {
             NoteObject ho = noteQueue[0];
@@ -571,6 +580,7 @@ namespace Quaver.Gameplay
             return hoo;
         }
 
+        // Check if LN is released on time or early
         void JudgeLN(int kkey, float timePos)
         {
             int curNote = -1; //Cannot create null struct :(
@@ -619,6 +629,7 @@ namespace Quaver.Gameplay
             }
         }
 
+        //Check if note is hit on time/late/early
         void JudgeNote(int kkey, float timePos)
         {
             if (hitQueue[kkey - 1].Count > 0 && hitQueue[kkey - 1][0].StartTime - curSongTime < judgeTimes[4])
@@ -673,6 +684,7 @@ namespace Quaver.Gameplay
             }
         }
 
+        //Remove note and either destroy it or recycle
         void RemoveNote(GameObject curNote)
         {
             if (noteQueue.Count > 0) InstantiateNote(curNote);
