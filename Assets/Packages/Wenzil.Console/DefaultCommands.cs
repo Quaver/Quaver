@@ -19,6 +19,7 @@ namespace Wenzil.Console
             ConsoleCommandsDatabase.RegisterCommand(ConfigGenCommand.name, ConfigGenCommand.description, ConfigGenCommand.usage, ConfigGenCommand.Execute);
             ConsoleCommandsDatabase.RegisterCommand(NotificationCommand.name, NotificationCommand.description, NotificationCommand.usage, NotificationCommand.Execute);
             ConsoleCommandsDatabase.RegisterCommand(CalculateDifficultyCommand.name, CalculateDifficultyCommand.description, CalculateDifficultyCommand.usage, CalculateDifficultyCommand.Execute);
+            ConsoleCommandsDatabase.RegisterCommand(ParseSkinCommand.name, ParseSkinCommand.description, ParseSkinCommand.usage, ParseSkinCommand.Execute);
         }
     }
 }
