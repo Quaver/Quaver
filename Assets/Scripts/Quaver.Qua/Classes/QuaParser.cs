@@ -233,7 +233,11 @@ namespace Quaver.Qua {
 			if (quaFile.TimingPoints.Count == 0)
 			{
 				quaFile.IsValidQua = false;
-				return quaFile;
+			}
+
+			if (quaFile.HitObjects.Count == 0)
+			{
+				quaFile.IsValidQua = false;
 			}
 
 			return quaFile;
