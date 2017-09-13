@@ -60,6 +60,9 @@ namespace Quaver.Osu.Beatmap {
                     case "[HitObjects]":
                         section = "[HitObjects]";
                         break;
+                    case "[Colours]":
+                        section = "[Colours]";
+                        break;
                 }
 
                 // Parse osu! file format
