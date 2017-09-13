@@ -58,7 +58,7 @@ namespace Quaver.SongSelect
 		// However, this will still order the maps in alphabetical order as well!
 		public static List<MapDirectory> Artist(List<MapDirectory> beatmapSets)
 		{
-			return OrderMapsBy.Title(beatmapSets.OrderByDescending(set => set.Beatmaps[0].Artist).ToList());
+			return beatmapSets.OrderByDescending(set => set.Beatmaps[0].Artist).ThenByDescending(set => set.Beatmaps[0].Title).ToList();
 		}
 
 		// This will take an existing MapDirectory and return a new one with the maps ordered by Title
