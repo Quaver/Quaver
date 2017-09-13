@@ -15,13 +15,15 @@ namespace Quaver.Audio
         private AudioSource bufferAudio;
         private CachedBeatmap bufferMap;
         private bool bufferPreview;
+        private float bufferPlayDelay;
 
-        public AudioBufferer(CachedBeatmap map, AudioSource gameAudio, bool usePreviewTime = false)
+        public AudioBufferer(CachedBeatmap map, AudioSource gameAudio, bool usePreviewTime = false, float playDelay = 0f)
         {
 
             bufferAudio = gameAudio;
             bufferMap = map;
             bufferPreview = usePreviewTime;
+            bufferPlayDelay = playDelay;
 
             string url = "file:///" + map.AudioPath;
             audioLoader = new WWW(url);
@@ -41,7 +43,8 @@ namespace Quaver.Audio
             //Set and play audio
             bufferAudio.clip = audioLoader.GetAudioClip(false,true, AudioType.OGGVORBIS);
             if (bufferPreview) bufferAudio.time = bufferMap.AudioPreviewTime / 1000f;
-            bufferAudio.Play();
+            else bufferAudio.time = 0;
+            bufferAudio.PlayDelayed(bufferPlayDelay);
 
             //Removes game object
             Debug.Log("[AUDIO BUFFER] DONE!");

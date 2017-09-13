@@ -4,6 +4,7 @@ using UnityEngine;
 using Quaver.Qua;
 using Quaver.Graphics;
 using Quaver.Main;
+using Quaver.Audio;
 
 namespace Quaver.Gameplay
 {
@@ -55,7 +56,7 @@ namespace Quaver.Gameplay
         private const int skin_timingBarPixelSize = 2;
         private const float skin_hitLightingScale = 4.0f; //Sets the scale of the hit lighting (relative to units)
         private const int skin_columnSize = 250;
-        private const int skin_receptorOffset = 0;
+        private const int skin_receptorYOffset = 50; //Sets the receptor's y position offset, relative to the edge of the screen.
         //private float[] skin_receptorRotations = new float[4] { -90f, 0f, 180f, 90f }; //Rotation of arrows if arrow skin is used
         private float[] skin_receptorRotations = new float[4] { 0, 0, 0, 0 }; //Rotation of arrows if arrow skin is used
 
@@ -78,7 +79,7 @@ namespace Quaver.Gameplay
 
         public void Start()
         {
-            qFile = QuaParser.Parse("E:\\GitHub\\Quaver\\Assets\\Songs\\BerserkerzWarefare345\\vibro345.qua");
+            qFile = QuaParser.Parse(Manager.currentMap.Path);
             if (!qFile.IsValidQua)
             {
                 print("IS NOT VALID QUA FILE");
@@ -157,7 +158,7 @@ namespace Quaver.Gameplay
 
                 //Declare Receptor Values
                 if (config_upScroll) scrollNegativeFactor = -1f;
-                receptorYPos = scrollNegativeFactor * (skin_columnSize / 256f + (float)skin_receptorOffset / 100f - 10f);
+                receptorYPos = scrollNegativeFactor * (skin_columnSize / 256f + (float)skin_receptorYOffset / 100f - 10f);
                 receptors = new GameObject[4];
                 hitLighting = new GameObject[4];
                 for (i = 0; i < 4; i++)
@@ -362,7 +363,7 @@ namespace Quaver.Gameplay
                 }
 
                 //Plays the song, but delayed
-                songAudio.PlayDelayed((float)config_playStartDelayed / 1000f);
+                AudioPlayer.LoadSong(Manager.currentMap, Manager.SongAudioSource, false, (float)config_playStartDelayed / 1000f);
                 loaded = true;
             }
         }
