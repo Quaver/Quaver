@@ -94,6 +94,7 @@ namespace Quaver.Main
 
             // Now, we want to sort all of the beatmaps.
             MapDirectories = OrderMapsBy.Directory(LoadedBeatmaps);
+            MapDirectories = OrderMapsBy.Artist(MapDirectories);
 
             // Select a random map from the map directories, which will be our first selected map.
             // Generate a random number from the list of loaded beatmaps, then we will
