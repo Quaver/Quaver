@@ -12,7 +12,7 @@ namespace Quaver.Audio
 	{
 		// This is purely responsible for loading a beatmap's audio file.
 		// It will take in a cached map, parse it, and load it's audio from the file system.
-		public static void LoadSong(CachedBeatmap map, AudioSource gameAudio, bool usePreviewTime = false)
+		public static void LoadSong(CachedBeatmap map, AudioSource gameAudio, bool usePreviewTime = false, float playDelay = 0f)
 		{
 			// Parse the cached beatmap, and find the audio file from it
 			if (!File.Exists(map.AudioPath))
@@ -23,7 +23,7 @@ namespace Quaver.Audio
             else
             {
                 Debug.Log("[AUDIO PLAYER] Created AudioBufferer");
-                AudioBufferer buffer = new AudioBufferer(map, gameAudio, usePreviewTime);
+                AudioBufferer buffer = new AudioBufferer(map, gameAudio, usePreviewTime,playDelay);
             }
 			
 		}

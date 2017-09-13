@@ -63,6 +63,8 @@ namespace Quaver.Main
                 SongList[i].SelectObject.GetComponent<Button>().onClick.AddListener(() => { Clicked(curPos, false); });
                 SongList[i].TitleText.text = SortedMapSets[i].Beatmaps[0].Title;
                 SongList[i].SubText.text = SortedMapSets[i].Beatmaps[0].Artist; //+ " | " + SortedBeatmaps[i].;
+                    if (SortedMapSets[i].Beatmaps[0].Creator.Length > 0)
+                SongList[i].SubText.text += " | " + SortedMapSets[i].Beatmaps[0].Creator;
                 BackgroundLoader.LoadTexture(SortedMapSets[i].Beatmaps[0], SongList[i].bgImage);
                 //SongList[i].bgImage.texture = SortedBeatmaps[i].
                 ObjectYSize += SongList[i].sizeY + 5;
@@ -168,7 +170,7 @@ namespace Quaver.Main
                 SelectYPos = DifficultyList[pos].posY;
                 if (DifficultyList[pos].Beatmap.AudioPath != Manager.currentMap.AudioPath)
                 {
-                    BackgroundLoader.LoadSprite(Manager.currentMap, Manager.bgImage);
+                    BackgroundLoader.LoadSprite(DifficultyList[pos].Beatmap, Manager.bgImage);
                     AudioPlayer.LoadSong(DifficultyList[pos].Beatmap, Manager.SongAudioSource, true);
                 }
                 Manager.currentMap = DifficultyList[pos].Beatmap;

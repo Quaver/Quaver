@@ -35,7 +35,7 @@ namespace Quaver.UI
             posY = newPosY;
             TitleText = SelectObject.transform.Find("SongTitle").GetComponent<Text>();
             rankingImage = SelectObject.transform.Find("Ranking").GetComponent<RawImage>();
-            bgImage = SelectObject.GetComponent<RawImage>();
+            bgImage = SelectObject.transform.Find("bgImage").GetComponent<RawImage>();
             if (SubSelection == 0)
             {
                 SubText = SelectObject.transform.Find("SongArtist").GetComponent<Text>();
