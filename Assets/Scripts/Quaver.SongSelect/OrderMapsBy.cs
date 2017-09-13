@@ -52,6 +52,26 @@ namespace Quaver.SongSelect
 			}
 
 			return sortedMaps;
+		}
+
+		// This will take an existing MapDirectory and return a new one with the maps ordered by Artist
+		// However, this will still order the maps in alphabetical order as well!
+		public static List<MapDirectory> Artist(List<MapDirectory> beatmapSets)
+		{
+			return OrderMapsBy.Title(beatmapSets.OrderByDescending(set => set.Beatmaps[0].Artist).ToList());
+		}
+
+		// This will take an existing MapDirectory and return a new one with the maps ordered by Title
+		public static List<MapDirectory> Title(List<MapDirectory> beatmapSets)
+		{
+			return beatmapSets.OrderByDescending(set => set.Beatmaps[0].Title).ToList();
+		} 
+
+		// This will take an existing MapDirectory and return a new one with the maps ordered by Creator
+		// but also orders the maps in alphabetical order by title as well!
+		public static List<MapDirectory> Creator(List<MapDirectory> beatmapSets)
+		{
+			return OrderMapsBy.Title(beatmapSets.OrderByDescending(set => set.Beatmaps[0].Creator).ToList());
 		} 
 	}
 }
