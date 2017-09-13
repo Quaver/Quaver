@@ -156,6 +156,10 @@ namespace Quaver.Cache
 
 						// Add the found missing map to the database.
 						AddToDatabase(foundMissingMap);
+
+					} else {
+						// Delete the .qua file from the file system.
+						File.Delete(quaFile);
 					}
 				}
 
