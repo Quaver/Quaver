@@ -19,10 +19,13 @@ namespace Wenzil.Console.Commands
 			if (args.Length > 0) 
 			{
 				string path = String.Join(" ", args);
-				IniData skin = SkinConfigLoader.Load(path);
+				Skin skin = SkinConfigLoader.Load(path);
 
-				Debug.Log(skin["General"]["Name"]);
-				return "Done!";
+                string skinLog = "[General] \n" + 
+                                "Name: " + skin.Name + "\n" +
+                                "Author: " + skin.Author + "\n" +
+                                "Version: " + skin.Version + "\n"; 
+				return skinLog;
 			}
 
 			return "Dude, give me the path of a skin.ini please. You're really chopping my eggplant here.";
