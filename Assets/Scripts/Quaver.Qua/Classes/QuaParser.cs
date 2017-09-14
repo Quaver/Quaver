@@ -123,6 +123,9 @@ namespace Quaver.Qua {
 							case "MapSetID":
 								quaFile.MapSetID = Int32.Parse(value);
 								break;
+							case "Description":
+								quaFile.Description = value;
+								break;
 						}						
 					}
 				}
