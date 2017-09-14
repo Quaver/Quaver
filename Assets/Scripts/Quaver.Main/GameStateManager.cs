@@ -12,7 +12,6 @@ using UnityStandardAssets.ImageEffects;
 
 namespace Quaver.Main
 {
-
     public class GameStateManager : MonoBehaviour
     {
         // IMPORTANT! These are the parsed config & all the loaded beatmaps!
