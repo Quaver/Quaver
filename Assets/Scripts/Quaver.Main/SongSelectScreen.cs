@@ -97,12 +97,12 @@ namespace Quaver.Main
             //Check if RightClick is active
             if (mouseRightDown) SelectYPos = (int)((Input.mousePosition.y / Screen.height) * (float)(ObjectYSize));
 
-            //Set position boundary. (485-95,485)
-            SelectYPos = Mathf.Min(Mathf.Max(390 - offsetFromSelection, SelectYPos), ObjectYSize - 485); 
+            //Set position boundary (top,bottom)
+            SelectYPos = Mathf.Min(Mathf.Max(565 - offsetFromSelection, SelectYPos), ObjectYSize - 605); 
 
             //Set Selection Y Position
             posTween += (SelectYPos - posTween) * Mathf.Min(Time.deltaTime * 5f, 1);
-            SelectionSet.transform.localPosition = new Vector2(-430, -posTween + 540);
+            SelectionSet.transform.localPosition = new Vector2(-430, -posTween + 720); //1440/2
 
             //Set offsetPos (when song is selected)
             if (offsetTween != offsetFromSelection)

@@ -33,17 +33,24 @@ namespace Quaver.Graphics
             
             if (spriteMode && bufferSprite != null)
             {
+                
                 //Create buffer image
                 Sprite sprite = new Sprite();
                 Texture2D texture = new Texture2D(64, 64, TextureFormat.ARGB32, true);
-                WWW data = new WWW(bufferPath);
 
-                //Wait before loading image onto unity as texture
-                yield return data;
-                yield return new WaitForSeconds(0.5f);
+                //Create file stream
+                FileStream fs = new FileStream(bufferPath, FileMode.Open, FileAccess.Read);
+                byte[] imageData = new byte[fs.Length];
+                fs.Read(imageData, 0, (int)fs.Length);
 
-                //Apply image to texture
-                data.LoadImageIntoTexture(texture);
+                //wait until file stream is done
+                while (fs.Position != fs.Length)
+                    yield return null;
+
+                //give the image a period to load onto unity
+                yield return new WaitForSeconds(0.2f);
+                texture.LoadImage(imageData);
+                yield return new WaitForSeconds(0.2f);
 
                 //Apply texture to bg + resize bg if bg isnt null
                 if (bufferSprite != null)
@@ -60,16 +67,23 @@ namespace Quaver.Graphics
             }
             else if (!spriteMode && bufferTexture != null)
             {
+                
                 //Create buffer image
                 Texture2D texture = new Texture2D(64, 64, TextureFormat.ARGB32, true);
-                WWW data = new WWW(bufferPath);
+                
+                //Create file stream
+                FileStream fs = new FileStream(bufferPath, FileMode.Open, FileAccess.Read);
+                byte[] imageData = new byte[fs.Length];
+                fs.Read(imageData, 0, (int)fs.Length);
 
-                //Wait before loading image onto unity as texture
-                yield return data;
-                yield return new WaitForSeconds(0.5f);
+                //Wait until filestream is done
+                while (fs.Position != fs.Length)
+                    yield return null;
 
-                //Apply image texture
-                data.LoadImageIntoTexture(texture);
+                //give the image a period to load onto unity
+                yield return new WaitForSeconds(0.4f);
+                texture.LoadImage(imageData);
+                yield return new WaitForSeconds(0.2f);
 
                 //Apply texture to ui
                 if (bufferTexture != null)
@@ -77,7 +91,6 @@ namespace Quaver.Graphics
             }
 
             //Removes game object
-            Debug.Log("[Background Buffer] DONE!");
             Destroy(this.gameObject);
         }
     }
