@@ -1,4 +1,4 @@
-# Quaver [![TravisCI](https://travis-ci.com/Swan/Quaver.svg?token=NHZjzNfqaGjpVAkssS34&branch=master)](https://github.com/Swan/Quaver) [![Discord](https://discordapp.com/api/guilds/354206121386573824/widget.png?style=shield)](https://discord.gg/nJa8VFr)
+# Quaver [![Discord](https://discordapp.com/api/guilds/354206121386573824/widget.png?style=shield)](https://discord.gg/nJa8VFr)
 Quaver is a modern cross-platform vertically scrolling rhythm game available for Windows, OS X & Linux.
 
 # Status
