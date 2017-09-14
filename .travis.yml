@@ -1,10 +1,9 @@
+# Example Travis config. See the entire example: https://github.com/JonathanPorta/ci-build
+
 language: objective-c
-osx_image: xcode8.1
+osx_image: xcode61
 rvm:
-- 2.2
-before_install:
-- chmod a+x ./install.sh
-- chmod a+x ./build.sh
+- 2.1.2
 install:
 - ./install.sh
 script:
