@@ -86,7 +86,6 @@ namespace Quaver.Cache
 						reader.Close();
 					}
 				}
-
 			}			
 
 			// Run a check if the amount of tempBeatmaps from the DB is equivalent to the number of .qua files in the songs directory
@@ -106,7 +105,6 @@ namespace Quaver.Cache
 					Debug.LogWarning(String.Format("[CACHE] Incorrect # of Loaded Beatmaps vs. Qua Files ({0} vs {1})", tempBeatmaps.Count, quaFilesInDir.Length));
 				}
 				
-
 				// Loop through all of the .qua files, and check if we have any missing maps.
 				// For every .qua file, we'll look to see if the paths match, if not, the 
 				// map will be considered as missing and will be added to the database,
@@ -156,7 +154,6 @@ namespace Quaver.Cache
 
 						// Add the found missing map to the database.
 						AddToDatabase(foundMissingMap);
-
 					} else {
 						// Delete the .qua file from the file system.
 						File.Delete(quaFile);
@@ -189,7 +186,6 @@ namespace Quaver.Cache
 
 					Debug.LogWarning("[CACHE] Extra map: " + mapInDb.Path + " in database found, removed from loaded beatmaps & database!");
 				}
-
 			} catch (Exception err)
 			{
 				Debug.LogError("[CACHE] Unable to check songs directory for .qua files. Is the SongDirectory correct?" + err.ToString());
@@ -250,4 +246,3 @@ namespace Quaver.Cache
 		}
 	}
 }
-
