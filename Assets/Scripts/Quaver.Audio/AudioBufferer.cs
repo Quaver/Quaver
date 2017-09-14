@@ -34,8 +34,7 @@ namespace Quaver.Audio
             bufferAudio.Stop();
 
             //Wait until audio is loaded
-            while (!audioLoader.isDone) yield return null;
-            yield return new WaitForSeconds(0.01f);
+            yield return audioLoader;
 
             //Set and play audio
             bufferAudio.clip = audioLoader.GetAudioClip(false,true, AudioType.OGGVORBIS);
@@ -44,8 +43,7 @@ namespace Quaver.Audio
             bufferAudio.PlayDelayed(bufferPlayDelay);
 
             //Removes game object
-            Debug.Log("[AUDIO BUFFER] DONE!");
-            Destroy(this);
+            Destroy(this.gameObject);
         }
     }
 }

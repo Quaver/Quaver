@@ -33,9 +33,14 @@ namespace Quaver.Main
         public GameObject bgImage;
         public AudioSource SongAudioSource;
 
+        // UI Variables
+        public float SelectScreenDim = 0.7f;
+
+
         // Test (remove later)
         public GameObject loadingScreenTest;
         private int testState = 0;
+
 
         void Awake()
         {
