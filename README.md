@@ -1,5 +1,6 @@
 # Quaver
 Quaver is a modern cross-platform vertically scrolling rhythm game available for Windows, OS X & Linux.
+
 [![Discord](https://discordapp.com/api/guilds/354206121386573824/widget.png?style=shield)](https://discord.gg/nJa8VFr)
 
 # Copyright
