@@ -5,11 +5,10 @@ using System;
 using UnityEngine;
 using System.Linq;
 
-namespace Quaver.Qua {
-
+namespace Quaver.Qua 
+{
 	public static class QuaParser 
 	{
-
 		// Takes a .qua file and parses it into an instance of the Qua Class.
 		public static QuaFile Parse(string filePath) 
 		{
@@ -79,7 +78,6 @@ namespace Quaver.Qua {
 								quaFile.BackgroundFile = value;
 								break;
 						}
-
 					}
 				}
 
@@ -220,16 +218,13 @@ namespace Quaver.Qua {
 
 						ho.EndTime = Int32.Parse(values[2]);
 
-						quaFile.HitObjects.Add(ho);
-					
+						quaFile.HitObjects.Add(ho);					
 					}
 				}
-
                 //Sort Hit Objects, Timing Points, And SVs
                 //quaFile.HitObjects.Sort(delegate (HitObject p1, HitObject p2) { return p1.StartTime.CompareTo(p2.StartTime); });
                 //quaFile.SliderVelocities.Sort(delegate (SliderVelocity p1, SliderVelocity p2) { return p1.StartTime.CompareTo(p2.StartTime); });
                 //quaFile.TimingPoints.Sort(delegate (TimingPoint p1, TimingPoint p2) { return p1.StartTime.CompareTo(p2.StartTime); });
-
             }		
 
 			// If there are zero timing points in the beatmap we'll consider that invalid.
@@ -245,7 +240,5 @@ namespace Quaver.Qua {
 
 			return quaFile;
 		}
-
 	}
-
 }
