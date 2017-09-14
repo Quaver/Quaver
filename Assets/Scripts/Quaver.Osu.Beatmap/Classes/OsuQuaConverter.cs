@@ -43,7 +43,8 @@ namespace Quaver.Osu.Beatmap {
 			fileString.Append("Creator: " + "\n");
 			fileString.Append("DifficultyName: " + osuBeatmap.Version + "\n");
 			fileString.Append("MapID: -1\n");
-			fileString.Append("MapSetID: -1\n\n");
+			fileString.Append("MapSetID: -1\n");
+			fileString.Append("Description: This beatmap was converted from osu!mania.\n\n");
 
 			// # Difficulty
 			fileString.Append("# Difficulty\n");
