@@ -148,7 +148,7 @@ namespace Quaver.Cache
 						string audioPath = quaDir + "/" + qua.AudioFile.Replace("\"", "");
 
 						CachedBeatmap foundMissingMap = new CachedBeatmap(quaDir, quaFile, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,
-																		"", 0, DateTime.Now, 0.0f, qua.Creator, bgPath, audioPath, qua.SongPreviewTime, "", qua.Source, qua.Tags);
+																		"", 0, DateTime.Now, 0.0f, qua.Creator, bgPath, audioPath, qua.SongPreviewTime, qua.Description, qua.Source, qua.Tags);
 
 						// Add the missing map to our loaded map, when the beatmap is selected, we'll have to get the BeatmapSetID + BeatmapId
 						// + Status and update that, but ONLY when the map has been selected.										
