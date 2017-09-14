@@ -36,11 +36,9 @@ namespace Quaver.Main
         // UI Variables
         public float SelectScreenDim = 0.7f;
 
-
         // Test (remove later)
         public GameObject loadingScreenTest;
         private int testState = 0;
-
 
         void Awake()
         {
@@ -54,7 +52,6 @@ namespace Quaver.Main
             // should be set to true at the beginning of the game, so songs can be heard even when
             // the game is minimized.
             Application.runInBackground = true;
-
         }
 
         private void Start()
@@ -71,7 +68,6 @@ namespace Quaver.Main
 
         private void Update()
         {
-
             // Handle screenshots
             ScreenshotService.Capture(GameConfig);
             
@@ -79,7 +75,6 @@ namespace Quaver.Main
             {
                 DustRenderer.emissionRate = 120;
             }
-
         }
         
         // This is the first thing that will be called upon Game Start. It is responsible for
@@ -143,7 +138,6 @@ namespace Quaver.Main
                 States[nextState].StateStart(this);
                 testState++;
             }
-
         }
     }
 }
