@@ -24,6 +24,7 @@ namespace Quaver.Qua {
 		public string DifficultyName;
 		public int MapID;
 		public int MapSetID;
+		public string Description;
 
 		// Difficulty
 		public float HPDrain;
