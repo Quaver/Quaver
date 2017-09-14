@@ -28,7 +28,7 @@ namespace Quaver.Cache
 				// Use connection to create an SQL Query we can execute
 				using(IDbCommand dbCmd = dbConnection.CreateCommand())
 				{
-					string query = "CREATE TABLE if not exists \"beatmaps\" (\"id\" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , \"directory\" TEXT NOT NULL , \"path\" TEXT NOT NULL  UNIQUE , \"beatmapsetid\" INTEGER NOT NULL , \"beatmapid\" INTEGER NOT NULL , \"artist\" TEXT NOT NULL , \"title\" TEXT NOT NULL , \"difficulty\" TEXT NOT NULL , \"rank\" TEXT NOT NULL , \"status\" INTEGER NOT NULL  DEFAULT 0, \"lastplayed\" DATETIME NOT NULL  DEFAULT CURRENT_DATE, \"stars\" INTEGER NOT NULL, \"creator\" TEXT, \"backgroundpath\" TEXT, \"audiopath\" TEXT, \"audiopreviewtime\" INTEGER NOT NULL  DEFAULT 0)";
+					string query = "CREATE TABLE if not exists \"beatmaps\" (\"id\" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , \"directory\" TEXT NOT NULL , \"path\" TEXT NOT NULL  UNIQUE , \"beatmapsetid\" INTEGER NOT NULL , \"beatmapid\" INTEGER NOT NULL , \"artist\" TEXT NOT NULL , \"title\" TEXT NOT NULL , \"difficulty\" TEXT NOT NULL , \"rank\" TEXT NOT NULL , \"status\" INTEGER NOT NULL  DEFAULT 0, \"lastplayed\" DATETIME NOT NULL  DEFAULT CURRENT_DATE, \"stars\" INTEGER NOT NULL, \"creator\" TEXT, \"backgroundpath\" TEXT, \"audiopath\" TEXT, \"audiopreviewtime\" INTEGER NOT NULL  DEFAULT 0, \"description\" TEXT, \"source\" TEXT, \"tags\" TEXT)";
 
 					dbCmd.CommandText = query;
 					dbCmd.ExecuteScalar(); // Execute scalar when inserting
@@ -69,7 +69,7 @@ namespace Quaver.Cache
 							CachedBeatmap loadedBeatmap = new CachedBeatmap(reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetInt32(4),
 																reader.GetString(5), reader.GetString(6), reader.GetString(7), reader.GetString(8),
 																reader.GetInt32(9), DateTime.Now, reader.GetFloat(11), reader.GetString(12), reader.GetString(13),
-																reader.GetString(14), reader.GetInt32(15));
+																reader.GetString(14), reader.GetInt32(15), reader.GetString(16), reader.GetString(17), reader.GetString(18));
 
 							// Log that shit for now, because i already know some fucking thing is going to go wrong.
 							/*Debug.Log(String.Format("[CACHE] Beatmap Loaded: Dir: {0}, Path: {1}, BSID: {2}, BID: {3}, Artist: {4}, Title: {5}, Diff: {6}, Rank: {7}, Status: {8}, LP: {9}, Stars: {10}", 
@@ -148,7 +148,7 @@ namespace Quaver.Cache
 						string audioPath = quaDir + "/" + qua.AudioFile.Replace("\"", "");
 
 						CachedBeatmap foundMissingMap = new CachedBeatmap(quaDir, quaFile, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,
-																		"", 0, DateTime.Now, 0.0f, qua.Creator, bgPath, audioPath, qua.SongPreviewTime);
+																		"", 0, DateTime.Now, 0.0f, qua.Creator, bgPath, audioPath, qua.SongPreviewTime, "", qua.Source, qua.Tags);
 
 						// Add the missing map to our loaded map, when the beatmap is selected, we'll have to get the BeatmapSetID + BeatmapId
 						// + Status and update that, but ONLY when the map has been selected.										
@@ -209,11 +209,12 @@ namespace Quaver.Cache
 				// Use connection to create an SQL Query we can execute
 				using(IDbCommand dbCmd = dbConnection.CreateCommand())
 				{
-					string query = String.Format("INSERT INTO beatmaps(directory,path,beatmapsetid,beatmapid,artist,title,difficulty,rank,status,lastplayed,stars,creator,backgroundpath,audiopath,audiopreviewtime) " + 
-									"VALUES(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", \"{7}\", \"{8}\", \"{9}\", \"{10}\", \"{11}\", \"{12}\", \"{13}\", \"{14}\")", 
+					string query = String.Format("INSERT INTO beatmaps(directory,path,beatmapsetid,beatmapid,artist,title,difficulty,rank,status,lastplayed,stars,creator,backgroundpath,audiopath,audiopreviewtime,description,source,tags) " + 
+									"VALUES(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", \"{7}\", \"{8}\", \"{9}\", \"{10}\", \"{11}\", \"{12}\", \"{13}\", \"{14}\", \"{15}\", \"{16}\", \"{17}\")", 
 									cachedMap.Directory, cachedMap.Path, cachedMap.BeatmapSetID, cachedMap.BeatmapID, 
 									cachedMap.Artist, cachedMap.Title, cachedMap.Difficulty, cachedMap.Rank, cachedMap.Status,
-									cachedMap.LastPlayed, cachedMap.Stars, cachedMap.Creator, cachedMap.BackgroundPath, cachedMap.AudioPath, cachedMap.AudioPreviewTime);
+									cachedMap.LastPlayed, cachedMap.Stars, cachedMap.Creator, cachedMap.BackgroundPath, cachedMap.AudioPath, cachedMap.AudioPreviewTime,
+									cachedMap.Description, cachedMap.Source,cachedMap.Tags);
 
 					dbCmd.CommandText = query;
 
