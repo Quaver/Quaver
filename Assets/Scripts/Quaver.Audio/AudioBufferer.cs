@@ -35,7 +35,7 @@ namespace Quaver.Audio
 
             //Wait until audio is loaded
             yield return audioLoader;
-
+            yield return new WaitForSeconds(0.1f);
             //Set and play audio
             bufferAudio.clip = audioLoader.GetAudioClip(false,true, AudioType.OGGVORBIS);
             if (bufferPreview) bufferAudio.time = bufferMap.AudioPreviewTime / 1000f;
