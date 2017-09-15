@@ -138,7 +138,15 @@ namespace Quaver.Main
                 int curState = _testState;
                 States[curState].StateEnd();
                 States[nextState].StateStart(this);
-                _testState++;
+                _testState = nextState;
+            }
+            else if (_testState == 2)
+            {
+                int nextState = 1;
+                int curState = _testState;
+                States[curState].StateEnd();
+                States[nextState].StateStart(this);
+                _testState = nextState;
             }
         }
     }
