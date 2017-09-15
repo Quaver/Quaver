@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using UnityEngine;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -13,34 +17,34 @@ namespace Wenzil.Console
     public class ConsoleController : MonoBehaviour
     {
         private const int inputHistoryCapacity = 20;
- 
+
         public ConsoleUI ui;
         public KeyCode toggleKey = KeyCode.BackQuote;
         public bool closeOnEscape = false;
 
-        private ConsoleInputHistory inputHistory = new ConsoleInputHistory(inputHistoryCapacity); 
+        private ConsoleInputHistory _inputHistory = new ConsoleInputHistory(inputHistoryCapacity);
 
-        void Awake()
+        private void Awake()
         {
             /* This instantiation causes a bug when Unity rebuilds the project while in play mode
                Solution: move it to class level initialization, and make inputHistoryCapacity a const */
             // inputHistory = new ConsoleInputHistory(inputHistoryCapacity); 
         }
-        void OnEnable()
+        private void OnEnable()
         {
             Console.OnConsoleLog += ui.AddNewOutputLine;
             ui.onSubmitCommand += ExecuteCommand;
-            ui.onClearConsole += inputHistory.Clear;
+            ui.onClearConsole += _inputHistory.Clear;
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             Console.OnConsoleLog -= ui.AddNewOutputLine;
             ui.onSubmitCommand -= ExecuteCommand;
-            ui.onClearConsole -= inputHistory.Clear;
+            ui.onClearConsole -= _inputHistory.Clear;
         }
 
-        void Update()
+        private void Update()
         {
             if (Input.GetKeyDown(toggleKey))
                 ui.ToggleConsole();
@@ -54,7 +58,7 @@ namespace Wenzil.Console
 
         private void NavigateInputHistory(bool up)
         {
-            string navigatedToInput = inputHistory.Navigate(up);
+            string navigatedToInput = _inputHistory.Navigate(up);
             ui.SetInputText(navigatedToInput);
         }
 
@@ -63,10 +67,10 @@ namespace Wenzil.Console
             string[] parts = input.Split(' ');
             string command = parts[0];
             string[] args = parts.Skip(1).ToArray();
-        
+
             Console.Log("> " + input);
             Console.Log(ConsoleCommandsDatabase.ExecuteCommand(command, args));
-            inputHistory.AddNewInputEntry(input);
+            _inputHistory.AddNewInputEntry(input);
         }
     }
 }

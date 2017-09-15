@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using UnityEngine;
 using System;
 using Wenzil.Console;
 using Wenzil.Console.Commands;
@@ -8,7 +12,7 @@ using Wenzil.Console.Commands;
 /// </summary>
 public class CustomCommands : MonoBehaviour
 {
-    void Start()
+    private void Start()
     {
         ConsoleCommandsDatabase.RegisterCommand("SPAWN", "Spawn a new game object from the given name and primitve type in front of the main camera. See PrimitiveType.", "SPAWN name primitiveType", Spawn);
         ConsoleCommandsDatabase.RegisterCommand("DESTROY", "Destroy the specified game object by name.", "DESTROY gameobject", Destroy);
@@ -22,8 +26,8 @@ public class CustomCommands : MonoBehaviour
         string name;
         PrimitiveType primitiveType;
         GameObject spawned;
-        
-        if(args.Length < 2)
+
+        if (args.Length < 2)
         {
             return HelpCommand.Execute("SPAWN");
         }
@@ -32,7 +36,7 @@ public class CustomCommands : MonoBehaviour
             name = args[0];
             try
             {
-                primitiveType = (PrimitiveType) Enum.Parse(typeof(PrimitiveType), args[1], true);
+                primitiveType = (PrimitiveType)Enum.Parse(typeof(PrimitiveType), args[1], true);
             }
             catch
             {
@@ -59,7 +63,7 @@ public class CustomCommands : MonoBehaviour
         {
             string name = args[0];
             GameObject gameobject = GameObject.Find(name);
-            
+
             if (gameobject != null)
             {
                 GameObject.Destroy(gameobject);

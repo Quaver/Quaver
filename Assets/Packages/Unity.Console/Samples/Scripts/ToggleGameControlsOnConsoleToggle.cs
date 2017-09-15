@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using UnityEngine;
 using Wenzil.Console;
 
 /// <summary>
@@ -10,13 +14,13 @@ public class ToggleGameControlsOnConsoleToggle : MonoBehaviour
     public MouseLook mouseLook;
     public WASDMovement wasdMovement;
 
-    void OnEnable()
+    private void OnEnable()
     {
         console.onToggleConsole += ToggleMouseLook;
         ToggleMouseLook(console.isConsoleOpen);
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         console.onToggleConsole -= ToggleMouseLook;
         ToggleMouseLook(false);
@@ -24,10 +28,10 @@ public class ToggleGameControlsOnConsoleToggle : MonoBehaviour
 
     private void ToggleMouseLook(bool isConsoleOpen)
     {
-        if(mouseLook != null)
+        if (mouseLook != null)
             mouseLook.enabled = !isConsoleOpen;
 
-        if(wasdMovement != null)
+        if (wasdMovement != null)
             wasdMovement.enabled = !isConsoleOpen;
     }
 }

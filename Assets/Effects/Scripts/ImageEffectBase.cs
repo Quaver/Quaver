@@ -1,9 +1,13 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System;
 using UnityEngine;
 
 namespace UnityStandardAssets.ImageEffects
 {
-    [RequireComponent(typeof (Camera))]
+    [RequireComponent(typeof(Camera))]
     [AddComponentMenu("")]
     public class ImageEffectBase : MonoBehaviour
     {
@@ -11,7 +15,7 @@ namespace UnityStandardAssets.ImageEffects
         /// and a material instantiated from the shader
         public Shader shader;
 
-        private Material m_Material;
+        private Material _material;
 
 
         protected virtual void Start()
@@ -34,21 +38,21 @@ namespace UnityStandardAssets.ImageEffects
         {
             get
             {
-                if (m_Material == null)
+                if (_material == null)
                 {
-                    m_Material = new Material(shader);
-                    m_Material.hideFlags = HideFlags.HideAndDontSave;
+                    _material = new Material(shader);
+                    _material.hideFlags = HideFlags.HideAndDontSave;
                 }
-                return m_Material;
+                return _material;
             }
         }
 
 
         protected virtual void OnDisable()
         {
-            if (m_Material)
+            if (_material)
             {
-                DestroyImmediate(m_Material);
+                DestroyImmediate(_material);
             }
         }
     }

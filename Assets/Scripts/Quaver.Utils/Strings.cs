@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Text;
@@ -7,7 +11,8 @@ using System.Security.Cryptography;
 
 namespace Quaver.Utils
 {
-    public static class Strings {
+    public static class Strings
+    {
         // Checks a string if it has any null or white space
         public static bool IsNullOrWhiteSpace(string value)
         {
@@ -47,7 +52,7 @@ namespace Quaver.Utils
         public static String GetMD5Hash(String TextToHash)
         {
             //Check wether data was passed
-            if((TextToHash == null) || (TextToHash.Length == 0))
+            if ((TextToHash == null) || (TextToHash.Length == 0))
             {
                 return String.Empty;
             }
@@ -58,9 +63,8 @@ namespace Quaver.Utils
             byte[] result = md5.ComputeHash(textToHash);
 
             //Convert result back to string.
-            return System.BitConverter.ToString(result); 
+            return System.BitConverter.ToString(result);
         }
-        
-    }    
+    }
 }
 

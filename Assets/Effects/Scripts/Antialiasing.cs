@@ -1,3 +1,7 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System;
 using UnityEngine;
 
@@ -15,7 +19,7 @@ namespace UnityStandardAssets.ImageEffects
     }
 
     [ExecuteInEditMode]
-    [RequireComponent(typeof (Camera))]
+    [RequireComponent(typeof(Camera))]
     [AddComponentMenu("Image Effects/Other/Antialiasing")]
     public class Antialiasing : PostEffectsBase
     {
@@ -32,19 +36,19 @@ namespace UnityStandardAssets.ImageEffects
         public bool dlaaSharp = false;
 
         public Shader ssaaShader;
-        private Material ssaa;
+        private Material _ssaa;
         public Shader dlaaShader;
-        private Material dlaa;
+        private Material _dlaa;
         public Shader nfaaShader;
-        private Material nfaa;
+        private Material _nfaa;
         public Shader shaderFXAAPreset2;
-        private Material materialFXAAPreset2;
+        private Material _materialFXAAPreset2;
         public Shader shaderFXAAPreset3;
-        private Material materialFXAAPreset3;
+        private Material _materialFXAAPreset3;
         public Shader shaderFXAAII;
-        private Material materialFXAAII;
+        private Material _materialFXAAII;
         public Shader shaderFXAAIII;
-        private Material materialFXAAIII;
+        private Material _materialFXAAIII;
 
 
         public Material CurrentAAMaterial()
@@ -54,25 +58,25 @@ namespace UnityStandardAssets.ImageEffects
             switch (mode)
             {
                 case AAMode.FXAA3Console:
-                    returnValue = materialFXAAIII;
+                    returnValue = _materialFXAAIII;
                     break;
                 case AAMode.FXAA2:
-                    returnValue = materialFXAAII;
+                    returnValue = _materialFXAAII;
                     break;
                 case AAMode.FXAA1PresetA:
-                    returnValue = materialFXAAPreset2;
+                    returnValue = _materialFXAAPreset2;
                     break;
                 case AAMode.FXAA1PresetB:
-                    returnValue = materialFXAAPreset3;
+                    returnValue = _materialFXAAPreset3;
                     break;
                 case AAMode.NFAA:
-                    returnValue = nfaa;
+                    returnValue = _nfaa;
                     break;
                 case AAMode.SSAA:
-                    returnValue = ssaa;
+                    returnValue = _ssaa;
                     break;
                 case AAMode.DLAA:
-                    returnValue = dlaa;
+                    returnValue = _dlaa;
                     break;
                 default:
                     returnValue = null;
@@ -87,13 +91,13 @@ namespace UnityStandardAssets.ImageEffects
         {
             CheckSupport(false);
 
-            materialFXAAPreset2 = CreateMaterial(shaderFXAAPreset2, materialFXAAPreset2);
-            materialFXAAPreset3 = CreateMaterial(shaderFXAAPreset3, materialFXAAPreset3);
-            materialFXAAII = CreateMaterial(shaderFXAAII, materialFXAAII);
-            materialFXAAIII = CreateMaterial(shaderFXAAIII, materialFXAAIII);
-            nfaa = CreateMaterial(nfaaShader, nfaa);
-            ssaa = CreateMaterial(ssaaShader, ssaa);
-            dlaa = CreateMaterial(dlaaShader, dlaa);
+            _materialFXAAPreset2 = CreateMaterial(shaderFXAAPreset2, _materialFXAAPreset2);
+            _materialFXAAPreset3 = CreateMaterial(shaderFXAAPreset3, _materialFXAAPreset3);
+            _materialFXAAII = CreateMaterial(shaderFXAAII, _materialFXAAII);
+            _materialFXAAIII = CreateMaterial(shaderFXAAIII, _materialFXAAIII);
+            _nfaa = CreateMaterial(nfaaShader, _nfaa);
+            _ssaa = CreateMaterial(ssaaShader, _ssaa);
+            _dlaa = CreateMaterial(dlaaShader, _dlaa);
 
             if (!ssaaShader.isSupported)
             {
@@ -113,59 +117,59 @@ namespace UnityStandardAssets.ImageEffects
                 return;
             }
 
-			// ----------------------------------------------------------------
+            // ----------------------------------------------------------------
             // FXAA antialiasing modes
 
-            if (mode == AAMode.FXAA3Console && (materialFXAAIII != null))
+            if (mode == AAMode.FXAA3Console && (_materialFXAAIII != null))
             {
-                materialFXAAIII.SetFloat("_EdgeThresholdMin", edgeThresholdMin);
-                materialFXAAIII.SetFloat("_EdgeThreshold", edgeThreshold);
-                materialFXAAIII.SetFloat("_EdgeSharpness", edgeSharpness);
+                _materialFXAAIII.SetFloat("_EdgeThresholdMin", edgeThresholdMin);
+                _materialFXAAIII.SetFloat("_EdgeThreshold", edgeThreshold);
+                _materialFXAAIII.SetFloat("_EdgeSharpness", edgeSharpness);
 
-                Graphics.Blit(source, destination, materialFXAAIII);
+                Graphics.Blit(source, destination, _materialFXAAIII);
             }
-            else if (mode == AAMode.FXAA1PresetB && (materialFXAAPreset3 != null))
+            else if (mode == AAMode.FXAA1PresetB && (_materialFXAAPreset3 != null))
             {
-                Graphics.Blit(source, destination, materialFXAAPreset3);
+                Graphics.Blit(source, destination, _materialFXAAPreset3);
             }
-            else if (mode == AAMode.FXAA1PresetA && materialFXAAPreset2 != null)
+            else if (mode == AAMode.FXAA1PresetA && _materialFXAAPreset2 != null)
             {
                 source.anisoLevel = 4;
-                Graphics.Blit(source, destination, materialFXAAPreset2);
+                Graphics.Blit(source, destination, _materialFXAAPreset2);
                 source.anisoLevel = 0;
             }
-            else if (mode == AAMode.FXAA2 && materialFXAAII != null)
+            else if (mode == AAMode.FXAA2 && _materialFXAAII != null)
             {
-                Graphics.Blit(source, destination, materialFXAAII);
+                Graphics.Blit(source, destination, _materialFXAAII);
             }
-            else if (mode == AAMode.SSAA && ssaa != null)
+            else if (mode == AAMode.SSAA && _ssaa != null)
             {
-				// ----------------------------------------------------------------
+                // ----------------------------------------------------------------
                 // SSAA antialiasing
-                Graphics.Blit(source, destination, ssaa);
+                Graphics.Blit(source, destination, _ssaa);
             }
-            else if (mode == AAMode.DLAA && dlaa != null)
+            else if (mode == AAMode.DLAA && _dlaa != null)
             {
-				// ----------------------------------------------------------------
-				// DLAA antialiasing
+                // ----------------------------------------------------------------
+                // DLAA antialiasing
 
                 source.anisoLevel = 0;
                 RenderTexture interim = RenderTexture.GetTemporary(source.width, source.height);
-                Graphics.Blit(source, interim, dlaa, 0);
-                Graphics.Blit(interim, destination, dlaa, dlaaSharp ? 2 : 1);
+                Graphics.Blit(source, interim, _dlaa, 0);
+                Graphics.Blit(interim, destination, _dlaa, dlaaSharp ? 2 : 1);
                 RenderTexture.ReleaseTemporary(interim);
             }
-            else if (mode == AAMode.NFAA && nfaa != null)
+            else if (mode == AAMode.NFAA && _nfaa != null)
             {
                 // ----------------------------------------------------------------
                 // nfaa antialiasing
 
                 source.anisoLevel = 0;
 
-                nfaa.SetFloat("_OffsetScale", offsetScale);
-                nfaa.SetFloat("_BlurRadius", blurRadius);
+                _nfaa.SetFloat("_OffsetScale", offsetScale);
+                _nfaa.SetFloat("_BlurRadius", blurRadius);
 
-                Graphics.Blit(source, destination, nfaa, showGeneratedNormals ? 1 : 0);
+                Graphics.Blit(source, destination, _nfaa, showGeneratedNormals ? 1 : 0);
             }
             else
             {

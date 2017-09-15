@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System;
@@ -8,9 +12,9 @@ using UnityEngine.UI;
 
 namespace Quaver.Graphics
 {
-	public class BackgroundLoader
-	{
-        private static GameObject bgSpriteObj; //will remove the old bg image buffer if one already exists
+    public class BackgroundLoader
+    {
+        private static GameObject s_bgSpriteObj; //will remove the old bg image buffer if one already exists
 
 
         // Responsible for loading a beatmap's background as a sprite.
@@ -19,12 +23,12 @@ namespace Quaver.Graphics
             string bgPath = map.BackgroundPath.Replace("\"", "");
             if (File.Exists(bgPath))
             {
-                if (bgSpriteObj != null)
-                    GameObject.Destroy(bgSpriteObj);
+                if (s_bgSpriteObj != null)
+                    GameObject.Destroy(s_bgSpriteObj);
 
                 bg.GetComponent<BackgroundDimAnimator>().dim = 0;
-                bgSpriteObj = new GameObject("BG Image Buffer");
-                bgSpriteObj.AddComponent<BackgroundBufferer>().init(true, bgPath, null, bg);
+                s_bgSpriteObj = new GameObject("BG Image Buffer");
+                s_bgSpriteObj.AddComponent<BackgroundBufferer>().init(true, bgPath, null, bg);
             }
         }
 

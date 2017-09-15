@@ -1,22 +1,24 @@
-﻿using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Quaver.Qua;
 
 namespace Quaver.Difficulty
 {
-
     public static class DifficultyCalculator
     {
         public static Difficulty CalculateDifficulty(List<HitObject> ObjectList)
         {
-
             //NPS Values
             float[] avgNps = new float[5]; //Pos 0 =total average
             float[] meanNps = new float[5];
             float[] npsConsistancy = new float[5];
             int[][] npsInterval = new int[5][];
-            int npsSize = (int)(Mathf.Ceil(Mathf.Max((float)ObjectList[ObjectList.Count - 1].StartTime,(float)ObjectList[ObjectList.Count - 1].EndTime) / 1000f));
+            int npsSize = (int)(Mathf.Ceil(Mathf.Max((float)ObjectList[ObjectList.Count - 1].StartTime, (float)ObjectList[ObjectList.Count - 1].EndTime) / 1000f));
             int npsTolerance = 0;
 
             //Temp Referencing Values
@@ -32,7 +34,7 @@ namespace Quaver.Difficulty
             float speed; //(NPS Keylane Mean + Nps Keylane Average) / 2
             float control; //(lnCount + ChordCount)/TotalHitObjects /AverageNPS
             int lnCount = 0;
-            int chordCount =0;
+            int chordCount = 0;
 
             //Sets NpsInterval Initial Size
             for (i = 0; i < 5; i++)
@@ -51,14 +53,14 @@ namespace Quaver.Difficulty
                     }
                     else
                     {
-                        npsInterval[0][curTime]+= 1;
-                        npsInterval[ObjectList[notePos].KeyLane][curTime]+= 1;
+                        npsInterval[0][curTime] += 1;
+                        npsInterval[ObjectList[notePos].KeyLane][curTime] += 1;
 
                         //If LNs are larger than 220ms, adds to LN count
                         if (ObjectList[notePos].EndTime > ObjectList[notePos].StartTime + 220) lnCount++;
 
                         //If current note is a chord, adds to chord count
-                        if (notePos-1 >= 0)
+                        if (notePos - 1 >= 0)
                         {
                             if (ObjectList[notePos].StartTime == ObjectList[notePos - 1].StartTime)
                             {
@@ -84,7 +86,6 @@ namespace Quaver.Difficulty
             curTime = 0;
             for (i = 0; i < 5; i++)
             {
-
                 curTime = 0;
                 for (notePos = 0; notePos < npsSize; notePos++)
                 {
@@ -129,16 +130,16 @@ namespace Quaver.Difficulty
                     if (npsInterval[i][notePos] >= npsTolerance)
                     {
                         //Normalize SD to 100NPS
-                        sd += Mathf.Pow((npsInterval[i][notePos] - meanNps[i])*(100f/Mathf.Max(avgNps[0],1)), 2);
+                        sd += Mathf.Pow((npsInterval[i][notePos] - meanNps[i]) * (100f / Mathf.Max(avgNps[0], 1)), 2);
                         curTime++;
                     }
                 }
-                sd = Mathf.Sqrt(sd/curTime);
+                sd = Mathf.Sqrt(sd / curTime);
                 npsConsistancy[i] = sd;
             }
 
             //Calculate Stamina Strain
-            stamina = Mathf.Pow(1f / Mathf.Max(npsConsistancy[0], 0.1f),1/10f)*Mathf.Pow(avgNps[0]/10f,0.94f)*20f;
+            stamina = Mathf.Pow(1f / Mathf.Max(npsConsistancy[0], 0.1f), 1 / 10f) * Mathf.Pow(avgNps[0] / 10f, 0.94f) * 20f;
 
             //Calculate Jack Strain
             //jack = Mathf.Sqrt(Mathf.Pow(npsConsistancy[1]*npsConsistancy[2]*npsConsistancy[3]*npsConsistancy[4]/100f, 2) / 4f);
@@ -170,6 +171,5 @@ namespace Quaver.Difficulty
 
             return newDifficulty;
         }
-
     }
 }

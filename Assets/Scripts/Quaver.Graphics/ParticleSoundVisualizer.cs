@@ -1,36 +1,41 @@
-﻿using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParticleSoundVisualizer : MonoBehaviour {
-
+public class ParticleSoundVisualizer : MonoBehaviour
+{
     //Assign these manually
     public bool isActive = true;
     public ParticleSystem particle;
-    private ParticleSystem.MainModule main;
+    private ParticleSystem.MainModule _main;
 
     //Reference Variables
-    private float[] spectrum = new float[256];
-    private float bassScale = 0;
-    private float avgScale;
+    private float[] _spectrum = new float[256];
+    private float _bassScale = 0;
+    private float _avgScale;
 
-    void Start()
+    private void Start()
     {
         if (particle != null)
         {
-            main = particle.main;
+            _main = particle.main;
         }
     }
 
-	void Update () {
-		if (isActive && particle != null)
+    private void Update()
+    {
+        if (isActive && particle != null)
         {
-            AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.Rectangular);
-            bassScale = Mathf.Pow(spectrum[0] * 0.8f + spectrum[1] * 0.2f,2f);
-            for (int i = 0; i < 8; i++) avgScale += spectrum[i];
-            avgScale = Mathf.Pow(avgScale/8f,0.25f);
+            AudioListener.GetSpectrumData(_spectrum, 0, FFTWindow.Rectangular);
+            _bassScale = Mathf.Pow(_spectrum[0] * 0.8f + _spectrum[1] * 0.2f, 2f);
+            for (int i = 0; i < 8; i++) _avgScale += _spectrum[i];
+            _avgScale = Mathf.Pow(_avgScale / 8f, 0.25f);
 
-            main.simulationSpeed = bassScale*0.7f + avgScale*0.3f + 0.05f;
+            _main.simulationSpeed = _bassScale * 0.7f + _avgScale * 0.3f + 0.05f;
         }
-	}
+    }
 }

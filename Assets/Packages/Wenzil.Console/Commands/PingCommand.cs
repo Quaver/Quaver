@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using UnityEngine;
 using System;
 
 namespace Wenzil.Console.Commands
@@ -14,12 +18,13 @@ namespace Wenzil.Console.Commands
 
         public static string Execute(params string[] args)
         {
-			if (args.Length > 0) {
-				string name = String.Join(" ", args);
-				return "Hello, " + name + ". Welcome to the developer console. Use the command HELP for a list of commands.";
-			}
+            if (args.Length > 0)
+            {
+                string name = String.Join(" ", args);
+                return "Hello, " + name + ". Welcome to the developer console. Use the command HELP for a list of commands.";
+            }
 
-			return "Welcome to the developer console, friend. Use the command HELP for a list of commands.";
+            return "Welcome to the developer console, friend. Use the command HELP for a list of commands.";
         }
     }
 }

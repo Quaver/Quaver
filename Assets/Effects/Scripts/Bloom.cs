@@ -1,11 +1,15 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System;
 using UnityEngine;
 
 namespace UnityStandardAssets.ImageEffects
 {
     [ExecuteInEditMode]
-    [RequireComponent (typeof(Camera))]
-    [AddComponentMenu ("Image Effects/Bloom and Glow/Bloom")]
+    [RequireComponent(typeof(Camera))]
+    [AddComponentMenu("Image Effects/Bloom and Glow/Bloom")]
     public class Bloom : PostEffectsBase
     {
         public enum LensFlareStyle
@@ -44,7 +48,7 @@ namespace UnityStandardAssets.ImageEffects
         public BloomScreenBlendMode screenBlendMode = BloomScreenBlendMode.Add;
 
         public HDRBloomMode hdr = HDRBloomMode.Auto;
-        private bool doHdr = false;
+        private bool _doHdr = false;
         public float sepBlurSpread = 2.5f;
 
         public BloomQuality quality = BloomQuality.High;
@@ -56,95 +60,98 @@ namespace UnityStandardAssets.ImageEffects
 
         public int hollywoodFlareBlurIterations = 2;
         public float flareRotation = 0.0f;
-        public LensFlareStyle lensflareMode = (LensFlareStyle) 1;
+        public LensFlareStyle lensflareMode = (LensFlareStyle)1;
         public float hollyStretchWidth = 2.5f;
         public float lensflareIntensity = 0.0f;
         public float lensflareThreshold = 0.3f;
         public float lensFlareSaturation = 0.75f;
-        public Color flareColorA = new Color (0.4f, 0.4f, 0.8f, 0.75f);
-        public Color flareColorB = new Color (0.4f, 0.8f, 0.8f, 0.75f);
-        public Color flareColorC = new Color (0.8f, 0.4f, 0.8f, 0.75f);
-        public Color flareColorD = new Color (0.8f, 0.4f, 0.0f, 0.75f);
+        public Color flareColorA = new Color(0.4f, 0.4f, 0.8f, 0.75f);
+        public Color flareColorB = new Color(0.4f, 0.8f, 0.8f, 0.75f);
+        public Color flareColorC = new Color(0.8f, 0.4f, 0.8f, 0.75f);
+        public Color flareColorD = new Color(0.8f, 0.4f, 0.0f, 0.75f);
         public Texture2D lensFlareVignetteMask;
 
         public Shader lensFlareShader;
-        private Material lensFlareMaterial;
+        private Material _lensFlareMaterial;
 
         public Shader screenBlendShader;
-        private Material screenBlend;
+        private Material _screenBlend;
 
         public Shader blurAndFlaresShader;
-        private Material blurAndFlaresMaterial;
+        private Material _blurAndFlaresMaterial;
 
         public Shader brightPassFilterShader;
-        private Material brightPassFilterMaterial;
+        private Material _brightPassFilterMaterial;
 
 
-        public override bool CheckResources ()
+        public override bool CheckResources()
         {
-            CheckSupport (false);
+            CheckSupport(false);
 
-            screenBlend = CheckShaderAndCreateMaterial (screenBlendShader, screenBlend);
-            lensFlareMaterial = CheckShaderAndCreateMaterial(lensFlareShader,lensFlareMaterial);
-            blurAndFlaresMaterial = CheckShaderAndCreateMaterial (blurAndFlaresShader, blurAndFlaresMaterial);
-            brightPassFilterMaterial = CheckShaderAndCreateMaterial(brightPassFilterShader, brightPassFilterMaterial);
+            _screenBlend = CheckShaderAndCreateMaterial(screenBlendShader, _screenBlend);
+            _lensFlareMaterial = CheckShaderAndCreateMaterial(lensFlareShader, _lensFlareMaterial);
+            _blurAndFlaresMaterial = CheckShaderAndCreateMaterial(blurAndFlaresShader, _blurAndFlaresMaterial);
+            _brightPassFilterMaterial = CheckShaderAndCreateMaterial(brightPassFilterShader, _brightPassFilterMaterial);
 
             if (!isSupported)
-                ReportAutoDisable ();
+                ReportAutoDisable();
             return isSupported;
         }
 
-        public void OnRenderImage (RenderTexture source, RenderTexture destination)
+        public void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
-            if (CheckResources()==false)
+            if (CheckResources() == false)
             {
-                Graphics.Blit (source, destination);
+                Graphics.Blit(source, destination);
                 return;
             }
 
             // screen blend is not supported when HDR is enabled (will cap values)
 
-            doHdr = false;
+            _doHdr = false;
             if (hdr == HDRBloomMode.Auto)
-                doHdr = source.format == RenderTextureFormat.ARGBHalf && GetComponent<Camera>().hdr;
-            else {
-                doHdr = hdr == HDRBloomMode.On;
+                _doHdr = source.format == RenderTextureFormat.ARGBHalf && GetComponent<Camera>().hdr;
+            else
+            {
+                _doHdr = hdr == HDRBloomMode.On;
             }
 
-            doHdr = doHdr && supportHDRTextures;
+            _doHdr = _doHdr && supportHDRTextures;
 
             BloomScreenBlendMode realBlendMode = screenBlendMode;
-            if (doHdr)
+            if (_doHdr)
                 realBlendMode = BloomScreenBlendMode.Add;
 
-            var rtFormat= (doHdr) ? RenderTextureFormat.ARGBHalf : RenderTextureFormat.Default;
-            var rtW2= source.width/2;
-            var rtH2= source.height/2;
-            var rtW4= source.width/4;
-            var rtH4= source.height/4;
+            var rtFormat = (_doHdr) ? RenderTextureFormat.ARGBHalf : RenderTextureFormat.Default;
+            var rtW2 = source.width / 2;
+            var rtH2 = source.height / 2;
+            var rtW4 = source.width / 4;
+            var rtH4 = source.height / 4;
 
             float widthOverHeight = (1.0f * source.width) / (1.0f * source.height);
             float oneOverBaseSize = 1.0f / 512.0f;
 
             // downsample
-            RenderTexture quarterRezColor = RenderTexture.GetTemporary (rtW4, rtH4, 0, rtFormat);
-            RenderTexture halfRezColorDown = RenderTexture.GetTemporary (rtW2, rtH2, 0, rtFormat);
-            if (quality > BloomQuality.Cheap) {
-                Graphics.Blit (source, halfRezColorDown, screenBlend, 2);
-                RenderTexture rtDown4 = RenderTexture.GetTemporary (rtW4, rtH4, 0, rtFormat);
-                Graphics.Blit (halfRezColorDown, rtDown4, screenBlend, 2);
-                Graphics.Blit (rtDown4, quarterRezColor, screenBlend, 6);
+            RenderTexture quarterRezColor = RenderTexture.GetTemporary(rtW4, rtH4, 0, rtFormat);
+            RenderTexture halfRezColorDown = RenderTexture.GetTemporary(rtW2, rtH2, 0, rtFormat);
+            if (quality > BloomQuality.Cheap)
+            {
+                Graphics.Blit(source, halfRezColorDown, _screenBlend, 2);
+                RenderTexture rtDown4 = RenderTexture.GetTemporary(rtW4, rtH4, 0, rtFormat);
+                Graphics.Blit(halfRezColorDown, rtDown4, _screenBlend, 2);
+                Graphics.Blit(rtDown4, quarterRezColor, _screenBlend, 6);
                 RenderTexture.ReleaseTemporary(rtDown4);
             }
-            else {
-                Graphics.Blit (source, halfRezColorDown);
-                Graphics.Blit (halfRezColorDown, quarterRezColor, screenBlend, 6);
+            else
+            {
+                Graphics.Blit(source, halfRezColorDown);
+                Graphics.Blit(halfRezColorDown, quarterRezColor, _screenBlend, 6);
             }
-            RenderTexture.ReleaseTemporary (halfRezColorDown);
+            RenderTexture.ReleaseTemporary(halfRezColorDown);
 
             // cut colors (thresholding)
-            RenderTexture secondQuarterRezColor = RenderTexture.GetTemporary (rtW4, rtH4, 0, rtFormat);
-            BrightFilter (bloomThreshold * bloomThresholdColor, quarterRezColor, secondQuarterRezColor);
+            RenderTexture secondQuarterRezColor = RenderTexture.GetTemporary(rtW4, rtH4, 0, rtFormat);
+            BrightFilter(bloomThreshold * bloomThresholdColor, quarterRezColor, secondQuarterRezColor);
 
             // blurring
 
@@ -152,35 +159,35 @@ namespace UnityStandardAssets.ImageEffects
             else if (bloomBlurIterations > 10) bloomBlurIterations = 10;
 
             for (int iter = 0; iter < bloomBlurIterations; iter++)
-			{
+            {
                 float spreadForPass = (1.0f + (iter * 0.25f)) * sepBlurSpread;
 
                 // vertical blur
-                RenderTexture blur4 = RenderTexture.GetTemporary (rtW4, rtH4, 0, rtFormat);
-                blurAndFlaresMaterial.SetVector ("_Offsets", new Vector4 (0.0f, spreadForPass * oneOverBaseSize, 0.0f, 0.0f));
-                Graphics.Blit (secondQuarterRezColor, blur4, blurAndFlaresMaterial, 4);
+                RenderTexture blur4 = RenderTexture.GetTemporary(rtW4, rtH4, 0, rtFormat);
+                _blurAndFlaresMaterial.SetVector("_Offsets", new Vector4(0.0f, spreadForPass * oneOverBaseSize, 0.0f, 0.0f));
+                Graphics.Blit(secondQuarterRezColor, blur4, _blurAndFlaresMaterial, 4);
                 RenderTexture.ReleaseTemporary(secondQuarterRezColor);
                 secondQuarterRezColor = blur4;
 
                 // horizontal blur
-                blur4 = RenderTexture.GetTemporary (rtW4, rtH4, 0, rtFormat);
-                blurAndFlaresMaterial.SetVector ("_Offsets", new Vector4 ((spreadForPass / widthOverHeight) * oneOverBaseSize, 0.0f, 0.0f, 0.0f));
-                Graphics.Blit (secondQuarterRezColor, blur4, blurAndFlaresMaterial, 4);
-                RenderTexture.ReleaseTemporary (secondQuarterRezColor);
+                blur4 = RenderTexture.GetTemporary(rtW4, rtH4, 0, rtFormat);
+                _blurAndFlaresMaterial.SetVector("_Offsets", new Vector4((spreadForPass / widthOverHeight) * oneOverBaseSize, 0.0f, 0.0f, 0.0f));
+                Graphics.Blit(secondQuarterRezColor, blur4, _blurAndFlaresMaterial, 4);
+                RenderTexture.ReleaseTemporary(secondQuarterRezColor);
                 secondQuarterRezColor = blur4;
 
                 if (quality > BloomQuality.Cheap)
-				{
+                {
                     if (iter == 0)
                     {
                         Graphics.SetRenderTarget(quarterRezColor);
                         GL.Clear(false, true, Color.black); // Clear to avoid RT restore
-                        Graphics.Blit (secondQuarterRezColor, quarterRezColor);
+                        Graphics.Blit(secondQuarterRezColor, quarterRezColor);
                     }
                     else
                     {
                         quarterRezColor.MarkRestoreExpected(); // using max blending, RT restore expected
-                        Graphics.Blit (secondQuarterRezColor, quarterRezColor, screenBlend, 10);
+                        Graphics.Blit(secondQuarterRezColor, quarterRezColor, _screenBlend, 10);
                     }
                 }
             }
@@ -189,43 +196,41 @@ namespace UnityStandardAssets.ImageEffects
             {
                 Graphics.SetRenderTarget(secondQuarterRezColor);
                 GL.Clear(false, true, Color.black); // Clear to avoid RT restore
-                Graphics.Blit (quarterRezColor, secondQuarterRezColor, screenBlend, 6);
+                Graphics.Blit(quarterRezColor, secondQuarterRezColor, _screenBlend, 6);
             }
 
             // lens flares: ghosting, anamorphic or both (ghosted anamorphic flares)
 
             if (lensflareIntensity > Mathf.Epsilon)
-			{
-
-                RenderTexture rtFlares4 = RenderTexture.GetTemporary (rtW4, rtH4, 0, rtFormat);
+            {
+                RenderTexture rtFlares4 = RenderTexture.GetTemporary(rtW4, rtH4, 0, rtFormat);
 
                 if (lensflareMode == 0)
-				{
+                {
                     // ghosting only
 
-                    BrightFilter (lensflareThreshold, secondQuarterRezColor, rtFlares4);
+                    BrightFilter(lensflareThreshold, secondQuarterRezColor, rtFlares4);
 
                     if (quality > BloomQuality.Cheap)
-					{
+                    {
                         // smooth a little
-                        blurAndFlaresMaterial.SetVector ("_Offsets", new Vector4 (0.0f, (1.5f) / (1.0f * quarterRezColor.height), 0.0f, 0.0f));
+                        _blurAndFlaresMaterial.SetVector("_Offsets", new Vector4(0.0f, (1.5f) / (1.0f * quarterRezColor.height), 0.0f, 0.0f));
                         Graphics.SetRenderTarget(quarterRezColor);
                         GL.Clear(false, true, Color.black); // Clear to avoid RT restore
-                        Graphics.Blit (rtFlares4, quarterRezColor, blurAndFlaresMaterial, 4);
+                        Graphics.Blit(rtFlares4, quarterRezColor, _blurAndFlaresMaterial, 4);
 
-                        blurAndFlaresMaterial.SetVector ("_Offsets", new Vector4 ((1.5f) / (1.0f * quarterRezColor.width), 0.0f, 0.0f, 0.0f));
+                        _blurAndFlaresMaterial.SetVector("_Offsets", new Vector4((1.5f) / (1.0f * quarterRezColor.width), 0.0f, 0.0f, 0.0f));
                         Graphics.SetRenderTarget(rtFlares4);
                         GL.Clear(false, true, Color.black); // Clear to avoid RT restore
-                        Graphics.Blit (quarterRezColor, rtFlares4, blurAndFlaresMaterial, 4);
+                        Graphics.Blit(quarterRezColor, rtFlares4, _blurAndFlaresMaterial, 4);
                     }
 
                     // no ugly edges!
-                    Vignette (0.975f, rtFlares4, rtFlares4);
-                    BlendFlares (rtFlares4, secondQuarterRezColor);
+                    Vignette(0.975f, rtFlares4, rtFlares4);
+                    BlendFlares(rtFlares4, secondQuarterRezColor);
                 }
                 else
-				{
-
+                {
                     //Vignette (0.975ff, rtFlares4, rtFlares4);
                     //DrawBorder(rtFlares4, screenBlend, 8);
 
@@ -234,124 +239,124 @@ namespace UnityStandardAssets.ImageEffects
 
                     float stretchWidth = (hollyStretchWidth * 1.0f / widthOverHeight) * oneOverBaseSize;
 
-                    blurAndFlaresMaterial.SetVector ("_Offsets", new Vector4 (flareXRot, flareyRot, 0.0f, 0.0f));
-                    blurAndFlaresMaterial.SetVector ("_Threshhold", new Vector4 (lensflareThreshold, 1.0f, 0.0f, 0.0f));
-                    blurAndFlaresMaterial.SetVector ("_TintColor", new Vector4 (flareColorA.r, flareColorA.g, flareColorA.b, flareColorA.a) * flareColorA.a * lensflareIntensity);
-                    blurAndFlaresMaterial.SetFloat ("_Saturation", lensFlareSaturation);
+                    _blurAndFlaresMaterial.SetVector("_Offsets", new Vector4(flareXRot, flareyRot, 0.0f, 0.0f));
+                    _blurAndFlaresMaterial.SetVector("_Threshhold", new Vector4(lensflareThreshold, 1.0f, 0.0f, 0.0f));
+                    _blurAndFlaresMaterial.SetVector("_TintColor", new Vector4(flareColorA.r, flareColorA.g, flareColorA.b, flareColorA.a) * flareColorA.a * lensflareIntensity);
+                    _blurAndFlaresMaterial.SetFloat("_Saturation", lensFlareSaturation);
 
                     // "pre and cut"
                     quarterRezColor.DiscardContents();
-                    Graphics.Blit (rtFlares4, quarterRezColor, blurAndFlaresMaterial, 2);
+                    Graphics.Blit(rtFlares4, quarterRezColor, _blurAndFlaresMaterial, 2);
                     // "post"
                     rtFlares4.DiscardContents();
-                    Graphics.Blit (quarterRezColor, rtFlares4, blurAndFlaresMaterial, 3);
+                    Graphics.Blit(quarterRezColor, rtFlares4, _blurAndFlaresMaterial, 3);
 
-                    blurAndFlaresMaterial.SetVector ("_Offsets", new Vector4 (flareXRot * stretchWidth, flareyRot * stretchWidth, 0.0f, 0.0f));
+                    _blurAndFlaresMaterial.SetVector("_Offsets", new Vector4(flareXRot * stretchWidth, flareyRot * stretchWidth, 0.0f, 0.0f));
                     // stretch 1st
-                    blurAndFlaresMaterial.SetFloat ("_StretchWidth", hollyStretchWidth);
+                    _blurAndFlaresMaterial.SetFloat("_StretchWidth", hollyStretchWidth);
                     quarterRezColor.DiscardContents();
-                    Graphics.Blit (rtFlares4, quarterRezColor, blurAndFlaresMaterial, 1);
+                    Graphics.Blit(rtFlares4, quarterRezColor, _blurAndFlaresMaterial, 1);
                     // stretch 2nd
-                    blurAndFlaresMaterial.SetFloat ("_StretchWidth", hollyStretchWidth * 2.0f);
+                    _blurAndFlaresMaterial.SetFloat("_StretchWidth", hollyStretchWidth * 2.0f);
                     rtFlares4.DiscardContents();
-                    Graphics.Blit (quarterRezColor, rtFlares4, blurAndFlaresMaterial, 1);
+                    Graphics.Blit(quarterRezColor, rtFlares4, _blurAndFlaresMaterial, 1);
                     // stretch 3rd
-                    blurAndFlaresMaterial.SetFloat ("_StretchWidth", hollyStretchWidth * 4.0f);
+                    _blurAndFlaresMaterial.SetFloat("_StretchWidth", hollyStretchWidth * 4.0f);
                     quarterRezColor.DiscardContents();
-                    Graphics.Blit (rtFlares4, quarterRezColor, blurAndFlaresMaterial, 1);
+                    Graphics.Blit(rtFlares4, quarterRezColor, _blurAndFlaresMaterial, 1);
 
                     // additional blur passes
                     for (int iter = 0; iter < hollywoodFlareBlurIterations; iter++)
-					{
+                    {
                         stretchWidth = (hollyStretchWidth * 2.0f / widthOverHeight) * oneOverBaseSize;
 
-                        blurAndFlaresMaterial.SetVector ("_Offsets", new Vector4 (stretchWidth * flareXRot, stretchWidth * flareyRot, 0.0f, 0.0f));
+                        _blurAndFlaresMaterial.SetVector("_Offsets", new Vector4(stretchWidth * flareXRot, stretchWidth * flareyRot, 0.0f, 0.0f));
                         rtFlares4.DiscardContents();
-                        Graphics.Blit (quarterRezColor, rtFlares4, blurAndFlaresMaterial, 4);
+                        Graphics.Blit(quarterRezColor, rtFlares4, _blurAndFlaresMaterial, 4);
 
-                        blurAndFlaresMaterial.SetVector ("_Offsets", new Vector4 (stretchWidth * flareXRot, stretchWidth * flareyRot, 0.0f, 0.0f));
+                        _blurAndFlaresMaterial.SetVector("_Offsets", new Vector4(stretchWidth * flareXRot, stretchWidth * flareyRot, 0.0f, 0.0f));
                         quarterRezColor.DiscardContents();
-                        Graphics.Blit (rtFlares4, quarterRezColor, blurAndFlaresMaterial, 4);
+                        Graphics.Blit(rtFlares4, quarterRezColor, _blurAndFlaresMaterial, 4);
                     }
 
-                    if (lensflareMode == (LensFlareStyle) 1)
+                    if (lensflareMode == (LensFlareStyle)1)
                         // anamorphic lens flares
-                        AddTo (1.0f, quarterRezColor, secondQuarterRezColor);
+                        AddTo(1.0f, quarterRezColor, secondQuarterRezColor);
                     else
-					{
+                    {
                         // "combined" lens flares
 
-                        Vignette (1.0f, quarterRezColor, rtFlares4);
-                        BlendFlares (rtFlares4, quarterRezColor);
-                        AddTo (1.0f, quarterRezColor, secondQuarterRezColor);
+                        Vignette(1.0f, quarterRezColor, rtFlares4);
+                        BlendFlares(rtFlares4, quarterRezColor);
+                        AddTo(1.0f, quarterRezColor, secondQuarterRezColor);
                     }
                 }
-                RenderTexture.ReleaseTemporary (rtFlares4);
+                RenderTexture.ReleaseTemporary(rtFlares4);
             }
 
-            int blendPass = (int) realBlendMode;
+            int blendPass = (int)realBlendMode;
             //if (Mathf.Abs(chromaticBloom) < Mathf.Epsilon)
             //	blendPass += 4;
 
-            screenBlend.SetFloat ("_Intensity", bloomIntensity);
-            screenBlend.SetTexture ("_ColorBuffer", source);
+            _screenBlend.SetFloat("_Intensity", bloomIntensity);
+            _screenBlend.SetTexture("_ColorBuffer", source);
 
             if (quality > BloomQuality.Cheap)
-			{
-                RenderTexture halfRezColorUp = RenderTexture.GetTemporary (rtW2, rtH2, 0, rtFormat);
-                Graphics.Blit (secondQuarterRezColor, halfRezColorUp);
-                Graphics.Blit (halfRezColorUp, destination, screenBlend, blendPass);
-                RenderTexture.ReleaseTemporary (halfRezColorUp);
+            {
+                RenderTexture halfRezColorUp = RenderTexture.GetTemporary(rtW2, rtH2, 0, rtFormat);
+                Graphics.Blit(secondQuarterRezColor, halfRezColorUp);
+                Graphics.Blit(halfRezColorUp, destination, _screenBlend, blendPass);
+                RenderTexture.ReleaseTemporary(halfRezColorUp);
             }
             else
-                Graphics.Blit (secondQuarterRezColor, destination, screenBlend, blendPass);
+                Graphics.Blit(secondQuarterRezColor, destination, _screenBlend, blendPass);
 
-            RenderTexture.ReleaseTemporary (quarterRezColor);
-            RenderTexture.ReleaseTemporary (secondQuarterRezColor);
+            RenderTexture.ReleaseTemporary(quarterRezColor);
+            RenderTexture.ReleaseTemporary(secondQuarterRezColor);
         }
 
-        private void AddTo (float intensity_, RenderTexture from, RenderTexture to)
+        private void AddTo(float intensity_, RenderTexture from, RenderTexture to)
         {
-            screenBlend.SetFloat ("_Intensity", intensity_);
+            _screenBlend.SetFloat("_Intensity", intensity_);
             to.MarkRestoreExpected(); // additive blending, RT restore expected
-            Graphics.Blit (from, to, screenBlend, 9);
+            Graphics.Blit(from, to, _screenBlend, 9);
         }
 
-        private void BlendFlares (RenderTexture from, RenderTexture to)
+        private void BlendFlares(RenderTexture from, RenderTexture to)
         {
-            lensFlareMaterial.SetVector ("colorA", new Vector4 (flareColorA.r, flareColorA.g, flareColorA.b, flareColorA.a) * lensflareIntensity);
-            lensFlareMaterial.SetVector ("colorB", new Vector4 (flareColorB.r, flareColorB.g, flareColorB.b, flareColorB.a) * lensflareIntensity);
-            lensFlareMaterial.SetVector ("colorC", new Vector4 (flareColorC.r, flareColorC.g, flareColorC.b, flareColorC.a) * lensflareIntensity);
-            lensFlareMaterial.SetVector ("colorD", new Vector4 (flareColorD.r, flareColorD.g, flareColorD.b, flareColorD.a) * lensflareIntensity);
+            _lensFlareMaterial.SetVector("colorA", new Vector4(flareColorA.r, flareColorA.g, flareColorA.b, flareColorA.a) * lensflareIntensity);
+            _lensFlareMaterial.SetVector("colorB", new Vector4(flareColorB.r, flareColorB.g, flareColorB.b, flareColorB.a) * lensflareIntensity);
+            _lensFlareMaterial.SetVector("colorC", new Vector4(flareColorC.r, flareColorC.g, flareColorC.b, flareColorC.a) * lensflareIntensity);
+            _lensFlareMaterial.SetVector("colorD", new Vector4(flareColorD.r, flareColorD.g, flareColorD.b, flareColorD.a) * lensflareIntensity);
             to.MarkRestoreExpected(); // additive blending, RT restore expected
-            Graphics.Blit (from, to, lensFlareMaterial);
+            Graphics.Blit(from, to, _lensFlareMaterial);
         }
 
-        private void BrightFilter (float thresh, RenderTexture from, RenderTexture to)
+        private void BrightFilter(float thresh, RenderTexture from, RenderTexture to)
         {
-            brightPassFilterMaterial.SetVector ("_Threshhold", new Vector4 (thresh, thresh, thresh, thresh));
-            Graphics.Blit (from, to, brightPassFilterMaterial, 0);
+            _brightPassFilterMaterial.SetVector("_Threshhold", new Vector4(thresh, thresh, thresh, thresh));
+            Graphics.Blit(from, to, _brightPassFilterMaterial, 0);
         }
 
-        private void BrightFilter (Color threshColor,  RenderTexture from, RenderTexture to)
+        private void BrightFilter(Color threshColor, RenderTexture from, RenderTexture to)
         {
-            brightPassFilterMaterial.SetVector ("_Threshhold", threshColor);
-            Graphics.Blit (from, to, brightPassFilterMaterial, 1);
+            _brightPassFilterMaterial.SetVector("_Threshhold", threshColor);
+            Graphics.Blit(from, to, _brightPassFilterMaterial, 1);
         }
 
-        private void Vignette (float amount, RenderTexture from, RenderTexture to)
+        private void Vignette(float amount, RenderTexture from, RenderTexture to)
         {
             if (lensFlareVignetteMask)
             {
-                screenBlend.SetTexture ("_ColorBuffer", lensFlareVignetteMask);
+                _screenBlend.SetTexture("_ColorBuffer", lensFlareVignetteMask);
                 to.MarkRestoreExpected(); // using blending, RT restore expected
-                Graphics.Blit (from == to ? null : from, to, screenBlend, from == to ? 7 : 3);
+                Graphics.Blit(from == to ? null : from, to, _screenBlend, from == to ? 7 : 3);
             }
             else if (from != to)
             {
-                Graphics.SetRenderTarget (to);
+                Graphics.SetRenderTarget(to);
                 GL.Clear(false, true, Color.black); // clear destination to avoid RT restore
-                Graphics.Blit (from, to);
+                Graphics.Blit(from, to);
             }
         }
     }

@@ -1,17 +1,20 @@
-﻿using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
 
-namespace Quaver.Osu.Beatmap {
-
+namespace Quaver.Osu.Beatmap
+{
     public class OsuBeatmapParser : MonoBehaviour
     {
         public static OsuBeatmap Parse(string filePath)
         {
-
             byte osuOffset = 170;
 
             if (!File.Exists(filePath.Trim()))
@@ -37,7 +40,7 @@ namespace Quaver.Osu.Beatmap {
 
             foreach (string line in File.ReadAllLines(filePath))
             {
-                switch(line.Trim())
+                switch (line.Trim())
                 {
                     case "[General]":
                         section = "[General]";
@@ -115,11 +118,8 @@ namespace Quaver.Osu.Beatmap {
                             case "WidescreenStoryboard":
                                 beatmap.WidescreenStoryboard = Int32.Parse(value);
                                 break;
-                            
                         }
-            
                     }
-                    
                 }
 
                 // Parse [Editor] Data
@@ -149,7 +149,6 @@ namespace Quaver.Osu.Beatmap {
                                 break;
                         }
                     }
-
                 }
 
                 // Parse [Editor] Data
@@ -196,7 +195,6 @@ namespace Quaver.Osu.Beatmap {
                                 break;
                         }
                     }
-
                 }
 
                 // Parse [Difficulty] Data
@@ -229,7 +227,6 @@ namespace Quaver.Osu.Beatmap {
                                 break;
                         }
                     }
-
                 }
 
                 // Parse [Events] Data
@@ -244,7 +241,7 @@ namespace Quaver.Osu.Beatmap {
                     }
                 }
 
-                try 
+                try
                 {
                     // Parse [TimingPoints] Data
                     if (section.Equals("[TimingPoints]"))
@@ -267,7 +264,8 @@ namespace Quaver.Osu.Beatmap {
                             beatmap.TimingPoints.Add(timingPoint);
                         }
                     }
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     Debug.Log(e);
                     Debug.Log(line);
@@ -294,24 +292,23 @@ namespace Quaver.Osu.Beatmap {
                             hitObject.X = Int32.Parse(values[0]);
 
                             // Find which key the object is. TODO: DRY this up.
-                            if (hitObject.X >= 0 && hitObject.X <= 127) 
+                            if (hitObject.X >= 0 && hitObject.X <= 127)
                             {
                                 hitObject.Key1 = true;
-
-                            } else if (hitObject.X >= 128 && hitObject.X <= 255) 
+                            }
+                            else if (hitObject.X >= 128 && hitObject.X <= 255)
                             {
-
                                 hitObject.Key2 = true;
-
-                            } else if (hitObject.X >= 256 && hitObject.X <= 383)
+                            }
+                            else if (hitObject.X >= 256 && hitObject.X <= 383)
                             {
                                 hitObject.Key3 = true;
-
-                            } else if (hitObject.X >= 384 && hitObject.X <= 511) 
+                            }
+                            else if (hitObject.X >= 384 && hitObject.X <= 511)
                             {
                                 hitObject.Key4 = true;
                             }
-                            
+
 
                             hitObject.Y = Int32.Parse(values[1]);
                             hitObject.StartTime = Int32.Parse(values[2]) + osuOffset;
@@ -325,20 +322,19 @@ namespace Quaver.Osu.Beatmap {
                             hitObject.X = Int32.Parse(values[0]);
 
                             // Find which key the object is. TODO: DRY this up.
-                            if (hitObject.X >= 0 && hitObject.X <= 127) 
+                            if (hitObject.X >= 0 && hitObject.X <= 127)
                             {
                                 hitObject.Key1 = true;
-
-                            } else if (hitObject.X >= 128 && hitObject.X <= 255) 
+                            }
+                            else if (hitObject.X >= 128 && hitObject.X <= 255)
                             {
-
                                 hitObject.Key2 = true;
-
-                            } else if (hitObject.X >= 256 && hitObject.X <= 383)
+                            }
+                            else if (hitObject.X >= 256 && hitObject.X <= 383)
                             {
                                 hitObject.Key3 = true;
-
-                            } else if (hitObject.X >= 384 && hitObject.X <= 511) 
+                            }
+                            else if (hitObject.X >= 384 && hitObject.X <= 511)
                             {
                                 hitObject.Key4 = true;
                             }
@@ -351,14 +347,11 @@ namespace Quaver.Osu.Beatmap {
                         }
 
                         beatmap.HitObjects.Add(hitObject);
-                                                        
                     }
                 }
-
             }
 
             return beatmap;
         }
     }
-
 }

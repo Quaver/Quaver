@@ -1,55 +1,59 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace UnityStandardAssets.ImageEffects
 {
-    class Triangles
+    internal class Triangles
     {
-        private static Mesh[] meshes;
-        private static int currentTris = 0;
+        private static Mesh[] s_meshes;
+        private static int s_currentTris = 0;
 
-        static bool HasMeshes()
+        private static bool HasMeshes()
         {
-            if (meshes == null)
+            if (s_meshes == null)
                 return false;
-            for (int i = 0; i < meshes.Length; i++)
-                if (null == meshes[i])
+            for (int i = 0; i < s_meshes.Length; i++)
+                if (null == s_meshes[i])
                     return false;
 
             return true;
         }
 
-        static void Cleanup()
+        private static void Cleanup()
         {
-            if (meshes == null)
+            if (s_meshes == null)
                 return;
 
-            for (int i = 0; i < meshes.Length; i++)
+            for (int i = 0; i < s_meshes.Length; i++)
             {
-                if (null != meshes[i])
+                if (null != s_meshes[i])
                 {
-                    Object.DestroyImmediate(meshes[i]);
-                    meshes[i] = null;
+                    Object.DestroyImmediate(s_meshes[i]);
+                    s_meshes[i] = null;
                 }
             }
-            meshes = null;
+            s_meshes = null;
         }
 
-        static Mesh[] GetMeshes(int totalWidth, int totalHeight)
+        private static Mesh[] GetMeshes(int totalWidth, int totalHeight)
         {
-            if (HasMeshes() && (currentTris == (totalWidth * totalHeight)))
+            if (HasMeshes() && (s_currentTris == (totalWidth * totalHeight)))
             {
-                return meshes;
+                return s_meshes;
             }
 
             int maxTris = 65000 / 3;
             int totalTris = totalWidth * totalHeight;
-            currentTris = totalTris;
+            s_currentTris = totalTris;
 
             int meshCount = Mathf.CeilToInt((1.0f * totalTris) / (1.0f * maxTris));
 
-            meshes = new Mesh[meshCount];
+            s_meshes = new Mesh[meshCount];
 
             int i = 0;
             int index = 0;
@@ -57,14 +61,14 @@ namespace UnityStandardAssets.ImageEffects
             {
                 int tris = Mathf.FloorToInt(Mathf.Clamp((totalTris - i), 0, maxTris));
 
-                meshes[index] = GetMesh(tris, i, totalWidth, totalHeight);
+                s_meshes[index] = GetMesh(tris, i, totalWidth, totalHeight);
                 index++;
             }
 
-            return meshes;
+            return s_meshes;
         }
 
-        static Mesh GetMesh(int triCount, int triOffset, int totalWidth, int totalHeight)
+        private static Mesh GetMesh(int triCount, int triOffset, int totalWidth, int totalHeight)
         {
             var mesh = new Mesh();
             mesh.hideFlags = HideFlags.DontSave;
