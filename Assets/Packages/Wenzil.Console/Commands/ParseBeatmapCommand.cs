@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using UnityEngine;
 using System;
 using Quaver.Osu.Beatmap;
 
@@ -65,21 +69,21 @@ namespace Wenzil.Console.Commands
                                     "SliderMultiplier: " + beatmap.SliderMultiplier + "\n" +
                                     "SliderTickRate: " + beatmap.SliderTickRate + "\n\n" +
 
-                                    "Background: " + beatmap.Background + "\n\n" + 
+                                    "Background: " + beatmap.Background + "\n\n" +
 
                                     "TimingPoints: " + beatmap.TimingPoints.Count + "\n" +
                                     "HitObjects: " + beatmap.HitObjects.Count + "\n";
 
             // Print the first 10 HitObjects to Console.
-            for (int i = 0; i < 10; i++) {
-                beatmapLogData += "[" + i + "] " + beatmap.HitObjects[i].Key1 + " | " + 
+            for (int i = 0; i < 10; i++)
+            {
+                beatmapLogData += "[" + i + "] " + beatmap.HitObjects[i].Key1 + " | " +
                 beatmap.HitObjects[i].Key2 + " | " +
                 beatmap.HitObjects[i].Key3 + " | " +
                 beatmap.HitObjects[i].Key4 + "\n";
             }
 
             return beatmapLogData;
-            
         }
     }
 }

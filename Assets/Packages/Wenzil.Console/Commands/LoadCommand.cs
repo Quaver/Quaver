@@ -1,9 +1,14 @@
-﻿using UnityEngine;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using UnityEngine;
 using System.Collections;
 
 /// <summary>
 /// LOAD command. Load the specified scene by name.
 /// </summary>
+
 
 namespace Wenzil.Console.Commands
 {
@@ -21,7 +26,7 @@ namespace Wenzil.Console.Commands
             }
             else
             {
-                return "Unused"; 
+                return "Unused";
             }
         }
 

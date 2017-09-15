@@ -1,46 +1,46 @@
-﻿using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Quaver.Cache;
 
 namespace Quaver.Audio
 {
-
-
     public class AudioBufferer : MonoBehaviour
     {
-
-        private WWW audioLoader;
-        private AudioSource bufferAudio;
-        private CachedBeatmap bufferMap;
-        private bool bufferPreview;
-        private float bufferPlayDelay;
+        private WWW _audioLoader;
+        private AudioSource _bufferAudio;
+        private CachedBeatmap _bufferMap;
+        private bool _bufferPreview;
+        private float _bufferPlayDelay;
 
         public void init(CachedBeatmap map, AudioSource gameAudio, bool usePreviewTime = false, float playDelay = 0f)
         {
-            bufferAudio = gameAudio;
-            bufferMap = map;
-            bufferPreview = usePreviewTime;
-            bufferPlayDelay = playDelay;
+            _bufferAudio = gameAudio;
+            _bufferMap = map;
+            _bufferPreview = usePreviewTime;
+            _bufferPlayDelay = playDelay;
 
             string url = "file:///" + map.AudioPath;
-            audioLoader = new WWW(url);
+            _audioLoader = new WWW(url);
             StartCoroutine(BufferAudio());
         }
 
         private IEnumerator BufferAudio()
         {
-
-            bufferAudio.Stop();
+            _bufferAudio.Stop();
 
             //Wait until audio is loaded
-            yield return audioLoader;
+            yield return _audioLoader;
             yield return new WaitForSeconds(0.1f);
             //Set and play audio
-            bufferAudio.clip = audioLoader.GetAudioClip(false,true, AudioType.OGGVORBIS);
-            if (bufferPreview) bufferAudio.time = bufferMap.AudioPreviewTime / 1000f;
-            else bufferAudio.time = 0;
-            bufferAudio.PlayDelayed(bufferPlayDelay);
+            _bufferAudio.clip = _audioLoader.GetAudioClip(false, true, AudioType.OGGVORBIS);
+            if (_bufferPreview) _bufferAudio.time = _bufferMap.AudioPreviewTime / 1000f;
+            else _bufferAudio.time = 0;
+            _bufferAudio.PlayDelayed(_bufferPlayDelay);
 
             //Removes game object
             Destroy(this.gameObject);

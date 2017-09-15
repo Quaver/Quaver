@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
@@ -6,15 +10,15 @@ using UnityEngine.UI;
 /// </summary>
 public class LockedCursor : MonoBehaviour
 {
-    private Graphic cursorGraphic;
+    private Graphic _cursorGraphic;
 
-    void Start()
+    private void Start()
     {
-        cursorGraphic = GetComponent<Image>();
-        cursorGraphic.enabled = false;
+        _cursorGraphic = GetComponent<Image>();
+        _cursorGraphic.enabled = false;
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
             UnlockCursor();
@@ -26,13 +30,13 @@ public class LockedCursor : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        cursorGraphic.enabled = true;
+        _cursorGraphic.enabled = true;
     }
 
     private void UnlockCursor()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        cursorGraphic.enabled = false;
+        _cursorGraphic.enabled = false;
     }
 }

@@ -1,11 +1,14 @@
-﻿using UnityEngine;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
 
 namespace Wenzil.Console
 {
-
     /// <summary>
     /// The interactive front-end of the console.
     /// </summary>
@@ -27,7 +30,7 @@ namespace Wenzil.Console
         /// </summary>
         public bool isConsoleOpen { get { return enabled; } }
 
-        void Awake()
+        private void Awake()
         {
             Show(false);
         }
@@ -56,12 +59,12 @@ namespace Wenzil.Console
             enabled = false;
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             OnToggle(true);
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             OnToggle(false);
         }
@@ -128,7 +131,7 @@ namespace Wenzil.Console
         {
             outputText.text = "";
             outputText.SetLayoutDirty();
-            if(onClearConsole != null)
+            if (onClearConsole != null)
                 onClearConsole();
         }
 
@@ -143,7 +146,7 @@ namespace Wenzil.Console
         /// <summary>
         /// Writes the given string into the console input, ready to be user submitted.
         /// </summary>
-        public void SetInputText(string input) 
+        public void SetInputText(string input)
         {
             inputField.MoveTextStart(false);
             inputField.text = input;

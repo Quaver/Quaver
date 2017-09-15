@@ -1,3 +1,7 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using UnityEngine;
 using System;
 using Quaver.Osu.Beatmap;
@@ -15,12 +19,12 @@ namespace Wenzil.Console.Commands
 
         public static string Execute(params string[] args)
         {
-            if (args.Length < 2) 
+            if (args.Length < 2)
             {
                 return "Invalid arguments passed. Usage: cvq ./cool_beatmap.osu cooler_beatmap.qua";
             }
 
-			OsuBeatmap osuBeatmap = OsuBeatmapParser.Parse(args[0]);
+            OsuBeatmap osuBeatmap = OsuBeatmapParser.Parse(args[0]);
 
             if (!osuBeatmap.IsValid)
             {
@@ -29,10 +33,10 @@ namespace Wenzil.Console.Commands
 
             bool hasConverted = OsuQuaConverter.Convert(osuBeatmap, args[1]);
 
-            if (hasConverted) 
+            if (hasConverted)
             {
                 return "Beatmap successfully converted @ " + args[1];
-            } 
+            }
 
             return "ERROR: The beatmap failed to convert.";
         }

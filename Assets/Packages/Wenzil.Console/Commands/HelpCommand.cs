@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using UnityEngine;
 using System.Collections.Generic;
 using System.Text;
 using Wenzil.Console;
 
 namespace Wenzil.Console.Commands
-{ 
+{
     /// <summary>
     /// HELP command. Display the list of available commands or details about a specific command.
     /// </summary>
@@ -14,7 +18,7 @@ namespace Wenzil.Console.Commands
         public static readonly string description = "Display the list of available commands or details about a specific command.";
         public static readonly string usage = "HELP [command]";
 
-        private static StringBuilder commandList = new StringBuilder();
+        private static StringBuilder s_commandList = new StringBuilder();
 
         public static string Execute(params string[] args)
         {
@@ -30,16 +34,16 @@ namespace Wenzil.Console.Commands
 
         private static string DisplayAvailableCommands()
         {
-            commandList.Length = 0; // clear the command list before rebuilding it
-            commandList.Append("<b>Available Commands</b>\n");
+            s_commandList.Length = 0; // clear the command list before rebuilding it
+            s_commandList.Append("<b>Available Commands</b>\n");
 
             foreach (ConsoleCommand command in ConsoleCommandsDatabase.commands)
             {
-                commandList.Append(string.Format("    <b>{0}</b> - {1}\n", command.name, command.description));
+                s_commandList.Append(string.Format("    <b>{0}</b> - {1}\n", command.name, command.description));
             }
 
-            commandList.Append("To display details about a specific command, type 'HELP' followed by the command name.");
-            return commandList.ToString();
+            s_commandList.Append("To display details about a specific command, type 'HELP' followed by the command name.");
+            return s_commandList.ToString();
         }
 
         private static string DisplayCommandDetails(string commandName)

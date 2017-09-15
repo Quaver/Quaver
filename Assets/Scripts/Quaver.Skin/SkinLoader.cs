@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using IniParser;
@@ -6,24 +10,24 @@ using IniParser.Model;
 
 namespace Quaver.Skin
 {
-	public class SkinConfigLoader
-	{
-		// Responsible for return back a parsed skin.ini file.
-		// I would seriously suggest reading the example to learn how to use
-		// this - https://github.com/rickyah/ini-parser
-		public static Skin Load(string path)
-		{
-			var parser = new FileIniDataParser();
+    public class SkinConfigLoader
+    {
+        // Responsible for return back a parsed skin.ini file.
+        // I would seriously suggest reading the example to learn how to use
+        // this - https://github.com/rickyah/ini-parser
+        public static Skin Load(string path)
+        {
+            var parser = new FileIniDataParser();
 
-			IniData data = parser.ReadFile(path);
+            IniData data = parser.ReadFile(path);
 
-			Skin skin = new Skin();
+            Skin skin = new Skin();
 
-			skin.Name = data["General"]["Name"];
-			skin.Author = data["General"]["Author"];
-			skin.Version = data["General"]["Version"];
+            skin.Name = data["General"]["Name"];
+            skin.Author = data["General"]["Author"];
+            skin.Version = data["General"]["Version"];
 
-			return skin;
-		}
-	}
+            return skin;
+        }
+    }
 }

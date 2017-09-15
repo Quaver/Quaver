@@ -1,50 +1,54 @@
-﻿using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Quaver.Config;
 
-public class TitleSoundVisualizer : MonoBehaviour {
-    private float[] spectrum = new float[512];
-    private float bassScale;
-    private float logoScale = 3f;
-    private float prevBassValue;
-    private float cameraShake = 0;
+public class TitleSoundVisualizer : MonoBehaviour
+{
+    private float[] _spectrum = new float[512];
+    private float _bassScale;
+    private float _logoScale = 3f;
+    private float _prevBassValue;
+    private float _cameraShake = 0;
 
     public GameObject[] emitters;
     public GameObject logo;
     public GameObject titleScreen;
     public AudioSource gameAudio;
 
-	void Start () {
-
-	}
-
-    void Update()
+    private void Start()
     {
-        AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.Rectangular);
+    }
+
+    private void Update()
+    {
+        AudioListener.GetSpectrumData(_spectrum, 0, FFTWindow.Rectangular);
         int i = 0;
         float tween = 0;
         for (i = 0; i < 40; i++)
         {
             //Debug.DrawLine(new Vector3((i - 1) / 20f, spectrum[i - 1] - 10, 1), new Vector3(i / 20f, spectrum[i] - 10, 1), Color.green);
-            if (i <= 2) tween += spectrum[i];
+            if (i <= 2) tween += _spectrum[i];
         }
-        bassScale += (tween - bassScale) / 2f;
-        if (bassScale - prevBassValue > 0.15f) logoScale += (3f + Mathf.Min(200f * Mathf.Pow(bassScale - prevBassValue,3.5f),2f)-logoScale)/2f;
+        _bassScale += (tween - _bassScale) / 2f;
+        if (_bassScale - _prevBassValue > 0.15f) _logoScale += (3f + Mathf.Min(200f * Mathf.Pow(_bassScale - _prevBassValue, 3.5f), 2f) - _logoScale) / 2f;
         //print(bassScale - prevBassValue);
-        prevBassValue = bassScale;
-        cameraShake += 0.01f;
-        if (cameraShake > Mathf.PI*2f) cameraShake -= Mathf.PI*2f;
-        this.transform.localPosition = new Vector3(Mathf.Sin(cameraShake) / 3f, Mathf.Cos(cameraShake) / 3f, 0);
-        logo.transform.localScale = Vector3.one * logoScale;
-        logoScale += (3f - logoScale) / 12f;
+        _prevBassValue = _bassScale;
+        _cameraShake += 0.01f;
+        if (_cameraShake > Mathf.PI * 2f) _cameraShake -= Mathf.PI * 2f;
+        this.transform.localPosition = new Vector3(Mathf.Sin(_cameraShake) / 3f, Mathf.Cos(_cameraShake) / 3f, 0);
+        logo.transform.localScale = Vector3.one * _logoScale;
+        _logoScale += (3f - _logoScale) / 12f;
 
         for (i = 0; i < emitters.Length; i++)
         {
-            emitters[i].transform.GetComponent<ParticleSystem>().emissionRate = bassScale * 20f + 2f;
-            emitters[i].transform.GetComponent<ParticleSystem>().playbackSpeed = bassScale * 4f+0.1F;
+            emitters[i].transform.GetComponent<ParticleSystem>().emissionRate = _bassScale * 20f + 2f;
+            emitters[i].transform.GetComponent<ParticleSystem>().playbackSpeed = _bassScale * 4f + 0.1F;
         }
-
     }
 }

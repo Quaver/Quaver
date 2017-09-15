@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Quaver.Qua;
@@ -13,29 +17,29 @@ namespace Quaver.Gameplay
         /*Classes/Gameobjects (public variables will be changed later)*/
         public GameObject hitObjectTest;
         public GameObject receptorBar;
-        private GameObject[] receptors;
+        private GameObject[] _receptors;
         public GameObject lightingBar;
-        private GameObject[] hitLighting;
+        private GameObject[] _hitLighting;
         public GameObject particleContainer;
         public GameObject hitContainer;
         public GameObject bgMask;
 
         /*GSM REFERENCES (Anything that references the game state manager)*/
-        private QuaFile qFile;
-        private AudioSource songAudio;
+        private QuaFile _qFile;
+        private AudioSource _songAudio;
 
         /*CONFIG VALUES*/
-        private int config_scrollSpeed;
-        private bool config_timingBars;
-        private bool config_upScroll;
-        private KeyCode[] config_KeyBindings;
-        private int config_offset;
+        private int _config_scrollSpeed;
+        private bool _config_timingBars;
+        private bool _config_upScroll;
+        private KeyCode[] _config_KeyBindings;
+        private int _config_offset;
 
         private const int config_playStartDelayed = 1000; //delays 1 second before song starts
         private const int maxNoteCount = 64; //dont know if this should be config or not
         private const float config_PixelUnitSize = 128; //pixels to units. 128 pixels = 1 unit.
 
-        private int[] judgeTimes = new int[6] { 16, 37, 70, 100, 124, 80 }; //OD9 judge times in ms (0,1,2,3,4), LN offset 5
+        private int[] _judgeTimes = new int[6] { 16, 37, 70, 100, 124, 80 }; //OD9 judge times in ms (0,1,2,3,4), LN offset 5
 
         /*GAME MODS*/
         private const bool mod_noSV = false;
@@ -58,93 +62,93 @@ namespace Quaver.Gameplay
         private const int skin_columnSize = 250;
         private const int skin_receptorYOffset = 50; //Sets the receptor's y position offset, relative to the edge of the screen.
         //private float[] skin_receptorRotations = new float[4] { -90f, 0f, 180f, 90f }; //Rotation of arrows if arrow skin is used
-        private float[] skin_receptorRotations = new float[4] { 0, 0, 0, 0 }; //Rotation of arrows if arrow skin is used
+        private float[] _skin_receptorRotations = new float[4] { 0, 0, 0, 0 }; //Rotation of arrows if arrow skin is used
 
         /*Referencing Values*/
         private const int missTime = 500; //after 500ms, the note will be removed
-        private List<TimingObject> SvQueue, timingQueue, barQueue;
-        private List<NoteObject>[] hitQueue;
-        private List<NoteObject> noteQueue, lnQueue, offLNQueue;
-        private GameObject[] activeNotes;
-        private ulong[] svCalc; //Stores SV position data for efficiency
-        private float actualSongTime;
-        private float curSongTime;
-        private float scrollNegativeFactor = 1f;
-        private bool[] keyDown;
-        private float receptorYPos;
-        private float[] receptorXPos, receptorXOffset, receptorSize;
-        private float modInterval;
-        private ulong curSVPos;
-        private int curSVint;
-        private bool songDone;
-        private float songEndOffset;
+        private List<TimingObject> _svQueue,_timingQueue,_barQueue;
+        private List<NoteObject>[] _hitQueue;
+        private List<NoteObject> _noteQueue,_lnQueue,_offLNQueue;
+        private GameObject[] _activeNotes;
+        private ulong[] _svCalc; //Stores SV position data for efficiency
+        private float _actualSongTime;
+        private float _curSongTime;
+        private float _scrollNegativeFactor = 1f;
+        private bool[] _keyDown;
+        private float _receptorYPos;
+        private float[] _receptorXPos,_receptorXOffset,_receptorSize;
+        private float _modInterval;
+        private ulong _curSVPos;
+        private int _curSVint;
+        private bool _songDone;
+        private float _songEndOffset;
 
         public void Start()
         {
             //Check if beatmap is valid
-            qFile = QuaParser.Parse(Manager.currentMap.Path);
-            if (!qFile.IsValidQua)
+            _qFile = QuaParser.Parse(Manager.currentMap.Path);
+            if (!_qFile.IsValidQua)
             {
                 print("IS NOT VALID QUA FILE");
             }
-            else if (qFile.IsValidQua)
+            else if (_qFile.IsValidQua)
             {
                 //Copy + Convert to NoteObjects
                 int i = 0;
                 int j = 0;
                 NoteObject newNote;
-                noteQueue = new List<NoteObject>();
-                for (i = 0; i < qFile.HitObjects.Count; i++)
+                _noteQueue = new List<NoteObject>();
+                for (i = 0; i < _qFile.HitObjects.Count; i++)
                 {
                     newNote = new NoteObject();
-                    newNote.StartTime = qFile.HitObjects[i].StartTime;
-                    newNote.EndTime = qFile.HitObjects[i].EndTime;
-                    newNote.KeyLane = qFile.HitObjects[i].KeyLane;
-                    noteQueue.Add(newNote);
+                    newNote.StartTime = _qFile.HitObjects[i].StartTime;
+                    newNote.EndTime = _qFile.HitObjects[i].EndTime;
+                    newNote.KeyLane = _qFile.HitObjects[i].KeyLane;
+                    _noteQueue.Add(newNote);
                 }
 
                 TimingObject newTime;
-                SvQueue = new List<TimingObject>();
-                for (i = 0; i < qFile.SliderVelocities.Count; i++)
+                _svQueue = new List<TimingObject>();
+                for (i = 0; i < _qFile.SliderVelocities.Count; i++)
                 {
                     newTime = new TimingObject();
-                    newTime.StartTime = qFile.SliderVelocities[i].StartTime;
-                    newTime.Multiplier = qFile.SliderVelocities[i].Multiplier;
-                    SvQueue.Add(newTime);
+                    newTime.StartTime = _qFile.SliderVelocities[i].StartTime;
+                    newTime.Multiplier = _qFile.SliderVelocities[i].Multiplier;
+                    _svQueue.Add(newTime);
                 }
 
 
-                timingQueue = new List<TimingObject>();
-                for (i = 0; i < qFile.TimingPoints.Count; i++)
+                _timingQueue = new List<TimingObject>();
+                for (i = 0; i < _qFile.TimingPoints.Count; i++)
                 {
                     newTime = new TimingObject();
-                    newTime.StartTime = qFile.TimingPoints[i].StartTime;
-                    newTime.BPM = qFile.TimingPoints[i].BPM;
-                    timingQueue.Add(newTime);
+                    newTime.StartTime = _qFile.TimingPoints[i].StartTime;
+                    newTime.BPM = _qFile.TimingPoints[i].BPM;
+                    _timingQueue.Add(newTime);
                 }
 
                 //Declare Reference Values
-                hitQueue = new List<NoteObject>[4];
-                lnQueue = new List<NoteObject>();
-                offLNQueue = new List<NoteObject>();
-                barQueue = new List<TimingObject>();
-                activeNotes = new GameObject[maxNoteCount];
+                _hitQueue = new List<NoteObject>[4];
+                _lnQueue = new List<NoteObject>();
+                _offLNQueue = new List<NoteObject>();
+                _barQueue = new List<TimingObject>();
+                _activeNotes = new GameObject[maxNoteCount];
 
-                songAudio = transform.GetComponent<AudioSource>();
-                receptorXPos = new float[4];
-                receptorXOffset = new float[4];
-                receptorSize = new float[4];
-                keyDown = new bool[4];
+                _songAudio = transform.GetComponent<AudioSource>();
+                _receptorXPos = new float[4];
+                _receptorXOffset = new float[4];
+                _receptorSize = new float[4];
+                _keyDown = new bool[4];
 
-                songAudio = Manager.SongAudioSource;
+                _songAudio = Manager.SongAudioSource;
                 //songAudio.clip = qFile.audi; get audio from qfile.
 
                 //Declare Config Variables
-                config_scrollSpeed = Manager.GameConfig.ScrollSpeed;
-                config_timingBars = true;//should be config
-                config_upScroll = !Manager.GameConfig.DownScroll;
-                config_KeyBindings = new KeyCode[] { Manager.GameConfig.KeyLaneMania1, Manager.GameConfig.KeyLaneMania2, Manager.GameConfig.KeyLaneMania3, Manager.GameConfig.KeyLaneMania4 };
-                config_offset = Manager.GameConfig.GlobalOffset;
+                _config_scrollSpeed = Manager.GameConfig.ScrollSpeed;
+                _config_timingBars = true;//should be config
+                _config_upScroll = !Manager.GameConfig.DownScroll;
+                _config_KeyBindings = new KeyCode[] { Manager.GameConfig.KeyLaneMania1, Manager.GameConfig.KeyLaneMania2, Manager.GameConfig.KeyLaneMania3, Manager.GameConfig.KeyLaneMania4 };
+                _config_offset = Manager.GameConfig.GlobalOffset;
 
 
                 //TempValues
@@ -154,32 +158,32 @@ namespace Quaver.Gameplay
 
 
                 //Declare Other Values
-                curSongTime = -config_playStartDelayed;
-                actualSongTime = -(float)config_playStartDelayed / 1000f;
-                curSVPos = (ulong)(-config_playStartDelayed + 10000f); //10000ms added since curSVPos is a uLong
-                curSVint = 0;
+                _curSongTime = -config_playStartDelayed;
+                _actualSongTime = -(float)config_playStartDelayed / 1000f;
+                _curSVPos = (ulong)(-config_playStartDelayed + 10000f); //10000ms added since curSVPos is a uLong
+                _curSVint = 0;
 
                 //Declare Receptor Values
-                if (config_upScroll) scrollNegativeFactor = -1f;
-                receptorYPos = scrollNegativeFactor * (skin_columnSize / 256f + (float)skin_receptorYOffset / 100f - 10f);
-                receptors = new GameObject[4];
-                hitLighting = new GameObject[4];
+                if (_config_upScroll) _scrollNegativeFactor = -1f;
+                _receptorYPos = _scrollNegativeFactor * (skin_columnSize / 256f + (float)skin_receptorYOffset / 100f - 10f);
+                _receptors = new GameObject[4];
+                _hitLighting = new GameObject[4];
                 for (i = 0; i < 4; i++)
                 {
-                    receptors[i] = receptorBar.transform.Find("R" + (i + 1)).gameObject;
-                    receptorXPos[i] = (i - 1.5f) * ((skin_columnSize + (float)skin_noteBufferSpacing) / config_PixelUnitSize);
-                    if (i >= 2 && mod_split) receptors[i].transform.localPosition = new Vector3(receptorXPos[i], -receptorYPos, 1);
-                    else receptors[i].transform.localPosition = new Vector3(receptorXPos[i], receptorYPos, 1);
-                    receptors[i].transform.localScale = Vector3.one * (skin_columnSize / (float)receptors[i].transform.GetComponent<SpriteRenderer>().sprite.rect.size.x);
-                    receptors[i].transform.transform.eulerAngles = new Vector3(0, 0, skin_receptorRotations[i]);
+                    _receptors[i] = receptorBar.transform.Find("R" + (i + 1)).gameObject;
+                    _receptorXPos[i] = (i - 1.5f) * ((skin_columnSize + (float)skin_noteBufferSpacing) / config_PixelUnitSize);
+                    if (i >= 2 && mod_split) _receptors[i].transform.localPosition = new Vector3(_receptorXPos[i], -_receptorYPos, 1);
+                    else _receptors[i].transform.localPosition = new Vector3(_receptorXPos[i], _receptorYPos, 1);
+                    _receptors[i].transform.localScale = Vector3.one * (skin_columnSize / (float)_receptors[i].transform.GetComponent<SpriteRenderer>().sprite.rect.size.x);
+                    _receptors[i].transform.transform.eulerAngles = new Vector3(0, 0, _skin_receptorRotations[i]);
 
-                    hitQueue[i] = new List<NoteObject>();
+                    _hitQueue[i] = new List<NoteObject>();
 
-                    hitLighting[i] = lightingBar.transform.Find("L" + (i + 1)).gameObject;
-                    hitLighting[i].transform.localScale = new Vector3(receptors[i].transform.localScale.x,
-                        scrollNegativeFactor * skin_hitLightingScale //*(config_PixelUnitSize / (float)hitLighting[i].transform.GetComponent<SpriteRenderer>().sprite.rect.size.y)
+                    _hitLighting[i] = lightingBar.transform.Find("L" + (i + 1)).gameObject;
+                    _hitLighting[i].transform.localScale = new Vector3(_receptors[i].transform.localScale.x,
+                        _scrollNegativeFactor * skin_hitLightingScale //*(config_PixelUnitSize / (float)hitLighting[i].transform.GetComponent<SpriteRenderer>().sprite.rect.size.y)
                         , 1f);
-                    hitLighting[i].transform.localPosition = receptors[i].transform.localPosition + new Vector3(0, hitLighting[i].transform.localScale.y * 2f, 1f);
+                    _hitLighting[i].transform.localPosition = _receptors[i].transform.localPosition + new Vector3(0, _hitLighting[i].transform.localScale.y * 2f, 1f);
                 }
 
                 //Set Skin Values
@@ -189,59 +193,58 @@ namespace Quaver.Gameplay
                     , 1f);
 
                 //Calculate Average BPM of map
-                if (!mod_noSV && SvQueue.Count > 1)
+                if (!mod_noSV && _svQueue.Count > 1)
                 {
-                    if (timingQueue.Count > 1)
+                    if (_timingQueue.Count > 1)
                     {
-                        foreach (TimingObject tp in timingQueue)
+                        foreach (TimingObject tp in _timingQueue)
                         {
-                            if (i + 1 < timingQueue.Count)
+                            if (i + 1 < _timingQueue.Count)
                             {
-                                if (timingQueue[i + 1].StartTime - timingQueue[i].StartTime > longestBpmTime)
+                                if (_timingQueue[i + 1].StartTime - _timingQueue[i].StartTime > longestBpmTime)
                                 {
                                     avgBpmPos = i;
-                                    longestBpmTime = timingQueue[i + 1].StartTime - timingQueue[i].StartTime;
+                                    longestBpmTime = _timingQueue[i + 1].StartTime - _timingQueue[i].StartTime;
                                 }
                             }
                         }
-                        averageBpm = timingQueue[avgBpmPos].BPM;
+                        averageBpm = _timingQueue[avgBpmPos].BPM;
                     }
-                    else averageBpm = timingQueue[0].BPM;
+                    else averageBpm = _timingQueue[0].BPM;
 
                     //Create and converts timing points to SV's
                     int hij = 0;
-                    for (j = 0; j < timingQueue.Count; j++)
+                    for (j = 0; j < _timingQueue.Count; j++)
                     {
-
-                        if (timingQueue[j].StartTime < SvQueue[0].StartTime)
+                        if (_timingQueue[j].StartTime < _svQueue[0].StartTime)
                         {
                             TimingObject newTp = new TimingObject();
-                            newTp.StartTime = timingQueue[j].StartTime;
+                            newTp.StartTime = _timingQueue[j].StartTime;
                             newTp.Multiplier = 1f;
-                            SvQueue.Insert(0, newTp);
+                            _svQueue.Insert(0, newTp);
                         }
-                        else if (timingQueue[j].StartTime >= SvQueue[SvQueue.Count - 1].StartTime)
+                        else if (_timingQueue[j].StartTime >= _svQueue[_svQueue.Count - 1].StartTime)
                         {
-                            if (timingQueue[j].StartTime - SvQueue[SvQueue.Count - 1].StartTime > 0.001f)
+                            if (_timingQueue[j].StartTime - _svQueue[_svQueue.Count - 1].StartTime > 0.001f)
                             {
                                 TimingObject newTp = new TimingObject();
-                                newTp.StartTime = timingQueue[j].StartTime;
+                                newTp.StartTime = _timingQueue[j].StartTime;
                                 newTp.Multiplier = 1f;
-                                SvQueue.Add(newTp);
+                                _svQueue.Add(newTp);
                             }
                         }
                         else
                         {
-                            for (i = hij; i < SvQueue.Count; i++)
+                            for (i = hij; i < _svQueue.Count; i++)
                             {
-                                if (i + 1 < SvQueue.Count && timingQueue[j].StartTime < SvQueue[i + 1].StartTime)
+                                if (i + 1 < _svQueue.Count && _timingQueue[j].StartTime < _svQueue[i + 1].StartTime)
                                 {
-                                    if (Mathf.Abs(timingQueue[j].StartTime - SvQueue[i + 1].StartTime) > 0.001f)
+                                    if (Mathf.Abs(_timingQueue[j].StartTime - _svQueue[i + 1].StartTime) > 0.001f)
                                     {
                                         TimingObject newTp = new TimingObject();
-                                        newTp.StartTime = timingQueue[j].StartTime;
+                                        newTp.StartTime = _timingQueue[j].StartTime;
                                         newTp.Multiplier = 1f;
-                                        SvQueue.Add(newTp);
+                                        _svQueue.Add(newTp);
                                         i++;
                                         hij = i;
                                     }
@@ -253,22 +256,22 @@ namespace Quaver.Gameplay
 
                     //Normalizes SV's in between each BPM change interval
                     hij = 0;
-                    SvQueue.Sort(delegate (TimingObject p1, TimingObject p2) { return p1.StartTime.CompareTo(p2.StartTime); });
-                    if (timingQueue.Count >= 1)
+                    _svQueue.Sort(delegate (TimingObject p1, TimingObject p2) { return p1.StartTime.CompareTo(p2.StartTime); });
+                    if (_timingQueue.Count >= 1)
                     {
-                        for (i = 0; i < timingQueue.Count; i++)
+                        for (i = 0; i < _timingQueue.Count; i++)
                         {
                             //print("c" + i);
-                            for (j = hij; j < SvQueue.Count; j++)
+                            for (j = hij; j < _svQueue.Count; j++)
                             {
-                                if (SvQueue[j].StartTime >= timingQueue[i].StartTime - 0.2f)
+                                if (_svQueue[j].StartTime >= _timingQueue[i].StartTime - 0.2f)
                                 {
                                     hij = j;
                                     TimingObject newSV = new TimingObject();
-                                    newSV.StartTime = SvQueue[j].StartTime;
-                                    newSV.Multiplier = Mathf.Min(SvQueue[j].Multiplier * timingQueue[i].BPM / averageBpm, 512f);
-                                    SvQueue.RemoveAt(j);
-                                    SvQueue.Insert(j, newSV);
+                                    newSV.StartTime = _svQueue[j].StartTime;
+                                    newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[i].BPM / averageBpm, 512f);
+                                    _svQueue.RemoveAt(j);
+                                    _svQueue.Insert(j, newSV);
                                     break;
                                 }
                             }
@@ -281,82 +284,82 @@ namespace Quaver.Gameplay
                     TimingObject newTp = new TimingObject();
                     newTp.StartTime = 0;
                     newTp.Multiplier = 1f;
-                    SvQueue.Add(newTp);
+                    _svQueue.Add(newTp);
                 }
 
                 //Calculates SV for efficiency
-                svCalc = new ulong[SvQueue.Count];
+                _svCalc = new ulong[_svQueue.Count];
                 ulong svPosTime = 0;
-                svCalc[0] = 0;
-                for (i = 0; i < SvQueue.Count; i++)
+                _svCalc[0] = 0;
+                for (i = 0; i < _svQueue.Count; i++)
                 {
-                    if (i + 1 < SvQueue.Count)
+                    if (i + 1 < _svQueue.Count)
                     {
-                        ulong templ = (ulong)((SvQueue[i + 1].StartTime - SvQueue[i].StartTime) * SvQueue[i].Multiplier);
+                        ulong templ = (ulong)((_svQueue[i + 1].StartTime - _svQueue[i].StartTime) * _svQueue[i].Multiplier);
                         if (templ > 10000000) templ = 10000000;
                         svPosTime += templ;
-                        svCalc[i + 1] = svPosTime;
+                        _svCalc[i + 1] = svPosTime;
                     }
                     else break;
                 }
 
                 //Create Timing bars
-                if (!mod_split && config_timingBars)
+                if (!mod_split && _config_timingBars)
                 {
                     float curBarTime = 0;
-                    for (i = 0; i < timingQueue.Count; i++)
+                    for (i = 0; i < _timingQueue.Count; i++)
                     {
-                        curBarTime = timingQueue[i].StartTime;
+                        curBarTime = _timingQueue[i].StartTime;
 
-                        if (barQueue.Count > 0 && barQueue[0].StartTime + 2 > curBarTime) barQueue.RemoveAt(0);
-                        curBarTime += 1000f * 4f * 60f / (timingQueue[i].BPM);
+                        if (_barQueue.Count > 0 && _barQueue[0].StartTime + 2 > curBarTime) _barQueue.RemoveAt(0);
+                        curBarTime += 1000f * 4f * 60f / (_timingQueue[i].BPM);
                         TimingObject curTiming;
 
-                        if (i + 1 < timingQueue.Count)
+                        if (i + 1 < _timingQueue.Count)
                         {
-                            while (curBarTime < timingQueue[i + 1].StartTime)
+                            while (curBarTime < _timingQueue[i + 1].StartTime)
                             {
                                 curTiming = new TimingObject();
                                 curTiming.StartTime = (int)(curBarTime);
-                                barQueue.Add(curTiming);
-                                curBarTime += 1000f * 4f * 60f / (timingQueue[i].BPM);
+                                _barQueue.Add(curTiming);
+                                curBarTime += 1000f * 4f * 60f / (_timingQueue[i].BPM);
                             }
                         }
                         else
                         {
-                            while (curBarTime < songAudio.clip.length * 1000f)
+                            while (curBarTime < _songAudio.clip.length * 1000f)
                             {
                                 curTiming = new TimingObject();
                                 curTiming.StartTime = (int)(curBarTime);
-                                barQueue.Add(curTiming);
-                                curBarTime += 1000f * 4f * 60f / (timingQueue[i].BPM);
+                                _barQueue.Add(curTiming);
+                                curBarTime += 1000f * 4f * 60f / (_timingQueue[i].BPM);
                             }
                         }
                     }
 
                     //Create starting bars
                     List<TimingObject> tempBars = new List<TimingObject>();
-                    for (i = 0; i < barQueue.Count; i++)
+                    for (i = 0; i < _barQueue.Count; i++)
                     {
                         TimingObject hoo = new TimingObject();
                         GameObject curBar = Instantiate(timingBar, hitContainer.transform);
                         curBar.transform.localScale = new Vector3(((float)(skin_columnSize + skin_bgMaskBufferSize + skin_noteBufferSpacing) / config_PixelUnitSize) * 4f * (config_PixelUnitSize / (float)curBar.transform.GetComponent<SpriteRenderer>().sprite.rect.size.x),
                             (config_PixelUnitSize / (float)curBar.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y) * ((float)skin_timingBarPixelSize / config_PixelUnitSize)
                             , 1f);
-                        curBar.transform.localPosition = new Vector3(0f, PosFromSV(barQueue[i].StartTime), 2f);
+                        curBar.transform.localPosition = new Vector3(0f, PosFromSV(_barQueue[i].StartTime), 2f);
 
-                        hoo.StartTime = barQueue[i].StartTime;
+                        hoo.StartTime = _barQueue[i].StartTime;
                         hoo.TimingBar = curBar;
                         tempBars.Add(hoo);
                     }
 
-                    barQueue = new List<TimingObject>(tempBars);
+                    _barQueue = new List<TimingObject>(tempBars);
                 }
 
                 //Create starting notes
                 for (i = 0; i < maxNoteCount; i++)
                 {
-                    if (noteQueue.Count > 0) activeNotes[i] = InstantiateNote(null);
+                    if (_noteQueue.Count > 0) _activeNotes[i] = InstantiateNote(null);
                     else break;
                 }
 
@@ -368,44 +371,43 @@ namespace Quaver.Gameplay
 
         public void Update()
         {
-            if (qFile.IsValidQua && isActive)
+            if (_qFile.IsValidQua && isActive)
             {
                 //Check what to do after unpaused
-                if (songAudio.time >= songAudio.clip.length && !songDone) songDone = true;
+                if (_songAudio.time >= _songAudio.clip.length && !_songDone) _songDone = true;
 
-                if (!songDone && !songAudio.isPlaying && songAudio.time < songAudio.clip.length) songAudio.UnPause();
-                else if (songDone) songEndOffset += Time.deltaTime;
+                if (!_songDone && !_songAudio.isPlaying && _songAudio.time < _songAudio.clip.length) _songAudio.UnPause();
+                else if (_songDone) _songEndOffset += Time.deltaTime;
 
 
                 //Song Time Calculation (ms)
-                if (songDone)
+                if (_songDone)
                 {
-                    actualSongTime = songAudio.clip.length + songEndOffset;
+                    _actualSongTime = _songAudio.clip.length + _songEndOffset;
                 }
                 else
                 {
-                    if (actualSongTime < 0) actualSongTime += Time.deltaTime;
-                    else actualSongTime = ((songAudio.time) + (actualSongTime + Time.deltaTime)) / 2f;
+                    if (_actualSongTime < 0) _actualSongTime += Time.deltaTime;
+                    else _actualSongTime = ((_songAudio.time) + (_actualSongTime + Time.deltaTime)) / 2f;
                 }
-                curSongTime = actualSongTime * 1000f - config_offset;
+                _curSongTime = _actualSongTime * 1000f - _config_offset;
 
                 //Calculates curSV Position
                 int k = 0; int j = 0;
 
-                if (curSongTime >= SvQueue[SvQueue.Count - 1].StartTime)
+                if (_curSongTime >= _svQueue[_svQueue.Count - 1].StartTime)
                 {
-                    curSVint = SvQueue.Count - 1;
+                    _curSVint = _svQueue.Count - 1;
                 }
-                else if (curSVint < SvQueue.Count - 2)
+                else if (_curSVint < _svQueue.Count - 2)
                 {
-                    for (j = curSVint; j < SvQueue.Count - 1; j++)
+                    for (j = _curSVint; j < _svQueue.Count - 1; j++)
                     {
-                        if (curSongTime > SvQueue[curSVint + 1].StartTime) curSVint++;
+                        if (_curSongTime > _svQueue[_curSVint + 1].StartTime) _curSVint++;
                         else break;
                     }
-
                 }
-                curSVPos = svCalc[curSVint] + (ulong)((float)((curSongTime) - (SvQueue[curSVint].StartTime)) * SvQueue[curSVint].Multiplier + 10000);
+                _curSVPos = _svCalc[_curSVint] + (ulong)((float)((_curSongTime) - (_svQueue[_curSVint].StartTime)) * _svQueue[_curSVint].Multiplier + 10000);
 
                 //Receptor Modifiers
                 if (mod_spin || mod_shuffle)
@@ -414,22 +416,21 @@ namespace Quaver.Gameplay
                     {
                         ModifyReceptors(k);
                     }
-
                 }
 
                 //Move bars
-                if (config_timingBars && !mod_split)
+                if (_config_timingBars && !mod_split)
                 {
-                    if (barQueue.Count > 0 && curSongTime > barQueue[0].StartTime + missTime)
+                    if (_barQueue.Count > 0 && _curSongTime > _barQueue[0].StartTime + missTime)
                     {
-                        Destroy(barQueue[0].TimingBar);
-                        barQueue.RemoveAt(0);
+                        Destroy(_barQueue[0].TimingBar);
+                        _barQueue.RemoveAt(0);
                     }
                     else
                     {
-                        for (k = 0; k < Mathf.Min(barQueue.Count, maxNoteCount); k++)
+                        for (k = 0; k < Mathf.Min(_barQueue.Count, maxNoteCount); k++)
                         {
-                            barQueue[k].TimingBar.transform.localPosition = new Vector3(0f, PosFromSV(barQueue[k].StartTime), 2f);
+                            _barQueue[k].TimingBar.transform.localPosition = new Vector3(0f, PosFromSV(_barQueue[k].StartTime), 2f);
                         }
                     }
                 }
@@ -437,44 +438,44 @@ namespace Quaver.Gameplay
                 //Move notes and check if miss
                 for (j = 0; j < 4; j++)
                 {
-                    for (k = 0; k < hitQueue[j].Count; k++)
+                    for (k = 0; k < _hitQueue[j].Count; k++)
                     {
-                        if (curSongTime > hitQueue[j][k].StartTime + judgeTimes[4])
+                        if (_curSongTime > _hitQueue[j][k].StartTime + _judgeTimes[4])
                         {
                             print("[Note Render] MISS");
-                            hitQueue[j][k].HitSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                            hitQueue[j][k].SliderEndSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
-                            hitQueue[j][k].SliderMiddleSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                            _hitQueue[j][k].HitSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                            _hitQueue[j][k].SliderEndSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+                            _hitQueue[j][k].SliderMiddleSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
 
-                            offLNQueue.Add(hitQueue[j][k]);
-                            hitQueue[j].RemoveAt(k);
+                            _offLNQueue.Add(_hitQueue[j][k]);
+                            _hitQueue[j].RemoveAt(k);
                             k--;
                         }
                         else
                         {
-                            SetNotePos(hitQueue[j][k], 1);
+                            SetNotePos(_hitQueue[j][k], 1);
                         }
                     }
                 }
                 //LN Check
-                for (k = 0; k < lnQueue.Count; k++)
+                for (k = 0; k < _lnQueue.Count; k++)
                 {
-                    if (curSongTime > Mathf.Max(lnQueue[k].StartTime, lnQueue[k].EndTime) + judgeTimes[4])
+                    if (_curSongTime > Mathf.Max(_lnQueue[k].StartTime, _lnQueue[k].EndTime) + _judgeTimes[4])
                     {
                         print("[Note Render] LATE LN RELEASE");
 
                         NoteObject newNote = new NoteObject();
 
-                        newNote.StartTime = (int)curSongTime;
-                        newNote.EndTime = lnQueue[k].EndTime;
-                        newNote.KeyLane = lnQueue[k].KeyLane;
+                        newNote.StartTime = (int)_curSongTime;
+                        newNote.EndTime = _lnQueue[k].EndTime;
+                        newNote.KeyLane = _lnQueue[k].KeyLane;
 
-                        newNote.HitSet = lnQueue[k].HitSet;
-                        newNote.HitSprite = lnQueue[k].HitSprite;
-                        newNote.SliderEndSprite = lnQueue[k].SliderEndSprite;
-                        newNote.SliderMiddleSprite = lnQueue[k].SliderMiddleSprite;
-                        newNote.SliderEndObject = lnQueue[k].SliderEndObject;
-                        newNote.SliderMiddleObject = lnQueue[k].SliderMiddleObject;
+                        newNote.HitSet = _lnQueue[k].HitSet;
+                        newNote.HitSprite = _lnQueue[k].HitSprite;
+                        newNote.SliderEndSprite = _lnQueue[k].SliderEndSprite;
+                        newNote.SliderMiddleSprite = _lnQueue[k].SliderMiddleSprite;
+                        newNote.SliderEndObject = _lnQueue[k].SliderEndObject;
+                        newNote.SliderMiddleObject = _lnQueue[k].SliderMiddleObject;
 
                         newNote.HitSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                         newNote.SliderEndSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
@@ -482,70 +483,69 @@ namespace Quaver.Gameplay
                         newNote.SliderEndObject.SetActive(false);
                         newNote.SliderMiddleObject.SetActive(false);
 
-                        offLNQueue.Add(newNote);
-                        lnQueue.RemoveAt(k);
+                        _offLNQueue.Add(newNote);
+                        _lnQueue.RemoveAt(k);
                         k--;
                     }
                     else
                     {
-                        SetNotePos(lnQueue[k], 2);
+                        SetNotePos(_lnQueue[k], 2);
                     }
                 }
 
                 //Ghost LN keys
-                if (offLNQueue.Count > 0)
+                if (_offLNQueue.Count > 0)
                 {
-                    for (k = 0; k < offLNQueue.Count; k++)
+                    for (k = 0; k < _offLNQueue.Count; k++)
                     {
-                        if (curSongTime > Mathf.Max(offLNQueue[k].StartTime, offLNQueue[k].EndTime) + missTime)
+                        if (_curSongTime > Mathf.Max(_offLNQueue[k].StartTime, _offLNQueue[k].EndTime) + missTime)
                         {
-                            RemoveNote(offLNQueue[k].HitSet);
-                            offLNQueue.RemoveAt(k);
+                            RemoveNote(_offLNQueue[k].HitSet);
+                            _offLNQueue.RemoveAt(k);
                             k--;
                         }
                         else
                         {
-                            SetNotePos(offLNQueue[k], 3);
+                            SetNotePos(_offLNQueue[k], 3);
                         }
                     }
                 }
                 //Key Press Check
                 for (k = 0; k < 4; k++)
                 {
-                    if (!keyDown[k])
+                    if (!_keyDown[k])
                     {
-                        if (Input.GetKeyDown(config_KeyBindings[k]))
+                        if (Input.GetKeyDown(_config_KeyBindings[k]))
                         {
-                            keyDown[k] = true;
-                            receptors[k].transform.localScale = Vector3.one * (skin_columnSize / config_PixelUnitSize) * 1.1f;
-                            receptors[k].transform.GetComponent<SpriteRenderer>().sprite = receptorSprite[1];
-                            hitLighting[k].SetActive(true); //temp
-                            JudgeNote(k + 1, curSongTime);
+                            _keyDown[k] = true;
+                            _receptors[k].transform.localScale = Vector3.one * (skin_columnSize / config_PixelUnitSize) * 1.1f;
+                            _receptors[k].transform.GetComponent<SpriteRenderer>().sprite = receptorSprite[1];
+                            _hitLighting[k].SetActive(true); //temp
+                            JudgeNote(k + 1, _curSongTime);
                         }
                     }
                     else
                     {
-                        if (Input.GetKeyUp(config_KeyBindings[k]))
+                        if (Input.GetKeyUp(_config_KeyBindings[k]))
                         {
-                            keyDown[k] = false;
-                            receptors[k].transform.GetComponent<SpriteRenderer>().sprite = receptorSprite[0];
-                            hitLighting[k].SetActive(false); //temp
-                            JudgeLN(k + 1, curSongTime);
-
+                            _keyDown[k] = false;
+                            _receptors[k].transform.GetComponent<SpriteRenderer>().sprite = receptorSprite[0];
+                            _hitLighting[k].SetActive(false); //temp
+                            JudgeLN(k + 1, _curSongTime);
                         }
                     }
                 }
             }
             else
             {
-                if (songAudio.isPlaying) songAudio.Pause();
+                if (_songAudio.isPlaying) _songAudio.Pause();
             }
         }
 
         //Creates/receycles new note
-        GameObject InstantiateNote(GameObject hoo)
+        private GameObject InstantiateNote(GameObject hoo)
         {
-            NoteObject ho = noteQueue[0];
+            NoteObject ho = _noteQueue[0];
             if (hoo == null)
             {
                 hoo = Instantiate(hitObjectTest, hitContainer.transform);
@@ -573,84 +573,84 @@ namespace Quaver.Gameplay
                 ho.SliderEndObject.gameObject.SetActive(false); ;
             }
 
-            ho.HitNote.transform.eulerAngles = new Vector3(0, 0, skin_receptorRotations[ho.KeyLane - 1]); //Rotation
+            ho.HitNote.transform.eulerAngles = new Vector3(0, 0, _skin_receptorRotations[ho.KeyLane - 1]); //Rotation
             SetNotePos(ho, 0);
-            hitQueue[ho.KeyLane - 1].Add(ho);
-            noteQueue.RemoveAt(0);
+            _hitQueue[ho.KeyLane - 1].Add(ho);
+            _noteQueue.RemoveAt(0);
             return hoo;
         }
 
         // Check if LN is released on time or early
-        void JudgeLN(int kkey, float timePos)
+        private void JudgeLN(int kkey, float timePos)
         {
             int curNote = -1; //Cannot create null struct :(
             float closestTime = 1000f;
-            for (int i = 0; i < lnQueue.Count; i++)
+            for (int i = 0; i < _lnQueue.Count; i++)
             {
-                if (lnQueue[i].KeyLane == kkey)
+                if (_lnQueue[i].KeyLane == kkey)
                 {
-                    closestTime = timePos - lnQueue[i].EndTime;
+                    closestTime = timePos - _lnQueue[i].EndTime;
                     curNote = i;
                 }
             }
-            if (curNote >= 0 && curNote < lnQueue.Count)
+            if (curNote >= 0 && curNote < _lnQueue.Count)
             {
-                if (closestTime < -judgeTimes[5])
+                if (closestTime < -_judgeTimes[5])
                 {
                     //Darkens early/mis-released LNs. Use skin images instead later
 
                     NoteObject newNote = new NoteObject();
 
-                    newNote.StartTime = (int)curSongTime;
-                    newNote.EndTime = lnQueue[curNote].EndTime;
-                    newNote.KeyLane = lnQueue[curNote].KeyLane;
+                    newNote.StartTime = (int)_curSongTime;
+                    newNote.EndTime = _lnQueue[curNote].EndTime;
+                    newNote.KeyLane = _lnQueue[curNote].KeyLane;
 
-                    newNote.HitSet = lnQueue[curNote].HitSet;
-                    newNote.HitSprite = lnQueue[curNote].HitSprite;
-                    newNote.SliderEndSprite = lnQueue[curNote].SliderEndSprite;
-                    newNote.SliderMiddleSprite = lnQueue[curNote].SliderMiddleSprite;
-                    newNote.SliderEndObject = lnQueue[curNote].SliderEndObject;
-                    newNote.SliderMiddleObject = lnQueue[curNote].SliderMiddleObject;
+                    newNote.HitSet = _lnQueue[curNote].HitSet;
+                    newNote.HitSprite = _lnQueue[curNote].HitSprite;
+                    newNote.SliderEndSprite = _lnQueue[curNote].SliderEndSprite;
+                    newNote.SliderMiddleSprite = _lnQueue[curNote].SliderMiddleSprite;
+                    newNote.SliderEndObject = _lnQueue[curNote].SliderEndObject;
+                    newNote.SliderMiddleObject = _lnQueue[curNote].SliderMiddleObject;
 
                     newNote.HitSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                     newNote.SliderMiddleSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                     newNote.SliderEndSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
 
-                    offLNQueue.Add(newNote);
-                    lnQueue.RemoveAt(curNote);
+                    _offLNQueue.Add(newNote);
+                    _lnQueue.RemoveAt(curNote);
                     print("[Note Render] EARLY LN RELEASE");
                 }
-                else if (closestTime > -judgeTimes[5] && closestTime < judgeTimes[5])
+                else if (closestTime > -_judgeTimes[5] && closestTime < _judgeTimes[5])
                 {
-                    RemoveNote(lnQueue[curNote].HitSet); ;
-                    lnQueue.RemoveAt(curNote);
+                    RemoveNote(_lnQueue[curNote].HitSet); ;
+                    _lnQueue.RemoveAt(curNote);
                     print("[Note Render] PERFECT LN RELEASE");
                 }
             }
         }
 
         //Check if note is hit on time/late/early
-        void JudgeNote(int kkey, float timePos)
+        private void JudgeNote(int kkey, float timePos)
         {
-            if (hitQueue[kkey - 1].Count > 0 && hitQueue[kkey - 1][0].StartTime - curSongTime < judgeTimes[4])
+            if (_hitQueue[kkey - 1].Count > 0 && _hitQueue[kkey - 1][0].StartTime - _curSongTime < _judgeTimes[4])
             {
-                float closestTime = hitQueue[kkey - 1][0].StartTime - curSongTime;
+                float closestTime = _hitQueue[kkey - 1][0].StartTime - _curSongTime;
                 float absTime = Mathf.Abs(closestTime);
-                if (absTime < judgeTimes[4])
+                if (absTime < _judgeTimes[4])
                 {
-                    if (absTime < judgeTimes[0])
+                    if (absTime < _judgeTimes[0])
                     {
                         print("[Note Render] MARV");
                     }
-                    else if (absTime < judgeTimes[1])
+                    else if (absTime < _judgeTimes[1])
                     {
                         print("[Note Render] PERF");
                     }
-                    else if (absTime < judgeTimes[2])
+                    else if (absTime < _judgeTimes[2])
                     {
                         print("[Note Render] GREAT");
                     }
-                    else if (absTime < judgeTimes[3])
+                    else if (absTime < _judgeTimes[3])
                     {
                         print("[Note Render] GOOD");
                     }
@@ -659,24 +659,24 @@ namespace Quaver.Gameplay
                         print("[Note Render] BAD");
                     }
                     //Check if LN
-                    if (hitQueue[kkey - 1][0].EndTime > 0)
+                    if (_hitQueue[kkey - 1][0].EndTime > 0)
                     {
-                        lnQueue.Add(hitQueue[kkey - 1][0]);
-                        hitQueue[kkey - 1].RemoveAt(0);
+                        _lnQueue.Add(_hitQueue[kkey - 1][0]);
+                        _hitQueue[kkey - 1].RemoveAt(0);
                     }
                     else
                     {
-                        RemoveNote(hitQueue[kkey - 1][0].HitSet);
-                        hitQueue[kkey - 1].RemoveAt(0);
+                        RemoveNote(_hitQueue[kkey - 1][0].HitSet);
+                        _hitQueue[kkey - 1].RemoveAt(0);
                     }
                     //Create particles
                     GameObject cp = Instantiate(circleParticleSystem, particleContainer.transform);
-                    cp.transform.localPosition = receptors[kkey - 1].transform.localPosition + new Vector3(0, 0, 4f);
+                    cp.transform.localPosition = _receptors[kkey - 1].transform.localPosition + new Vector3(0, 0, 4f);
 
                     GameObject hb = Instantiate(NoteHitParticle, particleContainer.transform);
-                    hb.transform.localPosition = receptors[kkey - 1].transform.localPosition + new Vector3(0, 0, -2f);
-                    hb.transform.eulerAngles = receptors[kkey - 1].transform.eulerAngles;
-                    hb.transform.localScale = receptors[kkey - 1].transform.localScale;
+                    hb.transform.localPosition = _receptors[kkey - 1].transform.localPosition + new Vector3(0, 0, -2f);
+                    hb.transform.eulerAngles = _receptors[kkey - 1].transform.eulerAngles;
+                    hb.transform.localScale = _receptors[kkey - 1].transform.localScale;
                     hb.GetComponent<NoteBurst>().startSize = hb.transform.localScale.x - 0.05f;
                     hb.GetComponent<NoteBurst>().burstSize = 0.1f;
                     hb.GetComponent<NoteBurst>().burstLength = 0.35f;
@@ -685,9 +685,9 @@ namespace Quaver.Gameplay
         }
 
         //Remove note and either destroy it or recycle
-        void RemoveNote(GameObject curNote)
+        private void RemoveNote(GameObject curNote)
         {
-            if (noteQueue.Count > 0) InstantiateNote(curNote);
+            if (_noteQueue.Count > 0) InstantiateNote(curNote);
             else Destroy(curNote);
         }
 
@@ -702,43 +702,42 @@ namespace Quaver.Gameplay
 
 
         // Modifies the receptors if visual mods are on.
-        void ModifyReceptors(int k)
+        private void ModifyReceptors(int k)
         {
             //Spin Receptors
-            if (mod_spin) skin_receptorRotations[k] += 0.5f;
-            if (skin_receptorRotations[k] >= 360) skin_receptorRotations[k] -= 360;
+            if (mod_spin) _skin_receptorRotations[k] += 0.5f;
+            if (_skin_receptorRotations[k] >= 360) _skin_receptorRotations[k] -= 360;
 
             //XOff Receptors
             if (mod_shuffle)
             {
-                if (k == 0 || k == 2) receptorXOffset[k] = (Mathf.Pow(Mathf.Sin(curSongTime * (Mathf.PI / 180f) / 10f), 3) + 1f) * skin_columnSize / config_PixelUnitSize / 2f;
-                else receptorXOffset[k] = -(Mathf.Pow(Mathf.Sin(curSongTime * (Mathf.PI / 180f) / 10f), 3) + 1f) * skin_columnSize / config_PixelUnitSize / 2f;
+                if (k == 0 || k == 2) _receptorXOffset[k] = (Mathf.Pow(Mathf.Sin(_curSongTime * (Mathf.PI / 180f) / 10f), 3) + 1f) * skin_columnSize / config_PixelUnitSize / 2f;
+                else _receptorXOffset[k] = -(Mathf.Pow(Mathf.Sin(_curSongTime * (Mathf.PI / 180f) / 10f), 3) + 1f) * skin_columnSize / config_PixelUnitSize / 2f;
             }
 
             //Set Receptor Transform
-            if (mod_spin) receptors[k].transform.localEulerAngles = new Vector3(0, 0, skin_receptorRotations[k]);
-            if (mod_shuffle) receptors[k].transform.localPosition = new Vector3(receptorXPos[k] + receptorXOffset[k], receptorYPos, 1);
-            receptors[k].transform.localScale = Vector3.one * (receptors[k].transform.localScale.x + ((skin_columnSize / config_PixelUnitSize) - receptors[k].transform.localScale.x) / 3f);
+            if (mod_spin) _receptors[k].transform.localEulerAngles = new Vector3(0, 0, _skin_receptorRotations[k]);
+            if (mod_shuffle) _receptors[k].transform.localPosition = new Vector3(_receptorXPos[k] + _receptorXOffset[k], _receptorYPos, 1);
+            _receptors[k].transform.localScale = Vector3.one * (_receptors[k].transform.localScale.x + ((skin_columnSize / config_PixelUnitSize) - _receptors[k].transform.localScale.x) / 3f);
         }
 
         //Sets the GameObject position of the note
-        void SetNotePos(NoteObject curNote, int lnMode)
+        private void SetNotePos(NoteObject curNote, int lnMode)
         {
             float StartTime = curNote.StartTime;
-            if (lnMode == 2) StartTime = curSongTime;
+            if (lnMode == 2) StartTime = _curSongTime;
             float splitFactor = 1f;
             if (mod_split && curNote.KeyLane >= 3) splitFactor = -1f;
             if (lnMode != 2 || mod_shuffle)
-                curNote.HitSet.transform.localPosition = new Vector3(receptorXPos[curNote.KeyLane - 1] + receptorXOffset[curNote.KeyLane - 1], splitFactor * PosFromSV(StartTime), 0);
-            else curNote.HitSet.transform.localPosition = new Vector3(receptorXPos[curNote.KeyLane - 1] + receptorXOffset[curNote.KeyLane - 1], receptorYPos * splitFactor, 0);
-            if (mod_spin) curNote.HitSprite.transform.eulerAngles = new Vector3(0, 0, skin_receptorRotations[curNote.KeyLane - 1]);
+                curNote.HitSet.transform.localPosition = new Vector3(_receptorXPos[curNote.KeyLane - 1] + _receptorXOffset[curNote.KeyLane - 1], splitFactor * PosFromSV(StartTime), 0);
+            else curNote.HitSet.transform.localPosition = new Vector3(_receptorXPos[curNote.KeyLane - 1] + _receptorXOffset[curNote.KeyLane - 1], _receptorYPos * splitFactor, 0);
+            if (mod_spin) curNote.HitSprite.transform.eulerAngles = new Vector3(0, 0, _skin_receptorRotations[curNote.KeyLane - 1]);
             if ((lnMode != 1 || mod_pull) && lnMode != 3 && curNote.EndTime > 0 && curNote.EndTime > StartTime)
             {
-
                 float lnSize = splitFactor * Mathf.Min(Mathf.Abs(PosFromSV(curNote.EndTime) - PosFromSV(StartTime)), 50f);
 
-                curNote.SliderMiddleSprite.size = new Vector2(1f, -scrollNegativeFactor * lnSize * (config_PixelUnitSize / skin_columnSize));
-                curNote.SliderEndObject.transform.localPosition = new Vector3(0f, scrollNegativeFactor * lnSize, 0.1f);
+                curNote.SliderMiddleSprite.size = new Vector2(1f, -_scrollNegativeFactor * lnSize * (config_PixelUnitSize / skin_columnSize));
+                curNote.SliderEndObject.transform.localPosition = new Vector3(0f, _scrollNegativeFactor * lnSize, 0.1f);
 
                 if (lnMode == 0)
                 {
@@ -749,55 +748,51 @@ namespace Quaver.Gameplay
                     curNote.SliderEndSprite.color = new Color(1f, 1f, 1f, 1f);
                     curNote.SliderEndObject.transform.localScale = Vector3.one * (skin_columnSize / config_PixelUnitSize);
                     curNote.SliderEndObject.SetActive(true);
-                    if (splitFactor >= 1) curNote.SliderEndSprite.flipY = !config_upScroll;
-                    else curNote.SliderEndSprite.flipY = config_upScroll;
+                    if (splitFactor >= 1) curNote.SliderEndSprite.flipY = !_config_upScroll;
+                    else curNote.SliderEndSprite.flipY = _config_upScroll;
                 }
             }
         }
 
         //Calculates the position from SV
-        float PosFromSV(float timePos)
+        private float PosFromSV(float timePos)
         {
             float returnVal;
-            if (Mathf.Abs(timePos - curSongTime) >= 0.01)
+            if (Mathf.Abs(timePos - _curSongTime) >= 0.01)
             {
                 if (!mod_noSV)
                 {
                     ulong svPosTime = 0;
                     int curPos = 0;
-                    if (timePos >= SvQueue[SvQueue.Count - 1].StartTime)
+                    if (timePos >= _svQueue[_svQueue.Count - 1].StartTime)
                     {
-                        curPos = SvQueue.Count - 1;
+                        curPos = _svQueue.Count - 1;
                     }
                     else
                     {
-                        for (int i = 0; i < SvQueue.Count - 1; i++)
+                        for (int i = 0; i < _svQueue.Count - 1; i++)
                         {
-                            if (timePos < SvQueue[i + 1].StartTime)
+                            if (timePos < _svQueue[i + 1].StartTime)
                             {
                                 curPos = i;
                                 break;
                             }
                         }
                     }
-                    svPosTime = svCalc[curPos] + (ulong)(15000 + (timePos - SvQueue[curPos].StartTime) * SvQueue[curPos].Multiplier);
+                    svPosTime = _svCalc[curPos] + (ulong)(15000 + (timePos - _svQueue[curPos].StartTime) * _svQueue[curPos].Multiplier);
                     //10000ms added for negative, since svPos is a ulong
 
-                    returnVal = (float)(svPosTime - curSVPos - 5000f) / 1000f * (float)config_scrollSpeed * (1 / songAudio.pitch);
+                    returnVal = (float)(svPosTime - _curSVPos - 5000f) / 1000f * (float)_config_scrollSpeed * (1 / _songAudio.pitch);
                 }
-                else returnVal = (timePos - curSongTime) / 1000f * (float)config_scrollSpeed * (1 / songAudio.pitch);
+                else returnVal = (timePos - _curSongTime) / 1000f * (float)_config_scrollSpeed * (1 / _songAudio.pitch);
             }
             else returnVal = 0;
 
-            if (mod_pull) returnVal = 2f * Mathf.Max(Mathf.Pow(returnVal, 0.6f), 0) + Mathf.Min(timePos - curSongTime, 0f) / 1000f * (float)config_scrollSpeed * (1 / songAudio.pitch);
+            if (mod_pull) returnVal = 2f * Mathf.Max(Mathf.Pow(returnVal, 0.6f), 0) + Mathf.Min(timePos - _curSongTime, 0f) / 1000f * (float)_config_scrollSpeed * (1 / _songAudio.pitch);
 
-            return returnVal * scrollNegativeFactor + receptorYPos;
+            return returnVal * _scrollNegativeFactor + _receptorYPos;
         }
-
     }
-
-
-
 
     //Dont rmeove below this
 }
