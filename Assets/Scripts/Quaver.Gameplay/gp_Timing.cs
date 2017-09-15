@@ -175,20 +175,20 @@ namespace Quaver.Gameplay
             int hij = 0;
             for (j = 0; j < _timingQueue.Count; j++)
             {
-                if (_timingQueue[j].StartTime < _svQueue[0].StartTime)
+                if (_timingQueue[j].StartTime < _svQueue[0].StartTime - 0.1f)
                 {
                     TimingObject newTp = new TimingObject();
                     newTp.StartTime = _timingQueue[j].StartTime;
-                    newTp.Multiplier = 1f;
+                    newTp.Multiplier = _svQueue[0].Multiplier;
                     _svQueue.Insert(0, newTp);
                 }
                 else if (_timingQueue[j].StartTime >= _svQueue[_svQueue.Count - 1].StartTime)
                 {
-                    if (_timingQueue[j].StartTime - _svQueue[_svQueue.Count - 1].StartTime > 0.001f)
+                    if (_timingQueue[j].StartTime - _svQueue[_svQueue.Count - 1].StartTime > 0.1f)
                     {
                         TimingObject newTp = new TimingObject();
                         newTp.StartTime = _timingQueue[j].StartTime;
-                        newTp.Multiplier = 1f;
+                        newTp.Multiplier = _svQueue[_svQueue.Count - 1].Multiplier;
                         _svQueue.Add(newTp);
                     }
                 }
@@ -198,7 +198,7 @@ namespace Quaver.Gameplay
                     {
                         if (i + 1 < _svQueue.Count && _timingQueue[j].StartTime < _svQueue[i + 1].StartTime)
                         {
-                            if (Mathf.Abs(_timingQueue[j].StartTime - _svQueue[i + 1].StartTime) > 0.001f)
+                            if (Mathf.Abs(_timingQueue[j].StartTime - _svQueue[i + 1].StartTime) > 0.1f)
                             {
                                 TimingObject newTp = new TimingObject();
                                 newTp.StartTime = _timingQueue[j].StartTime;
@@ -220,12 +220,20 @@ namespace Quaver.Gameplay
             {
                 for (i = 0; i < _timingQueue.Count; i++)
                 {
-                    //print("c" + i);
                     for (j = hij; j < _svQueue.Count; j++)
                     {
-                        if (_svQueue[j].StartTime >= _timingQueue[i].StartTime - 0.2f)
+                        if (_svQueue[j].StartTime < _timingQueue[0].StartTime +0.2)
                         {
-                            hij = j;
+                            TimingObject newSV = new TimingObject();
+                            newSV.StartTime = _svQueue[j].StartTime;
+                            newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[0].BPM / averageBpm, 512f);
+                            _svQueue.RemoveAt(j);
+                            _svQueue.Insert(j, newSV);
+                            break;
+                        }
+                        else if (_svQueue[j].StartTime >= _timingQueue[i].StartTime - 0.2f)
+                        {
+                            hij = j+1;
                             TimingObject newSV = new TimingObject();
                             newSV.StartTime = _svQueue[j].StartTime;
                             newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[i].BPM / averageBpm, 512f);
