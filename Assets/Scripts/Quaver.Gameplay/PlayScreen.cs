@@ -11,7 +11,7 @@ using Quaver.Audio;
 
 namespace Quaver.Gameplay
 {
-    public partial class NoteRendering : GameState
+    public partial class PlayScreen : GameState
     {
         /*Classes/Gameobjects (public variables will be changed later)*/
         public GameObject hitObjectTest;

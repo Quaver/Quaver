@@ -8,7 +8,7 @@ using Quaver.Graphics;
 
 namespace Quaver.Gameplay
 {
-    public partial class NoteRendering
+    public partial class PlayScreen
     {
         /*SKIN.INI VALUES*/
         private const int skin_bgMaskBufferSize = 12; //Adds a buffer space to the bg mask (+8 pixels wide)
