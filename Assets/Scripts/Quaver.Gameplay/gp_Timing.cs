@@ -187,7 +187,8 @@ namespace Quaver.Gameplay
                 {
                     TimingObject newTp = new TimingObject();
                     newTp.StartTime = _timingQueue[j].StartTime;
-                    newTp.Multiplier = _svQueue[0].Multiplier;
+                    if (_timingQueue[j].BPM == averageBpm) newTp.Multiplier = 1;
+                    else newTp.Multiplier = _svQueue[0].Multiplier;
                     _svQueue.Insert(0, newTp);
                 }
                 else if (_timingQueue[j].StartTime > _svQueue[_svQueue.Count - 1].StartTime + 0.01f)
