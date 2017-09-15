@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using UnityEngine;
 using System;
 using Quaver.Qua;
 
@@ -27,30 +31,30 @@ namespace Wenzil.Console.Commands
                 return "ERROR: The specified beatmap could not be found or is not valid.";
             }
 
-			string quaLog = "AudioFile: " + quaFile.AudioFile + "\n" +
-							"AudioLeadIn: " + quaFile.AudioLeadIn + "\n" +
-							"SongPreviewTime: " + quaFile.SongPreviewTime + "\n" +
-							"BackgroundFile: " + quaFile.BackgroundFile + "\n" + 
-							"Title: " + quaFile.Title + "\n" + 
-							"TitleUnicode: " + quaFile.TitleUnicode + "\n" +
-							"Artist: " + quaFile.Artist + "\n" + 
-							"ArtistUnicode: " + quaFile.ArtistUnicode + "\n" + 
-							"Source: " + quaFile.Source + "\n" + 
-							"Tags: " + quaFile.Tags + "\n" + 
-							"Creator: " + quaFile.Creator + "\n" + 
-							"DifficultyName: " + quaFile.DifficultyName + "\n" + 
-							"MapID: " + quaFile.MapID + "\n" + 
-							"MapSetID: " + quaFile.MapSetID + "\n" + 
-							"HPDrain: " + quaFile.HPDrain + "\n" +
-							"AccuracyStrain: " + quaFile.AccuracyStrain + "\n" +
+            string quaLog = "AudioFile: " + quaFile.AudioFile + "\n" +
+                            "AudioLeadIn: " + quaFile.AudioLeadIn + "\n" +
+                            "SongPreviewTime: " + quaFile.SongPreviewTime + "\n" +
+                            "BackgroundFile: " + quaFile.BackgroundFile + "\n" +
+                            "Title: " + quaFile.Title + "\n" +
+                            "TitleUnicode: " + quaFile.TitleUnicode + "\n" +
+                            "Artist: " + quaFile.Artist + "\n" +
+                            "ArtistUnicode: " + quaFile.ArtistUnicode + "\n" +
+                            "Source: " + quaFile.Source + "\n" +
+                            "Tags: " + quaFile.Tags + "\n" +
+                            "Creator: " + quaFile.Creator + "\n" +
+                            "DifficultyName: " + quaFile.DifficultyName + "\n" +
+                            "MapID: " + quaFile.MapID + "\n" +
+                            "MapSetID: " + quaFile.MapSetID + "\n" +
+                            "HPDrain: " + quaFile.HPDrain + "\n" +
+                            "AccuracyStrain: " + quaFile.AccuracyStrain + "\n" +
                             "IsValidQua: " + quaFile.IsValidQua;
 
-			// Add timing points to string
-			quaLog += "\nTiming Points Count: " + quaFile.TimingPoints.Count + "\n";
-			quaLog += "\nSVs Count: " + quaFile.SliderVelocities.Count + "\n";
-			quaLog += "\nHitObjects Count: " + quaFile.HitObjects.Count + "\n";
+            // Add timing points to string
+            quaLog += "\nTiming Points Count: " + quaFile.TimingPoints.Count + "\n";
+            quaLog += "\nSVs Count: " + quaFile.SliderVelocities.Count + "\n";
+            quaLog += "\nHitObjects Count: " + quaFile.HitObjects.Count + "\n";
 
-			return quaLog;
+            return quaLog;
         }
     }
 }

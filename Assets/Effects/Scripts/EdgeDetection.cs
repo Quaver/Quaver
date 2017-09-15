@@ -1,11 +1,15 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System;
 using UnityEngine;
 
 namespace UnityStandardAssets.ImageEffects
 {
     [ExecuteInEditMode]
-    [RequireComponent (typeof (Camera))]
-    [AddComponentMenu ("Image Effects/Edge Detection/Edge Detection")]
+    [RequireComponent(typeof(Camera))]
+    [AddComponentMenu("Image Effects/Edge Detection/Edge Detection")]
     public class EdgeDetection : PostEffectsBase
     {
         public enum EdgeDetectMode
@@ -28,62 +32,62 @@ namespace UnityStandardAssets.ImageEffects
         public Color edgesOnlyBgColor = Color.white;
 
         public Shader edgeDetectShader;
-        private Material edgeDetectMaterial = null;
-        private EdgeDetectMode oldMode = EdgeDetectMode.SobelDepthThin;
+        private Material _edgeDetectMaterial = null;
+        private EdgeDetectMode _oldMode = EdgeDetectMode.SobelDepthThin;
 
 
-        public override bool CheckResources ()
-		{
-            CheckSupport (true);
+        public override bool CheckResources()
+        {
+            CheckSupport(true);
 
-            edgeDetectMaterial = CheckShaderAndCreateMaterial (edgeDetectShader,edgeDetectMaterial);
-            if (mode != oldMode)
-                SetCameraFlag ();
+            _edgeDetectMaterial = CheckShaderAndCreateMaterial(edgeDetectShader, _edgeDetectMaterial);
+            if (mode != _oldMode)
+                SetCameraFlag();
 
-            oldMode = mode;
+            _oldMode = mode;
 
             if (!isSupported)
-                ReportAutoDisable ();
+                ReportAutoDisable();
             return isSupported;
         }
 
 
-        new void Start ()
-		{
-            oldMode	= mode;
+        private new void Start()
+        {
+            _oldMode = mode;
         }
 
-        void SetCameraFlag ()
-		{
+        private void SetCameraFlag()
+        {
             if (mode == EdgeDetectMode.SobelDepth || mode == EdgeDetectMode.SobelDepthThin)
                 GetComponent<Camera>().depthTextureMode |= DepthTextureMode.Depth;
             else if (mode == EdgeDetectMode.TriangleDepthNormals || mode == EdgeDetectMode.RobertsCrossDepthNormals)
                 GetComponent<Camera>().depthTextureMode |= DepthTextureMode.DepthNormals;
         }
 
-        void OnEnable ()
-		{
+        private void OnEnable()
+        {
             SetCameraFlag();
         }
 
         [ImageEffectOpaque]
-        void OnRenderImage (RenderTexture source, RenderTexture destination)
-		{
-            if (CheckResources () == false)
-			{
-                Graphics.Blit (source, destination);
+        private void OnRenderImage(RenderTexture source, RenderTexture destination)
+        {
+            if (CheckResources() == false)
+            {
+                Graphics.Blit(source, destination);
                 return;
             }
 
-            Vector2 sensitivity = new Vector2 (sensitivityDepth, sensitivityNormals);
-            edgeDetectMaterial.SetVector ("_Sensitivity", new Vector4 (sensitivity.x, sensitivity.y, 1.0f, sensitivity.y));
-            edgeDetectMaterial.SetFloat ("_BgFade", edgesOnly);
-            edgeDetectMaterial.SetFloat ("_SampleDistance", sampleDist);
-            edgeDetectMaterial.SetVector ("_BgColor", edgesOnlyBgColor);
-            edgeDetectMaterial.SetFloat ("_Exponent", edgeExp);
-            edgeDetectMaterial.SetFloat ("_Threshold", lumThreshold);
+            Vector2 sensitivity = new Vector2(sensitivityDepth, sensitivityNormals);
+            _edgeDetectMaterial.SetVector("_Sensitivity", new Vector4(sensitivity.x, sensitivity.y, 1.0f, sensitivity.y));
+            _edgeDetectMaterial.SetFloat("_BgFade", edgesOnly);
+            _edgeDetectMaterial.SetFloat("_SampleDistance", sampleDist);
+            _edgeDetectMaterial.SetVector("_BgColor", edgesOnlyBgColor);
+            _edgeDetectMaterial.SetFloat("_Exponent", edgeExp);
+            _edgeDetectMaterial.SetFloat("_Threshold", lumThreshold);
 
-            Graphics.Blit (source, destination, edgeDetectMaterial, (int) mode);
+            Graphics.Blit(source, destination, _edgeDetectMaterial, (int)mode);
         }
     }
 }

@@ -1,3 +1,7 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System;
 using UnityEngine;
 
@@ -6,6 +10,7 @@ using UnityEngine;
 // as it is scaled to a smaller resolution.
 // The effect works by accumulating the previous frames in an accumulation
 // texture.
+
 namespace UnityStandardAssets.ImageEffects
 {
     [ExecuteInEditMode]
@@ -16,7 +21,7 @@ namespace UnityStandardAssets.ImageEffects
         public float blurAmount = 0.8f;
         public bool extraBlur = false;
 
-        private RenderTexture accumTexture;
+        private RenderTexture _accumTexture;
 
         override protected void Start()
         {
@@ -31,45 +36,45 @@ namespace UnityStandardAssets.ImageEffects
         override protected void OnDisable()
         {
             base.OnDisable();
-            DestroyImmediate(accumTexture);
+            DestroyImmediate(_accumTexture);
         }
 
         // Called by camera to apply image effect
-        void OnRenderImage (RenderTexture source, RenderTexture destination)
+        private void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
             // Create the accumulation texture
-            if (accumTexture == null || accumTexture.width != source.width || accumTexture.height != source.height)
+            if (_accumTexture == null || _accumTexture.width != source.width || _accumTexture.height != source.height)
             {
-                DestroyImmediate(accumTexture);
-                accumTexture = new RenderTexture(source.width, source.height, 0);
-                accumTexture.hideFlags = HideFlags.HideAndDontSave;
-                Graphics.Blit( source, accumTexture );
+                DestroyImmediate(_accumTexture);
+                _accumTexture = new RenderTexture(source.width, source.height, 0);
+                _accumTexture.hideFlags = HideFlags.HideAndDontSave;
+                Graphics.Blit(source, _accumTexture);
             }
 
             // If Extra Blur is selected, downscale the texture to 4x4 smaller resolution.
             if (extraBlur)
             {
-                RenderTexture blurbuffer = RenderTexture.GetTemporary(source.width/4, source.height/4, 0);
-                accumTexture.MarkRestoreExpected();
-                Graphics.Blit(accumTexture, blurbuffer);
-                Graphics.Blit(blurbuffer,accumTexture);
+                RenderTexture blurbuffer = RenderTexture.GetTemporary(source.width / 4, source.height / 4, 0);
+                _accumTexture.MarkRestoreExpected();
+                Graphics.Blit(_accumTexture, blurbuffer);
+                Graphics.Blit(blurbuffer, _accumTexture);
                 RenderTexture.ReleaseTemporary(blurbuffer);
             }
 
             // Clamp the motion blur variable, so it can never leave permanent trails in the image
-            blurAmount = Mathf.Clamp( blurAmount, 0.0f, 0.92f );
+            blurAmount = Mathf.Clamp(blurAmount, 0.0f, 0.92f);
 
             // Setup the texture and floating point values in the shader
-            material.SetTexture("_MainTex", accumTexture);
-            material.SetFloat("_AccumOrig", 1.0F-blurAmount);
+            material.SetTexture("_MainTex", _accumTexture);
+            material.SetFloat("_AccumOrig", 1.0F - blurAmount);
 
             // We are accumulating motion over frames without clear/discard
             // by design, so silence any performance warnings from Unity
-            accumTexture.MarkRestoreExpected();
+            _accumTexture.MarkRestoreExpected();
 
             // Render the image using the motion blur shader
-            Graphics.Blit (source, accumTexture, material);
-            Graphics.Blit (accumTexture, destination);
+            Graphics.Blit(source, _accumTexture, material);
+            Graphics.Blit(_accumTexture, destination);
         }
     }
 }

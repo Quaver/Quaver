@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,9 +11,8 @@ using Quaver.Cache;
 
 namespace Quaver.UI
 {
-
-    public class SongSelectObject : ScriptableObject {
-
+    public class SongSelectObject : ScriptableObject
+    {
         //Song Variables
         public MapDirectory MapSet;
         public CachedBeatmap Beatmap;
@@ -29,7 +32,6 @@ namespace Quaver.UI
 
         public void init(int SubSelection, GameObject newSObject, Transform newParent, int newPosY, MapDirectory newMapSet, CachedBeatmap newBeatmap = null)
         {
-
             //Set UI Object Variables
             SelectObject = Instantiate(newSObject, newParent);
             ParentTransform = SelectObject.transform.GetComponent<Transform>();

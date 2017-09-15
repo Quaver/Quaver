@@ -1,11 +1,16 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System;
 using UnityEngine;
 
 namespace UnityStandardAssets.ImageEffects
 {
-    [RequireComponent (typeof(Camera))]
-    [AddComponentMenu ("Image Effects/Camera/Tilt Shift (Lens Blur)")]
-    class TiltShift : PostEffectsBase {
+    [RequireComponent(typeof(Camera))]
+    [AddComponentMenu("Image Effects/Camera/Tilt Shift (Lens Blur)")]
+    internal class TiltShift : PostEffectsBase
+    {
         public enum TiltShiftMode
         {
             TiltShiftMode,
@@ -31,45 +36,50 @@ namespace UnityStandardAssets.ImageEffects
         public int downsample = 0;
 
         public Shader tiltShiftShader = null;
-        private Material tiltShiftMaterial = null;
+        private Material _tiltShiftMaterial = null;
 
 
-        public override bool CheckResources () {
-            CheckSupport (true);
+        public override bool CheckResources()
+        {
+            CheckSupport(true);
 
-            tiltShiftMaterial = CheckShaderAndCreateMaterial (tiltShiftShader, tiltShiftMaterial);
+            _tiltShiftMaterial = CheckShaderAndCreateMaterial(tiltShiftShader, _tiltShiftMaterial);
 
             if (!isSupported)
-                ReportAutoDisable ();
+                ReportAutoDisable();
             return isSupported;
         }
 
-        void OnRenderImage (RenderTexture source, RenderTexture destination) {
-            if (CheckResources() == false) {
-                Graphics.Blit (source, destination);
+        private void OnRenderImage(RenderTexture source, RenderTexture destination)
+        {
+            if (CheckResources() == false)
+            {
+                Graphics.Blit(source, destination);
                 return;
             }
 
-            tiltShiftMaterial.SetFloat("_BlurSize", maxBlurSize < 0.0f ? 0.0f : maxBlurSize);
-            tiltShiftMaterial.SetFloat("_BlurArea", blurArea);
+            _tiltShiftMaterial.SetFloat("_BlurSize", maxBlurSize < 0.0f ? 0.0f : maxBlurSize);
+            _tiltShiftMaterial.SetFloat("_BlurArea", blurArea);
             source.filterMode = FilterMode.Bilinear;
 
             RenderTexture rt = destination;
-            if (downsample > 0f) {
-                rt = RenderTexture.GetTemporary (source.width>>downsample, source.height>>downsample, 0, source.format);
+            if (downsample > 0f)
+            {
+                rt = RenderTexture.GetTemporary(source.width >> downsample, source.height >> downsample, 0, source.format);
                 rt.filterMode = FilterMode.Bilinear;
             }
 
-            int basePassNr = (int) quality; basePassNr *= 2;
-            Graphics.Blit (source, rt, tiltShiftMaterial, mode == TiltShiftMode.TiltShiftMode ? basePassNr : basePassNr + 1);
+            int basePassNr = (int)quality; basePassNr *= 2;
+            Graphics.Blit(source, rt, _tiltShiftMaterial, mode == TiltShiftMode.TiltShiftMode ? basePassNr : basePassNr + 1);
 
-            if (downsample > 0) {
-                tiltShiftMaterial.SetTexture ("_Blurred", rt);
-                Graphics.Blit (source, destination, tiltShiftMaterial, 6);
+            if (downsample > 0)
+            {
+                _tiltShiftMaterial.SetTexture("_Blurred", rt);
+                Graphics.Blit(source, destination, _tiltShiftMaterial, 6);
             }
 
             if (rt != destination)
-                RenderTexture.ReleaseTemporary (rt);
+                RenderTexture.ReleaseTemporary(rt);
         }
     }
 }

@@ -1,4 +1,8 @@
-﻿using Quaver.Main;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using Quaver.Main;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,7 +29,7 @@ namespace Quaver.Main
         // It will be used to boot up the main menu music & auto-select the map when the user
         // goes to the song selection screen.
         public CachedBeatmap currentMap;
-        
+
         // Reference Variables
         public GameState[] States;
         public ParticleSystem DustRenderer;
@@ -37,9 +41,9 @@ namespace Quaver.Main
 
         // Test (remove later)
         public GameObject loadingScreenTest;
-        private int testState = 0;
+        private int _testState = 0;
 
-        void Awake()
+        private void Awake()
         {
             // TODO: We'll want to initialize a state here which will be our loading screen
             // before the game begin. Only then will we continue forward to the main menu
@@ -69,18 +73,18 @@ namespace Quaver.Main
         {
             // Handle screenshots
             ScreenshotService.Capture(GameConfig);
-            
-            if (testState >= 1)
+
+            if (_testState >= 1)
             {
                 DustRenderer.emissionRate = 120;
             }
         }
-        
+
         // This is the first thing that will be called upon Game Start. It is responsible for
         // creating and syncing our beatmap database, loading our configuration file,
         // and sorting the loaded beatmaps into their respective directories, so they can 
         // be used during song select.
-        void LoadConfiguration()
+        private void LoadConfiguration()
         {
             // Create and/or sync the beatmap database.
             BeatmapCacheIndex.CreateDatabase();
@@ -129,13 +133,13 @@ namespace Quaver.Main
         public void SwitchState()
         {
             //Test button click
-            if (testState <= 1)
+            if (_testState <= 1)
             {
-                int nextState = testState+1;
-                int curState = testState;
+                int nextState = _testState + 1;
+                int curState = _testState;
                 States[curState].StateEnd();
                 States[nextState].StateStart(this);
-                testState++;
+                _testState++;
             }
         }
     }

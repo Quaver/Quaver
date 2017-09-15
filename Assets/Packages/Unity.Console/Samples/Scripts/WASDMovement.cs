@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using UnityEngine;
 using System.Collections;
 
 /// <summary>
@@ -7,8 +11,8 @@ using System.Collections;
 public class WASDMovement : MonoBehaviour
 {
     public float speed = 1;
-    
-    void Update () 
+
+    private void Update()
     {
         Vector3 direction = Vector3.zero;
 
@@ -20,7 +24,7 @@ public class WASDMovement : MonoBehaviour
             direction += Vector3.right;
         if (Input.GetKey(KeyCode.A))
             direction += Vector3.left;
-        
+
         direction = transform.TransformDirection(direction);
         direction.y = 0;
         direction.Normalize();

@@ -1,3 +1,7 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System;
 using UnityEngine;
 
@@ -20,7 +24,7 @@ namespace UnityStandardAssets.ImageEffects
 
             material.SetMatrix("_RotationMatrix", rotationMatrix);
             material.SetVector("_CenterRadius", new Vector4(center.x, center.y, radius.x, radius.y));
-            material.SetFloat("_Angle", angle*Mathf.Deg2Rad);
+            material.SetFloat("_Angle", angle * Mathf.Deg2Rad);
 
             Graphics.Blit(source, destination, material);
         }

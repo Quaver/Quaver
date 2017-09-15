@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System;
@@ -10,36 +14,32 @@ namespace Quaver.Graphics
 {
     public class BackgroundBufferer : MonoBehaviour
     {
-
-        private bool spriteMode;
-        private string bufferPath;
-        private RawImage bufferTexture;
-        private GameObject bufferSprite;
+        private bool _spriteMode;
+        private string _bufferPath;
+        private RawImage _bufferTexture;
+        private GameObject _bufferSprite;
 
         //Initialization
         public void init(bool spriteBuffer, string bgPath, RawImage bgTexture, GameObject bgSprite = null)
         {
-            spriteMode = spriteBuffer;
-            bufferPath = bgPath;
-            bufferTexture = bgTexture;
-            bufferSprite = bgSprite;
+            _spriteMode = spriteBuffer;
+            _bufferPath = bgPath;
+            _bufferTexture = bgTexture;
+            _bufferSprite = bgSprite;
             StartCoroutine(BufferImage());
-
         }
 
         //Buffer Image async
         private IEnumerator BufferImage()
         {
-            
-            if (spriteMode && bufferSprite != null)
+            if (_spriteMode && _bufferSprite != null)
             {
-                
                 //Create buffer image
                 Sprite sprite = new Sprite();
                 Texture2D texture = new Texture2D(64, 64, TextureFormat.ARGB32, true);
 
                 //Create file stream
-                FileStream fs = new FileStream(bufferPath, FileMode.Open, FileAccess.Read);
+                FileStream fs = new FileStream(_bufferPath, FileMode.Open, FileAccess.Read);
                 byte[] imageData = new byte[fs.Length];
                 fs.Read(imageData, 0, (int)fs.Length);
 
@@ -53,26 +53,25 @@ namespace Quaver.Graphics
                 yield return new WaitForSeconds(0.2f);
 
                 //Apply texture to bg + resize bg if bg isnt null
-                if (bufferSprite != null)
+                if (_bufferSprite != null)
                 {
                     sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                    bufferSprite.GetComponent<SpriteRenderer>().sprite = sprite;
-                    bufferSprite.GetComponent<BackgroundDimAnimator>().dim = bufferSprite.GetComponent<BackgroundDimAnimator>().Manager.SelectScreenDim;
+                    _bufferSprite.GetComponent<SpriteRenderer>().sprite = sprite;
+                    _bufferSprite.GetComponent<BackgroundDimAnimator>().dim = _bufferSprite.GetComponent<BackgroundDimAnimator>().Manager.SelectScreenDim;
 
                     if (sprite.rect.size.y / sprite.rect.size.x >= Screen.width / Screen.height)
-                        bufferSprite.transform.localScale = Vector3.one * (20f * (100f / (float)sprite.rect.size.y));
+                        _bufferSprite.transform.localScale = Vector3.one * (20f * (100f / (float)sprite.rect.size.y));
                     else
-                        bufferSprite.transform.localScale = Vector3.one * ((float)Screen.width / (float)Screen.height) * 20f * (100f / (float)sprite.rect.size.x);
+                        _bufferSprite.transform.localScale = Vector3.one * ((float)Screen.width / (float)Screen.height) * 20f * (100f / (float)sprite.rect.size.x);
                 }
             }
-            else if (!spriteMode && bufferTexture != null)
+            else if (!_spriteMode && _bufferTexture != null)
             {
-                
                 //Create buffer image
                 Texture2D texture = new Texture2D(64, 64, TextureFormat.ARGB32, true);
-                
+
                 //Create file stream
-                FileStream fs = new FileStream(bufferPath, FileMode.Open, FileAccess.Read);
+                FileStream fs = new FileStream(_bufferPath, FileMode.Open, FileAccess.Read);
                 byte[] imageData = new byte[fs.Length];
                 fs.Read(imageData, 0, (int)fs.Length);
 
@@ -86,8 +85,8 @@ namespace Quaver.Graphics
                 yield return new WaitForSeconds(0.2f);
 
                 //Apply texture to ui
-                if (bufferTexture != null)
-                    bufferTexture.texture = texture;
+                if (_bufferTexture != null)
+                    _bufferTexture.texture = texture;
             }
 
             //Removes game object
