@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -147,67 +147,9 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114011440284159024, guid: 432075cbc5436a54e80e4fac7e001024,
-        type: 2}
-      propertyPath: StateObject
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 432075cbc5436a54e80e4fac7e001024, type: 2}
-  m_RootGameObject: {fileID: 1044688805}
   m_IsPrefabParent: 0
---- !u!1 &1044688805
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1487819047230342, guid: 432075cbc5436a54e80e4fac7e001024,
-    type: 2}
-  m_PrefabInternal: {fileID: 908107524}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1044688807}
-  - component: {fileID: 1044688806}
-  m_Layer: 0
-  m_Name: SongSelectScreen
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1044688806
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114011440284159024, guid: 432075cbc5436a54e80e4fac7e001024,
-    type: 2}
-  m_PrefabInternal: {fileID: 908107524}
-  m_GameObject: {fileID: 1044688805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fc5df24fc0e62041bc92a02c611ccd9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isActive: 1
-  loaded: 0
-  StateObject: {fileID: 0}
-  Manager: {fileID: 0}
-  SongSelectUI: {fileID: 1300386565390876, guid: 44d5be4efd204654ca504521076fecc3,
-    type: 2}
-  SongSelect: {fileID: 1363147736538688, guid: df6d86a57ba1809419908a384e340b81, type: 2}
-  DiffSelect: {fileID: 1574674068233836, guid: c1a7d689f9bdf5d418107de94eabeb9d, type: 2}
---- !u!4 &1044688807
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 4862970898088696, guid: 432075cbc5436a54e80e4fac7e001024,
-    type: 2}
-  m_PrefabInternal: {fileID: 908107524}
-  m_GameObject: {fileID: 1044688805}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1489942988}
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1160005496
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,104 +212,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1489942987
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1252293405906568, guid: 432075cbc5436a54e80e4fac7e001024,
-    type: 2}
-  m_PrefabInternal: {fileID: 908107524}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1489942988}
-  - component: {fileID: 1489942991}
-  - component: {fileID: 1489942990}
-  - component: {fileID: 1489942989}
-  m_Layer: 5
-  m_Name: SongSelect Canvas
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1489942988
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 224138113609393298, guid: 432075cbc5436a54e80e4fac7e001024,
-    type: 2}
-  m_PrefabInternal: {fileID: 908107524}
-  m_GameObject: {fileID: 1489942987}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 1044688807}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
---- !u!114 &1489942989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114430541532682370, guid: 432075cbc5436a54e80e4fac7e001024,
-    type: 2}
-  m_PrefabInternal: {fileID: 908107524}
-  m_GameObject: {fileID: 1489942987}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1301386320, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &1489942990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114274279141776330, guid: 432075cbc5436a54e80e4fac7e001024,
-    type: 2}
-  m_PrefabInternal: {fileID: 908107524}
-  m_GameObject: {fileID: 1489942987}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 1
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 2560, y: 1440}
-  m_ScreenMatchMode: 1
-  m_MatchWidthOrHeight: 1
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
---- !u!223 &1489942991
-Canvas:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 223333997086025598, guid: 432075cbc5436a54e80e4fac7e001024,
-    type: 2}
-  m_PrefabInternal: {fileID: 908107524}
-  m_GameObject: {fileID: 1489942987}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &1593309147
 GameObject:
   m_ObjectHideFlags: 0
