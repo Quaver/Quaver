@@ -1,6 +1,4 @@
-﻿// Copyright (c)  Swan. All rights reserved.  
-// See the Copyright notice in the root of the project.
-
+﻿
 using UnityEngine;
 using Wenzil.Console.Commands;
 
