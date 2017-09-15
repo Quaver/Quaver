@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Quaver.Gameplay
 {
-    public partial class NoteRendering
+    public partial class PlayScreen
     {
         //Config Values
         private int _config_scrollSpeed;
