@@ -214,9 +214,9 @@ namespace Quaver.Cache
                     string query = String.Format("INSERT INTO beatmaps(directory,path,beatmapsetid,beatmapid,artist,title,difficulty,rank,status,lastplayed,stars,creator,backgroundpath,audiopath,audiopreviewtime,description,source,tags) " +
                                     "VALUES(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", \"{7}\", \"{8}\", \"{9}\", \"{10}\", \"{11}\", \"{12}\", \"{13}\", \"{14}\", \"{15}\", \"{16}\", \"{17}\")",
                                     cachedMap.Directory, cachedMap.Path, cachedMap.BeatmapSetID, cachedMap.BeatmapID,
-                                    cachedMap.Artist, cachedMap.Title, cachedMap.Difficulty, cachedMap.Rank, cachedMap.Status,
-                                    cachedMap.LastPlayed, cachedMap.Stars, cachedMap.Creator, cachedMap.BackgroundPath, cachedMap.AudioPath, cachedMap.AudioPreviewTime,
-                                    cachedMap.Description, cachedMap.Source, cachedMap.Tags);
+                                    cachedMap.Artist.Replace("\"", ""), cachedMap.Title.Replace("\"", ""), cachedMap.Difficulty.Replace("\"", ""), cachedMap.Rank.Replace("\"", ""), cachedMap.Status,
+                                    cachedMap.LastPlayed, cachedMap.Stars, cachedMap.Creator.Replace("\"", ""), cachedMap.BackgroundPath, cachedMap.AudioPath, cachedMap.AudioPreviewTime,
+                                    cachedMap.Description.Replace("\"", ""), cachedMap.Source.Replace("\"", ""), cachedMap.Tags.Replace("\"", ""));
 
                     dbCmd.CommandText = query;
 

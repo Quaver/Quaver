@@ -243,7 +243,7 @@ namespace UnityStandardAssets.ImageEffects
             else
                 Graphics.Blit(lumRt, _rt, _tonemapMaterial, 3);
 #else
-			Graphics.Blit (lumRt, rt, tonemapMaterial, freshlyBrewedInternalRt ? 3 : 2);
+			Graphics.Blit (lumRt, _rt, _tonemapMaterial, freshlyBrewedInternalRt ? 3 : 2);
 #endif
 
             middleGrey = middleGrey < 0.001f ? 0.001f : middleGrey;
