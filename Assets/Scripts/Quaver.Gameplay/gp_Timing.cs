@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Quaver.Gameplay
 {
-    public partial class NoteRendering
+    public partial class PlayScreen
     {
         //SV + Timing Point Variables
         private List<TimingObject> _svQueue, _timingQueue, _barQueue;

@@ -160,9 +160,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4244376492499664}
-  - component: {fileID: 114142968066830598}
+  - component: {fileID: 114942045308920274}
   m_Layer: 0
-  m_Name: NoteRenderer
+  m_Name: PlayScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -426,7 +426,7 @@ Transform:
   m_Father: {fileID: 4135220311837928}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114142968066830598
+--- !u!114 &114942045308920274
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -434,20 +434,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1649563467215172}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57532c026f4897a4cbe71e66d8af2802, type: 3}
+  m_Script: {fileID: 11500000, guid: c4092c4d4f873f446a69ebf6e6d8e652, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActive: 1
+  isActive: 0
   loaded: 0
   StateObject: {fileID: 0}
   Manager: {fileID: 0}
-  hitObjectTest: {fileID: 1865356350589522, guid: 8c7141efb6411474ba0b7c6214b8e203,
-    type: 2}
-  receptorBar: {fileID: 1028726627867976}
-  lightingBar: {fileID: 1037119345131658}
-  particleContainer: {fileID: 1867461830650738}
-  hitContainer: {fileID: 1482597076369822}
-  bgMask: {fileID: 1110870842761766}
   receptorSprite:
   - {fileID: 21300000, guid: d8eb0d0daa357684da71463ed4a4b736, type: 3}
   - {fileID: 21300000, guid: 8f5f037c870f72147a8a5366cc7a34cb, type: 3}
@@ -456,6 +449,13 @@ MonoBehaviour:
   circleParticleSystem: {fileID: 1420125458562996, guid: c82fc5a849edb224e98233fb098ae154,
     type: 2}
   timingBar: {fileID: 1345396131330170, guid: 375a53a20f3459741a6f82fbfc4591f4, type: 2}
+  hitObjectTest: {fileID: 1865356350589522, guid: 8c7141efb6411474ba0b7c6214b8e203,
+    type: 2}
+  receptorBar: {fileID: 1028726627867976}
+  lightingBar: {fileID: 1037119345131658}
+  particleContainer: {fileID: 1867461830650738}
+  hitContainer: {fileID: 1482597076369822}
+  bgMask: {fileID: 1110870842761766}
 --- !u!212 &212087939107133718
 SpriteRenderer:
   m_ObjectHideFlags: 1

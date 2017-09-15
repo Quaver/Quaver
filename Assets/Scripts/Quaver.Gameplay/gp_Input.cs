@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Quaver.Gameplay
 {
-    public partial class NoteRendering
+    public partial class PlayScreen
     {
         private void input_CheckInput()
         {
