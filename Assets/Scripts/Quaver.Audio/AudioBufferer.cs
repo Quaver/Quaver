@@ -10,11 +10,11 @@ namespace Quaver.Audio
 {
     public class AudioBufferer : MonoBehaviour
     {
-        private WWW _audioLoader;
         private AudioSource _bufferAudio;
         private CachedBeatmap _bufferMap;
         private bool _bufferPreview;
         private float _bufferPlayDelay;
+        private string _bufferUrl;
 
         public void init(CachedBeatmap map, AudioSource gameAudio, bool usePreviewTime = false, float playDelay = 0f)
         {
@@ -23,18 +23,19 @@ namespace Quaver.Audio
             _bufferPreview = usePreviewTime;
             _bufferPlayDelay = playDelay;
 
-            string url = "file:///" + map.AudioPath;
-            _audioLoader = new WWW(url);
+            _bufferUrl = "file:///" + map.AudioPath;
             StartCoroutine(BufferAudio());
         }
 
         private IEnumerator BufferAudio()
         {
             _bufferAudio.Stop();
+            WWW _audioLoader = new WWW(_bufferUrl);
 
             //Wait until audio is loaded
             yield return _audioLoader;
             yield return new WaitForSeconds(0.1f);
+
             //Set and play audio
             _bufferAudio.clip = _audioLoader.GetAudioClip(false, true, AudioType.OGGVORBIS);
             if (_bufferPreview) _bufferAudio.time = _bufferMap.AudioPreviewTime / 1000f;
