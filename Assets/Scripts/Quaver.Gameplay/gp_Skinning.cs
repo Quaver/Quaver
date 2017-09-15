@@ -98,7 +98,7 @@ namespace Quaver.Gameplay
             hb.transform.eulerAngles = _receptors[kkey - 1].transform.eulerAngles;
             hb.transform.localScale = _receptors[kkey - 1].transform.localScale;
             hb.GetComponent<NoteBurst>().startSize = hb.transform.localScale.x - 0.05f;
-            hb.GetComponent<NoteBurst>().burstSize = 0.1f;
+            hb.GetComponent<NoteBurst>().burstSize = 0.3f;
             hb.GetComponent<NoteBurst>().burstLength = 0.35f;
         }
 
