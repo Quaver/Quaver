@@ -84,7 +84,6 @@ namespace Quaver.Gameplay
             //Create Timing bars
             _barQueue = new List<TimingObject>();
             time_CreateBars();
-
         }
 
         //Creates timing bars (used to measure 16 beats)
@@ -156,7 +155,7 @@ namespace Quaver.Gameplay
             //Calculate Average BPM of map
             if (_timingQueue.Count > 1)
             {
-                foreach (TimingObject tp in _timingQueue)
+                for (i=0; i<_timingQueue.Count;i++)
                 {
                     if (i + 1 < _timingQueue.Count)
                     {
@@ -164,6 +163,14 @@ namespace Quaver.Gameplay
                         {
                             avgBpmPos = i;
                             longestBpmTime = _timingQueue[i + 1].StartTime - _timingQueue[i].StartTime;
+                        }
+                    }
+                    else if (i + 1 == _timingQueue.Count)
+                    {
+                        if (_songAudio.clip.length*1000f - _timingQueue[i].StartTime > longestBpmTime)
+                        {
+                            avgBpmPos = i;
+                            longestBpmTime = _songAudio.clip.length*1000f - _timingQueue[i].StartTime;
                         }
                     }
                 }
@@ -175,22 +182,20 @@ namespace Quaver.Gameplay
             int hij = 0;
             for (j = 0; j < _timingQueue.Count; j++)
             {
-                if (_timingQueue[j].StartTime < _svQueue[0].StartTime - 0.1f)
+                
+                if (_timingQueue[j].StartTime < _svQueue[0].StartTime - 0.01f)
                 {
                     TimingObject newTp = new TimingObject();
                     newTp.StartTime = _timingQueue[j].StartTime;
                     newTp.Multiplier = _svQueue[0].Multiplier;
                     _svQueue.Insert(0, newTp);
                 }
-                else if (_timingQueue[j].StartTime >= _svQueue[_svQueue.Count - 1].StartTime)
+                else if (_timingQueue[j].StartTime > _svQueue[_svQueue.Count - 1].StartTime + 0.01f)
                 {
-                    if (_timingQueue[j].StartTime - _svQueue[_svQueue.Count - 1].StartTime > 0.1f)
-                    {
-                        TimingObject newTp = new TimingObject();
-                        newTp.StartTime = _timingQueue[j].StartTime;
-                        newTp.Multiplier = _svQueue[_svQueue.Count - 1].Multiplier;
-                        _svQueue.Add(newTp);
-                    }
+                    TimingObject newTp = new TimingObject();
+                    newTp.StartTime = _timingQueue[j].StartTime;
+                    newTp.Multiplier = _svQueue[_svQueue.Count - 1].Multiplier;
+                    _svQueue.Add(newTp);
                 }
                 else
                 {
@@ -198,17 +203,17 @@ namespace Quaver.Gameplay
                     {
                         if (i + 1 < _svQueue.Count && _timingQueue[j].StartTime < _svQueue[i + 1].StartTime)
                         {
-                            if (Mathf.Abs(_timingQueue[j].StartTime - _svQueue[i + 1].StartTime) > 0.1f)
+                            if (Mathf.Abs(_timingQueue[j].StartTime - _svQueue[i].StartTime) > 1f)
                             {
                                 TimingObject newTp = new TimingObject();
                                 newTp.StartTime = _timingQueue[j].StartTime;
                                 newTp.Multiplier = 1f;
                                 _svQueue.Add(newTp);
-                                i++;
                                 hij = i;
                             }
+                            break;
                         }
-                        else break;
+                        //else break;
                     }
                 }
             }
@@ -218,31 +223,41 @@ namespace Quaver.Gameplay
             _svQueue.Sort(delegate (TimingObject p1, TimingObject p2) { return p1.StartTime.CompareTo(p2.StartTime); });
             if (_timingQueue.Count >= 1)
             {
-                for (i = 0; i < _timingQueue.Count; i++)
+                hij = 0;
+
+                for (j = 0; j < _svQueue.Count; j++)
                 {
-                    for (j = hij; j < _svQueue.Count; j++)
+                    if (hij+1 < _timingQueue.Count)
                     {
-                        if (_svQueue[j].StartTime < _timingQueue[0].StartTime +0.2)
+                        if (_svQueue[j].StartTime < _timingQueue[hij + 1].StartTime - 0.01f)
                         {
                             TimingObject newSV = new TimingObject();
                             newSV.StartTime = _svQueue[j].StartTime;
-                            newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[0].BPM / averageBpm, 512f);
+                            newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[hij].BPM / averageBpm, 512f);
                             _svQueue.RemoveAt(j);
                             _svQueue.Insert(j, newSV);
-                            break;
                         }
-                        else if (_svQueue[j].StartTime >= _timingQueue[i].StartTime - 0.2f)
+                        else
                         {
-                            hij = j+1;
+                            hij++;
                             TimingObject newSV = new TimingObject();
                             newSV.StartTime = _svQueue[j].StartTime;
-                            newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[i].BPM / averageBpm, 512f);
+                            newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[hij].BPM / averageBpm, 512f);
                             _svQueue.RemoveAt(j);
                             _svQueue.Insert(j, newSV);
-                            break;
                         }
                     }
+                    else
+                    {
+                        TimingObject newSV = new TimingObject();
+                        newSV.StartTime = _svQueue[j].StartTime;
+                        newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[hij].BPM / averageBpm, 512f);
+                        _svQueue.RemoveAt(j);
+                        _svQueue.Insert(j, newSV);
+                    }
                 }
+
+
             }
         }
 
