@@ -39,7 +39,6 @@ namespace UnityStandardAssets.ImageEffects
             }
         }
 
-
         protected Material CreateMaterial(Shader s, Material m2Create)
         {
             if (!s)
@@ -129,7 +128,6 @@ namespace UnityStandardAssets.ImageEffects
             return supportDX11;
         }
 
-
         protected void ReportAutoDisable()
         {
             Debug.LogWarning("The image effect " + ToString() + " has been disabled as it's not supported on the current platform.");
@@ -167,14 +165,13 @@ namespace UnityStandardAssets.ImageEffects
                 material.SetPass(i);
 
                 float y1_;
+
                 if (invertY) y1_ = 1f;
                 else y1_ = 0f;
 
-                // left
-
                 float[] x1 = new float[4] { 0, 1f - (1f / (dest.width * 1f)), 0, 0 };
                 float[] x2 = new float[4] { 1.0f / (float)dest.width, 1f, 1f, 1f };
-                float[] y1 = new float[4] { 0, 0, 0, 1f - 1.0f / (float)dest.height };
+                float[] y1 = new float[4] { 0, 0, 0, 1f - (1f / (float)dest.height) };
                 float[] y2 = new float[4] { 1f, 1f, 1f / (float)dest.height, 1f };
 
                 GL.Begin(GL.QUADS);
