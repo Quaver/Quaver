@@ -176,7 +176,7 @@ namespace Quaver.Main
                     _songSelection = pos;
                     if (Manager.currentMap != null && _difficultyList[0].Beatmap.AudioPath != Manager.currentMap.AudioPath)
                     {
-                        SetSongStats(_sortedMapSets[pos].Beatmaps[0]);
+                        SetSongStats(_difficultyList[0].Beatmap);
                     }
 
                     //Change Diff UI Values
@@ -231,8 +231,10 @@ namespace Quaver.Main
             //LENGTH
 
             //Get Difficulty Stats
-            Difficulty.Difficulty DiffParsed = DifficultyCalculator.CalculateDifficulty(QuaParser.Parse(Manager.currentMap.Path).HitObjects);
+            Difficulty.Difficulty DiffParsed = DifficultyCalculator.CalculateDifficulty(QuaParser.Parse(_map.Path).HitObjects);
             int[] npsList = DiffParsed.npsInterval;
+
+            print(DiffParsed.AverageNPS);
 
             //Set NPS Graph
             _SongInfoWindow.transform.Find("NPSGraph").transform.Find("avgNps").GetComponent<Text>().text = "Average NPS: " + string.Format("{0:f2}", DiffParsed.AverageNPS);
