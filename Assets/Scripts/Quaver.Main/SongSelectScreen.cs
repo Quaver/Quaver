@@ -11,12 +11,15 @@ using Quaver.Cache;
 using Quaver.SongSelect;
 using Quaver.Audio;
 using Quaver.Graphics;
+using Quaver.Difficulty;
+using Quaver.Qua;
 
 namespace Quaver.Main
 {
     public class SongSelectScreen : GameState
     {
         //UI Object Variables
+        private GameObject _SongInfoWindow;
         public GameObject SongSelectUI;
         public GameObject SongSelect;
         public GameObject DiffSelect;
@@ -54,6 +57,7 @@ namespace Quaver.Main
             _totalBeatmaps = _sortedMapSets.Count;
 
             _selectionUI = Instantiate(SongSelectUI, this.transform.Find("SongSelect Canvas").transform);
+            _SongInfoWindow = _selectionUI.transform.Find("InformationWindow").transform.Find("SongInfo").gameObject;
             _selectionSet = _selectionUI.transform.Find("SelectionWindow").transform.transform.Find("SelectionCapture").gameObject;
             _songList = new SongSelectObject[_totalBeatmaps];
             _difficultyList = new SongSelectObject[0];
@@ -130,7 +134,7 @@ namespace Quaver.Main
             }
         }
 
-        public void Clicked(int pos, bool subSelection)
+        private void Clicked(int pos, bool subSelection)
         {
             //If a mapset is selected
             if (!subSelection)
@@ -172,8 +176,7 @@ namespace Quaver.Main
                     _songSelection = pos;
                     if (Manager.currentMap != null && _difficultyList[0].Beatmap.AudioPath != Manager.currentMap.AudioPath)
                     {
-                        AudioPlayer.LoadSong(_sortedMapSets[pos].Beatmaps[0], Manager.SongAudioSource, true);
-                        BackgroundLoader.LoadSprite(_sortedMapSets[pos].Beatmaps[0], Manager.bgImage);
+                        SetSongStats(_sortedMapSets[pos].Beatmaps[0]);
                     }
 
                     //Change Diff UI Values
@@ -201,12 +204,51 @@ namespace Quaver.Main
                 _selectYPos = _difficultyList[pos].posY;
                 if (_difficultyList[pos].Beatmap.AudioPath != Manager.currentMap.AudioPath)
                 {
-                    BackgroundLoader.LoadSprite(_difficultyList[pos].Beatmap, Manager.bgImage);
-                    AudioPlayer.LoadSong(_difficultyList[pos].Beatmap, Manager.SongAudioSource, true);
+                    SetSongStats(_difficultyList[pos].Beatmap);
                 }
                 //Sets the current map to the selected diff
                 Manager.currentMap = _difficultyList[pos].Beatmap;
             }
         }
+
+        private void SetSongStats(CachedBeatmap _map)
+        {
+            //Play Audio and Set Images
+            AudioPlayer.LoadSong(_map, Manager.SongAudioSource, true);
+            BackgroundLoader.LoadSprite(_map, Manager.bgImage);
+            BackgroundLoader.LoadTexture(_map, _SongInfoWindow.transform.Find("SongBG").GetComponent<RawImage>());
+
+            //Set Song Info Text
+            _SongInfoWindow.transform.Find("Title").GetComponent<Text>().text = _map.Title;
+            _SongInfoWindow.transform.Find("DiffName").GetComponent<Text>().text = _map.Difficulty;
+            _SongInfoWindow.transform.Find("Star Rating").GetComponent<Text>().text = "\u2605" + string.Format("{0:f2}", _map.Stars / 100f);
+            _SongInfoWindow.transform.Find("Description").GetComponent<Text>().text = _map.Description;
+            _SongInfoWindow.transform.Find("Artist").GetComponent<Text>().text = "Artist: " + _map.Artist;
+            _SongInfoWindow.transform.Find("Mapper").GetComponent<Text>().text = "Mapper: " + _map.Creator;
+            _SongInfoWindow.transform.Find("Source").GetComponent<Text>().text = "Source: " + _map.Source;
+            _SongInfoWindow.transform.Find("Tags").GetComponent<Text>().text = "Tags: " + _map.Tags;
+            //BPM
+            //LENGTH
+
+            //Get Difficulty Stats
+            Difficulty.Difficulty DiffParsed = DifficultyCalculator.CalculateDifficulty(QuaParser.Parse(Manager.currentMap.Path).HitObjects);
+            int[] npsList = DiffParsed.npsInterval;
+
+            //Set NPS Graph
+            _SongInfoWindow.transform.Find("NPSGraph").transform.Find("avgNps").GetComponent<Text>().text = "Average NPS: " + string.Format("{0:f2}", DiffParsed.AverageNPS);
+            //TEMP
+            _SongInfoWindow.transform.Find("NPSGraph").transform.Find("PlaceHolder").GetComponent<Text>().text = "";
+            for (int i=0; i < npsList.Length && i < 24; i++)
+            {
+                if (i % 12 == 0 && i != 0) _SongInfoWindow.transform.Find("NPSGraph").transform.Find("PlaceHolder").GetComponent<Text>().text = _SongInfoWindow.transform.Find("NPSGraph").transform.Find("PlaceHolder").GetComponent<Text>().text + "\n";
+                _SongInfoWindow.transform.Find("NPSGraph").transform.Find("PlaceHolder").GetComponent<Text>().text = _SongInfoWindow.transform.Find("NPSGraph").transform.Find("PlaceHolder").GetComponent<Text>().text + npsList[i] + ", ";
+            }
+        }
+
+        public void ScrollBarChanged()
+        {
+            print("A");
+        }
+
     }
 }
