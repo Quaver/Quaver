@@ -99,11 +99,11 @@ namespace Quaver.Main
             if (_mouseRightDown) _selectYPos = (int)((Input.mousePosition.y / Screen.height) * (float)(_objectYSize));
 
             //Set position boundary (top,bottom)
-            _selectYPos = Mathf.Min(Mathf.Max(565 - _offsetFromSelection, _selectYPos), _objectYSize - 605);
+            _selectYPos = Mathf.Min(Mathf.Max(390 - _offsetFromSelection, _selectYPos), _objectYSize - 485);
 
             //Set Selection Y Position
             _posTween += (_selectYPos - _posTween) * Mathf.Min(Time.deltaTime * 5f, 1);
-            _selectionSet.transform.localPosition = new Vector2(-430, -_posTween + 720); //1440/2
+            _selectionSet.transform.localPosition = new Vector2(-430, -_posTween + 540 ); //1080/2
 
             //Set offsetPos (when song is selected)
             if (_offsetTween != _offsetFromSelection)
