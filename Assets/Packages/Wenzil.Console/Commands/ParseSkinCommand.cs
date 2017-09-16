@@ -25,7 +25,31 @@ namespace Wenzil.Console.Commands
                 string skinLog = "[General] \n" +
                                 "Name: " + skin.Name + "\n" +
                                 "Author: " + skin.Author + "\n" +
-                                "Version: " + skin.Version + "\n";
+                                "Version: " + skin.Version + "\n\n" + 
+
+                                "CustomBackground: " + skin.CustomBackground + "\n\n" + 
+
+                                "CursorRotate: " + skin.CursorRotate + "\n" + 
+                                "CursorTrailRotate: " + skin.CursorTrailRotate + "\n" + 
+                                "CursorExpand: " + skin.CursorExpand + "\n" +
+                                "CursorCentre: " + skin.CursorCentre + "\n\n" +
+
+                                "BgMaskBufferSize: " + skin.BgMaskBufferSize + "\n" + 
+                                "NoteBufferSpacing: " + skin.NoteBufferSpacing + "\n" + 
+                                "TimingBarPixelSize: " + skin.TimingBarPixelSize + "\n" + 
+                                "HitLightingScale: " + skin.HitLightingScale + "\n" + 
+                                "ColumnSize: " + skin.ColumnSize + "\n" + 
+                                "ReceptorYOffset: " + skin.ReceptorYOffset + "\n\n" +
+
+                                "ColourLight1: " + skin.ColourLight1.ToString() + "\n" +
+                                "ColourLight2: " + skin.ColourLight2.ToString() + "\n" +
+                                "ColourLight3: " + skin.ColourLight3.ToString() + "\n" +
+                                "ColourLight4: " + skin.ColourLight4.ToString() + "\n" +   
+                                "Colour1: " + skin.Colour1.ToString() + "\n" + 
+                                "Colour2: " + skin.Colour2.ToString() + "\n" + 
+                                "Colour3: " + skin.Colour3.ToString() + "\n" + 
+                                "Colour4: " + skin.Colour4.ToString() + "\n" +
+                                "ColourHold: " + skin.ColourHold.ToString() + "\n";                                                                                                                                                                                                                            
                 return skinLog;
             }
 
