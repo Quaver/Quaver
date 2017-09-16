@@ -11,7 +11,6 @@ namespace Quaver.Gameplay
         private ulong _curSVPos;
         private int _curSVPart;
         private ulong[] _svCalc; //Stores SV position data for efficiency
-        private float AverageBPM = 100;
 
         //Audio File Variables
         private bool _songDone;
@@ -146,12 +145,38 @@ namespace Quaver.Gameplay
         //Creates SV Points
         private void time_CreateSVs()
         {
-            //Find Average BPM
-            time_CalculateAverageBPM();
-
-            //Reference Variables
+            //AverageBpm Reference Variables
+            float longestBpmTime = 0;
+            int avgBpmPos = 0;
+            float averageBpm = 100;
             int i = 0;
             int j = 0;
+
+            //Calculate Average BPM of map
+            if (_timingQueue.Count > 1)
+            {
+                for (i = 0; i < _timingQueue.Count; i++)
+                {
+                    if (i + 1 < _timingQueue.Count)
+                    {
+                        if (_timingQueue[i + 1].StartTime - _timingQueue[i].StartTime > longestBpmTime)
+                        {
+                            avgBpmPos = i;
+                            longestBpmTime = _timingQueue[i + 1].StartTime - _timingQueue[i].StartTime;
+                        }
+                    }
+                    else if (i + 1 == _timingQueue.Count)
+                    {
+                        if ((_songAudio.clip.length * 1000f) - _timingQueue[i].StartTime > longestBpmTime)
+                        {
+                            avgBpmPos = i;
+                            longestBpmTime = (_songAudio.clip.length * 1000f) - _timingQueue[i].StartTime;
+                        }
+                    }
+                }
+                averageBpm = _timingQueue[avgBpmPos].BPM;
+            }
+            else averageBpm = _timingQueue[0].BPM;
 
             //Create and converts timing points to SV's
             int hij = 0;
@@ -161,7 +186,7 @@ namespace Quaver.Gameplay
                 {
                     TimingObject newTp = new TimingObject();
                     newTp.StartTime = _timingQueue[j].StartTime;
-                    if (_timingQueue[j].BPM == AverageBPM) newTp.Multiplier = 1;
+                    if (_timingQueue[j].BPM == averageBpm) newTp.Multiplier = 1;
                     else newTp.Multiplier = _svQueue[0].Multiplier;
                     _svQueue.Insert(0, newTp);
                 }
@@ -208,7 +233,7 @@ namespace Quaver.Gameplay
                         {
                             TimingObject newSV = new TimingObject();
                             newSV.StartTime = _svQueue[j].StartTime;
-                            newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[hij].BPM / AverageBPM, 512f);
+                            newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[hij].BPM / averageBpm, 512f);
                             _svQueue.RemoveAt(j);
                             _svQueue.Insert(j, newSV);
                         }
@@ -217,7 +242,7 @@ namespace Quaver.Gameplay
                             hij++;
                             TimingObject newSV = new TimingObject();
                             newSV.StartTime = _svQueue[j].StartTime;
-                            newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[hij].BPM / AverageBPM, 512f);
+                            newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[hij].BPM / averageBpm, 512f);
                             _svQueue.RemoveAt(j);
                             _svQueue.Insert(j, newSV);
                         }
@@ -226,46 +251,12 @@ namespace Quaver.Gameplay
                     {
                         TimingObject newSV = new TimingObject();
                         newSV.StartTime = _svQueue[j].StartTime;
-                        newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[hij].BPM / AverageBPM, 512f);
+                        newSV.Multiplier = Mathf.Min(_svQueue[j].Multiplier * _timingQueue[hij].BPM / averageBpm, 512f);
                         _svQueue.RemoveAt(j);
                         _svQueue.Insert(j, newSV);
                     }
                 }
             }
-        }
-
-        //Calculate Average BPM of map
-        private void time_CalculateAverageBPM()
-        {
-            //AverageBpm Reference Variables
-            float longestBpmTime = 0;
-            int avgBpmPos = 0;
-            int i = 0;
-
-            if (_timingQueue.Count > 1)
-            {
-                for (i = 0; i < _timingQueue.Count; i++)
-                {
-                    if (i + 1 < _timingQueue.Count)
-                    {
-                        if (_timingQueue[i + 1].StartTime - _timingQueue[i].StartTime > longestBpmTime)
-                        {
-                            avgBpmPos = i;
-                            longestBpmTime = _timingQueue[i + 1].StartTime - _timingQueue[i].StartTime;
-                        }
-                    }
-                    else if (i + 1 == _timingQueue.Count)
-                    {
-                        if ((_songAudio.clip.length * 1000f) - _timingQueue[i].StartTime > longestBpmTime)
-                        {
-                            avgBpmPos = i;
-                            longestBpmTime = (_songAudio.clip.length * 1000f) - _timingQueue[i].StartTime;
-                        }
-                    }
-                }
-                AverageBPM = _timingQueue[avgBpmPos].BPM;
-            }
-            else AverageBPM = _timingQueue[0].BPM;
         }
 
         //Move Timing Bars
