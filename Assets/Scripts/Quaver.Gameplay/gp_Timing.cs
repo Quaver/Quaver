@@ -158,7 +158,6 @@ namespace Quaver.Gameplay
             //Create and converts timing points to SV's
             for (j = 0; j < _timingQueue.Count; j++)
             {
-                
                 if (_timingQueue[j].StartTime < _svQueue[0].StartTime - 0.01f)
                 {
                     TimingObject newTp = new TimingObject();
@@ -297,7 +296,6 @@ namespace Quaver.Gameplay
         //Calculate CurrentTime's Sv Position
         private void time_GetCurrentSVPos()
         {
-
             if (_curSongTime >= _svQueue[_svQueue.Count - 1].StartTime)
             {
                 _curSVPart = _svQueue.Count - 1;
