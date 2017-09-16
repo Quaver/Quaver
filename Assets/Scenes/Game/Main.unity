@@ -4941,8 +4941,7 @@ MonoBehaviour:
   focalSize: 0
   aperture: 12
   focalTransform: {fileID: 0}
-  maxBlurSize: 4
-  highResolution: 0
+  maxBlurSize: 3
   blurType: 0
   blurSampleCount: 2
   nearBlur: 0
