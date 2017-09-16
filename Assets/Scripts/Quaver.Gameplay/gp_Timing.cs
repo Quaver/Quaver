@@ -42,6 +42,7 @@ namespace Quaver.Gameplay
                 _svQueue.Add(newTime);
             }
 
+
             _timingQueue = new List<TimingObject>();
             for (i = 0; i < _qFile.TimingPoints.Count; i++)
             {
@@ -149,13 +150,12 @@ namespace Quaver.Gameplay
             float longestBpmTime = 0;
             int avgBpmPos = 0;
             float averageBpm = 100;
-            int i = 0;
-            int j = 0;
+            int i = 0; int j = 0;
 
             //Calculate Average BPM of map
             if (_timingQueue.Count > 1)
             {
-                for (i = 0; i < _timingQueue.Count; i++)
+                for (i=0; i<_timingQueue.Count;i++)
                 {
                     if (i + 1 < _timingQueue.Count)
                     {
@@ -167,10 +167,10 @@ namespace Quaver.Gameplay
                     }
                     else if (i + 1 == _timingQueue.Count)
                     {
-                        if ((_songAudio.clip.length * 1000f) - _timingQueue[i].StartTime > longestBpmTime)
+                        if (_songAudio.clip.length*1000f - _timingQueue[i].StartTime > longestBpmTime)
                         {
                             avgBpmPos = i;
-                            longestBpmTime = (_songAudio.clip.length * 1000f) - _timingQueue[i].StartTime;
+                            longestBpmTime = _songAudio.clip.length*1000f - _timingQueue[i].StartTime;
                         }
                     }
                 }
@@ -257,6 +257,8 @@ namespace Quaver.Gameplay
                         _svQueue.Insert(j, newSV);
                     }
                 }
+
+
             }
         }
 
@@ -294,7 +296,8 @@ namespace Quaver.Gameplay
                     else break;
                 }
             }
-            _curSVPos = _svCalc[_curSVPart] + (ulong)((float)((_curSongTime) - ((_svQueue[_curSVPart].StartTime)) * _svQueue[_curSVPart].Multiplier + 10000));
+            _curSVPos = _svCalc[_curSVPart] + (ulong)((float)((_curSongTime) - (_svQueue[_curSVPart].StartTime)) * _svQueue[_curSVPart].Multiplier + 10000);
+
         }
 
         //Set the position of the current play time
@@ -314,7 +317,8 @@ namespace Quaver.Gameplay
                 if (_actualSongTime < 0) _actualSongTime += Time.deltaTime;
                 else _actualSongTime = ((_songAudio.time) + (_actualSongTime + Time.deltaTime)) / 2f;
             }
-            _curSongTime = (_actualSongTime * 1000f) - _config_offset;
+            _curSongTime = _actualSongTime * 1000f - _config_offset;
         }
+
     }
 }
