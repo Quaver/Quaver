@@ -26,7 +26,6 @@ namespace Quaver.Config
             Cfg cfg = new Cfg();
             cfg.IsValid = true;
 
-
             foreach (string line in File.ReadAllLines(filePath))
             {
                 // Parse the config values, also we need to have defaults just in case some dont exist. and update the file.
@@ -156,7 +155,6 @@ namespace Quaver.Config
             return cfg;
         }
 
-
         // Responsible for correctly parsing a directory and setting it's default value if it isn't valid.
         // If the directory doesn't exist, then it will create it at the default value.
         private static void ParseDirectory(out string valueHolder, string valueToParse, string defaultValue)
@@ -203,7 +201,6 @@ namespace Quaver.Config
             return;
         }
 
-
         // Responsible for taking a short configuration value, validating it, and setting that value
         // in our Cfg instance.
         private static void ParseShort(out short valueHolder, string valueToParse, short defaultValue)
@@ -218,7 +215,6 @@ namespace Quaver.Config
             valueHolder = short.Parse(valueToParse);
             return;
         }
-
 
         // Responsible for taking a bool configuration value, validating it, and setting that value
         // in our Cfg instance.
