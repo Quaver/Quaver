@@ -1,4 +1,3 @@
-
 using System;
 using UnityEngine;
 
@@ -53,7 +52,6 @@ namespace UnityStandardAssets.ImageEffects
         private ComputeBuffer _cbPoints;
         private float _internalBlurWidth = 1.0f;
 
-
         public override bool CheckResources()
         {
             CheckSupport(true); // only requires depth, not HDR
@@ -100,7 +98,10 @@ namespace UnityStandardAssets.ImageEffects
             {
                 _cbDrawArgs = new ComputeBuffer(1, 16, ComputeBufferType.IndirectArguments);
                 var args = new int[4];
-                args[0] = 0; args[1] = 1; args[2] = 0; args[3] = 0;
+                args[0] = 0;
+                args[1] = 1;
+                args[2] = 0;
+                args[3] = 0;
                 _cbDrawArgs.SetData(args);
             }
             if (_cbPoints == null)
@@ -111,7 +112,7 @@ namespace UnityStandardAssets.ImageEffects
 
         private float FocalDistance01(float worldDist)
         {
-            return GetComponent<Camera>().WorldToViewportPoint((worldDist - GetComponent<Camera>().nearClipPlane) * GetComponent<Camera>().transform.forward + GetComponent<Camera>().transform.position).z / (GetComponent<Camera>().farClipPlane - GetComponent<Camera>().nearClipPlane);
+            return GetComponent<Camera>().WorldToViewportPoint(((worldDist - GetComponent<Camera>().nearClipPlane) * GetComponent<Camera>().transform.forward) + GetComponent<Camera>().transform.position).z / (GetComponent<Camera>().farClipPlane - GetComponent<Camera>().nearClipPlane);
         }
 
         private void WriteCoc(RenderTexture fromTo, bool fgDilate)
@@ -184,24 +185,11 @@ namespace UnityStandardAssets.ImageEffects
 
             if (visualizeFocus)
             {
-                //
-                // 2.
-                // visualize coc
-                //
-                //
-
                 WriteCoc(source, true);
                 Graphics.Blit(source, destination, _dofHdrMaterial, 16);
             }
             else if ((blurType == BlurType.DX11) && _dx11bokehMaterial)
             {
-                //
-                // 1.
-                // optimized dx11 bokeh scatter
-                //
-                //
-
-
                 if (highResolution)
                 {
                     _internalBlurWidth = _internalBlurWidth < 0.1f ? 0.1f : _internalBlurWidth;
