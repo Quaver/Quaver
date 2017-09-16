@@ -13,8 +13,6 @@ namespace Wenzil.Console
             //ConsoleCommandsDatabase.RegisterCommand(LoadCommand.name, LoadCommand.description, LoadCommand.usage, LoadCommand.Execute);  
             ConsoleCommandsDatabase.RegisterCommand(PingCommand.name, PingCommand.description, PingCommand.usage, PingCommand.Execute);
             ConsoleCommandsDatabase.RegisterCommand(ClearCommand.name, ClearCommand.description, ClearCommand.usage, ClearCommand.Execute);
-            ConsoleCommandsDatabase.RegisterCommand(ParseBeatmapCommand.name, ParseBeatmapCommand.description, ParseBeatmapCommand.usage, ParseBeatmapCommand.Execute);
-            ConsoleCommandsDatabase.RegisterCommand(ConvertToQuaCommand.name, ConvertToQuaCommand.description, ConvertToQuaCommand.usage, ConvertToQuaCommand.Execute);
             ConsoleCommandsDatabase.RegisterCommand(ParseQuaCommand.name, ParseQuaCommand.description, ParseQuaCommand.usage, ParseQuaCommand.Execute);
             ConsoleCommandsDatabase.RegisterCommand(ParseConfigCommand.name, ParseConfigCommand.description, ParseConfigCommand.usage, ParseConfigCommand.Execute);
             ConsoleCommandsDatabase.RegisterCommand(ConfigGenCommand.name, ConfigGenCommand.description, ConfigGenCommand.usage, ConfigGenCommand.Execute);
