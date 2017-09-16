@@ -58,10 +58,10 @@ namespace Quaver.Graphics
                     _bufferSprite.GetComponent<SpriteRenderer>().sprite = sprite;
                     _bufferSprite.GetComponent<BackgroundDimAnimator>().dim = _bufferSprite.GetComponent<BackgroundDimAnimator>().Manager.SelectScreenDim;
 
-                    if (sprite.rect.size.y / sprite.rect.size.x >= Screen.width / Screen.height)
-                        _bufferSprite.transform.localScale = Vector3.one * (20f * (100f / (float)sprite.rect.size.y));
+                    if (sprite.rect.size.y / sprite.rect.size.x <= Screen.height / Screen.width)
+                        _bufferSprite.transform.localScale = Vector3.one * 1.05f * (20f * (100f / (float)sprite.rect.size.y));
                     else
-                        _bufferSprite.transform.localScale = Vector3.one * ((float)Screen.width / (float)Screen.height) * 20f * (100f / (float)sprite.rect.size.x);
+                        _bufferSprite.transform.localScale = Vector3.one * 1.05f * ((float)Screen.width / (float)Screen.height) * 20f * (100f / (float)sprite.rect.size.x);
                 }
             }
             else if (!_spriteMode && _bufferTexture != null)
