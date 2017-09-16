@@ -19,9 +19,9 @@ namespace Quaver.UI
         private void Update()
         {
             //Set Text of fps/latency ui
-            _latencyTextTween += (500 * Time.deltaTime - _latencyTextTween) / 100f;
-            _fpsTextWeen += (1 / Time.deltaTime - _fpsTextWeen) / 100f;
-            FpsText.text = Mathf.Round(_fpsTextWeen * 10) / 10f + " fps";
+            _latencyTextTween += ((500f * Time.deltaTime) - _latencyTextTween) / 100f;
+            _fpsTextWeen += ((1f / Time.deltaTime) - _fpsTextWeen) / 100f;
+            FpsText.text = (Mathf.Round(_fpsTextWeen * 10f) / 10f) + " fps";
             LatencyText.text = "\u00B1" + Mathf.Round(_latencyTextTween * 100f) / 100f + " ms";
         }
     }
