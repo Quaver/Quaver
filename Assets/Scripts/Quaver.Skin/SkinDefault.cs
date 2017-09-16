@@ -31,10 +31,10 @@ namespace Quaver.Skin
         public static int ReceptorYOffset = 50;
 
         // [Colours]
-        public static Color ColourLight1;
-        public static Color ColourLight2;
-        public static Color ColourLight3;
-        public static Color ColourLight4;
+        public static Color ColourLight1 = new Color(178, 178, 255);
+        public static Color ColourLight2 = new Color(255, 255, 178);
+        public static Color ColourLight3 = new Color(178, 178, 255);
+        public static Color ColourLight4 = new Color(255, 255, 178);
         public static Color Colour1;
         public static Color Colour2;
         public static Color Colour3;
