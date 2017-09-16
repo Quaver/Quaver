@@ -15,7 +15,7 @@ namespace Quaver.Skin
         public static Color ToColor(this string color)
         {
             string[] colorSplit = color.Split(',');
-            return new Color(float.Parse(colorSplit[0]), float.Parse(colorSplit[1]), float.Parse(colorSplit[2]), float.Parse(colorSplit[3]));
+            return new Color(float.Parse(colorSplit[0]) / 255, float.Parse(colorSplit[1]) / 255, float.Parse(colorSplit[2]) / 255, float.Parse(colorSplit[3]));
         }
     }    
 }
