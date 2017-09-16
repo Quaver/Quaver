@@ -44,10 +44,9 @@ namespace Quaver.Gameplay
             }
             else if (_qFile.IsValidQua)
             {
-
                 //Declare Config Variables
                 _config_scrollSpeed = Manager.GameConfig.ScrollSpeed;
-                _config_timingBars = true;//should be config
+                _config_timingBars = true; //should be config
                 _config_upScroll = !Manager.GameConfig.DownScroll;
                 _config_KeyBindings = new KeyCode[] { Manager.GameConfig.KeyLaneMania1, Manager.GameConfig.KeyLaneMania2, Manager.GameConfig.KeyLaneMania3, Manager.GameConfig.KeyLaneMania4 };
                 _config_offset = Manager.GameConfig.GlobalOffset;
@@ -104,7 +103,6 @@ namespace Quaver.Gameplay
             }
         }
 
-
         // Modifies the receptors if visual mods are on.
         private void ModifyReceptors()
         {
@@ -124,7 +122,7 @@ namespace Quaver.Gameplay
                 //Set Receptor Transform
                 if (mod_spin) _receptors[k].transform.localEulerAngles = new Vector3(0, 0, _skin_receptorRotations[k]);
                 if (mod_shuffle) _receptors[k].transform.localPosition = new Vector3(_receptorXPos[k] + _receptorXOffset[k], _receptorYPos, 1);
-                _receptors[k].transform.localScale = Vector3.one * (_receptors[k].transform.localScale.x + ((skin_columnSize / config_PixelUnitSize) - _receptors[k].transform.localScale.x) / 3f);
+                _receptors[k].transform.localScale = Vector3.one * (_receptors[k].transform.localScale.x + (((skin_columnSize / config_PixelUnitSize) - _receptors[k].transform.localScale.x) / 3f));
             }
         }
 
@@ -132,13 +130,12 @@ namespace Quaver.Gameplay
         private void SetNotePos(NoteObject curNote, int lnMode)
         {
             float StartTime = curNote.StartTime;
-            if (lnMode == 2) StartTime = _curSongTime;
             float splitFactor = 1f;
+            if (lnMode == 2) StartTime = _curSongTime;
             if (mod_split && curNote.KeyLane >= 3) splitFactor = -1f;
-            if (lnMode != 2 || mod_shuffle)
-                curNote.HitSet.transform.localPosition = new Vector3(_receptorXPos[curNote.KeyLane - 1] + _receptorXOffset[curNote.KeyLane - 1], splitFactor * PosFromSV(StartTime), 0);
-            else curNote.HitSet.transform.localPosition = new Vector3(_receptorXPos[curNote.KeyLane - 1] + _receptorXOffset[curNote.KeyLane - 1], _receptorYPos * splitFactor, 0);
             if (mod_spin) curNote.HitSprite.transform.eulerAngles = new Vector3(0, 0, _skin_receptorRotations[curNote.KeyLane - 1]);
+            if (lnMode != 2 || mod_shuffle) curNote.HitSet.transform.localPosition = new Vector3(_receptorXPos[curNote.KeyLane - 1] + _receptorXOffset[curNote.KeyLane - 1], splitFactor * PosFromSV(StartTime), 0);
+            else curNote.HitSet.transform.localPosition = new Vector3(_receptorXPos[curNote.KeyLane - 1] + _receptorXOffset[curNote.KeyLane - 1], _receptorYPos * splitFactor, 0);
             if ((lnMode != 1 || mod_pull) && lnMode != 3 && curNote.EndTime > 0 && curNote.EndTime > StartTime)
             {
                 float lnSize = splitFactor * Mathf.Min(Mathf.Abs(PosFromSV(curNote.EndTime) - PosFromSV(StartTime)), 50f);
@@ -186,7 +183,7 @@ namespace Quaver.Gameplay
                             }
                         }
                     }
-                    svPosTime = _svCalc[curPos] + (ulong)(15000 + (timePos - _svQueue[curPos].StartTime) * _svQueue[curPos].Multiplier);
+                    svPosTime = _svCalc[curPos] + (ulong)(15000 + ((timePos - _svQueue[curPos].StartTime) * _svQueue[curPos].Multiplier));
                     //10000ms added for negative, since svPos is a ulong
 
                     returnVal = (float)(svPosTime - _curSVPos - 5000f) / 1000f * (float)_config_scrollSpeed * (1 / _songAudio.pitch);
@@ -195,9 +192,9 @@ namespace Quaver.Gameplay
             }
             else returnVal = 0;
 
-            if (mod_pull) returnVal = 2f * Mathf.Max(Mathf.Pow(returnVal, 0.6f), 0) + Mathf.Min(timePos - _curSongTime, 0f) / 1000f * (float)_config_scrollSpeed * (1 / _songAudio.pitch);
+            if (mod_pull) returnVal = (2f * Mathf.Max(Mathf.Pow(returnVal, 0.6f), 0)) + (Mathf.Min(timePos - _curSongTime, 0f) / 1000f * (float)_config_scrollSpeed * (1 / _songAudio.pitch));
 
-            return returnVal * _scrollNegativeFactor + _receptorYPos;
+            return (returnVal * _scrollNegativeFactor) + _receptorYPos;
         }
     }
 
