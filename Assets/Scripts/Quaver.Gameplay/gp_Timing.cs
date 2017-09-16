@@ -182,7 +182,6 @@ namespace Quaver.Gameplay
             int hij = 0;
             for (j = 0; j < _timingQueue.Count; j++)
             {
-                
                 if (_timingQueue[j].StartTime < _svQueue[0].StartTime - 0.01f)
                 {
                     TimingObject newTp = new TimingObject();
@@ -281,7 +280,6 @@ namespace Quaver.Gameplay
         //Calculate CurrentTime's Sv Position
         private void time_GetCurrentSVPos()
         {
-
             if (_curSongTime >= _svQueue[_svQueue.Count - 1].StartTime)
             {
                 _curSVPart = _svQueue.Count - 1;
@@ -294,7 +292,7 @@ namespace Quaver.Gameplay
                     else break;
                 }
             }
-            _curSVPos = _svCalc[_curSVPart] + (ulong)((float)((_curSongTime) - ((_svQueue[_curSVPart].StartTime)) * _svQueue[_curSVPart].Multiplier + 10000));
+            _curSVPos = _svCalc[_curSVPart] + 10000 + (ulong)((float)((_curSongTime) - (_svQueue[_curSVPart].StartTime * _svQueue[_curSVPart].Multiplier)));
         }
 
         //Set the position of the current play time
