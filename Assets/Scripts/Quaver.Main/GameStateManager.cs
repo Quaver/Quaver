@@ -10,6 +10,7 @@ using Quaver.Screenshot;
 using Quaver.SongSelect;
 using Quaver.Cache;
 using Quaver.Audio;
+using Quaver.Graphics;
 using UnityEngine.UI;
 using UnityStandardAssets.ImageEffects;
 
@@ -66,6 +67,8 @@ namespace Quaver.Main
             States[0].StateStart(this);
 
             AudioPlayer.LoadSong(currentMap, SongAudioSource);
+            BackgroundLoader.LoadSprite(currentMap, bgImage);
+            
         }
 
         private void Update()
