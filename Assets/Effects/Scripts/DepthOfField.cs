@@ -30,7 +30,6 @@ namespace UnityStandardAssets.ImageEffects
         public Shader dofHdrShader;
         private Material _dofHdrMaterial = null;
 
-
         private float _focalDistance01 = 10.0f;
         private ComputeBuffer _cbDrawArgs;
         private ComputeBuffer _cbPoints;
