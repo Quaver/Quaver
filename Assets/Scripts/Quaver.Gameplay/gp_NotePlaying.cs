@@ -27,7 +27,6 @@ namespace Quaver.Gameplay
         private float _scrollNegativeFactor = 1f;
         private bool[] _keyDown;
 
-
         //Initialize Notes
         private void np_init()
         {
@@ -38,7 +37,7 @@ namespace Quaver.Gameplay
             _hitQueue = new List<NoteObject>[4];
             _lnQueue = new List<NoteObject>();
             _offLNQueue = new List<NoteObject>();
-            for (i=0;i<4;i++) _hitQueue[i] = new List<NoteObject>();
+            for (i = 0; i < 4 ; i++) _hitQueue[i] = new List<NoteObject>();
 
             //Copy + Convert to NoteObjects
             NoteObject newNote;
@@ -58,7 +57,6 @@ namespace Quaver.Gameplay
                 if (_noteQueue.Count > 0) _activeNotes[i] = np_InstantiateNote(null);
                 else break;
             }
-
         }
 
         //Move Notes
@@ -172,11 +170,10 @@ namespace Quaver.Gameplay
             ho.HitNote.SetActive(true);
             ho.HitSprite.color = new Color(1f, 1f, 1f, 1f);
 
-
             if (ho.EndTime == 0)
             {
-                ho.SliderMiddleObject.gameObject.SetActive(false); ;
-                ho.SliderEndObject.gameObject.SetActive(false); ;
+                ho.SliderMiddleObject.gameObject.SetActive(false);
+                ho.SliderEndObject.gameObject.SetActive(false);
             }
 
             ho.HitNote.transform.eulerAngles = new Vector3(0, 0, _skin_receptorRotations[ho.KeyLane - 1]); //Rotation
@@ -192,7 +189,5 @@ namespace Quaver.Gameplay
             if (_noteQueue.Count > 0) np_InstantiateNote(curNote);
             else Destroy(curNote);
         }
-
-
     }
 }
