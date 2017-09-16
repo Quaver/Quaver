@@ -84,8 +84,6 @@ namespace Quaver.Main
             _selectYPos = _objectYSize;
         }
 
-
-
         private void Update()
         {
             //If Scroll
@@ -99,11 +97,11 @@ namespace Quaver.Main
             if (_mouseRightDown) _selectYPos = (int)((Input.mousePosition.y / Screen.height) * (float)(_objectYSize));
 
             //Set position boundary (top,bottom)
-            _selectYPos = Mathf.Min(Mathf.Max(565 - _offsetFromSelection, _selectYPos), _objectYSize - 605);
+            _selectYPos = Mathf.Min(Mathf.Max(390 - _offsetFromSelection, _selectYPos), _objectYSize - 485);
 
             //Set Selection Y Position
             _posTween += (_selectYPos - _posTween) * Mathf.Min(Time.deltaTime * 5f, 1);
-            _selectionSet.transform.localPosition = new Vector2(-430, -_posTween + 720); //1440/2
+            _selectionSet.transform.localPosition = new Vector2(-430, -_posTween + 540 ); //1080/2
 
             //Set offsetPos (when song is selected)
             if (_offsetTween != _offsetFromSelection)
@@ -125,13 +123,12 @@ namespace Quaver.Main
                 {
                     for (int i = 0; i < _difficultyList.Length; i++)
                     {
-                        float tweener = _difficultyList[i].ParentTransform.localPosition.x + (5 - _difficultyList[i].ParentTransform.localPosition.x) * Mathf.Min(Time.deltaTime * 15f, 1);
+                        float tweener = _difficultyList[i].ParentTransform.localPosition.x + ((5 - _difficultyList[i].ParentTransform.localPosition.x) * Mathf.Min(Time.deltaTime * 15f, 1));
                         _difficultyList[i].ParentTransform.localPosition = new Vector2(tweener, _difficultyList[i].posY);
                     }
                 }
             }
         }
-
 
         public void Clicked(int pos, bool subSelection)
         {
@@ -158,7 +155,7 @@ namespace Quaver.Main
                         //Song Object Set Text to map diff
                         _difficultyList[i].TitleText.text = _sortedMapSets[pos].Beatmaps[i].Difficulty;
                         _difficultyList[i].SubText.text = "\u2605" + string.Format("{0:f2}", _sortedMapSets[pos].Beatmaps[i].Stars / 100f);
-                        _difficultyList[i].ParentTransform.localPosition = new Vector2(450 + _difficultyList[i].diffPos * 60f, _difficultyList[i].posY);
+                        _difficultyList[i].ParentTransform.localPosition = new Vector2(450 + (_difficultyList[i].diffPos * 60f), _difficultyList[i].posY);
 
                         //Set Y Pos for next object
                         newSongPos += _difficultyList[i].sizeY + 5;
