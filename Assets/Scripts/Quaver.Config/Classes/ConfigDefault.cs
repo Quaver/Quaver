@@ -43,7 +43,7 @@ namespace Quaver.Config
 
         public static byte GlobalOffset = 0;
         public static bool LeaderboardVisible = false;
-        public static string Skin = "";
+        public static string Skin = "Default";
 
         public static KeyCode KeyLaneMania1 = KeyCode.D;
         public static KeyCode KeyLaneMania2 = KeyCode.F;
