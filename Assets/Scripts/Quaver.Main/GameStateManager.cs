@@ -1,6 +1,4 @@
-﻿// Copyright (c)  Swan. All rights reserved.  
-// See the Copyright notice in the root of the project.
-
+﻿
 using Quaver.Main;
 using System.Collections;
 using System.Collections.Generic;
