@@ -1,5 +1,6 @@
 ﻿
 using Quaver.Main;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -68,8 +69,17 @@ namespace Quaver.Main
             //Starts play mode (TEST)
             States[0].StateStart(this);
 
-            AudioPlayer.LoadSong(currentMap, SongAudioSource);
-            BackgroundLoader.LoadSprite(currentMap, bgImage);
+            try
+            {
+                AudioPlayer.LoadSong(currentMap, SongAudioSource);
+                BackgroundLoader.LoadSprite(currentMap, bgImage);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[GAME MANAGER] Could not load any song!");
+                Debug.LogException(e);
+            }
+
             
         }
 
