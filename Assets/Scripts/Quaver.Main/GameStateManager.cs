@@ -118,7 +118,7 @@ namespace Quaver.Main
             // go through them and find the correct map.
             if (MapDirectories.Count != 0)
             {
-                int randomMapNumber = Random.Range(0, LoadedBeatmaps.Count);
+                int randomMapNumber = UnityEngine.Random.Range(0, LoadedBeatmaps.Count);
                 int mapsLookedThrough = 0;
                 foreach (MapDirectory dir in MapDirectories)
                 {
