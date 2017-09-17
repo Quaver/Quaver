@@ -17,6 +17,9 @@ namespace Quaver.Difficulty
             float[] meanNps = new float[5];
             float[] npsConsistancy = new float[5];
             int[][] npsInterval = new int[5][];
+            List<int>[] startTimes = new List<int>[4];
+            List<float>[] jackStrain = new List<float>[4];
+            List<float>[] handStrain = new List<float>[4];
             int npsSize = (int)(Mathf.Ceil(Mathf.Max((float)ObjectList[ObjectList.Count - 1].StartTime, (float)ObjectList[ObjectList.Count - 1].EndTime) / 1000f));
             int npsTolerance = 0;
 
@@ -39,6 +42,12 @@ namespace Quaver.Difficulty
             for (i = 0; i < 5; i++)
             {
                 npsInterval[i] = new int[npsSize];
+                if (i < 4)
+                {
+                    startTimes[i] = new List<int>();
+                    jackStrain[i] = new List<float>();
+                    handStrain[i] = new List<float>();
+                }
             }
 
             //Calculates NPS + Sets npsInterval Array
@@ -54,6 +63,7 @@ namespace Quaver.Difficulty
                     {
                         npsInterval[0][curTime] += 1;
                         npsInterval[ObjectList[notePos].KeyLane][curTime] += 1;
+                        startTimes[ObjectList[notePos].KeyLane - 1].Add(ObjectList[notePos].StartTime);
 
                         //If LNs are larger than 220ms, adds to LN count
                         if (ObjectList[notePos].EndTime > ObjectList[notePos].StartTime + 220) lnCount++;
@@ -81,6 +91,7 @@ namespace Quaver.Difficulty
                 }
                 notePos++;
             }
+
             //Calculates Average NPS
             curTime = 0;
             for (i = 0; i < 5; i++)
