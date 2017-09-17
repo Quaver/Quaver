@@ -12,15 +12,8 @@ namespace UnityStandardAssets.ImageEffects
         public float focalLength = 10.0f;
         public float focalSize = 0.05f;
         public float aperture = 11.5f;
-        public Transform focalTransform = null;
         public float maxBlurSize = 2.0f;
-        public bool highResolution = false;
-
-        public enum BlurType
-        {
-            DiscBlur = 0,
-            DX11 = 1,
-        }
+        public Transform focalTransform = null;
 
         public enum BlurSampleCount
         {
@@ -29,7 +22,6 @@ namespace UnityStandardAssets.ImageEffects
             High = 2,
         }
 
-        public BlurType blurType = BlurType.DiscBlur;
         public BlurSampleCount blurSampleCount = BlurSampleCount.High;
 
         public bool nearBlur = false;
@@ -37,15 +29,6 @@ namespace UnityStandardAssets.ImageEffects
 
         public Shader dofHdrShader;
         private Material _dofHdrMaterial = null;
-
-        public Shader dx11BokehShader;
-        private Material _dx11bokehMaterial;
-
-        public float dx11BokehThreshold = 0.5f;
-        public float dx11SpawnHeuristic = 0.0875f;
-        public Texture2D dx11BokehTexture = null;
-        public float dx11BokehScale = 1.2f;
-        public float dx11BokehIntensity = 2.5f;
 
         private float _focalDistance01 = 10.0f;
         private ComputeBuffer _cbDrawArgs;
@@ -57,11 +40,6 @@ namespace UnityStandardAssets.ImageEffects
             CheckSupport(true); // only requires depth, not HDR
 
             _dofHdrMaterial = CheckShaderAndCreateMaterial(dofHdrShader, _dofHdrMaterial);
-            if (supportDX11 && blurType == BlurType.DX11)
-            {
-                _dx11bokehMaterial = CheckShaderAndCreateMaterial(dx11BokehShader, _dx11bokehMaterial);
-                CreateComputeResources();
-            }
 
             if (!isSupported)
                 ReportAutoDisable();
@@ -80,8 +58,6 @@ namespace UnityStandardAssets.ImageEffects
 
             if (_dofHdrMaterial) DestroyImmediate(_dofHdrMaterial);
             _dofHdrMaterial = null;
-            if (_dx11bokehMaterial) DestroyImmediate(_dx11bokehMaterial);
-            _dx11bokehMaterial = null;
         }
 
         private void ReleaseComputeResources()
@@ -179,8 +155,6 @@ namespace UnityStandardAssets.ImageEffects
 
             RenderTexture rtLow = null;
             RenderTexture rtLow2 = null;
-            RenderTexture rtSuperLow1 = null;
-            RenderTexture rtSuperLow2 = null;
             float fgBlurDist = _internalBlurWidth * foregroundOverlap;
 
             if (visualizeFocus)
@@ -188,172 +162,9 @@ namespace UnityStandardAssets.ImageEffects
                 WriteCoc(source, true);
                 Graphics.Blit(source, destination, _dofHdrMaterial, 16);
             }
-            else if ((blurType == BlurType.DX11) && _dx11bokehMaterial)
-            {
-                if (highResolution)
-                {
-                    _internalBlurWidth = _internalBlurWidth < 0.1f ? 0.1f : _internalBlurWidth;
-                    fgBlurDist = _internalBlurWidth * foregroundOverlap;
-
-                    rtLow = RenderTexture.GetTemporary(source.width, source.height, 0, source.format);
-
-                    var dest2 = RenderTexture.GetTemporary(source.width, source.height, 0, source.format);
-
-                    // capture COC
-                    WriteCoc(source, false);
-
-                    // blur a bit so we can do a frequency check
-                    rtSuperLow1 = RenderTexture.GetTemporary(source.width >> 1, source.height >> 1, 0, source.format);
-                    rtSuperLow2 = RenderTexture.GetTemporary(source.width >> 1, source.height >> 1, 0, source.format);
-
-                    Graphics.Blit(source, rtSuperLow1, _dofHdrMaterial, 15);
-                    _dofHdrMaterial.SetVector("_Offsets", new Vector4(0.0f, 1.5f, 0.0f, 1.5f));
-                    Graphics.Blit(rtSuperLow1, rtSuperLow2, _dofHdrMaterial, 19);
-                    _dofHdrMaterial.SetVector("_Offsets", new Vector4(1.5f, 0.0f, 0.0f, 1.5f));
-                    Graphics.Blit(rtSuperLow2, rtSuperLow1, _dofHdrMaterial, 19);
-
-                    // capture fg coc
-                    if (nearBlur)
-                        Graphics.Blit(source, rtSuperLow2, _dofHdrMaterial, 4);
-
-                    _dx11bokehMaterial.SetTexture("_BlurredColor", rtSuperLow1);
-                    _dx11bokehMaterial.SetFloat("_SpawnHeuristic", dx11SpawnHeuristic);
-                    _dx11bokehMaterial.SetVector("_BokehParams", new Vector4(dx11BokehScale, dx11BokehIntensity, Mathf.Clamp(dx11BokehThreshold, 0.005f, 4.0f), _internalBlurWidth));
-                    _dx11bokehMaterial.SetTexture("_FgCocMask", nearBlur ? rtSuperLow2 : null);
-
-                    // collect bokeh candidates and replace with a darker pixel
-                    Graphics.SetRandomWriteTarget(1, _cbPoints);
-                    Graphics.Blit(source, rtLow, _dx11bokehMaterial, 0);
-                    Graphics.ClearRandomWriteTargets();
-
-                    // fg coc blur happens here (after collect!)
-                    if (nearBlur)
-                    {
-                        _dofHdrMaterial.SetVector("_Offsets", new Vector4(0.0f, fgBlurDist, 0.0f, fgBlurDist));
-                        Graphics.Blit(rtSuperLow2, rtSuperLow1, _dofHdrMaterial, 2);
-                        _dofHdrMaterial.SetVector("_Offsets", new Vector4(fgBlurDist, 0.0f, 0.0f, fgBlurDist));
-                        Graphics.Blit(rtSuperLow1, rtSuperLow2, _dofHdrMaterial, 2);
-
-                        // merge fg coc with bg coc
-                        Graphics.Blit(rtSuperLow2, rtLow, _dofHdrMaterial, 3);
-                    }
-
-                    // NEW: LAY OUT ALPHA on destination target so we get nicer outlines for the high rez version
-                    Graphics.Blit(rtLow, dest2, _dofHdrMaterial, 20);
-
-                    // box blur (easier to merge with bokeh buffer)
-                    _dofHdrMaterial.SetVector("_Offsets", new Vector4(_internalBlurWidth, 0.0f, 0.0f, _internalBlurWidth));
-                    Graphics.Blit(rtLow, source, _dofHdrMaterial, 5);
-                    _dofHdrMaterial.SetVector("_Offsets", new Vector4(0.0f, _internalBlurWidth, 0.0f, _internalBlurWidth));
-                    Graphics.Blit(source, dest2, _dofHdrMaterial, 21);
-
-                    // apply bokeh candidates
-                    Graphics.SetRenderTarget(dest2);
-                    ComputeBuffer.CopyCount(_cbPoints, _cbDrawArgs, 0);
-                    _dx11bokehMaterial.SetBuffer("pointBuffer", _cbPoints);
-                    _dx11bokehMaterial.SetTexture("_MainTex", dx11BokehTexture);
-                    _dx11bokehMaterial.SetVector("_Screen", new Vector3(1.0f / (1.0f * source.width), 1.0f / (1.0f * source.height), _internalBlurWidth));
-                    _dx11bokehMaterial.SetPass(2);
-
-                    Graphics.DrawProceduralIndirect(MeshTopology.Points, _cbDrawArgs, 0);
-
-                    Graphics.Blit(dest2, destination);	// hackaround for DX11 high resolution flipfun (OPTIMIZEME)
-
-                    RenderTexture.ReleaseTemporary(dest2);
-                    RenderTexture.ReleaseTemporary(rtSuperLow1);
-                    RenderTexture.ReleaseTemporary(rtSuperLow2);
-                }
-                else
-                {
-                    rtLow = RenderTexture.GetTemporary(source.width >> 1, source.height >> 1, 0, source.format);
-                    rtLow2 = RenderTexture.GetTemporary(source.width >> 1, source.height >> 1, 0, source.format);
-
-                    fgBlurDist = _internalBlurWidth * foregroundOverlap;
-
-                    // capture COC & color in low resolution
-                    WriteCoc(source, false);
-                    source.filterMode = FilterMode.Bilinear;
-                    Graphics.Blit(source, rtLow, _dofHdrMaterial, 6);
-
-                    // blur a bit so we can do a frequency check
-                    rtSuperLow1 = RenderTexture.GetTemporary(rtLow.width >> 1, rtLow.height >> 1, 0, rtLow.format);
-                    rtSuperLow2 = RenderTexture.GetTemporary(rtLow.width >> 1, rtLow.height >> 1, 0, rtLow.format);
-
-                    Graphics.Blit(rtLow, rtSuperLow1, _dofHdrMaterial, 15);
-                    _dofHdrMaterial.SetVector("_Offsets", new Vector4(0.0f, 1.5f, 0.0f, 1.5f));
-                    Graphics.Blit(rtSuperLow1, rtSuperLow2, _dofHdrMaterial, 19);
-                    _dofHdrMaterial.SetVector("_Offsets", new Vector4(1.5f, 0.0f, 0.0f, 1.5f));
-                    Graphics.Blit(rtSuperLow2, rtSuperLow1, _dofHdrMaterial, 19);
-
-                    RenderTexture rtLow3 = null;
-
-                    if (nearBlur)
-                    {
-                        // capture fg coc
-                        rtLow3 = RenderTexture.GetTemporary(source.width >> 1, source.height >> 1, 0, source.format);
-                        Graphics.Blit(source, rtLow3, _dofHdrMaterial, 4);
-                    }
-
-                    _dx11bokehMaterial.SetTexture("_BlurredColor", rtSuperLow1);
-                    _dx11bokehMaterial.SetFloat("_SpawnHeuristic", dx11SpawnHeuristic);
-                    _dx11bokehMaterial.SetVector("_BokehParams", new Vector4(dx11BokehScale, dx11BokehIntensity, Mathf.Clamp(dx11BokehThreshold, 0.005f, 4.0f), _internalBlurWidth));
-                    _dx11bokehMaterial.SetTexture("_FgCocMask", rtLow3);
-
-                    // collect bokeh candidates and replace with a darker pixel
-                    Graphics.SetRandomWriteTarget(1, _cbPoints);
-                    Graphics.Blit(rtLow, rtLow2, _dx11bokehMaterial, 0);
-                    Graphics.ClearRandomWriteTargets();
-
-                    RenderTexture.ReleaseTemporary(rtSuperLow1);
-                    RenderTexture.ReleaseTemporary(rtSuperLow2);
-
-                    // fg coc blur happens here (after collect!)
-                    if (nearBlur)
-                    {
-                        _dofHdrMaterial.SetVector("_Offsets", new Vector4(0.0f, fgBlurDist, 0.0f, fgBlurDist));
-                        Graphics.Blit(rtLow3, rtLow, _dofHdrMaterial, 2);
-                        _dofHdrMaterial.SetVector("_Offsets", new Vector4(fgBlurDist, 0.0f, 0.0f, fgBlurDist));
-                        Graphics.Blit(rtLow, rtLow3, _dofHdrMaterial, 2);
-
-                        // merge fg coc with bg coc
-                        Graphics.Blit(rtLow3, rtLow2, _dofHdrMaterial, 3);
-                    }
-
-                    // box blur (easier to merge with bokeh buffer)
-                    _dofHdrMaterial.SetVector("_Offsets", new Vector4(_internalBlurWidth, 0.0f, 0.0f, _internalBlurWidth));
-                    Graphics.Blit(rtLow2, rtLow, _dofHdrMaterial, 5);
-                    _dofHdrMaterial.SetVector("_Offsets", new Vector4(0.0f, _internalBlurWidth, 0.0f, _internalBlurWidth));
-                    Graphics.Blit(rtLow, rtLow2, _dofHdrMaterial, 5);
-
-                    // apply bokeh candidates
-                    Graphics.SetRenderTarget(rtLow2);
-                    ComputeBuffer.CopyCount(_cbPoints, _cbDrawArgs, 0);
-                    _dx11bokehMaterial.SetBuffer("pointBuffer", _cbPoints);
-                    _dx11bokehMaterial.SetTexture("_MainTex", dx11BokehTexture);
-                    _dx11bokehMaterial.SetVector("_Screen", new Vector3(1.0f / (1.0f * rtLow2.width), 1.0f / (1.0f * rtLow2.height), _internalBlurWidth));
-                    _dx11bokehMaterial.SetPass(1);
-                    Graphics.DrawProceduralIndirect(MeshTopology.Points, _cbDrawArgs, 0);
-
-                    // upsample & combine
-                    _dofHdrMaterial.SetTexture("_LowRez", rtLow2);
-                    _dofHdrMaterial.SetTexture("_FgOverlap", rtLow3);
-                    _dofHdrMaterial.SetVector("_Offsets", ((1.0f * source.width) / (1.0f * rtLow2.width)) * _internalBlurWidth * Vector4.one);
-                    Graphics.Blit(source, destination, _dofHdrMaterial, 9);
-
-                    if (rtLow3) RenderTexture.ReleaseTemporary(rtLow3);
-                }
-            }
             else
             {
-                //
-                // 2.
-                // poisson disc style blur in low resolution
-                //
-                //
-
                 source.filterMode = FilterMode.Bilinear;
-
-                if (highResolution) _internalBlurWidth *= 2.0f;
 
                 WriteCoc(source, true);
 
@@ -362,25 +173,17 @@ namespace UnityStandardAssets.ImageEffects
 
                 int blurPass = (blurSampleCount == BlurSampleCount.High || blurSampleCount == BlurSampleCount.Medium) ? 17 : 11;
 
-                if (highResolution)
-                {
-                    _dofHdrMaterial.SetVector("_Offsets", new Vector4(0.0f, _internalBlurWidth, 0.025f, _internalBlurWidth));
-                    Graphics.Blit(source, destination, _dofHdrMaterial, blurPass);
-                }
-                else
-                {
-                    _dofHdrMaterial.SetVector("_Offsets", new Vector4(0.0f, _internalBlurWidth, 0.1f, _internalBlurWidth));
+                _dofHdrMaterial.SetVector("_Offsets", new Vector4(0.0f, _internalBlurWidth, 0.1f, _internalBlurWidth));
 
-                    // blur
-                    Graphics.Blit(source, rtLow, _dofHdrMaterial, 6);
-                    Graphics.Blit(rtLow, rtLow2, _dofHdrMaterial, blurPass);
+                // blur
+                Graphics.Blit(source, rtLow, _dofHdrMaterial, 6);
+                Graphics.Blit(rtLow, rtLow2, _dofHdrMaterial, blurPass);
 
-                    // cheaper blur in high resolution, upsample and combine
-                    _dofHdrMaterial.SetTexture("_LowRez", rtLow2);
-                    _dofHdrMaterial.SetTexture("_FgOverlap", null);
-                    _dofHdrMaterial.SetVector("_Offsets", Vector4.one * ((1.0f * source.width) / (1.0f * rtLow2.width)) * _internalBlurWidth);
-                    Graphics.Blit(source, destination, _dofHdrMaterial, blurSampleCount == BlurSampleCount.High ? 18 : 12);
-                }
+                // cheaper blur in high resolution, upsample and combine
+                _dofHdrMaterial.SetTexture("_LowRez", rtLow2);
+                _dofHdrMaterial.SetTexture("_FgOverlap", null);
+                _dofHdrMaterial.SetVector("_Offsets", Vector4.one * ((1.0f * source.width) / (1.0f * rtLow2.width)) * _internalBlurWidth);
+                Graphics.Blit(source, destination, _dofHdrMaterial, blurSampleCount == BlurSampleCount.High ? 18 : 12);
             }
 
             if (rtLow) RenderTexture.ReleaseTemporary(rtLow);
