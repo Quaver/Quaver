@@ -53,6 +53,10 @@ namespace Quaver.Main
             // should be set to true at the beginning of the game, so songs can be heard even when
             // the game is minimized.
             Application.runInBackground = true;
+
+            // IMPORTANT! This will watch the songs directory for any changes. When it detects changes,
+            // the user will be prompted to refresh their directory to handle the changes.
+            BeatmapWatcher.Watch(GameConfig);
         }
 
         private void Start()
