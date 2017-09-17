@@ -29,6 +29,11 @@ namespace Quaver.Main
         // goes to the song selection screen.
         public CachedBeatmap currentMap;
 
+        // IMPORTANT! This will hold all of the directories in that need to be refreshed
+        // this means there was a detected change, and when the user decides to refresh
+        // their game, it will handle the change
+        public static List<string> SongDirectoryChangeQueue = new List<string>();
+
         // Reference Variables
         public GameState[] States;
         public ParticleSystem DustRenderer;
