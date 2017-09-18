@@ -28,7 +28,7 @@ namespace Quaver.Gameplay
             _curSVPart = 0;
 
             //Declare Other Values
-            _songAudio = Manager.SongAudioSource;
+            if (!DEBUG_MODE) _songAudio = Manager.SongAudioSource; //_debug
             _curSongTime = -config_playStartDelayed;
             _actualSongTime = -(float)config_playStartDelayed / 1000f;
 
