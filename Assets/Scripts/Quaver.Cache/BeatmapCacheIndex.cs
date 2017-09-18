@@ -274,7 +274,7 @@ namespace Quaver.Cache
                     qua.Description = "This beatmap was converted from osu!mania.";
                 }
 
-                CachedBeatmap foundMissingMap = new CachedBeatmap(quaDir, fileName, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,
+                return new CachedBeatmap(quaDir, fileName, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,
                                                                 "", 0, DateTime.Now, 0.0f, qua.Creator, bgPath, audioPath, qua.SongPreviewTime, qua.Description, qua.Source, qua.Tags);                
             }
 
@@ -380,6 +380,61 @@ namespace Quaver.Cache
                                     }
                                 }
                             }
+                        }
+                    }
+
+                    // Now loop through all the files, and find the ones that arent in the database
+                    // but are actually on the file system, they are considered new maps and we want
+                    // to add them.
+                    foreach(var file in files)
+                    {
+                        if (File.Exists(file) && !filesInDb.Contains(file))
+                        {                        
+                            // If the map isn't valid, we need to go ahead and parse that file, and add it
+                            // manually the to the database using SQL.
+                            CachedBeatmap newMap = ConvertQuaToCached(file);
+
+                            if (newMap.Valid)
+                            {
+                                // Add Map To DB
+                                AddToDatabase(newMap);
+
+                                // Add map to loaded beatmaps
+                                GameStateManager.LoadedBeatmaps.Add(newMap);
+
+                                // Find the map directory that the beatmap is supposed to live in. If it exists,
+                                // Add the beatmap to that directory.
+                                bool foundBeatmapDirectory = false;
+                                for (int i = 0; i < GameStateManager.MapDirectories.Count; i++)
+                                {
+                                    if (GameStateManager.MapDirectories[i].Directory == Path.GetDirectoryName(file))
+                                    {
+                                        Debug.Log("[BEATMAP CACHE] Found the correct MapDirectory for file: " + file);
+                                        // Add the new map to the correct directory.
+                                        GameStateManager.MapDirectories[i].Beatmaps.Add(newMap);
+
+                                        foundBeatmapDirectory = true;
+                                    }
+                                }
+
+                                // If we still haven't found the correct beatmap directory, then we'll create a new one.
+                                if (!foundBeatmapDirectory)
+                                {
+                                    // Create a new MapDirectory and add the correct data.
+                                    MapDirectory newDir = new MapDirectory();
+                                    newDir.Directory = Path.GetDirectoryName(file);
+                                    
+                                    newDir.Beatmaps = new List<CachedBeatmap>();
+                                    newDir.Beatmaps.Add(newMap);
+
+                                    // Add the new map directory to the current list!
+                                    GameStateManager.MapDirectories.Add(newDir);
+
+                                    Debug.Log("[BEATMAP CACHE] Did not find the correct MapDirectory, so creating one for file: " + file);
+                                }
+
+                                Debug.Log("[BEATMAP CACHE] Added new unknown file to database: " + file);
+                            }                            
                         }
                     }
 
