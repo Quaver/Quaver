@@ -93,6 +93,9 @@ namespace Quaver.Gameplay
                 //Starts rendering notes + sets gameplay variables
                 np_init();
 
+                //Initialize UI
+                ui_init();
+
                 //Plays the song, but delayed
                 if (!DEBUG_MODE) AudioPlayer.LoadSong(Manager.currentMap, Manager.SongAudioSource, false, (float)config_playStartDelayed / 1000f);
                 loaded = true;
@@ -129,6 +132,9 @@ namespace Quaver.Gameplay
 
                 //Key Press Check
                 input_CheckInput();
+
+                //Update NPS graph
+                nps_Update();
             }
             else
             {

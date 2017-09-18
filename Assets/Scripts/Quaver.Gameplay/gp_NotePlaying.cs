@@ -12,6 +12,7 @@ namespace Quaver.Gameplay
         private bool _config_upScroll;
         private KeyCode[] _config_KeyBindings;
         private int _config_offset;
+        private const bool _config_EnableNpsGraph = true;
 
         //Game Constant Values
         private const int config_playStartDelayed = 1000; //delays 1 second before song starts
