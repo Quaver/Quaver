@@ -291,19 +291,175 @@ namespace Quaver.Cache
 
                 // This'll store the list of directories we'll be deleting from the Queue, after it's done
                 List<string> dirsToDelete = new List<string>();
+                string currentDir = "";
 
-				foreach (string directory in GameStateManager.SongDirectoryChangeQueue)
-				{
+                try 
+                {
+                    foreach (string directory in GameStateManager.SongDirectoryChangeQueue)
+                    {
 
-                    // Get the full current directory of the beatmap
-                    string currentDir = userConfig.SongDirectory + directory;
+                        // Get the full current directory of the beatmap
+                        currentDir = userConfig.SongDirectory + directory;
 
-                    // Get all the files in the directory
-                    string[] files = Directory.GetFiles(currentDir, "*.qua");
+                        List<string> files = new List<string>();
 
-                    // Store a list of all the files in the db
-                    List<string> filesInDb = new List<string>();
+                        // Try to get all the files in the directory
+                        files = Directory.GetFiles(currentDir, "*.qua").ToList();
 
+                        // Store a list of all the files in the db
+                        List<string> filesInDb = new List<string>();
+
+                        using (IDbConnection dbConnection = new SqliteConnection(s_connectionString))
+                        {
+                            // Open db connection
+                            dbConnection.Open();
+
+                            // Use connection to create an SQL Query we can execute
+                            using (IDbCommand dbCmd = dbConnection.CreateCommand())
+                            {
+                                Debug.Log("CURRENT DIR: " + currentDir);
+                                string query = "SELECT * FROM beatmaps WHERE directory='" + currentDir + "'";
+
+                                dbCmd.CommandText = query;
+
+                                // To be able to read the database data
+                                using (IDataReader reader = dbCmd.ExecuteReader())
+                                {
+                                    
+                                    while (reader.Read())
+                                    {
+                                        filesInDb.Add(reader.GetString(2));
+                                    }
+
+                                    // Close DB & Reader
+                                    dbConnection.Close();
+                                    reader.Close();
+                                }
+                            }
+                        }
+
+                        // Loop through all the files in the database
+                        foreach(string file in filesInDb)
+                        {
+                            // If the file is in both the directory, and the db, then reparse the beatmap
+                            // and update any relavant data.
+                            if (File.Exists(file) && filesInDb.Contains(file))
+                            {
+                                CachedBeatmap mapToUpdate = FindCachedMap(file);
+
+                                // If the map is in the database, and is valid, this means it needs to be updated.
+                                if (mapToUpdate.Valid)
+                                {
+                                    // So, we'll remove it from the database, and add it again.
+                                    DeleteFromDatabase(mapToUpdate);
+                                    AddToDatabase(mapToUpdate);
+                                }
+                            }
+
+                            // If the file does not exist on the file system, but still exists in the database,
+                            // Delete it.
+                            if (!File.Exists(file))
+                            {                            
+                                // Find that particular beatmap in a cached map
+                                CachedBeatmap mapToDelete = FindCachedMap(file);
+
+                                if (mapToDelete.Valid)
+                                {
+                                    Debug.Log("[BEATMAP CACHE] Removing beatmap: " + file + " from the database as it does not exist anymore.");
+
+                                    // Delete it from the database
+                                    DeleteFromDatabase(mapToDelete);
+
+                                    // Find the map's directory, and check if that directory is null or empty.
+                                    // If it isn't, that must mean the MapDirectory is valid and that particular beatmap
+                                    // can be removed!
+                                    MapDirectory beatmapMapDirectory = FindMapDirectory(mapToDelete);
+                                    if (!String.IsNullOrEmpty(beatmapMapDirectory.Directory))
+                                    {
+                                        for (int i = 0; i < GameStateManager.MapDirectories.Count; i++)
+                                        {
+                                            if (GameStateManager.MapDirectories[i].Beatmaps.Contains(mapToDelete))
+                                            {
+                                                GameStateManager.MapDirectories[i].Beatmaps.Remove(mapToDelete);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // Now loop through all the files, and find the ones that arent in the database
+                        // but are actually on the file system, they are considered new maps and we want
+                        // to add them.
+                        foreach(var file in files)
+                        {
+                            if (File.Exists(file) && !filesInDb.Contains(file))
+                            {                        
+                                // If the map isn't valid, we need to go ahead and parse that file, and add it
+                                // manually the to the database using SQL.
+                                CachedBeatmap newMap = ConvertQuaToCached(file);
+
+                                if (newMap.Valid)
+                                {
+                                    // Add Map To DB
+                                    AddToDatabase(newMap);
+
+                                    // Add map to loaded beatmaps
+                                    GameStateManager.LoadedBeatmaps.Add(newMap);
+
+                                    // Find the map directory that the beatmap is supposed to live in. If it exists,
+                                    // Add the beatmap to that directory.
+                                    bool foundBeatmapDirectory = false;
+                                    for (int i = 0; i < GameStateManager.MapDirectories.Count; i++)
+                                    {
+                                        if (GameStateManager.MapDirectories[i].Directory == Path.GetDirectoryName(file))
+                                        {
+                                            Debug.Log("[BEATMAP CACHE] Found the correct MapDirectory for file: " + file);
+                                            // Add the new map to the correct directory.
+                                            GameStateManager.MapDirectories[i].Beatmaps.Add(newMap);
+
+                                            foundBeatmapDirectory = true;
+                                        }
+                                    }
+
+                                    // If we still haven't found the correct beatmap directory, then we'll create a new one.
+                                    if (!foundBeatmapDirectory)
+                                    {
+                                        // Create a new MapDirectory and add the correct data.
+                                        MapDirectory newDir = new MapDirectory();
+                                        newDir.Directory = Path.GetDirectoryName(file);
+                                        
+                                        newDir.Beatmaps = new List<CachedBeatmap>();
+                                        newDir.Beatmaps.Add(newMap);
+
+                                        // Add the new map directory to the current list!
+                                        GameStateManager.MapDirectories.Add(newDir);
+
+                                        Debug.Log("[BEATMAP CACHE] Did not find the correct MapDirectory, so creating one for file: " + file);
+                                    }
+
+                                    Debug.Log("[BEATMAP CACHE] Added new unknown file to database: " + file);
+                                }                            
+                            }
+                        }
+
+                        dirsToDelete.Add(directory);				
+                    }
+
+                    // Remove all missing directories from the queue.
+                    foreach (string dir in dirsToDelete)
+                    {
+                        GameStateManager.SongDirectoryChangeQueue.RemoveAll(queueItem => queueItem == dir);
+                    }
+
+                    Debug.Log("[BEATMAP CACHE] Change Queue Updated with: " + GameStateManager.SongDirectoryChangeQueue.Count + " maps in it.");
+                }
+                catch (DirectoryNotFoundException e)
+                {
+                    Debug.LogException(e);
+
+                    // If the directory isn't found then we want to remove every single .qua file from the database,
+                    // delete the MapDirectory, & remove them from the list of loadedbeatmaps
                     using (IDbConnection dbConnection = new SqliteConnection(s_connectionString))
                     {
                         // Open db connection
@@ -312,142 +468,49 @@ namespace Quaver.Cache
                         // Use connection to create an SQL Query we can execute
                         using (IDbCommand dbCmd = dbConnection.CreateCommand())
                         {
-                            Debug.Log("CURRENT DIR: " + currentDir);
-                            string query = "SELECT * FROM beatmaps WHERE directory='" + currentDir + "'";
+                            string query = "DELETE FROM beatmaps WHERE directory=\"" + currentDir + "\"";
 
                             dbCmd.CommandText = query;
 
-                            // To be able to read the database data
-                            using (IDataReader reader = dbCmd.ExecuteReader())
-                            {
-                                
-                                while (reader.Read())
-                                {
-                                    filesInDb.Add(reader.GetString(2));
-                                }
+                            dbCmd.ExecuteScalar(); // Execute scalar when inserting
 
-                                // Close DB & Reader
-                                dbConnection.Close();
-                                reader.Close();
-                            }
+                            dbConnection.Close();
                         }
-                    }
+                    } 
 
-                    // Loop through all the files in the database
-                    foreach(string file in filesInDb)
+                    dirsToDelete.Add(currentDir);
+
+                    // Remove all missing directories from the queue.
+                    foreach (string dir in dirsToDelete)
                     {
-                        // If the file is in both the directory, and the db, then reparse the beatmap
-                        // and update any relavant data.
-                        if (File.Exists(file) && filesInDb.Contains(file))
+                        MapDirectory mapDirToDelete = new MapDirectory();
+
+                        // Find the MapDirectory that matches the one of the current iteration
+                        foreach (MapDirectory mapDir in GameStateManager.MapDirectories)
                         {
-                            CachedBeatmap mapToUpdate = FindCachedMap(file);
-
-                            // If the map is in the database, and is valid, this means it needs to be updated.
-                            if (mapToUpdate.Valid)
+                            if (mapDir.Directory == dir)
                             {
-                                // So, we'll remove it from the database, and add it again.
-                                DeleteFromDatabase(mapToUpdate);
-                                AddToDatabase(mapToUpdate);
+                                mapDirToDelete = mapDir;
+                                break;
                             }
                         }
 
-                        // If the file does not exist on the file system, but still exists in the database,
-                        // Delete it.
-                        if (!File.Exists(file))
-                        {                            
-                            // Find that particular beatmap in a cached map
-                            CachedBeatmap mapToDelete = FindCachedMap(file);
+                        if (GameStateManager.MapDirectories.Contains(mapDirToDelete))
+                        {
+                            GameStateManager.MapDirectories.Remove(mapDirToDelete);
+                            Debug.Log("[BEATMAP CACHE] Map Directory: " + currentDir + " was deleted, and has been removed from the cache.");
+                        }                        
+                    } 
 
-                            if (mapToDelete.Valid)
-                            {
-                                Debug.Log("[BEATMAP CACHE] Removing beatmap: " + file + " from the database as it does not exist anymore.");
-
-                                // Delete it from the database
-                                DeleteFromDatabase(mapToDelete);
-
-                                // Find the map's directory, and check if that directory is null or empty.
-                                // If it isn't, that must mean the MapDirectory is valid and that particular beatmap
-                                // can be removed!
-                                MapDirectory beatmapMapDirectory = FindMapDirectory(mapToDelete);
-                                if (!String.IsNullOrEmpty(beatmapMapDirectory.Directory))
-                                {
-                                    for (int i = 0; i < GameStateManager.MapDirectories.Count; i++)
-                                    {
-                                        if (GameStateManager.MapDirectories[i].Beatmaps.Contains(mapToDelete))
-                                        {
-                                            GameStateManager.MapDirectories[i].Beatmaps.Remove(mapToDelete);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Now loop through all the files, and find the ones that arent in the database
-                    // but are actually on the file system, they are considered new maps and we want
-                    // to add them.
-                    foreach(var file in files)
+                    GameStateManager.SongDirectoryChangeQueue.RemoveAll(queueItem => currentDir.Contains(queueItem) || queueItem.Contains(".meta"));
+                    foreach (string queue in GameStateManager.SongDirectoryChangeQueue)
                     {
-                        if (File.Exists(file) && !filesInDb.Contains(file))
-                        {                        
-                            // If the map isn't valid, we need to go ahead and parse that file, and add it
-                            // manually the to the database using SQL.
-                            CachedBeatmap newMap = ConvertQuaToCached(file);
-
-                            if (newMap.Valid)
-                            {
-                                // Add Map To DB
-                                AddToDatabase(newMap);
-
-                                // Add map to loaded beatmaps
-                                GameStateManager.LoadedBeatmaps.Add(newMap);
-
-                                // Find the map directory that the beatmap is supposed to live in. If it exists,
-                                // Add the beatmap to that directory.
-                                bool foundBeatmapDirectory = false;
-                                for (int i = 0; i < GameStateManager.MapDirectories.Count; i++)
-                                {
-                                    if (GameStateManager.MapDirectories[i].Directory == Path.GetDirectoryName(file))
-                                    {
-                                        Debug.Log("[BEATMAP CACHE] Found the correct MapDirectory for file: " + file);
-                                        // Add the new map to the correct directory.
-                                        GameStateManager.MapDirectories[i].Beatmaps.Add(newMap);
-
-                                        foundBeatmapDirectory = true;
-                                    }
-                                }
-
-                                // If we still haven't found the correct beatmap directory, then we'll create a new one.
-                                if (!foundBeatmapDirectory)
-                                {
-                                    // Create a new MapDirectory and add the correct data.
-                                    MapDirectory newDir = new MapDirectory();
-                                    newDir.Directory = Path.GetDirectoryName(file);
-                                    
-                                    newDir.Beatmaps = new List<CachedBeatmap>();
-                                    newDir.Beatmaps.Add(newMap);
-
-                                    // Add the new map directory to the current list!
-                                    GameStateManager.MapDirectories.Add(newDir);
-
-                                    Debug.Log("[BEATMAP CACHE] Did not find the correct MapDirectory, so creating one for file: " + file);
-                                }
-
-                                Debug.Log("[BEATMAP CACHE] Added new unknown file to database: " + file);
-                            }                            
-                        }
+                        Debug.Log(queue + " | " + currentDir);
+                    
                     }
-
-                    dirsToDelete.Add(directory);				
-				}
-
-                // Remove all missing directories from the queue.
-                foreach (string dir in dirsToDelete)
-                {
-                    GameStateManager.SongDirectoryChangeQueue.RemoveAll(queueItem => queueItem == dir);
+                    Debug.Log("[BEATMAP CACHE] Change Queue Updated with: " + GameStateManager.SongDirectoryChangeQueue.Count + " maps in it.");                  
                 }
 
-                Debug.Log("[BEATMAP CACHE] Change Queue Updated with: " + GameStateManager.SongDirectoryChangeQueue.Count + " maps in it.");
 			}
 		}
 
