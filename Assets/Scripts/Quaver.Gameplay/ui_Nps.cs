@@ -7,23 +7,32 @@ namespace Quaver.Gameplay
 {
     public partial class PlayScreen
     {
-        private GameObject npsGraph;
+        private GameObject _npsGraph;
 
         private List<int> _npsQueue;
-        private List<GameObject> _npsGraphObjects;
-        private int[] _npsData = new int[9];
-        private int[] _graphData;
+        private GameObject[] _npsGraphObjects;
+        private RectTransform[] _npsGraphTransforms;
+        private RectTransform[] _npsTextMarks;
+        private RawImage[] _npsGraphImage;
+        private Text _npsText;
 
-        private const int _graphSize = 60;
-        private const float _graphInterval = 0.1f;
+        private int[] _npsData = new int[9];
+        private float[] _graphData;
+
+        private const int _graphSize = 80;
+        private const float _graphInterval = 0.075f;
         private float _curGraphInterval = 0;
         private const float _graphObjectSize = 500f/ _graphSize;
         private float _graphTween = 0;
+        private float _textTween = 0;
+        private float _graphScaleTween = 10f;
         
         private void nps_init()
         {
+            //Set reference objects
             int i = 0;
-            npsGraph = uiCanvas.transform.Find("npsGraph").gameObject;
+            _npsGraph = uiCanvas.transform.Find("npsGraph").gameObject;
+            _npsText = _npsGraph.transform.Find("npsText").GetComponent<Text>();
 
             //Create npsQueue
             _npsQueue = new List<int>();
@@ -32,20 +41,32 @@ namespace Quaver.Gameplay
                 _npsQueue.Add(_noteQueue[i].StartTime);
             }
 
+            //Create reference lists/arrays
+            _graphData = new float[_graphSize];
+            _npsGraphObjects = new GameObject[_graphSize];
+            _npsGraphTransforms = new RectTransform[_graphSize];
+            _npsGraphImage = new RawImage[_graphSize];
+            _npsTextMarks = new RectTransform[7];
+
             //Create graphObjects
-            _graphData = new int[_graphSize];
-            _npsGraphObjects = new List<GameObject>();
             for (i = 0; i < _graphSize; i++)
             {
+                //Get components
                 GameObject newGraphObject = new GameObject("GraphObject");
-                newGraphObject.transform.parent = npsGraph.transform;
+                newGraphObject.transform.parent = _npsGraph.transform;
                 newGraphObject.AddComponent<CanvasRenderer>();
-                newGraphObject.AddComponent<RawImage>();
-                //newGraphObject.AddComponent<RectTransform>();
+                _npsGraphImage[i] = newGraphObject.AddComponent<RawImage>();
+                _npsGraphTransforms[i] = newGraphObject.GetComponent<RectTransform>();
 
+                //Set position/Size
                 newGraphObject.transform.localScale = Vector3.one;
-                newGraphObject.GetComponent<RectTransform>().sizeDelta = new Vector2(_graphObjectSize, _graphObjectSize);
-                newGraphObject.GetComponent<RectTransform>().localPosition = new Vector2(5 + i * _graphObjectSize, -5 - i*2f);
+                _npsGraphTransforms[i].sizeDelta = new Vector2(_graphObjectSize, _graphObjectSize);
+                _npsGraphTransforms[i].localPosition = new Vector2(500f - (i+0.5f) * _graphObjectSize, -200f);
+                _npsGraphObjects[i] = newGraphObject;
+            }
+            for(i = 0; i < 7; i++)
+            {
+                _npsTextMarks[i] = _npsGraph.transform.Find("npsMark_" + ((i + 1) * 10)).GetComponent<RectTransform>();
             }
         }
 
@@ -55,12 +76,13 @@ namespace Quaver.Gameplay
             {
                 //Convert graph start to data if it's time
                 int i = 0;
-                for (i = 0; i < 10 && i < _npsQueue.Count; i++)
+                for (i = 0; i < 2000 && i < _npsQueue.Count; i++)
                 {
-                    if (_npsQueue[0] > _curSongTime)
+                    if (_npsQueue[i] <= _curSongTime)
                     {
                         _npsData[0]++;
-                        _npsQueue.RemoveAt(0);
+                        _npsQueue.RemoveAt(i);
+                        i--;
                     }
                 }
 
@@ -68,99 +90,111 @@ namespace Quaver.Gameplay
                 _curGraphInterval += Time.deltaTime;
                 if (_curGraphInterval >= _graphInterval)
                 {
+                    //Update graph interval
                     _curGraphInterval -= _graphInterval;
 
-                    //Set graphData
-                    _npsGraphObjects[59].GetComponent<RectTransform>().localPosition = new Vector2(5 + 59 * _graphObjectSize, _graphTween);
-                    for (i= _graphSize-1; i>=1; i--)
-                    {
-
-                    }
+                    //Set graph tween and text
+                    _graphTween += (((float)(_npsData[0] + _npsData[1] + _npsData[2] + _npsData[3] + _npsData[4] + _npsData[5] + _npsData[6] + _npsData[7] + _npsData[8]) / 9f * 1f/_graphInterval) - _graphTween)/2f;
+                    _textTween += (_graphTween - _textTween) / 2f;
+                    _npsText.text = "Notes/sec: " + string.Format("{0:f2}", _textTween);
 
                     //Shift npsData
-                    for (i = 8; i >= 1; i--) _npsData[i] = _npsData[i-1];
+                    for (i = 8; i >= 1; i--) _npsData[i] = _npsData[i - 1];
                     _npsData[0] = 0;
 
+                    //Shift graphData
+                    float _highestNps = 0;
+                    for (i = _graphSize-1; i >= 1; i--)
+                    {
+                        if (_graphData[i] > _highestNps) _highestNps = _graphData[i];
+                        _graphData[i] = _graphData[i - 1];
+                    }
+                    _graphData[0] = _graphTween;
+                    _graphScaleTween += (_highestNps + 10f - _graphScaleTween)/2f;
+
+                    //Set GraphObject Transform
+                    for (i=0; i < _graphSize; i++)
+                    {
+                        //Set object color
+                        _npsGraphImage[i].color = colorGraph(_graphData[i]);
+
+                        //Set object position and scale
+                        float orig = (_graphData[i] / _graphScaleTween) * 200f - 200f;
+                        if (i >= 1)
+                        {
+                            float sizeCheck = orig;
+                            if (sizeCheck >= _npsGraphTransforms[i - 1].localPosition.y)
+                            {
+                                sizeCheck = Mathf.Abs(_npsGraphTransforms[i - 1].localPosition.y - orig + _npsGraphTransforms[i - 1].sizeDelta.y / 2f - _graphObjectSize);
+                                if (sizeCheck < _graphObjectSize) sizeCheck = _graphObjectSize;
+                                _npsGraphTransforms[i].sizeDelta = new Vector2(_graphObjectSize, sizeCheck);
+                                _npsGraphTransforms[i].localPosition = new Vector2(500f - (i + 0.5f) * _graphObjectSize, orig +(_graphObjectSize - sizeCheck) / 2f);
+
+                            }
+                            else
+                            {
+                                sizeCheck = Mathf.Abs(_npsGraphTransforms[i - 1].localPosition.y - orig - _npsGraphTransforms[i - 1].sizeDelta.y / 2f + _graphObjectSize);
+                                if (sizeCheck < _graphObjectSize) sizeCheck = _graphObjectSize;
+                                _npsGraphTransforms[i].sizeDelta = new Vector2(_graphObjectSize, sizeCheck);
+                                _npsGraphTransforms[i].localPosition = new Vector2(500f - (i + 0.5f) * _graphObjectSize, orig - (_graphObjectSize - sizeCheck) / 2f);
+                            }
+                        }
+                        else _npsGraphTransforms[i].localPosition = new Vector2(500f - (i+0.5f) * _graphObjectSize, orig);
+
+                        //Set position of text labels
+                        if (i < 7) _npsTextMarks[i].localPosition = new Vector2(15,(200f * (10 * (i + 1))/_graphScaleTween) - 200f);
+                    }
                 }
             }
-            /* nps graph
-            local highestNps = 0
-
-            for i = 1, 59 do
-                    npsGraph[60 - (i - 1)] = npsGraph[60 - i]
-
-                if npsGraph[60 - (i - 1)] > highestNps then highestNps = npsGraph[60 - (i - 1)] end
-                    end
-
-            npsGraph[1] = npsGraph[1] + ((npsData[1] + npsData[2] + npsData[3] + npsData[4] + npsData[5] + npsData[6] + npsData[7] + npsData[8] + npsData[9]) / 9 * (1 / 0.04) - npsGraph[1]) / 8
-
-            if npsGraph[1] > highestNps then highestNps = npsGraph[1] end
-            hNpsTween = hNpsTween + (highestNps + 10 - hNpsTween) / 3
-
-            for i = 1, 60 do
-                    --npsFrames[tostring(i)].Size = UDim2.new(0, 10, npsGraph[i] / hNpsTween, 0)
-                   --npsFrames[tostring(i)].Size = UDim2.new(0, 10, 0, 10)
-
-                local sizCheck = (1 - (npsGraph[i] / hNpsTween)) * 160
-
-
-                if 61 - i ~= 60 then
-
-                    if sizCheck > npsFrames[tostring(61 - i + 1)].Position.Y.Offset then
-                            local orig = sizCheck
-
-                        sizCheck = math.abs((sizCheck + 6) - (npsFrames[tostring(61 - i + 1)].Position.Y.Offset + npsFrames[tostring(61 - i + 1)].Size.Y.Offset))
-
-                        if sizCheck < 4 then sizCheck = 4 end
-                          npsFrames[tostring(61 - i)].Size = UDim2.new(0, 5, 0, sizCheck)
-
-                        npsFrames[tostring(61 - i)].Position = UDim2.new(0, (60 - i) * 5, 0, orig - sizCheck + 4)
-					else
-						npsFrames[tostring(61 - i)].Position = UDim2.new(0, (60 - i) * 5, 0, sizCheck)
-
-                        sizCheck = math.abs((npsFrames[tostring(61 - i + 1)].Position.Y.Offset + 2) - (sizCheck))
-
-                        if sizCheck < 4 then sizCheck = 4 end
-                          npsFrames[tostring(61 - i)].Size = UDim2.new(0, 5, 0, sizCheck)
-
-                    end
-				else
-					local prev = npsFrames["60"].Position.Y.Offset
-                    --npsFrames["60"].Position = UDim2.new(0, 295, 0, (prev + ((1 - npsGraph[1] / hNpsTween) * 160 - prev) / 6))
-
-                    npsFrames["60"].Position = UDim2.new(0, 295, 0, (1 - (npsGraph[1] / hNpsTween)) * 160)
-                    --print(npsFrames["60"].Position.Y.Offset)
-
-                    npsFrames["60"].Size = UDim2.new(0, 5, 0, 4)
-
-                end
-
-                if i <= 12 then
-                    npsRef[tostring(i - 1)].Position = UDim2.new(0, 0, 0, (1 - ((i * 5) / hNpsTween)) * 160)
-
-                end
-                --npsFrames[tostring(31 - i)].Position = UDim2.new(0, (60 - i) * 10, 0, orig - sizCheck / 2 - 10)
-
-                npsFrames[tostring(i)].BackgroundColor3 = colorizeNps(npsGraph[61 - i])
-
-            end
-
-            for i = 1, 9 do
-                    npsData[9 - (i - 1)] = npsData[9 - i]
-   
-               end
-
-            npsData[1] = 0
-
-            repeat
-            waittime = waittime - 0.05
-
-            until waittime < 0.05
-
-        end
-        npsText = npsText + (npsGraph[1] - npsText) / 6
-
-        script.Parent.gamePlay.NPS.npsText.Text = "Notes/Sec: "..(math.floor(npsText * 10) / 10)*/
         }
+
+        //Change graph object color to match nps
+        private Color colorGraph(float npsValue)
+        {
+            Color newColor = new Color();
+            float colorTween = npsValue;
+            float colorInterval = 4.5f;
+            if (npsValue < colorInterval)
+            {
+                colorTween = colorTween / colorInterval;
+                newColor = new Color(0.5f-(colorTween*0.5f), 0.5f - (colorTween * 0.5f), 1f);
+            }
+            else if (npsValue < colorInterval * 2)
+            {
+                colorTween = (colorTween-colorInterval) / colorInterval;
+                newColor = new Color(0, colorTween, 1f);
+            }
+            else if (npsValue < colorInterval * 3)
+            {
+                colorTween = (colorTween - (colorInterval * 2)) / colorInterval;
+                newColor = new Color(0, 1f, 1f-colorTween);
+            }
+            else if (npsValue < colorInterval * 4)
+            {
+                colorTween = (colorTween - (colorInterval * 3)) / colorInterval;
+                newColor = new Color(colorTween, 1f, 0f);
+            }
+            else if (npsValue < colorInterval * 5)
+            {
+                colorTween = (colorTween - (colorInterval * 4)) / colorInterval;
+                newColor = new Color(1f, 1f-colorTween, 0f);
+            }
+            else if (npsValue < colorInterval * 6)
+            {
+                colorTween = (colorTween - (colorInterval * 5)) / colorInterval;
+                newColor = new Color(1f, 0f, colorTween);
+            }
+            else if (npsValue < colorInterval * 7)
+            {
+                colorTween = (colorTween - (colorInterval * 6)) / colorInterval;
+                newColor = new Color(1f, colorTween*0.7f, 1f);
+            }
+            else
+            {
+                newColor = new Color(1f,0.7f, 1f);
+            }
+            return newColor;
+        }
+
     }
 }
