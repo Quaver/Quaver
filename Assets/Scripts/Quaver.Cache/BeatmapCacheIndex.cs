@@ -257,6 +257,30 @@ namespace Quaver.Cache
             }
         }
 
+        // Responsible for converting a .qua file to a CachedBeatmap
+        public static CachedBeatmap ConvertQuaToCached(string fileName)
+        {
+            QuaFile qua = QuaParser.Parse(fileName);
+            
+            if (qua.IsValidQua)
+            {
+                // Convert the parsed qua file into a CachedBeatmap and add it to our tempBeatmaps.
+                string quaDir = Path.GetDirectoryName(fileName);
+                string bgPath = quaDir + "/" + qua.BackgroundFile.Replace("\"", "");
+                string audioPath = quaDir + "/" + qua.AudioFile.Replace("\"", "");
+
+                if (Strings.IsNullOrEmptyOrWhiteSpace(qua.Description))
+                {
+                    qua.Description = "This beatmap was converted from osu!mania.";
+                }
+
+                CachedBeatmap foundMissingMap = new CachedBeatmap(quaDir, fileName, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,
+                                                                "", 0, DateTime.Now, 0.0f, qua.Creator, bgPath, audioPath, qua.SongPreviewTime, qua.Description, qua.Source, qua.Tags);                
+            }
+
+            return new CachedBeatmap(false);
+        }
+
         // Responsible for refreshing all of the directories in the queue.
         // This will CRUD maps as expected.
 		public static void RefreshDirectory(Cfg userConfig)
@@ -309,15 +333,22 @@ namespace Quaver.Cache
                         }
                     }
 
-                    // Loop through all the files in the directory
+                    // Loop through all the files in the database
                     foreach(string file in filesInDb)
                     {
                         // If the file is in both the directory, and the db, then reparse the beatmap
                         // and update any relavant data.
                         if (File.Exists(file) && filesInDb.Contains(file))
                         {
-                            // Readd/Update map
-                            Debug.Log("nnnn");
+                            CachedBeatmap mapToUpdate = FindCachedMap(file);
+
+                            // If the map is in the database, and is valid, this means it needs to be updated.
+                            if (mapToUpdate.Valid)
+                            {
+                                // So, we'll remove it from the database, and add it again.
+                                DeleteFromDatabase(mapToUpdate);
+                                AddToDatabase(mapToUpdate);
+                            }
                         }
 
                         // If the file does not exist on the file system, but still exists in the database,
