@@ -52,6 +52,9 @@ namespace Quaver.Gameplay
                 _noteQueue.Add(newNote);
             }
 
+            //Initialize UI
+            ui_init();
+
             //Create starting notes
             for (i = 0; i < maxNoteCount; i++)
             {
