@@ -21,8 +21,8 @@ namespace Quaver.Main
         // These need to be loaded first before any other state begins!!!!!!
         // VERY IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         public Cfg GameConfig;
-        public List<CachedBeatmap> LoadedBeatmaps = new List<CachedBeatmap>();
-        public List<MapDirectory> MapDirectories = new List<MapDirectory>();
+        public static List<CachedBeatmap> LoadedBeatmaps = new List<CachedBeatmap>();
+        public static List<MapDirectory> MapDirectories = new List<MapDirectory>();
 
         // IMPORTANT! This will hold the currently selected map in our MapDirectories list.
         // It will be used to boot up the main menu music & auto-select the map when the user
@@ -92,6 +92,10 @@ namespace Quaver.Main
         {
             // Handle screenshots
             ScreenshotService.Capture(GameConfig);
+            
+            // This will constantly check if the user has pressed F5, while any song directories are 
+            // in the queue. If they are, it will refresh that directory.
+            BeatmapCacheIndex.RefreshDirectory(GameConfig);
 
             if (_testState >= 1)
             {
