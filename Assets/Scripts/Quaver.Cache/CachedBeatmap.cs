@@ -8,6 +8,7 @@ namespace Quaver.Cache
 {
     public class CachedBeatmap
     {
+        public bool Valid = false;
         public string Directory;
         public string Path;
         public int BeatmapSetID;
@@ -51,6 +52,13 @@ namespace Quaver.Cache
             this.Description = description;
             this.Source = source;
             this.Tags = tags;
+            this.Valid = true;
+        }
+
+        public CachedBeatmap(bool valid)
+        {
+            // This'll hold an invalid map
+            this.Valid = false;
         }
     }
 }
