@@ -129,10 +129,11 @@ namespace Quaver.Gameplay
         {
             float StartTime = curNote.StartTime;
             float splitFactor = 1f;
-            if (lnMode == 2) StartTime = _curSongTime;
+            if (lnMode == 2 && StartTime <= _curSongTime) StartTime = _curSongTime;
             if (mod_split && curNote.KeyLane >= 3) splitFactor = -1f;
             if (mod_spin) curNote.HitSprite.transform.eulerAngles = new Vector3(0, 0, _skin_receptorRotations[curNote.KeyLane - 1]);
             if (lnMode != 2 || mod_shuffle) curNote.HitSet.transform.localPosition = new Vector3(_receptorXPos[curNote.KeyLane - 1] + _receptorXOffset[curNote.KeyLane - 1], splitFactor * PosFromSV(StartTime), 0);
+            else if (StartTime != _curSongTime) curNote.HitSet.transform.localPosition = new Vector3(_receptorXPos[curNote.KeyLane - 1] + _receptorXOffset[curNote.KeyLane - 1], splitFactor * PosFromSV(StartTime), 0);
             else curNote.HitSet.transform.localPosition = new Vector3(_receptorXPos[curNote.KeyLane - 1] + _receptorXOffset[curNote.KeyLane - 1], _receptorYPos * splitFactor, 0);
             if ((lnMode != 1 || mod_pull) && lnMode != 3 && curNote.EndTime > 0 && curNote.EndTime > StartTime)
             {
