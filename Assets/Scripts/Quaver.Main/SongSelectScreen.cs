@@ -52,8 +52,13 @@ namespace Quaver.Main
 
         private void Start()
         {
+            UpdateSongList();
+        }
+
+        public void UpdateSongList()
+        {
             //Initialize
-            _sortedMapSets = Manager.MapDirectories;
+            _sortedMapSets = GameStateManager.MapDirectories;
             _totalBeatmaps = _sortedMapSets.Count;
 
             //Set GameObject Variabls
@@ -93,7 +98,7 @@ namespace Quaver.Main
             }
             //Set these variables to the size of the song scroll
             _selectYPos = _objectYSize;
-            _ScrollBar.GetComponent<Scrollbar>().size = Mathf.Max(Mathf.Min(1080f / ((float)_objectYSize+1080f),1),0.1f);
+            _ScrollBar.GetComponent<Scrollbar>().size = Mathf.Max(Mathf.Min(1080f / ((float)_objectYSize+1080f),1),0.1f);            
         }
 
         //Remove All Event Listeners generated from this class
