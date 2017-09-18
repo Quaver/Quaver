@@ -7,10 +7,17 @@ using Quaver.Graphics;
 using Quaver.Main;
 using Quaver.Audio;
 
+using Quaver.Cache; //_debug
+using Quaver.Config; //_debug
+
 namespace Quaver.Gameplay
 {
     public partial class PlayScreen : GameState
     {
+        //DEBUG ONLY (temp)
+        public bool DEBUG_MODE = false;
+        public string DEBUG_SONGPATH = "E:\\GitHub\\Quaver\\Test\\Qua\\wtc.qua";
+
         /*Classes/Gameobjects (public variables will be changed later)*/
         public GameObject hitObjectTest;
         public GameObject receptorBar;
@@ -23,7 +30,7 @@ namespace Quaver.Gameplay
 
         /*GSM REFERENCES (Anything that references the game state manager)*/
         private QuaFile _qFile;
-        private AudioSource _songAudio;
+        public AudioSource _songAudio;
 
         /*GAME MODS*/
         private const bool mod_noSV = false;
@@ -32,10 +39,27 @@ namespace Quaver.Gameplay
         private const bool mod_spin = false;
         private const bool mod_shuffle = false;
 
+        public void Awake()
+        {
+            if (DEBUG_MODE) //_debug
+            {
+                print("[PlayScreen] DEBUGGING MODE");
+                BeatmapCacheIndex.CreateDatabase();
+                Cfg GameConfig = ConfigLoader.Load();
+                List<CachedBeatmap> LoadedBeatmaps = BeatmapCacheIndex.LoadBeatmaps(GameConfig);
+                //Load first song (for debug)
+                AudioPlayer.LoadSong(LoadedBeatmaps[0], _songAudio, false, (float)config_playStartDelayed / 1000f);
+                //print(_songAudio.clip.length);
+            }
+        }
+
         public void Start()
         {
+            //Parse Map
+            if (DEBUG_MODE) _qFile = QuaParser.Parse(DEBUG_SONGPATH); //_debug
+            else _qFile = QuaParser.Parse(Manager.currentMap.Path);
+
             //Check if beatmap is valid
-            _qFile = QuaParser.Parse(Manager.currentMap.Path);
             if (!_qFile.IsValidQua)
             {
                 print("IS NOT VALID QUA FILE");
@@ -43,11 +67,22 @@ namespace Quaver.Gameplay
             else if (_qFile.IsValidQua)
             {
                 //Declare Config Variables
-                _config_scrollSpeed = Manager.GameConfig.ScrollSpeed;
-                _config_timingBars = true; //should be config
-                _config_upScroll = !Manager.GameConfig.DownScroll;
-                _config_KeyBindings = new KeyCode[] { Manager.GameConfig.KeyLaneMania1, Manager.GameConfig.KeyLaneMania2, Manager.GameConfig.KeyLaneMania3, Manager.GameConfig.KeyLaneMania4 };
-                _config_offset = Manager.GameConfig.GlobalOffset;
+                if (!DEBUG_MODE)
+                {
+                    _config_scrollSpeed = Manager.GameConfig.ScrollSpeed;
+                    _config_timingBars = true; //should be config
+                    _config_upScroll = !Manager.GameConfig.DownScroll;
+                    _config_KeyBindings = new KeyCode[] { Manager.GameConfig.KeyLaneMania1, Manager.GameConfig.KeyLaneMania2, Manager.GameConfig.KeyLaneMania3, Manager.GameConfig.KeyLaneMania4 };
+                    _config_offset = Manager.GameConfig.GlobalOffset;
+                }
+                else
+                {
+                    _config_scrollSpeed = 23;
+                    _config_timingBars = true; //should be config
+                    _config_upScroll = true;
+                    _config_KeyBindings = new KeyCode[] { KeyCode.A,KeyCode.S,KeyCode.K,KeyCode.L };
+                    _config_offset = 0;
+                }
 
                 //Initializes skin
                 skin_init();
@@ -59,14 +94,14 @@ namespace Quaver.Gameplay
                 np_init();
 
                 //Plays the song, but delayed
-                AudioPlayer.LoadSong(Manager.currentMap, Manager.SongAudioSource, false, (float)config_playStartDelayed / 1000f);
+                if (!DEBUG_MODE) AudioPlayer.LoadSong(Manager.currentMap, Manager.SongAudioSource, false, (float)config_playStartDelayed / 1000f);
                 loaded = true;
             }
         }
 
         public void Update()
         {
-            if (_qFile.IsValidQua && isActive)
+            if (_qFile.IsValidQua && (isActive || DEBUG_MODE)) //_debug
             {
                 //Check what to do after unpaused
                 if (_songAudio.time >= _songAudio.clip.length && !_songDone) _songDone = true;
