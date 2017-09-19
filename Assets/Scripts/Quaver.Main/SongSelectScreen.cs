@@ -184,7 +184,7 @@ namespace Quaver.Main
         {
             //If a mapset is selected
             if (!subSelection)
-            {
+            {   
                 for (int i = 0; i < _difficultyList.Length; i++)
                 {
                     _difficultyList[i].SelectObject.GetComponent<Button>().onClick.RemoveAllListeners();
@@ -233,6 +233,9 @@ namespace Quaver.Main
 
                     //Sets the current map to the first difficulty of the map
                     Manager.currentMap = _difficultyList[0].Beatmap;
+
+                    // Change the window title to the clicked map.
+                    MainUtilities.ChangeWindowTitle("Quaver - " + Manager.currentMap.Artist + " - " + Manager.currentMap.Title + " [" + Manager.currentMap.Difficulty + "]");
                 }
                 else
                 {
@@ -254,6 +257,9 @@ namespace Quaver.Main
                 }
                 //Sets the current map to the selected diff
                 Manager.currentMap = _difficultyList[pos].Beatmap;
+
+                // Change the window title to the clicked difficulty
+                MainUtilities.ChangeWindowTitle("Quaver - " + Manager.currentMap.Artist + " - " + Manager.currentMap.Title + " [" + Manager.currentMap.Difficulty + "]");                
             }
         }
 
