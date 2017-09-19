@@ -55,6 +55,9 @@ namespace Quaver.Gameplay
 
         public void Start()
         {
+            // TODO: STARAVIA !!!!!!!!!! ALL OF THIS SHOULD BE MOVED TO AWAKE!!!!! ALERT ALERT ALERT
+            // ALERT PUT THIS IN AWAKE ALERT ALERT!!!
+
             //Parse Map
             if (DEBUG_MODE) _qFile = QuaParser.Parse(DEBUG_SONGPATH); //_debug
             else _qFile = QuaParser.Parse(Manager.currentMap.Path);
