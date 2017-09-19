@@ -22,8 +22,8 @@ To make life a bit easier for everyone, here's a bit of documentation for some o
   * [Difficulty](https://github.com/Swan/Quaver#difficulty)
   * [Timing](https://github.com/Swan/Quaver#timing)
   * [SV](https://github.com/Swan/Quaver#sv)
-  * [HitObjects] (https://github.com/Swan/Quaver#hitobjects)
-* [Configuration Files]()
+  * [HitObjects](https://github.com/Swan/Quaver#hitobjects)
+* [Configuration Files](https://github.com/Swan/Quaver/blob/master/README.md#configuration-quavercfg-file)
 
 ## .Qua Files ##
 
