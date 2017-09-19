@@ -34,6 +34,9 @@ namespace Quaver.Main
         // their game, it will handle the change
         public static List<string> SongDirectoryChangeQueue = new List<string>();
 
+        // This will hold the current Window Title. We change it everytime a new beatmap is played.
+        public static string WindowTitle;
+
         // Reference Variables
         public GameState[] States;
         public ParticleSystem DustRenderer;
@@ -63,6 +66,8 @@ namespace Quaver.Main
             // IMPORTANT! This will watch the songs directory for any changes. When it detects changes,
             // the user will be prompted to refresh their directory to handle the changes.
             BeatmapWatcher.Watch(GameConfig);
+
+            WindowTitle = "Quaver";
         }
 
         private void Start()
