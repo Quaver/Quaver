@@ -98,5 +98,49 @@ In this case, the HitObject would be noted as such: ``7182|3|9182``
 
 All of this information combined into a file makes up a .qua file which is able to be played. Please note that files must be in this exact format, if not, then the beatmap might not be able to be played. For more information, please see an [example file](https://github.com/Swan/Quaver/blob/master/Test/Qua/some.qua).
 
+## Configuration (quaver.cfg) File ##
+
+Quaver.cfg is essentially your configuration file for the game. You shouldn't really touch it unless you know what you are doing. A configuration file is generated on game load if you do not already have one, or if you have one that isn't valid. Below explains all the fields involved in this file.
+
+| Field | Description | Data Type | Example |
+| --- | --- | --- | --- | 
+| **SongDirectory** | The directory at which your songs will be loaded from | String | C:/Quaver/Songs/ |
+| **SkinsDirectory** | The directory at which your skins will be loaded | String | C:/Quaver/Skins/ |
+| **ScreenshotsDirectory** | The directory at which your screenshots will be saved | String | C:/Quaver/Screenshots |
+| **ReplaysDirectory** | The directory at which all exported replays will be saved to | String | C:/Quaver/Replays |
+| **LogsDirectory** | The directory at which all error, network, gamelogs will be stored | String | C:/Quaver/Logs |
+| **VolumeGlobal** | The master volume at which the game plays at ranging from 0-100 | Byte | 75 |
+| **VolumeEffect** | The volume at which all effects in the game play at ranging from 0-100 | Byte | 25 |
+| **VolumeMusic** | The volume at which all music in the game plays at ranging from 0-100 | Byte | 99 |
+| **BackgroundDim** | The preset dim at which backgrounds will be at ranging from 0-100 | Byte | 100 (All the way dimmed) |
+| **WindowHeight** | The saved window height the game will start at | Integer | 1080 |
+| **WindowWidth** | The saved window width the game will start at | Integer | 1920 |
+| **WindowFullScreen** | Is the game in fullscreen? | Bool | False |
+| **WindowLetterbox** | Is the game letterboxed? | Bool | True |
+| **CustomFrameLimit** | The FPS limit of the game | Short | 240 (Default) |
+| **FPSCounter** | Will the game display the FPS Counter? | Bool | True |
+| **FrameTimeDisplay** | Will the game display a graph of Frame Times? (Not Implemented) | Bool | False |
+| **Language** | The language of the game (Not Implemented) | String | en |
+| **QuaverVersion** | The version of the game | String | db.0.0.1 |
+| **QuaverBuildHash** | The build hash of the game | String | Not Implemented |
+| **ScrollSpeed** | The scroll speed at which objects will fall down | Byte | 32 |
+| **ScrollSpeedBPMScale** | Will the scroll speed be scaled by the BPM? | Bool | False |
+| **DownScroll** | If true, the notes fall downwards, if false they fall upward | Bool | True |
+| **GlobalOffset** | The offset at which notes will start playing in accordance to the song | Byte | 0 (Default) |
+| **LeaderboardVisible** | Do you want to show a scores leaderboard? (Not Implemented) | Bool | False |
+| **Skin** | The folder name of the loaded skin | String | Default |
+| **KeyLaneMania1** | The key pressed for lane 1 | String | D |
+| **KeyLaneMania2** | The key pressed for lane 2 | String | F |
+| **KeyLaneMania3** | The key pressed for lane 3 | String | J |
+| **KeyLaneMania4** | The key pressed for lane 4 | String | K |
+| **KeyScreenshot** | The key pressed to take a screenshot | String | F12 |
+| **KeyQuickRetry** | The key pressed to quickly retry a map | String | BackQuote |
+| **KeyIncreaseScrollSpeed** | The key pressed to increase the scroll speed by 1 | String | F5 |
+| **KeyDecreaseScrollSpeed** | The key pressed to decerease the scroll speed by 1 | String | F4 |
+| **KeyPause** | The key pressed to pause the game | String | ESC |
+| **KeyVolumeUp** | The key pressed to turn the volume of the game up | String | UpArrow |
+| **KeyVolumeDown** | The key pressed to turn the volume of the game down | String | DownArrow |
+| **TimingBars** | Do you want to show timing bars while playing? | Bool | True |
+
 # Copyright
 All code in this repository is copyrighted by the repository organization: [Quaver](https://github.com/Quaver) and its owners and does not contain an open-source license. Without explicit permission, you are not allowed to: use, copy, distribute, or modify any code without being at risk of take-downs, shake-downs, or litigation. It is best to download the client from the official source or Github release rather than compiling, modifying, or distributing your own. 
