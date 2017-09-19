@@ -91,7 +91,7 @@ A HitObject is denoted by three integer values separated by pipes (|).
 | Field | Description | Data Type | Required | Example |
 | --- | --- | --- | --- | --- |
 | **Start Time** | The offset at which the hit object begins | Integer | Yes | 7182 (This would be 7.182 seconds into the song) |
-| **Key Lane | The lane in which the note will fall (From 1-4) | Integer | Yes | 3 |
+| **Key Lane** | The lane in which the note will fall (From 1-4) | Integer | Yes | 3 |
 | **End Time** | The offset at which denotes the end time of a note. **Important:** If this is greater than 0, the note would be considered as a Long Note. | Integer | Yes | 9182
 
 In this case, the HitObject would be noted as such: ``7182|3|9182``
