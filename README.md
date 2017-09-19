@@ -1,7 +1,7 @@
 # Quaver [![CodeFactor](https://www.codefactor.io/repository/github/swan/quaver/badge)](https://www.codefactor.io/repository/github/swan/quaver) [![Discord](https://discordapp.com/api/guilds/354206121386573824/widget.png?style=shield)](https://discord.gg/nJa8VFr)
 Quaver is a modern cross-platform vertically scrolling rhythm game available for Windows, OS X & Linux.
 
-## Table of Contents ##
+### Table of Contents ###
 * [Status](https://github.com/Swan/Quaver#status)
 * [Requirements](https://github.com/Swan/Quaver#requirements)
 * [Contributing](https://github.com/Swan/Quaver#contributing)
@@ -29,7 +29,7 @@ Currently we are not looking for any community-based contributions. As this repo
 # Documentation
 To make life a bit easier for everyone, here's a bit of documentation for some of the certain aspects of Quaver that should be known about.
 
-## Table of Contents ##
+### Table of Contents ###
 
 * [.Qua Files](https://github.com/Swan/Quaver#qua-files)
   * [General](https://github.com/Swan/Quaver#general)
