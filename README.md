@@ -14,6 +14,17 @@ Currently we are not looking for any community-based contributions. As this repo
 # Documentation
 To make life a bit easier for everyone, here's a bit of documentation for some of the certain aspects of Quaver that should be known about.
 
+**Table of Contents**
+
+* [.Qua Files](https://github.com/Swan/Quaver#qua-files)
+  * [General](https://github.com/Swan/Quaver#general)
+  * [Metadata](https://github.com/Swan/Quaver#metadata)
+  * [Difficulty](https://github.com/Swan/Quaver#difficulty)
+  * [Timing](https://github.com/Swan/Quaver#timing)
+  * [SV](https://github.com/Swan/Quaver#sv)
+  * [HitObjects] (https://github.com/Swan/Quaver#hitobjects)
+* [Configuration Files]()
+
 ## .Qua Files ##
 
 .qua is our extension for beatmaps. We have made it very easy to comprehend and modify. Take a look at the table below, which describes each individual aspect of a qua file. Please note that any of these fields are subject to change at anytime.
