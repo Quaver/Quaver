@@ -36,7 +36,7 @@ To make life a bit easier for everyone, here's a bit of documentation for some o
 
 ## .Qua Files ##
 
-.qua is our extension for beatmaps. We have made it very easy to comprehend and modify. Take a look at the table below, which describes each individual aspect of a qua file. Please note that any of these fields are subject to change at anytime.
+.qua is our extension for beatmaps. We have made it very easy to comprehend and modify. Take a look at the table below, which describes each individual aspect of a qua file. Please note that any of these fields are subject to change at anytime. All of this information combined into a file makes up a .qua file which is able to be played. Please note that files must be in this exact format, if not, then the beatmap might not be able to be played. For more information, please see an [example file](https://github.com/Swan/Quaver/blob/master/Test/Qua/some.qua).
 
 ### General ###
 
@@ -116,11 +116,9 @@ A HitObject is denoted by three integer values separated by pipes (|).
 
 In this case, the HitObject would be noted as such: ``7182|3|9182``
 
-All of this information combined into a file makes up a .qua file which is able to be played. Please note that files must be in this exact format, if not, then the beatmap might not be able to be played. For more information, please see an [example file](https://github.com/Swan/Quaver/blob/master/Test/Qua/some.qua).
-
 ## Configuration (quaver.cfg) File ##
 
-Quaver.cfg is essentially your configuration file for the game. You shouldn't really touch it unless you know what you are doing. A configuration file is generated on game load if you do not already have one, or if you have one that isn't valid. Below explains all the fields involved in this file.
+Quaver.cfg is essentially your configuration file for the game. You shouldn't really touch it unless you know what you are doing. A configuration file is generated on game load if you do not already have one, or if you have one that isn't valid. Below explains all the fields involved in this file. Wanna see an example config file? Check out the [example](https://github.com/Swan/Quaver/blob/master/Test/Config/config_example.cfg).
 
 | Field | Description | Data Type | Example |
 | --- | --- | --- | --- | 
