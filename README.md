@@ -7,13 +7,7 @@ Quaver is a modern cross-platform vertically scrolling rhythm game available for
 * [Contributing](https://github.com/Swan/Quaver#contributing)
 * [Documentation](https://github.com/Swan/Quaver#documentation)
    * [.Qua Files](https://github.com/Swan/Quaver#qua-files)
-      * [General](https://github.com/Swan/Quaver#general)
-      * [Metadata](https://github.com/Swan/Quaver#metadata)
-      * [Difficulty](https://github.com/Swan/Quaver#difficulty)
-      * [Timing](https://github.com/Swan/Quaver#timing)
-      * [SV](https://github.com/Swan/Quaver#sv)
-      * [HitObjects](https://github.com/Swan/Quaver#hitobjects)
-  * [Configuration Files](https://github.com/Swan/Quaver/blob/master/README.md#configuration-quavercfg-file)
+   * [Configuration Files](https://github.com/Swan/Quaver/blob/master/README.md#configuration-quavercfg-file)
 * [Copyright](https://github.com/Swan/Quaver#copyright)
 
 # Status
