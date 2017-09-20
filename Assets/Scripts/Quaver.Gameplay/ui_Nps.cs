@@ -23,6 +23,7 @@ namespace Quaver.Gameplay
         private const float _graphInterval = 0.075f;
         private float _curGraphInterval = 0;
         private const float _graphObjectSize = 500f/ _graphSize;
+        private const float colorInterval = 5f;
         private float _graphTween = 0;
         private float _textTween = 0;
         private float _graphScaleTween = 10f;
@@ -37,9 +38,7 @@ namespace Quaver.Gameplay
             //Create npsQueue
             _npsQueue = new List<int>();
             for (i = 0; i < _noteQueue.Count; i++)
-            {
-                _npsQueue.Add(_noteQueue[i].StartTime);
-            }
+            _npsQueue.Add(_noteQueue[i].StartTime);
 
             //Create reference lists/arrays
             _graphData = new float[_graphSize];
@@ -76,7 +75,7 @@ namespace Quaver.Gameplay
             {
                 //Convert graph start to data if it's time
                 int i = 0;
-                for (i = 0; i < 2000 && i < _npsQueue.Count; i++)
+                for (i = 0; i < 10 && i < _npsQueue.Count; i++)
                 {
                     if (_npsQueue[i] <= _curSongTime)
                     {
@@ -153,7 +152,6 @@ namespace Quaver.Gameplay
         {
             Color newColor = new Color();
             float colorTween = npsValue;
-            float colorInterval = 4.5f;
             if (npsValue < colorInterval)
             {
                 colorTween = colorTween / colorInterval;
@@ -187,11 +185,11 @@ namespace Quaver.Gameplay
             else if (npsValue < colorInterval * 7)
             {
                 colorTween = (colorTween - (colorInterval * 6)) / colorInterval;
-                newColor = new Color(1f, colorTween*0.7f, 1f);
+                newColor = new Color(1f, colorTween, 1f);
             }
             else
             {
-                newColor = new Color(1f,0.7f, 1f);
+                newColor = new Color(1f,1f, 1f);
             }
             return newColor;
         }
