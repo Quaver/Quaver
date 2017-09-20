@@ -628,6 +628,7 @@ MonoBehaviour:
   circleParticleSystem: {fileID: 1420125458562996, guid: c82fc5a849edb224e98233fb098ae154,
     type: 2}
   timingBar: {fileID: 1345396131330170, guid: 375a53a20f3459741a6f82fbfc4591f4, type: 2}
+  Game_UI: {fileID: 1264349038636512, guid: bd8aaca815eb3414cba888d5902d4012, type: 2}
   DEBUG_MODE: 0
   DEBUG_SONGPATH: E:\GitHub\Quaver\Test\Qua\wtc.qua
   hitObjectTest: {fileID: 1865356350589522, guid: 8c7141efb6411474ba0b7c6214b8e203,

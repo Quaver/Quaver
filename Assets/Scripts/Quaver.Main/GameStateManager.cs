@@ -106,19 +106,29 @@ namespace Quaver.Main
         }
 
         //TEMP
-        private float WindowHeight = 480f;
-        private float WindowWidth = 854f;
+        public float WindowHeight = 720f;
+        public float WindowWidth = 1280f;
 
         //Gets called when resolution of game gets changed
         private void UpdateResolution()
         {
-            MainCanvas.GetComponent<CanvasScaler>().scaleFactor = WindowHeight / 1080f;
+            float newResolution = WindowWidth / WindowHeight;
+            float defResolution = 1920f / 1080f;
+            if (newResolution >= 1920f / 1080f)
+            {
+                ActiveStateUISet.GetComponent<RectTransform>().sizeDelta = new Vector2((newResolution/ defResolution )* 1920f,1080f);
+                MainCanvas.GetComponent<CanvasScaler>().scaleFactor = 0.01f + (WindowHeight / 1080f);
+            }
+            else
+            {
+                ActiveStateUISet.GetComponent<RectTransform>().sizeDelta = new Vector2(1920f, 1080f* (defResolution/newResolution));
+                MainCanvas.GetComponent<CanvasScaler>().scaleFactor = 0.01f + (WindowWidth / 1920f);
+            }
             float newWidth = WindowWidth / Screen.width;
             float newHeight = WindowHeight / Screen.height;
             Rect newCameraRect = new Rect((1 - newWidth) / 2f, (1 - newHeight) / 2f, newWidth, newHeight);
             MainCamera.rect = newCameraRect;
             BgCamera.rect = newCameraRect;
-
         }
 
         private void Update()
@@ -129,6 +139,9 @@ namespace Quaver.Main
             // This will constantly check if the user has pressed F5, while any song directories are 
             // in the queue. If they are, it will refresh that directory.
             BeatmapCacheIndex.RefreshDirectory(GameConfig);
+
+            //TEMP
+            UpdateResolution();
 
             if (_testState >= 1)
             {
