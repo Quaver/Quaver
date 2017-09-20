@@ -35,8 +35,6 @@ namespace Quaver.Gameplay
         public GameObject particleContainer;
         public GameObject hitContainer;
         public GameObject bgMask;
-        private GameObject[] _receptors;
-        private GameObject[] _hitLighting;
 
         /*GSM REFERENCES (Anything that references the game state manager)*/
         private QuaFile _qFile;
@@ -67,13 +65,22 @@ namespace Quaver.Gameplay
                 AudioPlayer.LoadSong(LoadedBeatmaps[0], _songAudio, false, (float)config_playStartDelayed / 1000f);
                 //print(_songAudio.clip.length);
             }
+
+            StartGame();
         }
 
-        public void Start()
+        private void RetryGame()
         {
-            // TODO: STARAVIA !!!!!!!!!! ALL OF THIS SHOULD BE MOVED TO AWAKE!!!!! ALERT ALERT ALERT
-            // ALERT PUT THIS IN AWAKE ALERT ALERT!!!
+            _songAudio.Stop();
+            loaded = false;
+            np_DestroyNotes();
+            time_DestroyBars();
+            ui_Reset();
+            StartGame();
+        }
 
+        private void StartGame()
+        {
             //Parse Map
             if (DEBUG_MODE) _qFile = QuaParser.Parse(DEBUG_SONGPATH); //_debug
             else _qFile = QuaParser.Parse(Manager.currentMap.Path);
@@ -99,7 +106,7 @@ namespace Quaver.Gameplay
                     _config_scrollSpeed = 23;
                     _config_timingBars = true; //should be config
                     _config_upScroll = true;
-                    _config_KeyBindings = new KeyCode[] { KeyCode.A,KeyCode.S,KeyCode.K,KeyCode.L };
+                    _config_KeyBindings = new KeyCode[] { KeyCode.A, KeyCode.S, KeyCode.K, KeyCode.L };
                     _config_offset = 0;
                 }
 
@@ -120,7 +127,7 @@ namespace Quaver.Gameplay
 
         public void Update()
         {
-            if (_qFile.IsValidQua && (isActive || DEBUG_MODE)) //_debug
+            if (_qFile.IsValidQua && loaded && (isActive || DEBUG_MODE)) //_debug
             {
                 //Check what to do after unpaused
                 if (_songAudio.time >= _songAudio.clip.length && !_songDone) _songDone = true;

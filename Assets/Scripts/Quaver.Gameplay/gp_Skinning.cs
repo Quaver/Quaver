@@ -22,6 +22,10 @@ namespace Quaver.Gameplay
         private float _receptorYPos;
         private float[] _receptorXPos, _receptorXOffset, _receptorSize;
 
+        //Skinning GameObjects
+        private GameObject[] _receptors;
+        private GameObject[] _hitLighting;
+
         //Skinning GameObject References (Temp)
         public Sprite[] receptorSprite;
         public GameObject NoteHitParticle;
@@ -68,6 +72,12 @@ namespace Quaver.Gameplay
             bgMask.transform.localScale = new Vector3(
                 ((float)(skin_columnSize + skin_bgMaskBufferSize + skin_noteBufferSpacing) / config_PixelUnitSize) * 4f * (config_PixelUnitSize / (float)bgMask.transform.GetComponent<SpriteRenderer>().sprite.rect.size.x),
                 20f * (config_PixelUnitSize / (float)bgMask.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y) , 1f);
+        }
+
+        private void skin_DestroySkinElements()
+        {
+            int i = 0;
+            for (i=0; i<4; i++) Destroy(_hitLighting[i]);
         }
 
         private void skin_NoteDown(int kkey)
