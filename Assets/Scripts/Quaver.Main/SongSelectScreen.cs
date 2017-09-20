@@ -62,7 +62,7 @@ namespace Quaver.Main
             _totalBeatmaps = _sortedMapSets.Count;
 
             //Set GameObject Variabls
-            StateUI = Instantiate(SongSelectUI, Manager.MainCanvas.transform);
+            StateUI = Instantiate(SongSelectUI, Manager.ActiveStateUISet.transform);
             _SongInfoWindow = StateUI.transform.Find("InformationWindow").transform.Find("SongInfo").gameObject;
             _ScrollBar = StateUI.transform.Find("SelectionWindow").transform.Find("SongScroll").gameObject;
             _selectionSet = StateUI.transform.Find("SelectionWindow").transform.transform.Find("SelectionCapture").gameObject;

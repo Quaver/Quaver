@@ -70,7 +70,7 @@ namespace Quaver.Gameplay
                 AudioPlayer.LoadSong(LoadedBeatmaps[0], _songAudio, false, (float)config_playStartDelayed / 1000f);
                 //print(_songAudio.clip.length);
             }
-            StateUI = Instantiate(Game_UI, Manager.MainCanvas.transform);
+            StateUI = Instantiate(Game_UI, Manager.ActiveStateUISet.transform);
             StartGame();
         }
 
