@@ -73,6 +73,7 @@ namespace Quaver.Gameplay
         {
             //Stop Audio
             _songAudio.Stop();
+            _songDone = false;
             loaded = false;
 
             //Destroy Objects
