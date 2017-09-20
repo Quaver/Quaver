@@ -4006,13 +4006,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 123f5794710ee0241b693d393aa778fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ActiveStates: []
   States:
-  - {fileID: 114966460760649336, guid: 2975431d956a4e2479964faf03bfc30f, type: 2}
-  - {fileID: 114011440284159024, guid: 432075cbc5436a54e80e4fac7e001024, type: 2}
-  - {fileID: 114942045308920274, guid: f58befa3427bc584088b31fc143262e5, type: 2}
+  - {fileID: 114817716125013374, guid: 082f793374c6b9642b334af6c28223c4, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   DustRenderer: {fileID: 668109980}
   bgImage: {fileID: 1480315230}
   SongAudioSource: {fileID: 17959001}
+  MainCanvas: {fileID: 1791472427}
+  ActiveStateSet: {fileID: 2085610643}
   SelectScreenDim: 0.7
   loadingScreenTest: {fileID: 304318828}
 --- !u!4 &795345389
@@ -4704,7 +4707,7 @@ GameObject:
   - component: {fileID: 1791472429}
   - component: {fileID: 1791472428}
   m_Layer: 5
-  m_Name: Debugging Canvas
+  m_Name: Main Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4755,7 +4758,7 @@ Canvas:
   m_GameObject: {fileID: 1791472427}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -4940,16 +4943,37 @@ MonoBehaviour:
   focalLength: 4.25
   focalSize: 0
   aperture: 12
-  focalTransform: {fileID: 0}
   maxBlurSize: 3
-  blurType: 0
+  focalTransform: {fileID: 0}
   blurSampleCount: 2
   nearBlur: 0
   foregroundOverlap: 2
   dofHdrShader: {fileID: 4800000, guid: acd613035ff3e455e8abf23fdc8c8c24, type: 3}
-  dx11BokehShader: {fileID: 4800000, guid: d8e82664aa8686642a424c88ab10164a, type: 3}
-  dx11BokehThreshold: 0.5
-  dx11SpawnHeuristic: 0.1
-  dx11BokehTexture: {fileID: 2800000, guid: a4cdca73d61814d33ac1587f6c163bca, type: 3}
-  dx11BokehScale: 15
-  dx11BokehIntensity: 2
+--- !u!1 &2085610643
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 2085610644}
+  m_Layer: 0
+  m_Name: ActiveStates
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2085610644
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2085610643}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

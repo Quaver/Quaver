@@ -14,7 +14,7 @@ using Quaver.Qua;
 
 namespace Quaver.Main
 {
-    public class SongSelectScreen : GameState
+    public class SongSelectScreen : GameStateObject
     {
         //UI Object Variables
         private GameObject _SongInfoWindow;
@@ -22,11 +22,11 @@ namespace Quaver.Main
         public GameObject SongSelectUI;
         public GameObject SongSelect;
         public GameObject DiffSelect;
+        public GameObject Game_UI;
 
         //Reference Values
         private List<MapDirectory> _sortedMapSets; //Change this list when sorting;
         private List<CachedBeatmap> _mapSetDifficulties;
-        private GameObject _selectionUI;
         private GameObject _selectionSet;
         private SongSelectObject[] _songList;
         private SongSelectObject[] _difficultyList;
@@ -62,10 +62,10 @@ namespace Quaver.Main
             _totalBeatmaps = _sortedMapSets.Count;
 
             //Set GameObject Variabls
-            _selectionUI = Instantiate(SongSelectUI, this.transform.Find("SongSelect Canvas").transform);
-            _SongInfoWindow = _selectionUI.transform.Find("InformationWindow").transform.Find("SongInfo").gameObject;
-            _ScrollBar = _selectionUI.transform.Find("SelectionWindow").transform.Find("SongScroll").gameObject;
-            _selectionSet = _selectionUI.transform.Find("SelectionWindow").transform.transform.Find("SelectionCapture").gameObject;
+            StateUI = Instantiate(SongSelectUI, Manager.MainCanvas.transform);
+            _SongInfoWindow = StateUI.transform.Find("InformationWindow").transform.Find("SongInfo").gameObject;
+            _ScrollBar = StateUI.transform.Find("SelectionWindow").transform.Find("SongScroll").gameObject;
+            _selectionSet = StateUI.transform.Find("SelectionWindow").transform.transform.Find("SelectionCapture").gameObject;
 
             //Add EventListener to ScrollBar
             _ScrollBar.GetComponent<Scrollbar>().onValueChanged.AddListener((float pos) => { SetScrollPos(pos,false); });

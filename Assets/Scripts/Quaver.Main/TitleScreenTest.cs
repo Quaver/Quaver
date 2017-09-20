@@ -4,15 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Quaver.Main;
 
-public class TitleScreenTest : GameState
+public class TitleScreenTest : GameStateObject
 {
-    // Use this for initialization
-    private void Start()
-    {
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-    }
+    //Do stuff
 }
