@@ -149,9 +149,6 @@ namespace Quaver.Main
             // in the queue. If they are, it will refresh that directory.
             BeatmapCacheIndex.RefreshDirectory(GameConfig);
 
-            //TEMP
-            UpdateResolution();
-
             if (_testState >= 1)
             {
                 DustRenderer.emissionRate = 120;
