@@ -16,17 +16,14 @@ namespace Quaver.Gameplay
         private RawImage[] _npsGraphImage;
         private Text _npsText;
 
-        private int[] _npsData = new int[9];
+        private int[] _npsData;
         private float[] _graphData;
 
         private const int _graphSize = 80;
         private const float _graphInterval = 0.075f;
-        private float _curGraphInterval = 0;
         private const float _graphObjectSize = 500f/ _graphSize;
         private const float colorInterval = 5f;
-        private float _graphTween = 0;
-        private float _textTween = 0;
-        private float _graphScaleTween = 10f;
+        private float _graphTween, _graphScaleTween, _textTween, _curGraphInterval;
         
         private void nps_init()
         {
@@ -34,6 +31,10 @@ namespace Quaver.Gameplay
             int i = 0;
             _npsGraph = uiCanvas.transform.Find("npsGraph").gameObject;
             _npsText = _npsGraph.transform.Find("npsText").GetComponent<Text>();
+            _curGraphInterval = 0;
+            _textTween = 0;
+            _graphTween = 0;
+            _graphScaleTween = 10f;
 
             //Create npsQueue
             _npsQueue = new List<int>();
@@ -41,6 +42,7 @@ namespace Quaver.Gameplay
             _npsQueue.Add(_noteQueue[i].StartTime);
 
             //Create reference lists/arrays
+            _npsData = new int[9];
             _graphData = new float[_graphSize];
             _npsGraphObjects = new GameObject[_graphSize];
             _npsGraphTransforms = new RectTransform[_graphSize];
@@ -67,6 +69,12 @@ namespace Quaver.Gameplay
             {
                 _npsTextMarks[i] = _npsGraph.transform.Find("npsMark_" + ((i + 1) * 10)).GetComponent<RectTransform>();
             }
+        }
+
+        private void nps_Reset()
+        {
+            for (int i = 0; i< _graphSize; i++) Destroy(_npsGraphObjects[i]);
+            _npsText.text = "Notes/Sec: 0.00";
         }
 
         private void nps_Update()

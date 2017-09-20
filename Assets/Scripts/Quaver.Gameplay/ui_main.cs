@@ -13,10 +13,16 @@ namespace Quaver.Gameplay
             uiCanvas = this.transform.Find("PlayCanvasUI").gameObject;
 
             //Creates nps graph
-            if (_config_EnableNpsGraph) nps_init();
+            nps_init();
 
             //Create MA display
-            if(_config_EnableMAdisplay) ma_init();
+            ma_init();
+        }
+
+        private void ui_Reset()
+        {
+            ma_Reset();
+            nps_Reset();
         }
 
         //Update score + display score UI
