@@ -31,7 +31,6 @@ namespace Quaver.Gameplay
         private const bool _config_EnableNpsGraph = true;
         private const bool _config_EnableMAdisplay = true;
         private KeyCode[] _config_KeyBindings;
-        private KeyCode _config_RetryKey;
 
         /*Classes/Gameobjects (public variables will be changed later)*/
         public GameObject hitObjectTest;
@@ -113,7 +112,6 @@ namespace Quaver.Gameplay
                     _config_scrollSpeed = Manager.GameConfig.ScrollSpeed;
                     _config_timingBars = true; //should be config
                     _config_upScroll = !Manager.GameConfig.DownScroll;
-                    _config_RetryKey = Manager.GameConfig.KeyQuickRetry;
                     _config_KeyBindings = new KeyCode[] { Manager.GameConfig.KeyLaneMania1, Manager.GameConfig.KeyLaneMania2, Manager.GameConfig.KeyLaneMania3, Manager.GameConfig.KeyLaneMania4 };
                     _config_offset = Manager.GameConfig.GlobalOffset;
                 }
