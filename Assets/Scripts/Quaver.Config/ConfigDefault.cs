@@ -50,8 +50,8 @@ namespace Quaver.Config
 
         public static KeyCode KeyScreenshot = KeyCode.F12;
         public static KeyCode KeyQuickRetry = KeyCode.BackQuote;
-        public static KeyCode KeyIncreaseScrollSpeed = KeyCode.F4;
-        public static KeyCode KeyDecreaseScrollSpeed = KeyCode.F5;
+        public static KeyCode KeyIncreaseScrollSpeed = KeyCode.F5;
+        public static KeyCode KeyDecreaseScrollSpeed = KeyCode.F4;
         public static KeyCode KeyPause = KeyCode.Escape;
         public static KeyCode KeyVolumeUp = KeyCode.UpArrow;
         public static KeyCode KeyVolumeDown = KeyCode.DownArrow;
