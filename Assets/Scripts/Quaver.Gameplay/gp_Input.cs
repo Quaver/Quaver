@@ -18,6 +18,8 @@ namespace Quaver.Gameplay
 
         private void input_CheckInput()
         {
+            _scrollSpeedChanged = false;
+
             //Mania key presses
             for (int k = 0; k < 4; k++)
             {
