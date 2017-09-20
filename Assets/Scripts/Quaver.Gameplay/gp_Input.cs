@@ -27,6 +27,12 @@ namespace Quaver.Gameplay
                     }
                 }
             }
+
+            if (Input.GetKeyDown(_config_RetryKey))
+            {
+                print("[Gamplay_Input] RETRY");
+            }
+
         }
 
         // Check if LN is released on time or early
@@ -65,16 +71,16 @@ namespace Quaver.Gameplay
                     newNote.SliderMiddleSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                     newNote.SliderEndSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
 
+                    //Early LN Release
                     _offLNQueue.Add(newNote);
                     _lnQueue.RemoveAt(curNote);
-                    print("[Note Render] EARLY LN RELEASE");
                     ui_ScoreChange(7);
                 }
                 else if (closestTime > -_judgeTimes[5] && closestTime < _judgeTimes[5])
                 {
+                    //LN release on time
                     np_RemoveNote(_lnQueue[curNote].HitSet); ;
                     _lnQueue.RemoveAt(curNote);
-                    print("[Note Render] PERFECT LN RELEASE");
                     ui_ScoreChange(6);
                 }
             }
@@ -89,31 +95,11 @@ namespace Quaver.Gameplay
                 float absTime = Mathf.Abs(closestTime);
                 if (absTime < _judgeTimes[4])
                 {
-                    if (absTime < _judgeTimes[0])
-                    {
-                        print("[Note Render] MARV");
-                        ui_ScoreChange(0);
-                    }
-                    else if (absTime < _judgeTimes[1])
-                    {
-                        print("[Note Render] PERF");
-                        ui_ScoreChange(1);
-                    }
-                    else if (absTime < _judgeTimes[2])
-                    {
-                        print("[Note Render] GREAT");
-                        ui_ScoreChange(2);
-                    }
-                    else if (absTime < _judgeTimes[3])
-                    {
-                        print("[Note Render] GOOD");
-                        ui_ScoreChange(3);
-                    }
-                    else
-                    {
-                        print("[Note Render] BAD");
-                        ui_ScoreChange(4);
-                    }
+                    if (absTime < _judgeTimes[0]) ui_ScoreChange(0, absTime);
+                    else if (absTime < _judgeTimes[1]) ui_ScoreChange(1, absTime);
+                    else if (absTime < _judgeTimes[2]) ui_ScoreChange(2, absTime);
+                    else if (absTime < _judgeTimes[3]) ui_ScoreChange(3, absTime);
+                    else ui_ScoreChange(4, absTime);
                     //Check if LN
                     if (_hitQueue[kkey - 1][0].EndTime > 0)
                     {
