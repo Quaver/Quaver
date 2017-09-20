@@ -20,7 +20,7 @@ namespace Quaver.Config
 		{
 			userConfig.ScrollSpeed--;
 			ConfigUpdater.Update(userConfig);
-			Debug.Log("[CONFIG] Scroll Speed has been decreased by 1.");
+			Debug.Log("[CONFIG] Scroll Speed has been decreased by 1. Now: " + userConfig.ScrollSpeed);
 			return userConfig;
 		}
 
@@ -29,7 +29,7 @@ namespace Quaver.Config
 		{
 			userConfig.DownScroll = !userConfig.DownScroll;
 			ConfigUpdater.Update(userConfig);
-			Debug.Log("[CONFIG] Scroll Direction has been flipped. Now: " + userConfig.ScrollSpeed);
+			Debug.Log("[CONFIG] Scroll Direction has been flipped. Downscroll is now: " + userConfig.DownScroll);
 			return userConfig;
 		}
 	}
