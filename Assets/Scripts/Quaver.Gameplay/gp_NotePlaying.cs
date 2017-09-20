@@ -12,7 +12,7 @@ namespace Quaver.Gameplay
         private const int maxNoteCount = 64; //dont know if this should be config or not
         private const int missTime = 500; //after 500ms, the note will be removed
         private const float config_PixelUnitSize = 128; //pixels to units. 128 pixels = 1 unit.
-        private int[] _judgeTimes = new int[6] { 16, 37, 70, 100, 124, 80 }; //OD9 judge times in ms (0,1,2,3,4), LN offset 5
+        private int[] _judgeTimes = new int[6] { 16, 38, 72, 100, 124, 64 }; //OD9 judge times in ms (0,1,2,3,4), LN offset 5
 
         //Referencing Values
         private List<NoteObject>[] _hitQueue;
