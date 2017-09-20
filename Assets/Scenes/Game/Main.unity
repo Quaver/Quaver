@@ -856,7 +856,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 367796160
+  randomSeed: 1646916807
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -4096,6 +4096,7 @@ MonoBehaviour:
   SongAudioSource: {fileID: 17959001}
   MainCamera: {fileID: 1540926766}
   BgCamera: {fileID: 2057510146}
+  BlackCamera: {fileID: 1095368946}
   MainCanvas: {fileID: 1791472427}
   ActiveStateUISet: {fileID: 639128557}
   ActiveStateSet: {fileID: 2085610643}
@@ -4348,7 +4349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f76f3b00f38e6c643b28082765cd24b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActive: 1
+  isActive: 0
   particle: {fileID: 668109980}
 --- !u!1 &1095368941
 GameObject:
@@ -4359,59 +4360,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1095368947}
   - component: {fileID: 1095368946}
-  - component: {fileID: 1095368945}
-  - component: {fileID: 1095368944}
-  - component: {fileID: 1095368943}
-  - component: {fileID: 1095368942}
   m_Layer: 0
   m_Name: BlackBGCam
   m_TagString: BackgroundObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1095368942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1095368941}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd70d448b18cfbc46af26466f752332c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visualizeFocus: 0
-  focalLength: 4.25
-  focalSize: 0
-  aperture: 12
-  maxBlurSize: 3
-  focalTransform: {fileID: 0}
-  blurSampleCount: 2
-  nearBlur: 0
-  foregroundOverlap: 2
-  dofHdrShader: {fileID: 4800000, guid: acd613035ff3e455e8abf23fdc8c8c24, type: 3}
---- !u!81 &1095368943
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1095368941}
-  m_Enabled: 0
---- !u!92 &1095368944
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1095368941}
-  m_Enabled: 1
---- !u!124 &1095368945
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1095368941}
-  m_Enabled: 1
+  m_IsActive: 0
 --- !u!20 &1095368946
 Camera:
   m_ObjectHideFlags: 0
@@ -5043,7 +4998,6 @@ GameObject:
   - component: {fileID: 2057510146}
   - component: {fileID: 2057510145}
   - component: {fileID: 2057510144}
-  - component: {fileID: 2057510143}
   - component: {fileID: 2057510147}
   m_Layer: 0
   m_Name: Background Camera
@@ -5066,13 +5020,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!81 &2057510143
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2057510141}
-  m_Enabled: 0
 --- !u!92 &2057510144
 Behaviour:
   m_ObjectHideFlags: 0
