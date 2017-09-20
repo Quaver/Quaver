@@ -8,6 +8,11 @@ namespace Quaver.Gameplay
     {
         //Input keys
         private bool[] _keyDown;
+        private bool _resetKeyDown;
+        private float _resetDuration;
+
+        //Reset const
+        private const float _ResetDownDuration = 1.0f;
 
         private void input_CheckInput()
         {
@@ -31,12 +36,21 @@ namespace Quaver.Gameplay
                 }
             }
 
-            if (Input.GetKeyDown(_config_RetryKey))
+            if (Input.GetKeyDown(_config_RetryKey)) _resetKeyDown = true;
+            if (Input.GetKeyUp(_config_RetryKey)) _resetKeyDown = false;
+            if (_resetKeyDown)
             {
-                print("[Gamplay_Input] RETRY");
-                RetryGame();
+                _resetDuration += Time.deltaTime;
+                print(_resetDuration);
+                if (_resetDuration > _ResetDownDuration)
+                {
+                    print("[Gamplay_Input] RETRY");
+                    _resetKeyDown = false;
+                    _resetDuration = 0;
+                    RetryGame();
+                }
             }
-
+            else _resetDuration = 0;
         }
 
         // Check if LN is released on time or early

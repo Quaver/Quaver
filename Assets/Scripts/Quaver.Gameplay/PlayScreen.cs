@@ -71,11 +71,20 @@ namespace Quaver.Gameplay
 
         private void RetryGame()
         {
+            //Stop Audio
             _songAudio.Stop();
             loaded = false;
+
+            //Destroy Objects
             np_DestroyNotes();
             time_DestroyBars();
+
+            //Reset UI
             ui_Reset();
+
+            //TODO: Transition Animation
+
+            //Start Game
             StartGame();
         }
 
