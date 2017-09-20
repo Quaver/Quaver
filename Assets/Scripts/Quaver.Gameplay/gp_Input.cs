@@ -68,12 +68,14 @@ namespace Quaver.Gameplay
                     _offLNQueue.Add(newNote);
                     _lnQueue.RemoveAt(curNote);
                     print("[Note Render] EARLY LN RELEASE");
+                    ui_ScoreChange(7);
                 }
                 else if (closestTime > -_judgeTimes[5] && closestTime < _judgeTimes[5])
                 {
                     np_RemoveNote(_lnQueue[curNote].HitSet); ;
                     _lnQueue.RemoveAt(curNote);
                     print("[Note Render] PERFECT LN RELEASE");
+                    ui_ScoreChange(6);
                 }
             }
         }
@@ -90,22 +92,27 @@ namespace Quaver.Gameplay
                     if (absTime < _judgeTimes[0])
                     {
                         print("[Note Render] MARV");
+                        ui_ScoreChange(0);
                     }
                     else if (absTime < _judgeTimes[1])
                     {
                         print("[Note Render] PERF");
+                        ui_ScoreChange(1);
                     }
                     else if (absTime < _judgeTimes[2])
                     {
                         print("[Note Render] GREAT");
+                        ui_ScoreChange(2);
                     }
                     else if (absTime < _judgeTimes[3])
                     {
                         print("[Note Render] GOOD");
+                        ui_ScoreChange(3);
                     }
                     else
                     {
                         print("[Note Render] BAD");
+                        ui_ScoreChange(4);
                     }
                     //Check if LN
                     if (_hitQueue[kkey - 1][0].EndTime > 0)
