@@ -45,7 +45,14 @@ namespace Quaver.Main
         public ParticleSystem DustRenderer;
         public GameObject bgImage;
         public AudioSource SongAudioSource;
+        public Camera MainCamera;
+        public Camera BgCamera;
+
+        //Game Canvas/UI
         public GameObject MainCanvas;
+        public GameObject ActiveStateUISet;
+
+        //Where the Gamestates will get cloned into
         public GameObject ActiveStateSet;
 
         // UI Variables
@@ -95,7 +102,23 @@ namespace Quaver.Main
                 Debug.LogException(e);
             }
 
-            
+            UpdateResolution();
+        }
+
+        //TEMP
+        private float WindowHeight = 480f;
+        private float WindowWidth = 854f;
+
+        //Gets called when resolution of game gets changed
+        private void UpdateResolution()
+        {
+            MainCanvas.GetComponent<CanvasScaler>().scaleFactor = WindowHeight / 1080f;
+            float newWidth = WindowWidth / Screen.width;
+            float newHeight = WindowHeight / Screen.height;
+            Rect newCameraRect = new Rect((1 - newWidth) / 2f, (1 - newHeight) / 2f, newWidth, newHeight);
+            MainCamera.rect = newCameraRect;
+            BgCamera.rect = newCameraRect;
+
         }
 
         private void Update()
