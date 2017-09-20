@@ -51,7 +51,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 330738d8ecea5da4aa06cf10a2d1d1d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StateObject: {fileID: 0}
+  StateObject: {fileID: 1188185250655360, guid: 3bd01a43332234e4baf3c41f14227e58,
+    type: 2}
   LoadedStateObject: {fileID: 0}
   Manager: {fileID: 0}
   UIObject: {fileID: 0}
