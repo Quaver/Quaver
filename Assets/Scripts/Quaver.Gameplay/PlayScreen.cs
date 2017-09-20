@@ -22,10 +22,11 @@ namespace Quaver.Gameplay
         private int _config_scrollSpeed;
         private bool _config_timingBars;
         private bool _config_upScroll;
-        private KeyCode[] _config_KeyBindings;
         private int _config_offset;
         private const bool _config_EnableNpsGraph = true;
         private const bool _config_EnableMAdisplay = true;
+        private KeyCode[] _config_KeyBindings;
+        private KeyCode _config_RetryKey = KeyCode.Q;
 
         /*Classes/Gameobjects (public variables will be changed later)*/
         public GameObject hitObjectTest;
@@ -51,6 +52,8 @@ namespace Quaver.Gameplay
         //Score Values
         //0 MARV, 1 PERF, 2 GREAT, 3 GOOD, 4 BAD, 5 MISS, 6 ACE, 7 EARLY, 8 LATE
         private int[] _ScoreSpread;
+        private float _acc;
+        private int _score;
 
         public void Awake()
         {

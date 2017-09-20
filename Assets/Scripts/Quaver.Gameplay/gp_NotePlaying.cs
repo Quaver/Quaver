@@ -66,8 +66,6 @@ namespace Quaver.Gameplay
                 {
                     if (_curSongTime > _hitQueue[j][k].StartTime + _judgeTimes[4])
                     {
-                        //Note missed
-                        print("[Note Render] MISS");
                         ui_ScoreChange(5);
                         _hitQueue[j][k].HitSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                         _hitQueue[j][k].SliderEndSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
@@ -93,7 +91,6 @@ namespace Quaver.Gameplay
                 if (_curSongTime > Mathf.Max(_lnQueue[k].StartTime, _lnQueue[k].EndTime) + _judgeTimes[4])
                 {
                     //Late LN Release
-                    print("[Note Render] LATE LN RELEASE");
                     ui_ScoreChange(8);
 
                     NoteObject newNote = new NoteObject();
