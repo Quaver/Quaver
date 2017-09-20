@@ -32,7 +32,7 @@ namespace Quaver.Cache
                 // Use connection to create an SQL Query we can execute
                 using (IDbCommand dbCmd = dbConnection.CreateCommand())
                 {
-                    string query = "CREATE TABLE if not exists \"beatmaps\" (\"id\" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , \"directory\" TEXT NOT NULL , \"path\" TEXT NOT NULL  UNIQUE , \"beatmapsetid\" INTEGER NOT NULL , \"beatmapid\" INTEGER NOT NULL , \"artist\" TEXT NOT NULL , \"title\" TEXT NOT NULL , \"difficulty\" TEXT NOT NULL , \"rank\" TEXT NOT NULL , \"status\" INTEGER NOT NULL  DEFAULT 0, \"lastplayed\" DATETIME NOT NULL  DEFAULT CURRENT_DATE, \"stars\" INTEGER NOT NULL, \"creator\" TEXT, \"backgroundpath\" TEXT, \"audiopath\" TEXT, \"audiopreviewtime\" INTEGER NOT NULL  DEFAULT 0, \"description\" TEXT, \"source\" TEXT, \"tags\" TEXT)";
+                    string query = "CREATE TABLE if not exists \"beatmaps\" (\"id\" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , \"directory\" TEXT NOT NULL , \"path\" TEXT NOT NULL  UNIQUE , \"beatmapsetid\" INTEGER NOT NULL , \"beatmapid\" INTEGER NOT NULL , \"artist\" TEXT NOT NULL , \"title\" TEXT NOT NULL , \"difficulty\" TEXT NOT NULL , \"rank\" TEXT NOT NULL , \"status\" INTEGER NOT NULL  DEFAULT 0, \"lastplayed\" DATETIME NOT NULL  DEFAULT CURRENT_DATE, \"stars\" INTEGER NOT NULL, \"creator\" TEXT, \"backgroundpath\" TEXT, \"audiopath\" TEXT, \"audiopreviewtime\" INTEGER NOT NULL  DEFAULT 0, \"description\" TEXT, \"source\" TEXT, \"tags\" TEXT, \"bpm\" INTEGER NOT NULL  DEFAULT 0, \"songlength\" INTEGER NOT NULL  DEFAULT 0)";
 
                     dbCmd.CommandText = query;
                     dbCmd.ExecuteScalar(); // Execute scalar when inserting
@@ -70,16 +70,12 @@ namespace Quaver.Cache
                         while (reader.Read())
                         {
                             // Create new Cached Beatmap Object
-                            CachedBeatmap loadedBeatmap = new CachedBeatmap(reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetInt32(4),
-                                                                reader.GetString(5), reader.GetString(6), reader.GetString(7), reader.GetString(8),
-                                                                reader.GetInt32(9), DateTime.Now, reader.GetFloat(11), reader.GetString(12), reader.GetString(13),
-                                                                reader.GetString(14), reader.GetInt32(15), reader.GetString(16), reader.GetString(17), reader.GetString(18));
-
-                            // Log that shit for now, because i already know some fucking thing is going to go wrong.
-                            /*Debug.Log(String.Format("[CACHE] Beatmap Loaded: Dir: {0}, Path: {1}, BSID: {2}, BID: {3}, Artist: {4}, Title: {5}, Diff: {6}, Rank: {7}, Status: {8}, LP: {9}, Stars: {10}", 
-													loadedBeatmap.Directory, loadedBeatmap.Path, loadedBeatmap.BeatmapSetID, loadedBeatmap.BeatmapID,
-													loadedBeatmap.Artist, loadedBeatmap.Title, loadedBeatmap.Difficulty, loadedBeatmap.Rank, loadedBeatmap.Status,
-													loadedBeatmap.LastPlayed, loadedBeatmap.Stars));*/
+                            CachedBeatmap loadedBeatmap = new CachedBeatmap(
+                                        reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetInt32(4),
+                                        reader.GetString(5), reader.GetString(6), reader.GetString(7), reader.GetString(8),
+                                        reader.GetInt32(9), DateTime.Now, reader.GetFloat(11), reader.GetString(12), reader.GetString(13),
+                                        reader.GetString(14), reader.GetInt32(15), reader.GetString(16), reader.GetString(17), reader.GetString(18),
+                                        reader.GetInt32(19), reader.GetInt32(20));
 
                             // Append the loaded beatmap to our List
                             tempBeatmaps.Add(loadedBeatmap);
@@ -154,8 +150,10 @@ namespace Quaver.Cache
                             qua.Description = "This beatmap was converted from osu!mania.";
                         }
 
-                        CachedBeatmap foundMissingMap = new CachedBeatmap(quaDir, quaFile, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,
-                                                                        "", 0, DateTime.Now, 0.0f, qua.Creator, bgPath, audioPath, qua.SongPreviewTime, qua.Description, qua.Source, qua.Tags);
+                        CachedBeatmap foundMissingMap = new CachedBeatmap(
+                            quaDir, quaFile, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,
+                            "", 0, DateTime.Now, 0.0f, qua.Creator, bgPath, audioPath, qua.SongPreviewTime, 
+                            qua.Description, qua.Source, qua.Tags, FindCommonBPM(qua), FindSongLength(qua));
 
                         // Add the missing map to our loaded map, when the beatmap is selected, we'll have to get the BeatmapSetID + BeatmapId
                         // + Status and update that, but ONLY when the map has been selected.										
@@ -217,12 +215,12 @@ namespace Quaver.Cache
                 // Use connection to create an SQL Query we can execute
                 using (IDbCommand dbCmd = dbConnection.CreateCommand())
                 {
-                    string query = String.Format("INSERT INTO beatmaps(directory,path,beatmapsetid,beatmapid,artist,title,difficulty,rank,status,lastplayed,stars,creator,backgroundpath,audiopath,audiopreviewtime,description,source,tags) " +
-                                    "VALUES(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", \"{7}\", \"{8}\", \"{9}\", \"{10}\", \"{11}\", \"{12}\", \"{13}\", \"{14}\", \"{15}\", \"{16}\", \"{17}\")",
+                    string query = String.Format("INSERT INTO beatmaps(directory,path,beatmapsetid,beatmapid,artist,title,difficulty,rank,status,lastplayed,stars,creator,backgroundpath,audiopath,audiopreviewtime,description,source,tags,bpm,songlength) " +
+                                    "VALUES(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", \"{7}\", \"{8}\", \"{9}\", \"{10}\", \"{11}\", \"{12}\", \"{13}\", \"{14}\", \"{15}\", \"{16}\", \"{17}\", \"{18}\", \"{19}\")",
                                     cachedMap.Directory, cachedMap.Path, cachedMap.BeatmapSetID, cachedMap.BeatmapID,
                                     cachedMap.Artist.Replace("\"", String.Empty), cachedMap.Title.Replace("\"", String.Empty), cachedMap.Difficulty.Replace("\"", String.Empty), cachedMap.Rank.Replace("\"", String.Empty), cachedMap.Status,
                                     cachedMap.LastPlayed, cachedMap.Stars, cachedMap.Creator.Replace("\"", String.Empty), cachedMap.BackgroundPath, cachedMap.AudioPath, cachedMap.AudioPreviewTime,
-                                    cachedMap.Description.Replace("\"", String.Empty), cachedMap.Source.Replace("\"", String.Empty), cachedMap.Tags.Replace("\"", String.Empty));
+                                    cachedMap.Description.Replace("\"", String.Empty), cachedMap.Source.Replace("\"", String.Empty), cachedMap.Tags.Replace("\"", String.Empty), cachedMap.BPM, cachedMap.SongLength);
 
                     dbCmd.CommandText = query;
 
@@ -275,7 +273,8 @@ namespace Quaver.Cache
                 }
 
                 return new CachedBeatmap(quaDir, fileName, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,
-                                                                "", 0, DateTime.Now, 0.0f, qua.Creator, bgPath, audioPath, qua.SongPreviewTime, qua.Description, qua.Source, qua.Tags);                
+                                        "", 0, DateTime.Now, 0.0f, qua.Creator, bgPath, audioPath, qua.SongPreviewTime, 
+                                        qua.Description, qua.Source, qua.Tags, FindCommonBPM(qua), FindSongLength(qua));                
             }
 
             return new CachedBeatmap(false);
@@ -540,6 +539,29 @@ namespace Quaver.Cache
             }
 
             return new MapDirectory();
+        }
+
+        // Finds the most common BPM in a qua file.
+        public static int FindCommonBPM(QuaFile qua)
+        {
+            var commonBPM = (int)qua.TimingPoints.GroupBy(i => i.BPM).OrderByDescending(grp => grp.Count())
+                .Select(grp=>grp.Key).First();
+
+            return commonBPM;            
+        }
+
+        // Finds the length of the beatmap.
+        public static int FindSongLength(QuaFile qua)
+        {
+            // This'll check for either the end time of the last object if it's greater than 0, or the start time.
+            HitObject lastHitObject = qua.HitObjects[qua.HitObjects.Count - 1];
+
+            if (lastHitObject.EndTime > 0)
+            {
+                return lastHitObject.EndTime;
+            }
+
+            return lastHitObject.StartTime;
         }
     }
 }
