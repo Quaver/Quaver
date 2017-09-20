@@ -254,7 +254,7 @@ namespace Quaver.Gameplay
                         {
                             TimingObject newSV = new TimingObject();
                             newSV.StartTime = _svQueue[i].StartTime;
-                            newSV.Multiplier = Mathf.Min(_svQueue[i].Multiplier * _timingQueue[hij].BPM / AverageBpm, 512f);
+                            newSV.Multiplier = Mathf.Min(_svQueue[i].Multiplier * _timingQueue[hij].BPM / AverageBpm, 64f);
                             _svQueue.RemoveAt(i);
                             _svQueue.Insert(i, newSV);
                         }
@@ -263,7 +263,7 @@ namespace Quaver.Gameplay
                             hij++;
                             TimingObject newSV = new TimingObject();
                             newSV.StartTime = _svQueue[i].StartTime;
-                            newSV.Multiplier = Mathf.Min(_svQueue[i].Multiplier * _timingQueue[hij].BPM / AverageBpm, 512f);
+                            newSV.Multiplier = Mathf.Min(_svQueue[i].Multiplier * _timingQueue[hij].BPM / AverageBpm, 64f);
                             _svQueue.RemoveAt(i);
                             _svQueue.Insert(i, newSV);
                         }
