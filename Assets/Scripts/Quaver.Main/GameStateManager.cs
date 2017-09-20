@@ -149,11 +149,6 @@ namespace Quaver.Main
             // This will constantly check if the user has pressed F5, while any song directories are 
             // in the queue. If they are, it will refresh that directory.
             BeatmapCacheIndex.RefreshDirectory(GameConfig);
-
-            if (_testState >= 1)
-            {
-                DustRenderer.emissionRate = 120;
-            }
         }
 
         // This is the first thing that will be called upon Game Start. It is responsible for
