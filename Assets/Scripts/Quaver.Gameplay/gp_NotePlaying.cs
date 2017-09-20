@@ -10,16 +10,15 @@ namespace Quaver.Gameplay
         //Game Constant Values
         private const int config_playStartDelayed = 1000; //delays 1 second before song starts
         private const int maxNoteCount = 64; //dont know if this should be config or not
+        private const int missTime = 500; //after 500ms, the note will be removed
         private const float config_PixelUnitSize = 128; //pixels to units. 128 pixels = 1 unit.
         private int[] _judgeTimes = new int[6] { 16, 37, 70, 100, 124, 80 }; //OD9 judge times in ms (0,1,2,3,4), LN offset 5
 
         //Referencing Values
-        private const int missTime = 500; //after 500ms, the note will be removed
         private List<NoteObject>[] _hitQueue;
         private List<NoteObject> _noteQueue, _lnQueue, _offLNQueue;
         private GameObject[] _activeNotes;
         private float _scrollNegativeFactor = 1f;
-        private bool[] _keyDown;
 
         //Initialize Notes
         private void np_init()
@@ -31,8 +30,8 @@ namespace Quaver.Gameplay
             _hitQueue = new List<NoteObject>[4];
             _lnQueue = new List<NoteObject>();
             _offLNQueue = new List<NoteObject>();
-            for (i = 0; i < 4; i++) _hitQueue[i] = new List<NoteObject>();
             _ScoreSpread = new int[9];
+            for (i = 0; i < 4; i++) _hitQueue[i] = new List<NoteObject>();
 
             //Copy + Convert to NoteObjects
             NoteObject newNote;
@@ -55,6 +54,11 @@ namespace Quaver.Gameplay
                 if (_noteQueue.Count > 0) _activeNotes[i] = np_InstantiateNote(null);
                 else break;
             }
+        }
+
+        private void np_DestroyNotes()
+        {
+            for (int i=0; i<maxNoteCount; i++) Destroy(_activeNotes[i]);
         }
 
         //Move Notes

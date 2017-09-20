@@ -6,6 +6,9 @@ namespace Quaver.Gameplay
 {
     public partial class PlayScreen
     {
+        //Input keys
+        private bool[] _keyDown;
+
         private void input_CheckInput()
         {
             for (int k = 0; k < 4; k++)
@@ -31,6 +34,7 @@ namespace Quaver.Gameplay
             if (Input.GetKeyDown(_config_RetryKey))
             {
                 print("[Gamplay_Input] RETRY");
+                RetryGame();
             }
 
         }

@@ -91,6 +91,11 @@ namespace Quaver.Gameplay
             time_CreateBars();
         }
 
+        private void time_DestroyBars()
+        {
+            for(int i = 0; i < _barQueue.Count; i++) Destroy(_barQueue[i].TimingBar);
+        }
+
         //Creates timing bars (used to measure 16 beats)
         private void time_CreateBars()
         {
