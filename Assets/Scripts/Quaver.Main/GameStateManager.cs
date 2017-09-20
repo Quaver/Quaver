@@ -47,6 +47,7 @@ namespace Quaver.Main
         public AudioSource SongAudioSource;
         public Camera MainCamera;
         public Camera BgCamera;
+        public Camera BlackCamera;
 
         //Game Canvas/UI
         public GameObject MainCanvas;
