@@ -166,8 +166,8 @@ namespace Quaver.Gameplay
                 //Key Press Check
                 input_CheckInput();
 
-                //Update NPS graph
-                nps_Update();
+                //Update UI
+                ui_Update();
             }
             else
             {

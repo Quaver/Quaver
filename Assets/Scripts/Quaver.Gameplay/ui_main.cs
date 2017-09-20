@@ -7,10 +7,12 @@ namespace Quaver.Gameplay
     public partial class PlayScreen
     {
         private GameObject uiCanvas;
+        private Transform _songPosBar;
 
         private void ui_init()
         {
             uiCanvas = this.transform.Find("PlayCanvasUI").gameObject;
+            _songPosBar = uiCanvas.transform.Find("ProgressBar").transform.Find("Scale");
 
             //Creates nps graph
             nps_init();
@@ -23,6 +25,12 @@ namespace Quaver.Gameplay
         {
             ma_Reset();
             nps_Reset();
+        }
+
+        private void ui_Update()
+        {
+            _songPosBar.localScale = new Vector2(_songAudio.time/_songAudio.clip.length, 1);
+            nps_Update();
         }
 
         //Update score + display score UI

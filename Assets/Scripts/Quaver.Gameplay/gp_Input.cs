@@ -41,7 +41,6 @@ namespace Quaver.Gameplay
             if (_resetKeyDown)
             {
                 _resetDuration += Time.deltaTime;
-                print(_resetDuration);
                 if (_resetDuration > _ResetDownDuration)
                 {
                     print("[Gamplay_Input] RETRY");
