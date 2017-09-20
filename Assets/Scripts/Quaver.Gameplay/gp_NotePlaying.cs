@@ -70,7 +70,11 @@ namespace Quaver.Gameplay
                 {
                     if (_curSongTime > _hitQueue[j][k].StartTime + _judgeTimes[4])
                     {
+                        //miss
                         ui_ScoreChange(5);
+                        //if note is an LN, it'll count as 2 misses
+                        if (_hitQueue[j][k].EndTime > 0) _ScoreSpread[5]++;
+                        //move to ghost queue
                         _hitQueue[j][k].HitSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                         _hitQueue[j][k].SliderEndSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                         _hitQueue[j][k].SliderMiddleSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
