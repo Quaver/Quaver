@@ -6,13 +6,6 @@ namespace Quaver.Gameplay
 {
     public partial class PlayScreen
     {
-        //Config Values
-        private int _config_scrollSpeed;
-        private bool _config_timingBars;
-        private bool _config_upScroll;
-        private KeyCode[] _config_KeyBindings;
-        private int _config_offset;
-        private const bool _config_EnableNpsGraph = true;
 
         //Game Constant Values
         private const int config_playStartDelayed = 1000; //delays 1 second before song starts
@@ -39,6 +32,7 @@ namespace Quaver.Gameplay
             _lnQueue = new List<NoteObject>();
             _offLNQueue = new List<NoteObject>();
             for (i = 0; i < 4; i++) _hitQueue[i] = new List<NoteObject>();
+            _ScoreSpread = new int[9];
 
             //Copy + Convert to NoteObjects
             NoteObject newNote;
@@ -74,6 +68,7 @@ namespace Quaver.Gameplay
                     {
                         //Note missed
                         print("[Note Render] MISS");
+                        ui_ScoreChange(5);
                         _hitQueue[j][k].HitSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                         _hitQueue[j][k].SliderEndSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
                         _hitQueue[j][k].SliderMiddleSprite.color = new Color(0.5f, 0.5f, 0.5f, 1f);
@@ -99,6 +94,7 @@ namespace Quaver.Gameplay
                 {
                     //Late LN Release
                     print("[Note Render] LATE LN RELEASE");
+                    ui_ScoreChange(8);
 
                     NoteObject newNote = new NoteObject();
                     newNote.StartTime = (int)_curSongTime;

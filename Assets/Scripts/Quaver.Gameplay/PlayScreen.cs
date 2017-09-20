@@ -18,6 +18,15 @@ namespace Quaver.Gameplay
         public bool DEBUG_MODE = false;
         public string DEBUG_SONGPATH = "E:\\GitHub\\Quaver\\Test\\Qua\\wtc.qua";
 
+        //Config Values
+        private int _config_scrollSpeed;
+        private bool _config_timingBars;
+        private bool _config_upScroll;
+        private KeyCode[] _config_KeyBindings;
+        private int _config_offset;
+        private const bool _config_EnableNpsGraph = true;
+        private const bool _config_EnableMAdisplay = true;
+
         /*Classes/Gameobjects (public variables will be changed later)*/
         public GameObject hitObjectTest;
         public GameObject receptorBar;
@@ -38,6 +47,10 @@ namespace Quaver.Gameplay
         private const bool mod_split = false;
         private const bool mod_spin = false;
         private const bool mod_shuffle = false;
+
+        //Score Values
+        //0 MARV, 1 PERF, 2 GREAT, 3 GOOD, 4 BAD, 5 MISS, 6 ACE, 7 EARLY, 8 LATE
+        private int[] _ScoreSpread;
 
         public void Awake()
         {
