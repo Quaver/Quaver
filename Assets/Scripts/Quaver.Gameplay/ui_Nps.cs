@@ -29,7 +29,7 @@ namespace Quaver.Gameplay
         {
             //Set reference objects
             int i = 0;
-            _npsGraph = uiCanvas.transform.Find("npsGraph").gameObject;
+            _npsGraph = StateUI.transform.Find("npsGraph").gameObject;
             _npsText = _npsGraph.transform.Find("npsText").GetComponent<Text>();
             _curGraphInterval = 0;
             _textTween = 0;

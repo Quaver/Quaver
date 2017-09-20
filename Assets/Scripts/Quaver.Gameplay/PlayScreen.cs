@@ -12,8 +12,13 @@ using Quaver.Config; //_debug
 
 namespace Quaver.Gameplay
 {
-    public partial class PlayScreen : GameState
+    public partial class PlayScreen : GameStateObject
     {
+        //UI + State
+        private bool loaded;
+        public GameObject Game_UI;
+
+
         //DEBUG ONLY (temp)
         public bool DEBUG_MODE = false;
         public string DEBUG_SONGPATH = "E:\\GitHub\\Quaver\\Test\\Qua\\wtc.qua";
@@ -53,7 +58,7 @@ namespace Quaver.Gameplay
         private float _acc;
         private int _score;
 
-        public void Awake()
+        public void Start()
         {
             if (DEBUG_MODE) //_debug
             {
@@ -65,7 +70,7 @@ namespace Quaver.Gameplay
                 AudioPlayer.LoadSong(LoadedBeatmaps[0], _songAudio, false, (float)config_playStartDelayed / 1000f);
                 //print(_songAudio.clip.length);
             }
-
+            StateUI = Instantiate(Game_UI, Manager.MainCanvas.transform);
             StartGame();
         }
 

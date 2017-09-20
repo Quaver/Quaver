@@ -6,13 +6,11 @@ namespace Quaver.Gameplay
 {
     public partial class PlayScreen
     {
-        private GameObject uiCanvas;
         private Transform _songPosBar;
 
         private void ui_init()
         {
-            uiCanvas = this.transform.Find("PlayCanvasUI").gameObject;
-            _songPosBar = uiCanvas.transform.Find("ProgressBar").transform.Find("Scale");
+            _songPosBar = StateUI.transform.Find("ProgressBar").transform.Find("Scale");
 
             //Creates nps graph
             nps_init();

@@ -14,7 +14,7 @@ namespace Quaver.Gameplay
         {
             if (_config_EnableMAdisplay)
             {
-                _maDisplay = uiCanvas.transform.Find("maInfo").gameObject;
+                _maDisplay = StateUI.transform.Find("maInfo").gameObject;
                 _maText = new Text[10];
                 _maText[0] = _maDisplay.transform.Find("Marv").GetComponent<Text>();
                 _maText[1] = _maDisplay.transform.Find("Perf").GetComponent<Text>();
