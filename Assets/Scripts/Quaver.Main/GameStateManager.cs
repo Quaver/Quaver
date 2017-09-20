@@ -37,11 +37,16 @@ namespace Quaver.Main
         // This will hold the current Window Title. We change it everytime a new beatmap is played.
         public static string WindowTitle;
 
+        //ACTIVE STATES
+        public List<GameState> ActiveStates = new List<GameState>();
+
         // Reference Variables
         public GameState[] States;
         public ParticleSystem DustRenderer;
         public GameObject bgImage;
         public AudioSource SongAudioSource;
+        public GameObject MainCanvas;
+        public GameObject ActiveStateSet;
 
         // UI Variables
         public float SelectScreenDim = 0.7f;
