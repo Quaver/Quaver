@@ -51,14 +51,17 @@ namespace Quaver.Graphics
                 //Apply texture to bg + resize bg if bg isnt null
                 if (_bufferSprite != null)
                 {
+                    float CameraWidth = GameObject.Find("Background Camera").GetComponent<Camera>().rect.width*Screen.width;
+                    float CameraHeight = GameObject.Find("Background Camera").GetComponent<Camera>().rect.height * Screen.height;
+
                     sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                     _bufferSprite.GetComponent<SpriteRenderer>().sprite = sprite;
                     _bufferSprite.GetComponent<BackgroundDimAnimator>().dim = _bufferSprite.GetComponent<BackgroundDimAnimator>().Manager.SelectScreenDim;
 
-                    if (sprite.rect.size.y / sprite.rect.size.x <= (float)Screen.height / (float)Screen.width)
+                    if (sprite.rect.size.y / sprite.rect.size.x <= (float)CameraHeight / (float)CameraWidth)
                         _bufferSprite.transform.localScale = Vector3.one * 1.05f * (20f * (100f / (float)sprite.rect.size.y));
                     else
-                        _bufferSprite.transform.localScale = Vector3.one * 1.05f * ((float)Screen.width / (float)Screen.height) * 20f * (100f / (float)sprite.rect.size.x);
+                        _bufferSprite.transform.localScale = Vector3.one * 1.05f * ((float)CameraWidth / (float)CameraHeight) * 20f * (100f / (float)sprite.rect.size.x);
                 }
             }
             else if (!_spriteMode && _bufferTexture != null)
