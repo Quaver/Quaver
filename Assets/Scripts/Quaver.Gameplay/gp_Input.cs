@@ -11,6 +11,7 @@ namespace Quaver.Gameplay
         private bool[] _keyDown;
         private bool _resetKeyDown;
         private float _resetDuration;
+        private bool _scrollSpeedChanged;
 
         //Reset const
         private const float _ResetDownDuration = 1.0f;
@@ -56,10 +57,18 @@ namespace Quaver.Gameplay
 
             //Scrollspeed decrease
             if (Input.GetKeyDown(Manager.GameConfig.KeyDecreaseScrollSpeed))
-            _config_scrollSpeed = ConfigHelper.DecreaseScrollSpeed(Manager.GameConfig).ScrollSpeed;
+            {
+                Manager.GameConfig = ConfigHelper.DecreaseScrollSpeed(Manager.GameConfig);
+                _config_scrollSpeed = Mathf.Max(Manager.GameConfig.ScrollSpeed,5); //sets minimum scrollspeed to 5
+                _scrollSpeedChanged = true;
+            }
             //Scrollspeed increase
             if (Input.GetKeyDown(Manager.GameConfig.KeyIncreaseScrollSpeed))
-            _config_scrollSpeed = ConfigHelper.IncreaseScrollSpeed(Manager.GameConfig).ScrollSpeed;
+            {
+                Manager.GameConfig = ConfigHelper.IncreaseScrollSpeed(Manager.GameConfig);
+                _config_scrollSpeed = Manager.GameConfig.ScrollSpeed;
+                _scrollSpeedChanged = true;
+            }
 
         }
 
