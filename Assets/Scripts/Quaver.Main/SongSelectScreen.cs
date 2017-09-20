@@ -19,6 +19,8 @@ namespace Quaver.Main
         //UI Object Variables
         private GameObject _SongInfoWindow;
         private GameObject _ScrollBar;
+        private RectTransform _ScrollRect;
+        private RectTransform _ScreenUI;
         public GameObject SongSelectUI;
         public GameObject SongSelect;
         public GameObject DiffSelect;
@@ -66,6 +68,8 @@ namespace Quaver.Main
             _SongInfoWindow = StateUI.transform.Find("InformationWindow").transform.Find("SongInfo").gameObject;
             _ScrollBar = StateUI.transform.Find("SelectionWindow").transform.Find("SongScroll").gameObject;
             _selectionSet = StateUI.transform.Find("SelectionWindow").transform.transform.Find("SelectionCapture").gameObject;
+            _ScreenUI = Manager.ActiveStateUISet.GetComponent<RectTransform>();
+            _ScrollRect = _selectionSet.GetComponent<RectTransform>();
 
             //Add EventListener to ScrollBar
             _ScrollBar.GetComponent<Scrollbar>().onValueChanged.AddListener((float pos) => { SetScrollPos(pos,false); });
@@ -143,15 +147,7 @@ namespace Quaver.Main
 
             //Set Selection Y Position
             _posTween += (_selectYPos - _posTween) * Mathf.Min(Time.deltaTime * 5f, 1);
-            if ((float)Screen.height / (float)Screen.width >= 1080f / 1920f)
-            {
-                //If square/weird resolution
-                _selectionSet.transform.localPosition = new Vector2(-430, -_posTween + 540); //1080/2 - 105*2
-            }
-            else
-            {
-                _selectionSet.transform.localPosition = new Vector2(-430,-_posTween +540); //1080/2 - 105*2
-            }
+            _ScrollRect.anchoredPosition = new Vector2(0, -_posTween - ((float)_ScreenUI.rect.height / 2f));
 
             //Set offsetPos (when song is selected)
             if (_offsetTween != _offsetFromSelection)
