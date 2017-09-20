@@ -106,26 +106,35 @@ namespace Quaver.Main
         }
 
         //TEMP
-        public float WindowHeight = 720f;
-        public float WindowWidth = 1280f;
+        //public float WindowHeight = 720f;
+        //public float WindowWidth = 1280f;
 
         //Gets called when resolution of game gets changed
         private void UpdateResolution()
         {
-            float newResolution = WindowWidth / WindowHeight;
+            float configWidth = GameConfig.WindowWidth;
+            float configHeight = GameConfig.WindowHeight;
+            if (!GameConfig.WindowLetterboxed)
+            {
+                configWidth = Screen.width;
+                configHeight = Screen.height;
+            }
+
+
+            float newResolution = configWidth / configHeight;
             float defResolution = 1920f / 1080f;
             if (newResolution >= 1920f / 1080f)
             {
                 ActiveStateUISet.GetComponent<RectTransform>().sizeDelta = new Vector2((newResolution/ defResolution )* 1920f,1080f);
-                MainCanvas.GetComponent<CanvasScaler>().scaleFactor = 0.0001f + (WindowHeight / 1080f);
+                MainCanvas.GetComponent<CanvasScaler>().scaleFactor = 0.0001f + (configHeight / 1080f);
             }
             else
             {
                 ActiveStateUISet.GetComponent<RectTransform>().sizeDelta = new Vector2(1920f, 1080f* (defResolution/newResolution));
-                MainCanvas.GetComponent<CanvasScaler>().scaleFactor = 0.0001f + (WindowWidth / 1920f);
+                MainCanvas.GetComponent<CanvasScaler>().scaleFactor = 0.0001f + (configWidth / 1920f);
             }
-            float newWidth = WindowWidth / Screen.width;
-            float newHeight = WindowHeight / Screen.height;
+            float newWidth = configWidth / Screen.width;
+            float newHeight = configHeight / Screen.height;
             Rect newCameraRect = new Rect((1 - newWidth) / 2f, (1 - newHeight) / 2f, newWidth, newHeight);
             MainCamera.rect = newCameraRect;
             BgCamera.rect = newCameraRect;
