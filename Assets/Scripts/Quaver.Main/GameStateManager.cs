@@ -117,12 +117,12 @@ namespace Quaver.Main
             if (newResolution >= 1920f / 1080f)
             {
                 ActiveStateUISet.GetComponent<RectTransform>().sizeDelta = new Vector2((newResolution/ defResolution )* 1920f,1080f);
-                MainCanvas.GetComponent<CanvasScaler>().scaleFactor = 0.01f + (WindowHeight / 1080f);
+                MainCanvas.GetComponent<CanvasScaler>().scaleFactor = 0.0001f + (WindowHeight / 1080f);
             }
             else
             {
                 ActiveStateUISet.GetComponent<RectTransform>().sizeDelta = new Vector2(1920f, 1080f* (defResolution/newResolution));
-                MainCanvas.GetComponent<CanvasScaler>().scaleFactor = 0.01f + (WindowWidth / 1920f);
+                MainCanvas.GetComponent<CanvasScaler>().scaleFactor = 0.0001f + (WindowWidth / 1920f);
             }
             float newWidth = WindowWidth / Screen.width;
             float newHeight = WindowHeight / Screen.height;
