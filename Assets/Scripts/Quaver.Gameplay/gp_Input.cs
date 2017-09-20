@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Quaver.Config;
 
 namespace Quaver.Gameplay
 {
@@ -16,6 +17,7 @@ namespace Quaver.Gameplay
 
         private void input_CheckInput()
         {
+            //Mania key presses
             for (int k = 0; k < 4; k++)
             {
                 if (!_keyDown[k])
@@ -36,8 +38,9 @@ namespace Quaver.Gameplay
                 }
             }
 
-            if (Input.GetKeyDown(_config_RetryKey)) _resetKeyDown = true;
-            if (Input.GetKeyUp(_config_RetryKey)) _resetKeyDown = false;
+            //Retry
+            if (Input.GetKeyDown(Manager.GameConfig.KeyQuickRetry)) _resetKeyDown = true;
+            if (Input.GetKeyUp(Manager.GameConfig.KeyQuickRetry)) _resetKeyDown = false;
             if (_resetKeyDown)
             {
                 _resetDuration += Time.deltaTime;
@@ -50,6 +53,14 @@ namespace Quaver.Gameplay
                 }
             }
             else _resetDuration = 0;
+
+            //Scrollspeed decrease
+            if (Input.GetKeyDown(Manager.GameConfig.KeyDecreaseScrollSpeed))
+            _config_scrollSpeed = ConfigHelper.DecreaseScrollSpeed(Manager.GameConfig).ScrollSpeed;
+            //Scrollspeed increase
+            if (Input.GetKeyDown(Manager.GameConfig.KeyIncreaseScrollSpeed))
+            _config_scrollSpeed = ConfigHelper.IncreaseScrollSpeed(Manager.GameConfig).ScrollSpeed;
+
         }
 
         // Check if LN is released on time or early
