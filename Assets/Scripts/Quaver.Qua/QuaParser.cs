@@ -37,11 +37,11 @@ namespace Quaver.Qua
                 // based on which section of the file we are on.
                 // In this case, we're parsing the entire file (Not Gameplay)
                 if (!gameplay)
-                    ParseQuaForGeneral(fileSection, line, playableMap);
+                    ParseQuaForGeneral(fileSection, line, ref playableMap);
                 // In this case, we're parsing the file for gameplay, so we only want to extract
                 // certain values.
                 else
-                    ParseQuaForGameplay(fileSection, line, playableMap);
+                    ParseQuaForGameplay(fileSection, line, ref playableMap);
 
                 // If the map at any point in time becomes invalid, we need to return it
                 if (!playableMap.IsValidQua)
@@ -97,18 +97,18 @@ namespace Quaver.Qua
         
         // This will parse the entire .qua file containing all the information, rather than to it's counterpart
         // ParseQuaForGampeplay, which only parses the required data used for gameplay
-        private static void ParseQuaForGeneral(string fileSection, string line, QuaFile map)
+        private static void ParseQuaForGeneral(string fileSection, string line, ref QuaFile map)
         {
             switch (fileSection)
             {
                 case "General":
-                    ParseGeneral(line, map);
+                    ParseGeneral(line, ref map);
                     break;
                 case "Metadata":
-                    ParseMetadata(line, map);
+                    ParseMetadata(line, ref map);
                     break;
                 case "Difficulty":
-                    ParseDifficulty(line, map);
+                    ParseDifficulty(line, ref map);
                     break;
                 case "Timing":
                     ParseTiming(line, map);
@@ -123,12 +123,12 @@ namespace Quaver.Qua
         }
 
         // This will parse only the required information in the .qua for gameplay purposes
-        private static void ParseQuaForGameplay(string fileSection, string line, QuaFile map)
+        private static void ParseQuaForGameplay(string fileSection, string line, ref QuaFile map)
         {
             switch (fileSection)
             {
                 case "Difficulty":
-                    ParseDifficulty(line, map);
+                    ParseDifficulty(line, ref map);
                     break;
                 case "Timing":
                     ParseTiming(line, map);
@@ -143,8 +143,9 @@ namespace Quaver.Qua
         }
 
         // Responsible for parsing ONLY the general section of the map.
-        private static void ParseGeneral(string line, QuaFile qua)
+        private static void ParseGeneral(string line, ref QuaFile qua)
         {
+            Debug.Log(line);
             if (line.Contains(":"))
             {
                 string key = line.Substring(0, line.IndexOf(':'));
@@ -169,7 +170,7 @@ namespace Quaver.Qua
         }
 
         // Responbile for parsing ONLY the Metadata section of the file.
-        private static void ParseMetadata(string line, QuaFile qua)
+        private static void ParseMetadata(string line, ref QuaFile qua)
         {
             if (line.Contains(":"))
             {
@@ -216,7 +217,7 @@ namespace Quaver.Qua
         }
 
         // Responsible for parsing on the difficulty section of the map.
-        private static void ParseDifficulty(string line, QuaFile qua)
+        private static void ParseDifficulty(string line, ref QuaFile qua)
         {
             if (line.Contains(":"))
             {
