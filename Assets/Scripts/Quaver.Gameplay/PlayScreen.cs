@@ -96,8 +96,8 @@ namespace Quaver.Gameplay
         private void StartGame()
         {
             //Parse Map
-            if (DEBUG_MODE) _qFile = QuaParser.Parse(DEBUG_SONGPATH); //_debug
-            else _qFile = QuaParser.Parse(Manager.currentMap.Path);
+            if (DEBUG_MODE) _qFile = QuaParser.Parse(DEBUG_SONGPATH, true); //_debug
+            else _qFile = QuaParser.Parse(Manager.currentMap.Path, true);
 
             //Check if beatmap is valid
             if (!_qFile.IsValidQua)
