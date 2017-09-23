@@ -53,7 +53,7 @@ namespace Quaver.Qua
             CheckQuaValidity(playableMap);
 
             Debug.Log("[QUA PARSER] Successfully parsed file with validity: " + playableMap.IsValidQua + 
-                        "Gameplay?: " + gameplay +" | Path: " + filePath);
+                        " Gameplay: " + gameplay +" | Path: " + filePath);
 
             // Finally return the map.
             return playableMap;
