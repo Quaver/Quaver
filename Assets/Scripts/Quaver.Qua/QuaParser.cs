@@ -1,5 +1,4 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System;
@@ -38,50 +37,11 @@ namespace Quaver.Qua
                 // based on which section of the file we are on.
                 // In this case, we're parsing the entire file (Not Gameplay)
                 if (!gameplay)
-                {
-                    switch (fileSection)
-                    {
-                        case "General":
-                            ParseGeneral(line, playableMap);
-                            break;
-                        case "Metadata":
-                            ParseMetadata(line, playableMap);
-                            break;
-                        case "Difficulty":
-                            ParseDifficulty(line, playableMap);
-                            break;
-                        case "Timing":
-                            ParseTiming(line, playableMap);
-                            break;
-                        case "SV":
-                            ParseSV(line, playableMap);
-                            break;
-                        case "HitObjects":
-                            ParseHitObject(line, playableMap);
-                            break;
-                    }
-                }
-
+                    ParseQuaForGeneral(fileSection, line, playableMap);
                 // In this case, we're parsing the file for gameplay, so we only want to extract
                 // certain values.
-                if (gameplay)
-                {
-                    switch (fileSection)
-                    {
-                        case "Difficulty":
-                            ParseDifficulty(line, playableMap);
-                            break;
-                        case "Timing":
-                            ParseTiming(line, playableMap);
-                            break;
-                        case "SV":
-                            ParseSV(line, playableMap);
-                            break;
-                        case "HitObjects":
-                            ParseHitObject(line, playableMap);
-                            break;
-                    }
-                }
+                else
+                    ParseQuaForGameplay(fileSection, line, playableMap);
 
                 // If the map at any point in time becomes invalid, we need to return it
                 if (!playableMap.IsValidQua)
@@ -92,7 +52,8 @@ namespace Quaver.Qua
             // before returning
             CheckQuaValidity(playableMap);
 
-            Debug.Log("Successfully parsed file with validity: " + playableMap.IsValidQua + " | Path: " + filePath);
+            Debug.Log("[QUA PARSER] Successfully parsed file with validity: " + playableMap.IsValidQua + 
+                        "Gameplay?: " + gameplay +" | Path: " + filePath);
 
             // Finally return the map.
             return playableMap;
@@ -132,6 +93,53 @@ namespace Quaver.Qua
 
             // If the line we are currently on isn't a section header, just return the current section.
             return currentSection;
+        }
+        
+        // This will parse the entire .qua file containing all the information, rather than to it's counterpart
+        // ParseQuaForGampeplay, which only parses the required data used for gameplay
+        private static void ParseQuaForGeneral(string fileSection, string line, QuaFile map)
+        {
+            switch (fileSection)
+            {
+                case "General":
+                    ParseGeneral(line, map);
+                    break;
+                case "Metadata":
+                    ParseMetadata(line, map);
+                    break;
+                case "Difficulty":
+                    ParseDifficulty(line, map);
+                    break;
+                case "Timing":
+                    ParseTiming(line, map);
+                    break;
+                case "SV":
+                    ParseSV(line, map);
+                    break;
+                case "HitObjects":
+                    ParseHitObject(line, map);
+                    break;
+            }
+        }
+
+        // This will parse only the required information in the .qua for gameplay purposes
+        private static void ParseQuaForGameplay(string fileSection, string line, QuaFile map)
+        {
+            switch (fileSection)
+            {
+                case "Difficulty":
+                    ParseDifficulty(line, map);
+                    break;
+                case "Timing":
+                    ParseTiming(line, map);
+                    break;
+                case "SV":
+                    ParseSV(line, map);
+                    break;
+                case "HitObjects":
+                    ParseHitObject(line, map);
+                    break;
+            }
         }
 
         // Responsible for parsing ONLY the general section of the map.
