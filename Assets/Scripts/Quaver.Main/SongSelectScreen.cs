@@ -11,6 +11,7 @@ using Quaver.Audio;
 using Quaver.Graphics;
 using Quaver.Difficulty;
 using Quaver.Qua;
+using Quaver.Utils;
 
 namespace Quaver.Main
 {
@@ -279,7 +280,7 @@ namespace Quaver.Main
             //LENGTH
 
             //Get Difficulty Stats
-            Difficulty.Difficulty DiffParsed = DifficultyCalculator.CalculateDifficulty(QuaParser.Parse(_map.Path).HitObjects);
+            Difficulty.Difficulty DiffParsed = DifficultyCalculator.CalculateDifficulty(ThreadWrapper.ParseQuaInNewThread(_map.Path).HitObjects);
             int[] npsList = DiffParsed.npsInterval;
 
             //Set NPS Graph
