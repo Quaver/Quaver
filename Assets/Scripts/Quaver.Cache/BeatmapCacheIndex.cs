@@ -258,7 +258,7 @@ namespace Quaver.Cache
         // Responsible for converting a .qua file to a CachedBeatmap
         public static CachedBeatmap ConvertQuaToCached(string fileName)
         {
-            QuaFile qua = QuaParser.Parse(fileName);
+            QuaFile qua = QuaParser.Parse(fileName, false);
             
             if (qua.IsValidQua)
             {
