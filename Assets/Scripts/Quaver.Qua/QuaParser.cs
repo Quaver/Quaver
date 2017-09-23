@@ -225,10 +225,6 @@ namespace Quaver.Qua
                         quaFile.HitObjects.Add(ho);
                     }
                 }
-                //Sort Hit Objects, Timing Points, And SVs
-                //quaFile.HitObjects.Sort(delegate (HitObject p1, HitObject p2) { return p1.StartTime.CompareTo(p2.StartTime); });
-                //quaFile.SliderVelocities.Sort(delegate (SliderVelocity p1, SliderVelocity p2) { return p1.StartTime.CompareTo(p2.StartTime); });
-                //quaFile.TimingPoints.Sort(delegate (TimingPoint p1, TimingPoint p2) { return p1.StartTime.CompareTo(p2.StartTime); });
             }
 
             // If there are zero timing points in the beatmap we'll consider that invalid.
