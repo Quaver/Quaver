@@ -10,235 +10,311 @@ namespace Quaver.Qua
 {
     public static class QuaParser
     {
-        // Takes a .qua file and parses it into an instance of the Qua Class.
-        public static QuaFile Parse(string filePath)
+        // This is responsible for parsing a .qua file. 
+        // It only parses the Difficulty, Timing points, SVs, and HitObjects.
+        // We don't bother parsing the entire file in this circumstance.
+        public static QuaFile Parse(string filePath, bool gameplay = false)
         {
-            // Check if the file path and extension are correct if not, return an
-            // invalid qua object.
+            // Run a check if the file exists, 
             if (!File.Exists(filePath) || !filePath.ToLower().EndsWith(".qua"))
             {
-                QuaFile tempQua = new QuaFile();
-                tempQua.IsValidQua = false;
-                return tempQua;
+                QuaFile invalidQua = new QuaFile();
+                invalidQua.IsValidQua = false;
+                return invalidQua;
             }
 
-            // Create a new Qua instance that we'll return to the caller.
-            QuaFile quaFile = new QuaFile();
-            quaFile.TimingPoints = new List<TimingPoint>();
-            quaFile.SliderVelocities = new List<SliderVelocity>();
-            quaFile.HitObjects = new List<HitObject>();
-            quaFile.IsValidQua = true;
+            QuaFile playableMap = InitializeValidQuaFile();
 
-            // This will hold the section of the file that we are currently parsing.
-            string section = "";
+            // This will hold the current file section that we are looking to parse.
+            string fileSection = "";
 
+            // Loop through all of the lines in the file, and begin parsing.
             foreach (string line in File.ReadAllLines(filePath))
             {
-                switch (line.Trim())
-                {
-                    case "# General":
-                        section = "General";
-                        break;
-                    case "# Metadata":
-                        section = "Metadata";
-                        break;
-                    case "# Difficulty":
-                        section = "Difficulty";
-                        break;
-                    case "# Timing":
-                        section = "Timing";
-                        break;
-                    case "# SV":
-                        section = "SV";
-                        break;
-                    case "# HitObjects":
-                        section = "HitObjects";
-                        break;
-                }
+                // Get the current section of the file.
+                fileSection = GetFileSection(line, fileSection);
 
-                // Parse General Section
-                if (section.Equals("General"))
+                // For each individual line in the file, you'll want to run a given parsing method
+                // based on which section of the file we are on.
+                // In this case, we're parsing the entire file (Not Gameplay)
+                if (!gameplay)
                 {
-                    if (line.Contains(":"))
+                    switch (fileSection)
                     {
-                        string key = line.Substring(0, line.IndexOf(':'));
-                        string value = line.Trim().Split(':').Last().Trim();
-
-                        switch (key.Trim())
-                        {
-                            case "AudioFile":
-                                quaFile.AudioFile = value;
-                                break;
-                            case "AudioLeadIn":
-                                quaFile.AudioLeadIn = Int32.Parse(value);
-                                break;
-                            case "SongPreviewTime":
-                                quaFile.SongPreviewTime = Int32.Parse(value);
-                                break;
-                            case "BackgroundFile":
-                                quaFile.BackgroundFile = value;
-                                break;
-                        }
+                        case "General":
+                            ParseGeneral(line, playableMap);
+                            break;
+                        case "Metadata":
+                            ParseMetadata(line, playableMap);
+                            break;
+                        case "Difficulty":
+                            ParseDifficulty(line, playableMap);
+                            break;
+                        case "Timing":
+                            ParseTiming(line, playableMap);
+                            break;
+                        case "SV":
+                            ParseSV(line, playableMap);
+                            break;
+                        case "HitObjects":
+                            ParseHitObject(line, playableMap);
+                            break;
                     }
                 }
 
-                // Parse Metadata Section
-                if (section.Equals("Metadata"))
+                // In this case, we're parsing the file for gameplay, so we only want to extract
+                // certain values.
+                if (gameplay)
                 {
-                    if (line.Contains(":"))
+                    switch (fileSection)
                     {
-                        string key = line.Substring(0, line.IndexOf(':'));
-                        string value = line.Trim().Split(':').Last().Trim();
-
-                        switch (key.Trim())
-                        {
-                            case "Title":
-                                quaFile.Title = value;
-                                break;
-                            case "TitleUnicode":
-                                quaFile.TitleUnicode = value;
-                                break;
-                            case "Artist":
-                                quaFile.Artist = value;
-                                break;
-                            case "ArtistUnicode":
-                                quaFile.ArtistUnicode = value;
-                                break;
-                            case "Source":
-                                quaFile.Source = value;
-                                break;
-                            case "Tags":
-                                quaFile.Tags = value;
-                                break;
-                            case "Creator":
-                                quaFile.Creator = value;
-                                break;
-                            case "DifficultyName":
-                                quaFile.DifficultyName = value;
-                                break;
-                            case "MapID":
-                                quaFile.MapID = Int32.Parse(value);
-                                break;
-                            case "MapSetID":
-                                quaFile.MapSetID = Int32.Parse(value);
-                                break;
-                            case "Description":
-                                quaFile.Description = value;
-                                break;
-                        }
+                        case "Difficulty":
+                            ParseDifficulty(line, playableMap);
+                            break;
+                        case "Timing":
+                            ParseTiming(line, playableMap);
+                            break;
+                        case "SV":
+                            ParseSV(line, playableMap);
+                            break;
+                        case "HitObjects":
+                            ParseHitObject(line, playableMap);
+                            break;
                     }
                 }
 
-                // Parse Difficulty Section
-                if (section.Equals("Difficulty"))
-                {
-                    if (line.Contains(":"))
-                    {
-                        string key = line.Substring(0, line.IndexOf(':'));
-                        string value = line.Trim().Split(':').Last().Trim();
-
-                        switch (key.Trim())
-                        {
-                            case "HPDrain":
-                                quaFile.HPDrain = float.Parse(value);
-                                break;
-                            case "AccuracyStrain":
-                                quaFile.AccuracyStrain = float.Parse(value);
-                                break;
-                        }
-                    }
-                }
-
-                // Parse Timing Section
-                if (section.Equals("Timing"))
-                {
-                    if (line.Contains("|") && !line.Contains("#"))
-                    {
-                        string[] values = line.Split('|');
-
-                        if (values.Length != 2)
-                        {
-                            quaFile.IsValidQua = false;
-                            return quaFile;
-                        }
-
-                        TimingPoint timing = new TimingPoint();
-
-                        timing.StartTime = float.Parse(values[0]);
-                        timing.BPM = float.Parse(values[1]);
-
-                        quaFile.TimingPoints.Add(timing);
-                    }
-                }
-
-                // Parse SV
-                if (section.Equals("SV"))
-                {
-                    if (line.Contains("|") && !line.Contains("#"))
-                    {
-                        string[] values = line.Split('|');
-
-                        // There should only be 3 values in an SV, if not, it's an invalid map.
-                        if (values.Length != 3)
-                        {
-                            quaFile.IsValidQua = false;
-                            return quaFile;
-                        }
-
-                        SliderVelocity sv = new SliderVelocity();
-
-                        sv.StartTime = float.Parse(values[0]);
-                        sv.Multiplier = float.Parse(values[1]);
-                        sv.Volume = Int32.Parse(values[2]);
-
-                        quaFile.SliderVelocities.Add(sv);
-                    }
-                }
-
-                // Parse Hit Objects
-                if (section.Equals("HitObjects"))
-                {
-                    if (line.Contains("|") && !line.Contains("HitObjects"))
-                    {
-                        string[] values = line.Split('|');
-
-                        if (values.Length != 3)
-                        {
-                            quaFile.IsValidQua = false;
-                            return quaFile;
-                        }
-
-                        HitObject ho = new HitObject(); // lol, ho. 
-
-                        ho.StartTime = Int32.Parse(values[0]);
-                        ho.KeyLane = Int32.Parse(values[1]);
-
-                        // If the key lane isn't in 1-4, then we'll consider the map to be invalid.
-                        if (ho.KeyLane < 1 || ho.KeyLane > 4)
-                        {
-                            quaFile.IsValidQua = false;
-                            return quaFile;
-                        }
-
-                        ho.EndTime = Int32.Parse(values[2]);
-
-                        quaFile.HitObjects.Add(ho);
-                    }
-                }
+                // If the map at any point in time becomes invalid, we need to return it
+                if (!playableMap.IsValidQua)
+                    return playableMap;
             }
 
-            // If there are zero timing points in the beatmap we'll consider that invalid.
-            if (quaFile.TimingPoints.Count == 0)
+            // Do some validity checks here on the map, to see if it was correctly parsed
+            // before returning
+            CheckQuaValidity(playableMap);
+
+            Debug.Log("Successfully parsed file with validity: " + playableMap.IsValidQua + " | Path: " + filePath);
+
+            // Finally return the map.
+            return playableMap;
+        }
+
+        // Responsible for handling the initialization of a valid QuaFile
+        private static QuaFile InitializeValidQuaFile()
+        {
+            // Initialize the new playuable Qua File
+            QuaFile validQua = new QuaFile();
+            validQua.TimingPoints = new List<TimingPoint>();
+            validQua.SliderVelocities = new List<SliderVelocity>();
+            validQua.HitObjects = new List<HitObject>();
+            validQua.IsValidQua = true;
+
+            return validQua;
+        }
+
+        // Runs a check on the current line of the file, and checks which section of the file we are on.
+        private static string GetFileSection(string line, string currentSection)
+        {
+            switch (line.Trim())
             {
-                quaFile.IsValidQua = false;
+                case "# General":
+                    return "General";
+                case "# Metadata":
+                    return "Metadata";
+                case "# Difficulty":
+                    return "Difficulty";
+                case "# Timing":
+                    return "Timing";
+                case "# SV":
+                    return "SV";
+                case "# HitObjects":
+                    return "HitObjects";
             }
 
-            if (quaFile.HitObjects.Count == 0)
+            // If the line we are currently on isn't a section header, just return the current section.
+            return currentSection;
+        }
+
+        // Responsible for parsing ONLY the general section of the map.
+        private static void ParseGeneral(string line, QuaFile qua)
+        {
+            if (line.Contains(":"))
             {
-                quaFile.IsValidQua = false;
+                string key = line.Substring(0, line.IndexOf(':'));
+                string value = line.Trim().Split(':').Last().Trim();
+
+                switch (key.Trim())
+                {
+                    case "AudioFile":
+                        qua.AudioFile = value;
+                        break;
+                    case "AudioLeadIn":
+                        qua.AudioLeadIn = Int32.Parse(value);
+                        break;
+                    case "SongPreviewTime":
+                        qua.SongPreviewTime = Int32.Parse(value);
+                        break;
+                    case "BackgroundFile":
+                        qua.BackgroundFile = value;
+                        break;
+                }
+            }
+        }
+
+        // Responbile for parsing ONLY the Metadata section of the file.
+        private static void ParseMetadata(string line, QuaFile qua)
+        {
+            if (line.Contains(":"))
+            {
+                string key = line.Substring(0, line.IndexOf(':'));
+                string value = line.Trim().Split(':').Last().Trim();
+
+                switch (key.Trim())
+                {
+                    case "Title":
+                        qua.Title = value;
+                        break;
+                    case "TitleUnicode":
+                        qua.TitleUnicode = value;
+                        break;
+                    case "Artist":
+                        qua.Artist = value;
+                        break;
+                    case "ArtistUnicode":
+                        qua.ArtistUnicode = value;
+                        break;
+                    case "Source":
+                        qua.Source = value;
+                        break;
+                    case "Tags":
+                        qua.Tags = value;
+                        break;
+                    case "Creator":
+                        qua.Creator = value;
+                        break;
+                    case "DifficultyName":
+                        qua.DifficultyName = value;
+                        break;
+                    case "MapID":
+                        qua.MapID = Int32.Parse(value);
+                        break;
+                    case "MapSetID":
+                        qua.MapSetID = Int32.Parse(value);
+                        break;
+                    case "Description":
+                        qua.Description = value;
+                        break;
+                }
+            }
+        }
+
+        // Responsible for parsing on the difficulty section of the map.
+        private static void ParseDifficulty(string line, QuaFile qua)
+        {
+            if (line.Contains(":"))
+            {
+                string key = line.Substring(0, line.IndexOf(':'));
+                string value = line.Trim().Split(':').Last().Trim();
+
+                switch (key.Trim())
+                {
+                    case "HPDrain":
+                        qua.HPDrain = float.Parse(value);
+                        break;
+                    case "AccuracyStrain":
+                        qua.AccuracyStrain = float.Parse(value);
+                        break;
+                }
+            }
+        }
+
+        // Responsible for parsing the TimingPoints of the map.
+        private static void ParseTiming(string line, QuaFile qua)
+        {
+            if (line.Contains("|") && !line.Contains("#"))
+            {
+                string[] values = line.Split('|');
+
+                if (values.Length != 2)
+                {
+                    qua.IsValidQua = false;
+                }
+
+                TimingPoint timing = new TimingPoint();
+
+                timing.StartTime = float.Parse(values[0]);
+                timing.BPM = float.Parse(values[1]);
+
+                qua.TimingPoints.Add(timing);
+            }
+        }
+
+        // Responsible for parsing the SV section of the .qua file.
+        private static void ParseSV(string line, QuaFile qua)
+        {
+            if (line.Contains("|") && !line.Contains("#"))
+            {
+                string[] values = line.Split('|');
+
+                // There should only be 3 values in an SV, if not, it's an invalid map.
+                if (values.Length != 3)
+                {
+                    qua.IsValidQua = false;
+                }
+
+                SliderVelocity sv = new SliderVelocity();
+
+                sv.StartTime = float.Parse(values[0]);
+                sv.Multiplier = float.Parse(values[1]);
+                sv.Volume = Int32.Parse(values[2]);
+
+                qua.SliderVelocities.Add(sv);
+            }
+        }
+
+        // Responsible for parsing a HitObject line of the .qua file
+        private static void ParseHitObject(string line, QuaFile qua)
+        {
+            if (line.Contains("|") && !line.Contains("HitObjects"))
+            {
+                string[] values = line.Split('|');
+
+                if (values.Length != 3)
+                {
+                    qua.IsValidQua = false;
+                }
+
+                HitObject ho = new HitObject(); // lol, ho. 
+
+                ho.StartTime = Int32.Parse(values[0]);
+                ho.KeyLane = Int32.Parse(values[1]);
+
+                // If the key lane isn't in 1-4, then we'll consider the map to be invalid.
+                if (ho.KeyLane < 1 || ho.KeyLane > 4)
+                {
+                    qua.IsValidQua = false;
+                }
+
+                ho.EndTime = Int32.Parse(values[2]);
+
+                qua.HitObjects.Add(ho);
+            }
+        }
+
+        // Responsible for checking the validity of a QuaFile.
+        // This should be called after fully parsing the file.
+        private static void CheckQuaValidity(QuaFile qua)
+        {
+            // If there aren't any HitObjects
+            if (qua.HitObjects.Count == 0)
+            {
+                qua.IsValidQua = false;
             }
 
-            return quaFile;
+            // If there aren't any TimingPoints
+            if (qua.TimingPoints.Count == 0)
+            {
+                qua.IsValidQua = false;
+            }
         }
     }
 }
