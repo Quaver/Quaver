@@ -18,5 +18,5 @@ Quaver is still under development and should not be used for gameplay, and is on
 # Contributing 
 Currently we are not looking for any community-based contributions. As this repository does not contain a license, all code in the repository is copyrighted. If you are eager to contribute however, it is best to contact us directly. Any pull requests made will be closed. Any feedback in terms of our code strucuture, or an issue with a library we are using, feel free to [open an issue](https://github.com/Swan/Quaver/issues).
 
-# Copyright
-All code in this repository is copyrighted by the repository organization: [Quaver](https://github.com/Quaver) and its owners and does not contain an open-source license. Without explicit permission, you are not allowed to: use, copy, distribute, or modify any code without being at risk of take-downs, shake-downs, or litigation. It is best to download the client from the official source or Github release rather than compiling, modifying, or distributing your own. 
+# LICENSE
+The code in this repository is licensed under the [GNU General Public License v3.0](https://github.com/Swan/Quaver/blob/master/LICENSE). See the LICENSE file for more information.
