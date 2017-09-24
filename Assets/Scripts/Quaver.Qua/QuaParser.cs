@@ -52,9 +52,6 @@ namespace Quaver.Qua
             // before returning
             CheckQuaValidity(playableMap);
 
-            Debug.Log("[QUA PARSER] Successfully parsed file with validity: " + playableMap.IsValidQua + 
-                        " Gameplay: " + gameplay +" | Path: " + filePath);
-
             // Finally return the map.
             return playableMap;
         }
@@ -132,7 +129,6 @@ namespace Quaver.Qua
         // Responsible for parsing ONLY the general section of the map.
         private static void ParseGeneral(string line, QuaFile qua)
         {
-            Debug.Log(line);
             if (line.Contains(":"))
             {
                 string key = line.Substring(0, line.IndexOf(':'));
