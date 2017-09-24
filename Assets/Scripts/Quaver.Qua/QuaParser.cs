@@ -10,8 +10,8 @@ namespace Quaver.Qua
     public static class QuaParser
     {
         // This is responsible for parsing a .qua file. 
-        // It only parses the Difficulty, Timing points, SVs, and HitObjects.
-        // We don't bother parsing the entire file in this circumstance.
+        // You'll have the option to parse a file specifically for gameplay, or 
+        // parse the entire file as defined in the second argument.
         public static QuaFile Parse(string filePath, bool gameplay = false)
         {
             // Run a check if the file exists, 
