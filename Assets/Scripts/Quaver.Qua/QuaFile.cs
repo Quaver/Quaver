@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Quaver.Qua
 {
-    public struct QuaFile
+    public class QuaFile
     {
         // # General
         public bool IsValidQua;
@@ -39,6 +39,16 @@ namespace Quaver.Qua
 
         // HitObjects
         public List<HitObject> HitObjects;
+    
+        // Constructor
+        public QuaFile()
+        {
+            // Initialize a valid QuaFile
+            this.TimingPoints = new List<TimingPoint>();
+            this.SliderVelocities = new List<SliderVelocity>();
+            this.HitObjects = new List<HitObject>();
+            this.IsValidQua = true;
+        }
     }
 }
 
