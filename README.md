@@ -16,7 +16,11 @@ Quaver is still under development and should not be used for gameplay, and is on
 * .NET 2.0+
 
 # Contributing 
-Currently we are not looking for any community-based contributions. As this repository does not contain a license, all code in the repository is copyrighted. If you are eager to contribute however, it is best to contact us directly. Any pull requests made will be closed. Any feedback in terms of our code strucuture, or an issue with a library we are using, feel free to [open an issue](https://github.com/Swan/Quaver/issues).
+We're welcoming all contributions to our game, however please keep in mind that we might have privatized assets that will most likely be mixed in our code, so if you are eager to help, this is a challenge you'll have to face. Contributions can be made via a pull request to this repository. Any contributors shall have their names mentioned in our [CONTRIBUTORS](https://github.com/Swan/Quaver/blob/master/CONTRIBUTORS) file. 
+
+Also, please note that our code is not perfect, but we do have certain standards in place for how we organize our code. It is best to follow those same practices unless you find something completely wrong with it - which in that case we are open for suggestions.
+
+The best place to start contributing is by joining our [Discord Server](https://discord.gg/nJa8VFr). All of our main developers, contributors, and testers are in there, and is the best place for collaboration.
 
 # LICENSE
 The code in this repository is licensed under the [GNU General Public License v3.0](https://github.com/Swan/Quaver/blob/master/LICENSE). See the LICENSE file for more information.
