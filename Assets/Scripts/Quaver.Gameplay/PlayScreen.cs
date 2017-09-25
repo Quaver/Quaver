@@ -215,10 +215,13 @@ namespace Quaver.Gameplay
             else curNote.HitSet.transform.localPosition = new Vector3(_receptorXPos[curNote.KeyLane - 1] + _receptorXOffset[curNote.KeyLane - 1], _receptorYPos * splitFactor, 0);
             if ((((lnMode != 1 || mod_pull) && lnMode != 3) || _scrollSpeedChanged ) && curNote.EndTime > 0)
             {
-                float lnSize = splitFactor * Mathf.Min(Mathf.Abs(PosFromSV(curNote.EndTime) - PosFromSV(StartTime)), 50f);
+                float lnSize = splitFactor * Mathf.Min(PosFromSV(curNote.EndTime) - PosFromSV(StartTime), 50f);
+
+                if (lnSize < 0) lnSize = 0;
 
                 curNote.SliderMiddleSprite.size = new Vector2(1f, -_scrollNegativeFactor * lnSize * (config_PixelUnitSize / skin_columnSize));
                 curNote.SliderEndObject.transform.localPosition = new Vector3(0f, _scrollNegativeFactor * lnSize, 0.1f);
+                if (lnSize == 0 && curNote.SliderEndObject.activeInHierarchy) curNote.SliderEndObject.SetActive(false);
 
                 if (lnMode == 0)
                 {
