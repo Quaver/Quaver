@@ -55,10 +55,10 @@ namespace Quaver.Main
 
         private void Start()
         {
-            UpdateSongList();
+            UpdateSongList(Manager.currentMap);
         }
 
-        public void UpdateSongList()
+        public void UpdateSongList(CachedBeatmap InitSelection = null)
         {
             //Initialize
             _sortedMapSets = GameStateManager.MapDirectories;
@@ -99,11 +99,19 @@ namespace Quaver.Main
 
                 //Song Object UI Add Event Listener
                 int curPos = i;
-                _songList[i].SelectObject.GetComponent<Button>().onClick.AddListener(() => { Clicked(curPos, false); });
+                _songList[i].SelectObject.GetComponent<Button>().onClick.AddListener(() => { SelectMapObject(curPos, false); });
             }
             //Set these variables to the size of the song scroll
+            _ScrollBar.GetComponent<Scrollbar>().size = Mathf.Max(Mathf.Min(1080f / ((float)_objectYSize+1080f),1),0.1f);    
+            
+            if (InitSelection != null)
+            {
+                //int curIndex = GameStateManager.MapDirectories.IndexOf(InitSelection.Directory);
+                //SelectMapObject(curIndex, true);
+            }
+            //else _selectYPos = _objectYSize;
             _selectYPos = _objectYSize;
-            _ScrollBar.GetComponent<Scrollbar>().size = Mathf.Max(Mathf.Min(1080f / ((float)_objectYSize+1080f),1),0.1f);            
+
         }
 
         //Remove All Event Listeners generated from this class
@@ -177,7 +185,7 @@ namespace Quaver.Main
             }
         }
 
-        private void Clicked(int pos, bool subSelection)
+        private void SelectMapObject(int pos, bool subSelection)
         {
             //If a mapset is selected
             if (!subSelection)
@@ -212,7 +220,7 @@ namespace Quaver.Main
 
                         //Add Event Listener
                         int curPos = i;
-                        _difficultyList[i].SelectObject.GetComponent<Button>().onClick.AddListener(() => { Clicked(curPos, true); });
+                        _difficultyList[i].SelectObject.GetComponent<Button>().onClick.AddListener(() => { SelectMapObject(curPos, true); });
                     }
 
                     //Sets Pos + Loads Audio/BG for main audio player/bg image
@@ -228,7 +236,7 @@ namespace Quaver.Main
                     _offsetTween = 0;
                     _selectYPos = _songList[pos].posY - (int)(_offsetFromSelection / 2f);
 
-                    //Sets the current map to the first difficulty of the map
+                    //Sets the current map to the first difficulty of the map set
                     Manager.currentMap = _difficultyList[0].Beatmap;
 
                     // Change the window title to the clicked map.
