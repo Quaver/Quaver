@@ -9,7 +9,11 @@ namespace Quaver.Utils
 {
     public static class Strings
     {
-        // Checks a string if it has any null or white space
+        /// <summary>
+        /// Checks if a string is null or has any whitespace
+        /// </summary>
+        /// <param name="value">The value you're checking</param>
+        /// <returns>Boolean</returns>
         public static bool IsNullOrWhiteSpace(string value)
         {
             if (value != null)
@@ -25,7 +29,11 @@ namespace Quaver.Utils
             return true;
         }
 
-        // Checks if a string is null, empty, or has whitespace.
+        /// <summary>
+        /// Checks if a string is null, empty or has any whitespace
+        /// </summary>
+        /// <param name="value">The value you're checking</param>
+        /// <returns>Boolean</returns>   
         public static bool IsNullOrEmptyOrWhiteSpace(string value)
         {
             return string.IsNullOrEmpty(value) ||
@@ -33,7 +41,11 @@ namespace Quaver.Utils
                     string.IsNullOrEmpty(value.Trim());
         }
 
-        // Remove the last word from a string
+        /// <summary>
+        /// Removes the last word in a string
+        /// </summary>
+        /// <param name="value">The string you want to move the last word from/</param>
+        /// <returns>The new string w/ the last word taken out.</returns>
         public static string RemoveLastWord(string value)
         {
             if (value == null) return ""; // Only if any
@@ -44,7 +56,11 @@ namespace Quaver.Utils
             return result;
         }
 
-        // Gets the MD5 Hash of a string.
+        /// <summary>
+        /// Converts a string to an MD5 Hash
+        /// </summary>
+        /// <param name="TextToHash">The string</param>
+        /// <returns>MD5 Hashed version of the string.</returns>
         public static String GetMD5Hash(String TextToHash)
         {
             //Check wether data was passed
