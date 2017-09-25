@@ -10,6 +10,10 @@ namespace Quaver.Screenshot
 {
     public static class ScreenshotService
     {
+        /// <summary>
+        /// Captures a screenshot and creates a notification of it.
+        /// </summary>
+        /// <param name="config">The game configuration object</param>
         public static void Capture(Cfg config)
         {
             if (Input.GetKeyDown(config.KeyScreenshot))
