@@ -8,6 +8,11 @@ namespace Quaver.Utils
 {
     public class ThreadWrapper
     {
+        /// <summary>
+        /// Parses a .qua file in a new thread.
+        /// </summary>
+        /// <param name="filePath">The file path of the .qua file</param>
+        /// <returns>A new instance of QuaFile</returns>
         public static QuaFile ParseQuaInNewThread(string filePath)
         {
             QuaFile parsedMap = new QuaFile();
