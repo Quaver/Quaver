@@ -9,9 +9,12 @@ namespace Quaver.Qua
 {
     public static class QuaParser
     {
-        // This is responsible for parsing a .qua file. 
-        // You'll have the option to parse a file specifically for gameplay, or 
-        // parse the entire file as defined in the second argument.
+        /// <summary>
+        /// Parses a .Qua file and returns an instance of the QuaFile class
+        /// </summary>
+        /// <param name="filePath">The path of the .qua file you are wanting to parse.</param>
+        /// <param name="gameplay">If true, only HitObjects, TimingPoints, SVs, and Difficulty will be parsed</param>
+        /// <returns>QuaFile Object</returns>
         public static QuaFile Parse(string filePath, bool gameplay = false)
         {
             // Run a check if the file exists, 
@@ -56,7 +59,12 @@ namespace Quaver.Qua
             return playableMap;
         }
 
-        // Runs a check on the current line of the file, and checks which section of the file we are on.
+        /// <summary>
+        /// Runs a check and modifies the current section of the file we are parsing.
+        /// </summary>
+        /// <param name="line">The current line of the file.</param>
+        /// <param name="currentSection">The current section of the file.</param>
+        /// <returns></returns>
         private static string GetFileSection(string line, string currentSection)
         {
             switch (line.Trim())
@@ -78,9 +86,14 @@ namespace Quaver.Qua
             // If the line we are currently on isn't a section header, just return the current section.
             return currentSection;
         }
-        
-        // This will parse the entire .qua file containing all the information, rather than to it's counterpart
-        // ParseQuaForGampeplay, which only parses the required data used for gameplay
+
+        /// <summary>
+        /// This will parse the entire .qua file containing all the information, rather than to it's counterpart
+        /// ParseQuaForGampeplay, which only parses the required data used for gameplay
+        /// </summary>
+        /// <param name="fileSection">The current file section</param>
+        /// <param name="line">The current line of the file.</param>
+        /// <param name="map">The instance of the QuaFile we've created</param>
         private static void ParseQuaForGeneral(string fileSection, string line, QuaFile map)
         {
             switch (fileSection)
@@ -106,7 +119,12 @@ namespace Quaver.Qua
             }
         }
 
-        // This will parse only the required information in the .qua for gameplay purposes
+        /// <summary>
+        /// This will parse only the required information in the .qua for gameplay purposes
+        /// </summary>
+        /// <param name="fileSection">The current file section</param>
+        /// <param name="line">The current line of the file.</param>
+        /// <param name="map">The instance of the QuaFile we've created</param>
         private static void ParseQuaForGameplay(string fileSection, string line, QuaFile map)
         {
             switch (fileSection)
@@ -126,7 +144,11 @@ namespace Quaver.Qua
             }
         }
 
-        // Responsible for parsing ONLY the general section of the map.
+        /// <summary>
+        /// Parses the #General section of the file
+        /// </summary>
+        /// <param name="line">The current line of the file.</param>
+        /// <param name="qua">The QuaFile instance we're returning.</param>
         private static void ParseGeneral(string line, QuaFile qua)
         {
             if (line.Contains(":"))
@@ -152,7 +174,11 @@ namespace Quaver.Qua
             }
         }
 
-        // Responbile for parsing ONLY the Metadata section of the file.
+        /// <summary>
+        /// Parses the #Metadata section of the file
+        /// </summary>
+        /// <param name="line">The current line of the file.</param>
+        /// <param name="qua">The QuaFile instance we're returning.</param>
         private static void ParseMetadata(string line, QuaFile qua)
         {
             if (line.Contains(":"))
@@ -199,7 +225,11 @@ namespace Quaver.Qua
             }
         }
 
-        // Responsible for parsing on the difficulty section of the map.
+        /// <summary>
+        /// Parses the #Difficulty section of the file
+        /// </summary>
+        /// <param name="line">The current line of the file.</param>
+        /// <param name="qua">The QuaFile instance we're returning.</param>
         private static void ParseDifficulty(string line, QuaFile qua)
         {
             if (line.Contains(":"))
@@ -219,7 +249,11 @@ namespace Quaver.Qua
             }
         }
 
-        // Responsible for parsing the TimingPoints of the map.
+        /// <summary>
+        /// Parses the #Timing section of the file
+        /// </summary>
+        /// <param name="line">The current line of the file.</param>
+        /// <param name="qua">The QuaFile instance we're returning.</param>
         private static void ParseTiming(string line, QuaFile qua)
         {
             if (line.Contains("|") && !line.Contains("#"))
@@ -240,7 +274,11 @@ namespace Quaver.Qua
             }
         }
 
-        // Responsible for parsing the SV section of the .qua file.
+        /// <summary>
+        /// Parses the #SV section of the file
+        /// </summary>
+        /// <param name="line">The current line of the file.</param>
+        /// <param name="qua">The QuaFile instance we're returning.</param>
         private static void ParseSV(string line, QuaFile qua)
         {
             if (line.Contains("|") && !line.Contains("#"))
@@ -263,7 +301,11 @@ namespace Quaver.Qua
             }
         }
 
-        // Responsible for parsing a HitObject line of the .qua file
+        /// <summary>
+        /// Parses the #HitObject section of the file
+        /// </summary>
+        /// <param name="line">The current line of the file.</param>
+        /// <param name="qua">The QuaFile instance we're returning.</param>
         private static void ParseHitObject(string line, QuaFile qua)
         {
             if (line.Contains("|") && !line.Contains("HitObjects"))
@@ -292,8 +334,10 @@ namespace Quaver.Qua
             }
         }
 
-        // Responsible for checking the validity of a QuaFile.
-        // This should be called after fully parsing the file.
+        /// <summary>
+        /// Responsible for checking the validity of a QuaFile.
+        /// </summary>
+        /// <param name="qua">The instance of the QuaFile object we're validity checking</param>
         private static void CheckQuaValidity(QuaFile qua)
         {
             // If there aren't any HitObjects
