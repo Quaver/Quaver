@@ -6,6 +6,10 @@ namespace Quaver.Mods
 {
     public class ModSuddenDeath : Mod
     {
+        /// <summary>
+        /// Sudden Death Mod.
+        /// The user will fail the beatmap if they miss once on the map.
+        /// </summary>
         public ModSuddenDeath()
         {
             Name = "Sudden Death";
