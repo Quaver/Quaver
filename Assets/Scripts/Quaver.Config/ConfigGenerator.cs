@@ -10,6 +10,10 @@ namespace Quaver.Config
 {
     public static class ConfigGenerator
     {
+        /// <summary>
+        /// Generates a new quaver.cfg file
+        /// </summary>
+        /// <returns>A boolean of whether it succeeded or failed.</returns>
         public static bool Generate()
         {
             if (File.Exists(ConfigDefault.ConfigDirectory))
