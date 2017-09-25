@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace Quaver.Config
 {
+    /// <summary>
+    /// These are a list of defaults for the Cfg. If you want to see what each value is,
+    /// in depth, see the Cfg class.
+    /// </summary>
     public static class ConfigDefault
     {
         public static bool IsValid = false;
