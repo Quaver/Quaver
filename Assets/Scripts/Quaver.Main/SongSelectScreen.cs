@@ -106,8 +106,8 @@ namespace Quaver.Main
             
             if (InitSelection != null)
             {
-                //int curIndex = GameStateManager.MapDirectories.IndexOf(InitSelection.Directory);
-                //SelectMapObject(curIndex, true);
+                //int diffIndex = GameStateManager.MapDirectories.FindIndex(r => r.Directory.Equals(InitSelection.MapsetDirectory));
+                //SelectMapObject(diffIndex, true);
             }
             //else _selectYPos = _objectYSize;
             _selectYPos = _objectYSize;
