@@ -11,7 +11,7 @@ namespace Quaver.Gameplay
         /*SKIN.INI VALUES*/
         private const int skin_bgMaskBufferSize = 12; //Adds a buffer space to the bg mask (+8 pixels wide)
         private const int skin_noteBufferSpacing = 0; //Spaces notes 0 pixels a part
-        private const int skin_timingBarPixelSize = 2;
+        private const int skin_timingBarPixelSize = 12; //Size of timing bars in pixels relative to resolution
         private const float skin_hitLightingScale = 4.0f; //Sets the scale of the hit lighting (relative to units)
         private const int skin_columnSize = 250;
         private const int skin_receptorYOffset = 50; //Sets the receptor's y position offset, relative to the edge of the screen.
