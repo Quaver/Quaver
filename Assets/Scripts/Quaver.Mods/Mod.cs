@@ -6,28 +6,44 @@ namespace Quaver.Mods
 {
     public class Mod
     {
-        // Name of the mod
+        /// <summary>
+        /// The name of the mod.
+        /// </summary>
         public string Name;
 
-        // Type of Mod
+        /// <summary>
+        /// The type of mod
+        /// </summary>
         public ModType Type;
 
-        // The identifier of the mod in the ModsEnum
+        /// <summary>
+        /// The unique indentifier of the mod
+        /// </summary>
         public ModIdentifier ModIdentifier;
 
-        // Description of the mod
+        /// <summary>
+        /// A description of the mod.
+        /// </summary>
         public string Description;
 
-        // The score multiplier of the mod
+        /// <summary>
+        /// The score multiplier the mod gives.
+        /// </summary>
         public float ScoreMultiplier;
 
-        // Is the mod ranked?
+        /// <summary>
+        /// If the mod triggers score submission or not.
+        /// </summary>
         public bool Ranked;
 
-        // A list of all other mods that aren't compatiable with this one.
+        /// <summary>
+        /// A list of incompatible mods that can't be used with this one.
+        /// </summary>
         public ModIdentifier[] IncompatibleMods;
 
-        // Are you allowed to fail the song with this mod on?
+        /// <summary>
+        /// If you are allowed to fail the map when using this mod.
+        /// </summary>
         public bool FailureAllowed;
     }
 }
