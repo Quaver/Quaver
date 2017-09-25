@@ -10,6 +10,10 @@ namespace Quaver.Config
 {
     public static class ConfigUpdater
     {
+        /// <summary>
+        /// Updates a quaver.cfg file with all the updated values in the Cfg object.
+        /// </summary>
+        /// <param name="configFile"></param>
         public static void Update(Cfg configFile)
         {
             string outputPath = Application.dataPath + "/quaver.cfg";
