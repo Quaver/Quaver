@@ -6,7 +6,11 @@ namespace Quaver.Config
 {
 	public class ConfigHelper
 	{
-		// For the real homies that wanna play with some speed in their life.
+		/// <summary>
+        /// Increases the scroll speed in the config file + config object
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <returns></returns>
 		public static Cfg IncreaseScrollSpeed(Cfg userConfig)
 		{
 			userConfig.ScrollSpeed++;
@@ -15,7 +19,11 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		// Noobs. Raise it up a bit fam.
+		/// <summary>
+        /// Decreases the scroll speed.
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <returns></returns>
 		public static Cfg DecreaseScrollSpeed(Cfg userConfig)
 		{
 			userConfig.ScrollSpeed--;
@@ -24,7 +32,11 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		// Ok if you actually use upscroll you're a freak.
+		/// <summary>
+        /// Changes the scroll direction.
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <returns></returns>
 		public static Cfg ChangeScrollDirection(Cfg userConfig)
 		{
 			userConfig.DownScroll = !userConfig.DownScroll;
@@ -33,7 +45,13 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		// Idk how people can play on some square ass resolution tbh, but do you.
+		/// <summary>
+        /// Changes the resolution
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="windowHeight">The new height</param>
+        /// <param name="windowWidth">The new width</param>
+        /// <returns></returns>
 		public static Cfg ChangeResolution(Cfg userConfig, int windowHeight, int windowWidth)
 		{
 			userConfig.WindowHeight = windowHeight;
@@ -43,7 +61,12 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		// Changes the VolumeGlobal variable in user config.
+		/// <summary>
+        /// Changes the master volume
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="newVolume"></param>
+        /// <returns></returns>
 		public static Cfg ChangeVolumeGlobal(Cfg userConfig, byte newVolume)
 		{
 			userConfig.VolumeGlobal = newVolume;
@@ -52,7 +75,12 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		// Changes the VolumeEffect variable in user config.
+		/// <summary>
+        /// Changes the effect volume.
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="newVolume"></param>
+        /// <returns></returns>
 		public static Cfg ChangeVolumeEffect(Cfg userConfig, byte newVolume)
 		{
 			userConfig.VolumeEffect = newVolume;
@@ -61,7 +89,12 @@ namespace Quaver.Config
 			return userConfig;
 		} 
 
-		// Changes the VolumeMusic variable in user config.
+		/// <summary>
+        /// Changes the music volume.
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="newVolume"></param>
+        /// <returns></returns>
 		public static Cfg ChangeVolumeMusic(Cfg userConfig, byte newVolume)
 		{
 			userConfig.VolumeMusic = newVolume;
@@ -70,7 +103,11 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		// FPSCounter Displayed?
+		/// <summary>
+        /// Changes the FPSCounterDisplay bool.
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <returns></returns>
 		public static Cfg ChangeFPSCounterDisplay(Cfg userConfig)
 		{
 			userConfig.FPSCounter = !userConfig.FPSCounter;
@@ -79,7 +116,11 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		// FrameTimeDisplay?
+		/// <summary>
+        /// Changes the FrameTimeDisplay bool.
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <returns></returns>
 		public static Cfg ChangeFrameTimeDisplay(Cfg userConfig)
 		{
 			userConfig.FrameTimeDisplay = !userConfig.FrameTimeDisplay;
@@ -88,7 +129,12 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		// Language
+		/// <summary>
+        /// Change the language of the game.
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="language"></param>
+        /// <returns></returns>
 		public static Cfg ChangeLanguage(Cfg userConfig, string language)
 		{
 			// v4l1d4t10n! ok not now but later
@@ -98,7 +144,12 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		// IF YOUR ACCURACY IS SHIT!!!!
+		/// <summary>
+        /// Change the global offset of the notes.
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="newOffset"></param>
+        /// <returns></returns>
 		public static Cfg ChangeGlobalOffset(Cfg userConfig, byte newOffset)
 		{
 			userConfig.GlobalOffset = newOffset;
@@ -107,7 +158,11 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		// DO YOU WANT TO SEE THE LEADERBOARD FAM
+		/// <summary>
+        /// Toggle leaderboard visibilty
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <returns></returns>
 		public static Cfg ChangeLeaderboardVisiblity(Cfg userConfig)
 		{
 			userConfig.LeaderboardVisible = !userConfig.LeaderboardVisible;
@@ -116,7 +171,12 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		// What do you prefer, bars or arrows? I think I'm a bar type of guy tbh. 
+		/// <summary>
+        /// Change the user defined skin.
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="skin"></param>
+        /// <returns></returns>
 		public static Cfg ChangeSkin(Cfg userConfig, string skin)
 		{
 			userConfig.Skin = skin;
@@ -125,7 +185,12 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		// OK HERES THE FUN PART BOYS WE GOTTA CHANGE SOME KEYBINDS
+		/// <summary>
+        /// Change the key pressed for lane 1
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="newKey"></param>
+        /// <returns></returns>
 		public static Cfg ChangeKeyLane1(Cfg userConfig, KeyCode newKey)
 		{
 			userConfig.KeyLaneMania1 = newKey;
@@ -134,7 +199,13 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		public static Cfg ChangeKeyLane2(Cfg userConfig, KeyCode newKey)
+        /// <summary>
+        /// Change the key pressed for lane 2
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="newKey"></param>
+        /// <returns></returns>
+        public static Cfg ChangeKeyLane2(Cfg userConfig, KeyCode newKey)
 		{
 			userConfig.KeyLaneMania2 = newKey;
 			ConfigUpdater.Update(userConfig);
@@ -142,7 +213,13 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		public static Cfg ChangeKeyLane3(Cfg userConfig, KeyCode newKey)
+        /// <summary>
+        /// Change the key pressed for lane 3
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="newKey"></param>
+        /// <returns></returns>
+        public static Cfg ChangeKeyLane3(Cfg userConfig, KeyCode newKey)
 		{
 			userConfig.KeyLaneMania3 = newKey;
 			ConfigUpdater.Update(userConfig);
@@ -150,7 +227,13 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
-		public static Cfg ChangeKeyLane4(Cfg userConfig, KeyCode newKey)
+        /// <summary>
+        /// Change the key pressed for lane 4
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="newKey"></param>
+        /// <returns></returns>
+        public static Cfg ChangeKeyLane4(Cfg userConfig, KeyCode newKey)
 		{
 			userConfig.KeyLaneMania4 = newKey;
 			ConfigUpdater.Update(userConfig);
@@ -158,6 +241,12 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
+        /// <summary>
+        /// Change the key pressed to take a screenshot
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="newKey"></param>
+        /// <returns></returns>
 		public static Cfg ChangeKeyScreenshot(Cfg userConfig, KeyCode newKey)
 		{
 			userConfig.KeyScreenshot = newKey;
@@ -166,6 +255,12 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
+        /// <summary>
+        /// Change the key pressed to quick retry the map.
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="newKey"></param>
+        /// <returns></returns>
 		public static Cfg ChangeQuickRetry (Cfg userConfig, KeyCode newKey)
 		{
 			userConfig.KeyQuickRetry = newKey;
@@ -174,6 +269,12 @@ namespace Quaver.Config
 			return userConfig;
 		}	
 
+        /// <summary>
+        /// Change the key pressed to pause the map.
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="newKey"></param>
+        /// <returns></returns>
 		public static Cfg ChangeKeyPause (Cfg userConfig, KeyCode newKey)
 		{
 			userConfig.KeyPause = newKey;
@@ -182,6 +283,12 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
+        /// <summary>
+        /// Change the key pressed to change the volume up
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="newKey"></param>
+        /// <returns></returns>
 		public static Cfg ChangeKeyVolumeUp (Cfg userConfig, KeyCode newKey)
 		{
 			userConfig.KeyVolumeUp = newKey;
@@ -190,6 +297,12 @@ namespace Quaver.Config
 			return userConfig;
 		}
 
+        /// <summary>
+        /// Change the key pressed to change the volume down.
+        /// </summary>
+        /// <param name="userConfig"></param>
+        /// <param name="newKey"></param>
+        /// <returns></returns>
 		public static Cfg ChangeKey (Cfg userConfig, KeyCode newKey)
 		{
 			userConfig.KeyVolumeDown = newKey;
