@@ -7,7 +7,8 @@ namespace Quaver.Gameplay
     public partial class PlayScreen
     {
         //SV + Timing Point Variables
-        private List<TimingObject> _svQueue, _timingQueue, _barQueue;
+        private List<TimingObject> _svQueue, _timingQueue, _barQueue, _activeBars;
+        private GameObject[] _activeBarObjects;
         private ulong _curSVPos;
         private int _curSVPart;
         private ulong[] _svCalc; //Stores SV position data for efficiency
@@ -31,6 +32,7 @@ namespace Quaver.Gameplay
             if (!DEBUG_MODE) _songAudio = Manager.SongAudioSource; //_debug
             _curSongTime = -config_playStartDelayed;
             _actualSongTime = -(float)config_playStartDelayed / 1000f;
+            _activeBarObjects = new GameObject[maxNoteCount];
 
             //Create Timing Points + SVs on a list
             TimingObject newTime;
@@ -93,7 +95,7 @@ namespace Quaver.Gameplay
 
         private void time_DestroyBars()
         {
-            for(int i = 0; i < _barQueue.Count; i++) Destroy(_barQueue[i].TimingBar);
+            for(int i = 0; i < _activeBars.Count; i++) Destroy(_activeBars[i].TimingBar);
         }
 
         //Creates timing bars (used to measure 16 beats)
@@ -133,23 +135,54 @@ namespace Quaver.Gameplay
                     }
                 }
 
-                //Create starting bars
+                //Create all bars in music
                 List<TimingObject> tempBars = new List<TimingObject>();
                 for (i = 0; i < _barQueue.Count; i++)
                 {
                     TimingObject hoo = new TimingObject();
-                    GameObject curBar = Instantiate(timingBar, hitContainer.transform);
-                    curBar.transform.localScale = new Vector3(((float)(skin_columnSize + skin_bgMaskBufferSize + skin_noteBufferSpacing) / config_PixelUnitSize) * 4f * (config_PixelUnitSize / (float)curBar.transform.GetComponent<SpriteRenderer>().sprite.rect.size.x),
-                        (config_PixelUnitSize / (float)curBar.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y) * ((float)skin_timingBarPixelSize / config_PixelUnitSize)
-                        , 1f);
-                    curBar.transform.localPosition = new Vector3(0f, PosFromSV(_barQueue[i].StartTime), 2f);
 
                     hoo.StartTime = _barQueue[i].StartTime;
-                    hoo.TimingBar = curBar;
                     tempBars.Add(hoo);
                 }
                 _barQueue = new List<TimingObject>(tempBars);
+
+                //Create starting bars
+                _activeBars = new List<TimingObject>();
+                for (i=0; i < maxNoteCount; i++)
+                {
+                    if (_barQueue.Count > 0) _activeBarObjects[i] = time_InstantiateBar(null);
+                    else break;
+                }
+
             }
+        }
+
+        //Creates a bar object
+        private GameObject time_InstantiateBar(GameObject curBar)
+        {
+            if (curBar == null)
+            {
+                curBar = Instantiate(timingBar, hitContainer.transform);
+                curBar.transform.localScale = new Vector3(((float)(skin_columnSize + skin_bgMaskBufferSize + skin_noteBufferSpacing) / config_PixelUnitSize) * 4f * (config_PixelUnitSize / (float)curBar.transform.GetComponent<SpriteRenderer>().sprite.rect.size.x),
+                    (config_PixelUnitSize / (float)curBar.transform.GetComponent<SpriteRenderer>().sprite.rect.size.y) * ((float)skin_timingBarPixelSize / config_PixelUnitSize)
+                    , 1f);
+            }
+            TimingObject newTimeOb = new TimingObject();
+            newTimeOb.StartTime = _barQueue[0].StartTime;
+            newTimeOb.TimingBar = curBar;
+
+            curBar.transform.localPosition = new Vector3(0f, PosFromSV(newTimeOb.StartTime), 2f);
+
+            _activeBars.Add(newTimeOb);
+            _barQueue.RemoveAt(0);
+            return curBar;
+        }
+
+        //Recycles bar objects from object pool or destroys them
+        private void time_RemoveBar(GameObject curBar)
+        {
+            if (_barQueue.Count > 0) time_InstantiateBar(curBar);
+            else Destroy(curBar);
         }
 
         //Creates SV Points
@@ -285,15 +318,17 @@ namespace Quaver.Gameplay
         {
             if (_config_timingBars && !mod_split)
             {
-                if (_barQueue.Count > 0 && _curSongTime > _barQueue[0].StartTime + missTime)
+                if (_activeBars.Count > 0 && _curSongTime > _activeBars[0].StartTime + missTime)
                 {
-                    Destroy(_barQueue[0].TimingBar);
-                    _barQueue.RemoveAt(0);
+                    time_RemoveBar(_activeBars[0].TimingBar);
+                    _activeBars.RemoveAt(0);
                 }
                 else
                 {
-                    for (int k = 0; k < Mathf.Min(_barQueue.Count, maxNoteCount); k++)
-                        _barQueue[k].TimingBar.transform.localPosition = new Vector3(0f, PosFromSV(_barQueue[k].StartTime), 2f);
+                    for (int k = 0; k < _activeBars.Count; k++)
+                    {
+                        _activeBars[k].TimingBar.transform.localPosition = new Vector3(0f, PosFromSV(_activeBars[k].StartTime), 2f);
+                    }
                 }
             }
         }

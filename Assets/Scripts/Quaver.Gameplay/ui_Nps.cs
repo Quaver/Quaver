@@ -70,6 +70,7 @@ namespace Quaver.Gameplay
                 _npsGraphTransforms[i].localPosition = _npsGraphPosition[i];
                 _npsGraphTransforms[i].sizeDelta = _npsGraphSize[i];
                 _npsGraphObjects[i] = newGraphObject;
+                _npsGraphImage[i].color = colorGraph(0);
             }
             for(i = 0; i < 7; i++)
             {
