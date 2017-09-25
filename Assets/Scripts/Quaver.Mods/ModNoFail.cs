@@ -6,6 +6,10 @@ namespace Quaver.Mods
 {
     public class ModNoFail : Mod
     {
+        /// <summary>
+        /// The No Fail mod
+        /// The user can play the beatmap without failing, even if their health reaches 0.
+        /// </summary>
         public ModNoFail()
         {
             Name = "No Fail";
