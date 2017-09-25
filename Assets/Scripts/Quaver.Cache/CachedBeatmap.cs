@@ -6,28 +6,114 @@ using UnityEngine;
 
 namespace Quaver.Cache
 {
+    /// <summary>
+    /// This class holds a beatmap that is cached in our database.
+    /// </summary>
     public class CachedBeatmap
     {
+        /// <summary>
+        /// The validity of the CachedBeatmap
+        /// </summary>
         public bool Valid = false;
+
+        /// <summary>
+        /// The directory of the beatmap
+        /// </summary>
         public string Directory;
+
+        /// <summary>
+        /// The absolute path of the beatmap
+        /// </summary>
         public string Path;
+
+        /// <summary>
+        /// The beatmap set id of the beatmap.
+        /// </summary>
         public int BeatmapSetID;
+
+        /// <summary>
+        /// The beatmap Id of the beatmap.
+        /// </summary>
         public int BeatmapID;
+
+        /// <summary>
+        /// The artist of the map.
+        /// </summary>
         public string Artist;
+
+        /// <summary>
+        /// The title of the map.
+        /// </summary>
         public string Title;
+
+        /// <summary>
+        /// The difficulty name of the map.
+        /// </summary>
         public string Difficulty;
+
+        /// <summary>
+        /// The highest achieved rank on the map.
+        /// </summary>
         public string Rank;
+
+        /// <summary>
+        /// The ranked status of the map.
+        /// </summary>
         public int Status;
+
+        /// <summary>
+        /// The date time of the last time the user has played the map.
+        /// </summary>
         public DateTime LastPlayed;
+
+        /// <summary>
+        /// The amount of stars the map has.
+        /// </summary>
         public float Stars;
+
+        /// <summary>
+        /// The creator of the map.
+        /// </summary>
         public string Creator;
+
+        /// <summary>
+        ///  The path of the background
+        /// </summary>
         public string BackgroundPath;
+
+        /// <summary>
+        /// The path of the audio file.
+        /// </summary>
         public string AudioPath;
+
+        /// <summary>
+        /// The preview time of the audio
+        /// </summary>
         public int AudioPreviewTime;
+
+        /// <summary>
+        /// The description of the map.
+        /// </summary>
         public string Description;
+
+        /// <summary>
+        /// The source of the song.
+        /// </summary>
         public string Source;
+
+        /// <summary>
+        /// Specific tags for the song/map
+        /// </summary>
         public string Tags;
+
+        /// <summary>
+        /// The most common BPM of the map.
+        /// </summary>
         public int BPM;
+
+        /// <summary>
+        /// The length of the map.
+        /// </summary>
         public int SongLength;
 
         // Set all the cached beatmap values in the constructor
