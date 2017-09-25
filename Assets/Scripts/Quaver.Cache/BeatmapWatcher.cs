@@ -9,6 +9,10 @@ namespace Quaver.Cache
 {
 	public class BeatmapWatcher
 	{
+        /// <summary>
+        /// Watches the Songs directory for any changes, and reports an event.
+        /// </summary>
+        /// <param name="userConfig">The user configuration object</param>
 		public static void Watch(Cfg userConfig)
 		{
 			FileSystemWatcher watcher = new FileSystemWatcher(userConfig.SongDirectory);
@@ -22,6 +26,12 @@ namespace Quaver.Cache
 			watcher.EnableRaisingEvents = true;
 		}
 
+        /// <summary>
+        /// Adds the changed directory to the queue of changes. 
+        /// It wont be directory changed until the user presses F5.
+        /// </summary>
+        /// <param name="source">The source of the change.</param>
+        /// <param name="e">All the other cool stuff we get with the change</param>
 		private static void OnChanged(object source, FileSystemEventArgs e)
 		{
 			FileInfo file = new FileInfo(e.FullPath);
