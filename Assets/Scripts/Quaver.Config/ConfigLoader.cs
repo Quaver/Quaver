@@ -7,7 +7,11 @@ namespace Quaver.Config
 {
     public static class ConfigLoader
     {
-        // Responsible for loading/creating a quaver.cfg file. Quaver configs should always be at the root directory.
+        /// <summary>
+        /// Loads a quaver.cfg file. This is usually done upon game start.
+        /// If it can't load the file, it'll generate a new one.
+        /// </summary>
+        /// <returns></returns>
         public static Cfg Load()
         {
             string configPath = Application.dataPath + "/quaver.cfg";
