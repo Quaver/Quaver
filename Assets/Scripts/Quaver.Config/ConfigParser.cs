@@ -11,6 +11,11 @@ namespace Quaver.Config
 {
     public class ConfigParser
     {
+        /// <summary>
+        /// Parses a quaver.cfg file.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public static Cfg Parse(string filePath)
         {
             if (!File.Exists(filePath.Trim()))
