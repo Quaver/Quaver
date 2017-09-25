@@ -13,6 +13,7 @@ namespace Quaver.Gameplay
         private GameObject[] _npsGraphObjects;
         private RectTransform[] _npsGraphTransforms;
         private RectTransform[] _npsTextMarks;
+        private Vector2[] _npsGraphPosition;
         private RawImage[] _npsGraphImage;
         private Text _npsText;
 
@@ -47,13 +48,14 @@ namespace Quaver.Gameplay
             _npsGraphObjects = new GameObject[_graphSize];
             _npsGraphTransforms = new RectTransform[_graphSize];
             _npsGraphImage = new RawImage[_graphSize];
+            _npsGraphPosition = new Vector2[_graphSize];
             _npsTextMarks = new RectTransform[7];
 
             //Create graphObjects
             for (i = 0; i < _graphSize; i++)
             {
                 //Get components
-                GameObject newGraphObject = new GameObject("GraphObject");
+                GameObject newGraphObject = new GameObject("GraphObject_"+i);
                 newGraphObject.transform.parent = _npsGraph.transform;
                 newGraphObject.AddComponent<CanvasRenderer>();
                 _npsGraphImage[i] = newGraphObject.AddComponent<RawImage>();
@@ -62,7 +64,8 @@ namespace Quaver.Gameplay
                 //Set position/Size
                 newGraphObject.transform.localScale = Vector3.one;
                 _npsGraphTransforms[i].sizeDelta = new Vector2(_graphObjectSize, _graphObjectSize);
-                _npsGraphTransforms[i].localPosition = new Vector2(500f - (i+0.5f) * _graphObjectSize, -200f);
+                _npsGraphPosition[i] = new Vector2(500f - (i + 0.5f) * _graphObjectSize, -200f);
+                _npsGraphTransforms[i].localPosition = _npsGraphPosition[i];
                 _npsGraphObjects[i] = newGraphObject;
             }
             for(i = 0; i < 7; i++)
@@ -115,16 +118,26 @@ namespace Quaver.Gameplay
                     {
                         if (_graphData[i] > _highestNps) _highestNps = _graphData[i];
                         _graphData[i] = _graphData[i - 1];
+                        _npsGraphImage[i].color = _npsGraphImage[i - 1].color;
+                        if (i >= 1)
+                        {
+                            _npsGraphPosition[i].y =_npsGraphPosition[i - 1].y;
+                            _npsGraphTransforms[i].localPosition = _npsGraphPosition[i];
+                            _npsGraphTransforms[i].sizeDelta = _npsGraphTransforms[i - 1].sizeDelta;
+                        }
                     }
                     _graphData[0] = _graphTween;
                     _graphScaleTween += (_highestNps + 10f - _graphScaleTween)/2f;
 
-                    //Set GraphObject Transform
-                    for (i=0; i < _graphSize; i++)
-                    {
-                        //Set object color
-                        _npsGraphImage[i].color = colorGraph(_graphData[i]);
+                    //Set values of first graph object
+                    _npsGraphImage[0].color = colorGraph(_graphData[0]);
+                    _npsGraphPosition[0].y = (_graphData[0] / _graphScaleTween) * 200f - 200f;
+                    _npsGraphTransforms[0].localPosition = _npsGraphPosition[0];
 
+                    //Set GraphObject Transform
+                    /*
+                    for (i=1; i < 4; i++)
+                    {
                         //Set object position and scale
                         float orig = (_graphData[i] / _graphScaleTween) * 200f - 200f;
                         if (i >= 1)
@@ -150,7 +163,7 @@ namespace Quaver.Gameplay
 
                         //Set position of text labels
                         if (i < 7) _npsTextMarks[i].localPosition = new Vector2(15,(200f * (10 * (i + 1))/_graphScaleTween) - 200f);
-                    }
+                    }*/
                 }
             }
         }
