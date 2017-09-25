@@ -9,9 +9,13 @@ namespace Quaver.Skin
 {
     public class SkinConfigLoader
     {
-        // Responsible for return back a parsed skin.ini file.
-        // I would seriously suggest reading the example to learn how to use
-        // this - https://github.com/rickyah/ini-parser
+        /// <summary>
+        /// Responsible for return back a parsed skin.ini file.
+        /// I would seriously suggest reading the example to learn how to use
+        /// this - https://github.com/rickyah/ini-parser
+        /// </summary>
+        /// <param name="path">The path of the skin.ini file</param>
+        /// <returns>An instance of the Skin class</returns>
         public static Skin Load(string path)
         {
             var parser = new FileIniDataParser();
