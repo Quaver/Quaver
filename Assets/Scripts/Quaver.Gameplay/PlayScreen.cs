@@ -62,7 +62,7 @@ namespace Quaver.Gameplay
             if (DEBUG_MODE) //_debug
             {
                 print("[PlayScreen] DEBUGGING MODE");
-                BeatmapCacheIndex.CreateDatabase();
+                BeatmapDBInterface.CreateDatabase();
                 Cfg GameConfig = ConfigLoader.Load();
                 List<CachedBeatmap> LoadedBeatmaps = BeatmapCacheIndex.LoadMaps(GameConfig);
                 //Load first song (for debug)
