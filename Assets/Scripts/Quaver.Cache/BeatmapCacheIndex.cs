@@ -179,7 +179,8 @@ namespace Quaver.Cache
 
                 return new CachedBeatmap(quaDir, fileName, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,
                                         "", 0, DateTime.Now, 0.0f, qua.Creator, bgPath, audioPath, qua.SongPreviewTime, 
-                                        qua.Description, qua.Source, qua.Tags, FindCommonBPM(qua), FindSongLength(qua));                
+                                        qua.Description, qua.Source, qua.Tags, BeatmapCacheUtilities.FindCommonBPM(qua), 
+                                        BeatmapCacheUtilities.FindSongLength(qua));                
             }
 
             return new CachedBeatmap(false);
@@ -249,7 +250,7 @@ namespace Quaver.Cache
                             // and update any relavant data.
                             if (File.Exists(file) && filesInDb.Contains(file))
                             {
-                                CachedBeatmap mapToUpdate = FindCachedMap(file);
+                                CachedBeatmap mapToUpdate = BeatmapCacheUtilities.FindCachedMap(file);
 
                                 // If the map is in the database, and is valid, this means it needs to be updated.
                                 if (mapToUpdate.Valid)
@@ -265,7 +266,7 @@ namespace Quaver.Cache
                             if (!File.Exists(file))
                             {                            
                                 // Find that particular beatmap in a cached map
-                                CachedBeatmap mapToDelete = FindCachedMap(file);
+                                CachedBeatmap mapToDelete = BeatmapCacheUtilities.FindCachedMap(file);
 
                                 if (mapToDelete.Valid)
                                 {
@@ -277,7 +278,7 @@ namespace Quaver.Cache
                                     // Find the map's directory, and check if that directory is null or empty.
                                     // If it isn't, that must mean the MapDirectory is valid and that particular beatmap
                                     // can be removed!
-                                    MapDirectory beatmapMapDirectory = FindMapDirectory(mapToDelete);
+                                    MapDirectory beatmapMapDirectory = BeatmapCacheUtilities.FindMapDirectory(mapToDelete);
                                     if (!String.IsNullOrEmpty(beatmapMapDirectory.Directory))
                                     {
                                         for (int i = 0; i < GameStateManager.MapDirectories.Count; i++)
@@ -417,57 +418,6 @@ namespace Quaver.Cache
 
 			}
 		}
-
-        // Finds a cached beatmap 
-        public static CachedBeatmap FindCachedMap(string fileName)
-        {
-            for (int i = 0; i < GameStateManager.LoadedBeatmaps.Count; i++)
-            {
-                if (GameStateManager.LoadedBeatmaps[i].Path == fileName)
-                {
-                    return GameStateManager.LoadedBeatmaps[i];
-                }
-            }
-
-            return new CachedBeatmap(false);
-        }
-
-        // Finds the MapDirectory object the beatmap is stored in
-        public static MapDirectory FindMapDirectory(CachedBeatmap map)
-        {
-            for (int i = 0; i < GameStateManager.MapDirectories.Count; i++)
-            {
-                if (GameStateManager.MapDirectories[i].Beatmaps.Contains(map))
-                {
-                    return GameStateManager.MapDirectories[i];
-                }
-            }
-
-            return new MapDirectory();
-        }
-
-        // Finds the most common BPM in a qua file.
-        public static int FindCommonBPM(QuaFile qua)
-        {
-            var commonBPM = (int)qua.TimingPoints.GroupBy(i => i.BPM).OrderByDescending(grp => grp.Count())
-                .Select(grp=>grp.Key).First();
-
-            return commonBPM;            
-        }
-
-        // Finds the length of the beatmap.
-        public static int FindSongLength(QuaFile qua)
-        {
-            // This'll check for either the end time of the last object if it's greater than 0, or the start time.
-            HitObject lastHitObject = qua.HitObjects[qua.HitObjects.Count - 1];
-
-            if (lastHitObject.EndTime > 0)
-            {
-                return lastHitObject.EndTime;
-            }
-
-            return lastHitObject.StartTime;
-        }
     }
 }
 
