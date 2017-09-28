@@ -17,8 +17,6 @@ namespace Quaver.Cache
 {
     public class BeatmapCacheIndex
     {
-        private static string s_connectionString = "URI=file:" + Application.dataPath + "/quaver.db";
-
         // Responsible for loading all of the playable beatmaps and creating the List<CachedBeatmap>
         public static List<CachedBeatmap> LoadMaps(Cfg userConfig)
         {
@@ -27,7 +25,7 @@ namespace Quaver.Cache
 
             // Create the database connection and create a CachedBeatmap object from them
             // and add them to our list
-            using (IDbConnection dbConnection = new SqliteConnection(s_connectionString))
+            using (IDbConnection dbConnection = new SqliteConnection(BeatmapDBInterface.s_connectionString))
             {
                 // Open db connection
                 dbConnection.Open();
@@ -108,7 +106,7 @@ namespace Quaver.Cache
 
                     if (newCachedMap.Valid)
                     {
-                        AddToDatabase(newCachedMap);
+                        BeatmapDBInterface.AddToDatabase(newCachedMap);
                         temporaryBeatmaps.Add(newCachedMap);
                     }
                     else 
@@ -149,7 +147,7 @@ namespace Quaver.Cache
                     if (matchedQuaWithDb) continue;
 
                     // If there wasn't we'll want to delete it from the database.
-                    DeleteFromDatabase(temporaryBeatmaps[i]);
+                    BeatmapDBInterface.DeleteFromDatabase(temporaryBeatmaps[i]);
                     Debug.LogWarning("[CACHE] Extra map: " + temporaryBeatmaps[i].Path + " in database found, removed from loaded beatmaps & database!");
                 }
 
@@ -159,80 +157,6 @@ namespace Quaver.Cache
             {
                 Debug.LogException(e);
                 return temporaryBeatmaps;
-            }
-        }
-
-        // Upon game launch, we'll use this to create the database and table if it does not already exist.
-        // This is ran before anything else.
-        public static void CreateDatabase()
-        {
-            // Create db connection
-            using (IDbConnection dbConnection = new SqliteConnection(s_connectionString))
-            {
-                // Open db connection
-                dbConnection.Open();
-
-                // Use connection to create an SQL Query we can execute
-                using (IDbCommand dbCmd = dbConnection.CreateCommand())
-                {
-                    string query = "CREATE TABLE if not exists \"beatmaps\" (\"id\" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , \"directory\" TEXT NOT NULL , \"path\" TEXT NOT NULL  UNIQUE , \"beatmapsetid\" INTEGER NOT NULL , \"beatmapid\" INTEGER NOT NULL , \"artist\" TEXT NOT NULL , \"title\" TEXT NOT NULL , \"difficulty\" TEXT NOT NULL , \"rank\" TEXT NOT NULL , \"status\" INTEGER NOT NULL  DEFAULT 0, \"lastplayed\" DATETIME NOT NULL  DEFAULT CURRENT_DATE, \"stars\" INTEGER NOT NULL, \"creator\" TEXT, \"backgroundpath\" TEXT, \"audiopath\" TEXT, \"audiopreviewtime\" INTEGER NOT NULL  DEFAULT 0, \"description\" TEXT, \"source\" TEXT, \"tags\" TEXT, \"bpm\" INTEGER NOT NULL  DEFAULT 0, \"songlength\" INTEGER NOT NULL  DEFAULT 0)";
-
-                    dbCmd.CommandText = query;
-                    dbCmd.ExecuteScalar(); // Execute scalar when inserting
-                    dbConnection.Close();
-                    Debug.Log("[CACHE] Beatmap Database Loaded/Generated!");
-                }
-            }
-        }
-
-        // This will be responsible for taking a CachedBeatmap and adding it to the database.
-        public static void AddToDatabase(CachedBeatmap cachedMap)
-        {
-            using (IDbConnection dbConnection = new SqliteConnection(s_connectionString))
-            {
-                // Open db connection
-                dbConnection.Open();
-
-                // Use connection to create an SQL Query we can execute
-                using (IDbCommand dbCmd = dbConnection.CreateCommand())
-                {
-                    string query = String.Format("INSERT INTO beatmaps(directory,path,beatmapsetid,beatmapid,artist,title,difficulty,rank,status,lastplayed,stars,creator,backgroundpath,audiopath,audiopreviewtime,description,source,tags,bpm,songlength) " +
-                                    "VALUES(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", \"{7}\", \"{8}\", \"{9}\", \"{10}\", \"{11}\", \"{12}\", \"{13}\", \"{14}\", \"{15}\", \"{16}\", \"{17}\", \"{18}\", \"{19}\")",
-                                    cachedMap.Directory, cachedMap.Path, cachedMap.BeatmapSetID, cachedMap.BeatmapID,
-                                    cachedMap.Artist.Replace("\"", String.Empty), cachedMap.Title.Replace("\"", String.Empty), cachedMap.Difficulty.Replace("\"", String.Empty), cachedMap.Rank.Replace("\"", String.Empty), cachedMap.Status,
-                                    cachedMap.LastPlayed, cachedMap.Stars, cachedMap.Creator.Replace("\"", String.Empty), cachedMap.BackgroundPath, cachedMap.AudioPath, cachedMap.AudioPreviewTime,
-                                    cachedMap.Description.Replace("\"", String.Empty), cachedMap.Source.Replace("\"", String.Empty), cachedMap.Tags.Replace("\"", String.Empty), cachedMap.BPM, cachedMap.SongLength);
-
-                    dbCmd.CommandText = query;
-
-                    dbCmd.ExecuteScalar(); // Execute scalar when inserting
-                    dbConnection.Close();
-
-                    Debug.Log("[CACHE] Added new beatmap to the cache.");
-                }
-            }
-        }
-
-        // This will be responsible for deleting a particular map from the database.
-        public static void DeleteFromDatabase(CachedBeatmap mapToDelete)
-        {
-            // Create db connection
-            using (IDbConnection dbConnection = new SqliteConnection(s_connectionString))
-            {
-                // Open db connection
-                dbConnection.Open();
-
-                // Use connection to create an SQL Query we can execute
-                using (IDbCommand dbCmd = dbConnection.CreateCommand())
-                {
-                    string query = "DELETE FROM beatmaps WHERE path=\"" + mapToDelete.Path + "\"";
-
-                    dbCmd.CommandText = query;
-
-                    dbCmd.ExecuteScalar(); // Execute scalar when inserting
-
-                    dbConnection.Close();
-                }
             }
         }
 
@@ -289,7 +213,7 @@ namespace Quaver.Cache
                         // Store a list of all the files in the db
                         List<string> filesInDb = new List<string>();
 
-                        using (IDbConnection dbConnection = new SqliteConnection(s_connectionString))
+                        using (IDbConnection dbConnection = new SqliteConnection(BeatmapDBInterface.s_connectionString))
                         {
                             // Open db connection
                             dbConnection.Open();
@@ -331,8 +255,8 @@ namespace Quaver.Cache
                                 if (mapToUpdate.Valid)
                                 {
                                     // So, we'll remove it from the database, and add it again.
-                                    DeleteFromDatabase(mapToUpdate);
-                                    AddToDatabase(mapToUpdate);
+                                    BeatmapDBInterface.DeleteFromDatabase(mapToUpdate);
+                                    BeatmapDBInterface.AddToDatabase(mapToUpdate);
                                 }
                             }
 
@@ -348,7 +272,7 @@ namespace Quaver.Cache
                                     Debug.Log("[BEATMAP CACHE] Removing beatmap: " + file + " from the database as it does not exist anymore.");
 
                                     // Delete it from the database
-                                    DeleteFromDatabase(mapToDelete);
+                                    BeatmapDBInterface.DeleteFromDatabase(mapToDelete);
 
                                     // Find the map's directory, and check if that directory is null or empty.
                                     // If it isn't, that must mean the MapDirectory is valid and that particular beatmap
@@ -382,7 +306,7 @@ namespace Quaver.Cache
                                 if (newMap.Valid)
                                 {
                                     // Add Map To DB
-                                    AddToDatabase(newMap);
+                                    BeatmapDBInterface.AddToDatabase(newMap);
 
                                     // Add map to loaded beatmaps
                                     GameStateManager.LoadedBeatmaps.Add(newMap);
@@ -440,7 +364,7 @@ namespace Quaver.Cache
 
                     // If the directory isn't found then we want to remove every single .qua file from the database,
                     // delete the MapDirectory, & remove them from the list of loadedbeatmaps
-                    using (IDbConnection dbConnection = new SqliteConnection(s_connectionString))
+                    using (IDbConnection dbConnection = new SqliteConnection(BeatmapDBInterface.s_connectionString))
                     {
                         // Open db connection
                         dbConnection.Open();

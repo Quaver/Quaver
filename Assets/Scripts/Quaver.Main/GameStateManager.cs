@@ -158,7 +158,7 @@ namespace Quaver.Main
         private void LoadConfiguration()
         {
             // Create and/or sync the beatmap database.
-            BeatmapCacheIndex.CreateDatabase();
+            BeatmapDBInterface.CreateDatabase();
 
             // The first thing we want to do is load our config before anything else.
             GameConfig = ConfigLoader.Load();
