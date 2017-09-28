@@ -102,7 +102,7 @@ namespace Quaver.Cache
                     if (foundMap) continue;
 
                     // Otherwise, we'll want to parse the map and add it to the DB.
-                    CachedBeatmap newCachedMap = ConvertQuaToCached(quaFilesInDirectory[i]);
+                    CachedBeatmap newCachedMap = BeatmapCacheUtilities.ConvertQuaToCached(quaFilesInDirectory[i]);
 
                     if (newCachedMap.Valid)
                     {
@@ -158,32 +158,6 @@ namespace Quaver.Cache
                 Debug.LogException(e);
                 return temporaryBeatmaps;
             }
-        }
-
-        // Responsible for converting a .qua file to a CachedBeatmap
-        public static CachedBeatmap ConvertQuaToCached(string fileName)
-        {
-            QuaFile qua = QuaParser.Parse(fileName, false);
-            
-            if (qua.IsValidQua)
-            {
-                // Convert the parsed qua file into a CachedBeatmap and add it to our tempBeatmaps.
-                string quaDir = Path.GetDirectoryName(fileName);
-                string bgPath = quaDir + "/" + qua.BackgroundFile.Replace("\"", "");
-                string audioPath = quaDir + "/" + qua.AudioFile.Replace("\"", "");
-
-                if (Strings.IsNullOrEmptyOrWhiteSpace(qua.Description))
-                {
-                    qua.Description = "No Description.";
-                }
-
-                return new CachedBeatmap(quaDir, fileName, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,
-                                        "", 0, DateTime.Now, 0.0f, qua.Creator, bgPath, audioPath, qua.SongPreviewTime, 
-                                        qua.Description, qua.Source, qua.Tags, BeatmapCacheUtilities.FindCommonBPM(qua), 
-                                        BeatmapCacheUtilities.FindSongLength(qua));                
-            }
-
-            return new CachedBeatmap(false);
         }
 
         // Responsible for refreshing all of the directories in the queue.
@@ -302,7 +276,7 @@ namespace Quaver.Cache
                             {                        
                                 // If the map isn't valid, we need to go ahead and parse that file, and add it
                                 // manually the to the database using SQL.
-                                CachedBeatmap newMap = ConvertQuaToCached(file);
+                                CachedBeatmap newMap = BeatmapCacheUtilities.ConvertQuaToCached(file);
 
                                 if (newMap.Valid)
                                 {
