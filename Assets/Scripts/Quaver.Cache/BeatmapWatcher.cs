@@ -208,6 +208,7 @@ namespace Quaver.Cache
                                         // Add the new map directory to the current list!
                                         GameStateManager.MapDirectories.Add(newDir);
 
+
                                         Debug.Log("[BEATMAP CACHE] Did not find the correct MapDirectory, so creating one for file: " + file);
                                     }
 
@@ -225,6 +226,7 @@ namespace Quaver.Cache
                         GameStateManager.SongDirectoryChangeQueue.RemoveAll(queueItem => queueItem == dir);
                     }
 
+					GameStateManager.MapDirectories = OrderMapsBy.Artist(GameStateManager.MapDirectories);  
                     Debug.Log("[BEATMAP CACHE] Change Queue Updated with: " + GameStateManager.SongDirectoryChangeQueue.Count + " maps in it.");
                 }
                 catch (DirectoryNotFoundException e)
@@ -272,7 +274,9 @@ namespace Quaver.Cache
                         {
                             GameStateManager.MapDirectories.Remove(mapDirToDelete);
                             Debug.Log("[BEATMAP CACHE] Map Directory: " + currentDir + " was deleted, and has been removed from the cache.");
-                        }                        
+                        }
+
+						GameStateManager.MapDirectories = OrderMapsBy.Artist(GameStateManager.MapDirectories);                       
                     } 
 
                     GameStateManager.SongDirectoryChangeQueue.RemoveAll(queueItem => currentDir.Contains(queueItem) || queueItem.Contains(".meta"));
