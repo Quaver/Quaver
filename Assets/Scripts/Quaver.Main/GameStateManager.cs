@@ -164,7 +164,7 @@ namespace Quaver.Main
             GameConfig = ConfigLoader.Load();
 
             // Here, we load all the beatmaps from the database, these are all the playable maps.
-            LoadedBeatmaps = BeatmapCacheIndex.LoadBeatmaps(GameConfig);
+            LoadedBeatmaps = BeatmapCacheIndex.LoadMaps(GameConfig);
 
             // Now, we want to sort all of the beatmaps.
             MapDirectories = OrderMapsBy.Directory(LoadedBeatmaps);

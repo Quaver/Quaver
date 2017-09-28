@@ -19,37 +19,14 @@ namespace Quaver.Cache
     {
         private static string s_connectionString = "URI=file:" + Application.dataPath + "/quaver.db";
 
-        // Upon game launch, we'll use this to create the database and table if it does not already exist.
-        // This is ran before anything else.
-        public static void CreateDatabase()
+        // Responsible for loading all of the playable beatmaps and creating the List<CachedBeatmap>
+        public static List<CachedBeatmap> LoadMaps(Cfg userConfig)
         {
-            // Create db connection
-            using (IDbConnection dbConnection = new SqliteConnection(s_connectionString))
-            {
-                // Open db connection
-                dbConnection.Open();
+            // First, we'll want to select all of the maps from the database and add them to a temporary List<CachedBeatmap>
+            List<CachedBeatmap> temporaryMaps = new List<CachedBeatmap>();
 
-                // Use connection to create an SQL Query we can execute
-                using (IDbCommand dbCmd = dbConnection.CreateCommand())
-                {
-                    string query = "CREATE TABLE if not exists \"beatmaps\" (\"id\" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , \"directory\" TEXT NOT NULL , \"path\" TEXT NOT NULL  UNIQUE , \"beatmapsetid\" INTEGER NOT NULL , \"beatmapid\" INTEGER NOT NULL , \"artist\" TEXT NOT NULL , \"title\" TEXT NOT NULL , \"difficulty\" TEXT NOT NULL , \"rank\" TEXT NOT NULL , \"status\" INTEGER NOT NULL  DEFAULT 0, \"lastplayed\" DATETIME NOT NULL  DEFAULT CURRENT_DATE, \"stars\" INTEGER NOT NULL, \"creator\" TEXT, \"backgroundpath\" TEXT, \"audiopath\" TEXT, \"audiopreviewtime\" INTEGER NOT NULL  DEFAULT 0, \"description\" TEXT, \"source\" TEXT, \"tags\" TEXT, \"bpm\" INTEGER NOT NULL  DEFAULT 0, \"songlength\" INTEGER NOT NULL  DEFAULT 0)";
-
-                    dbCmd.CommandText = query;
-                    dbCmd.ExecuteScalar(); // Execute scalar when inserting
-                    dbConnection.Close();
-                    Debug.Log("[CACHE] Beatmap Database Loaded/Generated!");
-                }
-            }
-        }
-
-        // Upon game launch, we'll want to load all of the beatmaps in the database to a List<CachedBeatmap>
-        // These will be the maps that we will be available for song select.
-        public static List<CachedBeatmap> LoadBeatmaps(Cfg userConfig)
-        {
-            List<CachedBeatmap> tempBeatmaps = new List<CachedBeatmap>();
-
-            // First we'll want to find all beatmaps in the database.
-            // Create db connection
+            // Create the database connection and create a CachedBeatmap object from them
+            // and add them to our list
             using (IDbConnection dbConnection = new SqliteConnection(s_connectionString))
             {
                 // Open db connection
@@ -71,14 +48,14 @@ namespace Quaver.Cache
                         {
                             // Create new Cached Beatmap Object
                             CachedBeatmap loadedBeatmap = new CachedBeatmap(
-                                        reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetInt32(4),
-                                        reader.GetString(5), reader.GetString(6), reader.GetString(7), reader.GetString(8),
-                                        reader.GetInt32(9), DateTime.Now, reader.GetFloat(11), reader.GetString(12), reader.GetString(13),
-                                        reader.GetString(14), reader.GetInt32(15), reader.GetString(16), reader.GetString(17), reader.GetString(18),
-                                        reader.GetInt32(19), reader.GetInt32(20));
+                            reader.GetString(1), reader.GetString(2), reader.GetInt32(3), reader.GetInt32(4),
+                            reader.GetString(5), reader.GetString(6), reader.GetString(7), reader.GetString(8),
+                            reader.GetInt32(9), DateTime.Now, reader.GetFloat(11), reader.GetString(12), reader.GetString(13),
+                            reader.GetString(14), reader.GetInt32(15), reader.GetString(16), reader.GetString(17), reader.GetString(18),
+                            reader.GetInt32(19), reader.GetInt32(20));
 
                             // Append the loaded beatmap to our List
-                            tempBeatmaps.Add(loadedBeatmap);
+                            temporaryMaps.Add(loadedBeatmap);
                         }
 
                         // Close DB & Reader
@@ -86,122 +63,126 @@ namespace Quaver.Cache
                         reader.Close();
                     }
                 }
+
+                SyncMissingBeatmaps(temporaryMaps, userConfig);
+                return SyncMissingQua(temporaryMaps, userConfig);
             }
+           
+        }
 
-            // Run a check if the amount of tempBeatmaps from the DB is equivalent to the number of .qua files in the songs directory
-            // If they aren't, we'll have to add/delete them to/from the database, and also append/truncate them to the tempBeatmaps list.
-            // Also run a check if each beatmap in the database matches with a song in the file system.
-
-            // This'll store the list of beatmaps that we'll be returning back to the user.
-            // These will be all beatmaps that are playable. Any other "tempBeatmaps" variable is temporary.
-            List<CachedBeatmap> finalLoadedBeatmaps = new List<CachedBeatmap>();
+        // Responsible for checking the file system and matching each .qua file to a row in the database.
+        // If there are more db rows, than .qua files, it'll get rid of the extra ones, and vice versa.
+        private static void SyncMissingBeatmaps(List<CachedBeatmap> temporaryBeatmaps, Cfg userConfig)
+        {
             try
             {
-                // This is all of the .qua files in the current songs directory
-                string[] quaFilesInDir = Directory.GetFiles(userConfig.SongDirectory, "*.qua", SearchOption.AllDirectories);
+                // Find all of the .qua files in the directory
+                string[] quaFilesInDirectory = Directory.GetFiles(userConfig.SongDirectory, "*.qua", SearchOption.AllDirectories);
 
-                if (tempBeatmaps.Count != quaFilesInDir.Length)
+                // If the number of loaded beatmaps and qua files don't match, we'll want to warn the user.
+                if (temporaryBeatmaps.Count != quaFilesInDirectory.Length)
                 {
-                    Debug.LogWarning(String.Format("[CACHE] Incorrect # of Loaded Beatmaps vs. Qua Files ({0} vs {1})", tempBeatmaps.Count, quaFilesInDir.Length));
+                    Debug.LogWarning("[BEATMAP CACHE] Incorrect number of loaded beatmaps vs. Qua Files: " + 
+                    temporaryBeatmaps.Count + " vs. " + quaFilesInDirectory.Length);
                 }
 
-                // Loop through all of the .qua files, and check if we have any missing maps.
-                // For every .qua file, we'll look to see if the paths match, if not, the 
-                // map will be considered as missing and will be added to the database,
-                // + appended to the list.
-                List<string> missingMaps = new List<string>();
-
-                // Add the missing .qua files to the database, and add them to the tempBeatmaps list.
-                if (missingMaps.Count > 0)
-                    Debug.LogWarning("[CACHE] # of missing .qua files in database: " + missingMaps.Count);
-
-                // Check if each qua file is already in the array. If it isn't, then add it.
-                foreach (string quaFile in quaFilesInDir)
-                {
+                // Here, we'll want to find all of the .qua files that are missing from the database and add them.
+                for (int i = 0; i < quaFilesInDirectory.Length; i++)
+                {   
                     bool foundMap = false;
-                    for (int i = 0; i < tempBeatmaps.Count; i++)
+
+                    for (int j = 0; j < temporaryBeatmaps.Count; j++)
                     {
-                        if (quaFile == tempBeatmaps[i].Path)
+                        if (quaFilesInDirectory[i] == temporaryBeatmaps[j].Path)
                         {
                             foundMap = true;
                             break;
                         }
                     }
 
-                    // If the map was found in the db, just check the next .qua file.
-                    if (foundMap)
-                        continue;
+                    // If the map ended up being found in the database, we'll want to move onto the next one
+                    if (foundMap) continue;
 
-                    // If the entire loop completes, this .qua file must be missing.
-                    missingMaps.Add(quaFile);
+                    // Otherwise, we'll want to parse the map and add it to the DB.
+                    CachedBeatmap newCachedMap = ConvertQuaToCached(quaFilesInDirectory[i]);
 
-                    // Parse the qua file, get the necessary data, and add it to the database.
-                    QuaFile qua = QuaParser.Parse(quaFile);
-
-                    if (qua.IsValidQua)
+                    if (newCachedMap.Valid)
                     {
-                        // Convert the parsed qua file into a CachedBeatmap and add it to our tempBeatmaps.
-                        string quaDir = Path.GetDirectoryName(quaFile);
-                        string bgPath = quaDir + "/" + qua.BackgroundFile.Replace("\"", "");
-                        string audioPath = quaDir + "/" + qua.AudioFile.Replace("\"", "");
-
-                        if (Strings.IsNullOrEmptyOrWhiteSpace(qua.Description))
-                        {
-                            qua.Description = "This beatmap was converted from osu!mania.";
-                        }
-
-                        CachedBeatmap foundMissingMap = new CachedBeatmap(
-                            quaDir, quaFile, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,
-                            "", 0, DateTime.Now, 0.0f, qua.Creator, bgPath, audioPath, qua.SongPreviewTime, 
-                            qua.Description, qua.Source, qua.Tags, FindCommonBPM(qua), FindSongLength(qua));
-
-                        // Add the missing map to our loaded map, when the beatmap is selected, we'll have to get the BeatmapSetID + BeatmapId
-                        // + Status and update that, but ONLY when the map has been selected.										
-                        tempBeatmaps.Add(foundMissingMap);
-
-                        // Add the found missing map to the database.
-                        AddToDatabase(foundMissingMap);
+                        AddToDatabase(newCachedMap);
+                        temporaryBeatmaps.Add(newCachedMap);
                     }
-                    else
+                    else 
                     {
-                        // Delete the .qua file from the file system.
-                        File.Delete(quaFile);
-                    }
+                        File.Delete(quaFilesInDirectory[i]);
+                    }                
                 }
+            } catch (Exception e)
+            {
+                Debug.Log(e);
+            }
+        }
 
-                // Since we should now have all of the missing qua files up to date, let's run a check for all of 
-                // the maps in our database, that we don't have on the file system.
-                foreach (CachedBeatmap mapInDb in tempBeatmaps)
+        // Responsible for syncing maps that are in the database, but don't have a valid .qua file attached to them.
+        private static List<CachedBeatmap> SyncMissingQua(List<CachedBeatmap> temporaryBeatmaps, Cfg userConfig)
+        {
+            try 
+            {
+                string[] quaFilesInDirectory = Directory.GetFiles(userConfig.SongDirectory, "*.qua", SearchOption.AllDirectories);
+                List<CachedBeatmap> syncedMaps = new List<CachedBeatmap>();
+
+                // Attempt to find a match of the .qua file and beatmap.
+                for (int i = 0; i < temporaryBeatmaps.Count; i++)
                 {
-                    bool foundMapInDb = false;
-                    for (int i = 0; i < quaFilesInDir.Length; i++)
+                    bool matchedQuaWithDb = false;
+                    for (int j = 0; j < quaFilesInDirectory.Length; j++)
                     {
-                        if (mapInDb.Path == quaFilesInDir[i])
+                        // If the .qua was found then we'll want to move onto the next one.
+                        if (temporaryBeatmaps[i].Path == quaFilesInDirectory[j])
                         {
-                            foundMapInDb = true;
-
-                            // Add the found map to the final list of maps we'll be returning
-                            finalLoadedBeatmaps.Add(mapInDb);
+                            matchedQuaWithDb = true;
+                            syncedMaps.Add(temporaryBeatmaps[i]);
                             break;
                         }
                     }
 
-                    // If the map was indeed fuond on the file system, check the next map.
-                    if (foundMapInDb)
-                        continue;
+                    // If there was a match, continue onto the next beatmap.
+                    if (matchedQuaWithDb) continue;
 
-                    // Delete the map from the database.
-                    DeleteFromDatabase(mapInDb);
+                    // If there wasn't we'll want to delete it from the database.
+                    DeleteFromDatabase(temporaryBeatmaps[i]);
+                    Debug.LogWarning("[CACHE] Extra map: " + temporaryBeatmaps[i].Path + " in database found, removed from loaded beatmaps & database!");
+                }
 
-                    Debug.LogWarning("[CACHE] Extra map: " + mapInDb.Path + " in database found, removed from loaded beatmaps & database!");
+                return syncedMaps;
+
+            } catch (Exception e)
+            {
+                Debug.LogException(e);
+                return temporaryBeatmaps;
+            }
+        }
+
+        // Upon game launch, we'll use this to create the database and table if it does not already exist.
+        // This is ran before anything else.
+        public static void CreateDatabase()
+        {
+            // Create db connection
+            using (IDbConnection dbConnection = new SqliteConnection(s_connectionString))
+            {
+                // Open db connection
+                dbConnection.Open();
+
+                // Use connection to create an SQL Query we can execute
+                using (IDbCommand dbCmd = dbConnection.CreateCommand())
+                {
+                    string query = "CREATE TABLE if not exists \"beatmaps\" (\"id\" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , \"directory\" TEXT NOT NULL , \"path\" TEXT NOT NULL  UNIQUE , \"beatmapsetid\" INTEGER NOT NULL , \"beatmapid\" INTEGER NOT NULL , \"artist\" TEXT NOT NULL , \"title\" TEXT NOT NULL , \"difficulty\" TEXT NOT NULL , \"rank\" TEXT NOT NULL , \"status\" INTEGER NOT NULL  DEFAULT 0, \"lastplayed\" DATETIME NOT NULL  DEFAULT CURRENT_DATE, \"stars\" INTEGER NOT NULL, \"creator\" TEXT, \"backgroundpath\" TEXT, \"audiopath\" TEXT, \"audiopreviewtime\" INTEGER NOT NULL  DEFAULT 0, \"description\" TEXT, \"source\" TEXT, \"tags\" TEXT, \"bpm\" INTEGER NOT NULL  DEFAULT 0, \"songlength\" INTEGER NOT NULL  DEFAULT 0)";
+
+                    dbCmd.CommandText = query;
+                    dbCmd.ExecuteScalar(); // Execute scalar when inserting
+                    dbConnection.Close();
+                    Debug.Log("[CACHE] Beatmap Database Loaded/Generated!");
                 }
             }
-            catch (Exception err)
-            {
-                Debug.LogError("[CACHE] Unable to check songs directory for .qua files. Is the SongDirectory correct?" + err.ToString());
-            }
-
-            return finalLoadedBeatmaps;
         }
 
         // This will be responsible for taking a CachedBeatmap and adding it to the database.
@@ -269,7 +250,7 @@ namespace Quaver.Cache
 
                 if (Strings.IsNullOrEmptyOrWhiteSpace(qua.Description))
                 {
-                    qua.Description = "This beatmap was converted from osu!mania.";
+                    qua.Description = "No Description.";
                 }
 
                 return new CachedBeatmap(quaDir, fileName, -1, -1, qua.Artist, qua.Title, qua.DifficultyName,

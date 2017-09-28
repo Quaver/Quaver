@@ -64,7 +64,7 @@ namespace Quaver.Gameplay
                 print("[PlayScreen] DEBUGGING MODE");
                 BeatmapCacheIndex.CreateDatabase();
                 Cfg GameConfig = ConfigLoader.Load();
-                List<CachedBeatmap> LoadedBeatmaps = BeatmapCacheIndex.LoadBeatmaps(GameConfig);
+                List<CachedBeatmap> LoadedBeatmaps = BeatmapCacheIndex.LoadMaps(GameConfig);
                 //Load first song (for debug)
                 AudioPlayer.LoadSong(LoadedBeatmaps[0], _songAudio, false, (float)config_playStartDelayed / 1000f);
                 //print(_songAudio.clip.length);
