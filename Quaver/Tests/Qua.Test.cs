@@ -11,8 +11,11 @@ namespace Quaver.Tests
     public static class QuaTest
     {
         [Conditional("DEBUG")]
-        public static void ParseQuaTest()
+        public static void ParseQuaTest(bool run)
         {
+            if (!run)
+                return;
+
             // Parsing a new Qua for testing purposes. We've specified a preprocessor directive here, 
             // so this'll only run in debug mode.
             var filePath = @"C:\Users\swan\Desktop\Stuff\Git\Quaver2.0\Quaver\Test\Qua\backbeat.qua";
