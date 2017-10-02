@@ -252,7 +252,6 @@ namespace Quaver.Config
             {
                 _volumeGlobal = value;
                 Task.Run(async () => await WriteConfigFileAsync());
-                ;
             }
         }
 

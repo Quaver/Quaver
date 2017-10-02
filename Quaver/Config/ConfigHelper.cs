@@ -13,7 +13,6 @@ namespace Quaver.Config
     /// </summary>
     public class ConfigHelper
     {
-
         /// <summary>
         ///     Reads a string and checks if it's a valid directory.
         /// </summary>
