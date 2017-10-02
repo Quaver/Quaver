@@ -113,9 +113,9 @@ namespace Quaver.QuaFile
         internal string TitleUnicode { get; set; }
 
         // Constructor
-        internal Qua(string filePath, bool gameplay = false)
+        internal Qua(string filePath)
         {
-            Parse(filePath, gameplay);
+            Parse(filePath);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Quaver.QuaFile
         /// <param name="filePath"></param>
         /// <param name="gameplay"></param>
         /// <returns></returns>
-        private void Parse(string filePath, bool gameplay)
+        private void Parse(string filePath)
         {
             // If the file doesn't exist, or it doesn't have a .qua extension, 
             // consider that an invalid Qua
@@ -143,11 +143,7 @@ namespace Quaver.QuaFile
                     var line = sr.ReadLine();
                     fileSection = GetFileSection(line, fileSection);
 
-                    // If we're parsing specifically for gameplay.
-                    if (gameplay)
-                        ParseQuaForGameplay(fileSection, line);
-                    else
-                        ParseEntireQua(fileSection, line);
+                     ParseEntireQua(fileSection, line);
                 }
             }
         }
@@ -195,32 +191,6 @@ namespace Quaver.QuaFile
                 case "Metadata":
                     ParseMetadata(line);
                     break;
-                case "Difficulty":
-                    ParseDifficulty(line);
-                    break;
-                case "Timing":
-                    ParseTiming(line);
-                    break;
-                case "SV":
-                    ParseSliderVelocity(line);
-                    break;
-                case "HitObjects":
-                    ParseHitObject(line);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// This will parse only the required information in the .qua for gameplay purposes
-        /// </summary>
-        /// <param name="fileSection">The current file section</param>
-        /// <param name="line">The current line of the file.</param>
-        private void ParseQuaForGameplay(string fileSection, string line)
-        {
-            switch (fileSection)
-            {
                 case "Difficulty":
                     ParseDifficulty(line);
                     break;
