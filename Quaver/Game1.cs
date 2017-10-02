@@ -16,7 +16,12 @@ namespace Quaver
         
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this)
+            {
+                SynchronizeWithVerticalRetrace = false
+            };
+
+            IsFixedTimeStep = false;
             Content.RootDirectory = "Content";
         }
 
