@@ -1,7 +1,7 @@
 ﻿#define DEBUG
 
 using System;
-using Quaver.Quas;
+using Quaver.QuaFile;
 using Quaver.Config;
 
 namespace Quaver
