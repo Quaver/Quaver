@@ -19,7 +19,7 @@ namespace Quaver.Tests
             // Parsing a new Qua for testing purposes. We've specified a preprocessor directive here, 
             // so this'll only run in debug mode.
             var filePath = @"C:\Users\swan\Desktop\Stuff\Git\Quaver2.0\Quaver\Test\Qua\backbeat.qua";
-            var qua = new Qua(filePath, false);
+            var qua = new Qua(filePath);
             Console.WriteLine($"Displaying data for parsed .qua file: {filePath}\n\n" +
                               $"Artist: {qua.Artist}\n" +
                               $"Title: {qua.Title}\n" +

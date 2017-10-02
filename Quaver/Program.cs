@@ -35,7 +35,7 @@ namespace Quaver
         /// </summary>
         private static void RunTestMethods()
         {
-            QuaTest.ParseQuaTest(false);
+            QuaTest.ParseQuaTest(true);
         }
     }
 }
