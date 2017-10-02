@@ -148,7 +148,6 @@ namespace Quaver.QuaFile
                         ParseQuaForGameplay(fileSection, line);
                     else
                         ParseEntireQua(fileSection, line);
-
                 }
             }
         }
