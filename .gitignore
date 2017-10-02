@@ -47,3 +47,5 @@ quaver.cfg
 quaver.cfg.meta
 quaver.db
 quaver.db.meta
+bin/*
+obj/*
