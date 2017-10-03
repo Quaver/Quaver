@@ -38,6 +38,7 @@ namespace Quaver
         private static void RunTestMethods()
         {
             QuaTest.ParseQuaTest(true);
+            SkinTest.ParseSkinTest(true);
         }
     }
 }
