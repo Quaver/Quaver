@@ -17,7 +17,10 @@ namespace Quaver.Tests
                 return;
 
             const string filePath = @"C:\Users\swan\Desktop\Stuff\Git\Quaver2.0\Quaver\Example\Skin\sample.ini";
+
+            var watch = Stopwatch.StartNew();
             var skin = new Skin(filePath);
+            watch.Stop();
             
             Console.Write($"Displaying values for parsed skin: {filePath}\n\n" +
                           $"Name: {skin.Name}\n" +
@@ -40,7 +43,9 @@ namespace Quaver.Tests
                           $"Colour1: {skin.Colour1}\n" +
                           $"Colour2: {skin.Colour2}\n" +
                           $"Colour3: {skin.Colour3}\n" +
-                          $"Colour4: {skin.Colour4}\n");
+                          $"Colour4: {skin.Colour4}\n" +
+                          $"Parsing Took : {watch.ElapsedMilliseconds}ms to execute.\n" +
+                          $"----------------------------------------------------------\n");
         }
     }
 }

@@ -26,7 +26,10 @@ namespace Quaver.Tests
                 return;
             }
 
+            var watch = Stopwatch.StartNew();
             var qua = new Qua(filePath);
+            watch.Stop();
+
             Console.WriteLine($"Displaying data for parsed .qua file: {filePath}\n\n" +
                               $"Artist: {qua.Artist}\n" +
                               $"Title: {qua.Title}\n" +
@@ -45,6 +48,7 @@ namespace Quaver.Tests
                               $"Timing Points: {qua.TimingPoints.Count}\n" +
                               $"Slider Velocities: {qua.SliderVelocities.Count}\n" +
                               $"HitObjects: {qua.HitObjects.Count}\n" +
+                              $"Parsing Took: {watch.ElapsedMilliseconds}ms to execute.\n" +
                               $"-----------------------------------------\n");
         }
     }
