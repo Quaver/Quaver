@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace Quaver.Config
 {
@@ -70,6 +71,24 @@ namespace Quaver.Config
             }
         }
 
+        /// <summary>
+        ///     Responsible for reading float values
+        /// </summary>
+        /// <param name="defaultVal"></param>
+        /// <param name="newVal"></param>
+        /// <returns></returns>
+        internal static float ReadFloat(float defaultVal, string newVal)
+        {
+            try
+            {
+                return float.Parse(newVal);
+            }
+            catch (Exception e)
+            {
+                return defaultVal;
+            }
+        }
+    
         /// <summary>
         ///     Responsible for reading boolean values from the config file.
         /// </summary>
@@ -138,6 +157,26 @@ namespace Quaver.Config
         internal static Keys ReadKeys(Keys defaultKey, string newVal)
         {
             return Enum.TryParse(newVal, out Keys newKey) ? newKey : defaultKey;
+        }
+
+        /// <summary>
+        ///     Reads an XNA Color value from a string
+        /// </summary>
+        /// <param name="defaultColor"></param>
+        /// <param name="newVal"></param>
+        /// <returns></returns>
+        internal static Color ReadColor(Color defaultColor, string newVal)
+        {
+            try
+            {
+                string[] colorSplit = newVal.Split(',');
+                return new Color(byte.Parse(colorSplit[0]), byte.Parse(colorSplit[1]), byte.Parse(colorSplit[2]), byte.Parse(colorSplit[3]));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return defaultColor;
+            }
         }
     }
 }
