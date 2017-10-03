@@ -129,7 +129,10 @@ namespace Quaver.QuaFile
             // If the file doesn't exist, or it doesn't have a .qua extension, 
             // consider that an invalid Qua
             if (!File.Exists(filePath) || !filePath.ToLower().EndsWith(".qua"))
+            {
                 IsValidQua = false;
+                return;
+            }
 
             // This will hold the current file section that we are parsing
             var fileSection = "";
