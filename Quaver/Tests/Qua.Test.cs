@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.QuaFile;
+using System.IO;
 
 namespace Quaver.Tests
 {
@@ -18,7 +19,13 @@ namespace Quaver.Tests
 
             // Parsing a new Qua for testing purposes. We've specified a preprocessor directive here, 
             // so this'll only run in debug mode.
-            var filePath = @"C:\Users\swan\Desktop\Stuff\Git\Quaver2.0\Quaver\Test\Qua\backbeat.qua";
+            var filePath = @"C:\Users\swan\Desktop\Stuff\Git\Quaver2.0\Quaver\Example\Qua\backbeat.qua";
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("Error on ParseQuaTest: Specified file does not exist.");
+                return;
+            }
+
             var qua = new Qua(filePath);
             Console.WriteLine($"Displaying data for parsed .qua file: {filePath}\n\n" +
                               $"Artist: {qua.Artist}\n" +
