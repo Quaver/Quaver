@@ -44,7 +44,8 @@ namespace Quaver.Tests
                               $"AccuracyStreain: {qua.AccuracyStrain}\n" +
                               $"Timing Points: {qua.TimingPoints.Count}\n" +
                               $"Slider Velocities: {qua.SliderVelocities.Count}\n" +
-                              $"HitObjects: {qua.HitObjects.Count}");
+                              $"HitObjects: {qua.HitObjects.Count}\n" +
+                              $"-----------------------------------------\n");
         }
     }
 }
