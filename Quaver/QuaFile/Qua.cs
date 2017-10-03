@@ -146,7 +146,7 @@ namespace Quaver.QuaFile
                     var line = sr.ReadLine();
                     fileSection = GetFileSection(line, fileSection);
 
-                     ParseEntireQua(fileSection, line);
+                    ParseEntireQua(fileSection, line);
                 }
             }
         }
