@@ -9,10 +9,10 @@ using System.IO;
 
 namespace Quaver.Tests
 {
-    public static class QuaTest
+    internal static class QuaTest
     {
         [Conditional("DEBUG")]
-        public static void ParseQuaTest(bool run)
+        internal static void ParseQuaTest(bool run)
         {
             if (!run)
                 return;
