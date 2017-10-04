@@ -582,7 +582,7 @@ namespace Quaver.Config
             Directory.CreateDirectory(DataDirectory);
 
             _songDirectory = GameDirectory + "/Songs";
-            Directory.CreateDirectory(Songdirectory);
+            Directory.CreateDirectory(SongDirectory);
 
             // We'll want to write a quaver.cfg file if it doesn't already exist.
             // There's no need to read the config file afterwards, since we already have 
@@ -615,7 +615,7 @@ namespace Quaver.Config
             _replayDirectory = ConfigHelper.ReadDirectory(ReplayDirectory, data["ReplayDirectory"]);
             _logsDirectory = ConfigHelper.ReadDirectory(LogsDirectory, data["LogsDirectory"]);
             _dataDirectory = ConfigHelper.ReadDirectory(DataDirectory, data["DataDirectory"]);
-            _songDirectory = ConfigHelper.ReadDirectory(Songdirectory, data["SongDirectory"]);
+            _songDirectory = ConfigHelper.ReadDirectory(SongDirectory, data["SongDirectory"]);
             _volumeGlobal = ConfigHelper.ReadPercentage(VolumeGlobal, data["VolumeGlobal"]);
             _volumeEffect = ConfigHelper.ReadPercentage(VolumeEffect, data["VolumeEffect"]);
             _volumeMusic = ConfigHelper.ReadPercentage(VolumeMusic, data["VolumeMusic"]);
