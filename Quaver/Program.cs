@@ -38,8 +38,8 @@ namespace Quaver
         [Conditional("DEBUG")]
         private static void RunTestMethods()
         {
-            QuaTest.ParseQuaTest(true);
-            SkinTest.ParseSkinTest(true);
+            Task.Run(() => QuaTest.ParseQuaTest(true));
+            Task.Run(() => SkinTest.ParseSkinTest(true));
         }
     }
 }
