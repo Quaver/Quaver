@@ -32,6 +32,9 @@ namespace Quaver
             // Wait for all relevant tasks to complete before starting the game.
             Task.WaitAll(dbTask);
 
+            // Start watching for directory changes.
+            Task.Run(() => BeatmapImporter.WatchForChanges());
+
             // Start game
             using (var game = new Game1())
             {
