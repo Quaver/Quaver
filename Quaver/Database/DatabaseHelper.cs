@@ -26,7 +26,6 @@ namespace Quaver.Database
             var conn = new SQLiteAsyncConnection(databasePath);
             await conn.CreateTableAsync<Beatmap>();
             await SyncBeatmapDatabaseAsync();
-            Console.WriteLine("[DATABASE HELPER] Beatmap synchronization completed!");
         }
 
         /// <summary>
@@ -90,6 +89,7 @@ namespace Quaver.Database
 
             // Now that the file count is synced, let's remove the records that don't have attached beatmaps.
             await SyncMissingQuaFromDatabase(files);
+            Console.WriteLine("[DATABASE HELPER] Beatmap synchronization completed!");
         }
 
         /// <summary>
