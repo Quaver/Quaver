@@ -156,7 +156,9 @@ namespace Quaver.Database
                     Console.WriteLine(e.ToString());
                 }
                 
-            }          
+            }
+            
+            Console.WriteLine($"[DATABASE HELPER] Sync Complete!");
         }
     }
 }
