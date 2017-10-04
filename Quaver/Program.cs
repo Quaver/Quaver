@@ -49,7 +49,7 @@ namespace Quaver
         [Conditional("DEBUG")]
         private static void RunTestMethods()
         {
-            Console.WriteLine("[DEBUG] Running Test Methods...");
+            Console.WriteLine("\n[DEBUG] Running Test Methods...\n");
             Task.Run(() => QuaTest.ParseQuaTest(true));
             Task.Run(() => SkinTest.ParseSkinTest(true));
         }
