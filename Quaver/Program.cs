@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Quaver.QuaFile;
 using Quaver.Config;
+using Quaver.Database;
 using Quaver.Tests;
 
 namespace Quaver
@@ -18,8 +20,29 @@ namespace Quaver
         [STAThread]
         private static void Main()
         {
-            Configuration.InitializeConfig();
-            Task.Run(() => RunTestMethods());
+            // Initialize quaver.cfg
+            var configTask = Task.Factory.StartNew(() =>
+            {
+                Console.WriteLine("[MAIN] Initializing Config...");
+                Configuration.InitializeConfig();
+            });
+
+            // Initialize beatmap database.
+            var beatmapDatabaseTask = Task.Factory.StartNew(async () =>
+            {
+                Console.WriteLine("[MAIN] Initializing/Reading Beatmap Database...");
+                await DatabaseHelper.InitializeBeatmapDatabaseAsync();
+            });
+            
+            // Run Test Methods
+            Task.Run(() =>
+            {
+                Console.WriteLine("[DEBUG] Running Test Methods...");
+                RunTestMethods();
+            });
+
+            //Wait for all of the setup tasks to complete before running the game.
+            Task.WaitAll(configTask, beatmapDatabaseTask);
 
             // Start game
             using (var game = new Game1())
