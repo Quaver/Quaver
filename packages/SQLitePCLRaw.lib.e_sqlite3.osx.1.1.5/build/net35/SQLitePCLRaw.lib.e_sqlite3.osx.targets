@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Automatically generated-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="InjectReference_9b0c0bce-b127-49ab-878f-732dbd5a9266" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup Condition=" '$(OS)' == 'Unix' AND Exists('/Library/Frameworks') ">
+      <Content Include="$(MSBuildThisFileDirectory)..\..\runtimes\osx-x64\native\libe_sqlite3.dylib">
+        <Link>libe_sqlite3.dylib</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Pack>false</Pack>
+      </Content>
+    </ItemGroup>
+  </Target>
+  <PropertyGroup>
+    <ResolveAssemblyReferencesDependsOn>$(ResolveAssemblyReferencesDependsOn);InjectReference_9b0c0bce-b127-49ab-878f-732dbd5a9266</ResolveAssemblyReferencesDependsOn>
+  </PropertyGroup>
+</Project>
