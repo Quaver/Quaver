@@ -112,5 +112,15 @@ namespace Quaver.Skinning
             Colour3 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["Colour3"]);
             Colour4 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["Colour4"]);
         }
+
+        /// <summary>
+        /// Asynchronously parses and creates a new skin object.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        internal static async Task<Skin> Create(string filePath)
+        {
+            return await Task.Run(() => new Skin(filePath));
+        }
     }
 }
