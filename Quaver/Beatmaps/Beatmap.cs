@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.QuaFile;
 
 namespace Quaver.Beatmaps
 {
@@ -107,5 +108,26 @@ namespace Quaver.Beatmaps
         /// The beatmap's length (Time of the last hit object)
         /// </summary>
         public int SongLength { get; set; }
+
+        internal Beatmap ConvertQuaToBeatmap(Qua qua, string path)
+        {
+            return new Beatmap()
+            {
+                IsValidBeatmap = true,
+                Path = path,
+                Artist = qua.Artist,
+                Title = qua.Title,
+                AudioPath = qua.AudioFile,
+                AudioPreviewTime = qua.SongPreviewTime,
+                BackgroundPath = qua.BackgroundFile,
+                BeatmapId = qua.MapId,
+                BeatmapSetId = qua.MapSetId,
+                Bpm = 2,
+                Creator = qua.Creator,
+                DifficultyName = qua.DifficultyName,
+                Source = qua.Source,
+                Tags = qua.Tags
+            };
+        }
     }
 }
