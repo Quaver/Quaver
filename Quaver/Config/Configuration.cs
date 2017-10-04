@@ -200,7 +200,7 @@ namespace Quaver.Config
             }
         }
 
-        internal static string Songdirectory
+        internal static string SongDirectory
         {
             get => _songDirectory;
             set
