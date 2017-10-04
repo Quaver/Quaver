@@ -16,15 +16,18 @@ namespace Quaver.Database
         /// <summary>
         /// Holds the path of the SQLite database
         /// </summary>
-        internal static readonly string databasePath = Path.Combine(Configuration.GameDirectory, "quaver.db");
+        internal static readonly string databasePath = Configuration.GameDirectory + "/quaver.db";
 
         /// <summary>
         /// Initialize the beatmap database & create a table named Beatmaps with the Beatmap class properties.
         /// </summary>
         internal static async Task InitializeBeatmapDatabaseAsync()
         {
+            Console.WriteLine("[DATABASE HELPER] Initializing/Reading Beatmap Database...");
+
             var conn = new SQLiteAsyncConnection(databasePath);
             await conn.CreateTableAsync<Beatmap>();
+
             Console.WriteLine("[DATABASE HELPER] Successfully initialized database & created table: \"Beatmaps\"");
         }
     }
