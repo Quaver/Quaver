@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Quaver.QuaFile;
 using Quaver.Config;
 using Quaver.Tests;
@@ -18,7 +19,7 @@ namespace Quaver
         private static void Main()
         {
             Configuration.InitializeConfig();
-            RunTestMethods();
+            Task.Run(() => RunTestMethods());
 
             // Start game
             using (var game = new Game1())
