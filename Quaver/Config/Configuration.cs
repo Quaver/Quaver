@@ -185,12 +185,27 @@ namespace Quaver.Config
         /// </summary>
         private static string _dataDirectory;
 
+        /// <summary>
+        ///     The song directory
+        /// </summary>
+        private static string _songDirectory;
+
         internal static string GameDirectory
         {
             get => _gameDirectory;
             set
             {
                 _gameDirectory = value;
+                Task.Run(async () => await WriteConfigFileAsync());
+            }
+        }
+
+        internal static string Songdirectory
+        {
+            get => _songDirectory;
+            set
+            {
+                _songDirectory = value;
                 Task.Run(async () => await WriteConfigFileAsync());
             }
         }
@@ -566,6 +581,9 @@ namespace Quaver.Config
             _dataDirectory = GameDirectory + "/Data";
             Directory.CreateDirectory(DataDirectory);
 
+            _songDirectory = GameDirectory + "/Songs";
+            Directory.CreateDirectory(Songdirectory);
+
             // We'll want to write a quaver.cfg file if it doesn't already exist.
             // There's no need to read the config file afterwards, since we already have 
             // all of the default values.
@@ -597,6 +615,7 @@ namespace Quaver.Config
             _replayDirectory = ConfigHelper.ReadDirectory(ReplayDirectory, data["ReplayDirectory"]);
             _logsDirectory = ConfigHelper.ReadDirectory(LogsDirectory, data["LogsDirectory"]);
             _dataDirectory = ConfigHelper.ReadDirectory(DataDirectory, data["DataDirectory"]);
+            _songDirectory = ConfigHelper.ReadDirectory(Songdirectory, data["SongDirectory"]);
             _volumeGlobal = ConfigHelper.ReadPercentage(VolumeGlobal, data["VolumeGlobal"]);
             _volumeEffect = ConfigHelper.ReadPercentage(VolumeEffect, data["VolumeEffect"]);
             _volumeMusic = ConfigHelper.ReadPercentage(VolumeMusic, data["VolumeMusic"]);
