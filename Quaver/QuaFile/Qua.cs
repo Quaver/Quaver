@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Quaver.QuaFile
 {
     internal class Qua
     {
+        // Constructor
+        internal Qua(string filePath)
+        {
+            Parse(filePath);
+        }
+
         /// <summary>
         ///     The difficulty of accuracy for the map.
         /// </summary>
@@ -112,14 +118,18 @@ namespace Quaver.QuaFile
         /// </summary>
         internal string TitleUnicode { get; set; }
 
-        // Constructor
-        internal Qua(string filePath)
+        /// <summary>
+        /// Asynchronously parses a .qua file and creates a Qua object
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        internal static async Task<Qua> Create(string filePath)
         {
-            Parse(filePath);
+            return await Task.Run(() => new Qua(filePath));
         }
 
         /// <summary>
-        /// Parses the specified .qua file in the constructor.
+        ///     Parses the specified .qua file in the constructor.
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="gameplay"></param>
@@ -152,7 +162,7 @@ namespace Quaver.QuaFile
         }
 
         /// <summary>
-        /// Runs a check and modifies the current section of the file we are parsing.
+        ///     Runs a check and modifies the current section of the file we are parsing.
         /// </summary>
         /// <param name="line">The current line of the file.</param>
         /// <param name="currentSection">The current section of the file.</param>
@@ -179,8 +189,8 @@ namespace Quaver.QuaFile
         }
 
         /// <summary>
-        /// This will parse the entire .qua file containing all the information, rather than to it's counterpart
-        /// ParseQuaForGampeplay, which only parses the required data used for gameplay
+        ///     This will parse the entire .qua file containing all the information, rather than to it's counterpart
+        ///     ParseQuaForGampeplay, which only parses the required data used for gameplay
         /// </summary>
         /// <param name="fileSection">The current file section</param>
         /// <param name="line">The current line of the file.</param>
@@ -212,7 +222,7 @@ namespace Quaver.QuaFile
         }
 
         /// <summary>
-        /// Parses the #General section of the file
+        ///     Parses the #General section of the file
         /// </summary>
         /// <param name="line">The current line of the file.</param>
         private void ParseGeneral(string line)
@@ -228,10 +238,10 @@ namespace Quaver.QuaFile
                         AudioFile = value;
                         break;
                     case "AudioLeadIn":
-                        AudioLeadIn = Int32.Parse(value);
+                        AudioLeadIn = int.Parse(value);
                         break;
                     case "SongPreviewTime":
-                        SongPreviewTime = Int32.Parse(value);
+                        SongPreviewTime = int.Parse(value);
                         break;
                     case "BackgroundFile":
                         BackgroundFile = value;
@@ -243,7 +253,7 @@ namespace Quaver.QuaFile
         }
 
         /// <summary>
-        /// Parses the #Metadata section of the file
+        ///     Parses the #Metadata section of the file
         /// </summary>
         /// <param name="line">The current line of the file.</param>
         private void ParseMetadata(string line)
@@ -280,10 +290,10 @@ namespace Quaver.QuaFile
                         DifficultyName = value;
                         break;
                     case "MapID":
-                        MapId = Int32.Parse(value);
+                        MapId = int.Parse(value);
                         break;
                     case "MapSetID":
-                        MapSetId = Int32.Parse(value);
+                        MapSetId = int.Parse(value);
                         break;
                     case "Description":
                         Description = value;
@@ -295,7 +305,7 @@ namespace Quaver.QuaFile
         }
 
         /// <summary>
-        /// Parses the #Difficulty section of the file
+        ///     Parses the #Difficulty section of the file
         /// </summary>
         /// <param name="line">The current line of the file.</param>
         private void ParseDifficulty(string line)
@@ -320,19 +330,19 @@ namespace Quaver.QuaFile
         }
 
         /// <summary>
-        /// Parses the #Timing section of the file
+        ///     Parses the #Timing section of the file
         /// </summary>
         /// <param name="line">The current line of the file.</param>
         private void ParseTiming(string line)
         {
             if (line.Contains("|") && !line.Contains("#"))
             {
-                string[] values = line.Split('|');
+                var values = line.Split('|');
 
                 if (values.Length != 2)
                     IsValidQua = false;
 
-                var timing = new TimingPoint()
+                var timing = new TimingPoint
                 {
                     StartTime = float.Parse(values[0]),
                     Bpm = float.Parse(values[1])
@@ -343,24 +353,24 @@ namespace Quaver.QuaFile
         }
 
         /// <summary>
-        /// Parses the #SV section of the file
+        ///     Parses the #SV section of the file
         /// </summary>
         /// <param name="line">The current line of the file.</param>
         private void ParseSliderVelocity(string line)
         {
             if (line.Contains("|") && !line.Contains("#"))
             {
-                string[] values = line.Split('|');
+                var values = line.Split('|');
 
                 // There should only be 3 values in an SV, if not, it's an invalid map.
                 if (values.Length != 3)
                     IsValidQua = false;
 
-                var sv = new SliderVelocity()
+                var sv = new SliderVelocity
                 {
                     StartTime = float.Parse(values[0]),
                     Multiplier = float.Parse(values[1]),
-                    Volume = Int32.Parse(values[2])
+                    Volume = int.Parse(values[2])
                 };
 
                 SliderVelocities.Add(sv);
@@ -368,36 +378,36 @@ namespace Quaver.QuaFile
         }
 
         /// <summary>
-        /// Parses the #HitObject section of the file
+        ///     Parses the #HitObject section of the file
         /// </summary>
         /// <param name="line">The current line of the file.</param>
         private void ParseHitObject(string line)
         {
             if (line.Contains("|") && !line.Contains("HitObjects"))
             {
-                string[] values = line.Split('|');
+                var values = line.Split('|');
 
                 if (values.Length != 3)
                     IsValidQua = false;
 
-                var ho = new HitObject()
+                var ho = new HitObject
                 {
-                    StartTime = Int32.Parse(values[0]),
-                    KeyLane = Int32.Parse(values[1])
+                    StartTime = int.Parse(values[0]),
+                    KeyLane = int.Parse(values[1])
                 };
 
                 // If the key lane isn't in 1-4, then we'll consider the map to be invalid.
                 if (ho.KeyLane < 1 || ho.KeyLane > 4)
                     IsValidQua = false;
 
-                ho.EndTime = Int32.Parse(values[2]);
+                ho.EndTime = int.Parse(values[2]);
 
                 HitObjects.Add(ho);
             }
         }
 
         /// <summary>
-        /// Responsible for checking the validity of a QuaFile.
+        ///     Responsible for checking the validity of a QuaFile.
         /// </summary>
         private void CheckQuaValidity()
         {
