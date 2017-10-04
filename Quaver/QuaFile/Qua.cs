@@ -159,6 +159,8 @@ namespace Quaver.QuaFile
                     ParseEntireQua(fileSection, line);
                 }
             }
+
+            CheckQuaValidity();
         }
 
         /// <summary>
