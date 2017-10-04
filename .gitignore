@@ -48,3 +48,4 @@ quaver.db
 quaver.db.meta
 */bin/*
 */obj/*
+/packages/*
