@@ -8,10 +8,10 @@ using Quaver.Skinning;
 
 namespace Quaver.Tests
 {
-    public static class SkinTest
+    internal static class SkinTest
     {
         [Conditional("DEBUG")]
-        public static void ParseSkinTest(bool run)
+        internal static void ParseSkinTest(bool run)
         {
             if (!run)
                 return;
