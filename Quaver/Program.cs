@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
-using Quaver.QuaFile;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Tests;
@@ -20,29 +20,17 @@ namespace Quaver
         [STAThread]
         private static void Main()
         {
-            // Initialize quaver.cfg
-            var configTask = Task.Factory.StartNew(() =>
-            {
-                Console.WriteLine("[MAIN] Initializing Config...");
-                Configuration.InitializeConfig();
-            });
+            // Initialize Config
+            Configuration.InitializeConfig();
 
-            // Initialize beatmap database.
-            var beatmapDatabaseTask = Task.Factory.StartNew(async () =>
-            {
-                Console.WriteLine("[MAIN] Initializing/Reading Beatmap Database...");
-                await DatabaseHelper.InitializeBeatmapDatabaseAsync();
-            });
-            
-            // Run Test Methods
-            Task.Run(() =>
-            {
-                Console.WriteLine("[DEBUG] Running Test Methods...");
-                RunTestMethods();
-            });
+            // After initializing the config, we'll run an async task to initialize the beatmap database
+            var dbTask = Task.Run(async () => await DatabaseHelper.InitializeBeatmapDatabaseAsync());
 
-            //Wait for all of the setup tasks to complete before running the game.
-            Task.WaitAll(configTask, beatmapDatabaseTask);
+            // Wait for all relevant tasks to complete before starting the game.
+            Task.WaitAll(dbTask);
+
+            // Run all test methods as a task in the background - Game can be started during this time however.
+            Task.Run(() => RunTestMethods());
 
             // Start game
             using (var game = new Game1())
@@ -52,15 +40,16 @@ namespace Quaver
         }
 
         /// <summary>
-        /// This'll run all of the test methods in our code. 
-        /// They should be marked with [Conditional("DEBUG")]
-        /// These will only be ran when the solution was built in debug mode.
-        /// All functions in this method should have an argument "run",
-        /// which specifies whether or not you want to run the specific method
+        ///     This'll run all of the test methods in our code.
+        ///     They should be marked with [Conditional("DEBUG")]
+        ///     These will only be ran when the solution was built in debug mode.
+        ///     All functions in this method should have an argument "run",
+        ///     which specifies whether or not you want to run the specific method
         /// </summary>
         [Conditional("DEBUG")]
         private static void RunTestMethods()
         {
+            Console.WriteLine("[DEBUG] Running Test Methods...");
             Task.Run(() => QuaTest.ParseQuaTest(true));
             Task.Run(() => SkinTest.ParseSkinTest(true));
         }
