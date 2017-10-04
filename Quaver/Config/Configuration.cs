@@ -543,6 +543,8 @@ namespace Quaver.Config
         /// </summary>
         internal static void InitializeConfig()
         {
+            Console.WriteLine("[CONFIG] Initializing Config...");
+
             // When initializing, we manually set the directory fields rather than the props,
             // because we only want to write the config file one time at this stage.
             // Usually when a property is modified, it will automatically write the config file again,
@@ -575,6 +577,7 @@ namespace Quaver.Config
 
             // If we already have a config file, we'll just want to read that.
             ReadConfigFile();
+            Console.WriteLine("[CONFIG] Config file successfully read/created!");
         }
 
         /// <summary>
