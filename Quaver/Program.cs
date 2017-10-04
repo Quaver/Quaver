@@ -23,14 +23,14 @@ namespace Quaver
             // Initialize Config
             Configuration.InitializeConfig();
 
+            // Run all test methods as a task in the background - Game can be started during this time however.
+            Task.Run(() => RunTestMethods());
+
             // After initializing the config, we'll run an async task to initialize the beatmap database
             var dbTask = Task.Run(async () => await DatabaseHelper.InitializeBeatmapDatabaseAsync());
 
             // Wait for all relevant tasks to complete before starting the game.
             Task.WaitAll(dbTask);
-
-            // Run all test methods as a task in the background - Game can be started during this time however.
-            Task.Run(() => RunTestMethods());
 
             // Start game
             using (var game = new Game1())
