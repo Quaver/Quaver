@@ -16,14 +16,14 @@ namespace Quaver.Database
         /// <summary>
         ///     Holds the path of the SQLite database
         /// </summary>
-        internal static readonly string databasePath = Configuration.GameDirectory + "/quaver.db";
+        private static readonly string DatabasePath = Configuration.GameDirectory + "/quaver.db";
 
         /// <summary>
         ///     Initializes the beatmap database & create a table named Beatmaps with the Beatmap class properties.
         /// </summary>
         internal static async Task InitializeBeatmapDatabaseAsync()
         {
-            var conn = new SQLiteAsyncConnection(databasePath);
+            var conn = new SQLiteAsyncConnection(DatabasePath);
             await conn.CreateTableAsync<Beatmap>();
             await SyncBeatmapDatabaseAsync();
         }
@@ -39,7 +39,7 @@ namespace Quaver.Database
             Console.WriteLine($"[DATABASE HELPER] Found {files.Length} .qua files in the /Songs/ Directory!");
 
             // Find all of the beatmaps currently in the database, and check if the amount matches the # of found files.
-            var conn = new SQLiteAsyncConnection(databasePath);
+            var conn = new SQLiteAsyncConnection(DatabasePath);
             var query = conn.Table<Beatmap>();
 
             await query.ToListAsync().ContinueWith(async t =>
@@ -99,7 +99,7 @@ namespace Quaver.Database
         private static async Task AddBeatmapsToDatabase(List<Beatmap> beatmaps)
         {
             Console.WriteLine($"[DATABASE HELPER] Adding {beatmaps.Count} beatmaps to the database...");
-            var conn = new SQLiteAsyncConnection(databasePath);
+            var conn = new SQLiteAsyncConnection(DatabasePath);
 
             var watch = Stopwatch.StartNew();
 
@@ -116,7 +116,7 @@ namespace Quaver.Database
         /// <returns></returns>
         private static async Task SyncMissingQuaFromDatabase(string[] files)
         {
-            var conn = new SQLiteAsyncConnection(databasePath);
+            var conn = new SQLiteAsyncConnection(DatabasePath);
             var query = conn.Table<Beatmap>();
 
             await query.ToListAsync().ContinueWith(t =>
@@ -146,7 +146,7 @@ namespace Quaver.Database
         {
             Console.WriteLine($"[DATABASE HELPER] Removing {beatmaps.Count} beatmaps from the database...");
 
-            var conn = new SQLiteConnection(databasePath);
+            var conn = new SQLiteConnection(DatabasePath);
 
             foreach (var map in beatmaps)
                 try
