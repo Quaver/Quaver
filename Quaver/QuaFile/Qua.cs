@@ -247,7 +247,7 @@ namespace Quaver.QuaFile
                         SongPreviewTime = Int32.Parse(value);
                         break;
                     case "BackgroundFile":
-                        BackgroundFile = value;
+                        BackgroundFile = value.Replace("\"", "");
                         break;
                     default:
                         break;
