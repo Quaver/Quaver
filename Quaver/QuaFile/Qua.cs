@@ -433,5 +433,19 @@ namespace Quaver.QuaFile
             return Math.Round((decimal)qua.TimingPoints.GroupBy(i => i.Bpm).OrderByDescending(grp => grp.Count())
                 .Select(grp => grp.Key).First(), 2, MidpointRounding.AwayFromZero);
         }
+
+        /// <summary>
+        ///     Finds the length of the beatmap
+        ///     (Time of the last hit object.)
+        /// </summary>
+        /// <param name="qua"></param>
+        /// <returns></returns>
+        internal static int FindSongLength(Qua qua)
+        {
+            // If the last object is a regular note, we return the start time
+            // however if it's an LN, we return the end time.
+            var lastHitObject = qua.HitObjects[qua.HitObjects.Count - 1];
+            return (lastHitObject.EndTime > 0) ? lastHitObject.EndTime : lastHitObject.StartTime;
+        }
     }
 }
