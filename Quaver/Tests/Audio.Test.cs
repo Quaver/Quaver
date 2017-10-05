@@ -18,7 +18,7 @@ namespace Quaver.Tests
                 return;
 
             const string filePath =
-                @"C:\Users\swan\AppData\Local\osu!\Songs\516109 Aitsuki Nakuru - Monochrome Butterfly\audio.mp3";
+                @"C:\Users\swan\Desktop\New folder\1. Camellia - WHAT THE CAT!\audio.ogg";
 
             if (!File.Exists(filePath))
             {
@@ -28,18 +28,18 @@ namespace Quaver.Tests
 
             GameAudio song = new GameAudio(filePath);
 
-            const double positionInMilliseconds = 52012;
+            const double positionInMilliseconds = 1000;
             song.Play(positionInMilliseconds);
             Console.WriteLine("[DEBUG] Current Audio Position - Started: " + song.GetAudioPosition());
             Thread.Sleep(2000);
 
-            song.Pause();
+            /*song.Pause();
             Console.WriteLine("[DEBUG] Current Audio Position - Paused: " + song.GetAudioPosition());
             Console.WriteLine("[DEBUG] Waiting 5 seconds to resume audio");
             Thread.Sleep(5000);
 
             song.Resume();
-            Console.WriteLine("[DEBUG] Current Audio Position - Resumed: " + song.GetAudioPosition());
+            Console.WriteLine("[DEBUG] Current Audio Position - Resumed: " + song.GetAudioPosition());*/
         }
     }
 }
