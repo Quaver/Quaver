@@ -41,11 +41,11 @@ namespace Quaver.Audio
                 if (stream != 0)
                     Stream = stream;
 
-                Console.WriteLine("[AUDIO ENGINE] Error: {0}", Bass.LastError);
                 return;
             }
 
             Stream = 0;
+            Console.WriteLine("[AUDIO ENGINE] Error: {0}", Bass.LastError);
         }
 
         /// <summary>

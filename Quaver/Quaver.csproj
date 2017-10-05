@@ -47,7 +47,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Audio\AudioLoader.cs" />
+    <Compile Include="Audio\GameAudio.cs" />
     <Compile Include="Beatmaps\Beatmap.cs" />
     <Compile Include="Database\BeatmapImporter.cs" />
     <Compile Include="Database\DatabaseHelper.cs" />
