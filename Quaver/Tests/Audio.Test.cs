@@ -28,17 +28,18 @@ namespace Quaver.Tests
 
             GameAudio song = new GameAudio(filePath);
 
-            var positionInMilliseconds = 52012;
+            const double positionInMilliseconds = 52012;
             song.Play(positionInMilliseconds);
-
-            Console.WriteLine("[DEBUG] Waiting 2 seconds to pause audio.");
+            Console.WriteLine("[DEBUG] Current Audio Position - Started: " + song.GetAudioPosition());
             Thread.Sleep(2000);
-            song.Pause();
 
+            song.Pause();
+            Console.WriteLine("[DEBUG] Current Audio Position - Paused: " + song.GetAudioPosition());
             Console.WriteLine("[DEBUG] Waiting 5 seconds to resume audio");
             Thread.Sleep(5000);
+
             song.Resume();
-            
+            Console.WriteLine("[DEBUG] Current Audio Position - Resumed: " + song.GetAudioPosition());
         }
     }
 }
