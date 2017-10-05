@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Cryptography;
 using ManagedBass;
 using Configuration = Quaver.Config.Configuration;
 
@@ -43,7 +41,6 @@ namespace Quaver.Audio
 
                 // Free the stream when the playback ends
                 Bass.ChannelAddFlag(Stream, BassFlags.AutoFree);
-
                 return;
             }
 

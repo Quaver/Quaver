@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Config;
-using System.Threading.Tasks;
 
 namespace Quaver
 {
@@ -16,12 +14,7 @@ namespace Quaver
         
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this)
-            {
-                SynchronizeWithVerticalRetrace = false
-            };
-
-            IsFixedTimeStep = false;
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
@@ -34,6 +27,7 @@ namespace Quaver
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
             base.Initialize();
         }
 
