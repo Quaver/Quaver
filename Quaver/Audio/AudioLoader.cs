@@ -5,7 +5,7 @@ using Configuration = Quaver.Config.Configuration;
 
 namespace Quaver.Audio
 {
-    internal class AudioImplementation
+    internal class AudioLoader
     {
         /// <summary>
         ///     Loads an audio stream
