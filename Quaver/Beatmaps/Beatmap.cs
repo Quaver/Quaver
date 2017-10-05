@@ -130,7 +130,8 @@ namespace Quaver.Beatmaps
                 Creator = qua.Creator,
                 DifficultyName = qua.DifficultyName,
                 Source = qua.Source,
-                Tags = qua.Tags
+                Tags = qua.Tags,
+                SongLength = Qua.FindSongLength(qua)
             };
         }
     }
