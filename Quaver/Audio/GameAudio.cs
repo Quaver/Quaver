@@ -41,6 +41,9 @@ namespace Quaver.Audio
                 if (stream != 0)
                     Stream = stream;
 
+                // Free the stream when the playback ends
+                Bass.ChannelAddFlag(Stream, BassFlags.AutoFree);
+
                 return;
             }
 
@@ -57,7 +60,7 @@ namespace Quaver.Audio
                 return;
 
             // Set the volume of the track, to that of what is in the config.
-            Bass.Volume = (float)Configuration.VolumeGlobal / 100;
+            Bass.Volume = (float) Configuration.VolumeGlobal / 100;
 
             // Set the position to play the song at 
             Bass.ChannelSetPosition(Stream, Bass.ChannelSeconds2Bytes(Stream, previewTime / 1000));
@@ -89,6 +92,29 @@ namespace Quaver.Audio
 
             Bass.ChannelPlay(Stream);
             Console.WriteLine($"[AUDIO ENGINE] Audio Stream: {Stream} has been resumed.");
+        }
+
+        /// <summary>
+        ///     Completely stops the current audio stream and frees any resources it took.
+        /// </summary>
+        internal void Stop()
+        {
+            if (Stream == 0 && Bass.ChannelIsActive(Stream) != PlaybackState.Stopped)
+                return;
+
+            // Completely stop the stream and free its resources
+            Bass.ChannelStop(Stream);
+            Bass.StreamFree(Stream);
+        }
+
+        /// <summary>
+        ///     Gets the current audio position of the stream in milliseconds.
+        ///     Returns 0.0 if the stream is 0
+        /// </summary>
+        /// <returns></returns>
+        internal double GetAudioPosition()
+        {
+            return (Stream == 0) ? 0.0f : Bass.ChannelBytes2Seconds(Stream, Bass.ChannelGetPosition(Stream));
         }
     }
 }
