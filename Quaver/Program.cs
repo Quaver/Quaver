@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Tests;
@@ -55,6 +56,7 @@ namespace Quaver
             Console.WriteLine("\n[DEBUG] Running Test Methods if there are any...\n");
             Task.Run(() => QuaTest.ParseQuaTest(false));
             Task.Run(() => SkinTest.ParseSkinTest(false));
+            Task.Run(() => AudioTest.PlaySongPreview(true));
         }
     }
 }
