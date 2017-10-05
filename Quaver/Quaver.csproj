@@ -61,6 +61,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Skinning\Skin.cs" />
+    <Compile Include="Tests\Audio.Test.cs" />
     <Compile Include="Tests\Qua.Test.cs" />
     <Compile Include="Tests\Skin.Test.cs" />
   </ItemGroup>
@@ -147,7 +148,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="app.manifest" />
+    <None Include="app.manifest">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
