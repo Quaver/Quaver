@@ -50,7 +50,6 @@ namespace Quaver
         ///     All functions in this method should have an argument "run",
         ///     which specifies whether or not you want to run the specific method
         /// </summary>
-        [Conditional("DEBUG")]
         private static void RunTestMethods()
         {
             Console.WriteLine("\n[DEBUG] Running Test Methods if there are any...\n");
