@@ -26,15 +26,19 @@ namespace Quaver.Tests
                 return;
             }
 
-            var stream = AudioLoader.LoadAudioStream(filePath);
+            GameAudio song = new GameAudio(filePath);
+
             var positionInMilliseconds = 52012;
-            AudioLoader.PlayAudioStream(stream, positionInMilliseconds);
+            song.Play(positionInMilliseconds);
+
             Console.WriteLine("[DEBUG] Waiting 2 seconds to pause audio.");
             Thread.Sleep(2000);
-            AudioLoader.PauseAudioStream(stream);
+            song.Pause();
+
             Console.WriteLine("[DEBUG] Waiting 5 seconds to resume audio");
             Thread.Sleep(5000);
-            AudioLoader.ResumeAudioStream(stream);
+            song.Resume();
+            
         }
     }
 }
