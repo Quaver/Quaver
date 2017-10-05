@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -240,10 +241,10 @@ namespace Quaver.QuaFile
                         AudioFile = value;
                         break;
                     case "AudioLeadIn":
-                        AudioLeadIn = int.Parse(value);
+                        AudioLeadIn = Int32.Parse(value);
                         break;
                     case "SongPreviewTime":
-                        SongPreviewTime = int.Parse(value);
+                        SongPreviewTime = Int32.Parse(value);
                         break;
                     case "BackgroundFile":
                         BackgroundFile = value;
@@ -292,10 +293,10 @@ namespace Quaver.QuaFile
                         DifficultyName = value;
                         break;
                     case "MapID":
-                        MapId = int.Parse(value);
+                        MapId = Int32.Parse(value);
                         break;
                     case "MapSetID":
-                        MapSetId = int.Parse(value);
+                        MapSetId = Int32.Parse(value);
                         break;
                     case "Description":
                         Description = value;
@@ -320,10 +321,10 @@ namespace Quaver.QuaFile
                 switch (key.Trim())
                 {
                     case "HPDrain":
-                        HpDrain = float.Parse(value);
+                        HpDrain = Single.Parse(value);
                         break;
                     case "AccuracyStrain":
-                        AccuracyStrain = float.Parse(value);
+                        AccuracyStrain = Single.Parse(value);
                         break;
                     default:
                         break;
@@ -346,8 +347,8 @@ namespace Quaver.QuaFile
 
                 var timing = new TimingPoint
                 {
-                    StartTime = float.Parse(values[0]),
-                    Bpm = float.Parse(values[1])
+                    StartTime = Single.Parse(values[0]),
+                    Bpm = Single.Parse(values[1])
                 };
 
                 TimingPoints.Add(timing);
@@ -370,9 +371,9 @@ namespace Quaver.QuaFile
 
                 var sv = new SliderVelocity
                 {
-                    StartTime = float.Parse(values[0]),
-                    Multiplier = float.Parse(values[1]),
-                    Volume = int.Parse(values[2])
+                    StartTime = Single.Parse(values[0]),
+                    Multiplier = Single.Parse(values[1]),
+                    Volume = Int32.Parse(values[2])
                 };
 
                 SliderVelocities.Add(sv);
@@ -394,15 +395,15 @@ namespace Quaver.QuaFile
 
                 var ho = new HitObject
                 {
-                    StartTime = int.Parse(values[0]),
-                    KeyLane = int.Parse(values[1])
+                    StartTime = Int32.Parse(values[0]),
+                    KeyLane = Int32.Parse(values[1])
                 };
 
                 // If the key lane isn't in 1-4, then we'll consider the map to be invalid.
                 if (ho.KeyLane < 1 || ho.KeyLane > 4)
                     IsValidQua = false;
 
-                ho.EndTime = int.Parse(values[2]);
+                ho.EndTime = Int32.Parse(values[2]);
 
                 HitObjects.Add(ho);
             }
@@ -420,6 +421,17 @@ namespace Quaver.QuaFile
             // If there aren't any TimingPoints
             if (TimingPoints.Count == 0)
                 IsValidQua = false;
+        }
+
+        /// <summary>
+        /// Finds the most common BPM in a Qua object.
+        /// </summary>
+        /// <param name="qua"></param>
+        /// <returns></returns>
+        internal static decimal FindCommonBpm(Qua qua)
+        {
+            return Math.Round((decimal)qua.TimingPoints.GroupBy(i => i.Bpm).OrderByDescending(grp => grp.Count())
+                .Select(grp => grp.Key).First(), 2, MidpointRounding.AwayFromZero);
         }
     }
 }

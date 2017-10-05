@@ -99,13 +99,20 @@ namespace Quaver.Beatmaps
         /// <summary>
         ///     The most common bpm for the beatmap
         /// </summary>
-        public int Bpm { get; set; }
+        public decimal Bpm { get; set; }
 
         /// <summary>
         ///     The beatmap's length (Time of the last hit object)
         /// </summary>
         public int SongLength { get; set; }
 
+        /// <summary>
+        ///     Responsible for converting a Qua object, to a Beatmap object
+        ///     a Beatmap object is one that is stored in the db.
+        /// </summary>
+        /// <param name="qua"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
         internal Beatmap ConvertQuaToBeatmap(Qua qua, string path)
         {
             return new Beatmap
@@ -119,7 +126,7 @@ namespace Quaver.Beatmaps
                 BackgroundPath = qua.BackgroundFile,
                 BeatmapId = qua.MapId,
                 BeatmapSetId = qua.MapSetId,
-                Bpm = 2,
+                Bpm = Qua.FindCommonBpm(qua),
                 Creator = qua.Creator,
                 DifficultyName = qua.DifficultyName,
                 Source = qua.Source,
