@@ -2,6 +2,11 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Quaver.src.GameState;
+
+//Temp
+using Quaver.src.Gameplay;
+
 namespace Quaver
 {
     /// <summary>
@@ -40,6 +45,10 @@ namespace Quaver
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            //Create new GameStateManager Instance
+            GameStateManager.Instance.SetContent(Content);
+            GameStateManager.Instance.AddScreen(new State_Gameplay(GraphicsDevice));
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -50,6 +59,7 @@ namespace Quaver
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            GameStateManager.Instance.UnloadContent();
         }
 
         /// <summary>
@@ -64,6 +74,7 @@ namespace Quaver
 
             // TODO: Add your update logic here
 
+            GameStateManager.Instance.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -77,6 +88,7 @@ namespace Quaver
 
             // TODO: Add your drawing code here
 
+            GameStateManager.Instance.Draw(spriteBatch);
             base.Draw(gameTime);
         }
     }
