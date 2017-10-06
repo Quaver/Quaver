@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using Quaver.src.GameState;
+using Quaver.GameState;
 
 //Temp
-using Quaver.src.Gameplay;
+using Quaver.Gameplay;
 
 namespace Quaver
 {

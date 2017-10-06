@@ -8,10 +8,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-using Quaver.src.GameState;
-using Quaver.src.Utility;
+using Quaver.GameState;
+using Quaver.Utility;
 
-namespace Quaver.src.Gameplay
+namespace Quaver.Gameplay
 {
     internal partial class State_Gameplay : GameStateBase
     {
