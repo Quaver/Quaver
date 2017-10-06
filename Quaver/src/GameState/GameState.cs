@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quaver.src.GameState
 {
-    public enum State
+    internal enum State
     {
         MainMenu,
         SongSelect,
@@ -21,7 +21,7 @@ namespace Quaver.src.GameState
         ScoreScreen,
         LoadingScreen
     }
-    public interface IGameState
+    internal interface IGameState
     {
 
         // Initialize the game settings here      
@@ -41,7 +41,7 @@ namespace Quaver.src.GameState
 
     }
 
-    public abstract class GameStateBase : IGameState
+    internal abstract class GameStateBase : IGameState
     {
         protected GraphicsDevice _graphicsDevice;
 

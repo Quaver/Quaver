@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quaver.src.GameState
 {
-    partial class State_Template : GameStateBase
+    internal partial class State_Template : GameStateBase
     {
         public State_Template(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {

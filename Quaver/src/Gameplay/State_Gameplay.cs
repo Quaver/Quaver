@@ -11,8 +11,12 @@ using Quaver.src.GameState;
 
 namespace Quaver.src.Gameplay
 {
-    partial class State_Gameplay : GameStateBase
+    internal partial class State_Gameplay : GameStateBase
     {
+
+        //TEST
+        private Texture2D _TestImage;
+
         public State_Gameplay(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {
             //Important to set the current state of this GameState
@@ -24,10 +28,15 @@ namespace Quaver.src.Gameplay
 
         public override void LoadContent(ContentManager content)
         {
+
+            //TEST
+            _TestImage = content.Load<Texture2D>("TestImages/arpiapic");
         }
 
         public override void UnloadContent()
         {
+            // TODO: Unload any non ContentManager content here
+            GameStateManager.Instance.UnloadContent();
         }
 
         public override void Update(GameTime gameTime)
@@ -36,7 +45,15 @@ namespace Quaver.src.Gameplay
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            _graphicsDevice.Clear(Color.Black);
+            spriteBatch.Begin();
+
+            // Draw sprites here
+            spriteBatch.Draw(_TestImage, new Rectangle(0, 0, 400, 400), Color.White);
+
+            //End
+            spriteBatch.End();
         }
-        
+
     }
 }
