@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 
-namespace Quaver.src.Utility
+namespace Quaver.Utility
 {
     internal static partial class Util
     {
