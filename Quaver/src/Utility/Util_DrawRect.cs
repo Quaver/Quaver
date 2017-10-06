@@ -31,7 +31,7 @@ namespace Quaver.src.Utility
         /// <param name="ObjectSize">The size of the object (Vector2)</param>
         /// <param name="Rect">The Rect Transform of the object (Vector4)</param>
         /// <returns></returns>
-        public static Rectangle AlignRect(Alignment ObjectAlignment, Vector2 ObjectSize, Rectangle Rect, Vector2 Offset = new Vector2())
+        public static Rectangle DrawRect(Alignment ObjectAlignment, Vector2 ObjectSize, Rectangle Rect, Vector2 Offset = new Vector2())
         {
             float AlignX = 0;
             float AlignY = 0;

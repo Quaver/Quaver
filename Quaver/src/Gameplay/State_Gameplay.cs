@@ -71,7 +71,7 @@ namespace Quaver.src.Gameplay
 
             // Draw sprites here
             //Optimize Later
-            int iterations = 2000;
+            int iterations = 50;
             for (int i = 0; i < iterations; i ++)
             {
                 float interval = ((float)i / iterations) * (float)Math.PI * 2f;
@@ -81,7 +81,7 @@ namespace Quaver.src.Gameplay
                         (int)(Util.Align(0.5f, 100, new Vector2(0, WindowSize.X)) + Math.Sin(pos + interval) * 200f),
                         (int)(Util.Align(0.5f, 100, new Vector2(0, WindowSize.Y)) + Math.Cos(pos + interval) * 200f),
                         100, 100)*/
-                        Util.AlignRect(Alignment.MidCenter,new Vector2(100,100),new Rectangle(0,0,(int)WindowSize.X,(int)WindowSize.Y),new Vector2((float)Math.Cos(pos+interval)*200f, (float)Math.Sin(pos + interval) *200f)),
+                        Util.DrawRect(Alignment.MidCenter,new Vector2(100,100),new Rectangle(0,0,(int)WindowSize.X,(int)WindowSize.Y),new Vector2((float)Math.Cos(pos+interval)*200f, (float)Math.Sin(pos + interval) *200f)),
                     Color.White);
             }
 
