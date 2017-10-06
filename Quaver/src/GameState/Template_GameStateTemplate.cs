@@ -14,8 +14,8 @@ namespace Quaver.src.GameState
     {
         public State_Template(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {
-            //Important to set the current state of this GameState
-            CurrentState = State.MainMenu;
+            //Important to assign a state to this class.
+            _currentState = State.MainMenu;
         }
         public override void Initialize()
         {
@@ -33,7 +33,7 @@ namespace Quaver.src.GameState
         {
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch, Vector2 WindowSize)
         {
         }
         
