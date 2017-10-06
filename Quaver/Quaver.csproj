@@ -90,6 +90,7 @@
     <Compile Include="src\Database\BeatmapImporter.cs" />
     <Compile Include="src\Database\DatabaseHelper.cs" />
     <Compile Include="src\Game1.cs" />
+    <Compile Include="src\GameState\GameStateManager.cs" />
     <Compile Include="src\GameState\Template_GameStateTemplate.cs" />
     <Compile Include="src\Gameplay\State_Gameplay.cs" />
     <Compile Include="src\GameState\GameState.cs" />
@@ -194,6 +195,9 @@
     <Content Include="x86\bass.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\TestImages\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
