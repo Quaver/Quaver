@@ -57,7 +57,7 @@ namespace Quaver.Audio
                 return;
 
             // Set the volume of the track, to that of what is in the config.
-            Bass.Volume = (float) Configuration.VolumeGlobal / 100;
+            Bass.ChannelSetAttribute(Stream, ChannelAttribute.Volume, (float) Configuration.VolumeGlobal / 100);
 
             // Set the position to play the song at 
             Bass.ChannelSetPosition(Stream, Bass.ChannelSeconds2Bytes(Stream, previewTime / 1000));
