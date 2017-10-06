@@ -44,14 +44,14 @@ namespace Quaver.Database
         /// <returns></returns>
         internal static async Task<List<Beatmap>> GetAllBeatmaps()
         {
-            var Beatmaps = new List<Beatmap>();
+            var beatmaps = new List<Beatmap>();
 
             var conn = new SQLiteAsyncConnection(DatabasePath);
             var query = conn.Table<Beatmap>();
 
-            await query.ToListAsync().ContinueWith(t => Beatmaps = t.Result);
+            await query.ToListAsync().ContinueWith(t => beatmaps = t.Result);
 
-            return Beatmaps;
+            return beatmaps;
         }
 
         /// <summary>
