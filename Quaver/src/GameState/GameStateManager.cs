@@ -12,48 +12,47 @@ namespace Quaver.GameState
 {
     internal class GameStateManager
     {
-        // Instance of the game state manager     
+        /// <summary>
+        ///     The GameStateManager instance. This is a singleton class, so there'll only be one.
+        /// </summary>   
         private static GameStateManager _instance;
-
-        //Managers
-        private ContentManager _content;
-        private GraphicsDeviceManager _graphics;
-
-        // Stack for the screens     
-        private Stack<GameStateBase> _screens = new Stack<GameStateBase>();
-
-        // Sets the content manager
-        public void SetContent(ContentManager content)
-        {
-            _content = content;
-        }
-
-        //Creates the GameStateManager Instance
         public static GameStateManager Instance
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new GameStateManager();
-                }
-                return _instance;
-            }
+            // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/null-conditional-operator
+            get => _instance = _instance ?? new GameStateManager();
         }
 
-        // Adds a new screen to the stack 
+        /// <summary>
+        ///     The content manager 
+        /// </summary>       
+        public ContentManager Content { get; set; }
+
+        /// <summary>
+        ///     The current graphics manager
+        /// </summary>
+        public GraphicsDeviceManager Graphics { get; set; }
+       
+        /// <summary>
+        ///     Holds a stack of all the current game states
+        /// </summary>
+        private readonly Stack<GameStateBase> _states = new Stack<GameStateBase>();
+
+        /// <summary>
+        ///     Adds a new screen to the stack
+        /// </summary>
+        /// <param name="screen"></param>
         public void AddScreen(GameStateBase screen)
         {
             try
             {
                 // Add the screen to the stack
-                _screens.Push(screen);
+                _states.Push(screen);
                 // Initialize the screen
-                _screens.Peek().Initialize();
+                _states.Peek().Initialize();
                 // Call the LoadContent on the screen
-                if (_content != null)
+                if (Content != null)
                 {
-                    _screens.Peek().LoadContent(_content);
+                    _states.Peek().LoadContent(Content);
                 }
             }
             catch (Exception ex)
@@ -62,15 +61,17 @@ namespace Quaver.GameState
             }
         }
 
-        // Removes the top screen from the stack
+        /// <summary>
+        ///     Removes the top most screen from the stack.
+        /// </summary>
         public void RemoveScreen()
         {
-            if (_screens.Count > 0)
+            if (_states.Count > 0)
             {
                 try
                 {
-                    var screen = _screens.Peek();
-                    _screens.Pop();
+                    var screen = _states.Peek();
+                    _states.Pop();
                 }
                 catch (Exception ex)
                 {
@@ -79,16 +80,21 @@ namespace Quaver.GameState
             }
         }
 
-        // Clears all the screen from the list
+        /// <summary>
+        ///     Clears all the screens from the stack.
+        /// </summary>
         public void ClearScreens()
         {
-            while (_screens.Count > 0)
+            while (_states.Count > 0)
             {
-                _screens.Pop();
+                _states.Pop();
             }
         }
 
-        // Removes all screens from the stack and adds a new one 
+        /// <summary>
+        ///     Removes all screens from the stack and adds a new one.
+        /// </summary>
+        /// <param name="screen"></param>
         public void ChangeScreen(GameStateBase screen)
         {
             try
@@ -101,15 +107,18 @@ namespace Quaver.GameState
                 // Log the exception
             }
         }
-
-        // Updates the top screen. 
+    
+        /// <summary>
+        ///     Updates the top screen.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
             try
             {
-                if (_screens.Count > 0)
+                if (_states.Count > 0)
                 {
-                    _screens.Peek().Update(gameTime);
+                    _states.Peek().Update(gameTime);
                 }
             }
             catch (Exception ex)
@@ -118,14 +127,18 @@ namespace Quaver.GameState
             }
         }
 
-        // Renders the top screen.
-        public void Draw(SpriteBatch spriteBatch, Vector2 WindowSize)
+        /// <summary>
+        ///     Renders the top screen.
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        /// <param name="windowSize"></param>
+        public void Draw(SpriteBatch spriteBatch, Vector2 windowSize)
         {
             try
             {
-                if (_screens.Count > 0)
+                if (_states.Count > 0)
                 {
-                    _screens.Peek().Draw(spriteBatch, WindowSize);
+                    _states.Peek().Draw(spriteBatch, windowSize);
                 }
             }
             catch (Exception ex)
@@ -134,14 +147,15 @@ namespace Quaver.GameState
             }
         }
 
-        // Unloads the content from the screen
+        /// <summary>
+        ///     Unloads the content from the screen.
+        /// </summary>
         public void UnloadContent()
         {
-            foreach (GameStateBase state in _screens)
+            foreach (var state in _states)
             {
                 state.UnloadContent();
             }
-
         }
     }
 }
