@@ -1,4 +1,4 @@
-# Quaver [![Travis](https://travis-ci.com/Swan/Quaver.svg?token=NHZjzNfqaGjpVAkssS34&branch=master)](#) [![CodeFactor](https://www.codefactor.io/repository/github/swan/quaver/badge)](https://www.codefactor.io/repository/github/swan/quaver) [![Discord](https://discordapp.com/api/guilds/354206121386573824/widget.png?style=shield)](https://discord.gg/nJa8VFr)
+# Quaver [![CodeFactor](https://www.codefactor.io/repository/github/swan/quaver/badge)](https://www.codefactor.io/repository/github/swan/quaver) [![Discord](https://discordapp.com/api/guilds/354206121386573824/widget.png?style=shield)](https://discord.gg/nJa8VFr)
 Quaver is a modern cross-platform vertically scrolling rhythm game available for Windows, OS X & Linux.
 
 ### Table of Contents ###
