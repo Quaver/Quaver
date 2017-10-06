@@ -15,19 +15,19 @@ namespace Quaver
     public class Game1 : Game
     {
         // Graphic Managers
-        public GraphicsDeviceManager graphics;
-        public SpriteBatch spriteBatch;
+        public GraphicsDeviceManager Graphics;
+        public SpriteBatch SpriteBatch;
 
         //Game Variables
-        public Vector2 _WindowSize;
+        public Vector2 WindowSize;
 
 
         public Game1()
         {
             //Set graphic variables
-            graphics = new GraphicsDeviceManager(this);
-            _WindowSize = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-            graphics.SynchronizeWithVerticalRetrace = false; //TURNS OFF VSYNC
+            Graphics = new GraphicsDeviceManager(this);
+            WindowSize = new Vector2(Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight);
+            Graphics.SynchronizeWithVerticalRetrace = false; //TURNS OFF VSYNC
             IsFixedTimeStep = false;
 
             //Load Content
@@ -54,10 +54,10 @@ namespace Quaver
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             //Create new GameStateManager Instance
-            GameStateManager.Instance.SetContent(Content);
+            GameStateManager.Instance.Content = Content;
             GameStateManager.Instance.AddScreen(new State_Gameplay(GraphicsDevice));
 
             // TODO: use this.Content to load your game content here
@@ -99,7 +99,7 @@ namespace Quaver
 
             // TODO: Add your drawing code here
 
-            GameStateManager.Instance.Draw(spriteBatch, _WindowSize);
+            GameStateManager.Instance.Draw(SpriteBatch, WindowSize);
             base.Draw(gameTime);
         }
     }
