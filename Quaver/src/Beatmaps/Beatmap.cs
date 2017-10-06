@@ -2,6 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 using Quaver.QuaFile;
+using SQLite;
 
 namespace Quaver.Beatmaps
 {
@@ -9,6 +10,7 @@ namespace Quaver.Beatmaps
     {   /// <summary>
         ///     The MD5 Of the file.
         /// </summary>
+        [PrimaryKey]
         public string Md5Checksum { get; set; }
 
         /// <summary>
@@ -121,7 +123,6 @@ namespace Quaver.Beatmaps
         /// <returns></returns>
         internal Beatmap ConvertQuaToBeatmap(Qua qua, string path)
         {
-
             return new Beatmap
             {
                 Md5Checksum = GetMd5Checksum(path),
@@ -148,7 +149,7 @@ namespace Quaver.Beatmaps
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        private static string GetMd5Checksum(string path)
+        public static string GetMd5Checksum(string path)
         {
             using (var md5 = MD5.Create())
             {
