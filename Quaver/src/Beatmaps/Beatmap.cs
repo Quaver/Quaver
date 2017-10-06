@@ -1,10 +1,16 @@
 ﻿using System;
+using System.IO;
+using System.Security.Cryptography;
 using Quaver.QuaFile;
 
 namespace Quaver.Beatmaps
 {
     internal class Beatmap
-    {
+    {   /// <summary>
+        ///     The MD5 Of the file.
+        /// </summary>
+        public string Md5Checksum { get; set; }
+
         /// <summary>
         ///     Is the beatmap valid and able to be played?
         /// </summary>
@@ -115,8 +121,10 @@ namespace Quaver.Beatmaps
         /// <returns></returns>
         internal Beatmap ConvertQuaToBeatmap(Qua qua, string path)
         {
+
             return new Beatmap
             {
+                Md5Checksum = GetMd5Checksum(path),
                 IsValidBeatmap = true,
                 Path = path,
                 Artist = qua.Artist,
@@ -131,8 +139,24 @@ namespace Quaver.Beatmaps
                 DifficultyName = qua.DifficultyName,
                 Source = qua.Source,
                 Tags = qua.Tags,
-                SongLength = Qua.FindSongLength(qua)
+                SongLength = Qua.FindSongLength(qua),
             };
+        }
+
+        /// <summary>
+        ///     Gets the Md5 Checksum of a file, more specifically a .qua file.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private static string GetMd5Checksum(string path)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(path))
+                {
+                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", string.Empty).ToLower();
+                }
+            }
         }
     }
 }
