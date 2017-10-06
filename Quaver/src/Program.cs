@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Quaver.Audio;
+using Quaver.Beatmaps;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Tests;
@@ -27,8 +28,10 @@ namespace Quaver
             // Run all test methods as a task in the background - Game can be started during this time however.
             Task.Run(() => RunTestMethods());
 
-            // After initializing the config, we'll run an async task to initialize the beatmap database
-            var dbTask = Task.Run(async () => await DatabaseHelper.InitializeBeatmapDatabaseAsync());
+            // After initializing the config, we'll run an async task to initialize the beatmap database,
+            // then proceed to load all of the beatmaps in the database.
+            List<Beatmap> Beatmaps;
+            var dbTask = Task.Run(async () => Beatmaps = await DatabaseHelper.InitializeBeatmapDatabaseAsync());
 
             // Wait for all relevant tasks to complete before starting the game.
             Task.WaitAll(dbTask);
