@@ -26,11 +26,32 @@ namespace Quaver.Database
         /// <summary>
         ///     Initializes the beatmap database & create a table named Beatmaps with the Beatmap class properties.
         /// </summary>
-        internal static async Task InitializeBeatmapDatabaseAsync()
+        internal static async Task<List<Beatmap>> InitializeBeatmapDatabaseAsync()
         {
             var conn = new SQLiteAsyncConnection(DatabasePath);
             await conn.CreateTableAsync<Beatmap>();
             await SyncBeatmapDatabaseAsync();
+
+            // Get a list of all the beatmaps, once synced.
+            var beatmaps = await GetAllBeatmaps();
+            Console.WriteLine($"[DATABASE HELPER] {beatmaps.Count} beatmaps were successfully loaded.");
+            return beatmaps;
+        }
+
+        /// <summary>
+        /// Asynchronously gets all the beatmaps from the database.
+        /// </summary>
+        /// <returns></returns>
+        internal static async Task<List<Beatmap>> GetAllBeatmaps()
+        {
+            var Beatmaps = new List<Beatmap>();
+
+            var conn = new SQLiteAsyncConnection(DatabasePath);
+            var query = conn.Table<Beatmap>();
+
+            await query.ToListAsync().ContinueWith(t => Beatmaps = t.Result);
+
+            return Beatmaps;
         }
 
         /// <summary>
