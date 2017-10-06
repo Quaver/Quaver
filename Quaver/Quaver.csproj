@@ -91,9 +91,11 @@
     <Compile Include="src\Database\DatabaseHelper.cs" />
     <Compile Include="src\Game1.cs" />
     <Compile Include="src\GameState\GameStateManager.cs" />
-    <Compile Include="src\GameState\Template_GameStateTemplate.cs" />
+    <Compile Include="src\GameState\State.cs" />
+    <Compile Include="src\GameState\GameStateTemplate.cs" />
     <Compile Include="src\Gameplay\State_Gameplay.cs" />
-    <Compile Include="src\GameState\GameState.cs" />
+    <Compile Include="src\GameState\GameStateBase.cs" />
+    <Compile Include="src\Graphics\ISprite.cs" />
     <Compile Include="src\Graphics\Sprite.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -61,7 +61,7 @@ namespace Quaver.GameState
         ///     TODO: Summary goes here.
         /// </summary>
         /// <param name="spriteBatch"></param>
-        /// <param name="WindowSize"></param>
+        /// <param name="windowSize"></param>
         public abstract void Draw(SpriteBatch spriteBatch, Vector2 windowSize);
     }
 }
