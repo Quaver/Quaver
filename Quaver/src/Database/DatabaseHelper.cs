@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Quaver.Beatmaps;
 using Quaver.Config;
 using Quaver.QuaFile;
@@ -62,6 +63,11 @@ namespace Quaver.Database
         {
             // Find all .qua files in the songs folder.
             var files = Directory.GetFiles(Configuration.SongDirectory, "*.qua", SearchOption.AllDirectories);
+
+            // This will hold all of the md5 checksums of all of the .qua files in the directory
+            // we will check if they are all in the database and not changed.
+            List<string> md5Checksums = new List<string>();
+            files.ToList().ForEach(x => md5Checksums.Add(Beatmap.GetMd5Checksum(x)));
             Console.WriteLine($"{module} Found {files.Length} .qua files in the /Songs/ Directory!");
 
             // Find all of the beatmaps currently in the database, and check if the amount matches the # of found files.
@@ -110,6 +116,36 @@ namespace Quaver.Database
                     // Add all the beatmaps to the database
                     if (beatmapsToCache.Count > 0)
                         await AddBeatmapsToDatabase(beatmapsToCache);
+                }
+
+                // Check if the MD5 Hashes of the .qua files are all in the database. If they're not, we'll have to 
+                // reprocess and update that individual beatmap.
+                var matchedMaps = t.Result.Where(map => md5Checksums.Any(md5 => md5 == map.Md5Checksum)).ToList();
+                var changedBeatmaps = t.Result.Except(matchedMaps).ToList();
+
+                // If there's any changed maps, want to reparse them and update them.
+                if (changedBeatmaps.Count > 0)
+                {
+                    // Store a new list of all the changed beatmaps.
+                    var changedCopy = new List<Beatmap>();
+
+                    // Get MD5 Checksum of the beatmap again, 
+                    // delete it, and re-add it.
+                    changedBeatmaps.ForEach(async cb =>
+                    {
+                        await conn.DeleteAsync(cb);
+
+                        // Parse the map again, and get all the updated values.
+                        var reprocessedMap = new Beatmap().ConvertQuaToBeatmap(new Qua(cb.Path), cb.Path);
+                   
+                        // If the beatmap is valid, then we'll add it to the maps to be refreshed.
+                        if (!reprocessedMap.IsValidBeatmap)
+                            return;
+
+                        Console.WriteLine($"{module} MD5 Of Beatmap: {cb.Artist} - {cb.Title} ({cb.DifficultyName}) has changed." +
+                                            $" updating the database with the new values.");
+                        await conn.InsertAsync(reprocessedMap);                                                 
+                    });
                 }
             });
 
