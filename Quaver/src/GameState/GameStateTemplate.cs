@@ -10,13 +10,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quaver.GameState
 {
-    internal partial class State_Template : GameStateBase
+    internal class GameStateTemplate : GameStateBase
     {
-        public State_Template(GraphicsDevice graphicsDevice) :base(graphicsDevice)
+        public GameStateTemplate(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {
             //Important to assign a state to this class.
-            _currentState = State.MainMenu;
+            CurrentState = State.MainMenu;
         }
+
         public override void Initialize()
         {
         }
