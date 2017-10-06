@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Quaver.src.GameState
+namespace Quaver.GameState
 {
     internal class GameStateManager
     {

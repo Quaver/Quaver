@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Quaver.src.Graphics
+namespace Quaver.Graphics
 {
     internal interface ISprite
     {
