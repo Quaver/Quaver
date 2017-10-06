@@ -104,7 +104,7 @@
     <Compile Include="src\QuaFile\Qua.cs" />
     <Compile Include="src\QuaFile\SliderVelocity.cs" />
     <Compile Include="src\QuaFile\TimingPoint.cs" />
-    <Compile Include="src\Skinning\Skin.cs" />
+    <Compile Include="src\Skins\Skin.cs" />
     <Compile Include="src\Tests\Audio.Test.cs" />
     <Compile Include="src\Tests\Qua.Test.cs" />
     <Compile Include="src\Tests\Skin.Test.cs" />
