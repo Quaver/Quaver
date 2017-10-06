@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Quaver.Beatmaps;
 using Quaver.Config;
@@ -120,24 +121,27 @@ namespace Quaver.Database
                 var changedBeatmaps = t.Result
                     .Except(t.Result.Where(map => md5Checksums.Any(md5 => md5 == map.Md5Checksum)).ToList()).ToList();
 
-                // If there's any changed maps, want to reparse them and update them.
                 if (changedBeatmaps.Count > 0)
-                    changedBeatmaps.ForEach(async cb =>
+                    foreach (var cb in changedBeatmaps)
                     {
-                        await conn.DeleteAsync(cb);
-
                         // Parse the map again, and get all the updated values.
-                        var reprocessedMap = new Beatmap().ConvertQuaToBeatmap(new Qua(cb.Path), cb.Path);
+                        if (File.Exists(cb.Path))
+                        {
+                            var conn2 = new SQLiteConnection(DatabasePath);
+                            conn2.Delete(cb);
 
-                        // If the beatmap is valid, then we'll add it to the maps to be refreshed.
-                        if (!reprocessedMap.IsValidBeatmap)
-                            return;
+                            var reprocessedMap = new Beatmap().ConvertQuaToBeatmap(new Qua(cb.Path), cb.Path);
 
-                        Console.WriteLine(
-                            $"{module} MD5 Of Beatmap: {cb.Artist} - {cb.Title} ({cb.DifficultyName}) has changed." +
-                            $" updating the database with the new values.");
-                        await conn.InsertAsync(reprocessedMap);
-                    });
+                            // If the beatmap is valid, then we'll add it to the maps to be refreshed.
+                            if (!reprocessedMap.IsValidBeatmap)
+                                return;
+
+                            Console.WriteLine(
+                                $"{module} MD5 Of Beatmap: {cb.Artist} - {cb.Title} ({cb.DifficultyName}) has changed." +
+                                $" updating the database with the new values.");
+                            conn2.Insert(reprocessedMap);
+                        }
+                    }             
             });
 
             // Now that the file count is synced, let's remove the records that don't have attached beatmaps.
