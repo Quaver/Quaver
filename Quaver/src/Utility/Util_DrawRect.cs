@@ -8,7 +8,9 @@ using Microsoft.Xna.Framework;
 
 namespace Quaver.Utility
 {
-
+    /// <summary>
+    ///     TODO: Add summary for what this is.
+    /// </summary>
     internal enum Alignment
     {
         TopLeft,
