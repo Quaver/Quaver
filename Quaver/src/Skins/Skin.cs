@@ -9,7 +9,7 @@ using IniParser;
 using IniParser.Model;
 using Quaver.Config;
 
-namespace Quaver.Skinning
+namespace Quaver.Skins
 {
     /// <summary>
     /// This class has everything to do with parsing skin.ini files
