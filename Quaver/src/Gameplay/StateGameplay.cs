@@ -13,20 +13,23 @@ using Quaver.Utility;
 
 namespace Quaver.Gameplay
 {
-    internal partial class State_Gameplay : GameStateBase
+    internal class StateGameplay : GameStateBase
     {
-
         //TEST
         private Texture2D _TestImage;
         private double fpsPos;
         private double pos;
         private int fpsCounter = 0;
 
-        public State_Gameplay(GraphicsDevice graphicsDevice) :base(graphicsDevice)
+        public StateGameplay(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {
             //Important to assign a state to this class.
-            _currentState = State.PlayScreen;
+            CurrentState = State.PlayScreen;
         }
+
+        /// <summary>
+        ///     TODO: Add Summary
+        /// </summary>
         public override void Initialize()
         {
             int width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
@@ -35,6 +38,9 @@ namespace Quaver.Gameplay
             Console.WriteLine("Screen Height: {0}, Screen Width: {1}",width,height);
         }
 
+        /// <summary>
+        ///     TODO: Add Summary
+        /// </summary>
         public override void LoadContent(ContentManager content)
         {
 
@@ -42,31 +48,39 @@ namespace Quaver.Gameplay
             _TestImage = content.Load<Texture2D>("TestImages/arpiapic");
         }
 
+        /// <summary>
+        ///     TODO: Add Summary
+        /// </summary>
         public override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
             GameStateManager.Instance.UnloadContent();
         }
 
+        /// <summary>
+        ///     TODO: Add Summary
+        /// </summary>
         public override void Update(GameTime gameTime)
         {
             //Console.WriteLine((double)(gameTime.ElapsedGameTime.TotalSeconds));
             pos += (double)(gameTime.ElapsedGameTime.TotalSeconds);
             fpsPos += (double)(gameTime.ElapsedGameTime.TotalSeconds);
             fpsCounter++;
+
             if (fpsCounter >= 100)
             {
                 fpsCounter = 0;
                 //Console.WriteLine(1 / (fpsPos / 100) + " FPS");
                 fpsPos = 0;
             }
-
-
         }
 
+        /// <summary>
+        ///     TODO: Add Summary
+        /// </summary>
         public override void Draw(SpriteBatch spriteBatch, Vector2 WindowSize)
         {
-            _graphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
 
             // Draw sprites here
@@ -88,6 +102,5 @@ namespace Quaver.Gameplay
             //End
             spriteBatch.End();
         }
-
     }
 }
