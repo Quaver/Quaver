@@ -95,6 +95,7 @@
     <Compile Include="src\GameState\GameStateTemplate.cs" />
     <Compile Include="src\Gameplay\StateGameplay.cs" />
     <Compile Include="src\GameState\GameStateBase.cs" />
+    <Compile Include="src\Graphics\CustomColors.cs" />
     <Compile Include="src\Graphics\ISprite.cs" />
     <Compile Include="src\Graphics\Sprite.cs" />
     <Compile Include="src\Program.cs" />
