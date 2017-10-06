@@ -10,20 +10,16 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quaver.Graphics
 {
-    internal interface ISprite
-    {
-        void Instantiate();
-        void Draw();
-        void Destroy();
-    }
-
+    /// <summary>
+    ///     TODO: ADD SUMMARY
+    /// </summary>
     internal abstract class Sprite : ISprite
     {
         protected GraphicsDevice _graphicsDevice;
         public Vector2 Position;
         public Vector2 Size;
 
-        public Sprite(GraphicsDevice graphicsDevice)
+        protected Sprite(GraphicsDevice graphicsDevice)
         {
             _graphicsDevice = graphicsDevice;
         }
@@ -32,6 +28,5 @@ namespace Quaver.Graphics
         public abstract void Instantiate();
         public abstract void Draw();
         public abstract void Destroy();
-
     }
 }
