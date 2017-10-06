@@ -62,11 +62,6 @@ namespace Quaver.Database
         {
             // Find all .qua files in the songs folder.
             var files = Directory.GetFiles(Configuration.SongDirectory, "*.qua", SearchOption.AllDirectories);
-
-            // This will hold all of the md5 checksums of all of the .qua files in the directory
-            // we will check if they are all in the database and not changed.
-            var md5Checksums = new List<string>();
-            files.ToList().ForEach(x => md5Checksums.Add(Beatmap.GetMd5Checksum(x)));
             Console.WriteLine($"{module} Found {files.Length} .qua files in the /Songs/ Directory!");
 
             // Find all of the beatmaps currently in the database, and check if the amount matches the # of found files.
@@ -117,8 +112,11 @@ namespace Quaver.Database
                         await AddBeatmapsToDatabase(beatmapsToCache);
                 }
 
-                // Check if the MD5 Hashes of the .qua files are all in the database. If they're not, we'll have to 
-                // reprocess and update that individual beatmap.
+                // This will hold all of the md5 checksums of all of the .qua files in the directory
+                // we will check if they are all in the database and not changed.
+                var md5Checksums = new List<string>();
+                files.ToList().ForEach(x => md5Checksums.Add(Beatmap.GetMd5Checksum(x)));
+
                 var changedBeatmaps = t.Result
                     .Except(t.Result.Where(map => md5Checksums.Any(md5 => md5 == map.Md5Checksum)).ToList()).ToList();
 
