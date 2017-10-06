@@ -90,7 +90,7 @@
     <Compile Include="src\Database\BeatmapImporter.cs" />
     <Compile Include="src\Database\DatabaseHelper.cs" />
     <Compile Include="src\Game1.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\QuaFile\HitObject.cs" />
     <Compile Include="src\QuaFile\Qua.cs" />
