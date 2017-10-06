@@ -14,12 +14,23 @@ namespace Quaver
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        
+        // Graphic Managers
+        public GraphicsDeviceManager graphics;
+        public SpriteBatch spriteBatch;
+
+        //Game Variables
+        public Vector2 _WindowSize;
+
+
         public Game1()
         {
+            //Set graphic variables
             graphics = new GraphicsDeviceManager(this);
+            _WindowSize = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            graphics.SynchronizeWithVerticalRetrace = false; //TURNS OFF VSYNC
+            IsFixedTimeStep = false;
+
+            //Load Content
             Content.RootDirectory = "Content";
         }
 
@@ -88,7 +99,7 @@ namespace Quaver
 
             // TODO: Add your drawing code here
 
-            GameStateManager.Instance.Draw(spriteBatch);
+            GameStateManager.Instance.Draw(spriteBatch, _WindowSize);
             base.Draw(gameTime);
         }
     }

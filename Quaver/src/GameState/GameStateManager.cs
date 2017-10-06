@@ -15,8 +15,9 @@ namespace Quaver.src.GameState
         // Instance of the game state manager     
         private static GameStateManager _instance;
 
-        //Content Manager
+        //Managers
         private ContentManager _content;
+        private GraphicsDeviceManager _graphics;
 
         // Stack for the screens     
         private Stack<GameStateBase> _screens = new Stack<GameStateBase>();
@@ -118,13 +119,13 @@ namespace Quaver.src.GameState
         }
 
         // Renders the top screen.
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Vector2 WindowSize)
         {
             try
             {
                 if (_screens.Count > 0)
                 {
-                    _screens.Peek().Draw(spriteBatch);
+                    _screens.Peek().Draw(spriteBatch, WindowSize);
                 }
             }
             catch (Exception ex)
