@@ -15,13 +15,13 @@ namespace Quaver.Graphics
     /// </summary>
     internal abstract class Sprite : ISprite
     {
-        protected GraphicsDevice _graphicsDevice;
+        protected GraphicsDevice GraphicsDevice;
         public Vector2 Position;
         public Vector2 Size;
 
         protected Sprite(GraphicsDevice graphicsDevice)
         {
-            _graphicsDevice = graphicsDevice;
+            GraphicsDevice = graphicsDevice;
         }
 
         //Interface default methods
