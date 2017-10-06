@@ -20,7 +20,7 @@ namespace Quaver.Tests
                 return;
 
             const string filePath =
-                @"C:\Users\swan\Desktop\New folder\1. Camellia - WHAT THE CAT!\audio.ogg";
+                @"C:\Users\swan\Desktop\New folder\587394 Silent Siren - Soukai Rock\Soukai ROCK 1.4x.ogg";
 
             if (!File.Exists(filePath))
             {
