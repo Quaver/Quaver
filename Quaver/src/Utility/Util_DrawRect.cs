@@ -27,7 +27,7 @@ namespace Quaver.Utility
     internal static partial class Util
     {
         /// <summary>
-        /// Returns a 1-dimensional value for an object's alignment within the provided boundary.
+        /// Returns an aligned rectangle within a boundary.
         /// </summary>
         /// <param name="ObjectAlignment">The alignment of the object (Enum)</param>
         /// <param name="ObjectSize">The size of the object (Vector2)</param>
@@ -38,13 +38,19 @@ namespace Quaver.Utility
             float AlignX = 0;
             float AlignY = 0;
 
-            //X allign to middle
+            //Set X-Alignment Scale
+            //To middle
             if (ObjectAlignment == Alignment.BotCenter || ObjectAlignment == Alignment.MidCenter || ObjectAlignment == Alignment.TopCenter) AlignX = 0.5f;
+            //To right
             else if (ObjectAlignment == Alignment.BotRight || ObjectAlignment == Alignment.MidRight || ObjectAlignment == Alignment.TopRight) AlignX = 1f;
 
+            //Set Y-Alignment Scale
+            //To middle
             if (ObjectAlignment == Alignment.MidLeft || ObjectAlignment == Alignment.MidCenter || ObjectAlignment == Alignment.MidRight) AlignY = 0.5f;
+            //To bottom
             else if (ObjectAlignment == Alignment.BotLeft || ObjectAlignment == Alignment.BotCenter || ObjectAlignment == Alignment.BotRight) AlignY = 1f;
 
+            //Set X and Y Alignments
             AlignX = Align(AlignX, ObjectSize.X, new Vector2(Rect.X, Rect.Width), Offset.X);
             AlignY = Align(AlignY, ObjectSize.Y, new Vector2(Rect.Y, Rect.Height), Offset.Y);
 

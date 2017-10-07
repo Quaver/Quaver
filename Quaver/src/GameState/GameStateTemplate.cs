@@ -34,7 +34,7 @@ namespace Quaver.GameState
         {
         }
 
-        public override void Draw(SpriteBatch spriteBatch, Vector2 WindowSize)
+        public override void Draw(SpriteBatch spriteBatch)
         {
         }
         

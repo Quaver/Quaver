@@ -8,9 +8,13 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.GameState;
 using Quaver.Utility;
+using Quaver.Graphics;
 
 namespace Quaver.Gameplay
 {
+    /// <summary>
+    /// This is the GameState when the player is actively playing.
+    /// </summary>
     internal class StateGameplay : GameStateBase
     {
         //TEST
@@ -18,6 +22,9 @@ namespace Quaver.Gameplay
         private double fpsPos;
         private double pos;
         private int fpsCounter = 0;
+        private Rectangle Boundary;
+
+        //State Variables
 
         public StateGameplay(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {
@@ -30,10 +37,12 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void Initialize()
         {
+            //TEMP
             int width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             int height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Console.WriteLine("[STATE_GAMEPLAY]: Initialized Gameplay State.");
             Console.WriteLine("Screen Height: {0}, Screen Width: {1}",width,height);
+            Boundary = new Rectangle(0, 0, 800,480);
         }
 
         /// <summary>
@@ -76,7 +85,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void Draw(SpriteBatch spriteBatch, Vector2 WindowSize)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
@@ -84,17 +93,17 @@ namespace Quaver.Gameplay
             // Draw sprites here
             //Optimize Later
             int iterations = 50;
+            Sprite[] spriteList = new Sprite[iterations]; //Temporary
+            
             for (int i = 0; i < iterations; i ++)
             {
                 float interval = ((float)i / iterations) * (float)Math.PI * 2f;
-                spriteBatch.Draw(
-                    _TestImage,
-                        /*new Rectangle(
-                        (int)(Util.Align(0.5f, 100, new Vector2(0, WindowSize.X)) + Math.Sin(pos + interval) * 200f),
-                        (int)(Util.Align(0.5f, 100, new Vector2(0, WindowSize.Y)) + Math.Cos(pos + interval) * 200f),
-                        100, 100)*/
-                        Util.DrawRect(Alignment.MidCenter,new Vector2(100,100),new Rectangle(0,0,(int)WindowSize.X,(int)WindowSize.Y),new Vector2((float)Math.Cos(pos+interval)*200f, (float)Math.Sin(pos + interval) *200f)),
-                    Color.White);
+                spriteList[i] = new Sprite(GraphicsDevice);
+                spriteList[i].Image = _TestImage;
+                spriteList[i].Size = Vector2.One * 50f;
+                spriteList[i].Rect = Util.DrawRect(Alignment.MidCenter, spriteList[i].Size, Boundary, new Vector2((float)Math.Cos(pos + interval) * 200f, (float)Math.Sin(pos + interval) * 200f));
+                spriteList[i].Tint = Color.White;
+                spriteList[i].Draw(spriteBatch);
             }
 
             //End
