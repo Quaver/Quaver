@@ -56,7 +56,7 @@ namespace Quaver
             Task.Run(() => QuaTest.ParseQuaTest(false));
             Task.Run(() => SkinTest.ParseSkinTest(false));
             Task.Run(() => AudioTest.PlaySongPreview(true));
-            Task.Run(() => JsonTest.SerializeJsonTest());
+            Task.Run(() => JsonTest.DeserializeJsonTest());
         }
     }
 }
