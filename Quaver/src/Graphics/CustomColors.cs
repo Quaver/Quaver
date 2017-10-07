@@ -9,8 +9,24 @@ namespace Quaver.Graphics
 {
     public struct CustomColors
     {
-        public static readonly Color Swan = new Color(219, 136, 194, 1); // # db88c2. LOL.
-        public static readonly Color Green = new Color(59, 233, 106, 1);
-        public static readonly Color LightBlue = new Color(76, 146, 211, 1);
+        /// <summary>
+        /// Swan's favorite color; #db88c2. This color is used for the developers of the game.
+        /// </summary>
+        public static readonly Color NameTag_Admin = new Color(219, 136, 194, 1);
+
+        /// <summary>
+        /// Nametag color for Community Managers, Map Nominators, ect.
+        /// </summary>
+        public static readonly Color NameTag_Moderator = new Color(59, 233, 106, 1);
+
+        /// <summary>
+        /// Nametag color for Quaver Supporters/Donators.
+        /// </summary>
+        public static readonly Color NameTag_Supporter = new Color(76, 146, 211, 1);
+
+        /// <summary>
+        /// Nametag color for regular users.
+        /// </summary>
+        public static readonly Color NameTag_Regular = new Color(76, 146, 211, 1);
     }
 }
