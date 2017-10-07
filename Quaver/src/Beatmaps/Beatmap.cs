@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using Quaver.QuaFile;
 using SQLite;
@@ -160,5 +164,26 @@ namespace Quaver.Beatmaps
                 }
             }
         }
+
+        /// <summary>
+        ///     Responsible for taking a list of beatmaps, and grouping each directory into a dictionary.
+        /// </summary>
+        /// <param name="beatmaps"></param>
+        /// <returns></returns>
+        public static Dictionary<string, List<Beatmap>> GroupBeatmapsByDirectory(List<Beatmap> beatmaps)
+        {
+            return (from beatmap in beatmaps
+                group beatmap by System.IO.Path.GetDirectoryName(beatmap.Path)
+                into g
+                select g).ToDictionary(x => x.Key, x => x.ToList());
+        }
+
+        /// <summary>
+        ///     Orders the beatmaps by title
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        
+
     }
 }
