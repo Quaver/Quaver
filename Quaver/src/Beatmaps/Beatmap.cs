@@ -16,6 +16,7 @@ namespace Quaver.Beatmaps
         /// <summary>
         ///     Is the beatmap valid and able to be played?
         /// </summary>
+        [Ignore]
         public bool IsValidBeatmap { get; set; }
 
         /// <summary>
