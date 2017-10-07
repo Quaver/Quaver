@@ -40,7 +40,7 @@ namespace Quaver.Database
                 Console.WriteLine($"{Module} {beatmaps.Count} beatmaps have been successfully loaded.");
 
                 var maps = BeatmapUtils.GroupBeatmapsByDirectory(beatmaps);
-                Console.WriteLine($"[GAME] Successfully loaded {maps.Count} in {maps.Keys.Count} directories.");
+                Console.WriteLine($"{Module} Successfully loaded {beatmaps.Count} in {maps.Keys.Count} directories.");
 
                 return maps;
             }
