@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Quaver.GameState
 {
     /// <summary>
-    ///     TODO: Summary about class goes here.
+    ///     Any GameState will be inheriting from this class.
     /// </summary>
     /// <inheritdoc />
     internal abstract class GameStateBase
@@ -18,10 +18,10 @@ namespace Quaver.GameState
         /// <summary>
         ///     TODO: Summary goes here.
         /// </summary>
-        protected GraphicsDevice GraphicsDevice; // Note, _graphicsDevice is wrong. _ is only for private Properties, not fields.
+        protected GraphicsDevice GraphicsDevice;
 
         /// <summary>
-        ///     TODO: Summary goes here.
+        ///     The State of the GameState class.
         /// </summary>
         public State CurrentState { get; set; }
 
@@ -61,6 +61,6 @@ namespace Quaver.GameState
         /// </summary>
         /// <param name="spriteBatch"></param>
         /// <param name="windowSize"></param>
-        public abstract void Draw(SpriteBatch spriteBatch, Vector2 windowSize);
+        public abstract void Draw(SpriteBatch spriteBatch);
     }
 }

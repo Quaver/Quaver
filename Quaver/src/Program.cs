@@ -34,7 +34,7 @@ namespace Quaver
             var dbTask = Task.Run(async () => Beatmaps = await DatabaseHelper.LoadBeatmapDatabaseAsync());
 
             // Wait for all relevant tasks to complete before starting the game.
-            Task.WaitAll(dbTask);
+            //Task.WaitAll(dbTask); FIX THIS <--
 
             // Start watching for directory changes.
             Task.Run(() => BeatmapImporter.WatchForChanges());

@@ -138,7 +138,7 @@ namespace Quaver.GameState
             {
                 if (_states.Count > 0)
                 {
-                    _states.Peek().Draw(spriteBatch, windowSize);
+                    _states.Peek().Draw(spriteBatch);
                 }
             }
             catch (Exception ex)
