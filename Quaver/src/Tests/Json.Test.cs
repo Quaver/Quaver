@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace Quaver.Tests
 {
-    public class English
+    private class English
     {
         public string score { get; set; }
         public string hpDrain { get; set; }
@@ -18,7 +18,7 @@ namespace Quaver.Tests
 
     internal static class JsonTest
     {
-        internal static void SerializeJsonTest()
+        internal static void DserializeJsonTest()
         {
             var assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("Quaver.Resources.Quaver_Localization.en.english.json"))
