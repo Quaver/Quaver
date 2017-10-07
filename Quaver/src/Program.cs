@@ -30,11 +30,14 @@ namespace Quaver
 
             // After initializing the config, we'll run an async task to initialize the beatmap database,
             // then proceed to load all of the beatmaps in the database.
-            List<Beatmap> Beatmaps;
-            var dbTask = Task.Run(async () => Beatmaps = await BeatmapCache.LoadBeatmapDatabaseAsync());
+            List<Beatmap> beatmapList = new List<Beatmap>();
+            var dbTask = Task.Run(async () => beatmapList = await BeatmapCache.LoadBeatmapDatabaseAsync());
 
             // Wait for all relevant tasks to complete before starting the game.
             Task.WaitAll(dbTask);
+
+            // Sort all the beatmaps by artist -> then title.
+            Dictionary<string, List<Beatmap>> beatmaps = Beatmap.OrderBeatmapsByArtist(Beatmap.GroupBeatmapsByDirectory(beatmapList));
 
             // Start watching for directory changes.
             Task.Run(() => BeatmapImporter.WatchForChanges());

@@ -181,9 +181,23 @@ namespace Quaver.Beatmaps
         /// <summary>
         ///     Orders the beatmaps by title
         /// </summary>
-        /// <param name=""></param>
+        /// <param name="beatmaps"></param>
         /// <returns></returns>
-        
+        public static Dictionary<string, List<Beatmap>> OrderBeatmapsByTitle(Dictionary<string, List<Beatmap>> beatmaps)
+        {
+            return beatmaps.OrderBy(x => x.Value[0].Title).ToDictionary(pair => pair.Key, pair => pair.Value);
+        }
 
+        /// <summary>
+        ///     Orders the beatmaps by artist, and then by title.
+        /// </summary>
+        /// <param name="beatmaps"></param>
+        /// <returns></returns>
+        public static Dictionary<string, List<Beatmap>> OrderBeatmapsByArtist(Dictionary<string, List<Beatmap>> beatmaps)
+        {
+            var dict = beatmaps.OrderBy(x => x.Value[0].Artist).ThenBy(x => x.Value[0].Title)
+                .ToDictionary(pair => pair.Key, pair => pair.Value);
+            return dict;
+        }
     }
 }
