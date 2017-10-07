@@ -129,7 +129,7 @@ namespace Quaver.Database
             // This'll hold all of the MD5 Checksums of the .qua files in the directory.
             // Since this is an updated list, we'll use these to check if they are in the database and unchanged.
             var fileChecksums = new List<string>();
-            quaFiles.ToList().ForEach(qua => fileChecksums.Add(Beatmap.GetMd5Checksum(qua)));
+            quaFiles.ToList().ForEach(qua => fileChecksums.Add(BeatmapUtils.GetMd5Checksum(qua)));
 
             // Find all the beatmaps in the database
             var beatmapsInDb = await FetchAllBeatmaps();
