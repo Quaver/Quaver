@@ -7,7 +7,7 @@ using Quaver.Beatmaps;
 using Quaver.Database;
 using Quaver.Skins;
 
-namespace Quaver
+namespace Quaver.Main
 {
     /// <summary>
     ///     Holds all the global variables and configuration for our game.

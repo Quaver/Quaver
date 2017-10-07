@@ -7,6 +7,7 @@ using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.Config;
 using Quaver.Database;
+using Quaver.Main;
 using Quaver.Tests;
 
 namespace Quaver

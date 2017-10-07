@@ -7,7 +7,7 @@ using Quaver.GameState;
 //Temp
 using Quaver.Gameplay;
 
-namespace Quaver
+namespace Quaver.Main
 {
     /// <summary>
     /// This is the main type for your game.
