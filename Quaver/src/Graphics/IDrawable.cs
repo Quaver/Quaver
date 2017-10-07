@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Quaver.Graphics
 {
     /// <summary>
-    ///     TODO: Add Summary Here
+    ///     Any object that will be drawn to the game inherits from IDrawable.
     /// </summary>
-    internal interface ISprite
+    internal interface IDrawable
     {
         void Instantiate();
-        void Draw();
+        void Draw(SpriteBatch spriteBatch);
         void Destroy();
     }
 }

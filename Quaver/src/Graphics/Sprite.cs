@@ -11,22 +11,30 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Quaver.Graphics
 {
     /// <summary>
-    ///     TODO: ADD SUMMARY
+    ///     Any drawable object that uses 
     /// </summary>
-    internal abstract class Sprite : ISprite
+    internal class Sprite : Drawable
     {
-        protected GraphicsDevice GraphicsDevice;
-        public Vector2 Position;
-        public Vector2 Size;
+        public Texture2D Image;
 
-        protected Sprite(GraphicsDevice graphicsDevice)
+        public Sprite(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {
-            GraphicsDevice = graphicsDevice;
-        }
 
-        //Interface default methods
-        public abstract void Instantiate();
-        public abstract void Draw();
-        public abstract void Destroy();
+        }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Image,Rect,Tint);
+
+            //Debugging (Temp)
+            //Console.WriteLine("{0}, {1}, {2}, {3}", Rect.X, Rect.Y, Rect.Width, Rect.Height);
+        }
+        public override void Destroy()
+        {
+            
+        }
+        public override void Instantiate()
+        {
+            
+        }
     }
 }

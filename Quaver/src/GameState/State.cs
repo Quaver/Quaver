@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Quaver.GameState
 {
     /// <summary>
-    ///     Enum for all of our different game states
+    ///     Enum for all the different game states. (Can only be accessed within Quaver.GameState namespace.)
     /// </summary>
     internal enum State
     {
