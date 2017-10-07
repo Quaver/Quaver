@@ -201,7 +201,7 @@
     </None>
     <None Include="app.manifest" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resources\Quaver-Localization\en\general.json" />
+    <EmbeddedResource Include="Resources\Quaver-Localization\en\english.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\INIFileParser.dll" />
