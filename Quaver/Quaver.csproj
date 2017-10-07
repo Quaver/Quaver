@@ -87,8 +87,8 @@
     <Compile Include="src\Beatmaps\Beatmap.cs" />
     <Compile Include="src\Config\ConfigHelper.cs" />
     <Compile Include="src\Config\Configuration.cs" />
+    <Compile Include="src\Database\BeatmapCache.cs" />
     <Compile Include="src\Database\BeatmapImporter.cs" />
-    <Compile Include="src\Database\DatabaseHelper.cs" />
     <Compile Include="src\Game1.cs" />
     <Compile Include="src\GameState\GameStateManager.cs" />
     <Compile Include="src\GameState\State.cs" />
