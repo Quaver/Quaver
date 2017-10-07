@@ -109,7 +109,9 @@
     <Compile Include="src\Tests\Audio.Test.cs" />
     <Compile Include="src\Tests\Qua.Test.cs" />
     <Compile Include="src\Tests\Skin.Test.cs" />
+    <Compile Include="src\Utility\Alignment.cs" />
     <Compile Include="src\Utility\Util_DrawRect.cs" />
+    <Compile Include="src\Utility\Util_Random.cs" />
     <Compile Include="src\Utility\Util_Align.cs" />
   </ItemGroup>
   <ItemGroup>

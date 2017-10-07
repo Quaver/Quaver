@@ -15,18 +15,27 @@ namespace Quaver.Graphics
     /// </summary>
     internal class Sprite : Drawable
     {
+        /// <summary>
+        /// Image Texture of the sprite.
+        /// </summary>
         public Texture2D Image;
+
+        /// <summary>
+        /// Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
+        /// </summary>
+        public float Rotation = 0;
 
         public Sprite(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {
-
+            Tint = Color.White;
+            //Image = FALLBACK IMAGE;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Image,Rect,Tint);
-
-            //Debugging (Temp)
+            //Debugging (Temporary)
             //Console.WriteLine("{0}, {1}, {2}, {3}", Rect.X, Rect.Y, Rect.Width, Rect.Height);
+
+            spriteBatch.Draw(Image, Rect, Tint);
         }
         public override void Destroy()
         {

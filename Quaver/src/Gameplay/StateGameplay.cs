@@ -23,6 +23,10 @@ namespace Quaver.Gameplay
         private double pos;
         private int fpsCounter = 0;
         private Rectangle Boundary;
+        private List<Sprite> spriteList;
+        private List<Vector2> rand;
+        private int iterations = 500;
+        private Color curColor = new Color(Util.Random(0, 1), Util.Random(0, 1), Util.Random(0, 1), 1);
 
         //State Variables
 
@@ -37,7 +41,7 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void Initialize()
         {
-            //TEMP
+            //TEMP Declare temp variables
             int width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             int height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Console.WriteLine("[STATE_GAMEPLAY]: Initialized Gameplay State.");
@@ -50,9 +54,20 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void LoadContent(ContentManager content)
         {
-
-            //TEST
+            //TEMP Create Sprite
             _TestImage = content.Load<Texture2D>("TestImages/arpiapic");
+            spriteList = new List<Sprite>();
+            rand = new List<Vector2>();
+            for (int i = 0; i < iterations; i++)
+            {
+                Sprite testSprite = new Sprite(GraphicsDevice);
+                testSprite.Image = _TestImage;
+                testSprite.Size = Vector2.One * 50f;
+                spriteList.Add(testSprite);
+
+                Vector2 random = new Vector2(Util.Random(-150f, 150f), Util.Random(-150f, 150f));
+                rand.Add(random);
+            }
         }
 
         /// <summary>
@@ -69,8 +84,15 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void Update(GameTime gameTime)
         {
-            //Console.WriteLine((double)(gameTime.ElapsedGameTime.TotalSeconds));
+            //Update pos of the objects (Temporary
             pos += (double)(gameTime.ElapsedGameTime.TotalSeconds);
+            if (pos > Math.PI * 2)
+            {
+                pos -= Math.PI * 2;
+                curColor = new Color(Util.Random(0, 1), Util.Random(0, 1), Util.Random(0, 1), 1);
+            }
+
+            //FPS COUNTER (Temporary)
             fpsPos += (double)(gameTime.ElapsedGameTime.TotalSeconds);
             fpsCounter++;
 
@@ -87,22 +109,15 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void Draw(SpriteBatch spriteBatch)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(curColor);
+            //GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
 
-            // Draw sprites here
-            //Optimize Later
-            int iterations = 50;
-            Sprite[] spriteList = new Sprite[iterations]; //Temporary
-            
-            for (int i = 0; i < iterations; i ++)
+            //Draw stuff here
+            for (int i = 0; i < spriteList.Count; i ++)
             {
                 float interval = ((float)i / iterations) * (float)Math.PI * 2f;
-                spriteList[i] = new Sprite(GraphicsDevice);
-                spriteList[i].Image = _TestImage;
-                spriteList[i].Size = Vector2.One * 50f;
-                spriteList[i].Rect = Util.DrawRect(Alignment.MidCenter, spriteList[i].Size, Boundary, new Vector2((float)Math.Cos(pos + interval) * 200f, (float)Math.Sin(pos + interval) * 200f));
-                spriteList[i].Tint = Color.White;
+                spriteList[i].Rect = Util.DrawRect(Util.Alignment.MidCenter, spriteList[i].Size, Boundary, new Vector2((float)Math.Cos(pos + interval) * 200f + rand[i].X, (float)Math.Sin(pos + interval) * 200f + rand[i].Y));
                 spriteList[i].Draw(spriteBatch);
             }
 
