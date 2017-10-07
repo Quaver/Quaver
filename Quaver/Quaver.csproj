@@ -109,6 +109,7 @@
     <Compile Include="src\QuaFile\TimingPoint.cs" />
     <Compile Include="src\Skins\Skin.cs" />
     <Compile Include="src\Tests\Audio.Test.cs" />
+    <Compile Include="src\Tests\Json.Test.cs" />
     <Compile Include="src\Tests\Qua.Test.cs" />
     <Compile Include="src\Tests\Skin.Test.cs" />
     <Compile Include="src\Utility\Alignment.cs" />
@@ -200,7 +201,7 @@
     </None>
     <None Include="app.manifest" />
     <None Include="packages.config" />
-    <None Include="Resources\Quaver-Localization\en\general.json" />
+    <EmbeddedResource Include="Resources\Quaver-Localization\en\general.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\INIFileParser.dll" />
