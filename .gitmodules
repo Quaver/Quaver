@@ -1,0 +1,3 @@
+[submodule "Quaver/Resources/Quaver-Localization"]
+	path = Quaver/Resources/Quaver-Localization
+	url = https://github.com/Swan/Quaver-Localization
