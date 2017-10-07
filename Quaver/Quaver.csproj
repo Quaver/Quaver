@@ -83,6 +83,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="src\Localization\English.cs" />
     <Compile Include="src\Main\GameBase.cs" />
     <Compile Include="src\Audio\GameAudio.cs" />
     <Compile Include="src\Beatmaps\Beatmap.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="src\Tests\Qua.Test.cs" />
     <Compile Include="src\Tests\Skin.Test.cs" />
     <Compile Include="src\Utility\Alignment.cs" />
+    <Compile Include="src\Utility\JsonResourceReader.cs" />
     <Compile Include="src\Utility\Util_DrawRect.cs" />
     <Compile Include="src\Utility\Util_Random.cs" />
     <Compile Include="src\Utility\Util_Align.cs" />
