@@ -28,17 +28,13 @@ namespace Quaver
             // Run all test methods as a task in the background - Game can be started during this time however.
             Task.Run(() => RunTestMethods());
 
-            // After initializing the config, we'll run an async task to initialize the beatmap database,
-            // then proceed to load all of the beatmaps in the database.
-            List<Beatmap> beatmapList = new List<Beatmap>();
-            var dbTask = Task.Run(async () => beatmapList = await BeatmapCache.LoadBeatmapDatabaseAsync());
+            // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
+            var beatmaps = new Dictionary<string, List<Beatmap>>();
+            var dbTask = Task.Run(async () => beatmaps = await BeatmapCache.LoadBeatmapDatabaseAsync());
+            beatmaps = BeatmapUtils.OrderBeatmapsByArtist(beatmaps);
 
             // Wait for all relevant tasks to complete before starting the game.
             Task.WaitAll(dbTask);
-
-            // Sort all the beatmaps by artist -> then title.
-            Dictionary<string, List<Beatmap>> beatmaps = BeatmapUtils.OrderBeatmapsByArtist(BeatmapUtils.GroupBeatmapsByDirectory(beatmapList));
-            Console.WriteLine($"[GAME] Successfully loaded {beatmapList.Count} in {beatmaps.Keys.Count} directories.");
 
             // Start watching for directory changes.
             Task.Run(() => BeatmapImporter.WatchForChanges());
