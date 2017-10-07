@@ -168,8 +168,7 @@ namespace Quaver.Database
         /// <returns></returns>
         private static async Task<List<Beatmap>> FetchAllBeatmaps()
         {
-            var conn = new SQLiteAsyncConnection(DatabasePath);
-            return await conn.Table<Beatmap>().ToListAsync().ContinueWith(t => t.Result);
+            return await new SQLiteAsyncConnection(DatabasePath).Table<Beatmap>().ToListAsync().ContinueWith(t => t.Result);
         }
 
         /// <summary>
@@ -190,13 +189,11 @@ namespace Quaver.Database
         /// <returns></returns>
         private static async Task DeleteBeatmapsFromDatabase(List<Beatmap> beatmaps)
         {
-            var conn = new SQLiteAsyncConnection(DatabasePath);
-
             try
             {
                 foreach (var map in beatmaps)
                 {
-                    await conn.DeleteAsync(map);
+                    await new SQLiteAsyncConnection(DatabasePath).DeleteAsync(map);
                 }
 
                 Console.WriteLine($"{Module} Successfully deleted {beatmaps.Count} beatmaps from the database.");
