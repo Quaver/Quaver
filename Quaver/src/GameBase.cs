@@ -1,0 +1,40 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Quaver.Beatmaps;
+using Quaver.Database;
+using Quaver.Skins;
+
+namespace Quaver
+{
+    /// <summary>
+    ///     Holds all the global variables and configuration for our game.
+    /// </summary>
+    internal static class GameBase
+    {
+        /// <summary>
+        ///     The current list of beatmaps
+        /// </summary>
+        public static Dictionary<string, List<Beatmap>> Beatmaps { get; set; }
+
+        /// <summary>
+        ///     The currently loaded Skin
+        /// </summary>
+        public static Skin LoadedSkin { get; set; }
+
+        /// <summary>
+        ///     Responsible for loading and setting our global beatmaps variable.
+        /// </summary>
+        public static void LoadAndSetBeatmaps()
+        {
+            Beatmaps = new Dictionary<string, List<Beatmap>>();
+
+            var dbTask = Task.Run(async () => Beatmaps = await BeatmapCache.LoadBeatmapDatabaseAsync());
+            Task.WaitAll(dbTask);
+
+            Beatmaps = BeatmapUtils.OrderBeatmapsByArtist(Beatmaps);
+        }
+    }
+}
