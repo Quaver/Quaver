@@ -8,22 +8,6 @@ using Microsoft.Xna.Framework;
 
 namespace Quaver.Utility
 {
-    /// <summary>
-    ///     TODO: Add summary for what this is.
-    /// </summary>
-    internal enum Alignment
-    {
-        TopLeft,
-        TopCenter,
-        TopRight,
-        MidLeft,
-        MidCenter,
-        MidRight,
-        BotLeft,
-        BotCenter,
-        BotRight
-    }
-
     internal static partial class Util
     {
         /// <summary>
