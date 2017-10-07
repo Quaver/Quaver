@@ -25,19 +25,14 @@ namespace Quaver
             // Initialize Config
             Configuration.InitializeConfig();
 
+            // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
+            GameBase.LoadAndSetBeatmaps();
+
+            // Start watching for beatmap directory changes.
+            BeatmapImporter.WatchForChanges();
+
             // Run all test methods as a task in the background - Game can be started during this time however.
             Task.Run(() => RunTestMethods());
-
-            // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
-            var beatmaps = new Dictionary<string, List<Beatmap>>();
-            var dbTask = Task.Run(async () => beatmaps = await BeatmapCache.LoadBeatmapDatabaseAsync());
-            beatmaps = BeatmapUtils.OrderBeatmapsByArtist(beatmaps);
-
-            // Wait for all relevant tasks to complete before starting the game.
-            Task.WaitAll(dbTask);
-
-            // Start watching for directory changes.
-            Task.Run(() => BeatmapImporter.WatchForChanges());
 
             // Start game
             using (var game = new Game1())
@@ -55,7 +50,7 @@ namespace Quaver
         /// </summary>
         private static void RunTestMethods()
         {
-            Console.WriteLine("\n[DEBUG] Running Test Methods if there are any...\n");
+            Console.WriteLine("\n[DEBUG] Running Test Methods if there are any...");
             Task.Run(() => QuaTest.ParseQuaTest(false));
             Task.Run(() => SkinTest.ParseSkinTest(false));
             Task.Run(() => AudioTest.PlaySongPreview(true));
