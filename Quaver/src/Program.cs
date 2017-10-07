@@ -26,7 +26,8 @@ namespace Quaver
             Configuration.InitializeConfig();
 
             // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
-            GameBase.LoadAndSetBeatmaps();
+            var loadGame = Task.Run(async () => await GameBase.LoadAndSetBeatmaps());
+            Task.WaitAll(loadGame);
 
             // Start watching for beatmap directory changes.
             BeatmapImporter.WatchForChanges();

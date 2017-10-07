@@ -32,14 +32,9 @@ namespace Quaver
         /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.
         /// </summary>
-        public static void LoadAndSetBeatmaps()
+        public static async Task LoadAndSetBeatmaps()
         {
-            Beatmaps = new Dictionary<string, List<Beatmap>>();
-
-            var dbTask = Task.Run(async () => Beatmaps = await BeatmapCache.LoadBeatmapDatabaseAsync());
-            Task.WaitAll(dbTask);
-
-            Beatmaps = BeatmapUtils.OrderBeatmapsByArtist(Beatmaps);
+            Beatmaps = BeatmapUtils.OrderBeatmapsByArtist(await BeatmapCache.LoadBeatmapDatabaseAsync());
         }
     }
 }
