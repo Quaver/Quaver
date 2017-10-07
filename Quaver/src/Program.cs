@@ -37,7 +37,7 @@ namespace Quaver
             Task.WaitAll(dbTask);
 
             // Sort all the beatmaps by artist -> then title.
-            Dictionary<string, List<Beatmap>> beatmaps = Beatmap.OrderBeatmapsByArtist(Beatmap.GroupBeatmapsByDirectory(beatmapList));
+            Dictionary<string, List<Beatmap>> beatmaps = BeatmapUtils.OrderBeatmapsByArtist(BeatmapUtils.GroupBeatmapsByDirectory(beatmapList));
             Console.WriteLine($"[GAME] Successfully loaded {beatmapList.Count} in {beatmaps.Keys.Count} directories.");
 
             // Start watching for directory changes.
