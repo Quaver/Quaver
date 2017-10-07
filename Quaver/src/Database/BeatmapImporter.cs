@@ -11,12 +11,6 @@ namespace Quaver.Database
     internal class BeatmapImporter
     {
         /// <summary>
-        /// Global property that keeps track of whether or not we have beatmap changes queued.
-        /// This is set to true whenever a change in the directory has been detected. 
-        /// </summary>
-        internal static bool changesQueued = false;
-
-        /// <summary>
         /// Watches the songs directory for any changes.
         /// </summary>
         internal static void WatchForChanges()
@@ -42,7 +36,7 @@ namespace Quaver.Database
         /// <param name="e"></param>
         internal static void OnDirectoryChange(object source, FileSystemEventArgs e)
         {
-            changesQueued = true;
+            GameBase.ImportQueueReady = true;
         }
     }
 }

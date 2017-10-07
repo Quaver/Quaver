@@ -25,6 +25,11 @@ namespace Quaver
         public static Skin LoadedSkin { get; set; }
 
         /// <summary>
+        ///     A boolean flag that controls whether or not we have queued changes in the song's directory.
+        /// </summary>
+        public static bool ImportQueueReady { get; set; }
+
+        /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.
         /// </summary>
         public static void LoadAndSetBeatmaps()
