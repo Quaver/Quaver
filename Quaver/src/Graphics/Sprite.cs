@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
+using Quaver.Utility;
+
 namespace Quaver.Graphics
 {
     /// <summary>
@@ -32,10 +34,21 @@ namespace Quaver.Graphics
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            //Debugging (Temporary)
-            //Console.WriteLine("{0}, {1}, {2}, {3}", Rect.X, Rect.Y, Rect.Width, Rect.Height);
+            if (Parent == null)
+            {
+                spriteBatch.Draw(Image, Rect, Tint);
+            }
+            else
+            {
+                Rectangle NewOffset = Util.DrawRect(Util.Alignment.MidCenter, Size , Parent.Rect, Position);
+                spriteBatch.Draw(Image, NewOffset, Tint);
+            }
 
-            spriteBatch.Draw(Image, Rect, Tint);
+            //Draws children
+            for(int i = 0; i < Children.Count; i++)
+            {
+                Children[i].Draw(spriteBatch);
+            }
         }
         public override void Destroy()
         {

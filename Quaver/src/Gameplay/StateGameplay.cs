@@ -25,7 +25,7 @@ namespace Quaver.Gameplay
         private Rectangle Boundary;
         private List<Sprite> spriteList;
         private List<Vector2> rand;
-        private int iterations = 500;
+        private int iterations = 24;
         private Color curColor = new Color(Util.Random(0, 1), Util.Random(0, 1), Util.Random(0, 1), 1);
 
         //State Variables
@@ -64,6 +64,14 @@ namespace Quaver.Gameplay
                 testSprite.Image = _TestImage;
                 testSprite.Size = Vector2.One * 50f;
                 spriteList.Add(testSprite);
+
+                for (int j = 0; j  < 5; j++)
+                {
+                    Sprite testChild = new Sprite(GraphicsDevice);
+                    testChild.Image = _TestImage;
+                    testChild.Size = Vector2.One * 20f;
+                    testChild.SetParent(testSprite);
+                }
 
                 Vector2 random = new Vector2(Util.Random(-150f, 150f), Util.Random(-150f, 150f));
                 rand.Add(random);
@@ -118,6 +126,13 @@ namespace Quaver.Gameplay
             {
                 float interval = ((float)i / iterations) * (float)Math.PI * 2f;
                 spriteList[i].Rect = Util.DrawRect(Util.Alignment.MidCenter, spriteList[i].Size, Boundary, new Vector2((float)Math.Cos(pos + interval) * 200f + rand[i].X, (float)Math.Sin(pos + interval) * 200f + rand[i].Y));
+
+                for (int j = 0; j < spriteList[i].Children.Count; j++)
+                {
+                    float childinterval = ((float)j / spriteList[i].Children.Count) * (float)Math.PI * 2f;
+                    spriteList[i].Children[j].Position = new Vector2((float)Math.Cos((pos + childinterval)*3f) * 50f, (float)Math.Sin((pos + childinterval) * 3f) * 50f);
+                }
+
                 spriteList[i].Draw(spriteBatch);
             }
 
