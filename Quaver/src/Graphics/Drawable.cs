@@ -15,8 +15,22 @@ namespace Quaver.Graphics
     /// </summary>
     internal abstract class Drawable : IDrawable
     {
+        //Drawable Object Variables
         protected GraphicsDevice GraphicsDevice;
         public Color Tint = new Color();
+        public List<Drawable> Children = new List<Drawable>();
+        public Drawable Parent;
+
+        //Constructor
+        protected Drawable(GraphicsDevice graphicsDevice)
+        {
+            GraphicsDevice = graphicsDevice;
+        }
+
+        //Interface default methods
+        public abstract void Instantiate();
+        public abstract void Draw(SpriteBatch spriteBatch);
+        public abstract void Destroy();
 
         /// <summary>
         /// The rectangle of the Drawable. (Position.X, Position.Y, Size.Width, Size.Height)
@@ -55,15 +69,26 @@ namespace Quaver.Graphics
             }
         }
 
-
-        protected Drawable(GraphicsDevice graphicsDevice)
+        /// <summary>
+        /// Use this method to set the parent of the Drawable Object.
+        /// </summary>
+        /// <param name="newParent"></param>
+        public void SetParent(Drawable newParent)
         {
-            GraphicsDevice = graphicsDevice;
+            if(Parent != null)
+                {
+                try
+                {
+                    int cIndex = Parent.Children.FindIndex(r => r == this);
+                    Parent.Children.RemoveAt(cIndex);
+                }
+                catch
+                {
+                    Console.WriteLine("[Quaver.Graphics.Drawable]: Error: Cannot find instance of this object from parent");
+                }
+            }
+            newParent.Children.Add(this);
+            Parent = newParent;
         }
-
-        //Interface default methods
-        public abstract void Instantiate();
-        public abstract void Draw(SpriteBatch spriteBatch);
-        public abstract void Destroy();
     }
 }
