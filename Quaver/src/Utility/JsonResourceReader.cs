@@ -18,7 +18,7 @@ namespace Quaver.Utility
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
         /// <param name="resource"></param>
-        internal static English Read(string resource)
+        internal static Language Read(string resource)
         {
             var assembly = Assembly.GetExecutingAssembly();
             using (var stream = assembly.GetManifestResourceStream(resource))
@@ -27,7 +27,7 @@ namespace Quaver.Utility
                 using (var reader = new JsonTextReader(sr))
                 {
                     var serializer = new JsonSerializer();
-                    return serializer.Deserialize<English>(reader);
+                    return serializer.Deserialize<Language>(reader);
                 }
             }
         }
