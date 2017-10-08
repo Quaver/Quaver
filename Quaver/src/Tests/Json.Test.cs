@@ -13,8 +13,10 @@ namespace Quaver.Tests
 {
     internal static class JsonTest
     {
-        internal static void DeserializeJsonTest()
+        internal static void DeserializeJsonTest(bool run)
         {
+            if (!run) return;
+
             var language = JsonResourceReader.Read("Quaver.Resources.Quaver_Localization.en.english.json");
             Console.WriteLine(language.Play);
         }
