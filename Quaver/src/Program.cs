@@ -55,8 +55,8 @@ namespace Quaver
             Console.WriteLine("\n[DEBUG] Running Test Methods if there are any...");
             Task.Run(() => QuaTest.ParseQuaTest(false));
             Task.Run(() => SkinTest.ParseSkinTest(false));
-            Task.Run(() => AudioTest.PlaySongPreview(true));
-            Task.Run(() => JsonTest.DeserializeJsonTest());
+            Task.Run(() => AudioTest.PlaySongPreview(false));
+            Task.Run(() => JsonTest.DeserializeJsonTest(false));
         }
     }
 }
