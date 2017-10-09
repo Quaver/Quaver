@@ -20,12 +20,29 @@ namespace Quaver.Graphics
         /// <summary>
         /// Image Texture of the sprite.
         /// </summary>
-        public Texture2D Image;
+        public Texture2D Image
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The alignment of the sprite relative to it's parent.
+        /// </summary>
+        public Alignment Alignment
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
         /// </summary>
-        public float Rotation = 0;
+        public float Rotation
+        {
+            get;
+            set;
+        }
 
         public Sprite(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {
@@ -40,7 +57,7 @@ namespace Quaver.Graphics
             }
             else
             {
-                Rectangle NewOffset = Util.DrawRect(Util.Alignment.MidCenter, Size , Parent.Rect, Position);
+                Rectangle NewOffset = Util.DrawRect(Alignment, Size , Parent.Rect, Position);
                 spriteBatch.Draw(Image, NewOffset, Tint);
             }
 
