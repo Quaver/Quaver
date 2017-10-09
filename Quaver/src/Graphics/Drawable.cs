@@ -30,9 +30,19 @@ namespace Quaver.Graphics
         public abstract void Destroy();
 
         /// <summary>
-        /// The rectangle of the Drawable. (Position.X, Position.Y, Size.Width, Size.Height). This variable can only be accessed within the Drawable Class.
+        /// This field is used to calculate the local position of the object.
         /// </summary>
-        private Rectangle _Rect = new Rectangle();
+        private Rectangle _LocalRect = new Rectangle();
+
+        /// <summary>
+        /// This field is used to calculate the global position of the object.
+        /// </summary>
+        private Rectangle _GlobalRect = new Rectangle();
+
+        /// <summary>
+        /// The Drawable's Parent.
+        /// </summary>
+        private Drawable _Parent;
 
         /// <summary>
         /// TODO: Add summary later.
@@ -57,8 +67,56 @@ namespace Quaver.Graphics
         /// </summary>
         public Drawable Parent
         {
-            get;
-            set;
+            get
+            {
+                return _Parent;
+            }
+            set
+            {
+                if (Parent != null)
+                {
+                    int cIndex = Parent.Children.FindIndex(r => r == this);
+                    Parent.Children.RemoveAt(cIndex);
+                }
+                value.Children.Add(this);
+                _Parent = value;
+
+                //efficiently moves object's global position relative to it's parent's position and it's own local position
+                LocalRect = _LocalRect;
+            }
+        }
+
+        /// <summary>
+        /// The rectangle of the Drawable. (Position.X, Position.Y, Size.Width, Size.Height).
+        /// </summary>
+        public Rectangle LocalRect
+        {
+            get
+            {
+                return _LocalRect;
+            }
+            set
+            {
+                if (_Parent != null)
+                {
+                    _GlobalRect.X = _Parent._GlobalRect.X + value.X;
+                    _GlobalRect.Y = _Parent._GlobalRect.Y + value.Y;
+                    _LocalRect = value;
+                }
+                else
+                {
+                    _GlobalRect = value;
+                    _LocalRect = value;
+                }
+            }
+        }
+
+        public Rectangle GlobalRect
+        {
+            get
+            {
+                return _GlobalRect;
+            }
         }
 
         /// <summary>
@@ -68,66 +126,36 @@ namespace Quaver.Graphics
         {
             get
             {
-                return new Vector2(_Rect.Width, _Rect.Height);
+                return new Vector2(_GlobalRect.Width, _GlobalRect.Height);
             }
             set
             {
-                _Rect.Width = (int)value.X;
-                _Rect.Height = (int)value.Y;
+                _GlobalRect.Width = (int)value.X;
+                _GlobalRect.Height = (int)value.Y;
             }
         }
 
         /// <summary>
-        /// The rectangle of the Drawable. (Position.X, Position.Y, Size.Width, Size.Height).
-        /// </summary>
-        public Rectangle Rect
-        {
-            get
-            {
-                return _Rect;
-            }
-            set
-            {
-                _Rect = value;
-            }
-        }
-
-        /// <summary>
-        /// Extention of the object's Rect in relation with Position
+        /// This is the object's position relative to it's parent.
         /// </summary>
         public Vector2 Position
         {
             get
             {
-                return new Vector2(_Rect.X, _Rect.Y);
+                return new Vector2(_GlobalRect.X, _GlobalRect.Y);
             }
             set
             {
-                _Rect.X = (int)value.X;
-                _Rect.Y = (int)value.Y;
-            }
-        }
-
-        /// <summary>
-        /// Use this method to set the parent of the Drawable Object.
-        /// </summary>
-        /// <param name="newParent"></param>
-        public void SetParent(Drawable newParent)
-        {
-            if(Parent != null)
+                if (_Parent != null)
                 {
-                try
-                {
-                    int cIndex = Parent.Children.FindIndex(r => r == this);
-                    Parent.Children.RemoveAt(cIndex);
+                    Rectangle newRect = _GlobalRect;
+                    newRect.X = _Parent._GlobalRect.X + (int)value.X;
+                    newRect.Y = _Parent._GlobalRect.Y + (int)value.Y;
+                    _GlobalRect = newRect;
                 }
-                catch
-                {
-                    Console.WriteLine("[Quaver.Graphics.Drawable]: Error: Cannot find instance of this object from parent");
-                }
+                _LocalRect.X = (int)value.X;
+                _LocalRect.Y = (int)value.Y;
             }
-            newParent.Children.Add(this);
-            Parent = newParent;
         }
     }
 }
