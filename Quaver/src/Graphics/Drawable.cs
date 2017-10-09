@@ -17,9 +17,6 @@ namespace Quaver.Graphics
     {
         //Drawable Object Variables
         protected GraphicsDevice GraphicsDevice;
-        public Color Tint = new Color();
-        public List<Drawable> Children = new List<Drawable>();
-        public Drawable Parent;
 
         //Constructor
         protected Drawable(GraphicsDevice graphicsDevice)
@@ -33,9 +30,36 @@ namespace Quaver.Graphics
         public abstract void Destroy();
 
         /// <summary>
-        /// The rectangle of the Drawable. (Position.X, Position.Y, Size.Width, Size.Height)
+        /// The rectangle of the Drawable. (Position.X, Position.Y, Size.Width, Size.Height). This variable can only be accessed within the Drawable Class.
         /// </summary>
-        public Rectangle Rect = new Rectangle();
+        private Rectangle _Rect = new Rectangle();
+
+        /// <summary>
+        /// TODO: Add summary later.
+        /// </summary>
+        public Color Tint
+        {
+            get;
+            set;
+        } = new Color();
+
+        /// <summary>
+        /// TODO: Add summary later.
+        /// </summary>
+        public List<Drawable> Children
+        {
+            get;
+            set;
+        } = new List<Drawable>();
+
+        /// <summary>
+        /// TODO: Add summary later.
+        /// </summary>
+        public Drawable Parent
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Extention of the object's Rect in relation with size
@@ -44,12 +68,27 @@ namespace Quaver.Graphics
         {
             get
             {
-                return new Vector2(Rect.Width, Rect.Height);
+                return new Vector2(_Rect.Width, _Rect.Height);
             }
             set
             {
-                Rect.Width = (int)value.X;
-                Rect.Height = (int)value.Y;
+                _Rect.Width = (int)value.X;
+                _Rect.Height = (int)value.Y;
+            }
+        }
+
+        /// <summary>
+        /// The rectangle of the Drawable. (Position.X, Position.Y, Size.Width, Size.Height).
+        /// </summary>
+        public Rectangle Rect
+        {
+            get
+            {
+                return _Rect;
+            }
+            set
+            {
+                _Rect = value;
             }
         }
 
@@ -60,12 +99,12 @@ namespace Quaver.Graphics
         {
             get
             {
-                return new Vector2(Rect.X, Rect.Y);
+                return new Vector2(_Rect.X, _Rect.Y);
             }
             set
             {
-                Rect.X = (int)value.X;
-                Rect.Y = (int)value.Y;
+                _Rect.X = (int)value.X;
+                _Rect.Y = (int)value.Y;
             }
         }
 
