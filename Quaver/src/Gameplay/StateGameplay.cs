@@ -125,7 +125,7 @@ namespace Quaver.Gameplay
             for (int i = 0; i < spriteList.Count; i ++)
             {
                 float interval = ((float)i / iterations) * (float)Math.PI * 2f;
-                spriteList[i].Rect = Util.DrawRect(Util.Alignment.MidCenter, spriteList[i].Size, Boundary, new Vector2((float)Math.Cos(pos + interval) * 200f + rand[i].X, (float)Math.Sin(pos + interval) * 200f + rand[i].Y));
+                spriteList[i].Rect = Util.DrawRect(Alignment.MidCenter, spriteList[i].Size, Boundary, new Vector2((float)Math.Cos(pos + interval) * 200f + rand[i].X, (float)Math.Sin(pos + interval) * 200f + rand[i].Y));
 
                 for (int j = 0; j < spriteList[i].Children.Count; j++)
                 {
