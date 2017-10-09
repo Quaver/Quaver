@@ -47,18 +47,19 @@ namespace Quaver.Graphics
         public Sprite(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {
             Tint = Color.White;
+            //Todo: Set fallback image
             //Image = FALLBACK IMAGE;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (Parent == null)
             {
-                spriteBatch.Draw(Image, Rect, Tint);
+                spriteBatch.Draw(Image, GlobalRect, Tint);
             }
             else
             {
-                Rectangle NewOffset = Util.DrawRect(Alignment, Size , Parent.Rect, Position);
-                spriteBatch.Draw(Image, NewOffset, Tint);
+                //Rectangle NewOffset = Util.DrawRect(Alignment, Size , Parent.Rect, Position);
+                spriteBatch.Draw(Image, GlobalRect, Tint);
             }
 
             //Draws children

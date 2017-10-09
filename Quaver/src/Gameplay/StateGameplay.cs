@@ -17,7 +17,7 @@ namespace Quaver.Gameplay
     /// </summary>
     internal class StateGameplay : GameStateBase
     {
-        //TEST
+        //TEST (These variables will be removed later)
         private Texture2D _TestImage;
         private double fpsPos;
         private double pos;
@@ -27,8 +27,6 @@ namespace Quaver.Gameplay
         private List<Vector2> rand;
         private int iterations = 24;
         private Color curColor = new Color(Util.Random(0, 1), Util.Random(0, 1), Util.Random(0, 1), 1);
-
-        //State Variables
 
         public StateGameplay(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {
@@ -70,7 +68,7 @@ namespace Quaver.Gameplay
                     Sprite testChild = new Sprite(GraphicsDevice);
                     testChild.Image = _TestImage;
                     testChild.Size = Vector2.One * 20f;
-                    testChild.SetParent(testSprite);
+                    testChild.Parent = testSprite;
                 }
 
                 Vector2 random = new Vector2(Util.Random(-150f, 150f), Util.Random(-150f, 150f));
@@ -125,7 +123,7 @@ namespace Quaver.Gameplay
             for (int i = 0; i < spriteList.Count; i ++)
             {
                 float interval = ((float)i / iterations) * (float)Math.PI * 2f;
-                spriteList[i].Rect = Util.DrawRect(Alignment.MidCenter, spriteList[i].Size, Boundary, new Vector2((float)Math.Cos(pos + interval) * 200f + rand[i].X, (float)Math.Sin(pos + interval) * 200f + rand[i].Y));
+                spriteList[i].LocalRect = Util.DrawRect(Alignment.MidCenter, spriteList[i].Size, Boundary, new Vector2((float)Math.Cos(pos + interval) * 200f + rand[i].X, (float)Math.Sin(pos + interval) * 200f + rand[i].Y));
 
                 for (int j = 0; j < spriteList[i].Children.Count; j++)
                 {
