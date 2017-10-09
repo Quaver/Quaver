@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
+using Quaver.Utility;
+
 namespace Quaver.Graphics
 {
     /// <summary>
@@ -22,6 +24,7 @@ namespace Quaver.Graphics
         protected Drawable(GraphicsDevice graphicsDevice)
         {
             GraphicsDevice = graphicsDevice;
+            _SetGlobalRect(_LocalRect);
         }
 
         //Interface default methods
@@ -39,10 +42,28 @@ namespace Quaver.Graphics
         /// </summary>
         private Rectangle _GlobalRect = new Rectangle();
 
+        private Alignment _Alignment = Alignment.TopLeft;
+
         /// <summary>
         /// The Drawable's Parent.
         /// </summary>
         private Drawable _Parent;
+
+        /// <summary>
+        /// The alignment of the sprite relative to it's parent.
+        /// </summary>
+        public Alignment Alignment
+        {
+            get
+            {
+                return _Alignment;
+            }
+            set
+            {
+                _Alignment = value;
+                _SetGlobalRect(_LocalRect);
+            }
+        }
 
         /// <summary>
         /// TODO: Add summary later.
@@ -80,9 +101,7 @@ namespace Quaver.Graphics
                 }
                 value.Children.Add(this);
                 _Parent = value;
-
-                //efficiently moves object's global position relative to it's parent's position and it's own local position
-                LocalRect = _LocalRect;
+                _SetGlobalRect(_LocalRect);
             }
         }
 
@@ -97,17 +116,7 @@ namespace Quaver.Graphics
             }
             set
             {
-                if (_Parent != null)
-                {
-                    _GlobalRect.X = _Parent._GlobalRect.X + value.X;
-                    _GlobalRect.Y = _Parent._GlobalRect.Y + value.Y;
-                    _LocalRect = value;
-                }
-                else
-                {
-                    _GlobalRect = value;
-                    _LocalRect = value;
-                }
+                _SetGlobalRect(value);
             }
         }
 
@@ -132,6 +141,8 @@ namespace Quaver.Graphics
             {
                 _GlobalRect.Width = (int)value.X;
                 _GlobalRect.Height = (int)value.Y;
+                _LocalRect.Width = (int)value.X;
+                _LocalRect.Height = (int)value.Y;
             }
         }
 
@@ -146,15 +157,37 @@ namespace Quaver.Graphics
             }
             set
             {
-                if (_Parent != null)
-                {
-                    Rectangle newRect = _GlobalRect;
-                    newRect.X = _Parent._GlobalRect.X + (int)value.X;
-                    newRect.Y = _Parent._GlobalRect.Y + (int)value.Y;
-                    _GlobalRect = newRect;
-                }
-                _LocalRect.X = (int)value.X;
-                _LocalRect.Y = (int)value.Y;
+                Rectangle newRect = _GlobalRect;
+                newRect.X = (int)value.X;
+                newRect.Y = (int)value.Y;
+                _SetGlobalRect(newRect);
+            }
+        }
+
+        /// <summary>
+        /// Internally sets the object's global rect.
+        /// </summary>
+        /// <param name="newRect"></param>
+        private void _SetGlobalRect(Rectangle newRect)
+        {
+            if (_Parent != null)
+            {
+                _GlobalRect = Util.DrawRect(_Alignment, newRect, Parent._GlobalRect);
+                _GlobalRect.X += newRect.X;
+                _GlobalRect.Y += newRect.Y;
+                _LocalRect = newRect;
+            }
+            else
+            {
+                //Temporary. Access the screen size later.
+                Rectangle tempRect = new Rectangle(0, 0, 800, 480);
+                _GlobalRect = Util.DrawRect(_Alignment, newRect, tempRect);
+
+                //Set rect
+                _GlobalRect.X += newRect.X;
+                _GlobalRect.Y += newRect.Y;
+                _LocalRect = newRect;
+                //Console.WriteLine(_GlobalRect);
             }
         }
     }

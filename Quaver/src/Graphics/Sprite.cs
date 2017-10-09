@@ -27,15 +27,6 @@ namespace Quaver.Graphics
         }
 
         /// <summary>
-        /// The alignment of the sprite relative to it's parent.
-        /// </summary>
-        public Alignment Alignment
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
         /// </summary>
         public float Rotation
@@ -44,34 +35,31 @@ namespace Quaver.Graphics
             set;
         }
 
+        //Constructor
         public Sprite(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {
             Tint = Color.White;
             //Todo: Set fallback image
             //Image = FALLBACK IMAGE;
         }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (Parent == null)
-            {
-                spriteBatch.Draw(Image, GlobalRect, Tint);
-            }
-            else
-            {
-                //Rectangle NewOffset = Util.DrawRect(Alignment, Size , Parent.Rect, Position);
-                spriteBatch.Draw(Image, GlobalRect, Tint);
-            }
+            //Draw itself
+            spriteBatch.Draw(Image, GlobalRect, Tint);
 
-            //Draws children
+            //Draw children
             for(int i = 0; i < Children.Count; i++)
             {
                 Children[i].Draw(spriteBatch);
             }
         }
+
         public override void Destroy()
         {
             
         }
+
         public override void Instantiate()
         {
             
