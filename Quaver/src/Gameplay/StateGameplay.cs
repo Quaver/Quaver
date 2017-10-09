@@ -61,6 +61,7 @@ namespace Quaver.Gameplay
                 Sprite testSprite = new Sprite(GraphicsDevice);
                 testSprite.Image = _TestImage;
                 testSprite.Size = Vector2.One * 50f;
+                testSprite.Alignment = Alignment.MidCenter;
                 spriteList.Add(testSprite);
 
                 for (int j = 0; j  < 5; j++)
@@ -68,10 +69,11 @@ namespace Quaver.Gameplay
                     Sprite testChild = new Sprite(GraphicsDevice);
                     testChild.Image = _TestImage;
                     testChild.Size = Vector2.One * 20f;
+                    testChild.Alignment = Alignment.MidCenter;
                     testChild.Parent = testSprite;
                 }
 
-                Vector2 random = new Vector2(Util.Random(-150f, 150f), Util.Random(-150f, 150f));
+                Vector2 random = new Vector2(Util.Random(-100f, 100f), Util.Random(-100f, 100f));
                 rand.Add(random);
             }
         }
@@ -123,12 +125,12 @@ namespace Quaver.Gameplay
             for (int i = 0; i < spriteList.Count; i ++)
             {
                 float interval = ((float)i / iterations) * (float)Math.PI * 2f;
-                spriteList[i].LocalRect = Util.DrawRect(Alignment.MidCenter, spriteList[i].Size, Boundary, new Vector2((float)Math.Cos(pos + interval) * 200f + rand[i].X, (float)Math.Sin(pos + interval) * 200f + rand[i].Y));
+                spriteList[i].Position = new Vector2((float)Math.Cos(pos + interval) * 100f + rand[i].X, (float)Math.Sin(pos + interval) * 100f + rand[i].Y);
 
                 for (int j = 0; j < spriteList[i].Children.Count; j++)
                 {
                     float childinterval = ((float)j / spriteList[i].Children.Count) * (float)Math.PI * 2f;
-                    spriteList[i].Children[j].Position = new Vector2((float)Math.Cos((pos + childinterval)*3f) * 50f, (float)Math.Sin((pos + childinterval) * 3f) * 50f);
+                    spriteList[i].Children[j].Position = new Vector2((float)Math.Cos((pos + childinterval)*3f) * 25f, (float)Math.Sin((pos + childinterval) * 3f) * 25f);
                 }
 
                 spriteList[i].Draw(spriteBatch);

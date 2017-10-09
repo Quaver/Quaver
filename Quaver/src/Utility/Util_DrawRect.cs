@@ -15,10 +15,10 @@ namespace Quaver.Utility
         /// Returns an aligned rectangle within a boundary.
         /// </summary>
         /// <param name="ObjectAlignment">The alignment of the object.</param>
-        /// <param name="ObjectSize">The size of the object.</param>
+        /// <param name="ObjectRect">The size of the object.</param>
         /// <param name="Boundary">The Rectangle of the Boundary.</param>
         /// <returns></returns>
-        public static Rectangle DrawRect(Alignment ObjectAlignment, Vector2 ObjectSize, Rectangle Boundary, Vector2 Offset = new Vector2())
+        public static Rectangle DrawRect(Alignment ObjectAlignment, Rectangle ObjectRect, Rectangle Boundary)
         {
             float AlignX = 0;
             float AlignY = 0;
@@ -36,10 +36,10 @@ namespace Quaver.Utility
             else if (ObjectAlignment == Alignment.BotLeft || ObjectAlignment == Alignment.BotCenter || ObjectAlignment == Alignment.BotRight) AlignY = 1f;
 
             //Set X and Y Alignments
-            AlignX = Align(AlignX, ObjectSize.X, new Vector2(Boundary.X, Boundary.X + Boundary.Width), Offset.X);
-            AlignY = Align(AlignY, ObjectSize.Y, new Vector2(Boundary.Y, Boundary.Y + Boundary.Height), Offset.Y);
+            AlignX = Align(AlignX, ObjectRect.Width, new Vector2(Boundary.X, Boundary.X + Boundary.Width), ObjectRect.X);
+            AlignY = Align(AlignY, ObjectRect.Height, new Vector2(Boundary.Y, Boundary.Y + Boundary.Height), ObjectRect.Y);
 
-            return new Rectangle((int)AlignX, (int)AlignY, (int)ObjectSize.X, (int)ObjectSize.Y);
+            return new Rectangle((int)AlignX, (int)AlignY, (int)ObjectRect.Width, (int)ObjectRect.Height);
         }
     }
 }
