@@ -24,6 +24,10 @@ namespace Quaver.Gameplay
             CurrentState = State.PlayScreen;
         }
 
+        //TEST
+        private Sprite _curNote;
+
+
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
@@ -36,6 +40,12 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void LoadContent(ContentManager content)
         {
+            _curNote = new Sprite(GraphicsDevice);
+            _curNote.Image = content.Load<Texture2D>("TestImages/note_hitObject");
+            _curNote.Alignment = Alignment.MidCenter;
+            _curNote.Size = Vector2.One * 64;
+            
+
 
         }
 
@@ -63,6 +73,7 @@ namespace Quaver.Gameplay
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             //End
+            _curNote.Draw(spriteBatch);
             spriteBatch.End();
         }
     }

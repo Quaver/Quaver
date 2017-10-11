@@ -123,7 +123,7 @@ namespace Quaver.GameState
             }
             catch (Exception ex)
             {
-
+                // Log the exception
             }
         }
 

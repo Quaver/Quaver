@@ -83,6 +83,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="src\Gameplay\Objects\HitObject.cs" />
     <Compile Include="src\Gameplay\StatePlayScreen.cs" />
     <Compile Include="src\Localization\Language.cs" />
     <Compile Include="src\Main\GameBase.cs" />
