@@ -6,6 +6,7 @@ using Quaver.GameState;
 
 //Temp
 using Quaver.Gameplay;
+using Quaver.Tests;
 
 namespace Quaver.Main
 {
@@ -14,20 +15,12 @@ namespace Quaver.Main
     /// </summary>
     public class Game1 : Game
     {
-        // Graphic Managers
-        public GraphicsDeviceManager Graphics;
-        public SpriteBatch SpriteBatch;
-
-        //Game Variables
-        public Vector2 WindowSize;
-
-
         public Game1()
         {
             //Set graphic variables
-            Graphics = new GraphicsDeviceManager(this);
-            WindowSize = new Vector2(Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight);
-            Graphics.SynchronizeWithVerticalRetrace = false; //TURNS OFF VSYNC
+            GameBase.GraphicsManager = new GraphicsDeviceManager(this);
+            GameBase.WindowSize = new Vector2(GameBase.GraphicsManager.PreferredBackBufferWidth, GameBase.GraphicsManager.PreferredBackBufferHeight);
+            GameBase.GraphicsManager.SynchronizeWithVerticalRetrace = false; //TURNS OFF VSYNC
             IsFixedTimeStep = false;
 
             //Load Content
@@ -54,11 +47,12 @@ namespace Quaver.Main
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            SpriteBatch = new SpriteBatch(GraphicsDevice);
+            GameBase.SpriteBatch = new SpriteBatch(GraphicsDevice);
+            GameBase.GraphicsDevice = GraphicsDevice;
 
             //Create new GameStateManager Instance
-            GameStateManager.Instance.Content = Content;
-            GameStateManager.Instance.AddScreen(new StatePlayScreen(GraphicsDevice));
+            GameBase.Content = Content;
+            GameStateManager.Instance.AddScreen(new StateTestScreen());
 
             // TODO: use this.Content to load your game content here
         }
@@ -95,11 +89,8 @@ namespace Quaver.Main
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
-            GameStateManager.Instance.Draw(SpriteBatch, WindowSize);
+            GameBase.GraphicsDevice.Clear(Color.DarkGray);
+            GameStateManager.Instance.Draw();
             base.Draw(gameTime);
         }
     }

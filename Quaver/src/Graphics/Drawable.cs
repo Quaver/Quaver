@@ -17,19 +17,16 @@ namespace Quaver.Graphics
     /// </summary>
     internal abstract class Drawable : IDrawable
     {
-        //Drawable Object Variables
-        protected GraphicsDevice GraphicsDevice;
 
         //Constructor
-        protected Drawable(GraphicsDevice graphicsDevice)
+        protected Drawable()
         {
-            GraphicsDevice = graphicsDevice;
             _SetGlobalRect(_LocalRect);
         }
 
         //Interface default methods
         public abstract void Instantiate();
-        public abstract void Draw(SpriteBatch spriteBatch);
+        public abstract void Draw();
         public abstract void Destroy();
 
         /// <summary>
