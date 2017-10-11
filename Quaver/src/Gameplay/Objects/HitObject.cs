@@ -29,11 +29,13 @@ namespace Quaver.Gameplay
             _HoldBodySprite = new Sprite(graphicsDevice);
             _HoldBodySprite.Image = content.Load<Texture2D>("TestImages/note_holdBody");
             _HoldBodySprite.Size = Vector2.One * 50;
+            _HoldBodySprite.Position = new Vector2(0, 12.5f);
             _HoldBodySprite.Alignment = Alignment.MidCenter;
 
             _HoldEndSprite = new Sprite(graphicsDevice);
             _HoldEndSprite.Image = content.Load<Texture2D>("TestImages/note_holdEnd");
             _HoldEndSprite.Size = Vector2.One * 50;
+            _HoldEndSprite.Position = new Vector2(0, 24);
             _HoldEndSprite.Alignment = Alignment.MidCenter;
         }
 
