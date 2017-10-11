@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IniParser;
 using Microsoft.Xna.Framework;
-using IniParser;
-using IniParser.Model;
 using Quaver.Config;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Quaver.Skins
 {
@@ -19,76 +14,98 @@ namespace Quaver.Skins
         /// <summary>
         /// Name of the skin
         /// </summary>
-        internal readonly string Name = "Default";
+        internal string Name { get; set; } = "Default";
 
         /// <summary>
         /// Author of the skin
         /// </summary>
-        internal readonly string Author = "Quaver Team";
+        internal string Author { get; set; } = "Quaver Team";
 
         /// <summary>
         /// Version number of the skin
         /// </summary>
-        internal readonly string Version = "1.0";
+        internal string Version { get; set; } = "1.0";
 
         /// <summary>
         /// Should we display the skin's custom menu background?
         /// </summary>
-        internal readonly bool CustomBackground = false;
+        internal bool CustomBackground { get; set; }
 
         /// <summary>
         /// Should the skin's cursor rotate?
         /// </summary>
-        internal readonly bool CursorRotate = true;
+        internal bool CursorRotate { get; set; } = true;
 
         /// <summary>
         /// Should the skin's cursor trail rotate?
         /// </summary>
-        internal readonly bool CursorTrailRotate = false;
+        internal bool CursorTrailRotate { get; set; }
 
         /// <summary>
         /// Should the cursor expand when the mouse is clicked?
         /// </summary>
-        internal readonly bool CursorExpand = true;
+        internal bool CursorExpand { get; set; } = true;
 
-        internal readonly int BgMaskBufferSize = 12;
-        internal readonly int NoteBufferSpacing = 1;
-        internal readonly int TimingBarPixelSize = 2;
-        internal readonly float HitLightingScale = 4.0f;
+        internal int BgMaskBufferSize { get; set; } = 12;
+        internal int NoteBufferSpacing { get; set; } = 1;
+        internal int TimingBarPixelSize { get; set; } = 2;
+        internal float HitLightingScale { get; set; } = 4.0f;
 
         /// <summary>
         /// Size of each lane in pixels.
         /// </summary>
-        internal readonly int ColumnSize = 250;
+        internal int ColumnSize { get; set; } = 250;
 
         /// <summary>
         /// The offset of the hit receptor
         /// </summary>
-        internal readonly int ReceptorYOffset = 50;
+        internal int ReceptorYOffset { get; set; } = 50;
 
         /// <summary>
         /// The colour that is used for the column's lighting.
         /// </summary>
-        internal readonly Color ColourLight1 = new Color(new Vector4(255, 255, 255, 1));
-        internal readonly Color ColourLight2 = new Color(new Vector4(255, 255, 255, 1));
-        internal readonly Color ColourLight3 = new Color(new Vector4(255, 255, 255, 1));
-        internal readonly Color ColourLight4 = new Color(new Vector4(255, 255, 255, 1));
+        internal Color ColourLight1 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
+        internal Color ColourLight2 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
+        internal Color ColourLight3 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
+        internal Color ColourLight4 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
 
         /// <summary>
         /// The colour of the actual lane
         /// </summary>
-        internal readonly Color Colour1 = new Color(new Vector4(255, 25, 255, 1));
-        internal readonly Color Colour2 = new Color(new Vector4(255, 255, 255, 1));
-        internal readonly Color Colour3 = new Color(new Vector4(255, 255, 255, 1));
-        internal readonly Color Colour4 = new Color(new Vector4(255, 255, 255, 1));
+        internal Color Colour1 { get; set; } = new Color(new Vector4(255, 25, 255, 1));
+        internal Color Colour2 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
+        internal Color Colour3 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
+        internal Color Colour4 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
 
-        internal Skin(string filePath)
+        /// <summary>
+        ///     Constructor, 
+        /// </summary>
+        /// <param name="directory"></param>
+        internal Skin(string directory)
         {
-            if (!File.Exists(filePath))
+            // The skin dir
+            var skinDirectory = Configuration.SkinDirectory + "/" + directory;
+
+            // Check if skin dir exists
+            if (!Directory.Exists(skinDirectory))
                 return;
 
-            // Begin Parsing skin.ini
-            var data = new FileIniDataParser().ReadFile(filePath);
+            // Read Skin.ini
+            ReadSkinConfig(skinDirectory);
+        }
+
+        /// <summary>
+        ///     Reads a skin.ini file
+        /// </summary>
+        /// <param name="skinDir"></param>
+        private  void ReadSkinConfig(string skinDir)
+        {
+            // Check if skin.ini file exists.
+            if (!File.Exists(skinDir + "/skin.ini"))
+                return;
+
+            // Begin Parsing skin.ini if it does.
+            var data = new FileIniDataParser().ReadFile(skinDir + "/skin.ini");
 
             Name = ConfigHelper.ReadString(Name, data["General"]["Name"]);
             Author = ConfigHelper.ReadString(Author, data["General"]["Author"]);
@@ -111,16 +128,6 @@ namespace Quaver.Skins
             Colour2 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["Colour2"]);
             Colour3 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["Colour3"]);
             Colour4 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["Colour4"]);
-        }
-
-        /// <summary>
-        /// Asynchronously parses and creates a new skin object.
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        internal static async Task<Skin> Create(string filePath)
-        {
-            return await Task.Run(() => new Skin(filePath));
         }
     }
 }

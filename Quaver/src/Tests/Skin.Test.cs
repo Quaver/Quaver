@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Skins;
 
 namespace Quaver.Tests
@@ -16,13 +17,13 @@ namespace Quaver.Tests
             if (!run)
                 return;
 
-            const string filePath = @"C:\Users\swan\Desktop\Stuff\Git\Quaver2.0\Quaver\Example\Skin\sample.ini";
+            const string directory = @"Swan";
 
             var watch = Stopwatch.StartNew();
-            var skin = new Skin(filePath);
+            var skin = new Skin(directory);
             watch.Stop();
             
-            Console.Write($"Displaying values for parsed skin: {filePath}\n\n" +
+            Console.Write($"Displaying values for parsed skin: {directory}\n\n" +
                           $"Name: {skin.Name}\n" +
                           $"Author: {skin.Author}\n" +
                           $"Version: {skin.Version}\n" +
