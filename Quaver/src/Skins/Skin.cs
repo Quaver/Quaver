@@ -121,10 +121,6 @@ namespace Quaver.Skins
             // The skin dir
             var skinDirectory = Configuration.SkinDirectory + "/" + directory;
 
-            // Check if skin dir exists
-            if (!Directory.Exists(skinDirectory))
-                return;
-
             // Read Skin.ini
             ReadSkinConfig(skinDirectory);
 
