@@ -21,22 +21,28 @@ namespace Quaver.Gameplay
 
         public HitObject(GraphicsDevice graphicsDevice, ContentManager content) //Remove ContentManager Later
         {
-            _HitBodySprite = new Sprite(graphicsDevice);
-            _HitBodySprite.Image = content.Load<Texture2D>("TestImages/note_hitObject");
-            _HitBodySprite.Size = Vector2.One * 50;
-            _HitBodySprite.Alignment = Alignment.MidCenter;
+            _HitBodySprite = new Sprite(graphicsDevice)
+            {
+                Image = content.Load<Texture2D>("TestImages/note_hitObject"),
+                Size = Vector2.One * 50,
+                Alignment = Alignment.MidCenter
+            };
 
-            _HoldBodySprite = new Sprite(graphicsDevice);
-            _HoldBodySprite.Image = content.Load<Texture2D>("TestImages/note_holdBody");
-            _HoldBodySprite.Size = Vector2.One * 50;
-            _HoldBodySprite.Position = new Vector2(0, 12.5f);
-            _HoldBodySprite.Alignment = Alignment.MidCenter;
+            _HoldBodySprite = new Sprite(graphicsDevice)
+            {
+                Image = content.Load<Texture2D>("TestImages/note_holdBody"),
+                Size = Vector2.One * 50,
+                Position = new Vector2(0, 12.5f),
+                Alignment = Alignment.MidCenter
+            };
 
-            _HoldEndSprite = new Sprite(graphicsDevice);
-            _HoldEndSprite.Image = content.Load<Texture2D>("TestImages/note_holdEnd");
-            _HoldEndSprite.Size = Vector2.One * 50;
-            _HoldEndSprite.Position = new Vector2(0, 24);
-            _HoldEndSprite.Alignment = Alignment.MidCenter;
+            _HoldEndSprite = new Sprite(graphicsDevice)
+            {
+                Image = content.Load<Texture2D>("TestImages/note_holdEnd"),
+                Size = Vector2.One * 50,
+                Position = new Vector2(0, 24),
+                Alignment = Alignment.MidCenter
+            };
         }
 
         /// <summary>
