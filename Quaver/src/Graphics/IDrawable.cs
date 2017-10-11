@@ -13,7 +13,7 @@ namespace Quaver.Graphics
     internal interface IDrawable
     {
         void Instantiate();
-        void Draw(SpriteBatch spriteBatch);
+        void Draw();
         void Destroy();
     }
 }

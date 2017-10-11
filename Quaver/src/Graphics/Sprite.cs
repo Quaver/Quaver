@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 using Quaver.Utility;
+using Quaver.Main;
 
 namespace Quaver.Graphics
 {
@@ -36,22 +37,22 @@ namespace Quaver.Graphics
         }
 
         //Constructor
-        public Sprite(GraphicsDevice graphicsDevice) :base(graphicsDevice)
+        public Sprite()
         {
             Tint = Color.White;
             //Todo: Set fallback image
             //Image = FALLBACK IMAGE;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
             //Draw itself
-            spriteBatch.Draw(Image, GlobalRect, Tint);
+            GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
 
             //Draw children
             for(int i = 0; i < Children.Count; i++)
             {
-                Children[i].Draw(spriteBatch);
+                Children[i].Draw();
             }
         }
 
