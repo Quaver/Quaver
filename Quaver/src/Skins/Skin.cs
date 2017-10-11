@@ -1,5 +1,7 @@
-﻿using IniParser;
+﻿using System.Collections.Generic;
+using IniParser;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using System.IO;
 using System.Threading.Tasks;
@@ -78,6 +80,24 @@ namespace Quaver.Skins
         internal Color Colour4 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
 
         /// <summary>
+        ///     All of the textures for the loaded skin elements. 
+        /// </summary>
+        internal Texture2D ColumnBgMask { get; set; }
+        internal Texture2D ColumnHitLighting { get; set; }
+        internal Texture2D ColumnTimingBar { get; set; }
+        internal Texture2D NoteHitObject1 { get; set; }
+        internal Texture2D NoteHitObject2 { get; set; }
+        internal Texture2D NoteHitObject3 { get; set; }
+        internal Texture2D NoteHitObject4 { get; set; }
+        internal Texture2D RankingA { get; set; }
+        internal Texture2D RankingB { get; set; }
+        internal Texture2D RankingC { get; set; }
+        internal Texture2D RankingD { get; set; }
+        internal Texture2D RankingS { get; set; }
+        internal Texture2D RankingSS { get; set; }
+        internal Texture2D RankingX { get; set; }
+
+        /// <summary>
         ///     Constructor, 
         /// </summary>
         /// <param name="directory"></param>
@@ -95,10 +115,38 @@ namespace Quaver.Skins
         }
 
         /// <summary>
+        ///     Loads all the skin elements from disk.
+        /// </summary>
+        /// <param name="skinDir"></param>
+        private void LoadSkinElements(string skinDir)
+        {
+            // Dictionary containing the texture and its matching file name
+            var skinElements = new Dictionary<Texture2D, string>
+            {
+                { ColumnBgMask, @"column-bgmask" },
+                { ColumnHitLighting, @"column-hitlighting" },
+                { ColumnTimingBar, @"column-timingbar" },
+                { NoteHitObject1, @"note-hitobject1" },
+                { NoteHitObject2, @"note-hitobject1" },
+                { NoteHitObject3, @"note-hitobject1" },
+                { NoteHitObject4, @"note-hitobject1" },
+                { RankingA, @"ranking-a"},
+                { RankingB, @"ranking-b"},
+                { RankingC, @"ranking-c"},
+                { RankingD, @"ranking-d"},
+                { RankingS, @"ranking-s"},
+                { RankingSS, @"ranking-ss"},
+                { RankingX, @"ranking-x"},               
+            };
+
+            // Attempt to load each file, if not, then load the default skin element.
+        }
+
+        /// <summary>
         ///     Reads a skin.ini file
         /// </summary>
         /// <param name="skinDir"></param>
-        private  void ReadSkinConfig(string skinDir)
+        private void ReadSkinConfig(string skinDir)
         {
             // Check if skin.ini file exists.
             if (!File.Exists(skinDir + "/skin.ini"))
