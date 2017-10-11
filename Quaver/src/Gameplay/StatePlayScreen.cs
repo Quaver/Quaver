@@ -57,7 +57,7 @@ namespace Quaver.Gameplay
         public override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            GameStateManager.Instance.UnloadContent();
+            //GameStateManager.Instance.UnloadContent();
         }
 
         /// <summary>
