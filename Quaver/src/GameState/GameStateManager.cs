@@ -152,7 +152,7 @@ namespace Quaver.GameState
         /// </summary>
         public void UnloadContent()
         {
-            foreach (var state in _states)
+            foreach (GameStateBase state in _states)
             {
                 state.UnloadContent();
             }
