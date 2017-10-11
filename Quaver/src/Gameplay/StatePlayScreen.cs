@@ -15,13 +15,13 @@ namespace Quaver.Gameplay
     /// <summary>
     /// This is the GameState when the player is actively playing.
     /// </summary>
-    internal partial class StateGameplay : GameStateBase
+    internal partial class StatePlayScreen : GameStateBase
     {
 
-        public StateGameplay(GraphicsDevice graphicsDevice) :base(graphicsDevice)
+        public StatePlayScreen(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {
             //Important to assign a state to this class.
-            CurrentState = State.TestScreen;
+            CurrentState = State.PlayScreen;
         }
 
         /// <summary>
