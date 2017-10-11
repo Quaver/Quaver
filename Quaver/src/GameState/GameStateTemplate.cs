@@ -12,7 +12,7 @@ namespace Quaver.GameState
 {
     internal class GameStateTemplate : GameStateBase
     {
-        public GameStateTemplate(GraphicsDevice graphicsDevice) :base(graphicsDevice)
+        public GameStateTemplate()
         {
             //Important to assign a state to this class.
             CurrentState = State.MainMenu;
@@ -22,7 +22,7 @@ namespace Quaver.GameState
         {
         }
 
-        public override void LoadContent(ContentManager content)
+        public override void LoadContent()
         {
         }
 
@@ -34,7 +34,7 @@ namespace Quaver.GameState
         {
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
         }
         

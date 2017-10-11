@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.GameState;
 using Quaver.Utility;
 using Quaver.Graphics;
+using Quaver.Main;
 
 namespace Quaver.Tests
 {
@@ -26,9 +27,8 @@ namespace Quaver.Tests
         private List<Sprite> spriteList;
         private List<Vector2> rand;
         private int iterations = 234;
-        private Color curColor = new Color(Util.Random(0, 1), Util.Random(0, 1), Util.Random(0, 1), 1);
 
-        public StateTestScreen(GraphicsDevice graphicsDevice) :base(graphicsDevice)
+        public StateTestScreen()
         {
             //Important to assign a state to this class.
             CurrentState = State.TestScreen;
@@ -50,15 +50,15 @@ namespace Quaver.Tests
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void LoadContent(ContentManager content)
+        public override void LoadContent()
         {
             //TEMP Create Sprite
-            _TestImage = content.Load<Texture2D>("TestImages/arpiapic");
+            _TestImage = GameBase.Content.Load<Texture2D>("TestImages/arpiapic");
             spriteList = new List<Sprite>();
             rand = new List<Vector2>();
             for (int i = 0; i < iterations; i++)
             {
-                Sprite testSprite = new Sprite(GraphicsDevice);
+                Sprite testSprite = new Sprite();
                 testSprite.Image = _TestImage;
                 testSprite.Size = Vector2.One * 50f;
                 testSprite.Alignment = Alignment.MidCenter;
@@ -66,7 +66,7 @@ namespace Quaver.Tests
 
                 for (int j = 0; j  < 5; j++)
                 {
-                    Sprite testChild = new Sprite(GraphicsDevice);
+                    Sprite testChild = new Sprite();
                     testChild.Image = _TestImage;
                     testChild.Size = Vector2.One * 20f;
                     testChild.Alignment = Alignment.MidCenter;
@@ -97,7 +97,6 @@ namespace Quaver.Tests
             if (pos > Math.PI * 2)
             {
                 pos -= Math.PI * 2;
-                curColor = new Color(Util.Random(0, 1), Util.Random(0, 1), Util.Random(0, 1), 1);
             }
 
             //FPS COUNTER (Temporary)
@@ -115,11 +114,10 @@ namespace Quaver.Tests
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
-            GraphicsDevice.Clear(curColor);
             //GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Begin();
+            GameBase.SpriteBatch.Begin();
 
             //Draw stuff here
             for (int i = 0; i < spriteList.Count; i ++)
@@ -133,11 +131,11 @@ namespace Quaver.Tests
                     spriteList[i].Children[j].Position = new Vector2((float)Math.Cos((pos + childinterval)*3f) * 25f, (float)Math.Sin((pos + childinterval) * 3f) * 25f);
                 }
 
-                spriteList[i].Draw(spriteBatch);
+                spriteList[i].Draw();
             }
 
             //End
-            spriteBatch.End();
+            GameBase.SpriteBatch.End();
         }
     }
 }
