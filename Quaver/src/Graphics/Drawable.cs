@@ -17,7 +17,6 @@ namespace Quaver.Graphics
     /// </summary>
     internal abstract class Drawable : IDrawable
     {
-
         //Constructor
         protected Drawable()
         {
