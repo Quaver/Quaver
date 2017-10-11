@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
+using Quaver.Config;
 
 namespace Quaver.Main
 {
@@ -65,6 +66,11 @@ namespace Quaver.Main
         public static async Task LoadAndSetBeatmaps()
         {
             Beatmaps = BeatmapUtils.OrderBeatmapsByArtist(await BeatmapCache.LoadBeatmapDatabaseAsync());
+        }
+
+        public static void LoadSkin()
+        {
+            LoadedSkin = new Skin(Configuration.Skin);
         }
     }
 }
