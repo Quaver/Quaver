@@ -18,7 +18,6 @@ namespace Quaver.Gameplay
     /// </summary>
     internal partial class StatePlayScreen : GameStateBase
     {
-
         public StatePlayScreen()
         {
             //Important to assign a state to this class.
@@ -27,7 +26,6 @@ namespace Quaver.Gameplay
 
         //TEST
         private HitObject _testHitObject;
-
 
         /// <summary>
         ///     TODO: Add Summary
@@ -46,10 +44,7 @@ namespace Quaver.Gameplay
             _curNote = new Sprite(GraphicsDevice);
             _curNote.Image = content.Load<Texture2D>("TestImages/note_hitObject");
             _curNote.Alignment = Alignment.MidCenter;
-            _curNote.Size = Vector2.One * 64;*/
-            
-
-
+            _curNote.Size = Vector2.One * 64;*/          
         }
 
         /// <summary>

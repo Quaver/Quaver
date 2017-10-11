@@ -36,7 +36,6 @@ namespace Quaver.GameState
 
         public override void Draw()
         {
-        }
-        
+        }      
     }
 }

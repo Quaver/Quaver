@@ -57,13 +57,11 @@ namespace Quaver.Graphics
         }
 
         public override void Destroy()
-        {
-            
+        {            
         }
 
         public override void Instantiate()
-        {
-            
+        {            
         }
     }
 }
