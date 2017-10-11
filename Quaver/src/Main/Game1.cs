@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Threading.Tasks;
+using ManagedBass;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -6,6 +9,7 @@ using Quaver.GameState;
 
 //Temp
 using Quaver.Gameplay;
+using Quaver.Skins;
 using Quaver.Tests;
 
 namespace Quaver.Main
@@ -49,10 +53,15 @@ namespace Quaver.Main
             // Create a new SpriteBatch, which can be used to draw textures.
             GameBase.SpriteBatch = new SpriteBatch(GraphicsDevice);
             GameBase.GraphicsDevice = GraphicsDevice;
-
+           
             //Create new GameStateManager Instance
             GameBase.Content = Content;
+
+            // Load the Game Skin Before Starting
+            GameBase.LoadSkin();
+
             GameStateManager.Instance.AddScreen(new StateTestScreen());
+
 
             // TODO: use this.Content to load your game content here
         }

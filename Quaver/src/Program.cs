@@ -33,7 +33,7 @@ namespace Quaver
             // Start watching for beatmap directory changes.
             BeatmapImporter.WatchForChanges();
 
-            // Run all test methods as a task in the background - Game can be started during this time however.
+            // Run all test methods
             Task.Run(() => RunTestMethods());
 
             // Start game
@@ -54,7 +54,6 @@ namespace Quaver
         {
             Console.WriteLine("\n[DEBUG] Running Test Methods if there are any...");
             Task.Run(() => QuaTest.ParseQuaTest(false));
-            Task.Run(() => SkinTest.ParseSkinTest(true));
             Task.Run(() => AudioTest.PlaySongPreview(false));
             Task.Run(() => JsonTest.DeserializeJsonTest(false));
         }

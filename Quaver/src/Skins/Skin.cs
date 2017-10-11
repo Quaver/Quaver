@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using IniParser;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using System.IO;
+using System.Net.Mime;
 using System.Threading.Tasks;
+using Quaver.Main;
 
 namespace Quaver.Skins
 {
@@ -81,6 +84,9 @@ namespace Quaver.Skins
 
         /// <summary>
         ///     All of the textures for the loaded skin elements. 
+        ///     Here we initialize all of them to a new texture, however they'll be replaced by an actual skin element
+        ///     texture upon loading. This is just to not have them null when creating the dictionary in LoadSkinElements();
+        ///     Is this shit? Probably.
         /// </summary>
         internal Texture2D ColumnBgMask { get; set; }
         internal Texture2D ColumnHitLighting { get; set; }
@@ -96,6 +102,15 @@ namespace Quaver.Skins
         internal Texture2D RankingS { get; set; }
         internal Texture2D RankingSS { get; set; }
         internal Texture2D RankingX { get; set; }
+        internal Texture2D NoteHoldEnd { get; set; }
+        internal Texture2D NoteHoldBody { get; set; }
+        internal Texture2D NoteReceptor { get; set; }
+        internal Texture2D JudgeMiss { get; set; }
+        internal Texture2D JudgeBad { get; set; }
+        internal Texture2D JudgeGood { get; set; }
+        internal Texture2D JudgeGreat { get; set; }
+        internal Texture2D JudgePerfect { get; set; }
+        internal Texture2D JudgeMarv { get; set; }
 
         /// <summary>
         ///     Constructor, 
@@ -112,6 +127,9 @@ namespace Quaver.Skins
 
             // Read Skin.ini
             ReadSkinConfig(skinDirectory);
+
+            // Load all skin elements
+            LoadSkinElements(skinDirectory);
         }
 
         /// <summary>
@@ -120,26 +138,136 @@ namespace Quaver.Skins
         /// <param name="skinDir"></param>
         private void LoadSkinElements(string skinDir)
         {
-            // Dictionary containing the texture and its matching file name
-            var skinElements = new Dictionary<Texture2D, string>
+            // Contains the file names of all skin elements
+            var skinElements = new []
             {
-                { ColumnBgMask, @"column-bgmask" },
-                { ColumnHitLighting, @"column-hitlighting" },
-                { ColumnTimingBar, @"column-timingbar" },
-                { NoteHitObject1, @"note-hitobject1" },
-                { NoteHitObject2, @"note-hitobject1" },
-                { NoteHitObject3, @"note-hitobject1" },
-                { NoteHitObject4, @"note-hitobject1" },
-                { RankingA, @"ranking-a"},
-                { RankingB, @"ranking-b"},
-                { RankingC, @"ranking-c"},
-                { RankingD, @"ranking-d"},
-                { RankingS, @"ranking-s"},
-                { RankingSS, @"ranking-ss"},
-                { RankingX, @"ranking-x"},               
+                @"column-bgmask",
+                @"column-hitlighting",
+                @"column-timingbar",
+                @"note-hitobject1",
+                @"note-hitobject2",
+                @"note-hitobject3",
+                @"note-hitobject4",
+                @"ranking-a",
+                @"ranking-b",
+                @"ranking-c",
+                @"ranking-d",
+                @"ranking-s",
+                @"ranking-ss",
+                @"ranking-x",
+                @"note-holdend",
+                @"note-holdbody",
+                @"note-receptor",
+                @"judge-miss",
+                @"judge-bad",
+                @"judge-good",
+                @"judge-great",
+                @"judge-perfect",
+                @"judge-marv"
             };
 
-            // Attempt to load each file, if not, then load the default skin element.
+            foreach (var element in skinElements)
+            {
+                var skinElementPath = skinDir + $"/{element}.png";
+                    
+                // Load up all the skin elements.
+                switch (element)
+                {
+                    case @"column-bgmask":
+                        ColumnBgMask = LoadIndividualElement(element, skinElementPath, ColumnBgMask);
+                        break;
+                    case @"column-hitlighting":
+                        ColumnHitLighting = LoadIndividualElement(element, skinElementPath, ColumnHitLighting);
+                        break;
+                    case @"column-timingbar":
+                        ColumnTimingBar = LoadIndividualElement(element, skinElementPath, ColumnTimingBar);
+                        break;
+                    case @"note-hitobject1":
+                        NoteHitObject1 = LoadIndividualElement(element, skinElementPath, NoteHitObject1);
+                        break;
+                    case @"note-hitobject2":
+                        NoteHitObject2 = LoadIndividualElement(element, skinElementPath, NoteHitObject2);
+                        break;
+                    case @"note-hitobject3":
+                        NoteHitObject3 = LoadIndividualElement(element, skinElementPath, NoteHitObject3);
+                        break;
+                    case @"note-hitobject4":
+                        NoteHitObject4 = LoadIndividualElement(element, skinElementPath, NoteHitObject4);
+                        break;
+                    case @"ranking-a":
+                        RankingA = LoadIndividualElement(element, skinElementPath, RankingA);
+                        break;
+                    case @"ranking-b":
+                        RankingB = LoadIndividualElement(element, skinElementPath, RankingB);
+                        break;
+                    case @"ranking-c":
+                        RankingC = LoadIndividualElement(element, skinElementPath, RankingC);
+                        break;
+                    case @"ranking-d":
+                        RankingD = LoadIndividualElement(element, skinElementPath, RankingD);
+                        break;
+                    case @"ranking-s":
+                        RankingS = LoadIndividualElement(element, skinElementPath, RankingS);
+                        break;
+                    case @"ranking-ss":
+                        RankingSS = LoadIndividualElement(element, skinElementPath, RankingSS);
+                        break;
+                    case @"ranking-x":
+                        RankingX = LoadIndividualElement(element, skinElementPath, RankingX);
+                        break;
+                    case @"note-holdend":
+                        NoteHoldEnd = LoadIndividualElement(element, skinElementPath, NoteHoldEnd);
+                        break;
+                    case @"note-holdbody":
+                        NoteHoldBody = LoadIndividualElement(element, skinElementPath, NoteHoldBody);
+                        break;
+                    case @"note-receptor":
+                        NoteReceptor = LoadIndividualElement(element, skinElementPath, NoteReceptor);
+                        break;
+                    case @"judge-miss":
+                        JudgeMiss = LoadIndividualElement(element, skinElementPath, JudgeMiss);
+                        break;
+                    case @"judge-bad":
+                        JudgeBad = LoadIndividualElement(element, skinElementPath, JudgeBad);
+                        break;
+                    case @"judge-good":
+                        JudgeGood = LoadIndividualElement(element, skinElementPath, JudgeGood);
+                        break;
+                    case @"judge-great":
+                        JudgeGreat = LoadIndividualElement(element, skinElementPath, JudgeGreat);
+                        break;
+                    case @"judge-perfect":
+                        JudgePerfect = LoadIndividualElement(element, skinElementPath, JudgePerfect);
+                        break;
+                    case @"judge-marv":
+                        JudgeMarv = LoadIndividualElement(element, skinElementPath, JudgeMarv);
+                        break;
+                    default:
+                        break;
+                }
+            }            
+        }
+
+        /// <summary>
+        ///     Loads an individual element.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="tex"></param>
+        private Texture2D LoadIndividualElement(string element, string path, Texture2D tex)
+        {
+            // Check if the skin file exists. If not, load and return the default skin element.
+            if (!File.Exists(path))
+            {
+                path = $"Default Skin/{element}";
+                Console.WriteLine($"[SKIN LOADER] Skin element: {element}.png could not be found. Resulting to default: {path}");
+                return GameBase.Content.Load<Texture2D>(path);
+            }
+
+            // Load the skin element
+            using (var fileStream = new FileStream(path, FileMode.Open))
+            {
+                return Texture2D.FromStream(GameBase.GraphicsDevice, fileStream);
+            }
         }
 
         /// <summary>
