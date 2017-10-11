@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 using Quaver.Graphics;
+using Quaver.Main;
 
 namespace Quaver.Gameplay
 {
@@ -19,26 +20,26 @@ namespace Quaver.Gameplay
         internal Sprite _HoldBodySprite;
         internal Sprite _HoldEndSprite;
 
-        public HitObject(GraphicsDevice graphicsDevice, ContentManager content) //Remove ContentManager Later
+        public HitObject() //Remove ContentManager Later
         {
-            _HitBodySprite = new Sprite(graphicsDevice)
+            _HitBodySprite = new Sprite()
             {
-                Image = content.Load<Texture2D>("TestImages/note_hitObject"),
+                Image = GameBase.Content.Load<Texture2D>("TestImages/note_hitObject"),
                 Size = Vector2.One * 50,
                 Alignment = Alignment.MidCenter
             };
 
-            _HoldBodySprite = new Sprite(graphicsDevice)
+            _HoldBodySprite = new Sprite()
             {
-                Image = content.Load<Texture2D>("TestImages/note_holdBody"),
+                Image = GameBase.Content.Load<Texture2D>("TestImages/note_holdBody"),
                 Size = Vector2.One * 50,
                 Position = new Vector2(0, 12.5f),
                 Alignment = Alignment.MidCenter
             };
 
-            _HoldEndSprite = new Sprite(graphicsDevice)
+            _HoldEndSprite = new Sprite()
             {
-                Image = content.Load<Texture2D>("TestImages/note_holdEnd"),
+                Image = GameBase.Content.Load<Texture2D>("TestImages/note_holdEnd"),
                 Size = Vector2.One * 50,
                 Position = new Vector2(0, 24),
                 Alignment = Alignment.MidCenter
@@ -69,16 +70,16 @@ namespace Quaver.Gameplay
             get; set;
         } = true;
         
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
             //If the object is a long note
             if (isLongNote)
             {
-                _HoldBodySprite.Draw(spriteBatch);
-                _HoldEndSprite.Draw(spriteBatch);
+                _HoldBodySprite.Draw();
+                _HoldEndSprite.Draw();
             }
 
-            _HitBodySprite.Draw(spriteBatch);
+            _HitBodySprite.Draw();
         }
     }
 }

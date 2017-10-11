@@ -16,23 +16,9 @@ namespace Quaver.GameState
     internal abstract class GameStateBase
     {
         /// <summary>
-        ///     TODO: Summary goes here.
-        /// </summary>
-        protected GraphicsDevice GraphicsDevice;
-
-        /// <summary>
         ///     The State of the GameState class.
         /// </summary>
         public State CurrentState { get; set; }
-
-        /// <summary>
-        ///     Constructor.
-        /// </summary>
-        /// <param name="graphicsDevice"></param>
-        protected GameStateBase(GraphicsDevice graphicsDevice)
-        {
-            GraphicsDevice = graphicsDevice;
-        }
         
         /// <summary>
         ///     TODO: Summary goes here
@@ -43,7 +29,7 @@ namespace Quaver.GameState
         ///     TODO: Summary goes here
         /// </summary>
         /// <param name="content"></param>
-        public abstract void LoadContent(ContentManager content);
+        public abstract void LoadContent();
 
         /// <summary>
         ///     TODO: Summary goes here
@@ -61,6 +47,6 @@ namespace Quaver.GameState
         /// </summary>
         /// <param name="spriteBatch"></param>
         /// <param name="windowSize"></param>
-        public abstract void Draw(SpriteBatch spriteBatch);
+        public abstract void Draw();
     }
 }
