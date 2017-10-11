@@ -41,12 +41,12 @@ namespace Quaver.GameState
         ///     Adds a new screen to the stack
         /// </summary>
         /// <param name="screen"></param>
-        public void AddScreen(GameStateBase screen)
+        public void AddScreen(GameStateBase newState)
         {
             try
             {
                 // Add the screen to the stack
-                _states.Push(screen);
+                _states.Push(newState);
                 // Initialize the screen
                 _states.Peek().Initialize();
                 // Call the LoadContent on the screen
