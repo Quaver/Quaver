@@ -84,9 +84,8 @@ namespace Quaver.Skins
 
         /// <summary>
         ///     All of the textures for the loaded skin elements. 
-        ///     Here we initialize all of them to a new texture, however they'll be replaced by an actual skin element
-        ///     texture upon loading. This is just to not have them null when creating the dictionary in LoadSkinElements();
-        ///     Is this shit? Probably.
+        ///     We first attempt to load the selected skin's elements, however if we can't,
+        ///     it'll result it to the default.
         /// </summary>
         internal Texture2D ColumnBgMask { get; set; }
         internal Texture2D ColumnHitLighting { get; set; }
