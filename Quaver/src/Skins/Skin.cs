@@ -111,6 +111,34 @@ namespace Quaver.Skins
         internal Texture2D JudgePerfect { get; set; }
         internal Texture2D JudgeMarv { get; set; }
 
+        // Contains the file names of all skin elements
+        private readonly string[] skinElements = new[]
+        {
+                @"column-bgmask",
+                @"column-hitlighting",
+                @"column-timingbar",
+                @"note-hitobject1",
+                @"note-hitobject2",
+                @"note-hitobject3",
+                @"note-hitobject4",
+                @"ranking-a",
+                @"ranking-b",
+                @"ranking-c",
+                @"ranking-d",
+                @"ranking-s",
+                @"ranking-ss",
+                @"ranking-x",
+                @"note-holdend",
+                @"note-holdbody",
+                @"note-receptor",
+                @"judge-miss",
+                @"judge-bad",
+                @"judge-good",
+                @"judge-great",
+                @"judge-perfect",
+                @"judge-marv"
+        };
+
         /// <summary>
         ///     Constructor, 
         /// </summary>
@@ -179,34 +207,6 @@ namespace Quaver.Skins
         /// <param name="skinDir"></param>
         private void LoadSkinElements(string skinDir)
         {
-            // Contains the file names of all skin elements
-            var skinElements = new []
-            {
-                @"column-bgmask",
-                @"column-hitlighting",
-                @"column-timingbar",
-                @"note-hitobject1",
-                @"note-hitobject2",
-                @"note-hitobject3",
-                @"note-hitobject4",
-                @"ranking-a",
-                @"ranking-b",
-                @"ranking-c",
-                @"ranking-d",
-                @"ranking-s",
-                @"ranking-ss",
-                @"ranking-x",
-                @"note-holdend",
-                @"note-holdbody",
-                @"note-receptor",
-                @"judge-miss",
-                @"judge-bad",
-                @"judge-good",
-                @"judge-great",
-                @"judge-perfect",
-                @"judge-marv"
-            };
-
             foreach (var element in skinElements)
             {
                 var skinElementPath = skinDir + $"/{element}.png";
