@@ -22,7 +22,7 @@ namespace Quaver.Tests
             var watch = Stopwatch.StartNew();
             var skin = new Skin(directory);
             watch.Stop();
-            
+                    
             Console.Write($"Displaying values for parsed skin: {directory}\n\n" +
                           $"Name: {skin.Name}\n" +
                           $"Author: {skin.Author}\n" +
