@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.GameState;
 using Quaver.Utility;
 using Quaver.Graphics;
+using Quaver.Main;
 
 namespace Quaver.Gameplay
 {
@@ -18,7 +19,7 @@ namespace Quaver.Gameplay
     internal partial class StatePlayScreen : GameStateBase
     {
 
-        public StatePlayScreen(GraphicsDevice graphicsDevice) :base(graphicsDevice)
+        public StatePlayScreen()
         {
             //Important to assign a state to this class.
             CurrentState = State.PlayScreen;
@@ -38,9 +39,9 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void LoadContent(ContentManager content)
+        public override void LoadContent()
         {
-            _testHitObject = new HitObject(GraphicsDevice, content);
+            _testHitObject = new HitObject();
                 /*
             _curNote = new Sprite(GraphicsDevice);
             _curNote.Image = content.Load<Texture2D>("TestImages/note_hitObject");
@@ -70,13 +71,13 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
-            GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Begin();
+            GameBase.GraphicsDevice.Clear(Color.Black);
+            GameBase.SpriteBatch.Begin();
             //End
-            _testHitObject.Draw(spriteBatch);
-            spriteBatch.End();
+            _testHitObject.Draw();
+            GameBase.SpriteBatch.End();
         }
     }
 }

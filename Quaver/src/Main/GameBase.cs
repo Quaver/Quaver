@@ -7,6 +7,11 @@ using Quaver.Beatmaps;
 using Quaver.Database;
 using Quaver.Skins;
 
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
+
 namespace Quaver.Main
 {
     /// <summary>
@@ -28,6 +33,31 @@ namespace Quaver.Main
         ///     A boolean flag that controls whether or not we have queued changes in the song's directory.
         /// </summary>
         public static bool ImportQueueReady { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static GraphicsDevice GraphicsDevice { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static GraphicsDeviceManager GraphicsManager { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static SpriteBatch SpriteBatch { get; set; }
+
+        /// <summary>
+        ///     The content manager 
+        /// </summary>       
+        public static ContentManager Content { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static Vector2 WindowSize { get; set; }
 
         /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.

@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+
+using Quaver.Main;
 
 namespace Quaver.GameState
 {
@@ -21,16 +22,6 @@ namespace Quaver.GameState
             // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/null-conditional-operator
             get => _instance = _instance ?? new GameStateManager();
         }
-
-        /// <summary>
-        ///     The content manager 
-        /// </summary>       
-        public ContentManager Content { get; set; }
-
-        /// <summary>
-        ///     The current graphics manager
-        /// </summary>
-        public GraphicsDeviceManager Graphics { get; set; }
        
         /// <summary>
         ///     Holds a stack of all the current game states
@@ -50,9 +41,9 @@ namespace Quaver.GameState
                 // Initialize the screen
                 _states.Peek().Initialize();
                 // Call the LoadContent on the screen
-                if (Content != null)
+                if (GameBase.Content != null)
                 {
-                    _states.Peek().LoadContent(Content);
+                    _states.Peek().LoadContent();
                 }
             }
             catch (Exception ex)
@@ -132,13 +123,13 @@ namespace Quaver.GameState
         /// </summary>
         /// <param name="spriteBatch"></param>
         /// <param name="windowSize"></param>
-        public void Draw(SpriteBatch spriteBatch, Vector2 windowSize)
+        public void Draw()
         {
             try
             {
                 if (_states.Count > 0)
                 {
-                    _states.Peek().Draw(spriteBatch);
+                    _states.Peek().Draw();
                 }
             }
             catch (Exception ex)
