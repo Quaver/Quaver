@@ -25,7 +25,7 @@ namespace Quaver.Gameplay
         }
 
         //TEST
-        private Sprite _curNote;
+        private HitObject _testHitObject;
 
 
         /// <summary>
@@ -40,10 +40,12 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void LoadContent(ContentManager content)
         {
+            _testHitObject = new HitObject(GraphicsDevice, content);
+                /*
             _curNote = new Sprite(GraphicsDevice);
             _curNote.Image = content.Load<Texture2D>("TestImages/note_hitObject");
             _curNote.Alignment = Alignment.MidCenter;
-            _curNote.Size = Vector2.One * 64;
+            _curNote.Size = Vector2.One * 64;*/
             
 
 
@@ -73,7 +75,7 @@ namespace Quaver.Gameplay
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             //End
-            _curNote.Draw(spriteBatch);
+            _testHitObject.Draw(spriteBatch);
             spriteBatch.End();
         }
     }
