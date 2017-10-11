@@ -58,7 +58,7 @@ namespace Quaver.Main
 
             //Create new GameStateManager Instance
             GameStateManager.Instance.Content = Content;
-            GameStateManager.Instance.AddScreen(new StateGameplay(GraphicsDevice));
+            GameStateManager.Instance.AddScreen(new StatePlayScreen(GraphicsDevice));
 
             // TODO: use this.Content to load your game content here
         }
