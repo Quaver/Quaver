@@ -127,7 +127,51 @@ namespace Quaver.Skins
             // Load all skin elements
             LoadSkinElements(skinDirectory);
 
-            Console.WriteLine("[SKIN LOADER] Skin successfully loaded!");
+            Console.WriteLine($"[SKIN LOADER] Skin successfully loaded!\n-----\n" +
+                              $"Name: {Name}\n" +
+                              $"Author: {Author}\n" +
+                              $"Version: {Version}\n" +
+                              $"CustomBackground: {CustomBackground}\n" +
+                              $"CursorRotate: {CursorRotate}\n" +
+                              $"CursorTrailRotate: {CursorTrailRotate}\n" +
+                              $"CursorExpand: {CursorExpand}\n" +
+                              $"BgMaskBufferSize: {BgMaskBufferSize}\n" +
+                              $"NoteBufferSpacing: {NoteBufferSpacing}\n" +
+                              $"TimingBarPixelSize: {TimingBarPixelSize}\n" +
+                              $"HitLightingScale: {HitLightingScale}\n" +
+                              $"ColumnSize: {ColumnSize}\n" +
+                              $"ReceptorYOffset: {ReceptorYOffset}\n" +
+                              $"ColourLight1: {ColourLight1}\n" +
+                              $"ColourLight2: {ColourLight2}\n" +
+                              $"ColourLight3: {ColourLight3}\n" +
+                              $"ColourLight4: {ColourLight4}\n" +
+                              $"Colour1: {Colour1}\n" +
+                              $"Colour2: {Colour2}\n" +
+                              $"Colour3: {Colour3}\n" +
+                              $"Colour4: {Colour4}\n" +
+                              $"ColumnBgMask: {ColumnBgMask.Bounds}\n" +
+                              $"ColumnHitLighting: {ColumnHitLighting.Bounds}\n" +
+                              $"ColumnTimingBar: {ColumnTimingBar.Bounds}\n" +
+                              $"NoteHitObject1: {NoteHitObject1.Bounds}\n" +
+                              $"NoteHitObject2: {NoteHitObject2.Bounds}\n" +
+                              $"NoteHitObject3: {NoteHitObject3.Bounds}\n" +
+                              $"NoteHitObject4: {NoteHitObject4.Bounds}\n" +
+                              $"RankingA: {RankingA.Bounds}\n" +
+                              $"RankingB: {RankingB.Bounds}\n" +
+                              $"RankingC: {RankingC.Bounds}\n" +
+                              $"RankingD: {RankingD.Bounds}\n" +
+                              $"RankingS: {RankingS.Bounds}\n" +
+                              $"RankingSS: {RankingSS.Bounds}\n" +
+                              $"RankingX: {RankingX.Bounds}\n" +
+                              $"NoteHoldEnd: {NoteHoldEnd.Bounds}\n" +
+                              $"NoteHoldBody: {NoteHoldBody.Bounds}\n" +
+                              $"NoteReceptor: {NoteReceptor.Bounds}\n" +
+                              $"JudgeMiss: {JudgeMiss.Bounds}\n" +
+                              $"JudgeBad: {JudgeBad.Bounds}\n" +
+                              $"JudgeGood: {JudgeGood.Bounds}\n" +
+                              $"JudgeGreat: {JudgeGreat.Bounds}\n" +
+                              $"JudgePerfect: {JudgePerfect.Bounds}\n" +
+                              $"JudgeMarv: {JudgeMarv.Bounds}\n");
         }
 
         /// <summary>
