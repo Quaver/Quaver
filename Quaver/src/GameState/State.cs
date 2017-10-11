@@ -18,6 +18,7 @@ namespace Quaver.GameState
         PlayPause,
         GameOver,
         ScoreScreen,
-        LoadingScreen
+        LoadingScreen,
+        TestScreen
     }
 }

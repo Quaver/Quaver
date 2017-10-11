@@ -10,12 +10,12 @@ using Quaver.GameState;
 using Quaver.Utility;
 using Quaver.Graphics;
 
-namespace Quaver.Gameplay
+namespace Quaver.Tests
 {
     /// <summary>
     /// This is the GameState when the player is actively playing.
     /// </summary>
-    internal class StateGameplay : GameStateBase
+    internal class StateTestScreen : GameStateBase
     {
         //TEST (These variables will be removed later)
         private Texture2D _TestImage;
@@ -25,13 +25,13 @@ namespace Quaver.Gameplay
         private Rectangle Boundary;
         private List<Sprite> spriteList;
         private List<Vector2> rand;
-        private int iterations = 24;
+        private int iterations = 234;
         private Color curColor = new Color(Util.Random(0, 1), Util.Random(0, 1), Util.Random(0, 1), 1);
 
-        public StateGameplay(GraphicsDevice graphicsDevice) :base(graphicsDevice)
+        public StateTestScreen(GraphicsDevice graphicsDevice) :base(graphicsDevice)
         {
             //Important to assign a state to this class.
-            CurrentState = State.PlayScreen;
+            CurrentState = State.TestScreen;
         }
 
         /// <summary>
