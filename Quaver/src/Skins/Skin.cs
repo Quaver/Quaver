@@ -6,8 +6,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using System.IO;
 using System.Net.Mime;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Quaver.Main;
+using Quaver.Utility;
 
 namespace Quaver.Skins
 {
@@ -215,73 +217,73 @@ namespace Quaver.Skins
                 switch (element)
                 {
                     case @"column-bgmask":
-                        ColumnBgMask = LoadIndividualElement(element, skinElementPath, ColumnBgMask);
+                        ColumnBgMask = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"column-hitlighting":
-                        ColumnHitLighting = LoadIndividualElement(element, skinElementPath, ColumnHitLighting);
+                        ColumnHitLighting = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"column-timingbar":
-                        ColumnTimingBar = LoadIndividualElement(element, skinElementPath, ColumnTimingBar);
+                        ColumnTimingBar = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"note-hitobject1":
-                        NoteHitObject1 = LoadIndividualElement(element, skinElementPath, NoteHitObject1);
+                        NoteHitObject1 = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"note-hitobject2":
-                        NoteHitObject2 = LoadIndividualElement(element, skinElementPath, NoteHitObject2);
+                        NoteHitObject2 = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"note-hitobject3":
-                        NoteHitObject3 = LoadIndividualElement(element, skinElementPath, NoteHitObject3);
+                        NoteHitObject3 = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"note-hitobject4":
-                        NoteHitObject4 = LoadIndividualElement(element, skinElementPath, NoteHitObject4);
+                        NoteHitObject4 = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"ranking-a":
-                        RankingA = LoadIndividualElement(element, skinElementPath, RankingA);
+                        RankingA = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"ranking-b":
-                        RankingB = LoadIndividualElement(element, skinElementPath, RankingB);
+                        RankingB = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"ranking-c":
-                        RankingC = LoadIndividualElement(element, skinElementPath, RankingC);
+                        RankingC = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"ranking-d":
-                        RankingD = LoadIndividualElement(element, skinElementPath, RankingD);
+                        RankingD = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"ranking-s":
-                        RankingS = LoadIndividualElement(element, skinElementPath, RankingS);
+                        RankingS = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"ranking-ss":
-                        RankingSS = LoadIndividualElement(element, skinElementPath, RankingSS);
+                        RankingSS = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"ranking-x":
-                        RankingX = LoadIndividualElement(element, skinElementPath, RankingX);
+                        RankingX = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"note-holdend":
-                        NoteHoldEnd = LoadIndividualElement(element, skinElementPath, NoteHoldEnd);
+                        NoteHoldEnd = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"note-holdbody":
-                        NoteHoldBody = LoadIndividualElement(element, skinElementPath, NoteHoldBody);
+                        NoteHoldBody = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"note-receptor":
-                        NoteReceptor = LoadIndividualElement(element, skinElementPath, NoteReceptor);
+                        NoteReceptor = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-miss":
-                        JudgeMiss = LoadIndividualElement(element, skinElementPath, JudgeMiss);
+                        JudgeMiss = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-bad":
-                        JudgeBad = LoadIndividualElement(element, skinElementPath, JudgeBad);
+                        JudgeBad = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-good":
-                        JudgeGood = LoadIndividualElement(element, skinElementPath, JudgeGood);
+                        JudgeGood = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-great":
-                        JudgeGreat = LoadIndividualElement(element, skinElementPath, JudgeGreat);
+                        JudgeGreat = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-perfect":
-                        JudgePerfect = LoadIndividualElement(element, skinElementPath, JudgePerfect);
+                        JudgePerfect = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-marv":
-                        JudgeMarv = LoadIndividualElement(element, skinElementPath, JudgeMarv);
+                        JudgeMarv = LoadIndividualElement(element, skinElementPath);
                         break;
                     default:
                         break;
@@ -294,22 +296,17 @@ namespace Quaver.Skins
         /// </summary>
         /// <param name="path"></param>
         /// <param name="tex"></param>
-        private Texture2D LoadIndividualElement(string element, string path, Texture2D tex)
+        private Texture2D LoadIndividualElement(string element, string path)
         {
-            // Check if the skin file exists. If not, load and return the default skin element.
-            if (!File.Exists(path))
-            {
-                path = $"Default Skin/{element}";
-                Console.WriteLine($"[SKIN LOADER] Skin element: {element}.png could not be found. Resulting to default: {path}");
+            // If the image file exists, go ahead and load it into a texture.
+            if (File.Exists(path))
+                return ImageLoader.Load(path);
 
-                return GameBase.Content.Load<Texture2D>(path);
-            }
+            // Otherwise, we'll have to change the path to that of the default element and load that instead.
+            path = $"Default Skin/{element}";
+            Console.WriteLine($"[SKIN LOADER] Skin element: {element}.png could not be found. Resulting to default: {path}");
 
-            // Load the skin element
-            using (var fileStream = new FileStream(path, FileMode.Open))
-            {
-                return Texture2D.FromStream(GameBase.GraphicsDevice, fileStream);
-            }
+            return GameBase.Content.Load<Texture2D>(path);
         }
 
         /// <summary>
