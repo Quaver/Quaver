@@ -116,6 +116,7 @@
     <Compile Include="src\Tests\Qua.Test.cs" />
     <Compile Include="src\Tests\Skin.Test.cs" />
     <Compile Include="src\Graphics\Alignment.cs" />
+    <Compile Include="src\Utility\ImageLoader.cs" />
     <Compile Include="src\Utility\JsonResourceReader.cs" />
     <Compile Include="src\Utility\Util_DrawRect.cs" />
     <Compile Include="src\Utility\Util_Random.cs" />
