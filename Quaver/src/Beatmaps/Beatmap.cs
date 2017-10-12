@@ -5,6 +5,8 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
+using Microsoft.Xna.Framework.Graphics;
+using Quaver.Audio;
 using Quaver.QuaFile;
 using SQLite;
 
@@ -118,6 +120,18 @@ namespace Quaver.Beatmaps
         ///     The beatmap's length (Time of the last hit object)
         /// </summary>
         public int SongLength { get; set; }
+
+        /// <summary>
+        ///     The specific beatmap's song.
+        /// </summary>
+        [Ignore]
+        public GameAudio Song { get; set; }
+
+        /// <summary>
+        ///     The beatmap's background texture.
+        /// </summary>
+        [Ignore]
+        public Texture2D Background { get; set; }
 
         /// <summary>
         ///     Responsible for converting a Qua object, to a Beatmap object
