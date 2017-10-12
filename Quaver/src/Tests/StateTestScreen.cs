@@ -26,7 +26,9 @@ namespace Quaver.Tests
         private Rectangle Boundary;
         private List<Sprite> spriteList;
         private List<Vector2> rand;
-        private int iterations = 234;
+        private int iterations = 100;
+        private SpriteFont testFont;
+        private float curFps;
 
         public StateTestScreen()
         {
@@ -42,9 +44,10 @@ namespace Quaver.Tests
             //TEMP Declare temp variables
             int width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             int height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            Console.WriteLine("[STATE_GAMEPLAY]: Initialized Gameplay State.");
+            Console.WriteLine("[STATE_TESTSCREEN]: Initialized Gameplay State.");
             Console.WriteLine("Screen Height: {0}, Screen Width: {1}",width,height);
             Boundary = new Rectangle(0, 0, 800,480);
+            testFont = GameBase.Content.Load<SpriteFont>("Fonts/testFont");
         }
 
         /// <summary>
@@ -106,7 +109,7 @@ namespace Quaver.Tests
             if (fpsCounter >= 100)
             {
                 fpsCounter = 0;
-                //Console.WriteLine(1 / (fpsPos / 100) + " FPS");
+                curFps = (float)(1 / (fpsPos / 100));
                 fpsPos = 0;
             }
         }
@@ -133,6 +136,8 @@ namespace Quaver.Tests
 
                 spriteList[i].Draw();
             }
+
+            GameBase.SpriteBatch.DrawString(testFont, Math.Floor(curFps).ToString()+" FPS", new Vector2(0, 0), Color.LightGreen);
 
             //End
             GameBase.SpriteBatch.End();
