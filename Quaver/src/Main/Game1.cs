@@ -59,7 +59,7 @@ namespace Quaver.Main
             // Load the Game Skin Before Starting
             GameBase.LoadSkin();
 
-            GameStateManager.Instance.AddScreen(new StateTestScreen());
+            GameStateManager.Instance.AddScreen(new StatePlayScreen());
 
 
             // TODO: use this.Content to load your game content here
@@ -86,7 +86,7 @@ namespace Quaver.Main
                 Exit();
 
             // TODO: Add your update logic here
-
+            FPSCounter.Count(gameTime.ElapsedGameTime.TotalSeconds);
             GameStateManager.Instance.Update(gameTime);
             base.Update(gameTime);
         }
@@ -98,8 +98,9 @@ namespace Quaver.Main
         protected override void Draw(GameTime gameTime)
         {
             GameBase.SpriteBatch.Begin();
-            GameBase.GraphicsDevice.Clear(Color.DarkGray);
+            GameBase.GraphicsDevice.Clear(Color.DarkSlateGray);
             GameStateManager.Instance.Draw();
+            FPSCounter.Draw();
             base.Draw(gameTime);
             GameBase.SpriteBatch.End();
         }
