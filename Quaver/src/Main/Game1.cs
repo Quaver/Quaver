@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ManagedBass;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -27,8 +28,10 @@ namespace Quaver.Main
             GameBase.GraphicsManager.SynchronizeWithVerticalRetrace = false; //TURNS OFF VSYNC
             IsFixedTimeStep = false;
 
-            //Load Content
-            Content.RootDirectory = "Content";
+            // Use Content in Resources folder (Don't touch this please.)
+            var resxContent = new ResourceContentManager(Services, Resource1.ResourceManager);
+            Content = resxContent;
+
         }
 
         /// <summary>

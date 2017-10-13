@@ -17,7 +17,7 @@ namespace Quaver.Tests
         private static double _fpsCurrent = 0;
         private static double _fpsCount = 0;
         private static int _interval = 0;
-        private static SpriteFont _FpsFont = GameBase.Content.Load<SpriteFont>("Fonts/testFont");
+        private static SpriteFont _FpsFont = GameBase.Content.Load<SpriteFont>("testFont");
 
         /// <summary>
         /// Use this to calculate FPS on every frame.
