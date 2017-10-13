@@ -19,6 +19,10 @@ namespace Quaver.Tests
         private static int _interval = 0;
         private static SpriteFont _FpsFont = GameBase.Content.Load<SpriteFont>("Fonts/testFont");
 
+        /// <summary>
+        /// Use this to calculate FPS on every frame.
+        /// </summary>
+        /// <param name="dt"></param>
         public static void Count(double dt)
         {
             _fpsCount += dt;
@@ -32,11 +36,18 @@ namespace Quaver.Tests
             }
         }
 
+        /// <summary>
+        /// Get the current FPS
+        /// </summary>
+        /// <returns></returns>
         public static double Get()
         {
             return _fpsCurrent;
         }
 
+        /// <summary>
+        /// Draw the current FPS as a text sprite
+        /// </summary>
         public static void Draw()
         {
             GameBase.SpriteBatch.DrawString(_FpsFont, Math.Floor(_fpsCurrent).ToString() + " FPS", new Vector2(0, 0), Color.LightGreen);
