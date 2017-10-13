@@ -24,14 +24,14 @@ namespace Quaver.Gameplay
         {
             _HitBodySprite = new Sprite()
             {
-                Image = GameBase.Content.Load<Texture2D>("TestImages/note_hitObject"),
+                Image = GameBase.Content.Load<Texture2D>("note_hitObject"),
                 Size = Vector2.One * 50,
                 Alignment = Alignment.MidCenter
             };
 
             _HoldBodySprite = new Sprite()
             {
-                Image = GameBase.Content.Load<Texture2D>("TestImages/note_holdBody"),
+                Image = GameBase.Content.Load<Texture2D>("note_holdBody"),
                 Size = Vector2.One * 50,
                 Position = new Vector2(0, 12.5f),
                 Alignment = Alignment.MidCenter
@@ -39,7 +39,7 @@ namespace Quaver.Gameplay
 
             _HoldEndSprite = new Sprite()
             {
-                Image = GameBase.Content.Load<Texture2D>("TestImages/note_holdEnd"),
+                Image = GameBase.Content.Load<Texture2D>("note_holdEnd"),
                 Size = Vector2.One * 50,
                 Position = new Vector2(0, 24),
                 Alignment = Alignment.MidCenter
