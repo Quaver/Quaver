@@ -21,9 +21,19 @@ namespace Quaver.Main
     internal static class GameBase
     {
         /// <summary>
-        ///     The current list of beatmaps
+        ///     The current list of loaded beatmaps
         /// </summary>
         public static Dictionary<string, List<Beatmap>> Beatmaps { get; set; }
+
+        /// <summary>
+        ///     The current list of ***visible*** beatmaps - Use these for song select!
+        /// </summary>
+        public static Dictionary<string, List<Beatmap>> VisibleBeatmaps { get; set; }
+
+        /// <summary>
+        ///     The currently selected beatmap.
+        /// </summary>
+        public static Beatmap SelectedBeatmap { get; set; }
 
         /// <summary>
         ///     The currently loaded Skin
@@ -66,11 +76,59 @@ namespace Quaver.Main
         public static async Task LoadAndSetBeatmaps()
         {
             Beatmaps = BeatmapUtils.OrderBeatmapsByArtist(await BeatmapCache.LoadBeatmapDatabaseAsync());
+            VisibleBeatmaps = Beatmaps;
         }
 
+        /// <summary>
+        ///     Loads the skin defined in the config file. 
+        /// </summary>
         public static void LoadSkin()
         {
             LoadedSkin = new Skin(Configuration.Skin);
+        }
+
+        /// <summary>
+        ///     Used to select a random beatmap from our current list of visible beatmaps.
+        /// </summary>
+        public static void SelectRandomBeatmap()
+        {
+            if (Beatmaps.Count == 0)
+                return;
+
+            // Find the number of total beatmaps
+            var totalMaps = 0;
+
+            foreach (KeyValuePair<string, List<Beatmap>> mapset in Beatmaps)
+            {
+                totalMaps += mapset.Value.Count;
+            }
+
+            var rand = new Random();
+            var randomBeatmap = rand.Next(0, totalMaps);
+
+            // Find the totalMaps'th beatmap
+            var onMap = 0;
+            foreach (KeyValuePair<string, List<Beatmap>> mapset in Beatmaps)
+            {
+                bool foundBeatmap = false;
+
+                foreach (var beatmap in mapset.Value)
+                {
+                    if (onMap == randomBeatmap)
+                    {
+                        SelectedBeatmap = beatmap;
+                        foundBeatmap = true;
+                        break;
+                    }
+
+                    onMap++;
+                }
+
+                if (foundBeatmap)
+                    break;
+            }
+
+            Console.WriteLine($"[GAME BASE] Random Beatmap: {SelectedBeatmap.Artist} - {SelectedBeatmap.Title} [{SelectedBeatmap.DifficultyName}]");
         }
     }
 }
