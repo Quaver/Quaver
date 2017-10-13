@@ -83,6 +83,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Resource1.Designer.cs" />
     <Compile Include="src\Gameplay\Objects\HitObject.cs" />
     <Compile Include="src\Gameplay\StatePlayScreen.cs" />
     <Compile Include="src\Graphics\Boundary.cs" />
@@ -208,7 +209,38 @@
     </None>
     <None Include="app.manifest" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Resource1.resx" />
     <EmbeddedResource Include="Resources\Quaver-Localization\en\english.json" />
+    <EmbeddedResource Include="Resources\Default Skin\column-bgmask.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\column-hitlighting.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\column-timingbar.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\judge-bad.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\judge-good.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\judge-great.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\judge-marv.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\judge-miss.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\judge-perfect.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject1.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject2.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject3.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject4.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdbody.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdend.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-receptor.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\ranking-a.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\ranking-b.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\ranking-c.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\ranking-d.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\ranking-s.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\ranking-ss.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\ranking-x.xnb" />
+    <EmbeddedResource Include="Resources\Fonts\test.xnb" />
+    <EmbeddedResource Include="Resources\Fonts\testFont.xnb" />
+    <EmbeddedResource Include="Resources\TestImages\arpiapic.xnb" />
+    <EmbeddedResource Include="Resources\TestImages\note_hitObject.xnb" />
+    <EmbeddedResource Include="Resources\TestImages\note_holdBody.xnb" />
+    <EmbeddedResource Include="Resources\TestImages\note_holdEnd.xnb" />
+    <EmbeddedResource Include="Resources\TestImages\note_Receptor.xnb" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\INIFileParser.dll" />

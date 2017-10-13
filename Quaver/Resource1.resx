@@ -118,7 +118,97 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="arpiapic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\TestImages\arpiapic.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="column-bgmask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\column-bgmask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="column-hitlighting" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\column-hitlighting.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="column-timingbar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\column-timingbar.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="english" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Quaver-Localization\en\english.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="judge-bad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\judge-bad.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="judge-good" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\judge-good.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="judge-great" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\judge-great.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="judge-marv" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\judge-marv.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="judge-miss" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\judge-miss.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="judge-perfect" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\judge-perfect.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdbody" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdbody.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdend" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdend.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-receptor" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-receptor.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note_hitObject" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\TestImages\note_hitObject.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note_holdBody" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\TestImages\note_holdBody.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note_holdEnd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\TestImages\note_holdEnd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note_Receptor" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\TestImages\note_Receptor.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ranking-a" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\ranking-a.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ranking-b" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\ranking-b.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ranking-c" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\ranking-c.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ranking-d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\ranking-d.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ranking-s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\ranking-s.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ranking-ss" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\ranking-ss.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ranking-x" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\ranking-x.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="test" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Fonts\test.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="testFont" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Fonts\testFont.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
