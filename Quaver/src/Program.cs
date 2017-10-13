@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Quaver.Audio;
@@ -27,7 +29,18 @@ namespace Quaver
             Configuration.InitializeConfig();
 
             // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
-            var loadGame = Task.Run(async () => await GameBase.LoadAndSetBeatmaps());
+            var loadGame = Task.Run(async () =>
+            {
+                await GameBase.LoadAndSetBeatmaps();
+                
+                // The visible beatmaps in song select should be every single mapset at the start of the game.
+                GameBase.VisibleBeatmaps = GameBase.Beatmaps;
+
+                // Select a random beatmap if we do in fact have beatmaps.
+                if (GameBase.Beatmaps.Count != 0)
+                    GameBase.SelectRandomBeatmap();
+            });
+
             Task.WaitAll(loadGame);
 
             // Start watching for beatmap directory changes.
