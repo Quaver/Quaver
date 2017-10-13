@@ -97,9 +97,11 @@ namespace Quaver.Main
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            GameBase.SpriteBatch.Begin();
             GameBase.GraphicsDevice.Clear(Color.DarkGray);
             GameStateManager.Instance.Draw();
             base.Draw(gameTime);
+            GameBase.SpriteBatch.End();
         }
     }
 }
