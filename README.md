@@ -12,8 +12,10 @@ Quaver is a modern cross-platform vertically scrolling rhythm game available for
 Quaver is still under development and should not be used for gameplay, and is only intended for developers only. While we do provide builds for users, expect there to be bugs and things not working. Any feature requests should be opened in the [issues](https://github.com/Swan/Quaver/issues).
 
 # Requirements
-* Unity 5.0+
-* .NET 2.0+
+* Monogame 3.6
+* .NET 4.5
+* Up to date and initialized submodules - `git submodule update --init --recursive`
+
 
 # Contributing 
 We're welcoming all contributions to our game, however please keep in mind that we might have privatized assets that will most likely be mixed in our code, so if you are eager to help, this is a challenge you'll have to face. Contributions can be made via a pull request to this repository. Any contributors shall have their names mentioned in our [CONTRIBUTORS](https://github.com/Swan/Quaver/blob/master/CONTRIBUTORS) file. 
