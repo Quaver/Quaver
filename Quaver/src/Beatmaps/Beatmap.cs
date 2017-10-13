@@ -134,6 +134,14 @@ namespace Quaver.Beatmaps
         public Texture2D Background { get; set; }
 
         /// <summary>
+        ///     Loads a beatmaps's GameAudio file
+        /// </summary>
+        internal void LoadAudio()
+        {
+            Song = new GameAudio(AudioPath);
+        }
+
+        /// <summary>
         ///     Responsible for converting a Qua object, to a Beatmap object
         ///     a Beatmap object is one that is stored in the db.
         /// </summary>
@@ -149,7 +157,7 @@ namespace Quaver.Beatmaps
                 Path = path,
                 Artist = qua.Artist,
                 Title = qua.Title,
-                AudioPath = qua.AudioFile,
+                AudioPath = System.IO.Path.GetDirectoryName(path) + "/" + qua.AudioFile,
                 AudioPreviewTime = qua.SongPreviewTime,
                 BackgroundPath = qua.BackgroundFile,
                 BeatmapId = qua.MapId,
