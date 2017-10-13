@@ -31,7 +31,6 @@ namespace Quaver.Main
             // Use Content in Resources folder (Don't touch this please.)
             var resxContent = new ResourceContentManager(Services, Resource1.ResourceManager);
             Content = resxContent;
-
         }
 
         /// <summary>
@@ -64,8 +63,15 @@ namespace Quaver.Main
 
             GameStateManager.Instance.AddScreen(new StatePlayScreen());
 
-
-            // TODO: use this.Content to load your game content here
+            // TODO: Have a main menu state that will load the song from there - This is just a concept.
+            // We check to see if the selected beatmap is null, because the game can in fact be started
+            // even though there are zero songs.
+            if (GameBase.SelectedBeatmap != null)
+            {
+                GameBase.SelectedBeatmap.LoadAudio();
+                GameBase.SelectedBeatmap.Song.Play();
+            }
+                
         }
 
         /// <summary>
