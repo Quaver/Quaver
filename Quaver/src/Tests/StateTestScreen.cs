@@ -119,9 +119,6 @@ namespace Quaver.Tests
         /// </summary>
         public override void Draw()
         {
-            //GraphicsDevice.Clear(Color.Black);
-            GameBase.SpriteBatch.Begin();
-
             //Draw stuff here
             for (int i = 0; i < spriteList.Count; i ++)
             {
@@ -138,9 +135,6 @@ namespace Quaver.Tests
             }
 
             GameBase.SpriteBatch.DrawString(testFont, Math.Floor(curFps).ToString()+" FPS", new Vector2(0, 0), Color.LightGreen);
-
-            //End
-            GameBase.SpriteBatch.End();
         }
     }
 }

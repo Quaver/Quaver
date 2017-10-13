@@ -68,11 +68,7 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void Draw()
         {
-            GameBase.GraphicsDevice.Clear(Color.Black);
-            GameBase.SpriteBatch.Begin();
-            //End
             _testHitObject.Draw();
-            GameBase.SpriteBatch.End();
         }
     }
 }
