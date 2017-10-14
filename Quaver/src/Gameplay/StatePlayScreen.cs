@@ -43,7 +43,7 @@ namespace Quaver.Gameplay
                 /*
             _curNote = new Sprite(GraphicsDevice);
             _curNote.Image = content.Load<Texture2D>("TestImages/note_hitObject");
-            _curNote.Alignment = Alignment.MidCenter;
+            _curNote.Alignment = Alignment.TopLeft;
             _curNote.Size = Vector2.One * 64;*/          
         }
 

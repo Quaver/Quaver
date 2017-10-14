@@ -20,7 +20,7 @@ namespace Quaver.Graphics
         //Constructor
         protected Drawable()
         {
-            _SetGlobalRect(_LocalRect);
+            SetGlobalRect(_LocalRect);
         }
 
         //Interface default methods
@@ -28,22 +28,13 @@ namespace Quaver.Graphics
         public abstract void Draw();
         public abstract void Destroy();
 
-        /// <summary>
-        /// This field is used to calculate the local position of the object.
-        /// </summary>
         private Rectangle _LocalRect = new Rectangle();
-
-        /// <summary>
-        /// This field is used to calculate the global position of the object.
-        /// </summary>
         private Rectangle _GlobalRect = new Rectangle();
-
         private Alignment _Alignment = Alignment.TopLeft;
-
-        /// <summary>
-        /// The Drawable's Parent.
-        /// </summary>
         private Drawable _Parent;
+        private Vector2 _ScaleSize;
+        private Vector2 _ScalePercent;
+        private Vector2 _LocalSize;
 
         /// <summary>
         /// The alignment of the sprite relative to it's parent.
@@ -57,7 +48,7 @@ namespace Quaver.Graphics
             set
             {
                 _Alignment = value;
-                _SetGlobalRect(_LocalRect);
+                SetGlobalRect(_LocalRect);
             }
         }
 
@@ -97,7 +88,7 @@ namespace Quaver.Graphics
                 }
                 value.Children.Add(this);
                 _Parent = value;
-                _SetGlobalRect(_LocalRect);
+                SetGlobalRect(_LocalRect);
             }
         }
 
@@ -112,10 +103,13 @@ namespace Quaver.Graphics
             }
             set
             {
-                _SetGlobalRect(value);
+                SetGlobalRect(value);
             }
         }
 
+        /// <summary>
+        /// (Read-only) Returns the Drawable's GlobalRect.
+        /// </summary>
         public Rectangle GlobalRect
         {
             get
@@ -125,46 +119,95 @@ namespace Quaver.Graphics
         }
 
         /// <summary>
+        /// The scale of the object relative to its parent.
+        /// </summary>
+        public Vector2 Scale
+        {
+            get
+            {
+                return _ScalePercent;
+            }
+            set
+            {
+                _ScalePercent = value;
+                SetGlobalSize(value);
+            }
+        }
+
+        /// <summary>
+        /// (Read-only) The size of the object after it has been scaled.
+        /// </summary>
+        public Vector2 AbsoluteSize
+        {
+            get
+            {
+                return new Vector2(_LocalRect.Width, _LocalRect.Height);
+            }
+        }
+        /// <summary>
         /// Extention of the object's Rect in relation with size
         /// </summary>
         public Vector2 Size
         {
             get
             {
-                return new Vector2(_GlobalRect.Width, _GlobalRect.Height);
+                return _LocalSize;
             }
             set
             {
-                _GlobalRect.Width = (int)value.X;
-                _GlobalRect.Height = (int)value.Y;
-                _LocalRect.Width = (int)value.X;
-                _LocalRect.Height = (int)value.Y;
+                _LocalSize = value;
+                SetGlobalSize(_ScalePercent);
             }
         }
 
         /// <summary>
-        /// This is the object's position relative to it's parent.
+        /// This is the object's position relative to its parent.
         /// </summary>
         public Vector2 Position
         {
             get
             {
-                return new Vector2(_GlobalRect.X, _GlobalRect.Y);
+                return new Vector2(_LocalRect.X, _LocalRect.Y);
             }
             set
             {
-                Rectangle newRect = _GlobalRect;
+                Rectangle newRect = _LocalRect;
                 newRect.X = (int)value.X;
                 newRect.Y = (int)value.Y;
-                _SetGlobalRect(newRect);
+                SetGlobalRect(newRect);
             }
+        }
+
+        /// <summary>
+        /// Internally sets the object's global size.
+        /// </summary>
+        /// <param name="newScale"></param>
+        private void SetGlobalSize(Vector2 newScale)
+        {
+            if (Parent != null)
+            {
+                _ScaleSize.X = _Parent._GlobalRect.Width * newScale.X;
+                _ScaleSize.Y = _Parent._GlobalRect.Height * newScale.Y;
+            }
+            else
+            {
+                //Temporary. Access the screen size later.
+                //Console.WriteLine(_ScalePercent);
+                Vector2 tempScreenSize = new Vector2(800, 400);
+                _ScaleSize.X = tempScreenSize.X * newScale.X;
+                _ScaleSize.Y = tempScreenSize.Y * newScale.Y;
+                //_ScaleSize = Vector2.Zero;
+            }
+            _LocalRect.Width = (int)(_LocalSize.X + _ScaleSize.X);
+            _LocalRect.Height = (int)(_LocalSize.Y + _ScaleSize.Y);
+            SetGlobalRect(_LocalRect);
         }
 
         /// <summary>
         /// Internally sets the object's global rect.
         /// </summary>
         /// <param name="newRect"></param>
-        private void _SetGlobalRect(Rectangle newRect)
+        private void SetGlobalRect(Rectangle newRect)
         {
             if (_Parent != null)
             {
@@ -177,12 +220,15 @@ namespace Quaver.Graphics
             {
                 //Temporary. Access the screen size later.
                 Rectangle tempRect = new Rectangle(0, 0, 800, 480);
+
+                //SetBlobalRect
                 _GlobalRect = Util.DrawRect(_Alignment, newRect, tempRect);
 
                 //Set rect
                 _GlobalRect.X += newRect.X;
                 _GlobalRect.Y += newRect.Y;
                 _LocalRect = newRect;
+                Console.WriteLine(_LocalSize);
                 //Console.WriteLine(_GlobalRect);
             }
         }
