@@ -26,7 +26,7 @@ namespace Quaver.Gameplay
             {
                 Image = GameBase.LoadedSkin.NoteHitObject1,
                 Size = Vector2.One * 50,
-                Scale = Vector2.One * 0.2f,
+                //Scale = Vector2.One * 0.1f,
                 Alignment = Alignment.TopLeft
             };
 
