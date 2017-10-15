@@ -25,7 +25,8 @@ namespace Quaver.Gameplay
         }
 
         //TEST
-        private HitObject _testHitObject;
+        private HitObject[] _testHitObject = new HitObject[4];
+        private Boundary _testBoundary;
 
         /// <summary>
         ///     TODO: Add Summary
@@ -39,7 +40,14 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void LoadContent()
         {
-            _testHitObject = new HitObject();
+            _testBoundary = new Boundary();
+            for (int i = 0; i < 4; i++)
+            {
+                _testHitObject[i] = new HitObject();
+                _testHitObject[i]._HitBodySprite.Parent = _testBoundary;
+                _testHitObject[i]._HoldBodySprite.Parent = _testBoundary;
+                _testHitObject[i]._HoldEndSprite.Parent = _testBoundary;
+            }
                 /*
             _curNote = new Sprite(GraphicsDevice);
             _curNote.Image = content.Load<Texture2D>("TestImages/note_hitObject");
@@ -68,7 +76,7 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void Draw()
         {
-            _testHitObject.Draw();
+            _testBoundary.Draw();
         }
     }
 }

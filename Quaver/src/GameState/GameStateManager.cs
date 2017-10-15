@@ -13,10 +13,11 @@ namespace Quaver.GameState
 {
     internal class GameStateManager
     {
+        private static GameStateManager _instance;
+
         /// <summary>
         ///     The GameStateManager instance. This is a singleton class, so there'll only be one.
         /// </summary>   
-        private static GameStateManager _instance;
         public static GameStateManager Instance
         {
             // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/null-conditional-operator
