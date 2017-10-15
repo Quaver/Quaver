@@ -25,14 +25,14 @@ namespace Quaver.Gameplay
             _HitBodySprite = new Sprite()
             {
                 Image = GameBase.LoadedSkin.NoteHitObject1,
-                Size = Vector2.One * 50,
+                Size = Vector2.One * 100,
                 Alignment = Alignment.TopLeft
             };
 
             _HoldBodySprite = new Sprite()
             {
                 Image = GameBase.LoadedSkin.NoteHoldBody,
-                Size = Vector2.One * 50,
+                Size = Vector2.One * 100,
                 Position = new Vector2(0, _HitBodySprite.AbsoluteSize.Y/2f),
                 Alignment = Alignment.TopLeft
             };
@@ -40,14 +40,10 @@ namespace Quaver.Gameplay
             _HoldEndSprite = new Sprite()
             {
                 Image = GameBase.LoadedSkin.NoteHoldEnd,
-                Size = Vector2.One * 50,
-                Position = new Vector2(0, _HitBodySprite.AbsoluteSize.Y/2f + _HoldBodySprite.AbsoluteSize.Y - 25),
+                Size = Vector2.One * 100,
+                Position = new Vector2(0, _HitBodySprite.AbsoluteSize.Y/2f + _HoldBodySprite.AbsoluteSize.Y - 50),
                 Alignment = Alignment.TopLeft
             };
-
-            Console.WriteLine(_HitBodySprite.GlobalRect);
-            Console.WriteLine(_HoldBodySprite.GlobalRect);
-            Console.WriteLine(_HoldEndSprite.GlobalRect);
         }
 
         /// <summary>
