@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 using Quaver.Utility;
+using Quaver.Main;
 
 namespace Quaver.Graphics
 {
@@ -218,18 +219,16 @@ namespace Quaver.Graphics
             }
             else
             {
-                //Temporary. Access the screen size later.
-                Rectangle tempRect = new Rectangle(0, 0, 800, 480);
+                //sets the window as the sprite's boundary
+                Rectangle newBoundary = new Rectangle()
+                {
+                    Width = (int)GameBase.WindowSize.X,
+                    Height = (int)GameBase.WindowSize.Y
+                };
 
-                //SetBlobalRect
-                _GlobalRect = Util.DrawRect(_Alignment, newRect, tempRect);
-
-                //Set rect
-                _GlobalRect.X += newRect.X;
-                _GlobalRect.Y += newRect.Y;
+                //SetGlobalRect
+                _GlobalRect = Util.DrawRect(_Alignment, newRect, newBoundary);
                 _LocalRect = newRect;
-                Console.WriteLine(_LocalSize);
-                //Console.WriteLine(_GlobalRect);
             }
         }
     }

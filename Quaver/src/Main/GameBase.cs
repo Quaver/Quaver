@@ -68,7 +68,7 @@ namespace Quaver.Main
         /// <summary>
         /// 
         /// </summary>
-        public static Vector2 WindowSize { get; set; }
+        public static Vector2 WindowSize { get; set; } = new Vector2(800, 480);
 
         /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.
