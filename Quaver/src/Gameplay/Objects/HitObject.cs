@@ -26,7 +26,6 @@ namespace Quaver.Gameplay
             {
                 Image = GameBase.LoadedSkin.NoteHitObject1,
                 Size = Vector2.One * 50,
-                //Scale = Vector2.One * 0.1f,
                 Alignment = Alignment.TopLeft
             };
 
@@ -34,7 +33,7 @@ namespace Quaver.Gameplay
             {
                 Image = GameBase.LoadedSkin.NoteHoldBody,
                 Size = Vector2.One * 50,
-                Position = new Vector2(0, _HitBodySprite.AbsoluteSize.Y),
+                Position = new Vector2(0, _HitBodySprite.AbsoluteSize.Y/2f),
                 Alignment = Alignment.TopLeft
             };
 
@@ -42,7 +41,7 @@ namespace Quaver.Gameplay
             {
                 Image = GameBase.LoadedSkin.NoteHoldEnd,
                 Size = Vector2.One * 50,
-                Position = new Vector2(0, _HitBodySprite.AbsoluteSize.Y + _HoldBodySprite.AbsoluteSize.Y),
+                Position = new Vector2(0, _HitBodySprite.AbsoluteSize.Y/2f + _HoldBodySprite.AbsoluteSize.Y - 25),
                 Alignment = Alignment.TopLeft
             };
 
