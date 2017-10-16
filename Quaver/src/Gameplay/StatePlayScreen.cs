@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,8 +36,8 @@ namespace Quaver.Gameplay
         }
 
         //TEST
-        private string _TESTMAPDIRECTORY = "E:\\GitHub\\Quaver\\Test\\Beatmaps\\26.NANAIRO\\test.qua";
-        private string _TESTAUDIODIRECTORY = "E:\\GitHub\\Quaver\\Test\\Beatmaps\\26.NANAIRO\\audio.ogg";
+        private string _TESTMAPDIRECTORY = $@"{Path.GetFullPath(@"..\..\..\Test\Beatmaps\26.NANAIRO\test.qua")}";
+        private string _TESTAUDIODIRECTORY = $@"{Path.GetFullPath(@"..\..\..\Test\Beatmaps\26.NANAIRO\audio.ogg")}";
         private HitObject[] _testHitObject = new HitObject[4];
         private int _testNoteSize = 67;
 
