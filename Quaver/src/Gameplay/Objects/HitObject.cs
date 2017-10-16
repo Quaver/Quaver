@@ -22,7 +22,7 @@ namespace Quaver.Gameplay
 
         public HitObject()
         {
-
+            //TODO: add load images/stuff loogic later.
         }
 
         /// <summary>
