@@ -34,7 +34,7 @@ namespace Quaver.Beatmaps
         internal static Dictionary<string, List<Beatmap>> GroupBeatmapsByDirectory(List<Beatmap> beatmaps)
         {
             return (from beatmap in beatmaps
-                    group beatmap by System.IO.Path.GetDirectoryName(beatmap.Path)
+                    group beatmap by Path.GetDirectoryName(beatmap.Path)
                 into g
                     select g).ToDictionary(x => x.Key, x => x.ToList());
         }
@@ -59,6 +59,41 @@ namespace Quaver.Beatmaps
             var dict = beatmaps.OrderBy(x => x.Value[0].Artist).ThenBy(x => x.Value[0].Title)
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
             return dict;
+        }
+
+        /// <summary>
+        ///     Searches and returns beatmaps 
+        /// </summary>
+        /// <param name="beatmaps"></param>
+        /// <param name="term"></param>
+        /// <returns></returns>
+        internal static Dictionary<string, List<Beatmap>> SearchBeatmaps(Dictionary<string, List<Beatmap>> beatmaps, string term)
+        {
+            // Lowercase which ever term comes in.
+            term = term.ToLower();
+
+            // Stores the new dictionary of found maps.
+            var foundMaps = new Dictionary<string, List<Beatmap>>();
+
+            // All the possible logical operators for our search terms
+            var logicalOperators = new[] {">", "<", ">=", "<=", "==", "!="};
+
+            // TODO: Break apart the search term if it has any logical operators, and add advanced beatmap searching
+
+            // Find beatmaps by search term.
+            foreach (var beatmapSet in beatmaps)
+            {
+                var maps = beatmapSet.Value.FindAll(x => x.Artist.ToLower().Contains(term) || x.Title.ToLower().Contains(term) ||
+                                                        x.Creator.ToLower().Contains(term) || x.DifficultyName.ToLower().Contains(term) ||
+                                                        x.Tags.ToLower().Contains(term) || x.Description.Contains(term) ||
+                                                        x.Source.ToLower().Contains(term));
+
+                // Add add the beatmaps to the dictionary.
+                if (maps.Count > 0)
+                    foundMaps.Add(Path.GetDirectoryName(maps[0].Path), maps);
+            }
+
+            return foundMaps;
         }
     }
 }
