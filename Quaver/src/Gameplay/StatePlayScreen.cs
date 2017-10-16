@@ -38,7 +38,6 @@ namespace Quaver.Gameplay
         private string _TESTMAPDIRECTORY = "E:\\GitHub\\Quaver\\Test\\Beatmaps\\26.NANAIRO\\test.qua";
         private string _TESTAUDIODIRECTORY = "E:\\GitHub\\Quaver\\Test\\Beatmaps\\26.NANAIRO\\audio.ogg";
         private HitObject[] _testHitObject = new HitObject[4];
-        private Boundary _testBoundary;
         private int _testNoteSize = 67;
 
         /// <summary>
@@ -46,13 +45,7 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void Initialize()
         {
-            //TEST
-            _testBoundary = new Boundary();
-            _testBoundary.Size = new Vector2(_testNoteSize * 4, GameBase.WindowSize.Y);
-            _testBoundary.Alignment = Alignment.TopCenter;
-            _testBoundary.UpdateRect();
-
-
+            //Load Qua + Audio
             Console.WriteLine("[STATE_PLAYSCREEN]: Initialized Gameplay State.");
             //GameBase.SelectRandomBeatmap();
             //_Beatmap = GameBase.SelectedBeatmap;
@@ -61,6 +54,9 @@ namespace Quaver.Gameplay
             //_GameAudio = new GameAudio(_Qua.AudioFile);
             _GameAudio = new GameAudio(_TESTAUDIODIRECTORY);
             Console.WriteLine("Loaded Beatmap: {0} - {1}", _Qua.Artist, _Qua.Title);
+
+            //Initialize Components
+            InitializePlayField();
         }
 
         /// <summary>
@@ -69,6 +65,7 @@ namespace Quaver.Gameplay
         public override void LoadContent()
         {
             //TEST
+            /*
             for (int i = 0; i < 4; i++)
             {
                 _testHitObject[i] = new HitObject();
@@ -79,7 +76,7 @@ namespace Quaver.Gameplay
                     Size = Vector2.One * _testNoteSize,
                     Position = new Vector2(i* _testNoteSize, _testNoteSize/2f),
                     Alignment = Alignment.TopLeft,
-                    Parent = _testBoundary
+                    Parent = _PlayField
                 };
 
                 _testHitObject[i]._HoldEndSprite = new Sprite()
@@ -88,7 +85,7 @@ namespace Quaver.Gameplay
                     Size = Vector2.One * _testNoteSize,
                     Position = new Vector2(i * _testNoteSize, _testNoteSize),
                     Alignment = Alignment.TopLeft,
-                    Parent = _testBoundary
+                    Parent = _PlayField
                 };
 
                 _testHitObject[i]._HitBodySprite = new Sprite()
@@ -97,13 +94,13 @@ namespace Quaver.Gameplay
                     Position = new Vector2(i * _testNoteSize, 0),
                     Size = Vector2.One * _testNoteSize,
                     Alignment = Alignment.TopLeft,
-                    Parent = _testBoundary
+                    Parent = _PlayField
                 };
 
                 _testHitObject[i]._HoldBodySprite.UpdateRect();
                 _testHitObject[i]._HoldEndSprite.UpdateRect();
                 _testHitObject[i]._HitBodySprite.UpdateRect();
-            }
+            }*/
 
             //Initialize
             _GameAudio.Play();
@@ -130,7 +127,7 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void Draw()
         {
-            _testBoundary.Draw();
+            _PlayField.Draw();
         }
     }
 }
