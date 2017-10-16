@@ -21,7 +21,7 @@ namespace Quaver.Graphics
         //Constructor
         protected Drawable()
         {
-            SetGlobalRect(_LocalRect);
+            //SetGlobalRect();
         }
 
         //Interface default methods
@@ -36,6 +36,8 @@ namespace Quaver.Graphics
         private Vector2 _ScaleSize;
         private Vector2 _ScalePercent;
         private Vector2 _LocalSize;
+        private Vector2 _AbsoluteSize;
+        private Vector2 _LocalPosition;
 
         /// <summary>
         /// The alignment of the sprite relative to it's parent.
@@ -49,7 +51,7 @@ namespace Quaver.Graphics
             set
             {
                 _Alignment = value;
-                SetGlobalRect(_LocalRect);
+                SetGlobalRect();
             }
         }
 
@@ -89,22 +91,7 @@ namespace Quaver.Graphics
                 }
                 value.Children.Add(this);
                 _Parent = value;
-                SetGlobalRect(_LocalRect);
-            }
-        }
-
-        /// <summary>
-        /// The rectangle of the Drawable. (Position.X, Position.Y, Size.Width, Size.Height).
-        /// </summary>
-        public Rectangle LocalRect
-        {
-            get
-            {
-                return _LocalRect;
-            }
-            set
-            {
-                SetGlobalRect(value);
+                SetGlobalRect();
             }
         }
 
@@ -120,6 +107,17 @@ namespace Quaver.Graphics
         }
 
         /// <summary>
+        /// (Read-only) Returns the Drawable's LocalRect.
+        /// </summary>
+        public Rectangle LocalRect
+        {
+            get
+            {
+                return _LocalRect;
+            }
+        }
+
+        /// <summary>
         /// The scale of the object relative to its parent.
         /// </summary>
         public Vector2 Scale
@@ -131,7 +129,7 @@ namespace Quaver.Graphics
             set
             {
                 _ScalePercent = value;
-                SetGlobalSize(value);
+                SetLocalSize();
             }
         }
 
@@ -142,7 +140,7 @@ namespace Quaver.Graphics
         {
             get
             {
-                return new Vector2(_LocalRect.Width, _LocalRect.Height);
+                return new Vector2(_AbsoluteSize.X, _AbsoluteSize.Y);
             }
         }
         /// <summary>
@@ -157,7 +155,7 @@ namespace Quaver.Graphics
             set
             {
                 _LocalSize = value;
-                SetGlobalSize(_ScalePercent);
+                SetLocalSize();
             }
         }
 
@@ -168,54 +166,65 @@ namespace Quaver.Graphics
         {
             get
             {
-                return new Vector2(_LocalRect.X, _LocalRect.Y);
+                return new Vector2(_LocalPosition.X, _LocalPosition.Y);
             }
             set
             {
-                Rectangle newRect = _LocalRect;
-                newRect.X = (int)value.X;
-                newRect.Y = (int)value.Y;
-                SetGlobalRect(newRect);
+                _LocalPosition = value;
+                SetLocalPosition();
             }
         }
 
         /// <summary>
-        /// Internally sets the object's global size.
+        /// This method will get called everytime the size of this object changes.
         /// </summary>
         /// <param name="newScale"></param>
-        private void SetGlobalSize(Vector2 newScale)
+        private void SetLocalSize()
         {
             if (Parent != null)
             {
-                _ScaleSize.X = _Parent._GlobalRect.Width * newScale.X;
-                _ScaleSize.Y = _Parent._GlobalRect.Height * newScale.Y;
+                _ScaleSize.X = _Parent._GlobalRect.Width * _ScalePercent.X;
+                _ScaleSize.Y = _Parent._GlobalRect.Height * _ScalePercent.Y;
             }
             else
             {
                 //Temporary. Access the screen size later.
                 //Console.WriteLine(_ScalePercent);
                 Vector2 tempScreenSize = new Vector2(800, 400);
-                _ScaleSize.X = tempScreenSize.X * newScale.X;
-                _ScaleSize.Y = tempScreenSize.Y * newScale.Y;
+                _ScaleSize.X = tempScreenSize.X * _ScalePercent.X;
+                _ScaleSize.Y = tempScreenSize.Y * _ScalePercent.Y;
                 //_ScaleSize = Vector2.Zero;
             }
-            _LocalRect.Width = (int)(_LocalSize.X + _ScaleSize.X);
-            _LocalRect.Height = (int)(_LocalSize.Y + _ScaleSize.Y);
-            SetGlobalRect(_LocalRect);
+            _AbsoluteSize.X = _LocalSize.X + _ScaleSize.X;
+            _AbsoluteSize.Y = _LocalSize.Y + _ScaleSize.Y;
+
+            _LocalRect.Width = (int)_AbsoluteSize.X;
+            _LocalRect.Height = (int)_AbsoluteSize.Y;
+            SetGlobalRect();
         }
 
         /// <summary>
-        /// Internally sets the object's global rect.
+        /// This method will get called everytime the position of this object changes.
+        /// </summary>
+        /// <param name="newPos"></param>
+        private void SetLocalPosition()
+        {
+            _LocalRect.X = (int)_LocalPosition.X;
+            _LocalRect.Y = (int)_LocalPosition.Y;
+            SetGlobalRect();
+        }
+
+        /// <summary>
+        /// This method will be called everytime a property changes.
         /// </summary>
         /// <param name="newRect"></param>
-        private void SetGlobalRect(Rectangle newRect)
+        private void SetGlobalRect()
         {
             if (_Parent != null)
             {
-                _GlobalRect = Util.DrawRect(_Alignment, newRect, Parent._GlobalRect);
-                _GlobalRect.X += newRect.X;
-                _GlobalRect.Y += newRect.Y;
-                _LocalRect = newRect;
+                _GlobalRect = Util.DrawRect(_Alignment, _LocalRect, Parent._GlobalRect);
+                _GlobalRect.X += _Parent._GlobalRect.X;
+                _GlobalRect.Y += _Parent._GlobalRect.Y;
             }
             else
             {
@@ -226,9 +235,7 @@ namespace Quaver.Graphics
                     Height = (int)GameBase.WindowSize.Y
                 };
 
-                //SetGlobalRect
-                _GlobalRect = Util.DrawRect(_Alignment, newRect, newBoundary);
-                _LocalRect = newRect;
+                _GlobalRect = Util.DrawRect(_Alignment, _LocalRect, newBoundary);
             }
         }
     }
