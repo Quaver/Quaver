@@ -15,14 +15,74 @@ namespace Quaver.Gameplay
 {
     public class HitObject
     {
+        //Parent Container
+        private Drawable _ParentContainer;
+
         //Sprite Objects
-        internal Sprite _HitBodySprite;
-        internal Sprite _HoldBodySprite;
-        internal Sprite _HoldEndSprite;
+        private Sprite _HitBodySprite;
+        private Sprite _HoldBodySprite;
+        private Sprite _HoldEndSprite;
+
+        //Position Variables
+        private Vector2 _Position;
+        private float _HitObjectSize;
 
         public HitObject()
         {
             //TODO: add load images/stuff loogic later.
+        }
+
+        public void Initialize()
+        {
+            _HoldBodySprite = new Sprite()
+            {
+                Image = GameBase.LoadedSkin.NoteHoldBody,
+                Alignment = Alignment.TopLeft,
+                Position = _Position,
+                Size = Vector2.One * HitObjectSize,
+                Parent = _ParentContainer
+            };
+            _HoldEndSprite = new Sprite()
+            {
+                Image = GameBase.LoadedSkin.NoteHoldEnd,
+                Alignment = Alignment.TopLeft,
+                Position = _Position,
+                Size = Vector2.One * HitObjectSize,
+                Parent = _ParentContainer
+            };
+
+            _HitBodySprite = new Sprite()
+            {
+                Image = GameBase.LoadedSkin.NoteHitObject1,
+                Alignment = Alignment.TopLeft,
+                Position = _Position,
+                Size = Vector2.One * HitObjectSize,
+                Parent = _ParentContainer
+            };
+            UpdateObject();
+        }
+
+        /// <summary>
+        /// The parent of the HitObjects
+        /// </summary>
+        internal Drawable ParentContainer
+        {
+            get
+            {
+                return _ParentContainer;
+            }
+            set
+            {
+                _ParentContainer = value;
+            }
+        }
+
+        /// <summary>
+        /// The lane which the HitObject belongs to.
+        /// </summary>
+        public int KeyLane
+        {
+            get; set;
         }
 
         /// <summary>
@@ -48,10 +108,65 @@ namespace Quaver.Gameplay
         {
             get; set;
         } = true;
+
+        /// <summary>
+        /// The position of the HitObject Sprites
+        /// </summary>
+        public Vector2 HitObjectPosition
+        {
+            get
+            {
+                return _Position;
+            }
+            set
+            {
+                _Position = value;
+            }
+        }
+
+        /// <summary>
+        /// The Y Position of the HitObject Sprites
+        /// </summary>
+        public float HitObjectY
+        {
+            get
+            {
+                return _Position.Y;
+            }
+            set
+            {
+                _Position.Y = value;
+            }
+        }
+
+        public float HitObjectSize
+        {
+            get
+            {
+                return _HitObjectSize;
+            }
+            set
+            {
+                _HitObjectSize = value;
+            }
+        }
+
+        public void UpdateObject()
+        {
+            if (isLongNote)
+            {
+                _HoldBodySprite.PositionY = _Position.Y + HitObjectSize / 2f;
+                _HoldEndSprite.PositionY = _Position.Y + HitObjectSize;
+
+                _HoldBodySprite.UpdateRect();
+                _HoldEndSprite.UpdateRect();
+            }
+            _HitBodySprite.PositionY = _Position.Y;
+            _HitBodySprite.UpdateRect();
+        }
         
         public void Draw()
         {
-            //If the object is a long note
             if (isLongNote)
             {
                 _HoldBodySprite.Draw();
