@@ -15,7 +15,23 @@ namespace Quaver.Gameplay
 {
     internal partial class StatePlayScreen : GameStateBase
     {
-        //internal int tester = 0;
+        private float _CurrentSongTime;
 
+        /// <summary>
+        /// Initialize Timing Contents.
+        /// </summary>
+        internal void InitializeTiming()
+        {
+            //TODO: Timing Initializer
+            _CurrentSongTime = 0;
+        }
+
+        /// <summary>
+        /// Calculates the Timing/SV of the current song position
+        /// </summary>
+        internal void UpdateTiming(double dt)
+        {
+            _CurrentSongTime = (float)_GameAudio.GetAudioPosition()*1000f;
+        }
     }
 }

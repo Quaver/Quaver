@@ -84,6 +84,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Resource1.Designer.cs" />
+    <Compile Include="src\Gameplay\Gameplay-NoteRendering.cs" />
     <Compile Include="src\Gameplay\Gameplay-Input.cs" />
     <Compile Include="src\Gameplay\Gameplay-PlayField.cs" />
     <Compile Include="src\Gameplay\Gameplay-Timing.cs" />
