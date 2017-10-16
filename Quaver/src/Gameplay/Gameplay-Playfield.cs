@@ -61,7 +61,6 @@ namespace Quaver.Gameplay
                     Parent = _PlayField
                 };
                 _Receptors[i].UpdateRect();
-                Console.WriteLine(_Receptors[i].GlobalRect);
             }
         }
 

@@ -155,17 +155,81 @@ namespace Quaver.Graphics
         }
 
         /// <summary>
+        /// The X Size of the Object.
+        /// </summary>
+        public float SizeX
+        {
+            get
+            {
+                return _LocalSize.X;
+            }
+            set
+            {
+                _LocalSize.X = value;
+                SetLocalSize();
+            }
+        }
+
+        /// <summary>
+        /// The Y Size of the Object.
+        /// </summary>
+        public float SizeY
+        {
+            get
+            {
+                return _LocalSize.Y;
+            }
+            set
+            {
+                _LocalSize.Y = value;
+                SetLocalSize();
+            }
+        }
+
+        /// <summary>
         /// This is the object's position relative to its parent.
         /// </summary>
         public Vector2 Position
         {
             get
             {
-                return new Vector2(_LocalPosition.X, _LocalPosition.Y);
+                return _LocalPosition;
             }
             set
             {
                 _LocalPosition = value;
+                SetLocalPosition();
+            }
+        }
+
+        /// <summary>
+        /// The X Position of the Object.
+        /// </summary>
+        public float PositionX
+        {
+            get
+            {
+                return _LocalPosition.X;
+            }
+            set
+            {
+                _LocalPosition.X = value;
+                SetLocalPosition();
+            }
+        }
+
+        /// <summary>
+        /// The Y Position of the Object.
+        /// </summary>
+        public float PositionY
+        {
+            get
+            {
+                return _LocalPosition.Y;
+            }
+            set
+            {
+                _LocalPosition.Y = value;
                 SetLocalPosition();
             }
         }

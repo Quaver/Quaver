@@ -57,6 +57,8 @@ namespace Quaver.Gameplay
 
             //Initialize Components
             InitializePlayField();
+            InitializeNotes();
+            InitializeTiming();
         }
 
         /// <summary>
@@ -64,44 +66,6 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void LoadContent()
         {
-            //TEST
-            /*
-            for (int i = 0; i < 4; i++)
-            {
-                _testHitObject[i] = new HitObject();
-
-                _testHitObject[i]._HoldBodySprite = new Sprite()
-                {
-                    Image = GameBase.LoadedSkin.NoteHoldBody,
-                    Size = Vector2.One * _testNoteSize,
-                    Position = new Vector2(i* _testNoteSize, _testNoteSize/2f),
-                    Alignment = Alignment.TopLeft,
-                    Parent = _PlayField
-                };
-
-                _testHitObject[i]._HoldEndSprite = new Sprite()
-                {
-                    Image = GameBase.LoadedSkin.NoteHoldEnd,
-                    Size = Vector2.One * _testNoteSize,
-                    Position = new Vector2(i * _testNoteSize, _testNoteSize),
-                    Alignment = Alignment.TopLeft,
-                    Parent = _PlayField
-                };
-
-                _testHitObject[i]._HitBodySprite = new Sprite()
-                {
-                    Image = GameBase.LoadedSkin.NoteHitObject1,
-                    Position = new Vector2(i * _testNoteSize, 0),
-                    Size = Vector2.One * _testNoteSize,
-                    Alignment = Alignment.TopLeft,
-                    Parent = _PlayField
-                };
-
-                _testHitObject[i]._HoldBodySprite.UpdateRect();
-                _testHitObject[i]._HoldEndSprite.UpdateRect();
-                _testHitObject[i]._HitBodySprite.UpdateRect();
-            }*/
-
             //Initialize
             _GameAudio.Play();
         }
@@ -121,8 +85,10 @@ namespace Quaver.Gameplay
         public override void Update(GameTime gameTime)
         {
             double dt = gameTime.ElapsedGameTime.TotalSeconds;
-            CheckInput();
+            UpdateTiming(dt);
             UpdatePlayField(dt);
+            UpdateNotes(dt);
+            CheckInput();
         }
 
         /// <summary>
