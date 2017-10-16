@@ -44,10 +44,6 @@ namespace Quaver.Gameplay
                 Position = new Vector2(0, _HitBodySprite.AbsoluteSize.Y/2f + _HoldBodySprite.AbsoluteSize.Y - 50),
                 Alignment = Alignment.TopLeft
             };
-
-            Console.WriteLine(_HitBodySprite.GlobalRect);
-            Console.WriteLine(_HoldBodySprite.GlobalRect);
-            Console.WriteLine(_HoldEndSprite.GlobalRect);
         }
 
         /// <summary>
