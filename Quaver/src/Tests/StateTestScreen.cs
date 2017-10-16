@@ -24,7 +24,8 @@ namespace Quaver.Tests
         private Boundary _testBoundary;
         private List<Sprite> _spriteList;
         private List<Vector2> _rand;
-        private int _iterations = 300;
+        private int _iterations = 50;
+        private int _totalChildren = 50;
 
         public StateTestScreen()
         {
@@ -42,6 +43,7 @@ namespace Quaver.Tests
             int height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Console.WriteLine("[STATE_TESTSCREEN]: Initialized Gameplay State.");
             Console.WriteLine("Screen Height: {0}, Screen Width: {1}",width,height);
+            Console.WriteLine("Total Test Objects: {0}", _iterations * _totalChildren);
         }
 
         /// <summary>
@@ -65,7 +67,7 @@ namespace Quaver.Tests
                 testSprite.Parent = _testBoundary;
                 _spriteList.Add(testSprite);
 
-                for (int j = 0; j  < 5; j++)
+                for (int j = 0; j  < _totalChildren; j++)
                 {
                     Sprite testChild = new Sprite();
                     testChild.Image = _TestImage;
@@ -108,13 +110,13 @@ namespace Quaver.Tests
         public override void Draw()
         {
             //Draw stuff here
-            for (int i = 0; i < _spriteList.Count; i ++)
+            for (int i = 0; i < _iterations; i ++)
             {
                 float interval = ((float)i / _iterations) * (float)Math.PI * 2f;
                 _spriteList[i].Position = new Vector2((float)Math.Cos(_pos + interval) * 100f + _rand[i].X, (float)Math.Sin(_pos + interval) * 100f + _rand[i].Y);
                 _spriteList[i].UpdateRect();
 
-                for (int j = 0; j < _spriteList[i].Children.Count; j++)
+                for (int j = 0; j < _totalChildren; j++)
                 {
                     float childinterval = ((float)j / _spriteList[i].Children.Count) * (float)Math.PI * 2f;
                     _spriteList[i].Children[j].Position = new Vector2((float)Math.Cos((_pos + childinterval)*3f) * 25f, (float)Math.Sin((_pos + childinterval) * 3f) * 25f);
