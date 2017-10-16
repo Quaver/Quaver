@@ -66,11 +66,11 @@ namespace Quaver.Main
             // TODO: Have a main menu state that will load the song from there - This is just a concept.
             // We check to see if the selected beatmap is null, because the game can in fact be started
             // even though there are zero songs.
-            if (GameBase.SelectedBeatmap != null)
+            /*if (GameBase.SelectedBeatmap != null)
             {
                 GameBase.SelectedBeatmap.LoadAudio();
                 GameBase.SelectedBeatmap.Song.Play();
-            }
+            }*/
                 
         }
 
