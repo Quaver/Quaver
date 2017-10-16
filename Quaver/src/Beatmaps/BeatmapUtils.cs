@@ -76,22 +76,22 @@ namespace Quaver.Beatmaps
             // Stores the new dictionary of found maps.
             var foundMaps = new Dictionary<string, List<Beatmap>>();
 
-            // All the possible logical operators for our search terms
-            var logicalOperators = new[] {">", "<", "=", "=="};
+            // All the possible relational operators for our search terms
+            var relationalOperators = new[] {">", "<", "=", "=="};
             var searchOptions = new[] { "bpm", "stars", "status", "length" };
 
-            // TODO: Break apart the search term if it has any logical operators, and add advanced beatmap searching
-            foreach (var logicalOperator in logicalOperators)
+            // TODO: Break apart the search term if it has any relational operators, and add advanced beatmap searching
+            foreach (var relationalOperator in relationalOperators)
             {
-                // If the search query does in deed have a logical operator, get the word string before it and after.
-                if (term.Contains(logicalOperator))
+                // If the search query does in deed have a relational operator, get the word string before it and after.
+                if (term.Contains(relationalOperator))
                 {
                     // Get the search option alone.
-                    var searchOption = term.Substring(0, term.IndexOf(logicalOperator));
+                    var searchOption = term.Substring(0, term.IndexOf(relationalOperator));
                     searchOption = searchOption.Split(' ').Last().ToLower();
 
                     // Get the search query alone.
-                    var query = term.Substring(term.IndexOf(logicalOperator) + 1);
+                    var query = term.Substring(term.IndexOf(relationalOperator) + 1);
                     query = query.Split(' ').First().ToLower();
 
                     // Try to parse the query number.
@@ -105,8 +105,8 @@ namespace Quaver.Beatmaps
                         continue;
                     }
 
-                    // Go through each logical operator 
-                    switch (logicalOperator)
+                    // Go through each relational operator 
+                    switch (relationalOperator)
                     {
                         case ">":
                             switch (searchOption)
@@ -160,7 +160,7 @@ namespace Quaver.Beatmaps
             if (foundMaps.Values.Count > 0)
                 return foundMaps;
 
-            // Find beatmaps by search term if the search query doesn't have logical operators.
+            // Find beatmaps by search term if the search query doesn't have relational operators.
             foreach (var beatmapSet in beatmaps)
             {
                 var maps = beatmapSet.Value.FindAll(x => x.Artist.ToLower().Contains(term) || x.Title.ToLower().Contains(term) ||
