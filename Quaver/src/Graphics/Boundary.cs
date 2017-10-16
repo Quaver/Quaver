@@ -18,6 +18,11 @@ namespace Quaver.Graphics
     /// </summary>
     internal class Boundary : Drawable
     {
+        public Boundary()
+        {
+            Size = GameBase.WindowSize;
+        }
+
         public override void Draw()
         {
 

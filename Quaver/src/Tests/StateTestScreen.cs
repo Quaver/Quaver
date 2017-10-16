@@ -20,15 +20,11 @@ namespace Quaver.Tests
     {
         //TEST (These variables will be removed later)
         private Texture2D _TestImage;
-        private double fpsPos;
-        private double pos;
-        private int fpsCounter = 0;
-        private Rectangle Boundary;
-        private List<Sprite> spriteList;
-        private List<Vector2> rand;
-        private int iterations = 100;
-        private SpriteFont testFont;
-        private float curFps;
+        private double _pos;
+        private Boundary _testBoundary;
+        private List<Sprite> _spriteList;
+        private List<Vector2> _rand;
+        private int _iterations = 300;
 
         public StateTestScreen()
         {
@@ -46,8 +42,6 @@ namespace Quaver.Tests
             int height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Console.WriteLine("[STATE_TESTSCREEN]: Initialized Gameplay State.");
             Console.WriteLine("Screen Height: {0}, Screen Width: {1}",width,height);
-            Boundary = new Rectangle(0, 0, 800,480);
-            testFont = GameBase.Content.Load<SpriteFont>("Fonts/testFont");
         }
 
         /// <summary>
@@ -56,16 +50,20 @@ namespace Quaver.Tests
         public override void LoadContent()
         {
             //TEMP Create Sprite
-            _TestImage = GameBase.Content.Load<Texture2D>("TestImages/arpiapic");
-            spriteList = new List<Sprite>();
-            rand = new List<Vector2>();
-            for (int i = 0; i < iterations; i++)
+            _testBoundary = new Boundary();
+            _testBoundary.UpdateRect();
+            _TestImage = GameBase.Content.Load<Texture2D>("note-hitobject1");
+            _spriteList = new List<Sprite>();
+            _rand = new List<Vector2>();
+            
+            for (int i = 0; i < _iterations; i++)
             {
                 Sprite testSprite = new Sprite();
                 testSprite.Image = _TestImage;
                 testSprite.Size = Vector2.One * 50f;
                 testSprite.Alignment = Alignment.MidCenter;
-                spriteList.Add(testSprite);
+                testSprite.Parent = _testBoundary;
+                _spriteList.Add(testSprite);
 
                 for (int j = 0; j  < 5; j++)
                 {
@@ -73,12 +71,13 @@ namespace Quaver.Tests
                     testChild.Image = _TestImage;
                     testChild.Size = Vector2.One * 20f;
                     testChild.Alignment = Alignment.MidCenter;
-                    testChild.Parent = testSprite;
+                    testChild.Parent = _spriteList[i];
                 }
 
-                Vector2 random = new Vector2(Util.Random(-100f, 100f), Util.Random(-100f, 100f));
-                rand.Add(random);
+                Vector2 random = new Vector2(Util.Random(-300f, 300f), Util.Random(-300f, 300f));
+                _rand.Add(random);
             }
+            
         }
 
         /// <summary>
@@ -96,21 +95,10 @@ namespace Quaver.Tests
         public override void Update(GameTime gameTime)
         {
             //Update pos of the objects (Temporary
-            pos += (double)(gameTime.ElapsedGameTime.TotalSeconds);
-            if (pos > Math.PI * 2)
+            _pos += (double)(gameTime.ElapsedGameTime.TotalSeconds);
+            if (_pos > Math.PI * 2)
             {
-                pos -= Math.PI * 2;
-            }
-
-            //FPS COUNTER (Temporary)
-            fpsPos += (double)(gameTime.ElapsedGameTime.TotalSeconds);
-            fpsCounter++;
-
-            if (fpsCounter >= 100)
-            {
-                fpsCounter = 0;
-                curFps = (float)(1 / (fpsPos / 100));
-                fpsPos = 0;
+                _pos -= Math.PI * 2;
             }
         }
 
@@ -120,21 +108,20 @@ namespace Quaver.Tests
         public override void Draw()
         {
             //Draw stuff here
-            for (int i = 0; i < spriteList.Count; i ++)
+            for (int i = 0; i < _spriteList.Count; i ++)
             {
-                float interval = ((float)i / iterations) * (float)Math.PI * 2f;
-                spriteList[i].Position = new Vector2((float)Math.Cos(pos + interval) * 100f + rand[i].X, (float)Math.Sin(pos + interval) * 100f + rand[i].Y);
+                float interval = ((float)i / _iterations) * (float)Math.PI * 2f;
+                _spriteList[i].Position = new Vector2((float)Math.Cos(_pos + interval) * 100f + _rand[i].X, (float)Math.Sin(_pos + interval) * 100f + _rand[i].Y);
+                _spriteList[i].UpdateRect();
 
-                for (int j = 0; j < spriteList[i].Children.Count; j++)
+                for (int j = 0; j < _spriteList[i].Children.Count; j++)
                 {
-                    float childinterval = ((float)j / spriteList[i].Children.Count) * (float)Math.PI * 2f;
-                    spriteList[i].Children[j].Position = new Vector2((float)Math.Cos((pos + childinterval)*3f) * 25f, (float)Math.Sin((pos + childinterval) * 3f) * 25f);
+                    float childinterval = ((float)j / _spriteList[i].Children.Count) * (float)Math.PI * 2f;
+                    _spriteList[i].Children[j].Position = new Vector2((float)Math.Cos((_pos + childinterval)*3f) * 25f, (float)Math.Sin((_pos + childinterval) * 3f) * 25f);
+                    _spriteList[i].Children[j].UpdateRect();
                 }
-
-                spriteList[i].Draw();
             }
-
-            GameBase.SpriteBatch.DrawString(testFont, Math.Floor(curFps).ToString()+" FPS", new Vector2(0, 0), Color.LightGreen);
+            _testBoundary.Draw();
         }
     }
 }
