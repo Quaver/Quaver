@@ -39,6 +39,9 @@ namespace Quaver
                 // Select a random beatmap if we do in fact have beatmaps.
                 if (GameBase.Beatmaps.Count != 0)
                     GameBase.SelectRandomBeatmap();
+
+                // Test Search
+                //GameBase.VisibleBeatmaps = BeatmapUtils.SearchBeatmaps(GameBase.Beatmaps, "Camellia");
             });
 
             Task.WaitAll(loadGame);
