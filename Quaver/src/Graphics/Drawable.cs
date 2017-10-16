@@ -18,12 +18,6 @@ namespace Quaver.Graphics
     /// </summary>
     internal abstract class Drawable : IDrawable
     {
-        //Constructor
-        protected Drawable()
-        {
-            //SetGlobalRect();
-        }
-
         //Interface default methods
         public abstract void Instantiate();
         public abstract void Draw();
@@ -32,6 +26,7 @@ namespace Quaver.Graphics
         private Rectangle _LocalRect = new Rectangle();
         private Rectangle _GlobalRect = new Rectangle();
         private Alignment _Alignment = Alignment.TopLeft;
+        private List<Drawable> _Children = new List<Drawable>();
         private Drawable _Parent;
         private Vector2 _ScaleSize;
         private Vector2 _ScalePercent;
@@ -51,7 +46,6 @@ namespace Quaver.Graphics
             set
             {
                 _Alignment = value;
-                SetGlobalRect();
             }
         }
 
@@ -69,9 +63,11 @@ namespace Quaver.Graphics
         /// </summary>
         public List<Drawable> Children
         {
-            get;
-            set;
-        } = new List<Drawable>();
+            get
+            {
+                return _Children;
+            }
+        }
 
         /// <summary>
         /// TODO: Add summary later.
@@ -86,12 +82,11 @@ namespace Quaver.Graphics
             {
                 if (Parent != null)
                 {
-                    int cIndex = Parent.Children.FindIndex(r => r == this);
-                    Parent.Children.RemoveAt(cIndex);
+                    int cIndex = Parent._Children.FindIndex(r => r == this);
+                    Parent._Children.RemoveAt(cIndex);
                 }
-                value.Children.Add(this);
+                value._Children.Add(this);
                 _Parent = value;
-                SetGlobalRect();
             }
         }
 
@@ -188,19 +183,14 @@ namespace Quaver.Graphics
             }
             else
             {
-                //Temporary. Access the screen size later.
-                //Console.WriteLine(_ScalePercent);
-                Vector2 tempScreenSize = new Vector2(800, 400);
-                _ScaleSize.X = tempScreenSize.X * _ScalePercent.X;
-                _ScaleSize.Y = tempScreenSize.Y * _ScalePercent.Y;
-                //_ScaleSize = Vector2.Zero;
+                _ScaleSize.X = GameBase.WindowSize.X * _ScalePercent.X;
+                _ScaleSize.Y = GameBase.WindowSize.Y * _ScalePercent.Y;
             }
             _AbsoluteSize.X = _LocalSize.X + _ScaleSize.X;
             _AbsoluteSize.Y = _LocalSize.Y + _ScaleSize.Y;
 
             _LocalRect.Width = (int)_AbsoluteSize.X;
             _LocalRect.Height = (int)_AbsoluteSize.Y;
-            SetGlobalRect();
         }
 
         /// <summary>
@@ -211,20 +201,18 @@ namespace Quaver.Graphics
         {
             _LocalRect.X = (int)_LocalPosition.X;
             _LocalRect.Y = (int)_LocalPosition.Y;
-            SetGlobalRect();
         }
 
         /// <summary>
-        /// This method will be called everytime a property changes.
+        /// This method will be called everytime a property of this object gets updated.
         /// </summary>
-        /// <param name="newRect"></param>
-        private void SetGlobalRect()
+        public void UpdateRect()
         {
             if (_Parent != null)
             {
                 _GlobalRect = Util.DrawRect(_Alignment, _LocalRect, Parent._GlobalRect);
-                _GlobalRect.X += _Parent._GlobalRect.X;
-                _GlobalRect.Y += _Parent._GlobalRect.Y;
+                //_GlobalRect.X += _Parent._GlobalRect.X;
+                //_GlobalRect.Y += _Parent._GlobalRect.Y;
             }
             else
             {
