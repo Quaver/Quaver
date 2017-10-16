@@ -32,8 +32,8 @@ namespace Quaver.GameState
         /// <summary>
         ///     Adds a new screen to the stack
         /// </summary>
-        /// <param name="screen"></param>
-        public void AddScreen(GameStateBase newState)
+        /// <param name="newState"></param>
+        public void AddState(GameStateBase newState)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace Quaver.GameState
         /// <summary>
         ///     Removes the top most screen from the stack.
         /// </summary>
-        public void RemoveScreen()
+        public void RemoveState()
         {
             if (_states.Count > 0)
             {
@@ -75,7 +75,7 @@ namespace Quaver.GameState
         /// <summary>
         ///     Clears all the screens from the stack.
         /// </summary>
-        public void ClearScreens()
+        public void ClearStates()
         {
             while (_states.Count > 0)
             {
@@ -87,12 +87,12 @@ namespace Quaver.GameState
         ///     Removes all screens from the stack and adds a new one.
         /// </summary>
         /// <param name="screen"></param>
-        public void ChangeScreen(GameStateBase screen)
+        public void ChangeState(GameStateBase screen)
         {
             try
             {
-                ClearScreens();
-                AddScreen(screen);
+                ClearStates();
+                AddState(screen);
             }
             catch (Exception ex)
             {

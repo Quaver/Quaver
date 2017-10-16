@@ -41,7 +41,7 @@ namespace Quaver.Tests
             //TEMP Declare temp variables
             int width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             int height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            Console.WriteLine("[STATE_TESTSCREEN]: Initialized Gameplay State.");
+            Console.WriteLine("[STATE_TESTSCREEN]: Initialized Test State.");
             Console.WriteLine("Screen Height: {0}, Screen Width: {1}",width,height);
             Console.WriteLine("Total Test Objects: {0}", _iterations * _totalChildren);
         }
