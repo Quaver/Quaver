@@ -156,7 +156,11 @@ namespace Quaver.Beatmaps
                 }
             }
 
-            // Find beatmaps by search term.
+            // If we've already found maps from the search query, just return without caring about the results afterward.
+            if (foundMaps.Values.Count > 0)
+                return foundMaps;
+
+            // Find beatmaps by search term if the search query doesn't have logical operators.
             foreach (var beatmapSet in beatmaps)
             {
                 var maps = beatmapSet.Value.FindAll(x => x.Artist.ToLower().Contains(term) || x.Title.ToLower().Contains(term) ||
@@ -169,7 +173,7 @@ namespace Quaver.Beatmaps
                     foundMaps.Add(Path.GetDirectoryName(maps[0].Path), maps);
             }
 
-            Console.WriteLine(foundMaps.Values.Count);
+            Console.WriteLine($"Found Mapsets: {foundMaps.Values.Count}");
             return foundMaps;
         }
     }
