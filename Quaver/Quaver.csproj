@@ -84,6 +84,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Resource1.Designer.cs" />
+    <Compile Include="src\Gameplay\Gameplay-Timing.cs" />
     <Compile Include="src\Gameplay\Objects\HitObject.cs" />
     <Compile Include="src\Gameplay\StatePlayScreen.cs" />
     <Compile Include="src\Graphics\Boundary.cs" />
