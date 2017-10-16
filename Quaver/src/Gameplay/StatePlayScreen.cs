@@ -120,6 +120,9 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void Update(GameTime gameTime)
         {
+            double dt = gameTime.ElapsedGameTime.TotalSeconds;
+            CheckInput();
+            UpdatePlayField(dt);
         }
 
         /// <summary>
