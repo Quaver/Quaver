@@ -44,15 +44,10 @@ namespace Quaver.Gameplay
             for (int i = 0; i < 4; i++)
             {
                 _testHitObject[i] = new HitObject();
-                _testHitObject[i]._HitBodySprite.Parent = _testBoundary;
                 _testHitObject[i]._HoldBodySprite.Parent = _testBoundary;
                 _testHitObject[i]._HoldEndSprite.Parent = _testBoundary;
-            }
-                /*
-            _curNote = new Sprite(GraphicsDevice);
-            _curNote.Image = content.Load<Texture2D>("TestImages/note_hitObject");
-            _curNote.Alignment = Alignment.TopLeft;
-            _curNote.Size = Vector2.One * 64;*/          
+                _testHitObject[i]._HitBodySprite.Parent = _testBoundary;
+            }    
         }
 
         /// <summary>
