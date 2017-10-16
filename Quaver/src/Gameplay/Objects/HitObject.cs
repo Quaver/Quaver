@@ -20,30 +20,9 @@ namespace Quaver.Gameplay
         internal Sprite _HoldBodySprite;
         internal Sprite _HoldEndSprite;
 
-        public HitObject() //Remove ContentManager Later
+        public HitObject()
         {
-            _HitBodySprite = new Sprite()
-            {
-                Image = GameBase.LoadedSkin.NoteHitObject1,
-                Size = Vector2.One * 100,
-                Alignment = Alignment.TopLeft
-            };
 
-            _HoldBodySprite = new Sprite()
-            {
-                Image = GameBase.LoadedSkin.NoteHoldBody,
-                Size = Vector2.One * 100,
-                Position = new Vector2(0, _HitBodySprite.AbsoluteSize.Y/2f),
-                Alignment = Alignment.TopLeft
-            };
-
-            _HoldEndSprite = new Sprite()
-            {
-                Image = GameBase.LoadedSkin.NoteHoldEnd,
-                Size = Vector2.One * 100,
-                Position = new Vector2(0, _HitBodySprite.AbsoluteSize.Y/2f + _HoldBodySprite.AbsoluteSize.Y - 50),
-                Alignment = Alignment.TopLeft
-            };
         }
 
         /// <summary>
