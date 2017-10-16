@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using ManagedBass;
 
 namespace Quaver.Beatmaps
 {
@@ -76,9 +77,84 @@ namespace Quaver.Beatmaps
             var foundMaps = new Dictionary<string, List<Beatmap>>();
 
             // All the possible logical operators for our search terms
-            var logicalOperators = new[] {">", "<", ">=", "<=", "==", "!="};
+            var logicalOperators = new[] {">", "<", "=", "=="};
+            var searchOptions = new[] { "bpm", "stars", "status", "length" };
 
             // TODO: Break apart the search term if it has any logical operators, and add advanced beatmap searching
+            foreach (var logicalOperator in logicalOperators)
+            {
+                // If the search query does in deed have a logical operator, get the word string before it and after.
+                if (term.Contains(logicalOperator))
+                {
+                    // Get the search option alone.
+                    var searchOption = term.Substring(0, term.IndexOf(logicalOperator));
+                    searchOption = searchOption.Split(' ').Last().ToLower();
+
+                    // Get the search query alone.
+                    var query = term.Substring(term.IndexOf(logicalOperator) + 1);
+                    query = query.Split(' ').First().ToLower();
+
+                    // Try to parse the query number.
+                    var queryNum = 0;
+                    try
+                    {
+                        queryNum = int.Parse(query);
+                    }
+                    catch (Exception e)
+                    {
+                        continue;
+                    }
+
+                    // Go through each logical operator 
+                    switch (logicalOperator)
+                    {
+                        case ">":
+                            switch (searchOption)
+                            {
+                                case "bpm":
+                                    foreach (var set in beatmaps)
+                                    {
+                                        var maps = set.Value.FindAll(x => x.Bpm > queryNum);
+
+                                        if (maps.Count > 0)
+                                            foundMaps.Add(Path.GetDirectoryName(maps[0].Path), maps);
+                                    }
+                                    break;
+                            }
+                            break;
+                        case "<":
+                            switch (searchOption)
+                            {
+                                case "bpm":
+                                    foreach (var set in beatmaps)
+                                    {
+                                        var maps = set.Value.FindAll(x => x.Bpm < queryNum);
+
+                                        if (maps.Count > 0)
+                                            foundMaps.Add(Path.GetDirectoryName(maps[0].Path), maps);
+                                    }
+                                    break;
+                            }
+                            break;
+                        case "=":
+                            switch (searchOption)
+                            {
+                                case "bpm":
+                                    foreach (var set in beatmaps)
+                                    {
+                                        var maps = set.Value.FindAll(x => Convert.ToInt32(x.Bpm) == queryNum);
+
+                                        if (maps.Count > 0)
+                                            foundMaps.Add(Path.GetDirectoryName(maps[0].Path), maps);
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+                    Console.WriteLine($"Found Mapsets: {foundMaps.Values.Count}");
+                    break;
+                }
+            }
 
             // Find beatmaps by search term.
             foreach (var beatmapSet in beatmaps)
@@ -93,6 +169,7 @@ namespace Quaver.Beatmaps
                     foundMaps.Add(Path.GetDirectoryName(maps[0].Path), maps);
             }
 
+            Console.WriteLine(foundMaps.Values.Count);
             return foundMaps;
         }
     }
