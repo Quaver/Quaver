@@ -23,12 +23,18 @@ namespace Quaver.Gameplay
         //Reference Variables
         private int _PlayFieldSize; //playfield is 400 pixels wide. Load from skin later.
 
-        //Sprites
+        //Receptors
         private Sprite[] _Receptors;
+        private float[] _ReceptorTargetSize = new float[4] { 1, 1, 1, 1 };
+        private float[] _ReceptorCurrentSize = new float[4] { 1, 1, 1, 1 };
+        private float[] _ReceptorXPosition;
 
-        //Boundaries
+        //Boundaries/Sprites
         private Boundary _PlayField;
 
+        /// <summary>
+        /// This method is called when the Playfield has to be initialized.
+        /// </summary>
         internal void InitializePlayField()
         {
             //Calculate skin reference variables
@@ -42,18 +48,57 @@ namespace Quaver.Gameplay
 
             //Create Receptors
             _Receptors = new Sprite[4];
+            _ReceptorXPosition = new float[4];
             for (int i=0; i<4; i++)
             {
+                _ReceptorXPosition[i] = _PlayFieldPadSize + (_PlayFieldObjectSize * i);
                 _Receptors[i] = new Sprite
                 {
                     Image = GameBase.LoadedSkin.NoteReceptor,
                     Size = Vector2.One * _PlayFieldObjectSize,
-                    Position = new Vector2(_PlayFieldPadSize + (_PlayFieldObjectSize * i), _ReceptorYOffset),
+                    Position = new Vector2(_ReceptorXPosition[i], _ReceptorYOffset),
                     Alignment = Alignment.TopLeft,
                     Parent = _PlayField
                 };
                 _Receptors[i].UpdateRect();
                 Console.WriteLine(_Receptors[i].GlobalRect);
+            }
+        }
+
+        /// <summary>
+        /// The method is called when the Playfield is going to be updated.
+        /// </summary>
+        internal void UpdatePlayField(double dt)
+        {
+            dt = Math.Min(dt * 20, 1);
+
+            //Update Receptors
+            for (int i=0; i<4; i++)
+            {
+                float receptorSizeOffset = ((_ReceptorCurrentSize[i] - 1) * _PlayFieldObjectSize / 2f);
+                _ReceptorCurrentSize[i] = Util.Tween(_ReceptorTargetSize[i], _ReceptorCurrentSize[i], dt);
+                _Receptors[i].Size = Vector2.One * _ReceptorCurrentSize[i] * _PlayFieldObjectSize;
+                _Receptors[i].Position = new Vector2(_ReceptorXPosition[i] - receptorSizeOffset, _ReceptorYOffset - receptorSizeOffset);
+                _Receptors[i].UpdateRect();
+            }
+        }
+
+        /// <summary>
+        /// Gets called whenever a key gets pressed. This method updates the receptor state.
+        /// </summary>
+        /// <param name="curReceptor"></param>
+        internal void UpdateReceptor(int curReceptor, bool keyDown)
+        {
+            if (keyDown)
+            {
+                //CHANGE TO RECEPTOR DOWN SKIN LATER
+                _Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteHitObject1;
+                _ReceptorTargetSize[curReceptor] = 1.1f;
+            }
+            else
+            {
+                _Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptor;
+                _ReceptorTargetSize[curReceptor] = 1;
             }
         }
     }

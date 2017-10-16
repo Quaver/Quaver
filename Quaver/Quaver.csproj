@@ -84,6 +84,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Resource1.Designer.cs" />
+    <Compile Include="src\Gameplay\Gameplay-Input.cs" />
     <Compile Include="src\Gameplay\Gameplay-PlayField.cs" />
     <Compile Include="src\Gameplay\Gameplay-Timing.cs" />
     <Compile Include="src\Gameplay\Objects\HitObject.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="src\Graphics\Alignment.cs" />
     <Compile Include="src\Utility\ImageLoader.cs" />
     <Compile Include="src\Utility\JsonResourceReader.cs" />
+    <Compile Include="src\Utility\Util_Tween.cs" />
     <Compile Include="src\Utility\Util_DrawRect.cs" />
     <Compile Include="src\Utility\Util_Random.cs" />
     <Compile Include="src\Utility\Util_Align.cs" />
