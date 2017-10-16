@@ -61,7 +61,7 @@ namespace Quaver.Main
             // Load the Game Skin Before Starting
             GameBase.LoadSkin();
 
-            GameStateManager.Instance.AddScreen(new StateTestScreen());
+            GameStateManager.Instance.AddScreen(new StatePlayScreen());
 
             // TODO: Have a main menu state that will load the song from there - This is just a concept.
             // We check to see if the selected beatmap is null, because the game can in fact be started
