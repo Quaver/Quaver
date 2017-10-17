@@ -65,5 +65,53 @@ namespace Quaver.Gameplay
                 _hitObjectQueue[i].UpdateObject();
             }
         }
+
+        /// <summary>
+        /// Calculates the position from SV
+        /// </summary>
+        /// <param name="TimeToPos"></param>
+        /// <returns></returns>
+        private double PosFromSV(double TimeToPos)
+        {
+            double PosFromTime = 0;
+            
+            /*
+            float returnVal;
+            if (Math.Abs(timePosition - _currentSongTime) >= 0.01)
+            {
+                if (!_mod_noSV)
+                {
+                    ulong svPosTime = 0;
+                    int curPos = 0;
+                    if (timePosition >= _svQueue[_svQueue.Count - 1].StartTime)
+                    {
+                        curPos = _svQueue.Count - 1;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < _svQueue.Count - 1; i++)
+                        {
+                            if (timePosition < _svQueue[i + 1].StartTime)
+                            {
+                                curPos = i;
+                                break;
+                            }
+                        }
+                    }
+                    svPosTime = _svCalc[curPos] + (ulong)(15000 + ((timePosition - _svQueue[curPos].StartTime) * _svQueue[curPos].Multiplier));
+                    //10000ms added for negative, since svPos is a ulong
+
+                    returnVal = (float)(svPosTime - _curSVPos - 5000f) / 1000f * (float)_config_scrollSpeed * (1 / _songAudio.pitch);
+                }
+                else returnVal = (timePosition - _currentSongTime) / 1000f * (float)_config_scrollSpeed * (1 / _songAudio.pitch);
+            }
+            else returnVal = 0;
+
+            if (_mod_pull) returnVal = (2f * Mathf.Max(Mathf.Pow(returnVal, 0.6f), 0)) + (Mathf.Min(timePosition - _currentSongTime, 0f) / 1000f * (float)_config_scrollSpeed * (1 / _songAudio.pitch));
+
+            return (returnVal * _scrollNegativeFactor) + _receptorYPos;
+            */
+            return PosFromTime;
+        }
     }
 }
