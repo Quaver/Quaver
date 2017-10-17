@@ -120,7 +120,7 @@ namespace Quaver.Audio
         /// <returns></returns>
         internal double GetAudioLength()
         {
-            return Bass.ChannelBytes2Seconds(Stream, Bass.ChannelGetLength(Stream));
+            return Bass.ChannelBytes2Seconds(Stream, Bass.ChannelGetLength(Stream)) * 1000;
         }
     }
 }
