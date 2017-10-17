@@ -126,10 +126,7 @@
     <Compile Include="src\Graphics\Alignment.cs" />
     <Compile Include="src\Utility\ImageLoader.cs" />
     <Compile Include="src\Utility\JsonResourceReader.cs" />
-    <Compile Include="src\Utility\Util_Tween.cs" />
-    <Compile Include="src\Utility\Util_DrawRect.cs" />
-    <Compile Include="src\Utility\Util_Random.cs" />
-    <Compile Include="src\Utility\Util_Align.cs" />
+    <Compile Include="src\Utility\Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
