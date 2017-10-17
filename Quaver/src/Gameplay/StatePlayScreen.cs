@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
+
 using Microsoft.Xna.Framework;
+
 using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.GameState;
@@ -33,8 +36,6 @@ namespace Quaver.Gameplay
                         @"..\..\..\Test\Beatmaps\672208 Camellia - shadows of cats\Camellia - shadows of cats (Applequestria) [Dreamless Wanderer].qua")
                 }";
 
-        private int _testNoteSize = 67;
-
         public StatePlayScreen()
         {
             //Important to assign a state to this class.
@@ -55,11 +56,6 @@ namespace Quaver.Gameplay
             //_GameAudio = new GameAudio(_Qua.AudioFile);
             _gameAudio = new GameAudio(_TESTAUDIODIRECTORY);
             Console.WriteLine("Loaded Beatmap: {0} - {1}", _qua.Artist, _qua.Title);
-
-            //Initialize Components
-            InitializePlayField();
-            InitializeNotes();
-            InitializeTiming();
         }
 
         /// <summary>
@@ -67,8 +63,12 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void LoadContent()
         {
-            //Initialize
-            _gameAudio.Play();
+            //Initialize Components
+            InitializeConfig();
+            InitializePlayField();
+            InitializeNotes();
+            InitializeTiming();
+            //_gameAudio.Play();
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void Update(GameTime gameTime)
         {
-            var dt = gameTime.ElapsedGameTime.TotalSeconds;
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
             SetCurrentSongTime(dt);
             UpdatePlayField(dt);
             UpdateNotes(dt);

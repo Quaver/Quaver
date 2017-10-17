@@ -69,7 +69,7 @@ namespace Quaver.Gameplay
         /// </summary>
         internal void UpdatePlayField(double dt)
         {
-            dt = Math.Min(dt * 20, 1);
+            dt = Math.Min(dt/30, 1);
 
             //Update Receptors
             for (int i=0; i<4; i++)

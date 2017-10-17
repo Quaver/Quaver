@@ -84,11 +84,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Resource1.Designer.cs" />
+    <Compile Include="src\Gameplay\Gameplay-Config.cs" />
+    <Compile Include="src\Gameplay\Gameplay-Mods.cs" />
     <Compile Include="src\Gameplay\Gameplay-NoteRendering.cs" />
     <Compile Include="src\Gameplay\Gameplay-Input.cs" />
     <Compile Include="src\Gameplay\Gameplay-PlayField.cs" />
     <Compile Include="src\Gameplay\Gameplay-Timing.cs" />
     <Compile Include="src\Gameplay\Objects\HitObject.cs" />
+    <Compile Include="src\Gameplay\Objects\TimingObject.cs" />
     <Compile Include="src\Gameplay\StatePlayScreen.cs" />
     <Compile Include="src\Graphics\Boundary.cs" />
     <Compile Include="src\Localization\Language.cs" />
