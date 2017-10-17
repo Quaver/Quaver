@@ -4,23 +4,26 @@ namespace Quaver.Gameplay
 {
     internal partial class StatePlayScreen : GameStateBase
     {
+        //Config Variables
+        private double _gameAudioOffset = 0;
+
         //Audio Variables
-        private float tempAudioLength = 20000; //TEMP
-        private float _gameAudioPosition;
+        private double tempAudioLength = 20000; //TEMP
+        private double _gameAudioPosition;
+        private double _gameAudioLength;
+        private double _songEndOffset = 1000;
 
         //Gameplay Variables
         private const int _playStartDelayed = 500;
 
-        private float _actualSongTime;
-        private float _currentSongTime;
+        private double _actualSongTime;
+        private double _currentSongTime;
         private int _curSVPart;
 
         //SV + Timing Point Variables
         //private List<TimingObject> _svQueue, _timingQueue, _barQueue, _activeBars;
         //private GameObject[] _activeBarObjects;
         private ulong _curSVPos;
-
-        private float _songEndOffset;
 
         //Audio File Variables
         private bool _songIsDone;
@@ -34,6 +37,8 @@ namespace Quaver.Gameplay
         internal void InitializeTiming()
         {
             //TODO: Timing Initializer
+            _gameAudioLength = _gameAudio.GetAudioLength();
+            _gameAudioPosition = 0;
 
             //Reference Variables
             var i = 0;
@@ -108,24 +113,25 @@ namespace Quaver.Gameplay
         //Set the position of the current play time
         private void SetCurrentSongTime(double dt)
         {
-            //_gameAudioPosition = _gameAudio.GetAudioPosition()
+            _gameAudioPosition = _gameAudio.GetAudioPosition();
             //Calculate Time after Song Done
-            /*
-            if (!_songIsDone && _gameAudioPosition < _songAudio.clip.length) _songAudio.UnPause();
-            else if (_songIsDone) _SongEndOffset += Time.deltaTime;
+            
+            
+            if (!_songIsDone && _gameAudioPosition < _gameAudioLength) {}//_songAudio.UnPause();
+            else if (_songIsDone) _songEndOffset += dt;
 
             //Calculate Actual Song Time
             if (_songIsDone)
             {
-                _ActualSongTime = _songAudio.clip.length + _SongEndOffset;
+                _actualSongTime = _gameAudioLength + _songEndOffset;
             }
             else
             {
-                if (_ActualSongTime < 0) _ActualSongTime += Time.deltaTime;
-                else _ActualSongTime = ((_songAudio.time) + (_ActualSongTime + Time.deltaTime)) / 2f;
+                if (_actualSongTime < 0) _actualSongTime += dt;
+                else _actualSongTime = (_gameAudioPosition + (_actualSongTime + dt)) / 2f;
             }
-            _CurrentSongTime = (_ActualSongTime * 1000f) - _config_offset;
-            */
+            _currentSongTime = (_actualSongTime * 1000f) - _gameAudioOffset;
+            
             
         }
 
