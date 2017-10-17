@@ -13,8 +13,8 @@ namespace Quaver.Utility
         /// <summary>
         /// Returns a 1-dimensional value for an object's alignment within the provided boundary.
         /// </summary>
-        /// <param name="Scale">The value (percentage) which the object will be aligned to (0=min, 0.5 =mid, 1.0 = max)</param>
-        /// <param name="ObjectSize">The size of the object</param>
+        /// <param name="scale">The value (percentage) which the object will be aligned to (0=min, 0.5 =mid, 1.0 = max)</param>
+        /// <param name="objectSize">The size of the object</param>
         /// <param name="boundary"></param>
         /// <returns></returns>
         internal static float Align(float scale, float objectSize, Vector2 boundary, float offset = 0)
