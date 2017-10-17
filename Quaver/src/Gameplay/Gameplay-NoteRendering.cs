@@ -16,13 +16,13 @@ using Quaver.Main;
 
 namespace Quaver.Gameplay
 {
-    internal partial class StatePlayScreen : GameStateBase
+    internal partial class StatePlayScreen
     {
         //Config
         private float _ScrollSpeed = 1.4f;
 
         //HitObjects
-        private List<HitObject> _HitObjectQueue;
+        private List<HitObject> _hitObjectQueue;
 
         /// <summary>
         /// Initalize any HitObject related content. 
@@ -31,22 +31,22 @@ namespace Quaver.Gameplay
         {
             int i;
 
-            Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: TOTAL HITOBJECTS: " + _Qua.HitObjects.Count);
-            _HitObjectQueue = new List<HitObject>();
-            for (i = 0; i < _Qua.HitObjects.Count && i < 200; i++)
+            Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: TOTAL HITOBJECTS: " + _qua.HitObjects.Count);
+            _hitObjectQueue = new List<HitObject>();
+            for (i = 0; i < _qua.HitObjects.Count && i < 200; i++)
             {
                 HitObject newObject = new HitObject()
                 {
                     ParentContainer = _PlayField,
-                    StartTime = _Qua.HitObjects[i].StartTime,
-                    EndTime = _Qua.HitObjects[i].EndTime,
-                    isLongNote = _Qua.HitObjects[i].EndTime > 0,
-                    KeyLane = _Qua.HitObjects[i].KeyLane,
+                    StartTime = _qua.HitObjects[i].StartTime,
+                    EndTime = _qua.HitObjects[i].EndTime,
+                    isLongNote = _qua.HitObjects[i].EndTime > 0,
+                    KeyLane = _qua.HitObjects[i].KeyLane,
                     HitObjectSize = _PlayFieldObjectSize,
-                    HitObjectPosition = new Vector2(_ReceptorXPosition[_Qua.HitObjects[i].KeyLane-1], _Qua.HitObjects[i].StartTime * _ScrollSpeed)
+                    HitObjectPosition = new Vector2(_ReceptorXPosition[_qua.HitObjects[i].KeyLane-1], _qua.HitObjects[i].StartTime * _ScrollSpeed)
                 };
                 newObject.Initialize();
-                _HitObjectQueue.Add(newObject);
+                _hitObjectQueue.Add(newObject);
             }
             Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: Done Loading Hitobjects.");
         }
@@ -58,11 +58,11 @@ namespace Quaver.Gameplay
         internal void UpdateNotes(double dt)
         {
             int i;
-            for (i=0; i< _HitObjectQueue.Count; i++)
+            for (i=0; i< _hitObjectQueue.Count; i++)
             {
                 //_HitObjectQueue[i].HitObjectPosition = new Vector2(_ReceptorXPosition[_HitObjectQueue[i].KeyLane - 1], (float)((_HitObjectQueue[i].StartTime - _CurrentSongTime) * _ScrollSpeed + _ReceptorYOffset));
-                _HitObjectQueue[i].HitObjectY = (float)((_HitObjectQueue[i].StartTime - _CurrentSongTime - 100) * _ScrollSpeed); //not synced
-                _HitObjectQueue[i].UpdateObject();
+                _hitObjectQueue[i].HitObjectY = (float)((_hitObjectQueue[i].StartTime - _currentSongTime) * _ScrollSpeed); //not synced
+                _hitObjectQueue[i].UpdateObject();
             }
         }
     }
