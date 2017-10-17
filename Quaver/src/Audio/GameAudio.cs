@@ -111,7 +111,16 @@ namespace Quaver.Audio
         /// <returns></returns>
         internal double GetAudioPosition()
         {
-            return (Stream == 0) ? 0.0f : Bass.ChannelBytes2Seconds(Stream, Bass.ChannelGetPosition(Stream));
+            return (Stream == 0) ? 0.0f : Bass.ChannelBytes2Seconds(Stream, Bass.ChannelGetPosition(Stream)) * 1000;
+        }
+
+        /// <summary>
+        ///     Returns the length of the audio stream.
+        /// </summary>
+        /// <returns></returns>
+        internal double GetAudioLength()
+        {
+            return Bass.ChannelBytes2Seconds(Stream, Bass.ChannelGetLength(Stream));
         }
     }
 }
