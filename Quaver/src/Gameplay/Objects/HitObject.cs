@@ -102,6 +102,14 @@ namespace Quaver.Gameplay
         }
 
         /// <summary>
+        /// The _svPart's index that the object StartTime lies right after.
+        /// </summary>
+        public int SvPosition
+        {
+            get; set;
+        }
+
+        /// <summary>
         /// Determines if the HitObject is a long note or a regular note.
         /// </summary>
         public bool isLongNote

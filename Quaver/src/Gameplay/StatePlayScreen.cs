@@ -66,8 +66,8 @@ namespace Quaver.Gameplay
             //Initialize Components
             InitializeConfig();
             InitializePlayField();
-            InitializeNotes();
             InitializeTiming();
+            InitializeNotes();
             //_gameAudio.Play();
         }
 
