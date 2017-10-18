@@ -60,7 +60,6 @@ namespace Quaver.Gameplay
                         }
                     }
                 }
-                Console.WriteLine(newObject.SvPosition);
 
                 //Initialize Object and add it to HitObjectQueue
                 newObject.Initialize();
@@ -92,21 +91,17 @@ namespace Quaver.Gameplay
         private float PosFromSv(double timeToPos, int svIndex)
         {
             float posFromTime = 0;
-            //Console.WriteLine(_svCalc[_svCalc.Length-1]);
             if (!_mod_noSV)
             {
-                ulong svPosTime = 0;
-                svPosTime = _svCalc[svIndex] +
-                            (ulong) (15000 + ((timeToPos - _svQueue[svIndex].TargetTime) *
-                                                _svQueue[svIndex].SvMultiplier));
-                //10000ms added for negative, since svPos is a ulong
-                posFromTime = (svPosTime - _curSVPos - 5000f) * _ScrollSpeed; //* (1 / _songAudio.pitch);
+                ulong svTimeToPos = 0;
+                svTimeToPos = _svCalc[svIndex] + (ulong) (15000 + ((timeToPos - _svQueue[svIndex].TargetTime) * _svQueue[svIndex].SvMultiplier));
+                posFromTime = (svTimeToPos - _curSVPos - 5000f) * _ScrollSpeed;
             }
             else
-                posFromTime = (float)((timeToPos - _currentSongTime) * _ScrollSpeed); //* (1 / _songAudio.pitch);
+                posFromTime = (float)((timeToPos - _currentSongTime) * _ScrollSpeed);
 
             if (_mod_pull)
-                posFromTime = (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(timeToPos - _currentSongTime, 0f) * _ScrollSpeed)); //* (1 / _songAudio.pitch));
+                posFromTime = (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(timeToPos - _currentSongTime, 0f) * _ScrollSpeed));
 
             return (posFromTime * _scrollNegativeFactor) + _ReceptorYOffset;
         }

@@ -114,8 +114,6 @@ namespace Quaver.Gameplay
                 else break;
             }
 
-            Console.WriteLine($@"SV CALC: {_svCalc[0]}, {_svCalc[1]}, {_svCalc[2]}, {_svCalc[3]}");
-
             //Create Timing bars
             //_barQueue = new List<TimingObject>();
             //time_CreateBars();
