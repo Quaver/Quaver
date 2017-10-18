@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using ManagedBass;
+using ManagedBass.Fx;
 using Configuration = Quaver.Config.Configuration;
 
 namespace Quaver.Audio
@@ -34,7 +35,7 @@ namespace Quaver.Audio
         {
             if (Bass.Init())
             {
-                var stream = Bass.CreateStream(filePath);
+                var stream = Bass.CreateStream(filePath, Flags: BassFlags.Decode);
 
                 if (stream != 0)
                     Stream = stream;
@@ -51,7 +52,7 @@ namespace Quaver.Audio
         /// <summary>
         /// Plays the current audio stream at a given preview time if specified.
         /// </summary>
-        internal void Play(double previewTime = 0)
+        internal void Play(double previewTime = 0, float playbackRate = 1.0f)
         {
             if (Stream == 0 && Bass.ChannelIsActive(Stream) != PlaybackState.Stopped)
                 return;
@@ -62,9 +63,13 @@ namespace Quaver.Audio
             // Set the position to play the song at 
             Bass.ChannelSetPosition(Stream, Bass.ChannelSeconds2Bytes(Stream, previewTime / 1000));
 
+            // Set Tempo
+            Stream = BassFx.TempoCreate(Stream, BassFlags.FxFreeSource);
+            Bass.ChannelSetAttribute(Stream, ChannelAttribute.Tempo, playbackRate * 100 - 100);
+
             // Start playing!
             Bass.ChannelPlay(Stream);
-            Console.WriteLine($"[AUDIO ENGINE] Audio Stream: {Stream} has started playing at position: {previewTime}");
+            Console.WriteLine($"[AUDIO ENGINE] Stream: {Stream} has started playing at pos: {previewTime} at {playbackRate}x speed");
         }
 
         /// <summary>
