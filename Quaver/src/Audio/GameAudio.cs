@@ -52,7 +52,7 @@ namespace Quaver.Audio
         /// <summary>
         /// Plays the current audio stream at a given preview time if specified.
         /// </summary>
-        internal void Play(double previewTime = 0, float playbackRate = 1.0f)
+        internal void Play(double previewTime = 0, float playbackRate = 1.0f, bool pitch = false)
         {
             if (Stream == 0 && Bass.ChannelIsActive(Stream) != PlaybackState.Stopped)
                 return;
@@ -67,9 +67,13 @@ namespace Quaver.Audio
             Stream = BassFx.TempoCreate(Stream, BassFlags.FxFreeSource);
             Bass.ChannelSetAttribute(Stream, ChannelAttribute.Tempo, playbackRate * 100 - 100);
 
-            // Start playing!
+            // Set Pitch if necessary.
+            if (pitch)
+                Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, Math.Log(Math.Pow(playbackRate, 12), 2));
+
+            // Start playing
             Bass.ChannelPlay(Stream);
-            Console.WriteLine($"[AUDIO ENGINE] Stream: {Stream} has started playing at pos: {previewTime} at {playbackRate}x speed");
+            Console.WriteLine($"[AUDIO ENGINE] Audio Stream playing at pos: {previewTime} at {playbackRate}x speed - Pitch Change: {pitch}");
         }
 
         /// <summary>
