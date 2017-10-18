@@ -26,12 +26,12 @@ namespace Quaver.Gameplay
         //SV + Timing Point Variables
         //private List<TimingObject> _svQueue, _timingQueue, _barQueue, _activeBars;
         //private GameObject[] _activeBarObjects;
-        private long _curSVPos;
+        private ulong _curSVPos;
 
         //Audio File Variables
         private bool _songIsDone;
 
-        private long[] _svCalc; //Stores SV position data for efficiency
+        private ulong[] _svCalc; //Stores SV position data for efficiency
         private float _averageBpm = 100;
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Quaver.Gameplay
 
             //Reference Variables
             var i = 0;
-            _curSVPos = (long) (-PlayStartDelayed + 10000f); //10000ms added since curSVPos is a long
+            _curSVPos = (ulong) (-PlayStartDelayed + 10000f); //10000ms added since curSVPos is a long
             _curSVPart = 0;
 
             //Declare Other Values
@@ -101,14 +101,14 @@ namespace Quaver.Gameplay
             }
 
             //Calculates SV for efficiency
-            _svCalc = new long[_svQueue.Count];
-            long svPosTime = 0;
+            _svCalc = new ulong[_svQueue.Count];
+            ulong svPosTime = 0;
             _svCalc[0] = 0;
             for (i = 0; i < _svQueue.Count; i++)
             {
                 if (i + 1 < _svQueue.Count)
                 {
-                    svPosTime += (long)((_svQueue[i + 1].TargetTime - _svQueue[i].TargetTime) * _svQueue[i].SvMultiplier);
+                    svPosTime += (ulong)((_svQueue[i + 1].TargetTime - _svQueue[i].TargetTime) * _svQueue[i].SvMultiplier);
                     _svCalc[i + 1] = svPosTime;
                 }
                 else break;
@@ -406,7 +406,7 @@ namespace Quaver.Gameplay
                     else break;
                 }
             }
-            _curSVPos = _svCalc[_curSVPart] + (long)(((float)((_currentSongTime) - (_svQueue[_curSVPart].TargetTime)) * _svQueue[_curSVPart].SvMultiplier) + 10000);
+            _curSVPos = _svCalc[_curSVPart] + (ulong)(((float)((_currentSongTime) - (_svQueue[_curSVPart].TargetTime)) * _svQueue[_curSVPart].SvMultiplier) + 10000);
         }
     }
 }

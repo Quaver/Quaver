@@ -43,6 +43,26 @@ namespace Quaver.Gameplay
                     HitObjectSize = _PlayFieldObjectSize,
                     HitObjectPosition = new Vector2(_ReceptorXPosition[_qua.HitObjects[i].KeyLane-1], _qua.HitObjects[i].StartTime * _ScrollSpeed)
                 };
+
+                //Calculate SV Index for object
+                if (newObject.StartTime >= _svQueue[_svQueue.Count - 1].TargetTime)
+                {
+                    newObject.SvPosition = _svQueue.Count - 1;
+                }
+                else
+                {
+                    for (int j = 0; j < _svQueue.Count - 1; j++)
+                    {
+                        if (newObject.StartTime < _svQueue[j + 1].TargetTime)
+                        {
+                            newObject.SvPosition = j;
+                            break;
+                        }
+                    }
+                }
+                Console.WriteLine(newObject.SvPosition);
+
+                //Initialize Object and add it to HitObjectQueue
                 newObject.Initialize();
                 _hitObjectQueue.Add(newObject);
             }
@@ -59,7 +79,7 @@ namespace Quaver.Gameplay
             for (i=0; i< _hitObjectQueue.Count; i++)
             {
                 //_HitObjectQueue[i].HitObjectPosition = new Vector2(_ReceptorXPosition[_HitObjectQueue[i].KeyLane - 1], (float)((_HitObjectQueue[i].StartTime - _CurrentSongTime) * _ScrollSpeed + _ReceptorYOffset));
-                _hitObjectQueue[i].HitObjectY = PosFromSv(_hitObjectQueue[i].StartTime); //(float)((_hitObjectQueue[i].StartTime - _currentSongTime) * _ScrollSpeed); //not synced
+                _hitObjectQueue[i].HitObjectY = PosFromSv(_hitObjectQueue[i].StartTime, _hitObjectQueue[i].SvPosition); //(float)((_hitObjectQueue[i].StartTime - _currentSongTime) * _ScrollSpeed); //not synced
                 _hitObjectQueue[i].UpdateObject();
             }
         }
@@ -69,44 +89,24 @@ namespace Quaver.Gameplay
         /// </summary>
         /// <param name="timeToPos"></param>
         /// <returns></returns>
-        private float PosFromSv(double timeToPos)
+        private float PosFromSv(double timeToPos, int svIndex)
         {
             float posFromTime = 0;
             //Console.WriteLine(_svCalc[_svCalc.Length-1]);
             if (!_mod_noSV)
             {
-                long svPosTime = 0;
-                int curPos = 0;
-                if (timeToPos >= _svQueue[_svQueue.Count - 1].TargetTime)
-                {
-                    curPos = _svQueue.Count - 1;
-                }
-                else
-                {
-                    for (int i = 0; i < _svQueue.Count - 1; i++)
-                    {
-                        if (timeToPos < _svQueue[i + 1].TargetTime)
-                        {
-                            curPos = i;
-                            break;
-                        }
-                    }
-                }
-                svPosTime = _svCalc[curPos] +
-                            (long) (15000 + ((timeToPos - _svQueue[curPos].TargetTime) *
-                                                _svQueue[curPos].SvMultiplier));
+                ulong svPosTime = 0;
+                svPosTime = _svCalc[svIndex] +
+                            (ulong) (15000 + ((timeToPos - _svQueue[svIndex].TargetTime) *
+                                                _svQueue[svIndex].SvMultiplier));
                 //10000ms added for negative, since svPos is a ulong
-
                 posFromTime = (svPosTime - _curSVPos - 5000f) * _ScrollSpeed; //* (1 / _songAudio.pitch);
             }
             else
-                posFromTime =
-                    (float)(timeToPos - _currentSongTime) *
-                    (float)_ScrollSpeed; //* (1 / _songAudio.pitch);
+                posFromTime = (float)((timeToPos - _currentSongTime) * _ScrollSpeed); //* (1 / _songAudio.pitch);
 
             if (_mod_pull)
-                posFromTime = (float)(2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) +
-                              (float)(Math.Min(timeToPos - _currentSongTime, 0f) * (float)_ScrollSpeed); //* (1 / _songAudio.pitch));
+                posFromTime = (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(timeToPos - _currentSongTime, 0f) * _ScrollSpeed)); //* (1 / _songAudio.pitch));
 
             return (posFromTime * _scrollNegativeFactor) + _ReceptorYOffset;
         }
