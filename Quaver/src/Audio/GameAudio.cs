@@ -50,7 +50,7 @@ namespace Quaver.Audio
         }
 
         /// <summary>
-        /// Plays the current audio stream at a given preview time if specified.
+        /// Plays the current audio stream at a given preview time, rate, and pitch if specified.
         /// </summary>
         internal void Play(double previewTime = 0, float playbackRate = 1.0f, bool pitch = false)
         {
