@@ -9,14 +9,13 @@ namespace Quaver.Gameplay
         private double _gameAudioOffset = 0;
 
         //Audio Variables
-        private double tempAudioLength = 20000; //TEMP
         private double _gameAudioPosition;
         private double _gameAudioLength;
         private double _songEndOffset;
         private bool _songIsPlaying;
 
         //Gameplay Variables
-        private const int _playStartDelayed = 500;
+        private const int PlayStartDelayed = 500;
 
         private double _actualSongTime;
         private double _currentSongTime;
@@ -27,12 +26,12 @@ namespace Quaver.Gameplay
         //SV + Timing Point Variables
         //private List<TimingObject> _svQueue, _timingQueue, _barQueue, _activeBars;
         //private GameObject[] _activeBarObjects;
-        private ulong _curSVPos;
+        private long _curSVPos;
 
         //Audio File Variables
         private bool _songIsDone;
 
-        private ulong[] _svCalc; //Stores SV position data for efficiency
+        private long[] _svCalc; //Stores SV position data for efficiency
         private float _averageBpm = 100;
 
         /// <summary>
@@ -48,12 +47,12 @@ namespace Quaver.Gameplay
 
             //Reference Variables
             var i = 0;
-            _curSVPos = (ulong) (-_playStartDelayed + 10000f); //10000ms added since curSVPos is a uLong
+            _curSVPos = (long) (-PlayStartDelayed + 10000f); //10000ms added since curSVPos is a long
             _curSVPart = 0;
 
             //Declare Other Values
-            _currentSongTime = -_playStartDelayed;
-            _actualSongTime = -_playStartDelayed;
+            _currentSongTime = -PlayStartDelayed;
+            _actualSongTime = -PlayStartDelayed;
             //_activeBarObjects = new GameObject[maxNoteCount];
 
             //Create Timing Points + SVs on a list
@@ -102,20 +101,20 @@ namespace Quaver.Gameplay
             }
 
             //Calculates SV for efficiency
-            _svCalc = new ulong[_svQueue.Count];
-            ulong svPosTime = 0;
+            _svCalc = new long[_svQueue.Count];
+            long svPosTime = 0;
             _svCalc[0] = 0;
             for (i = 0; i < _svQueue.Count; i++)
             {
                 if (i + 1 < _svQueue.Count)
                 {
-                    var templ = (ulong)((_svQueue[i + 1].TargetTime - _svQueue[i].TargetTime) * _svQueue[i].SvMultiplier);
-                    if (templ > 10000000) templ = 10000000;
-                    svPosTime += templ;
+                    svPosTime += (long)((_svQueue[i + 1].TargetTime - _svQueue[i].TargetTime) * _svQueue[i].SvMultiplier);
                     _svCalc[i + 1] = svPosTime;
                 }
                 else break;
             }
+
+            Console.WriteLine($@"SV CALC: {_svCalc[0]}, {_svCalc[1]}, {_svCalc[2]}, {_svCalc[3]}");
 
             //Create Timing bars
             //_barQueue = new List<TimingObject>();
@@ -125,6 +124,7 @@ namespace Quaver.Gameplay
         //Set the position of the current play time
         private void SetCurrentSongTime(double dt)
         {
+            //Get GameAudio Position
             _gameAudioPosition = _gameAudio.GetAudioPosition();
 
             //Calculate Time after Song Done
@@ -148,7 +148,9 @@ namespace Quaver.Gameplay
                 }
             }
             _currentSongTime = _actualSongTime - _gameAudioOffset;
-            
+
+            //Get SV Position
+            GetCurrentSvPosition();
             //Console.WriteLine($"SONGTIME: {_currentSongTime}");
         }
 
@@ -253,14 +255,8 @@ namespace Quaver.Gameplay
         //Creates SV Points
         private void ConvertTPtoSV()
         {
-            
-            //AverageBpm Reference Variables
-            int i = 0;
-            int j = 0;
-            int hij = 0;
-
             //Create and converts timing points to SV's
-            for (j = 0; j < _timingQueue.Count; j++)
+            for (int j = 0; j < _timingQueue.Count; j++)
             {
                 if (_timingQueue[j].TargetTime < _svQueue[0].TargetTime - 0.01f)
                 {
@@ -279,7 +275,8 @@ namespace Quaver.Gameplay
                 }
                 else
                 {
-                    for (i = hij; i < _svQueue.Count; i++)
+                    int lastIndex = 0;
+                    for (int i = lastIndex; i < _svQueue.Count; i++)
                     {
                         if (i + 1 < _svQueue.Count && _timingQueue[j].TargetTime < _svQueue[i + 1].TargetTime)
                         {
@@ -289,7 +286,7 @@ namespace Quaver.Gameplay
                                 newTp.TargetTime = _timingQueue[j].TargetTime;
                                 newTp.SvMultiplier = 1f;
                                 _svQueue.Add(newTp);
-                                hij = i;
+                                lastIndex = i;
                             }
                             break;
                         }
@@ -306,8 +303,8 @@ namespace Quaver.Gameplay
             //TODO: Make this calculate consistancy based average bpm instead of timing point that is longest
             //AverageBpm Reference Variables
             double longestBpmTime = 0;
-            int AvergeBpmIndex = 0;
-            int i = 0;
+            var avergeBpmIndex = 0;
+            var i = 0;
 
             //Calculate Average BPM
             if (_timingQueue.Count > 1)
@@ -318,7 +315,7 @@ namespace Quaver.Gameplay
                     {
                         if (_timingQueue[i + 1].TargetTime - _timingQueue[i].TargetTime > longestBpmTime)
                         {
-                            AvergeBpmIndex = i;
+                            avergeBpmIndex = i;
                             longestBpmTime = _timingQueue[i + 1].TargetTime - _timingQueue[i].TargetTime;
                         }
                     }
@@ -326,12 +323,12 @@ namespace Quaver.Gameplay
                     {
                         if (_gameAudioLength - _timingQueue[i].TargetTime > longestBpmTime)
                         {
-                            AvergeBpmIndex = i;
+                            avergeBpmIndex = i;
                             longestBpmTime = _gameAudioLength - _timingQueue[i].TargetTime;
                         }
                     }
                 }
-                _averageBpm = _timingQueue[AvergeBpmIndex].BPM;
+                _averageBpm = _timingQueue[avergeBpmIndex].BPM;
             }
             else _averageBpm = _timingQueue[0].BPM;
         }
@@ -340,8 +337,8 @@ namespace Quaver.Gameplay
         private void NormalizeSVs()
         {
             //Reference Variables + Sort
-            int i = 0;
-            int LastIndex = 0;
+            var i = 0;
+            var lastIndex = 0;
             _svQueue.Sort(delegate (TimingObject p1, TimingObject p2) { return p1.TargetTime.CompareTo(p2.TargetTime); });
 
             //Normalize
@@ -349,24 +346,24 @@ namespace Quaver.Gameplay
             {
                 for (i = 0; i < _svQueue.Count; i++)
                 {
-                    if (LastIndex + 1 < _timingQueue.Count)
+                    if (lastIndex + 1 < _timingQueue.Count)
                     {
-                        if (_svQueue[i].TargetTime < _timingQueue[LastIndex + 1].TargetTime - 0.01f)
+                        if (_svQueue[i].TargetTime < _timingQueue[lastIndex + 1].TargetTime - 0.01f)
                         {
                             _svQueue[i].TargetTime = _svQueue[i].TargetTime;
-                            _svQueue[i].SvMultiplier = Math.Min(_svQueue[i].SvMultiplier * _timingQueue[LastIndex].BPM / _averageBpm, 64f);
+                            _svQueue[i].SvMultiplier = Math.Min(_svQueue[i].SvMultiplier * _timingQueue[lastIndex].BPM / _averageBpm, 64f);
                         }
                         else
                         {
-                            LastIndex++;
+                            lastIndex++;
                             _svQueue[i].TargetTime = _svQueue[i].TargetTime;
-                            _svQueue[i].SvMultiplier = Math.Min(_svQueue[i].SvMultiplier * _timingQueue[LastIndex].BPM / _averageBpm, 64f);
+                            _svQueue[i].SvMultiplier = Math.Min(_svQueue[i].SvMultiplier * _timingQueue[lastIndex].BPM / _averageBpm, 64f);
                         }
                     }
                     else
                     {
                         _svQueue[i].TargetTime = _svQueue[i].TargetTime;
-                        _svQueue[i].SvMultiplier = Math.Min(_svQueue[i].SvMultiplier * _timingQueue[LastIndex].BPM / _averageBpm, 512f);
+                        _svQueue[i].SvMultiplier = Math.Min(_svQueue[i].SvMultiplier * _timingQueue[lastIndex].BPM / _averageBpm, 512f);
                     }
                 }
             }
@@ -395,10 +392,9 @@ namespace Quaver.Gameplay
         }
 
         //Calculate CurrentTime's Sv Position
-        private void GetCurrentSVPos()
+        private void GetCurrentSvPosition()
         {
-            /*
-            if (_CurrentSongTime >= _svQueue[_svQueue.Count - 1].StartTime)
+            if (_currentSongTime >= _svQueue[_svQueue.Count - 1].TargetTime)
             {
                 _curSVPart = _svQueue.Count - 1;
             }
@@ -406,12 +402,11 @@ namespace Quaver.Gameplay
             {
                 for (int j = _curSVPart; j < _svQueue.Count - 1; j++)
                 {
-                    if (_CurrentSongTime > _svQueue[_curSVPart + 1].StartTime) _curSVPart++;
+                    if (_currentSongTime > _svQueue[_curSVPart + 1].TargetTime) _curSVPart++;
                     else break;
                 }
             }
-            _curSVPos = _svCalc[_curSVPart] + (ulong)(((float)((_CurrentSongTime) - (_svQueue[_curSVPart].StartTime)) * _svQueue[_curSVPart].Multiplier) + 10000);
-            */
+            _curSVPos = _svCalc[_curSVPart] + (long)(((float)((_currentSongTime) - (_svQueue[_curSVPart].TargetTime)) * _svQueue[_curSVPart].SvMultiplier) + 10000);
         }
     }
 }
