@@ -90,15 +90,16 @@ namespace Quaver.Gameplay
         /// <returns></returns>
         private float PosFromSv(double timeToPos, int svIndex)
         {
+            //This variable returns the position from the given time
             float posFromTime = 0;
-            if (!_mod_noSV)
+
+            //If NoSV mod is enabled
+            if (_mod_noSV) posFromTime = (float)((timeToPos - _currentSongTime) * _ScrollSpeed);
+            //If SVs are enabled
             {
-                ulong svTimeToPos = 0;
-                svTimeToPos = _svCalc[svIndex] + (ulong) (15000 + ((timeToPos - _svQueue[svIndex].TargetTime) * _svQueue[svIndex].SvMultiplier));
+                ulong svTimeToPos = _svCalc[svIndex] + (ulong)(15000 + ((timeToPos - _svQueue[svIndex].TargetTime) * _svQueue[svIndex].SvMultiplier));
                 posFromTime = (svTimeToPos - _curSVPos - 5000f) * _ScrollSpeed;
             }
-            else
-                posFromTime = (float)((timeToPos - _currentSongTime) * _ScrollSpeed);
 
             if (_mod_pull)
                 posFromTime = (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(timeToPos - _currentSongTime, 0f) * _ScrollSpeed));
