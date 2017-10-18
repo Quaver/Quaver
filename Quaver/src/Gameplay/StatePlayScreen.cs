@@ -24,7 +24,7 @@ namespace Quaver.Gameplay
         private readonly string _TESTAUDIODIRECTORY =
             $@"{
                     Path.GetFullPath(
-                        @"..\..\..\Test\Beatmaps\672208 Camellia - shadows of cats\Camellia - shadows of cats.mp3")
+                        @"..\..\..\Test\Beatmaps\2. Camellia - Backbeat Maniac\audio.ogg")
                 }";
 
         private HitObject[] _testHitObject = new HitObject[4];
@@ -33,7 +33,7 @@ namespace Quaver.Gameplay
         private readonly string _TESTMAPDIRECTORY =
             $@"{
                     Path.GetFullPath(
-                        @"..\..\..\Test\Beatmaps\672208 Camellia - shadows of cats\Camellia - shadows of cats (Applequestria) [Dreamless Wanderer].qua")
+                        @"..\..\..\Test\Beatmaps\2. Camellia - Backbeat Maniac\Camellia - Backbeat Maniac () [Rewind VIP].qua")
                 }";
 
         public StatePlayScreen()
