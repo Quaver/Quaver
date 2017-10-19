@@ -21,15 +21,22 @@ namespace Quaver.Gameplay
         //HitObjects
         private List<HitObject> _hitObjectQueue;
 
+        //Track
+        private ulong[] _svCalc; //Stores SV position data for efficiency
+        private int _currentSVIndex;
+        private ulong _trackPosition;
 
         /// <summary>
         /// Initalize any HitObject related content. 
         /// </summary>
         internal void InitializeNotes()
         {
+            //Initialize Track
             int i;
+            _trackPosition = (ulong)(-PlayStartDelayed + 10000f); //10000ms added since curSVPos is a long
+            _currentSVIndex = 0;
 
-            Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: TOTAL HITOBJECTS: " + _qua.HitObjects.Count);
+            //Initialize HitObjects
             _hitObjectQueue = new List<HitObject>();
             for (i = 0; i < _qua.HitObjects.Count && i < 200; i++)
             {
@@ -61,6 +68,9 @@ namespace Quaver.Gameplay
                     }
                 }
 
+                //Calculate Y-Offset From Receptor
+                newObject.OffsetFromReceptor = SvOffsetFromTime(newObject.StartTime, newObject.SvPosition);
+
                 //Initialize Object and add it to HitObjectQueue
                 newObject.Initialize();
                 _hitObjectQueue.Add(newObject);
@@ -74,37 +84,54 @@ namespace Quaver.Gameplay
         /// <param name="dt"></param>
         internal void UpdateNotes(double dt)
         {
+            //Update the position of the track
+            GetCurrentTrackPosition();
+
+
             int i;
             for (i=0; i< _hitObjectQueue.Count; i++)
             {
                 //_HitObjectQueue[i].HitObjectPosition = new Vector2(_ReceptorXPosition[_HitObjectQueue[i].KeyLane - 1], (float)((_HitObjectQueue[i].StartTime - _CurrentSongTime) * _ScrollSpeed + _ReceptorYOffset));
-                _hitObjectQueue[i].HitObjectY = PosFromSv(_hitObjectQueue[i].StartTime, _hitObjectQueue[i].SvPosition); //(float)((_hitObjectQueue[i].StartTime - _currentSongTime) * _ScrollSpeed); //not synced
+                _hitObjectQueue[i].HitObjectY = PosFromOffset(_hitObjectQueue[i].OffsetFromReceptor); //(float)((_hitObjectQueue[i].StartTime - _currentSongTime) * _ScrollSpeed); //not synced
                 _hitObjectQueue[i].UpdateObject();
             }
         }
 
         /// <summary>
-        /// Calculates the position from SV
+        /// Calculates the position of the hitobject from given time
         /// </summary>
         /// <param name="timeToPos"></param>
         /// <returns></returns>
-        private float PosFromSv(double timeToPos, int svIndex)
+        private ulong SvOffsetFromTime(float timeToOffset, int svIndex)
         {
-            //This variable returns the position from the given time
-            float posFromTime = 0;
+            //If NoSV mod is enabled, return ms offset, else return sv offset calculation
+            return (_mod_noSV) ? (ulong) timeToOffset : _svCalc[svIndex] + (ulong)(15000 + ((timeToOffset - _svQueue[svIndex].TargetTime) * _svQueue[svIndex].SvMultiplier)) - 5000;
+        }
 
-            //If NoSV mod is enabled
-            if (_mod_noSV) posFromTime = (float)((timeToPos - _currentSongTime) * _ScrollSpeed);
-            //If SVs are enabled
+        private float PosFromOffset(ulong offsetToPos)
+        {
+            //if (_mod_pull) return (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(offsetToPos - _currentSongTime, 0f) * _ScrollSpeed));
+            return _ReceptorYOffset + (((float)(10000 + offsetToPos - _trackPosition) - 10000f) * _scrollNegativeFactor * _ScrollSpeed);
+        }
+
+        /// <summary>
+        /// Calculate track position
+        /// </summary>
+        private void GetCurrentTrackPosition()
+        {
+            if (_currentSongTime >= _svQueue[_svQueue.Count - 1].TargetTime)
             {
-                ulong svTimeToPos = _svCalc[svIndex] + (ulong)(15000 + ((timeToPos - _svQueue[svIndex].TargetTime) * _svQueue[svIndex].SvMultiplier));
-                posFromTime = (svTimeToPos - _curSVPos - 5000f) * _ScrollSpeed;
+                _currentSVIndex = _svQueue.Count - 1;
             }
-
-            if (_mod_pull)
-                posFromTime = (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(timeToPos - _currentSongTime, 0f) * _ScrollSpeed));
-
-            return (posFromTime * _scrollNegativeFactor) + _ReceptorYOffset;
+            else if (_currentSVIndex < _svQueue.Count - 2)
+            {
+                for (int j = _currentSVIndex; j < _svQueue.Count - 1; j++)
+                {
+                    if (_currentSongTime > _svQueue[_currentSVIndex + 1].TargetTime) _currentSVIndex++;
+                    else break;
+                }
+            }
+            _trackPosition = _svCalc[_currentSVIndex] + (ulong)(((float)((_currentSongTime) - (_svQueue[_currentSVIndex].TargetTime)) * _svQueue[_currentSVIndex].SvMultiplier) + 10000);
         }
     }
 }
