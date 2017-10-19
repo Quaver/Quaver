@@ -19,19 +19,15 @@ namespace Quaver.Gameplay
 
         private double _actualSongTime;
         private double _currentSongTime;
-        private int _curSVPart;
         private List<TimingObject> _svQueue;
         private List<TimingObject> _timingQueue;
 
         //SV + Timing Point Variables
         //private List<TimingObject> _svQueue, _timingQueue, _barQueue, _activeBars;
         //private GameObject[] _activeBarObjects;
-        private ulong _curSVPos;
 
         //Audio File Variables
         private bool _songIsDone;
-
-        private ulong[] _svCalc; //Stores SV position data for efficiency
         private float _averageBpm = 100;
 
         /// <summary>
@@ -47,8 +43,6 @@ namespace Quaver.Gameplay
 
             //Reference Variables
             var i = 0;
-            _curSVPos = (ulong) (-PlayStartDelayed + 10000f); //10000ms added since curSVPos is a long
-            _curSVPart = 0;
 
             //Declare Other Values
             _currentSongTime = -PlayStartDelayed;
@@ -146,10 +140,6 @@ namespace Quaver.Gameplay
                 }
             }
             _currentSongTime = _actualSongTime - _gameAudioOffset;
-
-            //Get SV Position
-            GetCurrentSvPosition();
-            //Console.WriteLine($"SONGTIME: {_currentSongTime}");
         }
 
         private void time_DestroyBars()
@@ -331,13 +321,14 @@ namespace Quaver.Gameplay
             else _averageBpm = _timingQueue[0].BPM;
         }
 
+
         //Normalizes SV's in between each BPM change interval
         private void NormalizeSVs()
         {
             //Reference Variables + Sort
             var i = 0;
             var lastIndex = 0;
-            _svQueue.Sort(delegate (TimingObject p1, TimingObject p2) { return p1.TargetTime.CompareTo(p2.TargetTime); });
+            _svQueue.Sort((p1, p2) => { return p1.TargetTime.CompareTo(p2.TargetTime); });
 
             //Normalize
             if (_timingQueue.Count >= 1)
@@ -387,24 +378,6 @@ namespace Quaver.Gameplay
                 }
             }
             */
-        }
-
-        //Calculate CurrentTime's Sv Position
-        private void GetCurrentSvPosition()
-        {
-            if (_currentSongTime >= _svQueue[_svQueue.Count - 1].TargetTime)
-            {
-                _curSVPart = _svQueue.Count - 1;
-            }
-            else if (_curSVPart < _svQueue.Count - 2)
-            {
-                for (int j = _curSVPart; j < _svQueue.Count - 1; j++)
-                {
-                    if (_currentSongTime > _svQueue[_curSVPart + 1].TargetTime) _curSVPart++;
-                    else break;
-                }
-            }
-            _curSVPos = _svCalc[_curSVPart] + (ulong)(((float)((_currentSongTime) - (_svQueue[_curSVPart].TargetTime)) * _svQueue[_curSVPart].SvMultiplier) + 10000);
         }
     }
 }

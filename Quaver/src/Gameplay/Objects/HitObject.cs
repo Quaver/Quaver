@@ -110,6 +110,14 @@ namespace Quaver.Gameplay
         }
 
         /// <summary>
+        /// The Object's Y-Offset From the receptor.
+        /// </summary>
+        public ulong OffsetFromReceptor
+        {
+            get; set;
+        }
+
+        /// <summary>
         /// Determines if the HitObject is a long note or a regular note.
         /// </summary>
         public bool isLongNote
