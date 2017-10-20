@@ -113,7 +113,6 @@
     <Compile Include="src\GameState\GameStateBase.cs" />
     <Compile Include="src\Graphics\CustomColors.cs" />
     <Compile Include="src\Graphics\Sprite.cs" />
-    <Compile Include="src\Graphics\IDrawable.cs" />
     <Compile Include="src\Graphics\Drawable.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

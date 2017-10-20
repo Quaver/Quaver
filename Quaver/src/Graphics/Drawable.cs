@@ -16,114 +16,76 @@ namespace Quaver.Graphics
     /// <summary>
     ///     This class is for any objects that will be drawn to the screen.
     /// </summary>
-    internal abstract class Drawable
+    internal abstract class Drawable 
     {
         //Interface default methods
         public abstract void Instantiate();
         public abstract void Draw();
         public abstract void Destroy();
 
-        private Rectangle _LocalRect = new Rectangle();
-        private Rectangle _GlobalRect = new Rectangle();
-        private Alignment _Alignment = Alignment.TopLeft;
-        private List<Drawable> _Children = new List<Drawable>();
-        private Drawable _Parent;
-        private Vector2 _ScaleSize;
-        private Vector2 _ScalePercent;
-        private Vector2 _LocalSize;
-        private Vector2 _AbsoluteSize;
-        private Vector2 _LocalPosition;
+        private Rectangle _localRect;
+        private Rectangle _globalRect;
+        private List<Drawable> _children = new List<Drawable>();
+        private Drawable _parent;
+        private Vector2 _scaleSize;
+        private Vector2 _scalePercent;
+        private Vector2 _localSize;
+        private Vector2 _absoluteSize;
+        private Vector2 _localPosition;
 
         /// <summary>
         /// The alignment of the sprite relative to it's parent.
         /// </summary>
-        public Alignment Alignment
-        {
-            get
-            {
-                return _Alignment;
-            }
-            set
-            {
-                _Alignment = value;
-            }
-        }
+        public Alignment Alignment { get; set; } = Alignment.TopLeft;
 
         /// <summary>
         /// TODO: Add summary later.
         /// </summary>
-        public Color Tint
-        {
-            get;
-            set;
-        } = new Color();
+        public Color Tint { get; set; } = new Color();
 
         /// <summary>
         /// TODO: Add summary later.
         /// </summary>
-        public List<Drawable> Children
-        {
-            get
-            {
-                return _Children;
-            }
-        }
+        public List<Drawable> Children { get => _children; set => _children = value; }
 
         /// <summary>
         /// TODO: Add summary later.
         /// </summary>
         public Drawable Parent
         {
-            get
-            {
-                return _Parent;
-            }
+            get => _parent;
             set
             {
                 if (Parent != null)
                 {
-                    int cIndex = Parent._Children.FindIndex(r => r == this);
-                    Parent._Children.RemoveAt(cIndex);
+                    var cIndex = Parent._children.FindIndex(r => r == this);
+                    Parent._children.RemoveAt(cIndex);
                 }
-                value._Children.Add(this);
-                _Parent = value;
+                value._children.Add(this);
+                _parent = value;
             }
         }
 
         /// <summary>
         /// (Read-only) Returns the Drawable's GlobalRect.
         /// </summary>
-        public Rectangle GlobalRect
-        {
-            get
-            {
-                return _GlobalRect;
-            }
-        }
+        public Rectangle GlobalRect { get => _globalRect; }
+
 
         /// <summary>
         /// (Read-only) Returns the Drawable's LocalRect.
         /// </summary>
-        public Rectangle LocalRect
-        {
-            get
-            {
-                return _LocalRect;
-            }
-        }
+        public Rectangle LocalRect { get => _localRect; }
 
         /// <summary>
         /// The scale of the object relative to its parent.
         /// </summary>
         public Vector2 Scale
         {
-            get
-            {
-                return _ScalePercent;
-            }
+            get => _scalePercent;
             set
             {
-                _ScalePercent = value;
+                _scalePercent = value;
                 SetLocalSize();
             }
         }
@@ -131,25 +93,17 @@ namespace Quaver.Graphics
         /// <summary>
         /// (Read-only) The size of the object after it has been scaled.
         /// </summary>
-        public Vector2 AbsoluteSize
-        {
-            get
-            {
-                return new Vector2(_AbsoluteSize.X, _AbsoluteSize.Y);
-            }
-        }
+        public Vector2 AbsoluteSize { get => new Vector2(_absoluteSize.X, _absoluteSize.Y); }
+
         /// <summary>
         /// Extention of the object's Rect in relation with size
         /// </summary>
         public Vector2 Size
         {
-            get
-            {
-                return _LocalSize;
-            }
+            get => _localSize;
             set
             {
-                _LocalSize = value;
+                _localSize = value;
                 SetLocalSize();
             }
         }
@@ -159,13 +113,10 @@ namespace Quaver.Graphics
         /// </summary>
         public float SizeX
         {
-            get
-            {
-                return _LocalSize.X;
-            }
+            get => _localSize.X;
             set
             {
-                _LocalSize.X = value;
+                _localSize.X = value;
                 SetLocalSize();
             }
         }
@@ -175,13 +126,10 @@ namespace Quaver.Graphics
         /// </summary>
         public float SizeY
         {
-            get
-            {
-                return _LocalSize.Y;
-            }
+            get => _localSize.Y;
             set
             {
-                _LocalSize.Y = value;
+                _localSize.Y = value;
                 SetLocalSize();
             }
         }
@@ -191,13 +139,10 @@ namespace Quaver.Graphics
         /// </summary>
         public Vector2 Position
         {
-            get
-            {
-                return _LocalPosition;
-            }
+            get => _localPosition;
             set
             {
-                _LocalPosition = value;
+                _localPosition = value;
                 SetLocalPosition();
             }
         }
@@ -207,13 +152,10 @@ namespace Quaver.Graphics
         /// </summary>
         public float PositionX
         {
-            get
-            {
-                return _LocalPosition.X;
-            }
+            get => _localPosition.X;
             set
             {
-                _LocalPosition.X = value;
+                _localPosition.X = value;
                 SetLocalPosition();
             }
         }
@@ -223,13 +165,10 @@ namespace Quaver.Graphics
         /// </summary>
         public float PositionY
         {
-            get
-            {
-                return _LocalPosition.Y;
-            }
+            get => _localPosition.Y;
             set
             {
-                _LocalPosition.Y = value;
+                _localPosition.Y = value;
                 SetLocalPosition();
             }
         }
@@ -242,19 +181,19 @@ namespace Quaver.Graphics
         {
             if (Parent != null)
             {
-                _ScaleSize.X = _Parent._GlobalRect.Width * _ScalePercent.X;
-                _ScaleSize.Y = _Parent._GlobalRect.Height * _ScalePercent.Y;
+                _scaleSize.X = _parent._globalRect.Width * _scalePercent.X;
+                _scaleSize.Y = _parent._globalRect.Height * _scalePercent.Y;
             }
             else
             {
-                _ScaleSize.X = GameBase.WindowSize.X * _ScalePercent.X;
-                _ScaleSize.Y = GameBase.WindowSize.Y * _ScalePercent.Y;
+                _scaleSize.X = GameBase.WindowSize.X * _scalePercent.X;
+                _scaleSize.Y = GameBase.WindowSize.Y * _scalePercent.Y;
             }
-            _AbsoluteSize.X = _LocalSize.X + _ScaleSize.X;
-            _AbsoluteSize.Y = _LocalSize.Y + _ScaleSize.Y;
+            _absoluteSize.X = _localSize.X + _scaleSize.X;
+            _absoluteSize.Y = _localSize.Y + _scaleSize.Y;
 
-            _LocalRect.Width = (int)_AbsoluteSize.X;
-            _LocalRect.Height = (int)_AbsoluteSize.Y;
+            _localRect.Width = (int)_absoluteSize.X;
+            _localRect.Height = (int)_absoluteSize.Y;
         }
 
         /// <summary>
@@ -263,8 +202,8 @@ namespace Quaver.Graphics
         /// <param name="newPos"></param>
         private void SetLocalPosition()
         {
-            _LocalRect.X = (int)_LocalPosition.X;
-            _LocalRect.Y = (int)_LocalPosition.Y;
+            _localRect.X = (int)_localPosition.X;
+            _localRect.Y = (int)_localPosition.Y;
         }
 
         /// <summary>
@@ -272,22 +211,22 @@ namespace Quaver.Graphics
         /// </summary>
         public void UpdateRect()
         {
-            if (_Parent != null)
+            if (_parent != null)
             {
-                _GlobalRect = Util.DrawRect(_Alignment, _LocalRect, Parent._GlobalRect);
-                //_GlobalRect.X += _Parent._GlobalRect.X;
-                //_GlobalRect.Y += _Parent._GlobalRect.Y;
+                _globalRect = Util.DrawRect(Alignment, _localRect, Parent._globalRect);
+                //_globalRect.X += _parent._globalRect.X;
+                //_globalRect.Y += _parent._globalRect.Y;
             }
             else
             {
                 //sets the window as the sprite's boundary
-                Rectangle newBoundary = new Rectangle()
+                var newBoundary = new Rectangle()
                 {
                     Width = (int)GameBase.WindowSize.X,
                     Height = (int)GameBase.WindowSize.Y
                 };
 
-                _GlobalRect = Util.DrawRect(_Alignment, _LocalRect, newBoundary);
+                _globalRect = Util.DrawRect(Alignment, _localRect, newBoundary);
             }
         }
     }
