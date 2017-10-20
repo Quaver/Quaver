@@ -25,7 +25,6 @@ namespace Quaver.Graphics
 
         private Rectangle _localRect;
         private Rectangle _globalRect;
-        private List<Drawable> _children = new List<Drawable>();
         private Drawable _parent;
         private Vector2 _scaleSize;
         private Vector2 _scalePercent;
@@ -46,7 +45,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// TODO: Add summary later.
         /// </summary>
-        public List<Drawable> Children { get => _children; set => _children = value; }
+        public List<Drawable> Children { get; set; } = new List<Drawable>();
 
         /// <summary>
         /// TODO: Add summary later.
@@ -58,10 +57,10 @@ namespace Quaver.Graphics
             {
                 if (Parent != null)
                 {
-                    var cIndex = Parent._children.FindIndex(r => r == this);
-                    Parent._children.RemoveAt(cIndex);
+                    var cIndex = Parent.Children.FindIndex(r => r == this);
+                    Parent.Children.RemoveAt(cIndex);
                 }
-                value._children.Add(this);
+                value.Children.Add(this);
                 _parent = value;
             }
         }
