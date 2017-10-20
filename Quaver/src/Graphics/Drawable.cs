@@ -16,7 +16,7 @@ namespace Quaver.Graphics
     /// <summary>
     ///     This class is for any objects that will be drawn to the screen.
     /// </summary>
-    internal abstract class Drawable : IDrawable
+    internal abstract class Drawable
     {
         //Interface default methods
         public abstract void Instantiate();
