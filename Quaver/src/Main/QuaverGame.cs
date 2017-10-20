@@ -5,10 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 using Quaver.GameState;
-
-//Temp
 using Quaver.Gameplay;
 using Quaver.Skins;
 using Quaver.Tests;
@@ -19,17 +16,21 @@ namespace Quaver.Main
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class QuaverGame : Game
     {
-        public Game1()
+        public QuaverGame()
         {
-            //Set graphic variables
+            // Set the global graphics device manager.
             GameBase.GraphicsManager = new GraphicsDeviceManager(this);
+
+            // Set the global window size
             GameBase.WindowSize = new Vector2(GameBase.GraphicsManager.PreferredBackBufferWidth, GameBase.GraphicsManager.PreferredBackBufferHeight);
-            GameBase.GraphicsManager.SynchronizeWithVerticalRetrace = false; //TURNS OFF VSYNC
+
+            // Turn off vsync
+            GameBase.GraphicsManager.SynchronizeWithVerticalRetrace = false; 
             IsFixedTimeStep = false;
 
-            // Use Content in Resources folder (Don't touch this please.)
+            // Use Content in Resources folder (Don't touch this please)
             var resxContent = new ResourceContentManager(Services, Resource1.ResourceManager);
             Content = resxContent;
         }
@@ -54,6 +55,8 @@ namespace Quaver.Main
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             GameBase.SpriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // Set the global Graphics Device.
             GameBase.GraphicsDevice = GraphicsDevice;
            
             //Create new GameStateManager Instance
@@ -62,17 +65,8 @@ namespace Quaver.Main
             // Load the Game Skin Before Starting
             GameBase.LoadSkin();
 
-            GameStateManager.Instance.ChangeState(new StatePlayScreen());
-
-            // TODO: Have a main menu state that will load the song from there - This is just a concept.
-            // We check to see if the selected beatmap is null, because the game can in fact be started
-            // even though there are zero songs.
-            /*if (GameBase.SelectedBeatmap != null)
-            {
-                GameBase.SelectedBeatmap.LoadAudio();
-                GameBase.SelectedBeatmap.Song.Play();
-            }*/
-                
+            // Change to the play screen state (Currently utilized for testing.)
+            GameStateManager.Instance.ChangeState(new StatePlayScreen());                
         }
 
         /// <summary>
@@ -81,7 +75,6 @@ namespace Quaver.Main
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
             GameStateManager.Instance.UnloadContent();
         }
 
@@ -92,12 +85,12 @@ namespace Quaver.Main
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            // TODO: Add your update logic here
+            // Update FpsCounter
             FpsCounter.Count(gameTime.ElapsedGameTime.TotalSeconds);
+
+            // Update all game states.
             GameStateManager.Instance.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -107,10 +100,19 @@ namespace Quaver.Main
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            // Start SriteBatch
             GameBase.SpriteBatch.Begin();
+
+            // Set Background Color
             GameBase.GraphicsDevice.Clear(Color.DarkSlateGray);
+
+            // Draw the game states
             GameStateManager.Instance.Draw();
+            
+            // Draw the FPS Counter
             FpsCounter.Draw();
+
+            // Draw everything else in the base class
             base.Draw(gameTime);
             GameBase.SpriteBatch.End();
         }
