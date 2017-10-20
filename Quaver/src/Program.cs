@@ -53,7 +53,7 @@ namespace Quaver
             Task.Run(() => RunTestMethods());
 
             // Start game
-            using (var game = new Game1())
+            using (var game = new QuaverGame())
             {
                 game.Run();
             }
