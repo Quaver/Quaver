@@ -18,27 +18,24 @@ namespace Quaver.Graphics
     /// </summary>
     internal class Boundary : Drawable
     {
+        // Constructor
         public Boundary()
         {
             Size = GameBase.WindowSize;
         }
 
+        /// <summary>
+        ///     Draws its children to the screen
+        /// </summary>
         public override void Draw()
         {
-
-            //Draw children
-            for(int i = 0; i < Children.Count; i++)
-            {
-                Children[i].Draw();
-            }
+            Children.ForEach(x => x.Draw());
         }
 
-        public override void Destroy()
-        {            
-        }
+        // TODO: Implement Destroy
+        public override void Destroy() { }
 
-        public override void Instantiate()
-        {            
-        }
+        // TODO: Implement Instantiate
+        public override void Instantiate() { }
     }
 }
