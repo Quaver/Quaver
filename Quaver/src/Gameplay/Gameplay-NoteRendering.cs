@@ -20,6 +20,8 @@ namespace Quaver.Gameplay
     {
         //HitObjects
         private List<HitObject> _hitObjectQueue;
+        private List<HitObject> _hitObjectPool;
+        private const int HitObjectPoolSize = 1000;
 
         //Track
         private ulong[] _svCalc; //Stores SV position data for efficiency
@@ -38,7 +40,7 @@ namespace Quaver.Gameplay
 
             //Initialize HitObjects
             _hitObjectQueue = new List<HitObject>();
-            for (i = 0; i < _qua.HitObjects.Count && i < 200; i++)
+            for (i = 0; i < _qua.HitObjects.Count && i < HitObjectPoolSize; i++)
             {
                 HitObject newObject = new HitObject()
                 {
