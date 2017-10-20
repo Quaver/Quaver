@@ -108,7 +108,7 @@
     <Compile Include="src\GameState\State.cs" />
     <Compile Include="src\GameState\GameStateTemplate.cs" />
     <Compile Include="src\Notifications\Notification.cs" />
-    <Compile Include="src\Tests\FPSCounter.cs" />
+    <Compile Include="src\Utility\FpsCounter.cs" />
     <Compile Include="src\Tests\StateTestScreen.cs" />
     <Compile Include="src\GameState\GameStateBase.cs" />
     <Compile Include="src\Graphics\CustomColors.cs" />
