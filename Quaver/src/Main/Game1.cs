@@ -12,6 +12,7 @@ using Quaver.GameState;
 using Quaver.Gameplay;
 using Quaver.Skins;
 using Quaver.Tests;
+using Quaver.Utility;
 
 namespace Quaver.Main
 {
@@ -95,7 +96,7 @@ namespace Quaver.Main
                 Exit();
 
             // TODO: Add your update logic here
-            FPSCounter.Count(gameTime.ElapsedGameTime.TotalSeconds);
+            FpsCounter.Count(gameTime.ElapsedGameTime.TotalSeconds);
             GameStateManager.Instance.Update(gameTime);
             base.Update(gameTime);
         }
@@ -109,7 +110,7 @@ namespace Quaver.Main
             GameBase.SpriteBatch.Begin();
             GameBase.GraphicsDevice.Clear(Color.DarkSlateGray);
             GameStateManager.Instance.Draw();
-            FPSCounter.Draw();
+            FpsCounter.Draw();
             base.Draw(gameTime);
             GameBase.SpriteBatch.End();
         }
