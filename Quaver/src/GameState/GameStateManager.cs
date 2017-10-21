@@ -22,13 +22,13 @@ namespace Quaver.GameState
         /// <summary>
         ///     Holds a stack of all the current game states
         /// </summary>
-        private Stack<GameStateBase> States { get; } = new Stack<GameStateBase>();
+        private Stack<IGameState> States { get; } = new Stack<IGameState>();
 
         /// <summary>
         ///     Adds a new screen to the stack
         /// </summary>
         /// <param name="newState"></param>
-        public void AddState(GameStateBase newState)
+        public void AddState(IGameState newState)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace Quaver.GameState
         ///     Removes all screens from the stack and adds a new one.
         /// </summary>
         /// <param name="screen"></param>
-        public void ChangeState(GameStateBase screen)
+        public void ChangeState(IGameState screen)
         {
             try
             {
@@ -144,7 +144,7 @@ namespace Quaver.GameState
         /// </summary>
         public void UnloadContent()
         {
-            foreach (GameStateBase state in States)
+            foreach (var state in States)
                 state.UnloadContent();
         }
     }
