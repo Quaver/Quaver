@@ -191,5 +191,12 @@ namespace Quaver.Gameplay
 
             _HitBodySprite.Draw();
         }
+
+        public void Destroy()
+        {
+            _HoldBodySprite.Destroy();
+            _HoldEndSprite.Destroy();
+            _HitBodySprite.Destroy();
+        }
     }
 }
