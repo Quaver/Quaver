@@ -87,13 +87,14 @@
     <Compile Include="src\Gameplay\Gameplay-Config.cs" />
     <Compile Include="src\Gameplay\Gameplay-Mods.cs" />
     <Compile Include="src\Gameplay\Gameplay-NoteRendering.cs" />
-    <Compile Include="src\Gameplay\Gameplay-Input.cs" />
     <Compile Include="src\Gameplay\Gameplay-PlayField.cs" />
     <Compile Include="src\Gameplay\Gameplay-Timing.cs" />
-    <Compile Include="src\Gameplay\Objects\HitObject.cs" />
-    <Compile Include="src\Gameplay\Objects\TimingObject.cs" />
+    <Compile Include="src\Gameplay\HitObject.cs" />
+    <Compile Include="src\Gameplay\TimingObject.cs" />
     <Compile Include="src\Gameplay\StatePlayScreen.cs" />
     <Compile Include="src\Graphics\Boundary.cs" />
+    <Compile Include="src\Input\GameplayInputManager.cs" />
+    <Compile Include="src\Input\InputManager.cs" />
     <Compile Include="src\Localization\Language.cs" />
     <Compile Include="src\Main\GameBase.cs" />
     <Compile Include="src\Audio\GameAudio.cs" />

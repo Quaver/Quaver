@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-
 using Microsoft.Xna.Framework;
-
 using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.GameState;
+using Quaver.Input;
 using Quaver.QuaFile;
 
 namespace Quaver.Gameplay
@@ -16,26 +15,22 @@ namespace Quaver.Gameplay
     /// </summary>
     internal partial class StatePlayScreen : GameStateBase
     {
-        //Beatmap
-        //private Beatmap _beatmap;
-        private GameAudio _gameAudio;
-        private Qua _qua;
+        /// <summary>
+        ///     The input manager for this game state.
+        /// </summary>
+        private GameplayInputManager InputManager { get; } = new GameplayInputManager();
 
-        private readonly string _TESTAUDIODIRECTORY =
-            $@"{
-                    Path.GetFullPath(
-                        @"..\..\..\Test\Beatmaps\2. Camellia - Backbeat Maniac\audio.ogg")
-                }";
+        /// <summary>
+        ///     The Audio, used for testing purposes (We'll use this on the Beatmap class objecvt itself later.)
+        /// </summary>
+        private GameAudio TestSong { get; set; }
 
-        private HitObject[] _testHitObject = new HitObject[4];
+        /// <summary>
+        ///     The Qua object
+        /// </summary>
+        private Qua Qua{ get; set; }
 
-        //TEST
-        private readonly string _TESTMAPDIRECTORY =
-            $@"{
-                    Path.GetFullPath(
-                        @"..\..\..\Test\Beatmaps\2. Camellia - Backbeat Maniac\Camellia - Backbeat Maniac () [Rewind VIP].qua")
-                }";
-
+        // Ctor
         public StatePlayScreen()
         {
             //Important to assign a state to this class.
@@ -49,13 +44,13 @@ namespace Quaver.Gameplay
         {
             //Load Qua + Audio
             Console.WriteLine("[STATE_PLAYSCREEN]: Initialized Gameplay State.");
-            //GameBase.SelectRandomBeatmap();
-            //_Beatmap = GameBase.SelectedBeatmap;
-            //Console.WriteLine("Loaded Beatmap: {0} - {1}",_Beatmap.Artist,_Beatmap.Title);
-            _qua = new Qua(_TESTMAPDIRECTORY);
-            //_GameAudio = new GameAudio(_Qua.AudioFile);
-            _gameAudio = new GameAudio(_TESTAUDIODIRECTORY);
-            Console.WriteLine("Loaded Beatmap: {0} - {1}", _qua.Artist, _qua.Title);
+
+            // Set .qua and audio - The qua should be parsed from the Beatmap class object path, and the song will be auto loaded.
+            // but this is ok for testing purposes.
+            Qua = new Qua(Path.GetFullPath(@"..\..\..\Test\Beatmaps\2. Camellia - Backbeat Maniac\Camellia - Backbeat Maniac () [Rewind VIP].qua"));
+            TestSong = new GameAudio(Path.GetFullPath(@"..\..\..\Test\Beatmaps\2. Camellia - Backbeat Maniac\audio.ogg"));
+
+            Console.WriteLine("Loaded Beatmap: {0} - {1}", Qua.Artist, Qua.Title);
         }
 
         /// <summary>
@@ -68,7 +63,6 @@ namespace Quaver.Gameplay
             InitializePlayField();
             InitializeTiming();
             InitializeNotes();
-            //_gameAudio.Play();
         }
 
         /// <summary>
@@ -76,7 +70,6 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
             GameStateManager.Instance.UnloadContent();
         }
 
@@ -85,11 +78,20 @@ namespace Quaver.Gameplay
         /// </summary>
         public override void Update(GameTime gameTime)
         {
+            // Get the current game time in milliseconds.
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            // Set the current song time.
             SetCurrentSongTime(dt);
+
+            // Update the playfield
             UpdatePlayField(dt);
+
+            // Update the Notes
             UpdateNotes(dt);
-            CheckInput();
+
+            // Check the input for this particular game state.
+            InputManager.CheckInput();
         }
 
         /// <summary>

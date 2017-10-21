@@ -36,7 +36,7 @@ namespace Quaver.Gameplay
         internal void InitializeTiming()
         {
             //TODO: Timing Initializer
-            _gameAudioLength = _gameAudio.GetAudioLength();
+            _gameAudioLength = TestSong.GetAudioLength();
             _gameAudioPosition = 0;
             _songEndOffset = 0;
             _songIsPlaying = false;
@@ -53,23 +53,23 @@ namespace Quaver.Gameplay
 
             _svQueue = new List<TimingObject>();
             
-            for (i = 0; i < _qua.SliderVelocities.Count; i++)
+            for (i = 0; i < Qua.SliderVelocities.Count; i++)
             {
                 TimingObject newSV = new TimingObject
                 {
-                    TargetTime = _qua.SliderVelocities[i].StartTime,
-                    SvMultiplier = _qua.SliderVelocities[i].Multiplier
+                    TargetTime = Qua.SliderVelocities[i].StartTime,
+                    SvMultiplier = Qua.SliderVelocities[i].Multiplier
                 };
                 _svQueue.Add(newSV);
             }
 
             _timingQueue = new List<TimingObject>();
-            for (i = 0; i < _qua.TimingPoints.Count; i++)
+            for (i = 0; i < Qua.TimingPoints.Count; i++)
             {
                 TimingObject newTO = new TimingObject
                 {
-                    TargetTime = _qua.TimingPoints[i].StartTime,
-                    BPM = _qua.TimingPoints[i].Bpm
+                    TargetTime = Qua.TimingPoints[i].StartTime,
+                    BPM = Qua.TimingPoints[i].Bpm
                 };
                 _timingQueue.Add(newTO);
             }
@@ -117,7 +117,7 @@ namespace Quaver.Gameplay
         private void SetCurrentSongTime(double dt)
         {
             //Get GameAudio Position
-            _gameAudioPosition = _gameAudio.GetAudioPosition();
+            _gameAudioPosition = TestSong.GetAudioPosition();
 
             //Calculate Time after Song Done
             if (_songIsDone)
@@ -134,7 +134,7 @@ namespace Quaver.Gameplay
                     if (!_songIsPlaying)
                     {
                         _songIsPlaying = true;
-                        _gameAudio.Play();
+                        TestSong.Play();
                     }
                     _actualSongTime = (_gameAudioPosition + (_actualSongTime + dt)) / 2f;
                 }
