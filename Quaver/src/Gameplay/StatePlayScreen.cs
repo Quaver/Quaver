@@ -13,8 +13,10 @@ namespace Quaver.Gameplay
     /// <summary>
     ///     This is the GameState when the player is actively playing.
     /// </summary>
-    internal partial class StatePlayScreen : GameStateBase
+    internal partial class StatePlayScreen : IGameState
     {
+        public State CurrentState { get; set; } = State.PlayScreen;
+
         /// <summary>
         ///     The input manager for this game state.
         /// </summary>
@@ -40,7 +42,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void Initialize()
+        public void Initialize()
         {
             //Load Qua + Audio
             Console.WriteLine("[STATE_PLAYSCREEN]: Initialized Gameplay State.");
@@ -56,7 +58,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void LoadContent()
+        public void LoadContent()
         {
             //Initialize Components
             InitializeConfig();
@@ -68,7 +70,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void UnloadContent()
+        public void UnloadContent()
         {
             GameStateManager.Instance.UnloadContent();
         }
@@ -76,7 +78,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void Update(GameTime gameTime)
+        public  void Update(GameTime gameTime)
         {
             // Get the current game time in milliseconds.
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -97,7 +99,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void Draw()
+        public void Draw()
         {
             _PlayField.Draw();
         }

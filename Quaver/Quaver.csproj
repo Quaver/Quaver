@@ -92,6 +92,7 @@
     <Compile Include="src\Gameplay\HitObject.cs" />
     <Compile Include="src\Gameplay\TimingObject.cs" />
     <Compile Include="src\Gameplay\StatePlayScreen.cs" />
+    <Compile Include="src\GameState\IGameState.cs" />
     <Compile Include="src\Graphics\Boundary.cs" />
     <Compile Include="src\Input\GameplayInputManager.cs" />
     <Compile Include="src\Input\IInputManager.cs" />
@@ -111,7 +112,6 @@
     <Compile Include="src\Notifications\Notification.cs" />
     <Compile Include="src\Utility\FpsCounter.cs" />
     <Compile Include="src\Tests\StateTestScreen.cs" />
-    <Compile Include="src\GameState\GameStateBase.cs" />
     <Compile Include="src\Graphics\CustomColors.cs" />
     <Compile Include="src\Graphics\Sprite.cs" />
     <Compile Include="src\Graphics\Drawable.cs" />
