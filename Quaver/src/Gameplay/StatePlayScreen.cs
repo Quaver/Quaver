@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Beatmaps;
+using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Input;
 using Quaver.QuaFile;
@@ -28,16 +29,19 @@ namespace Quaver.Gameplay
         private GameAudio TestSong { get; set; }
 
         /// <summary>
-        ///     The Qua object
+        ///     The Qua object - Parsed .qua file.
         /// </summary>
         private Qua Qua{ get; set; }
 
-        // Ctor
-        public StatePlayScreen()
-        {
-            //Important to assign a state to this class.
-            CurrentState = State.PlayScreen;
-        }
+        /// <summary>
+        ///     The scroll speed
+        /// </summary>
+        private float ScrollSpeed { get; set; } = Configuration.ScrollSpeed / 20f;
+
+        /// <summary>
+        ///     TODO: Add Summary.
+        /// </summary>
+        private float ScrollNegativeFactor { get; set; } = 1f;
 
         /// <summary>
         ///     TODO: Add Summary
@@ -61,7 +65,6 @@ namespace Quaver.Gameplay
         public void LoadContent()
         {
             //Initialize Components
-            InitializeConfig();
             InitializePlayField();
             InitializeTiming();
             InitializeNotes();

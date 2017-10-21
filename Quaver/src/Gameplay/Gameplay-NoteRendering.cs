@@ -50,7 +50,7 @@ namespace Quaver.Gameplay
                     isLongNote = Qua.HitObjects[i].EndTime > 0,
                     KeyLane = Qua.HitObjects[i].KeyLane,
                     HitObjectSize = _PlayFieldObjectSize,
-                    HitObjectPosition = new Vector2(_ReceptorXPosition[Qua.HitObjects[i].KeyLane-1], Qua.HitObjects[i].StartTime * _ScrollSpeed)
+                    HitObjectPosition = new Vector2(_ReceptorXPosition[Qua.HitObjects[i].KeyLane-1], Qua.HitObjects[i].StartTime * ScrollSpeed)
                 };
 
                 //Calculate SV Index for object
@@ -120,7 +120,7 @@ namespace Quaver.Gameplay
         private float PosFromOffset(ulong offsetToPos)
         {
             //if (_mod_pull) return (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(offsetToPos - _currentSongTime, 0f) * _ScrollSpeed));
-            return _ReceptorYOffset + (((float)(10000 + offsetToPos - _trackPosition) - 10000f) * _scrollNegativeFactor * _ScrollSpeed);
+            return _ReceptorYOffset + (((float)(10000 + offsetToPos - _trackPosition) - 10000f) * ScrollNegativeFactor * ScrollSpeed);
         }
 
         /// <summary>
