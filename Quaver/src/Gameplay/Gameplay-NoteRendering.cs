@@ -21,7 +21,7 @@ namespace Quaver.Gameplay
         //HitObjects
         private List<HitObject> _hitObjectQueue;
         private List<HitObject> _hitObjectPool;
-        private const int HitObjectPoolSize = 1000;
+        private const int HitObjectPoolSize = 200;
 
         //Track
         private ulong[] _svCalc; //Stores SV position data for efficiency
@@ -40,7 +40,7 @@ namespace Quaver.Gameplay
 
             //Initialize HitObjects
             _hitObjectQueue = new List<HitObject>();
-            for (i = 0; i < Qua.HitObjects.Count && i < HitObjectPoolSize; i++)
+            for (i = 0; i < Qua.HitObjects.Count; i++)
             {
                 HitObject newObject = new HitObject()
                 {
@@ -74,7 +74,7 @@ namespace Quaver.Gameplay
                 newObject.OffsetFromReceptor = SvOffsetFromTime(newObject.StartTime, newObject.SvPosition);
 
                 //Initialize Object and add it to HitObjectQueue
-                newObject.Initialize();
+                if (i < HitObjectPoolSize) newObject.Initialize();
                 _hitObjectQueue.Add(newObject);
             }
             Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: Done Loading Hitobjects.");
@@ -91,7 +91,7 @@ namespace Quaver.Gameplay
 
 
             int i;
-            for (i=0; i< _hitObjectQueue.Count; i++)
+            for (i=0; i< _hitObjectQueue.Count && i < HitObjectPoolSize; i++)
             {
                 //_HitObjectQueue[i].HitObjectPosition = new Vector2(_ReceptorXPosition[_HitObjectQueue[i].KeyLane - 1], (float)((_HitObjectQueue[i].StartTime - _CurrentSongTime) * _ScrollSpeed + _ReceptorYOffset));
                 _hitObjectQueue[i].HitObjectY = PosFromOffset(_hitObjectQueue[i].OffsetFromReceptor); //(float)((_hitObjectQueue[i].StartTime - _currentSongTime) * _ScrollSpeed); //not synced
