@@ -21,6 +21,7 @@ namespace Quaver.Graphics
         //Interface default methods
         public abstract void Instantiate();
         public abstract void Draw();
+
         public abstract void Destroy();
 
         private Rectangle _localRect;
