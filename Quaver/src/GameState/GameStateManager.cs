@@ -13,21 +13,16 @@ namespace Quaver.GameState
 {
     internal class GameStateManager
     {
-        private static GameStateManager _instance;
-
         /// <summary>
         ///     The GameStateManager instance. This is a singleton class, so there'll only be one.
-        /// </summary>   
-        public static GameStateManager Instance
-        {
-            // https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/null-conditional-operator
-            get => _instance = _instance ?? new GameStateManager();
-        }
-       
+        /// </summary> 
+        private static GameStateManager _instance;  
+        public static GameStateManager Instance { get => _instance = _instance ?? new GameStateManager(); }
+
         /// <summary>
         ///     Holds a stack of all the current game states
         /// </summary>
-        private readonly Stack<GameStateBase> _states = new Stack<GameStateBase>();
+        private Stack<GameStateBase> States { get; } = new Stack<GameStateBase>();
 
         /// <summary>
         ///     Adds a new screen to the stack
@@ -38,18 +33,19 @@ namespace Quaver.GameState
             try
             {
                 // Add the screen to the stack
-                _states.Push(newState);
+                States.Push(newState);
+
                 // Initialize the screen
-                _states.Peek().Initialize();
+                States.Peek().Initialize();
+
                 // Call the LoadContent on the screen
                 if (GameBase.Content != null)
-                {
-                    _states.Peek().LoadContent();
-                }
+                    States.Peek().LoadContent();
             }
             catch (Exception ex)
             {
                 // Log the exception
+                Console.WriteLine(ex);
             }
         }
 
@@ -58,17 +54,18 @@ namespace Quaver.GameState
         /// </summary>
         public void RemoveState()
         {
-            if (_states.Count > 0)
+            if (States.Count == 0)
+                return;
+
+            try
             {
-                try
-                {
-                    var screen = _states.Peek();
-                    _states.Pop();
-                }
-                catch (Exception ex)
-                {
-                    // Log the exception
-                }
+                var screen = States.Peek();
+                States.Pop();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex);
             }
         }
 
@@ -77,9 +74,9 @@ namespace Quaver.GameState
         /// </summary>
         public void ClearStates()
         {
-            while (_states.Count > 0)
+            while (States.Count > 0)
             {
-                _states.Pop();
+                States.Pop();
             }
         }
 
@@ -97,6 +94,7 @@ namespace Quaver.GameState
             catch (Exception ex)
             {
                 // Log the exception
+                Console.WriteLine(ex);
             }
         }
     
@@ -108,14 +106,15 @@ namespace Quaver.GameState
         {
             try
             {
-                if (_states.Count > 0)
-                {
-                    _states.Peek().Update(gameTime);
-                }
+                if (States.Count == 0)
+                    return;
+
+                States.Peek().Update(gameTime);
             }
             catch (Exception ex)
             {
                 // Log the exception
+                Console.WriteLine(ex);
             }
         }
 
@@ -128,14 +127,15 @@ namespace Quaver.GameState
         {
             try
             {
-                if (_states.Count > 0)
-                {
-                    _states.Peek().Draw();
-                }
+                if (States.Count == 0)
+                    return;
+
+                States.Peek().Draw();
             }
             catch (Exception ex)
             {
                 // Log the exception
+                Console.WriteLine(ex);
             }
         }
 
@@ -144,10 +144,8 @@ namespace Quaver.GameState
         /// </summary>
         public void UnloadContent()
         {
-            foreach (GameStateBase state in _states)
-            {
+            foreach (GameStateBase state in States)
                 state.UnloadContent();
-            }
         }
     }
 }
