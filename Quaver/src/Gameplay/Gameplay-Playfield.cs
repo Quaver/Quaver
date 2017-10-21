@@ -24,8 +24,8 @@ namespace Quaver.Gameplay
         private int _PlayFieldSize; //playfield is 400 pixels wide. Load from skin later.
 
         //Receptors
-        private Sprite[] _Receptors;
-        private float[] _ReceptorTargetSize = new float[4] { 1, 1, 1, 1 };
+        private static Sprite[] _Receptors;
+        private static float[] _ReceptorTargetSize = new float[4] { 1, 1, 1, 1 };
         private float[] _ReceptorCurrentSize = new float[4] { 1, 1, 1, 1 };
         private float[] _ReceptorXPosition;
 
@@ -86,7 +86,7 @@ namespace Quaver.Gameplay
         /// Gets called whenever a key gets pressed. This method updates the receptor state.
         /// </summary>
         /// <param name="curReceptor"></param>
-        internal void UpdateReceptor(int curReceptor, bool keyDown)
+        internal static bool UpdateReceptor(int curReceptor, bool keyDown)
         {
             if (keyDown)
             {
@@ -99,6 +99,8 @@ namespace Quaver.Gameplay
                 _Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptor;
                 _ReceptorTargetSize[curReceptor] = 1;
             }
+
+            return true;
         }
     }
 }
