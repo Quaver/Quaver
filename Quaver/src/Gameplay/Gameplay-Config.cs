@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
 
 using Quaver.Config;
+using Quaver.GameState;
 using Quaver.Utility;
 using Quaver.Graphics;
 using Quaver.Main;
 
 namespace Quaver.Gameplay
 {
-    internal partial class StatePlayScreen
+    internal partial class StatePlayScreen : IGameState
     {
         //Config Values
         private int _config_scrollSpeed = 20;

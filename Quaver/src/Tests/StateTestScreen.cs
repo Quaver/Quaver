@@ -16,8 +16,10 @@ namespace Quaver.Tests
     /// <summary>
     /// This is the GameState when the player is actively playing.
     /// </summary>
-    internal class StateTestScreen : GameStateBase
+    internal class StateTestScreen : IGameState
     {
+        public State CurrentState { get; set; } = State.TestScreen;
+
         //TEST (These variables will be removed later)
         private Texture2D _TestImage;
         private double _pos;
@@ -27,16 +29,10 @@ namespace Quaver.Tests
         private int _iterations = 50;
         private int _totalChildren = 50;
 
-        public StateTestScreen()
-        {
-            //Important to assign a state to this class.
-            CurrentState = State.TestScreen;
-        }
-
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void Initialize()
+        public void Initialize()
         {
             //TEMP Declare temp variables
             int width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
@@ -49,7 +45,7 @@ namespace Quaver.Tests
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void LoadContent()
+        public void LoadContent()
         {
             //TEMP Create Sprite
             _testBoundary = new Boundary();
@@ -85,7 +81,7 @@ namespace Quaver.Tests
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void UnloadContent()
+        public void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
             GameStateManager.Instance.UnloadContent();
@@ -94,7 +90,7 @@ namespace Quaver.Tests
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             //Update pos of the objects (Temporary
             _pos += (double)(gameTime.ElapsedGameTime.TotalSeconds);
@@ -107,7 +103,7 @@ namespace Quaver.Tests
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public override void Draw()
+        public void Draw()
         {
             //Draw stuff here
             for (int i = 0; i < _iterations; i ++)

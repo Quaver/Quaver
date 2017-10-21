@@ -10,22 +10,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quaver.GameState
 {
-    internal class GameStateTemplate : GameStateBase
+    internal class GameStateTemplate : IGameState
     {
-        public GameStateTemplate()
-        {
-            //Important to assign a state to this class.
-            CurrentState = State.MainMenu;
-        }
+        public State CurrentState { get; set; } = State.MainMenu;
 
-        public override void Initialize() { }
+        public void Initialize() { }
 
-        public override void LoadContent() { }
+        public void LoadContent() { }
 
-        public override void UnloadContent() { }
+        public void UnloadContent() { }
 
-        public override void Update(GameTime gameTime) { }
+        public void Update(GameTime gameTime) { }
 
-        public override void Draw() { }      
+        public void Draw() { }      
     }
 }

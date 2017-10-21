@@ -13,7 +13,7 @@ using Quaver.Main;
 
 namespace Quaver.Gameplay
 {
-    internal partial class StatePlayScreen : GameStateBase
+    internal partial class StatePlayScreen
     {
         //Skinning Properties/Fields
         private int _PlayFieldObjectSize = 75; //The size of each hit object.
