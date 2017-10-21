@@ -40,17 +40,17 @@ namespace Quaver.Gameplay
 
             //Initialize HitObjects
             _hitObjectQueue = new List<HitObject>();
-            for (i = 0; i < _qua.HitObjects.Count && i < HitObjectPoolSize; i++)
+            for (i = 0; i < Qua.HitObjects.Count && i < HitObjectPoolSize; i++)
             {
                 HitObject newObject = new HitObject()
                 {
                     ParentContainer = _PlayField,
-                    StartTime = _qua.HitObjects[i].StartTime,
-                    EndTime = _qua.HitObjects[i].EndTime,
-                    isLongNote = _qua.HitObjects[i].EndTime > 0,
-                    KeyLane = _qua.HitObjects[i].KeyLane,
+                    StartTime = Qua.HitObjects[i].StartTime,
+                    EndTime = Qua.HitObjects[i].EndTime,
+                    isLongNote = Qua.HitObjects[i].EndTime > 0,
+                    KeyLane = Qua.HitObjects[i].KeyLane,
                     HitObjectSize = _PlayFieldObjectSize,
-                    HitObjectPosition = new Vector2(_ReceptorXPosition[_qua.HitObjects[i].KeyLane-1], _qua.HitObjects[i].StartTime * _ScrollSpeed)
+                    HitObjectPosition = new Vector2(_ReceptorXPosition[Qua.HitObjects[i].KeyLane-1], Qua.HitObjects[i].StartTime * _ScrollSpeed)
                 };
 
                 //Calculate SV Index for object
