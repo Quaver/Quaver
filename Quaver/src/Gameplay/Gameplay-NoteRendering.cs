@@ -93,9 +93,16 @@ namespace Quaver.Gameplay
             int i;
             for (i=0; i< _hitObjectQueue.Count && i < HitObjectPoolSize; i++)
             {
-                //_HitObjectQueue[i].HitObjectPosition = new Vector2(_ReceptorXPosition[_HitObjectQueue[i].KeyLane - 1], (float)((_HitObjectQueue[i].StartTime - _CurrentSongTime) * _ScrollSpeed + _ReceptorYOffset));
-                _hitObjectQueue[i].HitObjectY = PosFromOffset(_hitObjectQueue[i].OffsetFromReceptor); //(float)((_hitObjectQueue[i].StartTime - _currentSongTime) * _ScrollSpeed); //not synced
-                _hitObjectQueue[i].UpdateObject();
+                if (_hitObjectQueue[i].StartTime > _currentSongTime) //TODO: Add miss ms timing later
+                {
+                    _hitObjectQueue[i].HitObjectY = PosFromOffset(_hitObjectQueue[i].OffsetFromReceptor);
+                    _hitObjectQueue[i].UpdateObject();
+                }
+                else
+                {
+                    RecycleNote(i);
+                    i--;
+                }
             }
         }
 
@@ -135,5 +142,19 @@ namespace Quaver.Gameplay
             }
             _trackPosition = _svCalc[_currentSVIndex] + (ulong)(((float)((_currentSongTime) - (_svQueue[_currentSVIndex].TargetTime)) * _svQueue[_currentSVIndex].SvMultiplier) + 10000);
         }
+
+        /// <summary>
+        /// TODO: add description
+        /// </summary>
+        /// <param name="index"></param>
+        private void RecycleNote(int index)
+        {
+            _hitObjectQueue[index].Destroy();
+            _hitObjectQueue.RemoveAt(index);
+            if (_hitObjectQueue.Count > HitObjectPoolSize)
+                _hitObjectQueue[HitObjectPoolSize-1].Initialize();
+        }
+
+
     }
 }
