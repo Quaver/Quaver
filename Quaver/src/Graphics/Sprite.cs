@@ -52,7 +52,7 @@ namespace Quaver.Graphics
         // TODO: Implement Destroy
         public override void Destroy()
         {
-            //Parent = null;
+            Parent = null;
         }
 
         // TODO: Implement Instantiate
