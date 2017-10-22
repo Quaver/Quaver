@@ -44,13 +44,13 @@ namespace Quaver.Gameplay
             {
                 HitObject newObject = new HitObject()
                 {
-                    ParentContainer = _PlayField,
+                    ParentContainer = Playfield.PlayfieldBoundary,
                     StartTime = Qua.HitObjects[i].StartTime,
                     EndTime = Qua.HitObjects[i].EndTime,
                     isLongNote = Qua.HitObjects[i].EndTime > 0,
                     KeyLane = Qua.HitObjects[i].KeyLane,
-                    HitObjectSize = _PlayFieldObjectSize,
-                    HitObjectPosition = new Vector2(_ReceptorXPosition[Qua.HitObjects[i].KeyLane-1], Qua.HitObjects[i].StartTime * ScrollSpeed)
+                    HitObjectSize = Playfield.PlayfieldObjectSize,
+                    HitObjectPosition = new Vector2(Playfield.ReceptorXPosition[Qua.HitObjects[i].KeyLane-1], Qua.HitObjects[i].StartTime * ScrollSpeed)
                 };
 
                 //Calculate SV Index for object
@@ -88,7 +88,6 @@ namespace Quaver.Gameplay
         {
             //Update the position of the track
             GetCurrentTrackPosition();
-
 
             int i;
             for (i=0; i< _hitObjectQueue.Count && i < HitObjectPoolSize; i++)

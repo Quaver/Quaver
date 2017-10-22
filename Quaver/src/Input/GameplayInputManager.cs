@@ -44,7 +44,7 @@ namespace Quaver.Input
             // Update Lane Keys Receptor
             var updatedReceptor = false;
             for (var i = 0; i < LaneKeys.Count; i++)
-                updatedReceptor = (KeyboardState.IsKeyDown(LaneKeys[i])) ? StatePlayScreen.UpdateReceptor(i, true) : StatePlayScreen.UpdateReceptor(i, false);              
+                updatedReceptor = (KeyboardState.IsKeyDown(LaneKeys[i])) ? Playfield.UpdateReceptor(i, true) : Playfield.UpdateReceptor(i, false);              
         }
     }
 }
