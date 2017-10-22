@@ -17,12 +17,12 @@ namespace Quaver.Graphics
         /// <summary>
         /// A list of every Drawable object that will be drawn
         /// </summary>
-        internal static List<Drawable> _drawList = new List<Drawable>();
+        internal static List<Drawable> DrawList = new List<Drawable>();
 
         /// <summary>
         /// A list of every Drawable asset that is active (in memory)
         /// </summary>
-        internal static List<Drawable> _spritePool = new List<Drawable>();
+        internal static List<Drawable> SpritePool = new List<Drawable>();
 
         /// <summary>
         /// Add a new Drawable object to the Sprite Pool.
@@ -30,7 +30,7 @@ namespace Quaver.Graphics
         /// <param name="current"></param>
         internal static void AddToSpritePool(Drawable current)
         {
-            _spritePool.Add(current);
+            SpritePool.Add(current);
         }
 
         /// <summary>
@@ -40,8 +40,8 @@ namespace Quaver.Graphics
         internal static void RemoveFromSpritePool(Drawable current)
         {
             RemoveFromDrawList(current);
-            var cIndex = _drawList.FindIndex(r => r == current);
-            if (cIndex >= 0) _spritePool.RemoveAt(cIndex);
+            var cIndex = DrawList.FindIndex(r => r == current);
+            if (cIndex >= 0) SpritePool.RemoveAt(cIndex);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Quaver.Graphics
         /// <param name="current"></param>
         internal static void AddToDrawList(Drawable current)
         {
-            _drawList.Add(current);
+            DrawList.Add(current);
         }
 
         /// <summary>
@@ -59,8 +59,8 @@ namespace Quaver.Graphics
         /// <param name="current"></param>
         internal static void RemoveFromDrawList(Drawable current)
         {
-            var cIndex = _drawList.FindIndex(r => r == current);
-            if (cIndex >= 0) _drawList.RemoveAt(cIndex);
+            var cIndex = DrawList.FindIndex(r => r == current);
+            if (cIndex >= 0) DrawList.RemoveAt(cIndex);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Quaver.Graphics
         /// </summary>
         internal static void ClearDrawList()
         {
-            _drawList.Clear();
+            DrawList.Clear();
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Quaver.Graphics
         /// </summary>
         internal static void Draw()
         {
-            foreach (var current in _drawList)
+            foreach (var current in DrawList)
             {
                 current.Draw();
             }
