@@ -46,6 +46,16 @@ namespace Quaver.Gameplay
         public ulong OffsetFromReceptor { get; set; }
 
         /// <summary>
+        /// The initial size of this object's long note.
+        /// </summary>
+        public ulong InitialLongNoteSize { get; set; }
+
+        /// <summary>
+        /// The current size of this object's long note.
+        /// </summary>
+        public ulong CurrentLongNoteSize { get; set; }
+
+        /// <summary>
         /// Determines if the HitObject is a long note or a regular note.
         /// </summary>
         public bool IsLongNote { get; set; }
@@ -85,7 +95,7 @@ namespace Quaver.Gameplay
                 Image = GameBase.LoadedSkin.NoteHoldBody,
                 Alignment = Alignment.TopLeft,
                 Position = HitObjectPosition,
-                Size = Vector2.One * HitObjectSize,
+                Size = new Vector2(HitObjectSize, InitialLongNoteSize),
                 Parent = ParentContainer
             };
 
@@ -117,13 +127,19 @@ namespace Quaver.Gameplay
         {
             if (IsLongNote)
             {
+                //Update HoldBody Position and Size
                 HoldBodySprite.PositionY = HitObjectPosition.Y + HitObjectSize / 2f;
-                HoldEndSprite.PositionY = HitObjectPosition.Y + HitObjectSize;
+                HoldBodySprite.SizeY = CurrentLongNoteSize;
 
+                //Update Hold End Position
+                HoldEndSprite.PositionY = HitObjectPosition.Y + HoldBodySprite.SizeY;
+
+                //Update Hold Rects
                 HoldBodySprite.UpdateRect();
                 HoldEndSprite.UpdateRect();
             }
 
+            //Update HitBody
             HitBodySprite.PositionY = HitObjectPosition.Y;
             HitBodySprite.UpdateRect();
         }
