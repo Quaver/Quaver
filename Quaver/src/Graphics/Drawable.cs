@@ -19,8 +19,6 @@ namespace Quaver.Graphics
     internal abstract class Drawable 
     {
         //Methods that will be inherited
-        public abstract void Instantiate();
-        public abstract void Destroy();
         public abstract void Draw();
 
         //Local variables
@@ -176,6 +174,23 @@ namespace Quaver.Graphics
                 _localPosition.Y = value;
                 SetLocalPosition();
             }
+        }
+
+        /// <summary>
+        /// This method is called when the object will be removed from memory.
+        /// </summary>
+        public void Destroy()
+        {
+            SpriteManager.RemoveFromSpritePool(this);
+            Parent = null;
+        }
+
+        /// <summary>
+        /// This method will be called whenever the object gets created.
+        /// </summary>
+        public void Instantiate()
+        {
+            SpriteManager.AddToSpritePool(this);
         }
 
         /// <summary>
