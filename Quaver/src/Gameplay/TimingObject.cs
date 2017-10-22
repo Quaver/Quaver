@@ -3,17 +3,17 @@
     internal class TimingObject
     {
         /// <summary>
-        ///     TODO: Add Summary...
+        ///     The time (in ms) which the timing point starts at
         /// </summary>
         public float TargetTime { get; set; }
 
         /// <summary>
-        ///     TODO: Add Summary...
+        ///     The BPM of this timing object.
         /// </summary>
         public float BPM { get; set; }
 
         /// <summary>
-        ///     TODO: Add Summary...
+        ///     The SV multiplier (scroll velocity multiplier) of this object.
         /// </summary>
         public float SvMultiplier { get; set; }
     }
