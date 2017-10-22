@@ -78,7 +78,7 @@ namespace Quaver.Gameplay
             CalculateAverageBpm();
 
             //Create SVs
-            if (!_mod_noSV && _svQueue.Count > 1)
+            if (!ModNoSv && _svQueue.Count > 1)
             {
                 ConvertTPtoSV();
                 NormalizeSVs();
