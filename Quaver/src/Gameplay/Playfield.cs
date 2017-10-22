@@ -26,7 +26,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     TODO: CHANGE. Use Config Variable instead.
         /// </summary>
-        private static int ReceptorYOffset { get; set; } = 20;
+        public static int ReceptorYOffset { get; set; } = 20;
 
         /// <summary>
         ///     TODO: The Playfield size. Load from skin -- About 400px wide.
@@ -82,7 +82,6 @@ namespace Quaver.Gameplay
             {
                 // Set ReceptorXPos 
                 ReceptorXPosition[i] = PlayfieldPadSize + PlayfieldObjectSize * i;
-                Console.WriteLine(ReceptorXPosition[i]);
 
                 // Create new Receptor Sprite
                 Receptors[i] = new Sprite
