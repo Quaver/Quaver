@@ -47,7 +47,7 @@ namespace Quaver.Gameplay
                     ParentContainer = Playfield.PlayfieldBoundary,
                     StartTime = Qua.HitObjects[i].StartTime,
                     EndTime = Qua.HitObjects[i].EndTime,
-                    isLongNote = Qua.HitObjects[i].EndTime > 0,
+                    IsLongNote = Qua.HitObjects[i].EndTime > 0,
                     KeyLane = Qua.HitObjects[i].KeyLane,
                     HitObjectSize = Playfield.PlayfieldObjectSize,
                     HitObjectPosition = new Vector2(Playfield.ReceptorXPosition[Qua.HitObjects[i].KeyLane-1], Qua.HitObjects[i].StartTime * ScrollSpeed)
@@ -94,7 +94,8 @@ namespace Quaver.Gameplay
             {
                 if (_hitObjectQueue[i].StartTime > _currentSongTime) //TODO: Add miss ms timing later
                 {
-                    _hitObjectQueue[i].HitObjectY = PosFromOffset(_hitObjectQueue[i].OffsetFromReceptor);
+                    // Set new hit object position with the current x, and a new y
+                    _hitObjectQueue[i].HitObjectPosition = new Vector2(_hitObjectQueue[i].HitObjectPosition.X, PosFromOffset(_hitObjectQueue[i].OffsetFromReceptor));
                     _hitObjectQueue[i].UpdateObject();
                 }
                 else
