@@ -49,14 +49,16 @@ namespace Quaver.Graphics
             Children.ForEach(x => x.Draw());
         }
 
-        // TODO: Implement Destroy
+        /// <summary>
+        /// This method is called when the object will be removed from memory.
+        /// </summary>
         public override void Destroy()
         {
             SpriteManager.RemoveFromSpritePool(this);
             Parent = null;
         }
 
-        // TODO: Implement Instantiate
+        // This method will be called whenever the object gets created.
         public override void Instantiate()
         {
             SpriteManager.AddToSpritePool(this);
