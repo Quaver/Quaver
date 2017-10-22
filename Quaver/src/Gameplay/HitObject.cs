@@ -48,7 +48,7 @@ namespace Quaver.Gameplay
         /// <summary>
         /// Determines if the HitObject is a long note or a regular note.
         /// </summary>
-        public bool IsLongNote { get; set; } = true;
+        public bool IsLongNote { get; set; }
 
         /// <summary>
         /// The position of the HitObject Sprites
