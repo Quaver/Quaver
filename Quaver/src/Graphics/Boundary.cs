@@ -32,7 +32,9 @@ namespace Quaver.Graphics
             Children.ForEach(x => x.Draw());
         }
 
-        // TODO: Implement Destroy
+        /// <summary>
+        /// This method will be called whenever the drawable will be destroyed.
+        /// </summary>
         public override void Destroy()
         {
             SpriteManager.RemoveFromSpritePool(this);
