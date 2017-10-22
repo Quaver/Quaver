@@ -44,6 +44,19 @@ namespace Quaver.Gameplay
         private float ScrollNegativeFactor { get; set; } = 1f;
 
         /// <summary>
+        ///     Test mod for No Slider Velcoities
+        /// </summary>
+        private bool ModNoSv { get; }
+
+        /// <summary>
+        ///     Other random mods that were put here.
+        /// </summary>
+        private bool ModPull { get; }
+        private bool ModSplit { get; }
+        private bool ModSpin { get; }
+        private bool ModShuffle { get; }
+
+        /// <summary>
         ///     TODO: Add Summary
         /// </summary>
         public void Initialize()
