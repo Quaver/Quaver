@@ -119,10 +119,8 @@ namespace Quaver.GameState
         }
 
         /// <summary>
-        ///     Renders the top screen.
+        /// Draws the current GameState
         /// </summary>
-        /// <param name="spriteBatch"></param>
-        /// <param name="windowSize"></param>
         public void Draw()
         {
             try
