@@ -39,17 +39,17 @@ namespace Quaver.Graphics
         public Alignment Alignment { get; set; } = Alignment.TopLeft;
 
         /// <summary>
-        /// TODO: Add summary later.
+        /// The color tint of this object. White = no tint.
         /// </summary>
         public Color Tint { get; set; } = new Color();
 
         /// <summary>
-        /// TODO: Add summary later.
+        /// The children of this object that depend on this object's position/size.
         /// </summary>
         public List<Drawable> Children { get; set; } = new List<Drawable>();
 
         /// <summary>
-        /// TODO: Add summary later.
+        /// The parent of this object which it depends on for position/size.
         /// </summary>
         public Drawable Parent
         {
@@ -217,8 +217,6 @@ namespace Quaver.Graphics
             if (_parent != null)
             {
                 _globalRect = Util.DrawRect(Alignment, _localRect, Parent._globalRect);
-                //_globalRect.X += _parent._globalRect.X;
-                //_globalRect.Y += _parent._globalRect.Y;
             }
             else
             {
