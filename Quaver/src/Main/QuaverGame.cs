@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.GameState;
 using Quaver.Gameplay;
+using Quaver.Graphics;
 using Quaver.Skins;
 using Quaver.Tests;
 using Quaver.Utility;
@@ -110,6 +111,7 @@ namespace Quaver.Main
             GameStateManager.Instance.Draw();
             
             // Draw the FPS Counter
+            SpriteManager.Draw();
             FpsCounter.Draw();
             LogTracker.Draw();
 
