@@ -8,6 +8,7 @@ using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Input;
 using Quaver.QuaFile;
+using Quaver.Utility;
 
 namespace Quaver.Gameplay
 {
@@ -70,6 +71,12 @@ namespace Quaver.Gameplay
             TestSong = new GameAudio(Path.GetFullPath(@"..\..\..\Test\Beatmaps\2. Camellia - Backbeat Maniac\audio.ogg"));
 
             Console.WriteLine("Loaded Beatmap: {0} - {1}", Qua.Artist, Qua.Title);
+
+            //Create loggers
+            LogTracker.AddLogger("DeltaTime",Color.LawnGreen);
+            LogTracker.AddLogger("SongTime", Color.White);
+            LogTracker.AddLogger("SongPos", Color.White);
+            LogTracker.AddLogger("HitObjects", Color.Wheat);
         }
 
         /// <summary>
@@ -110,6 +117,12 @@ namespace Quaver.Gameplay
 
             // Check the input for this particular game state.
             InputManager.CheckInput();
+
+            // Update Loggers
+            LogTracker.UpdateLogger("DeltaTime", "Delta Time: " + dt + "ms");
+            LogTracker.UpdateLogger("SongTime", "Current Song Time: " + _currentSongTime + "ms");
+            LogTracker.UpdateLogger("SongPos", "Current Track Position: " + _trackPosition);
+            LogTracker.UpdateLogger("HitObjects", "Total Remaining Notes: " + _hitObjectQueue.Count);
         }
 
         /// <summary>

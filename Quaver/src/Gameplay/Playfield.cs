@@ -103,7 +103,7 @@ namespace Quaver.Gameplay
         /// <param name="dt"></param>
         public static void UpdatePlayfield(double dt)
         {
-            // TODO: Add Summary here.
+            // The delta time tweening variable for animation.
             dt = Math.Min(dt / 30, 1);
 
             // Update receptors
@@ -111,7 +111,7 @@ namespace Quaver.Gameplay
             {
                 var receptorSizeOffset = (ReceptorCurrentSize[i] - 1) * PlayfieldObjectSize / 2f;
 
-                // TODO: Add Summary
+                // Update receptor Size/Position
                 ReceptorCurrentSize[i] = Util.Tween(ReceptorTargetSize[i], ReceptorCurrentSize[i], dt);
                 Receptors[i].Size = Vector2.One * ReceptorCurrentSize[i] * PlayfieldObjectSize;
                 Receptors[i].Position = new Vector2(ReceptorXPosition[i] - receptorSizeOffset, ReceptorYOffset - receptorSizeOffset);

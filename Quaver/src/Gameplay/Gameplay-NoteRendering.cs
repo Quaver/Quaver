@@ -20,7 +20,6 @@ namespace Quaver.Gameplay
     {
         //HitObjects
         private List<HitObject> _hitObjectQueue;
-        private List<HitObject> _hitObjectPool;
         private const int HitObjectPoolSize = 200;
 
         //Track
@@ -35,7 +34,7 @@ namespace Quaver.Gameplay
         {
             //Initialize Track
             int i;
-            _trackPosition = (ulong)(-PlayStartDelayed + 10000f); //10000ms added since curSVPos is a long
+            _trackPosition = (ulong)(-PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
             _currentSVIndex = 0;
 
             //Initialize HitObjects
@@ -151,6 +150,8 @@ namespace Quaver.Gameplay
         {
             _hitObjectQueue[index].Destroy();
             _hitObjectQueue.RemoveAt(index);
+
+            //Initialize the HitObject (create the hit object sprites) if there are any inactive HitObjects
             if (_hitObjectQueue.Count > HitObjectPoolSize)
                 _hitObjectQueue[HitObjectPoolSize-1].Initialize();
         }
