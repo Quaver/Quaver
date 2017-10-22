@@ -56,12 +56,17 @@ namespace Quaver.Graphics
             get => _parent;
             set
             {
+                //Remove this object from its old parent's Children list
                 if (Parent != null)
                 {
                     var cIndex = Parent.Children.FindIndex(r => r == this);
                     Parent.Children.RemoveAt(cIndex);
                 }
-                value.Children.Add(this);
+
+                //Add this object to its new parent's Children list
+                if (value != null) value.Children.Add(this);
+
+                //Assign parent in this object
                 _parent = value;
             }
         }
@@ -176,7 +181,6 @@ namespace Quaver.Graphics
         /// <summary>
         /// This method will get called everytime the size of this object changes.
         /// </summary>
-        /// <param name="newScale"></param>
         private void SetLocalSize()
         {
             if (Parent != null)
@@ -199,7 +203,6 @@ namespace Quaver.Graphics
         /// <summary>
         /// This method will get called everytime the position of this object changes.
         /// </summary>
-        /// <param name="newPos"></param>
         private void SetLocalPosition()
         {
             _localRect.X = (int)_localPosition.X;
