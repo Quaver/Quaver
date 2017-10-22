@@ -18,10 +18,10 @@ namespace Quaver.Graphics
     /// </summary>
     internal abstract class Drawable 
     {
-        //Interface default methods
+        //Methods that will be inherited
         public abstract void Instantiate();
-        public abstract void Draw();
         public abstract void Destroy();
+        public abstract void Draw();
 
         //Local variables
         private Rectangle _localRect;
