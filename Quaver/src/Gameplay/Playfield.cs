@@ -127,7 +127,7 @@ namespace Quaver.Gameplay
         {
             if (keyDown)
             {
-                //CHANGE TO RECEPTOR DOWN SKIN LATER
+                //TODO: CHANGE TO RECEPTOR_DOWN SKIN LATER WHEN RECEPTOR IS PRESSED
                 Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteHitObject1;
                 ReceptorTargetSize[curReceptor] = 1.1f;
             }

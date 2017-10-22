@@ -52,10 +52,14 @@ namespace Quaver.Graphics
         // TODO: Implement Destroy
         public override void Destroy()
         {
+            SpriteManager.RemoveFromSpritePool(this);
             Parent = null;
         }
 
         // TODO: Implement Instantiate
-        public override void Instantiate() { }
+        public override void Instantiate()
+        {
+            SpriteManager.AddToSpritePool(this);
+        }
     }
 }
