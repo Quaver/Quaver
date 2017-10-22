@@ -65,7 +65,7 @@ namespace Quaver.Gameplay
         public void LoadContent()
         {
             //Initialize Components
-            InitializePlayField();
+            Playfield.InitializePlayfield();
             InitializeTiming();
             InitializeNotes();
         }
@@ -90,7 +90,7 @@ namespace Quaver.Gameplay
             SetCurrentSongTime(dt);
 
             // Update the playfield
-            UpdatePlayField(dt);
+            Playfield.UpdatePlayfield(dt);;
 
             // Update the Notes
             UpdateNotes(dt);
@@ -104,7 +104,7 @@ namespace Quaver.Gameplay
         /// </summary>
         public void Draw()
         {
-            _PlayField.Draw();
+            Playfield.PlayfieldBoundary.Draw();
         }
     }
 }
