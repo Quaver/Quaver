@@ -86,7 +86,6 @@
     <Compile Include="Resource1.Designer.cs" />
     <Compile Include="src\Gameplay\Gameplay-Mods.cs" />
     <Compile Include="src\Gameplay\Gameplay-NoteRendering.cs" />
-    <Compile Include="src\Gameplay\Gameplay-PlayField.cs" />
     <Compile Include="src\Gameplay\Gameplay-Timing.cs" />
     <Compile Include="src\Gameplay\HitObject.cs" />
     <Compile Include="src\Gameplay\Playfield.cs" />
