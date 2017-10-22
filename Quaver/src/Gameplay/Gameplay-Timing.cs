@@ -9,7 +9,6 @@ namespace Quaver.Gameplay
         private double _gameAudioOffset = 0;
 
         //Audio Variables
-        private double _gameAudioPosition;
         private double _gameAudioLength;
         private double _songEndOffset;
         private bool _songIsPlaying;
@@ -37,7 +36,6 @@ namespace Quaver.Gameplay
         {
             //TODO: Timing Initializer
             _gameAudioLength = TestSong.GetAudioLength();
-            _gameAudioPosition = 0;
             _songEndOffset = 0;
             _songIsPlaying = false;
 
@@ -116,9 +114,6 @@ namespace Quaver.Gameplay
         //Set the position of the current play time
         private void SetCurrentSongTime(double dt)
         {
-            //Get GameAudio Position
-            _gameAudioPosition = TestSong.GetAudioPosition();
-
             //Calculate Time after Song Done
             if (_songIsDone)
             {
@@ -136,7 +131,7 @@ namespace Quaver.Gameplay
                         _songIsPlaying = true;
                         TestSong.Play();
                     }
-                    _actualSongTime = (_gameAudioPosition + (_actualSongTime + dt)) / 2f;
+                    _actualSongTime = (TestSong.GetAudioPosition() + (_actualSongTime + dt)) / 2f;
                 }
             }
             _currentSongTime = _actualSongTime - _gameAudioOffset;
