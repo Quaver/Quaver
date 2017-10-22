@@ -49,14 +49,11 @@ namespace Quaver.Gameplay
                     IsLongNote = Qua.HitObjects[i].EndTime > 0,
                     KeyLane = Qua.HitObjects[i].KeyLane,
                     HitObjectSize = Playfield.PlayfieldObjectSize,
-                    HitObjectPosition = new Vector2(Playfield.ReceptorXPosition[Qua.HitObjects[i].KeyLane-1], Qua.HitObjects[i].StartTime * ScrollSpeed)
+                    HitObjectPosition = new Vector2(Playfield.ReceptorXPosition[Qua.HitObjects[i].KeyLane-1], Qua.HitObjects[i].StartTime * ScrollSpeed),
                 };
 
-                //Calculate SV Index for object
-                if (newObject.StartTime >= _svQueue[_svQueue.Count - 1].TargetTime)
-                {
-                    newObject.SvPosition = _svQueue.Count - 1;
-                }
+                //Calculate SV Index for hit object
+                if (newObject.StartTime >= _svQueue[_svQueue.Count - 1].TargetTime) newObject.SvPosition = _svQueue.Count - 1;
                 else
                 {
                     for (int j = 0; j < _svQueue.Count - 1; j++)
@@ -71,6 +68,27 @@ namespace Quaver.Gameplay
 
                 //Calculate Y-Offset From Receptor
                 newObject.OffsetFromReceptor = SvOffsetFromTime(newObject.StartTime, newObject.SvPosition);
+
+                //If the object is a long note
+                if (newObject.IsLongNote)
+                {
+                    int curIndex = 0;
+                    if (newObject.EndTime >= _svQueue[_svQueue.Count - 1].TargetTime) curIndex = _svQueue.Count - 1;
+                    else
+                    {
+                        for (int j = 0; j < _svQueue.Count - 1; j++)
+                        {
+                            if (newObject.EndTime < _svQueue[j + 1].TargetTime)
+                            {
+                                curIndex = j;
+                                break;
+                            }
+                        }
+                    }
+
+                    newObject.InitialLongNoteSize = SvOffsetFromTime(newObject.EndTime, curIndex) - newObject.OffsetFromReceptor;
+                    newObject.CurrentLongNoteSize = newObject.InitialLongNoteSize;
+                }
 
                 //Initialize Object and add it to HitObjectQueue
                 if (i < HitObjectPoolSize) newObject.Initialize();
@@ -91,16 +109,17 @@ namespace Quaver.Gameplay
             int i;
             for (i=0; i< _hitObjectQueue.Count && i < HitObjectPoolSize; i++)
             {
-                if (_hitObjectQueue[i].StartTime > _currentSongTime) //TODO: Add miss ms timing later
+                if (_currentSongTime > _hitObjectQueue[i].StartTime && _currentSongTime > _hitObjectQueue[i].EndTime) //TODO: Add miss ms timing later
+                {
+                    //Recycle Note
+                    RecycleNote(i);
+                    i--;
+                }
+                else
                 {
                     // Set new hit object position with the current x, and a new y
                     _hitObjectQueue[i].HitObjectPosition = new Vector2(_hitObjectQueue[i].HitObjectPosition.X, PosFromOffset(_hitObjectQueue[i].OffsetFromReceptor));
                     _hitObjectQueue[i].UpdateObject();
-                }
-                else
-                {
-                    RecycleNote(i);
-                    i--;
                 }
             }
         }
