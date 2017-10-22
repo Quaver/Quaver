@@ -57,44 +57,6 @@ namespace Quaver.Gameplay
         private bool ModSpin { get; }
         private bool ModShuffle { get; }
 
-        //TEST
-        private double prevSongTime = 0;
-
-        private double curSongTime = 0;
-
-        private double prevByteTime = 0;
-        private double curByteTime = 0;
-
-        private double averageSongTime = 0;
-        private double averageByteTime = 0;
-
-        private bool alreadyTested = false;
-
-        private int frameCount = 0;
-
-        private void Tester()
-        {
-
-            if (!alreadyTested)
-            {
-                prevSongTime = _currentSongTime;
-                prevByteTime = TestSong.GetAudioPosition();
-                alreadyTested = true;
-            }
-            frameCount++;
-            curByteTime = TestSong.GetAudioPosition();
-            curSongTime = _currentSongTime;
-
-            averageSongTime += Math.Pow(curSongTime-prevSongTime,4);
-            averageByteTime += Math.Pow(curByteTime-prevByteTime,4);
-
-            LogTracker.QuickLog("SongTime Unsteadiness: "+string.Format("{0:0.00}", averageSongTime/frameCount));
-            LogTracker.QuickLog("GetAudioPosition() Unsteadiness: " + string.Format("{0:0.00}", averageByteTime / frameCount));
-
-            prevSongTime = curSongTime;
-            prevByteTime = curByteTime;
-        }
-
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
@@ -163,7 +125,6 @@ namespace Quaver.Gameplay
             LogTracker.UpdateLogger("HitObjects", "Total Remaining Notes: " + _hitObjectQueue.Count);
 
             if (_currentSongTime > 10)
-            Tester();
         }
 
         /// <summary>
