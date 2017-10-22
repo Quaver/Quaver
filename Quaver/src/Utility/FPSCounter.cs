@@ -34,6 +34,11 @@ namespace Quaver.Utility
         private static SpriteFont Font { get; } = GameBase.Content.Load<SpriteFont>("testFont");
 
         /// <summary>
+        /// After this many frames, it will update the current FPS
+        /// </summary>
+        private const int FrameCount = 100;
+
+        /// <summary>
         /// Use this to calculate FPS on every frame.
         /// </summary>
         /// <param name="dt"></param>
@@ -42,11 +47,11 @@ namespace Quaver.Utility
             FpsCount += dt;
             Interval++;
 
-            // Only after 20 frames, it will update the current FPS
-            if (Interval < 20)
+            // Only after the total FrameCount, it will update the current FPS
+            if (Interval < FrameCount)
                 return;
 
-            FpsCurrent = 1 / (FpsCount / 20);
+            FpsCurrent = 1 / (FpsCount / FrameCount);
 
             // Reset both the FPS Count & Intrval
             FpsCount = 0;
@@ -67,7 +72,7 @@ namespace Quaver.Utility
         /// </summary>
         public static void Draw()
         {
-            GameBase.SpriteBatch.DrawString(Font, Math.Floor(FpsCurrent) + " FPS", new Vector2(0, 0), Color.LightGreen);
+            GameBase.SpriteBatch.DrawString(Font, Math.Floor(FpsCurrent) + " FPS", new Vector2(0, GameBase.WindowSize.Y-20), Color.LightGreen);
         }
 
     }

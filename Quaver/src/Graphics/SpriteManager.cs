@@ -68,7 +68,7 @@ namespace Quaver.Graphics
         /// </summary>
         internal static void ClearDrawList()
         {
-            _drawList.RemoveRange(0,_drawList.Count-1);
+            _drawList.Clear();
         }
 
         /// <summary>

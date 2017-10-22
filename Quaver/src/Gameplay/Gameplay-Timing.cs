@@ -340,19 +340,19 @@ namespace Quaver.Gameplay
                         if (_svQueue[i].TargetTime < _timingQueue[lastIndex + 1].TargetTime - 0.01f)
                         {
                             _svQueue[i].TargetTime = _svQueue[i].TargetTime;
-                            _svQueue[i].SvMultiplier = Math.Min(_svQueue[i].SvMultiplier * _timingQueue[lastIndex].BPM / _averageBpm, 64f);
+                            _svQueue[i].SvMultiplier = Math.Min(_svQueue[i].SvMultiplier * _timingQueue[lastIndex].BPM / _averageBpm, 128f);
                         }
                         else
                         {
                             lastIndex++;
                             _svQueue[i].TargetTime = _svQueue[i].TargetTime;
-                            _svQueue[i].SvMultiplier = Math.Min(_svQueue[i].SvMultiplier * _timingQueue[lastIndex].BPM / _averageBpm, 64f);
+                            _svQueue[i].SvMultiplier = Math.Min(_svQueue[i].SvMultiplier * _timingQueue[lastIndex].BPM / _averageBpm, 128f);
                         }
                     }
                     else
                     {
                         _svQueue[i].TargetTime = _svQueue[i].TargetTime;
-                        _svQueue[i].SvMultiplier = Math.Min(_svQueue[i].SvMultiplier * _timingQueue[lastIndex].BPM / _averageBpm, 512f);
+                        _svQueue[i].SvMultiplier = Math.Min(_svQueue[i].SvMultiplier * _timingQueue[lastIndex].BPM / _averageBpm, 128f);
                     }
                 }
             }
