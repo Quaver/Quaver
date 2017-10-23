@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Audio;
 using Quaver.QuaFile;
+using Quaver.Utility;
 using SQLite;
 
 namespace Quaver.Beatmaps
@@ -139,6 +140,14 @@ namespace Quaver.Beatmaps
         internal void LoadAudio()
         {
             Song = new GameAudio(AudioPath);
+        }
+
+        /// <summary>
+        ///     Loads a beatmaps background file.
+        /// </summary>
+        internal void LoadBackground()
+        {
+            Background = ImageLoader.Load(System.IO.Path.GetDirectoryName(Path) + "/" + Background);
         }
 
         /// <summary>
