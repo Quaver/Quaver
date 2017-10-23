@@ -7,6 +7,7 @@ using Quaver.Beatmaps;
 using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Input;
+using Quaver.Logging;
 using Quaver.Main;
 using Quaver.QuaFile;
 using Quaver.Utility;
