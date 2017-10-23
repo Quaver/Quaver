@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Quaver.Config;
 using Quaver.Main;
 
 namespace Quaver.Gameplay
@@ -135,7 +136,7 @@ namespace Quaver.Gameplay
                     _actualSongTime = (GameBase.SelectedBeatmap.Song.GetAudioPosition() + (_actualSongTime + dt)) / 2f;
                 }
             }
-            _currentSongTime = _actualSongTime - _gameAudioOffset;
+            _currentSongTime = _actualSongTime - Configuration.GlobalOffset;
         }
 
         private void time_DestroyBars()
