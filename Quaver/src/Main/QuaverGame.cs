@@ -9,6 +9,7 @@ using Quaver.GameState;
 using Quaver.Gameplay;
 using Quaver.Graphics;
 using Quaver.Logging;
+using Quaver.Modifiers;
 using Quaver.Skins;
 using Quaver.Tests;
 using Quaver.Utility;
@@ -48,6 +49,13 @@ namespace Quaver.Main
             // Select a random beatmap if we do in fact have beatmaps.
             if (GameBase.Beatmaps.Count != 0)
                 GameBase.SelectRandomBeatmap();
+
+            // Add some mods
+            ModManager.AddMod(ModIdentifier.Speed15X);
+            Console.WriteLine(GameBase.CurrentGameModifiers.Count);
+
+            ModManager.AddMod(ModIdentifier.Speed15X);
+            Console.WriteLine(GameBase.CurrentGameModifiers.Count);
 
             // TODO: Add your initialization logic here
             base.Initialize();
