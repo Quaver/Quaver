@@ -69,7 +69,7 @@ namespace Quaver.Gameplay
             // Create playfield boundary & Update Rect.
             PlayfieldBoundary = new Boundary()
             {
-                Size = new Vector2(PlayfieldSize, GameBase.WindowSize.Y),
+                Size = new Vector2(PlayfieldSize, GameBase.Window.Height),
                 Alignment = Alignment.TopCenter
             };
 

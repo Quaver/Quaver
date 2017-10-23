@@ -82,8 +82,11 @@ namespace Quaver.Utility
             //Draw everything in the log tracker
             foreach (var current in _logs)
             {
-                GameBase.SpriteBatch.DrawString(Font, current.Value, new Vector2(0, i * 20), current.LogColor);
-                i++;
+                if (current.Value != null)
+                {
+                    GameBase.SpriteBatch.DrawString(Font, current.Value, new Vector2(0, i * 20), current.LogColor);
+                    i++;
+                }
             }
 
             //Draw anything in quicklog
