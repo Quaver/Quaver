@@ -65,7 +65,7 @@ namespace Quaver.Gameplay
         {
             // TODO: MOVE THE LOADING OF THE AUDIO, PARSING OF BEATMAPS, AND LOADING OF HIT OBJECTS TO A LOADING STATE. VERY IMPORTANT
             // Load up the selected beatmap's song, yo.
-            GameBase.SelectedBeatmap.Song = new GameAudio(GameBase.SelectedBeatmap.AudioPath);
+            GameBase.SelectedBeatmap.LoadAudio();
 
             // Parse the selected beatmap.
             Qua = new Qua(GameBase.SelectedBeatmap.Path);
