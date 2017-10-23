@@ -45,13 +45,18 @@ namespace Quaver.Modifiers
         public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.Speed75X };
 
         /// <summary>
+        ///     The speed alteration rate the game's clock will be set to.
+        /// </summary>
+        public float SpeedAlterationRate { get; set; } = 1.5f;
+
+        /// <summary>
         ///     All the mod logic should go here, setting unique variables. NEVER call this directly. Always use
         ///     ModManager.AddMod();
         /// </summary>
         public void InitializeMod()
         {
             // Set the GameClock (Audio Speed) to 1.5x here.
-            GameBase.GameClock = 1.5f;
+            GameBase.GameClock = SpeedAlterationRate;
         }
     }
 }
