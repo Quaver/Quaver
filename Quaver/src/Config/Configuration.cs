@@ -88,7 +88,7 @@ namespace Quaver.Config
         /// <summary>
         ///     The offset of the notes compared to the song start.
         /// </summary>
-        private static short _globalOffset;
+        private static sbyte _globalOffset;
 
         /// <summary>
         ///     Should Timing Bars be displayed during gameplay?
@@ -410,7 +410,7 @@ namespace Quaver.Config
             }
         }
 
-        internal static short GlobalOffset
+        internal static sbyte GlobalOffset
         {
             get => _globalOffset;
             set
@@ -629,7 +629,7 @@ namespace Quaver.Config
             _scrollSpeed = ConfigHelper.ReadPercentage(ScrollSpeed, data["ScrollSpeed"]);
             _scaleScrollSpeedWithBpm = ConfigHelper.ReadBool(ScaleScrollSpeedWithBpm, data["ScaleScrollSpeedWithBpm"]);
             _downScroll = ConfigHelper.ReadBool(DownScroll, data["DownScroll"]);
-            _globalOffset = ConfigHelper.ReadInt16(GlobalOffset, data["GlobalOffset"]);
+            _globalOffset = ConfigHelper.ReadSignedByte(GlobalOffset, data["GlobalOffset"]);
             _displayTimingBars = ConfigHelper.ReadBool(DisplayTimingBars, data["DisplayTimingBars"]);
             _leaderboardVisible = ConfigHelper.ReadBool(LeaderboardVisible, data["LeaderboardVisible"]);
             _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
