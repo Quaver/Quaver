@@ -27,6 +27,7 @@ namespace Quaver.Database
             watcher.Changed += OnDirectoryChange;
             watcher.Created += OnDirectoryChange;
             watcher.Deleted += OnDirectoryChange;
+            watcher.Renamed += OnDirectoryChange;
         }
 
         /// <summary>
@@ -37,6 +38,7 @@ namespace Quaver.Database
         /// <param name="e"></param>
         internal static void OnDirectoryChange(object source, FileSystemEventArgs e)
         {
+            Console.WriteLine($"[BEATMAP IMPORTER] Detected directory change at: {e.FullPath}");
             GameBase.ImportQueueReady = true;
         }
     }
