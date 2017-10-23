@@ -7,17 +7,17 @@ using Quaver.Main;
 
 namespace Quaver.Modifiers
 {
-    internal class Speed15X : IMod
+    internal class Speed : IMod
     {
         /// <summary>
         ///     The name of the mod.
         /// </summary>
-        public string Name { get; set; } = "Speed 1.5x";
+        public string Name { get; set; } = "Speed Modifier";
 
         /// <summary>
         ///     The identifier of the mod.
         /// </summary>
-        public ModIdentifier ModIdentifier { get; set; } = ModIdentifier.Speed15X;
+        public ModIdentifier ModIdentifier { get; set; } = ModIdentifier.Speed;
 
         /// <summary>
         ///     The type of mod as defined in the enum
@@ -27,7 +27,7 @@ namespace Quaver.Modifiers
         /// <summary>
         ///     The description of the Mod
         /// </summary>
-        public string Description { get; set; } = "Sets the song speed to 1.5x";
+        public string Description { get; set; } = "Sets the song's speed.";
 
         /// <summary>
         ///     Is the mod ranked?
@@ -42,12 +42,21 @@ namespace Quaver.Modifiers
         /// <summary>
         ///     The identifier of mods that are incompatible with this one.
         /// </summary>
-        public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.Speed75X };
+        public ModIdentifier[] IncompatibleMods { get; set; } = {  };
 
         /// <summary>
         ///     The speed alteration rate the game's clock will be set to.
         /// </summary>
-        public float SpeedAlterationRate { get; set; } = 1.5f;
+        private float SpeedAlterationRate { get; set; }
+
+        /// <summary>
+        ///     Sets the speed alteration rate. This is so we can have only one mod dedicated to speed.
+        /// </summary>
+        /// <param name="speedRate"></param>
+        public Speed(float speedRate)
+        {
+            SpeedAlterationRate = speedRate;
+        }
 
         /// <summary>
         ///     All the mod logic should go here, setting unique variables. NEVER call this directly. Always use

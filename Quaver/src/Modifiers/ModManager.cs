@@ -14,19 +14,18 @@ namespace Quaver.Modifiers
     {
         /// <summary>
         ///     Adds a mod to our list, getting rid of any incompatible mods that are currently in there.
+        ///     Also, specifying a speed, if need-be.
         /// </summary>
-        public static void AddMod(ModIdentifier modIdentifier)
+        public static void AddMod(ModIdentifier modIdentifier, float speedRate = 1.0f)
         {
             IMod mod;
 
             // Set the newMod based on the ModType that is coming in
             switch (modIdentifier)
             {
-                case ModIdentifier.Speed15X:
-                    mod = new Speed15X();
-                    break;
-                case ModIdentifier.Speed75X:
-                    mod = new Speed75X();
+                case ModIdentifier.Speed:
+                    mod = new Speed(speedRate);
+                    GameBase.CurrentGameModifiers.RemoveAll(x => x.ModIdentifier == ModIdentifier.Speed);
                     break;
                 case ModIdentifier.NoSliderVelocity:
                     mod = new NoSliderVelocities();
@@ -70,7 +69,7 @@ namespace Quaver.Modifiers
                 GameBase.ScoreMultiplier -= removedMod.ScoreMultiplierAddition;
 
                 // Remove the mod's speed modification
-                if (removedMod.SpeedAlterationRate != 1.0f) GameBase.GameClock = 1.0f;
+                if (modIdentifier == ModIdentifier.Speed) GameBase.GameClock = 1.0f;
 
                 // Remove the Mod
                 GameBase.CurrentGameModifiers.Remove(removedMod);

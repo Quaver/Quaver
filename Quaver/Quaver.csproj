@@ -113,8 +113,7 @@
     <Compile Include="src\Modifiers\ModManager.cs" />
     <Compile Include="src\Modifiers\ModType.cs" />
     <Compile Include="src\Modifiers\NoSliderVelocities.cs" />
-    <Compile Include="src\Modifiers\Speed75X.cs" />
-    <Compile Include="src\Modifiers\Speed15X.cs" />
+    <Compile Include="src\Modifiers\Speed.cs" />
     <Compile Include="src\Notifications\Notification.cs" />
     <Compile Include="src\Logging\LogObject.cs" />
     <Compile Include="src\Logging\LogTracker.cs" />
