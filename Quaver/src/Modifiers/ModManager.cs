@@ -25,6 +25,9 @@ namespace Quaver.Modifiers
                 case ModIdentifier.Speed15X:
                     mod = new Speed15X();
                     break;
+                case ModIdentifier.Speed75X:
+                    mod = new Speed75X();
+                    break;
                 default:
                     return;
             }
@@ -32,7 +35,7 @@ namespace Quaver.Modifiers
             // First check to see is already activated there.
             if (GameBase.CurrentGameModifiers.Exists(x => x.ModIdentifier == mod.ModIdentifier))
             {
-                Console.WriteLine($"Error: Game Modifier {mod.ModIdentifier} has already been activated.");
+                Console.WriteLine($"[MOD MANAGER] Error: Game Modifier {mod.ModIdentifier} has already been activated.");
                 return;
             }
 
@@ -44,7 +47,9 @@ namespace Quaver.Modifiers
 
             // Initialize the mod and set its score multiplier.
             GameBase.ScoreMultiplier += mod.ScoreMultiplierAddition;
-            mod.InitializeMod();         
+            mod.InitializeMod();  
+            
+            Console.WriteLine($"[MOD MANAGER] Added Mod: {mod.ModIdentifier} and removed all incompatible mods.");
         }
     }
 }

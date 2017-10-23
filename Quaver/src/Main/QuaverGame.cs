@@ -57,6 +57,9 @@ namespace Quaver.Main
             ModManager.AddMod(ModIdentifier.Speed15X);
             Console.WriteLine(GameBase.CurrentGameModifiers.Count);
 
+            ModManager.AddMod(ModIdentifier.Speed75X);
+            Console.WriteLine(GameBase.CurrentGameModifiers.Count);
+
             // TODO: Add your initialization logic here
             base.Initialize();
         }
