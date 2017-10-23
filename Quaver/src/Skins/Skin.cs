@@ -156,7 +156,7 @@ namespace Quaver.Skins
             // Load all skin elements
             LoadSkinElements(skinDirectory);
 
-            Console.WriteLine($"[SKIN LOADER] Skin successfully loaded!\n-----\n" +
+            /*Console.WriteLine($"[SKIN LOADER] Skin successfully loaded!\n-----\n" +
                               $"Name: {Name}\n" +
                               $"Author: {Author}\n" +
                               $"Version: {Version}\n" +
@@ -200,7 +200,7 @@ namespace Quaver.Skins
                               $"JudgeGood: {JudgeGood.Bounds}\n" +
                               $"JudgeGreat: {JudgeGreat.Bounds}\n" +
                               $"JudgePerfect: {JudgePerfect.Bounds}\n" +
-                              $"JudgeMarv: {JudgeMarv.Bounds}\n");
+                              $"JudgeMarv: {JudgeMarv.Bounds}\n");*/
         }
 
         /// <summary>
