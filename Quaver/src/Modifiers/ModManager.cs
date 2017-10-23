@@ -43,7 +43,8 @@ namespace Quaver.Modifiers
             }
 
             // Check if any incompatible mods are already in our current game modifiers, and remove them if that is the case.
-            GameBase.CurrentGameModifiers.RemoveAll(x => x.IncompatibleMods.Contains(mod.ModIdentifier));
+            var incompatibleMods = GameBase.CurrentGameModifiers.FindAll(x => x.IncompatibleMods.Contains(mod.ModIdentifier));
+            incompatibleMods.ForEach(x => RemoveMod(x.ModIdentifier));
 
             // Add The Mod
             GameBase.CurrentGameModifiers.Add(mod);
