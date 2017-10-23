@@ -7,6 +7,7 @@ using Quaver.Beatmaps;
 using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Input;
+using Quaver.Main;
 using Quaver.QuaFile;
 using Quaver.Utility;
 
@@ -23,11 +24,6 @@ namespace Quaver.Gameplay
         ///     The input manager for this game state.
         /// </summary>
         private GameplayInputManager InputManager { get; } = new GameplayInputManager();
-
-        /// <summary>
-        ///     The Audio, used for testing purposes (We'll use this on the Beatmap class objecvt itself later.)
-        /// </summary>
-        private GameAudio TestSong { get; set; }
 
         /// <summary>
         ///     The Qua object - Parsed .qua file.
@@ -62,15 +58,15 @@ namespace Quaver.Gameplay
         /// </summary>
         public void Initialize()
         {
-            //Load Qua + Audio
+            // TODO: MOVE THE LOADING OF THE AUDIO, PARSING OF BEATMAPS, AND LOADING OF HIT OBJECTS TO A LOADING STATE. VERY IMPORTANT
+            // Load up the selected beatmap's song, yo.
+            GameBase.SelectedBeatmap.Song = new GameAudio(GameBase.SelectedBeatmap.AudioPath);
+
+            // Parse the selected beatmap.
+            Qua = new Qua(GameBase.SelectedBeatmap.Path);
+
             Console.WriteLine("[STATE_PLAYSCREEN]: Initialized Gameplay State.");
-
-            // Set .qua and audio - The qua should be parsed from the Beatmap class object path, and the song will be auto loaded.
-            // but this is ok for testing purposes.
-            Qua = new Qua(Path.GetFullPath(@"..\..\..\Test\Beatmaps\2. Camellia - Backbeat Maniac\Camellia - Backbeat Maniac () [Rewind VIP].qua"));
-            TestSong = new GameAudio(Path.GetFullPath(@"..\..\..\Test\Beatmaps\2. Camellia - Backbeat Maniac\audio.ogg"));
-
-            Console.WriteLine("Loaded Beatmap: {0} - {1}", Qua.Artist, Qua.Title);
+            Console.WriteLine("Loaded Beatmap: {0} - {1}", GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title);
 
             //Create loggers
             LogTracker.AddLogger("DeltaTime",Color.LawnGreen);
