@@ -138,6 +138,24 @@ namespace Quaver.Config
         }
 
         /// <summary>
+        ///     Reads a signed byte from the config file
+        /// </summary>
+        /// <param name="defaultVal"></param>
+        /// <param name="newVal"></param>
+        /// <returns></returns>
+        internal static sbyte ReadSignedByte(sbyte defaultVal, string newVal)
+        {
+            try
+            {
+                return sbyte.Parse(newVal);
+            }
+            catch (Exception e)
+            {
+                return defaultVal;
+            }   
+        }
+
+        /// <summary>
         ///     Reads the skin value from the config file.
         /// </summary>
         /// <param name="defaultSkin"></param>
