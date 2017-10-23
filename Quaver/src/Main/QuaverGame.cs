@@ -52,11 +52,14 @@ namespace Quaver.Main
 
             // Add some mods
             ModManager.AddMod(ModIdentifier.Speed75X);
-            ModManager.RemoveMod(ModIdentifier.Speed15X);
-
+            ModManager.RemoveMod(ModIdentifier.Speed15X);    
             ModManager.AddMod(ModIdentifier.Speed75X);
+
+            ModManager.RemoveAllMods();
+
             ModManager.AddMod(ModIdentifier.NoSliderVelocity);
             ModManager.RemoveMod(ModIdentifier.NoSliderVelocity);
+            ModManager.AddMod(ModIdentifier.Speed15X);
             // ModManager.RemoveMod(ModIdentifier.Speed75X);
 
             // TODO: Add your initialization logic here
