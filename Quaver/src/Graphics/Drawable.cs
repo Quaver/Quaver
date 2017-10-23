@@ -205,8 +205,8 @@ namespace Quaver.Graphics
             }
             else
             {
-                _scaleSize.X = GameBase.WindowSize.X * _scalePercent.X;
-                _scaleSize.Y = GameBase.WindowSize.Y * _scalePercent.Y;
+                _scaleSize.X = GameBase.Window.Width * _scalePercent.X;
+                _scaleSize.Y = GameBase.Window.Height * _scalePercent.Y;
             }
             _absoluteSize.X = _localSize.X + _scaleSize.X;
             _absoluteSize.Y = _localSize.Y + _scaleSize.Y;
@@ -238,8 +238,8 @@ namespace Quaver.Graphics
                 //sets the window as the sprite's boundary
                 var newBoundary = new Rectangle()
                 {
-                    Width = (int)GameBase.WindowSize.X,
-                    Height = (int)GameBase.WindowSize.Y
+                    Width = (int)GameBase.Window.Width,
+                    Height = (int)GameBase.Window.Height
                 };
 
                 _globalRect = Util.DrawRect(Alignment, _localRect, newBoundary);
