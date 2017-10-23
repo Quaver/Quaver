@@ -91,5 +91,17 @@ namespace Quaver.Modifiers
         {
             return GameBase.CurrentGameModifiers.Exists(x => x.ModIdentifier == modIdentifier);
         }
+
+        /// <summary>
+        ///     Removes all items from our list of mods
+        /// </summary>
+        public static void RemoveAllMods()
+        {
+            GameBase.CurrentGameModifiers.Clear();
+
+            // Reset all GameBase variables to its defaults
+            GameBase.ScoreMultiplier = 1.0f;
+            GameBase.GameClock = 1.0f;
+        }
     }
 }
