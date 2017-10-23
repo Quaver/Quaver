@@ -7,27 +7,27 @@ using Quaver.Main;
 
 namespace Quaver.Modifiers
 {
-    internal class Speed15X : IMod
+    internal class Speed75X : IMod
     {
         /// <summary>
         ///     The name of the mod.
         /// </summary>
-        public string Name { get; set; } = "Speed 1.5x";
+        public string Name { get; set; } = "Speed 0.75x";
 
         /// <summary>
         ///     The identifier of the mod.
         /// </summary>
-        public ModIdentifier ModIdentifier { get; set; } = ModIdentifier.Speed15X;
+        public ModIdentifier ModIdentifier { get; set; } = ModIdentifier.Speed75X;
 
         /// <summary>
         ///     The type of mod as defined in the enum
         /// </summary>
-        public ModType Type { get; set; } = ModType.DifficultyIncrease;
+        public ModType Type { get; set; } = ModType.DifficultyDecrease;
 
         /// <summary>
         ///     The description of the Mod
         /// </summary>
-        public string Description { get; set; } = "Sets the song speed to 1.5x";
+        public string Description { get; set; } = "Sets the song speed to 0.75x";
 
         /// <summary>
         ///     Is the mod ranked?
@@ -42,7 +42,7 @@ namespace Quaver.Modifiers
         /// <summary>
         ///     The identifier of mods that are incompatible with this one.
         /// </summary>
-        public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.Speed75X };
+        public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.Speed15X };
 
         /// <summary>
         ///     All the mod logic should go here, setting unique variables. NEVER call this directly. Always use
@@ -50,8 +50,8 @@ namespace Quaver.Modifiers
         /// </summary>
         public void InitializeMod()
         {
-            // Set the GameClock (Audio Speed) to 1.5x here.
-            GameBase.GameClock = 1.5f;
+            // Set the GameClock (Audio Speed) to 0.75x here.
+            GameBase.GameClock = 0.75f;
         }
     }
 }
