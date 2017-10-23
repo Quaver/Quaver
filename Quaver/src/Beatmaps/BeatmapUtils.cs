@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using ManagedBass;
+using Quaver.Main;
 
 namespace Quaver.Beatmaps
 {
@@ -22,7 +23,7 @@ namespace Quaver.Beatmaps
             {
                 using (var stream = File.OpenRead(path))
                 {
-                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", string.Empty).ToLower();
+                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", String.Empty).ToLower();
                 }
             }
         }
@@ -98,7 +99,7 @@ namespace Quaver.Beatmaps
                     var queryNum = 0;
                     try
                     {
-                        queryNum = int.Parse(query);
+                        queryNum = Int32.Parse(query);
                     }
                     catch (Exception e)
                     {
@@ -175,6 +176,50 @@ namespace Quaver.Beatmaps
 
             Console.WriteLine($"Found Mapsets: {foundMaps.Values.Count}");
             return foundMaps;
+        }
+
+        /// <summary>
+        ///     Used to select a random beatmap from our current list of visible beatmaps.
+        /// </summary>
+        public static void SelectRandomBeatmap()
+        {
+            if (GameBase.Beatmaps.Count == 0)
+                return;
+
+            // Find the number of total beatmaps
+            var totalMaps = 0;
+
+            foreach (KeyValuePair<string, List<Beatmap>> mapset in GameBase.Beatmaps)
+            {
+                totalMaps += mapset.Value.Count;
+            }
+
+            var rand = new Random();
+            var randomBeatmap = rand.Next(0, totalMaps);
+
+            // Find the totalMaps'th beatmap
+            var onMap = 0;
+            foreach (KeyValuePair<string, List<Beatmap>> mapset in GameBase.Beatmaps)
+            {
+                bool foundBeatmap = false;
+
+                foreach (var beatmap in mapset.Value)
+                {
+                    if (onMap == randomBeatmap)
+                    {
+                        GameBase.SelectedBeatmap = beatmap;
+                        foundBeatmap = true;
+                        break;
+                    }
+
+                    onMap++;
+                }
+
+                if (foundBeatmap)
+                    break;
+            }
+
+            Console.WriteLine($"[GAME BASE] Random Beatmap: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
         }
     }
 }
