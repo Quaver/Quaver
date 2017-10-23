@@ -71,6 +71,11 @@ namespace Quaver.Main
         public static Rectangle Window { get; set; } = new Rectangle(0, 0, 800, 480); //TODO: Automatically set this rectangle as windoow size
 
         /// <summary>
+        ///     The game's clock. Essentially it controls which speed songs are played at.
+        /// </summary>
+        public static float GameClock { get; set; } = 1.0f;
+
+        /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.
         /// </summary>
         public static async Task LoadAndSetBeatmaps()

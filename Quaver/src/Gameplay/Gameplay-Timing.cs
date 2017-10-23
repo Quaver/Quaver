@@ -131,7 +131,7 @@ namespace Quaver.Gameplay
                     if (!_songIsPlaying)
                     {
                         _songIsPlaying = true;
-                        GameBase.SelectedBeatmap.Song.Play();
+                        GameBase.SelectedBeatmap.Song.Play(0, GameBase.GameClock);
                     }
                     _actualSongTime = (GameBase.SelectedBeatmap.Song.GetAudioPosition() + (_actualSongTime + dt)) / 2f;
                 }
