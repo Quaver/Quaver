@@ -42,9 +42,6 @@ namespace Quaver
 
             Task.WaitAll(loadGame);
 
-            // Start watching for beatmap directory changes.
-            BeatmapImporter.WatchForChanges();
-
             // Run all test methods
             Task.Run(() => RunTestMethods());
 

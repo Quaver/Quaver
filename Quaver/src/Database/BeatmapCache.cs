@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Quaver.Beatmaps;
 using Quaver.Config;
+using Quaver.Main;
 using Quaver.QuaFile;
 using SQLite;
 
