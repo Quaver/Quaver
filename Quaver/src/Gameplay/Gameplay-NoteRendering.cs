@@ -14,6 +14,7 @@ using Quaver.Utility;
 using Quaver.Graphics;
 using Quaver.Logging;
 using Quaver.Main;
+using Quaver.Modifiers;
 
 namespace Quaver.Gameplay
 {
@@ -135,7 +136,7 @@ namespace Quaver.Gameplay
         private ulong SvOffsetFromTime(float timeToOffset, int svIndex)
         {
             //If NoSV mod is enabled, return ms offset, else return sv offset calculation
-            return (ModNoSv) ? (ulong) timeToOffset : _svCalc[svIndex] + (ulong)(15000 + ((timeToOffset - _svQueue[svIndex].TargetTime) * _svQueue[svIndex].SvMultiplier)) - 5000;
+            return (ModManager.Activated(ModIdentifier.NoSliderVelocity)) ? (ulong) timeToOffset : _svCalc[svIndex] + (ulong)(15000 + ((timeToOffset - _svQueue[svIndex].TargetTime) * _svQueue[svIndex].SvMultiplier)) - 5000;
         }
 
         private float PosFromOffset(ulong offsetToPos)
