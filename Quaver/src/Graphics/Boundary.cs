@@ -21,7 +21,8 @@ namespace Quaver.Graphics
         // Constructor
         public Boundary()
         {
-            Size = GameBase.WindowSize;
+            SizeX = GameBase.Window.Width;
+            SizeY = GameBase.Window.Height;
         }
 
         /// <summary>
