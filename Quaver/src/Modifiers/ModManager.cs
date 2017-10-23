@@ -51,5 +51,32 @@ namespace Quaver.Modifiers
             
             Console.WriteLine($"[MOD MANAGER] Added Mod: {mod.ModIdentifier} and removed all incompatible mods.");
         }
+
+        /// <summary>
+        ///     Removes a mod from our GameBase
+        /// </summary>
+        public static void RemoveMod(ModIdentifier modIdentifier)
+        {
+            try
+            {
+                // Try to find the removed mod in the list
+                var removedMod = GameBase.CurrentGameModifiers.Find(x => x.ModIdentifier == modIdentifier);
+
+                // Remove The Mod's score multiplier
+                GameBase.ScoreMultiplier -= removedMod.ScoreMultiplierAddition;
+
+                // Remove the mod's speed modification
+                if (removedMod.SpeedAlterationRate != 1.0f) GameBase.GameClock = 1.0f;
+
+                // Remove the Mod
+                GameBase.CurrentGameModifiers.Remove(removedMod);
+                Console.WriteLine($"[MOD MANAGER] Removed {modIdentifier} from the current game modifiers.");
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("[MOD MANAGER] Error: Trying to remove mod that isn't activated. Moving On!");
+            }
+        }
     }
 }
