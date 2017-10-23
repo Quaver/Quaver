@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.GameState;
 using Quaver.Gameplay;
 using Quaver.Graphics;
+using Quaver.Logging;
 using Quaver.Skins;
 using Quaver.Tests;
 using Quaver.Utility;

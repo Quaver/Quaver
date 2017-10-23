@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.GameState;
 using Quaver.Utility;
 using Quaver.Graphics;
+using Quaver.Logging;
 using Quaver.Main;
 
 namespace Quaver.Gameplay

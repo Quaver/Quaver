@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Main;
 
-namespace Quaver.Utility
+namespace Quaver.Logging
 {
     /// <summary>
     /// This class will be used to track variables and any necessary logging on screen.
