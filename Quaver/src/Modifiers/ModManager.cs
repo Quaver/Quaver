@@ -14,7 +14,7 @@ namespace Quaver.Modifiers
     {
         /// <summary>
         ///     Adds a mod to our list, getting rid of any incompatible mods that are currently in there.
-        ///     Also, specifying a speed, if need-be.
+        ///     Also, specifying a speed, if need-be. That is only "required" if passing in ModIdentifier.Speed
         /// </summary>
         public static void AddMod(ModIdentifier modIdentifier, float speedRate = 1.0f)
         {
@@ -24,8 +24,11 @@ namespace Quaver.Modifiers
             switch (modIdentifier)
             {
                 case ModIdentifier.Speed:
+                    // Throw an exception if the speedRate isn't specified, but yet someone is trying to add the mod.
+                    if (speedRate == 1.0f)
+                        throw new ArgumentException("speedRate must be specified if you are adding ModIdentifier.Speed");
+                    
                     mod = new Speed(speedRate);
-                    GameBase.CurrentGameModifiers.RemoveAll(x => x.ModIdentifier == ModIdentifier.Speed);
                     break;
                 case ModIdentifier.NoSliderVelocity:
                     mod = new NoSliderVelocities();
