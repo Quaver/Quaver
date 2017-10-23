@@ -51,14 +51,11 @@ namespace Quaver.Main
                 GameBase.SelectRandomBeatmap();
 
             // Add some mods
-            ModManager.AddMod(ModIdentifier.Speed15X);
-            Console.WriteLine(GameBase.CurrentGameModifiers.Count);
-
-            ModManager.AddMod(ModIdentifier.Speed15X);
-            Console.WriteLine(GameBase.CurrentGameModifiers.Count);
+            ModManager.AddMod(ModIdentifier.Speed75X);
+            ModManager.RemoveMod(ModIdentifier.Speed15X);
 
             ModManager.AddMod(ModIdentifier.Speed75X);
-            Console.WriteLine(GameBase.CurrentGameModifiers.Count);
+            // ModManager.RemoveMod(ModIdentifier.Speed75X);
 
             // TODO: Add your initialization logic here
             base.Initialize();
