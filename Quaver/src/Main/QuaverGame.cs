@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Beatmaps;
 using Quaver.Database;
 using Quaver.GameState;
 using Quaver.Gameplay;
@@ -52,7 +53,7 @@ namespace Quaver.Main
         {
             // Select a random beatmap if we do in fact have beatmaps.
             if (GameBase.Beatmaps.Count != 0)
-                GameBase.SelectRandomBeatmap();
+                BeatmapUtils.SelectRandomBeatmap();
 
             // Add some mods
             ModManager.AddMod(ModIdentifier.Speed, 1.5f);
