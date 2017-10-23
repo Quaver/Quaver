@@ -7,6 +7,7 @@ using Quaver.Beatmaps;
 using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Input;
+using Quaver.Main;
 using Quaver.QuaFile;
 using Quaver.Utility;
 
@@ -25,14 +26,9 @@ namespace Quaver.Gameplay
         private GameplayInputManager InputManager { get; } = new GameplayInputManager();
 
         /// <summary>
-        ///     The Audio, used for testing purposes TODO: reference beatmap from external class
-        /// </summary>
-        private GameAudio TestSong { get; set; }
-
-        /// <summary>
         ///     The Qua object - Parsed .qua file.
         /// </summary>
-        private Qua Qua{ get; set; }
+        private Qua Qua { get; set; }
 
         /// <summary>
         ///     The scroll speed
@@ -50,7 +46,7 @@ namespace Quaver.Gameplay
         private bool ModNoSv { get; }
 
         /// <summary>
-        ///     Other random mods that were put here. TODO: use mod helper class later
+        ///     Other random mods that were put here.
         /// </summary>
         private bool ModPull { get; }
         private bool ModSplit { get; }
@@ -62,18 +58,18 @@ namespace Quaver.Gameplay
         /// </summary>
         public void Initialize()
         {
-            //Load Qua + Audio
+            // TODO: MOVE THE LOADING OF THE AUDIO, PARSING OF BEATMAPS, AND LOADING OF HIT OBJECTS TO A LOADING STATE. VERY IMPORTANT
+            // Load up the selected beatmap's song, yo.
+            GameBase.SelectedBeatmap.Song = new GameAudio(GameBase.SelectedBeatmap.AudioPath);
+
+            // Parse the selected beatmap.
+            Qua = new Qua(GameBase.SelectedBeatmap.Path);
+
             Console.WriteLine("[STATE_PLAYSCREEN]: Initialized Gameplay State.");
-
-            // Set .qua and audio - The qua should be parsed from the Beatmap class object path, and the song will be auto loaded.
-            // but this is ok for testing purposes.
-            Qua = new Qua(Path.GetFullPath(@"..\..\..\Test\Beatmaps\26.NANAIRO\test.qua"));
-            TestSong = new GameAudio(Path.GetFullPath(@"..\..\..\Test\Beatmaps\26.NANAIRO\audio.ogg"));
-
-            Console.WriteLine("Loaded Beatmap: {0} - {1}", Qua.Artist, Qua.Title);
+            Console.WriteLine("Loaded Beatmap: {0} - {1}", GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title);
 
             //Create loggers
-            LogTracker.AddLogger("DeltaTime",Color.LawnGreen);
+            LogTracker.AddLogger("DeltaTime", Color.LawnGreen);
             LogTracker.AddLogger("SongTime", Color.White);
             LogTracker.AddLogger("SongPos", Color.White);
             LogTracker.AddLogger("HitObjects", Color.Wheat);
@@ -101,7 +97,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public  void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             // Get the current game time in milliseconds.
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -110,7 +106,7 @@ namespace Quaver.Gameplay
             SetCurrentSongTime(dt);
 
             // Update the playfield
-            Playfield.UpdatePlayfield(dt);;
+            Playfield.UpdatePlayfield(dt); ;
 
             // Update the Notes
             UpdateNotes(dt);
