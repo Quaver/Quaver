@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
 using Quaver.GameState;
 using Quaver.Config;
+using Quaver.Database;
 using Quaver.Gameplay;
+using Quaver.Main;
 
 namespace Quaver.Input
 {
@@ -44,7 +46,20 @@ namespace Quaver.Input
             // Update Lane Keys Receptor
             var updatedReceptor = false;
             for (var i = 0; i < LaneKeys.Count; i++)
-                updatedReceptor = (KeyboardState.IsKeyDown(LaneKeys[i])) ? Playfield.UpdateReceptor(i, true) : Playfield.UpdateReceptor(i, false);              
+                updatedReceptor = (KeyboardState.IsKeyDown(LaneKeys[i])) ? Playfield.UpdateReceptor(i, true) : Playfield.UpdateReceptor(i, false);   
+            
+            // TODO: This is a beatmap import and sync test, eventually add this to its own game state
+            if (KeyboardState.IsKeyDown(Keys.F5) && GameBase.ImportQueueReady)
+            {
+                GameBase.ImportQueueReady = false;
+
+                // Asynchronously load and set the GameBase beatmaps and visible ones.
+                Task.Run(async () =>
+                {
+                    await GameBase.LoadAndSetBeatmaps();
+                    GameBase.VisibleBeatmaps = GameBase.Beatmaps;
+                });
+            }
         }
     }
 }

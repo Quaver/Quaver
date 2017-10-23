@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Database;
 using Quaver.GameState;
 using Quaver.Gameplay;
 using Quaver.Graphics;
@@ -36,6 +37,9 @@ namespace Quaver.Main
             // Use Content in Resources folder (Don't touch this please)
             var resxContent = new ResourceContentManager(Services, Resource1.ResourceManager);
             Content = resxContent;
+
+            // Start watching for directory changes.
+            BeatmapImporter.WatchForChanges();
         }
 
         /// <summary>
