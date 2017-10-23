@@ -22,7 +22,7 @@ namespace Quaver.Modifiers
         /// <summary>
         ///     The type of mod as defined in the enum
         /// </summary>
-        public ModType Type { get; set; } = ModType.DifficultyIncrease;
+        public ModType Type { get; set; } = ModType.Special;
 
         /// <summary>
         ///     The description of the Mod
