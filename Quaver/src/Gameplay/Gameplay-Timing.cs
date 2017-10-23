@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Quaver.Main;
 
 namespace Quaver.Gameplay
 {
@@ -35,7 +36,7 @@ namespace Quaver.Gameplay
         internal void InitializeTiming()
         {
             //TODO: Timing Initializer
-            _gameAudioLength = TestSong.GetAudioLength();
+            _gameAudioLength = GameBase.SelectedBeatmap.Song.GetAudioLength();
             _songEndOffset = 0;
             _songIsPlaying = false;
 
@@ -129,9 +130,9 @@ namespace Quaver.Gameplay
                     if (!_songIsPlaying)
                     {
                         _songIsPlaying = true;
-                        TestSong.Play();
+                        GameBase.SelectedBeatmap.Song.Play();
                     }
-                    _actualSongTime = (TestSong.GetAudioPosition() + (_actualSongTime + dt)) / 2f;
+                    _actualSongTime = (GameBase.SelectedBeatmap.Song.GetAudioPosition() + (_actualSongTime + dt)) / 2f;
                 }
             }
             _currentSongTime = _actualSongTime - _gameAudioOffset;
