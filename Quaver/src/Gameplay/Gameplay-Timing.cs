@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Quaver.Config;
 using Quaver.Main;
+using Quaver.Modifiers;
 
 namespace Quaver.Gameplay
 {
@@ -78,7 +79,7 @@ namespace Quaver.Gameplay
             CalculateAverageBpm();
 
             //Create SVs
-            if (!ModNoSv && _svQueue.Count > 1)
+            if (ModManager.Activated(ModIdentifier.NoSliderVelocity) == false && _svQueue.Count > 1)
             {
                 ConvertTPtoSV();
                 NormalizeSVs();
