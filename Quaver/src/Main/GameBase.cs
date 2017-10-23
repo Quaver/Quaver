@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Quaver.Config;
+using Quaver.Modifiers;
 
 namespace Quaver.Main
 {
@@ -74,6 +75,17 @@ namespace Quaver.Main
         ///     The game's clock. Essentially it controls which speed songs are played at.
         /// </summary>
         public static float GameClock { get; set; } = 1.0f;
+
+        /// <summary>
+        ///     The score multiplier for the game. Controls how many points the game score will be 
+        ///     multiplied by.
+        /// </summary>
+        public static float ScoreMultiplier { get; set; } = 1.0f;
+
+        /// <summary>
+        ///     A list of all the current game modifiers that are activated.
+        /// </summary>
+        public static List<IMod> CurrentGameModifiers { get; set; } = new List<IMod>();
 
         /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.
