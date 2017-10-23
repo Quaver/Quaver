@@ -36,10 +36,6 @@ namespace Quaver
                 // The visible beatmaps in song select should be every single mapset at the start of the game.
                 GameBase.VisibleBeatmaps = GameBase.Beatmaps;
 
-                // Select a random beatmap if we do in fact have beatmaps.
-                if (GameBase.Beatmaps.Count != 0)
-                    GameBase.SelectRandomBeatmap();
-
                 // Test Search
                 //GameBase.VisibleBeatmaps = BeatmapUtils.SearchBeatmaps(GameBase.Beatmaps, "Camellia");
             });
