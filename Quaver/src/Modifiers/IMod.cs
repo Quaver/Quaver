@@ -44,12 +44,6 @@ namespace Quaver.Modifiers
         ModIdentifier[] IncompatibleMods { get; set; }
 
         /// <summary>
-        ///     The speed aleration rate the game will be set to.
-        ///     If the mod doesnt require a speed alteration, it should be set to 1.0f;
-        /// </summary>
-        float SpeedAlterationRate { get; set; }
-
-        /// <summary>
         ///     All the mod logic should go here.
         /// </summary>
         void InitializeMod();
