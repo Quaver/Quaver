@@ -71,7 +71,7 @@ namespace Quaver.Gameplay
             Qua = new Qua(GameBase.SelectedBeatmap.Path);
 
             Console.WriteLine($"[GAMEPLAY STATE] Initialized Gameplay State with Mods: { String.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ModIdentifier)) }");
-            Console.WriteLine("Loaded Beatmap: {0} - {1}", GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title);
+            Console.WriteLine($"Loaded Beatmap: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
 
             //Create loggers
             LogTracker.AddLogger("DeltaTime", Color.LawnGreen);
