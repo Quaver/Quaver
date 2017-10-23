@@ -28,6 +28,9 @@ namespace Quaver.Modifiers
                 case ModIdentifier.Speed75X:
                     mod = new Speed75X();
                     break;
+                case ModIdentifier.NoSliderVelocity:
+                    mod = new NoSliderVelocities();
+                    break;
                 default:
                     return;
             }
@@ -77,6 +80,16 @@ namespace Quaver.Modifiers
             {
                 Console.WriteLine("[MOD MANAGER] Error: Trying to remove mod that isn't activated. Moving On!");
             }
+        }
+
+        /// <summary>
+        ///     Checks if a mod is currently activated.
+        /// </summary>
+        /// <param name="modIdentifier"></param>
+        /// <returns></returns>
+        public static bool Activated(ModIdentifier modIdentifier)
+        {
+            return GameBase.CurrentGameModifiers.Exists(x => x.ModIdentifier == modIdentifier);
         }
     }
 }
