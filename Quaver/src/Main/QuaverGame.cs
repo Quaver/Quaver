@@ -45,6 +45,8 @@ namespace Quaver.Main
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            GameBase.SelectRandomBeatmap();
+
             base.Initialize();
         }
 
