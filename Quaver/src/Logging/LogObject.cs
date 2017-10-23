@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
-namespace Quaver.Utility
+namespace Quaver.Logging
 {
     class LogObject
     {
