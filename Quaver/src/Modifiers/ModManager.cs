@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Quaver.Main;
+
+namespace Quaver.Modifiers
+{
+    /// <summary>
+    ///     Entire class that controls the addition and removal of game mods.
+    /// </summary>
+    internal class ModManager
+    {
+        /// <summary>
+        ///     Adds a mod to our list, getting rid of any incompatible mods that are currently in there.
+        /// </summary>
+        public static void AddMod(ModIdentifier modIdentifier)
+        {
+            IMod mod;
+
+            // Set the newMod based on the ModType that is coming in
+            switch (modIdentifier)
+            {
+                case ModIdentifier.Speed15X:
+                    mod = new Speed15X();
+                    break;
+                default:
+                    return;
+            }
+
+            // First check to see is already activated there.
+            if (GameBase.CurrentGameModifiers.Exists(x => x.ModIdentifier == mod.ModIdentifier))
+            {
+                Console.WriteLine($"Error: Game Modifier {mod.ModIdentifier} has already been activated.");
+                return;
+            }
+
+            // Check if any incompatible mods are already in our current game modifiers, and remove them if that is the case.
+            GameBase.CurrentGameModifiers.RemoveAll(x => x.IncompatibleMods.Contains(mod.ModIdentifier));
+
+            // Add The Mod
+            GameBase.CurrentGameModifiers.Add(mod);
+
+            // Initialize the mod and set its score multiplier.
+            GameBase.ScoreMultiplier += mod.ScoreMultiplierAddition;
+            mod.InitializeMod();         
+        }
+    }
+}
