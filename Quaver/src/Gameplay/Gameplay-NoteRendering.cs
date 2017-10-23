@@ -20,7 +20,7 @@ namespace Quaver.Gameplay
     {
         //HitObjects
         private List<HitObject> _hitObjectQueue;
-        private const int HitObjectPoolSize = 200;
+        private const int HitObjectPoolSize = 256;
 
         //Track
         private ulong[] _svCalc; //Stores SV position data for efficiency
@@ -95,6 +95,7 @@ namespace Quaver.Gameplay
                 _hitObjectQueue.Add(newObject);
             }
             Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: Done Loading Hitobjects.");
+            LogTracker.AddLogger("noteRemoved",Color.Red);
         }
 
         /// <summary>
@@ -107,10 +108,11 @@ namespace Quaver.Gameplay
             GetCurrentTrackPosition();
 
             int i;
-            for (i=0; i< _hitObjectQueue.Count && i < HitObjectPoolSize; i++)
+            for (i=0; i < _hitObjectQueue.Count && i < HitObjectPoolSize; i++)
             {
                 if (_currentSongTime > _hitObjectQueue[i].StartTime && _currentSongTime > _hitObjectQueue[i].EndTime) //TODO: Add miss ms timing later
                 {
+                    LogTracker.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+_hitObjectQueue.Count);
                     //Recycle Note
                     RecycleNote(i);
                     i--;
@@ -171,8 +173,7 @@ namespace Quaver.Gameplay
             _hitObjectQueue.RemoveAt(index);
 
             //Initialize the HitObject (create the hit object sprites) if there are any inactive HitObjects
-            if (_hitObjectQueue.Count > HitObjectPoolSize)
-                _hitObjectQueue[HitObjectPoolSize-1].Initialize();
+            if (_hitObjectQueue.Count >= HitObjectPoolSize) _hitObjectQueue[HitObjectPoolSize - 1].Initialize();
         }
 
 

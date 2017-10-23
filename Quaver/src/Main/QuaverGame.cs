@@ -25,7 +25,7 @@ namespace Quaver.Main
             GameBase.GraphicsManager = new GraphicsDeviceManager(this);
 
             // Set the global window size
-            GameBase.WindowSize = new Vector2(GameBase.GraphicsManager.PreferredBackBufferWidth, GameBase.GraphicsManager.PreferredBackBufferHeight);
+            GameBase.Window = new Rectangle(0, 0, GameBase.GraphicsManager.PreferredBackBufferWidth, GameBase.GraphicsManager.PreferredBackBufferHeight);
 
             // Turn off vsync
             GameBase.GraphicsManager.SynchronizeWithVerticalRetrace = false; 
@@ -83,7 +83,7 @@ namespace Quaver.Main
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        /// <param name="gameTime">Provides a snapshot of delta time values.</param>
         protected override void Update(GameTime gameTime)
         {
             // Update FpsCounter

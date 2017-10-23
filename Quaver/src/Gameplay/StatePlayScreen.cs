@@ -25,7 +25,7 @@ namespace Quaver.Gameplay
         private GameplayInputManager InputManager { get; } = new GameplayInputManager();
 
         /// <summary>
-        ///     The Audio, used for testing purposes (We'll use this on the Beatmap class objecvt itself later.)
+        ///     The Audio, used for testing purposes TODO: reference beatmap from external class
         /// </summary>
         private GameAudio TestSong { get; set; }
 
@@ -50,7 +50,7 @@ namespace Quaver.Gameplay
         private bool ModNoSv { get; }
 
         /// <summary>
-        ///     Other random mods that were put here.
+        ///     Other random mods that were put here. TODO: use mod helper class later
         /// </summary>
         private bool ModPull { get; }
         private bool ModSplit { get; }
@@ -67,8 +67,8 @@ namespace Quaver.Gameplay
 
             // Set .qua and audio - The qua should be parsed from the Beatmap class object path, and the song will be auto loaded.
             // but this is ok for testing purposes.
-            Qua = new Qua(Path.GetFullPath(@"..\..\..\Test\Beatmaps\2. Camellia - Backbeat Maniac\Camellia - Backbeat Maniac () [Rewind VIP].qua"));
-            TestSong = new GameAudio(Path.GetFullPath(@"..\..\..\Test\Beatmaps\2. Camellia - Backbeat Maniac\audio.ogg"));
+            Qua = new Qua(Path.GetFullPath(@"..\..\..\Test\Beatmaps\26.NANAIRO\test.qua"));
+            TestSong = new GameAudio(Path.GetFullPath(@"..\..\..\Test\Beatmaps\26.NANAIRO\audio.ogg"));
 
             Console.WriteLine("Loaded Beatmap: {0} - {1}", Qua.Artist, Qua.Title);
 
