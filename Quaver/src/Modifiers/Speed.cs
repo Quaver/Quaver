@@ -64,7 +64,7 @@ namespace Quaver.Modifiers
         /// </summary>
         public void InitializeMod()
         {
-            // Set the GameClock (Audio Speed) to 1.5x here.
+            // Set the GameClock (Audio Speed) to the SpeedAlterationRate.
             GameBase.GameClock = SpeedAlterationRate;
         }
     }
