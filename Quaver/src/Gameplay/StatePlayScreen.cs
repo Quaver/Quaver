@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Beatmaps;
@@ -69,7 +70,7 @@ namespace Quaver.Gameplay
             // Parse the selected beatmap.
             Qua = new Qua(GameBase.SelectedBeatmap.Path);
 
-            Console.WriteLine("[STATE_PLAYSCREEN]: Initialized Gameplay State.");
+            Console.WriteLine($"[GAMEPLAY STATE] Initialized Gameplay State with Mods: { String.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ModIdentifier)) }");
             Console.WriteLine("Loaded Beatmap: {0} - {1}", GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title);
 
             //Create loggers
