@@ -304,7 +304,7 @@ namespace Quaver.Skins
 
             // Otherwise, we'll have to change the path to that of the default element and load that instead.
             path = $"{element}";
-            Console.WriteLine($"[SKIN LOADER] Skin element: {element}.png could not be found. Resulting to default: {path}");
+            //Console.WriteLine($"[SKIN LOADER] Skin element: {element}.png could not be found. Resulting to default: {path}");
 
             return GameBase.Content.Load<Texture2D>(path);
         }
