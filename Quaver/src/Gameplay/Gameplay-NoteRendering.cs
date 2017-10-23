@@ -160,7 +160,7 @@ namespace Quaver.Gameplay
                     else break;
                 }
             }
-            _trackPosition = _svCalc[_currentSVIndex] + (ulong)(((float)((_currentSongTime) - (_svQueue[_currentSVIndex].TargetTime)) * _svQueue[_currentSVIndex].SvMultiplier) + 10000);
+            _trackPosition = _svCalc[_currentSVIndex] + (ulong)(((float)(_currentSongTime - (_svQueue[_currentSVIndex].TargetTime)) * _svQueue[_currentSVIndex].SvMultiplier) + 10000);
         }
 
         /// <summary>
