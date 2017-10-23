@@ -44,6 +44,10 @@ namespace Quaver.Main
         /// </summary>
         protected override void Initialize()
         {
+            // Select a random beatmap if we do in fact have beatmaps.
+            if (GameBase.Beatmaps.Count != 0)
+                GameBase.SelectRandomBeatmap();
+
             // TODO: Add your initialization logic here
             base.Initialize();
         }
