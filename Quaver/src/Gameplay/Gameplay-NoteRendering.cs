@@ -112,7 +112,7 @@ namespace Quaver.Gameplay
             {
                 if (_currentSongTime > _hitObjectQueue[i].StartTime && _currentSongTime > _hitObjectQueue[i].EndTime) //TODO: Add miss ms timing later
                 {
-                    LogTracker.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+_hitObjectQueue.Count);
+                    LogTracker.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(_hitObjectQueue.Count-HitObjectPoolSize));
                     //Recycle Note
                     RecycleNote(i);
                     i--;
