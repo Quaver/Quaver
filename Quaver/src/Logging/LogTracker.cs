@@ -16,7 +16,6 @@ namespace Quaver.Logging
     static class LogTracker
     {
         private static List<LogObject> _logs = new List<LogObject>();
-        private static List<string> _quickLog = new List<string>();
 
         /// <summary>
         ///     The SpriteFont for the loggers.
@@ -60,6 +59,10 @@ namespace Quaver.Logging
             Console.WriteLine("[LogTracker.UpdateLogger] ERROR: Log with given name is not found: "+ logName);
         }
 
+        /// <summary>
+        /// This method will remove a log object with the given name.
+        /// </summary>
+        /// <param name="logName"></param>
         public static void RemoveLogger(string logName)
         {
             var Index = _logs.FindIndex(r => r.Name == logName);
@@ -67,37 +70,47 @@ namespace Quaver.Logging
             else Console.WriteLine("[LogTracker.RemoveLogger] ERROR: Log with given name is not found: " + logName);
         }
 
-        public static void QuickLog(string value)
+        /// <summary>
+        /// Creates a log that will only be displayed on screen for a limited amount of time.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="newColor"></param>
+        /// <param name="duratioon"></param>
+        public static void QuickLog(string message, Color newColor, float duration = 0.2f)
         {
-            _quickLog.Add(value);
+            var newLog = new LogObject()
+            {
+                Name = "_QuickLog",
+                LogColor = newColor,
+                Duration = duration,
+                NoDuration = false,
+                Value = message
+            };
+            _logs.Add(newLog);
+            Console.WriteLine("LOG ADDED: "+message);
         }
 
         /// <summary>
         /// Draw the log objects
         /// </summary>
-        public static void Draw()
+        public static void Draw(double dt)
         {
-            var i = 0;
-
-            //Draw everything in the log tracker
-            foreach (var current in _logs)
+            for (int i=0; i<_logs.Count; i++)
             {
+                LogObject current = _logs[i];
                 if (current.Value != null)
                 {
                     GameBase.SpriteBatch.DrawString(Font, current.Value, new Vector2(0, i * 20), current.LogColor);
-                    i++;
+                    if (!current.NoDuration)
+                    {
+                        current.Duration -= (float)dt;
+                        if (current.Duration <= 0)
+                        {
+                            _logs.RemoveAt(i);
+                            i--;
+                        }
+                    }
                 }
-            }
-
-            //Draw anything in quicklog
-            if (_quickLog.Count > 0)
-            {
-                foreach (var current in _quickLog)
-                {
-                    GameBase.SpriteBatch.DrawString(Font, current, new Vector2(0, i * 20), Color.Aqua);
-                    i++;
-                }
-                _quickLog.Clear();
             }
         }
     }
