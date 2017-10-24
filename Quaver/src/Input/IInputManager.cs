@@ -19,10 +19,5 @@ namespace Quaver.Input
         ///     The current keyboard state.
         /// </summary>
         KeyboardState KeyboardState { get; set; }
-
-        /// <summary>
-        ///     Checks the input of the given input manager
-        /// </summary>
-        void CheckInput();
     }
 }
