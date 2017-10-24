@@ -130,7 +130,7 @@ namespace Quaver.Main
             // Draw the FPS Counter
             SpriteManager.Draw();
             FpsCounter.Draw();
-            LogTracker.Draw();
+            LogTracker.Draw(gameTime.ElapsedGameTime.TotalSeconds);
 
             // Draw everything else in the base class
             base.Draw(gameTime);
