@@ -677,16 +677,8 @@ namespace Quaver.Config
             // Tracks the number of attempts to write the file it has made. 
             var attempts = 0;
 
-            // Log if the config file isn't free.
-            bool logged = false;
-            while (!IsFileReady(GameDirectory + "/quaver.cfg"))
-            {
-                if (!logged)
-                {
-                    Console.WriteLine("[CONFIG MANAGER] Waiting for config file to be freed in order to write to it.");
-                    logged = true;
-                }                  
-            }
+            // Don't do anything if the file isn't ready.
+            while (!IsFileReady(GameDirectory + "/quaver.cfg")){}
 
             var sb = new StringBuilder();
 

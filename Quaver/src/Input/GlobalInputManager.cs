@@ -55,7 +55,6 @@ namespace Quaver.Input
                 && (KeyboardState.IsKeyDown(Keys.RightAlt) || KeyboardState.IsKeyDown(Keys.LeftAlt)) 
                 && Config.Configuration.VolumeGlobal < 100)
             {
-                Console.WriteLine("Volume Up");
                 Config.Configuration.VolumeGlobal += 5;
 
                 // Set the last scroll wheel value
@@ -70,8 +69,6 @@ namespace Quaver.Input
                 && (KeyboardState.IsKeyDown(Keys.RightAlt) || KeyboardState.IsKeyDown(Keys.LeftAlt)) 
                 && Config.Configuration.VolumeGlobal > 0)
             {
-                Console.WriteLine("Volume Down");
-
                 Config.Configuration.VolumeGlobal -= 5;
 
                 // Set the last scroll wheel value
