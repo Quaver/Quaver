@@ -56,7 +56,7 @@ namespace Quaver.Main
                 BeatmapUtils.SelectRandomBeatmap();
 
             // Add some mods
-            ModManager.AddMod(ModIdentifier.Speed, 1.5f);
+            // ModManager.AddMod(ModIdentifier.Speed, 1.5f);
             // ModManager.AddMod(ModIdentifer.NoSliderVelocities);
             // ModManager.RemoveMod(ModIdentifier.Speed);
             // ModManager.RemoveAllMods();
