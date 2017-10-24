@@ -37,6 +37,11 @@ namespace Quaver.Gameplay
         private Qua Qua { get; set; }
 
         /// <summary>
+        ///     The MD5 Hash of the played beatmap.
+        /// </summary>
+        private string BeatmapMd5 { get; set; }
+
+        /// <summary>
         ///     The scroll speed
         /// </summary>
         private float ScrollSpeed { get; set; } = Configuration.ScrollSpeed / 20f;
@@ -63,8 +68,12 @@ namespace Quaver.Gameplay
             // Parse the selected beatmap.
             Qua = new Qua(GameBase.SelectedBeatmap.Path);
 
+            // Get beatmap MD5 of the parsed qua.
+            BeatmapMd5 = BeatmapUtils.GetMd5Checksum(GameBase.SelectedBeatmap.Path);
+
             Console.WriteLine($"[GAMEPLAY STATE] Initialized Gameplay State with Mods: { String.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ModIdentifier)) }");
-            Console.WriteLine($"Loaded Beatmap: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
+            Console.WriteLine($"[GAMEPLAY STATE] Loaded Beatmap: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
+            Console.WriteLine($"[GAMEPLAY STATE] Loaded Beatmap MD5: {BeatmapMd5}");
 
             //Create loggers
             LogTracker.AddLogger("DeltaTime", Color.LawnGreen);
