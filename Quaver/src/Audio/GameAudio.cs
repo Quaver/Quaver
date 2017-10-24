@@ -131,5 +131,16 @@ namespace Quaver.Audio
         {
             return Bass.ChannelBytes2Seconds(Stream, Bass.ChannelGetLength(Stream)) * 1000;
         }
+
+        /// <summary>
+        ///     Skips to a defined position in the audio.
+        /// </summary>
+        internal void SkipTo(double position)
+        {
+            if (Stream == 0)
+                return;
+
+            Bass.ChannelSetPosition(Stream, Bass.ChannelSeconds2Bytes(Stream, position / 1000));
+        }
     }
 }
