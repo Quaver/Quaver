@@ -724,11 +724,9 @@ namespace Quaver.Config
                     sw.Close();
                 }
 
+                // If too many attempts were made.
                 if (attempts == 2)
-                {
                     Console.WriteLine("[CONFIG MANAGER] Too many attempts in a short time to write the config file have been made.");
-                    return;
-                }
             }
         }
 
