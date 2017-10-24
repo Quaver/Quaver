@@ -19,5 +19,10 @@ namespace Quaver.Input
         ///     The current keyboard state.
         /// </summary>
         KeyboardState KeyboardState { get; set; }
+
+        /// <summary>
+        ///     The current Mouse State
+        /// </summary>
+        MouseState MouseState { get; set; }
     }
 }
