@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using IniParser;
 using Microsoft.Xna.Framework.Input;
@@ -10,6 +12,11 @@ namespace Quaver.Config
 {
     internal class Configuration
     {
+        /// <summary>
+        ///     Keeps track of whether or not the config file is currently being written.
+        /// </summary>
+        private static bool CurrentlyWritingConfig { get; set; }
+
         /// <summary>
         ///     The master volume of the game.
         /// </summary>
@@ -667,6 +674,20 @@ namespace Quaver.Config
         /// </summary>
         internal static async Task WriteConfigFileAsync()
         {
+            // Tracks the number of attempts to write the file it has made. 
+            var attempts = 0;
+
+            // Log if the config file isn't free.
+            bool logged = false;
+            while (!IsFileReady(GameDirectory + "/quaver.cfg"))
+            {
+                if (!logged)
+                {
+                    Console.WriteLine("[CONFIG MANAGER] Waiting for config file to be freed in order to write to it.");
+                    logged = true;
+                }                  
+            }
+
             var sb = new StringBuilder();
 
             // Top file information
@@ -695,9 +716,58 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
-                // Log File could not be generated to handle this, we'll generally just want to 
-                // crash the program. This shouldn't ever happen, unless the filestream is already open.
-                Console.WriteLine(e);
+                // Try to write the file again 3 times.
+                while (attempts != 2)
+                {
+                    attempts++;
+                    Console.WriteLine($"[CONFIG MANAGER] Could not write file as it is being used by another process.. Attempt #{attempts}");
+
+                    // Create a new stream 
+                    var sw = new StreamWriter(GameDirectory + "/quaver.cfg")
+                    {
+                        AutoFlush = true
+                    };
+
+                    // Write to file and close it.
+                    await sw.WriteLineAsync(sb.ToString());
+                    sw.Close();
+                }
+
+                if (attempts == 2)
+                {
+                    Console.WriteLine("[CONFIG MANAGER] Too many attempts in a short time to write the config file have been made.");
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Checks if the file is ready to be written to.
+        /// </summary>
+        /// <param name="sFilename"></param>
+        /// <returns></returns>
+        public static bool IsFileReady(string sFilename)
+        {
+            // If the file can be opened for exclusive access it means that the file
+            // is no longer locked by another process.
+            try
+            {
+                using (var inputStream = File.Open(sFilename, FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    if (inputStream.Length > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
     }
