@@ -10,6 +10,7 @@ using Quaver.Database;
 using Quaver.GameState;
 using Quaver.Gameplay;
 using Quaver.Graphics;
+using Quaver.Input;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.Skins;
@@ -23,6 +24,11 @@ namespace Quaver.Main
     /// </summary>
     public class QuaverGame : Game
     {
+        /// <summary>
+        ///     The global input manager. For all inputs that are the same across every state.
+        /// </summary>
+        private GlobalInputManager GlobalInputManager { get; } = new GlobalInputManager();
+
         public QuaverGame()
         {
             // Set the global graphics device manager.
@@ -109,6 +115,9 @@ namespace Quaver.Main
 
             // Update all game states.
             GameStateManager.Instance.Update(gameTime);
+
+            // Check Global Input
+            GlobalInputManager.CheckInput();
 
             base.Update(gameTime);
         }
