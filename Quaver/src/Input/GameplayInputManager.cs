@@ -28,6 +28,11 @@ namespace Quaver.Input
         public KeyboardState KeyboardState { get; set; }
 
         /// <summary>
+        ///     TRhe current Mouse State
+        /// </summary>
+        public MouseState MouseState { get; set; }
+
+        /// <summary>
         ///     All of the lane keys mapped to a list
         /// </summary>
         private List<Keys> LaneKeys { get; } = new List<Keys>()
@@ -55,6 +60,9 @@ namespace Quaver.Input
         {
             // Set the current state of the keyboard.
             KeyboardState = Keyboard.GetState();
+
+            // Set the current mouse state.
+            MouseState = Mouse.GetState();
 
             // Check Mania Key Presses
             HandleManiaKeyPresses();
