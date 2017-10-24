@@ -142,5 +142,13 @@ namespace Quaver.Audio
 
             Bass.ChannelSetPosition(Stream, Bass.ChannelSeconds2Bytes(Stream, position / 1000));
         }
+
+        /// <summary>
+        ///     Changes the audios volume by a specified amount.
+        /// </summary>
+        internal void ChangeAudioVolume()
+        {
+            Bass.ChannelSetAttribute(Stream, ChannelAttribute.Volume, (float)Configuration.VolumeGlobal / 100);
+        }
     }
 }
