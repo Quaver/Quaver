@@ -99,7 +99,8 @@ namespace Quaver.Gameplay
         /// </summary>
         public void UnloadContent()
         {
-            GameStateManager.Instance.UnloadContent();
+            //Do unload stuff
+            //GameStateManager.Instance.UnloadContent();
         }
 
         /// <summary>
