@@ -35,6 +35,8 @@ namespace Quaver.Input
             Configuration.KeyMania4
         };
 
+        private bool[] LaneKeyDown = new bool[4];
+
         /// <summary>
         ///     Checks if the given input was given
         /// </summary>
@@ -46,7 +48,20 @@ namespace Quaver.Input
             // Update Lane Keys Receptor
             var updatedReceptor = false;
             for (var i = 0; i < LaneKeys.Count; i++)
-                updatedReceptor = (KeyboardState.IsKeyDown(LaneKeys[i])) ? Playfield.UpdateReceptor(i, true) : Playfield.UpdateReceptor(i, false);   
+            {
+                if (KeyboardState.IsKeyDown(LaneKeys[i]))
+                {
+                    if (LaneKeyDown[i])
+                    {
+                        //Key press logic
+                    }
+                    else
+                    {
+                        //LN release logic
+                    }
+                }
+                updatedReceptor = (KeyboardState.IsKeyDown(LaneKeys[i])) ? Playfield.UpdateReceptor(i, true) : Playfield.UpdateReceptor(i, false);
+            }
             
             // TODO: This is a beatmap import and sync test, eventually add this to its own game state
             if (KeyboardState.IsKeyDown(Keys.F5) && GameBase.ImportQueueReady)
