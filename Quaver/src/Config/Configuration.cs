@@ -712,7 +712,6 @@ namespace Quaver.Config
                 while (attempts != 2)
                 {
                     attempts++;
-                    Console.WriteLine($"[CONFIG MANAGER] Could not write file as it is being used by another process.. Attempt #{attempts}");
 
                     // Create a new stream 
                     var sw = new StreamWriter(GameDirectory + "/quaver.cfg")
