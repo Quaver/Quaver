@@ -156,6 +156,11 @@ namespace Quaver.Config
         private static Keys _keyVolumeDown = Keys.Down;
 
         /// <summary>
+        ///     The key pressed to skip the song introduction
+        /// </summary>
+        private static Keys _keySkipIntro = Keys.RightAlt;
+
+        /// <summary>
         ///     These are all values that should never ben
         /// </summary>
         private static string _gameDirectory;
@@ -550,6 +555,16 @@ namespace Quaver.Config
             }
         }
 
+        internal static Keys KeySkipIntro
+        {
+            get => _keySkipIntro;
+            set
+            {
+                _keySkipIntro = value;
+                Task.Run(async () => await WriteConfigFileAsync());
+            }
+        }
+
         /// <summary>
         ///     Important!
         ///     Responsible for initializing directory properties,
@@ -640,7 +655,8 @@ namespace Quaver.Config
             _keyQuickRetry = ConfigHelper.ReadKeys(KeyQuickRetry, data["KeyQuickRetry"]);
             _keyIncreaseScrollSpeed = ConfigHelper.ReadKeys(KeyIncreaseScrollSpeed, data["KeyIncreaseScrollSpeed"]);
             _keyDecreaseScrollSpeed = ConfigHelper.ReadKeys(KeyDecreaseScrollSpeed, data["KeyDecreaseScrollSpeed"]);
-
+            _keySkipIntro = ConfigHelper.ReadKeys(KeySkipIntro, data["KeySkipIntro"]);
+                
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync());
         }
