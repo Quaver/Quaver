@@ -51,7 +51,7 @@ namespace Quaver.Input
         /// <summary>
         ///     Checks if the given input was given
         /// </summary>
-        public void CheckInput(Qua qua, double currentSongTime)
+        public void CheckInput(Qua qua, bool skippable)
         {
             // Set the current state of the keyboard.
             KeyboardState = Keyboard.GetState();
@@ -60,7 +60,7 @@ namespace Quaver.Input
             HandleManiaKeyPresses();
 
             // Check Skip Song Input
-            SkipSong(qua, currentSongTime);
+            SkipSong(qua, skippable);
 
             // Check import beatmaps
             ImportBeatmaps();
@@ -96,9 +96,9 @@ namespace Quaver.Input
         /// </summary>
         /// <param name="qua"></param>
         /// <param name="currentSongTime"></param>
-        private void SkipSong(Qua qua, double currentSongTime)
+        private void SkipSong(Qua qua, bool skippable)
         {
-            if (qua.HitObjects[0].StartTime - currentSongTime >= 5000 && KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !SongSkipped)
+            if (skippable && KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !SongSkipped)
             {
                 SongSkipped = true;
 
