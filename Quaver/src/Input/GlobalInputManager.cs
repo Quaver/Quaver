@@ -51,7 +51,9 @@ namespace Quaver.Input
         private void HandleVolumeChanges()
         {
             //  Raise volume if the user scrolls up.
-            if (MouseState.ScrollWheelValue > LastScrollWheelValue && (KeyboardState.IsKeyDown(Keys.RightAlt) || KeyboardState.IsKeyDown(Keys.LeftAlt)))
+            if (MouseState.ScrollWheelValue > LastScrollWheelValue 
+                && (KeyboardState.IsKeyDown(Keys.RightAlt) || KeyboardState.IsKeyDown(Keys.LeftAlt)) 
+                && Config.Configuration.VolumeGlobal < 100)
             {
                 Console.WriteLine("Volume Up");
                 Config.Configuration.VolumeGlobal += 5;
@@ -64,7 +66,9 @@ namespace Quaver.Input
                 Console.WriteLine($"[CONFIG MANAGER] VolumeGlobal Changed To: {Config.Configuration.VolumeGlobal}");
             }
             // Lower volume if the user scrolls down
-            else if (MouseState.ScrollWheelValue < LastScrollWheelValue && (KeyboardState.IsKeyDown(Keys.RightAlt) || KeyboardState.IsKeyDown(Keys.LeftAlt)))
+            else if (MouseState.ScrollWheelValue < LastScrollWheelValue 
+                && (KeyboardState.IsKeyDown(Keys.RightAlt) || KeyboardState.IsKeyDown(Keys.LeftAlt)) 
+                && Config.Configuration.VolumeGlobal > 0)
             {
                 Console.WriteLine("Volume Down");
 
