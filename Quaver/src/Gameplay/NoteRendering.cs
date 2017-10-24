@@ -9,30 +9,37 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Utility;
 using Quaver.Graphics;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
+using Quaver.QuaFile;
 
 namespace Quaver.Gameplay
 {
-    internal partial class StatePlayScreen
+    internal class NoteRendering
     {
         //HitObjects
-        private List<HitObject> _hitObjectQueue;
-        private const int HitObjectPoolSize = 256;
+        public static List<HitObject> _hitObjectQueue;
+        public const int HitObjectPoolSize = 256;
 
         //Track
-        private ulong[] _svCalc; //Stores SV position data for efficiency
-        private int _currentSVIndex;
-        private ulong _trackPosition;
+        public static ulong[] _svCalc; //Stores SV position data for efficiency
+        public static int _currentSVIndex;
+        public static ulong _trackPosition;
+        public const int PlayStartDelayed = 500;
+
+        //CONFIG (temp)
+        public static float ScrollNegativeFactor { get; set; } = 1f;
+        public static float ScrollSpeed { get; set; } = Configuration.ScrollSpeed / 20f;
 
         /// <summary>
         /// Initalize any HitObject related content. 
         /// </summary>
-        internal void InitializeNotes()
+        internal static void InitializeNotes(Qua Qua)
         {
             //Initialize Track
             int i;
@@ -55,12 +62,12 @@ namespace Quaver.Gameplay
                 };
 
                 //Calculate SV Index for hit object
-                if (newObject.StartTime >= _svQueue[_svQueue.Count - 1].TargetTime) newObject.SvPosition = _svQueue.Count - 1;
+                if (newObject.StartTime >= NoteTiming._svQueue[NoteTiming._svQueue.Count - 1].TargetTime) newObject.SvPosition = NoteTiming._svQueue.Count - 1;
                 else
                 {
-                    for (int j = 0; j < _svQueue.Count - 1; j++)
+                    for (int j = 0; j < NoteTiming._svQueue.Count - 1; j++)
                     {
-                        if (newObject.StartTime < _svQueue[j + 1].TargetTime)
+                        if (newObject.StartTime < NoteTiming._svQueue[j + 1].TargetTime)
                         {
                             newObject.SvPosition = j;
                             break;
@@ -75,12 +82,12 @@ namespace Quaver.Gameplay
                 if (newObject.IsLongNote)
                 {
                     int curIndex = 0;
-                    if (newObject.EndTime >= _svQueue[_svQueue.Count - 1].TargetTime) curIndex = _svQueue.Count - 1;
+                    if (newObject.EndTime >= NoteTiming._svQueue[NoteTiming._svQueue.Count - 1].TargetTime) curIndex = NoteTiming._svQueue.Count - 1;
                     else
                     {
-                        for (int j = 0; j < _svQueue.Count - 1; j++)
+                        for (int j = 0; j < NoteTiming._svQueue.Count - 1; j++)
                         {
-                            if (newObject.EndTime < _svQueue[j + 1].TargetTime)
+                            if (newObject.EndTime < NoteTiming._svQueue[j + 1].TargetTime)
                             {
                                 curIndex = j;
                                 break;
@@ -104,7 +111,7 @@ namespace Quaver.Gameplay
         /// Updates any HitObject related content.
         /// </summary>
         /// <param name="dt"></param>
-        internal void UpdateNotes(double dt)
+        internal static void UpdateNotes(double dt)
         {
             //Update the position of the track
             GetCurrentTrackPosition();
@@ -112,7 +119,7 @@ namespace Quaver.Gameplay
             int i;
             for (i=0; i < _hitObjectQueue.Count && i < HitObjectPoolSize; i++)
             {
-                if (_currentSongTime > _hitObjectQueue[i].StartTime && _currentSongTime > _hitObjectQueue[i].EndTime) //TODO: Add miss ms timing later
+                if (NoteTiming._currentSongTime > _hitObjectQueue[i].StartTime && NoteTiming._currentSongTime > _hitObjectQueue[i].EndTime) //TODO: Add miss ms NoteTiming later
                 {
                     LogTracker.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(_hitObjectQueue.Count-HitObjectPoolSize));
                     //Recycle Note
@@ -133,13 +140,13 @@ namespace Quaver.Gameplay
         /// </summary>
         /// <param name="timeToPos"></param>
         /// <returns></returns>
-        private ulong SvOffsetFromTime(float timeToOffset, int svIndex)
+        internal static ulong SvOffsetFromTime(float timeToOffset, int svIndex)
         {
             //If NoSV mod is enabled, return ms offset, else return sv offset calculation
-            return (ModManager.Activated(ModIdentifier.NoSliderVelocity)) ? (ulong) timeToOffset : _svCalc[svIndex] + (ulong)(15000 + ((timeToOffset - _svQueue[svIndex].TargetTime) * _svQueue[svIndex].SvMultiplier)) - 5000;
+            return (ModManager.Activated(ModIdentifier.NoSliderVelocity)) ? (ulong) timeToOffset : _svCalc[svIndex] + (ulong)(15000 + ((timeToOffset - NoteTiming._svQueue[svIndex].TargetTime) * NoteTiming._svQueue[svIndex].SvMultiplier)) - 5000;
         }
 
-        private float PosFromOffset(ulong offsetToPos)
+        internal static float PosFromOffset(ulong offsetToPos)
         {
             //if (_mod_pull) return (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(offsetToPos - _currentSongTime, 0f) * _ScrollSpeed));
             return Playfield.ReceptorYOffset + (((float)(10000 + offsetToPos - _trackPosition) - 10000f) * ScrollNegativeFactor * ScrollSpeed);
@@ -148,28 +155,28 @@ namespace Quaver.Gameplay
         /// <summary>
         /// Calculate track position
         /// </summary>
-        private void GetCurrentTrackPosition()
+        internal static void GetCurrentTrackPosition()
         {
-            if (_currentSongTime >= _svQueue[_svQueue.Count - 1].TargetTime)
+            if (NoteTiming._currentSongTime >= NoteTiming._svQueue[NoteTiming._svQueue.Count - 1].TargetTime)
             {
-                _currentSVIndex = _svQueue.Count - 1;
+                _currentSVIndex = NoteTiming._svQueue.Count - 1;
             }
-            else if (_currentSVIndex < _svQueue.Count - 2)
+            else if (_currentSVIndex < NoteTiming._svQueue.Count - 2)
             {
-                for (int j = _currentSVIndex; j < _svQueue.Count - 1; j++)
+                for (int j = _currentSVIndex; j < NoteTiming._svQueue.Count - 1; j++)
                 {
-                    if (_currentSongTime > _svQueue[_currentSVIndex + 1].TargetTime) _currentSVIndex++;
+                    if (NoteTiming._currentSongTime > NoteTiming._svQueue[_currentSVIndex + 1].TargetTime) _currentSVIndex++;
                     else break;
                 }
             }
-            _trackPosition = _svCalc[_currentSVIndex] + (ulong)(((float)(_currentSongTime - (_svQueue[_currentSVIndex].TargetTime)) * _svQueue[_currentSVIndex].SvMultiplier) + 10000);
+            _trackPosition = _svCalc[_currentSVIndex] + (ulong)(((float)(NoteTiming._currentSongTime - (NoteTiming._svQueue[_currentSVIndex].TargetTime)) * NoteTiming._svQueue[_currentSVIndex].SvMultiplier) + 10000);
         }
 
         /// <summary>
         /// TODO: add description
         /// </summary>
         /// <param name="index"></param>
-        private void RecycleNote(int index)
+        internal static void RecycleNote(int index)
         {
             _hitObjectQueue[index].Destroy();
             _hitObjectQueue.RemoveAt(index);

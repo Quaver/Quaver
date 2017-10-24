@@ -42,16 +42,6 @@ namespace Quaver.Gameplay
         private string BeatmapMd5 { get; set; }
 
         /// <summary>
-        ///     The scroll speed
-        /// </summary>
-        private float ScrollSpeed { get; set; } = Configuration.ScrollSpeed / 20f;
-
-        /// <summary>
-        ///     TODO: Add Summary.
-        /// </summary>
-        private float ScrollNegativeFactor { get; set; } = 1f;
-
-        /// <summary>
         ///     Keeps track of whether or not the song intro is current skippable.
         /// </summary>
         private bool IntroSkippable { get; set; }
@@ -90,8 +80,8 @@ namespace Quaver.Gameplay
         {
             //Initialize Components
             Playfield.InitializePlayfield();
-            InitializeTiming();
-            InitializeNotes();
+            NoteTiming.InitializeTiming(Qua);
+            NoteRendering.InitializeNotes(Qua);
         }
 
         /// <summary>
@@ -112,25 +102,25 @@ namespace Quaver.Gameplay
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Set the current song time.
-            SetCurrentSongTime(dt);
+            NoteTiming.SetCurrentSongTime(dt);
 
             // Update the playfield
             Playfield.UpdatePlayfield(dt); ;
 
             // Check if the song is currently skippable.
-            IntroSkippable = (Qua.HitObjects[0].StartTime - _currentSongTime >= 5000);
+            IntroSkippable = (Qua.HitObjects[0].StartTime - NoteTiming._currentSongTime >= 5000);
 
             // Update the Notes
-            UpdateNotes(dt);
+            NoteRendering.UpdateNotes(dt);
 
             // Check the input for this particular game state.
             InputManager.CheckInput(Qua, IntroSkippable);
 
             // Update Loggers
             LogTracker.UpdateLogger("DeltaTime", "Delta Time: " + dt + "ms");
-            LogTracker.UpdateLogger("SongTime", "Current Song Time: " + _currentSongTime + "ms");
-            LogTracker.UpdateLogger("SongPos", "Current Track Position: " + _trackPosition);
-            LogTracker.UpdateLogger("HitObjects", "Total Remaining Notes: " + _hitObjectQueue.Count);
+            LogTracker.UpdateLogger("SongTime", "Current Song Time: " + NoteTiming._currentSongTime + "ms");
+            LogTracker.UpdateLogger("SongPos", "Current Track Position: " + NoteRendering._trackPosition);
+            LogTracker.UpdateLogger("HitObjects", "Total Remaining Notes: " + NoteRendering._hitObjectQueue.Count);
             LogTracker.UpdateLogger("Skippable", $"Intro Skippable: {IntroSkippable}");
         }
 
