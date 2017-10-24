@@ -104,7 +104,8 @@ namespace Quaver.Main
         protected override void Update(GameTime gameTime)
         {
             // Update FpsCounter
-            FpsCounter.Count(gameTime.ElapsedGameTime.TotalSeconds);
+            if (Config.Configuration.FpsCounter)
+                FpsCounter.Count(gameTime.ElapsedGameTime.TotalSeconds);
 
             // Update all game states.
             GameStateManager.Instance.Update(gameTime);
@@ -128,8 +129,10 @@ namespace Quaver.Main
             GameStateManager.Instance.Draw();
             
             // Draw the FPS Counter
+            if (Config.Configuration.FpsCounter)
+                FpsCounter.Draw();
+
             SpriteManager.Draw();
-            FpsCounter.Draw();
             LogTracker.Draw(gameTime.ElapsedGameTime.TotalSeconds);
 
             // Draw everything else in the base class
