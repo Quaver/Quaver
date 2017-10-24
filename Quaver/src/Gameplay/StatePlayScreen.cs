@@ -121,7 +121,7 @@ namespace Quaver.Gameplay
             LogTracker.UpdateLogger("SongTime", "Current Song Time: " + _currentSongTime + "ms");
             LogTracker.UpdateLogger("SongPos", "Current Track Position: " + _trackPosition);
             LogTracker.UpdateLogger("HitObjects", "Total Remaining Notes: " + _hitObjectQueue.Count);
-            LogTracker.UpdateLogger("Skippable", $"Song Skippable: {IntroSkippable}");
+            LogTracker.UpdateLogger("Skippable", $"Intro Skippable: {IntroSkippable}");
         }
 
         /// <summary>
