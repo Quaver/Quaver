@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.GameState;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Gameplay;
+using Quaver.Logging;
 using Quaver.Main;
 
 namespace Quaver.Input
@@ -49,16 +51,17 @@ namespace Quaver.Input
             var updatedReceptor = false;
             for (var i = 0; i < LaneKeys.Count; i++)
             {
-                if (KeyboardState.IsKeyDown(LaneKeys[i]))
+                //Lane Key Press
+                if (KeyboardState.IsKeyDown(LaneKeys[i]) && !LaneKeyDown[i])
                 {
-                    if (LaneKeyDown[i])
-                    {
-                        //Key press logic
-                    }
-                    else
-                    {
-                        //LN release logic
-                    }
+                    LaneKeyDown[i] = true;
+                    LogTracker.QuickLog("KeyPress: " + i, Color.Blue);
+                }
+                //Lane Key Release
+                else if (KeyboardState.IsKeyUp(LaneKeys[i]) && LaneKeyDown[i])
+                {
+                    LaneKeyDown[i] = false;
+                    LogTracker.QuickLog("KeyRelease: " + i, Color.DarkBlue);
                 }
                 updatedReceptor = (KeyboardState.IsKeyDown(LaneKeys[i])) ? Playfield.UpdateReceptor(i, true) : Playfield.UpdateReceptor(i, false);
             }
