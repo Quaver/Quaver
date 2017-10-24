@@ -47,9 +47,9 @@ namespace Quaver.Gameplay
         private float ScrollNegativeFactor { get; set; } = 1f;
 
         /// <summary>
-        ///     Keeps track of whether or not the song is current skippable.
+        ///     Keeps track of whether or not the song intro is current skippable.
         /// </summary>
-        private bool SongSkippable { get; set; }
+        private bool IntroSkippable { get; set; }
 
         /// <summary>
         ///     TODO: Add Summary
@@ -108,20 +108,20 @@ namespace Quaver.Gameplay
             Playfield.UpdatePlayfield(dt); ;
 
             // Check if the song is currently skippable.
-            SongSkippable = (Qua.HitObjects[0].StartTime - _currentSongTime >= 5000);
+            IntroSkippable = (Qua.HitObjects[0].StartTime - _currentSongTime >= 5000);
 
             // Update the Notes
             UpdateNotes(dt);
 
             // Check the input for this particular game state.
-            InputManager.CheckInput(Qua, SongSkippable);
+            InputManager.CheckInput(Qua, IntroSkippable);
 
             // Update Loggers
             LogTracker.UpdateLogger("DeltaTime", "Delta Time: " + dt + "ms");
             LogTracker.UpdateLogger("SongTime", "Current Song Time: " + _currentSongTime + "ms");
             LogTracker.UpdateLogger("SongPos", "Current Track Position: " + _trackPosition);
             LogTracker.UpdateLogger("HitObjects", "Total Remaining Notes: " + _hitObjectQueue.Count);
-            LogTracker.UpdateLogger("Skippable", $"Song Skippable: {SongSkippable}");
+            LogTracker.UpdateLogger("Skippable", $"Song Skippable: {IntroSkippable}");
         }
 
         /// <summary>

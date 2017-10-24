@@ -44,9 +44,9 @@ namespace Quaver.Input
         private bool[] LaneKeyDown { get; set; } = new bool[4];
 
         /// <summary>
-        ///     Keeps track of whether or not the song was skipped.
+        ///     Keeps track of whether or not the song intro was skipped.
         /// </summary>
-        private bool SongSkipped { get; set; }
+        private bool IntroSkipped { get; set; }
 
         /// <summary>
         ///     Checks if the given input was given
@@ -92,15 +92,15 @@ namespace Quaver.Input
         }
 
         /// <summary>
-        ///     Detects if the song is skippable and will skip if the player decides to.
+        ///     Detects if the song intro is skippable and will skip if the player decides to.
         /// </summary>
         /// <param name="qua"></param>
         /// <param name="currentSongTime"></param>
         private void SkipSong(Qua qua, bool skippable)
         {
-            if (skippable && KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !SongSkipped)
+            if (skippable && KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !IntroSkipped)
             {
-                SongSkipped = true;
+                IntroSkipped = true;
 
                 Console.WriteLine("[GAMEPLAY STATE] Song has been successfully skipped to 3 seconds before the first HitObject.");
 
