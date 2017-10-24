@@ -98,7 +98,7 @@ namespace Quaver.Input
         /// <param name="currentSongTime"></param>
         private void SkipSong(Qua qua, double currentSongTime)
         {
-            if (qua.HitObjects[0].StartTime - currentSongTime >= 5000 && KeyboardState.IsKeyDown(Keys.RightAlt) && !SongSkipped)
+            if (qua.HitObjects[0].StartTime - currentSongTime >= 5000 && KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !SongSkipped)
             {
                 SongSkipped = true;
 
