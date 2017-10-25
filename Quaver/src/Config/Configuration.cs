@@ -13,9 +13,9 @@ namespace Quaver.Config
     internal class Configuration
     {
         /// <summary>
-        ///     Keeps track of whether or not the config file is currently being written.
+        ///     Dictates whether or not this is the first write of the file.
         /// </summary>
-        private static bool CurrentlyWritingConfig { get; set; }
+        private static bool FirstWrite { get; set; }
 
         /// <summary>
         ///     The master volume of the game.
@@ -609,6 +609,8 @@ namespace Quaver.Config
             // all of the default values.
             if (!File.Exists(GameDirectory + "/quaver.cfg"))
             {
+                File.WriteAllText(GameDirectory + "/quaver.cfg", "; Quaver Configuration File");
+
                 Task.Run(async () => await WriteConfigFileAsync()).Wait();
                 return;
             }
