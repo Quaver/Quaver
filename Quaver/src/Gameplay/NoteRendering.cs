@@ -20,16 +20,19 @@ using Quaver.QuaFile;
 
 namespace Quaver.Gameplay
 {
+    /// <summary>
+    /// This class manages anything relating to rendering the HitObjects
+    /// </summary>
     internal class NoteRendering
     {
         //HitObjects
-        internal static List<HitObject> _hitObjectQueue { get; set; }
+        internal static List<HitObject> HitObjectQueue { get; set; }
         internal const int HitObjectPoolSize = 256;
 
         //Track
-        internal static ulong[] _svCalc { get; set; } //Stores SV position data for efficiency
-        internal static int _currentSVIndex { get; set; }
-        internal static ulong _trackPosition { get; set; }
+        internal static ulong[] SvCalc { get; set; } //Stores SV position data for efficiency
+        internal static int CurrentSVIndex { get; set; }
+        internal static ulong TrackPosition { get; set; }
 
         //CONFIG (temp)
         private static float ScrollNegativeFactor { get; set; } = 1f;
@@ -42,11 +45,11 @@ namespace Quaver.Gameplay
         {
             //Initialize Track
             int i;
-            _trackPosition = (ulong)(-NoteTiming.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
-            _currentSVIndex = 0;
+            TrackPosition = (ulong)(-Timing.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
+            CurrentSVIndex = 0;
 
             //Initialize HitObjects
-            _hitObjectQueue = new List<HitObject>();
+            HitObjectQueue = new List<HitObject>();
             for (i = 0; i < Qua.HitObjects.Count; i++)
             {
                 HitObject newObject = new HitObject()
@@ -61,12 +64,12 @@ namespace Quaver.Gameplay
                 };
 
                 //Calculate SV Index for hit object
-                if (newObject.StartTime >= NoteTiming._svQueue[NoteTiming._svQueue.Count - 1].TargetTime) newObject.SvPosition = NoteTiming._svQueue.Count - 1;
+                if (newObject.StartTime >= Timing.SvQueue[Timing.SvQueue.Count - 1].TargetTime) newObject.SvPosition = Timing.SvQueue.Count - 1;
                 else
                 {
-                    for (int j = 0; j < NoteTiming._svQueue.Count - 1; j++)
+                    for (int j = 0; j < Timing.SvQueue.Count - 1; j++)
                     {
-                        if (newObject.StartTime < NoteTiming._svQueue[j + 1].TargetTime)
+                        if (newObject.StartTime < Timing.SvQueue[j + 1].TargetTime)
                         {
                             newObject.SvPosition = j;
                             break;
@@ -81,12 +84,12 @@ namespace Quaver.Gameplay
                 if (newObject.IsLongNote)
                 {
                     int curIndex = 0;
-                    if (newObject.EndTime >= NoteTiming._svQueue[NoteTiming._svQueue.Count - 1].TargetTime) curIndex = NoteTiming._svQueue.Count - 1;
+                    if (newObject.EndTime >= Timing.SvQueue[Timing.SvQueue.Count - 1].TargetTime) curIndex = Timing.SvQueue.Count - 1;
                     else
                     {
-                        for (int j = 0; j < NoteTiming._svQueue.Count - 1; j++)
+                        for (int j = 0; j < Timing.SvQueue.Count - 1; j++)
                         {
-                            if (newObject.EndTime < NoteTiming._svQueue[j + 1].TargetTime)
+                            if (newObject.EndTime < Timing.SvQueue[j + 1].TargetTime)
                             {
                                 curIndex = j;
                                 break;
@@ -100,7 +103,7 @@ namespace Quaver.Gameplay
 
                 //Initialize Object and add it to HitObjectQueue
                 if (i < HitObjectPoolSize) newObject.Initialize();
-                _hitObjectQueue.Add(newObject);
+                HitObjectQueue.Add(newObject);
             }
             Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: Done Loading Hitobjects.");
             LogTracker.AddLogger("noteRemoved",Color.Red);
@@ -116,11 +119,11 @@ namespace Quaver.Gameplay
             GetCurrentTrackPosition();
 
             int i;
-            for (i=0; i < _hitObjectQueue.Count && i < HitObjectPoolSize; i++)
+            for (i=0; i < HitObjectQueue.Count && i < HitObjectPoolSize; i++)
             {
-                if (NoteTiming._currentSongTime > _hitObjectQueue[i].StartTime && NoteTiming._currentSongTime > _hitObjectQueue[i].EndTime) //TODO: Add miss ms NoteTiming later
+                if (Timing.CurrentSongTime > HitObjectQueue[i].StartTime && Timing.CurrentSongTime > HitObjectQueue[i].EndTime) //TODO: Add miss ms Timing later
                 {
-                    LogTracker.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(_hitObjectQueue.Count-HitObjectPoolSize));
+                    LogTracker.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(HitObjectQueue.Count-HitObjectPoolSize));
                     //Recycle Note
                     RecycleNote(i);
                     i--;
@@ -128,8 +131,8 @@ namespace Quaver.Gameplay
                 else
                 {
                     // Set new hit object position with the current x, and a new y
-                    _hitObjectQueue[i].HitObjectPosition = new Vector2(_hitObjectQueue[i].HitObjectPosition.X, PosFromOffset(_hitObjectQueue[i].OffsetFromReceptor));
-                    _hitObjectQueue[i].UpdateObject();
+                    HitObjectQueue[i].HitObjectPosition = new Vector2(HitObjectQueue[i].HitObjectPosition.X, PosFromOffset(HitObjectQueue[i].OffsetFromReceptor));
+                    HitObjectQueue[i].UpdateObject();
                 }
             }
         }
@@ -142,13 +145,13 @@ namespace Quaver.Gameplay
         internal static ulong SvOffsetFromTime(float timeToOffset, int svIndex)
         {
             //If NoSV mod is enabled, return ms offset, else return sv offset calculation
-            return (ModManager.Activated(ModIdentifier.NoSliderVelocity)) ? (ulong) timeToOffset : _svCalc[svIndex] + (ulong)(15000 + ((timeToOffset - NoteTiming._svQueue[svIndex].TargetTime) * NoteTiming._svQueue[svIndex].SvMultiplier)) - 5000;
+            return (ModManager.Activated(ModIdentifier.NoSliderVelocity)) ? (ulong) timeToOffset : SvCalc[svIndex] + (ulong)(15000 + ((timeToOffset - Timing.SvQueue[svIndex].TargetTime) * Timing.SvQueue[svIndex].SvMultiplier)) - 5000;
         }
 
         internal static float PosFromOffset(ulong offsetToPos)
         {
-            //if (_mod_pull) return (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(offsetToPos - _currentSongTime, 0f) * _ScrollSpeed));
-            return Playfield.ReceptorYOffset + (((float)(10000 + offsetToPos - _trackPosition) - 10000f) * ScrollNegativeFactor * ScrollSpeed);
+            //if (_mod_pull) return (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(offsetToPos - CurrentSongTime, 0f) * _ScrollSpeed));
+            return Playfield.ReceptorYOffset + (((float)(10000 + offsetToPos - TrackPosition) - 10000f) * ScrollNegativeFactor * ScrollSpeed);
         }
 
         /// <summary>
@@ -156,19 +159,19 @@ namespace Quaver.Gameplay
         /// </summary>
         internal static void GetCurrentTrackPosition()
         {
-            if (NoteTiming._currentSongTime >= NoteTiming._svQueue[NoteTiming._svQueue.Count - 1].TargetTime)
+            if (Timing.CurrentSongTime >= Timing.SvQueue[Timing.SvQueue.Count - 1].TargetTime)
             {
-                _currentSVIndex = NoteTiming._svQueue.Count - 1;
+                CurrentSVIndex = Timing.SvQueue.Count - 1;
             }
-            else if (_currentSVIndex < NoteTiming._svQueue.Count - 2)
+            else if (CurrentSVIndex < Timing.SvQueue.Count - 2)
             {
-                for (int j = _currentSVIndex; j < NoteTiming._svQueue.Count - 1; j++)
+                for (int j = CurrentSVIndex; j < Timing.SvQueue.Count - 1; j++)
                 {
-                    if (NoteTiming._currentSongTime > NoteTiming._svQueue[_currentSVIndex + 1].TargetTime) _currentSVIndex++;
+                    if (Timing.CurrentSongTime > Timing.SvQueue[CurrentSVIndex + 1].TargetTime) CurrentSVIndex++;
                     else break;
                 }
             }
-            _trackPosition = _svCalc[_currentSVIndex] + (ulong)(((float)(NoteTiming._currentSongTime - (NoteTiming._svQueue[_currentSVIndex].TargetTime)) * NoteTiming._svQueue[_currentSVIndex].SvMultiplier) + 10000);
+            TrackPosition = SvCalc[CurrentSVIndex] + (ulong)(((float)(Timing.CurrentSongTime - (Timing.SvQueue[CurrentSVIndex].TargetTime)) * Timing.SvQueue[CurrentSVIndex].SvMultiplier) + 10000);
         }
 
         /// <summary>
@@ -177,11 +180,11 @@ namespace Quaver.Gameplay
         /// <param name="index"></param>
         internal static void RecycleNote(int index)
         {
-            _hitObjectQueue[index].Destroy();
-            _hitObjectQueue.RemoveAt(index);
+            HitObjectQueue[index].Destroy();
+            HitObjectQueue.RemoveAt(index);
 
             //Initialize the HitObject (create the hit object sprites) if there are any inactive HitObjects
-            if (_hitObjectQueue.Count >= HitObjectPoolSize) _hitObjectQueue[HitObjectPoolSize - 1].Initialize();
+            if (HitObjectQueue.Count >= HitObjectPoolSize) HitObjectQueue[HitObjectPoolSize - 1].Initialize();
         }
 
 
