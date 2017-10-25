@@ -28,6 +28,7 @@ namespace Quaver.Gameplay
         //HitObjects
         internal static List<HitObject> HitObjectQueue { get; set; }
         internal const int HitObjectPoolSize = 256;
+        internal const uint RemoveTimeAfterMiss = 1000;
 
         //Track
         internal static ulong[] SvCalc { get; set; } //Stores SV position data for efficiency
@@ -121,7 +122,7 @@ namespace Quaver.Gameplay
             int i;
             for (i=0; i < HitObjectQueue.Count && i < HitObjectPoolSize; i++)
             {
-                if (Timing.CurrentSongTime > HitObjectQueue[i].StartTime && Timing.CurrentSongTime > HitObjectQueue[i].EndTime) //TODO: Add miss ms Timing later
+                if (Timing.CurrentSongTime > HitObjectQueue[i].StartTime + RemoveTimeAfterMiss && Timing.CurrentSongTime > HitObjectQueue[i].EndTime + RemoveTimeAfterMiss) //TODO: Add miss ms Timing later
                 {
                     LogTracker.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(HitObjectQueue.Count-HitObjectPoolSize));
                     //Recycle Note
