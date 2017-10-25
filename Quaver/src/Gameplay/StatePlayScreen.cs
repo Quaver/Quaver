@@ -80,7 +80,7 @@ namespace Quaver.Gameplay
         {
             //Initialize Components
             Playfield.InitializePlayfield();
-            NoteTiming.InitializeTiming(Qua);
+            Timing.InitializeTiming(Qua);
             NoteRendering.InitializeNotes(Qua);
         }
 
@@ -102,13 +102,13 @@ namespace Quaver.Gameplay
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Set the current song time.
-            NoteTiming.SetCurrentSongTime(dt);
+            Timing.SetCurrentSongTime(dt);
 
             // Update the playfield
             Playfield.UpdatePlayfield(dt); ;
 
             // Check if the song is currently skippable.
-            IntroSkippable = (Qua.HitObjects[0].StartTime - NoteTiming._currentSongTime >= 5000);
+            IntroSkippable = (Qua.HitObjects[0].StartTime - Timing.CurrentSongTime >= 5000);
 
             // Update the Notes
             NoteRendering.UpdateNotes(dt);
@@ -118,9 +118,9 @@ namespace Quaver.Gameplay
 
             // Update Loggers
             LogTracker.UpdateLogger("DeltaTime", "Delta Time: " + dt + "ms");
-            LogTracker.UpdateLogger("SongTime", "Current Song Time: " + NoteTiming._currentSongTime + "ms");
-            LogTracker.UpdateLogger("SongPos", "Current Track Position: " + NoteRendering._trackPosition);
-            LogTracker.UpdateLogger("HitObjects", "Total Remaining Notes: " + NoteRendering._hitObjectQueue.Count);
+            LogTracker.UpdateLogger("SongTime", "Current Song Time: " + Timing.CurrentSongTime + "ms");
+            LogTracker.UpdateLogger("SongPos", "Current Track Position: " + NoteRendering.TrackPosition);
+            LogTracker.UpdateLogger("HitObjects", "Total Remaining Notes: " + NoteRendering.HitObjectQueue.Count);
             LogTracker.UpdateLogger("Skippable", $"Intro Skippable: {IntroSkippable}");
         }
 
