@@ -30,7 +30,6 @@ namespace Quaver.Gameplay
             if (keyDown)
             {
                 //Do key press stuff
-                //LogTracker.QuickLog("KeyPress: " + keyLane, Color.Blue);
 
                 int nIndex = -1;
                 int i;
@@ -43,14 +42,14 @@ namespace Quaver.Gameplay
                     }
                 }
 
-                if (nIndex >= 0)
+                if (nIndex > -1)
                 {
                     for (i = 0; i < 5; i++)
                     {
                         if (Math.Abs(NoteRendering.HitObjectQueue[nIndex].StartTime - Timing.CurrentSongTime) <= HitTiming[i])
                         {
                             LogTracker.QuickLog("NOTE INDEX: "+nIndex+" "+TimingNames[i], TimingColors[i], 0.5f);
-                            NoteRendering.RecycleNote(nIndex);
+                            NoteRendering.RecycleNote(nIndex); //TODO: Add to LN queue instead of recycling early
                             break;
                         }
                     }
@@ -59,7 +58,6 @@ namespace Quaver.Gameplay
             else
             {
                 //Do key release stuff
-                //LogTracker.QuickLog("KeyRelease: " + keyLane, Color.DarkBlue);
             }
         }
     }
