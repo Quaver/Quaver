@@ -12,7 +12,6 @@ using Quaver.Gameplay;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.QuaFile;
-using Quaver.src.Gameplay;
 
 namespace Quaver.Input
 {
