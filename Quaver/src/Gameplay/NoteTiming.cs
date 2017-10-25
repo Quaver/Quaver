@@ -9,29 +9,25 @@ namespace Quaver.Gameplay
 {
     internal static class NoteTiming
     {
-        //Config Variables
-        private static double _gameAudioOffset = 0;
-
         //Audio Variables
-        private static double _gameAudioLength;
-        private static double _songEndOffset;
-        private static bool _songIsPlaying;
+        private static double _gameAudioLength { get; set; }
+        private static double _songEndOffset { get; set; }
+        private static bool _songIsPlaying { get; set; }
 
         //Gameplay Variables
-        private const int PlayStartDelayed = 500;
-
-        private static double _actualSongTime;
-        public static double _currentSongTime;
-        public static List<TimingObject> _svQueue;
-        private static List<TimingObject> _timingQueue;
+        internal const int PlayStartDelayed = 500;
+        private static double _actualSongTime { get; set; }
+        internal static double _currentSongTime { get; set; }
+        internal static List<TimingObject> _svQueue { get; set; }
+        private static List<TimingObject> _timingQueue { get; set; }
 
         //SV + Timing Point Variables
         //private List<TimingObject> _svQueue, _timingQueue, _barQueue, _activeBars;
         //private GameObject[] _activeBarObjects;
 
         //Audio File Variables
-        private static bool _songIsDone;
-        private static float _averageBpm = 100;
+        private static bool _songIsDone { get; set; }
+        private static float _averageBpm { get; set; } = 100;
 
         /// <summary>
         ///     Initialize Timing Contents.
