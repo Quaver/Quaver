@@ -12,6 +12,7 @@ using Quaver.Gameplay;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.QuaFile;
+using Quaver.src.Gameplay;
 
 namespace Quaver.Input
 {
@@ -87,15 +88,16 @@ namespace Quaver.Input
                 if (KeyboardState.IsKeyDown(LaneKeys[i]) && !LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = true;
-                    LogTracker.QuickLog("KeyPress: " + i, Color.Blue);
+                    NoteManager.Input(i,true);
+                    Playfield.UpdateReceptor(i, true);
                 }
                 //Lane Key Release
                 else if (KeyboardState.IsKeyUp(LaneKeys[i]) && LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = false;
-                    LogTracker.QuickLog("KeyRelease: " + i, Color.DarkBlue);
+                    NoteManager.Input(i, false);
+                    Playfield.UpdateReceptor(i, false);
                 }
-                updatedReceptor = (KeyboardState.IsKeyDown(LaneKeys[i])) ? Playfield.UpdateReceptor(i, true) : Playfield.UpdateReceptor(i, false);
             }
         }
 
