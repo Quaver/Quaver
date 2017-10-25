@@ -23,18 +23,17 @@ namespace Quaver.Gameplay
     internal class NoteRendering
     {
         //HitObjects
-        public static List<HitObject> _hitObjectQueue;
-        public const int HitObjectPoolSize = 256;
+        internal static List<HitObject> _hitObjectQueue { get; set; }
+        internal const int HitObjectPoolSize = 256;
 
         //Track
-        public static ulong[] _svCalc; //Stores SV position data for efficiency
-        public static int _currentSVIndex;
-        public static ulong _trackPosition;
-        public const int PlayStartDelayed = 500;
+        internal static ulong[] _svCalc { get; set; } //Stores SV position data for efficiency
+        internal static int _currentSVIndex { get; set; }
+        internal static ulong _trackPosition { get; set; }
 
         //CONFIG (temp)
-        public static float ScrollNegativeFactor { get; set; } = 1f;
-        public static float ScrollSpeed { get; set; } = Configuration.ScrollSpeed / 20f;
+        private static float ScrollNegativeFactor { get; set; } = 1f;
+        private static float ScrollSpeed { get; set; } = Configuration.ScrollSpeed / 20f;
 
         /// <summary>
         /// Initalize any HitObject related content. 
@@ -43,7 +42,7 @@ namespace Quaver.Gameplay
         {
             //Initialize Track
             int i;
-            _trackPosition = (ulong)(-PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
+            _trackPosition = (ulong)(-NoteTiming.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
             _currentSVIndex = 0;
 
             //Initialize HitObjects
