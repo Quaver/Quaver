@@ -19,7 +19,7 @@ namespace Quaver.Gameplay
     /// <summary>
     ///     This is the GameState when the player is actively playing.
     /// </summary>
-    internal partial class StatePlayScreen : IGameState
+    internal class StatePlayScreen : IGameState
     {
         /// <summary>
         ///     The current state as defined in the enum.

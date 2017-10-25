@@ -75,7 +75,7 @@ namespace Quaver.Logging
         /// </summary>
         /// <param name="message"></param>
         /// <param name="newColor"></param>
-        /// <param name="duratioon"></param>
+        /// <param name="duration"></param>
         public static void QuickLog(string message, Color newColor, float duration = 0.2f)
         {
             var newLog = new LogObject()
@@ -87,7 +87,6 @@ namespace Quaver.Logging
                 Value = message
             };
             _logs.Add(newLog);
-            Console.WriteLine("LOG ADDED: "+message);
         }
 
         /// <summary>
