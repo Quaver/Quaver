@@ -120,7 +120,7 @@ namespace Quaver.Gameplay
             LogTracker.UpdateLogger("DeltaTime", "Delta Time: " + dt + "ms");
             LogTracker.UpdateLogger("SongTime", "Current Song Time: " + Timing.CurrentSongTime + "ms");
             LogTracker.UpdateLogger("SongPos", "Current Track Position: " + NoteRendering.TrackPosition);
-            LogTracker.UpdateLogger("HitObjects", "Total Remaining Notes: " + NoteRendering.HitObjectQueue.Count);
+            LogTracker.UpdateLogger("HitObjects", "Total Remaining Notes: " + NoteRendering.HitObjectPool.Count);
             LogTracker.UpdateLogger("Skippable", $"Intro Skippable: {IntroSkippable}");
         }
 

@@ -33,9 +33,9 @@ namespace Quaver.Gameplay
 
                 int nIndex = -1;
                 int i;
-                for (i = 0; i < NoteRendering.HitObjectPoolSize && i < NoteRendering.HitObjectQueue.Count; i++)
+                for (i = 0; i < NoteRendering.HitObjectPoolSize && i < NoteRendering.HitObjectPool.Count; i++)
                 {
-                    if (NoteRendering.HitObjectQueue[i].KeyLane == keyLane + 1 && NoteRendering.HitObjectQueue[i].StartTime - Timing.CurrentSongTime > -HitTiming[4])
+                    if (NoteRendering.HitObjectPool[i].KeyLane == keyLane + 1 && NoteRendering.HitObjectPool[i].StartTime - Timing.CurrentSongTime > -HitTiming[4])
                     {
                         nIndex = i;
                         break;
@@ -46,7 +46,7 @@ namespace Quaver.Gameplay
                 {
                     for (i = 0; i < 5; i++)
                     {
-                        if (Math.Abs(NoteRendering.HitObjectQueue[nIndex].StartTime - Timing.CurrentSongTime) <= HitTiming[i])
+                        if (Math.Abs(NoteRendering.HitObjectPool[nIndex].StartTime - Timing.CurrentSongTime) <= HitTiming[i])
                         {
                             LogTracker.QuickLog("NOTE INDEX: "+nIndex+" "+TimingNames[i], TimingColors[i], 0.5f);
                             NoteRendering.RecycleNote(nIndex); //TODO: Add to LN queue instead of recycling early
