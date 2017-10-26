@@ -268,6 +268,12 @@
   <ItemGroup>
     <Folder Include="Content\TestImages\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Quaver.Online\Quaver.Online\Quaver.Online.csproj">
+      <Project>{e8afe82b-4dda-4b46-bee7-75748e957ef3}</Project>
+      <Name>Quaver.Online</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.5\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.5\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" />
