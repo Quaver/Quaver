@@ -1,3 +1,6 @@
 [submodule "Quaver/Resources/Quaver-Localization"]
 	path = Quaver/Resources/Quaver-Localization
 	url = https://github.com/Swan/Quaver-Localization
+[submodule "Quaver.Online"]
+	path = Quaver.Online
+	url = git@github.com:Swan/Quaver.Online
