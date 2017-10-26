@@ -610,6 +610,7 @@ namespace Quaver.Config
             if (!File.Exists(GameDirectory + "/quaver.cfg"))
             {
                 File.WriteAllText(GameDirectory + "/quaver.cfg", "; Quaver Configuration File");
+                FirstWrite = true;
 
                 Task.Run(async () => await WriteConfigFileAsync()).Wait();
                 return;
@@ -680,7 +681,7 @@ namespace Quaver.Config
             var attempts = 0;
 
             // Don't do anything if the file isn't ready.
-            while (!IsFileReady(GameDirectory + "/quaver.cfg")){}
+            while (!IsFileReady(GameDirectory + "/quaver.cfg") && !FirstWrite){}
 
             var sb = new StringBuilder();
 
@@ -707,6 +708,8 @@ namespace Quaver.Config
                 // Write to file and close it.
                 await sw.WriteLineAsync(sb.ToString());
                 sw.Close();
+
+                FirstWrite = false;
             }
             catch (Exception e)
             {
