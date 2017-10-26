@@ -27,7 +27,6 @@ namespace Quaver.Gameplay
     {
         //HitObjects
         internal static List<HitObject> HitObjectPool { get; set; }
-        internal static List<HitObject>[] HitObjectQueue { get; set; } = new List<HitObject>[4];
         internal const int HitObjectPoolSize = 256;
         internal const uint RemoveTimeAfterMiss = 1000;
 
@@ -49,12 +48,6 @@ namespace Quaver.Gameplay
             int i;
             TrackPosition = (ulong)(-Timing.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
             CurrentSVIndex = 0;
-
-            //Initialize Pooling
-            for (i = 0; i < 4; i++)
-            {
-                HitObjectQueue[i] = new List<HitObject>();
-            }
 
             //Initialize HitObjects
             HitObjectPool = new List<HitObject>();
@@ -112,7 +105,6 @@ namespace Quaver.Gameplay
                 //Initialize Object and add it to HitObjectPool
                 if (i < HitObjectPoolSize) newObject.Initialize();
                 HitObjectPool.Add(newObject);
-                HitObjectQueue[newObject.KeyLane-1].Add(newObject);
             }
             Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: Done Loading Hitobjects.");
             LogTracker.AddLogger("noteRemoved",Color.Red);
@@ -189,11 +181,11 @@ namespace Quaver.Gameplay
         /// <param name="index"></param>
         internal static void RecycleNote(int index)
         {
+            //Remove old HitObject
             HitObjectPool[index].Destroy();
             HitObjectPool.RemoveAt(index);
-            HitObjectQueue[HitObjectPool[index].KeyLane - 1].RemoveAt(0);
 
-            //Initialize the HitObject (create the hit object sprites) if there are any inactive HitObjects
+            //Initialize the new HitObject (create the hit object sprites)
             if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize();
         }
 

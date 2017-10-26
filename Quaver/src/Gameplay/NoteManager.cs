@@ -30,26 +30,25 @@ namespace Quaver.Gameplay
             if (keyDown)
             {
                 //Do key press stuff
-
-                int nIndex = -1;
+                int noteIndex = -1;
                 int i;
                 for (i = 0; i < NoteRendering.HitObjectPoolSize && i < NoteRendering.HitObjectPool.Count; i++)
                 {
                     if (NoteRendering.HitObjectPool[i].KeyLane == keyLane + 1 && NoteRendering.HitObjectPool[i].StartTime - Timing.CurrentSongTime > -HitTiming[4])
                     {
-                        nIndex = i;
+                        noteIndex = i;
                         break;
                     }
                 }
 
-                if (nIndex > -1)
+                if (noteIndex > -1)
                 {
                     for (i = 0; i < 5; i++)
                     {
-                        if (Math.Abs(NoteRendering.HitObjectPool[nIndex].StartTime - Timing.CurrentSongTime) <= HitTiming[i])
+                        if (Math.Abs(NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime) <= HitTiming[i])
                         {
-                            LogTracker.QuickLog("NOTE INDEX: "+nIndex+" "+TimingNames[i], TimingColors[i], 0.5f);
-                            NoteRendering.RecycleNote(nIndex); //TODO: Add to LN queue instead of recycling early
+                            LogTracker.QuickLog("NOTE INDEX: "+ noteIndex + " "+TimingNames[i], TimingColors[i], 0.5f);
+                            NoteRendering.RecycleNote(noteIndex); //TODO: Add to LN queue instead of recycling early
                             break;
                         }
                     }
