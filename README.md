@@ -25,4 +25,4 @@ Also, please note that our code is not perfect, but we do have certain standards
 The best place to start contributing is by joining our [Discord Server](https://discord.gg/nJa8VFr). All of our main developers, contributors, and testers are in there, and is the best place for collaboration.
 
 # LICENSE
-The code in this repository is licensed under the [GNU General Public License v3.0](https://github.com/Swan/Quaver/blob/master/LICENSE). See the LICENSE file for more information.
+The code in this repository is licensed under the [GNU Affero General Public License v3.0](https://github.com/Swan/Quaver/blob/master/LICENSE). See the LICENSE file for more information.
