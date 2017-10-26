@@ -26,7 +26,8 @@ namespace Quaver.Gameplay
     internal class NoteRendering
     {
         //HitObjects
-        internal static List<HitObject> HitObjectQueue { get; set; }
+        internal static List<HitObject> HitObjectPool { get; set; }
+        internal static List<HitObject>[] HitObjectQueue { get; set; } = new List<HitObject>[4];
         internal const int HitObjectPoolSize = 256;
         internal const uint RemoveTimeAfterMiss = 1000;
 
@@ -49,8 +50,14 @@ namespace Quaver.Gameplay
             TrackPosition = (ulong)(-Timing.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
             CurrentSVIndex = 0;
 
+            //Initialize Pooling
+            for (i = 0; i < 4; i++)
+            {
+                HitObjectQueue[i] = new List<HitObject>();
+            }
+
             //Initialize HitObjects
-            HitObjectQueue = new List<HitObject>();
+            HitObjectPool = new List<HitObject>();
             for (i = 0; i < Qua.HitObjects.Count; i++)
             {
                 HitObject newObject = new HitObject()
@@ -102,9 +109,10 @@ namespace Quaver.Gameplay
                     newObject.CurrentLongNoteSize = newObject.InitialLongNoteSize;
                 }
 
-                //Initialize Object and add it to HitObjectQueue
+                //Initialize Object and add it to HitObjectPool
                 if (i < HitObjectPoolSize) newObject.Initialize();
-                HitObjectQueue.Add(newObject);
+                HitObjectPool.Add(newObject);
+                HitObjectQueue[newObject.KeyLane-1].Add(newObject);
             }
             Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: Done Loading Hitobjects.");
             LogTracker.AddLogger("noteRemoved",Color.Red);
@@ -120,11 +128,11 @@ namespace Quaver.Gameplay
             GetCurrentTrackPosition();
 
             int i;
-            for (i=0; i < HitObjectQueue.Count && i < HitObjectPoolSize; i++)
+            for (i=0; i < HitObjectPool.Count && i < HitObjectPoolSize; i++)
             {
-                if (Timing.CurrentSongTime > HitObjectQueue[i].StartTime + RemoveTimeAfterMiss && Timing.CurrentSongTime > HitObjectQueue[i].EndTime + RemoveTimeAfterMiss) //TODO: Add miss ms Timing later
+                if (Timing.CurrentSongTime > HitObjectPool[i].StartTime + RemoveTimeAfterMiss && Timing.CurrentSongTime > HitObjectPool[i].EndTime + RemoveTimeAfterMiss) //TODO: Add miss ms Timing later
                 {
-                    LogTracker.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(HitObjectQueue.Count-HitObjectPoolSize));
+                    LogTracker.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(HitObjectPool.Count-HitObjectPoolSize));
                     //Recycle Note
                     RecycleNote(i);
                     i--;
@@ -132,8 +140,8 @@ namespace Quaver.Gameplay
                 else
                 {
                     // Set new hit object position with the current x, and a new y
-                    HitObjectQueue[i].HitObjectPosition = new Vector2(HitObjectQueue[i].HitObjectPosition.X, PosFromOffset(HitObjectQueue[i].OffsetFromReceptor));
-                    HitObjectQueue[i].UpdateObject();
+                    HitObjectPool[i].HitObjectPosition = new Vector2(HitObjectPool[i].HitObjectPosition.X, PosFromOffset(HitObjectPool[i].OffsetFromReceptor));
+                    HitObjectPool[i].UpdateObject();
                 }
             }
         }
@@ -181,11 +189,12 @@ namespace Quaver.Gameplay
         /// <param name="index"></param>
         internal static void RecycleNote(int index)
         {
-            HitObjectQueue[index].Destroy();
-            HitObjectQueue.RemoveAt(index);
+            HitObjectPool[index].Destroy();
+            HitObjectPool.RemoveAt(index);
+            HitObjectQueue[HitObjectPool[index].KeyLane - 1].RemoveAt(0);
 
             //Initialize the HitObject (create the hit object sprites) if there are any inactive HitObjects
-            if (HitObjectQueue.Count >= HitObjectPoolSize) HitObjectQueue[HitObjectPoolSize - 1].Initialize();
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize();
         }
 
 
