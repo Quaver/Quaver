@@ -10,6 +10,7 @@ using Quaver.Beatmaps;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Main;
+using Quaver.Online.Patcher;
 using Quaver.Tests;
 
 namespace Quaver
@@ -25,6 +26,9 @@ namespace Quaver
         [STAThread]
         private static void Main()
         {
+            // TODO: Test patching of files.
+            Patcher.PatchFiles(CpuFlag.Win64);
+
             // Initialize Config
             Configuration.InitializeConfig();
 
