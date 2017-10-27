@@ -136,14 +136,19 @@ namespace Quaver.Gameplay
                 }
                 else
                 {
-                    //Set LN Size
+                    //Set LN Size and Note Position
                     if (Timing.CurrentSongTime > HitObjectHold[i].StartTime)
-                        HitObjectHold[i].CurrentLongNoteSize =(ulong) ((HitObjectHold[i].LnOffsetFromReceptor - TrackPosition) * ScrollSpeed);
+                    {
+                        HitObjectHold[i].CurrentLongNoteSize = (ulong) ((HitObjectHold[i].LnOffsetFromReceptor - TrackPosition) * ScrollSpeed);
+                        HitObjectHold[i].HitObjectPosition = new Vector2(HitObjectHold[i].HitObjectPosition.X, (float)Playfield.ReceptorYOffset);
+                    }
                     else
+                    {
                         HitObjectHold[i].CurrentLongNoteSize = HitObjectHold[i].InitialLongNoteSize;
+                        HitObjectHold[i].HitObjectPosition = new Vector2(HitObjectHold[i].HitObjectPosition.X, PosFromOffset(HitObjectHold[i].OffsetFromReceptor));
+                    }
 
-                    //Update Position and Object
-                    HitObjectHold[i].HitObjectPosition = new Vector2(HitObjectHold[i].HitObjectPosition.X,(float) Playfield.ReceptorYOffset);
+                    //Update Object
                     HitObjectHold[i].UpdateObject();
                 }
             }
@@ -242,7 +247,7 @@ namespace Quaver.Gameplay
         /// Kills an object from the HitObjectHold Pool
         /// </summary>
         /// <param name="index"></param>
-        internal static void KillHold(int index)
+        internal static void KillHold(int index, bool destroy = false)
         {
             //Update the object's position and size
             HitObjectHold[index].StartTime = (float)Timing.CurrentSongTime;
@@ -250,8 +255,12 @@ namespace Quaver.Gameplay
             HitObjectHold[index].OffsetFromReceptor = SvOffsetFromTime(HitObjectHold[index].StartTime, HitObjectHold[index].SvIndex);
 
             //Kill the object and add it to the HitObjectDead pool
-            HitObjectHold[index].Kill();
-            HitObjectDead.Add(HitObjectHold[index]);
+            if (destroy) HitObjectHold[index].Destroy();
+            else
+            {
+                HitObjectHold[index].Kill();
+                HitObjectDead.Add(HitObjectHold[index]);
+            }
 
             //Remove from the hold pool
             HitObjectHold.RemoveAt(index);
