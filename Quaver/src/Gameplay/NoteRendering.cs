@@ -98,7 +98,7 @@ namespace Quaver.Gameplay
                         }
                     }
 
-                    newObject.InitialLongNoteSize = SvOffsetFromTime(newObject.EndTime, curIndex) - newObject.OffsetFromReceptor;
+                    newObject.InitialLongNoteSize = (ulong)((SvOffsetFromTime(newObject.EndTime, curIndex) - newObject.OffsetFromReceptor)*ScrollSpeed);
                     newObject.CurrentLongNoteSize = newObject.InitialLongNoteSize;
                 }
 
