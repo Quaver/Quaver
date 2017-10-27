@@ -21,7 +21,7 @@ using Quaver.QuaFile;
 namespace Quaver.Gameplay
 {
     /// <summary>
-    /// This class manages anything relating to rendering the HitObjects. Note: This class does not do any timing/input calculation besides note removal after missing.
+    /// This class manages anything relating to rendering the HitObjects. Note: This class does not do any timing/input calculation besides note removal after missing and late release.
     /// </summary>
     internal class NoteRendering
     {

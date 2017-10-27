@@ -39,22 +39,22 @@ namespace Quaver.Gameplay
         private static Sprite[] Receptors { get; set; }
 
         /// <summary>
-        ///     TODO: Add Summary
+        ///     The target size for each receptors.
         /// </summary>
         private static float[] ReceptorTargetSize { get; set; } = { 1.0f, 1.0f, 1.0f, 1.0f };
 
         /// <summary>
-        ///     TODO: Add Summary
+        ///     The current size for each receptors. Used for animation.
         /// </summary>
         private static float[] ReceptorCurrentSize { get; set; } = { 1.0f, 1.0f, 1.0f, 1.0f };
 
         /// <summary>
-        ///     TODO: Add Summary
+        ///     The X-position of each receptor.
         /// </summary>
         public static float[] ReceptorXPosition { get; set; } = new float[4];
 
         /// <summary>
-        ///     Playfield Boundary
+        ///     The playfield Boundary
         /// </summary>
         public static Boundary PlayfieldBoundary { get; set; } = new Boundary();
 
