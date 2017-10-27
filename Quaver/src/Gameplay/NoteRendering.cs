@@ -27,6 +27,8 @@ namespace Quaver.Gameplay
     {
         //HitObjects
         internal static List<HitObject> HitObjectPool { get; set; }
+        internal static List<HitObject> HitObjectDead { get; set; }
+        internal static List<HitObject> HitObjectHold { get; set; }
         internal const int HitObjectPoolSize = 256;
         internal const uint RemoveTimeAfterMiss = 1000;
 
@@ -51,6 +53,8 @@ namespace Quaver.Gameplay
 
             //Initialize HitObjects
             HitObjectPool = new List<HitObject>();
+            HitObjectDead = new List<HitObject>();
+            HitObjectHold = new List<HitObject>();
             for (i = 0; i < Qua.HitObjects.Count; i++)
             {
                 HitObject newObject = new HitObject()
@@ -116,17 +120,19 @@ namespace Quaver.Gameplay
         /// <param name="dt"></param>
         internal static void UpdateNotes(double dt)
         {
+            int i;
+
             //Update the position of the track
             GetCurrentTrackPosition();
 
-            int i;
+            //Update Active HitObjects
             for (i=0; i < HitObjectPool.Count && i < HitObjectPoolSize; i++)
             {
-                if (Timing.CurrentSongTime > HitObjectPool[i].StartTime + RemoveTimeAfterMiss && Timing.CurrentSongTime > HitObjectPool[i].EndTime + RemoveTimeAfterMiss) //TODO: Add miss ms Timing later
+                if (Timing.CurrentSongTime > HitObjectPool[i].StartTime + NoteManager.HitTiming[4])
                 {
                     LogTracker.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(HitObjectPool.Count-HitObjectPoolSize));
                     //Recycle Note
-                    RecycleNote(i);
+                    RecycleNote(i, true);
                     i--;
                 }
                 else
@@ -134,6 +140,22 @@ namespace Quaver.Gameplay
                     // Set new hit object position with the current x, and a new y
                     HitObjectPool[i].HitObjectPosition = new Vector2(HitObjectPool[i].HitObjectPosition.X, PosFromOffset(HitObjectPool[i].OffsetFromReceptor));
                     HitObjectPool[i].UpdateObject();
+                }
+            }
+
+            //Update Dead HitObjects
+            for (i = 0; i < HitObjectDead.Count; i++)
+            {
+                if (Timing.CurrentSongTime > HitObjectDead[i].EndTime + RemoveTimeAfterMiss)
+                {
+                    HitObjectDead[i].Destroy();
+                    HitObjectDead.RemoveAt(i);
+                    i--;
+                }
+                else
+                {
+                    HitObjectDead[i].HitObjectPosition = new Vector2(HitObjectDead[i].HitObjectPosition.X,PosFromOffset(HitObjectDead[i].OffsetFromReceptor));
+                    HitObjectDead[i].UpdateObject();
                 }
             }
         }
@@ -179,16 +201,21 @@ namespace Quaver.Gameplay
         /// TODO: add description
         /// </summary>
         /// <param name="index"></param>
-        internal static void RecycleNote(int index)
+        internal static void RecycleNote(int index, bool killNote = false)
         {
+            //If old note is killed (AKA when you miss an LN)
+            if (killNote)
+            {
+                HitObjectPool[index].Kill();
+                HitObjectDead.Add(HitObjectPool[index]);
+            }
+            else HitObjectPool[index].Destroy();
+
             //Remove old HitObject
-            HitObjectPool[index].Destroy();
             HitObjectPool.RemoveAt(index);
 
             //Initialize the new HitObject (create the hit object sprites)
             if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize();
         }
-
-
     }
 }

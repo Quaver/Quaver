@@ -167,5 +167,18 @@ namespace Quaver.Gameplay
             HoldEndSprite.Destroy();
             HitBodySprite.Destroy();
         }
+
+        /// <summary>
+        /// This method will be called when the HitObject has to be killed (LN missed, LN early release)
+        /// </summary>
+        public void Kill()
+        {
+            //Console.WriteLine("KILLED");
+
+            Color newTint = Color.Gray;
+            HoldBodySprite.Tint = newTint;
+            HoldEndSprite.Tint = newTint;
+            HitBodySprite.Tint = newTint;
+        }
     }
 }
