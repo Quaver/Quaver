@@ -21,7 +21,7 @@ using Quaver.QuaFile;
 namespace Quaver.Gameplay
 {
     /// <summary>
-    /// This class manages anything relating to rendering the HitObjects
+    /// This class manages anything relating to rendering the HitObjects. Note: This class does not do any timing/input calculation besides note removal after missing.
     /// </summary>
     internal class NoteRendering
     {
@@ -69,21 +69,21 @@ namespace Quaver.Gameplay
                 };
 
                 //Calculate SV Index for hit object
-                if (newObject.StartTime >= Timing.SvQueue[Timing.SvQueue.Count - 1].TargetTime) newObject.SvPosition = Timing.SvQueue.Count - 1;
+                if (newObject.StartTime >= Timing.SvQueue[Timing.SvQueue.Count - 1].TargetTime) newObject.SvIndex = Timing.SvQueue.Count - 1;
                 else
                 {
                     for (int j = 0; j < Timing.SvQueue.Count - 1; j++)
                     {
                         if (newObject.StartTime < Timing.SvQueue[j + 1].TargetTime)
                         {
-                            newObject.SvPosition = j;
+                            newObject.SvIndex = j;
                             break;
                         }
                     }
                 }
 
                 //Calculate Y-Offset From Receptor
-                newObject.OffsetFromReceptor = SvOffsetFromTime(newObject.StartTime, newObject.SvPosition);
+                newObject.OffsetFromReceptor = SvOffsetFromTime(newObject.StartTime, newObject.SvIndex);
 
                 //If the object is a long note
                 if (newObject.IsLongNote)
@@ -102,7 +102,9 @@ namespace Quaver.Gameplay
                         }
                     }
 
-                    newObject.InitialLongNoteSize = (ulong)((SvOffsetFromTime(newObject.EndTime, curIndex) - newObject.OffsetFromReceptor)*ScrollSpeed);
+                    //Set LN Variables
+                    newObject.LnOffsetFromReceptor = SvOffsetFromTime(newObject.EndTime, curIndex);
+                    newObject.InitialLongNoteSize = (ulong)((newObject.LnOffsetFromReceptor - newObject.OffsetFromReceptor)*ScrollSpeed);
                     newObject.CurrentLongNoteSize = newObject.InitialLongNoteSize;
                 }
 
@@ -131,8 +133,12 @@ namespace Quaver.Gameplay
                 if (Timing.CurrentSongTime > HitObjectPool[i].StartTime + NoteManager.HitTiming[4])
                 {
                     LogTracker.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(HitObjectPool.Count-HitObjectPoolSize));
-                    //Recycle Note
-                    RecycleNote(i, true);
+
+                    //If HitObject is an LN, kill it
+                    if (HitObjectPool[i].IsLongNote) KillNote(i);
+
+                    //If HitObject is a LongNote, Recycle it
+                    else RecycleNote(i);
                     i--;
                 }
                 else
@@ -140,6 +146,30 @@ namespace Quaver.Gameplay
                     // Set new hit object position with the current x, and a new y
                     HitObjectPool[i].HitObjectPosition = new Vector2(HitObjectPool[i].HitObjectPosition.X, PosFromOffset(HitObjectPool[i].OffsetFromReceptor));
                     HitObjectPool[i].UpdateObject();
+                }
+            }
+
+            //Update Hold Objects
+            for (i = 0; i < HitObjectHold.Count; i++)
+            {
+                if (Timing.CurrentSongTime > HitObjectHold[i].EndTime + NoteManager.HitTiming[4])
+                {
+                    //Remove from LN Queue
+                    HitObjectHold[i].Destroy();
+                    HitObjectHold.RemoveAt(i);
+                    i--;
+                }
+                else
+                {
+                    //Set LN Size
+                    if (Timing.CurrentSongTime > HitObjectHold[i].StartTime)
+                        HitObjectHold[i].CurrentLongNoteSize =(ulong) ((HitObjectHold[i].LnOffsetFromReceptor - TrackPosition) * ScrollSpeed);
+                    else
+                        HitObjectHold[i].CurrentLongNoteSize = HitObjectHold[i].InitialLongNoteSize;
+
+                    //Update Position and Object
+                    HitObjectHold[i].HitObjectPosition = new Vector2(HitObjectHold[i].HitObjectPosition.X,(float) Playfield.ReceptorYOffset);
+                    HitObjectHold[i].UpdateObject();
                 }
             }
 
@@ -201,17 +231,43 @@ namespace Quaver.Gameplay
         /// TODO: add description
         /// </summary>
         /// <param name="index"></param>
-        internal static void RecycleNote(int index, bool killNote = false)
+        internal static void KillNote(int index)
         {
-            //If old note is killed (AKA when you miss an LN)
-            if (killNote)
-            {
-                HitObjectPool[index].Kill();
-                HitObjectDead.Add(HitObjectPool[index]);
-            }
-            else HitObjectPool[index].Destroy();
+            //Kill HitObject (AKA when you miss an LN)
+            HitObjectPool[index].Kill();
+            HitObjectDead.Add(HitObjectPool[index]);
 
             //Remove old HitObject
+            HitObjectPool.RemoveAt(index);
+
+            //Initialize the new HitObject (create the hit object sprites)
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize();
+        }
+
+        /// <summary>
+        /// TODO: add description
+        /// </summary>
+        /// <param name="index"></param>
+        internal static void HoldNote(int index)
+        {
+            //Move to LN Hold Pool
+            HitObjectHold.Add(HitObjectPool[index]);
+
+            //Remove old HitObject
+            HitObjectPool.RemoveAt(index);
+
+            //Initialize the new HitObject (create the hit object sprites)
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize();
+        }
+
+        /// <summary>
+        /// TODO: add description
+        /// </summary>
+        /// <param name="index"></param>
+        internal static void RecycleNote(int index)
+        {
+            //Remove old HitObject
+            HitObjectPool[index].Destroy();
             HitObjectPool.RemoveAt(index);
 
             //Initialize the new HitObject (create the hit object sprites)
