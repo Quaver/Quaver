@@ -69,18 +69,7 @@ namespace Quaver.Gameplay
                 };
 
                 //Calculate SV Index for hit object
-                if (newObject.StartTime >= Timing.SvQueue[Timing.SvQueue.Count - 1].TargetTime) newObject.SvIndex = Timing.SvQueue.Count - 1;
-                else
-                {
-                    for (int j = 0; j < Timing.SvQueue.Count - 1; j++)
-                    {
-                        if (newObject.StartTime < Timing.SvQueue[j + 1].TargetTime)
-                        {
-                            newObject.SvIndex = j;
-                            break;
-                        }
-                    }
-                }
+                newObject.SvIndex = GetSvIndex(newObject.StartTime);
 
                 //Calculate Y-Offset From Receptor
                 newObject.OffsetFromReceptor = SvOffsetFromTime(newObject.StartTime, newObject.SvIndex);
@@ -88,22 +77,8 @@ namespace Quaver.Gameplay
                 //If the object is a long note
                 if (newObject.IsLongNote)
                 {
-                    int curIndex = 0;
-                    if (newObject.EndTime >= Timing.SvQueue[Timing.SvQueue.Count - 1].TargetTime) curIndex = Timing.SvQueue.Count - 1;
-                    else
-                    {
-                        for (int j = 0; j < Timing.SvQueue.Count - 1; j++)
-                        {
-                            if (newObject.EndTime < Timing.SvQueue[j + 1].TargetTime)
-                            {
-                                curIndex = j;
-                                break;
-                            }
-                        }
-                    }
-
                     //Set LN Variables
-                    newObject.LnOffsetFromReceptor = SvOffsetFromTime(newObject.EndTime, curIndex);
+                    newObject.LnOffsetFromReceptor = SvOffsetFromTime(newObject.EndTime, GetSvIndex(newObject.EndTime));
                     newObject.InitialLongNoteSize = (ulong)((newObject.LnOffsetFromReceptor - newObject.OffsetFromReceptor)*ScrollSpeed);
                     newObject.CurrentLongNoteSize = newObject.InitialLongNoteSize;
                 }
@@ -227,6 +202,25 @@ namespace Quaver.Gameplay
             TrackPosition = SvCalc[CurrentSVIndex] + (ulong)(((float)(Timing.CurrentSongTime - (Timing.SvQueue[CurrentSVIndex].TargetTime)) * Timing.SvQueue[CurrentSVIndex].SvMultiplier) + 10000);
         }
 
+        internal static int GetSvIndex(float indexTime)
+        {
+            int newIndex = 0;
+            if (indexTime >= Timing.SvQueue[Timing.SvQueue.Count - 1].TargetTime) newIndex = Timing.SvQueue.Count - 1;
+            else
+            {
+                for (int j = 0; j < Timing.SvQueue.Count - 1; j++)
+                {
+                    if (indexTime < Timing.SvQueue[j + 1].TargetTime)
+                    {
+                        newIndex = j;
+                        break;
+                    }
+                }
+            }
+
+            return newIndex;
+        }
+
         /// <summary>
         /// TODO: add description
         /// </summary>
@@ -242,6 +236,20 @@ namespace Quaver.Gameplay
 
             //Initialize the new HitObject (create the hit object sprites)
             if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize();
+        }
+
+        /// <summary>
+        /// Kills an object from the HitObjectHold Pool
+        /// </summary>
+        /// <param name="index"></param>
+        internal static void KillHold(int index)
+        {
+            //Kill the object and add it to the HitObjectDead pool
+            HitObjectHold[index].Kill();
+            HitObjectDead.Add(HitObjectHold[index]);
+
+            //Remove from the hold pool
+            HitObjectHold.RemoveAt(index);
         }
 
         /// <summary>

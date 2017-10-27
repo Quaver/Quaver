@@ -18,7 +18,7 @@ namespace Quaver.Gameplay
         internal static string[] TimingNames { get; } = new string[5]{"MARV","PERF","GREAT","GOOD","BAD"};
 
         //Temp
-        private static Color[] TimingColors { get;  } = new Color[5]{Color.White,Color.LightBlue,Color.LightGreen,Color.Yellow,Color.Red};
+        private static Color[] TimingColors { get;  } = new Color[5]{Color.White,Color.LightBlue,Color.LightGreen,Color.Yellow,Color.Magenta};
 
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Quaver.Gameplay
                         if (Math.Abs(NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime) <= HitTiming[i])
                         {
                             //Score manager stuff
-                            LogTracker.QuickLog("NOTE INDEX: "+ noteIndex + " "+TimingNames[i], TimingColors[i], 0.5f);
+                            LogTracker.QuickLog("NOTE INDEX: PRESS "+ noteIndex + ", "+TimingNames[i], TimingColors[i], 0.5f);
                             //TODO: Hook with score manager
 
                             //If the object is an LN, hold it at the receptors
@@ -67,15 +67,14 @@ namespace Quaver.Gameplay
             }
             else
             {
-                /*
                 //Reference Variables
                 int noteIndex = -1;
                 int i;
 
                 //Search for closest HitObject that is inside the HitTiming Window
-                for (i = 0; i < NoteRendering.HitObjectPoolSize && i < NoteRendering.HitObjectPool.Count; i++)
+                for (i = 0; i < NoteRendering.HitObjectHold.Count; i++)
                 {
-                    if (NoteRendering.HitObjectPool[i].KeyLane == keyLane + 1 && NoteRendering.HitObjectPool[i].StartTime - Timing.CurrentSongTime > -HitTiming[4])
+                    if (NoteRendering.HitObjectHold[i].KeyLane == keyLane + 1)
                     {
                         noteIndex = i;
                         break;
@@ -85,18 +84,32 @@ namespace Quaver.Gameplay
                 //If such HitObject exists, it will do key-press stuff to it
                 if (noteIndex > -1)
                 {
-                    //Check which HitWindow this object's timing is in
+                    //Check which HitWindow this object's timing is in.
+                    //Since it's an LN, the hit window is increased by 1.5x
+                    int releaseTiming = -1;
                     for (i = 0; i < 5; i++)
                     {
-                        if (Math.Abs(NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime) <= HitTiming[i])
+                        if (Math.Abs(NoteRendering.HitObjectHold[noteIndex].EndTime - Timing.CurrentSongTime) <= HitTiming[i] * 1.5f)
                         {
-                            LogTracker.QuickLog("NOTE INDEX: " + noteIndex + " " + TimingNames[i], TimingColors[i], 0.5f);
-                            NoteRendering.RecycleNote(noteIndex); //TODO: Add to LN queue instead of recycling early
+                            releaseTiming = i;
                             break;
                         }
                     }
+
+                    //If LN has been missed
+                    if (releaseTiming > -1)
+                    {
+                        LogTracker.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", " + TimingNames[releaseTiming], TimingColors[releaseTiming], 0.5f);
+                    }
+                    //If LN has been released during a HitWindow
+                    else
+                    {
+                        LogTracker.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", MISS", Color.Red, 0.5f);
+                    }
+
+                    //Remove LN from pool
+                    NoteRendering.KillHold(noteIndex);
                 }
-                */
             }
         }
     }
