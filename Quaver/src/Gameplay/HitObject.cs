@@ -15,6 +15,7 @@ namespace Quaver.Gameplay
 {
     public class HitObject
     {
+        private Vector2 _hitObjectPosition;
         /// <summary>
         /// The parent of the HitObjects
         /// </summary>
@@ -68,7 +69,23 @@ namespace Quaver.Gameplay
         /// <summary>
         /// The position of the HitObject Sprites
         /// </summary>
-        public Vector2 HitObjectPosition { get; set; } = Vector2.Zero;
+        public Vector2 HitObjectPosition
+        {
+            get => _hitObjectPosition;
+            set
+            {
+                _hitObjectPosition = value;
+            } 
+        }
+
+        public float HitObjectPositionY
+        {
+            get => _hitObjectPosition.Y;
+            set
+            {
+                _hitObjectPosition.Y = value;
+            }
+        }
 
         /// <summary>
         ///     The size of the hit object
@@ -99,7 +116,7 @@ namespace Quaver.Gameplay
             {
                 Image = GameBase.LoadedSkin.NoteHoldBody,
                 Alignment = Alignment.TopLeft,
-                Position = HitObjectPosition,
+                Position = _hitObjectPosition,
                 Size = new Vector2(HitObjectSize, InitialLongNoteSize),
                 Parent = ParentContainer
             };
@@ -108,7 +125,7 @@ namespace Quaver.Gameplay
             {
                 Image = GameBase.LoadedSkin.NoteHoldEnd,
                 Alignment = Alignment.TopLeft,
-                Position = HitObjectPosition,
+                Position = _hitObjectPosition,
                 Size = Vector2.One * HitObjectSize,
                 Parent = ParentContainer
             };
@@ -117,7 +134,7 @@ namespace Quaver.Gameplay
             {
                 Image = GameBase.LoadedSkin.NoteHitObject1,
                 Alignment = Alignment.TopLeft,
-                Position = HitObjectPosition,
+                Position = _hitObjectPosition,
                 Size = Vector2.One * HitObjectSize,
                 Parent = ParentContainer
             };
@@ -133,11 +150,11 @@ namespace Quaver.Gameplay
             if (IsLongNote)
             {
                 //Update HoldBody Position and Size
-                HoldBodySprite.PositionY = HitObjectPosition.Y + HitObjectSize / 2f;
+                HoldBodySprite.PositionY = _hitObjectPosition.Y + HitObjectSize / 2f;
                 HoldBodySprite.SizeY = CurrentLongNoteSize;
 
                 //Update Hold End Position
-                HoldEndSprite.PositionY = HitObjectPosition.Y + HoldBodySprite.SizeY;
+                HoldEndSprite.PositionY = _hitObjectPosition.Y + HoldBodySprite.SizeY;
 
                 //Update Hold Rects
                 HoldBodySprite.UpdateRect();
@@ -145,7 +162,7 @@ namespace Quaver.Gameplay
             }
 
             //Update HitBody
-            HitBodySprite.PositionY = HitObjectPosition.Y;
+            HitBodySprite.PositionY = _hitObjectPosition.Y;
             HitBodySprite.UpdateRect();
         }
         
