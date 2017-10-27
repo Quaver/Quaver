@@ -119,7 +119,7 @@ namespace Quaver.Gameplay
                 else
                 {
                     // Set new hit object position with the current x, and a new y
-                    HitObjectPool[i].HitObjectPosition = new Vector2(HitObjectPool[i].HitObjectPosition.X, PosFromOffset(HitObjectPool[i].OffsetFromReceptor));
+                    HitObjectPool[i].HitObjectPositionY = PosFromOffset(HitObjectPool[i].OffsetFromReceptor);
                     HitObjectPool[i].UpdateObject();
                 }
             }
@@ -140,12 +140,12 @@ namespace Quaver.Gameplay
                     if (Timing.CurrentSongTime > HitObjectHold[i].StartTime)
                     {
                         HitObjectHold[i].CurrentLongNoteSize = (ulong) ((HitObjectHold[i].LnOffsetFromReceptor - TrackPosition) * ScrollSpeed);
-                        HitObjectHold[i].HitObjectPosition = new Vector2(HitObjectHold[i].HitObjectPosition.X, (float)Playfield.ReceptorYOffset);
+                        HitObjectHold[i].HitObjectPositionY = Playfield.ReceptorYOffset;
                     }
                     else
                     {
                         HitObjectHold[i].CurrentLongNoteSize = HitObjectHold[i].InitialLongNoteSize;
-                        HitObjectHold[i].HitObjectPosition = new Vector2(HitObjectHold[i].HitObjectPosition.X, PosFromOffset(HitObjectHold[i].OffsetFromReceptor));
+                        HitObjectHold[i].HitObjectPositionY = PosFromOffset(HitObjectHold[i].OffsetFromReceptor);
                     }
 
                     //Update Object
@@ -164,7 +164,7 @@ namespace Quaver.Gameplay
                 }
                 else
                 {
-                    HitObjectDead[i].HitObjectPosition = new Vector2(HitObjectDead[i].HitObjectPosition.X,PosFromOffset(HitObjectDead[i].OffsetFromReceptor));
+                    HitObjectDead[i].HitObjectPositionY = PosFromOffset(HitObjectDead[i].OffsetFromReceptor);
                     HitObjectDead[i].UpdateObject();
                 }
             }
