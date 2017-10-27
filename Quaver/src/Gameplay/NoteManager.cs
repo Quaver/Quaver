@@ -100,15 +100,14 @@ namespace Quaver.Gameplay
                     if (releaseTiming > -1)
                     {
                         LogTracker.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", " + TimingNames[releaseTiming], TimingColors[releaseTiming], 0.5f);
+                        NoteRendering.KillHold(noteIndex,true);
                     }
                     //If LN has been released during a HitWindow
                     else
                     {
                         LogTracker.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", MISS", Color.Red, 0.5f);
+                        NoteRendering.KillHold(noteIndex);
                     }
-
-                    //Remove LN from pool
-                    NoteRendering.KillHold(noteIndex);
                 }
             }
         }
