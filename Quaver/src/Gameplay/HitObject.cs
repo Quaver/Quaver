@@ -36,14 +36,19 @@ namespace Quaver.Gameplay
         public float EndTime { get; set; }
 
         /// <summary>
-        /// The _svPart's index that the object StartTime lies right after.
+        /// The HitObject's index that the object StartTime lies right after.
         /// </summary>
-        public int SvPosition { get; set; }
+        public int SvIndex { get; set; }
 
         /// <summary>
         /// The Object's Y-Offset From the receptor.
         /// </summary>
         public ulong OffsetFromReceptor { get; set; }
+
+        /// <summary>
+        /// The LN End Y-Offset From the receptor.
+        /// </summary>
+        public ulong LnOffsetFromReceptor { get; set; }
 
         /// <summary>
         /// The initial size of this object's long note.
