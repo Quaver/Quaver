@@ -15,7 +15,11 @@ namespace Quaver.Gameplay
 {
     public class HitObject
     {
+        /// <summary>
+        /// Private field for HitObject Sprite Position
+        /// </summary>
         private Vector2 _hitObjectPosition;
+
         /// <summary>
         /// The parent of the HitObjects
         /// </summary>
@@ -78,6 +82,9 @@ namespace Quaver.Gameplay
             } 
         }
 
+        /// <summary>
+        /// The Y-position of the HitObject Sprites
+        /// </summary>
         public float HitObjectPositionY
         {
             get => _hitObjectPosition.Y;
@@ -93,22 +100,22 @@ namespace Quaver.Gameplay
         public float HitObjectSize { get; set; }
 
         /// <summary>
-        ///     TODO: Add Summary
+        ///     The main body of the hit object.
         /// </summary>
         private Sprite HitBodySprite { get; set; }
 
         /// <summary>
-        ///     TODO: Add Summary
+        ///     The hold body of the hit object.
         /// </summary>
         private Sprite HoldBodySprite { get; set; }
 
         /// <summary>
-        ///     TODO: Add Summary
+        ///     The cap/end of the hit object's LN.
         /// </summary>
         private Sprite HoldEndSprite { get; set; }
 
         /// <summary>
-        ///     TODO: Initializes the HitObject sprite
+        ///     This method initializes the HitObject sprites
         /// </summary>
         public void Initialize()
         {
@@ -143,7 +150,7 @@ namespace Quaver.Gameplay
         }
 
         /// <summary>
-        ///     TODO: Add Summary
+        ///     This method recalculates the object's position and LN size.
         /// </summary>
         public void UpdateObject()
         {
@@ -167,7 +174,7 @@ namespace Quaver.Gameplay
         }
         
         /// <summary>
-        ///     TODO: Add Summary
+        ///     Draw the object onto screen.
         /// </summary>
         public void Draw()
         {
@@ -181,7 +188,7 @@ namespace Quaver.Gameplay
         }
 
         /// <summary>
-        ///     TODO: Add Summary
+        ///     Destroy the hit object.
         /// </summary>
         public void Destroy()
         {
@@ -191,7 +198,7 @@ namespace Quaver.Gameplay
         }
 
         /// <summary>
-        /// This method will be called when the HitObject has to be killed (LN missed, LN early release)
+        ///     This method will be called when the HitObject has to be killed (LN missed, LN early release)
         /// </summary>
         public void Kill()
         {
