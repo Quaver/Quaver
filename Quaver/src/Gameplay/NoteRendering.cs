@@ -244,6 +244,11 @@ namespace Quaver.Gameplay
         /// <param name="index"></param>
         internal static void KillHold(int index)
         {
+            //Update the object's position and size
+            HitObjectHold[index].StartTime = (float)Timing.CurrentSongTime;
+            HitObjectHold[index].SvIndex = GetSvIndex(HitObjectHold[index].StartTime);
+            HitObjectHold[index].OffsetFromReceptor = SvOffsetFromTime(HitObjectHold[index].StartTime, HitObjectHold[index].SvIndex);
+
             //Kill the object and add it to the HitObjectDead pool
             HitObjectHold[index].Kill();
             HitObjectDead.Add(HitObjectHold[index]);
