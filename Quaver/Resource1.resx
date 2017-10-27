@@ -169,9 +169,6 @@
   <data name="note-holdbody" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Skin\note-holdbody.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="note-holdend" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\note-holdend.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="note-receptor" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Skin\note-receptor.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -195,5 +192,8 @@
   </data>
   <data name="ranking-x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Skin\ranking-x.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdend" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdend.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
