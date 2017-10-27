@@ -68,7 +68,7 @@ namespace Quaver.Gameplay
         /// <summary>
         /// The position of the HitObject Sprites
         /// </summary>
-        public Vector2 HitObjectPosition { get; set; }
+        public Vector2 HitObjectPosition { get; set; } = Vector2.Zero;
 
         /// <summary>
         ///     The size of the hit object
