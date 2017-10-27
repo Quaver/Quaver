@@ -14,8 +14,8 @@ namespace Quaver.Gameplay
     class NoteManager
     {
         //Hit Timing Variables
-        private static int[] HitTiming { get; } = new int[5] {32, 56, 80, 100, 120};
-        private static string[] TimingNames { get; } = new string[5]{"MARV","PERF","GREAT","GOOD","BAD"};
+        internal static int[] HitTiming { get; } = new int[5] {16, 43, 76, 106, 130};
+        internal static string[] TimingNames { get; } = new string[5]{"MARV","PERF","GREAT","GOOD","BAD"};
 
         //Temp
         private static Color[] TimingColors { get;  } = new Color[5]{Color.White,Color.LightBlue,Color.LightGreen,Color.Yellow,Color.Red};
