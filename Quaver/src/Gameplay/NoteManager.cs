@@ -14,7 +14,6 @@ namespace Quaver.Gameplay
     class NoteManager
     {
         //Hit Timing Variables
-        internal static int[] HitTiming { get; } = new int[5] {16, 43, 76, 106, 130};
         internal static string[] TimingNames { get; } = new string[5]{"MARV","PERF","GREAT","GOOD","BAD"};
 
         //Temp
@@ -36,7 +35,7 @@ namespace Quaver.Gameplay
                 //Search for closest HitObject that is inside the HitTiming Window
                 for (i = 0; i < NoteRendering.HitObjectPoolSize && i < NoteRendering.HitObjectPool.Count; i++)
                 {
-                    if (NoteRendering.HitObjectPool[i].KeyLane == keyLane + 1 && NoteRendering.HitObjectPool[i].StartTime - Timing.CurrentSongTime > -HitTiming[4])
+                    if (NoteRendering.HitObjectPool[i].KeyLane == keyLane + 1 && NoteRendering.HitObjectPool[i].StartTime - Timing.CurrentSongTime > -ScoreManager.HitWindow[4])
                     {
                         noteIndex = i;
                         break;
@@ -49,7 +48,7 @@ namespace Quaver.Gameplay
                     //Check which HitWindow this object's timing is in
                     for (i = 0; i < 5; i++)
                     {
-                        if (Math.Abs(NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime) <= HitTiming[i])
+                        if (Math.Abs(NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime) <= ScoreManager.HitWindow[i])
                         {
                             //Score manager stuff
                             LogTracker.QuickLog("NOTE INDEX: PRESS "+ noteIndex + ", "+TimingNames[i], TimingColors[i], 0.5f);
@@ -90,7 +89,7 @@ namespace Quaver.Gameplay
                     int releaseTiming = -1;
                     for (i = 0; i < 3; i++)
                     {
-                        if (Math.Abs(NoteRendering.HitObjectHold[noteIndex].EndTime - Timing.CurrentSongTime) <= HitTiming[i] * 1.25f)
+                        if (Math.Abs(NoteRendering.HitObjectHold[noteIndex].EndTime - Timing.CurrentSongTime) <= ScoreManager.HitWindow[i] * 1.25f)
                         {
                             releaseTiming = i;
                             break;

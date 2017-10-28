@@ -105,7 +105,7 @@ namespace Quaver.Gameplay
             //Update Active HitObjects
             for (i=0; i < HitObjectPool.Count && i < HitObjectPoolSize; i++)
             {
-                if (Timing.CurrentSongTime > HitObjectPool[i].StartTime + NoteManager.HitTiming[4])
+                if (Timing.CurrentSongTime > HitObjectPool[i].StartTime + ScoreManager.HitWindow[4])
                 {
                     LogTracker.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(HitObjectPool.Count-HitObjectPoolSize));
 
@@ -127,7 +127,7 @@ namespace Quaver.Gameplay
             //Update Hold Objects
             for (i = 0; i < HitObjectHold.Count; i++)
             {
-                if (Timing.CurrentSongTime > HitObjectHold[i].EndTime + NoteManager.HitTiming[4])
+                if (Timing.CurrentSongTime > HitObjectHold[i].EndTime + ScoreManager.HitWindow[4])
                 {
                     //Remove from LN Queue
                     HitObjectHold[i].Destroy();
