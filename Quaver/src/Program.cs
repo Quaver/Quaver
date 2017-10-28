@@ -27,7 +27,7 @@ namespace Quaver
         private static void Main()
         {
             // TODO: Test patching of files.
-            Patcher.PatchFiles(CpuFlag.Win64);
+            //Patcher.PatchFiles(CpuFlag.Win64);
 
             // Initialize Config
             Configuration.InitializeConfig();
