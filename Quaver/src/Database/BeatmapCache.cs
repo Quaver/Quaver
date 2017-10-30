@@ -76,6 +76,7 @@ namespace Quaver.Database
 
             await CacheByFileCount(quaFiles);
             await CacheByMd5ChecksumAsync(quaFiles);
+            await RemoveMissingBeatmaps();
         }
 
         /// <summary>
@@ -164,6 +165,37 @@ namespace Quaver.Database
             // Add new beatmaps to the database.
             if (reprocessedBeatmaps.Count > 0)
                 await InsertBeatmapsIntoDatabase(reprocessedBeatmaps);
+        }
+
+        /// <summary>
+        ///     Takes a look at all the beatmaps that are in the db and removes any of the missing ones.
+        /// </summary>
+        /// <returns></returns>
+        private static async Task RemoveMissingBeatmaps()
+        {
+            var beatmaps = await FetchAllBeatmaps();
+            
+            // Stores the maps we need to delete
+            var mapsToDelete = new List<Beatmap>();
+            
+            foreach (var map in beatmaps)
+            {
+                if (File.Exists(map.Path))
+                    continue;
+
+                try
+                {
+                    File.Delete(map.Path);
+                    mapsToDelete.Add(map);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                             
+            }
+
+            await DeleteBeatmapsFromDatabase(mapsToDelete);
         }
 
         /// <summary>
