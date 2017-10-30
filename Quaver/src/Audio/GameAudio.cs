@@ -57,9 +57,6 @@ namespace Quaver.Audio
             if (Stream == 0 && Bass.ChannelIsActive(Stream) != PlaybackState.Stopped)
                 return;
 
-            // Set the volume of the track, to that of what is in the config.
-            Bass.ChannelSetAttribute(Stream, ChannelAttribute.Volume, (float) Configuration.VolumeGlobal / 100);
-
             // Set the position to play the song at 
             Bass.ChannelSetPosition(Stream, Bass.ChannelSeconds2Bytes(Stream, previewTime / 1000));
 
@@ -71,6 +68,9 @@ namespace Quaver.Audio
             if (pitch)
                 Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, Math.Log(Math.Pow(playbackRate, 12), 2));
 
+            // Change the audio volume to that of what is in the config file.
+            ChangeAudioVolume();
+            
             // Start playing
             Bass.ChannelPlay(Stream);
             Console.WriteLine($"[AUDIO ENGINE] Audio Stream playing at pos: {previewTime} at {playbackRate}x speed - Pitch Change: {pitch}");
