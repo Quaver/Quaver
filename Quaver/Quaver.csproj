@@ -119,7 +119,7 @@
     <Compile Include="src\Modifiers\Speed.cs" />
     <Compile Include="src\Notifications\Notification.cs" />
     <Compile Include="src\Logging\LogObject.cs" />
-    <Compile Include="src\Logging\LogTracker.cs" />
+    <Compile Include="src\Logging\LogManager.cs" />
     <Compile Include="src\Tests\StateTestScreen.cs" />
     <Compile Include="src\Graphics\CustomColors.cs" />
     <Compile Include="src\Graphics\Sprite.cs" />
