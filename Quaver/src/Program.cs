@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Quaver.Audio;
@@ -28,6 +29,11 @@ namespace Quaver
         {
             // TODO: Test patching of files.
             //Patcher.PatchFiles(CpuFlag.Win64);
+
+            /*
+             * Display Resources Names
+             * foreach (var file in System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames())
+                Console.WriteLine(file);*/
 
             // Initialize Config
             Configuration.InitializeConfig();
