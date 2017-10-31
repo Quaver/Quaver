@@ -157,7 +157,7 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
-                LogManager.Debug(e.Message);
+                //LogManager.Debug(e.Message);
                 return defaultVal;
             }   
         }
