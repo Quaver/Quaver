@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ManagedBass;
 using ManagedBass.Fx;
@@ -11,9 +12,29 @@ namespace Quaver.Audio
 {
     internal class GameAudio
     {
+        /// <summary>
+        ///     The current Audio Stream
+        /// </summary>
         public int Stream { get; set; }
+
+        /// <summary>
+        ///     The list of "streams" for this particular audio stream.
+        ///     Essentially it's how many loaded instances of this stream there are.
+        ///     This is in place mainly for hitsounds, where we would need to play
+        ///     the same audio stream over and over. Disabling AutoFree didn't work,
+        ///     TODO: Find a better fix for this.
+        /// </summary>
         public static List<AudioStream> Streams { get; set; } = new List<AudioStream>();
+
+        /// <summary>
+        ///     Is the current audio stream a sound effect? If not, it's considered a song.
+        /// </summary>
         private bool isEffect { get; }
+
+        /// <summary>
+        ///     The path of the audio stream - used as temporary variables of hitsounds.
+        ///     to be reloaded.
+        /// </summary>
         private string Path { get; set; }
 
         /// <summary>
@@ -45,7 +66,12 @@ namespace Quaver.Audio
             {
                 byte[] buffer = new byte[8 * 1024];
 
-                var path = Configuration.DataDirectory + "/temp.mp3";
+                // Create a random name for the file
+                var random = new Random();
+                var chars = "abcdefghijklmnopqrstuvwxyz0123456789"; 
+                var randFileName = new string(Enumerable.Repeat(chars, 25).Select(s => s[random.Next(s.Length)]).ToArray());
+
+                var path = Configuration.DataDirectory + $"/{randFileName}.mp3";
                 var file = File.Create(path);
                 int len;
                 while ((len = stream.Read(buffer, 0, buffer.Length)) > 0)
