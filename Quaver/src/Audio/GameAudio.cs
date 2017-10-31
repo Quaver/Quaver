@@ -2,6 +2,7 @@
 using System.IO;
 using ManagedBass;
 using ManagedBass.Fx;
+using Quaver.Main;
 using Configuration = Quaver.Config.Configuration;
 
 namespace Quaver.Audio
@@ -9,12 +10,13 @@ namespace Quaver.Audio
     internal class GameAudio
     {
         public int Stream { get; set; }
+        private bool isEffect { get; }
 
         /// <summary>
         /// Constructor - We check if the file path is correct, and if it is, we try to load the audio stream
         /// </summary>
         /// <param name="filePath"></param>
-        public GameAudio(string filePath)
+        public GameAudio(string filePath, bool effect = false)
         {
             // If the file doesn't exist, the stream is set to 0, which means it cannot be played.
             if (!File.Exists(filePath))
@@ -22,6 +24,9 @@ namespace Quaver.Audio
                 Stream = 0;
                 return;
             }
+
+            if (effect)
+                isEffect = true;
 
             // Otherwise, we are going to load the audio stream
             LoadAudioStream(filePath);
@@ -33,20 +38,23 @@ namespace Quaver.Audio
         /// <param name="filePath"></param>
         private void LoadAudioStream(string filePath)
         {
-            if (Bass.Init())
+            // Make sure BASS only gets initialized one time.
+            if (!GameBase.BassInitialized)
             {
-                var stream = Bass.CreateStream(filePath, Flags: BassFlags.Decode);
-
-                if (stream != 0)
-                    Stream = stream;
-
-                // Free the stream when the playback ends
-                Bass.ChannelAddFlag(Stream, BassFlags.AutoFree);
-                return;
+                Bass.Init();
+                GameBase.BassInitialized = true;
             }
+                
+            // Cr3eate the stream
+            var stream = Bass.CreateStream(filePath, Flags: BassFlags.Decode);
 
-            Stream = 0;
-            Console.WriteLine("[AUDIO ENGINE] Error: {0}", Bass.LastError);
+            if (stream != 0)
+                Stream = stream;
+
+            // Free the stream when the playback ends
+            Bass.ChannelAddFlag(Stream, BassFlags.AutoFree);
+
+            Console.WriteLine("[AUDIO ENGINE] Audio Stream Status: {0}", Bass.LastError);
         }
 
         /// <summary>
@@ -70,6 +78,7 @@ namespace Quaver.Audio
 
             // Change the audio volume to that of what is in the config file.
             ChangeAudioVolume();
+            ChangeMasterVolume();
             
             // Start playing
             Bass.ChannelPlay(Stream);
@@ -144,11 +153,21 @@ namespace Quaver.Audio
         }
 
         /// <summary>
-        ///     Changes the audios volume by a specified amount.
+        ///     Sets the audio volume to that of what is in the config file, depending on if it is an effect or not.
         /// </summary>
         internal void ChangeAudioVolume()
         {
-            Bass.ChannelSetAttribute(Stream, ChannelAttribute.Volume, (float)Configuration.VolumeGlobal / 100);
+            var volume = (isEffect) ? (float) Configuration.VolumeEffect / 100 : (float) Configuration.VolumeMusic / 100;
+
+            Bass.ChannelSetAttribute(Stream, ChannelAttribute.Volume, volume);
+        }
+
+        /// <summary>
+        ///     Changes the master volume of all streams
+        /// </summary>
+        internal void ChangeMasterVolume()
+        {
+            Bass.GlobalStreamVolume = Configuration.VolumeGlobal * 100;
         }
     }
 }
