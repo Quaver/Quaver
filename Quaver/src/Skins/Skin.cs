@@ -6,8 +6,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using System.IO;
 using System.Net.Mime;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Remoting.Channels;
 using System.Threading.Tasks;
+using Quaver.Audio;
 using Quaver.Main;
 using Quaver.Utility;
 
@@ -113,6 +116,8 @@ namespace Quaver.Skins
         internal Texture2D JudgePerfect { get; set; }
         internal Texture2D JudgeMarv { get; set; }
 
+        internal GameAudio Hit { get; set; }
+
         // Contains the file names of all skin elements
         private readonly string[] skinElements = new[]
         {
@@ -138,7 +143,8 @@ namespace Quaver.Skins
                 @"judge-good",
                 @"judge-great",
                 @"judge-perfect",
-                @"judge-marv"
+                @"judge-marv",
+                @"hit"
         };
 
         /// <summary>
@@ -285,6 +291,9 @@ namespace Quaver.Skins
                     case @"judge-marv":
                         JudgeMarv = LoadIndividualElement(element, skinElementPath);
                         break;
+                    case @"hit":
+                        Hit = LoadAudioElement(Assembly.GetExecutingAssembly().GetManifestResourceStream("Quaver.Resources.Default_Skin.hit.mp3"));
+                        break;
                     default:
                         break;
                 }
@@ -307,6 +316,18 @@ namespace Quaver.Skins
             //Console.WriteLine($"[SKIN LOADER] Skin element: {element}.png could not be found. Resulting to default: {path}");
 
             return GameBase.Content.Load<Texture2D>(path);
+        }
+
+        /// <summary>
+        ///     Create a new GameAudio object with 
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private GameAudio LoadAudioElement(Stream stream)
+        {
+            Console.WriteLine(stream.Length);
+            return new GameAudio(stream);
         }
 
         /// <summary>
