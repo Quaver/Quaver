@@ -88,6 +88,11 @@ namespace Quaver.Main
         public static List<IMod> CurrentGameModifiers { get; set; } = new List<IMod>();
 
         /// <summary>
+        ///     Keeps track of if the bass library is already initialized on the default output device
+        /// </summary>
+        public static bool BassInitialized { get; set; } 
+
+        /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.
         /// </summary>
         public static async Task LoadAndSetBeatmaps()
