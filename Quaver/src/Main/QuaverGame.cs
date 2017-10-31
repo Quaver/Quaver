@@ -53,10 +53,13 @@ namespace Quaver.Main
             // Creates an audio timer that runs throughout the existence of this game instance
             // and automagically frees up all available audio streams to prevent memory leaks.
             // this was the best way i could figure out.
-            var audioTimer = new Timer();
-            audioTimer.Elapsed += AudioTimerHandler;
-            audioTimer.Interval = 2000;
-            audioTimer.Enabled = true;
+            Task.Run(() =>
+            {
+                var audioTimer = new Timer();
+                audioTimer.Elapsed += AudioTimerHandler;
+                audioTimer.Interval = 2000;
+                audioTimer.Enabled = true;
+            });
         }
 
         /// <summary>
