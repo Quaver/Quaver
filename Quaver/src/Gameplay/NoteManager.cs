@@ -26,6 +26,7 @@ namespace Quaver.Gameplay
         /// <param name="keyLane"></param>
         internal static void Input(int keyLane, bool keyDown)
         {
+            //Check for Note press/LN press
             if (keyDown)
             {
                 //Reference Variables
@@ -52,7 +53,7 @@ namespace Quaver.Gameplay
                         {
                             //Score manager stuff
                             LogManager.QuickLog("NOTE INDEX: PRESS "+ noteIndex + ", "+TimingNames[i], TimingColors[i], 0.5f);
-                            //TODO: Hook with score manager
+                            ScoreManager.Count(i, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime);
 
                             //If the object is an LN, hold it at the receptors
                             if (NoteRendering.HitObjectPool[noteIndex].IsLongNote) NoteRendering.HoldNote(noteIndex);
@@ -64,6 +65,7 @@ namespace Quaver.Gameplay
                     }
                 }
             }
+            //Check for LN release
             else
             {
                 //Reference Variables
@@ -84,7 +86,7 @@ namespace Quaver.Gameplay
                 if (noteIndex > -1)
                 {
                     //Check which HitWindow this object's timing is in.
-                    //Since it's an LN, the hit window is increased by 1.5x.
+                    //Since it's an LN, the hit window is increased by 1.25x.
                     //Only checks MARV/PERF/GREAT
                     int releaseTiming = -1;
                     for (i = 0; i < 3; i++)
@@ -100,12 +102,14 @@ namespace Quaver.Gameplay
                     if (releaseTiming > -1)
                     {
                         LogManager.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", " + TimingNames[releaseTiming], TimingColors[releaseTiming], 0.5f);
+                        ScoreManager.Count(i);
                         NoteRendering.KillHold(noteIndex,true);
                     }
                     //If LN has been released during a HitWindow
                     else
                     {
                         LogManager.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", EARLY", TimingColors[4], 0.5f);
+                        ScoreManager.Count(3);
                         NoteRendering.KillHold(noteIndex);
                     }
                 }
