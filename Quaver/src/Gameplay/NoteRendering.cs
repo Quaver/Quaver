@@ -108,8 +108,11 @@ namespace Quaver.Gameplay
                 //Note is not pressed (Missed)
                 if (Timing.CurrentSongTime > HitObjectPool[i].StartTime + ScoreManager.HitWindow[4])
                 {
+                    //Track note miss with ScoreManager
                     LogManager.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(HitObjectPool.Count-HitObjectPoolSize));
                     LogManager.QuickLog("NOTE INDEX: MISSED NOTE " + (HitObjectPool[i].KeyLane - 1), Color.IndianRed, 0.5f);
+                    ScoreManager.Count(5);
+
                     //If HitObject is an LN, kill it
                     if (HitObjectPool[i].IsLongNote) KillNote(i);
 
@@ -132,8 +135,11 @@ namespace Quaver.Gameplay
                 //LN is missed
                 if (Timing.CurrentSongTime > HitObjectHold[i].EndTime + ScoreManager.HitWindow[4])
                 {
-                    //Remove from LN Queue
+                    //Track LN late release with ScoreManager
                     LogManager.QuickLog("NOTE INDEX: LATE RELEASE " + (HitObjectHold[i].KeyLane - 1), Color.DarkRed, 0.5f);
+                    ScoreManager.Count(5);
+
+                    //Remove from LN Queue
                     HitObjectHold[i].Destroy();
                     HitObjectHold.RemoveAt(i);
                     i--;
