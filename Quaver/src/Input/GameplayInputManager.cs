@@ -80,7 +80,6 @@ namespace Quaver.Input
         private void HandleManiaKeyPresses()
         {
             // Update Lane Keys Receptor
-            var updatedReceptor = false;
             for (var i = 0; i < LaneKeys.Count; i++)
             {
                 //Lane Key Press

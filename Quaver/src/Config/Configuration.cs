@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using IniParser;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Logging;
 
 namespace Quaver.Config
 {
@@ -728,6 +729,8 @@ namespace Quaver.Config
                     await sw.WriteLineAsync(sb.ToString());
                     sw.Close();
                 }
+
+                LogManager.Debug(e.Message);
 
                 // If too many attempts were made.
                 if (attempts == 2)

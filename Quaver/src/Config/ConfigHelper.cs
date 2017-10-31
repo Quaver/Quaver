@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.Logging;
 
 namespace Quaver.Config
 {
@@ -49,6 +50,7 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
+                LogManager.Debug(e.Message);
                 return defaultVal;
             }
         }
@@ -67,6 +69,7 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
+                LogManager.Debug(e.Message);
                 return defaultVal;
             }
         }
@@ -85,6 +88,7 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
+                LogManager.Debug(e.Message);
                 return defaultVal;
             }
         }
@@ -103,6 +107,7 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
+                LogManager.Debug(e.Message);
                 return defaultVal;
             }
         }
@@ -133,6 +138,7 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
+                LogManager.Debug(e.Message);
                 return defaultVal;
             }
         }
@@ -151,6 +157,7 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
+                LogManager.Debug(e.Message);
                 return defaultVal;
             }   
         }
