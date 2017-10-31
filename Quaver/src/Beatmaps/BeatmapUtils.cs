@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using ManagedBass;
+using Quaver.Logging;
 using Quaver.Main;
 
 namespace Quaver.Beatmaps
@@ -103,6 +104,7 @@ namespace Quaver.Beatmaps
                     }
                     catch (Exception e)
                     {
+                        LogManager.Debug(e.Message);
                         continue;
                     }
 
