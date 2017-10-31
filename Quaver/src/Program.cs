@@ -37,6 +37,10 @@ namespace Quaver
 
             // Initialize Config
             Configuration.InitializeConfig();
+ 
+            // Delete all the temporary data files.
+            foreach (var file in new DirectoryInfo(Configuration.DataDirectory).GetFiles())
+                file.Delete();
 
             // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
             var loadGame = Task.Run(async () =>
