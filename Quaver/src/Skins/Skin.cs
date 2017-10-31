@@ -326,8 +326,7 @@ namespace Quaver.Skins
         /// <returns></returns>
         private GameAudio LoadAudioElement(Stream stream)
         {
-            Console.WriteLine(stream.Length);
-            return new GameAudio(stream);
+            return new GameAudio(stream, true);
         }
 
         /// <summary>
