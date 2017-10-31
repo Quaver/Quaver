@@ -32,6 +32,33 @@ namespace Quaver.Audio
             LoadAudioStream(filePath);
         }
 
+        public GameAudio(Stream stream, bool effect = false)
+        {
+            if (effect)
+                isEffect = true;
+
+            try
+            {
+                byte[] buffer = new byte[8 * 1024];
+
+                var path = Configuration.DataDirectory + "/temp.mp3";
+                var file = File.Create(path);
+                int len;
+                while ((len = stream.Read(buffer, 0, buffer.Length)) > 0)
+                {         
+                    file.Write(buffer, 0, len);
+                }
+
+                file.Close();
+
+                LoadAudioStream(path);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
         /// <summary>
         ///     Loads an audio stream, called automatically upon instantiation
         /// </summary>
