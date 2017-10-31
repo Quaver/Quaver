@@ -26,7 +26,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     TODO: CHANGE. Use Config Variable instead.
         /// </summary>
-        public static int ReceptorYOffset { get; set; } = 20;
+        public static int ReceptorYOffset { get; set; } = 40;
 
         /// <summary>
         ///     TODO: The Playfield size. Load from skin -- About 400px wide.

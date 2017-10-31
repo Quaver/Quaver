@@ -34,12 +34,12 @@ namespace Quaver.Gameplay
 
         //Track
         internal static ulong[] SvCalc { get; set; } //Stores SV position data for efficiency
-        internal static int CurrentSVIndex { get; set; }
+        internal static int CurrentSvIndex { get; set; }
         internal static ulong TrackPosition { get; set; }
 
         //CONFIG (temp)
         private static float ScrollNegativeFactor { get; set; } = 1f;
-        private static float ScrollSpeed { get; set; } = Configuration.ScrollSpeed / 20f;
+        private static float ScrollSpeed { get; set; } = Configuration.ScrollSpeed / 20f; //TODO: Add scroll speed curve
 
         /// <summary>
         /// Initalize any HitObject related content. 
@@ -49,7 +49,7 @@ namespace Quaver.Gameplay
             //Initialize Track
             int i;
             TrackPosition = (ulong)(-Timing.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
-            CurrentSVIndex = 0;
+            CurrentSvIndex = 0;
 
             //Initialize HitObjects
             HitObjectPool = new List<HitObject>();
@@ -105,10 +105,11 @@ namespace Quaver.Gameplay
             //Update Active HitObjects
             for (i=0; i < HitObjectPool.Count && i < HitObjectPoolSize; i++)
             {
+                //Note is not pressed (Missed)
                 if (Timing.CurrentSongTime > HitObjectPool[i].StartTime + ScoreManager.HitWindow[4])
                 {
                     LogManager.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(HitObjectPool.Count-HitObjectPoolSize));
-
+                    LogManager.QuickLog("NOTE INDEX: MISSED NOTE " + (HitObjectPool[i].KeyLane - 1), Color.IndianRed, 0.5f);
                     //If HitObject is an LN, kill it
                     if (HitObjectPool[i].IsLongNote) KillNote(i);
 
@@ -116,6 +117,7 @@ namespace Quaver.Gameplay
                     else RecycleNote(i);
                     i--;
                 }
+                //Note is still active
                 else
                 {
                     // Set new hit object position with the current x, and a new y
@@ -127,13 +129,16 @@ namespace Quaver.Gameplay
             //Update Hold Objects
             for (i = 0; i < HitObjectHold.Count; i++)
             {
+                //LN is missed
                 if (Timing.CurrentSongTime > HitObjectHold[i].EndTime + ScoreManager.HitWindow[4])
                 {
                     //Remove from LN Queue
+                    LogManager.QuickLog("NOTE INDEX: LATE RELEASE " + (HitObjectHold[i].KeyLane - 1), Color.DarkRed, 0.5f);
                     HitObjectHold[i].Destroy();
                     HitObjectHold.RemoveAt(i);
                     i--;
                 }
+                //LN is active
                 else
                 {
                     //Set LN Size and Note Position
@@ -194,17 +199,17 @@ namespace Quaver.Gameplay
         {
             if (Timing.CurrentSongTime >= Timing.SvQueue[Timing.SvQueue.Count - 1].TargetTime)
             {
-                CurrentSVIndex = Timing.SvQueue.Count - 1;
+                CurrentSvIndex = Timing.SvQueue.Count - 1;
             }
-            else if (CurrentSVIndex < Timing.SvQueue.Count - 2)
+            else if (CurrentSvIndex < Timing.SvQueue.Count - 2)
             {
-                for (int j = CurrentSVIndex; j < Timing.SvQueue.Count - 1; j++)
+                for (int j = CurrentSvIndex; j < Timing.SvQueue.Count - 1; j++)
                 {
-                    if (Timing.CurrentSongTime > Timing.SvQueue[CurrentSVIndex + 1].TargetTime) CurrentSVIndex++;
+                    if (Timing.CurrentSongTime > Timing.SvQueue[CurrentSvIndex + 1].TargetTime) CurrentSvIndex++;
                     else break;
                 }
             }
-            TrackPosition = SvCalc[CurrentSVIndex] + (ulong)(((float)(Timing.CurrentSongTime - (Timing.SvQueue[CurrentSVIndex].TargetTime)) * Timing.SvQueue[CurrentSVIndex].SvMultiplier) + 10000);
+            TrackPosition = SvCalc[CurrentSvIndex] + (ulong)(((float)(Timing.CurrentSongTime - (Timing.SvQueue[CurrentSvIndex].TargetTime)) * Timing.SvQueue[CurrentSvIndex].SvMultiplier) + 10000);
         }
 
         internal static int GetSvIndex(float indexTime)
