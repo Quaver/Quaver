@@ -12,7 +12,7 @@ namespace Quaver.Audio
     internal class GameAudio
     {
         public int Stream { get; set; }
-        public static List<int> Streams { get; set; } = new List<int>();
+        public static List<AudioStream> Streams { get; set; } = new List<AudioStream>();
         private bool isEffect { get; }
         private string Path { get; set; }
 
@@ -82,7 +82,7 @@ namespace Quaver.Audio
 
             if (stream != 0)
             {
-                Streams.Add(Stream);
+                Streams.Add(new AudioStream(){ IsEffect = isEffect, Stream = Stream});
                 Stream = stream;
             }
                 
@@ -114,7 +114,9 @@ namespace Quaver.Audio
 
             // Play the stream and reload the audio stream
             Bass.ChannelPlay(Stream);
-            LoadAudioStream(Path);
+
+            if (isEffect)
+                LoadAudioStream(Path);
         }
 
         /// <summary>
@@ -210,8 +212,8 @@ namespace Quaver.Audio
         {
             foreach (var audioStream in Streams)
             {
-                if (Bass.ChannelIsActive(audioStream) == PlaybackState.Stopped)
-                    Bass.StreamFree(audioStream);
+                if (Bass.ChannelIsActive(audioStream.Stream) == PlaybackState.Stopped && audioStream.IsEffect)
+                    Bass.StreamFree(audioStream.Stream);
             }         
         }
     }
