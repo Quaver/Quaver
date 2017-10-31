@@ -259,6 +259,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\INIFileParser.dll" />
+    <EmbeddedResource Include="Resources\Default Skin\hit.mp3" />
     <Content Include="x64\bass.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
