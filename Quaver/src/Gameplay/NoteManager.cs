@@ -51,7 +51,7 @@ namespace Quaver.Gameplay
                         if (Math.Abs(NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime) <= ScoreManager.HitWindow[i])
                         {
                             //Score manager stuff
-                            LogTracker.QuickLog("NOTE INDEX: PRESS "+ noteIndex + ", "+TimingNames[i], TimingColors[i], 0.5f);
+                            LogManager.QuickLog("NOTE INDEX: PRESS "+ noteIndex + ", "+TimingNames[i], TimingColors[i], 0.5f);
                             //TODO: Hook with score manager
 
                             //If the object is an LN, hold it at the receptors
@@ -99,13 +99,13 @@ namespace Quaver.Gameplay
                     //If LN has been missed
                     if (releaseTiming > -1)
                     {
-                        LogTracker.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", " + TimingNames[releaseTiming], TimingColors[releaseTiming], 0.5f);
+                        LogManager.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", " + TimingNames[releaseTiming], TimingColors[releaseTiming], 0.5f);
                         NoteRendering.KillHold(noteIndex,true);
                     }
                     //If LN has been released during a HitWindow
                     else
                     {
-                        LogTracker.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", EARLY", TimingColors[4], 0.5f);
+                        LogManager.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", EARLY", TimingColors[4], 0.5f);
                         NoteRendering.KillHold(noteIndex);
                     }
                 }

@@ -88,7 +88,7 @@ namespace Quaver.Gameplay
                 HitObjectPool.Add(newObject);
             }
             Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: Done Loading Hitobjects.");
-            LogTracker.AddLogger("noteRemoved",Color.Red);
+            LogManager.AddLogger("noteRemoved",Color.Red);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Quaver.Gameplay
             {
                 if (Timing.CurrentSongTime > HitObjectPool[i].StartTime + ScoreManager.HitWindow[4])
                 {
-                    LogTracker.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(HitObjectPool.Count-HitObjectPoolSize));
+                    LogManager.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(HitObjectPool.Count-HitObjectPoolSize));
 
                     //If HitObject is an LN, kill it
                     if (HitObjectPool[i].IsLongNote) KillNote(i);

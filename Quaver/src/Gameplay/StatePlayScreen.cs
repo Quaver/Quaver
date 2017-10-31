@@ -66,11 +66,11 @@ namespace Quaver.Gameplay
             Console.WriteLine($"[GAMEPLAY STATE] Loaded Beatmap MD5: {BeatmapMd5}");
 
             //Create loggers
-            LogTracker.AddLogger("DeltaTime", Color.LawnGreen);
-            LogTracker.AddLogger("SongTime", Color.White);
-            LogTracker.AddLogger("SongPos", Color.White);
-            LogTracker.AddLogger("HitObjects", Color.Wheat);
-            LogTracker.AddLogger("Skippable", CustomColors.NameTagAdmin);
+            LogManager.AddLogger("DeltaTime", Color.LawnGreen);
+            LogManager.AddLogger("SongTime", Color.White);
+            LogManager.AddLogger("SongPos", Color.White);
+            LogManager.AddLogger("HitObjects", Color.Wheat);
+            LogManager.AddLogger("Skippable", CustomColors.NameTagAdmin);
         }
 
         /// <summary>
@@ -117,11 +117,11 @@ namespace Quaver.Gameplay
             InputManager.CheckInput(Qua, IntroSkippable);
 
             // Update Loggers
-            LogTracker.UpdateLogger("DeltaTime", "Delta Time: " + dt + "ms");
-            LogTracker.UpdateLogger("SongTime", "Current Song Time: " + Timing.CurrentSongTime + "ms");
-            LogTracker.UpdateLogger("SongPos", "Current Track Position: " + NoteRendering.TrackPosition);
-            LogTracker.UpdateLogger("HitObjects", "Total Remaining Notes: " + NoteRendering.HitObjectPool.Count);
-            LogTracker.UpdateLogger("Skippable", $"Intro Skippable: {IntroSkippable}");
+            LogManager.UpdateLogger("DeltaTime", "Delta Time: " + dt + "ms");
+            LogManager.UpdateLogger("SongTime", "Current Song Time: " + Timing.CurrentSongTime + "ms");
+            LogManager.UpdateLogger("SongPos", "Current Track Position: " + NoteRendering.TrackPosition);
+            LogManager.UpdateLogger("HitObjects", "Total Remaining Notes: " + NoteRendering.HitObjectPool.Count);
+            LogManager.UpdateLogger("Skippable", $"Intro Skippable: {IntroSkippable}");
         }
 
         /// <summary>
