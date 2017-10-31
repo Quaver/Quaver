@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Timers;
 using ManagedBass;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.Database;
 using Quaver.GameState;
@@ -47,6 +49,14 @@ namespace Quaver.Main
 
             // Start watching for directory changes.
             BeatmapImporter.WatchForChanges();
+
+            // Creates an audio timer that runs throughout the existence of this game instance
+            // and automagically frees up all available audio streams to prevent memory leaks.
+            // this was the best way i could figure out.
+            var audioTimer = new Timer();
+            audioTimer.Elapsed += AudioTimerHandler;
+            audioTimer.Interval = 2000;
+            audioTimer.Enabled = true;
         }
 
         /// <summary>
@@ -147,6 +157,16 @@ namespace Quaver.Main
             // Draw everything else in the base class
             base.Draw(gameTime);
             GameBase.SpriteBatch.End();
+        }
+
+        /// <summary>
+        ///     Frees all available audio streams every x seconds.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        private void AudioTimerHandler(object source, ElapsedEventArgs e)
+        {
+            Task.Run(() => GameAudio.FreeAvailableStreams());
         }
     }
 }
