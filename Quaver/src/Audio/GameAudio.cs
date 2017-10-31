@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using ManagedBass;
 using ManagedBass.Fx;
 using Quaver.Main;
@@ -10,7 +12,9 @@ namespace Quaver.Audio
     internal class GameAudio
     {
         public int Stream { get; set; }
+        public static List<int> Streams { get; set; } = new List<int>();
         private bool isEffect { get; }
+        private string Path { get; set; }
 
         /// <summary>
         /// Constructor - We check if the file path is correct, and if it is, we try to load the audio stream
@@ -51,6 +55,7 @@ namespace Quaver.Audio
 
                 file.Close();
 
+                Path = path;
                 LoadAudioStream(path);
             }
             catch (Exception e)
@@ -76,12 +81,12 @@ namespace Quaver.Audio
             var stream = Bass.CreateStream(filePath, Flags: BassFlags.Decode);
 
             if (stream != 0)
+            {
+                Streams.Add(Stream);
                 Stream = stream;
-
-            // Free the stream when the playback ends
+            }
+                
             Bass.ChannelAddFlag(Stream, BassFlags.AutoFree);
-
-            Console.WriteLine("[AUDIO ENGINE] Audio Stream Status: {0}", Bass.LastError);
         }
 
         /// <summary>
@@ -89,7 +94,7 @@ namespace Quaver.Audio
         /// </summary>
         internal void Play(double previewTime = 0, float playbackRate = 1.0f, bool pitch = false)
         {
-            if (Stream == 0 && Bass.ChannelIsActive(Stream) != PlaybackState.Stopped)
+            if (Stream == 0)
                 return;
 
             // Set the position to play the song at 
@@ -106,10 +111,10 @@ namespace Quaver.Audio
             // Change the audio volume to that of what is in the config file.
             ChangeAudioVolume();
             ChangeMasterVolume();
-            
-            // Start playing
+
+            // Play the stream and reload the audio stream
             Bass.ChannelPlay(Stream);
-            Console.WriteLine($"[AUDIO ENGINE] Audio Stream playing at pos: {previewTime} at {playbackRate}x speed - Pitch Change: {pitch}");
+            LoadAudioStream(Path);
         }
 
         /// <summary>
@@ -195,6 +200,19 @@ namespace Quaver.Audio
         internal void ChangeMasterVolume()
         {
             Bass.GlobalStreamVolume = Configuration.VolumeGlobal * 100;
+        }
+
+        /// <summary>
+        ///     Frees all available streams, ran continuously throughout the game.
+        ///     See: QuaverGame.elapsedEventHandler
+        /// </summary>
+        internal static void FreeAvailableStreams()
+        {
+            foreach (var audioStream in Streams)
+            {
+                if (Bass.ChannelIsActive(audioStream) == PlaybackState.Stopped)
+                    Bass.StreamFree(audioStream);
+            }         
         }
     }
 }
