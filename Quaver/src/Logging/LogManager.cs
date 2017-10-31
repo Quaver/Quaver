@@ -90,6 +90,25 @@ namespace Quaver.Logging
         }
 
         /// <summary>
+        /// This method will prompt an error message whenever something goes wrong!!
+        /// </summary>
+        /// <param name="message"></param>
+        public static void Debug(string message)
+        {
+            //TODO: Later, we will use a different type of display and save the logs onto a wordpad or something
+            var newLog = new LogObject()
+            {
+                Name = "_QuickLog",
+                LogColor = Color.Red,
+                Duration = 2,
+                NoDuration = false,
+                Value = message
+            };
+            _logs.Add(newLog);
+            Console.Write("[LogManager]:" + message);
+        }
+
+        /// <summary>
         /// Draw the log objects
         /// </summary>
         public static void Draw(double dt)
