@@ -13,7 +13,7 @@ namespace Quaver.Logging
     /// <summary>
     /// This class will be used to track variables and any necessary logging on screen.
     /// </summary>
-    static class LogTracker
+    static class LogManager
     {
         private static List<LogObject> _logs = new List<LogObject>();
 
