@@ -57,6 +57,14 @@ namespace Quaver.Audio
             LoadAudioStream(filePath);
         }
 
+        /// <summary>
+        ///     Constructor - Turns an audio stream into a temp file, then proceeds to load it. 
+        ///     ManagedBass doesn't seem to have to ability to create a stream directly from 
+        ///     a Streaam instance, so this seems to be a better option.
+        ///     TODO: Explore this more, it's a bit hacky.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="effect"></param>
         public GameAudio(Stream stream, bool effect = false)
         {
             if (effect)
@@ -70,7 +78,8 @@ namespace Quaver.Audio
                 var random = new Random();
                 var chars = "abcdefghijklmnopqrstuvwxyz0123456789"; 
                 var randFileName = new string(Enumerable.Repeat(chars, 25).Select(s => s[random.Next(s.Length)]).ToArray());
-
+                
+                // Create file with the audio stream
                 var path = Configuration.DataDirectory + $"/{randFileName}.mp3";
                 var file = File.Create(path);
                 int len;
@@ -82,6 +91,8 @@ namespace Quaver.Audio
                 file.Close();
 
                 Path = path;
+
+                // Proceed to load the audio stream as normal.
                 LoadAudioStream(path);
             }
             catch (Exception e)
