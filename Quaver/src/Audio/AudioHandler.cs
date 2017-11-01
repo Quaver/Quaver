@@ -11,9 +11,14 @@ namespace Quaver.Audio
     internal static class AudioHandler
     {
         /// <summary>
-        ///     Contains all of the audio streams which will be continuously freed throughout the game's lifecycle.
+        ///     Our Global list of used BASS audio streams
+        ///     Essentially it's how many loaded streams we have.
+        ///     Periodically all unused streams will get freed to prevent memory leaks,
+        ///     as the game continuously loads new audio streams for GameEffects,
+        ///     to play multiple of the same effect at one time if possible.
+        ///     TODO: Find a better fix for this.
         /// </summary>
-        internal static List<AudioStream> AllStreams { get; set; } = new List<AudioStream>();
+        internal static List<int> GlobalAudioStreams { get; set; } = new List<int>();
 
         /// <summary>
         ///     Changes the master volume of all streams
@@ -29,18 +34,18 @@ namespace Quaver.Audio
         /// </summary>
         internal static void FreeAvailableStreams()
         {
-            var newStreamList = new List<AudioStream>();
+            var newStreamList = new List<int>();
 
-            foreach (var audioStream in AllStreams)
+            foreach (var audioStream in GlobalAudioStreams)
             {
-                if (Bass.ChannelIsActive(audioStream.Stream) == PlaybackState.Stopped)
-                    Bass.StreamFree(audioStream.Stream);
+                if (Bass.ChannelIsActive(audioStream) == PlaybackState.Stopped)
+                    Bass.StreamFree(audioStream);
                 else
                     newStreamList.Add(audioStream);
             }
 
             // Replace the list of streams with the new list of active ones.
-            AllStreams = newStreamList;
+            GlobalAudioStreams = newStreamList;
         }
     }
 }

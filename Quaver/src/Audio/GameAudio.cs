@@ -18,15 +18,6 @@ namespace Quaver.Audio
         protected int Stream { get; set; }
 
         /// <summary>
-        ///     The list of "streams" for this particular audio stream.
-        ///     Essentially it's how many loaded instances of this stream there are.
-        ///     This is in place mainly for hitsounds, where we would need to play
-        ///     the same audio stream over and over. Disabling AutoFree didn't work,
-        ///     TODO: Find a better fix for this.
-        /// </summary>
-        private List<AudioStream> Streams { get; set; } = new List<AudioStream>();
-
-        /// <summary>
         ///     The path of the audio stream - used as temporary variables of hitsounds.
         ///     to be reloaded.
         /// </summary>
@@ -72,7 +63,7 @@ namespace Quaver.Audio
 
             if (stream != 0)
             {
-                AudioHandler.AllStreams.Add(new AudioStream(){ Stream = Stream });
+                AudioHandler.GlobalAudioStreams.Add(Stream);
                 Stream = stream;
             }
                 
