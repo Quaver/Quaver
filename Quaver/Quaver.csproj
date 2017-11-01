@@ -100,7 +100,6 @@
   <ItemGroup>
     <Compile Include="Resource1.Designer.cs" />
     <Compile Include="src\Audio\AudioHandler.cs" />
-    <Compile Include="src\Audio\AudioStream.cs" />
     <Compile Include="src\Audio\GameEffect.cs" />
     <Compile Include="src\Gameplay\NoteManager.cs" />
     <Compile Include="src\Gameplay\NoteRendering.cs" />
