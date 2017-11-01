@@ -15,7 +15,7 @@ namespace Quaver.Audio
         /// <summary>
         ///     The current Audio Stream
         /// </summary>
-        public int Stream { get; set; }
+        protected int Stream { get; set; }
 
         /// <summary>
         ///     The list of "streams" for this particular audio stream.
@@ -24,24 +24,24 @@ namespace Quaver.Audio
         ///     the same audio stream over and over. Disabling AutoFree didn't work,
         ///     TODO: Find a better fix for this.
         /// </summary>
-        public static List<AudioStream> Streams { get; set; } = new List<AudioStream>();
-
-        /// <summary>
-        ///     Is the current audio stream a sound effect? If not, it's considered a song.
-        /// </summary>
-        private bool isEffect { get; }
+        private List<AudioStream> Streams { get; set; } = new List<AudioStream>();
 
         /// <summary>
         ///     The path of the audio stream - used as temporary variables of hitsounds.
         ///     to be reloaded.
         /// </summary>
-        private string Path { get; set; }
+        protected string Path { get; set; }
+
+        /// <summary>
+        ///     Ctor
+        /// </summary>
+        public GameAudio(){}
 
         /// <summary>
         /// Constructor - We check if the file path is correct, and if it is, we try to load the audio stream
         /// </summary>
         /// <param name="filePath"></param>
-        public GameAudio(string filePath, bool effect = false)
+        public GameAudio(string filePath)
         {
             // If the file doesn't exist, the stream is set to 0, which means it cannot be played.
             if (!File.Exists(filePath))
@@ -50,62 +50,15 @@ namespace Quaver.Audio
                 return;
             }
 
-            if (effect)
-                isEffect = true;
-
             // Otherwise, we are going to load the audio stream
             LoadAudioStream(filePath);
-        }
-
-        /// <summary>
-        ///     Constructor - Turns an audio stream into a temp file, then proceeds to load it. 
-        ///     ManagedBass doesn't seem to have to ability to create a stream directly from 
-        ///     a Streaam instance, so this seems to be a better option.
-        ///     TODO: Explore this more, it's a bit hacky.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="effect"></param>
-        public GameAudio(Stream stream, bool effect = false)
-        {
-            if (effect)
-                isEffect = true;
-
-            try
-            {
-                byte[] buffer = new byte[8 * 1024];
-
-                // Create a random name for the file
-                var random = new Random();
-                var chars = "abcdefghijklmnopqrstuvwxyz0123456789"; 
-                var randFileName = new string(Enumerable.Repeat(chars, 25).Select(s => s[random.Next(s.Length)]).ToArray());
-                
-                // Create file with the audio stream
-                var path = Configuration.DataDirectory + $"/{randFileName}.mp3";
-                var file = File.Create(path);
-                int len;
-                while ((len = stream.Read(buffer, 0, buffer.Length)) > 0)
-                {         
-                    file.Write(buffer, 0, len);
-                }
-
-                file.Close();
-
-                Path = path;
-
-                // Proceed to load the audio stream as normal.
-                LoadAudioStream(path);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
         }
 
         /// <summary>
         ///     Loads an audio stream, called automatically upon instantiation
         /// </summary>
         /// <param name="filePath"></param>
-        private void LoadAudioStream(string filePath)
+        protected void LoadAudioStream(string filePath)
         {
             // Make sure BASS only gets initialized one time.
             if (!GameBase.BassInitialized)
@@ -119,7 +72,7 @@ namespace Quaver.Audio
 
             if (stream != 0)
             {
-                Streams.Add(new AudioStream(){ IsEffect = isEffect, Stream = Stream});
+                AudioHandler.AllStreams.Add(new AudioStream(){ Stream = Stream});
                 Stream = stream;
             }
                 
@@ -129,7 +82,7 @@ namespace Quaver.Audio
         /// <summary>
         /// Plays the current audio stream at a given preview time, rate, and pitch if specified.
         /// </summary>
-        internal void Play(double previewTime = 0, float playbackRate = 1.0f, bool pitch = false)
+        internal virtual void Play(double previewTime = 0, float playbackRate = 1.0f, bool pitch = false)
         {
             if (Stream == 0)
                 return;
@@ -147,13 +100,10 @@ namespace Quaver.Audio
 
             // Change the audio volume to that of what is in the config file.
             ChangeAudioVolume();
-            ChangeMasterVolume();
+            AudioHandler.ChangeMasterVolume();
 
             // Play the stream and reload the audio stream
             Bass.ChannelPlay(Stream);
-
-            if (isEffect)
-                LoadAudioStream(Path);
         }
 
         /// <summary>
@@ -226,32 +176,11 @@ namespace Quaver.Audio
         /// <summary>
         ///     Sets the audio volume to that of what is in the config file, depending on if it is an effect or not.
         /// </summary>
-        internal void ChangeAudioVolume()
+        internal virtual void ChangeAudioVolume()
         {
-            var volume = (isEffect) ? (float) Configuration.VolumeEffect / 100 : (float) Configuration.VolumeMusic / 100;
+            var volume = (float) Configuration.VolumeMusic / 100;
 
             Bass.ChannelSetAttribute(Stream, ChannelAttribute.Volume, volume);
-        }
-
-        /// <summary>
-        ///     Changes the master volume of all streams
-        /// </summary>
-        internal void ChangeMasterVolume()
-        {
-            Bass.GlobalStreamVolume = Configuration.VolumeGlobal * 100;
-        }
-
-        /// <summary>
-        ///     Frees all available streams, ran continuously throughout the game.
-        ///     See: QuaverGame.elapsedEventHandler
-        /// </summary>
-        internal static void FreeAvailableStreams()
-        {
-            foreach (var audioStream in Streams)
-            {
-                if (Bass.ChannelIsActive(audioStream.Stream) == PlaybackState.Stopped && audioStream.IsEffect)
-                    Bass.StreamFree(audioStream.Stream);
-            }         
         }
     }
 }
