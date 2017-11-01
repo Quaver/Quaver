@@ -16,7 +16,7 @@ namespace Quaver.Utility
         /// <summary>
         ///     The current FPS
         /// </summary>
-        private static double FpsCurrent { get; set; }
+        public static double FpsCurrent { get; set; }
 
         /// <summary>
         ///     The FPS Count
@@ -56,15 +56,6 @@ namespace Quaver.Utility
             // Reset both the FPS Count & Intrval
             FpsCount = 0;
             Interval = 0;
-        }
-
-        /// <summary>
-        /// Get the current FPS
-        /// </summary>
-        /// <returns></returns>
-        public static double Get()
-        {
-            return FpsCurrent;
         }
 
         /// <summary>
