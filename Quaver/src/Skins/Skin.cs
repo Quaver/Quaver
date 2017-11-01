@@ -116,7 +116,7 @@ namespace Quaver.Skins
         internal Texture2D JudgePerfect { get; set; }
         internal Texture2D JudgeMarv { get; set; }
 
-        internal GameAudio Hit { get; set; }
+        internal GameEffect Hit { get; set; }
 
         // Contains the file names of all skin elements
         private readonly string[] skinElements = new[]
@@ -292,7 +292,7 @@ namespace Quaver.Skins
                         JudgeMarv = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"hit":
-                        Hit = LoadAudioElement(Assembly.GetExecutingAssembly().GetManifestResourceStream("Quaver.Resources.Default_Skin.hit.mp3"));
+                        Hit = LoadGameEffectElement(Assembly.GetExecutingAssembly().GetManifestResourceStream("Quaver.Resources.Default_Skin.hit.mp3"));
                         break;
                     default:
                         break;
@@ -319,14 +319,14 @@ namespace Quaver.Skins
         }
 
         /// <summary>
-        ///     Create a new GameAudio object with 
+        ///     Used for loading game effects on the skin.
         /// </summary>
         /// <param name="element"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        private GameAudio LoadAudioElement(Stream stream)
+        private GameEffect LoadGameEffectElement(Stream stream)
         {
-            return new GameAudio(stream, true);
+            return new GameEffect(stream);
         }
 
         /// <summary>
