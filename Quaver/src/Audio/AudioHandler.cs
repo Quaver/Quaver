@@ -30,7 +30,6 @@ namespace Quaver.Audio
         internal static void FreeAvailableStreams()
         {
             var newStreamList = new List<AudioStream>();
-            Console.WriteLine(AllStreams.Count);
 
             foreach (var audioStream in AllStreams)
             {
