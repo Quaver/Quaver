@@ -59,15 +59,6 @@ namespace Quaver.Utility
         }
 
         /// <summary>
-        /// Get the current FPS
-        /// </summary>
-        /// <returns></returns>
-        public static double Get()
-        {
-            return FpsCurrent;
-        }
-
-        /// <summary>
         /// Draw the current FPS as a text sprite
         /// </summary>
         public static void Draw()
