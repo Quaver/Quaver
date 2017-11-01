@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ManagedBass;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Audio;
 using Quaver.GameState;
 using Quaver.Main;
 
@@ -61,7 +62,7 @@ namespace Quaver.Input
                 LastScrollWheelValue = MouseState.ScrollWheelValue;
 
                 // Change the master volume based on the new config value.
-                GameBase.SelectedBeatmap.Song.ChangeMasterVolume();
+                AudioHandler.ChangeMasterVolume();
                 Console.WriteLine($"[CONFIG MANAGER] VolumeGlobal Changed To: {Config.Configuration.VolumeGlobal}");
             }
             // Lower volume if the user scrolls down
@@ -75,7 +76,7 @@ namespace Quaver.Input
                 LastScrollWheelValue = MouseState.ScrollWheelValue;
 
                 // Change the master volume based on the new config value.
-                GameBase.SelectedBeatmap.Song.ChangeMasterVolume();
+                AudioHandler.ChangeMasterVolume();
                 Console.WriteLine($"[CONFIG MANAGER] VolumeGlobal Changed To: {Config.Configuration.VolumeGlobal}");
             }
         }
