@@ -72,7 +72,7 @@ namespace Quaver.Audio
 
             if (stream != 0)
             {
-                AudioHandler.AllStreams.Add(new AudioStream(){ Stream = Stream});
+                AudioHandler.AllStreams.Add(new AudioStream(){ Stream = Stream });
                 Stream = stream;
             }
                 
