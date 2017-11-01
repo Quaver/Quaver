@@ -169,7 +169,7 @@ namespace Quaver.Main
         /// <param name="e"></param>
         private void AudioTimerHandler(object source, ElapsedEventArgs e)
         {
-            Task.Run(() => GameAudio.FreeAvailableStreams());
+            Task.Run(() => AudioHandler.FreeAvailableStreams());
         }
     }
 }
