@@ -99,7 +99,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Resource1.Designer.cs" />
+    <Compile Include="src\Audio\AudioHandler.cs" />
     <Compile Include="src\Audio\AudioStream.cs" />
+    <Compile Include="src\Audio\Effect.cs" />
     <Compile Include="src\Gameplay\NoteManager.cs" />
     <Compile Include="src\Gameplay\NoteRendering.cs" />
     <Compile Include="src\Gameplay\Timing.cs" />
