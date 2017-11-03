@@ -47,20 +47,21 @@ namespace Quaver.Gameplay
         private bool IntroSkippable { get; set; }
 
         /// <summary>
+        ///     Ctor, data passed in from loading state
+        /// </summary>
+        /// <param name="qua"></param>
+        /// <param name="beatmapMd5"></param>
+        public StatePlayScreen(Qua qua, string beatmapMd5)
+        {
+            Qua = qua;
+            BeatmapMd5 = beatmapMd5;
+        }
+
+        /// <summary>
         ///     TODO: Add Summary
         /// </summary>
         public void Initialize()
         {
-            // TODO: MOVE THE LOADING OF THE AUDIO, PARSING OF BEATMAPS, AND LOADING OF HIT OBJECTS TO A LOADING STATE. VERY IMPORTANT
-            // Load up the selected beatmap's song, yo.
-            GameBase.SelectedBeatmap.LoadAudio();
-
-            // Parse the selected beatmap.
-            Qua = new Qua(GameBase.SelectedBeatmap.Path);
-
-            // Get beatmap MD5 of the parsed qua.
-            BeatmapMd5 = BeatmapUtils.GetMd5Checksum(GameBase.SelectedBeatmap.Path);
-
             Console.WriteLine($"[GAMEPLAY STATE] Initialized Gameplay State with Mods: { String.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ModIdentifier)) }");
             Console.WriteLine($"[GAMEPLAY STATE] Loaded Beatmap: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
             Console.WriteLine($"[GAMEPLAY STATE] Loaded Beatmap MD5: {BeatmapMd5}");
