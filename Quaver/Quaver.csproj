@@ -110,6 +110,7 @@
     <Compile Include="src\Gameplay\TimingObject.cs" />
     <Compile Include="src\Gameplay\StatePlayScreen.cs" />
     <Compile Include="src\GameState\IGameState.cs" />
+    <Compile Include="src\GameState\SongLoadingState.cs" />
     <Compile Include="src\Graphics\Boundary.cs" />
     <Compile Include="src\Graphics\SpriteManager.cs" />
     <Compile Include="src\Input\GameplayInputManager.cs" />
