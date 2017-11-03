@@ -102,8 +102,9 @@ namespace Quaver.Main
             // Load the Game Skin Before Starting
             GameBase.LoadSkin();
 
-            // Change to the play screen state (Currently utilized for testing.)
-            GameStateManager.Instance.ChangeState(new StatePlayScreen());                
+            // Change to the loading screen state, where we detect if the song
+            // is actually able to be loaded.
+            GameStateManager.Instance.ChangeState(new SongLoadingState());             
         }
 
         /// <summary>
