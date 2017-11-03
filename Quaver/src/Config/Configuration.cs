@@ -769,6 +769,13 @@ namespace Quaver.Config
             _keyMania2 = ConfigHelper.ReadKeys(KeyMania2, data["KeyMania2"]);
             _keyMania3 = ConfigHelper.ReadKeys(KeyMania3, data["KeyMania3"]);
             _keyMania4 = ConfigHelper.ReadKeys(KeyMania4, data["KeyMania4"]);
+            _7keyMania1 = ConfigHelper.ReadKeys(KeyMania7K1, data["KeyMania7K1"]);
+            _7keyMania2 = ConfigHelper.ReadKeys(KeyMania7K2, data["KeyMania7K2"]);
+            _7keyMania3 = ConfigHelper.ReadKeys(KeyMania7K3, data["KeyMania7K3"]);
+            _7keyMania4 = ConfigHelper.ReadKeys(KeyMania7K4, data["KeyMania7K4"]);
+            _7keyMania5 = ConfigHelper.ReadKeys(KeyMania7K5, data["KeyMania7K5"]);
+            _7keyMania6 = ConfigHelper.ReadKeys(KeyMania7K6, data["KeyMania7K6"]);
+            _7keyMania7 = ConfigHelper.ReadKeys(KeyMania7K7, data["KeyMania7K7"]);
             _keyQuickRetry = ConfigHelper.ReadKeys(KeyQuickRetry, data["KeyQuickRetry"]);
             _keyIncreaseScrollSpeed = ConfigHelper.ReadKeys(KeyIncreaseScrollSpeed, data["KeyIncreaseScrollSpeed"]);
             _keyDecreaseScrollSpeed = ConfigHelper.ReadKeys(KeyDecreaseScrollSpeed, data["KeyDecreaseScrollSpeed"]);
