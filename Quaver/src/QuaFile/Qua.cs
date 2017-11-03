@@ -70,6 +70,11 @@ namespace Quaver.QuaFile
         internal float HpDrain { get; set; }
 
         /// <summary>
+        ///     The key count for the map (Quaver only supports 4k and 7k)
+        /// </summary>
+        internal int KeyCount { get; set; }
+
+        /// <summary>
         ///     Keeps track of whether or not the data in the QuaFile object is valid.
         /// </summary>
         internal bool IsValidQua { get; set; } = true;
@@ -326,6 +331,9 @@ namespace Quaver.QuaFile
                     case "AccuracyStrain":
                         AccuracyStrain = Single.Parse(value);
                         break;
+                    case "KeyCount":
+                        KeyCount = Int32.Parse(value);
+                        break;
                     default:
                         break;
                 }
@@ -416,7 +424,7 @@ namespace Quaver.QuaFile
                     };
 
                     // If the key lane isn't in 1-4, then we'll consider the map to be invalid.
-                    if (ho.KeyLane < 1 || ho.KeyLane > 4)
+                    if (ho.KeyLane < 1 || ho.KeyLane > 7)
                         IsValidQua = false;
 
                     ho.EndTime = Int32.Parse(values[2]);
@@ -441,6 +449,10 @@ namespace Quaver.QuaFile
 
             // If there aren't any TimingPoints
             if (TimingPoints.Count == 0)
+                IsValidQua = false;
+
+            // Check for bad key counts. We only support 4 and 7k
+            if (KeyCount != 4 && KeyCount != 7)
                 IsValidQua = false;
         }
 
