@@ -338,20 +338,27 @@ namespace Quaver.QuaFile
         /// <param name="line">The current line of the file.</param>
         private void ParseTiming(string line)
         {
-            if (line.Contains("|") && !line.Contains("#"))
+            try
             {
-                var values = line.Split('|');
-
-                if (values.Length != 2)
-                    IsValidQua = false;
-
-                var timing = new TimingPoint
+                if (line.Contains("|") && !line.Contains("#"))
                 {
-                    StartTime = Single.Parse(values[0]),
-                    Bpm = Single.Parse(values[1])
-                };
+                    var values = line.Split('|');
 
-                TimingPoints.Add(timing);
+                    if (values.Length != 2)
+                        IsValidQua = false;
+
+                    var timing = new TimingPoint
+                    {
+                        StartTime = Single.Parse(values[0]),
+                        Bpm = Single.Parse(values[1])
+                    };
+
+                    TimingPoints.Add(timing);
+                }
+            }
+            catch (Exception e)
+            {
+                IsValidQua = false;
             }
         }
 
@@ -361,22 +368,29 @@ namespace Quaver.QuaFile
         /// <param name="line">The current line of the file.</param>
         private void ParseSliderVelocity(string line)
         {
-            if (line.Contains("|") && !line.Contains("#"))
+            try
             {
-                var values = line.Split('|');
-
-                // There should only be 3 values in an SV, if not, it's an invalid map.
-                if (values.Length != 3)
-                    IsValidQua = false;
-
-                var sv = new SliderVelocity
+                if (line.Contains("|") && !line.Contains("#"))
                 {
-                    StartTime = Single.Parse(values[0]),
-                    Multiplier = Single.Parse(values[1]),
-                    Volume = Int32.Parse(values[2])
-                };
+                    var values = line.Split('|');
 
-                SliderVelocities.Add(sv);
+                    // There should only be 3 values in an SV, if not, it's an invalid map.
+                    if (values.Length != 3)
+                        IsValidQua = false;
+
+                    var sv = new SliderVelocity
+                    {
+                        StartTime = Single.Parse(values[0]),
+                        Multiplier = Single.Parse(values[1]),
+                        Volume = Int32.Parse(values[2])
+                    };
+
+                    SliderVelocities.Add(sv);
+                }
+            }
+            catch (Exception e)
+            {
+                IsValidQua = false;
             }
         }
 
@@ -386,26 +400,33 @@ namespace Quaver.QuaFile
         /// <param name="line">The current line of the file.</param>
         private void ParseHitObject(string line)
         {
-            if (line.Contains("|") && !line.Contains("HitObjects"))
+            try
             {
-                var values = line.Split('|');
-
-                if (values.Length != 3)
-                    IsValidQua = false;
-
-                var ho = new HitObject
+                if (line.Contains("|") && !line.Contains("HitObjects"))
                 {
-                    StartTime = Int32.Parse(values[0]),
-                    KeyLane = Int32.Parse(values[1])
-                };
+                    var values = line.Split('|');
 
-                // If the key lane isn't in 1-4, then we'll consider the map to be invalid.
-                if (ho.KeyLane < 1 || ho.KeyLane > 4)
-                    IsValidQua = false;
+                    if (values.Length != 3)
+                        IsValidQua = false;
 
-                ho.EndTime = Int32.Parse(values[2]);
+                    var ho = new HitObject
+                    {
+                        StartTime = Int32.Parse(values[0]),
+                        KeyLane = Int32.Parse(values[1])
+                    };
 
-                HitObjects.Add(ho);
+                    // If the key lane isn't in 1-4, then we'll consider the map to be invalid.
+                    if (ho.KeyLane < 1 || ho.KeyLane > 4)
+                        IsValidQua = false;
+
+                    ho.EndTime = Int32.Parse(values[2]);
+
+                    HitObjects.Add(ho);
+                }
+            }
+            catch (Exception e)
+            {
+                IsValidQua = false;
             }
         }
 
