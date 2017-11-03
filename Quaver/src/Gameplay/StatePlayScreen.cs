@@ -65,8 +65,10 @@ namespace Quaver.Gameplay
             Console.WriteLine($"[GAMEPLAY STATE] Initialized Gameplay State with Mods: { String.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ModIdentifier)) }");
             Console.WriteLine($"[GAMEPLAY STATE] Loaded Beatmap: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
             Console.WriteLine($"[GAMEPLAY STATE] Loaded Beatmap MD5: {BeatmapMd5}");
+            Console.WriteLine($"[GAMEPLAY STATE] Beatmap has Key Count: {Qua.KeyCount}");
 
             //Create loggers
+            LogManager.AddLogger("KeyCount", Color.Pink);
             LogManager.AddLogger("DeltaTime", Color.LawnGreen);
             LogManager.AddLogger("SongTime", Color.White);
             LogManager.AddLogger("SongPos", Color.White);
@@ -118,6 +120,7 @@ namespace Quaver.Gameplay
             InputManager.CheckInput(Qua, IntroSkippable);
 
             // Update Loggers
+            LogManager.UpdateLogger("KeyCount", $"Key Count: {Qua.KeyCount}");
             LogManager.UpdateLogger("DeltaTime", "Delta Time: " + dt + "ms");
             LogManager.UpdateLogger("SongTime", "Current Song Time: " + Timing.CurrentSongTime + "ms");
             LogManager.UpdateLogger("SongPos", "Current Track Position: " + NoteRendering.TrackPosition);
