@@ -134,6 +134,42 @@ namespace Quaver.Config
         private static Keys _keyMania4 = Keys.K;
 
         /// <summary>
+        ///     The key pressed for lane 1 - 7k
+        /// </summary>
+        private static Keys _7keyMania1 = Keys.S;
+
+        /// <summary>
+        ///     The key pressed for lane 2 - 7k
+        /// </summary>
+        private static Keys _7keyMania2 = Keys.D;
+
+        /// <summary>
+        ///     The key pressed for lane 3 - 7k
+        /// </summary>
+        private static Keys _7keyMania3 = Keys.F;
+
+        /// <summary>
+        ///     The key pressed for lane 4 - 7k
+        /// </summary>
+        private static Keys _7keyMania4 = Keys.Space;
+
+        /// <summary>
+        ///     The key pressed for lane 5 - 7k
+        /// </summary>
+        private static Keys _7keyMania5 = Keys.J;
+
+        /// <summary>
+        ///     The key pressed for lane 6 - 7k
+        /// </summary>
+        private static Keys _7keyMania6 = Keys.K;
+
+        /// <summary>
+        ///     The key pressed for lane 7 - 7k
+        /// </summary>
+        private static Keys _7keyMania7 = Keys.L;
+
+
+        /// <summary>
         ///     The key pressed to quickly retry the song during gameplay
         /// </summary>
         private static Keys _keyQuickRetry = Keys.OemTilde;
@@ -499,6 +535,76 @@ namespace Quaver.Config
             set
             {
                 _keyMania4 = value;
+                Task.Run(async () => await WriteConfigFileAsync());
+            }
+        }
+
+        internal static Keys KeyMania7K1
+        {
+            get => _7keyMania1;
+            set
+            {
+                _7keyMania1 = value;
+                Task.Run(async () => await WriteConfigFileAsync());
+            }
+        }
+
+        internal static Keys KeyMania7K2
+        {
+            get => _7keyMania2;
+            set
+            {
+                _7keyMania2 = value;
+                Task.Run(async () => await WriteConfigFileAsync());
+            }
+        }
+
+        internal static Keys KeyMania7K3
+        {
+            get => _7keyMania3;
+            set
+            {
+                _7keyMania3 = value;
+                Task.Run(async () => await WriteConfigFileAsync());
+            }
+        }
+
+        internal static Keys KeyMania7K4
+        {
+            get => _7keyMania4;
+            set
+            {
+                _7keyMania4 = value;
+                Task.Run(async () => await WriteConfigFileAsync());
+            }
+        }
+
+        internal static Keys KeyMania7K5
+        {
+            get => _7keyMania5;
+            set
+            {
+                _7keyMania5 = value;
+                Task.Run(async () => await WriteConfigFileAsync());
+            }
+        }
+
+        internal static Keys KeyMania7K6
+        {
+            get => _7keyMania6;
+            set
+            {
+                _7keyMania6 = value;
+                Task.Run(async () => await WriteConfigFileAsync());
+            }
+        }
+
+        internal static Keys KeyMania7K7
+        {
+            get => _7keyMania7;
+            set
+            {
+                _7keyMania1 = value;
                 Task.Run(async () => await WriteConfigFileAsync());
             }
         }
