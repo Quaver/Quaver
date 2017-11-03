@@ -112,6 +112,8 @@
     <Compile Include="src\GameState\IGameState.cs" />
     <Compile Include="src\GameState\SongLoadingState.cs" />
     <Compile Include="src\Graphics\Boundary.cs" />
+    <Compile Include="src\Graphics\Button.cs" />
+    <Compile Include="src\Graphics\IClickable.cs" />
     <Compile Include="src\Graphics\SpriteManager.cs" />
     <Compile Include="src\Input\GameplayInputManager.cs" />
     <Compile Include="src\Input\GlobalInputManager.cs" />
