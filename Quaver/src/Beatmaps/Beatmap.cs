@@ -135,6 +135,11 @@ namespace Quaver.Beatmaps
         public Texture2D Background { get; set; }
 
         /// <summary>
+        ///     The amount of keys the beatmap has.
+        /// </summary>
+        public int Keys { get; set; }
+
+        /// <summary>
         ///     Loads a beatmaps's GameAudio file
         /// </summary>
         internal void LoadAudio()
@@ -177,6 +182,7 @@ namespace Quaver.Beatmaps
                 Source = qua.Source,
                 Tags = qua.Tags,
                 SongLength = Qua.FindSongLength(qua),
+                Keys = qua.KeyCount
             };
         }
     }
