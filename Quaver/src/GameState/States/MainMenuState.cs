@@ -23,6 +23,10 @@ namespace Quaver.GameState
 
         public void Initialize()
         {
+            // Load and play the randomly selected beatmap's song.
+            GameBase.SelectedBeatmap.LoadAudio();
+            GameBase.SelectedBeatmap.Song.Play();
+
             testButton = new Button(ButtonType.Image)
             {
                 Size = new Vector2(200, 40),
@@ -38,6 +42,10 @@ namespace Quaver.GameState
         public void ButtonClick(object sender, EventArgs e)
         {
             LogManager.QuickLog("Clicked",Color.White,1f);
+
+            // Stop the selected song since it's only played during the main menu.
+            GameBase.SelectedBeatmap.Song.Stop();
+
             GameStateManager.Instance.AddState(new SongLoadingState());
         }
 
