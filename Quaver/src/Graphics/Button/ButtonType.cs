@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Quaver.Graphics
+namespace Quaver.Graphics.Button
 {
     internal enum ButtonType
     {

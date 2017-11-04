@@ -11,7 +11,7 @@ using Quaver.Utility;
 using Quaver.Graphics;
 using Quaver.Main;
 
-namespace Quaver.Tests
+namespace Quaver.GameState.States
 {
     /// <summary>
     /// This is the GameState when the player is actively playing.
