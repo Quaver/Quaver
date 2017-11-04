@@ -104,6 +104,16 @@ namespace Quaver.Main
         public static Texture2D DefaultBackgroundTexture { get; set; }
 
         /// <summary>
+        ///     The current keyboard state.
+        /// </summary>
+        public static KeyboardState KeyboardState { get; set; }
+
+        /// <summary>
+        ///     The current Mouse State
+        /// </summary>
+        public static MouseState MouseState { get; set; }
+
+        /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.
         /// </summary>
         public static async Task LoadAndSetBeatmaps()
