@@ -483,7 +483,6 @@ namespace Quaver.Peppy
             try
             {
                 // Write the file.
-                Console.WriteLine(OriginalFileName.Replace(".osu", ".qua"));
                 var file = new StreamWriter(OriginalFileName.Replace(".osu", ".qua"))
                 {
                     AutoFlush = true
