@@ -19,16 +19,6 @@ namespace Quaver.Input
         public State CurrentState { get; set; } // Global State, so this isn't necessary.
 
         /// <summary>
-        ///     The current keyboard state.
-        /// </summary>
-        public KeyboardState KeyboardState { get; set; }
-
-        /// <summary>
-        ///     The current Mouse State
-        /// </summary>
-        public MouseState MouseState { get; set; }
-
-        /// <summary>
         ///     Keeps track of the last scroll wheel value.
         /// </summary>
         private int LastScrollWheelValue { get; set; }
@@ -38,10 +28,6 @@ namespace Quaver.Input
         /// </summary>
         public void CheckInput()
         {
-            // Get the two states of the keyboard.
-            KeyboardState = Keyboard.GetState();
-            MouseState = Mouse.GetState();
-
             HandleVolumeChanges();
         }
 
@@ -52,28 +38,28 @@ namespace Quaver.Input
         private void HandleVolumeChanges()
         {
             //  Raise volume if the user scrolls up.
-            if (MouseState.ScrollWheelValue > LastScrollWheelValue 
-                && (KeyboardState.IsKeyDown(Keys.RightAlt) || KeyboardState.IsKeyDown(Keys.LeftAlt)) 
+            if (GameBase.MouseState.ScrollWheelValue > LastScrollWheelValue 
+                && (GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) || GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt)) 
                 && Config.Configuration.VolumeGlobal < 100)
             {
                 Config.Configuration.VolumeGlobal += 5;
 
                 // Set the last scroll wheel value
-                LastScrollWheelValue = MouseState.ScrollWheelValue;
+                LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
 
                 // Change the master volume based on the new config value.
                 AudioHandler.ChangeMasterVolume();
                 Console.WriteLine($"[CONFIG MANAGER] VolumeGlobal Changed To: {Config.Configuration.VolumeGlobal}");
             }
             // Lower volume if the user scrolls down
-            else if (MouseState.ScrollWheelValue < LastScrollWheelValue 
-                && (KeyboardState.IsKeyDown(Keys.RightAlt) || KeyboardState.IsKeyDown(Keys.LeftAlt)) 
+            else if (GameBase.MouseState.ScrollWheelValue < LastScrollWheelValue 
+                && (GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) || GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt)) 
                 && Config.Configuration.VolumeGlobal > 0)
             {
                 Config.Configuration.VolumeGlobal -= 5;
 
                 // Set the last scroll wheel value
-                LastScrollWheelValue = MouseState.ScrollWheelValue;
+                LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
 
                 // Change the master volume based on the new config value.
                 AudioHandler.ChangeMasterVolume();
