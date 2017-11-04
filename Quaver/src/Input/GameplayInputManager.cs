@@ -23,16 +23,6 @@ namespace Quaver.Input
         public State CurrentState { get; set; } = State.PlayScreen;
 
         /// <summary>
-        ///     The current Keyboard State
-        /// </summary>
-        public KeyboardState KeyboardState { get; set; }
-
-        /// <summary>
-        ///     TRhe current Mouse State
-        /// </summary>
-        public MouseState MouseState { get; set; }
-
-        /// <summary>
         ///     All of the lane keys mapped to a list
         /// </summary>
         private List<Keys> LaneKeys { get; } = new List<Keys>()
@@ -58,12 +48,6 @@ namespace Quaver.Input
         /// </summary>
         public void CheckInput(Qua qua, bool skippable)
         {
-            // Set the current state of the keyboard.
-            KeyboardState = Keyboard.GetState();
-
-            // Set the current mouse state.
-            MouseState = Mouse.GetState();
-
             // Check Mania Key Presses
             HandleManiaKeyPresses();
 
@@ -83,7 +67,7 @@ namespace Quaver.Input
             for (var i = 0; i < LaneKeys.Count; i++)
             {
                 //Lane Key Press
-                if (KeyboardState.IsKeyDown(LaneKeys[i]) && !LaneKeyDown[i])
+                if (GameBase.KeyboardState.IsKeyDown(LaneKeys[i]) && !LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = true;
                     NoteManager.Input(i,true);
@@ -91,7 +75,7 @@ namespace Quaver.Input
                     GameBase.LoadedSkin.Hit.Play();
                 }
                 //Lane Key Release
-                else if (KeyboardState.IsKeyUp(LaneKeys[i]) && LaneKeyDown[i])
+                else if (GameBase.KeyboardState.IsKeyUp(LaneKeys[i]) && LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = false;
                     NoteManager.Input(i, false);
@@ -107,7 +91,7 @@ namespace Quaver.Input
         /// <param name="currentSongTime"></param>
         private void SkipSong(Qua qua, bool skippable)
         {
-            if (skippable && KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !IntroSkipped)
+            if (skippable && GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !IntroSkipped)
             {
                 IntroSkipped = true;
 
@@ -130,7 +114,7 @@ namespace Quaver.Input
         private void ImportBeatmaps()
         {
             // TODO: This is a beatmap import and sync test, eventually add this to its own game state
-            if (KeyboardState.IsKeyDown(Keys.F5) && GameBase.ImportQueueReady)
+            if (GameBase.KeyboardState.IsKeyDown(Keys.F5) && GameBase.ImportQueueReady)
             {
                 GameBase.ImportQueueReady = false;
 
