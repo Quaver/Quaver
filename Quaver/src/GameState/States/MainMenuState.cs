@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Graphics;
+using Quaver.Main;
 
 namespace Quaver.GameState
 {
@@ -14,14 +16,41 @@ namespace Quaver.GameState
     {
         public State CurrentState { get; set; } = State.MainMenu;
 
-        public void Initialize() { }
+        //TEST
+        public Sprite testButton;
 
-        public void LoadContent() { }
+        public void Initialize()
+        {
+            testButton = new Sprite()
+            {
+                Size = new Vector2(200, 40),
+                Image = GameBase.LoadedSkin.NoteHoldBody,
+                Alignment = Alignment.MidCenter,
+                Position = Vector2.Zero
+            };
+            testButton.UpdateRect();
+            SpriteManager.AddToDrawList(testButton);
+            Console.WriteLine(testButton.GlobalRect);
+        }
 
-        public void UnloadContent() { }
+        public void LoadContent()
+        {
+            
+        }
 
-        public void Update(GameTime gameTime) { }
+        public void UnloadContent()
+        {
+            
+        }
 
-        public void Draw() { }
+        public void Update(GameTime gameTime)
+        {
+            
+        }
+
+        public void Draw()
+        {
+            
+        }
     }
 }
