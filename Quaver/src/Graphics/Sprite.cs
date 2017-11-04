@@ -19,12 +19,12 @@ namespace Quaver.Graphics
     internal class Sprite : Drawable
     {
         /// <summary>
-        /// Image Texture of the sprite.
+        ///     Image Texture of the sprite.
         /// </summary>
         public Texture2D Image { get; set; }
 
         /// <summary>
-        /// Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
+        ///     Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
         /// </summary>
         public float Rotation { get; set; }
 
@@ -48,6 +48,14 @@ namespace Quaver.Graphics
 
             //Draw children
             Children.ForEach(x => x.Draw());
+        }
+
+        /// <summary>
+        ///     Will update the sprite. Used for animation/logic
+        /// </summary>
+        public override void Update()
+        {
+            
         }
     }
 }
