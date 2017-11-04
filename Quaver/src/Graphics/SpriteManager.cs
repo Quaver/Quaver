@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.Graphics;
+using Quaver.Main;
 
 namespace Quaver.Graphics
 {
@@ -74,13 +75,14 @@ namespace Quaver.Graphics
         /// <summary>
         /// This method will draw every object in the Draw List.
         /// </summary>
-        internal static void Draw()
+        internal static void Draw(double dt)
         {
             foreach (var current in DrawList)
             {
-                current.Update();
+                current.Update(dt);
                 current.Draw();
             }
+            GameBase.Cursor.Update(dt);
         }
 
     }

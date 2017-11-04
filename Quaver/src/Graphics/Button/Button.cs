@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Main;
+using Quaver.Utility;
 
 namespace Quaver.Graphics
 {
@@ -14,6 +16,11 @@ namespace Quaver.Graphics
         private Texture2D Mask { get; set; }
         private String Text { get; set; }
         private ButtonType ButtonType { get; set; }
+
+        private float HoverCurrentTween { get; set; }
+        private float HoverTargetTween { get; set; }
+
+        private Color CurrentTint = Color.White;
 
         //Constructor
         public Button(ButtonType type)
@@ -26,7 +33,7 @@ namespace Quaver.Graphics
         /// </summary>
         public override void Draw()
         {
-            //base.Draw();
+            base.Draw();
         }
 
         /// <summary>
@@ -56,10 +63,18 @@ namespace Quaver.Graphics
         /// <summary>
         ///     This method will be used for button logic and animation
         /// </summary>
-        public override void Update()
+        public override void Update(double dt)
         {
-            Console.WriteLine("Button.Update()");
-            Console.WriteLine(GameBase.MouseState.X);
+            if (this.GlobalRect.Contains(GameBase.MouseState.Position)) HoverTargetTween = 1;
+            else HoverTargetTween = 0;
+
+            HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt/30,1));
+            CurrentTint.R = (byte)(HoverCurrentTween * 255);
+            CurrentTint.G = (byte)(HoverCurrentTween * 255);
+            CurrentTint.B = (byte)(HoverCurrentTween * 255);
+
+            Tint = CurrentTint;
+
             //Do button logic
         }
     }
