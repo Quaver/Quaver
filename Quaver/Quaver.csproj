@@ -108,9 +108,9 @@
     <Compile Include="src\Gameplay\Playfield.cs" />
     <Compile Include="src\Gameplay\ScoreManager.cs" />
     <Compile Include="src\Gameplay\TimingObject.cs" />
-    <Compile Include="src\Gameplay\StatePlayScreen.cs" />
+    <Compile Include="src\GameState\States\PlayScreenState.cs" />
     <Compile Include="src\GameState\IGameState.cs" />
-    <Compile Include="src\GameState\SongLoadingState.cs" />
+    <Compile Include="src\GameState\States\SongLoadingState.cs" />
     <Compile Include="src\Graphics\Boundary.cs" />
     <Compile Include="src\Graphics\Button\Button.cs" />
     <Compile Include="src\Graphics\Button\ButtonType.cs" />
@@ -140,7 +140,7 @@
     <Compile Include="src\Notifications\Notification.cs" />
     <Compile Include="src\Logging\LogObject.cs" />
     <Compile Include="src\Logging\LogManager.cs" />
-    <Compile Include="src\Tests\StateTestScreen.cs" />
+    <Compile Include="src\GameState\States\TestScreenState.cs" />
     <Compile Include="src\Graphics\CustomColors.cs" />
     <Compile Include="src\Graphics\Sprite.cs" />
     <Compile Include="src\Graphics\Drawable.cs" />
