@@ -33,7 +33,7 @@ namespace Quaver.Graphics
             Children.ForEach(x => x.Draw());
         }
 
-        public override void Update()
+        public override void Update(double dt)
         {
             //base.Update();
         }

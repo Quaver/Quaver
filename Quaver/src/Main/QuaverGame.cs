@@ -102,6 +102,9 @@ namespace Quaver.Main
             // Load the Game Skin Before Starting
             GameBase.LoadSkin();
 
+            // Create Cursor. Use after LoadSkin
+            GameBase.LoadCursor();
+
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
             GameStateManager.Instance.ChangeState(new MainMenuState());             
@@ -158,7 +161,7 @@ namespace Quaver.Main
             if (Config.Configuration.FpsCounter)
                 FpsCounter.Draw();
 
-            SpriteManager.Draw();
+            SpriteManager.Draw(gameTime.ElapsedGameTime.TotalSeconds);
             LogManager.Draw(gameTime.ElapsedGameTime.TotalSeconds);
 
             // Draw everything else in the base class

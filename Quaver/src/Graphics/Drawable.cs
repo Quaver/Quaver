@@ -21,7 +21,7 @@ namespace Quaver.Graphics
         //Methods that will be inherited
         public abstract void Draw();
 
-        public abstract void Update();
+        public abstract void Update(double dt);
 
         //Local variables
         private Rectangle _localRect;

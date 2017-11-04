@@ -120,6 +120,7 @@
     <Compile Include="src\Input\GlobalInputManager.cs" />
     <Compile Include="src\Input\IInputManager.cs" />
     <Compile Include="src\Localization\Language.cs" />
+    <Compile Include="src\Graphics\Cursor.cs" />
     <Compile Include="src\Main\GameBase.cs" />
     <Compile Include="src\Audio\GameAudio.cs" />
     <Compile Include="src\Beatmaps\Beatmap.cs" />

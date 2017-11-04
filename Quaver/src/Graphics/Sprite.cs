@@ -53,9 +53,9 @@ namespace Quaver.Graphics
         /// <summary>
         ///     Will update the sprite. Used for animation/logic
         /// </summary>
-        public override void Update()
+        public override void Update(double dt)
         {
-            Console.WriteLine("Sprite.Update()");
+            //Animation logic
         }
     }
 }
