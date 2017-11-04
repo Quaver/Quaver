@@ -32,5 +32,9 @@ namespace Quaver.Graphics
         {
             Children.ForEach(x => x.Draw());
         }
+
+        public override void Update()
+        {
+        }
     }
 }
