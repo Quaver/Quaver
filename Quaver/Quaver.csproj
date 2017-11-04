@@ -108,6 +108,7 @@
     <Compile Include="src\Gameplay\Playfield.cs" />
     <Compile Include="src\Gameplay\ScoreManager.cs" />
     <Compile Include="src\Gameplay\TimingObject.cs" />
+    <Compile Include="src\GameState\States\MainMenuState.cs" />
     <Compile Include="src\GameState\States\PlayScreenState.cs" />
     <Compile Include="src\GameState\IGameState.cs" />
     <Compile Include="src\GameState\States\SongLoadingState.cs" />
