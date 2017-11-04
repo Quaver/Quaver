@@ -59,7 +59,7 @@ namespace Quaver.GameState
 
             try
             {
-                var screen = States.Peek();
+                States.Peek().UnloadContent();
                 States.Pop();
             }
             catch (Exception ex)
@@ -76,6 +76,7 @@ namespace Quaver.GameState
         {
             while (States.Count > 0)
             {
+                States.Peek().UnloadContent();
                 States.Pop();
             }
         }

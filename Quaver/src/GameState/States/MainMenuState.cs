@@ -32,14 +32,14 @@ namespace Quaver.GameState
             };
             testButton.UpdateRect();
             testButton.Clicked += ButtonClick;
-            SpriteManager.AddToDrawList(testButton);
+            SpriteManager.AddToDrawPool(testButton);
             Console.WriteLine(testButton.GlobalRect);
         }
 
         public void ButtonClick(object sender, EventArgs e)
         {
             LogManager.QuickLog("Clicked",Color.White,1f);
-            GameStateManager.Instance.ChangeState(new PlayScreenState());
+            GameStateManager.Instance.AddState(new SongLoadingState());
         }
 
 
@@ -50,7 +50,13 @@ namespace Quaver.GameState
 
         public void UnloadContent()
         {
-            
+            Console.WriteLine("UNLOADED MAIN MENU");
+            Console.WriteLine("UNLOADED MAIN MENU");
+            Console.WriteLine("UNLOADED MAIN MENU");
+            Console.WriteLine("UNLOADED MAIN MENU");
+            Console.WriteLine("UNLOADED MAIN MENU");
+            testButton.Clicked -= ButtonClick;
+            testButton.Destroy();
         }
 
         public void Update(GameTime gameTime)
