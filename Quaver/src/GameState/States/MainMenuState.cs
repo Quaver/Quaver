@@ -12,6 +12,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Button;
 using Quaver.Logging;
 using Quaver.Main;
+using Quaver.Peppy;
 
 namespace Quaver.GameState.States
 {
@@ -21,6 +22,8 @@ namespace Quaver.GameState.States
 
         //TEST
         public Button testButton;
+
+        public Button importPeppyButton;
 
         public void Initialize()
         {
@@ -38,6 +41,18 @@ namespace Quaver.GameState.States
             testButton.UpdateRect();
             testButton.Clicked += ButtonClick;
             Console.WriteLine(testButton.GlobalRect);
+
+
+            importPeppyButton = new Button(ButtonType.Image)
+            {
+                Size = new Vector2(200, 40),
+                Image = GameBase.LoadedSkin.NoteHoldBody,
+                Alignment = Alignment.TopCenter,
+                Position = Vector2.Zero
+            };
+            importPeppyButton.UpdateRect();
+            importPeppyButton.Clicked += Osz.OnImportButtonClick;
+            
         }
 
         public void ButtonClick(object sender, EventArgs e)
@@ -70,11 +85,13 @@ namespace Quaver.GameState.States
         public void Update(GameTime gameTime)
         {
             testButton.Update(gameTime.ElapsedGameTime.TotalMilliseconds);
+            importPeppyButton.Update(gameTime.ElapsedGameTime.TotalMilliseconds);
         }
 
         public void Draw()
         {
             testButton.Draw();
+            importPeppyButton.Draw();
         }
     }
 }
