@@ -17,11 +17,11 @@ namespace Quaver.GameState
         public State CurrentState { get; set; } = State.MainMenu;
 
         //TEST
-        public Sprite testButton;
+        public Button testButton;
 
         public void Initialize()
         {
-            testButton = new Sprite()
+            testButton = new Button(ButtonType.Image)
             {
                 Size = new Vector2(200, 40),
                 Image = GameBase.LoadedSkin.NoteHoldBody,

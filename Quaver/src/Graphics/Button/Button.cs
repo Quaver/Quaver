@@ -26,7 +26,7 @@ namespace Quaver.Graphics
         /// </summary>
         public override void Draw()
         {
-            base.Draw();
+            //base.Draw();
         }
 
         /// <summary>
