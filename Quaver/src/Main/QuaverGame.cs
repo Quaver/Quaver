@@ -104,7 +104,7 @@ namespace Quaver.Main
 
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
-            GameStateManager.Instance.ChangeState(new SongLoadingState());             
+            GameStateManager.Instance.ChangeState(new MainMenuState());             
         }
 
         /// <summary>

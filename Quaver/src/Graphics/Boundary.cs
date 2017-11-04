@@ -35,6 +35,7 @@ namespace Quaver.Graphics
 
         public override void Update()
         {
+            base.Update();
         }
     }
 }
