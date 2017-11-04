@@ -55,7 +55,7 @@ namespace Quaver.Graphics
         /// </summary>
         public override void Update()
         {
-            
+            Console.WriteLine("Sprite.Update()");
         }
     }
 }
