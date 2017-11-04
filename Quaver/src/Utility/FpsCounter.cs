@@ -51,7 +51,7 @@ namespace Quaver.Utility
             if (Interval < FrameCount)
                 return;
 
-            FpsCurrent = 1 / (FpsCount / FrameCount);
+            FpsCurrent = 1000 / (FpsCount / FrameCount);
 
             // Reset both the FPS Count & Intrval
             FpsCount = 0;
