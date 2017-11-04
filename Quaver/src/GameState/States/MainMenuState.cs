@@ -32,7 +32,6 @@ namespace Quaver.GameState
             };
             testButton.UpdateRect();
             testButton.Clicked += ButtonClick;
-            SpriteManager.AddToDrawPool(testButton);
             Console.WriteLine(testButton.GlobalRect);
         }
 
@@ -55,18 +54,18 @@ namespace Quaver.GameState
             Console.WriteLine("UNLOADED MAIN MENU");
             Console.WriteLine("UNLOADED MAIN MENU");
             Console.WriteLine("UNLOADED MAIN MENU");
-            testButton.Clicked -= ButtonClick;
+            //testButton.Clicked -= ButtonClick;
             testButton.Destroy();
         }
 
         public void Update(GameTime gameTime)
         {
-            
+            testButton.Update(gameTime.ElapsedGameTime.TotalMilliseconds);
         }
 
         public void Draw()
         {
-            
+            testButton.Draw();
         }
     }
 }

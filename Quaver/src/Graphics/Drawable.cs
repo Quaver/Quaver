@@ -183,8 +183,7 @@ namespace Quaver.Graphics
         /// </summary>
         public void Destroy()
         {
-            SpriteManager.RemoveFromSpritePool(this);
-            Parent = null;
+            
         }
 
         /// <summary>
@@ -192,7 +191,7 @@ namespace Quaver.Graphics
         /// </summary>
         public void Instantiate()
         {
-            SpriteManager.AddToSpritePool(this);
+            
         }
 
         /// <summary>
