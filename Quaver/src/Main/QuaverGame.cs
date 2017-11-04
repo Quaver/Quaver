@@ -130,6 +130,9 @@ namespace Quaver.Main
             // Update all game states.
             GameStateManager.Instance.Update(gameTime);
 
+            GameBase.KeyboardState = Keyboard.GetState();
+            GameBase.MouseState = Mouse.GetState();
+
             // Check Global Input
             GlobalInputManager.CheckInput();
 
