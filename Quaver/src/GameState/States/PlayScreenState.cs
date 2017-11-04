@@ -19,7 +19,7 @@ namespace Quaver.Gameplay
     /// <summary>
     ///     This is the GameState when the player is actively playing.
     /// </summary>
-    internal class StatePlayScreen : IGameState
+    internal class PlayScreenState : IGameState
     {
         /// <summary>
         ///     The current state as defined in the enum.
@@ -51,7 +51,7 @@ namespace Quaver.Gameplay
         /// </summary>
         /// <param name="qua"></param>
         /// <param name="beatmapMd5"></param>
-        public StatePlayScreen(Qua qua, string beatmapMd5)
+        public PlayScreenState(Qua qua, string beatmapMd5)
         {
             Qua = qua;
             BeatmapMd5 = beatmapMd5;
