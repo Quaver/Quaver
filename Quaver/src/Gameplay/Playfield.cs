@@ -95,7 +95,6 @@ namespace Quaver.Gameplay
 
                 Receptors[i].UpdateRect();
             }
-            SpriteManager.AddToDrawPool(PlayfieldBoundary);
         }
 
         /// <summary>
