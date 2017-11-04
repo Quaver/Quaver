@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Gameplay;
 using Quaver.Graphics;
+using Quaver.Logging;
 using Quaver.Main;
 
 namespace Quaver.GameState
@@ -29,9 +31,17 @@ namespace Quaver.GameState
                 Position = Vector2.Zero
             };
             testButton.UpdateRect();
+            testButton.Clicked += ButtonClick;
             SpriteManager.AddToDrawList(testButton);
             Console.WriteLine(testButton.GlobalRect);
         }
+
+        public void ButtonClick(object sender, EventArgs e)
+        {
+            LogManager.QuickLog("Clicked",Color.White,1f);
+            GameStateManager.Instance.ChangeState(new PlayScreenState());
+        }
+
 
         public void LoadContent()
         {
