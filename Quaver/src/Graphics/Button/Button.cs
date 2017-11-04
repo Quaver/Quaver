@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Main;
 
 namespace Quaver.Graphics
 {
@@ -13,9 +14,6 @@ namespace Quaver.Graphics
         private Texture2D Mask { get; set; }
         private String Text { get; set; }
         private ButtonType ButtonType { get; set; }
-
-        //TODO: temp. remove later
-        private MouseState MouseState;
 
         //Constructor
         public Button(ButtonType type)
@@ -60,8 +58,7 @@ namespace Quaver.Graphics
         /// </summary>
         public override void Update()
         {
-            MouseState = Mouse.GetState();
-            Console.WriteLine(MouseState.X);
+            Console.WriteLine(GameBase.MouseState.X);
             //Do button logic
             base.Update();
         }
