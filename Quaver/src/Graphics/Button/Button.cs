@@ -20,7 +20,7 @@ namespace Quaver.Graphics
         }
 
         /// <summary>
-        /// This method draws the button.
+        ///     This method draws the button.
         /// </summary>
         public override void Draw()
         {
@@ -28,7 +28,7 @@ namespace Quaver.Graphics
         }
 
         /// <summary>
-        /// This method is called when the button gets clicked
+        ///     This method is called when the button gets clicked
         /// </summary>
         public void OnClicked()
         {
@@ -36,7 +36,7 @@ namespace Quaver.Graphics
         }
 
         /// <summary>
-        /// This method is called when the mouse hovers over the button
+        ///     This method is called when the mouse hovers over the button
         /// </summary>
         public void MouseOver()
         {
@@ -44,12 +44,19 @@ namespace Quaver.Graphics
         }
 
         /// <summary>
-        /// This method is called when the Mouse hovers out of the button
+        ///     This method is called when the Mouse hovers out of the button
         /// </summary>
         public void MouseOut()
         {
             
         }
 
+        /// <summary>
+        ///     This method will be used for button logic and animation
+        /// </summary>
+        public override void Update()
+        {
+            base.Update();
+        }
     }
 }
