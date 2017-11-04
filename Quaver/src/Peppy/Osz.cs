@@ -74,7 +74,7 @@ namespace Quaver.Peppy
                 }
 
                 // Now that all of them are converted, we'll create a new directory with all of the files except for .osu
-                var newSongDir = $"{Config.Configuration.SongDirectory}/{new DirectoryInfo(fileName).Name}";
+                var newSongDir = $"{Config.Configuration.SongDirectory}/{new DirectoryInfo(fileName).Name.Replace(".osz", "")}";
 
                 Directory.CreateDirectory(newSongDir);
 
@@ -85,7 +85,7 @@ namespace Quaver.Peppy
                 }
                 
                 // Delete the entire temp directory.
-                File.Delete(fileName);
+                Directory.Delete(extractPath, true);
                 Console.WriteLine($"[PEPPY CONVERTER] Completed Conversion for .osz: {fileName}");
             }
             catch (Exception e)
