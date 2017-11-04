@@ -11,6 +11,26 @@ namespace Quaver.Utility
     internal class Util
     {
         /// <summary>
+        /// Converts Point to Vector2
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        internal static Vector2 PointToVector2(Point point)
+        {
+            return new Vector2(point.X, point.Y);
+        }
+
+        /// <summary>
+        /// Converts Vector2 to Point
+        /// </summary>
+        /// <param name="vector2"></param>
+        /// <returns></returns>
+        internal static Point Vector2ToPoint(Vector2 vector2)
+        {
+            return new Point((int)vector2.X, (int)vector2.Y);
+        }
+
+        /// <summary>
         /// Returns a 1-dimensional value for an object's alignment within the provided boundary.
         /// </summary>
         /// <param name="scale">The value (percentage) which the object will be aligned to (0=min, 0.5 =mid, 1.0 = max)</param>

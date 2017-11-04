@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Quaver.Config;
+using Quaver.Graphics;
 using Quaver.Modifiers;
 
 namespace Quaver.Main
@@ -103,6 +104,11 @@ namespace Quaver.Main
         public static MouseState MouseState { get; set; }
 
         /// <summary>
+        /// The mouse cursor
+        /// </summary>
+        public static Cursor Cursor { get; private set; }
+
+        /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.
         /// </summary>
         public static async Task LoadAndSetBeatmaps()
@@ -117,6 +123,14 @@ namespace Quaver.Main
         public static void LoadSkin()
         {
             LoadedSkin = new Skin(Configuration.Skin);
+        }
+
+        /// <summary>
+        ///     Initialize Cursor. Only called once per game.
+        /// </summary>
+        public static void LoadCursor()
+        {
+            Cursor = new Cursor();
         }
     }
 }
