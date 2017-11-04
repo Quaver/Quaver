@@ -58,9 +58,9 @@ namespace Quaver.Graphics
         /// </summary>
         public override void Update()
         {
+            Console.WriteLine("Button.Update()");
             Console.WriteLine(GameBase.MouseState.X);
             //Do button logic
-            base.Update();
         }
     }
 }

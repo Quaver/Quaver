@@ -78,6 +78,7 @@ namespace Quaver.Graphics
         {
             foreach (var current in DrawList)
             {
+                current.Update();
                 current.Draw();
             }
         }
