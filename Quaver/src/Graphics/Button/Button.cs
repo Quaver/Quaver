@@ -17,6 +17,8 @@ namespace Quaver.Graphics
         private String Text { get; set; }
         private ButtonType ButtonType { get; set; }
 
+        //Mouse Over
+        private bool MouseHovered { get; set; }
         private float HoverCurrentTween { get; set; }
         private float HoverTargetTween { get; set; }
 
@@ -49,7 +51,8 @@ namespace Quaver.Graphics
         /// </summary>
         public void MouseOver()
         {
-            
+            MouseHovered = true;
+            HoverTargetTween = 1;
         }
 
         /// <summary>
@@ -57,7 +60,8 @@ namespace Quaver.Graphics
         /// </summary>
         public void MouseOut()
         {
-            
+            MouseHovered = false;
+            HoverTargetTween = 0;
         }
 
         /// <summary>
@@ -65,13 +69,19 @@ namespace Quaver.Graphics
         /// </summary>
         public override void Update(double dt)
         {
-            if (this.GlobalRect.Contains(GameBase.MouseState.Position)) HoverTargetTween = 1;
-            else HoverTargetTween = 0;
+            if (this.GlobalRect.Contains(GameBase.MouseState.Position))
+            {
+                if (!MouseHovered) MouseOver();
+            }
+            else
+            {
+                if (MouseHovered) MouseOut();
+            }
 
-            HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt/30,1));
-            CurrentTint.R = (byte)(HoverCurrentTween * 255);
-            CurrentTint.G = (byte)(HoverCurrentTween * 255);
-            CurrentTint.B = (byte)(HoverCurrentTween * 255);
+            HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt/40,1));
+            CurrentTint.R = (byte)((HoverCurrentTween * 0.25 + 0.75f) * 255);
+            CurrentTint.G = (byte)((HoverCurrentTween * 0.25 + 0.75f) * 255);
+            CurrentTint.B = (byte)((HoverCurrentTween * 0.25 + 0.75f) * 255);
 
             Tint = CurrentTint;
 
