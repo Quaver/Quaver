@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Utility;
 
@@ -21,6 +22,11 @@ namespace Quaver.Graphics
         private bool MouseHovered { get; set; }
         private float HoverCurrentTween { get; set; }
         private float HoverTargetTween { get; set; }
+
+        //Mouse Click
+        private bool MouseClicked { get; set; }
+        private double MouseDownDuration { get; set; }
+        public event EventHandler Clicked;
 
         private Color CurrentTint = Color.White;
 
@@ -43,7 +49,8 @@ namespace Quaver.Graphics
         /// </summary>
         public void OnClicked()
         {
-            
+            MouseClicked = true;
+            Clicked(this, null);
         }
 
         /// <summary>
@@ -71,11 +78,26 @@ namespace Quaver.Graphics
         {
             if (this.GlobalRect.Contains(GameBase.MouseState.Position))
             {
+                //Animation
                 if (!MouseHovered) MouseOver();
+
+                //Click logic
+                if (GameBase.MouseState.LeftButton == ButtonState.Pressed)
+                {
+                    if (!MouseClicked) OnClicked();
+                }
+                else
+                {
+                    if (MouseClicked) MouseClicked = false;
+                }
             }
             else
             {
+                //Animation
                 if (MouseHovered) MouseOut();
+
+                //Click logic
+                if (MouseClicked) MouseClicked = false;
             }
 
             HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt/40,1));
