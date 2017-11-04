@@ -9,10 +9,11 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Gameplay;
 using Quaver.Graphics;
+using Quaver.Graphics.Button;
 using Quaver.Logging;
 using Quaver.Main;
 
-namespace Quaver.GameState
+namespace Quaver.GameState.States
 {
     internal class MainMenuState : IGameState
     {

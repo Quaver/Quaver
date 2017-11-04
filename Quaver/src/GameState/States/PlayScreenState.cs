@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.Config;
+using Quaver.Gameplay;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Input;
@@ -14,7 +15,7 @@ using Quaver.Main;
 using Quaver.QuaFile;
 using Quaver.Utility;
 
-namespace Quaver.Gameplay
+namespace Quaver.GameState.States
 {
     /// <summary>
     ///     This is the GameState when the player is actively playing.
