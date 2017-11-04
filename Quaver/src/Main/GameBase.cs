@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Quaver.Config;
+using Quaver.Graphics;
 using Quaver.Modifiers;
 
 namespace Quaver.Main
@@ -90,7 +91,17 @@ namespace Quaver.Main
         /// <summary>
         ///     Keeps track of if the bass library is already initialized on the default output device
         /// </summary>
-        public static bool BassInitialized { get; set; } 
+        public static bool BassInitialized { get; set; }
+
+        /// <summary>
+        ///     The current background for the game displayed in menus and in-game.
+        /// </summary>
+        public static Sprite CurrentBackground { get; set; }
+
+        /// <summary>
+        ///     The default background texture sprite for the game.
+        /// </summary>
+        public static Texture2D DefaultBackgroundTexture { get; set; }
 
         /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.
@@ -107,6 +118,44 @@ namespace Quaver.Main
         public static void LoadSkin()
         {
             LoadedSkin = new Skin(Configuration.Skin);
+        }
+
+        /// <summary>
+        ///     Changes the current background's image
+        /// </summary>
+        /// <param name="tex"></param>
+        public static void ChangeBackground(Texture2D tex)
+        {
+            // In the event the texture isn't properly loaded just return.
+            if (tex.Height == 0 || tex.Width == 0)
+                return;
+
+            // Change background here.
+        }
+
+        /// <summary>
+        ///     Loads a beatmap's background if it isn't already loaded 
+        /// </summary>
+        /// <param name="tex"></param>
+        public static void ChangeBackground()
+        {
+            // Attempt to load the beatmap's background
+            try
+            {
+                SelectedBeatmap.LoadBackground();
+
+                // Check if the map was actually loaded properly, if it wasn't throw an exception
+                if (SelectedBeatmap.Background.Height == 0 || SelectedBeatmap.Background.Width == 0)
+                    throw new Exception("Background was not loaded properly.");
+
+                // Change background here.
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                // Change to default background
+            }
         }
     }
 }
