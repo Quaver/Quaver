@@ -9,7 +9,7 @@ using Quaver.Gameplay;
 using Quaver.Main;
 using Quaver.QuaFile;
 
-namespace Quaver.GameState
+namespace Quaver.GameState.States
 {
     internal class SongLoadingState : IGameState
     {

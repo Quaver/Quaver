@@ -10,9 +10,9 @@ using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Utility;
 
-namespace Quaver.Graphics
+namespace Quaver.Graphics.Button
 {
-    class Button : Sprite
+    internal class Button : Sprite
     {
         private Texture2D Mask { get; set; }
         private String Text { get; set; }

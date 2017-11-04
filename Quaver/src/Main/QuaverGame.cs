@@ -11,6 +11,7 @@ using Quaver.Beatmaps;
 using Quaver.Database;
 using Quaver.GameState;
 using Quaver.Gameplay;
+using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Input;
 using Quaver.Logging;
