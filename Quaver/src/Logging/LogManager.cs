@@ -121,7 +121,7 @@ namespace Quaver.Logging
                     GameBase.SpriteBatch.DrawString(Font, current.Value, new Vector2(0, i * 20), current.LogColor);
                     if (!current.NoDuration)
                     {
-                        current.Duration -= (float)dt;
+                        current.Duration -= (float)dt/1000f;
                         if (current.Duration <= 0)
                         {
                             _logs.RemoveAt(i);
