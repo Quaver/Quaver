@@ -126,15 +126,18 @@ namespace Quaver.Main
         /// <param name="gameTime">Provides a snapshot of delta time values.</param>
         protected override void Update(GameTime gameTime)
         {
+            double dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+
             // Update FpsCounter
             if (Config.Configuration.FpsCounter)
-                FpsCounter.Count(gameTime.ElapsedGameTime.TotalMilliseconds);
+                FpsCounter.Count(dt);
 
             // Update all game states.
             GameStateManager.Instance.Update(gameTime);
 
             GameBase.KeyboardState = Keyboard.GetState();
             GameBase.MouseState = Mouse.GetState();
+            GameBase.Cursor.Update(dt);
 
             // Check Global Input
             GlobalInputManager.CheckInput();
@@ -148,6 +151,8 @@ namespace Quaver.Main
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            double dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+
             // Start SriteBatch
             GameBase.SpriteBatch.Begin();
 
@@ -161,8 +166,11 @@ namespace Quaver.Main
             if (Config.Configuration.FpsCounter)
                 FpsCounter.Draw();
 
-            SpriteManager.Draw(gameTime.ElapsedGameTime.TotalMilliseconds);
-            LogManager.Draw(gameTime.ElapsedGameTime.TotalMilliseconds);
+            //Draw log manager logs
+            LogManager.Draw(dt);
+
+            //Draw cursor
+            GameBase.Cursor.Draw();
 
             // Draw everything else in the base class
             base.Draw(gameTime);

@@ -31,7 +31,6 @@ namespace Quaver.Graphics
 
             UpdateRect();
             base.Update(dt);
-            Draw();
         }
     }
 }
