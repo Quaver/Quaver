@@ -19,6 +19,7 @@ using Quaver.Modifiers;
 using Quaver.Skins;
 using Quaver.Tests;
 using Quaver.Utility;
+using System.Windows.Forms;
 
 namespace Quaver.Main
 {
@@ -56,7 +57,7 @@ namespace Quaver.Main
             // this was the best way i could figure out.
             Task.Run(() =>
             {
-                var audioTimer = new Timer();
+                var audioTimer = new System.Timers.Timer();
                 audioTimer.Elapsed += AudioTimerHandler;
                 audioTimer.Interval = 2000;
                 audioTimer.Enabled = true;
@@ -70,7 +71,7 @@ namespace Quaver.Main
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        {
+        { 
             // Select a random beatmap if we do in fact have beatmaps.
             if (GameBase.Beatmaps.Count != 0)
                 BeatmapUtils.SelectRandomBeatmap();
