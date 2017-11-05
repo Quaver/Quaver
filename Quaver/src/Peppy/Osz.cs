@@ -52,8 +52,6 @@ namespace Quaver.Peppy
                 var newMap = GameBase.Beatmaps.Where(x => !oldMaps.ContainsKey(x.Key))
                     .ToDictionary(x => x.Key, x => x.Value);
 
-                Console.WriteLine(newMap.Count);
-
                 // If a new map was successfully loaded, 
                 if (true)
                 {
@@ -64,7 +62,6 @@ namespace Quaver.Peppy
 
                     // Switch map and load audio for song and play it.
                     GameBase.SelectedBeatmap = map;
-                    Console.WriteLine(map.Path);
                     GameBase.SelectedBeatmap.LoadAudio();
                     GameBase.SelectedBeatmap.Song.Play();
                 }
