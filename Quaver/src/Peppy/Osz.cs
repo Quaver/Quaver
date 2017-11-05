@@ -8,7 +8,10 @@ using System.Windows.Forms;
 using ManagedBass;
 using Ionic.Zip;
 using Microsoft.Xna.Framework;
+using Quaver.Beatmaps;
+using Quaver.GameState;
 using Quaver.Logging;
+using Quaver.Main;
 
 namespace Quaver.Peppy
 {
@@ -37,8 +40,33 @@ namespace Quaver.Peppy
                 return;
 
             // Proceed to extract and convert the map TODO: Put loading screen here.
-            Task.Run(() => ConvertOsz(openFileDialog.FileName)).ContinueWith(t =>
+            Task.Run(() => ConvertOsz(openFileDialog.FileName)).ContinueWith(async t =>
             {
+                // Update the selected beatmap with the new one.
+                // This button should only be on the song select state, so no need to check for states here.
+                var oldMaps = GameBase.Beatmaps;
+
+                // Load the beatmaps again automatically.
+                await GameBase.LoadAndSetBeatmaps();
+
+                var newBeatmaps = GameBase.Beatmaps.Except(oldMaps).ToList();
+
+                // If a new map was successfully loaded, 
+                if (newBeatmaps.Count != 0)
+                {
+                    // Get the last map that was imported.
+                    var map = newBeatmaps[newBeatmaps.Count - 1].Value[newBeatmaps[0].Value.Count - 1];
+
+                    // Stop the currently selected beatmap's song.
+                    GameBase.SelectedBeatmap.Song.Stop();
+
+                    // Switch map and load audio for song and play it.
+                    GameBase.SelectedBeatmap = map;
+                    Console.WriteLine(map.Path);
+                    GameBase.SelectedBeatmap.LoadAudio();
+                    GameBase.SelectedBeatmap.Song.Play();
+                }
+
                 // TODO: Stop Loading Screen.
                 Console.WriteLine("[CONVERT OSZ TASK] Successfully completed. Stopping loader.");
             });
