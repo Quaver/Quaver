@@ -49,13 +49,15 @@ namespace Quaver.Peppy
                 // Load the beatmaps again automatically.
                 await GameBase.LoadAndSetBeatmaps();
 
-                var newBeatmaps = GameBase.Beatmaps.Except(oldMaps).ToList();
+                var newMap = GameBase.Beatmaps.Where(x => !oldMaps.ContainsKey(x.Key))
+                    .ToDictionary(x => x.Key, x => x.Value);
+
+                Console.WriteLine(newMap.Count);
 
                 // If a new map was successfully loaded, 
-                if (newBeatmaps.Count != 0)
+                if (true)
                 {
-                    // Get the last map that was imported.
-                    var map = newBeatmaps[newBeatmaps.Count - 1].Value[newBeatmaps[0].Value.Count - 1];
+                    var map = newMap.Values.Last().Last();
 
                     // Stop the currently selected beatmap's song.
                     GameBase.SelectedBeatmap.Song.Stop();
