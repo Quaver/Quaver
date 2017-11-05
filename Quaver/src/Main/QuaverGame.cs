@@ -35,14 +35,17 @@ namespace Quaver.Main
 
         public QuaverGame()
         {
-            // Set the global graphics device manager.
-            GameBase.GraphicsManager = new GraphicsDeviceManager(this);
+            // Set the global graphics device manager & set Window width & height.
+            GameBase.GraphicsManager = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = Config.Configuration.WindowWidth,
+                PreferredBackBufferHeight = Config.Configuration.WindowHeight,
+                SynchronizeWithVerticalRetrace = false // Turns off vsync
+            };
 
             // Set the global window size
             GameBase.Window = new Rectangle(0, 0, GameBase.GraphicsManager.PreferredBackBufferWidth, GameBase.GraphicsManager.PreferredBackBufferHeight);
 
-            // Turn off vsync
-            GameBase.GraphicsManager.SynchronizeWithVerticalRetrace = false; 
             IsFixedTimeStep = false;
 
             // Use Content in Resources folder (Don't touch this please)
