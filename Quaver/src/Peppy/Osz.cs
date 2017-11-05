@@ -61,7 +61,8 @@ namespace Quaver.Peppy
                     var map = newMap.Values.Last().Last();
 
                     // Stop the currently selected beatmap's song.
-                    GameBase.SelectedBeatmap.Song.Stop();
+                    if (GameBase.SelectedBeatmap != null)
+                        GameBase.SelectedBeatmap.Song.Stop();
 
                     // Switch map and load audio for song and play it.
                     GameBase.SelectedBeatmap = map;
