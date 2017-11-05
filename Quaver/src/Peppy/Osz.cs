@@ -10,6 +10,7 @@ using Ionic.Zip;
 using Microsoft.Xna.Framework;
 using Quaver.Beatmaps;
 using Quaver.GameState;
+using Quaver.GameState.States;
 using Quaver.Logging;
 using Quaver.Main;
 
@@ -39,7 +40,9 @@ namespace Quaver.Peppy
             if (openFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            // Proceed to extract and convert the map TODO: Put loading screen here.
+            // Proceed to extract and convert the map, show loading screen.
+            GameStateManager.Instance.AddState(new MapImportLoadingState());
+
             Task.Run(() => ConvertOsz(openFileDialog.FileName)).ContinueWith(async t =>
             {
                 // Update the selected beatmap with the new one.
@@ -66,8 +69,8 @@ namespace Quaver.Peppy
                     GameBase.SelectedBeatmap.Song.Play();
                 }
 
-                // TODO: Stop Loading Screen.
                 Console.WriteLine("[CONVERT OSZ TASK] Successfully completed. Stopping loader.");
+                GameStateManager.Instance.RemoveState();
             });
         }
 
