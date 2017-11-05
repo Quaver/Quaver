@@ -53,7 +53,7 @@ namespace Quaver.Peppy
                     .ToDictionary(x => x.Key, x => x.Value);
 
                 // If a new map was successfully loaded, 
-                if (true)
+                if (newMap.Count > 0)
                 {
                     var map = newMap.Values.Last().Last();
 
