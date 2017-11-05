@@ -28,8 +28,11 @@ namespace Quaver.GameState.States
         public void Initialize()
         {
             // Load and play the randomly selected beatmap's song.
-            GameBase.SelectedBeatmap.LoadAudio();
-            GameBase.SelectedBeatmap.Song.Play();
+            if (GameBase.SelectedBeatmap != null)
+            {
+                GameBase.SelectedBeatmap.LoadAudio();
+                GameBase.SelectedBeatmap.Song.Play();
+            }
 
             testButton = new Button(ButtonType.Image)
             {
