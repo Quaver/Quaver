@@ -183,7 +183,7 @@ namespace Quaver.Graphics
         /// </summary>
         public void Destroy()
         {
-            
+            Parent = null;
         }
 
         /// <summary>
