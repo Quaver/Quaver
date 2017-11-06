@@ -30,8 +30,17 @@ namespace Quaver.GameState.States
             // Load and play the randomly selected beatmap's song.
             if (GameBase.SelectedBeatmap != null)
             {
-                GameBase.SelectedBeatmap.LoadAudio();
-                GameBase.SelectedBeatmap.Song.Play();
+                // In the event that the song is already loaded up, we don't want to load it again
+                // through this state.
+                if (GameBase.SelectedBeatmap.Song != null)
+                    GameBase.SelectedBeatmap.Song.Resume();
+                else
+                {
+                    // Here we assume that the song hasn't been loaded since its length is 0,
+                    // so we'll attempt to load it up and play it.
+                    GameBase.SelectedBeatmap.LoadAudio();
+                    GameBase.SelectedBeatmap.Song.Play();
+                }
             }
 
             testButton = new Button(ButtonType.Image)
