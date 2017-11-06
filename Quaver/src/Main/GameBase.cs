@@ -70,7 +70,7 @@ namespace Quaver.Main
         /// <summary>
         /// 
         /// </summary>
-        public static Rectangle Window { get; set; } = new Rectangle(0, 0, 800, 480); //TODO: Automatically set this rectangle as windoow size
+        public static Rectangle Window { get; set; } = new Rectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight); //TODO: Automatically set this rectangle as windoow size
 
         /// <summary>
         ///     The game's clock. Essentially it controls which speed songs are played at.
