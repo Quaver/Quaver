@@ -9,6 +9,7 @@ using Quaver.GameState;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Gameplay;
+using Quaver.GameState.States;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.QuaFile;
@@ -56,6 +57,9 @@ namespace Quaver.Input
 
             // Check import beatmaps
             ImportBeatmaps();
+
+            // Pause game
+            HandlePause();
         }
 
         /// <summary>
@@ -125,6 +129,19 @@ namespace Quaver.Input
                     GameBase.VisibleBeatmaps = GameBase.Beatmaps;
                 });
             }
+        }
+
+        /// <summary>
+        ///     Responsible for handling pausing 
+        /// </summary>
+        private void HandlePause()
+        {
+            if (!GameBase.KeyboardState.IsKeyDown(Configuration.KeyPause))
+                return;
+
+            // TODO: Implement actual pausing here. For now, we're just going to go back to the main menu.
+            GameBase.SelectedBeatmap.Song.Pause();
+            GameStateManager.Instance.ChangeState(new MainMenuState());
         }
     }
 }
