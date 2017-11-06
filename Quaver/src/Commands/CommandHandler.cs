@@ -14,7 +14,8 @@ namespace Quaver.Commands
         public static ICommand[] Commands { get; set; } =
         {
             new HelpCommand(),
-            new ListMapsetsCommand()       
+            new MapsetsCommand(),
+            new BeatmapsCommand()
         };
 
         /// <summary>
