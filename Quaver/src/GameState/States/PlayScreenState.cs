@@ -134,7 +134,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Draw()
         {
-            //Playfield.PlayfieldBoundary.Draw();
+            Playfield.PlayfieldBoundary.Draw();
         }
     }
 }
