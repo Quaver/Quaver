@@ -21,6 +21,7 @@ namespace Quaver.Commands
         public void Execute()
         {
             var commandString = new StringBuilder();
+            commandString.AppendLine();
 
             //  It's a dictonary where the keys are strings, so please.
             var i = 0;
