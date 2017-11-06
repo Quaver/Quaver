@@ -8,15 +8,15 @@ using Quaver.Main;
 
 namespace Quaver.Commands
 {
-    internal class ListMapsetsCommand : ICommand
+    internal class MapsetsCommand : ICommand
     {
-        public string Name { get; set; } = "LISTMAPSETS";
+        public string Name { get; set; } = "MAPSETS";
 
         public int Args { get; set; } = 0;
 
         public string Description { get; set; } = "Lists all of the loaded beatmap sets";
 
-        public string Usage { get; set; } = "> listmapsets";
+        public string Usage { get; set; } = "> mapsets";
 
         public void Execute()
         {
