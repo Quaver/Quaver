@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ManagedBass;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Audio;
+using Quaver.Commands;
 using Quaver.GameState;
 using Quaver.Main;
 
@@ -88,7 +89,7 @@ namespace Quaver.Input
             Task.Run(() =>
             {
                 var input = Console.ReadLine();
-                Console.WriteLine($"You entered command: {input}");
+                CommandHandler.Execute(input);
                 
             }).ContinueWith(t =>
             {
