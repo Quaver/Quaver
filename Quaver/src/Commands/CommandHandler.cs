@@ -11,8 +11,9 @@ namespace Quaver.Commands
         /// <summary>
         ///     Stores all of the game's commands.
         /// </summary>
-        private static ICommand[] Commands { get; set; } =
+        public static ICommand[] Commands { get; set; } =
         {
+            new HelpCommand(),
             new ListMapsetsCommand()       
         };
 
