@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,12 +24,15 @@ namespace Quaver.Input
         /// </summary>
         private int LastScrollWheelValue { get; set; }
 
+        private bool ConsoleTriggered { get; set; }
+
         /// <summary>
         ///     Check the input.
         /// </summary>
         public void CheckInput()
         {
             HandleVolumeChanges();
+            HandleConsoleCommand();
         }
 
         /// <summary>
@@ -65,6 +69,31 @@ namespace Quaver.Input
                 AudioHandler.ChangeMasterVolume();
                 Console.WriteLine($"[CONFIG MANAGER] VolumeGlobal Changed To: {Config.Configuration.VolumeGlobal}");
             }
+        }
+
+        /// <summary>
+        ///     Enables the ability to type console commands from any state.
+        /// </summary>
+        [Conditional("DEBUG")]
+        private void HandleConsoleCommand()
+        {
+            if (!GameBase.KeyboardState.IsKeyDown(Keys.OemTilde) || ConsoleTriggered)
+                return; 
+
+            ConsoleTriggered = true;
+
+            Console.Write("> ");
+
+            // Run the command handler as a task, so that it does not interupt and pause the main thread.
+            Task.Run(() =>
+            {
+                var input = Console.ReadLine();
+                Console.WriteLine($"You entered command: {input}");
+                
+            }).ContinueWith(t =>
+            {
+                ConsoleTriggered = false;
+            });
         }
     }
 }
