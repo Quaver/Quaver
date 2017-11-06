@@ -13,6 +13,9 @@ namespace Quaver.Gameplay
 {
     internal class Playfield
     {
+        private static int KeyCount { get; set; } = 7;
+
+
         /// <summary>
         ///     The size of each HitObject.
         /// </summary>
@@ -41,17 +44,17 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     The target size for each receptors.
         /// </summary>
-        private static float[] ReceptorTargetSize { get; set; } = { 1.0f, 1.0f, 1.0f, 1.0f };
+        private static float[] ReceptorTargetSize { get; set; }
 
         /// <summary>
         ///     The current size for each receptors. Used for animation.
         /// </summary>
-        private static float[] ReceptorCurrentSize { get; set; } = { 1.0f, 1.0f, 1.0f, 1.0f };
+        private static float[] ReceptorCurrentSize { get; set; }
 
         /// <summary>
         ///     The X-position of each receptor.
         /// </summary>
-        public static float[] ReceptorXPosition { get; set; } = new float[4];
+        public static float[] ReceptorXPosition { get; set; } = new float[KeyCount];
 
         /// <summary>
         ///     The playfield Boundary
@@ -64,7 +67,7 @@ namespace Quaver.Gameplay
         public static void InitializePlayfield()
         {
             // Calculate skin reference variables.
-            PlayfieldSize = PlayfieldObjectSize * 4 + PlayfieldPadSize * 2;
+            PlayfieldSize = PlayfieldObjectSize * KeyCount + PlayfieldPadSize * 2;
 
             // Create playfield boundary & Update Rect.
             PlayfieldBoundary = new Boundary()
@@ -76,7 +79,15 @@ namespace Quaver.Gameplay
             PlayfieldBoundary.UpdateRect();
 
             // Create Receptors
-            Receptors = new Sprite[4];
+            Receptors = new Sprite[KeyCount];
+            ReceptorCurrentSize = new float[KeyCount];
+            ReceptorTargetSize = new float[KeyCount];
+
+            for (var i = 0; i < KeyCount; i++)
+            {
+                ReceptorCurrentSize[i] = 1;
+                ReceptorTargetSize[i] = 1;
+            }
 
             for (var i = 0; i < Receptors.Length; i++)
             {
@@ -107,7 +118,7 @@ namespace Quaver.Gameplay
             dt = Math.Min(dt / 30, 1);
 
             // Update receptors
-            for (var i = 0; i < 4; i++)
+            for (var i = 0; i < KeyCount; i++)
             {
                 var receptorSizeOffset = (ReceptorCurrentSize[i] - 1) * PlayfieldObjectSize / 2f;
 
