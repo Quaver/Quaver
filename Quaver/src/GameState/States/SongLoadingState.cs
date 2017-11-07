@@ -35,6 +35,10 @@ namespace Quaver.GameState.States
                 if (!qua.IsValidQua)
                     throw new Exception("[SONG LOADING STATE] The .qua file could NOT be loaded!");
 
+                // Set the beatmap's Qua. 
+                // We parse it and set it each time the player is going to play to kmake sure they are
+                // actually playing the correct map.
+                GameBase.SelectedBeatmap.Qua = qua;
                 Console.WriteLine("[SONG LOADING STATE] Qua successfully loaded.");
 
                 // Attempt to load the audio.
@@ -50,7 +54,7 @@ namespace Quaver.GameState.States
                 Console.WriteLine($"[SONG LOADING STATE] Successfully loaded beatmap: {md5}");
 
                 // Load Play State
-                GameStateManager.Instance.ChangeState(new PlayScreenState(qua, md5));
+                GameStateManager.Instance.ChangeState(new PlayScreenState(md5));
             }
             catch (Exception e)
             {
