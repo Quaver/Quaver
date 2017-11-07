@@ -43,7 +43,7 @@ namespace Quaver.GameState.States
                 }
             }
 
-            testButton = new Button(ButtonType.Image)
+            testButton = new Button()
             {
                 Size = new Vector2(200, 40),
                 Image = GameBase.LoadedSkin.NoteHoldBody,
@@ -55,7 +55,7 @@ namespace Quaver.GameState.States
             Console.WriteLine(testButton.GlobalRect);
 
 
-            importPeppyButton = new Button(ButtonType.Image)
+            importPeppyButton = new Button()
             {
                 Size = new Vector2(200, 40),
                 Image = GameBase.LoadedSkin.NoteHoldBody,
@@ -85,12 +85,7 @@ namespace Quaver.GameState.States
 
         public void UnloadContent()
         {
-            Console.WriteLine("UNLOADED MAIN MENU");
-            Console.WriteLine("UNLOADED MAIN MENU");
-            Console.WriteLine("UNLOADED MAIN MENU");
-            Console.WriteLine("UNLOADED MAIN MENU");
-            Console.WriteLine("UNLOADED MAIN MENU");
-            //testButton.Clicked -= ButtonClick;
+            testButton.Clicked -= ButtonClick;
             testButton.Destroy();
         }
 
