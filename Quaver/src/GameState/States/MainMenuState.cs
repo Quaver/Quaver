@@ -43,7 +43,7 @@ namespace Quaver.GameState.States
                 }
             }
 
-            testButton = new Button()
+            testButton = new BasicButton()
             {
                 Size = new Vector2(200, 40),
                 Image = GameBase.LoadedSkin.NoteHoldBody,
@@ -55,7 +55,7 @@ namespace Quaver.GameState.States
             Console.WriteLine(testButton.GlobalRect);
 
 
-            importPeppyButton = new Button()
+            importPeppyButton = new BasicButton()
             {
                 Size = new Vector2(200, 40),
                 Image = GameBase.LoadedSkin.NoteHoldBody,

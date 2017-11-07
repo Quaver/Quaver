@@ -109,6 +109,7 @@
     <Compile Include="src\Commands\Command\BeatmapsCommand.cs" />
     <Compile Include="src\Commands\Command\MapsetsCommand.cs" />
     <Compile Include="src\GameState\States\MapImportLoadingState.cs" />
+    <Compile Include="src\Graphics\Button\BasicButton.cs" />
     <Compile Include="src\Peppy\Osz.cs" />
     <Compile Include="src\Gameplay\NoteManager.cs" />
     <Compile Include="src\Gameplay\NoteRendering.cs" />
