@@ -16,7 +16,7 @@ namespace Quaver.Commands
 
         public string Usage { get; set; } = "> help";
 
-        public void Execute()
+        public void Execute(string[] args)
         {
             var commandString = new StringBuilder();
             commandString.AppendLine();
