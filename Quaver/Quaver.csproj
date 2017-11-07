@@ -268,7 +268,6 @@
     <None Include="app.manifest" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Resource1.resx" />
-    <EmbeddedResource Include="Resources\Quaver-Localization\en\english.json" />
     <EmbeddedResource Include="Resources\Fonts\test.xnb" />
     <EmbeddedResource Include="Resources\Fonts\testFont.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\column-bgmask.xnb" />
@@ -333,12 +332,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\TestImages\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Quaver.Online\Quaver.Online\Quaver.Online.csproj">
-      <Project>{e8afe82b-4dda-4b46-bee7-75748e957ef3}</Project>
-      <Name>Quaver.Online</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
