@@ -33,11 +33,6 @@ namespace Quaver.GameState.States
         private GameplayInputManager InputManager { get; } = new GameplayInputManager();
 
         /// <summary>
-        ///     The Qua object - Parsed .qua file.
-        /// </summary>
-        private Qua Qua { get; set; }
-
-        /// <summary>
         ///     The MD5 Hash of the played beatmap.
         /// </summary>
         private string BeatmapMd5 { get; set; }
@@ -52,9 +47,8 @@ namespace Quaver.GameState.States
         /// </summary>
         /// <param name="qua"></param>
         /// <param name="beatmapMd5"></param>
-        public PlayScreenState(Qua qua, string beatmapMd5)
+        public PlayScreenState(string beatmapMd5)
         {
-            Qua = qua;
             BeatmapMd5 = beatmapMd5;
         }
 
@@ -66,7 +60,7 @@ namespace Quaver.GameState.States
             Console.WriteLine($"[GAMEPLAY STATE] Initialized Gameplay State with Mods: { String.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ModIdentifier)) }");
             Console.WriteLine($"[GAMEPLAY STATE] Loaded Beatmap: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
             Console.WriteLine($"[GAMEPLAY STATE] Loaded Beatmap MD5: {BeatmapMd5}");
-            Console.WriteLine($"[GAMEPLAY STATE] Beatmap has Key Count: {Qua.KeyCount}");
+            Console.WriteLine($"[GAMEPLAY STATE] Beatmap has Key Count: {GameBase.SelectedBeatmap.Qua.KeyCount}");
 
             //Create loggers
             LogManager.AddLogger("KeyCount", Color.Pink);
@@ -84,8 +78,8 @@ namespace Quaver.GameState.States
         {
             //Initialize Components
             Playfield.InitializePlayfield();
-            Timing.InitializeTiming(Qua);
-            NoteRendering.InitializeNotes(Qua);
+            Timing.InitializeTiming(GameBase.SelectedBeatmap.Qua);
+            NoteRendering.InitializeNotes(GameBase.SelectedBeatmap.Qua);
         }
 
         /// <summary>
@@ -112,16 +106,16 @@ namespace Quaver.GameState.States
             Playfield.UpdatePlayfield(dt); ;
 
             // Check if the song is currently skippable.
-            IntroSkippable = (Qua.HitObjects[0].StartTime - Timing.CurrentSongTime >= 5000);
+            IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.CurrentSongTime >= 5000);
 
             // Update the Notes
             NoteRendering.UpdateNotes(dt);
 
             // Check the input for this particular game state.
-            InputManager.CheckInput(Qua, IntroSkippable);
+            InputManager.CheckInput(GameBase.SelectedBeatmap.Qua, IntroSkippable);
 
             // Update Loggers
-            LogManager.UpdateLogger("KeyCount", $"Key Count: {Qua.KeyCount}");
+            LogManager.UpdateLogger("KeyCount", $"Key Count: {GameBase.SelectedBeatmap.Qua.KeyCount}");
             LogManager.UpdateLogger("DeltaTime", "Delta Time: " + dt + "ms");
             LogManager.UpdateLogger("SongTime", "Current Song Time: " + Timing.CurrentSongTime + "ms");
             LogManager.UpdateLogger("SongPos", "Current Track Position: " + NoteRendering.TrackPosition);
