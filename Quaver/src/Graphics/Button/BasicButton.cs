@@ -10,6 +10,9 @@ using Quaver.Utility;
 
 namespace Quaver.Graphics.Button
 {
+    /// <summary>
+    ///     This type of button is used for simple buttons that only require a single image + tint animation.
+    /// </summary>
     internal class BasicButton : Button
     {
         /// <summary>

@@ -12,6 +12,9 @@ using Quaver.Utility;
 
 namespace Quaver.Graphics.Button
 {
+    /// <summary>
+    /// This class will be inherited from every button class.
+    /// </summary>
     internal abstract class Button : Sprite
     {
         /// <summary>
