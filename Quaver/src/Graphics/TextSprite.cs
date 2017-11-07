@@ -19,11 +19,19 @@ namespace Quaver.Graphics
     internal class TextSprite : Drawable
     {
         /// <summary>
-        ///     Image Texture of the sprite.
+        /// The text of this TextSprite
         /// </summary>
-        public Texture2D Image { get; set; }
-
         public string Text { get; set; }
+
+        /// <summary>
+        /// The font of this object
+        /// </summary>
+        public SpriteFont Font { get; } = GameBase.Content.Load<SpriteFont>("testFont");
+
+        /// <summary>
+        /// The color of this object
+        /// </summary>
+        public Color TextColor = Color.White;
 
         /// <summary>
         ///     Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
@@ -34,9 +42,6 @@ namespace Quaver.Graphics
         public TextSprite()
         {
             Tint = Color.White;
-
-            //Todo: Set fallback image
-            //Image = FALLBACK IMAGE;
         }
 
         /// <summary>
@@ -44,9 +49,11 @@ namespace Quaver.Graphics
         /// </summary>
         public override void Draw()
         {
+            //TODO: SpriteFont.MeasureString()
+
             //Draw itself if it is in the window
             if (GameBase.Window.Intersects(GlobalRect))
-            GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
+                GameBase.SpriteBatch.DrawString(Font, Text, new Vector2(GlobalRect.X, GlobalRect.Y), TextColor);
 
             //Draw children
             Children.ForEach(x => x.Draw());

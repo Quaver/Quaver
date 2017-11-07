@@ -111,6 +111,7 @@
     <Compile Include="src\GameState\States\MapImportLoadingState.cs" />
     <Compile Include="src\Graphics\Button\TextButton.cs" />
     <Compile Include="src\Graphics\Button\BasicButton.cs" />
+    <Compile Include="src\Graphics\TextSprite.cs" />
     <Compile Include="src\Peppy\Osz.cs" />
     <Compile Include="src\Gameplay\NoteManager.cs" />
     <Compile Include="src\Gameplay\NoteRendering.cs" />
