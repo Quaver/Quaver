@@ -16,7 +16,8 @@ namespace Quaver.Commands
         {
             new HelpCommand(),
             new MapsetsCommand(),
-            new BeatmapsCommand()
+            new BeatmapsCommand(),
+            new ClearCommand()
         };
 
         /// <summary>
