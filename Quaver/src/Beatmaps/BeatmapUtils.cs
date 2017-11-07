@@ -154,7 +154,6 @@ namespace Quaver.Beatmaps
                             }
                             break;
                     }
-                    Console.WriteLine($"Found Mapsets: {foundMaps.Values.Count}");
                     break;
                 }
             }
@@ -176,7 +175,6 @@ namespace Quaver.Beatmaps
                     foundMaps.Add(Path.GetDirectoryName(maps[0].Path), maps);
             }
 
-            Console.WriteLine($"Found Mapsets: {foundMaps.Values.Count}");
             return foundMaps;
         }
 
