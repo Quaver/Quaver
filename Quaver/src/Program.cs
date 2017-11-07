@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Quaver.Audio;
 using Quaver.Beatmaps;
+using Quaver.Commands;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Main;
@@ -58,6 +59,9 @@ namespace Quaver
 
             // Run all test methods
             Task.Run(() => RunTestMethods());
+
+            // Enable console commands (Only applicable if on debug release)
+            CommandHandler.HandleConsoleCommand();
 
             // Start game
             using (var game = new QuaverGame())
