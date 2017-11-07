@@ -135,6 +135,12 @@ namespace Quaver.Beatmaps
         public Texture2D Background { get; set; }
 
         /// <summary>
+        ///     The actual parsed qua file for the beatmap.
+        /// </summary>
+        [Ignore]
+        public Qua Qua { get; set; }
+
+        /// <summary>
         ///     The amount of keys the beatmap has.
         /// </summary>
         public int Keys { get; set; }
