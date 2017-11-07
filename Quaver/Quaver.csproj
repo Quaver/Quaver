@@ -124,7 +124,6 @@
     <Compile Include="src\GameState\States\SongLoadingState.cs" />
     <Compile Include="src\Graphics\Boundary.cs" />
     <Compile Include="src\Graphics\Button\Button.cs" />
-    <Compile Include="src\Graphics\Button\ButtonType.cs" />
     <Compile Include="src\Input\GameplayInputManager.cs" />
     <Compile Include="src\Input\GlobalInputManager.cs" />
     <Compile Include="src\Input\IInputManager.cs" />
