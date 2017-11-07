@@ -16,7 +16,7 @@ namespace Quaver.Commands
 
         public string Usage { get; set; } = "> clear";
 
-        public void Execute()
+        public void Execute(string[] args)
         {
             Console.Clear();
         }

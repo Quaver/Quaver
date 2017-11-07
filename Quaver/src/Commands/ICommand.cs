@@ -31,6 +31,6 @@ namespace Quaver.Commands
         /// <summary>
         ///     Executes the command.
         /// </summary>
-        void Execute();
+        void Execute(string[] args);
     }
 }
