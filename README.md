@@ -14,8 +14,6 @@ Quaver is still under development and should not be used for gameplay, and is on
 # Requirements
 * Monogame 3.6
 * .NET 4.5
-* Up to date and initialized submodules - `git submodule update --init --recursive`
-
 
 # Contributing 
 We're welcoming all contributions to our game, however please keep in mind that we might have privatized assets that will most likely be mixed in our code, so if you are eager to help, this is a challenge you'll have to face. Contributions can be made via a pull request to this repository. Any contributors shall have their names mentioned in our [CONTRIBUTORS](https://github.com/Swan/Quaver/blob/master/CONTRIBUTORS) file. 
