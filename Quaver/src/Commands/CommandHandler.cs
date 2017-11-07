@@ -17,7 +17,8 @@ namespace Quaver.Commands
             new HelpCommand(),
             new MapsetsCommand(),
             new BeatmapsCommand(),
-            new ClearCommand()
+            new ClearCommand(),
+            new BeatmapSearchCommand()
         };
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace Quaver.Commands
                 if (!command.ToLower().Equals(cmd.Name.ToLower()))
                     continue;
 
-                cmd.Execute();
+                cmd.Execute(args);
                 return;
             }
                     
