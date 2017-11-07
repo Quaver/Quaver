@@ -102,6 +102,7 @@
     <Compile Include="src\Audio\AudioHandler.cs" />
     <Compile Include="src\Audio\GameEffect.cs" />
     <Compile Include="src\Commands\CommandHandler.cs" />
+    <Compile Include="src\Commands\Command\ClearCommand.cs" />
     <Compile Include="src\Commands\Command\HelpCommand.cs" />
     <Compile Include="src\Commands\ICommand.cs" />
     <Compile Include="src\Commands\Command\BeatmapsCommand.cs" />
