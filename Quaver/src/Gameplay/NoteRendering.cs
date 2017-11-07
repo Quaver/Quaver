@@ -88,7 +88,6 @@ namespace Quaver.Gameplay
                 HitObjectPool.Add(newObject);
             }
             Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: Done Loading Hitobjects.");
-            LogManager.AddLogger("noteRemoved",Color.Red);
         }
 
         /// <summary>
@@ -109,7 +108,6 @@ namespace Quaver.Gameplay
                 if (Timing.CurrentSongTime > HitObjectPool[i].StartTime + ScoreManager.HitWindow[4])
                 {
                     //Track note miss with ScoreManager
-                    LogManager.UpdateLogger("noteRemoved", "last note removed: index #"+i+ " total remain: "+(HitObjectPool.Count-HitObjectPoolSize));
                     LogManager.QuickLog("NOTE INDEX: MISSED NOTE " + (HitObjectPool[i].KeyLane - 1), Color.IndianRed, 0.5f);
                     ScoreManager.Count(5);
 
