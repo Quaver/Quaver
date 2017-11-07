@@ -12,7 +12,6 @@ using Quaver.Commands;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Main;
-using Quaver.Online.Patcher;
 using Quaver.Tests;
 
 namespace Quaver
