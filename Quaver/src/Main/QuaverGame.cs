@@ -20,6 +20,7 @@ using Quaver.Skins;
 using Quaver.Tests;
 using Quaver.Utility;
 using System.Windows.Forms;
+using Quaver.Commands;
 
 namespace Quaver.Main
 {
@@ -78,6 +79,9 @@ namespace Quaver.Main
             // Select a random beatmap if we do in fact have beatmaps.
             if (GameBase.Beatmaps.Count != 0)
                 BeatmapUtils.SelectRandomBeatmap();
+
+            // Enable console commands (Only applicable if on debug release)
+            CommandHandler.HandleConsoleCommand();
 
             // Add some mods
             // ModManager.AddMod(ModIdentifier.Speed, 1.5f);
