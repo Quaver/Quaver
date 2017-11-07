@@ -53,19 +53,17 @@ namespace Quaver.GameState.States
             };
             testButton.UpdateRect();
             testButton.Clicked += ButtonClick;
-            Console.WriteLine(testButton.GlobalRect);
 
-
-            importPeppyButton = new BasicButton()
+            importPeppyButton = new TextButton()
             {
                 Size = new Vector2(200, 40),
                 Image = GameBase.LoadedSkin.NoteHoldBody,
                 Alignment = Alignment.TopCenter,
-                Position = Vector2.Zero
+                Position = Vector2.Zero,
+                Text = "Import .osz"
             };
             importPeppyButton.UpdateRect();
-            importPeppyButton.Clicked += Osz.OnImportButtonClick;
-            
+            importPeppyButton.Clicked += Osz.OnImportButtonClick;           
         }
 
         public void ButtonClick(object sender, EventArgs e)
