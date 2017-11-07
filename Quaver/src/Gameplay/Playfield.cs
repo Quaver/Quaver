@@ -13,9 +13,6 @@ namespace Quaver.Gameplay
 {
     internal class Playfield
     {
-        private static int KeyCount { get; set; } = 7;
-
-
         /// <summary>
         ///     The size of each HitObject.
         /// </summary>
@@ -54,7 +51,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     The X-position of each receptor.
         /// </summary>
-        public static float[] ReceptorXPosition { get; set; } = new float[KeyCount];
+        public static float[] ReceptorXPosition { get; set; } = new float[GameBase.SelectedBeatmap.Keys];
 
         /// <summary>
         ///     The playfield Boundary
@@ -67,7 +64,7 @@ namespace Quaver.Gameplay
         public static void InitializePlayfield()
         {
             // Calculate skin reference variables.
-            PlayfieldSize = PlayfieldObjectSize * KeyCount + PlayfieldPadSize * 2;
+            PlayfieldSize = PlayfieldObjectSize * GameBase.SelectedBeatmap.Keys + PlayfieldPadSize * 2;
 
             // Create playfield boundary & Update Rect.
             PlayfieldBoundary = new Boundary()
@@ -79,11 +76,11 @@ namespace Quaver.Gameplay
             PlayfieldBoundary.UpdateRect();
 
             // Create Receptors
-            Receptors = new Sprite[KeyCount];
-            ReceptorCurrentSize = new float[KeyCount];
-            ReceptorTargetSize = new float[KeyCount];
+            Receptors = new Sprite[GameBase.SelectedBeatmap.Keys];
+            ReceptorCurrentSize = new float[GameBase.SelectedBeatmap.Keys];
+            ReceptorTargetSize = new float[GameBase.SelectedBeatmap.Keys];
 
-            for (var i = 0; i < KeyCount; i++)
+            for (var i = 0; i < GameBase.SelectedBeatmap.Keys; i++)
             {
                 ReceptorCurrentSize[i] = 1;
                 ReceptorTargetSize[i] = 1;
@@ -118,7 +115,7 @@ namespace Quaver.Gameplay
             dt = Math.Min(dt / 30, 1);
 
             // Update receptors
-            for (var i = 0; i < KeyCount; i++)
+            for (var i = 0; i < GameBase.SelectedBeatmap.Keys; i++)
             {
                 var receptorSizeOffset = (ReceptorCurrentSize[i] - 1) * PlayfieldObjectSize / 2f;
 
