@@ -14,10 +14,6 @@ namespace Quaver.Graphics.Button
 {
     internal class Button : Sprite
     {
-        private Texture2D Mask { get; set; }
-        private String Text { get; set; }
-        private ButtonType ButtonType { get; set; }
-
         //Mouse Over
         private bool MouseHovered { get; set; }
         private float HoverCurrentTween { get; set; }
@@ -29,12 +25,6 @@ namespace Quaver.Graphics.Button
         public event EventHandler Clicked;
 
         private Color CurrentTint = Color.White;
-
-        //Constructor
-        public Button(ButtonType type)
-        {
-            ButtonType = type;
-        }
 
         /// <summary>
         ///     This method draws the button.
