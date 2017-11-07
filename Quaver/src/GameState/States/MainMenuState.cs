@@ -43,12 +43,13 @@ namespace Quaver.GameState.States
                 }
             }
 
-            testButton = new BasicButton()
+            testButton = new TextButton()
             {
                 Size = new Vector2(200, 40),
                 Image = GameBase.LoadedSkin.NoteHoldBody,
                 Alignment = Alignment.MidCenter,
-                Position = Vector2.Zero
+                Position = Vector2.Zero,
+                Text = "Next State"
             };
             testButton.UpdateRect();
             testButton.Clicked += ButtonClick;
