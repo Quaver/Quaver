@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Discord;
 using Quaver.Gameplay;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
@@ -41,6 +42,16 @@ namespace Quaver.GameState.States
                     GameBase.SelectedBeatmap.LoadAudio();
                     GameBase.SelectedBeatmap.Song.Play();
                 }
+
+                // Set Rich Presence
+                GameBase.DiscordController.presence.details = $"Listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
+                DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+            }
+            else
+            {
+                // Set Rich Presence
+                GameBase.DiscordController.presence.details = $"Idle";
+                DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
             }
 
             testButton = new TextButton()

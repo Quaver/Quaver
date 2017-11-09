@@ -21,6 +21,7 @@ using Quaver.Tests;
 using Quaver.Utility;
 using System.Windows.Forms;
 using Quaver.Commands;
+using Quaver.Discord;
 
 namespace Quaver.Main
 {
@@ -89,6 +90,20 @@ namespace Quaver.Main
             // ModManager.RemoveMod(ModIdentifier.Speed);
             // ModManager.RemoveAllMods();
 
+            // Initialize Discord RPC Controller.
+            if (GameBase.DiscordController == null)
+            {
+                GameBase.DiscordController = new DiscordController();
+                GameBase.DiscordController.Initialize();
+
+                // Create a new RichPresence
+                GameBase.DiscordController.presence = new DiscordRPC.RichPresence()
+                {
+                    state = "Dev Build"
+                };
+                DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+            }
+
             // TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -126,6 +141,7 @@ namespace Quaver.Main
         protected override void UnloadContent()
         {
             GameStateManager.Instance.UnloadContent();
+            DiscordRPC.Shutdown();
         }
 
         /// <summary>
