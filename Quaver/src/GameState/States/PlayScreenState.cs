@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.Config;
+using Quaver.Discord;
 using Quaver.Gameplay;
 using Quaver.GameState;
 using Quaver.Graphics;
@@ -61,6 +62,9 @@ namespace Quaver.GameState.States
             Console.WriteLine($"[GAMEPLAY STATE] Loaded Beatmap: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
             Console.WriteLine($"[GAMEPLAY STATE] Loaded Beatmap MD5: {BeatmapMd5}");
             Console.WriteLine($"[GAMEPLAY STATE] Beatmap has Key Count: {GameBase.SelectedBeatmap.Qua.KeyCount}");
+
+            GameBase.DiscordController.presence.details = $"Playing: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} ({GameBase.SelectedBeatmap.DifficultyName})";
+            DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
 
             //Create loggers
             LogManager.AddLogger("KeyCount", Color.Pink);
