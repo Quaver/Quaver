@@ -9,6 +9,7 @@ using ManagedBass;
 using Ionic.Zip;
 using Microsoft.Xna.Framework;
 using Quaver.Beatmaps;
+using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.GameState.States;
 using Quaver.Logging;
@@ -68,6 +69,10 @@ namespace Quaver.Peppy
                     GameBase.SelectedBeatmap = map;
                     GameBase.SelectedBeatmap.LoadAudio();
                     GameBase.SelectedBeatmap.Song.Play();
+
+                    // Set Rich Presence
+                    GameBase.DiscordController.presence.details = $"Listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
+                    DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
                 }
 
                 Console.WriteLine("[CONVERT OSZ TASK] Successfully completed. Stopping loader.");

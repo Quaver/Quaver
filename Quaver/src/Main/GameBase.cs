@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Quaver.Config;
+using Quaver.Discord;
 using Quaver.Graphics;
 using Quaver.Modifiers;
 
@@ -107,6 +108,11 @@ namespace Quaver.Main
         /// The mouse cursor
         /// </summary>
         public static Cursor Cursor { get; private set; }
+
+        /// <summary>
+        ///     The current Discord Controller for RichPresence.
+        /// </summary>
+        public static DiscordController DiscordController { get; set; }
 
         /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.

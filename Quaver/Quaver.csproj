@@ -108,6 +108,8 @@
     <Compile Include="src\Commands\ICommand.cs" />
     <Compile Include="src\Commands\Command\BeatmapsCommand.cs" />
     <Compile Include="src\Commands\Command\MapsetsCommand.cs" />
+    <Compile Include="src\Discord\DiscordController.cs" />
+    <Compile Include="src\Discord\DiscordRPC.cs" />
     <Compile Include="src\GameState\States\MapImportLoadingState.cs" />
     <Compile Include="src\Graphics\Button\TextButton.cs" />
     <Compile Include="src\Graphics\Button\BasicButton.cs" />
@@ -315,6 +317,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="discord-rpc.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="x86_64\INIFileParser.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
