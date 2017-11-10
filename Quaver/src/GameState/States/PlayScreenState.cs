@@ -106,14 +106,14 @@ namespace Quaver.GameState.States
             // Set the current song time.
             Timing.SetCurrentSongTime(dt);
 
-            // Update the playfield
-            Playfield.UpdatePlayfield(dt); ;
-
             // Check if the song is currently skippable.
             IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.CurrentSongTime >= 5000);
 
+            // Update the playfield
+            Playfield.Update(dt); ;
+
             // Update the Notes
-            NoteRendering.UpdateNotes(dt);
+            NoteRendering.Update(dt);
 
             // Check the input for this particular game state.
             InputManager.CheckInput(GameBase.SelectedBeatmap.Qua, IntroSkippable);
@@ -132,8 +132,8 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Draw()
         {
-            Playfield.PlayfieldBoundary.Draw();
-            NoteRendering.NoteRenderingBoundary.Draw();
+            Playfield.Boundary.Draw();
+            NoteRendering.Boundary.Draw();
         }
     }
 }
