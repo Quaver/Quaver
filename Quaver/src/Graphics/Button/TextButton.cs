@@ -25,6 +25,7 @@ namespace Quaver.Graphics.Button
             {
                 Text = ButtonText,
                 Size = ButtonSize,
+                Alignment = Alignment.MidCenter,
                 Parent = this
             };
             Size = ButtonSize;
