@@ -94,7 +94,7 @@ namespace Quaver.GameState.States
             //GameBase.SelectedBeatmap.Song.Stop();
 
             //Change to SongSelectState
-            GameStateManager.Instance.AddState(new SongSelectState());
+            GameStateManager.Instance.ChangeState(new SongSelectState());
         }
     }
 }
