@@ -50,6 +50,11 @@ namespace Quaver.Peppy
                 // This button should only be on the song select state, so no need to check for states here.
                 var oldMaps = GameBase.Beatmaps;
 
+                foreach (KeyValuePair<string, List<Beatmap>> entry in oldMaps)
+                {
+                    Console.WriteLine(entry.Key);
+                }
+
                 // Load the beatmaps again automatically.
                 await GameBase.LoadAndSetBeatmaps();
 
@@ -66,13 +71,15 @@ namespace Quaver.Peppy
                         GameBase.SelectedBeatmap.Song.Stop();
 
                     // Switch map and load audio for song and play it.
-                    GameBase.SelectedBeatmap = map;
-                    GameBase.SelectedBeatmap.LoadAudio();
-                    GameBase.SelectedBeatmap.Song.Play();
+                    GameBase.ChangeBeatmap(map);
 
-                    // Set Rich Presence
-                    GameBase.DiscordController.presence.details = $"Listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
-                    DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+                    if (GameBase.SelectedBeatmap.Song != null)
+                    {
+                        GameBase.SelectedBeatmap.Song.Play();
+                        // Set Rich Presence
+                        GameBase.DiscordController.presence.details = $"Listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
+                        DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+                    }                    
                 }
 
                 Console.WriteLine("[CONVERT OSZ TASK] Successfully completed. Stopping loader.");
