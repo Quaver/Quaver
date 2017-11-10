@@ -53,8 +53,11 @@ namespace Quaver.Gameplay
             CurrentSvIndex = 0;
 
             //Initialize Boundary
-            NoteRenderingBoundary = new Boundary();
-            NoteRenderingBoundary.UpdateRect();
+            NoteRenderingBoundary = new Boundary()
+            {
+                Size = new Vector2(Playfield.PlayfieldSize, GameBase.Window.Height),
+                Alignment = Alignment.TopCenter
+            };
 
             //Initialize HitObjects
             HitObjectPool = new List<HitObject>();
@@ -182,6 +185,9 @@ namespace Quaver.Gameplay
                     HitObjectDead[i].Update();
                 }
             }
+
+            //Update Boundary
+            NoteRenderingBoundary.Update(dt);
         }
 
         /// <summary>
