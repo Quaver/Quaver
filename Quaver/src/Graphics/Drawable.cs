@@ -44,7 +44,7 @@ namespace Quaver.Graphics
         }
 
         //Local variables
-        private bool _changed;
+        internal bool _changed;
         private Rectangle _localRect;
         private Rectangle _globalRect;
         private Drawable _parent;
