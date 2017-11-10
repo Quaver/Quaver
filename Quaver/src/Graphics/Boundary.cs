@@ -35,7 +35,7 @@ namespace Quaver.Graphics
 
         public override void Update(double dt)
         {
-            //base.Update();
+            UpdateRect();
         }
     }
 }

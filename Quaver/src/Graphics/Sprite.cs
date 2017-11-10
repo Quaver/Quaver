@@ -55,6 +55,7 @@ namespace Quaver.Graphics
         /// </summary>
         public override void Update(double dt)
         {
+            UpdateRect();
             //Animation logic
         }
     }
