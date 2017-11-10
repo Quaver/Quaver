@@ -247,20 +247,9 @@ namespace Quaver.Graphics
         public void UpdateRect()
         {
             if (_parent != null)
-            {
                 _globalRect = Util.DrawRect(Alignment, _localRect, Parent._globalRect);
-            }
             else
-            {
-                //sets the window as the sprite's boundary
-                var newBoundary = new Rectangle()
-                {
-                    Width = (int)GameBase.Window.Width,
-                    Height = (int)GameBase.Window.Height
-                };
-
-                _globalRect = Util.DrawRect(Alignment, _localRect, newBoundary);
-            }
+                _globalRect = Util.DrawRect(Alignment, _localRect, GameBase.Window);
         }
     }
 }
