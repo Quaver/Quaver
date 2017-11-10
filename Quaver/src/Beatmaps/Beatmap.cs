@@ -27,6 +27,11 @@ namespace Quaver.Beatmaps
         public bool IsValidBeatmap { get; set; }
 
         /// <summary>
+        ///     The directory of the beatmap
+        /// </summary>
+        public string Directory { get; set; }
+
+        /// <summary>
         ///     The absolute path of the .qua file
         /// </summary>
         public string Path { get; set; }
@@ -149,8 +154,8 @@ namespace Quaver.Beatmaps
         ///     Loads a beatmaps's GameAudio file
         /// </summary>
         internal void LoadAudio()
-        {
-            Song = new GameAudio(AudioPath);
+        {      
+            Song = new GameAudio(Config.Configuration.SongDirectory + "/" + Directory + "/" + AudioPath);
         }
 
         /// <summary>
@@ -158,7 +163,7 @@ namespace Quaver.Beatmaps
         /// </summary>
         internal void LoadBackground()
         {
-            Background = ImageLoader.Load(System.IO.Path.GetDirectoryName(Path) + "/" + Background);
+            Background = ImageLoader.Load(Config.Configuration.SongDirectory + "/" + Directory + "/" + Background);
         }
 
         /// <summary>
@@ -174,10 +179,11 @@ namespace Quaver.Beatmaps
             {
                 Md5Checksum = BeatmapUtils.GetMd5Checksum(path),
                 IsValidBeatmap = true,
-                Path = path,
+                Directory = new DirectoryInfo(System.IO.Path.GetDirectoryName(path)).Name.Replace("\\", "/"),
+                Path = System.IO.Path.GetFileName(path).Replace("\\", "/"),
                 Artist = qua.Artist,
                 Title = qua.Title,
-                AudioPath = System.IO.Path.GetDirectoryName(path) + "/" + qua.AudioFile,
+                AudioPath = qua.AudioFile,
                 AudioPreviewTime = qua.SongPreviewTime,
                 BackgroundPath = qua.BackgroundFile,
                 BeatmapId = qua.MapId,
