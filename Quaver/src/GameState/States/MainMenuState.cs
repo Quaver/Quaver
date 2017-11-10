@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Beatmaps;
 using Quaver.Discord;
 using Quaver.Gameplay;
 using Quaver.Graphics;
@@ -103,6 +104,21 @@ namespace Quaver.GameState.States
         {
             testButton.Update(gameTime.ElapsedGameTime.TotalMilliseconds);
             importPeppyButton.Update(gameTime.ElapsedGameTime.TotalMilliseconds);
+
+            // If the user is idle on the main menu continue to select random beatmaps.
+            if (GameBase.SelectedBeatmap != null && GameBase.SelectedBeatmap.Song != null)
+            {
+                if (GameBase.SelectedBeatmap.Song.GetAudioPosition() >= GameBase.SelectedBeatmap.Song.GetAudioLength())
+                {
+                    // Stop the current song
+                    GameBase.SelectedBeatmap.Song.Stop();
+
+                    // Select a new song and play it
+                    BeatmapUtils.SelectRandomBeatmap();
+                    GameBase.SelectedBeatmap.LoadAudio();
+                    GameBase.SelectedBeatmap.Song.Play();
+                }
+            }
         }
 
         public void Draw()
