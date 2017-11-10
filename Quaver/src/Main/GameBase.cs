@@ -138,5 +138,15 @@ namespace Quaver.Main
         {
             Cursor = new Cursor();
         }
+
+        /// <summary>
+        ///     Changes the map and loads the audio for it.
+        /// </summary>
+        public static void ChangeBeatmap(Beatmap map)
+        {
+            SelectedBeatmap.Song.Stop();
+            SelectedBeatmap = map;
+            SelectedBeatmap.LoadAudio();
+        }
     }
 }
