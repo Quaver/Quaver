@@ -37,7 +37,7 @@ namespace Quaver.Beatmaps
         internal static Dictionary<string, List<Beatmap>> GroupBeatmapsByDirectory(List<Beatmap> beatmaps)
         {
             return (from beatmap in beatmaps
-                    group beatmap by Path.GetDirectoryName(beatmap.Path)
+                    group beatmap by beatmap.Directory
                 into g
                     select g).ToDictionary(x => x.Key, x => x.ToList());
         }
