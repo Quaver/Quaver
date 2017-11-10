@@ -77,9 +77,6 @@ namespace Quaver.GameState.States
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            // Select and play random maps.
-            //MenuAudioPlayer.PlayRandomBeatmaps();
-
             //Update Menu Screen Boundary
             Boundary.Update(dt);
         }
@@ -97,7 +94,7 @@ namespace Quaver.GameState.States
             //GameBase.SelectedBeatmap.Song.Stop();
 
             //Change to SongSelectState
-            GameStateManager.Instance.AddState(new SongSelectState());
+            GameStateManager.Instance.ChangeState(new SongSelectState());
         }
     }
 }

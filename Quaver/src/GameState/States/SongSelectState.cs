@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Audio;
 using Quaver.Beatmaps;
+using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
 using Quaver.Logging;
@@ -21,17 +22,18 @@ namespace Quaver.GameState
         public State CurrentState { get; set; } = State.MainMenu;
         public bool UpdateReady { get; set; }
 
-        //TEST
-        private List<Button> Buttons = new List<Button>();
-        private Boundary Boundary = new Boundary();
-
-        private int _buttonPos = 150;
+        //TODO: update later   TEST.
+        private List<Button> Buttons { get; set; } = new List<Button>();
+        private Button PlayButton { get; set; }
+        private Boundary Boundary { get; set; } = new Boundary();
+        private int ButtonPos { get; set; } = 50;
 
         public void Initialize()
         {
             //Create buttons for every beatmap set TODO: Use beatmap set instead of beatmaps
             foreach (KeyValuePair<string, List<Beatmap>> mapset in GameBase.VisibleBeatmaps)
             {
+                //Create Song Buttons
                 foreach (var map in mapset.Value)
                 {
                     var newButton = new TextButton(new Vector2(300, 20),
@@ -39,7 +41,7 @@ namespace Quaver.GameState
                     {
                         Image = GameBase.LoadedSkin.ColumnTimingBar,
                         Alignment = Alignment.TopLeft,
-                        PositionY = _buttonPos,
+                        PositionY = ButtonPos,
                         Parent = Boundary
                     };
                     newButton.TextSprite.Alignment = Alignment.MidLeft;
@@ -47,8 +49,16 @@ namespace Quaver.GameState
                     var currentMap = map;
                     newButton.Clicked += (sender, e) => ButtonClick(sender, e, newButton.TextSprite.Text, currentMap);
                     Buttons.Add(newButton);
-                    _buttonPos += 20;
+                    ButtonPos += 20;
                 }
+
+                PlayButton = new TextButton(new Vector2(200, 50), "Play")
+                {
+                    Image = GameBase.LoadedSkin.ColumnTimingBar,
+                    Alignment = Alignment.TopRight,
+                    Parent = Boundary
+                };
+                PlayButton.Clicked += PlayMap;
             }
 
             //Add map selected text TODO: remove later
@@ -61,16 +71,20 @@ namespace Quaver.GameState
 
         public void UnloadContent()
         {
+            UpdateReady = false;
+            PlayButton.Clicked -= PlayMap;
 
-            GameBase.SelectedBeatmap.Song.Stop();
+            //TODO: Remove button delegates ?
+            foreach (TextButton button in Buttons)
+            {
+                //button.Clicked -= Delegate;
+            }
+
+            Boundary.Destroy();
         }
 
         public void Update(GameTime gameTime)
         {
-
-            // Select and play random maps.
-            //MenuAudioPlayer.PlayRandomBeatmaps();
-
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
             Boundary.Update(dt);
         }
@@ -85,10 +99,8 @@ namespace Quaver.GameState
         {
             LogManager.UpdateLogger("MapSelected","Map Selected: "+text);
 
-            GameBase.SelectedBeatmap.Song.Stop();
-            GameBase.SelectedBeatmap = map;
-            GameBase.SelectedBeatmap.LoadAudio();
-            GameBase.SelectedBeatmap.Song.Play();
+            GameBase.ChangeBeatmap(map);
+            GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
 
 
             // Stop the selected song since it's only played during the main menu.
@@ -96,6 +108,13 @@ namespace Quaver.GameState
 
             //Change to SongSelectState
             //GameStateManager.Instance.AddState(new SongSelectState());
+        }
+
+        //TODO: Remove
+        public void PlayMap(object sender, EventArgs e)
+        {
+            GameBase.SelectedBeatmap.Song.Stop();
+            GameStateManager.Instance.ChangeState(new SongLoadingState());
         }
     }
 }
