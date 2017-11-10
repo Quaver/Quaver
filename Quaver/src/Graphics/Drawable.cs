@@ -33,13 +33,18 @@ namespace Quaver.Graphics
         public virtual void Update(double dt)
         {
             //Animation logic
-            UpdateRect();
+            if (_changed)
+            {
+                _changed = false;
+                UpdateRect();
+            }
 
             //Update Children
             Children.ForEach(x => x.Update(dt));
         }
 
         //Local variables
+        private bool _changed;
         private Rectangle _localRect;
         private Rectangle _globalRect;
         private Drawable _parent;
@@ -84,6 +89,7 @@ namespace Quaver.Graphics
 
                 //Assign parent in this object
                 _parent = value;
+                _changed = true;
             }
         }
 
@@ -195,6 +201,11 @@ namespace Quaver.Graphics
         }
 
         /// <summary>
+        /// Determines if the Object is going to get drawn.
+        /// </summary>
+        public bool Visible { get; set; } = true;
+
+        /// <summary>
         /// This method is called when the object will be removed from memory.
         /// </summary>
         public void Destroy()
@@ -230,6 +241,7 @@ namespace Quaver.Graphics
 
             _localRect.Width = (int)_absoluteSize.X;
             _localRect.Height = (int)_absoluteSize.Y;
+            _changed = true;
         }
 
         /// <summary>
@@ -239,6 +251,7 @@ namespace Quaver.Graphics
         {
             _localRect.X = (int)_localPosition.X;
             _localRect.Y = (int)_localPosition.Y;
+            _changed = true;
         }
 
         /// <summary>
@@ -247,20 +260,9 @@ namespace Quaver.Graphics
         public void UpdateRect()
         {
             if (_parent != null)
-            {
                 _globalRect = Util.DrawRect(Alignment, _localRect, Parent._globalRect);
-            }
             else
-            {
-                //sets the window as the sprite's boundary
-                var newBoundary = new Rectangle()
-                {
-                    Width = (int)GameBase.Window.Width,
-                    Height = (int)GameBase.Window.Height
-                };
-
-                _globalRect = Util.DrawRect(Alignment, _localRect, newBoundary);
-            }
+                _globalRect = Util.DrawRect(Alignment, _localRect, GameBase.Window);
         }
     }
 }
