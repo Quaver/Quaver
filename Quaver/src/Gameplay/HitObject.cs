@@ -145,27 +145,6 @@ namespace Quaver.Gameplay
                 Size = Vector2.One * HitObjectSize,
                 Parent = ParentContainer
             };
-
-            UpdateObject();
-        }
-
-        /// <summary>
-        ///     This method recalculates the object's position and LN size.
-        /// </summary>
-        public void UpdateObject()
-        {
-            if (IsLongNote)
-            {
-                //Update HoldBody Position and Size
-                HoldBodySprite.PositionY = _hitObjectPosition.Y + HitObjectSize / 2f;
-                HoldBodySprite.SizeY = CurrentLongNoteSize;
-
-                //Update Hold End Position
-                HoldEndSprite.PositionY = _hitObjectPosition.Y + HoldBodySprite.SizeY;
-            }
-
-            //Update HitBody
-            HitBodySprite.PositionY = _hitObjectPosition.Y;
         }
         
         /// <summary>
