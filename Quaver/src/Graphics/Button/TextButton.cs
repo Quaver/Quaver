@@ -21,6 +21,21 @@ namespace Quaver.Graphics.Button
         public SpriteFont Font { get; } = GameBase.Content.Load<SpriteFont>("testFont");
         public Color TextColor = Color.White;
 
+        public TextSprite TextSprite { get; set; }
+
+        //Constructor
+        public TextButton()
+        {
+            TextSprite = new TextSprite()
+            {
+                Text = this.Text,
+                Size = this.Size,
+                Position = this.Position
+            };
+
+            TextSprite.UpdateRect();
+        }
+
         /// <summary>
         ///     Current tween value of the object. Used for animation.
         /// </summary>
@@ -76,8 +91,9 @@ namespace Quaver.Graphics.Button
         public override void Draw()
         {
             base.Draw();
+            TextSprite.Draw();
             //TODO: Use a text sprite after
-            GameBase.SpriteBatch.DrawString(Font, Text, new Vector2(GlobalRect.X + 40, GlobalRect.Y + 5), TextColor);
+            //GameBase.SpriteBatch.DrawString(Font, Text, new Vector2(GlobalRect.X + 40, GlobalRect.Y + 5), TextColor);
         }
     }
 }
