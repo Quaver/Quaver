@@ -196,4 +196,10 @@
   <data name="hit" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Skin\hit.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="diff-select-mask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\diff-select-mask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="set-select-mask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\set-select-mask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>
