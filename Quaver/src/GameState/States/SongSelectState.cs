@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Audio;
 using Quaver.Beatmaps;
+using Quaver.Discord;
 using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
@@ -30,6 +31,10 @@ namespace Quaver.GameState
 
         public void Initialize()
         {
+            // Update Discord Presence
+            GameBase.DiscordController.presence.details = $"Looking for a song to play.";
+            DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+
             //Create buttons for every beatmap set TODO: Use beatmap set instead of beatmaps
             foreach (KeyValuePair<string, List<Beatmap>> mapset in GameBase.VisibleBeatmaps)
             {
