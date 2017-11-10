@@ -34,18 +34,25 @@ namespace Quaver.Audio
         /// </summary>
         internal static void FreeAvailableStreams()
         {
-            var newStreamList = new List<int>();
-
-            foreach (var audioStream in GlobalAudioStreams)
+            try
             {
-                if (Bass.ChannelIsActive(audioStream) == PlaybackState.Stopped)
-                    Bass.StreamFree(audioStream);
-                else
-                    newStreamList.Add(audioStream);
-            }
+                var newStreamList = new List<int>();
 
-            // Replace the list of streams with the new list of active ones.
-            GlobalAudioStreams = newStreamList;
+                foreach (var audioStream in GlobalAudioStreams)
+                {
+                    if (Bass.ChannelIsActive(audioStream) == PlaybackState.Stopped)
+                        Bass.StreamFree(audioStream);
+                    else
+                        newStreamList.Add(audioStream);
+                }
+
+                // Replace the list of streams with the new list of active ones.
+                GlobalAudioStreams = newStreamList;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("[AUDIO HANDLER] Could not free available streams for this current interval.");
+            }
         }
     }
 }
