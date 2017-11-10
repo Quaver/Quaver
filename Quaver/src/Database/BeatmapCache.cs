@@ -102,7 +102,7 @@ namespace Quaver.Database
             foreach (var file in quaFiles)
             {
                 // Run a check to see if the beatmap path already exists in the database.
-                if (beatmapsInDb.Any(beatmap => beatmap.Path.Replace("\\", "/") == file.Replace("\\", "/"))) continue;
+                if (beatmapsInDb.Any(beatmap => Configuration.SongDirectory.Replace("\\", "/") + "/" + beatmap.Directory + "/" + beatmap.Path.Replace("\\", "/") == file.Replace("\\", "/"))) continue;
 
                 // Try to parse the file and check if it is a legitimate .qua file.
                 var qua = await Qua.Create(file);
@@ -115,7 +115,7 @@ namespace Quaver.Database
 
                 // Convert the Qua into a Beatmap object and add it to our list of maps we want to cache.
                 var newBeatmap = new Beatmap().ConvertQuaToBeatmap(qua, file);
-                newBeatmap.Path = newBeatmap.Path.Replace("\\", "/");
+                newBeatmap.Path = Path.GetFileName(newBeatmap.Path.Replace("\\", "/"));
                 beatmapsToCache.Add(newBeatmap);
             }
 
@@ -180,12 +180,14 @@ namespace Quaver.Database
             
             foreach (var map in beatmaps)
             {
-                if (File.Exists(map.Path))
+                var mapPath = $"{Configuration.SongDirectory}/{map.Directory}/{map.Path}".Replace("\\", "/");
+
+                if (File.Exists(mapPath))
                     continue;
 
                 try
                 {
-                    File.Delete(map.Path);
+                    File.Delete(mapPath);
                     mapsToDelete.Add(map);
                 }
                 catch (Exception e)
@@ -236,6 +238,7 @@ namespace Quaver.Database
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 Console.WriteLine(e);
             }
         }
