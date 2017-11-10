@@ -39,12 +39,6 @@ namespace Quaver.Graphics
             Tint = Color.White;
         }
 
-        public override void Update(double dt)
-        {
-            Console.WriteLine("A");
-            base.Update(dt);
-        }
-
         /// <summary>
         ///     Draws the sprite to the screen.
         /// </summary>
