@@ -33,15 +33,16 @@ namespace Quaver.Graphics
         /// </summary>
         public Color TextColor = Color.White;
 
-        /// <summary>
-        ///     Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
-        /// </summary>
-        public float Rotation { get; set; }
-
         // Ctor
         public TextSprite()
         {
             Tint = Color.White;
+        }
+
+        public override void Update(double dt)
+        {
+            Console.WriteLine("A");
+            base.Update(dt);
         }
 
         /// <summary>
@@ -50,21 +51,12 @@ namespace Quaver.Graphics
         public override void Draw()
         {
             //TODO: SpriteFont.MeasureString()
-
+            //Console.WriteLine(GlobalRect);
             //Draw itself if it is in the window
-            if (GameBase.Window.Intersects(GlobalRect))
+            //if (GameBase.Window.Intersects(GlobalRect))
                 GameBase.SpriteBatch.DrawString(Font, Text, new Vector2(GlobalRect.X, GlobalRect.Y), TextColor);
 
             base.Draw();
-        }
-
-        /// <summary>
-        ///     Will update the sprite. Used for animation/logic
-        /// </summary>
-        public override void Update(double dt)
-        {
-            UpdateRect();
-            //Animation logic
         }
     }
 }
