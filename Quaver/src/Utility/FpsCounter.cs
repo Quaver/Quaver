@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Logging;
 using Quaver.Main;
 
 namespace Quaver.Utility
@@ -56,6 +57,9 @@ namespace Quaver.Utility
             // Reset both the FPS Count & Intrval
             FpsCount = 0;
             Interval = 0;
+
+            //If it ever stutters, it will log it. (If dt is higher than 1/144th of a second)
+            if (dt > 6) LogManager.QuickLog("LAG/STUTTER. DT DELAY: "+Math.Round(dt,2),Color.Red,5);
         }
 
         /// <summary>
