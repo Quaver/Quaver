@@ -31,7 +31,7 @@ namespace Quaver.Gameplay
         internal static List<HitObject> HitObjectHold { get; set; }
         internal const int HitObjectPoolSize = 256;
         internal const uint RemoveTimeAfterMiss = 1000;
-        internal static Boundary NoteRenderingBoundary;
+        internal static Boundary Boundary;
 
         //Track
         internal static ulong[] SvCalc { get; set; } //Stores SV position data for efficiency
@@ -53,7 +53,7 @@ namespace Quaver.Gameplay
             CurrentSvIndex = 0;
 
             //Initialize Boundary
-            NoteRenderingBoundary = new Boundary()
+            Boundary = new Boundary()
             {
                 Size = new Vector2(Playfield.PlayfieldSize, GameBase.Window.Height),
                 Alignment = Alignment.TopCenter
@@ -67,7 +67,7 @@ namespace Quaver.Gameplay
             {
                 HitObject newObject = new HitObject()
                 {
-                    ParentContainer = NoteRenderingBoundary,
+                    ParentContainer = Boundary,
                     StartTime = Qua.HitObjects[i].StartTime,
                     EndTime = Qua.HitObjects[i].EndTime,
                     IsLongNote = Qua.HitObjects[i].EndTime > 0,
@@ -187,7 +187,7 @@ namespace Quaver.Gameplay
             }
 
             //Update Boundary
-            NoteRenderingBoundary.Update(dt);
+            Boundary.Update(dt);
         }
 
         /// <summary>
