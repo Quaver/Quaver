@@ -10,6 +10,7 @@ using Quaver.Discord;
 using Quaver.Gameplay;
 using Quaver.GameState;
 using Quaver.Graphics;
+using Quaver.Graphics.Button;
 using Quaver.Input;
 using Quaver.Logging;
 using Quaver.Main;
@@ -41,6 +42,9 @@ namespace Quaver.GameState.States
         /// </summary>
         private bool IntroSkippable { get; set; }
 
+        //TODO:Remove later.   TEST
+        private Button TestButton { get; set; }
+
         /// <summary>
         ///     Ctor, data passed in from loading state
         /// </summary>
@@ -71,27 +75,45 @@ namespace Quaver.GameState.States
             LogManager.AddLogger("SongPos", Color.White);
             LogManager.AddLogger("HitObjects", Color.Wheat);
             LogManager.AddLogger("Skippable", CustomColors.NameTagAdmin);
+
+            //Initialize Components
+            Playfield.InitializePlayfield();
+            Timing.InitializeTiming(GameBase.SelectedBeatmap.Qua);
+            NoteRendering.InitializeNotes(GameBase.SelectedBeatmap.Qua);
+
+            TestButton = new TextButton(new Vector2(200, 50), "BACK")
+            {
+                Image = GameBase.LoadedSkin.ColumnTimingBar,
+                Alignment = Alignment.TopCenter,
+                Parent = NoteRendering.Boundary
+            };
+            TestButton.Clicked += ButtonClick;
+
             UpdateReady = true;
         }
 
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public void LoadContent()
-        {
-            //Initialize Components
-            Playfield.InitializePlayfield();
-            Timing.InitializeTiming(GameBase.SelectedBeatmap.Qua);
-            NoteRendering.InitializeNotes(GameBase.SelectedBeatmap.Qua);
-        }
+        public void LoadContent() { }
 
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
         public void UnloadContent()
         {
-            //Do unload stuff
-            //GameStateManager.Instance.UnloadContent();
+            //Remove Loggers
+            LogManager.RemoveLogger("KeyCount");
+            LogManager.RemoveLogger("DeltaTime");
+            LogManager.RemoveLogger("SongTime");
+            LogManager.RemoveLogger("SongPos");
+            LogManager.RemoveLogger("HitObjects");
+            LogManager.RemoveLogger("Skippable");
+
+            //Do Unload stuff
+            TestButton.Clicked -= ButtonClick;
+            NoteRendering.Boundary.Destroy();
+            Playfield.Boundary.Destroy();
             UpdateReady = false;
         }
 
@@ -134,6 +156,12 @@ namespace Quaver.GameState.States
         {
             Playfield.Boundary.Draw();
             NoteRendering.Boundary.Draw();
+            TestButton.Draw();
+        }
+
+        public void ButtonClick(object sender, EventArgs e)
+        {
+            GameStateManager.Instance.ChangeState(new SongSelectState());
         }
     }
 }
