@@ -31,7 +31,7 @@ namespace Quaver.GameState.States
                     throw new Exception("No selected beatmap, we should not be on this screen!!!");
 
                 // Try and parse the .qua and check if it is valid.
-                var qua = new Qua(GameBase.SelectedBeatmap.Path);
+                var qua = new Qua(Config.Configuration.SongDirectory + "/" + GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.Path);
 
                 if (!qua.IsValidQua)
                     throw new Exception("[SONG LOADING STATE] The .qua file could NOT be loaded!");
