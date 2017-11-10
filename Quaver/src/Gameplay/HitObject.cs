@@ -147,6 +147,17 @@ namespace Quaver.Gameplay
                 Size = Vector2.One * HitObjectSize,
                 Parent = ParentContainer
             };
+
+            if (IsLongNote)
+            {
+                HoldBodySprite.Visible = true;
+                HoldEndSprite.Visible = true;
+            }
+            else
+            {
+                HoldBodySprite.Visible = false;
+                HoldEndSprite.Visible = false;
+            }
         }
 
         public void Update()
@@ -156,16 +167,9 @@ namespace Quaver.Gameplay
                 //Update HoldBody Position and Size
                 HoldBodySprite.PositionY = _hitObjectPosition.Y + HitObjectSize / 2f;
                 HoldBodySprite.SizeY = CurrentLongNoteSize;
-                HoldBodySprite.Visible = true;
 
                 //Update Hold End Position
                 HoldEndSprite.PositionY = _hitObjectPosition.Y + HoldBodySprite.SizeY;
-                HoldEndSprite.Visible = true;
-            }
-            else
-            {
-                HoldBodySprite.Visible = false;
-                HoldEndSprite.Visible = false;
             }
 
             //Update HitBody
