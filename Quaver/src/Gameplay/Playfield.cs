@@ -56,7 +56,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     The playfield Boundary
         /// </summary>
-        public static Boundary PlayfieldBoundary { get; set; } = new Boundary();
+        public static Boundary PlayfieldBoundary { get; set; }
 
         /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
