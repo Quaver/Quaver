@@ -87,6 +87,7 @@ namespace Quaver.GameState.States
                 Alignment = Alignment.TopCenter,
                 Parent = NoteRendering.Boundary
             };
+            TestButton.Clicked += ButtonClick;
 
             UpdateReady = true;
         }
@@ -101,9 +102,16 @@ namespace Quaver.GameState.States
         /// </summary>
         public void UnloadContent()
         {
-            //Do unload stuff
-            //GameStateManager.Instance.UnloadContent();
+            //Remove Loggers
+            LogManager.RemoveLogger("KeyCount");
+            LogManager.RemoveLogger("DeltaTime");
+            LogManager.RemoveLogger("SongTime");
+            LogManager.RemoveLogger("SongPos");
+            LogManager.RemoveLogger("HitObjects");
+            LogManager.RemoveLogger("Skippable");
 
+            //Do Unload stuff
+            TestButton.Clicked -= ButtonClick;
             TestButton.Destroy();
             UpdateReady = false;
         }
@@ -152,7 +160,6 @@ namespace Quaver.GameState.States
 
         public void ButtonClick(object sender, EventArgs e)
         {
-            //Change to SongSelectState
             GameStateManager.Instance.ChangeState(new SongSelectState());
         }
     }
