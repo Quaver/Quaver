@@ -90,8 +90,6 @@ namespace Quaver.GameState.States
             MenuAudioPlayer.PlayRandomBeatmaps();
 
             //Update Menu Screen Boundary
-            //testButton.Update(dt);
-            //importPeppyButton.Update(dt);
             MenuScreen.Update(dt);
         }
 
