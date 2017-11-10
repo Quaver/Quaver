@@ -22,6 +22,8 @@ namespace Quaver.GameState.States
     {
         public State CurrentState { get; set; } = State.MainMenu;
 
+        public Boundary MenuScreen;
+
         //TEST
         public Button testButton;
 
@@ -55,24 +57,29 @@ namespace Quaver.GameState.States
                 DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
             }
 
-            testButton = new TextButton()
+            //Initialize Menu Screen
+            MenuScreen = new Boundary()
             {
-                Size = new Vector2(200, 40),
+                Size = new Vector2(GameBase.Window.Size.X,GameBase.Window.Size.Y)
+            };
+
+            //Initialize Test Buttons TODO: Remove later
+            testButton = new TextButton(new Vector2(200, 40), "Next State")
+            {
                 Image = GameBase.LoadedSkin.NoteHoldBody,
                 Alignment = Alignment.MidCenter,
                 Position = Vector2.Zero,
-                Text = "Next State"
+                Parent = MenuScreen
             };
             testButton.UpdateRect();
             testButton.Clicked += ButtonClick;
 
-            importPeppyButton = new TextButton()
+            importPeppyButton = new TextButton(new Vector2(200, 40), "Import .osz")
             {
-                Size = new Vector2(200, 40),
                 Image = GameBase.LoadedSkin.NoteHoldBody,
                 Alignment = Alignment.TopCenter,
                 Position = Vector2.Zero,
-                Text = "Import .osz"
+                Parent = MenuScreen
             };
             importPeppyButton.UpdateRect();
             importPeppyButton.Clicked += Osz.OnImportButtonClick;           
@@ -102,8 +109,9 @@ namespace Quaver.GameState.States
 
         public void Update(GameTime gameTime)
         {
-            testButton.Update(gameTime.ElapsedGameTime.TotalMilliseconds);
-            importPeppyButton.Update(gameTime.ElapsedGameTime.TotalMilliseconds);
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+            //testButton.Update(dt);
+            //importPeppyButton.Update(dt);
 
             // If the user is idle on the main menu continue to select random beatmaps.
             if (GameBase.SelectedBeatmap != null && GameBase.SelectedBeatmap.Song != null)
@@ -123,6 +131,9 @@ namespace Quaver.GameState.States
                     DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
                 }
             }
+
+            //Update Menu Screen Boundary
+            MenuScreen.Update(dt);
         }
 
         public void Draw()
