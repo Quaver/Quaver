@@ -25,6 +25,7 @@ namespace Quaver.Graphics.Button
             {
                 Text = ButtonText,
                 Size = ButtonSize,
+                Alignment = Alignment.MidCenter,
                 Parent = this
             };
             Size = ButtonSize;
@@ -44,14 +45,6 @@ namespace Quaver.Graphics.Button
         ///     Current Color/Tint of the object.
         /// </summary>
         private Color CurrentTint = Color.White;
-
-        /// <summary>
-        ///     This method is called when the button gets clicked
-        /// </summary>
-        public override void OnClicked()
-        {
-            base.OnClicked();
-        }
 
         /// <summary>
         ///     This method is called when the mouse hovers over the button

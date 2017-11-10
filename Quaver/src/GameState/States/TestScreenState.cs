@@ -19,6 +19,7 @@ namespace Quaver.GameState.States
     internal class StateTestScreen : IGameState
     {
         public State CurrentState { get; set; } = State.TestScreen;
+        public bool UpdateReady { get; set; }
 
         //TEST (These variables will be removed later)
         private Texture2D _TestImage;
@@ -40,6 +41,8 @@ namespace Quaver.GameState.States
             Console.WriteLine("[STATE_TESTSCREEN]: Initialized Test State.");
             Console.WriteLine("Screen Height: {0}, Screen Width: {1}",width,height);
             Console.WriteLine("Total Test Objects: {0}", _iterations * _totalChildren);
+
+            UpdateReady = true;
         }
 
         /// <summary>
