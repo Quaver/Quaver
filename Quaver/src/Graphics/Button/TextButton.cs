@@ -30,10 +30,8 @@ namespace Quaver.Graphics.Button
             {
                 Text = this.Text,
                 Size = this.Size,
-                Position = this.Position
+                Parent = this
             };
-
-            TextSprite.UpdateRect();
         }
 
         /// <summary>
