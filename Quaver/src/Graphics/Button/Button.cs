@@ -87,6 +87,8 @@ namespace Quaver.Graphics.Button
                 //Click logic
                 if (MouseClicked) MouseClicked = false;
             }
+
+            base.Update(dt);
         }
     }
 }
