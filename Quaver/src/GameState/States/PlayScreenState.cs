@@ -112,7 +112,8 @@ namespace Quaver.GameState.States
 
             //Do Unload stuff
             TestButton.Clicked -= ButtonClick;
-            TestButton.Destroy();
+            NoteRendering.Boundary.Destroy();
+            Playfield.Boundary.Destroy();
             UpdateReady = false;
         }
 
