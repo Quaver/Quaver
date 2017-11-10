@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.Discord;
 using Quaver.Gameplay;
@@ -31,31 +32,8 @@ namespace Quaver.GameState.States
 
         public void Initialize()
         {
-            // Load and play the randomly selected beatmap's song.
-            if (GameBase.SelectedBeatmap != null)
-            {
-                // In the event that the song is already loaded up, we don't want to load it again
-                // through this state.
-                if (GameBase.SelectedBeatmap.Song != null)
-                    GameBase.SelectedBeatmap.Song.Resume();
-                else
-                {
-                    // Here we assume that the song hasn't been loaded since its length is 0,
-                    // so we'll attempt to load it up and play it.
-                    GameBase.SelectedBeatmap.LoadAudio();
-                    GameBase.SelectedBeatmap.Song.Play();
-                }
-
-                // Set Rich Presence
-                GameBase.DiscordController.presence.details = $"Listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
-                DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
-            }
-            else
-            {
-                // Set Rich Presence
-                GameBase.DiscordController.presence.details = $"Idle";
-                DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
-            }
+            // Initialize the main menu's audio player.
+            MenuAudioPlayer.Initialize();
 
             //Initialize Menu Screen
             MenuScreen = new Boundary();
@@ -108,24 +86,8 @@ namespace Quaver.GameState.States
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            // If the user is idle on the main menu continue to select random beatmaps.
-            if (GameBase.SelectedBeatmap != null && GameBase.SelectedBeatmap.Song != null)
-            {
-                if (GameBase.SelectedBeatmap.Song.GetAudioPosition() >= GameBase.SelectedBeatmap.Song.GetAudioLength())
-                {
-                    // Stop the current song
-                    GameBase.SelectedBeatmap.Song.Stop();
-
-                    // Select a new song and play it
-                    BeatmapUtils.SelectRandomBeatmap();
-                    GameBase.SelectedBeatmap.LoadAudio();
-                    GameBase.SelectedBeatmap.Song.Play();
-
-                    // Set new Rich Presence
-                    GameBase.DiscordController.presence.details = $"Listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
-                    DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
-                }
-            }
+            // Select and play random maps.
+            MenuAudioPlayer.PlayRandomBeatmaps();
 
             //Update Menu Screen Boundary
             //testButton.Update(dt);
