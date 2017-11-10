@@ -87,7 +87,8 @@ namespace Quaver.GameState
 
             GameBase.SelectedBeatmap.Song.Stop();
             GameBase.SelectedBeatmap = map;
-            //GameBase.SelectedBeatmap.Song.Play();
+            GameBase.SelectedBeatmap.LoadAudio();
+            GameBase.SelectedBeatmap.Song.Play();
 
 
             // Stop the selected song since it's only played during the main menu.
