@@ -23,6 +23,10 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
+        }
+
+        public void LoadContent()
+        {
             try
             {
                 Console.WriteLine("[SONG LOADING STATE] Attempting to load beatmap...");
@@ -62,11 +66,9 @@ namespace Quaver.GameState.States
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);   
+                Console.WriteLine(e);
             }
         }
-
-        public void LoadContent() {}
 
         public void UnloadContent() { }
 
