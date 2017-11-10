@@ -19,6 +19,9 @@ namespace Quaver.Audio
         /// </summary>
         internal static void Initialize()
         {
+            if (GameBase.Beatmaps.Count == 0)
+                return; 
+
             // Load and play the randomly selected beatmap's song.
             if (GameBase.SelectedBeatmap != null)
             {
@@ -52,6 +55,9 @@ namespace Quaver.Audio
         /// </summary>
         internal static void PlayRandomBeatmaps()
         {
+            if (GameBase.Beatmaps.Count == 0)
+                return;
+
             // Run a check if the selected map or song is currently null.
             if (GameBase.SelectedBeatmap == null || GameBase.SelectedBeatmap.Song == null)
                 return;
