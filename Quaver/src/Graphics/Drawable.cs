@@ -33,13 +33,18 @@ namespace Quaver.Graphics
         public virtual void Update(double dt)
         {
             //Animation logic
-            UpdateRect();
+            if (_changed)
+            {
+                _changed = false;
+                UpdateRect();
+            }
 
             //Update Children
             Children.ForEach(x => x.Update(dt));
         }
 
         //Local variables
+        private bool _changed;
         private Rectangle _localRect;
         private Rectangle _globalRect;
         private Drawable _parent;
@@ -84,6 +89,7 @@ namespace Quaver.Graphics
 
                 //Assign parent in this object
                 _parent = value;
+                _changed = true;
             }
         }
 
@@ -235,6 +241,7 @@ namespace Quaver.Graphics
 
             _localRect.Width = (int)_absoluteSize.X;
             _localRect.Height = (int)_absoluteSize.Y;
+            _changed = true;
         }
 
         /// <summary>
@@ -244,6 +251,7 @@ namespace Quaver.Graphics
         {
             _localRect.X = (int)_localPosition.X;
             _localRect.Y = (int)_localPosition.Y;
+            _changed = true;
         }
 
         /// <summary>

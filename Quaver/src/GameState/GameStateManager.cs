@@ -36,11 +36,11 @@ namespace Quaver.GameState
                 States.Push(newState);
 
                 // Initialize the screen
-                States.Peek().Initialize();
+                newState.Initialize();
 
                 // Call the LoadContent on the screen
                 if (GameBase.Content != null)
-                    States.Peek().LoadContent();
+                    newState.LoadContent();
             }
             catch (Exception ex)
             {
