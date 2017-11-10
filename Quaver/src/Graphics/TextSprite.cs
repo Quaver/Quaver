@@ -19,9 +19,23 @@ namespace Quaver.Graphics
     internal class TextSprite : Drawable
     {
         /// <summary>
-        /// The text of this TextSprite
+        ///     The text of this TextSprite
         /// </summary>
         public string Text { get; set; }
+
+        /// <summary>
+        ///     Determines if the text will stop before overflowing.
+        ///     If multiline is enabled, this value will stop vertical overflowing.
+        ///     If multiline is disabled, this value will stop horizontal overflowing.
+        /// </summary>
+        public bool Wordwrap { get; set; }
+
+        /// <summary>
+        ///     Determines if more than 1 line of text should be used. 
+        ///     If wordwrap is enabled, it will cut off the bottom. 
+        ///     If word wrap isn't enabled, it will not cut off at the bottom.
+        /// </summary>
+        public bool Multiline { get; set; }
 
         /// <summary>
         ///     The Rectangle of the rendered text inside the TextSprite.
@@ -33,15 +47,18 @@ namespace Quaver.Graphics
         /// </summary>
         private Rectangle _textRect;
 
+        /// <summary>
+        ///     The size of the rendered text in a single row.
+        /// </summary>
         private Vector2 _textSize = new Vector2();
 
         /// <summary>
-        /// The font of this object
+        ///     The font of this object
         /// </summary>
         public SpriteFont Font { get; } = GameBase.Content.Load<SpriteFont>("testFont");
 
         /// <summary>
-        /// The color of this object
+        ///     The color of this object
         /// </summary>
         public Color TextColor = Color.White;
 
