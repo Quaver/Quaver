@@ -52,6 +52,7 @@ namespace Quaver.Graphics
             //TODO: SpriteFont.MeasureString()
 
             //Draw itself if it is in the window
+            Console.WriteLine(GlobalRect);
             if (GameBase.Window.Intersects(GlobalRect))
                 GameBase.SpriteBatch.DrawString(Font, Text, new Vector2(GlobalRect.X, GlobalRect.Y), TextColor);
 
