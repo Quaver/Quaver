@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
@@ -33,7 +34,7 @@ namespace Quaver.GameState
             {
                 foreach (var map in mapset.Value)
                 {
-                    var newButton = new TextButton(new Vector2(520, 20),
+                    var newButton = new TextButton(new Vector2(300, 20),
                         map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]")
                     {
                         Image = GameBase.LoadedSkin.ColumnTimingBar,
@@ -43,20 +44,33 @@ namespace Quaver.GameState
                     };
                     newButton.TextSprite.Alignment = Alignment.MidLeft;
                     newButton.TextSprite.PositionX = 20;
-                    newButton.Clicked += (sender, e) => ButtonClick(sender, e, newButton.TextSprite.Text);
+                    var currentMap = map;
+                    newButton.Clicked += (sender, e) => ButtonClick(sender, e, newButton.TextSprite.Text, currentMap);
                     Buttons.Add(newButton);
                     _buttonPos += 20;
                 }
             }
+
+            //Add map selected text TODO: remove later
+            LogManager.AddLogger("MapSelected",Color.Yellow);
+            LogManager.UpdateLogger("MapSelected", "Map Selected: "+GameBase.SelectedBeatmap.Artist + " - " + GameBase.SelectedBeatmap.Title + " [" + GameBase.SelectedBeatmap.DifficultyName + "]");
             UpdateReady = true;
         }
 
         public void LoadContent() { }
 
-        public void UnloadContent() { }
+        public void UnloadContent()
+        {
+
+            GameBase.SelectedBeatmap.Song.Stop();
+        }
 
         public void Update(GameTime gameTime)
         {
+
+            // Select and play random maps.
+            //MenuAudioPlayer.PlayRandomBeatmaps();
+
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
             Boundary.Update(dt);
         }
@@ -67,9 +81,15 @@ namespace Quaver.GameState
         }
 
         //TODO: Remove
-        public void ButtonClick(object sender, EventArgs e, string text)
+        public void ButtonClick(object sender, EventArgs e, string text, Beatmap map)
         {
-            LogManager.QuickLog(text, Color.Blue,4);
+            LogManager.UpdateLogger("MapSelected","Map Selected: "+text);
+
+            GameBase.SelectedBeatmap.Song.Stop();
+            GameBase.SelectedBeatmap = map;
+            //GameBase.SelectedBeatmap.Song.Play();
+
+
             // Stop the selected song since it's only played during the main menu.
             //GameBase.SelectedBeatmap.Song.Stop();
 
