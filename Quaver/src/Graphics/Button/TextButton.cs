@@ -47,14 +47,6 @@ namespace Quaver.Graphics.Button
         private Color CurrentTint = Color.White;
 
         /// <summary>
-        ///     This method is called when the button gets clicked
-        /// </summary>
-        public override void OnClicked()
-        {
-            base.OnClicked();
-        }
-
-        /// <summary>
         ///     This method is called when the mouse hovers over the button
         /// </summary>
         public override void MouseOver()

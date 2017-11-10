@@ -195,6 +195,11 @@ namespace Quaver.Graphics
         }
 
         /// <summary>
+        /// Determines if the Object is going to get drawn.
+        /// </summary>
+        public bool Visible { get; set; } = true;
+
+        /// <summary>
         /// This method is called when the object will be removed from memory.
         /// </summary>
         public void Destroy()
