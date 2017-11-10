@@ -110,7 +110,8 @@ namespace Quaver.GameState
                 if (States.Count == 0)
                     return;
 
-                States.Peek().Update(gameTime);
+                if (States.Peek().UpdateReady)
+                    States.Peek().Update(gameTime);
             }
             catch (Exception ex)
             {

@@ -22,8 +22,9 @@ namespace Quaver.GameState.States
     internal class MainMenuState : IGameState
     {
         public State CurrentState { get; set; } = State.MainMenu;
+        public bool UpdateReady { get; set; }
 
-        public Boundary MenuScreen;
+        public Boundary Boundary;
 
         //TEST
         public Button testButton;
@@ -36,7 +37,7 @@ namespace Quaver.GameState.States
             MenuAudioPlayer.Initialize();
 
             //Initialize Menu Screen
-            MenuScreen = new Boundary();
+            Boundary = new Boundary();
 
             //Initialize Test Buttons TODO: Remove later
             testButton = new TextButton(new Vector2(200, 40), "Next State")
@@ -44,7 +45,7 @@ namespace Quaver.GameState.States
                 Image = GameBase.LoadedSkin.NoteHoldBody,
                 Alignment = Alignment.MidCenter,
                 Position = Vector2.Zero,
-                Parent = MenuScreen
+                Parent = Boundary
             };
             testButton.UpdateRect();
             testButton.Clicked += ButtonClick;
@@ -54,10 +55,11 @@ namespace Quaver.GameState.States
                 Image = GameBase.LoadedSkin.NoteHoldBody,
                 Alignment = Alignment.TopCenter,
                 Position = Vector2.Zero,
-                Parent = MenuScreen
+                Parent = Boundary
             };
             importPeppyButton.UpdateRect();
-            importPeppyButton.Clicked += Osz.OnImportButtonClick;           
+            importPeppyButton.Clicked += Osz.OnImportButtonClick;
+            UpdateReady = true;
         }
 
         public void ButtonClick(object sender, EventArgs e)
@@ -78,8 +80,9 @@ namespace Quaver.GameState.States
 
         public void UnloadContent()
         {
+            UpdateReady = false;
             testButton.Clicked -= ButtonClick;
-            testButton.Destroy();
+            Boundary.Destroy();
         }
 
         public void Update(GameTime gameTime)
@@ -90,7 +93,7 @@ namespace Quaver.GameState.States
             MenuAudioPlayer.PlayRandomBeatmaps();
 
             //Update Menu Screen Boundary
-            MenuScreen.Update(dt);
+            Boundary.Update(dt);
         }
 
         public void Draw()
