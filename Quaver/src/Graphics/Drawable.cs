@@ -230,6 +230,8 @@ namespace Quaver.Graphics
         /// </summary>
         public void UpdateRect()
         {
+            //Children.ForEach(x => x.UpdateRect());
+
             if (_parent != null)
             {
                 _globalRect = Util.DrawRect(Alignment, _localRect, Parent._globalRect);
