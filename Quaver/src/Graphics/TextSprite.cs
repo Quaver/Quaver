@@ -61,10 +61,9 @@ namespace Quaver.Graphics
             _textRect.Height = (int)_textSize.Y;
 
             //Update GlobalTextRect
-            if (Parent != null)
-                GlobalTextRect = Util.DrawRect(Alignment, _textRect, Parent.GlobalRect);
-            else
-                GlobalTextRect = Util.DrawRect(Alignment, _textRect, GameBase.Window);
+            GlobalTextRect = Util.DrawRect(Alignment, _textRect, GlobalRect);
+
+            base.Update(dt);
         }
 
         /// <summary>
@@ -73,9 +72,8 @@ namespace Quaver.Graphics
         public override void Draw()
         {
             //TODO: SpriteFont.MeasureString()
-            //Console.WriteLine(GlobalRect);
             //Draw itself if it is in the window
-            //if (GameBase.Window.Intersects(GlobalRect))
+            if (GameBase.Window.Intersects(GlobalRect))
                 GameBase.SpriteBatch.DrawString(Font, Text, new Vector2(GlobalTextRect.X, GlobalTextRect.Y), TextColor);
 
             base.Draw();
