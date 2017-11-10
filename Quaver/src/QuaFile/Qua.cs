@@ -159,14 +159,16 @@ namespace Quaver.QuaFile
                 while (sr.Peek() >= 0)
                 {
                     // Read the current file line and get the file section associated with it.
-                    var line = sr.ReadLine();
+                    var line = sr.ReadLine().Trim();
+
+                    if (line == "")
+                        continue;
+
                     fileSection = GetFileSection(line, fileSection);
 
                     ParseEntireQua(fileSection, line);
                 }
             }
-
-            CheckQuaValidity();
         }
 
         /// <summary>
@@ -177,7 +179,7 @@ namespace Quaver.QuaFile
         /// <returns></returns>
         private static string GetFileSection(string line, string currentSection)
         {
-            switch (line.Trim())
+            switch (line)
             {
                 case "# General":
                     return "General";
@@ -204,28 +206,37 @@ namespace Quaver.QuaFile
         /// <param name="line">The current line of the file.</param>
         private void ParseEntireQua(string fileSection, string line)
         {
-            switch (fileSection)
+            try
             {
-                case "General":
-                    ParseGeneral(line);
-                    break;
-                case "Metadata":
-                    ParseMetadata(line);
-                    break;
-                case "Difficulty":
-                    ParseDifficulty(line);
-                    break;
-                case "Timing":
-                    ParseTiming(line);
-                    break;
-                case "SV":
-                    ParseSliderVelocity(line);
-                    break;
-                case "HitObjects":
-                    ParseHitObject(line);
-                    break;
-                default:
-                    break;
+                switch (fileSection)
+                {
+                    case "General":
+                        ParseGeneral(line);
+                        break;
+                    case "Metadata":
+                        ParseMetadata(line);
+                        break;
+                    case "Difficulty":
+                        ParseDifficulty(line);
+                        break;
+                    case "Timing":
+                        ParseTiming(line);
+                        break;
+                    case "SV":
+                        ParseSliderVelocity(line);
+                        break;
+                    case "HitObjects":
+                        ParseHitObject(line);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine(line);
+                throw;
             }
         }
 
@@ -235,29 +246,29 @@ namespace Quaver.QuaFile
         /// <param name="line">The current line of the file.</param>
         private void ParseGeneral(string line)
         {
-            if (line.Contains(":"))
-            {
-                var key = line.Substring(0, line.IndexOf(':'));
-                var value = line.Trim().Split(':').Last().Trim();
+            if (!line.Contains(":"))
+                return;
 
-                switch (key.Trim())
-                {
-                    case "AudioFile":
-                        AudioFile = value;
-                        break;
-                    case "AudioLeadIn":
-                        AudioLeadIn = Int32.Parse(value);
-                        break;
-                    case "SongPreviewTime":
-                        SongPreviewTime = Int32.Parse(value);
-                        break;
-                    case "BackgroundFile":
-                        BackgroundFile = value.Replace("\"", "");
-                        break;
-                    default:
-                        break;
-                }
-            }
+            var key = line.Substring(0, line.IndexOf(':')).Trim();
+            var value = line.Split(':').Last().Trim();
+
+            switch (key)
+            {
+                case "AudioFile":
+                    AudioFile = value;
+                    break;
+                case "AudioLeadIn":
+                    AudioLeadIn = int.Parse(value);
+                    break;
+                case "SongPreviewTime":
+                    SongPreviewTime = int.Parse(value);
+                    break;
+                case "BackgroundFile":
+                    BackgroundFile = value.Replace("\"", "");
+                    break;
+                default:
+                    break;
+            }        
         }
 
         /// <summary>
@@ -266,49 +277,49 @@ namespace Quaver.QuaFile
         /// <param name="line">The current line of the file.</param>
         private void ParseMetadata(string line)
         {
-            if (line.Contains(":"))
-            {
-                var key = line.Substring(0, line.IndexOf(':'));
-                var value = line.Trim().Split(':').Last().Trim();
+            if (!line.Contains(":"))
+                return;
 
-                switch (key.Trim())
-                {
-                    case "Title":
-                        Title = value;
-                        break;
-                    case "TitleUnicode":
-                        TitleUnicode = value;
-                        break;
-                    case "Artist":
-                        Artist = value;
-                        break;
-                    case "ArtistUnicode":
-                        ArtistUnicode = value;
-                        break;
-                    case "Source":
-                        Source = value;
-                        break;
-                    case "Tags":
-                        Tags = value;
-                        break;
-                    case "Creator":
-                        Creator = value;
-                        break;
-                    case "DifficultyName":
-                        DifficultyName = value;
-                        break;
-                    case "MapID":
-                        MapId = Int32.Parse(value);
-                        break;
-                    case "MapSetID":
-                        MapSetId = Int32.Parse(value);
-                        break;
-                    case "Description":
-                        Description = value;
-                        break;
-                    default:
-                        break;
-                }
+            var key = line.Substring(0, line.IndexOf(':')).Trim();
+            var value = line.Split(':').Last().Trim();
+
+            switch (key)
+            {
+                case "Title":
+                    Title = value;
+                    break;
+                case "TitleUnicode":
+                    TitleUnicode = value;
+                    break;
+                case "Artist":
+                    Artist = value;
+                    break;
+                case "ArtistUnicode":
+                    ArtistUnicode = value;
+                    break;
+                case "Source":
+                    Source = value;
+                    break;
+                case "Tags":
+                    Tags = value;
+                    break;
+                case "Creator":
+                    Creator = value;
+                    break;
+                case "DifficultyName":
+                    DifficultyName = value;
+                    break;
+                case "MapID":
+                    MapId = int.Parse(value);
+                    break;
+                case "MapSetID":
+                    MapSetId = int.Parse(value);
+                    break;
+                case "Description":
+                    Description = value;
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -318,25 +329,25 @@ namespace Quaver.QuaFile
         /// <param name="line">The current line of the file.</param>
         private void ParseDifficulty(string line)
         {
-            if (line.Contains(":"))
-            {
-                var key = line.Substring(0, line.IndexOf(':'));
-                var value = line.Trim().Split(':').Last().Trim();
+            if (!line.Contains(":"))
+                return;
 
-                switch (key.Trim())
-                {
-                    case "HPDrain":
-                        HpDrain = Single.Parse(value);
-                        break;
-                    case "AccuracyStrain":
-                        AccuracyStrain = Single.Parse(value);
-                        break;
-                    case "KeyCount":
-                        KeyCount = Int32.Parse(value);
-                        break;
-                    default:
-                        break;
-                }
+            var key = line.Substring(0, line.IndexOf(':')).Trim();
+            var value = line.Split(':').Last().Trim();
+
+            switch (key)
+            {
+                case "HPDrain":
+                    HpDrain = float.Parse(value);
+                    break;
+                case "AccuracyStrain":
+                    AccuracyStrain = float.Parse(value);
+                    break;
+                case "KeyCount":
+                    KeyCount = int.Parse(value);
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -348,24 +359,25 @@ namespace Quaver.QuaFile
         {
             try
             {
-                if (line.Contains("|") && !line.Contains("#"))
+                if (!line.Contains("|") || line.Contains("#"))
+                    return;
+
+                var values = line.Trim().Split('|');
+
+                if (values.Length != 2)
+                    IsValidQua = false;
+
+                var timing = new TimingPoint
                 {
-                    var values = line.Split('|');
+                    StartTime = float.Parse(values[0]),
+                    Bpm = float.Parse(values[1])
+                };
 
-                    if (values.Length != 2)
-                        IsValidQua = false;
-
-                    var timing = new TimingPoint
-                    {
-                        StartTime = Single.Parse(values[0]),
-                        Bpm = Single.Parse(values[1])
-                    };
-
-                    TimingPoints.Add(timing);
-                }
+                TimingPoints.Add(timing);
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 IsValidQua = false;
             }
         }
@@ -378,26 +390,27 @@ namespace Quaver.QuaFile
         {
             try
             {
-                if (line.Contains("|") && !line.Contains("#"))
+                if (!line.Contains("|") || line.Contains("#"))
+                    return;
+
+                var values = line.Trim().Split('|');
+
+                // There should only be 3 values in an SV, if not, it's an invalid map.
+                if (values.Length != 3)
+                    IsValidQua = false;
+
+                var sv = new SliderVelocity
                 {
-                    var values = line.Split('|');
+                    StartTime = float.Parse(values[0]),
+                    Multiplier = float.Parse(values[1]),
+                    Volume = int.Parse(values[2])
+                };
 
-                    // There should only be 3 values in an SV, if not, it's an invalid map.
-                    if (values.Length != 3)
-                        IsValidQua = false;
-
-                    var sv = new SliderVelocity
-                    {
-                        StartTime = Single.Parse(values[0]),
-                        Multiplier = Single.Parse(values[1]),
-                        Volume = Int32.Parse(values[2])
-                    };
-
-                    SliderVelocities.Add(sv);
-                }
+                SliderVelocities.Add(sv);
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 IsValidQua = false;
             }
         }
@@ -410,30 +423,31 @@ namespace Quaver.QuaFile
         {
             try
             {
-                if (line.Contains("|") && !line.Contains("HitObjects"))
+                if (!line.Contains("|") || line.Contains("HitObjects"))
+                    return;
+
+                var values = line.Trim().Split('|');
+
+                if (values.Length != 3)
+                    IsValidQua = false;
+
+                var ho = new HitObject
                 {
-                    var values = line.Split('|');
+                    StartTime = int.Parse(values[0]),
+                    KeyLane = int.Parse(values[1])
+                };
 
-                    if (values.Length != 3)
-                        IsValidQua = false;
+                // If the key lane isn't in 1-4, then we'll consider the map to be invalid.
+                if (ho.KeyLane < 1 || ho.KeyLane > 7)
+                    IsValidQua = false;
 
-                    var ho = new HitObject
-                    {
-                        StartTime = Int32.Parse(values[0]),
-                        KeyLane = Int32.Parse(values[1])
-                    };
+                ho.EndTime = int.Parse(values[2]);
 
-                    // If the key lane isn't in 1-4, then we'll consider the map to be invalid.
-                    if (ho.KeyLane < 1 || ho.KeyLane > 7)
-                        IsValidQua = false;
-
-                    ho.EndTime = Int32.Parse(values[2]);
-
-                    HitObjects.Add(ho);
-                }
+                HitObjects.Add(ho);
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 IsValidQua = false;
             }
         }
