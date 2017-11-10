@@ -73,8 +73,6 @@ namespace Quaver.Gameplay
                 Alignment = Alignment.TopCenter
             };
 
-            //PlayfieldBoundary.UpdateRect();
-
             // Create Receptors
             Receptors = new Sprite[GameBase.SelectedBeatmap.Qua.KeyCount];
             ReceptorCurrentSize = new float[GameBase.SelectedBeatmap.Qua.KeyCount];
