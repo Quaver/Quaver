@@ -50,11 +50,6 @@ namespace Quaver.Peppy
                 // This button should only be on the song select state, so no need to check for states here.
                 var oldMaps = GameBase.Beatmaps;
 
-                foreach (KeyValuePair<string, List<Beatmap>> entry in oldMaps)
-                {
-                    Console.WriteLine(entry.Key);
-                }
-
                 // Load the beatmaps again automatically.
                 await GameBase.LoadAndSetBeatmaps();
 
