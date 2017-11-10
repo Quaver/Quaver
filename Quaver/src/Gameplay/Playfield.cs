@@ -31,7 +31,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     TODO: The Playfield size. Load from skin -- About 400px wide.
         /// </summary>
-        private static int PlayfieldSize { get; set; }
+        public static int PlayfieldSize { get; set; }
 
         /// <summary>
         ///     The receptor sprites.
