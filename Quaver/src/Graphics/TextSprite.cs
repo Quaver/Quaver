@@ -28,7 +28,7 @@ namespace Quaver.Graphics
         ///     If multiline is enabled, this value will stop vertical overflowing.
         ///     If multiline is disabled, this value will stop horizontal overflowing.
         /// </summary>
-        public bool Wordwrap { get; set; }
+        public bool Textwrap { get; set; } = true;
 
         /// <summary>
         ///     Determines if more than 1 line of text should be used. 
@@ -70,15 +70,29 @@ namespace Quaver.Graphics
 
         public override void Update(double dt)
         {
-            //Update TextSize
-            _textSize = Font.MeasureString(Text);
+            if (!_changed)
+            {
+                //Update TextSize
+                _textSize = Font.MeasureString(Text);
 
-            //Update TextRect
-            _textRect.Width = (int)_textSize.X;
-            _textRect.Height = (int)_textSize.Y;
+                //Update TextRect
+                _textRect.Width = (int) _textSize.X;
+                _textRect.Height = (int) _textSize.Y;
 
-            //Update GlobalTextRect
-            GlobalTextRect = Util.DrawRect(Alignment, _textRect, GlobalRect);
+                //Update GlobalTextRect
+                GlobalTextRect = Util.DrawRect(Alignment, _textRect, GlobalRect);
+
+                if (Multiline)
+                {
+                    if (Textwrap)
+                        Text = WrapText(Text, false);
+                    else
+                        //TODO: Cut text after x lines
+                        Text = WrapText(Text, false);
+                }
+                else if (Textwrap)
+                    Text = WrapText(Text, true);
+            }
 
             base.Update(dt);
         }
@@ -94,6 +108,37 @@ namespace Quaver.Graphics
                 GameBase.SpriteBatch.DrawString(Font, Text, new Vector2(GlobalTextRect.X, GlobalTextRect.Y), TextColor);
 
             base.Draw();
+        }
+
+        private string WrapText(string text, bool singleLine)
+        {
+            if (Font.MeasureString(text).X < SizeX)
+            {
+                return text;
+            }
+
+            string[] words = text.Split(' ');
+            StringBuilder wrappedText = new StringBuilder();
+            float linewidth = 0f;
+            float spaceWidth = Font.MeasureString(" ").X;
+            for (int i = 0; i < words.Length; ++i)
+            {
+                Vector2 size = Font.MeasureString(words[i]);
+                if (linewidth + size.X < SizeX)
+                {
+                    linewidth += size.X + spaceWidth;
+                }
+                else if (!singleLine)
+                {
+                    wrappedText.Append("\n");
+                    linewidth = size.X + spaceWidth;
+                }
+                else break;
+                wrappedText.Append(words[i]);
+                wrappedText.Append(" ");
+            }
+
+            return wrappedText.ToString();
         }
     }
 }
