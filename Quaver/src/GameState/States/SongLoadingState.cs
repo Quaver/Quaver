@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +32,9 @@ namespace Quaver.GameState.States
                     throw new Exception("No selected beatmap, we should not be on this screen!!!");
 
                 // Try and parse the .qua and check if it is valid.
-                var qua = new Qua(Config.Configuration.SongDirectory + "/" + GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.Path);
+                var quaPath = $"{Config.Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
+
+                var qua = new Qua(quaPath);
 
                 if (!qua.IsValidQua)
                     throw new Exception("[SONG LOADING STATE] The .qua file could NOT be loaded!");
@@ -51,7 +54,7 @@ namespace Quaver.GameState.States
                 Console.WriteLine("[SONG LOADING STATE] Audio file successfully loaded.");
 
                 // Get Beatmap MD5
-                var md5 = BeatmapUtils.GetMd5Checksum(GameBase.SelectedBeatmap.Path);
+                var md5 = BeatmapUtils.GetMd5Checksum(quaPath);
                 Console.WriteLine($"[SONG LOADING STATE] Successfully loaded beatmap: {md5}");
 
                 // Load Play State
