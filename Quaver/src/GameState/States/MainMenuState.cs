@@ -28,7 +28,6 @@ namespace Quaver.GameState.States
 
         //TEST
         public Button testButton;
-
         public Button importPeppyButton;
 
         public void Initialize()
@@ -62,17 +61,6 @@ namespace Quaver.GameState.States
             UpdateReady = true;
         }
 
-        public void ButtonClick(object sender, EventArgs e)
-        {
-            LogManager.QuickLog("Clicked",Color.White,1f);
-
-            // Stop the selected song since it's only played during the main menu.
-            GameBase.SelectedBeatmap.Song.Stop();
-
-            GameStateManager.Instance.AddState(new SongLoadingState());
-        }
-
-
         public void LoadContent()
         {
             
@@ -100,6 +88,16 @@ namespace Quaver.GameState.States
         {
             testButton.Draw();
             importPeppyButton.Draw();
+        }
+
+        //TODO: Remove. Test function.
+        public void ButtonClick(object sender, EventArgs e)
+        {
+            // Stop the selected song since it's only played during the main menu.
+            GameBase.SelectedBeatmap.Song.Stop();
+
+            //Change to SongSelectState
+            GameStateManager.Instance.AddState(new SongSelectState());
         }
     }
 }
