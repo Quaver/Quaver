@@ -105,7 +105,7 @@ namespace Quaver.Gameplay
         ///     Updates the current playfield.
         /// </summary>
         /// <param name="dt"></param>
-        public static void UpdatePlayfield(double dt)
+        public static void Update(double dt)
         {
             // Update the delta time tweening variable for animation.
             dt = Math.Min(dt / 30, 1);
