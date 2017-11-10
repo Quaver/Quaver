@@ -23,10 +23,8 @@ namespace Quaver.GameState.States
     /// </summary>
     internal class PlayScreenState : IGameState
     {
-        /// <summary>
-        ///     The current state as defined in the enum.
-        /// </summary>
         public State CurrentState { get; set; } = State.PlayScreen;
+        public bool UpdateReady { get; set; }
 
         /// <summary>
         ///     The input manager for this game state.
@@ -73,6 +71,7 @@ namespace Quaver.GameState.States
             LogManager.AddLogger("SongPos", Color.White);
             LogManager.AddLogger("HitObjects", Color.Wheat);
             LogManager.AddLogger("Skippable", CustomColors.NameTagAdmin);
+            UpdateReady = true;
         }
 
         /// <summary>
@@ -93,6 +92,7 @@ namespace Quaver.GameState.States
         {
             //Do unload stuff
             //GameStateManager.Instance.UnloadContent();
+            UpdateReady = false;
         }
 
         /// <summary>

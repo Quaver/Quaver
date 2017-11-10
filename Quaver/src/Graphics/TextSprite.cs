@@ -24,6 +24,18 @@ namespace Quaver.Graphics
         public string Text { get; set; }
 
         /// <summary>
+        ///     The Rectangle of the rendered text inside the TextSprite.
+        /// </summary>
+        private Rectangle GlobalTextRect { get; set; }
+
+        /// <summary>
+        ///     The Local Rectangle of the rendered text inside the TextSprite. Used to reference Text Size.
+        /// </summary>
+        private Rectangle _textRect;
+
+        private Vector2 _textSize = new Vector2();
+
+        /// <summary>
         /// The font of this object
         /// </summary>
         public SpriteFont Font { get; } = GameBase.Content.Load<SpriteFont>("testFont");
@@ -39,16 +51,30 @@ namespace Quaver.Graphics
             Tint = Color.White;
         }
 
+        public override void Update(double dt)
+        {
+            //Update TextSize
+            _textSize = Font.MeasureString(Text);
+
+            //Update TextRect
+            _textRect.Width = (int)_textSize.X;
+            _textRect.Height = (int)_textSize.Y;
+
+            //Update GlobalTextRect
+            GlobalTextRect = Util.DrawRect(Alignment, _textRect, GlobalRect);
+
+            base.Update(dt);
+        }
+
         /// <summary>
         ///     Draws the sprite to the screen.
         /// </summary>
         public override void Draw()
         {
             //TODO: SpriteFont.MeasureString()
-            //Console.WriteLine(GlobalRect);
             //Draw itself if it is in the window
-            //if (GameBase.Window.Intersects(GlobalRect))
-                GameBase.SpriteBatch.DrawString(Font, Text, new Vector2(GlobalRect.X, GlobalRect.Y), TextColor);
+            if (GameBase.Window.Intersects(GlobalRect))
+                GameBase.SpriteBatch.DrawString(Font, Text, new Vector2(GlobalTextRect.X, GlobalTextRect.Y), TextColor);
 
             base.Draw();
         }

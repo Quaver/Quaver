@@ -15,6 +15,11 @@ namespace Quaver.GameState
         State CurrentState { get; set; }
 
         /// <summary>
+        ///     Once the state is initialized, this value determines if the state can be updated.
+        /// </summary>
+        bool UpdateReady { get; set; }
+
+        /// <summary>
         ///     Any initialization before the state begins.
         /// </summary>
         void Initialize();

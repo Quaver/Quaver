@@ -14,6 +14,7 @@ namespace Quaver.GameState.States
     internal class MapImportLoadingState : IGameState
     {
         public State CurrentState { get; set; } = State.LoadingScreen;
+        public bool UpdateReady { get; set; }
 
         public void Initialize()
         {

@@ -125,6 +125,7 @@ namespace Quaver.Gameplay
                 Alignment = Alignment.TopLeft,
                 Position = _hitObjectPosition,
                 Size = new Vector2(HitObjectSize, InitialLongNoteSize),
+                Visible = false,
                 Parent = ParentContainer
             };
 
@@ -134,6 +135,7 @@ namespace Quaver.Gameplay
                 Alignment = Alignment.TopLeft,
                 Position = _hitObjectPosition,
                 Size = Vector2.One * HitObjectSize,
+                Visible = false,
                 Parent = ParentContainer
             };
 
@@ -145,6 +147,17 @@ namespace Quaver.Gameplay
                 Size = Vector2.One * HitObjectSize,
                 Parent = ParentContainer
             };
+
+            if (IsLongNote)
+            {
+                HoldBodySprite.Visible = true;
+                HoldEndSprite.Visible = true;
+            }
+            else
+            {
+                HoldBodySprite.Visible = false;
+                HoldEndSprite.Visible = false;
+            }
         }
 
         public void Update()
@@ -161,20 +174,6 @@ namespace Quaver.Gameplay
 
             //Update HitBody
             HitBodySprite.PositionY = _hitObjectPosition.Y;
-        }
-        
-        /// <summary>
-        ///     Draw the object onto screen.
-        /// </summary>
-        public void Draw()
-        {
-            if (IsLongNote)
-            {
-                HoldBodySprite.Draw();
-                HoldEndSprite.Draw();
-            }
-
-            HitBodySprite.Draw();
         }
 
         /// <summary>

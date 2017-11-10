@@ -13,6 +13,7 @@ namespace Quaver.GameState
     internal class GameStateTemplate : IGameState
     {
         public State CurrentState { get; set; } = State.MainMenu;
+        public bool UpdateReady { get; set; }
 
         public void Initialize() { }
 

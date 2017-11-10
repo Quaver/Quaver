@@ -43,7 +43,7 @@ namespace Quaver.Graphics
         public override void Draw()
         {
             //Draw itself if it is in the window
-            if (GameBase.Window.Intersects(GlobalRect))
+            if (GameBase.Window.Intersects(GlobalRect) && Visible)
             GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
 
             //Draw children
