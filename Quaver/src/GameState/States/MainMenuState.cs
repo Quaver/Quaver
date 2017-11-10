@@ -117,6 +117,10 @@ namespace Quaver.GameState.States
                     BeatmapUtils.SelectRandomBeatmap();
                     GameBase.SelectedBeatmap.LoadAudio();
                     GameBase.SelectedBeatmap.Song.Play();
+
+                    // Set new Rich Presence
+                    GameBase.DiscordController.presence.details = $"Listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
+                    DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
                 }
             }
         }
