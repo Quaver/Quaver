@@ -14,6 +14,7 @@ namespace Quaver.GameState.States
     internal class SongLoadingState : IGameState
     {
         public State CurrentState { get; set; } = State.LoadingScreen;
+        public bool UpdateReady { get; set; }
 
         /// <summary>
         ///     Try to load the qua file and song. 
