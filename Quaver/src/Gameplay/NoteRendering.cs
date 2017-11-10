@@ -102,7 +102,7 @@ namespace Quaver.Gameplay
         /// Updates any HitObject related content.
         /// </summary>
         /// <param name="dt"></param>
-        internal static void UpdateNotes(double dt)
+        internal static void Update(double dt)
         {
             int i;
 
