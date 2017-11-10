@@ -18,10 +18,26 @@ namespace Quaver.Graphics
     /// </summary>
     internal abstract class Drawable 
     {
-        //Methods that will be inherited
-        public abstract void Draw();
+        /// <summary>
+        /// This method gets called every frame to draw the object.
+        /// </summary>
+        public virtual void Draw()
+        {
+            Children.ForEach(x => x.Draw());
+        }
 
-        public abstract void Update(double dt);
+        /// <summary>
+        /// This method gets called every frame to update the object.
+        /// </summary>
+        /// <param name="dt"></param>
+        public virtual void Update(double dt)
+        {
+            //Animation logic
+            UpdateRect();
+
+            //Update Children
+            Children.ForEach(x => x.Update(dt));
+        }
 
         //Local variables
         private Rectangle _localRect;
@@ -230,8 +246,6 @@ namespace Quaver.Graphics
         /// </summary>
         public void UpdateRect()
         {
-            //Children.ForEach(x => x.UpdateRect());
-
             if (_parent != null)
             {
                 _globalRect = Util.DrawRect(Alignment, _localRect, Parent._globalRect);

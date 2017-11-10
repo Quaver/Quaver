@@ -55,8 +55,7 @@ namespace Quaver.Graphics
             if (GameBase.Window.Intersects(GlobalRect))
                 GameBase.SpriteBatch.DrawString(Font, Text, new Vector2(GlobalRect.X, GlobalRect.Y), TextColor);
 
-            //Draw children
-            Children.ForEach(x => x.Draw());
+            base.Draw();
         }
 
         /// <summary>
