@@ -38,7 +38,7 @@ namespace Quaver.Graphics.Button
         public virtual void OnClicked()
         {
             MouseClicked = true;
-            Clicked(this, null);
+            Clicked?.Invoke(this, null);
         }
 
         /// <summary>
