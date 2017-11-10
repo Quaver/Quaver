@@ -77,9 +77,6 @@ namespace Quaver.GameState.States
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            // Select and play random maps.
-            //MenuAudioPlayer.PlayRandomBeatmaps();
-
             //Update Menu Screen Boundary
             Boundary.Update(dt);
         }
