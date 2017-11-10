@@ -55,8 +55,11 @@ namespace Quaver.Graphics
         /// </summary>
         public override void Update(double dt)
         {
-            UpdateRect();
             //Animation logic
+            UpdateRect();
+
+            //Update Children
+            Children.ForEach(x => x.Update(dt));
         }
     }
 }
