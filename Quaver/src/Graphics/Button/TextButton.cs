@@ -16,22 +16,18 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class TextButton : Button
     {
-
-        public string Text { get; set; }
-        public SpriteFont Font { get; } = GameBase.Content.Load<SpriteFont>("testFont");
-        public Color TextColor = Color.White;
-
         public TextSprite TextSprite { get; set; }
 
         //Constructor
-        public TextButton()
+        public TextButton(Vector2 ButtonSize, string ButtonText)
         {
             TextSprite = new TextSprite()
             {
-                Text = this.Text,
-                Size = this.Size,
+                Text = ButtonText,
+                Size = ButtonSize,
                 Parent = this
             };
+            Size = ButtonSize;
         }
 
         /// <summary>
@@ -83,6 +79,8 @@ namespace Quaver.Graphics.Button
             CurrentTint.G = (byte)((HoverCurrentTween * 0.25 + 0.75f) * 255);
             CurrentTint.B = (byte)((HoverCurrentTween * 0.25 + 0.75f) * 255);
             Tint = CurrentTint;
+            
+            //TextSprite.Update(dt);
             base.Update(dt);
         }
     }
