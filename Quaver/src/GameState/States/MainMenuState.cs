@@ -78,7 +78,7 @@ namespace Quaver.GameState.States
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Select and play random maps.
-            MenuAudioPlayer.PlayRandomBeatmaps();
+            //MenuAudioPlayer.PlayRandomBeatmaps();
 
             //Update Menu Screen Boundary
             Boundary.Update(dt);
@@ -94,7 +94,7 @@ namespace Quaver.GameState.States
         public void ButtonClick(object sender, EventArgs e)
         {
             // Stop the selected song since it's only played during the main menu.
-            GameBase.SelectedBeatmap.Song.Stop();
+            //GameBase.SelectedBeatmap.Song.Stop();
 
             //Change to SongSelectState
             GameStateManager.Instance.AddState(new SongSelectState());
