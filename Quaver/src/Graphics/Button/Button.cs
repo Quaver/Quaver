@@ -56,36 +56,31 @@ namespace Quaver.Graphics.Button
         /// </summary>
         public override void Update(double dt)
         {
-            if (GlobalRect.Contains(GameBase.MouseState.Position))
+            //Click logic
+            if (GameBase.MouseState.LeftButton == ButtonState.Pressed)
             {
-                //Animation
-                if (!MouseHovered)
+                if (!MouseClicked)
                 {
-                    MouseHovered = true;
-                    MouseOver();
-                }
-
-                //Click logic
-                if (GameBase.MouseState.LeftButton == ButtonState.Pressed)
-                {
-                    if (!MouseClicked) OnClicked();
-                }
-                else
-                {
-                    if (MouseClicked) MouseClicked = false;
+                    MouseClicked = true;
+                    if (GlobalRect.Contains(GameBase.MouseState.Position)) OnClicked();
                 }
             }
             else
             {
-                //Animation
-                if (MouseHovered)
-                {
-                    MouseHovered = false;
-                    MouseOut();
-                }
+                MouseClicked = false;
+            }
 
-                //Click logic
-                if (MouseClicked) MouseClicked = false;
+            //Animation
+            var over = GlobalRect.Contains(GameBase.MouseState.Position);
+            if (over && !MouseHovered)
+            {
+                MouseHovered = true;
+                MouseOver();
+            }
+            else if (!over && MouseHovered)
+            {
+                MouseHovered = false;
+                MouseOut();
             }
 
             base.Update(dt);
