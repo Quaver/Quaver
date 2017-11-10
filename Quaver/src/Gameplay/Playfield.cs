@@ -56,7 +56,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     The playfield Boundary
         /// </summary>
-        public static Boundary PlayfieldBoundary { get; set; }
+        public static Boundary Boundary { get; set; }
 
         /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
@@ -67,7 +67,7 @@ namespace Quaver.Gameplay
             PlayfieldSize = PlayfieldObjectSize * GameBase.SelectedBeatmap.Qua.KeyCount + PlayfieldPadSize * 2;
 
             // Create playfield boundary & Update Rect.
-            PlayfieldBoundary = new Boundary()
+            Boundary = new Boundary()
             {
                 Size = new Vector2(PlayfieldSize, GameBase.Window.Height),
                 Alignment = Alignment.TopCenter
@@ -96,7 +96,7 @@ namespace Quaver.Gameplay
                     Size = Vector2.One * PlayfieldObjectSize,
                     Position = new Vector2(ReceptorXPosition[i], ReceptorYOffset),
                     Alignment = Alignment.TopLeft,
-                    Parent = PlayfieldBoundary
+                    Parent = Boundary
                 };
             }
         }
@@ -122,7 +122,7 @@ namespace Quaver.Gameplay
             }
 
             //Update Playfield + Children
-            PlayfieldBoundary.Update(dt);
+            Boundary.Update(dt);
         }
 
         /// <summary>
