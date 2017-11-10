@@ -59,7 +59,7 @@ namespace Quaver.Utility
             Interval = 0;
 
             //If it ever stutters, it will log it. (If dt is higher than 1/144th of a second)
-            if (dt > 6) LogManager.QuickLog("LAG/STUTTER. DT DELAY: "+Math.Round(dt,2),Color.Red,5);
+            if (dt > 6) LogManager.QuickLog("LAG/STUTTER. DT DELAY: "+Math.Round(dt,2)+"ms",Color.Red,5);
         }
 
         /// <summary>
