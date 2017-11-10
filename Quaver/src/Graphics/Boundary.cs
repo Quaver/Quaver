@@ -23,14 +23,8 @@ namespace Quaver.Graphics
         {
             SizeX = GameBase.Window.Width;
             SizeY = GameBase.Window.Height;
-        }
-
-        /// <summary>
-        ///     Draws its children to the screen
-        /// </summary>
-        public override void Draw()
-        {
-            Children.ForEach(x => x.Draw());
+            PositionX = GameBase.Window.X;
+            PositionY = GameBase.Window.Y;
         }
     }
 }

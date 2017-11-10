@@ -58,10 +58,7 @@ namespace Quaver.GameState.States
             }
 
             //Initialize Menu Screen
-            MenuScreen = new Boundary()
-            {
-                Size = new Vector2(GameBase.Window.Size.X,GameBase.Window.Size.Y)
-            };
+            MenuScreen = new Boundary();
 
             //Initialize Test Buttons TODO: Remove later
             testButton = new TextButton(new Vector2(200, 40), "Next State")
@@ -110,8 +107,6 @@ namespace Quaver.GameState.States
         public void Update(GameTime gameTime)
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
-            //testButton.Update(dt);
-            //importPeppyButton.Update(dt);
 
             // If the user is idle on the main menu continue to select random beatmaps.
             if (GameBase.SelectedBeatmap != null && GameBase.SelectedBeatmap.Song != null)
@@ -133,6 +128,8 @@ namespace Quaver.GameState.States
             }
 
             //Update Menu Screen Boundary
+            //testButton.Update(dt);
+            //importPeppyButton.Update(dt);
             MenuScreen.Update(dt);
         }
 
