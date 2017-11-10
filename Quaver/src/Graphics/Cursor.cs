@@ -68,7 +68,6 @@ namespace Quaver.Graphics
             PositionX -= (CursorSize + ClickCurrentSize) /2;
             PositionY -= (CursorSize + ClickCurrentSize) /2;
 
-            UpdateRect();
             base.Update(dt);
         }
     }
