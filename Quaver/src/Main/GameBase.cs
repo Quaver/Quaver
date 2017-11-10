@@ -69,7 +69,7 @@ namespace Quaver.Main
         public static ContentManager Content { get; set; }
 
         /// <summary>
-        /// 
+        ///     The rectangle this game will be rendered onto
         /// </summary>
         public static Rectangle Window { get; set; } = new Rectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight); //TODO: Automatically set this rectangle as windoow size
 
