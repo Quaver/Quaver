@@ -146,6 +146,22 @@ namespace Quaver.Gameplay
                 Parent = ParentContainer
             };
         }
+
+        public void Update()
+        {
+            if (IsLongNote)
+            {
+                //Update HoldBody Position and Size
+                HoldBodySprite.PositionY = _hitObjectPosition.Y + HitObjectSize / 2f;
+                HoldBodySprite.SizeY = CurrentLongNoteSize;
+
+                //Update Hold End Position
+                HoldEndSprite.PositionY = _hitObjectPosition.Y + HoldBodySprite.SizeY;
+            }
+
+            //Update HitBody
+            HitBodySprite.PositionY = _hitObjectPosition.Y;
+        }
         
         /// <summary>
         ///     Draw the object onto screen.
