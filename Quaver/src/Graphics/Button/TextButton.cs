@@ -85,13 +85,5 @@ namespace Quaver.Graphics.Button
             Tint = CurrentTint;
             base.Update(dt);
         }
-
-        public override void Draw()
-        {
-            base.Draw();
-            TextSprite.Draw();
-            //TODO: Use a text sprite after
-            //GameBase.SpriteBatch.DrawString(Font, Text, new Vector2(GlobalRect.X + 40, GlobalRect.Y + 5), TextColor);
-        }
     }
 }

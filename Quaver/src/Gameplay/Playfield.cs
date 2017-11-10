@@ -73,7 +73,7 @@ namespace Quaver.Gameplay
                 Alignment = Alignment.TopCenter
             };
 
-            PlayfieldBoundary.UpdateRect();
+            //PlayfieldBoundary.UpdateRect();
 
             // Create Receptors
             Receptors = new Sprite[GameBase.SelectedBeatmap.Qua.KeyCount];
@@ -100,8 +100,6 @@ namespace Quaver.Gameplay
                     Alignment = Alignment.TopLeft,
                     Parent = PlayfieldBoundary
                 };
-
-                Receptors[i].UpdateRect();
             }
         }
 
@@ -111,7 +109,7 @@ namespace Quaver.Gameplay
         /// <param name="dt"></param>
         public static void UpdatePlayfield(double dt)
         {
-            // The delta time tweening variable for animation.
+            // Update the delta time tweening variable for animation.
             dt = Math.Min(dt / 30, 1);
 
             // Update receptors
@@ -123,8 +121,10 @@ namespace Quaver.Gameplay
                 ReceptorCurrentSize[i] = Util.Tween(ReceptorTargetSize[i], ReceptorCurrentSize[i], dt);
                 Receptors[i].Size = Vector2.One * ReceptorCurrentSize[i] * PlayfieldObjectSize;
                 Receptors[i].Position = new Vector2(ReceptorXPosition[i] - receptorSizeOffset, ReceptorYOffset - receptorSizeOffset);
-                Receptors[i].UpdateRect();
             }
+
+            //Update Playfield + Children
+            PlayfieldBoundary.Update(dt);
         }
 
         /// <summary>

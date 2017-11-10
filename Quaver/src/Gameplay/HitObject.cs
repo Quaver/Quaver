@@ -162,15 +162,10 @@ namespace Quaver.Gameplay
 
                 //Update Hold End Position
                 HoldEndSprite.PositionY = _hitObjectPosition.Y + HoldBodySprite.SizeY;
-
-                //Update Hold Rects
-                HoldBodySprite.UpdateRect();
-                HoldEndSprite.UpdateRect();
             }
 
             //Update HitBody
             HitBodySprite.PositionY = _hitObjectPosition.Y;
-            HitBodySprite.UpdateRect();
         }
         
         /// <summary>
