@@ -123,6 +123,7 @@ namespace Quaver.Gameplay
                 {
                     // Set new hit object position with the current x, and a new y
                     HitObjectPool[i].HitObjectPositionY = PosFromOffset(HitObjectPool[i].OffsetFromReceptor);
+                    HitObjectPool[i].Update();
                 }
             }
 
@@ -155,6 +156,9 @@ namespace Quaver.Gameplay
                         HitObjectHold[i].CurrentLongNoteSize = HitObjectHold[i].InitialLongNoteSize;
                         HitObjectHold[i].HitObjectPositionY = PosFromOffset(HitObjectHold[i].OffsetFromReceptor);
                     }
+
+                    //Update HitObject
+                    HitObjectHold[i].Update();
                 }
             }
 
@@ -170,6 +174,7 @@ namespace Quaver.Gameplay
                 else
                 {
                     HitObjectDead[i].HitObjectPositionY = PosFromOffset(HitObjectDead[i].OffsetFromReceptor);
+                    HitObjectDead[i].Update();
                 }
             }
         }
