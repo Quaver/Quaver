@@ -82,10 +82,6 @@ namespace Quaver.Graphics
         {
             if (Changed)
             {
-                //TODO: REMOVE
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Text Changed: "+this);
-
                 //Update TextSize
                 _textSize = Font.MeasureString(Text);
 

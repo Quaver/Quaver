@@ -66,8 +66,7 @@ namespace Quaver.Logging
             if (!found)
             {
                 //Todo: [TAG] console writeline remove
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("[LogTracker.UpdateLogger] ERROR: Log with given name is not found: " + logName);
+                ConsoleLog("[LogTracker.UpdateLogger] ERROR: Log with given name is not found: " + logName, ConsoleColor.Yellow);
             }
         }
 
@@ -83,7 +82,7 @@ namespace Quaver.Logging
             {
                 //Todo: [TAG] console writeline remove
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("[LogTracker.RemoveLogger] ERROR: Log with given name is not found: " + logName);
+                ConsoleLog("[LogTracker.RemoveLogger] ERROR: Log with given name is not found: " + logName, ConsoleColor.Yellow);
             }
         }
 
@@ -124,8 +123,14 @@ namespace Quaver.Logging
             _logs.Add(newLog);
 
             //Todo: [TAG] console writeline remove
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("[LogManager]:" + message);
+            ConsoleLog("[LogManager]:" + message, ConsoleColor.Red);
+        }
+
+        public static void ConsoleLog(string message, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(message);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         /// <summary>
