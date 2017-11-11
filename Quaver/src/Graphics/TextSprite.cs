@@ -124,15 +124,15 @@ namespace Quaver.Graphics
 
             //Reference Variables
             string[] words = text.Split(' ');
-            StringBuilder wrappedText = new StringBuilder();
-            float linewidth = 0f;
-            float spaceWidth = Font.MeasureString(" ").X;
-            int textline = 0;
+            var wrappedText = new StringBuilder();
+            var linewidth = 0f;
+            var spaceWidth = Font.MeasureString(" ").X;
+            var textline = 0;
 
             //Update Text
-            for (int i = 0; i < words.Length; ++i)
+            foreach (var a in words)
             {
-                Vector2 size = Font.MeasureString(words[i]);
+                Vector2 size = Font.MeasureString(a);
                 if (linewidth + size.X < SizeX)
                 {
                     linewidth += size.X + spaceWidth;
@@ -149,7 +149,7 @@ namespace Quaver.Graphics
 
                 }
                 else break;
-                wrappedText.Append(words[i] + " ");
+                wrappedText.Append(a + " ");
             }
 
             //Console.WriteLine("MAX: {0}, TOTAL {1}", MaxTextLines, textline);
