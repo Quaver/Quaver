@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Beatmaps;
@@ -16,6 +17,7 @@ using Quaver.Logging;
 using Quaver.Main;
 using Quaver.QuaFile;
 using Quaver.Utility;
+using Button = Quaver.Graphics.Button.Button;
 
 namespace Quaver.GameState.States
 {
@@ -26,6 +28,10 @@ namespace Quaver.GameState.States
     {
         public State CurrentState { get; set; } = State.PlayScreen;
         public bool UpdateReady { get; set; }
+
+        //todo: remove. TEST.
+        private Sprite TextUnder { get; set; }
+        private TextSprite SVText { get; set; }
 
         /// <summary>
         ///     The input manager for this game state.
@@ -81,6 +87,7 @@ namespace Quaver.GameState.States
             Timing.InitializeTiming(GameBase.SelectedBeatmap.Qua);
             NoteRendering.InitializeNotes(GameBase.SelectedBeatmap.Qua);
 
+            //Todo: Remove. TEST.
             TestButton = new TextButton(new Vector2(200, 50), "BACK")
             {
                 Image = GameBase.LoadedSkin.ColumnTimingBar,
@@ -88,6 +95,28 @@ namespace Quaver.GameState.States
                 Parent = NoteRendering.Boundary
             };
             TestButton.Clicked += ButtonClick;
+
+            TextUnder = new Sprite()
+            {
+                Image = GameBase.UI.HollowBox,
+                Tint = Color.Blue,
+                Size = new Vector2(250,200),
+                Alignment = Alignment.TopRight
+            };
+
+            var temp = "SV Points: ";
+            foreach (var sv in Timing.SvQueue) temp += "[" + sv.TargetTime + ", " + sv.SvMultiplier + "x], ";
+            SVText = new TextSprite()
+            {
+                Size = new Vector2(240,190),
+                Position = new Vector2(5,5),
+                Alignment = Alignment.TopLeft,
+                Parent = TextUnder,
+                TextColor = Color.Yellow,
+                Multiline = true,
+                Textwrap = true,
+                Text = temp
+            };
 
             UpdateReady = true;
         }
@@ -114,6 +143,10 @@ namespace Quaver.GameState.States
             TestButton.Clicked -= ButtonClick;
             NoteRendering.Boundary.Destroy();
             Playfield.Boundary.Destroy();
+
+            //todo: temp
+            TextUnder.Destroy();
+
             UpdateReady = false;
         }
 
@@ -147,6 +180,9 @@ namespace Quaver.GameState.States
             LogManager.UpdateLogger("SongPos", "Current Track Position: " + NoteRendering.TrackPosition);
             LogManager.UpdateLogger("HitObjects", "Total Remaining Notes: " + NoteRendering.HitObjectPool.Count);
             LogManager.UpdateLogger("Skippable", $"Intro Skippable: {IntroSkippable}");
+
+            //Todo: remove. TEST.
+            TextUnder.Update(dt);
         }
 
         /// <summary>
@@ -157,6 +193,7 @@ namespace Quaver.GameState.States
             Playfield.Boundary.Draw();
             NoteRendering.Boundary.Draw();
             TestButton.Draw();
+            TextUnder.Draw();
         }
 
         public void ButtonClick(object sender, EventArgs e)
