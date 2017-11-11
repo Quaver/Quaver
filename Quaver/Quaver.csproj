@@ -157,7 +157,6 @@
     <Compile Include="src\Notifications\Notification.cs" />
     <Compile Include="src\Logging\LogObject.cs" />
     <Compile Include="src\Logging\LogManager.cs" />
-    <Compile Include="src\GameState\States\TestScreenState.cs" />
     <Compile Include="src\Graphics\CustomColors.cs" />
     <Compile Include="src\Graphics\Sprite.cs" />
     <Compile Include="src\Graphics\Drawable.cs" />
