@@ -23,8 +23,6 @@ namespace Quaver.GameState.States
             GameBase.ChangeDiscordPresence("Importing Charts");
         }
 
-        public void LoadContent() { }
-
         public void UnloadContent() { }
 
         public void Update(GameTime gameTime) { }

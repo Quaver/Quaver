@@ -25,11 +25,6 @@ namespace Quaver.GameState
         void Initialize();
 
         /// <summary>
-        ///     Loads all the content
-        /// </summary>
-        void LoadContent();
-
-        /// <summary>
         ///     Any unloading of content.
         /// </summary>
         void UnloadContent();
