@@ -28,7 +28,6 @@ namespace Quaver.GameState
         private Button PlayButton { get; set; }
         private Boundary Boundary { get; set; } = new Boundary();
         private int ButtonPos { get; set; } = 50;
-        private List<EventHandler> PlayHander { get; set; } = new List<EventHandler>();
 
         public void Initialize()
         {
@@ -42,7 +41,6 @@ namespace Quaver.GameState
                 //Create Song Buttons
                 foreach (var map in mapset.Value)
                 {
-                    //Create Button
                     var newButton = new TextButton(new Vector2(300, 20),
                         map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]")
                     {
@@ -54,26 +52,20 @@ namespace Quaver.GameState
                     newButton.TextSprite.Alignment = Alignment.MidLeft;
                     newButton.TextSprite.PositionX = 20;
                     var currentMap = map;
-
-                    //Add event Listener
-                    EventHandler curEvent = (sender, e) => ButtonClick(sender, e,
-                        map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]", currentMap);
-                    PlayHander.Add(curEvent);
-                    newButton.Clicked += curEvent;
-
-                    //Add button
+                    newButton.Clicked += (sender, e) => ButtonClick(sender, e, map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]", currentMap);
                     Buttons.Add(newButton);
                     ButtonPos += 20;
                 }
-
-                PlayButton = new TextButton(new Vector2(200, 50), "Play")
-                {
-                    Image = GameBase.LoadedSkin.ColumnTimingBar,
-                    Alignment = Alignment.TopRight,
-                    Parent = Boundary
-                };
-                PlayButton.Clicked += PlayMap;
             }
+
+            // Create play button
+            PlayButton = new TextButton(new Vector2(200, 50), "Play")
+            {
+                Image = GameBase.LoadedSkin.ColumnTimingBar,
+                Alignment = Alignment.TopRight,
+                Parent = Boundary
+            };
+            PlayButton.Clicked += PlayMap;
 
             //Add map selected text TODO: remove later
             LogManager.AddLogger("MapSelected",Color.Yellow);
@@ -89,12 +81,10 @@ namespace Quaver.GameState
             PlayButton.Clicked -= PlayMap;
 
             //TODO: Remove button delegates ?
-            for(var i=0; i<Buttons.Count;i++)
+            foreach (TextButton button in Buttons)
             {
-                Buttons[i].Clicked -= PlayHander[i];
+                //button.Clicked -= Delegate;
             }
-
-            LogManager.RemoveLogger("MapSelected");
 
             Boundary.Destroy();
         }
@@ -129,7 +119,6 @@ namespace Quaver.GameState
         //TODO: Remove
         public void PlayMap(object sender, EventArgs e)
         {
-            PlayButton.Clickable = false;
             GameBase.SelectedBeatmap.Song.Stop();
             GameStateManager.Instance.ChangeState(new SongLoadingState());
         }
