@@ -193,9 +193,9 @@ namespace Quaver.Gameplay
         internal static void UnloadContent()
         {
             Boundary.Destroy();
-            //HitObjectHold = null;
-            //HitObjectDead = null;
-            //HitObjectPool = null;
+            HitObjectHold.Clear();
+            HitObjectDead.Clear();
+            HitObjectPool.Clear();
         }
 
         /// <summary>
