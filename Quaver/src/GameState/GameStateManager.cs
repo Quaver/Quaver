@@ -44,7 +44,7 @@ namespace Quaver.GameState
             catch (Exception ex)
             {
                 // Log the exception
-                LogManager.Debug(ex.Message);
+                Debug(ex);
             }
         }
 
@@ -67,7 +67,7 @@ namespace Quaver.GameState
             catch (Exception ex)
             {
                 // Log the exception
-                LogManager.Debug(ex.Message);
+                Debug(ex);
             }
         }
 
@@ -96,7 +96,7 @@ namespace Quaver.GameState
             catch (Exception ex)
             {
                 // Log the exception
-                LogManager.Debug(ex.Message);
+                Debug(ex);
             }
         }
     
@@ -117,7 +117,7 @@ namespace Quaver.GameState
             catch (Exception ex)
             {
                 // Log the exception
-                LogManager.Debug(ex.Message);
+                Debug(ex);
             }
         }
 
@@ -135,9 +135,13 @@ namespace Quaver.GameState
             }
             catch (Exception ex)
             {
-                // Log the exception
-                LogManager.Debug(ex.Message);
+                Debug(ex);
             }
+        }
+
+        private void Debug(Exception ex)
+        {
+            LogManager.Debug(ex.TargetSite+"\n"+ex.StackTrace+"\n"+ ex.Message+"\n");
         }
     }
 }
