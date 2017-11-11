@@ -66,11 +66,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
-            Console.WriteLine($"[GAMEPLAY STATE] Initialized Gameplay State with Mods: { String.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ModIdentifier)) }");
-            Console.WriteLine($"[GAMEPLAY STATE] Loaded Beatmap: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
-            Console.WriteLine($"[GAMEPLAY STATE] Loaded Beatmap MD5: {BeatmapMd5}");
-            Console.WriteLine($"[GAMEPLAY STATE] Beatmap has Key Count: {GameBase.SelectedBeatmap.Qua.KeyCount}");
-
+            //Update Discord Status
             GameBase.DiscordController.presence.details = $"Playing: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} ({GameBase.SelectedBeatmap.DifficultyName})";
             DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
 
