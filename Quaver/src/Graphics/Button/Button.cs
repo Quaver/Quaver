@@ -23,6 +23,11 @@ namespace Quaver.Graphics.Button
         private bool MouseHovered { get; set; }
 
         /// <summary>
+        ///     Determines if the Event Listener will be fired if the button is clicked.
+        /// </summary>
+        private bool Clickable { get; set; } = true;
+
+        /// <summary>
         ///     Internally used to detect when a button gets clicked once. (To ensure it doesnt click every frame when user holds down the mouse button.)
         /// </summary>
         private bool MouseClicked { get; set; }
@@ -35,10 +40,13 @@ namespace Quaver.Graphics.Button
         /// <summary>
         ///     This method is called when the button gets clicked
         /// </summary>
-        public virtual void OnClicked()
+        public void OnClicked()
         {
-            MouseClicked = true;
-            Clicked?.Invoke(this, null);
+            if (Clickable)
+            {
+                LogManager.QuickLog("Clicked", Color.LightBlue, 0.5f);
+                Clicked?.Invoke(this, null);
+            }
         }
 
         /// <summary>
