@@ -21,14 +21,30 @@ namespace Quaver.GameState.States
 {
     internal class MainMenuState : IGameState
     {
+        /// <summary>
+        ///     State
+        /// </summary>
         public State CurrentState { get; set; } = State.MainMenu;
+
+        /// <summary>
+        ///     Update Ready
+        /// </summary>
         public bool UpdateReady { get; set; }
 
-        public Boundary Boundary;
+        /// <summary>
+        ///     Boundary
+        /// </summary>
+        public Boundary Boundary { get; set; }
 
-        //TEST
-        public Button testButton;
-        public Button importPeppyButton;
+        /// <summary>
+        ///     Button to switch to the song select state
+        /// </summary>
+        public Button SwitchSongSelectButton { get; set; }
+
+        /// <summary>
+        ///     Button to import .osz
+        /// </summary>
+        public Button ImportPeppyButton { get; set; }
 
         public void Initialize()
         {
@@ -38,41 +54,30 @@ namespace Quaver.GameState.States
             //Initialize Menu Screen
             Boundary = new Boundary();
 
-            //Initialize Test Buttons TODO: Remove later
-            testButton = new TextButton(new Vector2(200, 40), "Next State")
-            {
-                Image = GameBase.LoadedSkin.NoteHoldBody,
-                Alignment = Alignment.MidCenter,
-                Position = Vector2.Zero,
-                Parent = Boundary
-            };
-            testButton.UpdateRect();
-            testButton.Clicked += ButtonClick;
+            // Create Buttons
+            CreateButtons();
 
-            importPeppyButton = new TextButton(new Vector2(200, 40), "Import .osz")
-            {
-                Image = GameBase.LoadedSkin.NoteHoldBody,
-                Alignment = Alignment.TopCenter,
-                Position = Vector2.Zero,
-                Parent = Boundary
-            };
-            importPeppyButton.UpdateRect();
-            importPeppyButton.Clicked += Osz.OnImportButtonClick;
             UpdateReady = true;
         }
 
-        public void LoadContent()
-        {
-            
-        }
+        /// <summary>
+        ///     Load
+        /// </summary>
+        public void LoadContent() { }
 
+        /// <summary>
+        ///     Unload
+        /// </summary>
         public void UnloadContent()
         {
             UpdateReady = false;
-            testButton.Clicked -= ButtonClick;
             Boundary.Destroy();
         }
 
+        /// <summary>
+        ///     Update
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -80,11 +85,14 @@ namespace Quaver.GameState.States
             //Update Menu Screen Boundary
             Boundary.Update(dt);
         }
-
+        
+        /// <summary>
+        ///     Draw
+        /// </summary>
         public void Draw()
         {
-            testButton.Draw();
-            importPeppyButton.Draw();
+            SwitchSongSelectButton.Draw();
+            ImportPeppyButton.Draw();
         }
 
         //TODO: Remove. Test function.
@@ -95,6 +103,36 @@ namespace Quaver.GameState.States
 
             //Change to SongSelectState
             GameStateManager.Instance.ChangeState(new SongSelectState());
+        }
+
+        /// <summary>
+        ///     Responsible for creating the buttons to be displayed on the screen.
+        /// </summary>
+        private void CreateButtons()
+        {
+            // Switch Song Select Button
+            SwitchSongSelectButton = new TextButton(new Vector2(200, 40), "Next State")
+            {
+                Image = GameBase.LoadedSkin.NoteHoldBody,
+                Alignment = Alignment.MidCenter,
+                Position = Vector2.Zero,
+                Parent = Boundary
+            };
+
+            SwitchSongSelectButton.UpdateRect();
+            SwitchSongSelectButton.Clicked += ButtonClick;
+
+            // Import .osz Button
+            ImportPeppyButton = new TextButton(new Vector2(200, 40), "Import .osz")
+            {
+                Image = GameBase.LoadedSkin.NoteHoldBody,
+                Alignment = Alignment.TopCenter,
+                Position = Vector2.Zero,
+                Parent = Boundary
+            };
+
+            ImportPeppyButton.UpdateRect();
+            ImportPeppyButton.Clicked += Osz.OnImportButtonClick;
         }
     }
 }
