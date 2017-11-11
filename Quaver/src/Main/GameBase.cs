@@ -154,5 +154,15 @@ namespace Quaver.Main
             SelectedBeatmap = map;
             SelectedBeatmap.LoadAudio();
         }
+
+        /// <summary>
+        ///     Responsible for changing the discord rich presence.
+        /// </summary>
+        /// <param name="details"></param>
+        public static void ChangeDiscordPresence(string details)
+        {
+            DiscordController.presence.details = details;
+            DiscordRPC.UpdatePresence(ref DiscordController.presence);
+        }
     }
 }
