@@ -25,8 +25,6 @@ namespace Quaver.GameState.States
         {
             try
             {
-                Console.WriteLine("[SONG LOADING STATE] Attempting to load beatmap...");
-
                 // Throw an exception if there is no selected beatmap.
                 if (GameBase.SelectedBeatmap == null)
                     throw new Exception("No selected beatmap, we should not be on this screen!!!");
@@ -43,7 +41,7 @@ namespace Quaver.GameState.States
                 // We parse it and set it each time the player is going to play to kmake sure they are
                 // actually playing the correct map.
                 GameBase.SelectedBeatmap.Qua = qua;
-                Console.WriteLine("[SONG LOADING STATE] Qua successfully loaded.");
+                //Console.WriteLine("[SONG LOADING STATE] Qua successfully loaded.");
 
                 // Attempt to load the audio.
                 GameBase.SelectedBeatmap.LoadAudio();
@@ -51,11 +49,9 @@ namespace Quaver.GameState.States
                 if (GameBase.SelectedBeatmap.Song.GetAudioLength() < 1)
                     throw new Exception("[SONG LOADING STATE] Audio file could not be loaded.");
 
-                Console.WriteLine("[SONG LOADING STATE] Audio file successfully loaded.");
-
                 // Get Beatmap MD5
                 var md5 = BeatmapUtils.GetMd5Checksum(quaPath);
-                Console.WriteLine($"[SONG LOADING STATE] Successfully loaded beatmap: {md5}");
+                //Console.WriteLine($"[SONG LOADING STATE] Successfully loaded beatmap: {md5}");
 
                 // Load Play State
                 GameStateManager.Instance.ChangeState(new PlayScreenState(md5));
