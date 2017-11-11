@@ -52,7 +52,10 @@ namespace Quaver.Gameplay
                         if (Math.Abs(NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime) <= ScoreManager.HitWindow[i])
                         {
                             //Score manager stuff
-                            LogManager.QuickLog("NOTE INDEX: PRESS "+ noteIndex + ", "+TimingNames[i], TimingColors[i], 0.5f);
+                            //TODO: proper judge display
+                            Playfield.judgeSprite.Text = "PRESS "+TimingNames[i];
+                            Playfield.judgeSprite.TextColor = TimingColors[i];
+                            //LogManager.QuickLog("NOTE INDEX: PRESS "+ noteIndex + ", "+TimingNames[i], TimingColors[i], 0.5f);
                             ScoreManager.Count(i, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime);
 
                             //If the object is an LN, hold it at the receptors
@@ -101,14 +104,20 @@ namespace Quaver.Gameplay
                     //If LN has been missed
                     if (releaseTiming > -1)
                     {
-                        LogManager.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", " + TimingNames[releaseTiming], TimingColors[releaseTiming], 0.5f);
+                        //TODO: proper judge display
+                        //LogManager.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", " + TimingNames[releaseTiming], TimingColors[releaseTiming], 0.5f);
+                        Playfield.judgeSprite.Text = "RELEASE "+TimingNames[releaseTiming];
+                        Playfield.judgeSprite.TextColor = TimingColors[releaseTiming];
                         ScoreManager.Count(i);
                         NoteRendering.KillHold(noteIndex,true);
                     }
                     //If LN has been released during a HitWindow
                     else
                     {
-                        LogManager.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", EARLY", TimingColors[4], 0.5f);
+                        //TODO: proper judge display
+                        //LogManager.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", EARLY", TimingColors[4], 0.5f);
+                        Playfield.judgeSprite.Text = "RELEASE "+TimingNames[4];
+                        Playfield.judgeSprite.TextColor = TimingColors[4];
                         ScoreManager.Count(3);
                         NoteRendering.KillHold(noteIndex);
                     }

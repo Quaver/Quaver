@@ -16,10 +16,10 @@ namespace Quaver.Graphics
     /// <summary>
     ///     Any drawable object that uses 
     /// </summary>
-    internal class TextSprite : Drawable
+    internal class TextBoxSprite : Drawable
     {
         /// <summary>
-        ///     The Actual text of the text sprite.
+        ///     The Actual text of the text Box.
         /// </summary>
         private string _text = "";
 
@@ -31,7 +31,19 @@ namespace Quaver.Graphics
         /// <summary>
         ///     The text of this TextSprite
         /// </summary>
-        public string Text { get; set; }
+        public string Text {
+            get
+            {
+                return _text;
+            }
+            set
+            {
+                _text = value;
+                Changed = true;
+            } 
+        }
+
+        public Alignment TextAlignment { get; set; } = Alignment.MidCenter;
 
         /// <summary>
         ///     Determines if the text will stop before overflowing.
@@ -73,7 +85,7 @@ namespace Quaver.Graphics
         public Color TextColor = Color.White;
 
         // Ctor
-        public TextSprite()
+        public TextBoxSprite()
         {
             Tint = Color.White;
         }
@@ -90,7 +102,7 @@ namespace Quaver.Graphics
                 _textRect.Height = (int) _textSize.Y;
 
                 //Update GlobalTextRect
-                GlobalTextRect = Util.DrawRect(Alignment, _textRect, GlobalRect);
+                GlobalTextRect = Util.DrawRect(TextAlignment, _textRect, GlobalRect);
 
                 if (Multiline)
                 {
