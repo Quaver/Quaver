@@ -116,6 +116,7 @@
     <Compile Include="src\Graphics\Button\TextButton.cs" />
     <Compile Include="src\Graphics\Button\BasicButton.cs" />
     <Compile Include="src\Graphics\TextSprite.cs" />
+    <Compile Include="src\Graphics\UI.cs" />
     <Compile Include="src\Peppy\Osz.cs" />
     <Compile Include="src\Gameplay\NoteManager.cs" />
     <Compile Include="src\Gameplay\NoteRendering.cs" />
@@ -258,7 +259,6 @@
       <Link>x64\libopenal.so.1</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="BlankBox.xnb" />
     <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\libSDL2-2.0.0.dylib">
       <Link>libSDL2-2.0.0.dylib</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -273,7 +273,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="app.manifest" />
-    <None Include="HollowBox.xnb" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Resource1.resx" />
     <EmbeddedResource Include="Resources\Fonts\test.xnb" />
@@ -301,10 +300,10 @@
     <EmbeddedResource Include="Resources\Default Skin\ranking-s.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\ranking-ss.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\ranking-x.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\diff-select-mask.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\set-select-mask.xnb" />
-    <None Include="Resources\UI\BlankBox.mgcontent" />
-    <None Include="Resources\UI\HollowBox.mgcontent" />
+    <EmbeddedResource Include="Resources\UI\diff-select-mask.xnb" />
+    <EmbeddedResource Include="Resources\UI\set-select-mask.xnb" />
+    <EmbeddedResource Include="Resources\UI\blank-box.xnb" />
+    <EmbeddedResource Include="Resources\UI\hollow-box.xnb" />
     <None Include="x64\libbass.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
