@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+using Quaver.Logging;
 using Quaver.Main;
 
 namespace Quaver.GameState
@@ -46,7 +46,7 @@ namespace Quaver.GameState
             catch (Exception ex)
             {
                 // Log the exception
-                Console.WriteLine(ex);
+                LogManager.Debug(ex.Message);
             }
         }
 
@@ -67,7 +67,7 @@ namespace Quaver.GameState
             catch (Exception ex)
             {
                 // Log the exception
-                Console.WriteLine(ex);
+                LogManager.Debug(ex.Message);
             }
         }
 
@@ -98,7 +98,7 @@ namespace Quaver.GameState
             catch (Exception ex)
             {
                 // Log the exception
-                Console.WriteLine(ex);
+                LogManager.Debug(ex.Message);
             }
         }
     
@@ -119,7 +119,7 @@ namespace Quaver.GameState
             catch (Exception ex)
             {
                 // Log the exception
-                Console.WriteLine(ex);
+                LogManager.Debug(ex.Message);
             }
         }
 
@@ -138,7 +138,7 @@ namespace Quaver.GameState
             catch (Exception ex)
             {
                 // Log the exception
-                Console.WriteLine(ex);
+                LogManager.Debug(ex.Message);
             }
         }
 
