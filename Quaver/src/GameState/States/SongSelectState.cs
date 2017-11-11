@@ -85,6 +85,8 @@ namespace Quaver.GameState
                 //button.Clicked -= Delegate;
             }
 
+            LogManager.RemoveLogger("MapSelected");
+
             Boundary.Destroy();
         }
 
@@ -118,6 +120,7 @@ namespace Quaver.GameState
         //TODO: Remove
         public void PlayMap(object sender, EventArgs e)
         {
+            PlayButton.Clickable = false;
             GameBase.SelectedBeatmap.Song.Stop();
             GameStateManager.Instance.ChangeState(new SongLoadingState());
         }
