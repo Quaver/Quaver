@@ -43,13 +43,13 @@ namespace Quaver.GameState
                     var newButton = new TextButton(new Vector2(300, 20),
                         map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]")
                     {
-                        Image = GameBase.LoadedSkin.ColumnTimingBar,
+                        Image = GameBase.UI.BlankBox,
                         Alignment = Alignment.TopLeft,
                         PositionY = ButtonPos,
                         Parent = Boundary
                     };
                     newButton.TextSprite.Alignment = Alignment.MidLeft;
-                    newButton.TextSprite.PositionX = 20;
+
                     var currentMap = map;
                     newButton.Clicked += (sender, e) => ButtonClick(sender, e, map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]", currentMap);
                     Buttons.Add(newButton);
@@ -58,9 +58,9 @@ namespace Quaver.GameState
             }
 
             // Create play button
-            PlayButton = new TextButton(new Vector2(200, 50), "Play")
+            PlayButton = new TextButton(new Vector2(200, 30), "Play")
             {
-                Image = GameBase.LoadedSkin.ColumnTimingBar,
+                Image = GameBase.UI.BlankBox,
                 Alignment = Alignment.TopRight,
                 Parent = Boundary
             };
