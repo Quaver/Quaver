@@ -126,6 +126,14 @@ namespace Quaver.Gameplay
         }
 
         /// <summary>
+        ///     Unloads content to free memory
+        /// </summary>
+        public static void UnloadContent()
+        {
+            Boundary.Destroy();
+        }
+
+        /// <summary>
         /// Gets called whenever a key gets pressed. This method updates the receptor state.
         /// </summary>
         /// <param name="curReceptor"></param>

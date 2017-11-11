@@ -115,10 +115,19 @@ namespace Quaver.Gameplay
         }
 
         /// <summary>
+        ///     Unloads any objects to save memory
+        /// </summary>
+        internal static void UnloadContent()
+        {
+            SvQueue = null;
+            TimingQueue = null;
+        }
+
+        /// <summary>
         ///     Set the position of the current play time
         /// </summary>
         /// <param name="dt"></param>
-        internal static void SetCurrentSongTime(double dt)
+        internal static void Update(double dt)
         {
             //Calculate Time after Song Done
             if (_songIsDone)
