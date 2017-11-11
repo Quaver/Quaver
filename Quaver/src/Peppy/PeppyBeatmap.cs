@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -137,31 +138,31 @@ namespace Quaver.Peppy
                                 AudioFilename = value;
                                 break;
                             case "AudioLeadIn":
-                                AudioLeadIn = Int32.Parse(value);
+                                AudioLeadIn = Int32.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "PreviewTime":
-                                PreviewTime = Int32.Parse(value);
+                                PreviewTime = Int32.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "Countdown":
-                                Countdown = Int32.Parse(value);
+                                Countdown = Int32.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "SampleSet":
                                 SampleSet = value;
                                 break;
                             case "StackLeniency":
-                                StackLeniency = float.Parse(value);
+                                StackLeniency = float.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "Mode":
-                                Mode = Int32.Parse(value);
+                                Mode = Int32.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "LetterboxInBreaks":
-                                LetterboxInBreaks = Int32.Parse(value);
+                                LetterboxInBreaks = Int32.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "SpecialStyle":
-                                SpecialStyle = Int32.Parse(value);
+                                SpecialStyle = Int32.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "WidescreenStoryboard":
-                                WidescreenStoryboard = Int32.Parse(value);
+                                WidescreenStoryboard = Int32.Parse(value, CultureInfo.InvariantCulture);
                                 break;
 
                         }
@@ -184,16 +185,16 @@ namespace Quaver.Peppy
                                 Bookmarks = value;
                                 break;
                             case "DistanceSpacing":
-                                DistanceSpacing = float.Parse(value);
+                                DistanceSpacing = float.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "BeatDivisor":
-                                BeatDivisor = Int32.Parse(value);
+                                BeatDivisor = Int32.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "GridSize":
-                                GridSize = Int32.Parse(value);
+                                GridSize = Int32.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "TimelineZoom":
-                                TimelineZoom = float.Parse(value);
+                                TimelineZoom = float.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                         }
                     }
@@ -235,10 +236,10 @@ namespace Quaver.Peppy
                                 Tags = value;
                                 break;
                             case "BeatmapID":
-                                BeatmapID = Int32.Parse(value);
+                                BeatmapID = Int32.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "BeatmapSetID":
-                                BeatmapSetID = Int32.Parse(value);
+                                BeatmapSetID = Int32.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             default:
                                 break;
@@ -258,22 +259,22 @@ namespace Quaver.Peppy
                         switch (key.Trim())
                         {
                             case "HPDrainRate":
-                                HPDrainRate = float.Parse(value);
+                                HPDrainRate = float.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "CircleSize":
-                                KeyCount = Int32.Parse(value);
+                                KeyCount = Int32.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "OverallDifficulty":
-                                OverallDifficulty = float.Parse(value);
+                                OverallDifficulty = float.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "ApproachRate":
-                                ApproachRate = float.Parse(value);
+                                ApproachRate = float.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "SliderMultiplier":
-                                SliderMultiplier = float.Parse(value);
+                                SliderMultiplier = float.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "SliderTickRate":
-                                SliderTickRate = float.Parse(value);
+                                SliderTickRate = float.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                         }
                     }
@@ -303,14 +304,14 @@ namespace Quaver.Peppy
 
                             var timingPoint = new TimingPoint();
 
-                            timingPoint.Offset = float.Parse(values[0]);
-                            timingPoint.MillisecondsPerBeat = float.Parse(values[1]);
-                            timingPoint.Meter = Int32.Parse(values[2]);
-                            timingPoint.SampleType = Int32.Parse(values[3]);
-                            timingPoint.SampleSet = Int32.Parse(values[4]);
-                            timingPoint.Volume = Int32.Parse(values[5]);
-                            timingPoint.Inherited = Int32.Parse(values[6]);
-                            timingPoint.KiaiMode = Int32.Parse(values[7]);
+                            timingPoint.Offset = float.Parse(values[0], CultureInfo.InvariantCulture);
+                            timingPoint.MillisecondsPerBeat = float.Parse(values[1], CultureInfo.InvariantCulture);
+                            timingPoint.Meter = Int32.Parse(values[2], CultureInfo.InvariantCulture);
+                            timingPoint.SampleType = Int32.Parse(values[3], CultureInfo.InvariantCulture);
+                            timingPoint.SampleSet = Int32.Parse(values[4], CultureInfo.InvariantCulture);
+                            timingPoint.Volume = Int32.Parse(values[5], CultureInfo.InvariantCulture);
+                            timingPoint.Inherited = Int32.Parse(values[6], CultureInfo.InvariantCulture);
+                            timingPoint.KiaiMode = Int32.Parse(values[7], CultureInfo.InvariantCulture);
 
                             TimingPoints.Add(timingPoint);
                         }
@@ -333,7 +334,7 @@ namespace Quaver.Peppy
                         // signifies that it is an LN
                         HitObject hitObject = new HitObject();
 
-                        hitObject.X = Int32.Parse(values[0]);
+                        hitObject.X = Int32.Parse(values[0], CultureInfo.InvariantCulture);
 
                         // 4k and 7k have both different hit object parsing.
                         if (KeyCount == 4)
@@ -367,17 +368,17 @@ namespace Quaver.Peppy
                                 hitObject.Key7 = true;
                         }
 
-                        hitObject.Y = Int32.Parse(values[1]);
-                        hitObject.StartTime = Int32.Parse(values[2]);
-                        hitObject.Type = Int32.Parse(values[3]);
-                        hitObject.HitSound = Int32.Parse(values[4]);
+                        hitObject.Y = Int32.Parse(values[1], CultureInfo.InvariantCulture);
+                        hitObject.StartTime = Int32.Parse(values[2], CultureInfo.InvariantCulture);
+                        hitObject.Type = Int32.Parse(values[3], CultureInfo.InvariantCulture);
+                        hitObject.HitSound = Int32.Parse(values[4], CultureInfo.InvariantCulture);
                         hitObject.Additions = "0:0:0:0:";
 
                         // If it's an LN, we'll want to add the object's EndTime as well.
                         if (line.Contains("128"))
                         {
                             var endTime = values[5].Substring(0, values[5].IndexOf(":"));
-                            hitObject.EndTime = Int32.Parse(endTime);
+                            hitObject.EndTime = Int32.Parse(endTime, CultureInfo.InvariantCulture);
                         }
 
                         HitObjects.Add(hitObject);
