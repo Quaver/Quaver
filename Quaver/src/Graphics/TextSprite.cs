@@ -19,6 +19,16 @@ namespace Quaver.Graphics
     internal class TextSprite : Drawable
     {
         /// <summary>
+        ///     The Actual text of the text sprite.
+        /// </summary>
+        private string _text = "";
+
+        /// <summary>
+        ///     Maximum lines of text this body can have before vertical overflow.
+        /// </summary>
+        private int MaxTextLines { get; set; }
+
+        /// <summary>
         ///     The text of this TextSprite
         /// </summary>
         public string Text { get; set; }
@@ -50,7 +60,7 @@ namespace Quaver.Graphics
         /// <summary>
         ///     The size of the rendered text in a single row.
         /// </summary>
-        private Vector2 _textSize = new Vector2();
+        private Vector2 _textSize;
 
         /// <summary>
         ///     The font of this object
@@ -84,14 +94,11 @@ namespace Quaver.Graphics
 
                 if (Multiline)
                 {
-                    if (Textwrap)
-                        Text = WrapText(Text, false);
-                    else
-                        //TODO: Cut text after x lines
-                        Text = WrapText(Text, false);
+                    MaxTextLines = (int) Math.Max(Math.Floor(SizeY / _textSize.Y),1); //TODO: update later
+                    _text = WrapText(Text, false);
                 }
                 else if (Textwrap)
-                    Text = WrapText(Text, true);
+                    _text = WrapText(Text, true);
             }
 
             base.Update(dt);
@@ -105,22 +112,24 @@ namespace Quaver.Graphics
             //TODO: SpriteFont.MeasureString()
             //Draw itself if it is in the window
             if (GameBase.Window.Intersects(GlobalRect))
-                GameBase.SpriteBatch.DrawString(Font, Text, new Vector2(GlobalTextRect.X, GlobalTextRect.Y), TextColor);
+                GameBase.SpriteBatch.DrawString(Font, _text, new Vector2(GlobalTextRect.X, GlobalTextRect.Y), TextColor);
 
             base.Draw();
         }
 
         private string WrapText(string text, bool singleLine)
         {
-            if (Font.MeasureString(text).X < SizeX)
-            {
-                return text;
-            }
+            //Check if text is not short enough to fit on its on box
+            if (Font.MeasureString(text).X < SizeX) return text;
 
+            //Reference Variables
             string[] words = text.Split(' ');
             StringBuilder wrappedText = new StringBuilder();
             float linewidth = 0f;
             float spaceWidth = Font.MeasureString(" ").X;
+            int textline = 0;
+
+            //Update Text
             for (int i = 0; i < words.Length; ++i)
             {
                 Vector2 size = Font.MeasureString(words[i]);
@@ -130,13 +139,20 @@ namespace Quaver.Graphics
                 }
                 else if (!singleLine)
                 {
+                    //Add new line
                     wrappedText.Append("\n");
                     linewidth = size.X + spaceWidth;
+
+                    //Check if text wrap should continue
+                    textline++;
+                    if (Textwrap && textline >= MaxTextLines) break;
+
                 }
                 else break;
-                wrappedText.Append(words[i]);
-                wrappedText.Append(" ");
+                wrappedText.Append(words[i] + " ");
             }
+
+            //Console.WriteLine("MAX: {0}, TOTAL {1}", MaxTextLines, textline);
 
             return wrappedText.ToString();
         }
