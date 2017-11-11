@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Quaver.Peppy
@@ -75,6 +76,8 @@ namespace Quaver.Peppy
         /// </summary>
         public PeppyBeatmap(string filePath)
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
             if (!File.Exists(filePath.Trim()))
             {
                 IsValid = false;
