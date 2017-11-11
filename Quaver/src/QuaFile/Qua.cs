@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Quaver.QuaFile
@@ -143,6 +144,8 @@ namespace Quaver.QuaFile
         /// <returns></returns>
         private void Parse(string filePath)
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
             // If the file doesn't exist, or it doesn't have a .qua extension, 
             // consider that an invalid Qua
             if (!File.Exists(filePath) || !filePath.ToLower().EndsWith(".qua"))
@@ -259,10 +262,10 @@ namespace Quaver.QuaFile
                     AudioFile = value;
                     break;
                 case "AudioLeadIn":
-                    AudioLeadIn = int.Parse(value, CultureInfo.InvariantCulture);
+                    AudioLeadIn = int.Parse(value);
                     break;
                 case "SongPreviewTime":
-                    SongPreviewTime = int.Parse(value, CultureInfo.InvariantCulture);
+                    SongPreviewTime = int.Parse(value);
                     break;
                 case "BackgroundFile":
                     BackgroundFile = value.Replace("\"", "");
@@ -311,10 +314,10 @@ namespace Quaver.QuaFile
                     DifficultyName = value;
                     break;
                 case "MapID":
-                    MapId = int.Parse(value, CultureInfo.InvariantCulture);
+                    MapId = int.Parse(value);
                     break;
                 case "MapSetID":
-                    MapSetId = int.Parse(value, CultureInfo.InvariantCulture);
+                    MapSetId = int.Parse(value);
                     break;
                 case "Description":
                     Description = value;
@@ -339,13 +342,13 @@ namespace Quaver.QuaFile
             switch (key)
             {
                 case "HPDrain":
-                    HpDrain = float.Parse(value, CultureInfo.InvariantCulture);
+                    HpDrain = float.Parse(value);
                     break;
                 case "AccuracyStrain":
-                    AccuracyStrain = float.Parse(value, CultureInfo.InvariantCulture);
+                    AccuracyStrain = float.Parse(value);
                     break;
                 case "KeyCount":
-                    KeyCount = int.Parse(value, CultureInfo.InvariantCulture);
+                    KeyCount = int.Parse(value);
                     break;
                 default:
                     break;
@@ -370,8 +373,8 @@ namespace Quaver.QuaFile
 
                 var timing = new TimingPoint
                 {
-                    StartTime = float.Parse(values[0], CultureInfo.InvariantCulture),
-                    Bpm = float.Parse(values[1], CultureInfo.InvariantCulture)
+                    StartTime = float.Parse(values[0]),
+                    Bpm = float.Parse(values[1])
                 };
 
                 TimingPoints.Add(timing);
@@ -402,9 +405,9 @@ namespace Quaver.QuaFile
 
                 var sv = new SliderVelocity
                 {
-                    StartTime = float.Parse(values[0], CultureInfo.InvariantCulture),
-                    Multiplier = float.Parse(values[1], CultureInfo.InvariantCulture),
-                    Volume = int.Parse(values[2], CultureInfo.InvariantCulture)
+                    StartTime = float.Parse(values[0]),
+                    Multiplier = float.Parse(values[1]),
+                    Volume = int.Parse(values[2])
                 };
 
                 SliderVelocities.Add(sv);
@@ -434,8 +437,8 @@ namespace Quaver.QuaFile
 
                 var ho = new HitObject
                 {
-                    StartTime = int.Parse(values[0], CultureInfo.InvariantCulture),
-                    KeyLane = int.Parse(values[1], CultureInfo.InvariantCulture)
+                    StartTime = int.Parse(values[0]),
+                    KeyLane = int.Parse(values[1])
                 };
 
                 // If the key lane isn't in 1-4, then we'll consider the map to be invalid.
