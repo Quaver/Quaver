@@ -29,6 +29,8 @@ namespace Quaver.Graphics.Button
                 Parent = this
             };
             Size = ButtonSize;
+            Image = GameBase.UI.BlankBox;
+            TextSprite.TextColor = Color.Black;
         }
 
         /// <summary>
