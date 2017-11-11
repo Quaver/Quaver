@@ -52,7 +52,6 @@ namespace Quaver.GameState.States
         {
             //TEMP Create Sprite
             _testBoundary = new Boundary();
-            _testBoundary.UpdateRect();
             _TestImage = GameBase.Content.Load<Texture2D>("note-hitobject1");
             _spriteList = new List<Sprite>();
             _rand = new List<Vector2>();
@@ -113,13 +112,11 @@ namespace Quaver.GameState.States
             {
                 float interval = ((float)i / _iterations) * (float)Math.PI * 2f;
                 _spriteList[i].Position = new Vector2((float)Math.Cos(_pos + interval) * 100f + _rand[i].X, (float)Math.Sin(_pos + interval) * 100f + _rand[i].Y);
-                _spriteList[i].UpdateRect();
 
                 for (int j = 0; j < _totalChildren; j++)
                 {
                     float childinterval = ((float)j / _spriteList[i].Children.Count) * (float)Math.PI * 2f;
                     _spriteList[i].Children[j].Position = new Vector2((float)Math.Cos((_pos + childinterval)*3f) * 25f, (float)Math.Sin((_pos + childinterval) * 3f) * 25f);
-                    _spriteList[i].Children[j].UpdateRect();
                 }
             }
             _testBoundary.Draw();

@@ -190,7 +190,8 @@ namespace Quaver.Graphics
             if (Changed)
             {
                 Changed = false;
-                UpdateRect();
+                RecalculateRect();
+                Children.ForEach(x => x.Changed = true);
             }
 
             //Update Children
@@ -208,14 +209,12 @@ namespace Quaver.Graphics
         /// <summary>
         /// This method will be called everytime a property of this object gets updated.
         /// </summary>
-        public void UpdateRect()
+        public void RecalculateRect()
         {
             if (_parent != null)
                 _globalRect = Util.DrawRect(Alignment, _localRect, Parent._globalRect);
             else
                 _globalRect = Util.DrawRect(Alignment, _localRect, GameBase.Window);
-
-            Children.ForEach(x => x.UpdateRect());
         }
 
         /// <summary>
