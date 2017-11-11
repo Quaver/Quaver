@@ -94,7 +94,7 @@ namespace Quaver.Graphics
 
                 if (Multiline)
                 {
-                    MaxTextLines = (int) Math.Max(Math.Floor(SizeY / _textSize.Y),1);
+                    MaxTextLines = (int) Math.Max(Math.Floor(SizeY / _textSize.Y),1); //TODO: update later
                     _text = WrapText(Text, false);
                 }
                 else if (Textwrap)
@@ -149,12 +149,10 @@ namespace Quaver.Graphics
 
                 }
                 else break;
-                wrappedText.Append(words[i]);
-                wrappedText.Append(" ");
-
+                wrappedText.Append(words[i] + " ");
             }
 
-            Console.WriteLine("MAX: {0}, TOTAL {1}", MaxTextLines, textline);
+            //Console.WriteLine("MAX: {0}, TOTAL {1}", MaxTextLines, textline);
 
             return wrappedText.ToString();
         }
