@@ -66,9 +66,8 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
-            //Update Discord Status
-            GameBase.DiscordController.presence.details = $"Playing: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} ({GameBase.SelectedBeatmap.DifficultyName})";
-            DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+            // Update Discord Presence
+            GameBase.ChangeDiscordPresence($"Playing: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
 
             //Create loggers
             LogManager.AddLogger("KeyCount", Color.Pink);

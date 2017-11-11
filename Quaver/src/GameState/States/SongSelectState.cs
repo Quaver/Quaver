@@ -32,8 +32,7 @@ namespace Quaver.GameState
         public void Initialize()
         {
             // Update Discord Presence
-            GameBase.DiscordController.presence.details = $"Looking for a song to play.";
-            DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+            GameBase.ChangeDiscordPresence("Looking for a song to play.");
 
             //Create buttons for every beatmap set TODO: Use beatmap set instead of beatmaps
             foreach (KeyValuePair<string, List<Beatmap>> mapset in GameBase.VisibleBeatmaps)
