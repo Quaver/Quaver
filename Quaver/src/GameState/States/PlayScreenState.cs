@@ -126,25 +126,21 @@ namespace Quaver.GameState.States
         /// </summary>
         public void UnloadContent()
         {
+            UpdateReady = false;
+
             //Unload Content from other classes
             NoteRendering.UnloadContent();
             Timing.UnloadContent();
             Playfield.UnloadContent();
 
             //Remove Loggers
-            LogManager.RemoveLogger("KeyCount");
-            LogManager.RemoveLogger("DeltaTime");
-            LogManager.RemoveLogger("SongTime");
-            LogManager.RemoveLogger("SongPos");
-            LogManager.RemoveLogger("HitObjects");
-            LogManager.RemoveLogger("Skippable");
+            LogManager.ClearLogger();
 
             //Destroy boundarys
             TestButton.Clicked -= ButtonClick;
 
             //todo: temp
             TextUnder.Destroy();
-            UpdateReady = false;
         }
 
         /// <summary>

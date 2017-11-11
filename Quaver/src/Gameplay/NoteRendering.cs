@@ -192,14 +192,10 @@ namespace Quaver.Gameplay
 
         internal static void UnloadContent()
         {
-            //foreach (var ho in HitObjectPool) ho.Destroy();
-            //foreach (var ho in HitObjectHold) ho.Destroy();
-            //foreach (var ho in HitObjectDead) ho.Destroy();
-            HitObjectPool = null;
-            HitObjectHold = null;
-            HitObjectDead = null;
             Boundary.Destroy();
-            //Boundary = null;
+            //HitObjectHold = null;
+            //HitObjectDead = null;
+            //HitObjectPool = null;
         }
 
         /// <summary>
