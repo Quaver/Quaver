@@ -28,6 +28,7 @@ namespace Quaver.GameState
         private Button PlayButton { get; set; }
         private Boundary Boundary { get; set; } = new Boundary();
         private int ButtonPos { get; set; } = 50;
+        private List<EventHandler> PlayHander { get; set; } = new List<EventHandler>();
 
         public void Initialize()
         {
@@ -41,6 +42,7 @@ namespace Quaver.GameState
                 //Create Song Buttons
                 foreach (var map in mapset.Value)
                 {
+                    //Create Button
                     var newButton = new TextButton(new Vector2(300, 20),
                         map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]")
                     {
@@ -52,7 +54,14 @@ namespace Quaver.GameState
                     newButton.TextSprite.Alignment = Alignment.MidLeft;
                     newButton.TextSprite.PositionX = 20;
                     var currentMap = map;
-                    newButton.Clicked += (sender, e) => ButtonClick(sender, e, map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]", currentMap);
+
+                    //Add event Listener
+                    EventHandler curEvent = (sender, e) => ButtonClick(sender, e,
+                        map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]", currentMap);
+                    PlayHander.Add(curEvent);
+                    newButton.Clicked += curEvent;
+
+                    //Add button
                     Buttons.Add(newButton);
                     ButtonPos += 20;
                 }
@@ -80,9 +89,9 @@ namespace Quaver.GameState
             PlayButton.Clicked -= PlayMap;
 
             //TODO: Remove button delegates ?
-            foreach (TextButton button in Buttons)
+            for(var i=0; i<Buttons.Count;i++)
             {
-                //button.Clicked -= Delegate;
+                Buttons[i].Clicked -= PlayHander[i];
             }
 
             LogManager.RemoveLogger("MapSelected");
