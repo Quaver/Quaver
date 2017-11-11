@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -258,10 +259,10 @@ namespace Quaver.QuaFile
                     AudioFile = value;
                     break;
                 case "AudioLeadIn":
-                    AudioLeadIn = int.Parse(value);
+                    AudioLeadIn = int.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 case "SongPreviewTime":
-                    SongPreviewTime = int.Parse(value);
+                    SongPreviewTime = int.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 case "BackgroundFile":
                     BackgroundFile = value.Replace("\"", "");
@@ -310,10 +311,10 @@ namespace Quaver.QuaFile
                     DifficultyName = value;
                     break;
                 case "MapID":
-                    MapId = int.Parse(value);
+                    MapId = int.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 case "MapSetID":
-                    MapSetId = int.Parse(value);
+                    MapSetId = int.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 case "Description":
                     Description = value;
@@ -338,13 +339,13 @@ namespace Quaver.QuaFile
             switch (key)
             {
                 case "HPDrain":
-                    HpDrain = float.Parse(value);
+                    HpDrain = float.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 case "AccuracyStrain":
-                    AccuracyStrain = float.Parse(value);
+                    AccuracyStrain = float.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 case "KeyCount":
-                    KeyCount = int.Parse(value);
+                    KeyCount = int.Parse(value, CultureInfo.InvariantCulture);
                     break;
                 default:
                     break;
@@ -369,8 +370,8 @@ namespace Quaver.QuaFile
 
                 var timing = new TimingPoint
                 {
-                    StartTime = float.Parse(values[0]),
-                    Bpm = float.Parse(values[1])
+                    StartTime = float.Parse(values[0], CultureInfo.InvariantCulture),
+                    Bpm = float.Parse(values[1], CultureInfo.InvariantCulture)
                 };
 
                 TimingPoints.Add(timing);
@@ -401,9 +402,9 @@ namespace Quaver.QuaFile
 
                 var sv = new SliderVelocity
                 {
-                    StartTime = float.Parse(values[0]),
-                    Multiplier = float.Parse(values[1]),
-                    Volume = int.Parse(values[2])
+                    StartTime = float.Parse(values[0], CultureInfo.InvariantCulture),
+                    Multiplier = float.Parse(values[1], CultureInfo.InvariantCulture),
+                    Volume = int.Parse(values[2], CultureInfo.InvariantCulture)
                 };
 
                 SliderVelocities.Add(sv);
@@ -433,8 +434,8 @@ namespace Quaver.QuaFile
 
                 var ho = new HitObject
                 {
-                    StartTime = int.Parse(values[0]),
-                    KeyLane = int.Parse(values[1])
+                    StartTime = int.Parse(values[0], CultureInfo.InvariantCulture),
+                    KeyLane = int.Parse(values[1], CultureInfo.InvariantCulture)
                 };
 
                 // If the key lane isn't in 1-4, then we'll consider the map to be invalid.
