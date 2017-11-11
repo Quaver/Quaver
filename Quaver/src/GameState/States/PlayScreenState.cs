@@ -98,8 +98,9 @@ namespace Quaver.GameState.States
 
             TextUnder = new Sprite()
             {
-                Image = GameBase.LoadedSkin.ColumnTimingBar,
-                Size = new Vector2(250,500),
+                Image = GameBase.UI.HollowBox,
+                Tint = Color.Blue,
+                Size = new Vector2(250,200),
                 Alignment = Alignment.TopRight
             };
 
@@ -111,8 +112,9 @@ namespace Quaver.GameState.States
                 Position = new Vector2(5,5),
                 Alignment = Alignment.TopLeft,
                 Parent = TextUnder,
-                TextColor = Color.DarkRed,
+                TextColor = Color.Yellow,
                 Multiline = true,
+                Textwrap = true,
                 Text = temp
             };
 
