@@ -80,8 +80,12 @@ namespace Quaver.Graphics
 
         public override void Update(double dt)
         {
-            if (!_changed)
+            if (Changed)
             {
+                //TODO: REMOVE
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Text Changed: "+this);
+
                 //Update TextSize
                 _textSize = Font.MeasureString(Text);
 
@@ -99,6 +103,8 @@ namespace Quaver.Graphics
                 }
                 else if (Textwrap)
                     _text = WrapText(Text, true);
+
+                Console.WriteLine(GlobalTextRect);
             }
 
             base.Update(dt);

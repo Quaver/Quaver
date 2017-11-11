@@ -18,33 +18,8 @@ namespace Quaver.Graphics
     /// </summary>
     internal abstract class Drawable 
     {
-        /// <summary>
-        /// This method gets called every frame to draw the object.
-        /// </summary>
-        public virtual void Draw()
-        {
-            Children.ForEach(x => x.Draw());
-        }
-
-        /// <summary>
-        /// This method gets called every frame to update the object.
-        /// </summary>
-        /// <param name="dt"></param>
-        public virtual void Update(double dt)
-        {
-            //Animation logic
-            if (_changed)
-            {
-                _changed = false;
-                UpdateRect();
-            }
-
-            //Update Children
-            Children.ForEach(x => x.Update(dt));
-        }
-
         //Local variables
-        internal bool _changed;
+        internal bool Changed { get; set; }
         private Rectangle _localRect;
         private Rectangle _globalRect;
         private Drawable _parent;
@@ -89,7 +64,7 @@ namespace Quaver.Graphics
 
                 //Assign parent in this object
                 _parent = value;
-                _changed = true;
+                Changed = true;
             }
         }
 
@@ -206,19 +181,49 @@ namespace Quaver.Graphics
         public bool Visible { get; set; } = true;
 
         /// <summary>
+        /// This method gets called every frame to update the object.
+        /// </summary>
+        /// <param name="dt"></param>
+        public virtual void Update(double dt)
+        {
+            //Animation logic
+            if (Changed)
+            {
+                Changed = false;
+                UpdateRect();
+            }
+
+            //Update Children
+            Children.ForEach(x => x.Update(dt));
+        }
+
+        /// <summary>
+        /// This method gets called every frame to draw the object.
+        /// </summary>
+        public virtual void Draw()
+        {
+            Children.ForEach(x => x.Draw());
+        }
+
+        /// <summary>
+        /// This method will be called everytime a property of this object gets updated.
+        /// </summary>
+        public void UpdateRect()
+        {
+            if (_parent != null)
+                _globalRect = Util.DrawRect(Alignment, _localRect, Parent._globalRect);
+            else
+                _globalRect = Util.DrawRect(Alignment, _localRect, GameBase.Window);
+
+            Children.ForEach(x => x.UpdateRect());
+        }
+
+        /// <summary>
         /// This method is called when the object will be removed from memory.
         /// </summary>
         public void Destroy()
         {
             Parent = null;
-        }
-
-        /// <summary>
-        /// This method will be called whenever the object gets created.
-        /// </summary>
-        public void Instantiate()
-        {
-            
         }
 
         /// <summary>
@@ -241,7 +246,7 @@ namespace Quaver.Graphics
 
             _localRect.Width = (int)_absoluteSize.X;
             _localRect.Height = (int)_absoluteSize.Y;
-            _changed = true;
+            Changed = true;
         }
 
         /// <summary>
@@ -251,18 +256,7 @@ namespace Quaver.Graphics
         {
             _localRect.X = (int)_localPosition.X;
             _localRect.Y = (int)_localPosition.Y;
-            _changed = true;
-        }
-
-        /// <summary>
-        /// This method will be called everytime a property of this object gets updated.
-        /// </summary>
-        public void UpdateRect()
-        {
-            if (_parent != null)
-                _globalRect = Util.DrawRect(Alignment, _localRect, Parent._globalRect);
-            else
-                _globalRect = Util.DrawRect(Alignment, _localRect, GameBase.Window);
+            Changed = true;
         }
     }
 }
