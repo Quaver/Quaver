@@ -99,10 +99,7 @@ namespace Quaver.Graphics
                 }
                 else if (Textwrap)
                     _text = WrapText(Text, true);
-
-                Console.WriteLine(GlobalTextRect);
             }
-
             base.Update(dt);
         }
 
