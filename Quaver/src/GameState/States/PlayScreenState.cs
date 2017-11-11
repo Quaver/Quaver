@@ -31,7 +31,7 @@ namespace Quaver.GameState.States
 
         //todo: remove. TEST.
         private Sprite TextUnder { get; set; }
-        private TextSprite SVText { get; set; }
+        private TextBoxSprite SVText { get; set; }
 
         /// <summary>
         ///     The input manager for this game state.
@@ -98,11 +98,11 @@ namespace Quaver.GameState.States
 
             var temp = "SV Points: ";
             foreach (var sv in Timing.SvQueue) temp += "[" + sv.TargetTime + ", " + sv.SvMultiplier + "x], ";
-            SVText = new TextSprite()
+            SVText = new TextBoxSprite()
             {
                 Size = new Vector2(240,190),
                 Position = new Vector2(5,5),
-                Alignment = Alignment.TopLeft,
+                TextAlignment = Alignment.TopLeft,
                 Parent = TextUnder,
                 TextColor = Color.Yellow,
                 Multiline = true,

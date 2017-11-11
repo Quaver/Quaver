@@ -16,16 +16,17 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class TextButton : Button
     {
-        public TextSprite TextSprite { get; set; }
+        public TextBoxSprite TextSprite { get; set; }
 
         //Constructor
         public TextButton(Vector2 ButtonSize, string ButtonText)
         {
-            TextSprite = new TextSprite()
+            TextSprite = new TextBoxSprite()
             {
                 Text = ButtonText,
                 Size = ButtonSize,
                 Alignment = Alignment.MidCenter,
+                TextAlignment = Alignment.MidCenter,
                 Parent = this
             };
             Size = ButtonSize;
