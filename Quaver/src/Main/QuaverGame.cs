@@ -126,6 +126,9 @@ namespace Quaver.Main
             // Load the Game Skin Before Starting
             GameBase.LoadSkin();
 
+            // Load UI .xnb elements
+            GameBase.UI.LoadElementsAsContent();
+
             // Create Cursor. Use after LoadSkin
             GameBase.LoadCursor();
 
