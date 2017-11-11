@@ -61,11 +61,6 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Load
-        /// </summary>
-        public void LoadContent() { }
-
-        /// <summary>
         ///     Unload
         /// </summary>
         public void UnloadContent()

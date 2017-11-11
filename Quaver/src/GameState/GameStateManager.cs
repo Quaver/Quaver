@@ -40,10 +40,6 @@ namespace Quaver.GameState
 
                 //Todo: [TAG] console writeline remove
                 LogManager.ConsoleLog("["+DateTime.Today.TimeOfDay+"][GAMESTATE MANAGER]: Loaded State: " + newState, ConsoleColor.Green);
-
-                // Call the LoadContent on the screen
-                if (GameBase.Content != null)
-                    newState.LoadContent();
             }
             catch (Exception ex)
             {

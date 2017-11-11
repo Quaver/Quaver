@@ -72,8 +72,6 @@ namespace Quaver.GameState
             UpdateReady = true;
         }
 
-        public void LoadContent() { }
-
         public void UnloadContent()
         {
             UpdateReady = false;

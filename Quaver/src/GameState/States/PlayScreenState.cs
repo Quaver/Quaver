@@ -119,11 +119,6 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public void LoadContent() { }
-
-        /// <summary>
-        ///     TODO: Add Summary
-        /// </summary>
         public void UnloadContent()
         {
             UpdateReady = false;
