@@ -191,7 +191,6 @@ namespace Quaver.Graphics
             {
                 Changed = false;
                 RecalculateRect();
-                Children.ForEach(x => x.Changed = true);
             }
 
             //Update Children
@@ -215,6 +214,8 @@ namespace Quaver.Graphics
                 _globalRect = Util.DrawRect(Alignment, _localRect, Parent._globalRect);
             else
                 _globalRect = Util.DrawRect(Alignment, _localRect, GameBase.Window);
+
+            Children.ForEach(x => x.RecalculateRect());
         }
 
         /// <summary>
