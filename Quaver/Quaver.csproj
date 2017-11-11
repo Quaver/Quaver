@@ -259,6 +259,7 @@
       <Link>x64\libopenal.so.1</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="BlankBox.xnb" />
     <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\libSDL2-2.0.0.dylib">
       <Link>libSDL2-2.0.0.dylib</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -273,6 +274,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="app.manifest" />
+    <None Include="HollowBox.xnb" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Resource1.resx" />
     <EmbeddedResource Include="Resources\Fonts\test.xnb" />

@@ -52,7 +52,7 @@ namespace Quaver.GameState
                     newButton.TextSprite.Alignment = Alignment.MidLeft;
                     newButton.TextSprite.PositionX = 20;
                     var currentMap = map;
-                    newButton.Clicked += (sender, e) => ButtonClick(sender, e, newButton.TextSprite.Text, currentMap);
+                    newButton.Clicked += (sender, e) => ButtonClick(sender, e, map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]", currentMap);
                     Buttons.Add(newButton);
                     ButtonPos += 20;
                 }
