@@ -38,6 +38,14 @@ namespace Quaver.Logging
         }
 
         /// <summary>
+        /// Clears every log object from the list.
+        /// </summary>
+        public static void ClearLogger()
+        {
+            _logs.Clear();
+        }
+
+        /// <summary>
         /// Update the current log with provided value.
         /// </summary>
         /// <param name="logName"></param>
@@ -56,7 +64,11 @@ namespace Quaver.Logging
             }
             //If no logger with given name is found
             if (!found)
-            Console.WriteLine("[LogTracker.UpdateLogger] ERROR: Log with given name is not found: "+ logName);
+            {
+                //Todo: [TAG] console writeline remove
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("[LogTracker.UpdateLogger] ERROR: Log with given name is not found: " + logName);
+            }
         }
 
         /// <summary>
@@ -67,7 +79,12 @@ namespace Quaver.Logging
         {
             var Index = _logs.FindIndex(r => r.Name == logName);
             if (Index >= 0) _logs.RemoveAt(Index);
-            else Console.WriteLine("[LogTracker.RemoveLogger] ERROR: Log with given name is not found: " + logName);
+            else
+            {
+                //Todo: [TAG] console writeline remove
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("[LogTracker.RemoveLogger] ERROR: Log with given name is not found: " + logName);
+            }
         }
 
         /// <summary>
@@ -95,7 +112,7 @@ namespace Quaver.Logging
         /// <param name="message"></param>
         public static void Debug(string message)
         {
-            //TODO: Later, we will use a different type of display and save the logs onto a wordpad or something
+            //Todo: Later, we will use a different type of display and save the logs onto a wordpad or something
             var newLog = new LogObject()
             {
                 Name = "_QuickLog",
@@ -105,6 +122,9 @@ namespace Quaver.Logging
                 Value = message
             };
             _logs.Add(newLog);
+
+            //Todo: [TAG] console writeline remove
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.Write("[LogManager]:" + message);
         }
 
