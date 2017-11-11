@@ -21,12 +21,24 @@ namespace Quaver.Graphics
         internal Texture2D SetSelectMask { get; set; }
 
         /// <summary>
+        ///     blank-box
+        /// </summary>
+        internal Texture2D BlankBox { get; set; }
+
+        /// <summary>
+        ///     hollow-box
+        /// </summary>
+        internal Texture2D HollowBox { get; set; }
+
+        /// <summary>
         ///     Loads all the ui elements into content
         /// </summary>
         public void LoadElementsAsContent()
         {
             DiffSelectMask = GameBase.Content.Load<Texture2D>("diff-select-mask");
             SetSelectMask = GameBase.Content.Load<Texture2D>("set-select-mask");
+            BlankBox = GameBase.Content.Load<Texture2D>("blank-box");
+            HollowBox = GameBase.Content.Load<Texture2D>("hollow-box");
         }
     }
 }
