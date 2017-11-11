@@ -25,7 +25,7 @@ namespace Quaver.Graphics.Button
         /// <summary>
         ///     Determines if the Event Listener will be fired if the button is clicked.
         /// </summary>
-        private bool Clickable { get; set; } = true;
+        public bool Clickable { get; set; } = true;
 
         /// <summary>
         ///     Internally used to detect when a button gets clicked once. (To ensure it doesnt click every frame when user holds down the mouse button.)
