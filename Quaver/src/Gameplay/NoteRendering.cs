@@ -45,7 +45,7 @@ namespace Quaver.Gameplay
         /// <summary>
         /// Initalize any HitObject related content. 
         /// </summary>
-        internal static void InitializeNotes(Qua Qua)
+        internal static void Initialize(Qua Qua)
         {
             //Initialize Track
             int i;

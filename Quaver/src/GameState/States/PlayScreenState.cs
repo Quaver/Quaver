@@ -83,9 +83,9 @@ namespace Quaver.GameState.States
             LogManager.AddLogger("Skippable", CustomColors.NameTagAdmin);
 
             //Initialize Components
-            Playfield.InitializePlayfield();
-            Timing.InitializeTiming(GameBase.SelectedBeatmap.Qua);
-            NoteRendering.InitializeNotes(GameBase.SelectedBeatmap.Qua);
+            Playfield.Initialize();
+            Timing.Initialize(GameBase.SelectedBeatmap.Qua);
+            NoteRendering.Initialize(GameBase.SelectedBeatmap.Qua);
 
             //Todo: Remove. TEST.
             TestButton = new TextButton(new Vector2(200, 50), "BACK")
