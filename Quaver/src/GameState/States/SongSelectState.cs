@@ -48,7 +48,7 @@ namespace Quaver.GameState
                         PositionY = ButtonPos,
                         Parent = Boundary
                     };
-                    newButton.TextSprite.Alignment = Alignment.MidLeft;
+                    newButton.TextSprite.TextAlignment = Alignment.MidLeft;
 
                     var currentMap = map;
                     newButton.Clicked += (sender, e) => ButtonClick(sender, e, map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]", currentMap);
