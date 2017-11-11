@@ -303,6 +303,8 @@
     <EmbeddedResource Include="Resources\Default Skin\ranking-x.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\diff-select-mask.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\set-select-mask.xnb" />
+    <None Include="Resources\UI\BlankBox.mgcontent" />
+    <None Include="Resources\UI\HollowBox.mgcontent" />
     <None Include="x64\libbass.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
