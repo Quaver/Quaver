@@ -46,7 +46,7 @@ namespace Quaver.Config
             // return the default percentage.
             try
             {
-                var newPercentage = byte.Parse(newVal, CultureInfo.InvariantCulture);
+                var newPercentage = byte.Parse(newVal);
                 return newPercentage > 100 ? defaultVal : newPercentage;
             }
             catch (Exception e)
@@ -66,7 +66,7 @@ namespace Quaver.Config
         {
             try
             {
-                return int.Parse(newVal, CultureInfo.InvariantCulture);
+                return int.Parse(newVal);
             }
             catch (Exception e)
             {
@@ -85,7 +85,7 @@ namespace Quaver.Config
         {
             try
             {
-                return float.Parse(newVal, CultureInfo.InvariantCulture);
+                return float.Parse(newVal);
             }
             catch (Exception e)
             {
@@ -135,7 +135,7 @@ namespace Quaver.Config
         {
             try
             {
-                return short.Parse(newVal, CultureInfo.InvariantCulture);
+                return short.Parse(newVal);
             }
             catch (Exception e)
             {
@@ -154,7 +154,7 @@ namespace Quaver.Config
         {
             try
             {
-                return sbyte.Parse(newVal, CultureInfo.InvariantCulture);
+                return sbyte.Parse(newVal);
             }
             catch (Exception e)
             {
@@ -196,7 +196,7 @@ namespace Quaver.Config
             try
             {
                 string[] colorSplit = newVal.Split(',');
-                return new Color(byte.Parse(colorSplit[0], CultureInfo.InvariantCulture), byte.Parse(colorSplit[1], CultureInfo.InvariantCulture), byte.Parse(colorSplit[2], CultureInfo.InvariantCulture), byte.Parse(colorSplit[3], CultureInfo.InvariantCulture));
+                return new Color(byte.Parse(colorSplit[0]), byte.Parse(colorSplit[1]), byte.Parse(colorSplit[2]), byte.Parse(colorSplit[3]));
             }
             catch (Exception e)
             {
