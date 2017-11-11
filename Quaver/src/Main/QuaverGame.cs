@@ -129,7 +129,7 @@ namespace Quaver.Main
         /// </summary>
         protected override void UnloadContent()
         {
-            GameStateManager.Instance.UnloadContent();
+            GameStateManager.Instance.ClearStates();
             DiscordRPC.Shutdown();
         }
 

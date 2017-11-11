@@ -86,7 +86,6 @@ namespace Quaver.GameState.States
         public void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            GameStateManager.Instance.UnloadContent();
         }
 
         /// <summary>

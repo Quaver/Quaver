@@ -39,8 +39,7 @@ namespace Quaver.GameState
                 newState.Initialize();
 
                 //Todo: [TAG] console writeline remove
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("["+DateTime.Today.TimeOfDay+"][GAMESTATE MANAGER]: Loaded State: " + newState);
+                LogManager.ConsoleLog("["+DateTime.Today.TimeOfDay+"][GAMESTATE MANAGER]: Loaded State: " + newState, ConsoleColor.Green);
 
                 // Call the LoadContent on the screen
                 if (GameBase.Content != null)
@@ -66,8 +65,7 @@ namespace Quaver.GameState
                 States.Peek().UnloadContent();
 
                 //Todo: [TAG] console writeline remove
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("[" + DateTime.Today.TimeOfDay + "][GAMESTATE MANAGER]: Unloaded content from " + States.Peek());
+                LogManager.ConsoleLog("[" + DateTime.Today.TimeOfDay + "][GAMESTATE MANAGER]: Unloaded content from " + States.Peek(), ConsoleColor.DarkGreen);
                 States.Pop();
             }
             catch (Exception ex)
@@ -84,12 +82,7 @@ namespace Quaver.GameState
         {
             while (States.Count > 0)
             {
-                States.Peek().UnloadContent();
-
-                //Todo: [TAG] console writeline remove
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("[" + DateTime.Today.TimeOfDay + "][GAMESTATE MANAGER]: Unloaded content from " + States.Peek());
-                States.Pop();
+                RemoveState();
             }
         }
 
@@ -148,21 +141,6 @@ namespace Quaver.GameState
             {
                 // Log the exception
                 LogManager.Debug(ex.Message);
-            }
-        }
-
-        /// <summary>
-        ///     Unloads the content from the screen.
-        /// </summary>
-        public void UnloadContent()
-        {
-            foreach (var state in States)
-            {
-                state.UnloadContent();
-
-                //Todo: [TAG] console writeline remove
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("[" + DateTime.Today.TimeOfDay + "][GAMESTATE MANAGER]: Unloaded content from " + state);
             }
         }
     }
