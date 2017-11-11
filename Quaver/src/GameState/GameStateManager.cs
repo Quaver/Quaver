@@ -37,6 +37,7 @@ namespace Quaver.GameState
 
                 // Initialize the screen
                 newState.Initialize();
+                Console.WriteLine("["+DateTime.Today.TimeOfDay+"][GAMESTATE MANAGER]: Loading State: " + newState);
 
                 // Call the LoadContent on the screen
                 if (GameBase.Content != null)
@@ -59,6 +60,7 @@ namespace Quaver.GameState
 
             try
             {
+                Console.WriteLine("["+DateTime.Today.TimeOfDay+"][GAMESTATE MANAGER]: Unloaded content from " + States.Peek());
                 States.Peek().UnloadContent();
                 States.Pop();
             }
@@ -76,6 +78,7 @@ namespace Quaver.GameState
         {
             while (States.Count > 0)
             {
+                Console.WriteLine("[" + DateTime.Today.TimeOfDay + "][GAMESTATE MANAGER]: Unloaded content from " + States.Peek());
                 States.Peek().UnloadContent();
                 States.Pop();
             }
@@ -145,7 +148,10 @@ namespace Quaver.GameState
         public void UnloadContent()
         {
             foreach (var state in States)
+            {
+                Console.WriteLine("[" + DateTime.Today.TimeOfDay + "][GAMESTATE MANAGER]: Unloaded content from " + state);
                 state.UnloadContent();
+            }
         }
     }
 }
