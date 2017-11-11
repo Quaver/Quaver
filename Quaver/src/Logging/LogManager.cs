@@ -66,7 +66,7 @@ namespace Quaver.Logging
             if (!found)
             {
                 //Todo: [TAG] console writeline remove
-                ConsoleLog("[LogTracker.UpdateLogger] ERROR: Log with given name is not found: " + logName, ConsoleColor.Yellow);
+                //ConsoleLog("[LogTracker.UpdateLogger] ERROR: Log with given name is not found: " + logName, ConsoleColor.Yellow);
             }
         }
 

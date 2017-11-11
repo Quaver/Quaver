@@ -71,10 +71,7 @@ namespace Quaver.GameState.States
 
             //Create loggers
             LogManager.AddLogger("KeyCount", Color.Pink);
-            LogManager.AddLogger("DeltaTime", Color.LawnGreen);
-            LogManager.AddLogger("SongTime", Color.White);
             LogManager.AddLogger("SongPos", Color.White);
-            LogManager.AddLogger("HitObjects", Color.Wheat);
             LogManager.AddLogger("Skippable", CustomColors.NameTagAdmin);
 
             //Initialize Components
@@ -163,10 +160,7 @@ namespace Quaver.GameState.States
 
             // Update Loggers
             LogManager.UpdateLogger("KeyCount", $"Key Count: {GameBase.SelectedBeatmap.Qua.KeyCount}");
-            LogManager.UpdateLogger("DeltaTime", "Delta Time: " + dt + "ms");
-            LogManager.UpdateLogger("SongTime", "Current Song Time: " + Timing.CurrentSongTime + "ms");
             LogManager.UpdateLogger("SongPos", "Current Track Position: " + NoteRendering.TrackPosition);
-            LogManager.UpdateLogger("HitObjects", "Total Remaining Notes: " + NoteRendering.HitObjectPool.Count);
             LogManager.UpdateLogger("Skippable", $"Intro Skippable: {IntroSkippable}");
 
             //Todo: remove. TEST.
