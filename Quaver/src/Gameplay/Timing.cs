@@ -119,8 +119,8 @@ namespace Quaver.Gameplay
         /// </summary>
         internal static void UnloadContent()
         {
-            SvQueue = null;
-            TimingQueue = null;
+            SvQueue.Clear();
+            TimingQueue.Clear();
         }
 
         /// <summary>
