@@ -83,7 +83,7 @@ namespace Quaver.GameState.States
             NoteRendering.Initialize(GameBase.SelectedBeatmap.Qua);
 
             //Todo: Remove. TEST.
-            TestButton = new TextButton(new Vector2(200, 50), "BACK")
+            TestButton = new TextButton(new Vector2(200, 30), "BACK")
             {
                 Image = GameBase.LoadedSkin.ColumnTimingBar,
                 Alignment = Alignment.TopCenter,
