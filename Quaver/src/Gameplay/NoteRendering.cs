@@ -190,6 +190,18 @@ namespace Quaver.Gameplay
             Boundary.Update(dt);
         }
 
+        internal static void UnloadContent()
+        {
+            //foreach (var ho in HitObjectPool) ho.Destroy();
+            //foreach (var ho in HitObjectHold) ho.Destroy();
+            //foreach (var ho in HitObjectDead) ho.Destroy();
+            HitObjectPool = null;
+            HitObjectHold = null;
+            HitObjectDead = null;
+            Boundary.Destroy();
+            //Boundary = null;
+        }
+
         /// <summary>
         /// Calculates the position of the hitobject from given time
         /// </summary>
@@ -201,6 +213,11 @@ namespace Quaver.Gameplay
             return (ModManager.Activated(ModIdentifier.NoSliderVelocity)) ? (ulong) timeToOffset : SvCalc[svIndex] + (ulong)(15000 + ((timeToOffset - Timing.SvQueue[svIndex].TargetTime) * Timing.SvQueue[svIndex].SvMultiplier)) - 5000;
         }
 
+        /// <summary>
+        /// Calculates the position of the note from offset.
+        /// </summary>
+        /// <param name="offsetToPos"></param>
+        /// <returns></returns>
         internal static float PosFromOffset(ulong offsetToPos)
         {
             //if (_mod_pull) return (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(offsetToPos - CurrentSongTime, 0f) * _ScrollSpeed));
@@ -227,6 +244,11 @@ namespace Quaver.Gameplay
             TrackPosition = SvCalc[CurrentSvIndex] + (ulong)(((float)(Timing.CurrentSongTime - (Timing.SvQueue[CurrentSvIndex].TargetTime)) * Timing.SvQueue[CurrentSvIndex].SvMultiplier) + 10000);
         }
 
+        /// <summary>
+        /// Gets the Index of the SV timing point from the SV Queue List
+        /// </summary>
+        /// <param name="indexTime"></param>
+        /// <returns></returns>
         internal static int GetSvIndex(float indexTime)
         {
             int newIndex = 0;

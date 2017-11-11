@@ -126,6 +126,9 @@ namespace Quaver.GameState.States
         /// </summary>
         public void UnloadContent()
         {
+            //Unload Content from other classes
+            NoteRendering.UnloadContent();
+
             //Remove Loggers
             LogManager.RemoveLogger("KeyCount");
             LogManager.RemoveLogger("DeltaTime");
