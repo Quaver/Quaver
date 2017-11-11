@@ -128,6 +128,8 @@ namespace Quaver.GameState.States
         {
             //Unload Content from other classes
             NoteRendering.UnloadContent();
+            Timing.UnloadContent();
+            Playfield.UnloadContent();
 
             //Remove Loggers
             LogManager.RemoveLogger("KeyCount");
@@ -137,14 +139,11 @@ namespace Quaver.GameState.States
             LogManager.RemoveLogger("HitObjects");
             LogManager.RemoveLogger("Skippable");
 
-            //Do Unload stuff
+            //Destroy boundarys
             TestButton.Clicked -= ButtonClick;
-            NoteRendering.Boundary.Destroy();
-            Playfield.Boundary.Destroy();
 
             //todo: temp
             TextUnder.Destroy();
-
             UpdateReady = false;
         }
 
@@ -157,7 +156,7 @@ namespace Quaver.GameState.States
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Set the current song time.
-            Timing.SetCurrentSongTime(dt);
+            Timing.Update(dt);
 
             // Check if the song is currently skippable.
             IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.CurrentSongTime >= 5000);
