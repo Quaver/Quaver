@@ -49,17 +49,5 @@ namespace Quaver.Graphics
             //Draw children
             Children.ForEach(x => x.Draw());
         }
-
-        /// <summary>
-        ///     Will update the sprite. Used for animation/logic
-        /// </summary>
-        public override void Update(double dt)
-        {
-            //Animation logic
-            UpdateRect();
-
-            //Update Children
-            Children.ForEach(x => x.Update(dt));
-        }
     }
 }

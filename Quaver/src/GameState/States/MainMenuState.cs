@@ -122,7 +122,6 @@ namespace Quaver.GameState.States
                 Parent = Boundary
             };
 
-            SwitchSongSelectButton.UpdateRect();
             SwitchSongSelectButton.Clicked += ButtonClick;
 
             // Import .osz Button
@@ -134,7 +133,6 @@ namespace Quaver.GameState.States
                 Parent = Boundary
             };
 
-            ImportPeppyButton.UpdateRect();
             ImportPeppyButton.Clicked += Osz.OnImportButtonClick;
         }
     }
