@@ -11,6 +11,7 @@ using Quaver.Beatmaps;
 using Quaver.Commands;
 using Quaver.Config;
 using Quaver.Database;
+using Quaver.Discord;
 using Quaver.Main;
 using Quaver.Tests;
 
@@ -27,38 +28,18 @@ namespace Quaver
         [STAThread]
         private static void Main()
         {
-            // TODO: Test patching of files.
-            //Patcher.PatchFiles(CpuFlag.Win64);
-
-            /*
-             * Display Resources Names
-             * foreach (var file in System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames())
-                Console.WriteLine(file);*/
-
             // Initialize Config
             Configuration.InitializeConfig();
+
+            // Initialize Discord RichPresence
+            InitializeDiscordPresence();
+
+            // Delete Temp Files
+            DeleteTemporaryFiles();
  
-            // Delete all the temporary data files.
-            foreach (var file in new DirectoryInfo(Configuration.DataDirectory).GetFiles())
-                file.Delete();
-
-            // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
-            var loadGame = Task.Run(async () =>
-            {
-                await GameBase.LoadAndSetBeatmaps();
-                
-                // The visible beatmaps in song select should be every single mapset at the start of the game.
-                GameBase.VisibleBeatmaps = GameBase.Beatmaps;
-
-                // Test Search
-                //GameBase.VisibleBeatmaps = BeatmapUtils.SearchBeatmaps(GameBase.Beatmaps, "Camellia");
-            });
-
-            Task.WaitAll(loadGame);
-
-            // Run all test methods
-            Task.Run(() => RunTestMethods());
-
+            // Set up the game
+            SetupGame();
+      
             // Start game
             using (var game = new QuaverGame())
             {
@@ -67,18 +48,48 @@ namespace Quaver
         }
 
         /// <summary>
-        ///     This'll run all of the test methods in our code.
-        ///     They should be marked with [Conditional("DEBUG")]
-        ///     These will only be ran when the solution was built in debug mode.
-        ///     All functions in this method should have an argument "run",
-        ///     which specifies whether or not you want to run the specific method
+        ///     Responsible for initializing the Discord Presence
         /// </summary>
-        private static void RunTestMethods()
+        private static void InitializeDiscordPresence()
         {
-            Console.WriteLine("\n[DEBUG] Running Test Methods if there are any...");
-            Task.Run(() => QuaTest.ParseQuaTest(false));
-            Task.Run(() => AudioTest.PlaySongPreview(false));
-            Task.Run(() => JsonTest.DeserializeJsonTest(false));
+            if (GameBase.DiscordController != null)
+                return;
+
+            GameBase.DiscordController = new DiscordController();
+            GameBase.DiscordController.Initialize();
+
+            // Create a new RichPresence
+            GameBase.DiscordController.presence = new DiscordRPC.RichPresence()
+            {
+                state = "Dev Build"
+            };
+            DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+        }
+
+        /// <summary>
+        ///     Deletes all temporary files if there are any.
+        /// </summary>
+        private static void DeleteTemporaryFiles()
+        {
+            foreach (var file in new DirectoryInfo(Configuration.DataDirectory).GetFiles())
+                file.Delete();
+        }
+
+        /// <summary>
+        ///     Responsible for initializing and setting the beatmap database and setting the loaded beatmaps
+        /// </summary>
+        private static void SetupGame()
+        {
+            // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
+            var loadGame = Task.Run(async () =>
+            {
+                await GameBase.LoadAndSetBeatmaps();
+
+                // The visible beatmaps in song select should be every single mapset at the start of the game.
+                GameBase.VisibleBeatmaps = GameBase.Beatmaps;
+            });
+
+            Task.WaitAll(loadGame);
         }
     }
 }
