@@ -35,7 +35,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Initialize Timing Contents.
         /// </summary>
-        internal static void InitializeTiming(Qua Qua)
+        internal static void Initialize(Qua Qua)
         {
             //TODO: Timing Initializer
             GameAudioLength = GameBase.SelectedBeatmap.Song.GetAudioLength();
@@ -114,7 +114,10 @@ namespace Quaver.Gameplay
             //time_CreateBars();
         }
 
-        //Set the position of the current play time
+        /// <summary>
+        ///     Set the position of the current play time
+        /// </summary>
+        /// <param name="dt"></param>
         internal static void SetCurrentSongTime(double dt)
         {
             //Calculate Time after Song Done

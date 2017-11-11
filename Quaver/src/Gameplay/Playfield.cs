@@ -61,7 +61,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
         /// </summary>
-        public static void InitializePlayfield()
+        public static void Initialize()
         {
             // Calculate skin reference variables.
             PlayfieldSize = PlayfieldObjectSize * GameBase.SelectedBeatmap.Qua.KeyCount + PlayfieldPadSize * 2;
