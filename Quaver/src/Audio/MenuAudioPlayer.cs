@@ -38,14 +38,12 @@ namespace Quaver.Audio
                 }
 
                 // Set Rich Presence
-                GameBase.DiscordController.presence.details = $"Listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
-                DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+                GameBase.ChangeDiscordPresence($"In the Main Menu Listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}");
             }
             else
             {
                 // Set Rich Presence
-                GameBase.DiscordController.presence.details = $"Idle";
-                DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+                GameBase.ChangeDiscordPresence("Idle");
             }
         }
 
