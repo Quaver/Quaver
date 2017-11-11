@@ -115,6 +115,12 @@ namespace Quaver.Main
         public static DiscordController DiscordController { get; set; }
 
         /// <summary>
+        ///     Contains all of the loaded embedded UI .xnb resources that aren't apart of the
+        ///     default skin
+        /// </summary>
+        public static UI UI { get; set; } = new UI();
+
+        /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.
         /// </summary>
         public static async Task LoadAndSetBeatmaps()
