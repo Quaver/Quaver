@@ -108,7 +108,7 @@ namespace Quaver.GameState.States
             foreach (var sv in Timing.SvQueue) temp += "[" + sv.TargetTime + ", " + sv.SvMultiplier + "x], ";
             SVText = new TextSprite()
             {
-                Size = new Vector2(240,490),
+                Size = new Vector2(240,190),
                 Position = new Vector2(5,5),
                 Alignment = Alignment.TopLeft,
                 Parent = TextUnder,
