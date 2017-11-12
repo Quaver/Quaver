@@ -163,7 +163,7 @@ namespace Quaver.Beatmaps
         /// </summary>
         internal void LoadBackground()
         {
-            Background = ImageLoader.Load(Config.Configuration.SongDirectory + "/" + Directory + "/" + Background);
+            Background = ImageLoader.Load(Config.Configuration.SongDirectory + "/" + Directory + "/" + BackgroundPath);
         }
 
         /// <summary>
