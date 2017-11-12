@@ -207,6 +207,16 @@ namespace Quaver.Gameplay
             Boundary.Update(dt);
         }
 
+        /// <summary>
+        ///     Draws whatever has to be rendered.
+        /// </summary>
+        internal static void Draw()
+        {
+            Boundary.Draw();
+        }
+        /// <summary>
+        ///     Unloads content after the game is done.
+        /// </summary>
         internal static void UnloadContent()
         {
             Boundary.Destroy();
