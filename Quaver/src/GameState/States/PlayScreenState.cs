@@ -69,10 +69,15 @@ namespace Quaver.GameState.States
             // Update Discord Presence
             GameBase.ChangeDiscordPresence($"Playing: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
 
-            //Create loggers
+            //Todo: Remove. Create loggers
             LogManager.AddLogger("KeyCount", Color.Pink);
             LogManager.AddLogger("SongPos", Color.White);
             LogManager.AddLogger("Skippable", CustomColors.NameTagAdmin);
+
+            for (var i=0; i < NoteManager.TimingNames.Length; i++)
+            {
+                LogManager.AddLogger(NoteManager.TimingNames[i], NoteManager.TimingColors[i]);
+            }
 
             //Initialize Components
             Playfield.Initialize();
