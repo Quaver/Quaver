@@ -158,7 +158,7 @@ namespace Quaver.Gameplay
             {
                 Size = size,
                 Alignment = Alignment.MidCenter,
-                Image = GameBase.LoadedSkin.JudgeMiss,
+                Image = JudgeImages[0],
                 Parent = BoundaryOver
             };
         }
