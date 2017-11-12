@@ -118,7 +118,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     This method initializes the HitObject sprites
         /// </summary>
-        public void Initialize()
+        public void Initialize(bool downScroll)
         {
             HoldBodySprite = new Sprite()
             {
@@ -161,16 +161,16 @@ namespace Quaver.Gameplay
             }
         }
 
-        public void Update()
+        public void Update(bool downScroll)
         {
             if (IsLongNote)
             {
                 //Update HoldBody Position and Size
-                HoldBodySprite.PositionY = _hitObjectPosition.Y + HitObjectSize / 2f;
                 HoldBodySprite.SizeY = CurrentLongNoteSize;
+                HoldBodySprite.PositionY = downScroll ? -(float)CurrentLongNoteSize + HitObjectSize / 2f + _hitObjectPosition.Y : _hitObjectPosition.Y + HitObjectSize / 2f;
 
                 //Update Hold End Position
-                HoldEndSprite.PositionY = _hitObjectPosition.Y + HoldBodySprite.SizeY;
+                HoldEndSprite.PositionY = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.SizeY) : _hitObjectPosition.Y + HoldBodySprite.SizeY;
             }
 
             //Update HitBody
