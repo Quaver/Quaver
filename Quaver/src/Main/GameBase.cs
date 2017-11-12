@@ -128,11 +128,17 @@ namespace Quaver.Main
         /// </summary>
         public static UI UI { get; set; } = new UI();
 
+        /// <summary>
+        ///     Whenever the settings for window size is changed, call this method to update the window.
+        /// </summary>
+        /// <param name="newSize"></param>
         public static void UpdateWindow(Point newSize)
         {
+            //TODO: unfinished
             Window = new Rectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight);
             Rectangle mainWindow = GraphicsDevice.PresentationParameters.Bounds;
 
+            //Align letterboxed window
             Window = Util.DrawRect(Alignment.MidCenter, Window, mainWindow);
             WindowYRatio = Window.Height / ReferenceResolution.Y;
         }
