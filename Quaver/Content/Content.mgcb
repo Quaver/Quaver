@@ -13,3 +13,17 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin RalewayMedium.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:RalewayMedium.spritefont
+
+#begin RalewayBold.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:RalewayBold.spritefont
+
