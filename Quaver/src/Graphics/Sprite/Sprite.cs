@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Utility;
 using Quaver.Main;
 
-namespace Quaver.Graphics
+namespace Quaver.Graphics.Sprite
 {
     /// <summary>
     ///     Any drawable object that uses 

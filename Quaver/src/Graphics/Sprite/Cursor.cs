@@ -9,7 +9,7 @@ using Quaver.Graphics;
 using Quaver.Main;
 using Quaver.Utility;
 
-namespace Quaver.Graphics
+namespace Quaver.Graphics.Sprite
 {
     /// <summary>
     /// Todo: move class somewhere else?

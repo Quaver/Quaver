@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Content;
 using Quaver.Config;
 using Quaver.Discord;
 using Quaver.Graphics;
+using Quaver.Graphics.Sprite;
 using Quaver.Modifiers;
 using Quaver.Utility;
 
