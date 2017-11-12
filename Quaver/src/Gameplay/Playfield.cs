@@ -58,6 +58,8 @@ namespace Quaver.Gameplay
         /// </summary>
         public static Boundary Boundary { get; set; }
 
+        public static Sprite BgMask { get; set; }
+
         /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
         /// </summary>
@@ -71,6 +73,14 @@ namespace Quaver.Gameplay
             {
                 Size = new Vector2(PlayfieldSize, GameBase.Window.Height),
                 Alignment = Alignment.TopCenter
+            };
+
+            // Create BG Mask
+            BgMask = new Sprite()
+            {
+                Image = GameBase.LoadedSkin.ColumnBgMask,
+                Parent = Boundary,
+                Size = Boundary.Size,
             };
 
             // Create Receptors
