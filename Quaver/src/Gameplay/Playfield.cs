@@ -54,9 +54,14 @@ namespace Quaver.Gameplay
         public static float[] ReceptorXPosition { get; set; } = new float[GameBase.SelectedBeatmap.Qua.KeyCount];
 
         /// <summary>
-        ///     The playfield Boundary
+        ///     The first layer of the playfield. Used to render receptors/FX
         /// </summary>
-        public static Boundary Boundary { get; set; }
+        public static Boundary BoundaryUnder { get; set; }
+
+        /// <summary>
+        ///     The second layer of the playfield. Used to render judge/HitBurst
+        /// </summary>
+        public static Boundary BoundaryOver { get; set; }
 
         public static Sprite BgMask { get; set; }
 
@@ -69,7 +74,13 @@ namespace Quaver.Gameplay
             PlayfieldSize = PlayfieldObjectSize * GameBase.SelectedBeatmap.Qua.KeyCount + PlayfieldPadSize * 2;
 
             // Create playfield boundary & Update Rect.
-            Boundary = new Boundary()
+            BoundaryUnder = new Boundary()
+            {
+                Size = new Vector2(PlayfieldSize, GameBase.Window.Height),
+                Alignment = Alignment.TopCenter
+            };
+
+            BoundaryOver = new Boundary()
             {
                 Size = new Vector2(PlayfieldSize, GameBase.Window.Height),
                 Alignment = Alignment.TopCenter
@@ -79,7 +90,7 @@ namespace Quaver.Gameplay
             BgMask = new Sprite()
             {
                 Image = GameBase.LoadedSkin.ColumnBgMask,
-                Parent = Boundary,
+                Parent = BoundaryUnder,
                 Scale = Vector2.One
             };
 
@@ -106,9 +117,25 @@ namespace Quaver.Gameplay
                     Size = Vector2.One * PlayfieldObjectSize,
                     Position = new Vector2(ReceptorXPosition[i], ReceptorYOffset),
                     Alignment = Alignment.TopLeft,
-                    Parent = Boundary
+                    Parent = BoundaryUnder
                 };
             }
+        }
+
+        /// <summary>
+        ///     Draws the first layer of the Playfield (Renders before Notes)
+        /// </summary>
+        public static void DrawUnder()
+        {
+            BoundaryUnder.Draw();
+        }
+
+        /// <summary>
+        ///     Draws the second layer of the Playfield (Renders after Notes)
+        /// </summary>
+        public static void DrawOver()
+        {
+            BoundaryOver.Draw();
         }
 
         /// <summary>
@@ -132,7 +159,7 @@ namespace Quaver.Gameplay
             }
 
             //Update Playfield + Children
-            Boundary.Update(dt);
+            BoundaryUnder.Update(dt);
         }
 
         /// <summary>
@@ -140,7 +167,7 @@ namespace Quaver.Gameplay
         /// </summary>
         public static void UnloadContent()
         {
-            Boundary.Destroy();
+            BoundaryUnder.Destroy();
         }
 
         /// <summary>
