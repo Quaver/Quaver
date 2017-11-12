@@ -51,7 +51,6 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
-                LogManager.Debug(e.Message);
                 return defaultVal;
             }
         }
@@ -70,7 +69,6 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
-                LogManager.Debug(e.Message);
                 return defaultVal;
             }
         }
@@ -89,7 +87,6 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
-                LogManager.Debug(e.Message);
                 return defaultVal;
             }
         }
@@ -108,7 +105,6 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
-                LogManager.Debug(e.Message);
                 return defaultVal;
             }
         }
@@ -139,7 +135,6 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
-                LogManager.Debug(e.Message);
                 return defaultVal;
             }
         }
@@ -158,7 +153,6 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
-                //LogManager.Debug(e.Message);
                 return defaultVal;
             }   
         }
