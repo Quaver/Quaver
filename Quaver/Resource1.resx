@@ -208,4 +208,10 @@
   <data name="hit" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Skin\hit.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="RalewayBold" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Fonts\RalewayBold.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="RalewayMedium" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Fonts\RalewayMedium.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

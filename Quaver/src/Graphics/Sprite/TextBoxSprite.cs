@@ -77,7 +77,7 @@ namespace Quaver.Graphics
         /// <summary>
         ///     The font of this object
         /// </summary>
-        public SpriteFont Font { get; } = GameBase.Content.Load<SpriteFont>("testFont");
+        public SpriteFont Font { get; } = GameBase.Content.Load<SpriteFont>("RalewayMedium");
 
         /// <summary>
         ///     The color of this object
