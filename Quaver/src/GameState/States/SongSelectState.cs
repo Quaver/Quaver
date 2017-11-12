@@ -16,7 +16,7 @@ using Quaver.Graphics.Button;
 using Quaver.Logging;
 using Quaver.Main;
 
-namespace Quaver.GameState
+namespace Quaver.GameState.States
 {
     internal class SongSelectState : IGameState
     {
