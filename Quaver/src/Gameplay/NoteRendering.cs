@@ -40,14 +40,18 @@ namespace Quaver.Gameplay
         internal static ulong TrackPosition { get; set; }
 
         //CONFIG (temp)
-        private static float ScrollNegativeFactor { get; set; } = 1f;
-        private static float ScrollSpeed { get; set; } = Configuration.ScrollSpeed / 20f; //TODO: Add scroll speed curve
+        private static float ScrollNegativeFactor { get; set; }
+        private static float ScrollSpeed { get; set; }
 
         /// <summary>
         /// Initalize any HitObject related content. 
         /// </summary>
         internal static void Initialize(Qua Qua)
         {
+            // Do config stuff
+            ScrollNegativeFactor = Config.Configuration.DownScroll ? -1 : 1;
+            ScrollSpeed = Configuration.ScrollSpeed / 20f; //todo: balance curve
+
             //Initialize Track
             int i;
             TrackPosition = (ulong)(-Timing.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
