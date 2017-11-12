@@ -32,9 +32,7 @@ namespace Quaver.Graphics
         public Sprite()
         {
             Tint = Color.White;
-
-            //Todo: Set fallback image
-            //Image = FALLBACK IMAGE;
+            Image = GameBase.UI.BlankBox;
         }
 
         /// <summary>

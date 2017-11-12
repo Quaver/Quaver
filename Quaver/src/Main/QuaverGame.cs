@@ -115,6 +115,9 @@ namespace Quaver.Main
             // Load UI .xnb elements
             GameBase.UI.LoadElementsAsContent();
 
+            //Initialize Background Manager. Use after Load UI.
+            BackgroundManager.Initialize();
+
             // Create Cursor. Use after LoadSkin
             GameBase.LoadCursor();
 
@@ -129,6 +132,7 @@ namespace Quaver.Main
         /// </summary>
         protected override void UnloadContent()
         {
+            BackgroundManager.UnloadContent();
             GameStateManager.Instance.ClearStates();
             DiscordRPC.Shutdown();
         }
@@ -145,6 +149,9 @@ namespace Quaver.Main
             // Update FpsCounter
             if (Config.Configuration.FpsCounter)
                 FpsCounter.Count(dt);
+
+            // Update Background from Background Manager
+            BackgroundManager.Update(dt);
 
             // Update all game states.
             GameStateManager.Instance.Update(gameTime);
@@ -171,7 +178,10 @@ namespace Quaver.Main
             GameBase.SpriteBatch.Begin();
 
             // Set Background Color
-            GameBase.GraphicsDevice.Clear(Color.DarkSlateGray);
+            GameBase.GraphicsDevice.Clear(Color.Black);
+
+            // Draw Background
+            BackgroundManager.Draw();
 
             // Draw the game states
             GameStateManager.Instance.Draw();

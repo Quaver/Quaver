@@ -117,6 +117,7 @@
     <Compile Include="src\Graphics\Button\BasicButton.cs" />
     <Compile Include="src\Graphics\TextBoxSprite.cs" />
     <Compile Include="src\Graphics\UI.cs" />
+    <Compile Include="src\Main\Background.cs" />
     <Compile Include="src\Peppy\Osz.cs" />
     <Compile Include="src\Gameplay\NoteManager.cs" />
     <Compile Include="src\Gameplay\NoteRendering.cs" />
