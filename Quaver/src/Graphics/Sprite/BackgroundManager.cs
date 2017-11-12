@@ -107,7 +107,7 @@ namespace Quaver.Graphics
 
             //Update Background Color
             CurrentColor = Vector3.Zero;
-            Brightness = 1 - (Configuration.BackgroundDim/255);
+            Brightness = Configuration.BackgroundBrightness/255f;
             TargetColor = Vector3.One * Brightness;
         }
 
