@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Main;
 
-namespace Quaver.Graphics
+namespace Quaver.Graphics.Text
 {
     internal static class Fonts
     {
