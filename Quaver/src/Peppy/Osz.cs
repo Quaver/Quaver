@@ -34,7 +34,8 @@ namespace Quaver.Peppy
                 InitialDirectory = "c:\\",
                 Filter = "Peppy Beatmap Set (*.osz)|*.osz",
                 FilterIndex = 0,
-                RestoreDirectory = true
+                RestoreDirectory = true,
+                Multiselect = true
             };
 
             // If the dialog couldn't be shown, that's an issue, so we'll return for now.
@@ -44,7 +45,11 @@ namespace Quaver.Peppy
             // Proceed to extract and convert the map, show loading screen.
             GameStateManager.Instance.AddState(new MapImportLoadingState());
 
-            Task.Run(() => ConvertOsz(openFileDialog.FileName)).ContinueWith(async t =>
+            Task.Run(() =>
+            {
+                foreach (var fileName in openFileDialog.FileNames)
+                    ConvertOsz(fileName);
+            }).ContinueWith(async t =>
             {
                 // Update the selected beatmap with the new one.
                 // This button should only be on the song select state, so no need to check for states here.
@@ -72,9 +77,10 @@ namespace Quaver.Peppy
                     {
                         GameBase.SelectedBeatmap.Song.Play();
                         // Set Rich Presence
-                        GameBase.DiscordController.presence.details = $"Listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
+                        GameBase.DiscordController.presence.details =
+                            $"Listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
                         DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
-                    }                    
+                    }
                 }
 
                 Console.WriteLine("[CONVERT OSZ TASK] Successfully completed. Stopping loader.");
