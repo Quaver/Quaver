@@ -40,14 +40,18 @@ namespace Quaver.Gameplay
         internal static ulong TrackPosition { get; set; }
 
         //CONFIG (temp)
-        private static float ScrollNegativeFactor { get; set; } = 1f;
-        private static float ScrollSpeed { get; set; } = Configuration.ScrollSpeed / 20f; //TODO: Add scroll speed curve
+        private static float ScrollNegativeFactor { get; set; }
+        private static float ScrollSpeed { get; set; }
 
         /// <summary>
         /// Initalize any HitObject related content. 
         /// </summary>
         internal static void Initialize(Qua Qua)
         {
+            // Do config stuff
+            ScrollNegativeFactor = Config.Configuration.DownScroll ? -1 : 1;
+            ScrollSpeed = Configuration.ScrollSpeed / 20f; //todo: balance curve
+
             //Initialize Track
             int i;
             TrackPosition = (ulong)(-Timing.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
@@ -93,7 +97,7 @@ namespace Quaver.Gameplay
                 }
 
                 //Initialize Object and add it to HitObjectPool
-                if (i < HitObjectPoolSize) newObject.Initialize();
+                if (i < HitObjectPoolSize) newObject.Initialize(Config.Configuration.DownScroll);
                 HitObjectPool.Add(newObject);
             }
 
@@ -133,7 +137,7 @@ namespace Quaver.Gameplay
                 {
                     // Set new hit object position with the current x, and a new y
                     HitObjectPool[i].HitObjectPositionY = PosFromOffset(HitObjectPool[i].OffsetFromReceptor);
-                    HitObjectPool[i].Update();
+                    HitObjectPool[i].Update(Config.Configuration.DownScroll);
                 }
             }
 
@@ -167,7 +171,7 @@ namespace Quaver.Gameplay
                     }
 
                     //Update HitObject
-                    HitObjectHold[i].Update();
+                    HitObjectHold[i].Update(Config.Configuration.DownScroll);
                 }
             }
 
@@ -183,7 +187,7 @@ namespace Quaver.Gameplay
                 else
                 {
                     HitObjectDead[i].HitObjectPositionY = PosFromOffset(HitObjectDead[i].OffsetFromReceptor);
-                    HitObjectDead[i].Update();
+                    HitObjectDead[i].Update(Config.Configuration.DownScroll);
                 }
             }
 
@@ -289,7 +293,7 @@ namespace Quaver.Gameplay
             HitObjectPool.RemoveAt(index);
 
             //Initialize the new HitObject (create the hit object sprites)
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize();
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll);
         }
 
         /// <summary>
@@ -328,7 +332,7 @@ namespace Quaver.Gameplay
             HitObjectPool.RemoveAt(index);
 
             //Initialize the new HitObject (create the hit object sprites)
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize();
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll);
         }
 
         /// <summary>
@@ -342,7 +346,7 @@ namespace Quaver.Gameplay
             HitObjectPool.RemoveAt(index);
 
             //Initialize the new HitObject (create the hit object sprites)
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize();
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll);
         }
     }
 }
