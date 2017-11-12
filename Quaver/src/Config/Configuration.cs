@@ -36,7 +36,7 @@ namespace Quaver.Config
         /// <summary>
         ///     The dim for backgrounds during gameplay
         /// </summary>
-        private static byte _backgroundDim;
+        private static byte _backgroundBrightness = 100;
 
         /// <summary>
         ///     The height of the window.
@@ -339,12 +339,12 @@ namespace Quaver.Config
             }
         }
 
-        internal static byte BackgroundDim
+        internal static byte BackgroundBrightness
         {
-            get => _backgroundDim;
+            get => _backgroundBrightness;
             set
             {
-                _backgroundDim = value;
+                _backgroundBrightness = value;
                 Task.Run(async () => await WriteConfigFileAsync());
             }
         }
@@ -749,7 +749,7 @@ namespace Quaver.Config
             _volumeGlobal = ConfigHelper.ReadPercentage(VolumeGlobal, data["VolumeGlobal"]);
             _volumeEffect = ConfigHelper.ReadPercentage(VolumeEffect, data["VolumeEffect"]);
             _volumeMusic = ConfigHelper.ReadPercentage(VolumeMusic, data["VolumeMusic"]);
-            _backgroundDim = ConfigHelper.ReadPercentage(BackgroundDim, data["BackgroundDim"]);
+            _backgroundBrightness = ConfigHelper.ReadPercentage(BackgroundBrightness, data["BackgroundBrightness"]);
             _windowHeight = ConfigHelper.ReadInt32(WindowHeight, data["WindowHeight"]);
             _windowWidth = ConfigHelper.ReadInt32(WindowWidth, data["WindowWidth"]);
             _windowFullScreen = ConfigHelper.ReadBool(WindowFullScreen, data["WindowFullScreen"]);
