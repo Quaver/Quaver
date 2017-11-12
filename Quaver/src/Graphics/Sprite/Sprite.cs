@@ -23,10 +23,23 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         public Texture2D Image { get; set; }
 
+
         /// <summary>
         ///     Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
         /// </summary>
-        public float Rotation { get; set; }
+        public float Rotation {
+            get
+            {
+                return _rotation;
+                
+            }
+            set
+            {
+                _rotation = value;
+                Changed = true;
+            } 
+        }
+        private float _rotation = 25;
 
         // Ctor
         public Sprite()
@@ -41,9 +54,9 @@ namespace Quaver.Graphics.Sprite
         public override void Draw()
         {
             //Draw itself if it is in the window
+            //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             if (GameBase.Window.Intersects(GlobalRect) && Visible)
-            GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
-
+            GameBase.SpriteBatch.Draw(Image, GlobalRect, null, Color.White, _rotation, Vector2.Zero, SpriteEffects.None, 0f);
             //Draw children
             Children.ForEach(x => x.Draw());
         }
