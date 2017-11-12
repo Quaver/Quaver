@@ -87,6 +87,9 @@ namespace Quaver.Graphics
         /// <param name="newBG"></param>
         public static void Change(Texture2D newBG)
         {
+            if (newBG == null)
+                return;
+
             Background.Image = newBG;
             CurrentColor = Vector3.Zero;
         }
