@@ -56,8 +56,8 @@ namespace Quaver.Skins
         /// </summary>
         internal bool CursorExpand { get; set; } = true;
 
-        internal int BgMaskBufferSize { get; set; } = 12;
-        internal int NoteBufferSpacing { get; set; } = 1;
+        internal int BgMaskPadding { get; set; } = 12;
+        internal int NotePadding { get; set; } = 1;
         internal int TimingBarPixelSize { get; set; } = 2;
         internal float HitLightingScale { get; set; } = 4.0f;
 
@@ -349,8 +349,8 @@ namespace Quaver.Skins
             CursorRotate = ConfigHelper.ReadBool(CursorRotate, data["Cursor"]["CursorRotate"]);
             CursorTrailRotate = ConfigHelper.ReadBool(CursorTrailRotate, data["Cursor"]["CursorTrailRotate"]);
             CursorExpand = ConfigHelper.ReadBool(CursorExpand, data["Cursor"]["CursorExpand"]);
-            BgMaskBufferSize = ConfigHelper.ReadInt32(BgMaskBufferSize, data["Gameplay"]["BgMaskBufferSize"]);
-            NoteBufferSpacing = ConfigHelper.ReadInt32(NoteBufferSpacing, data["Gameplay"]["NoteBufferSpacing"]);
+            BgMaskPadding = ConfigHelper.ReadInt32(BgMaskPadding, data["Gameplay"]["BgMaskPadding"]);
+            NotePadding = ConfigHelper.ReadInt32(NotePadding, data["Gameplay"]["NotePadding"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, data["Gameplay"]["TimingBarPixelSize"]);
             HitLightingScale = ConfigHelper.ReadFloat(HitLightingScale, data["Gameplay"]["HitLightingScale"]);
             ColumnSize = ConfigHelper.ReadInt32(ColumnSize, data["Gameplay"]["ColumnSize"]);
