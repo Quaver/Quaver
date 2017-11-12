@@ -210,6 +210,23 @@ namespace Quaver.Graphics
         /// </summary>
         public void RecalculateRect()
         {
+            //Calculate Scale
+            if (_parent != null)
+            {
+                _scaleSize.X = _parent._globalRect.Width * _scalePercent.X;
+                _scaleSize.Y = _parent._globalRect.Height * _scalePercent.Y;
+            }
+            else
+            {
+                _scaleSize.X = GameBase.Window.Width * _scalePercent.X;
+                _scaleSize.Y = GameBase.Window.Height * _scalePercent.Y;
+            }
+            _absoluteSize.X = _localSize.X + _scaleSize.X;
+            _absoluteSize.Y = _localSize.Y + _scaleSize.Y;
+            _localRect.Width = (int)_absoluteSize.X;
+            _localRect.Height = (int)_absoluteSize.Y;
+
+            //Update Global Rect
             if (_parent != null)
                 _globalRect = Util.DrawRect(Alignment, _localRect, Parent._globalRect);
             else
@@ -231,21 +248,6 @@ namespace Quaver.Graphics
         /// </summary>
         private void SetLocalSize()
         {
-            if (Parent != null)
-            {
-                _scaleSize.X = _parent._globalRect.Width * _scalePercent.X;
-                _scaleSize.Y = _parent._globalRect.Height * _scalePercent.Y;
-            }
-            else
-            {
-                _scaleSize.X = GameBase.Window.Width * _scalePercent.X;
-                _scaleSize.Y = GameBase.Window.Height * _scalePercent.Y;
-            }
-            _absoluteSize.X = _localSize.X + _scaleSize.X;
-            _absoluteSize.Y = _localSize.Y + _scaleSize.Y;
-
-            _localRect.Width = (int)_absoluteSize.X;
-            _localRect.Height = (int)_absoluteSize.Y;
             Changed = true;
         }
 

@@ -80,7 +80,7 @@ namespace Quaver.Gameplay
             {
                 Image = GameBase.LoadedSkin.ColumnBgMask,
                 Parent = Boundary,
-                Size = Boundary.Size,
+                Scale = Vector2.One
             };
 
             // Create Receptors
