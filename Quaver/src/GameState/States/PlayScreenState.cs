@@ -67,7 +67,8 @@ namespace Quaver.GameState.States
         public void Initialize()
         {
             // Update Discord Presence
-            GameBase.ChangeDiscordPresence($"Playing: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
+            GameBase.ChangeDiscordPresence($"Playing: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} " +
+                                           $"[{GameBase.SelectedBeatmap.DifficultyName}]");
 
             //Todo: Remove. Create loggers
             LogManager.AddLogger("KeyCount", Color.Pink);

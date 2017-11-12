@@ -64,7 +64,7 @@ namespace Quaver.Skins
         /// <summary>
         /// Size of each lane in pixels.
         /// </summary>
-        internal int ColumnSize { get; set; } = 250;
+        internal int ColumnSize { get; set; } = 100;
 
         /// <summary>
         /// The offset of the hit receptor
