@@ -76,7 +76,7 @@ namespace Quaver.Main
         /// <summary>
         ///     The reference resolution for UI and game elements
         /// </summary>
-        public static Vector2 ReferenceResolution { get; set; } = new Vector2(1280,720);
+        public static Vector2 ReferenceResolution { get; } = new Vector2(1280,720);
 
         /// <summary>
         ///     The game's clock. Essentially it controls which speed songs are played at.
