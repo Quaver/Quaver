@@ -64,8 +64,20 @@ namespace Quaver.Peppy
                 var newMap = GameBase.Beatmaps.Where(x => !oldMaps.ContainsKey(x.Key))
                     .ToDictionary(x => x.Key, x => x.Value);
 
-                // If a new map was successfully loaded, 
-                if (newMap.Count > 0)
+                // In the event that the user imports maps when there weren't any maps previously.
+               if (oldMaps.Count == 0)
+                {
+                    BeatmapUtils.SelectRandomBeatmap();
+
+                    if (GameBase.SelectedBeatmap != null)
+                    {
+                        GameBase.SelectedBeatmap.LoadAudio();
+
+                        if (GameBase.SelectedBeatmap.Song != null)
+                            GameBase.SelectedBeatmap.Song.Play();
+                    }
+                }
+                else if (newMap.Count > 0)
                 {
                     var map = newMap.Values.Last().Last();
 
