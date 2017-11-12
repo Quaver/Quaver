@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
+using Quaver.Main;
 
-namespace Quaver.Main
+namespace Quaver.Graphics
 {
     class BackgroundManager
     {
@@ -18,6 +19,7 @@ namespace Quaver.Main
             {
                 SizeX = GameBase.Window.Size.X,
                 SizeY = GameBase.Window.Size.Y,
+                Alignment = Alignment.MidCenter,
                 Image = GameBase.LoadedSkin.NoteHitObject1
             };
         }
@@ -39,6 +41,7 @@ namespace Quaver.Main
 
         public static void Draw()
         {
+            Console.WriteLine(Background.GlobalRect);
             Background.Draw();
         }
 
