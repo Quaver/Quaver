@@ -18,16 +18,17 @@ namespace Quaver.Graphics
         {
             Background = new Sprite()
             {
-                SizeX = GameBase.Window.X,
-                SizeY = GameBase.Window.Y,
+                SizeX = GameBase.Window.Width,
+                SizeY = GameBase.Window.Height,
                 Alignment = Alignment.MidCenter,
-                Image = GameBase.LoadedSkin.NoteHitObject1
+                Image = GameBase.UI.DiffSelectMask,
+                Tint = Color.Gray
             };
         }
 
         public static void UnloadContent()
         {
-            
+            Background.Destroy();
         }
 
         public static void Update(double dt)
@@ -42,7 +43,6 @@ namespace Quaver.Graphics
 
         public static void Draw()
         {
-            Console.WriteLine(Background.GlobalRect);
             Background.Draw();
         }
 

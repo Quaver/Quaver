@@ -102,6 +102,7 @@ namespace Quaver.GameState
         {
             LogManager.UpdateLogger("MapSelected","Map Selected: "+text);
 
+            //BackgroundManager.Change(map.Background);
             GameBase.ChangeBeatmap(map);
             GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
 

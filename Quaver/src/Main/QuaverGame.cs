@@ -181,7 +181,7 @@ namespace Quaver.Main
             GameBase.GraphicsDevice.Clear(Color.Black);
 
             // Draw Background
-            //BackgroundManager.Draw();
+            BackgroundManager.Draw();
 
             // Draw the game states
             GameStateManager.Instance.Draw();
@@ -195,9 +195,6 @@ namespace Quaver.Main
 
             //Draw cursor
             GameBase.Cursor.Draw();
-
-            // TODO: remove. Draw Background
-            BackgroundManager.Draw();
 
             // Draw everything else in the base class
             base.Draw(gameTime);
