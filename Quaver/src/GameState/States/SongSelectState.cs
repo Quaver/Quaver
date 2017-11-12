@@ -13,6 +13,7 @@ using Quaver.Discord;
 using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
+using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Main;
 
