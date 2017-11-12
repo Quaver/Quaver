@@ -24,7 +24,7 @@ namespace Quaver.Graphics
             SizeX = GameBase.Window.Width;
             SizeY = GameBase.Window.Height;
             PositionX = GameBase.Window.X;
-            PositionY = GameBase.Window.Y;
+            PositionY = GameBase.Window.Y;s
         }
     }
 }
