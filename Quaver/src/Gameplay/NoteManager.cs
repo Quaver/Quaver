@@ -53,8 +53,8 @@ namespace Quaver.Gameplay
                         {
                             //Score manager stuff
                             //TODO: proper judge display
-                            NoteRendering.judgeSprite.Text = "PRESS "+TimingNames[i];
-                            NoteRendering.judgeSprite.TextColor = TimingColors[i];
+                            Playfield.judgeSprite.Text = "PRESS "+TimingNames[i];
+                            Playfield.judgeSprite.TextColor = TimingColors[i];
                             //LogManager.QuickLog("NOTE INDEX: PRESS "+ noteIndex + ", "+TimingNames[i], TimingColors[i], 0.5f);
                             ScoreManager.Count(i, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime);
 
@@ -106,8 +106,8 @@ namespace Quaver.Gameplay
                     {
                         //TODO: proper judge display
                         //LogManager.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", " + TimingNames[releaseTiming], TimingColors[releaseTiming], 0.5f);
-                        NoteRendering.judgeSprite.Text = "RELEASE "+TimingNames[releaseTiming];
-                        NoteRendering.judgeSprite.TextColor = TimingColors[releaseTiming];
+                        Playfield.judgeSprite.Text = "RELEASE "+TimingNames[releaseTiming];
+                        Playfield.judgeSprite.TextColor = TimingColors[releaseTiming];
                         ScoreManager.Count(i);
                         NoteRendering.KillHold(noteIndex,true);
                     }
@@ -116,8 +116,8 @@ namespace Quaver.Gameplay
                     {
                         //TODO: proper judge display
                         //LogManager.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", EARLY", TimingColors[4], 0.5f);
-                        NoteRendering.judgeSprite.Text = "RELEASE "+TimingNames[4];
-                        NoteRendering.judgeSprite.TextColor = TimingColors[4];
+                        Playfield.judgeSprite.Text = "RELEASE "+TimingNames[4];
+                        Playfield.judgeSprite.TextColor = TimingColors[4];
                         ScoreManager.Count(3);
                         NoteRendering.KillHold(noteIndex);
                     }
