@@ -115,6 +115,7 @@
     <Compile Include="src\GameState\States\MapImportLoadingState.cs" />
     <Compile Include="src\Graphics\Button\TextButton.cs" />
     <Compile Include="src\Graphics\Button\BasicButton.cs" />
+    <Compile Include="src\Graphics\Sprite\Boundary.cs" />
     <Compile Include="src\Graphics\Text\Fonts.cs" />
     <Compile Include="src\Graphics\Text\TextBoxSprite.cs" />
     <Compile Include="src\Graphics\UI.cs" />
@@ -131,7 +132,6 @@
     <Compile Include="src\GameState\States\PlayScreenState.cs" />
     <Compile Include="src\GameState\IGameState.cs" />
     <Compile Include="src\GameState\States\SongLoadingState.cs" />
-    <Compile Include="src\Graphics\Boundary.cs" />
     <Compile Include="src\Graphics\Button\Button.cs" />
     <Compile Include="src\Input\GameplayInputManager.cs" />
     <Compile Include="src\Input\GlobalInputManager.cs" />
