@@ -15,6 +15,7 @@ using Quaver.Config;
 using Quaver.Discord;
 using Quaver.Graphics;
 using Quaver.Modifiers;
+using Quaver.Utility;
 
 namespace Quaver.Main
 {
@@ -69,14 +70,16 @@ namespace Quaver.Main
         public static ContentManager Content { get; set; }
 
         /// <summary>
+        ///     The reference resolution for UI and game elements
+        /// </summary>
+        public static Vector2 ReferenceResolution { get; } = new Vector2(1280, 720);
+
+        /// <summary>
         ///     The rectangle this game will be rendered onto
         /// </summary>
         public static Rectangle Window { get; set; } = new Rectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight); //TODO: Automatically set this rectangle as windoow size
 
-        /// <summary>
-        ///     The reference resolution for UI and game elements
-        /// </summary>
-        public static Vector2 ReferenceResolution { get; } = new Vector2(1280,720);
+        public static double WindowYRatio { get; set; } = Window.Height / ReferenceResolution.Y;
 
         /// <summary>
         ///     The game's clock. Essentially it controls which speed songs are played at.
@@ -124,6 +127,15 @@ namespace Quaver.Main
         ///     default skin
         /// </summary>
         public static UI UI { get; set; } = new UI();
+
+        public static void UpdateWindow(Point newSize)
+        {
+            Window = new Rectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight);
+            Rectangle mainWindow = GraphicsDevice.PresentationParameters.Bounds;
+
+            Window = Util.DrawRect(Alignment.MidCenter, Window, mainWindow);
+            WindowYRatio = Window.Height / ReferenceResolution.Y;
+        }
 
         /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.
