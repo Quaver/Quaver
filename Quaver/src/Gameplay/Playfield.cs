@@ -139,6 +139,7 @@ namespace Quaver.Gameplay
                 Size = new Vector2(200, 50),
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.MidCenter,
+                Textwrap = false,
                 Parent = BoundaryOver
             };
         }
@@ -181,6 +182,7 @@ namespace Quaver.Gameplay
 
             //Update Playfield + Children
             BoundaryUnder.Update(dt);
+            BoundaryOver.Update(dt);
         }
 
         /// <summary>

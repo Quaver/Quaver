@@ -275,7 +275,6 @@
     <None Include="app.manifest" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Resource1.resx" />
-    <EmbeddedResource Include="Resources\Fonts\test.xnb" />
     <EmbeddedResource Include="Resources\Fonts\testFont.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\column-bgmask.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\column-hitlighting.xnb" />
@@ -306,8 +305,11 @@
     <EmbeddedResource Include="Resources\UI\hollow-box.xnb" />
     <None Include="RalewayBold.xnb" />
     <None Include="RalewayMedium.xnb" />
-    <None Include="Resources\Fonts\RalewayBold.xnb" />
-    <None Include="Resources\Fonts\RalewayMedium.xnb" />
+    <None Include="Resources\Fonts\Bold12.xnb" />
+    <None Include="Resources\Fonts\Medium12.xnb" />
+    <None Include="Resources\Fonts\Medium16.xnb" />
+    <None Include="Resources\Fonts\Medium24.xnb" />
+    <None Include="Resources\Fonts\Medium48.xnb" />
     <None Include="x64\libbass.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
