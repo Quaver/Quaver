@@ -131,7 +131,7 @@
     <Compile Include="src\GameState\States\PlayScreenState.cs" />
     <Compile Include="src\GameState\IGameState.cs" />
     <Compile Include="src\GameState\States\SongLoadingState.cs" />
-    <Compile Include="src\Graphics\Boundary.cs" />
+    <Compile Include="src\Graphics\Sprite\Boundary.cs" />
     <Compile Include="src\Graphics\Button\Button.cs" />
     <Compile Include="src\Input\GameplayInputManager.cs" />
     <Compile Include="src\Input\GlobalInputManager.cs" />
