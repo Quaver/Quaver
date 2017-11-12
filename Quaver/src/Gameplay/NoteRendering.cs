@@ -118,9 +118,6 @@ namespace Quaver.Gameplay
                 if (Timing.CurrentSongTime > HitObjectPool[i].StartTime + ScoreManager.HitWindow[4])
                 {
                     //Track note miss with ScoreManager
-                    //todo: proper judge display
-                    Playfield.judgeSprite.Text = "PRESS MISS";
-                    Playfield.judgeSprite.TextColor = Color.Red;
                     //LogManager.QuickLog("NOTE INDEX: MISSED NOTE " + (HitObjectPool[i].KeyLane - 1), Color.IndianRed, 0.5f);
                     ScoreManager.Count(5);
 
@@ -147,10 +144,7 @@ namespace Quaver.Gameplay
                 if (Timing.CurrentSongTime > HitObjectHold[i].EndTime + ScoreManager.HitWindow[4])
                 {
                     //Track LN late release with ScoreManager
-                    //todo: proper judge display
-                    Playfield.judgeSprite.Text = "RELEASE MISS";
-                    Playfield.judgeSprite.TextColor = Color.Red;
-                    ScoreManager.Count(5);
+                    ScoreManager.Count(5,true);
 
                     //Remove from LN Queue
                     HitObjectHold[i].Destroy();
