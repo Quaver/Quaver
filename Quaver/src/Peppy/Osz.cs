@@ -45,10 +45,13 @@ namespace Quaver.Peppy
             // Proceed to extract and convert the map, show loading screen.
             GameStateManager.Instance.AddState(new MapImportLoadingState());
 
+            // Run the converter for all file names
             Task.Run(() =>
             {
                 foreach (var fileName in openFileDialog.FileNames)
                     ConvertOsz(fileName);
+
+            // When all the maps have been converted, select the last imported map and make that the selected one.
             }).ContinueWith(async t =>
             {
                 // Update the selected beatmap with the new one.
