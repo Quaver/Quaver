@@ -58,9 +58,6 @@ namespace Quaver.Gameplay
         /// </summary>
         public static Boundary Boundary { get; set; }
 
-        //Todo: temp
-        public static TextBoxSprite judgeSprite;
-
         /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
         /// </summary>
@@ -102,15 +99,6 @@ namespace Quaver.Gameplay
                     Parent = Boundary
                 };
             }
-
-            //todo: Temp.
-            judgeSprite = new TextBoxSprite()
-            {
-                Size = new Vector2(600, 50),
-                Alignment = Alignment.MidCenter,
-                TextAlignment = Alignment.MidCenter,
-                Parent = Boundary
-            };
         }
 
         /// <summary>

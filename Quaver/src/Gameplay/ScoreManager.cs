@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Logging;
 
 namespace Quaver.Gameplay
 {
@@ -37,7 +38,7 @@ namespace Quaver.Gameplay
         /// <param name="offset"></param>
         public static void Count(int index, double? offset=null)
         {
-            //U[date Judge Spread
+            //Update Judge Spread
             JudgeSpread[index]++;
             JudgeCount++;
 
@@ -66,6 +67,10 @@ namespace Quaver.Gameplay
             }
 
             //Update Score
+
+            //log scores
+            if (index < 5)
+            LogManager.UpdateLogger(NoteManager.TimingNames[index], NoteManager.TimingNames[index]+": "+ JudgeSpread[index]);
 
         }
 

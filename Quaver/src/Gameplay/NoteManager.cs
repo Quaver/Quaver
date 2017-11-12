@@ -17,7 +17,7 @@ namespace Quaver.Gameplay
         internal static string[] TimingNames { get; } = new string[5]{"MARV","PERF","GREAT","GOOD","BAD"};
 
         //Temp
-        private static Color[] TimingColors { get;  } = new Color[5]{Color.White,Color.LightBlue,Color.LightGreen,Color.Yellow,Color.Magenta};
+        internal static Color[] TimingColors { get;  } = new Color[5]{Color.White,Color.LightBlue,Color.LightGreen,Color.Yellow,Color.Magenta};
 
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace Quaver.Gameplay
                         {
                             //Score manager stuff
                             //TODO: proper judge display
-                            Playfield.judgeSprite.Text = "PRESS "+TimingNames[i];
-                            Playfield.judgeSprite.TextColor = TimingColors[i];
+                            NoteRendering.judgeSprite.Text = "PRESS "+TimingNames[i];
+                            NoteRendering.judgeSprite.TextColor = TimingColors[i];
                             //LogManager.QuickLog("NOTE INDEX: PRESS "+ noteIndex + ", "+TimingNames[i], TimingColors[i], 0.5f);
                             ScoreManager.Count(i, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime);
 
@@ -106,8 +106,8 @@ namespace Quaver.Gameplay
                     {
                         //TODO: proper judge display
                         //LogManager.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", " + TimingNames[releaseTiming], TimingColors[releaseTiming], 0.5f);
-                        Playfield.judgeSprite.Text = "RELEASE "+TimingNames[releaseTiming];
-                        Playfield.judgeSprite.TextColor = TimingColors[releaseTiming];
+                        NoteRendering.judgeSprite.Text = "RELEASE "+TimingNames[releaseTiming];
+                        NoteRendering.judgeSprite.TextColor = TimingColors[releaseTiming];
                         ScoreManager.Count(i);
                         NoteRendering.KillHold(noteIndex,true);
                     }
@@ -116,8 +116,8 @@ namespace Quaver.Gameplay
                     {
                         //TODO: proper judge display
                         //LogManager.QuickLog("NOTE INDEX: RELEASE " + noteIndex + ", EARLY", TimingColors[4], 0.5f);
-                        Playfield.judgeSprite.Text = "RELEASE "+TimingNames[4];
-                        Playfield.judgeSprite.TextColor = TimingColors[4];
+                        NoteRendering.judgeSprite.Text = "RELEASE "+TimingNames[4];
+                        NoteRendering.judgeSprite.TextColor = TimingColors[4];
                         ScoreManager.Count(3);
                         NoteRendering.KillHold(noteIndex);
                     }

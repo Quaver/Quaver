@@ -42,6 +42,9 @@ namespace Quaver.Gameplay
         private static float ScrollNegativeFactor { get; set; } = 1f;
         private static float ScrollSpeed { get; set; } = Configuration.ScrollSpeed / 20f; //TODO: Add scroll speed curve
 
+        //TODO: temp
+        public static TextBoxSprite judgeSprite;
+
         /// <summary>
         /// Initalize any HitObject related content. 
         /// </summary>
@@ -95,6 +98,15 @@ namespace Quaver.Gameplay
                 if (i < HitObjectPoolSize) newObject.Initialize();
                 HitObjectPool.Add(newObject);
             }
+
+            //todo: Temp.
+            judgeSprite = new TextBoxSprite()
+            {
+                Size = new Vector2(200, 50),
+                Alignment = Alignment.MidCenter,
+                TextAlignment = Alignment.MidCenter,
+                Parent = Boundary
+            };
             Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: Done Loading Hitobjects.");
         }
 
@@ -116,7 +128,10 @@ namespace Quaver.Gameplay
                 if (Timing.CurrentSongTime > HitObjectPool[i].StartTime + ScoreManager.HitWindow[4])
                 {
                     //Track note miss with ScoreManager
-                    LogManager.QuickLog("NOTE INDEX: MISSED NOTE " + (HitObjectPool[i].KeyLane - 1), Color.IndianRed, 0.5f);
+                    //todo: proper judge display
+                    judgeSprite.Text = "PRESS MISS";
+                    judgeSprite.TextColor = Color.Red;
+                    //LogManager.QuickLog("NOTE INDEX: MISSED NOTE " + (HitObjectPool[i].KeyLane - 1), Color.IndianRed, 0.5f);
                     ScoreManager.Count(5);
 
                     //If HitObject is an LN, kill it
@@ -142,7 +157,9 @@ namespace Quaver.Gameplay
                 if (Timing.CurrentSongTime > HitObjectHold[i].EndTime + ScoreManager.HitWindow[4])
                 {
                     //Track LN late release with ScoreManager
-                    LogManager.QuickLog("NOTE INDEX: LATE RELEASE " + (HitObjectHold[i].KeyLane - 1), Color.DarkRed, 0.5f);
+                    //todo: proper judge display
+                    judgeSprite.Text = "RELEASE MISS";
+                    judgeSprite.TextColor = Color.Red;
                     ScoreManager.Count(5);
 
                     //Remove from LN Queue
