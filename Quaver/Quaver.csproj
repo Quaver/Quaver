@@ -115,7 +115,8 @@
     <Compile Include="src\GameState\States\MapImportLoadingState.cs" />
     <Compile Include="src\Graphics\Button\TextButton.cs" />
     <Compile Include="src\Graphics\Button\BasicButton.cs" />
-    <Compile Include="src\Graphics\Sprite\TextBoxSprite.cs" />
+    <Compile Include="src\Graphics\Text\Fonts.cs" />
+    <Compile Include="src\Graphics\Text\TextBoxSprite.cs" />
     <Compile Include="src\Graphics\UI.cs" />
     <Compile Include="src\Graphics\Sprite\BackgroundManager.cs" />
     <Compile Include="src\Peppy\Osz.cs" />
