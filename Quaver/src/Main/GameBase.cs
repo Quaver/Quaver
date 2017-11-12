@@ -74,6 +74,11 @@ namespace Quaver.Main
         public static Rectangle Window { get; set; } = new Rectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight); //TODO: Automatically set this rectangle as windoow size
 
         /// <summary>
+        ///     The reference resolution for UI and game elements
+        /// </summary>
+        public static Vector2 ReferenceResolution { get; set; } = new Vector2(1280,720);
+
+        /// <summary>
         ///     The game's clock. Essentially it controls which speed songs are played at.
         /// </summary>
         public static float GameClock { get; set; } = 1.0f;
