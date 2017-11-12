@@ -91,9 +91,22 @@ namespace Quaver.Graphics
             if (newBG == null)
                 return;
 
+            //Update Image
             Background.Image = newBG;
-            CurrentColor = Vector3.Zero;
 
+            //Update Background Image Resolution
+            var bgYRatio = ((float)newBG.Height / newBG.Width) / ((float)GameBase.Window.Height / GameBase.Window.Width);
+            if (bgYRatio > 1)
+            {
+                Background.Size = new Vector2(newBG.Width, newBG.Height) * ((float)GameBase.Window.Width / newBG.Width);
+            }
+            else
+            {
+                Background.Size = new Vector2(newBG.Width, newBG.Height) * ((float)GameBase.Window.Height / newBG.Height);
+            }
+
+            //Update Background Color
+            CurrentColor = Vector3.Zero;
             Brightness = 1 - (Configuration.BackgroundDim/255);
             TargetColor = Vector3.One * Brightness;
         }
