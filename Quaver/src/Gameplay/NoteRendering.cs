@@ -42,9 +42,6 @@ namespace Quaver.Gameplay
         private static float ScrollNegativeFactor { get; set; } = 1f;
         private static float ScrollSpeed { get; set; } = Configuration.ScrollSpeed / 20f; //TODO: Add scroll speed curve
 
-        //TODO: temp
-        public static TextBoxSprite judgeSprite;
-
         /// <summary>
         /// Initalize any HitObject related content. 
         /// </summary>
@@ -99,14 +96,6 @@ namespace Quaver.Gameplay
                 HitObjectPool.Add(newObject);
             }
 
-            //todo: Temp.
-            judgeSprite = new TextBoxSprite()
-            {
-                Size = new Vector2(200, 50),
-                Alignment = Alignment.MidCenter,
-                TextAlignment = Alignment.MidCenter,
-                Parent = Boundary
-            };
             Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: Done Loading Hitobjects.");
         }
 
@@ -129,8 +118,8 @@ namespace Quaver.Gameplay
                 {
                     //Track note miss with ScoreManager
                     //todo: proper judge display
-                    judgeSprite.Text = "PRESS MISS";
-                    judgeSprite.TextColor = Color.Red;
+                    Playfield.judgeSprite.Text = "PRESS MISS";
+                    Playfield.judgeSprite.TextColor = Color.Red;
                     //LogManager.QuickLog("NOTE INDEX: MISSED NOTE " + (HitObjectPool[i].KeyLane - 1), Color.IndianRed, 0.5f);
                     ScoreManager.Count(5);
 
@@ -158,8 +147,8 @@ namespace Quaver.Gameplay
                 {
                     //Track LN late release with ScoreManager
                     //todo: proper judge display
-                    judgeSprite.Text = "RELEASE MISS";
-                    judgeSprite.TextColor = Color.Red;
+                    Playfield.judgeSprite.Text = "RELEASE MISS";
+                    Playfield.judgeSprite.TextColor = Color.Red;
                     ScoreManager.Count(5);
 
                     //Remove from LN Queue

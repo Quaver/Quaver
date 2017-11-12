@@ -65,7 +65,13 @@ namespace Quaver.Gameplay
         /// </summary>
         public static Boundary BoundaryOver { get; set; }
 
+        /// <summary>
+        ///     The background mask of the playfield.
+        /// </summary>
         public static Sprite BgMask { get; set; }
+
+        //TODO: temp
+        public static TextBoxSprite judgeSprite;
 
         /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
@@ -126,6 +132,15 @@ namespace Quaver.Gameplay
                     Parent = BoundaryUnder
                 };
             }
+
+            //todo: Temp.
+            judgeSprite = new TextBoxSprite()
+            {
+                Size = new Vector2(200, 50),
+                Alignment = Alignment.MidCenter,
+                TextAlignment = Alignment.MidCenter,
+                Parent = BoundaryOver
+            };
         }
 
         /// <summary>
