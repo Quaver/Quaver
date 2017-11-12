@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
@@ -72,8 +73,12 @@ namespace Quaver.Gameplay
         /// </summary>
         public static Sprite BgMask { get; set; }
 
-        //TODO: temp
-        public static TextBoxSprite judgeSprite;
+        /// <summary>
+        ///     This displays the judging (MARV/PERF/GREAT/ect)
+        /// </summary>
+        public static Sprite JudgeSprite { get; set; }
+
+        public static Texture2D[] JudgeImages { get; set; }
 
         /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
@@ -135,14 +140,25 @@ namespace Quaver.Gameplay
                 };
             }
 
-            //todo: Temp.
-            judgeSprite = new TextBoxSprite()
+            // Create Judge Sprite/References
+            JudgeImages = new Texture2D[6]
             {
-                Size = new Vector2(200, 50),
+                GameBase.LoadedSkin.JudgeMarv,
+                GameBase.LoadedSkin.JudgePerfect,
+                GameBase.LoadedSkin.JudgeGreat,
+                GameBase.LoadedSkin.JudgeGood,
+                GameBase.LoadedSkin.JudgeBad,
+                GameBase.LoadedSkin.JudgeMiss
+            };
+
+            //TODO: add judge scale
+            //var size = new Vector2(GameBase.LoadedSkin.JudgeMiss.Width, GameBase.LoadedSkin.JudgeMiss.Height)*(float)GameBase.WindowYRatio;
+            var size = new Vector2(JudgeImages[0].Width, JudgeImages[0].Height) * (float)GameBase.WindowYRatio * 0.5f;
+            JudgeSprite = new Sprite()
+            {
+                Size = size,
                 Alignment = Alignment.MidCenter,
-                TextAlignment = Alignment.MidCenter,
-                Font = Fonts.Medium24,
-                Textwrap = false,
+                Image = GameBase.LoadedSkin.JudgeMiss,
                 Parent = BoundaryOver
             };
         }
@@ -194,6 +210,14 @@ namespace Quaver.Gameplay
         public static void UnloadContent()
         {
             BoundaryUnder.Destroy();
+        }
+
+        public static void UpdateJudge(int index)
+        {
+            //TODO: add judge scale
+            var size = new Vector2(JudgeImages[index].Width, JudgeImages[index].Height) * (float)GameBase.WindowYRatio * 0.5f;
+            JudgeSprite.Image = JudgeImages[index];
+            JudgeSprite.Size = size;
         }
 
         /// <summary>

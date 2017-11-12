@@ -36,7 +36,7 @@ namespace Quaver.Gameplay
         /// </summary>
         /// <param name="index"></param>
         /// <param name="offset"></param>
-        public static void Count(int index, double? offset=null)
+        public static void Count(int index, bool release = false, double? offset=null)
         {
             //Update Judge Spread
             JudgeSpread[index]++;
@@ -71,6 +71,9 @@ namespace Quaver.Gameplay
             //log scores
             if (index < 5)
             LogManager.UpdateLogger(NoteManager.TimingNames[index], NoteManager.TimingNames[index]+": "+ JudgeSpread[index]);
+
+            //Display stuff
+            Playfield.UpdateJudge(index);
 
         }
 
