@@ -91,6 +91,9 @@ namespace Quaver.GameState.States
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
             Boundary.Update(dt);
+
+            // Repeat the song preview if necessary
+            RepeatSongPreview();;
         }
 
         public void Draw()
@@ -108,19 +111,8 @@ namespace Quaver.GameState.States
             GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
 
             // Load background asynchronously.
-            Task.Run(() =>
-            {
-                GameBase.SelectedBeatmap.LoadBackground();
-            }).ContinueWith(t => BackgroundManager.Change(GameBase.SelectedBeatmap.Background));
-
-
-
-
-            // Stop the selected song since it's only played during the main menu.
-            //GameBase.SelectedBeatmap.Song.Stop();
-
-            //Change to SongSelectState
-            //GameStateManager.Instance.AddState(new SongSelectState());
+            Task.Run(() => GameBase.SelectedBeatmap.LoadBackground())
+                .ContinueWith(t => BackgroundManager.Change(GameBase.SelectedBeatmap.Background));
         }
 
         //TODO: Remove
@@ -128,6 +120,18 @@ namespace Quaver.GameState.States
         {
             GameBase.SelectedBeatmap.Song.Stop();
             GameStateManager.Instance.ChangeState(new SongLoadingState());
+        }
+
+        /// <summary>
+        ///     Responsible for repeating the song preview in song select once the song is over.
+        /// </summary>
+        private void RepeatSongPreview()
+        {
+            if (GameBase.SelectedBeatmap.Song.GetAudioPosition() < GameBase.SelectedBeatmap.Song.GetAudioLength())
+                return;
+
+            GameBase.SelectedBeatmap.LoadAudio();
+            GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
         }
     }
 }
