@@ -15,7 +15,7 @@ namespace Quaver.Graphics.Button
     /// <summary>
     /// This class will be inherited from every button class.
     /// </summary>
-    internal abstract class Button : Sprite
+    internal abstract class Button : Sprite.Sprite
     {
         /// <summary>
         ///     Used to detect when the user hovers over the button so the MouseOver() and MouseOut() methods get called only once.
