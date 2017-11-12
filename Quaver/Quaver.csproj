@@ -304,6 +304,10 @@
     <EmbeddedResource Include="Resources\UI\set-select-mask.xnb" />
     <EmbeddedResource Include="Resources\UI\blank-box.xnb" />
     <EmbeddedResource Include="Resources\UI\hollow-box.xnb" />
+    <None Include="RalewayBold.xnb" />
+    <None Include="RalewayMedium.xnb" />
+    <None Include="Resources\Fonts\RalewayBold.xnb" />
+    <None Include="Resources\Fonts\RalewayMedium.xnb" />
     <None Include="x64\libbass.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
