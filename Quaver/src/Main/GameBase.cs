@@ -182,9 +182,24 @@ namespace Quaver.Main
         ///     Responsible for changing the discord rich presence.
         /// </summary>
         /// <param name="details"></param>
-        public static void ChangeDiscordPresence(string details)
+        public static void ChangeDiscordPresence(string details, double timeLeft = 0)
         {
             DiscordController.presence.details = details;
+
+            if (timeLeft != 0)
+            {
+                // Get Current Unix Time
+                var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                var unixDateTime = (DateTime.Now.ToLocalTime().ToUniversalTime() - epoch).TotalSeconds;
+
+                // Set Discord presence to the "time left" specified.
+                DiscordController.presence.endTimestamp = (long) (unixDateTime + timeLeft / 1000);
+            }
+            else
+            {
+                DiscordController.presence.endTimestamp = 0;
+            }
+
             DiscordRPC.UpdatePresence(ref DiscordController.presence);
         }
     }
