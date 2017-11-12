@@ -83,13 +83,17 @@ namespace Quaver.Graphics
         }
 
         /// <summary>
-        ///     Changes the background image.
+        ///     Changes the background image. If no image is added to the parameter, it'll update the brightness to match the config.
         /// </summary>
         /// <param name="newBG"></param>
-        public static void Change(Texture2D newBG)
+        public static void Change(Texture2D newBG = null)
         {
             if (newBG == null)
+            {
+                Brightness = Configuration.BackgroundBrightness / 100f;
+                TargetColor = Vector3.One * Brightness;
                 return;
+            }
 
             //Update Image
             Background.Image = newBG;
@@ -107,7 +111,7 @@ namespace Quaver.Graphics
 
             //Update Background Color
             CurrentColor = Vector3.Zero;
-            Brightness = Configuration.BackgroundBrightness/255f;
+            Brightness = Configuration.BackgroundBrightness/100f;
             TargetColor = Vector3.One * Brightness;
         }
 
