@@ -31,8 +31,8 @@ namespace Quaver.Tests
                           $"CursorRotate: {skin.CursorRotate}\n" +
                           $"CursorTrailRotate: {skin.CursorRotate}\n" +
                           $"CursorExpand: {skin.CursorExpand}\n" +
-                          $"BgMaskBufferSize: {skin.BgMaskBufferSize}\n" +
-                          $"NoteBufferSpacing: {skin.NoteBufferSpacing}\n" +
+                          $"BgMaskBufferSize: {skin.BgMaskPadding}\n" +
+                          $"NoteBufferSpacing: {skin.NotePadding}\n" +
                           $"TimingBarPixelSize: {skin.TimingBarPixelSize}\n" +
                           $"HitLightingScale: {skin.HitLightingScale}\n" +
                           $"ColumnSize: {skin.ColumnSize}\n" +
