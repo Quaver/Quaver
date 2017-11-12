@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
 using Quaver.Main;
@@ -17,8 +18,8 @@ namespace Quaver.Graphics
         {
             Background = new Sprite()
             {
-                SizeX = GameBase.Window.Size.X,
-                SizeY = GameBase.Window.Size.Y,
+                SizeX = GameBase.Window.X,
+                SizeY = GameBase.Window.Y,
                 Alignment = Alignment.MidCenter,
                 Image = GameBase.LoadedSkin.NoteHitObject1
             };
@@ -31,7 +32,7 @@ namespace Quaver.Graphics
 
         public static void Update(double dt)
         {
-            
+            Background.Update(dt);
         }
 
         public static void Change(Texture2D newBG)
