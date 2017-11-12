@@ -97,7 +97,7 @@ namespace Quaver.Gameplay
                 }
 
                 //Initialize Object and add it to HitObjectPool
-                if (i < HitObjectPoolSize) newObject.Initialize();
+                if (i < HitObjectPoolSize) newObject.Initialize(Config.Configuration.DownScroll);
                 HitObjectPool.Add(newObject);
             }
 
@@ -137,7 +137,7 @@ namespace Quaver.Gameplay
                 {
                     // Set new hit object position with the current x, and a new y
                     HitObjectPool[i].HitObjectPositionY = PosFromOffset(HitObjectPool[i].OffsetFromReceptor);
-                    HitObjectPool[i].Update();
+                    HitObjectPool[i].Update(Config.Configuration.DownScroll);
                 }
             }
 
@@ -171,7 +171,7 @@ namespace Quaver.Gameplay
                     }
 
                     //Update HitObject
-                    HitObjectHold[i].Update();
+                    HitObjectHold[i].Update(Config.Configuration.DownScroll);
                 }
             }
 
@@ -187,7 +187,7 @@ namespace Quaver.Gameplay
                 else
                 {
                     HitObjectDead[i].HitObjectPositionY = PosFromOffset(HitObjectDead[i].OffsetFromReceptor);
-                    HitObjectDead[i].Update();
+                    HitObjectDead[i].Update(Config.Configuration.DownScroll);
                 }
             }
 
@@ -293,7 +293,7 @@ namespace Quaver.Gameplay
             HitObjectPool.RemoveAt(index);
 
             //Initialize the new HitObject (create the hit object sprites)
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize();
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll);
         }
 
         /// <summary>
@@ -332,7 +332,7 @@ namespace Quaver.Gameplay
             HitObjectPool.RemoveAt(index);
 
             //Initialize the new HitObject (create the hit object sprites)
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize();
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll);
         }
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace Quaver.Gameplay
             HitObjectPool.RemoveAt(index);
 
             //Initialize the new HitObject (create the hit object sprites)
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize();
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll);
         }
     }
 }
