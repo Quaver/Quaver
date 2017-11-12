@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Main;
 using Quaver.Utility;
@@ -36,7 +37,7 @@ namespace Quaver.Graphics
         /// <summary>
         ///     The dimness of the background.
         /// </summary>
-        public static double Dimness { get; set; } = 0;
+        public static float Brightness { get; set; } = 1;
 
         /// <summary>
         ///     Initializes the background.
@@ -92,6 +93,9 @@ namespace Quaver.Graphics
 
             Background.Image = newBG;
             CurrentColor = Vector3.Zero;
+
+            Brightness = 1 - (Configuration.BackgroundDim/255);
+            TargetColor = Vector3.One * Brightness;
         }
 
         /// <summary>
