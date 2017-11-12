@@ -130,6 +130,7 @@ namespace Quaver.GameState.States
             if (GameBase.SelectedBeatmap.Song.GetAudioPosition() < GameBase.SelectedBeatmap.Song.GetAudioLength())
                 return;
 
+            GameBase.SelectedBeatmap.Song.Stop();
             GameBase.SelectedBeatmap.LoadAudio();
             GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
         }
