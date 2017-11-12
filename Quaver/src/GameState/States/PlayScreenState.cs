@@ -12,6 +12,7 @@ using Quaver.Gameplay;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
+using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Input;
 using Quaver.Logging;

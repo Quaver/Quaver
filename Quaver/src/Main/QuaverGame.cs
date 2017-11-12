@@ -22,6 +22,7 @@ using Quaver.Utility;
 using System.Windows.Forms;
 using Quaver.Commands;
 using Quaver.Discord;
+using Quaver.Graphics.Sprite;
 
 namespace Quaver.Main
 {
