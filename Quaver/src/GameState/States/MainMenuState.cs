@@ -13,6 +13,7 @@ using Quaver.Discord;
 using Quaver.Gameplay;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
+using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Peppy;
