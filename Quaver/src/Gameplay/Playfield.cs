@@ -21,12 +21,14 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     The size of the playfield padding.
         /// </summary>
-        private static int PlayfieldPadSize { get; set; } = 5;
+        private static int PlayfieldPadding { get; set; }
+
+        private static int ReceptorPadding { get; set; }
 
         /// <summary>
         ///     TODO: CHANGE. Use Config Variable instead.
         /// </summary>
-        public static int ReceptorYOffset { get; set; } = 40;
+        public static int ReceptorYOffset { get; set; }
 
         /// <summary>
         ///     TODO: The Playfield size. Load from skin -- About 400px wide.
@@ -73,8 +75,10 @@ namespace Quaver.Gameplay
             // Calculate skin reference variables.
             var resolution = GameBase.Window.Height / GameBase.ReferenceResolution.Y;
             PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize * resolution);
-            PlayfieldPadSize = (int) (GameBase.LoadedSkin.BgMaskPadding * resolution);
-            PlayfieldSize = PlayfieldObjectSize * GameBase.SelectedBeatmap.Qua.KeyCount + PlayfieldPadSize * 2;
+            PlayfieldPadding = (int) (GameBase.LoadedSkin.BgMaskPadding * resolution);
+            ReceptorPadding = (int)(GameBase.LoadedSkin.NotePadding * resolution);
+            ReceptorYOffset = GameBase.LoadedSkin.ReceptorYOffset;
+            PlayfieldSize = (PlayfieldObjectSize + ReceptorPadding) * GameBase.SelectedBeatmap.Qua.KeyCount + PlayfieldPadding * 2 - ReceptorPadding;
 
             // Create playfield boundary & Update Rect.
             BoundaryUnder = new Boundary()
@@ -111,7 +115,7 @@ namespace Quaver.Gameplay
             for (var i = 0; i < Receptors.Length; i++)
             {
                 // Set ReceptorXPos 
-                ReceptorXPosition[i] = PlayfieldPadSize + PlayfieldObjectSize * i;
+                ReceptorXPosition[i] = PlayfieldPadding + (PlayfieldObjectSize + ReceptorPadding) * i;
 
                 // Create new Receptor Sprite
                 Receptors[i] = new Sprite
