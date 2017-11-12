@@ -7,13 +7,40 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
 using Quaver.Main;
+using Quaver.Utility;
 
 namespace Quaver.Graphics
 {
     class BackgroundManager
     {
+        /// <summary>
+        ///     The Background Sprite.
+        /// </summary>
         public static Sprite Background;
 
+        /// <summary>
+        ///     The tint of the background
+        /// </summary>
+        public static Color Tint = new Color(255, 255, 255);
+
+        /// <summary>
+        ///     Target Color of the background represented by percentage.
+        /// </summary>
+        public static Vector3 TargetColor { get; set; } = Vector3.One;
+
+        /// <summary>
+        ///     Current Color of the background represented by percentage.
+        /// </summary>
+        public static Vector3 CurrentColor { get; set; } = Vector3.One;
+
+        /// <summary>
+        ///     The dimness of the background.
+        /// </summary>
+        public static double Dimness { get; set; } = 0;
+
+        /// <summary>
+        ///     Initializes the background.
+        /// </summary>
         public static void Initialize()
         {
             Background = new Sprite()
@@ -26,21 +53,47 @@ namespace Quaver.Graphics
             };
         }
 
+        /// <summary>
+        ///     Unloads the background sprite.
+        /// </summary>
         public static void UnloadContent()
         {
             Background.Destroy();
         }
 
+        /// <summary>
+        ///     Updates the background.
+        /// </summary>
+        /// <param name="dt"></param>
         public static void Update(double dt)
         {
+            //Tween Color
+            float tween = (float)Math.Min(dt / 300, 1);
+            CurrentColor = Vector3.Lerp(CurrentColor, TargetColor, tween);
+
+            //Update Color
+            Tint.R = (byte)(CurrentColor.X*255);
+            Tint.G = (byte)(CurrentColor.Y*255);
+            Tint.B = (byte)(CurrentColor.Z*255);
+
+            //Update Background Tint
+            Background.Tint = Tint;
             Background.Update(dt);
         }
 
+        /// <summary>
+        ///     Changes the background image.
+        /// </summary>
+        /// <param name="newBG"></param>
         public static void Change(Texture2D newBG)
         {
             Background.Image = newBG;
+            CurrentColor = Vector3.Zero;
         }
 
+        /// <summary>
+        ///     Draws the background sprite.
+        /// </summary>
         public static void Draw()
         {
             Background.Draw();
