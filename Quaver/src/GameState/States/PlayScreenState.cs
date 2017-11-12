@@ -177,8 +177,9 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Draw()
         {
-            Playfield.Boundary.Draw();
+            Playfield.DrawUnder();
             NoteRendering.Boundary.Draw();
+            Playfield.DrawOver();
             TestButton.Draw();
             TextUnder.Draw();
         }

@@ -115,9 +115,9 @@
     <Compile Include="src\GameState\States\MapImportLoadingState.cs" />
     <Compile Include="src\Graphics\Button\TextButton.cs" />
     <Compile Include="src\Graphics\Button\BasicButton.cs" />
-    <Compile Include="src\Graphics\TextBoxSprite.cs" />
+    <Compile Include="src\Graphics\Sprite\TextBoxSprite.cs" />
     <Compile Include="src\Graphics\UI.cs" />
-    <Compile Include="src\Graphics\BackgroundManager.cs" />
+    <Compile Include="src\Graphics\Sprite\BackgroundManager.cs" />
     <Compile Include="src\Peppy\Osz.cs" />
     <Compile Include="src\Gameplay\NoteManager.cs" />
     <Compile Include="src\Gameplay\NoteRendering.cs" />
@@ -136,7 +136,7 @@
     <Compile Include="src\Input\GlobalInputManager.cs" />
     <Compile Include="src\Input\IInputManager.cs" />
     <Compile Include="src\Localization\Language.cs" />
-    <Compile Include="src\Graphics\Cursor.cs" />
+    <Compile Include="src\Graphics\Sprite\Cursor.cs" />
     <Compile Include="src\Main\GameBase.cs" />
     <Compile Include="src\Audio\GameAudio.cs" />
     <Compile Include="src\Beatmaps\Beatmap.cs" />
@@ -159,7 +159,7 @@
     <Compile Include="src\Logging\LogObject.cs" />
     <Compile Include="src\Logging\LogManager.cs" />
     <Compile Include="src\Graphics\CustomColors.cs" />
-    <Compile Include="src\Graphics\Sprite.cs" />
+    <Compile Include="src\Graphics\Sprite\Sprite.cs" />
     <Compile Include="src\Graphics\Drawable.cs" />
     <Compile Include="src\Peppy\PeppyBeatmap.cs" />
     <Compile Include="src\Program.cs" />
