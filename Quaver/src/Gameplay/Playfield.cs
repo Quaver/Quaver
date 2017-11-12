@@ -16,7 +16,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     The size of each HitObject.
         /// </summary>
-        public static int PlayfieldObjectSize { get; } = 75;
+        public static int PlayfieldObjectSize { get; set; }
 
         /// <summary>
         ///     The size of the playfield padding.
@@ -71,6 +71,7 @@ namespace Quaver.Gameplay
         public static void Initialize()
         {
             // Calculate skin reference variables.
+            PlayfieldObjectSize = GameBase.LoadedSkin.ColumnSize;
             PlayfieldSize = PlayfieldObjectSize * GameBase.SelectedBeatmap.Qua.KeyCount + PlayfieldPadSize * 2;
 
             // Create playfield boundary & Update Rect.
