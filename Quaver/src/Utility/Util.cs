@@ -39,28 +39,8 @@ namespace Quaver.Utility
         /// <returns></returns>
         internal static float Align(float scale, float objectSize, Vector2 boundary, float offset = 0)
         {
-            float boundaryMin;
-            float boundaryMax;
-
-            // Sets the boundary min/max values
-            if (boundary.X < boundary.Y)
-            {
-                boundaryMin = boundary.X;
-                boundaryMax = boundary.Y;
-            }
-            else
-            {
-                boundaryMin = boundary.Y;
-                boundaryMax = boundary.X;
-            }
-
-            // The alignment (Also used as a temporary boundary size value)
-            var alignment = boundaryMax - boundaryMin;
-
-            //If the object size is bigger than the boundary for some reason
-            alignment = (objectSize > alignment) ? (scale * alignment) + boundaryMin : ((alignment - objectSize) * scale) + boundaryMin;
-
-            return alignment + offset;
+            //BoundaryMin + (BoundarySize - ObjectSize) * Scale
+            return Math.Min(boundary.X, boundary.Y) + (Math.Abs(boundary.X - boundary.Y) - objectSize) * scale + offset;
         }
 
         /// <summary>
