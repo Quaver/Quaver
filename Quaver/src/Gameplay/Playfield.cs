@@ -140,6 +140,7 @@ namespace Quaver.Gameplay
                 Size = new Vector2(200, 50),
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.MidCenter,
+                Font = Fonts.Medium24,
                 Textwrap = false,
                 Parent = BoundaryOver
             };
