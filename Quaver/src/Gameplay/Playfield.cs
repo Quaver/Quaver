@@ -73,10 +73,9 @@ namespace Quaver.Gameplay
         public static void Initialize()
         {
             // Calculate skin reference variables.
-            var resolution = GameBase.Window.Height / GameBase.ReferenceResolution.Y;
-            PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize * resolution);
-            PlayfieldPadding = (int) (GameBase.LoadedSkin.BgMaskPadding * resolution);
-            ReceptorPadding = (int)(GameBase.LoadedSkin.NotePadding * resolution);
+            PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
+            PlayfieldPadding = (int) (GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowYRatio);
+            ReceptorPadding = (int)(GameBase.LoadedSkin.NotePadding * GameBase.WindowYRatio);
             ReceptorYOffset = GameBase.LoadedSkin.ReceptorYOffset;
             PlayfieldSize = (PlayfieldObjectSize + ReceptorPadding) * GameBase.SelectedBeatmap.Qua.KeyCount + PlayfieldPadding * 2 - ReceptorPadding;
 
