@@ -809,7 +809,14 @@ namespace Quaver.Config
             // For every line we want to append "PropName = PropValue" to the string
             foreach (var p in typeof(Configuration)
                 .GetProperties(BindingFlags.Static | BindingFlags.NonPublic))
+            {
+                // Don't include the FirstWrite Property
+                if (p.Name == "FirstWrite")
+                    continue;
+
                 sb.AppendLine(p.Name + " = " + p.GetValue(null));
+            }
+               
 
             try
             {
