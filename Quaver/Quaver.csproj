@@ -304,8 +304,6 @@
     <EmbeddedResource Include="Resources\UI\set-select-mask.xnb" />
     <EmbeddedResource Include="Resources\UI\blank-box.xnb" />
     <EmbeddedResource Include="Resources\UI\hollow-box.xnb" />
-    <None Include="RalewayBold.xnb" />
-    <None Include="RalewayMedium.xnb" />
     <None Include="Resources\Fonts\Bold12.xnb" />
     <None Include="Resources\Fonts\Medium12.xnb" />
     <None Include="Resources\Fonts\Medium16.xnb" />
@@ -351,9 +349,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\TestImages\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
