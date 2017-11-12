@@ -35,13 +35,20 @@ namespace Quaver.Graphics.Sprite
             }
             set
             {
-                _rotation = value;
+                _rotation = MathHelper.ToRadians(value);
                 Changed = true;
             } 
         }
-        private float _rotation = 25;
+        private float _rotation;
 
-        // Ctor
+        /// <summary>
+        ///     The origin of this object used for rotation.
+        /// </summary>
+        private Vector2 Origin { get; set; }
+
+        private Rectangle RenderRect { get; set; }
+
+        // Constructor
         public Sprite()
         {
             Tint = Color.White;
@@ -56,9 +63,23 @@ namespace Quaver.Graphics.Sprite
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             if (GameBase.Window.Intersects(GlobalRect) && Visible)
-            GameBase.SpriteBatch.Draw(Image, GlobalRect, null, Color.White, _rotation, Vector2.Zero, SpriteEffects.None, 0f);
+            GameBase.SpriteBatch.Draw(Image, RenderRect, null, Color.White, _rotation, Origin, SpriteEffects.None, 0f);
             //Draw children
             Children.ForEach(x => x.Draw());
+        }
+
+        public override void Update(double dt)
+        {
+            //_rotation += 0.0007f;
+            if (Changed)
+            {
+                Origin = new Vector2(GlobalRect.Width / 2f, GlobalRect.Height / 2f);
+                RenderRect = new Rectangle((int) (GlobalRect.X + Origin.X), (int) (GlobalRect.Y + Origin.Y),
+                    GlobalRect.Width, GlobalRect.Height);
+            }
+            //if (Changed) Origin = new Vector2(Image.Width, Image.Height); //* (float)Math.Abs(Math.Sin(_rotation));
+            //if (Changed) Origin = new Vector2(Image.Width, Image.Height);
+            base.Update(dt);
         }
     }
 }
