@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
 using Quaver.Utility;
 using Quaver.Main;
 
-namespace Quaver.Graphics
+namespace Quaver.Graphics.Text
 {
     /// <summary>
     ///     Any drawable object that uses 
