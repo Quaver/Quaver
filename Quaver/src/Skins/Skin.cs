@@ -56,15 +56,30 @@ namespace Quaver.Skins
         /// </summary>
         internal bool CursorExpand { get; set; } = true;
 
-        internal int BgMaskPadding { get; set; } = 12;
+        /// <summary>
+        ///     The padding (Positional offset) of the notes relative from the bg mask.
+        /// </summary>
+        internal int BgMaskPadding { get; set; } = 7;
+
+        /// <summary>
+        ///     The padding (Positional offset) of the notes relative from eachother.
+        /// </summary>
         internal int NotePadding { get; set; } = 1;
+
+        /// <summary>
+        ///     The size of the timing pars (in pixels).
+        /// </summary>
         internal int TimingBarPixelSize { get; set; } = 2;
+
+        /// <summary>
+        ///     The scale of the hitlighting objects.
+        /// </summary>
         internal float HitLightingScale { get; set; } = 4.0f;
 
         /// <summary>
         /// Size of each lane in pixels.
         /// </summary>
-        internal int ColumnSize { get; set; } = 100;
+        internal int ColumnSize { get; set; } = 80;
 
         /// <summary>
         /// The offset of the hit receptor
