@@ -102,9 +102,13 @@ namespace Quaver.GameState
         {
             LogManager.UpdateLogger("MapSelected","Map Selected: "+text);
 
-            //BackgroundManager.Change(map.Background);
+            //Select map
             GameBase.ChangeBeatmap(map);
             GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+
+            //Change BG
+            GameBase.SelectedBeatmap.LoadBackground();
+            BackgroundManager.Change(GameBase.SelectedBeatmap.Background);
 
 
             // Stop the selected song since it's only played during the main menu.
