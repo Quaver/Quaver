@@ -147,7 +147,7 @@ namespace Quaver.Gameplay
                 Size = Vector2.One * HitObjectSize,
                 Visible = false,
                 Parent = ParentContainer,
-                Rotation = downScroll ? 180 : 0
+                SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
             };
 
             if (IsLongNote)
