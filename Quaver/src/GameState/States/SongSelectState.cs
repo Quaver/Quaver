@@ -26,6 +26,7 @@ namespace Quaver.GameState.States
 
         //TODO: update later   TEST.
         private List<Button> Buttons { get; set; } = new List<Button>();
+        private List<EventHandler> ClickEvents { get; set; } = new List<EventHandler>();
         private Button PlayButton { get; set; }
         private Boundary Boundary { get; set; } = new Boundary();
         private int ButtonPos { get; set; } = 50;
@@ -52,7 +53,9 @@ namespace Quaver.GameState.States
                     newButton.TextSprite.TextAlignment = Alignment.MidLeft;
 
                     var currentMap = map;
-                    newButton.Clicked += (sender, e) => ButtonClick(sender, e, map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]", currentMap);
+                    EventHandler curEvent = (sender, e) => ButtonClick(sender, e, map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]", currentMap);
+                    ClickEvents.Add(curEvent);
+                    newButton.Clicked += curEvent;
                     Buttons.Add(newButton);
                     ButtonPos += 20;
                 }
@@ -79,11 +82,12 @@ namespace Quaver.GameState.States
             PlayButton.Clicked -= PlayMap;
 
             //TODO: Remove button delegates ?
-            foreach (TextButton button in Buttons)
+            for (int i=0; i<Buttons.Count; i++)
             {
-                //button.Clicked -= Delegate;
+                Buttons[i].Clicked -= ClickEvents[i];
             }
-
+            ClickEvents.Clear();
+            Buttons.Clear();
             Boundary.Destroy();
         }
 
