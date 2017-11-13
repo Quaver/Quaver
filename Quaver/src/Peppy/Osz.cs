@@ -98,7 +98,7 @@ namespace Quaver.Peppy
                         GameBase.SelectedBeatmap.Song.Play();
                         // Set Rich Presence
                         GameBase.DiscordController.presence.details =
-                            $"Listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
+                            $"In the main menu listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
                         DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
                     }
                 }
