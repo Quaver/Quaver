@@ -83,11 +83,6 @@ namespace Quaver.GameState.States
                 LogManager.AddLogger(NoteManager.TimingNames[i], NoteManager.TimingColors[i]);
             }
 
-            //Initialize Components
-            Playfield.Initialize();
-            Timing.Initialize(GameBase.SelectedBeatmap.Qua);
-            NoteRendering.Initialize(GameBase.SelectedBeatmap.Qua);
-
             //Todo: Remove. TEST.
             TestButton = new TextButton(new Vector2(200, 30), "BACK")
             {
