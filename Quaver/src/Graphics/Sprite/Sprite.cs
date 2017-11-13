@@ -78,10 +78,17 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         public override void Draw()
         {
+            if (ImageChanged)
+            {
+                RecalculateOrigin();
+                //Console.WriteLine(_image);
+            }
+
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             if (GameBase.Window.Intersects(GlobalRect) && Visible) //GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             GameBase.SpriteBatch.Draw(_image, _renderRect, null, Tint, _rotation, Origin, SpriteEffect, 0f);
+
             //Draw children
             Children.ForEach(x => x.Draw());
         }
@@ -107,6 +114,7 @@ namespace Quaver.Graphics.Sprite
             _renderRect = GlobalRect;
             _renderRect.X = (int)(GlobalRect.X + GlobalRect.Width / 2f);
             _renderRect.Y = (int) (GlobalRect.Y + GlobalRect.Height / 2f);
+
             ImageChanged = false;
         }
     }
