@@ -109,6 +109,8 @@ namespace Quaver.Input
 
                 // Resume the song
                 GameBase.SelectedBeatmap.Song.Resume();
+
+                PlayScreenState.HandleDiscordPresence(true);
             }
         }
 
