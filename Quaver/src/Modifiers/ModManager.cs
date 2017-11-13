@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.Logging;
-using Quaver.Main;
 
 namespace Quaver.Modifiers
 {

@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using ManagedBass;
 using Quaver.Logging;
-using Quaver.Main;
 
 namespace Quaver.Beatmaps
 {

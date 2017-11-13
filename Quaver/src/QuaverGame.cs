@@ -24,7 +24,7 @@ using Quaver.Commands;
 using Quaver.Discord;
 using Quaver.Graphics.Sprite;
 
-namespace Quaver.Main
+namespace Quaver
 {
     /// <summary>
     /// This is the main type for your game.

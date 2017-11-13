@@ -12,7 +12,6 @@ using Quaver.Commands;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Discord;
-using Quaver.Main;
 using Quaver.Tests;
 
 namespace Quaver

@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Audio;
 using Quaver.Commands;
 using Quaver.GameState;
-using Quaver.Main;
 
 namespace Quaver.Input
 {

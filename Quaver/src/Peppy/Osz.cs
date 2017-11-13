@@ -14,7 +14,6 @@ using Quaver.GameState;
 using Quaver.GameState.States;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
-using Quaver.Main;
 
 namespace Quaver.Peppy
 {

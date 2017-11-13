@@ -11,7 +11,6 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Remoting.Channels;
 using System.Threading.Tasks;
 using Quaver.Audio;
-using Quaver.Main;
 using Quaver.Utility;
 
 namespace Quaver.Skins

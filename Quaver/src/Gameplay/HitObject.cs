@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
-using Quaver.Main;
+
 
 namespace Quaver.Gameplay
 {

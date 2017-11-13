@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Beatmaps;
 using Quaver.Gameplay;
-using Quaver.Main;
+
 using Quaver.QuaFile;
 
 namespace Quaver.GameState.States

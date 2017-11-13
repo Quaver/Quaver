@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
-using Quaver.Main;
+
 using Quaver.Skins;
 using Quaver.Utility;
 
