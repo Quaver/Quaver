@@ -179,11 +179,21 @@ namespace Quaver.GameState.States
         /// <param name="e"></param>
         private void OnSpeedModButtonClick(object sender, EventArgs e)
         {
-            // Add the mod, but make sure it can only be between 0.75 and 2.0x speed.
-            if (GameBase.GameClock < 2.0)
-                ModManager.AddMod(ModIdentifier.Speed, GameBase.GameClock + 0.1f);
-            else
-                ModManager.AddMod(ModIdentifier.Speed, 0.75f);
+            try
+            {
+                // Add the mod, but make sure it can only be between 0.75 and 2.0x speed.
+                if (GameBase.GameClock < 2.0)
+                    ModManager.AddMod(ModIdentifier.Speed, (float)Math.Round(GameBase.GameClock + 0.1f, 1));
+                else
+                    ModManager.AddMod(ModIdentifier.Speed, 0.5f);
+            }
+            catch (Exception ex)
+            {
+                // Remove the mod if it ends up being 1.0x. This should always throw an exception due to the nature of how
+                // mods work
+                GameBase.GameClock = 1f;
+                ModManager.RemoveMod(ModIdentifier.Speed);
+            }
 
             // Change the song speed directly.
             if (GameBase.SelectedBeatmap.Song != null)
