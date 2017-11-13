@@ -71,7 +71,7 @@ namespace Quaver.GameState.States
         public void Initialize()
         {
             // Update Discord Presence
-            HandleDiscordPresence();
+            HandleDiscordPresence(false);
 
             //Todo: Remove. Create loggers
             LogManager.AddLogger("KeyCount", Color.Pink);
@@ -196,30 +196,28 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     Responsible for handling discord presence w/ mods if any exist.
         /// </summary>
-        private void HandleDiscordPresence()
+        public static void HandleDiscordPresence(bool skippedSong)
         {
             var sb = new StringBuilder();
             sb.Append($"Playing: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
 
-            // Add Mods to string if they exist
+            // Get original song length
+            var songLength = GameBase.SelectedBeatmap.Song.GetAudioLength() / GameBase.GameClock;
+            
+            // Get the new time in the song if it was skipped.
+            if (skippedSong)
+                songLength = (GameBase.SelectedBeatmap.Song.GetAudioLength() - GameBase.SelectedBeatmap.Song.GetAudioPosition()) / GameBase.GameClock;
+
+            // Add mods to the string if mods exist
             if (GameBase.CurrentGameModifiers.Count > 0)
             {
                 sb.Append(" with mods: ");
 
                 if (GameBase.CurrentGameModifiers.Exists(x => x.ModIdentifier == ModIdentifier.Speed))
-                {
                     sb.Append($"Speed {GameBase.GameClock}x");
-
-                    // Get the song length difference
-                    var newSongLength = GameBase.SelectedBeatmap.Song.GetAudioLength() * (1 / GameBase.GameClock);
-
-                    GameBase.ChangeDiscordPresence(sb.ToString(), newSongLength);
-                    return;
-                }
-                    
             }
 
-            GameBase.ChangeDiscordPresence(sb.ToString(), GameBase.SelectedBeatmap.Song.GetAudioLength());
+            GameBase.ChangeDiscordPresence(sb.ToString(), songLength);
         }
     }
 }
