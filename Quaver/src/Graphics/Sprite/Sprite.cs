@@ -54,6 +54,8 @@ namespace Quaver.Graphics.Sprite
         }
         private float _rotation;
 
+        public SpriteEffects SpriteEffect { get; set; }
+
         /// <summary>
         ///     The origin of this object used for rotation.
         /// </summary>
@@ -84,7 +86,7 @@ namespace Quaver.Graphics.Sprite
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             if (GameBase.Window.Intersects(GlobalRect) && Visible) //GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
-            GameBase.SpriteBatch.Draw(_image, _renderRect, null, Tint, _rotation, Origin, SpriteEffects.None, 0f);
+            GameBase.SpriteBatch.Draw(_image, _renderRect, null, Tint, _rotation, Origin, SpriteEffect, 0f);
             //Draw children
             Children.ForEach(x => x.Draw());
         }
