@@ -88,12 +88,13 @@ namespace Quaver.Graphics.Sprite
         /// <param name="newBG"></param>
         public static void Change(Texture2D newBG = null)
         {
-            if (newBG == null)
-            {
-                Brightness = Configuration.BackgroundBrightness / 100f;
-                TargetColor = Vector3.One * Brightness;
-                return;
-            }
+            //Update Background Color
+            Brightness = Configuration.BackgroundBrightness / 100f;
+            TargetColor = Vector3.One * Brightness;
+            CurrentColor = Vector3.Zero;
+
+            //Checks if image is not null
+            if (newBG == null) return;
 
             //Update Image
             Background.Image = newBG;
@@ -108,11 +109,6 @@ namespace Quaver.Graphics.Sprite
             {
                 Background.Size = new Vector2(newBG.Width, newBG.Height) * ((float)GameBase.Window.Height / newBG.Height);
             }
-
-            //Update Background Color
-            CurrentColor = Vector3.Zero;
-            Brightness = Configuration.BackgroundBrightness/100f;
-            TargetColor = Vector3.One * Brightness;
         }
 
         /// <summary>

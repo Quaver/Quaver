@@ -119,8 +119,9 @@ namespace Quaver.Main
             BackgroundManager.Initialize();
             if (GameBase.Beatmaps.Count != 0)
             {
-                GameBase.SelectedBeatmap.LoadBackground();
-                BackgroundManager.Change(GameBase.SelectedBeatmap.Background);
+                // Load background asynchronously.
+                Task.Run(() => GameBase.SelectedBeatmap.LoadBackground())
+                    .ContinueWith(t => BackgroundManager.Change(GameBase.SelectedBeatmap.Background));
             }
 
             // Create Cursor. Use after LoadSkin
