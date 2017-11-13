@@ -16,6 +16,7 @@ using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Main;
+using Quaver.Modifiers;
 
 namespace Quaver.GameState.States
 {
@@ -31,6 +32,9 @@ namespace Quaver.GameState.States
         private Boundary Boundary { get; set; } = new Boundary();
         private int ButtonPos { get; set; } = 50;
         private Button BackButton { get; set; }
+
+        // Test Mod Button
+        private Button SpeedModButton { get; set; }
 
         public void Initialize()
         {
@@ -79,6 +83,15 @@ namespace Quaver.GameState.States
                 Parent = Boundary
             };
             BackButton.Clicked += OnBackButtonClick;
+
+            // Create Speed Mod Button
+            SpeedModButton = new TextButton(new Vector2(200, 50), "Add Speed Mod")
+            {
+                Image = GameBase.UI.BlankBox,
+                Alignment = Alignment.BotCenter,
+                Parent = Boundary
+            };
+            SpeedModButton.Clicked += OnSpeedModButtonClick;
 
             //Add map selected text TODO: remove later
             LogManager.AddLogger("MapSelected",Color.Yellow);
@@ -157,6 +170,24 @@ namespace Quaver.GameState.States
         private void OnBackButtonClick(object sender, EventArgs e)
         {
             GameStateManager.Instance.ChangeState(new MainMenuState());
+        }
+
+        /// <summary>
+        ///     Adds speed mod to game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSpeedModButtonClick(object sender, EventArgs e)
+        {
+            // Add the mod, but make sure it can only be between 0.75 and 2.0x speed.
+            if (GameBase.GameClock < 2.0)
+                ModManager.AddMod(ModIdentifier.Speed, GameBase.GameClock + 0.1f);
+            else
+                ModManager.AddMod(ModIdentifier.Speed, 0.75f);
+
+            // Change the song speed directly.
+            if (GameBase.SelectedBeatmap.Song != null)
+                GameBase.SelectedBeatmap.Song.ChangeSongSpeed();
         }
     }
 }
