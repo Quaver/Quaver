@@ -220,8 +220,8 @@ namespace Quaver.Gameplay
         {
             //TODO: add judge scale
             var size = new Vector2(JudgeImages[index].Width, JudgeImages[index].Height) * (float)GameBase.WindowYRatio * 0.5f;
-            JudgeSprite.Image = JudgeImages[index];
             JudgeSprite.Size = size;
+            JudgeSprite.Image = JudgeImages[index];
         }
 
         /// <summary>
