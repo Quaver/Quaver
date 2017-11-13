@@ -28,7 +28,7 @@ namespace Quaver
         /// <summary>
         ///     The global game state manager for the game.
         /// </summary>
-        public static GameStateManager GameStateManager { get; set; } = new GameStateManager();
+        public static GameStateManager GameStateManager { get; } = new GameStateManager();
 
         /// <summary>
         ///     The current list of loaded beatmaps
