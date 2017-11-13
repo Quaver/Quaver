@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Quaver.Beatmaps;
 using Quaver.Discord;
+using Quaver.Graphics.Sprite;
 
 namespace Quaver.Audio
 {
@@ -65,9 +66,17 @@ namespace Quaver.Audio
             // Stop the current track
             GameBase.SelectedBeatmap.Song.Stop();
 
-            // Select a new random beatmap, load the audio and play it.
+            // Select new map
             BeatmapUtils.SelectRandomBeatmap();
+
+            // Load Audio
             GameBase.SelectedBeatmap.LoadAudio();
+
+            // Load Background and change it
+            GameBase.SelectedBeatmap.LoadBackground();
+            BackgroundManager.Change(GameBase.SelectedBeatmap.Background);
+
+            // Begin to play
             GameBase.SelectedBeatmap.Song.Play();
 
             // Set new Discord Rich Presence
