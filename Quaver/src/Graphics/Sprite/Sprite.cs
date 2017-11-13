@@ -31,7 +31,8 @@ namespace Quaver.Graphics.Sprite
             set
             {
                 _image = value;
-                ImageChanged = true;
+                _origin.X = _image.Width / 2f;
+                _origin.Y = _image.Height / 2f;
             }
         }
         private Texture2D _image = GameBase.UI.BlankBox;
@@ -49,27 +50,24 @@ namespace Quaver.Graphics.Sprite
             set
             {
                 _rotation = MathHelper.ToRadians(value);
-                ImageChanged = true;
             } 
         }
         private float _rotation;
 
-        public SpriteEffects SpriteEffect { get; set; }
+        /// <summary>
+        ///     The Effects this sprite will inherit.
+        /// </summary>
+        public SpriteEffects SpriteEffect { get; set; } = SpriteEffects.None;
 
         /// <summary>
         ///     The origin of this object used for rotation.
         /// </summary>
-        private Vector2 Origin { get; set; }
+        private Vector2 _origin = Vector2.One;
 
         /// <summary>
         ///     The Rectangle used to render the sprite.
         /// </summary>
         private Rectangle _renderRect;
-
-        /// <summary>
-        ///     Gets toggled on whenever the image or rotation gets changed.
-        /// </summary>
-        private bool ImageChanged { get; set; }
 
         public Color Tint { get; set; } = Color.White;
 
@@ -78,20 +76,17 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         public override void Draw()
         {
-            if (ImageChanged || Changed) RecalculateOrigin();
+            if (Changed) RecalculateOrigin();
 
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             if (GameBase.Window.Intersects(GlobalRect) && Visible)
             {
-                if (_rotation == 0)
-                    GameBase.SpriteBatch.Draw(_image, GlobalRect, Tint);
-                else
-                    GameBase.SpriteBatch.Draw(_image, _renderRect, null, Tint, _rotation, Origin, SpriteEffect, 0f);
+                GameBase.SpriteBatch.Draw(_image, _renderRect, null, Tint, _rotation, _origin, SpriteEffect, 0f);
             }
 
             //Draw children
-            Children.ForEach(x => x.Draw());
+            base.Draw();
         }
 
         /// <summary>
@@ -101,9 +96,13 @@ namespace Quaver.Graphics.Sprite
         public override void Update(double dt)
         {
             //_rotation += 0.0007f;
-            if (Changed) ImageChanged = true;
+            if (Changed)
+            {
+                base.Update(dt);
+                RecalculateOrigin();
+            }
+            else
             base.Update(dt);
-            if (ImageChanged) RecalculateOrigin();
         }
 
         /// <summary>
@@ -111,15 +110,9 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         private void RecalculateOrigin()
         {
-            if (_rotation == 0)
-            {
-                Origin = new Vector2(_image.Width / 2f, _image.Height / 2f);
-                _renderRect = GlobalRect;
-                _renderRect.X = (int)(GlobalRect.X + GlobalRect.Width / 2f);
-                _renderRect.Y = (int)(GlobalRect.Y + GlobalRect.Height / 2f);
-            }
-
-            ImageChanged = false;
+            _renderRect = GlobalRect;
+            _renderRect.X = (int)(GlobalRect.X + GlobalRect.Width / 2f);
+            _renderRect.Y = (int)(GlobalRect.Y + GlobalRect.Height / 2f);
         }
     }
 }
