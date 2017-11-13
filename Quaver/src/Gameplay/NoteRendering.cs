@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Utility;
@@ -50,7 +50,7 @@ namespace Quaver.Gameplay
         {
             // Do config stuff
             ScrollNegativeFactor = Config.Configuration.DownScroll ? -1 : 1;
-            ScrollSpeed = Configuration.ScrollSpeed / 20f; //todo: balance curve
+            ScrollSpeed = Configuration.ScrollSpeed / (20f * GameBase.GameClock); //todo: balance curve
 
             //Initialize Track
             int i;
