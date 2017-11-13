@@ -30,6 +30,7 @@ namespace Quaver.GameState.States
         private Button PlayButton { get; set; }
         private Boundary Boundary { get; set; } = new Boundary();
         private int ButtonPos { get; set; } = 50;
+        private Button BackButton { get; set; }
 
         public void Initialize()
         {
@@ -69,6 +70,15 @@ namespace Quaver.GameState.States
                 Parent = Boundary
             };
             PlayButton.Clicked += PlayMap;
+
+            // Create back button
+            BackButton = new TextButton(new Vector2(200, 50), "Back")
+            {
+                Image = GameBase.UI.BlankBox,
+                Alignment = Alignment.BotLeft,
+                Parent = Boundary
+            };
+            BackButton.Clicked += OnBackButtonClick;
 
             //Add map selected text TODO: remove later
             LogManager.AddLogger("MapSelected",Color.Yellow);
@@ -137,6 +147,16 @@ namespace Quaver.GameState.States
             GameBase.SelectedBeatmap.Song.Stop();
             GameBase.SelectedBeatmap.LoadAudio();
             GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+        }
+
+        /// <summary>
+        ///     Whenever the back button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackButtonClick(object sender, EventArgs e)
+        {
+            GameStateManager.Instance.ChangeState(new MainMenuState());
         }
     }
 }
