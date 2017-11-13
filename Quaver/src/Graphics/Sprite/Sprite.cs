@@ -86,7 +86,7 @@ namespace Quaver.Graphics.Sprite
             }
 
             //Draw children
-            Children.ForEach(x => x.Draw());
+            base.Draw();
         }
 
         /// <summary>
