@@ -88,7 +88,7 @@ namespace Quaver.GameState.States
                 //Console.WriteLine($"[SONG LOADING STATE] Successfully loaded beatmap: {md5}");
 
                 // Load Play State
-                GameStateManager.Instance.ChangeState(new PlayScreenState(md5));
+                GameBase.GameStateManager.ChangeState(new PlayScreenState(md5));
             }
             catch (Exception e)
             {
