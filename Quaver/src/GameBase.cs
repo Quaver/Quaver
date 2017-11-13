@@ -18,7 +18,7 @@ using Quaver.Graphics.Sprite;
 using Quaver.Modifiers;
 using Quaver.Utility;
 
-namespace Quaver.Main
+namespace Quaver
 {
     /// <summary>
     ///     Holds all the global variables and configuration for our game.

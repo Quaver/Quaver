@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Main;
+
 using Quaver.Utility;
 
 namespace Quaver.Graphics.Button

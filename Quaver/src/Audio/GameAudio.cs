@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ManagedBass;
 using ManagedBass.Fx;
-using Quaver.Main;
 using Configuration = Quaver.Config.Configuration;
 
 namespace Quaver.Audio

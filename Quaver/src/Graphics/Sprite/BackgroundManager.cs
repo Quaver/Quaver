@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.Graphics;
-using Quaver.Main;
+
 using Quaver.Utility;
 
 namespace Quaver.Graphics.Sprite

@@ -138,7 +138,7 @@
     <Compile Include="src\Input\IInputManager.cs" />
     <Compile Include="src\Localization\Language.cs" />
     <Compile Include="src\Graphics\Sprite\Cursor.cs" />
-    <Compile Include="src\Main\GameBase.cs" />
+    <Compile Include="src\GameBase.cs" />
     <Compile Include="src\Audio\GameAudio.cs" />
     <Compile Include="src\Beatmaps\Beatmap.cs" />
     <Compile Include="src\Beatmaps\BeatmapUtils.cs" />
@@ -146,7 +146,7 @@
     <Compile Include="src\Config\Configuration.cs" />
     <Compile Include="src\Database\BeatmapCache.cs" />
     <Compile Include="src\Database\BeatmapImporter.cs" />
-    <Compile Include="src\Main\QuaverGame.cs" />
+    <Compile Include="src\QuaverGame.cs" />
     <Compile Include="src\GameState\GameStateManager.cs" />
     <Compile Include="src\GameState\State.cs" />
     <Compile Include="src\GameState\GameStateTemplate.cs" />

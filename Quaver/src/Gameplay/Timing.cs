@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Quaver.Config;
-using Quaver.Main;
+
 using Quaver.Modifiers;
 using Quaver.QuaFile;
 
