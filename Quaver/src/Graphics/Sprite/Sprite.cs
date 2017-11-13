@@ -34,7 +34,7 @@ namespace Quaver.Graphics.Sprite
                 ImageChanged = true;
             }
         }
-        private Texture2D _image;
+        private Texture2D _image = GameBase.UI.BlankBox;
 
 
         /// <summary>
@@ -71,12 +71,7 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         private bool ImageChanged { get; set; }
 
-        // Constructor
-        public Sprite()
-        {
-            Tint = Color.White;
-            Image = GameBase.UI.BlankBox;
-        }
+        public Color Tint { get; set; } = Color.White;
 
         /// <summary>
         ///     Draws the sprite to the screen.

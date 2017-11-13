@@ -83,12 +83,6 @@ namespace Quaver.Graphics.Text
         /// </summary>
         public Color TextColor = Color.White;
 
-        // Ctor
-        public TextBoxSprite()
-        {
-            Tint = Color.White;
-        }
-
         public override void Update(double dt)
         {
             if (Changed)
