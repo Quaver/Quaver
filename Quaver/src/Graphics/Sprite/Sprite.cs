@@ -31,6 +31,7 @@ namespace Quaver.Graphics.Sprite
             set
             {
                 _image = value;
+                ImageChanged = true;
             }
         }
         private Texture2D _image;
@@ -48,7 +49,7 @@ namespace Quaver.Graphics.Sprite
             set
             {
                 _rotation = MathHelper.ToRadians(value);
-                Changed = true;
+                ImageChanged = true;
             } 
         }
         private float _rotation;
@@ -62,6 +63,8 @@ namespace Quaver.Graphics.Sprite
         ///     The Rectangle used to render the sprite.
         /// </summary>
         private Rectangle RenderRect { get; set; }
+
+        private bool ImageChanged { get; set; }
 
         // Constructor
         public Sprite()
@@ -90,9 +93,13 @@ namespace Quaver.Graphics.Sprite
         public override void Update(double dt)
         {
             //_rotation += 0.0007f;
-            var checkChange = Changed;
+            if (Changed) ImageChanged = true;
             base.Update(dt);
-            if (checkChange) RecalculateOrigin();
+            if (ImageChanged)
+            {
+                RecalculateOrigin();
+                ImageChanged = false;
+            }
         }
 
         /// <summary>

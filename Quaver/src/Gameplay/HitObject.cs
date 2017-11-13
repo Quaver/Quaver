@@ -130,16 +130,6 @@ namespace Quaver.Gameplay
                 Parent = ParentContainer
             };
 
-            HoldEndSprite = new Sprite()
-            {
-                Image = GameBase.LoadedSkin.NoteHoldEnd,
-                Alignment = Alignment.TopLeft,
-                Position = _hitObjectPosition,
-                Size = Vector2.One * HitObjectSize,
-                Visible = false,
-                Parent = ParentContainer
-            };
-
             HitBodySprite = new Sprite()
             {
                 Image = GameBase.LoadedSkin.NoteHitObject1,
@@ -147,6 +137,17 @@ namespace Quaver.Gameplay
                 Position = _hitObjectPosition,
                 Size = Vector2.One * HitObjectSize,
                 Parent = ParentContainer
+            };
+
+            HoldEndSprite = new Sprite()
+            {
+                Image = GameBase.LoadedSkin.NoteHoldEnd,
+                Alignment = Alignment.TopLeft,
+                Position = _hitObjectPosition,
+                Size = Vector2.One * HitObjectSize,
+                Visible = false,
+                Parent = ParentContainer,
+                Rotation = downScroll ? 180 : 0
             };
 
             if (IsLongNote)
