@@ -80,6 +80,9 @@ namespace Quaver
         /// </summary>
         public static Rectangle Window { get; set; } = new Rectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight); //TODO: Automatically set this rectangle as windoow size
 
+        /// <summary>
+        ///     WindowHeight / WindowWidth ratio
+        /// </summary>
         public static double WindowYRatio { get; set; } = Window.Height / ReferenceResolution.Y;
 
         /// <summary>
