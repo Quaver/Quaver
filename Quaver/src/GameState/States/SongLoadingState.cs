@@ -76,6 +76,7 @@ namespace Quaver.GameState.States
                 // Set the beatmap's Qua. 
                 // We parse it and set it each time the player is going to play to kmake sure they are
                 // actually playing the correct map.
+                GameBase.SelectedBeatmap.Song.Stop();
                 GameBase.SelectedBeatmap.Qua = qua;
                 //Console.WriteLine("[SONG LOADING STATE] Qua successfully loaded.");
 
