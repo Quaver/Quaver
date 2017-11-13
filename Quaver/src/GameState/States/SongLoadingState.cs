@@ -30,7 +30,8 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
-            Task.Run(() => LoadBeatmap()); //.ContinueWith(t => InitializeGameplay(GameBase.SelectedBeatmap.Qua));
+            LoadBeatmap();
+            //Task.Run(() => LoadBeatmap()); //.ContinueWith(t => InitializeGameplay(GameBase.SelectedBeatmap.Qua));
         }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Draw()
         {
-            GameBase.GraphicsDevice.Clear(Color.Red);
+            //GameBase.GraphicsDevice.Clear(Color.Red);
         }
 
         /// <summary>
