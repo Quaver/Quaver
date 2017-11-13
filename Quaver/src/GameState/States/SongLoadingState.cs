@@ -85,6 +85,7 @@ namespace Quaver.GameState.States
                 if (GameBase.SelectedBeatmap.Song.GetAudioLength() < 1)
                     throw new Exception("[SONG LOADING STATE] Audio file could not be loaded.");
 
+                LogManager.ConsoleLog("[SONG LOADING STATE]: Done Loading Beatmap", ConsoleColor.DarkBlue);
                 //Initialize Gameplay
                 //InitializeGameplay(qua);
 
@@ -123,6 +124,7 @@ namespace Quaver.GameState.States
                 var quaPath = $"{Config.Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
                 var md5 = BeatmapUtils.GetMd5Checksum(quaPath);
                 GameBase.GameStateManager.ChangeState(new PlayScreenState(md5));
+                LogManager.ConsoleLog("[SONG LOADING STATE]: Done Changing States", ConsoleColor.DarkBlue);
             }
             catch (Exception ex)
             {
