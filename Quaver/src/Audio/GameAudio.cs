@@ -173,5 +173,13 @@ namespace Quaver.Audio
 
             Bass.ChannelSetAttribute(Stream, ChannelAttribute.Volume, volume);
         }
+
+        /// <summary>
+        ///     Changes the song's speed based on the current game clock
+        /// </summary>
+        internal void ChangeSongSpeed()
+        {
+            Bass.ChannelSetAttribute(Stream, ChannelAttribute.Tempo, GameBase.GameClock * 100 - 100);
+        }
     }
 }
