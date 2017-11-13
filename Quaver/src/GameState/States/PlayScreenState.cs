@@ -204,8 +204,10 @@ namespace Quaver.GameState.States
             // Add Mods to string if they exist
             if (GameBase.CurrentGameModifiers.Count > 0)
             {
+                sb.Append(" with mods: ");
+
                 if (GameBase.CurrentGameModifiers.Exists(x => x.ModIdentifier == ModIdentifier.Speed))
-                    sb.Append($" with mods: Speed {GameBase.GameClock}");
+                    sb.Append($"Speed {GameBase.GameClock}x");
             }
 
             GameBase.ChangeDiscordPresence(sb.ToString(), GameBase.SelectedBeatmap.Song.GetAudioLength());
