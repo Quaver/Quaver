@@ -21,14 +21,47 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     Image Texture of the sprite.
         /// </summary>
-        public Texture2D Image { get; set; }
+        public Texture2D Image
+        {
+            get
+            {
+                return _image;
+                
+            }
+            set
+            {
+                _image = value;
+                RecalculateOrigin();
+            }
+        }
+        private Texture2D _image;
+
 
         /// <summary>
         ///     Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
         /// </summary>
-        public float Rotation { get; set; }
+        public float Rotation {
+            get
+            {
+                return _rotation;
+                
+            }
+            set
+            {
+                _rotation = MathHelper.ToRadians(value);
+                Changed = true;
+            } 
+        }
+        private float _rotation;
 
-        // Ctor
+        /// <summary>
+        ///     The origin of this object used for rotation.
+        /// </summary>
+        private Vector2 Origin { get; set; }
+
+        private Rectangle RenderRect { get; set; }
+
+        // Constructor
         public Sprite()
         {
             Tint = Color.White;
@@ -41,11 +74,28 @@ namespace Quaver.Graphics.Sprite
         public override void Draw()
         {
             //Draw itself if it is in the window
-            if (GameBase.Window.Intersects(GlobalRect) && Visible)
-            GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
-
+            //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
+            if (GameBase.Window.Intersects(GlobalRect) && Visible) //GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
+            GameBase.SpriteBatch.Draw(_image, RenderRect, null, Color.White, _rotation, Origin, SpriteEffects.None, 0f);
             //Draw children
             Children.ForEach(x => x.Draw());
+        }
+
+        public override void Update(double dt)
+        {
+            //_rotation += 0.0007f;
+            if (Changed)
+                RecalculateOrigin();
+            base.Update(dt);
+        }
+
+        private void RecalculateOrigin()
+        {
+            Origin = new Vector2(_image.Width / 2f, _image.Height / 2f);
+            RenderRect = new Rectangle((int)(GlobalRect.X + GlobalRect.Width / 2f), (int)(GlobalRect.Y + GlobalRect.Height / 2f),
+                GlobalRect.Width, GlobalRect.Height);
+
+            if (Image == GameBase.LoadedSkin.JudgeMiss || Image == GameBase.LoadedSkin.JudgeMarv || Image == GameBase.LoadedSkin.JudgePerfect) Console.WriteLine(this+", "+Origin);
         }
     }
 }
