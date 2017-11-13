@@ -38,13 +38,6 @@ namespace Quaver.Modifiers
                     return;
             }
 
-            // First check to see is already activated there.
-            if (GameBase.CurrentGameModifiers.Exists(x => x.ModIdentifier == mod.ModIdentifier))
-            {
-                Console.WriteLine($"[MOD MANAGER] Error: Game Modifier {mod.ModIdentifier} has already been activated.");
-                return;
-            }
-
             // Check if any incompatible mods are already in our current game modifiers, and remove them if that is the case.
             var incompatibleMods = GameBase.CurrentGameModifiers.FindAll(x => x.IncompatibleMods.Contains(mod.ModIdentifier));
             incompatibleMods.ForEach(x => RemoveMod(x.ModIdentifier));
@@ -57,6 +50,7 @@ namespace Quaver.Modifiers
             mod.InitializeMod();  
             
             Console.WriteLine($"[MOD MANAGER] Added Mod: {mod.ModIdentifier} and removed all incompatible mods.");
+            Console.WriteLine($"[MOD MANAGER] Current Mods: {String.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ToString()))}");
         }
 
         /// <summary>
