@@ -30,7 +30,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
-            LoadBeatmap();
+            Task.Run(() => LoadBeatmap()); //.ContinueWith(t => InitializeGameplay(GameBase.SelectedBeatmap.Qua));
         }
 
         /// <summary>
@@ -83,17 +83,34 @@ namespace Quaver.GameState.States
                 if (GameBase.SelectedBeatmap.Song.GetAudioLength() < 1)
                     throw new Exception("[SONG LOADING STATE] Audio file could not be loaded.");
 
-                // Get Beatmap MD5
-                var md5 = BeatmapUtils.GetMd5Checksum(quaPath);
-                //Console.WriteLine($"[SONG LOADING STATE] Successfully loaded beatmap: {md5}");
+                //Initialize Gameplay
+                InitializeGameplay(qua);
 
-                // Load Play State
-                GameStateManager.Instance.ChangeState(new PlayScreenState(md5));
+                //Change States
+                ChangeState(quaPath);
+
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
+        }
+
+        /// <summary>
+        ///     Initializes gameplay classes
+        /// </summary>
+        /// <param name="qua"></param>
+        private void InitializeGameplay(Qua qua)
+        {
+            Playfield.Initialize();
+            Timing.Initialize(qua);
+            NoteRendering.Initialize(qua);
+        }
+
+        private void ChangeState(string quaPath)
+        {
+            var md5 = BeatmapUtils.GetMd5Checksum(quaPath);
+            GameStateManager.Instance.ChangeState(new PlayScreenState(md5));
         }
     }
 }
