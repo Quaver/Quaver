@@ -199,7 +199,8 @@ namespace Quaver.Gameplay
                 // Update receptor Size/Position
                 ReceptorCurrentSize[i] = Util.Tween(ReceptorTargetSize[i], ReceptorCurrentSize[i], dt);
                 Receptors[i].Size = Vector2.One * ReceptorCurrentSize[i] * PlayfieldObjectSize;
-                Receptors[i].Position = Config.Configuration.DownScroll ? new Vector2(ReceptorXPosition[i] - receptorSizeOffset, ReceptorYOffset + receptorSizeOffset) : new Vector2(ReceptorXPosition[i] - receptorSizeOffset, ReceptorYOffset - receptorSizeOffset);
+                Receptors[i].PositionX = ReceptorXPosition[i] - receptorSizeOffset;
+                Receptors[i].PositionY = ReceptorYOffset - receptorSizeOffset;
             }
 
             //Update Playfield + Children
