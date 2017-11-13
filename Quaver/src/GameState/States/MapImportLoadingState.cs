@@ -20,7 +20,7 @@ namespace Quaver.GameState.States
         {
             // TODO: Add some sort of general loading screen here. The state is only going to be used during map importing.
             // Set Rich Presence
-            GameBase.ChangeDiscordPresence("Importing Charts");
+            GameBase.ChangeDiscordPresence("Importing new charts");
         }
 
         public void UnloadContent() { }
