@@ -185,7 +185,7 @@ namespace Quaver.GameState.States
 
         public void ButtonClick(object sender, EventArgs e)
         {
-            GameStateManager.Instance.ChangeState(new SongSelectState());
+            GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 
         /// <summary>

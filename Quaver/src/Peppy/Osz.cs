@@ -43,7 +43,7 @@ namespace Quaver.Peppy
                 return;
 
             // Proceed to extract and convert the map, show loading screen.
-            GameStateManager.Instance.AddState(new MapImportLoadingState());
+            GameBase.GameStateManager.AddState(new MapImportLoadingState());
 
             // Run the converter for all file names
             Task.Run(() =>
@@ -103,7 +103,7 @@ namespace Quaver.Peppy
                 }
 
                 Console.WriteLine("[CONVERT OSZ TASK] Successfully completed. Stopping loader.");
-                GameStateManager.Instance.RemoveState();
+                GameBase.GameStateManager.RemoveState();
             });
         }
 

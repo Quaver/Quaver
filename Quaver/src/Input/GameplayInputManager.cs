@@ -142,7 +142,7 @@ namespace Quaver.Input
 
             // TODO: Implement actual pausing here. For now, we're just going to go back to the main menu.
             GameBase.SelectedBeatmap.Song.Pause();
-            GameStateManager.Instance.ChangeState(new MainMenuState());
+            GameBase.GameStateManager.ChangeState(new MainMenuState());
         }
     }
 }
