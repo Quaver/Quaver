@@ -34,7 +34,7 @@ namespace Quaver.GameState.States
         private Button BackButton { get; set; }
 
         // Test Mod Button
-        private Button SpeedModButton { get; set; }
+        private TextButton SpeedModButton { get; set; }
 
         public void Initialize()
         {
@@ -85,7 +85,7 @@ namespace Quaver.GameState.States
             BackButton.Clicked += OnBackButtonClick;
 
             // Create Speed Mod Button
-            SpeedModButton = new TextButton(new Vector2(200, 50), "Add Speed Mod")
+            SpeedModButton = new TextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.GameClock}x")
             {
                 Image = GameBase.UI.BlankBox,
                 Alignment = Alignment.BotRight,
@@ -196,6 +196,8 @@ namespace Quaver.GameState.States
             }
 
             // Change the song speed directly.
+            SpeedModButton.TextSprite.Text = $"Add Speed Mod {GameBase.GameClock}x";
+
             if (GameBase.SelectedBeatmap.Song != null)
                 GameBase.SelectedBeatmap.Song.ChangeSongSpeed();
         }
