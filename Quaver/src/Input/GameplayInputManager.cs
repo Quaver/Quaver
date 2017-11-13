@@ -11,7 +11,6 @@ using Quaver.Database;
 using Quaver.Gameplay;
 using Quaver.GameState.States;
 using Quaver.Logging;
-using Quaver.Main;
 using Quaver.QuaFile;
 
 namespace Quaver.Input

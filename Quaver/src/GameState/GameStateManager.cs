@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Logging;
-using Quaver.Main;
+
 
 namespace Quaver.GameState
 {

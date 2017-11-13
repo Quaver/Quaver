@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Quaver.Beatmaps;
 using Quaver.Discord;
-using Quaver.Main;
 
 namespace Quaver.Audio
 {

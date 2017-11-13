@@ -17,7 +17,7 @@ using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Input;
 using Quaver.Logging;
-using Quaver.Main;
+
 using Quaver.Modifiers;
 using Quaver.QuaFile;
 using Quaver.Utility;
