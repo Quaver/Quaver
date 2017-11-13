@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using Quaver.Beatmaps;
 using Quaver.Database;
 using Quaver.Skins;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Quaver.Config;
 using Quaver.Discord;
+using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Modifiers;
@@ -25,6 +25,11 @@ namespace Quaver
     /// </summary>
     internal static class GameBase
     {
+        /// <summary>
+        ///     The global game state manager for the game.
+        /// </summary>
+        public static GameStateManager GameStateManager { get; set; } = new GameStateManager();
+
         /// <summary>
         ///     The current list of loaded beatmaps
         /// </summary>
