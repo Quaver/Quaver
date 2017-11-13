@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Beatmaps;
 using Quaver.Gameplay;
-
+using Quaver.Logging;
 using Quaver.QuaFile;
 
 namespace Quaver.GameState.States
@@ -31,7 +32,7 @@ namespace Quaver.GameState.States
         public void Initialize()
         {
             LoadBeatmap();
-            //Task.Run(() => LoadBeatmap()); //.ContinueWith(t => InitializeGameplay(GameBase.SelectedBeatmap.Qua));
+            Task.Run(() => LoadBeatmap()).ContinueWith(t => InitializeGameplay(GameBase.SelectedBeatmap.Qua)).ContinueWith(t => ChangeState());
         }
 
         /// <summary>
@@ -85,14 +86,14 @@ namespace Quaver.GameState.States
                     throw new Exception("[SONG LOADING STATE] Audio file could not be loaded.");
 
                 //Initialize Gameplay
-                InitializeGameplay(qua);
+                //InitializeGameplay(qua);
 
                 //Change States
-                ChangeState(quaPath);
+                //ChangeState(quaPath);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
+                LogManager.Debug(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n");
             }
         }
 
@@ -102,15 +103,31 @@ namespace Quaver.GameState.States
         /// <param name="qua"></param>
         private void InitializeGameplay(Qua qua)
         {
-            Playfield.Initialize();
-            Timing.Initialize(qua);
-            NoteRendering.Initialize(qua);
+            try
+            {
+                Playfield.Initialize();
+                Timing.Initialize(qua);
+                NoteRendering.Initialize(qua);
+                LogManager.ConsoleLog("[SONG LOADING STATE]: Done Initializing Gameplay", ConsoleColor.DarkBlue);
+            }
+            catch (Exception ex)
+            {
+                LogManager.Debug(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n");
+            }
         }
 
-        private void ChangeState(string quaPath)
+        private void ChangeState()
         {
-            var md5 = BeatmapUtils.GetMd5Checksum(quaPath);
-            GameBase.GameStateManager.ChangeState(new PlayScreenState(md5));
+            try
+            {
+                var quaPath = $"{Config.Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
+                var md5 = BeatmapUtils.GetMd5Checksum(quaPath);
+                GameBase.GameStateManager.ChangeState(new PlayScreenState(md5));
+            }
+            catch (Exception ex)
+            {
+                LogManager.Debug(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n");
+            }
         }
     }
 }
