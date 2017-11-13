@@ -196,12 +196,12 @@ namespace Quaver.GameState.States
             var sb = new StringBuilder();
             sb.Append($"Playing: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
 
-            // Get original song length
-            var songLength = GameBase.SelectedBeatmap.Song.GetAudioLength() / GameBase.GameClock;
+            // Get the original map length. 
+            double mapLength = Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) / GameBase.GameClock;
             
-            // Get the new time in the song if it was skipped.
+            // Get the new map length if it was skipped.
             if (skippedSong)
-                songLength = (GameBase.SelectedBeatmap.Song.GetAudioLength() - GameBase.SelectedBeatmap.Song.GetAudioPosition()) / GameBase.GameClock;
+                mapLength = (Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) - GameBase.SelectedBeatmap.Song.GetAudioPosition()) / GameBase.GameClock;
 
             // Add mods to the string if mods exist
             if (GameBase.CurrentGameModifiers.Count > 0)
@@ -212,7 +212,7 @@ namespace Quaver.GameState.States
                     sb.Append($"Speed {GameBase.GameClock}x");
             }
 
-            GameBase.ChangeDiscordPresence(sb.ToString(), songLength);
+            GameBase.ChangeDiscordPresence(sb.ToString(), mapLength);
         }
     }
 }
