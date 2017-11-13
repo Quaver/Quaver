@@ -64,6 +64,9 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         private Rectangle RenderRect { get; set; }
 
+        /// <summary>
+        ///     Gets toggled on whenever the image or rotation gets changed.
+        /// </summary>
         private bool ImageChanged { get; set; }
 
         // Constructor
@@ -95,11 +98,7 @@ namespace Quaver.Graphics.Sprite
             //_rotation += 0.0007f;
             if (Changed) ImageChanged = true;
             base.Update(dt);
-            if (ImageChanged)
-            {
-                RecalculateOrigin();
-                ImageChanged = false;
-            }
+            if (ImageChanged) RecalculateOrigin();
         }
 
         /// <summary>
@@ -110,6 +109,7 @@ namespace Quaver.Graphics.Sprite
             Origin = new Vector2(_image.Width / 2f, _image.Height / 2f);
             RenderRect = new Rectangle((int)(GlobalRect.X + GlobalRect.Width / 2f), (int)(GlobalRect.Y + GlobalRect.Height / 2f),
                 GlobalRect.Width, GlobalRect.Height);
+            ImageChanged = false;
         }
     }
 }
