@@ -83,7 +83,7 @@ namespace Quaver.Audio
 
             // Set Tempo
             Stream = BassFx.TempoCreate(Stream, BassFlags.FxFreeSource);
-            Bass.ChannelSetAttribute(Stream, ChannelAttribute.Tempo, playbackRate * 100 - 100);
+            ChangeSongSpeed();
 
             // Set Pitch if necessary.
             if (pitch)
