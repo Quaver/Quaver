@@ -81,7 +81,7 @@ namespace Quaver.Graphics.Sprite
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             if (GameBase.Window.Intersects(GlobalRect) && Visible) //GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
-            GameBase.SpriteBatch.Draw(_image, RenderRect, null, Color.White, _rotation, Origin, SpriteEffects.None, 0f);
+            GameBase.SpriteBatch.Draw(_image, RenderRect, null, Tint, _rotation, Origin, SpriteEffects.None, 0f);
             //Draw children
             Children.ForEach(x => x.Draw());
         }
