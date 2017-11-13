@@ -31,8 +31,11 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
-            LoadBeatmap();
-            Task.Run(() => LoadBeatmap()).ContinueWith(t => InitializeGameplay(GameBase.SelectedBeatmap.Qua)).ContinueWith(t => ChangeState());
+            Task.Run(() => LoadBeatmap()).ContinueWith(t =>
+            {
+                InitializeGameplay(GameBase.SelectedBeatmap.Qua);
+                ChangeState();
+            });
         }
 
         /// <summary>
