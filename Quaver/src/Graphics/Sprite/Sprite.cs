@@ -31,7 +31,6 @@ namespace Quaver.Graphics.Sprite
             set
             {
                 _image = value;
-                RecalculateOrigin();
             }
         }
         private Texture2D _image;
@@ -59,6 +58,9 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         private Vector2 Origin { get; set; }
 
+        /// <summary>
+        ///     The Rectangle used to render the sprite.
+        /// </summary>
         private Rectangle RenderRect { get; set; }
 
         // Constructor
@@ -81,21 +83,26 @@ namespace Quaver.Graphics.Sprite
             Children.ForEach(x => x.Draw());
         }
 
+        /// <summary>
+        ///     Update the sprite every frame.
+        /// </summary>
+        /// <param name="dt"></param>
         public override void Update(double dt)
         {
             //_rotation += 0.0007f;
-            if (Changed)
-                RecalculateOrigin();
+            var checkChange = Changed;
             base.Update(dt);
+            if (checkChange) RecalculateOrigin();
         }
 
+        /// <summary>
+        ///     Recalculate Origin + Rotation of sprite
+        /// </summary>
         private void RecalculateOrigin()
         {
             Origin = new Vector2(_image.Width / 2f, _image.Height / 2f);
             RenderRect = new Rectangle((int)(GlobalRect.X + GlobalRect.Width / 2f), (int)(GlobalRect.Y + GlobalRect.Height / 2f),
                 GlobalRect.Width, GlobalRect.Height);
-
-            if (Image == GameBase.LoadedSkin.JudgeMiss || Image == GameBase.LoadedSkin.JudgeMarv || Image == GameBase.LoadedSkin.JudgePerfect) Console.WriteLine(this+", "+Origin);
         }
     }
 }
