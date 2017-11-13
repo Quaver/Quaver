@@ -207,7 +207,16 @@ namespace Quaver.GameState.States
                 sb.Append(" with mods: ");
 
                 if (GameBase.CurrentGameModifiers.Exists(x => x.ModIdentifier == ModIdentifier.Speed))
+                {
                     sb.Append($"Speed {GameBase.GameClock}x");
+
+                    // Get the song length difference
+                    var newSongLength = GameBase.SelectedBeatmap.Song.GetAudioLength() * (1 / GameBase.GameClock);
+
+                    GameBase.ChangeDiscordPresence(sb.ToString(), newSongLength);
+                    return;
+                }
+                    
             }
 
             GameBase.ChangeDiscordPresence(sb.ToString(), GameBase.SelectedBeatmap.Song.GetAudioLength());
