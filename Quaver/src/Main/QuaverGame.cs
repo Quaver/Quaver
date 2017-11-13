@@ -77,10 +77,9 @@ namespace Quaver.Main
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        { 
+        {
             // Select a random beatmap if we do in fact have beatmaps.
-            if (GameBase.Beatmaps.Count != 0)
-                BeatmapUtils.SelectRandomBeatmap();
+            if (GameBase.Beatmaps.Count != 0) BeatmapUtils.SelectRandomBeatmap();
 
             // Enable console commands (Only applicable if on debug release)
             CommandHandler.HandleConsoleCommand();
@@ -118,6 +117,11 @@ namespace Quaver.Main
 
             //Initialize Background Manager. Use after Load UI.
             BackgroundManager.Initialize();
+            if (GameBase.Beatmaps.Count != 0)
+            {
+                GameBase.SelectedBeatmap.LoadBackground();
+                BackgroundManager.Change(GameBase.SelectedBeatmap.Background);
+            }
 
             // Create Cursor. Use after LoadSkin
             GameBase.LoadCursor();
