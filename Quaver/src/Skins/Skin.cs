@@ -86,6 +86,15 @@ namespace Quaver.Skins
         internal int ReceptorYOffset { get; set; } = 50;
 
         /// <summary>
+        ///     The alignment of the column
+        /// 
+        ///     "When read, it'll be between 0 and 1
+        ///     if it's 0, it'll snap to the left, 1 will snap to right
+        ///     0.5 to the middle"
+        /// </summary>
+        internal byte ColumnAlignment { get; set; } = 50;
+
+        /// <summary>
         /// The colour that is used for the column's lighting.
         /// </summary>
         internal Color ColourLight1 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
@@ -369,6 +378,7 @@ namespace Quaver.Skins
             HitLightingScale = ConfigHelper.ReadFloat(HitLightingScale, data["Gameplay"]["HitLightingScale"]);
             ColumnSize = ConfigHelper.ReadInt32(ColumnSize, data["Gameplay"]["ColumnSize"]);
             ReceptorYOffset = ConfigHelper.ReadInt32(ReceptorYOffset, data["Gameplay"]["ReceptorYOffset"]);
+            ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, data["Gameplay"]["ColumnAlignment"]);
             ColourLight1 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight1"]);
             ColourLight2 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight2"]);
             ColourLight3 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight3"]);
