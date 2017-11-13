@@ -62,7 +62,7 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     The Rectangle used to render the sprite.
         /// </summary>
-        private Rectangle RenderRect { get; set; }
+        private Rectangle _renderRect;
 
         /// <summary>
         ///     Gets toggled on whenever the image or rotation gets changed.
@@ -84,7 +84,7 @@ namespace Quaver.Graphics.Sprite
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             if (GameBase.Window.Intersects(GlobalRect) && Visible) //GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
-            GameBase.SpriteBatch.Draw(_image, RenderRect, null, Tint, _rotation, Origin, SpriteEffects.None, 0f);
+            GameBase.SpriteBatch.Draw(_image, _renderRect, null, Tint, _rotation, Origin, SpriteEffects.None, 0f);
             //Draw children
             Children.ForEach(x => x.Draw());
         }
@@ -107,8 +107,9 @@ namespace Quaver.Graphics.Sprite
         private void RecalculateOrigin()
         {
             Origin = new Vector2(_image.Width / 2f, _image.Height / 2f);
-            RenderRect = new Rectangle((int)(GlobalRect.X + GlobalRect.Width / 2f), (int)(GlobalRect.Y + GlobalRect.Height / 2f),
-                GlobalRect.Width, GlobalRect.Height);
+            _renderRect = GlobalRect;
+            _renderRect.X = (int)(GlobalRect.X + GlobalRect.Width / 2f);
+            _renderRect.Y = (int) (GlobalRect.Y + GlobalRect.Height / 2f);
             ImageChanged = false;
         }
     }
