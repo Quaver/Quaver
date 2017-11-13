@@ -78,6 +78,7 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         public override void Draw()
         {
+            if (Changed) Console.WriteLine(_image);
             if (ImageChanged)
             {
                 RecalculateOrigin();

@@ -152,6 +152,13 @@ namespace Quaver.Main
         {
             double dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
+            // Check Global Input
+            GlobalInputManager.CheckInput();
+
+            // Update Keyboard States
+            GameBase.KeyboardState = Keyboard.GetState();
+            GameBase.MouseState = Mouse.GetState();
+
             // Update FpsCounter
             if (Config.Configuration.FpsCounter)
                 FpsCounter.Count(dt);
@@ -162,12 +169,8 @@ namespace Quaver.Main
             // Update all game states.
             GameStateManager.Instance.Update(gameTime);
 
-            GameBase.KeyboardState = Keyboard.GetState();
-            GameBase.MouseState = Mouse.GetState();
+            // Update Mouse Cursor
             GameBase.Cursor.Update(dt);
-
-            // Check Global Input
-            GlobalInputManager.CheckInput();
 
             base.Update(gameTime);
         }
