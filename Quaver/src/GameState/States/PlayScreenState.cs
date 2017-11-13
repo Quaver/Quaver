@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
@@ -17,6 +18,7 @@ using Quaver.Graphics.Text;
 using Quaver.Input;
 using Quaver.Logging;
 using Quaver.Main;
+using Quaver.Modifiers;
 using Quaver.QuaFile;
 using Quaver.Utility;
 using Button = Quaver.Graphics.Button.Button;
@@ -69,8 +71,7 @@ namespace Quaver.GameState.States
         public void Initialize()
         {
             // Update Discord Presence
-            GameBase.ChangeDiscordPresence($"Playing: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} " +
-                                           $"[{GameBase.SelectedBeatmap.DifficultyName}]", GameBase.SelectedBeatmap.Song.GetAudioLength());
+            HandleDiscordPresence();
 
             //Todo: Remove. Create loggers
             LogManager.AddLogger("KeyCount", Color.Pink);
@@ -190,6 +191,24 @@ namespace Quaver.GameState.States
         public void ButtonClick(object sender, EventArgs e)
         {
             GameStateManager.Instance.ChangeState(new SongSelectState());
+        }
+
+        /// <summary>
+        ///     Responsible for handling discord presence w/ mods if any exist.
+        /// </summary>
+        private void HandleDiscordPresence()
+        {
+            var sb = new StringBuilder();
+            sb.Append($"Playing: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
+
+            // Add Mods to string if they exist
+            if (GameBase.CurrentGameModifiers.Count > 0)
+            {
+                if (GameBase.CurrentGameModifiers.Exists(x => x.ModIdentifier == ModIdentifier.Speed))
+                    sb.Append($" with mods: Speed {GameBase.GameClock}");
+            }
+
+            GameBase.ChangeDiscordPresence(sb.ToString(), GameBase.SelectedBeatmap.Song.GetAudioLength());
         }
     }
 }
