@@ -35,11 +35,6 @@ namespace Quaver.Graphics
         public Alignment Alignment { get; set; } = Alignment.TopLeft;
 
         /// <summary>
-        /// The color tint of this object. White = no tint.
-        /// </summary>
-        public Color Tint { get; set; } = new Color();
-
-        /// <summary>
         /// The children of this object that depend on this object's position/size.
         /// </summary>
         public List<Drawable> Children { get; set; } = new List<Drawable>();
