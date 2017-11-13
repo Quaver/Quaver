@@ -21,7 +21,20 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     Image Texture of the sprite.
         /// </summary>
-        public Texture2D Image { get; set; }
+        public Texture2D Image
+        {
+            get
+            {
+                return _image;
+                
+            }
+            set
+            {
+                _image = value;
+                RecalculateOrigin();
+            }
+        }
+        private Texture2D _image;
 
 
         /// <summary>
@@ -62,8 +75,8 @@ namespace Quaver.Graphics.Sprite
         {
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
-            if (GameBase.Window.Intersects(GlobalRect) && Visible)
-            GameBase.SpriteBatch.Draw(Image, RenderRect, null, Color.White, _rotation, Origin, SpriteEffects.None, 0f);
+            if (GameBase.Window.Intersects(GlobalRect) && Visible) //GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
+            GameBase.SpriteBatch.Draw(_image, RenderRect, null, Color.White, _rotation, Origin, SpriteEffects.None, 0f);
             //Draw children
             Children.ForEach(x => x.Draw());
         }
@@ -72,14 +85,17 @@ namespace Quaver.Graphics.Sprite
         {
             //_rotation += 0.0007f;
             if (Changed)
-            {
-                Origin = new Vector2(GlobalRect.Width / 2f, GlobalRect.Height / 2f);
-                RenderRect = new Rectangle((int) (GlobalRect.X + Origin.X), (int) (GlobalRect.Y + Origin.Y),
-                    GlobalRect.Width, GlobalRect.Height);
-            }
-            //if (Changed) Origin = new Vector2(Image.Width, Image.Height); //* (float)Math.Abs(Math.Sin(_rotation));
-            //if (Changed) Origin = new Vector2(Image.Width, Image.Height);
+                RecalculateOrigin();
             base.Update(dt);
+        }
+
+        private void RecalculateOrigin()
+        {
+            Origin = new Vector2(_image.Width / 2f, _image.Height / 2f);
+            RenderRect = new Rectangle((int)(GlobalRect.X + GlobalRect.Width / 2f), (int)(GlobalRect.Y + GlobalRect.Height / 2f),
+                GlobalRect.Width, GlobalRect.Height);
+
+            if (Image == GameBase.LoadedSkin.JudgeMiss || Image == GameBase.LoadedSkin.JudgeMarv || Image == GameBase.LoadedSkin.JudgePerfect) Console.WriteLine(this+", "+Origin);
         }
     }
 }
