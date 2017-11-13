@@ -129,7 +129,7 @@ namespace Quaver
 
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
-            GameStateManager.Instance.ChangeState(new MainMenuState());             
+            GameBase.GameStateManager.ChangeState(new MainMenuState());             
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Quaver
         protected override void UnloadContent()
         {
             BackgroundManager.UnloadContent();
-            GameStateManager.Instance.ClearStates();
+            GameBase.GameStateManager.ClearStates();
             DiscordRPC.Shutdown();
         }
 
@@ -167,7 +167,7 @@ namespace Quaver
             BackgroundManager.Update(dt);
 
             // Update all game states.
-            GameStateManager.Instance.Update(gameTime);
+            GameBase.GameStateManager.Update(gameTime);
 
             // Update Mouse Cursor
             GameBase.Cursor.Update(dt);
@@ -193,7 +193,7 @@ namespace Quaver
             BackgroundManager.Draw();
 
             // Draw the game states
-            GameStateManager.Instance.Draw();
+            GameBase.GameStateManager.Draw();
 
             // Draw the FPS Counter
             if (Config.Configuration.FpsCounter)

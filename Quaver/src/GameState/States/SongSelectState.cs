@@ -146,7 +146,7 @@ namespace Quaver.GameState.States
         public void PlayMap(object sender, EventArgs e)
         {
             GameBase.SelectedBeatmap.Song.Stop();
-            GameStateManager.Instance.ChangeState(new SongLoadingState());
+            GameBase.GameStateManager.ChangeState(new SongLoadingState());
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Quaver.GameState.States
         /// <param name="e"></param>
         private void OnBackButtonClick(object sender, EventArgs e)
         {
-            GameStateManager.Instance.ChangeState(new MainMenuState());
+            GameBase.GameStateManager.ChangeState(new MainMenuState());
         }
 
         /// <summary>

@@ -14,12 +14,6 @@ namespace Quaver.GameState
     internal class GameStateManager
     {
         /// <summary>
-        ///     The GameStateManager instance. This is a singleton class, so there'll only be one.
-        /// </summary> 
-        private static GameStateManager _instance;  
-        public static GameStateManager Instance { get => _instance = _instance ?? new GameStateManager(); }
-
-        /// <summary>
         ///     Holds a stack of all the current game states
         /// </summary>
         private Stack<IGameState> States { get; } = new Stack<IGameState>();

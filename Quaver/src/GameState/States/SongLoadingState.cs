@@ -89,6 +89,8 @@ namespace Quaver.GameState.States
                 //Change States
                 ChangeState(quaPath);
 
+                // Load Play State
+                GameBase.GameStateManager.ChangeState(new PlayScreenState(md5));
             }
             catch (Exception e)
             {
