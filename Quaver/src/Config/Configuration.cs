@@ -19,6 +19,11 @@ namespace Quaver.Config
         private static bool FirstWrite { get; set; }
 
         /// <summary>
+        ///     The username of the user.
+        /// </summary>
+        private static string _username = "";
+
+        /// <summary>
         ///     The master volume of the game.
         /// </summary>
         private static byte _volumeGlobal = 100;
@@ -305,6 +310,16 @@ namespace Quaver.Config
             set
             {
                 _dataDirectory = value;
+                Task.Run(async () => await WriteConfigFileAsync());
+            }
+        }
+
+        internal static string Username
+        {
+            get => _username;
+            set
+            {
+                _username = value;
                 Task.Run(async () => await WriteConfigFileAsync());
             }
         }
@@ -746,6 +761,7 @@ namespace Quaver.Config
             _logsDirectory = ConfigHelper.ReadDirectory(LogsDirectory, data["LogsDirectory"]);
             _dataDirectory = ConfigHelper.ReadDirectory(DataDirectory, data["DataDirectory"]);
             _songDirectory = ConfigHelper.ReadDirectory(SongDirectory, data["SongDirectory"]);
+            _username = ConfigHelper.ReadString(Username, data["Username"]);
             _volumeGlobal = ConfigHelper.ReadPercentage(VolumeGlobal, data["VolumeGlobal"]);
             _volumeEffect = ConfigHelper.ReadPercentage(VolumeEffect, data["VolumeEffect"]);
             _volumeMusic = ConfigHelper.ReadPercentage(VolumeMusic, data["VolumeMusic"]);
