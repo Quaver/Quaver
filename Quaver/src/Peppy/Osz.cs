@@ -12,6 +12,7 @@ using Quaver.Beatmaps;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.GameState.States;
+using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Main;
 
@@ -87,6 +88,10 @@ namespace Quaver.Peppy
 
                     // Switch map and load audio for song and play it.
                     GameBase.ChangeBeatmap(map);
+
+                    // Load and change background after import
+                    GameBase.SelectedBeatmap.LoadBackground();
+                    BackgroundManager.Change(GameBase.SelectedBeatmap.Background);
 
                     if (GameBase.SelectedBeatmap.Song != null)
                     {
