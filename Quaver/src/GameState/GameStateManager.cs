@@ -125,7 +125,8 @@ namespace Quaver.GameState
                 if (States.Count == 0)
                     return;
 
-                States.Peek().Draw();
+                if (States.Peek().UpdateReady)
+                    States.Peek().Draw();
             }
             catch (Exception ex)
             {
