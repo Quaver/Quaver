@@ -79,7 +79,7 @@ namespace Quaver.GameState.States
             BackButton = new TextButton(new Vector2(200, 50), "Back")
             {
                 Image = GameBase.UI.BlankBox,
-                Alignment = Alignment.BotLeft,
+                Alignment = Alignment.BotCenter,
                 Parent = Boundary
             };
             BackButton.Clicked += OnBackButtonClick;
@@ -88,7 +88,7 @@ namespace Quaver.GameState.States
             SpeedModButton = new TextButton(new Vector2(200, 50), "Add Speed Mod")
             {
                 Image = GameBase.UI.BlankBox,
-                Alignment = Alignment.BotCenter,
+                Alignment = Alignment.BotRight,
                 Parent = Boundary
             };
             SpeedModButton.Clicked += OnSpeedModButtonClick;
