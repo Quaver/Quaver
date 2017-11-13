@@ -72,7 +72,7 @@ namespace Quaver.Audio
             GameBase.SelectedBeatmap.Song.Play();
 
             // Set new Discord Rich Presence
-            GameBase.ChangeDiscordPresence($"In the Main Menu Listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}");
+            GameBase.ChangeDiscordPresence($"In the main menu listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}");
         }
     }
 }
