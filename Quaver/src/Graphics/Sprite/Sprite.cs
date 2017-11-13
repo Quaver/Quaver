@@ -78,17 +78,17 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         public override void Draw()
         {
-            if (Changed) Console.WriteLine(_image);
-            if (ImageChanged)
-            {
-                RecalculateOrigin();
-                //Console.WriteLine(_image);
-            }
+            if (ImageChanged || Changed) RecalculateOrigin();
 
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
-            if (GameBase.Window.Intersects(GlobalRect) && Visible) //GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
-            GameBase.SpriteBatch.Draw(_image, _renderRect, null, Tint, _rotation, Origin, SpriteEffect, 0f);
+            if (GameBase.Window.Intersects(GlobalRect) && Visible)
+            {
+                if (_rotation == 0)
+                    GameBase.SpriteBatch.Draw(_image, GlobalRect, Tint);
+                else
+                    GameBase.SpriteBatch.Draw(_image, _renderRect, null, Tint, _rotation, Origin, SpriteEffect, 0f);
+            }
 
             //Draw children
             Children.ForEach(x => x.Draw());
@@ -111,10 +111,13 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         private void RecalculateOrigin()
         {
-            Origin = new Vector2(_image.Width / 2f, _image.Height / 2f);
-            _renderRect = GlobalRect;
-            _renderRect.X = (int)(GlobalRect.X + GlobalRect.Width / 2f);
-            _renderRect.Y = (int) (GlobalRect.Y + GlobalRect.Height / 2f);
+            if (_rotation == 0)
+            {
+                Origin = new Vector2(_image.Width / 2f, _image.Height / 2f);
+                _renderRect = GlobalRect;
+                _renderRect.X = (int)(GlobalRect.X + GlobalRect.Width / 2f);
+                _renderRect.Y = (int)(GlobalRect.Y + GlobalRect.Height / 2f);
+            }
 
             ImageChanged = false;
         }

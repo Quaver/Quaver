@@ -22,7 +22,12 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     The tint of the background
         /// </summary>
-        public static Color Tint = new Color(255, 255, 255);
+        private static Color _tint = new Color(255, 255, 255);
+
+        /// <summary>
+        ///     The previous tint of the background. Used to save processing space.
+        /// </summary>
+        private static Color _prevTint = _tint;
 
         /// <summary>
         ///     Target Color of the background represented by percentage.
@@ -73,13 +78,14 @@ namespace Quaver.Graphics.Sprite
             CurrentColor = Vector3.Lerp(CurrentColor, TargetColor, tween);
 
             //Update Color
-            Tint.R = (byte)(CurrentColor.X*255);
-            Tint.G = (byte)(CurrentColor.Y*255);
-            Tint.B = (byte)(CurrentColor.Z*255);
+            _tint.R = (byte)(CurrentColor.X*255);
+            _tint.G = (byte)(CurrentColor.Y*255);
+            _tint.B = (byte)(CurrentColor.Z*255);
 
             //Update Background Tint
-            Background.Tint = Tint;
+            if (_tint != _prevTint) Background.Tint = _tint;
             Background.Update(dt);
+            _prevTint = _tint;
         }
 
         /// <summary>
