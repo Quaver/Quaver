@@ -42,7 +42,7 @@ namespace Quaver.Modifiers
         /// <summary>
         ///     The identifier of mods that are incompatible with this one.
         /// </summary>
-        public ModIdentifier[] IncompatibleMods { get; set; } = {  };
+        public ModIdentifier[] IncompatibleMods { get; set; } = { ModIdentifier.Speed };
 
         /// <summary>
         ///     The speed alteration rate the game's clock will be set to.
@@ -66,6 +66,7 @@ namespace Quaver.Modifiers
         {
             // Set the GameClock (Audio Speed) to the SpeedAlterationRate.
             GameBase.GameClock = SpeedAlterationRate;
+            Console.WriteLine($"[MOD MANAGER] Speed is not set to {GameBase.GameClock}x");
         }
     }
 }
