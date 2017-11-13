@@ -61,7 +61,9 @@ namespace Quaver
             // Create a new RichPresence
             GameBase.DiscordController.presence = new DiscordRPC.RichPresence()
             {
-                state = "Dev Build"
+                state = "Dev Build",
+                largeImageKey = "quaver",
+                largeImageText = Configuration.Username
             };
             DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
         }
