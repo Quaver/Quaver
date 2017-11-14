@@ -82,7 +82,7 @@ namespace Quaver.Logging
         /// <summary>
         ///     Logs a message to the screen, console, and runtime log
         /// </summary>
-        internal static void Log(string value, Color color, float duration = 1.5f)
+        internal static void Log(string value, Color color, float duration = 2.5f)
         {
             if (!Configuration.Debug)
                 return;
