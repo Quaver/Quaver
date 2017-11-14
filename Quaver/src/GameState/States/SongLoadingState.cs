@@ -26,16 +26,19 @@ namespace Quaver.GameState.States
         public bool UpdateReady { get; set; }
 
         /// <summary>
+        ///     Keeps track of if we're currently loading the map.
+        /// </summary>
+        private bool IsLoading { get; set; }
+
+        /// <summary>
         ///     Try to load the qua file and song. 
         ///     If we've successfully loaded it, move onto the play state.
         /// </summary>
         public void Initialize()
         {
-            Task.Run(() => LoadBeatmap()).ContinueWith(t =>
-            {
-                InitializeGameplay(GameBase.SelectedBeatmap.Qua);
-                ChangeState();
-            });
+            LoadBeatmap();
+            InitializeGameplay(GameBase.SelectedBeatmap.Qua);
+            ChangeState();
         }
 
         /// <summary>
@@ -47,7 +50,9 @@ namespace Quaver.GameState.States
         ///     Update
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Update(GameTime gameTime) {}
+        public void Update(GameTime gameTime)
+        {
+        }
 
         /// <summary>
         ///     Draw
@@ -79,22 +84,17 @@ namespace Quaver.GameState.States
                 // Set the beatmap's Qua. 
                 // We parse it and set it each time the player is going to play to kmake sure they are
                 // actually playing the correct map.
-                GameBase.SelectedBeatmap.Song.Stop();
                 GameBase.SelectedBeatmap.Qua = qua;
-                //Console.WriteLine("[SONG LOADING STATE] Qua successfully loaded.");
 
                 // Attempt to load the audio.
+                GameBase.SelectedBeatmap.Song.Stop();
                 GameBase.SelectedBeatmap.LoadAudio();
 
+                // Detect if the audio can't be played.
                 if (GameBase.SelectedBeatmap.Song.GetAudioLength() < 1)
                     throw new Exception("[SONG LOADING STATE] Audio file could not be loaded.");
 
                 LogManager.ConsoleLog("[SONG LOADING STATE]: Done Loading Beatmap", ConsoleColor.DarkBlue);
-                //Initialize Gameplay
-                //InitializeGameplay(qua);
-
-                //Change States
-                //ChangeState(quaPath);
             }
             catch (Exception ex)
             {
