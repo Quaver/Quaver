@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,21 @@ namespace Quaver.Logging
         ///     The SpriteFont for the logs
         /// </summary>
         private static SpriteFont Font { get; set; }
+
+        /// <summary>
+        ///     The path of the current runtime log
+        /// </summary>
+        private static string RuntimeLogPath { get; set; }
+
+        /// <summary>
+        ///     Creates the log file
+        /// </summary>
+        internal static void CreateLogFile()
+        {
+            RuntimeLogPath = Configuration.LogsDirectory + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".log";
+
+            File.Create(RuntimeLogPath);
+        }
 
         /// <summary>
         ///     Initializes the logger.
@@ -66,8 +82,6 @@ namespace Quaver.Logging
 
             if (log != null)
                 log.Value = value;
-            else
-                Console.WriteLine($"Error: Log with the name {name} has not been found.");
         }
 
         /// <summary>
@@ -104,6 +118,28 @@ namespace Quaver.Logging
         /// </summary>
         internal static void Log(string value, Color color, float duration = 2.5f)
         {
+            if (RuntimeLogPath == null)
+                return;
+
+            // Put the time in front of the incoming log 
+            value = DateTime.Now.ToString("h:mm:ss") + " " + value;
+
+            // Write to the log file
+            try
+            {
+                var sw = new StreamWriter(RuntimeLogPath, true)
+                {
+                    AutoFlush = true
+                };
+
+                sw.WriteLine(value);
+                sw.Close();
+            }
+            catch (Exception e)
+            {
+                // Don't bother
+            }
+
             if (!Configuration.Debug)
                 return;
 
@@ -116,7 +152,7 @@ namespace Quaver.Logging
                 Color = color,
                 Duration = duration,
                 NoDuration = false,
-                Value = DateTime.Now.ToString("h:mm:ss") + " " + value
+                Value = value
             });
         }
 
