@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Quaver.Logging;
 
 namespace Quaver.Peppy
 {
@@ -497,7 +499,7 @@ namespace Quaver.Peppy
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Log(e.Message, Color.Red);
             }
         }
     }

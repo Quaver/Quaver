@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Quaver.Beatmaps;
 using Quaver.Config;
+using Quaver.Logging;
 using Quaver.QuaFile;
 using SQLite;
 
@@ -37,16 +39,16 @@ namespace Quaver.Database
 
                 // Fetch all the new beatmaps after syncing and return them.
                 var beatmaps = await FetchAllBeatmaps();
-                Console.WriteLine($"{Module} {beatmaps.Count} beatmaps have been successfully loaded.");
+                Logger.Log($"{beatmaps.Count} beatmaps have been successfully loaded.", Color.Cyan);
 
                 var maps = BeatmapUtils.GroupBeatmapsByDirectory(beatmaps);
-                Console.WriteLine($"{Module} Successfully loaded {beatmaps.Count} in {maps.Keys.Count} directories.");
+                Logger.Log($"Successfully loaded {beatmaps.Count} in {maps.Keys.Count} directories.", Color.Cyan);
 
                 return maps;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Log(e.Message, Color.Cyan);
                 File.Delete(DatabasePath);
                 return await LoadBeatmapDatabaseAsync();
             }            
@@ -59,7 +61,7 @@ namespace Quaver.Database
         {
             var conn = new SQLiteAsyncConnection(DatabasePath);
             await conn.CreateTableAsync<Beatmap>();
-            Console.WriteLine($"{Module} Beatmap DB has been created.");
+            Logger.Log($"Beatmap Database has been created.", Color.Cyan);
         }
         
         /// <summary>
@@ -71,7 +73,7 @@ namespace Quaver.Database
         {
             // Find all the.qua files in the directory.
             var quaFiles = Directory.GetFiles(Configuration.SongDirectory, "*.qua", SearchOption.AllDirectories);
-            Console.WriteLine($"{Module} Found: {quaFiles.Length} .qua files in the /songs/ directory.");
+            Logger.Log($"Found: {quaFiles.Length} .qua files in the /songs/ directory.", Color.Cyan);
 
             await CacheByFileCount(quaFiles);
             await CacheByMd5ChecksumAsync(quaFiles);
@@ -92,7 +94,7 @@ namespace Quaver.Database
             if (beatmapsInDb.Count == quaFiles.Length)
                 return;
 
-            Console.WriteLine($"{Module} Incorrect # of .qua files vs maps detected. {quaFiles.Length} vs {beatmapsInDb.Count}");
+            Logger.Log($"Incorrect # of .qua files vs maps detected. {quaFiles.Length} vs {beatmapsInDb.Count}", Color.Red);
 
             // This'll store all the beatmaps we'll be adding into the database.
             var beatmapsToCache = new List<Beatmap>();
@@ -107,7 +109,7 @@ namespace Quaver.Database
                 var qua = await Qua.Create(file);
                 if (!qua.IsValidQua)
                 {
-                    Console.WriteLine($"{Module} Error: Qua File {file} could not be parsed.");
+                    Logger.Log($"Error: Qua File {file} could not be parsed.", Color.Red);
                     File.Delete(file);
                     continue;
                 }
@@ -142,7 +144,7 @@ namespace Quaver.Database
             var mismatchedBeatmaps = beatmapsInDb
                 .Except(beatmapsInDb.Where(map => fileChecksums.Any(md5 => md5 == map.Md5Checksum)).ToList()).ToList();
 
-            Console.WriteLine($"{Module} Found: {mismatchedBeatmaps.Count} beatmaps with unmatched checksums");
+            Logger.Log($"Found: {mismatchedBeatmaps.Count} beatmaps with unmatched checksums", Color.Cyan);
             if (mismatchedBeatmaps.Count > 0)
                 await DeleteBeatmapsFromDatabase(mismatchedBeatmaps);
 
@@ -191,7 +193,7 @@ namespace Quaver.Database
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Logger.Log(e.Message, Color.Red);
                 }
                              
             }
@@ -216,7 +218,7 @@ namespace Quaver.Database
         private static async Task InsertBeatmapsIntoDatabase(List<Beatmap> beatmaps)
         {
             await new SQLiteAsyncConnection(DatabasePath).InsertAllAsync(beatmaps)
-                .ContinueWith(t => Console.WriteLine($"{Module} Successfully added {beatmaps.Count} beatmaps to the database"));
+                .ContinueWith(t => Logger.Log($"Successfully added {beatmaps.Count} beatmaps to the database", Color.Cyan));
         }
 
         /// <summary>
@@ -233,12 +235,11 @@ namespace Quaver.Database
                     await new SQLiteAsyncConnection(DatabasePath).DeleteAsync(map);
                 }
 
-                Console.WriteLine($"{Module} Successfully deleted {beatmaps.Count} beatmaps from the database.");
+                Logger.Log($"Successfully deleted {beatmaps.Count} beatmaps from the database.", Color.Cyan);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                Console.WriteLine(e);
+                Logger.Log(e.Message, Color.Red);
             }
         }
     }

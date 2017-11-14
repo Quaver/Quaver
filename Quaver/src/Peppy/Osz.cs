@@ -102,7 +102,7 @@ namespace Quaver.Peppy
                     }
                 }
 
-                Console.WriteLine("[CONVERT OSZ TASK] Successfully completed. Stopping loader.");
+                Logger.Log("Successfully completed the conversion task. Stopping loader.", Color.Cyan);
                 GameBase.GameStateManager.RemoveState();
             });
         }
@@ -151,13 +151,12 @@ namespace Quaver.Peppy
                 
                 // Delete the entire temp directory.
                 Directory.Delete(extractPath, true);
-                Console.WriteLine($"[PEPPY CONVERTER] Completed Conversion for .osz: {fileName}");
                 Logger.Log($".osz has been successfully converted.", Color.Cyan, 2f);
             }
             catch (Exception e)
             {
                 Logger.Log($"Error: There was an issue converting the .osz", Color.Red, 2f);
-                Console.WriteLine(e);     
+                Logger.Log(e.Message, Color.Red);
             }
         }
     }
