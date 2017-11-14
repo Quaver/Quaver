@@ -16,6 +16,7 @@ using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Modifiers;
+using Quaver.QuaFile;
 using Quaver.Utility;
 
 namespace Quaver
@@ -210,6 +211,33 @@ namespace Quaver
             }
 
             DiscordRPC.UpdatePresence(ref DiscordController.presence);
+        }
+
+        /// <summary>
+        ///     Responsible for handling discord presence w/ mods if any exist.
+        /// </summary>
+        public static void ChangeDiscordPresenceGameplay(bool skippedSong)
+        {
+            var sb = new StringBuilder();
+            sb.Append($"Playing: {SelectedBeatmap.Artist} - {SelectedBeatmap.Title} [{SelectedBeatmap.DifficultyName}]");
+
+            // Get the original map length. 
+            double mapLength = Qua.FindSongLength(SelectedBeatmap.Qua) / GameClock;
+
+            // Get the new map length if it was skipped.
+            if (skippedSong)
+                mapLength = (Qua.FindSongLength(SelectedBeatmap.Qua) - SelectedBeatmap.Song.GetAudioPosition()) / GameClock;
+
+            // Add mods to the string if mods exist
+            if (GameBase.CurrentGameModifiers.Count > 0)
+            {
+                sb.Append(" with mods: ");
+
+                if (CurrentGameModifiers.Exists(x => x.ModIdentifier == ModIdentifier.Speed))
+                    sb.Append($"Speed {GameClock}x");
+            }
+
+            ChangeDiscordPresence(sb.ToString(), mapLength);
         }
     }
 }
