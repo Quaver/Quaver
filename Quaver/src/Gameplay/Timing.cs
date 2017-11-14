@@ -58,12 +58,7 @@ namespace Quaver.Gameplay
             
             for (i = 0; i < Qua.SliderVelocities.Count; i++)
             {
-                TimingObject newSV = new TimingObject
-                {
-                    TargetTime = Qua.SliderVelocities[i].StartTime,
-                    SvMultiplier = Qua.SliderVelocities[i].Multiplier
-                };
-                SvQueue.Add(newSV);
+                CreateSV(Qua.SliderVelocities[i].StartTime, Qua.SliderVelocities[i].Multiplier);
             }
 
             TimingQueue = new List<TimingObject>();
@@ -89,12 +84,7 @@ namespace Quaver.Gameplay
             //If there's no SV, create a single SV Point
             else
             {
-                TimingObject newTp = new TimingObject
-                {
-                    TargetTime = 0,
-                    SvMultiplier = 1f
-                };
-                SvQueue.Add(newTp);
+                CreateSV(0,1f);
             }
 
             //Calculates SV for efficiency
@@ -253,46 +243,49 @@ namespace Quaver.Gameplay
         }*/
 
         //Creates SV Points
+        internal static void CreateSV(float targetTime, float multiplier, int? index = null)
+        {
+            TimingObject newTp = new TimingObject();
+            newTp.TargetTime = targetTime;
+            newTp.SvMultiplier = multiplier;
+            if (index != null) SvQueue.Insert((int)index, newTp);
+            else SvQueue.Add(newTp);
+        }
+
+        /// <summary>
+        ///     Convert Timing Point to SV
+        /// </summary>
         internal static void ConvertTPtoSV()
         {
             //Create and converts timing points to SV's
-            for (int j = 0; j < TimingQueue.Count; j++)
+            var lastIndex = 0;
+            foreach (TimingObject timeObject in TimingQueue)
             {
-                if (TimingQueue[j].TargetTime < SvQueue[0].TargetTime - 0.01f)
+                if (timeObject.TargetTime < SvQueue[0].TargetTime)
                 {
-                    TimingObject newTp = new TimingObject();
-                    newTp.TargetTime = TimingQueue[j].TargetTime;
-                    if (TimingQueue[j].BPM == _averageBpm) newTp.SvMultiplier = 1;
-                    else newTp.SvMultiplier = SvQueue[0].SvMultiplier;
-                    SvQueue.Insert(0, newTp);
+                    if (Math.Abs(timeObject.BPM- _averageBpm) <= 0.02)
+                        CreateSV(timeObject.TargetTime, 1, 0);
+                    else
+                        CreateSV(timeObject.TargetTime, SvQueue[0].SvMultiplier, 0);
                 }
-                else if (TimingQueue[j].TargetTime > SvQueue[SvQueue.Count - 1].TargetTime + 0.01f)
-                {
-                    TimingObject newTp = new TimingObject();
-                    newTp.TargetTime = TimingQueue[j].TargetTime;
-                    newTp.SvMultiplier = SvQueue[SvQueue.Count - 1].SvMultiplier;
-                    SvQueue.Add(newTp);
-                }
+                else if (timeObject.TargetTime > SvQueue[SvQueue.Count - 1].TargetTime)
+                    CreateSV(timeObject.TargetTime, SvQueue[SvQueue.Count - 1].SvMultiplier);
                 else
                 {
-                    int lastIndex = 0;
-                    for (int i = lastIndex; i < SvQueue.Count; i++)
+                    for (var i = lastIndex; i < SvQueue.Count; i++)
                     {
-                        if (i + 1 < SvQueue.Count && TimingQueue[j].TargetTime < SvQueue[i + 1].TargetTime)
+                        if (i + 1 >= SvQueue.Count || !(timeObject.TargetTime < SvQueue[i + 1].TargetTime))
+                            continue;
+                        if (Math.Abs(timeObject.TargetTime - SvQueue[i].TargetTime) > 1f)
                         {
-                            if (Math.Abs(TimingQueue[j].TargetTime - SvQueue[i].TargetTime) > 1f)
-                            {
-                                TimingObject newTp = new TimingObject();
-                                newTp.TargetTime = TimingQueue[j].TargetTime;
-                                newTp.SvMultiplier = 1f;
-                                SvQueue.Add(newTp);
-                                lastIndex = i;
-                            }
-                            break;
+                            CreateSV(timeObject.TargetTime, 1f);
+                            lastIndex = i;
                         }
+                        break;
                     }
                 }
             }
+            SvQueue.Sort((p1, p2) => p1.TargetTime.CompareTo(p2.TargetTime));
         }
 
         /// <summary>
@@ -340,7 +333,6 @@ namespace Quaver.Gameplay
             //Reference Variables + Sort
             var i = 0;
             var lastIndex = 0;
-            SvQueue.Sort((p1, p2) => { return p1.TargetTime.CompareTo(p2.TargetTime); });
 
             //Normalize
             if (TimingQueue.Count >= 1)
