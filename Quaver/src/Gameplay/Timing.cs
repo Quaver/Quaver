@@ -12,6 +12,9 @@ namespace Quaver.Gameplay
     /// </summary>
     internal static class Timing
     {
+        //Gameplay Constants
+        internal const int PlayStartDelayed = 3000; //How long to pause the audio before playing. Max is 10000ms.
+
         //Audio Variables
         private static double GameAudioLength { get; set; }
         private static double SongEndOffset { get; set; }
@@ -20,7 +23,6 @@ namespace Quaver.Gameplay
         //Gameplay Variables
         private static double ActualSongTime { get; set; }
         internal static double CurrentSongTime { get; set; }
-        internal const int PlayStartDelayed = 3000; //How long to pause the audio before playing. Max is 10000ms.
         internal static List<TimingObject> SvQueue { get; set; }
         private static List<TimingObject> TimingQueue { get; set; }
 
