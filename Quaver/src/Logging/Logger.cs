@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Config;
 
 namespace Quaver.Logging
 {
@@ -27,6 +28,9 @@ namespace Quaver.Logging
         /// <param name="color"></param>
         internal static void Add(string name, string value, Color color)
         {
+            if (!Configuration.Debug)
+                return;
+
             Logs.Add(new Log()
             {
                 Name = name,
@@ -40,6 +44,9 @@ namespace Quaver.Logging
         /// </summary>
         internal static void Update(string name, string value)
         {
+            if (!Configuration.Debug)
+                return;
+
             // Find the log with the correct name passed.
             var log = Logs.FirstOrDefault(x => x.Name == name);
 
@@ -55,6 +62,9 @@ namespace Quaver.Logging
         /// <param name="name"></param>
         internal static void Remove(string name)
         {
+            if (!Configuration.Debug)
+                return;
+
             Logs.RemoveAll(x => x.Name == name);
         }
 
@@ -63,6 +73,9 @@ namespace Quaver.Logging
         /// </summary>
         internal static void Clear()
         {
+            if (!Configuration.Debug)
+                return;
+
             Logs.Clear();
         }
 
@@ -71,6 +84,9 @@ namespace Quaver.Logging
         /// </summary>
         internal static void Log(string value, Color color, float duration = 1.5f)
         {
+            if (!Configuration.Debug)
+                return;
+
             Logs.Add(new Log()
             {
                 Name = "LogMethod",
@@ -86,6 +102,9 @@ namespace Quaver.Logging
         /// </summary>
         internal static void Draw(double dt)
         {
+            if (!Configuration.Debug)
+                return;
+
             for (var i = 0; i < Logs.Count; i++)
             {
                 if (Logs[i].Value == null)
