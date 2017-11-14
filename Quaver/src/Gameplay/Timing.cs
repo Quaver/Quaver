@@ -20,7 +20,7 @@ namespace Quaver.Gameplay
         //Gameplay Variables
         private static double ActualSongTime { get; set; }
         internal static double CurrentSongTime { get; set; }
-        internal const int PlayStartDelayed = 500;
+        internal const int PlayStartDelayed = 3000; //How long to pause the audio before playing. Max is 10000ms.
         internal static List<TimingObject> SvQueue { get; set; }
         private static List<TimingObject> TimingQueue { get; set; }
 
