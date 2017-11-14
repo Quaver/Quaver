@@ -71,7 +71,10 @@ namespace Quaver.GameState.States
         public void Initialize()
         {
             // Update Discord Presence
-            HandleDiscordPresence(false);
+            GameBase.ChangeDiscordPresenceGameplay(false);
+
+            // Initialize Gameplay
+            InitializeGameplay();
 
             //Todo: Remove. Create loggers
             LogManager.AddLogger("KeyCount", Color.Pink);
@@ -189,30 +192,13 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Responsible for handling discord presence w/ mods if any exist.
+        ///     Solely responsible for intializing gameplay aspects
         /// </summary>
-        public static void HandleDiscordPresence(bool skippedSong)
+        private void InitializeGameplay()
         {
-            var sb = new StringBuilder();
-            sb.Append($"Playing: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
-
-            // Get the original map length. 
-            double mapLength = Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) / GameBase.GameClock;
-            
-            // Get the new map length if it was skipped.
-            if (skippedSong)
-                mapLength = (Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) - GameBase.SelectedBeatmap.Song.GetAudioPosition()) / GameBase.GameClock;
-
-            // Add mods to the string if mods exist
-            if (GameBase.CurrentGameModifiers.Count > 0)
-            {
-                sb.Append(" with mods: ");
-
-                if (GameBase.CurrentGameModifiers.Exists(x => x.ModIdentifier == ModIdentifier.Speed))
-                    sb.Append($"Speed {GameBase.GameClock}x");
-            }
-
-            GameBase.ChangeDiscordPresence(sb.ToString(), mapLength);
+            Playfield.Initialize();
+            Timing.Initialize(GameBase.SelectedBeatmap.Qua);
+            NoteRendering.Initialize(GameBase.SelectedBeatmap.Qua);
         }
     }
 }
