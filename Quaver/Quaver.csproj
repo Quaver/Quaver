@@ -120,6 +120,8 @@
     <Compile Include="src\Graphics\Text\TextBoxSprite.cs" />
     <Compile Include="src\Graphics\UI.cs" />
     <Compile Include="src\Graphics\Sprite\BackgroundManager.cs" />
+    <Compile Include="src\Logging\Log.cs" />
+    <Compile Include="src\Logging\Logger.cs" />
     <Compile Include="src\Peppy\Osz.cs" />
     <Compile Include="src\Gameplay\NoteManager.cs" />
     <Compile Include="src\Gameplay\NoteRendering.cs" />
@@ -157,8 +159,6 @@
     <Compile Include="src\Modifiers\NoSliderVelocities.cs" />
     <Compile Include="src\Modifiers\Speed.cs" />
     <Compile Include="src\Notifications\Notification.cs" />
-    <Compile Include="src\Logging\LogObject.cs" />
-    <Compile Include="src\Logging\LogManager.cs" />
     <Compile Include="src\Graphics\CustomColors.cs" />
     <Compile Include="src\Graphics\Sprite\Sprite.cs" />
     <Compile Include="src\Graphics\Drawable.cs" />

@@ -152,11 +152,11 @@ namespace Quaver.Peppy
                 // Delete the entire temp directory.
                 Directory.Delete(extractPath, true);
                 Console.WriteLine($"[PEPPY CONVERTER] Completed Conversion for .osz: {fileName}");
-                LogManager.QuickLog($".osz has been successfully converted.", Color.Cyan, 2f);
+                Logger.Log($".osz has been successfully converted.", Color.Cyan, 2f);
             }
             catch (Exception e)
             {
-                LogManager.QuickLog($"Error: There was an issue converting the .osz", Color.Red, 2f);
+                Logger.Log($"Error: There was an issue converting the .osz", Color.Red, 2f);
                 Console.WriteLine(e);     
             }
         }

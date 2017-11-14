@@ -77,14 +77,12 @@ namespace Quaver.GameState.States
             InitializeGameplay();
 
             //Todo: Remove. Create loggers
-            LogManager.AddLogger("KeyCount", Color.Pink);
-            LogManager.AddLogger("SongPos", Color.White);
-            LogManager.AddLogger("Skippable", CustomColors.NameTagAdmin);
+            Logger.Add("KeyCount", "", Color.Pink);
+            Logger.Add("SongPos", "", Color.White);
+            Logger.Add("Skippable", "", CustomColors.NameTagAdmin);
 
             for (var i=0; i < NoteManager.TimingNames.Length; i++)
-            {
-                LogManager.AddLogger(NoteManager.TimingNames[i], NoteManager.TimingColors[i]);
-            }
+                Logger.Add(NoteManager.TimingNames[i], "", NoteManager.TimingColors[i]);
 
             //Todo: Remove. TEST.
             TestButton = new TextButton(new Vector2(200, 30), "BACK")
@@ -133,7 +131,7 @@ namespace Quaver.GameState.States
             Playfield.UnloadContent();
 
             //Remove Loggers
-            LogManager.ClearLogger();
+            Logger.Clear();
 
             //Destroy boundarys
             TestButton.Clicked -= ButtonClick;
@@ -166,9 +164,9 @@ namespace Quaver.GameState.States
             InputManager.CheckInput(GameBase.SelectedBeatmap.Qua, IntroSkippable);
 
             // Update Loggers
-            LogManager.UpdateLogger("KeyCount", $"Key Count: {GameBase.SelectedBeatmap.Qua.KeyCount}");
-            LogManager.UpdateLogger("SongPos", "Current Track Position: " + NoteRendering.TrackPosition);
-            LogManager.UpdateLogger("Skippable", $"Intro Skippable: {IntroSkippable}");
+            Logger.Update("KeyCount", $"Key Count: {GameBase.SelectedBeatmap.Qua.KeyCount}");
+            Logger.Update("SongPos", "Current Track Position: " + NoteRendering.TrackPosition);
+            Logger.Update("Skippable", $"Intro Skippable: {IntroSkippable}");
 
             //Todo: remove. TEST.
             TextUnder.Update(dt);
