@@ -33,7 +33,6 @@ namespace Quaver.GameState.States
         {
             Task.Run(() => LoadBeatmap()).ContinueWith(t =>
             {
-                InitializeGameplay(GameBase.SelectedBeatmap.Qua);
                 ChangeState();
             });
         }
@@ -83,34 +82,7 @@ namespace Quaver.GameState.States
                 // actually playing the correct map.
                 GameBase.SelectedBeatmap.Qua = qua;
 
-                // Attempt to load the audio.
-                GameBase.SelectedBeatmap.Song.Stop();
-                GameBase.SelectedBeatmap.LoadAudio();
-
-                // Detect if the audio can't be played.
-                if (GameBase.SelectedBeatmap.Song.GetAudioLength() < 1)
-                    throw new Exception("[SONG LOADING STATE] Audio file could not be loaded.");
-
                 LogManager.ConsoleLog("[SONG LOADING STATE]: Done Loading Beatmap", ConsoleColor.DarkCyan);
-            }
-            catch (Exception ex)
-            {
-                LogManager.Debug(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n");
-            }
-        }
-
-        /// <summary>
-        ///     Initializes gameplay classes
-        /// </summary>
-        /// <param name="qua"></param>
-        private void InitializeGameplay(Qua qua)
-        {
-            try
-            {
-                Playfield.Initialize();
-                Timing.Initialize(qua);
-                NoteRendering.Initialize(qua);
-                LogManager.ConsoleLog("[SONG LOADING STATE]: Done Initializing Gameplay", ConsoleColor.DarkCyan);
             }
             catch (Exception ex)
             {
@@ -122,9 +94,18 @@ namespace Quaver.GameState.States
         {
             try
             {
+                // Stop the current audio and load it again before moving onto the next state.
+                GameBase.SelectedBeatmap.Song.Stop();
+                GameBase.SelectedBeatmap.LoadAudio();
+
+                // Detect if the audio can't be played.
+                if (GameBase.SelectedBeatmap.Song.GetAudioLength() < 1)
+                    throw new Exception("[SONG LOADING STATE] Audio file could not be loaded.");
+
+                // Get the MD5 Hash of the played map and change the state.
                 var quaPath = $"{Config.Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
-                var md5 = BeatmapUtils.GetMd5Checksum(quaPath);
-                GameBase.GameStateManager.ChangeState(new PlayScreenState(md5));
+                GameBase.GameStateManager.ChangeState(new PlayScreenState(BeatmapUtils.GetMd5Checksum(quaPath)));
+
                 LogManager.ConsoleLog("[SONG LOADING STATE]: Done Changing States", ConsoleColor.Cyan);
             }
             catch (Exception ex)
