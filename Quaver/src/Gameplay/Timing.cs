@@ -79,7 +79,7 @@ namespace Quaver.Gameplay
             if (ModManager.Activated(ModIdentifier.NoSliderVelocity) == false && SvQueue.Count > 1)
             {
                 ConvertTPtoSV();
-                NormalizeSVs();
+                //NormalizeSVs();
             }
             //If there's no SV, create a single SV Point
             else
@@ -274,12 +274,12 @@ namespace Quaver.Gameplay
                 {
                     for (var i = lastIndex; i < SvQueue.Count; i++)
                     {
-                        if (i + 1 >= SvQueue.Count || !(timeObject.TargetTime < SvQueue[i + 1].TargetTime))
+                        if (i + 1 >= SvQueue.Count) //|| !(timeObject.TargetTime < SvQueue[i + 1].TargetTime))
                             continue;
                         if (Math.Abs(timeObject.TargetTime - SvQueue[i].TargetTime) > 1f)
                         {
-                            CreateSV(timeObject.TargetTime, 1f);
-                            lastIndex = i;
+                            CreateSV(timeObject.TargetTime, 1f, lastIndex);
+                            lastIndex = i+1;
                         }
                         break;
                     }
@@ -332,6 +332,7 @@ namespace Quaver.Gameplay
         {
             //Reference Variables + Sort
             var i = 0;
+            var j = 0;
             var lastIndex = 0;
 
             //Normalize
@@ -339,24 +340,26 @@ namespace Quaver.Gameplay
             {
                 for (i = 0; i < SvQueue.Count; i++)
                 {
-                    if (lastIndex + 1 < TimingQueue.Count)
+                    for (j = lastIndex; j < TimingQueue.Count; j++)
                     {
-                        if (SvQueue[i].TargetTime < TimingQueue[lastIndex + 1].TargetTime - 0.01f)
+                        if (j + 1 < TimingQueue.Count)
                         {
-                            SvQueue[i].TargetTime = SvQueue[i].TargetTime;
-                            SvQueue[i].SvMultiplier = Math.Min(SvQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
+                            if (SvQueue[i].TargetTime < TimingQueue[lastIndex + 1].TargetTime)
+                            {
+                                Console.WriteLine(SvQueue[i].TargetTime);
+                                SvQueue[i].SvMultiplier =
+                                    Math.Min(SvQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
+                            }
+                            else
+                            {
+                                SvQueue[i].SvMultiplier =
+                                    Math.Min(SvQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
+                                lastIndex = j;
+                            }
+                            break;
                         }
-                        else
-                        {
-                            lastIndex++;
-                            SvQueue[i].TargetTime = SvQueue[i].TargetTime;
-                            SvQueue[i].SvMultiplier = Math.Min(SvQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
-                        }
-                    }
-                    else
-                    {
-                        SvQueue[i].TargetTime = SvQueue[i].TargetTime;
-                        SvQueue[i].SvMultiplier = Math.Min(SvQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
+                        SvQueue[i].SvMultiplier =
+                            Math.Min(SvQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
                     }
                 }
             }
