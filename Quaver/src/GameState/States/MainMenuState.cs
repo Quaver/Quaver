@@ -59,6 +59,9 @@ namespace Quaver.GameState.States
             CreateButtons();
 
             UpdateReady = true;
+
+            // Logging
+            Logger.Log($"Loaded {GameBase.Beatmaps.Count} beatmap sets", Color.Pink);
         }
 
         /// <summary>
