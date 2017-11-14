@@ -103,7 +103,6 @@ namespace Quaver.Beatmaps
                     }
                     catch (Exception e)
                     {
-                        LogManager.Debug(e.Message);
                         continue;
                     }
 

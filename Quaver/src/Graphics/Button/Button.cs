@@ -44,7 +44,7 @@ namespace Quaver.Graphics.Button
         {
             if (Clickable)
             {
-                LogManager.QuickLog("Clicked", Color.LightBlue, 0.5f);
+                Logger.Log("Clicked", Color.LightBlue, 0.5f);
                 Clicked?.Invoke(this, null);
             }
         }

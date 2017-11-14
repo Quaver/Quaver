@@ -70,7 +70,7 @@ namespace Quaver.Gameplay
 
             //log scores
             if (index < 5)
-            LogManager.UpdateLogger(NoteManager.TimingNames[index], NoteManager.TimingNames[index]+": "+ JudgeSpread[index]);
+            Logger.Update(NoteManager.TimingNames[index], NoteManager.TimingNames[index]+": "+ JudgeSpread[index]);
 
             //Display stuff
             Playfield.UpdateJudge(index);

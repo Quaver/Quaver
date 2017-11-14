@@ -200,7 +200,7 @@ namespace Quaver
                 FpsCounter.Draw();
 
             //Draw log manager logs
-            LogManager.Draw(dt);
+            Logger.Draw(dt);
 
             //Draw cursor
             GameBase.Cursor.Draw();

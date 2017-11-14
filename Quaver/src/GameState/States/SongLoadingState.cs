@@ -79,11 +79,11 @@ namespace Quaver.GameState.States
                 // actually playing the correct map.
                 GameBase.SelectedBeatmap.Qua = qua;
 
-                LogManager.ConsoleLog("[SONG LOADING STATE]: Done Loading Beatmap", ConsoleColor.DarkCyan);
+                Logger.Log("Finished loading Beatmap", Color.Cyan);
             }
             catch (Exception ex)
             {
-                LogManager.Debug(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n");
+                Logger.Log(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n", Color.Red, 5.0f);
             }
         }
 
@@ -106,11 +106,11 @@ namespace Quaver.GameState.States
                 var quaPath = $"{Config.Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
                 GameBase.GameStateManager.ChangeState(new PlayScreenState(BeatmapUtils.GetMd5Checksum(quaPath)));
 
-                LogManager.ConsoleLog("[SONG LOADING STATE]: Done Changing States", ConsoleColor.Cyan);
+                Logger.Log("Successfully changed to the gameplay state.", Color.Cyan);
             }
             catch (Exception ex)
             {
-                LogManager.Debug(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n");
+                Logger.Log(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n", Color.Red, 5.0f);
             }
         }
     }
