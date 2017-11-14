@@ -71,7 +71,7 @@ namespace Quaver.Modifiers
 
                 // Remove the Mod
                 GameBase.CurrentGameModifiers.Remove(removedMod);
-                Logger.Log("Removed {modIdentifier} from the current game modifiers.", Color.Cyan);
+                Logger.Log($"Removed {modIdentifier} from the current game modifiers.", Color.Cyan);
 
             }
             catch (Exception e)
