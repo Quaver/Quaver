@@ -26,19 +26,16 @@ namespace Quaver.GameState.States
         public bool UpdateReady { get; set; }
 
         /// <summary>
-        ///     Keeps track of if we're currently loading the map.
-        /// </summary>
-        private bool IsLoading { get; set; }
-
-        /// <summary>
         ///     Try to load the qua file and song. 
         ///     If we've successfully loaded it, move onto the play state.
         /// </summary>
         public void Initialize()
         {
-            LoadBeatmap();
-            InitializeGameplay(GameBase.SelectedBeatmap.Qua);
-            ChangeState();
+            Task.Run(() => LoadBeatmap()).ContinueWith(t =>
+            {
+                InitializeGameplay(GameBase.SelectedBeatmap.Qua);
+                ChangeState();
+            });
         }
 
         /// <summary>
