@@ -33,7 +33,7 @@ namespace Quaver.GameState
                 newState.Initialize();
 
                 //Todo: [TAG] console writeline remove
-                LogManager.ConsoleLog("["+DateTime.Today.TimeOfDay+"][GAMESTATE MANAGER]: Loaded State: " + newState, ConsoleColor.Green);
+                Logger.Log($"Loaded State: {newState}", Color.Cyan);
             }
             catch (Exception ex)
             {
@@ -55,7 +55,7 @@ namespace Quaver.GameState
                 States.Peek().UnloadContent();
 
                 //Todo: [TAG] console writeline remove
-                LogManager.ConsoleLog("[" + DateTime.Today.TimeOfDay + "][GAMESTATE MANAGER]: Unloaded content from " + States.Peek(), ConsoleColor.DarkGreen);
+                Logger.Log($"Unloaded content from {States.Peek()}", Color.Cyan);
                 States.Pop();
             }
             catch (Exception ex)
@@ -136,7 +136,7 @@ namespace Quaver.GameState
 
         private void Debug(Exception ex)
         {
-            LogManager.Debug(ex.TargetSite+"\n"+ex.StackTrace+"\n"+ ex.Message+"\n");
+            Logger.Log(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n", Color.Red, 5.0f);
         }
     }
 }

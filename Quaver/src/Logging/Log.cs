@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace Quaver.Logging
 {
-    class LogObject
+    internal class Log
     {
         /// <summary>
         /// The name of the Log-Tracking Object
@@ -22,7 +22,7 @@ namespace Quaver.Logging
         /// <summary>
         /// The color of the message
         /// </summary>
-        public Color LogColor { get; set; }
+        public Color Color { get; set; }
 
         /// <summary>
         /// How long the message will be shown for.

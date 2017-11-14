@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Quaver.Logging;
 
 namespace Quaver.Modifiers
@@ -75,7 +76,7 @@ namespace Quaver.Modifiers
             }
             catch (Exception e)
             {
-                LogManager.Debug(e.Message);
+                Logger.Log(e.Message, Color.Red, 5.0f);
                 Console.WriteLine("[MOD MANAGER] Error: Trying to remove mod that isn't activated. Moving On!");
             }
         }

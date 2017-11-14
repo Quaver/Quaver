@@ -94,8 +94,7 @@ namespace Quaver.GameState.States
             SpeedModButton.Clicked += OnSpeedModButtonClick;
 
             //Add map selected text TODO: remove later
-            LogManager.AddLogger("MapSelected",Color.Yellow);
-            LogManager.UpdateLogger("MapSelected", "Map Selected: "+GameBase.SelectedBeatmap.Artist + " - " + GameBase.SelectedBeatmap.Title + " [" + GameBase.SelectedBeatmap.DifficultyName + "]");
+            Logger.Add("MapSelected", "Map Selected: " + GameBase.SelectedBeatmap.Artist + " - " + GameBase.SelectedBeatmap.Title + " [" + GameBase.SelectedBeatmap.DifficultyName + "]", Color.Yellow);
             UpdateReady = true;
         }
 
@@ -131,7 +130,7 @@ namespace Quaver.GameState.States
         //TODO: Remove
         public void ButtonClick(object sender, EventArgs e, string text, Beatmap map)
         {
-            LogManager.UpdateLogger("MapSelected","Map Selected: "+text);
+            Logger.Update("MapSelected","Map Selected: "+text);
 
             //Select map
             GameBase.ChangeBeatmap(map);
