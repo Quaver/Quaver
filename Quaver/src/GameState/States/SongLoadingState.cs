@@ -31,10 +31,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
-            Task.Run(() => LoadBeatmap()).ContinueWith(t =>
-            {
-                ChangeState();
-            });
+            Task.Run(() => LoadBeatmap()).ContinueWith(t => ChangeState());
         }
 
         /// <summary>
@@ -90,6 +87,9 @@ namespace Quaver.GameState.States
             }
         }
 
+        /// <summary>
+        ///     Responsible for getting the state ready to be changed, and then actually chjanging it.
+        /// </summary>
         private void ChangeState()
         {
             try
