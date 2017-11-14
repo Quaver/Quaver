@@ -49,8 +49,8 @@ namespace Quaver.Modifiers
             GameBase.ScoreMultiplier += mod.ScoreMultiplierAddition;
             mod.InitializeMod();  
             
-            Console.WriteLine($"[MOD MANAGER] Added Mod: {mod.ModIdentifier} and removed all incompatible mods.");
-            Console.WriteLine($"[MOD MANAGER] Current Mods: {String.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ToString()))}");
+            Logger.Log($"Added Mod: {mod.ModIdentifier} and removed all incompatible mods.", Color.Cyan);
+            Logger.Log($"Current Mods: {String.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ToString()))}", Color.Cyan);
         }
 
         /// <summary>
@@ -71,13 +71,12 @@ namespace Quaver.Modifiers
 
                 // Remove the Mod
                 GameBase.CurrentGameModifiers.Remove(removedMod);
-                Console.WriteLine($"[MOD MANAGER] Removed {modIdentifier} from the current game modifiers.");
+                Logger.Log("Removed {modIdentifier} from the current game modifiers.", Color.Cyan);
 
             }
             catch (Exception e)
             {
                 Logger.Log(e.Message, Color.Red, 5.0f);
-                Console.WriteLine("[MOD MANAGER] Error: Trying to remove mod that isn't activated. Moving On!");
             }
         }
 

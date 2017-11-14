@@ -98,7 +98,7 @@ namespace Quaver.Input
             {
                 IntroSkipped = true;
 
-                Console.WriteLine("[GAMEPLAY STATE] Song has been successfully skipped to 3 seconds before the first HitObject.");
+                Logger.Log("Song has been successfully skipped to 3 seconds before the first HitObject.", Color.Pink);
 
                 // Pause the song temporarily.
                 GameBase.SelectedBeatmap.Song.Pause();

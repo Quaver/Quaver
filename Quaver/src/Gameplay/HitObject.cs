@@ -193,8 +193,6 @@ namespace Quaver.Gameplay
         /// </summary>
         public void Kill()
         {
-            //Console.WriteLine("KILLED");
-
             Color newTint = Color.Gray;
             HoldBodySprite.Tint = newTint;
             HoldEndSprite.Tint = newTint;

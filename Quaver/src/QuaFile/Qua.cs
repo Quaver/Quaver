@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Quaver.Logging;
 
 namespace Quaver.QuaFile
 {
@@ -238,8 +240,7 @@ namespace Quaver.QuaFile
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                Console.WriteLine(line);
+                Logger.Log(e.Message, Color.Red);
                 throw;
             }
         }
@@ -381,7 +382,7 @@ namespace Quaver.QuaFile
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Log(e.Message, Color.Red);
                 IsValidQua = false;
             }
         }
@@ -414,7 +415,7 @@ namespace Quaver.QuaFile
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Log(e.Message, Color.Red);
                 IsValidQua = false;
             }
         }
@@ -451,7 +452,7 @@ namespace Quaver.QuaFile
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Log(e.Message, Color.Red);
                 IsValidQua = false;
             }
         }

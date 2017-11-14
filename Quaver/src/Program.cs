@@ -12,6 +12,7 @@ using Quaver.Commands;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Discord;
+using Quaver.Logging;
 using Quaver.Tests;
 
 namespace Quaver
@@ -29,6 +30,9 @@ namespace Quaver
         {
             // Initialize Config
             Configuration.InitializeConfig();
+
+            // Create the log file.
+            Logger.CreateLogFile();
 
             // Initialize Discord RichPresence
             InitializeDiscordPresence();

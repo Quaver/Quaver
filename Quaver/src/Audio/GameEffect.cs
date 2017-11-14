@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Quaver.Config;
 using ManagedBass;
+using Microsoft.Xna.Framework;
+using Quaver.Logging;
 
 namespace Quaver.Audio
 {
@@ -48,7 +50,7 @@ namespace Quaver.Audio
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Log(e.Message, Color.Red);
             }
         }
 
