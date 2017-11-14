@@ -20,24 +20,32 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     The size of each HitObject.
         /// </summary>
-        public static int PlayfieldObjectSize { get; set; }
+        internal static int PlayfieldObjectSize { get; set; }
 
         /// <summary>
         ///     The size of the playfield padding.
         /// </summary>
         private static int PlayfieldPadding { get; set; }
 
+        /// <summary>
+        ///     The padding of the receptors.
+        /// </summary>
         private static int ReceptorPadding { get; set; }
 
         /// <summary>
         ///     TODO: CHANGE. Use Config Variable instead.
         /// </summary>
-        public static int ReceptorYOffset { get; set; }
+        internal static int ReceptorYOffset { get; set; }
 
         /// <summary>
         ///     TODO: The Playfield size. Load from skin -- About 400px wide.
         /// </summary>
-        public static int PlayfieldSize { get; set; }
+        internal static int PlayfieldSize { get; set; }
+
+        /// <summary>
+        ///     The X-position of each receptor.
+        /// </summary>
+        internal static float[] ReceptorXPosition { get; set; } = new float[GameBase.SelectedBeatmap.Qua.KeyCount];
 
         /// <summary>
         ///     The receptor sprites.
@@ -55,31 +63,32 @@ namespace Quaver.Gameplay
         private static float[] ReceptorCurrentSize { get; set; }
 
         /// <summary>
-        ///     The X-position of each receptor.
-        /// </summary>
-        public static float[] ReceptorXPosition { get; set; } = new float[GameBase.SelectedBeatmap.Qua.KeyCount];
-
-        /// <summary>
         ///     The first layer of the playfield. Used to render receptors/FX
         /// </summary>
-        public static Boundary BoundaryUnder { get; set; }
+        private static Boundary BoundaryUnder { get; set; }
 
         /// <summary>
         ///     The second layer of the playfield. Used to render judge/HitBurst
         /// </summary>
-        public static Boundary BoundaryOver { get; set; }
+        private static Boundary BoundaryOver { get; set; }
 
         /// <summary>
         ///     The background mask of the playfield.
         /// </summary>
-        public static Sprite BgMask { get; set; }
+        private static Sprite BgMask { get; set; }
 
         /// <summary>
         ///     This displays the judging (MARV/PERF/GREAT/ect)
         /// </summary>
-        public static Sprite JudgeSprite { get; set; }
+        private static Sprite JudgeSprite { get; set; }
 
-        public static Texture2D[] JudgeImages { get; set; }
+        /// <summary>
+        ///     Used to reference the images for JudgeSprite
+        /// </summary>
+        private static Texture2D[] JudgeImages { get; set; }
+
+        private static Sprite AccuracyBox { get; set; }
+        
 
         /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
