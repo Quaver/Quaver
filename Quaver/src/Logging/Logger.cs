@@ -19,7 +19,15 @@ namespace Quaver.Logging
         /// <summary>
         ///     The SpriteFont for the logs
         /// </summary>
-        private static SpriteFont Font { get; } = GameBase.Content.Load<SpriteFont>("testFont");
+        private static SpriteFont Font { get; set; }
+
+        /// <summary>
+        ///     Initializes the logger.
+        /// </summary>
+        internal static void Initialize()
+        {
+            Font = GameBase.Content.Load<SpriteFont>("testFont");
+        }
 
         /// <summary>
         ///     Adds a log to our current list.
@@ -29,6 +37,9 @@ namespace Quaver.Logging
         internal static void Add(string name, string value, Color color)
         {
             if (!Configuration.Debug)
+                return;
+
+            if (GameBase.Content == null)
                 return;
 
             Logs.Add(new Log()
@@ -45,6 +56,9 @@ namespace Quaver.Logging
         internal static void Update(string name, string value)
         {
             if (!Configuration.Debug)
+                return;
+
+            if (GameBase.Content == null)
                 return;
 
             // Find the log with the correct name passed.
@@ -65,6 +79,9 @@ namespace Quaver.Logging
             if (!Configuration.Debug)
                 return;
 
+            if (GameBase.Content == null)
+                return;
+
             Logs.RemoveAll(x => x.Name == name);
         }
 
@@ -76,6 +93,9 @@ namespace Quaver.Logging
             if (!Configuration.Debug)
                 return;
 
+            if (GameBase.Content == null)
+                return;
+
             Logs.Clear();
         }
 
@@ -85,6 +105,9 @@ namespace Quaver.Logging
         internal static void Log(string value, Color color, float duration = 2.5f)
         {
             if (!Configuration.Debug)
+                return;
+
+            if (GameBase.Content == null)
                 return;
 
             Logs.Add(new Log()
@@ -103,6 +126,9 @@ namespace Quaver.Logging
         internal static void Draw(double dt)
         {
             if (!Configuration.Debug)
+                return;
+
+                        if (GameBase.Content == null)
                 return;
 
             for (var i = 0; i < Logs.Count; i++)
