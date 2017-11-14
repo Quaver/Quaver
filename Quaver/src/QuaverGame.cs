@@ -115,6 +115,9 @@ namespace Quaver
             // Load UI .xnb elements
             GameBase.UI.LoadElementsAsContent();
 
+            // Initialze the logger
+            Logger.Initialize();
+
             //Initialize Background Manager. Use after Load UI.
             BackgroundManager.Initialize();
             if (GameBase.Beatmaps.Count != 0)
