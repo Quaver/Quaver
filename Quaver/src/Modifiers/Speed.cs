@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Quaver.Logging;
 
 namespace Quaver.Modifiers
 {
@@ -65,7 +67,7 @@ namespace Quaver.Modifiers
         {
             // Set the GameClock (Audio Speed) to the SpeedAlterationRate.
             GameBase.GameClock = SpeedAlterationRate;
-            Console.WriteLine($"[MOD MANAGER] Speed is not set to {GameBase.GameClock}x");
+            Logger.Log($"Speed is now set to {GameBase.GameClock}x", Color.Cyan);
         }
     }
 }
