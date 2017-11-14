@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ManagedBass;
+using Microsoft.Xna.Framework;
+using Quaver.Logging;
 using Configuration = Quaver.Config.Configuration;
 
 namespace Quaver.Audio
@@ -51,7 +53,7 @@ namespace Quaver.Audio
             }
             catch (Exception e)
             {
-                Console.WriteLine("[AUDIO HANDLER] Could not free available streams for this current interval.");
+                Logger.Log("Error: Could not free available streams for this interval", Color.Red);
             }
         }
     }

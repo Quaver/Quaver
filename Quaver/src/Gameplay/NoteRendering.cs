@@ -101,7 +101,7 @@ namespace Quaver.Gameplay
                 HitObjectPool.Add(newObject);
             }
 
-            Console.WriteLine("[STATE_GAMEPLAY/NoteRendering]: Done Loading Hitobjects.");
+            Logger.Log("Done loading HitObjects", Color.AntiqueWhite);
         }
 
         /// <summary>
