@@ -145,7 +145,6 @@ namespace Quaver.GameState.States
         //TODO: Remove
         public void PlayMap(object sender, EventArgs e)
         {
-            GameBase.SelectedBeatmap.Song.Stop();
             GameBase.GameStateManager.ChangeState(new SongLoadingState());
         }
 
