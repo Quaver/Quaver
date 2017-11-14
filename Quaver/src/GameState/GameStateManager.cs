@@ -31,9 +31,6 @@ namespace Quaver.GameState
 
                 // Initialize the screen
                 newState.Initialize();
-
-                //Todo: [TAG] console writeline remove
-                Logger.Log($"Loaded State: {newState}", Color.Cyan);
             }
             catch (Exception ex)
             {
@@ -53,9 +50,6 @@ namespace Quaver.GameState
             try
             {
                 States.Peek().UnloadContent();
-
-                //Todo: [TAG] console writeline remove
-                Logger.Log($"Unloaded content from {States.Peek()}", Color.Cyan);
                 States.Pop();
             }
             catch (Exception ex)

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using ManagedBass;
 using ManagedBass.Fx;
+using Microsoft.Xna.Framework;
+using Quaver.Logging;
 using Configuration = Quaver.Config.Configuration;
 
 namespace Quaver.Audio
@@ -105,7 +107,7 @@ namespace Quaver.Audio
                 return;
 
             Bass.ChannelPause(Stream);
-            Console.WriteLine($"[AUDIO ENGINE] Audio Stream: {Stream} has been paused.");
+            Logger.Log($"Audio Stream {Stream} has been paused.", Color.Cyan);
         }
 
         /// <summary>
@@ -117,7 +119,7 @@ namespace Quaver.Audio
                 return;
 
             Bass.ChannelPlay(Stream);
-            Console.WriteLine($"[AUDIO ENGINE] Audio Stream: {Stream} has been resumed.");
+            Logger.Log($"Audio Stream {Stream} has been resumed.", Color.Cyan);
         }
 
         /// <summary>
