@@ -120,6 +120,11 @@ namespace Quaver.Config
         private static string _skin = "Default";
 
         /// <summary>
+        ///     Dictates whether or not to show logger messages
+        /// </summary>
+        private static bool _debug = true;
+
+        /// <summary>
         ///     The key pressed for lane 1
         /// </summary>
         private static Keys _keyMania1 = Keys.D;
@@ -515,6 +520,16 @@ namespace Quaver.Config
             }
         }
 
+        internal static bool Debug
+        {
+            get => _debug;
+            set
+            {
+                _debug = value;
+                Task.Run(async () => await WriteConfigFileAsync());
+            }
+        }
+
         internal static Keys KeyMania1
         {
             get => _keyMania1;
@@ -782,6 +797,7 @@ namespace Quaver.Config
             _displayTimingBars = ConfigHelper.ReadBool(DisplayTimingBars, data["DisplayTimingBars"]);
             _leaderboardVisible = ConfigHelper.ReadBool(LeaderboardVisible, data["LeaderboardVisible"]);
             _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
+            _debug = ConfigHelper.ReadBool(Debug, data["Debug"]);
             _keyMania1 = ConfigHelper.ReadKeys(KeyMania1, data["KeyMania1"]);
             _keyMania2 = ConfigHelper.ReadKeys(KeyMania2, data["KeyMania2"]);
             _keyMania3 = ConfigHelper.ReadKeys(KeyMania3, data["KeyMania3"]);
