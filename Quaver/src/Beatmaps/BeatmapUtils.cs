@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using ManagedBass;
+using Microsoft.Xna.Framework;
 using Quaver.Logging;
 
 namespace Quaver.Beatmaps
@@ -217,7 +218,7 @@ namespace Quaver.Beatmaps
                     break;
             }
 
-            Console.WriteLine($"[GAME BASE] Random Beatmap: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]");
+            Logger.Log($"Random Beatmap Selected: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]", Color.Cyan);
         }
     }
 }

@@ -61,7 +61,7 @@ namespace Quaver.GameState.States
             UpdateReady = true;
 
             // Logging
-            Logger.Log($"Loaded {GameBase.Beatmaps.Count} beatmap sets", Color.Pink);
+            Logger.Log($"{GameBase.Beatmaps.Count} beatmap sets are currently loaded", Color.Pink);
         }
 
         /// <summary>

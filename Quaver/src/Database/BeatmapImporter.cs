@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Quaver.Config;
+using Quaver.Logging;
 
 
 namespace Quaver.Database
@@ -38,7 +40,7 @@ namespace Quaver.Database
         /// <param name="e"></param>
         internal static void OnDirectoryChange(object source, FileSystemEventArgs e)
         {
-            Console.WriteLine($"[BEATMAP IMPORTER] Detected directory change at: {e.FullPath}");
+            Logger.Log($"Detected directory change at: {e.FullPath}", Color.Pink);
             GameBase.ImportQueueReady = true;
         }
     }
