@@ -269,7 +269,7 @@ namespace Quaver.Skins
                         JudgeMarv = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"hit":
-                        Hit = LoadGameEffectElement(Assembly.GetExecutingAssembly().GetManifestResourceStream("Quaver.Resources.Default_Skin.hit.mp3"));
+                        Hit = LoadGameEffectElement(Assembly.GetExecutingAssembly().GetManifestResourceStream("Quaver.Resources.Default_Skin.hit.mp3"), "hit.mp3");
                         break;
                     default:
                         break;
@@ -301,9 +301,11 @@ namespace Quaver.Skins
         /// <param name="element"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        private GameEffect LoadGameEffectElement(Stream stream)
+        private GameEffect LoadGameEffectElement(Stream stream, string path)
         {
-            return new GameEffect(stream);
+            var fullPath = Configuration.SkinDirectory + "/" + Configuration.Skin + "/" + path;
+
+            return (File.Exists(fullPath)) ? new GameEffect(fullPath) : new GameEffect(stream);
         }
 
         /// <summary>
