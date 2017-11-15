@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -131,6 +132,20 @@ namespace Quaver.Utility
         internal static float Tween(float target, float current, double scale)
         {
             return (float)(current + ((target - current) * scale));
+        }
+
+        /// <summary>
+        ///     Turns a Stream object into a byte array
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static byte[] ConvertStreamToByteArray(Stream input)
+        {
+            using (var ms = new MemoryStream())
+            {
+                input.CopyTo(ms);
+                return ms.ToArray();
+            }
         }
     }
 }
