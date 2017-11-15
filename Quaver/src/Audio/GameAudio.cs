@@ -50,7 +50,7 @@ namespace Quaver.Audio
         ///     Loads an audio stream, called automatically upon instantiation
         /// </summary>
         /// <param name="filePath"></param>
-        protected void LoadAudioStream(string filePath)
+        private void LoadAudioStream(string filePath)
         {
             // Make sure BASS only gets initialized one time.
             if (!GameBase.BassInitialized)
