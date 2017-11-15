@@ -117,7 +117,7 @@ namespace Quaver.Config
         /// <summary>
         ///     The skin in the Skins directory that is loaded. Default is the only exception, as it'll be overrided.
         /// </summary>
-        private static string _skin = "Default";
+        private static string _skin = "";
 
         /// <summary>
         ///     Dictates whether or not to show logger messages
