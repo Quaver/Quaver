@@ -37,7 +37,7 @@ namespace Quaver.Config
         /// <summary>
         ///     The Music volume of the gamne.
         /// </summary>
-        private static byte _volumeMusic = 50;
+        private static byte _volumeMusic = 30;
 
         /// <summary>
         ///     The dim for backgrounds during gameplay
