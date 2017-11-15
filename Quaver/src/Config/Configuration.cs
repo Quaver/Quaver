@@ -32,7 +32,7 @@ namespace Quaver.Config
         /// <summary>
         ///     The SFX volume of the game.
         /// </summary>
-        private static byte _volumeEffect = 50;
+        private static byte _volumeEffect = 100;
 
         /// <summary>
         ///     The Music volume of the gamne.
