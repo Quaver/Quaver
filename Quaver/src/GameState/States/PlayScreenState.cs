@@ -70,6 +70,8 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
+            GameBase.GameWindow.Title = $"Quaver - {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]";
+
             // Update Discord Presence
             GameBase.ChangeDiscordPresenceGameplay(false);
 

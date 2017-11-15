@@ -38,6 +38,8 @@ namespace Quaver.GameState.States
 
         public void Initialize()
         {
+            GameBase.GameWindow.Title = "Quaver";
+
             // Update Discord Presence
             GameBase.ChangeDiscordPresence("In song select");
 
