@@ -27,6 +27,11 @@ namespace Quaver
     internal static class GameBase
     {
         /// <summary>
+        ///     Reference to the Game's window.
+        /// </summary>
+        public static GameWindow GameWindow { get; set; }
+
+        /// <summary>
         ///     The global game state manager for the game.
         /// </summary>
         public static GameStateManager GameStateManager { get; } = new GameStateManager();
