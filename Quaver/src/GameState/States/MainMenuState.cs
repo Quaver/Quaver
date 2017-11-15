@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Forms.VisualStyles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -49,6 +49,8 @@ namespace Quaver.GameState.States
 
         public void Initialize()
         {
+            GameBase.GameWindow.Title = "Quaver";
+
             // Initialize the main menu's audio player.
             MenuAudioPlayer.Initialize();
 
