@@ -43,7 +43,10 @@ namespace Quaver.Audio
                 foreach (var audioStream in GlobalAudioStreams)
                 {
                     if (Bass.ChannelIsActive(audioStream) == PlaybackState.Stopped)
+                    {
+                        Bass.ChannelStop(audioStream);
                         Bass.StreamFree(audioStream);
+                    }                  
                     else
                         newStreamList.Add(audioStream);
                 }
