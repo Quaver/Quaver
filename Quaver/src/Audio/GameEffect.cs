@@ -8,16 +8,26 @@ using Quaver.Config;
 using ManagedBass;
 using Microsoft.Xna.Framework;
 using Quaver.Logging;
+using Quaver.Utility;
 
 namespace Quaver.Audio
 {
     internal class GameEffect : GameAudio
     {
         /// <summary>
-        ///     Constructor - Turns an audio stream into a temp file, then proceeds to load it. 
-        ///     ManagedBass doesn't seem to have to ability to create a stream directly from 
-        ///     a Streaam instance, so this seems to be a better option.
-        ///     TODO: Explore this more, it's a bit hacky.
+        ///     The raw file data containing the SFX
+        /// </summary>
+        private byte[] Data { get; set; }
+
+        /// <summary>
+        ///     The path of the file, if there is one.
+        /// </summary>
+        private string Path { get; set; }
+
+        /// <summary>
+        ///     Constructor - Takes in a Stream and converts it into a byte array containing
+        ///     the raw file data. This is then used to create a BASS stream to be used as a game effect.
+        ///     * Used for embedded resource effects
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="effect"></param>
@@ -25,33 +35,78 @@ namespace Quaver.Audio
         {
             try
             {
-                byte[] buffer = new byte[8 * 1024];
+                // Convert the stream to a byte array
+                Data = Util.ConvertStreamToByteArray(stream);
 
-                // Create a random name for the file
-                var random = new Random();
-                var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-                var randFileName = new string(Enumerable.Repeat(chars, 25).Select(s => s[random.Next(s.Length)]).ToArray());
-
-                // Create file with the audio stream
-                var path = Config.Configuration.DataDirectory + $"/{randFileName}.mp3";
-                var file = File.Create(path);
-                int len;
-                while ((len = stream.Read(buffer, 0, buffer.Length)) > 0)
+                if (Data.Length == 0)
                 {
-                    file.Write(buffer, 0, len);
+                    Stream = 0;
+                    return;
                 }
 
-                file.Close();
-
-                Path = path;
-
-                // Proceed to load the audio stream as normal.
-                LoadAudioStream(path);
+                LoadAudioStream();
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, Color.Red);
+                Console.WriteLine(e);
+                throw;
             }
+        }
+
+        /// <summary>
+        ///     Ctor - 
+        ///     Loads a GameEffect from a file path.
+        ///     Used for skinned SFX.
+        /// </summary>
+        /// <param name="path"></param>
+        public GameEffect(string path)
+        {
+            Path = path;
+
+            if (!File.Exists(Path))
+            {
+                Stream = 0;
+                return;
+            }
+
+            Console.WriteLine(Path);
+            LoadAudioStream();
+        }
+
+        /// <summary>
+        ///     Loads the audio stream again
+        /// </summary>
+        private void LoadAudioStream()
+        {
+            // Make sure BASS only gets initialized one time.
+            if (!GameBase.BassInitialized)
+            {
+                Bass.Init();
+                GameBase.BassInitialized = true;
+            }
+
+            // Create the stream from the raw file data
+            var stream = 0;
+
+            if (Data != null && Data.Length != 0)
+                stream = Bass.CreateStream(Data, 0, Data.Length, BassFlags.Decode);
+
+            // In the event that the stream data is non-existant, we must have been given a file path
+            // so we'll run a check for that and end up loading the stream via that method.
+            else if (Path != "")
+            {
+                stream = Bass.CreateStream(Path, Flags: BassFlags.Decode);
+            }
+            else
+                return;
+
+            if (stream != 0)
+            {
+                AudioHandler.GlobalAudioStreams.Add(Stream);
+                Stream = stream;
+            }
+
+            Bass.ChannelAddFlag(Stream, BassFlags.AutoFree);
         }
 
         /// <summary>
@@ -63,7 +118,7 @@ namespace Quaver.Audio
         internal override void Play(double previewTime = 0, float playbackRate = 1.0f, bool pitch = false)
         {
             base.Play();
-            LoadAudioStream(Path);
+            LoadAudioStream();
         }
 
         /// <summary>
