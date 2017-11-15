@@ -55,6 +55,9 @@ namespace Quaver
             var resxContent = new ResourceContentManager(Services, Resource1.ResourceManager);
             Content = resxContent;
 
+            // Make a reference to the Window on GameBase
+            GameBase.GameWindow = Window;
+
             // Start watching for directory changes.
             BeatmapImporter.WatchForChanges();
 
