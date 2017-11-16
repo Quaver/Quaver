@@ -144,6 +144,11 @@ namespace Quaver
         public static UI UI { get; set; } = new UI();
 
         /// <summary>
+        ///     Keeps track of if the player wants their music to be pitched on speeds other than 1.0x
+        /// </summary>
+        public static bool CurrentlyPitched { get; set; }
+
+        /// <summary>
         ///     Whenever the settings for window size is changed, call this method to update the window.
         /// </summary>
         /// <param name="newSize"></param>

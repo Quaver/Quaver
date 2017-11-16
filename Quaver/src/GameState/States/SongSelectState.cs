@@ -99,7 +99,7 @@ namespace Quaver.GameState.States
             SpeedModButton.Clicked += OnSpeedModButtonClick;
 
             // Create Speed Mod Button
-            TogglePitch = new TextButton(new Vector2(200, 50), $"Toggle Pitch: {GameBase.SelectedBeatmap.Song.Pitched}")
+            TogglePitch = new TextButton(new Vector2(200, 50), $"Toggle Pitch: {GameBase.CurrentlyPitched}")
             {
                 Image = GameBase.UI.BlankBox,
                 Alignment = Alignment.MidRight,
@@ -150,7 +150,7 @@ namespace Quaver.GameState.States
             GameBase.ChangeBeatmap(map);
 
             // Change Pitch Text
-            TogglePitch.TextSprite.Text = $"Toggle Pitch {GameBase.SelectedBeatmap.Song.Pitched}";
+            TogglePitch.TextSprite.Text = $"Toggle Pitch: {GameBase.CurrentlyPitched}";
 
             GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
 
@@ -226,7 +226,7 @@ namespace Quaver.GameState.States
         private void OnTogglePitchButtonClick(object sender, EventArgs e)
         {
             GameBase.SelectedBeatmap.Song.ToggleSongPitch();
-            TogglePitch.TextSprite.Text = $"Toggle Pitch {GameBase.SelectedBeatmap.Song.Pitched}";
+            TogglePitch.TextSprite.Text = $"Toggle Pitch: {GameBase.CurrentlyPitched}";
         }
     }
 }
