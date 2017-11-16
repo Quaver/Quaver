@@ -25,6 +25,11 @@ namespace Quaver.Audio
         protected string Path { get; set; }
 
         /// <summary>
+        ///     Keeps track of whether or not the audio track is currently pitched.
+        /// </summary>
+        internal bool Pitched { get; set; }
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         public GameAudio(){}
@@ -74,7 +79,7 @@ namespace Quaver.Audio
         /// <summary>
         /// Plays the current audio stream at a given preview time, rate, and pitch if specified.
         /// </summary>
-        internal virtual void Play(double previewTime = 0, float playbackRate = 1.0f, bool pitch = false)
+        internal virtual void Play(double previewTime = 0, float playbackRate = 1.0f)
         {
             if (Stream == 0)
                 return;
@@ -87,8 +92,8 @@ namespace Quaver.Audio
             ChangeSongSpeed();
 
             // Set Pitch if necessary.
-            if (pitch)
-                Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, Math.Log(Math.Pow(playbackRate, 12), 2));
+            if (Pitched)
+                Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, Math.Log(Math.Pow(GameBase.GameClock, 12), 2));
 
             // Change the audio volume to that of what is in the config file.
             ChangeAudioVolume();
@@ -181,6 +186,27 @@ namespace Quaver.Audio
         internal void ChangeSongSpeed()
         {
             Bass.ChannelSetAttribute(Stream, ChannelAttribute.Tempo, GameBase.GameClock * 100 - 100);
+
+            // Set new pitch if any
+            if (Pitched)
+                Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, Math.Log(Math.Pow(GameBase.GameClock, 12), 2));
+        }
+
+        /// <summary>
+        ///     Toggles the stream's pitch.
+        /// </summary>
+        internal void ToggleSongPitch()
+        {
+            if (!Pitched)
+            {
+                Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, Math.Log(Math.Pow(GameBase.GameClock, 12), 2));
+                Pitched = true;
+            }
+            else
+            {
+                Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, 0);
+                Pitched = false;
+            }              
         }
     }
 }
