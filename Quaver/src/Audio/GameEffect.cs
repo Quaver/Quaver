@@ -115,7 +115,7 @@ namespace Quaver.Audio
         /// <param name="previewTime"></param>
         /// <param name="playbackRate"></param>
         /// <param name="pitch"></param>
-        internal override void Play(double previewTime = 0, float playbackRate = 1.0f, bool pitch = false)
+        internal override void Play(double previewTime = 0, float playbackRate = 1.0f)
         {
             base.Play();
             LoadAudioStream();
