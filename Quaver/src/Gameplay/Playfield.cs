@@ -87,11 +87,22 @@ namespace Quaver.Gameplay
         /// </summary>
         private static Texture2D[] JudgeImages { get; set; }
 
+        private static int PriorityJudgeImage { get; set; } = 0;
+        private static double PriorityJudgeLength { get; set; }
+
         private static Vector2[] JudgeSizes { get; set; }
 
-        private static Sprite OffsetMiddleGauge { get; set; }
+        private static Boundary OffsetGaugeBoundary { get; set; }
+        private static Sprite OffsetGaugeMiddle { get; set; }
+
+        private const int OffsetIndicatorSize = 64;
+        private static float OffsetGaugeSize { get; set; }
+
+        private static int CurrentOffsetObjectIndex { get; set; }
+        private static Sprite[] OffsetIndicatorsSprites { get; set; }
 
         private static TextBoxSprite ComboText { get; set; }
+        private static double AlphaHold { get; set; }
         
 
         /// <summary>
@@ -99,6 +110,10 @@ namespace Quaver.Gameplay
         /// </summary>
         public static void Initialize()
         {
+            // Set default reference variables
+            AlphaHold = 0;
+            CurrentOffsetObjectIndex = 0;
+
             // Calculate skin reference variables.
             PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
             PlayfieldPadding = (int) (GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowYRatio);
@@ -183,6 +198,7 @@ namespace Quaver.Gameplay
                 Parent = BoundaryOver
             };
 
+            // Create Combo Text
             ComboText = new TextBoxSprite()
             {
                 SizeX = 100,
@@ -190,18 +206,43 @@ namespace Quaver.Gameplay
                 PositionY = 45f * (float)GameBase.WindowYRatio,
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.TopCenter,
-                Text = "632x",
+                Text = "0x",
                 Font = Fonts.Medium16,
                 Parent = BoundaryOver
             };
 
-            OffsetMiddleGauge = new Sprite()
+            // Create Offset Gauge
+            OffsetGaugeBoundary = new Boundary()
             {
-                SizeX = 2,
+                SizeX = 200 * (float)GameBase.WindowYRatio,
                 SizeY = 10f * (float)GameBase.WindowYRatio,
                 PositionY = 30f * (float)GameBase.WindowYRatio,
                 Alignment = Alignment.MidCenter,
                 Parent = BoundaryOver
+            };
+
+            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (ScoreManager.HitWindow[4]*2);
+
+            OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
+            for (var i = 0; i < OffsetIndicatorSize; i++)
+            {
+                OffsetIndicatorsSprites[i] = new Sprite()
+                {
+                    Parent = OffsetGaugeBoundary,
+                    ScaleY = 1,
+                    SizeX = 4,
+                    Alignment = Alignment.MidCenter,
+                    PositionX = 0,
+                    Alpha = 0
+                };
+            }
+
+            OffsetGaugeMiddle = new Sprite()
+            {
+                SizeX = 2,
+                ScaleY = 1,
+                Alignment = Alignment.MidCenter,
+                Parent = OffsetGaugeBoundary
             };
         }
 
@@ -228,6 +269,13 @@ namespace Quaver.Gameplay
         public static void Update(double dt)
         {
             // Update the delta time tweening variable for animation.
+            AlphaHold += dt;
+            PriorityJudgeLength -= dt;
+            if (PriorityJudgeLength <= 0)
+            {
+                PriorityJudgeLength = 0;
+                PriorityJudgeImage = 0;
+            }
             dt = Math.Min(dt / 30, 1);
 
             // Update receptors
@@ -240,6 +288,19 @@ namespace Quaver.Gameplay
                 Receptors[i].Size = Vector2.One * ReceptorCurrentSize[i] * PlayfieldObjectSize;
                 Receptors[i].PositionX = ReceptorXPosition[i] - receptorSizeOffset;
                 Receptors[i].PositionY = ReceptorYOffset - receptorSizeOffset;
+            }
+
+            // Update Offset Indicators
+            foreach (var sprite in OffsetIndicatorsSprites)
+            {
+                sprite.Alpha = Util.Tween(0, sprite.Alpha, dt / 35);
+            }
+
+            // Update Judge Alpha
+            if (AlphaHold > 500 && PriorityJudgeLength <= 0)
+            {
+                JudgeSprite.Alpha = Util.Tween(0, JudgeSprite.Alpha, dt / 4);
+                ComboText.Alpha = Util.Tween(0, ComboText.Alpha, dt / 4);
             }
 
             //Update Playfield + Children
@@ -255,13 +316,41 @@ namespace Quaver.Gameplay
             BoundaryUnder.Destroy();
         }
 
-        public static void UpdateJudge(int index)
+        public static void UpdateJudge(int index, bool release = false, double? offset = null)
         {
             //TODO: add judge scale
-            var size = JudgeSizes[index];
-            JudgeSprite.Size = size;
-            JudgeSprite.Image = JudgeImages[index];
             ComboText.Text = ScoreManager.Combo + "x";
+            ComboText.Alpha = 1;
+            JudgeSprite.Alpha = 1;
+            AlphaHold = 0;
+
+            if (index >= PriorityJudgeImage && index >= 2)
+            {
+                // Priority Judge Image to show
+                if (index == 2) PriorityJudgeLength = 200;
+                else if (index == 3) PriorityJudgeLength = 400;
+                else PriorityJudgeLength = 500;
+                PriorityJudgeImage = index;
+
+                // Update judge sprite
+                JudgeSprite.Size = JudgeSizes[index];
+                JudgeSprite.Image = JudgeImages[index];
+            }
+            else if (PriorityJudgeLength <= 0)
+            {
+                JudgeSprite.Size = JudgeSizes[index];
+                JudgeSprite.Image = JudgeImages[index];
+            }
+
+            if (index != 5 && !release && offset != null)
+            {
+                CurrentOffsetObjectIndex++;
+                if (CurrentOffsetObjectIndex >= OffsetIndicatorSize) CurrentOffsetObjectIndex = 0;
+                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Tint = CustomColors.JudgeColors[index];
+                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].PositionX = -(float)offset * OffsetGaugeSize;
+                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Alpha = 0.5f;
+            }
+
         }
 
         /// <summary>

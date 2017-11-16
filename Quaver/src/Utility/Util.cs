@@ -94,7 +94,7 @@ namespace Quaver.Utility
             alignX = Align(alignX, objectRect.Width, new Vector2(boundary.X, boundary.X + boundary.Width), objectRect.X);
             alignY = Align(alignY, objectRect.Height, new Vector2(boundary.Y, boundary.Y + boundary.Height), objectRect.Y);
 
-            return new Rectangle((int)alignX, (int)alignY, (int)objectRect.Width, (int)objectRect.Height);
+            return new Rectangle((int)alignX, (int)alignY, objectRect.Width, objectRect.Height);
         }
 
         /// <summary>
