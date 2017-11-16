@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Quaver.Graphics;
 using Quaver.Logging;
 
 namespace Quaver.Gameplay
@@ -13,6 +15,9 @@ namespace Quaver.Gameplay
     /// </summary>
     internal class ScoreManager
     {
+        //Hit Timing Variables
+        internal static string[] JudgeNames { get; } = new string[6] { "MARV", "PERF", "GREAT", "GOOD", "OKAY", "MISS" };
+
         //Hit Tracking (Judging/Scoring)
         public static int[] JudgeSpread { get; set; } = new int[6];
         public static int JudgeCount { get; set; }
@@ -70,7 +75,7 @@ namespace Quaver.Gameplay
 
             //log scores
             if (index < 5)
-            Logger.Update(NoteManager.TimingNames[index], NoteManager.TimingNames[index]+": "+ JudgeSpread[index]);
+            Logger.Update(JudgeNames[index], JudgeNames[index]+": "+ JudgeSpread[index]);
 
             //Display stuff
             Playfield.UpdateJudge(index);
