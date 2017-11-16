@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
+using Quaver.Utility;
 
 namespace Quaver.Gameplay
 {
@@ -19,9 +20,9 @@ namespace Quaver.Gameplay
 
         private static TextBoxSprite[] AccuracyIndicatorText { get; set; }
 
-        private static TextBoxSprite[] AccuracyCountText { get; set; }
+        internal static TextBoxSprite[] AccuracyCountText { get; set; }
 
-        private static TextBoxSprite ScoreText { get; set; }
+        internal static TextBoxSprite ScoreText { get; set; }
 
         private static Sprite LeaderboardBox { get; set; }
 
@@ -101,8 +102,15 @@ namespace Quaver.Gameplay
                 Size = new Vector2(230, 340),
                 Alignment = Alignment.MidLeft,
                 Parent = Boundary,
-                Tint = Color.Black //todo: remove later and use skin image
+                Tint = CustomColors.TransparentBlack //todo: remove later and use skin image
             };
+        }
+
+        internal static void UpdateAccuracyBox(int index)
+        {
+            AccuracyCountText[index+1].Text = ScoreManager.JudgePressSpread[index] + " | " + ScoreManager.JudgeReleaseSpread[index];
+            AccuracyCountText[0].Text = $"{ScoreManager.Accuracy * 100:0.00}%";
+            ScoreText.Text = ScoreManager.Score.ToString();
         }
 
         internal static void Update(double dt)
