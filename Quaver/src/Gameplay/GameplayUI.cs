@@ -12,7 +12,7 @@ namespace Quaver.Gameplay
     /// <summary>
     ///     This class Draws anything that will be shown to the player which is related to data
     /// </summary>
-    internal class DataInterface
+    internal class GameplayUI
     {
         private static Sprite AccuracyBox { get; set; }
 
