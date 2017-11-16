@@ -34,8 +34,16 @@ namespace Quaver.Gameplay
 
         private static Boundary Boundary { get; set; }
 
+        public static bool NoteHolding { get; set; }
+
+        private static double CurrentScore { get; set; }
+
         internal static void Initialize()
         {
+            // Reference Variables
+            CurrentScore = 0;
+            NoteHolding = false;
+
             // Create Boundary
             Boundary = new Boundary();
 
@@ -130,7 +138,7 @@ namespace Quaver.Gameplay
                 Multiline = false,
                 Font = Fonts.Medium24,
                 TextColor = Color.White,
-                Text = "1234567",
+                Text = "0000000",
                 PositionY = 0,
                 PositionX = 10
             };
@@ -150,7 +158,6 @@ namespace Quaver.Gameplay
         {
             AccuracyCountText[index+1].Text = ScoreManager.JudgePressSpread[index] + " | " + ScoreManager.JudgeReleaseSpread[index];
             AccuracyCountText[0].Text = $"{ScoreManager.Accuracy * 100:0.00}%";
-            ScoreText.Text = Util.ScoreToString(ScoreManager.Score);
 
             //Calculate graph bars
             for (var i = 0; i < 6; i++)
@@ -161,12 +168,29 @@ namespace Quaver.Gameplay
 
         internal static void Update(double dt)
         {
-            var tween = Math.Min(dt / 100, 1);
+            // Update Accuracy Graph Bars
+            double tween = Math.Min(dt / 100, 1);
             for (var i = 0; i < 6; i++)
             {
                 AccuracyGraphBar[i].ScaleX = Util.Tween(AccuracyGraphTargetScale[i], AccuracyGraphBar[i].ScaleX, tween);
             }
 
+            // If there's an active long note, the score will have a "slider" effect (+1 point every 25ms), otherwise it will tween normally
+            if (NoteHolding)
+            {
+                CurrentScore += tween*4;
+                if (CurrentScore > ScoreManager.Score) CurrentScore = ScoreManager.Score;
+            }
+            else
+            {
+                CurrentScore = ScoreManager.Score; // Util.Tween(ScoreManager.Score, (float)CurrentScore, tween);
+                //if (CurrentScore > ScoreManager.Score) CurrentScore = ScoreManager.Score;
+            }
+
+            // Update Score Text
+            ScoreText.Text = Util.ScoreToString((int)CurrentScore);
+
+            // Update Boundary
             Boundary.Update(dt);   
         }
 

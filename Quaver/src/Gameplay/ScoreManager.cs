@@ -19,12 +19,12 @@ namespace Quaver.Gameplay
         internal static string[] JudgeNames { get; } = new string[6] { "MARV", "PERF", "GREAT", "GOOD", "OKAY", "MISS" };
 
         //Hit Tracking (Judging/Scoring)
-        public static int[] JudgePressSpread { get; set; } = new int[6];
-        public static int[] JudgeReleaseSpread { get; set; } = new int[6];
+        public static int[] JudgePressSpread { get; set; }
+        public static int[] JudgeReleaseSpread { get; set; }
         public static int JudgeCount { get; set; }
 
         //Hit Tracking (ms deviance)
-        public static List<double> MsDeviance { get; set; } = new List<double>();
+        public static List<double> MsDeviance { get; set; }
 
         //Score tracking
         public static int ConsistancyMultiplier { get; set; }
@@ -35,7 +35,7 @@ namespace Quaver.Gameplay
         public static float Accuracy { get; set; }
 
         //Hit Window
-        internal static float[] HitWindow { get; } = new float[5] { 20, 44, 76, 106, 130 };
+        internal static float[] HitWindow { get; } = new float[5] { 20, 44, 76, 106, 130 }; //todo: create OD curve
 
         /// <summary>
         /// This method is used to track and count scoring.
@@ -63,7 +63,7 @@ namespace Quaver.Gameplay
             Accuracy /= JudgeCount;
 
             //todo: actual score calculation
-            Score = (int)(Accuracy * 1000000f * JudgeCount / 20000f);
+            Score = (int)(1000000f * JudgeCount / 20000f);
 
             //Update ConsistancyMultiplier and Combo
             if (index < 4)
@@ -89,5 +89,19 @@ namespace Quaver.Gameplay
 
         }
 
+        /// <summary>
+        ///     Clear and Initialize Scoring related variables
+        /// </summary>
+        public static void Initialize()
+        {
+            Accuracy = 0;
+            ConsistancyMultiplier = 0;
+            Combo = 0;
+            Score = 0;
+            JudgeCount = 0;
+            JudgeReleaseSpread = new int[6];
+            JudgePressSpread = new int[6];
+            MsDeviance = new List<double>();
+        }
     }
 }
