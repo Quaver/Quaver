@@ -152,7 +152,7 @@ namespace Quaver.Graphics.Text
         {
             //TODO: SpriteFont.MeasureString()
             //Draw itself if it is in the window
-            if (GameBase.Window.Intersects(GlobalRect))
+            if (GameBase.Window.Intersects(GlobalRect) && Visible)
                 GameBase.SpriteBatch.DrawString(Font, _text, new Vector2(GlobalTextRect.X, GlobalTextRect.Y), _color);
 
             base.Draw();
