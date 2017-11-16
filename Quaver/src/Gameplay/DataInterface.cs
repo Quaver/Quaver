@@ -20,8 +20,6 @@ namespace Quaver.Gameplay
 
         private static Boundary Boundary { get; set; }
 
-        private static Sprite HollowBox { get; set; }
-
         internal static void Initialize()
         {
             // Create Boundary
@@ -42,14 +40,6 @@ namespace Quaver.Gameplay
                 Size = new Vector2(200, 600),
                 Alignment = Alignment.MidLeft,
                 Image = GameBase.UI.HollowBox,
-                Parent = Boundary
-            };
-
-            //todo: test.
-            HollowBox = new Sprite()
-            {
-                Image = GameBase.UI.HollowBox,
-                Scale = Vector2.One,
                 Parent = Boundary
             };
         }
