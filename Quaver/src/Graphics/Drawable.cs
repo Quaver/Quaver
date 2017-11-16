@@ -223,6 +223,7 @@ namespace Quaver.Graphics
         /// </summary>
         public virtual void Draw()
         {
+            if (Visible)
             Children.ForEach(x => x.Draw());
         }
 

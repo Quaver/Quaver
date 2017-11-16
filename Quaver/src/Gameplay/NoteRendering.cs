@@ -146,6 +146,9 @@ namespace Quaver.Gameplay
             }
 
             //Update Hold Objects
+            if (HitObjectHold.Count == 0) GameplayUI.NoteHolding = false;
+            else GameplayUI.NoteHolding = true;
+
             for (i = 0; i < HitObjectHold.Count; i++)
             {
                 //LN is missed

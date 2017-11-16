@@ -75,6 +75,9 @@ namespace Quaver.GameState.States
             // Update Discord Presence
             GameBase.ChangeDiscordPresenceGameplay(false);
 
+            // Clear score manager
+            ScoreManager.Initialize();
+
             // Initialize Gameplay
             InitializeGameplay();
 
