@@ -15,700 +15,250 @@ namespace Quaver.Config
     internal class Configuration
     {
         /// <summary>
-        ///     Dictates whether or not this is the first write of the file.
+        ///     Dictates whether or not this is the first write of the file for the current game session.
+        ///     (Not saved in Config)
         /// </summary>
         private static bool FirstWrite { get; set; }
-
-        /// <summary>
-        ///     The username of the user.
-        /// </summary>
-        private static string _username = "";
-
-        /// <summary>
-        ///     The master volume of the game.
-        /// </summary>
-        private static byte _volumeGlobal = 100;
-
-        /// <summary>
-        ///     The SFX volume of the game.
-        /// </summary>
-        private static byte _volumeEffect = 100;
-
-        /// <summary>
-        ///     The Music volume of the gamne.
-        /// </summary>
-        private static byte _volumeMusic = 30;
-
-        /// <summary>
-        ///     The dim for backgrounds during gameplay
-        /// </summary>
-        private static byte _backgroundBrightness = 100;
-
-        /// <summary>
-        ///     The height of the window.
-        /// </summary>
-        private static int _windowHeight = 900;
-
-        /// <summary>
-        ///     The width of the window.
-        /// </summary>
-        private static int _windowWidth = 1600;
-
-        /// <summary>
-        ///     Is the window fullscreen?
-        /// </summary>
-        private static bool _windowFullScreen;
-
-        /// <summary>
-        ///     Is the window letterboxed?
-        /// </summary>
-        private static bool _windowLetterboxed;
-
-        /// <summary>
-        ///     The max custom frame limit set by the user.
-        /// </summary>
-        private static int _customFrameLimit = 240;
-
-        /// <summary>
-        ///     Should the game display the FPS Counter?
-        /// </summary>
-        private static bool _fpsCounter = true;
-
-        /// <summary>
-        ///     Should the game display a frame times graph?
-        /// </summary>
-        private static bool _showFrameTimeDisplay;
-
-        /// <summary>
-        ///     The language the game is in.
-        /// </summary>
-        private static string _language = "en";
-
-        /// <summary>
-        ///     The scroll speed during gameplay.
-        /// </summary>
-        private static byte _scrollSpeed = 34;
-
-        /// <summary>
-        ///     Should the scroll speed be scaled to align with the song's BPM?
-        /// </summary>
-        private static bool _scaleScrollSpeedWithBpm;
-
-        /// <summary>
-        ///     Should the game be played with DownScroll? If false, it's UpScroll
-        /// </summary>
-        private static bool _downScroll = true;
-
-        /// <summary>
-        ///     The offset of the notes compared to the song start.
-        /// </summary>
-        private static sbyte _globalOffset;
-
-        /// <summary>
-        ///     Should Timing Bars be displayed during gameplay?
-        /// </summary>
-        private static bool _displayTimingBars = true;
-
-        /// <summary>
-        ///     Should the leaderboard be visible during gameplay?
-        /// </summary>
-        private static bool _leaderboardVisible = true;
-
-        /// <summary>
-        ///     The skin in the Skins directory that is loaded. Default is the only exception, as it'll be overrided.
-        /// </summary>
-        private static string _skin = "";
-
-        /// <summary>
-        ///     Dictates whether or not to show logger messages
-        /// </summary>
-        private static bool _debug = true;
-
-        /// <summary>
-        ///     The key pressed for lane 1
-        /// </summary>
-        private static Keys _keyMania1 = Keys.D;
-
-        /// <summary>
-        ///     The key pressed for lane 2
-        /// </summary>
-        private static Keys _keyMania2 = Keys.F;
-
-        /// <summary>
-        ///     The key pressed for lane 3
-        /// </summary>
-        private static Keys _keyMania3 = Keys.J;
-
-        /// <summary>
-        ///     The key pressed for lane 4
-        /// </summary>
-        private static Keys _keyMania4 = Keys.K;
-
-        /// <summary>
-        ///     The key pressed for lane 1 - 7k
-        /// </summary>
-        private static Keys _7keyMania1 = Keys.S;
-
-        /// <summary>
-        ///     The key pressed for lane 2 - 7k
-        /// </summary>
-        private static Keys _7keyMania2 = Keys.D;
-
-        /// <summary>
-        ///     The key pressed for lane 3 - 7k
-        /// </summary>
-        private static Keys _7keyMania3 = Keys.F;
-
-        /// <summary>
-        ///     The key pressed for lane 4 - 7k
-        /// </summary>
-        private static Keys _7keyMania4 = Keys.Space;
-
-        /// <summary>
-        ///     The key pressed for lane 5 - 7k
-        /// </summary>
-        private static Keys _7keyMania5 = Keys.J;
-
-        /// <summary>
-        ///     The key pressed for lane 6 - 7k
-        /// </summary>
-        private static Keys _7keyMania6 = Keys.K;
-
-        /// <summary>
-        ///     The key pressed for lane 7 - 7k
-        /// </summary>
-        private static Keys _7keyMania7 = Keys.L;
-
-
-        /// <summary>
-        ///     The key pressed to quickly retry the song during gameplay
-        /// </summary>
-        private static Keys _keyQuickRetry = Keys.OemTilde;
-
-        /// <summary>
-        ///     The key pressed to increase the scroll speed during gameplay.
-        /// </summary>
-        private static Keys _keyIncreaseScrollSpeed = Keys.F4;
-
-        /// <summary>
-        ///     The key pressed to decrease the scroll speed during gameplay.
-        /// </summary>
-        private static Keys _keyDecreaseScrollSpeed = Keys.F3;
-
-        /// <summary>
-        ///     The key pressed to pause and menu-back.
-        /// </summary>
-        private static Keys _keyPause = Keys.Escape;
-
-        /// <summary>
-        ///     The key pressed to turn the volume up.
-        /// </summary>
-        private static Keys _keyVolumeUp = Keys.Up;
-
-        /// <summary>
-        ///     The key pressed to turn the volume down
-        /// </summary>
-        private static Keys _keyVolumeDown = Keys.Down;
-
-        /// <summary>
-        ///     The key pressed to skip the song introduction
-        /// </summary>
-        private static Keys _keySkipIntro = Keys.RightAlt;
 
         /// <summary>
         ///     These are all values that should never ben
         /// </summary>
         private static string _gameDirectory;
+        internal static string GameDirectory { get => _gameDirectory; set { _gameDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The skin directory
         /// </summary>
         private static string _skinDirectory;
+        internal static string SkinDirectory { get => _skinDirectory; set { _skinDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The screenshot directory
         /// </summary>
         private static string _screenshotDirectory;
+        internal static string ScreenshotDirectory { get => _screenshotDirectory; set { _screenshotDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The replay directory
         /// </summary>
         private static string _replayDirectory;
+        internal static string ReplayDirectory { get => _replayDirectory; set { _replayDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The Logs directory
         /// </summary>
         private static string _logsDirectory;
+        internal static string LogsDirectory { get => _logsDirectory; set { _logsDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The data directory
         /// </summary>
         private static string _dataDirectory;
+        internal static string DataDirectory { get => _dataDirectory; set { _dataDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The song directory
         /// </summary>
         private static string _songDirectory;
+        internal static string SongDirectory { get => _songDirectory; set { _songDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static string GameDirectory
-        {
-            get => _gameDirectory;
-            set
-            {
-                _gameDirectory = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The username of the user.
+        /// </summary>
+        private static string _username = "";
+        internal static string Username { get => _username; set { _username = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static string SongDirectory
-        {
-            get => _songDirectory;
-            set
-            {
-                _songDirectory = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The skin in the Skins directory that is loaded. Default is the only exception, as it'll be overrided.
+        /// </summary>
+        private static string _skin = "";
+        internal static string Skin { get => _skin; set { _skin = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static string SkinDirectory
-        {
-            get => _skinDirectory;
-            set
-            {
-                _skinDirectory = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The master volume of the game.
+        /// </summary>
+        private static byte _volumeGlobal = 100;
+        internal static byte VolumeGlobal { get => _volumeGlobal; set { _volumeGlobal = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static string ScreenshotDirectory
-        {
-            get => _screenshotDirectory;
-            set
-            {
-                _screenshotDirectory = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The SFX volume of the game.
+        /// </summary>
+        private static byte _volumeEffect = 100;
+        internal static byte VolumeEffect { get => _volumeEffect; set { _volumeEffect = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static string ReplayDirectory
-        {
-            get => _replayDirectory;
-            set
-            {
-                _replayDirectory = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The Music volume of the gamne.
+        /// </summary>
+        private static byte _volumeMusic = 30;
+        internal static byte VolumeMusic{ get => _volumeMusic; set { _volumeMusic = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static string LogsDirectory
-        {
-            get => _logsDirectory;
-            set
-            {
-                _logsDirectory = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The dim for backgrounds during gameplay
+        /// </summary>
+        private static byte _backgroundBrightness = 100;
+        internal static byte BackgroundBrightness { get => _backgroundBrightness; set { _backgroundBrightness = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static string DataDirectory
-        {
-            get => _dataDirectory;
-            set
-            {
-                _dataDirectory = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The height of the window.
+        /// </summary>
+        private static int _windowHeight = 900;
+        internal static int WindowHeight { get => _windowHeight; set { _windowHeight = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static string Username
-        {
-            get => _username;
-            set
-            {
-                _username = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The width of the window.
+        /// </summary>
+        private static int _windowWidth = 1600;
+        internal static int WindowWidth { get => _windowWidth; set{ _windowWidth = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static byte VolumeGlobal
-        {
-            get => _volumeGlobal;
-            set
-            {
-                _volumeGlobal = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     Is the window fullscreen?
+        /// </summary>
+        private static bool _windowFullScreen;
+        internal static bool WindowFullScreen { get => _windowFullScreen; set { _windowFullScreen = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static byte VolumeEffect
-        {
-            get => _volumeEffect;
-            set
-            {
-                _volumeEffect = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     Is the window letterboxed?
+        /// </summary>
+        private static bool _windowLetterboxed;
+        internal static bool WindowLetterboxed { get => _windowLetterboxed; set { _windowLetterboxed = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static byte VolumeMusic
-        {
-            get => _volumeMusic;
-            set
-            {
-                _volumeMusic = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     Should the game display the FPS Counter?
+        /// </summary>
+        private static bool _fpsCounter = true;
+        internal static bool FpsCounter { get => _fpsCounter; set { _fpsCounter = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static byte BackgroundBrightness
-        {
-            get => _backgroundBrightness;
-            set
-            {
-                _backgroundBrightness = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The scroll speed during gameplay.
+        /// </summary>
+        private static byte _scrollSpeed = 34;
+        internal static byte ScrollSpeed { get => _scrollSpeed; set { _scrollSpeed = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static int WindowHeight
-        {
-            get => _windowHeight;
-            set
-            {
-                _windowHeight = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     Should the game be played with DownScroll? If false, it's UpScroll
+        /// </summary>
+        private static bool _downScroll = true;
+        internal static bool DownScroll { get => _downScroll; set { _downScroll = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static int WindowWidth
-        {
-            get => _windowWidth;
-            set
-            {
-                _windowWidth = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The offset of the notes compared to the song start.
+        /// </summary>
+        private static sbyte _globalOffset;
+        internal static sbyte GlobalOffset { get => _globalOffset; set { _globalOffset = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static bool WindowFullScreen
-        {
-            get => _windowFullScreen;
-            set
-            {
-                _windowFullScreen = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     Dictates whether or not to show logger messages
+        /// </summary>
+        private static bool _debug = true;
+        internal static bool Debug { get => _debug; set { _debug = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static bool WindowLetterboxed
-        {
-            get => _windowLetterboxed;
-            set
-            {
-                _windowLetterboxed = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed for lane 1
+        /// </summary>
+        private static Keys _keyMania1 = Keys.D;
+        internal static Keys KeyMania1 { get => _keyMania1; set { _keyMania1 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static int CustomFrameLimit
-        {
-            get => _customFrameLimit;
-            set
-            {
-                _customFrameLimit = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed for lane 2
+        /// </summary>
+        private static Keys _keyMania2 = Keys.F;
+        internal static Keys KeyMania2 { get => _keyMania2; set { _keyMania2 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static bool FpsCounter
-        {
-            get => _fpsCounter;
-            set
-            {
-                _fpsCounter = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed for lane 3
+        /// </summary>
+        private static Keys _keyMania3 = Keys.J;
+        internal static Keys KeyMania3 { get => _keyMania3; set { _keyMania3 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static bool ShowFrameTimeDisplay
-        {
-            get => _showFrameTimeDisplay;
-            set
-            {
-                _showFrameTimeDisplay = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed for lane 4
+        /// </summary>
+        private static Keys _keyMania4 = Keys.K;
+        internal static Keys KeyMania4 { get => _keyMania4; set { _keyMania4 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static string Language
-        {
-            get => _language;
-            set
-            {
-                _language = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed for lane 1 - 7k
+        /// </summary>
+        private static Keys _keyMania7k1 = Keys.S;
+        internal static Keys KeyMania7k1 { get => _keyMania7k1; set { _keyMania7k1 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static byte ScrollSpeed
-        {
-            get => _scrollSpeed;
-            set
-            {
-                _scrollSpeed = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed for lane 2 - 7k
+        /// </summary>
+        private static Keys _keyMania7k2 = Keys.D;
+        internal static Keys KeyMania7k2 { get => _keyMania7k2; set { _keyMania7k2 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static bool ScaleScrollSpeedWithBpm
-        {
-            get => _scaleScrollSpeedWithBpm;
-            set
-            {
-                _scaleScrollSpeedWithBpm = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed for lane 3 - 7k
+        /// </summary>
+        private static Keys _keyMania7k3 = Keys.F;
+        internal static Keys KeyMania7k3 { get => _keyMania7k3; set { _keyMania7k3 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static bool DownScroll
-        {
-            get => _downScroll;
-            set
-            {
-                _downScroll = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed for lane 4 - 7k
+        /// </summary>
+        private static Keys _keyMania7k4 = Keys.Space;
+        internal static Keys KeyMania7k4 { get => _keyMania7k4; set { _keyMania7k4 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static sbyte GlobalOffset
-        {
-            get => _globalOffset;
-            set
-            {
-                _globalOffset = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed for lane 5 - 7k
+        /// </summary>
+        private static Keys _keyMania7k5 = Keys.J;
+        internal static Keys KeyMania7k5 { get => _keyMania7k5; set { _keyMania7k5 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static bool DisplayTimingBars
-        {
-            get => _displayTimingBars;
-            set
-            {
-                _displayTimingBars = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed for lane 6 - 7k
+        /// </summary>
+        private static Keys _keyMania7k6 = Keys.K;
+        internal static Keys KeyMania7k6 { get => _keyMania7k6; set { _keyMania7k6 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static bool LeaderboardVisible
-        {
-            get => _leaderboardVisible;
-            set
-            {
-                _leaderboardVisible = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed for lane 7 - 7k
+        /// </summary>
+        private static Keys _keyMania7k7 = Keys.L;
+        internal static Keys KeyMania7k7 { get => _keyMania7k7; set { _keyMania7k7 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static string Skin
-        {
-            get => _skin;
-            set
-            {
-                _skin = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed to quickly retry the song during gameplay
+        /// </summary>
+        private static Keys _keyQuickRetry = Keys.OemTilde;
+        internal static Keys KeyQuickRetry { get => _keyQuickRetry; set { _keyQuickRetry = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static bool Debug
-        {
-            get => _debug;
-            set
-            {
-                _debug = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed to increase the scroll speed during gameplay.
+        /// </summary>
+        private static Keys _keyIncreaseScrollSpeed = Keys.F4;
+        internal static Keys KeyIncreaseScrollSpeed { get => _keyIncreaseScrollSpeed; set { _keyIncreaseScrollSpeed = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static Keys KeyMania1
-        {
-            get => _keyMania1;
-            set
-            {
-                _keyMania1 = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed to decrease the scroll speed during gameplay.
+        /// </summary>
+        private static Keys _keyDecreaseScrollSpeed = Keys.F3;
+        internal static Keys KeyDecreaseScrollSpeed { get => _keyDecreaseScrollSpeed; set { _keyDecreaseScrollSpeed = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static Keys KeyMania2
-        {
-            get => _keyMania2;
-            set
-            {
-                _keyMania2 = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed to pause and menu-back.
+        /// </summary>
+        private static Keys _keyPause = Keys.Escape;
+        internal static Keys KeyPause { get => _keyPause; set { _keyPause = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static Keys KeyMania3
-        {
-            get => _keyMania3;
-            set
-            {
-                _keyMania3 = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed to turn the volume up.
+        /// </summary>
+        private static Keys _keyVolumeUp = Keys.Up;
+        internal static Keys KeyVolumeUp { get => _keyVolumeUp; set { _keyVolumeUp = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static Keys KeyMania4
-        {
-            get => _keyMania4;
-            set
-            {
-                _keyMania4 = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed to turn the volume down
+        /// </summary>
+        private static Keys _keyVolumeDown = Keys.Down;
+        internal static Keys KeyVolumeDown { get => _keyVolumeDown; set { _keyVolumeDown = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        internal static Keys KeyMania7K1
-        {
-            get => _7keyMania1;
-            set
-            {
-                _7keyMania1 = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
-
-        internal static Keys KeyMania7K2
-        {
-            get => _7keyMania2;
-            set
-            {
-                _7keyMania2 = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
-
-        internal static Keys KeyMania7K3
-        {
-            get => _7keyMania3;
-            set
-            {
-                _7keyMania3 = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
-
-        internal static Keys KeyMania7K4
-        {
-            get => _7keyMania4;
-            set
-            {
-                _7keyMania4 = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
-
-        internal static Keys KeyMania7K5
-        {
-            get => _7keyMania5;
-            set
-            {
-                _7keyMania5 = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
-
-        internal static Keys KeyMania7K6
-        {
-            get => _7keyMania6;
-            set
-            {
-                _7keyMania6 = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
-
-        internal static Keys KeyMania7K7
-        {
-            get => _7keyMania7;
-            set
-            {
-                _7keyMania1 = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
-
-        internal static Keys KeyQuickRetry
-        {
-            get => _keyQuickRetry;
-            set
-            {
-                _keyQuickRetry = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
-
-        internal static Keys KeyIncreaseScrollSpeed
-        {
-            get => _keyIncreaseScrollSpeed;
-            set
-            {
-                _keyIncreaseScrollSpeed = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
-
-        internal static Keys KeyDecreaseScrollSpeed
-        {
-            get => _keyDecreaseScrollSpeed;
-            set
-            {
-                _keyDecreaseScrollSpeed = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
-
-        internal static Keys KeyPause
-        {
-            get => _keyPause;
-            set
-            {
-                _keyPause = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
-
-        internal static Keys KeyVolumeUp
-        {
-            get => _keyVolumeUp;
-            set
-            {
-                _keyVolumeUp = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
-
-        internal static Keys KeyVolumeDown
-        {
-            get => _keyVolumeDown;
-            set
-            {
-                _keyVolumeDown = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
-
-        internal static Keys KeySkipIntro
-        {
-            get => _keySkipIntro;
-            set
-            {
-                _keySkipIntro = value;
-                Task.Run(async () => await WriteConfigFileAsync());
-            }
-        }
+        /// <summary>
+        ///     The key pressed to skip the song introduction
+        /// </summary>
+        private static Keys _keySkipIntro = Keys.RightAlt;
+        internal static Keys KeySkipIntro { get => _keySkipIntro; set { _keySkipIntro = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     Important!
@@ -786,29 +336,23 @@ namespace Quaver.Config
             _windowWidth = ConfigHelper.ReadInt32(WindowWidth, data["WindowWidth"]);
             _windowFullScreen = ConfigHelper.ReadBool(WindowFullScreen, data["WindowFullScreen"]);
             _windowLetterboxed = ConfigHelper.ReadBool(WindowLetterboxed, data["WindowLetterboxed"]);
-            _customFrameLimit = ConfigHelper.ReadInt32(CustomFrameLimit, data["CustomFrameLimit"]);
             _fpsCounter = ConfigHelper.ReadBool(FpsCounter, data["FpsCounter"]);
-            _showFrameTimeDisplay = ConfigHelper.ReadBool(ShowFrameTimeDisplay, data["ShowFrameTimeDisplay"]);
-            _language = ConfigHelper.ReadString(Language, data["Language"]);
             _scrollSpeed = ConfigHelper.ReadPercentage(ScrollSpeed, data["ScrollSpeed"]);
-            _scaleScrollSpeedWithBpm = ConfigHelper.ReadBool(ScaleScrollSpeedWithBpm, data["ScaleScrollSpeedWithBpm"]);
             _downScroll = ConfigHelper.ReadBool(DownScroll, data["DownScroll"]);
             _globalOffset = ConfigHelper.ReadSignedByte(GlobalOffset, data["GlobalOffset"]);
-            _displayTimingBars = ConfigHelper.ReadBool(DisplayTimingBars, data["DisplayTimingBars"]);
-            _leaderboardVisible = ConfigHelper.ReadBool(LeaderboardVisible, data["LeaderboardVisible"]);
             _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
             _debug = ConfigHelper.ReadBool(Debug, data["Debug"]);
             _keyMania1 = ConfigHelper.ReadKeys(KeyMania1, data["KeyMania1"]);
             _keyMania2 = ConfigHelper.ReadKeys(KeyMania2, data["KeyMania2"]);
             _keyMania3 = ConfigHelper.ReadKeys(KeyMania3, data["KeyMania3"]);
             _keyMania4 = ConfigHelper.ReadKeys(KeyMania4, data["KeyMania4"]);
-            _7keyMania1 = ConfigHelper.ReadKeys(KeyMania7K1, data["KeyMania7K1"]);
-            _7keyMania2 = ConfigHelper.ReadKeys(KeyMania7K2, data["KeyMania7K2"]);
-            _7keyMania3 = ConfigHelper.ReadKeys(KeyMania7K3, data["KeyMania7K3"]);
-            _7keyMania4 = ConfigHelper.ReadKeys(KeyMania7K4, data["KeyMania7K4"]);
-            _7keyMania5 = ConfigHelper.ReadKeys(KeyMania7K5, data["KeyMania7K5"]);
-            _7keyMania6 = ConfigHelper.ReadKeys(KeyMania7K6, data["KeyMania7K6"]);
-            _7keyMania7 = ConfigHelper.ReadKeys(KeyMania7K7, data["KeyMania7K7"]);
+            _keyMania7k1 = ConfigHelper.ReadKeys(KeyMania7k1, data["KeyMania7k1"]);
+            _keyMania7k2 = ConfigHelper.ReadKeys(KeyMania7k2, data["KeyMania7k2"]);
+            _keyMania7k3 = ConfigHelper.ReadKeys(KeyMania7k3, data["KeyMania7k3"]);
+            _keyMania7k4 = ConfigHelper.ReadKeys(KeyMania7k4, data["KeyMania7k4"]);
+            _keyMania7k5 = ConfigHelper.ReadKeys(KeyMania7k5, data["KeyMania7k5"]);
+            _keyMania7k6 = ConfigHelper.ReadKeys(KeyMania7k6, data["KeyMania7k6"]);
+            _keyMania7k7 = ConfigHelper.ReadKeys(KeyMania7k7, data["KeyMania7k7"]);
             _keyQuickRetry = ConfigHelper.ReadKeys(KeyQuickRetry, data["KeyQuickRetry"]);
             _keyIncreaseScrollSpeed = ConfigHelper.ReadKeys(KeyIncreaseScrollSpeed, data["KeyIncreaseScrollSpeed"]);
             _keyDecreaseScrollSpeed = ConfigHelper.ReadKeys(KeyDecreaseScrollSpeed, data["KeyDecreaseScrollSpeed"]);
@@ -850,7 +394,6 @@ namespace Quaver.Config
                 sb.AppendLine(p.Name + " = " + p.GetValue(null));
             }
                
-
             try
             {
                 // Create a new stream 
@@ -901,17 +444,7 @@ namespace Quaver.Config
             try
             {
                 using (var inputStream = File.Open(sFilename, FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    if (inputStream.Length > 0)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-
-                }
+                    return (inputStream.Length > 0);
             }
             catch (Exception)
             {
