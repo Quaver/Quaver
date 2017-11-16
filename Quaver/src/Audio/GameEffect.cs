@@ -33,6 +33,8 @@ namespace Quaver.Audio
         /// <param name="effect"></param>
         public GameEffect(Stream stream)
         {
+            IsEffect = true;
+
             try
             {
                 // Convert the stream to a byte array
@@ -61,6 +63,7 @@ namespace Quaver.Audio
         /// <param name="path"></param>
         public GameEffect(string path)
         {
+            IsEffect = true;
             Path = path;
 
             if (!File.Exists(Path))
