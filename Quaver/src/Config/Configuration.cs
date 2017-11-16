@@ -153,6 +153,12 @@ namespace Quaver.Config
         internal static bool Debug { get => _debug; set { _debug = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
+        ///     Dictates whether or not the song audio is pitched while using the Speed mod.
+        /// </summary>
+        private static bool _pitched;
+        internal static bool Pitched { get => _pitched; set { _pitched = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
         ///     The key pressed for lane 1
         /// </summary>
         private static Keys _keyMania1 = Keys.D;
@@ -342,6 +348,7 @@ namespace Quaver.Config
             _globalOffset = ConfigHelper.ReadSignedByte(GlobalOffset, data["GlobalOffset"]);
             _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
             _debug = ConfigHelper.ReadBool(Debug, data["Debug"]);
+            _pitched = ConfigHelper.ReadBool(Pitched, data["Pitched"]);
             _keyMania1 = ConfigHelper.ReadKeys(KeyMania1, data["KeyMania1"]);
             _keyMania2 = ConfigHelper.ReadKeys(KeyMania2, data["KeyMania2"]);
             _keyMania3 = ConfigHelper.ReadKeys(KeyMania3, data["KeyMania3"]);
