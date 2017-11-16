@@ -32,6 +32,7 @@ namespace Quaver.Gameplay
             {
                 Alignment = Alignment.TopRight,
                 Size = new Vector2(300, 200),
+                Image = GameBase.UI.HollowBox,
                 Parent = Boundary
             };
 
@@ -40,6 +41,7 @@ namespace Quaver.Gameplay
             {
                 Size = new Vector2(200, 600),
                 Alignment = Alignment.MidLeft,
+                Image = GameBase.UI.HollowBox,
                 Parent = Boundary
             };
 
@@ -59,7 +61,10 @@ namespace Quaver.Gameplay
 
         internal static void Draw()
         {
-            Boundary.Draw();   
+            Boundary.Draw();
+            LeaderboardBox.Draw();
+            HollowBox.Draw();
+            AccuracyBox.Draw();
         }
 
         internal static void UnloadContent()
