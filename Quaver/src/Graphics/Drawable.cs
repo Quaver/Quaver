@@ -88,6 +88,32 @@ namespace Quaver.Graphics
         }
 
         /// <summary>
+        /// The X scale of the object relative to its parent.
+        /// </summary>
+        public float ScaleX
+        {
+            get => _scalePercent.X;
+            set
+            {
+                _scalePercent.X = value;
+                SetLocalSize();
+            }
+        }
+
+        /// <summary>
+        /// The Y scale of the object relative to its parent.
+        /// </summary>
+        public float ScaleY
+        {
+            get => _scalePercent.Y;
+            set
+            {
+                _scalePercent.Y = value;
+                SetLocalSize();
+            }
+        }
+
+        /// <summary>
         /// (Read-only) The size of the object after it has been scaled.
         /// </summary>
         public Vector2 AbsoluteSize { get => new Vector2(_absoluteSize.X, _absoluteSize.Y); }

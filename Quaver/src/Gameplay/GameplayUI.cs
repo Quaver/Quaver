@@ -26,6 +26,8 @@ namespace Quaver.Gameplay
 
         private static Sprite[] AccuracyGraphBar { get; set; }
 
+        private static float[] AccuracyGraphTargetScale { get; set; }
+
         private static TextBoxSprite ScoreText { get; set; }
 
         private static Sprite LeaderboardBox { get; set; }
@@ -36,6 +38,9 @@ namespace Quaver.Gameplay
         {
             // Create Boundary
             Boundary = new Boundary();
+
+            // Create Accuracy Box Variables
+            AccuracyGraphTargetScale = new float[6];
 
             // Create new Accuracy Box
             AccuracyBox = new Sprite()
@@ -69,7 +74,8 @@ namespace Quaver.Gameplay
                 {
                     Parent = AccuracyDisplaySet[i+1],
                     Alignment = Alignment.MidLeft,
-                    Scale = Vector2.One,
+                    ScaleX = 0,
+                    ScaleY = 1,
                     SizeY = -2,
                     Tint = CustomColors.JudgeColors[i],
                     Alpha = 0.12f
@@ -145,10 +151,22 @@ namespace Quaver.Gameplay
             AccuracyCountText[index+1].Text = ScoreManager.JudgePressSpread[index] + " | " + ScoreManager.JudgeReleaseSpread[index];
             AccuracyCountText[0].Text = $"{ScoreManager.Accuracy * 100:0.00}%";
             ScoreText.Text = ScoreManager.Score.ToString();
+
+            //Calculate graph bars
+            for (var i = 0; i < 6; i++)
+            {
+                AccuracyGraphTargetScale[i] = (float)Math.Sqrt((double)(ScoreManager.JudgePressSpread[i] + ScoreManager.JudgeReleaseSpread[i]) / ScoreManager.JudgeCount);
+            }
         }
 
         internal static void Update(double dt)
         {
+            var tween = Math.Min(dt / 100, 1);
+            for (var i = 0; i < 6; i++)
+            {
+                AccuracyGraphBar[i].ScaleX = Util.Tween(AccuracyGraphTargetScale[i], AccuracyGraphBar[i].ScaleX, tween);
+            }
+
             Boundary.Update(dt);   
         }
 
