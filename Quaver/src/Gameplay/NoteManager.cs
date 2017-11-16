@@ -79,9 +79,9 @@ namespace Quaver.Gameplay
                 {
                     //Check which HitWindow this object's timing is in.
                     //Since it's an LN, the hit window is increased by 1.25x.
-                    //Only checks MARV/PERF/GREAT
+                    //Only checks MARV/PERF/GREAT/GOOD
                     int releaseTiming = -1;
-                    for (i = 0; i < 3; i++)
+                    for (i = 0; i < 4; i++)
                     {
                         if (Math.Abs(NoteRendering.HitObjectHold[noteIndex].EndTime - Timing.CurrentSongTime) <= ScoreManager.HitWindow[i] * 1.25f)
                         {
@@ -90,16 +90,16 @@ namespace Quaver.Gameplay
                         }
                     }
 
-                    //If LN has been missed
+                    //If LN has been released during a HitWindow
                     if (releaseTiming > -1)
                     {
                         ScoreManager.Count(i, true);
                         NoteRendering.KillHold(noteIndex,true);
                     }
-                    //If LN has been released during a HitWindow
+                    //If LN has been missed
                     else
                     {
-                        ScoreManager.Count(3, true);
+                        ScoreManager.Count(4, true);
                         NoteRendering.KillHold(noteIndex);
                     }
                 }
