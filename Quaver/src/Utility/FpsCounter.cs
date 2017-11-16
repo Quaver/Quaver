@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Graphics.Text;
 using Quaver.Logging;
 
 namespace Quaver.Utility
@@ -30,7 +31,7 @@ namespace Quaver.Utility
         /// <summary>
         ///     The SpriteFont for the FPS Counter.
         /// </summary>
-        private static SpriteFont Font { get; } = GameBase.Content.Load<SpriteFont>("testFont");
+        private static SpriteFont Font { get; } = Fonts.Medium16;
 
         /// <summary>
         /// After this many frames, it will update the current FPS
@@ -65,7 +66,7 @@ namespace Quaver.Utility
         /// </summary>
         public static void Draw()
         {
-            GameBase.SpriteBatch.DrawString(Font, Math.Floor(FpsCurrent) + " FPS", new Vector2(0, GameBase.Window.Height-20), Color.White);
+            GameBase.SpriteBatch.DrawString(Font, Math.Floor(FpsCurrent) + " FPS", new Vector2(0, GameBase.Window.Height-24), Color.White);
         }
 
     }
