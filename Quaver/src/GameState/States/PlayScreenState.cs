@@ -83,9 +83,6 @@ namespace Quaver.GameState.States
             Logger.Add("SongPos", "", Color.White);
             Logger.Add("Skippable", "", CustomColors.NameTagAdmin);
 
-            for (var i=0; i < NoteManager.TimingNames.Length; i++)
-                Logger.Add(NoteManager.TimingNames[i], "", NoteManager.TimingColors[i]);
-
             //Todo: Remove. TEST.
             TestButton = new TextButton(new Vector2(200, 30), "BACK")
             {

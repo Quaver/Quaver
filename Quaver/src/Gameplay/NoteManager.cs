@@ -13,13 +13,6 @@ namespace Quaver.Gameplay
     /// </summary>
     class NoteManager
     {
-        //Hit Timing Variables
-        internal static string[] TimingNames { get; } = new string[5]{"MARV","PERF","GREAT","GOOD","BAD"};
-
-        //Temp
-        internal static Color[] TimingColors { get;  } = new Color[5]{Color.White,Color.LightBlue,Color.LightGreen,Color.Yellow,Color.Magenta};
-
-
         /// <summary>
         /// This method gets called when a key gets pressed.
         /// </summary>
