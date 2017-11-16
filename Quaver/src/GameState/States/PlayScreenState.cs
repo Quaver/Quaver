@@ -188,7 +188,7 @@ namespace Quaver.GameState.States
             Playfield.DrawOver();
             DataInterface.Draw();
             TestButton.Draw();
-            TextUnder.Draw();
+            //TextUnder.Draw();
         }
 
         public void ButtonClick(object sender, EventArgs e)
