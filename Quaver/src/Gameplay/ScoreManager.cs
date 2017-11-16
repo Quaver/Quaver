@@ -29,7 +29,7 @@ namespace Quaver.Gameplay
         public static float Accuracy { get; set; }
 
         //Hit Window
-        internal static float[] HitWindow { get; } = new float[5] { 16, 43, 76, 106, 130 };
+        internal static float[] HitWindow { get; } = new float[5] { 20, 44, 76, 106, 130 };
 
         /// <summary>
         /// This method is used to track and count scoring.

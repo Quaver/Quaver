@@ -86,8 +86,6 @@ namespace Quaver.Gameplay
         ///     Used to reference the images for JudgeSprite
         /// </summary>
         private static Texture2D[] JudgeImages { get; set; }
-
-        private static Sprite AccuracyBox { get; set; }
         
 
         /// <summary>
@@ -104,7 +102,7 @@ namespace Quaver.Gameplay
             // Calculate Config stuff
             ReceptorYOffset = Config.Configuration.DownScroll ? GameBase.Window.Bottom - GameBase.LoadedSkin.ReceptorYOffset - PlayfieldObjectSize : GameBase.LoadedSkin.ReceptorYOffset;
 
-            // Create playfield boundary & Update Rect.
+            // Create playfield boundary
             BoundaryUnder = new Boundary()
             {
                 Size = new Vector2(PlayfieldSize, GameBase.Window.Height),
