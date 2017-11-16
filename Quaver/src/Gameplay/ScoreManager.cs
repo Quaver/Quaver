@@ -62,6 +62,9 @@ namespace Quaver.Gameplay
                          JudgeReleaseSpread[3] / 2f + JudgeReleaseSpread[4] / 4f);
             Accuracy /= JudgeCount;
 
+            //todo: actual score calculation
+            Score = (int)(Accuracy * 1000000f * JudgeCount / 20000f);
+
             //Update ConsistancyMultiplier and Combo
             if (index < 4)
             {

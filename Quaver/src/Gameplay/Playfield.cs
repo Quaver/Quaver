@@ -195,7 +195,8 @@ namespace Quaver.Gameplay
                 Size = JudgeSizes[0],
                 Alignment = Alignment.MidCenter,
                 Image = JudgeImages[0],
-                Parent = BoundaryOver
+                Parent = BoundaryOver,
+                Alpha = 0
             };
 
             // Create Combo Text
@@ -208,7 +209,8 @@ namespace Quaver.Gameplay
                 TextAlignment = Alignment.TopCenter,
                 Text = "0x",
                 Font = Fonts.Medium16,
-                Parent = BoundaryOver
+                Parent = BoundaryOver,
+                Alpha = 0
             };
 
             // Create Offset Gauge
@@ -328,7 +330,7 @@ namespace Quaver.Gameplay
             {
                 // Priority Judge Image to show
                 if (index == 2) PriorityJudgeLength = 200;
-                else if (index == 3) PriorityJudgeLength = 400;
+                else if (index == 3) PriorityJudgeLength = 300;
                 else PriorityJudgeLength = 500;
                 PriorityJudgeImage = index;
 

@@ -12,6 +12,19 @@ namespace Quaver.Utility
     internal class Util
     {
         /// <summary>
+        /// Converts score to string (1234567) format
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns></returns>
+        internal static string ScoreToString(int score)
+        {
+            var output = score.ToString();
+            for (var i = output.Length; i < 7; i++)
+                output = "0" + output;
+            return output;
+        }
+
+        /// <summary>
         /// Converts Point to Vector2
         /// </summary>
         /// <param name="point"></param>

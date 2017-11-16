@@ -138,7 +138,7 @@ namespace Quaver.Gameplay
             // Create new Leaderboard Box
             LeaderboardBox = new Sprite()
             {
-                Size = new Vector2(230, 340),
+                Size = new Vector2(230, 400),
                 Alignment = Alignment.MidLeft,
                 Parent = Boundary,
                 Alpha = 0.5f,
@@ -150,7 +150,7 @@ namespace Quaver.Gameplay
         {
             AccuracyCountText[index+1].Text = ScoreManager.JudgePressSpread[index] + " | " + ScoreManager.JudgeReleaseSpread[index];
             AccuracyCountText[0].Text = $"{ScoreManager.Accuracy * 100:0.00}%";
-            ScoreText.Text = ScoreManager.Score.ToString();
+            ScoreText.Text = Util.ScoreToString(ScoreManager.Score);
 
             //Calculate graph bars
             for (var i = 0; i < 6; i++)
