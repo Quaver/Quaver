@@ -131,6 +131,7 @@ namespace Quaver.GameState.States
             NoteRendering.UnloadContent();
             Timing.UnloadContent();
             Playfield.UnloadContent();
+            DataInterface.UnloadContent();
 
             //Remove Loggers
             Logger.Clear();
@@ -162,6 +163,9 @@ namespace Quaver.GameState.States
             // Update the Notes
             NoteRendering.Update(dt);
 
+            // Update Data Interface
+            DataInterface.Update(dt);
+
             // Check the input for this particular game state.
             InputManager.CheckInput(GameBase.SelectedBeatmap.Qua, IntroSkippable);
 
@@ -182,6 +186,7 @@ namespace Quaver.GameState.States
             Playfield.DrawUnder();
             NoteRendering.Draw();
             Playfield.DrawOver();
+            DataInterface.Draw();
             TestButton.Draw();
             TextUnder.Draw();
         }
@@ -199,6 +204,7 @@ namespace Quaver.GameState.States
             Playfield.Initialize();
             Timing.Initialize(GameBase.SelectedBeatmap.Qua);
             NoteRendering.Initialize(GameBase.SelectedBeatmap.Qua);
+            DataInterface.Initialize();
         }
     }
 }
