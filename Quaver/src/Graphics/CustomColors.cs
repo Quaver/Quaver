@@ -29,7 +29,7 @@ namespace Quaver.Graphics
         /// </summary>
         public static readonly Color NameTagRegular = new Color(76, 146, 211, 1);
 
-        public static readonly Color JudgeMarv = new Color(90, 255, 255, 1);
+        public static readonly Color JudgeMarv = new Color(255, 255, 200, 1);
         public static readonly Color JudgePerf = new Color(255, 255, 0, 1);
         public static readonly Color JudgeGreat = new Color(0, 255, 0, 1);
         public static readonly Color JudgeGood = new Color(0, 168, 255, 1);
