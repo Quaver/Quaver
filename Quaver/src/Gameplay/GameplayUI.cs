@@ -20,9 +20,11 @@ namespace Quaver.Gameplay
 
         private static TextBoxSprite[] AccuracyIndicatorText { get; set; }
 
-        internal static TextBoxSprite[] AccuracyCountText { get; set; }
+        private static TextBoxSprite[] AccuracyCountText { get; set; }
 
-        internal static TextBoxSprite ScoreText { get; set; }
+        private static Sprite[] AccuracyGraphBar { get; set; }
+
+        private static TextBoxSprite ScoreText { get; set; }
 
         private static Sprite LeaderboardBox { get; set; }
 
@@ -42,6 +44,21 @@ namespace Quaver.Gameplay
                 Tint = CustomColors.TransparentBlack //todo: remove later and use skin image
             };
 
+            AccuracyGraphBar = new Sprite[7];
+            for (var i = 0; i < 7; i++)
+            {
+                AccuracyGraphBar[i] = new Sprite()
+                {
+                    Parent = AccuracyBox,
+                    Alignment = Alignment.TopLeft,
+                    SizeX = AccuracyBox.SizeX - 20,
+                    SizeY = 26,
+                    PositionY = i * 25 + 55,
+                    PositionX = 10,
+                    Tint = i == 0 ? Color.White : CustomColors.JudgeColorsOpaque[i - 1]
+                };
+            }
+
             AccuracyIndicatorText = new TextBoxSprite[7];
             for (var i = 0; i < 7; i++)
             {
@@ -51,12 +68,13 @@ namespace Quaver.Gameplay
                     Alignment = Alignment.TopLeft,
                     TextAlignment = Alignment.TopLeft,
                     SizeX = AccuracyBox.SizeX-20,
+                    SizeY = 26,
                     Textwrap = false,
                     Multiline = false,
                     Font = Fonts.Medium16,
                     TextColor = i == 0 ? Color.White : CustomColors.JudgeColorsTransparent[i-1],
                     Text = i == 0 ? "Accuracy" : ScoreManager.JudgeNames[i-1],
-                    PositionY = i*24 + 60,
+                    PositionY = i*25 + 55,
                     PositionX = 10
                 };
             }
@@ -70,6 +88,7 @@ namespace Quaver.Gameplay
                     Alignment = Alignment.TopLeft,
                     TextAlignment = Alignment.TopRight,
                     SizeX = AccuracyBox.SizeX - 20,
+                    SizeY = 26,
                     Textwrap = false,
                     Multiline = false,
                     Font = Fonts.Medium16,
@@ -86,7 +105,7 @@ namespace Quaver.Gameplay
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.MidCenter,
                 SizeX = AccuracyBox.SizeX - 20,
-                SizeY = 60,
+                SizeY = 55,
                 Textwrap = false,
                 Multiline = false,
                 Font = Fonts.Medium24,
