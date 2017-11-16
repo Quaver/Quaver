@@ -25,6 +25,11 @@ namespace Quaver.Audio
         protected string Path { get; set; }
 
         /// <summary>
+        ///     Keeps track of if the current audio is an effect
+        /// </summary>
+        protected bool IsEffect { get; set; }
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         public GameAudio(){}
@@ -87,7 +92,7 @@ namespace Quaver.Audio
             ChangeSongSpeed();
 
             // Set Pitch if necessary.
-            if (GameBase.CurrentlyPitched)
+            if (GameBase.CurrentlyPitched && !IsEffect)
                 Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, Math.Log(Math.Pow(GameBase.GameClock, 12), 2));
 
             // Change the audio volume to that of what is in the config file.
@@ -183,7 +188,7 @@ namespace Quaver.Audio
             Bass.ChannelSetAttribute(Stream, ChannelAttribute.Tempo, GameBase.GameClock * 100 - 100);
 
             // Set new pitch if any
-            if (GameBase.CurrentlyPitched)
+            if (GameBase.CurrentlyPitched && !IsEffect)
                 Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, Math.Log(Math.Pow(GameBase.GameClock, 12), 2));
         }
 
@@ -193,7 +198,7 @@ namespace Quaver.Audio
         internal void ToggleSongPitch()
         {
             // Reeset the pitch and turn off pitching if the speed ever gets to 1.0x
-            if (GameBase.GameClock == 1.0f)
+            if (GameBase.GameClock == 1.0f && !IsEffect)
             {
                 Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, 0);
                 GameBase.CurrentlyPitched = false;
@@ -201,7 +206,7 @@ namespace Quaver.Audio
             }
 
             // Toggle Pitching
-            if (!GameBase.CurrentlyPitched)
+            if (!GameBase.CurrentlyPitched && !IsEffect)
             {
                 Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, Math.Log(Math.Pow(GameBase.GameClock, 12), 2));
                 GameBase.CurrentlyPitched = true;
