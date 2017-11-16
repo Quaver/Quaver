@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
+using Quaver.Graphics.Text;
 
 namespace Quaver.Logging
 {
@@ -42,7 +43,7 @@ namespace Quaver.Logging
         /// </summary>
         internal static void Initialize()
         {
-            Font = GameBase.Content.Load<SpriteFont>("testFont");
+            Font = Fonts.Medium12;
         }
 
         /// <summary>
