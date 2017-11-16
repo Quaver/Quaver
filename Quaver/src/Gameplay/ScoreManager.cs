@@ -19,7 +19,8 @@ namespace Quaver.Gameplay
         internal static string[] JudgeNames { get; } = new string[6] { "MARV", "PERF", "GREAT", "GOOD", "OKAY", "MISS" };
 
         //Hit Tracking (Judging/Scoring)
-        public static int[] JudgeSpread { get; set; } = new int[6];
+        public static int[] JudgePressSpread { get; set; } = new int[6];
+        public static int[] JudgeReleaseSpread { get; set; } = new int[6];
         public static int JudgeCount { get; set; }
 
         //Hit Tracking (ms deviance)
@@ -44,7 +45,8 @@ namespace Quaver.Gameplay
         public static void Count(int index, bool release = false, double? offset=null)
         {
             //Update Judge Spread
-            JudgeSpread[index]++;
+            if (release) JudgeReleaseSpread[index]++;
+            else JudgePressSpread[index]++;
             JudgeCount++;
 
             //Update ms-deviance
@@ -54,8 +56,11 @@ namespace Quaver.Gameplay
                 MsDeviance.Add((double)offset);
             }
 
-            //Get new accuracy
-            Accuracy = (JudgeSpread[0] + JudgeSpread[1] + JudgeSpread[2] / 1.5f + JudgeSpread[3] / 2f + JudgeSpread[4] / 4f) /JudgeCount;
+            Accuracy = (JudgePressSpread[0] + JudgePressSpread[1] + JudgePressSpread[2] / 1.5f +
+                        JudgePressSpread[3] / 2f + JudgePressSpread[4] / 4f);
+            Accuracy += (JudgeReleaseSpread[0] + JudgeReleaseSpread[1] + JudgeReleaseSpread[2] / 1.5f +
+                         JudgeReleaseSpread[3] / 2f + JudgeReleaseSpread[4] / 4f);
+            Accuracy /= JudgeCount;
 
             //Update ConsistancyMultiplier and Combo
             if (index < 4)
@@ -74,8 +79,7 @@ namespace Quaver.Gameplay
             //Update Score
 
             //log scores
-            if (index < 5)
-            Logger.Update(JudgeNames[index], JudgeNames[index]+": "+ JudgeSpread[index]);
+            GameplayUI.UpdateAccuracyBox(index);
 
             //Display stuff
             Playfield.UpdateJudge(index);
