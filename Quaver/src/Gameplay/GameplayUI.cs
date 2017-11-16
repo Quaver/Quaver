@@ -83,7 +83,7 @@ namespace Quaver.Gameplay
                 {
                     Parent = AccuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
-                    TextAlignment = Alignment.TopLeft,
+                    TextAlignment = Alignment.MidLeft,
                     Scale = Vector2.One,
                     PositionX = 5,
                     Textwrap = false,
@@ -102,7 +102,7 @@ namespace Quaver.Gameplay
                 {
                     Parent = AccuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
-                    TextAlignment = Alignment.TopRight,
+                    TextAlignment = Alignment.MidRight,
                     Scale = Vector2.One,
                     PositionX = -5,
                     Textwrap = false,
