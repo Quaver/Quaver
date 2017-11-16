@@ -29,16 +29,18 @@ namespace Quaver.Gameplay
             AccuracyBox = new Sprite()
             {
                 Alignment = Alignment.TopRight,
-                Size = new Vector2(300, 200),
-                Parent = Boundary
+                Size = new Vector2(230, 240),
+                Parent = Boundary,
+                Tint = Color.Black //todo: remove later and use skin image
             };
 
             // Create new Leaderboard Box
             LeaderboardBox = new Sprite()
             {
-                Size = new Vector2(200, 600),
+                Size = new Vector2(230, 340),
                 Alignment = Alignment.MidLeft,
-                Parent = Boundary
+                Parent = Boundary,
+                Tint = Color.Black //todo: remove later and use skin image
             };
         }
 
