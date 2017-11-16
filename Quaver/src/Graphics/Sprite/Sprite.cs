@@ -62,7 +62,7 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     The origin of this object used for rotation.
         /// </summary>
-        private Vector2 _origin = Vector2.One;
+        private Vector2 _origin = new Vector2(GameBase.UI.BlankBox.Width/2f, GameBase.UI.BlankBox.Width/2f); //TODO: bake this value later
 
         /// <summary>
         ///     The Rectangle used to render the sprite.
