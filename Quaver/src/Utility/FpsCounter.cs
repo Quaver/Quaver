@@ -65,7 +65,7 @@ namespace Quaver.Utility
         /// </summary>
         public static void Draw()
         {
-            GameBase.SpriteBatch.DrawString(Font, Math.Floor(FpsCurrent) + " FPS", new Vector2(0, GameBase.Window.Height-20), Color.Black);
+            GameBase.SpriteBatch.DrawString(Font, Math.Floor(FpsCurrent) + " FPS", new Vector2(0, GameBase.Window.Height-20), Color.White);
         }
 
     }
