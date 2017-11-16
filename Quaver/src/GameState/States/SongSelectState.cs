@@ -36,6 +36,9 @@ namespace Quaver.GameState.States
         // Test Mod Button
         private TextButton SpeedModButton { get; set; }
 
+        // Another test mod button
+        private TextButton TogglePitch { get; set; }
+
         public void Initialize()
         {
             GameBase.GameWindow.Title = "Quaver";
@@ -95,6 +98,15 @@ namespace Quaver.GameState.States
             };
             SpeedModButton.Clicked += OnSpeedModButtonClick;
 
+            // Create Speed Mod Button
+            TogglePitch = new TextButton(new Vector2(200, 50), $"Toggle Pitch: {GameBase.SelectedBeatmap.Song.Pitched}")
+            {
+                Image = GameBase.UI.BlankBox,
+                Alignment = Alignment.MidRight,
+                Parent = Boundary
+            };
+            TogglePitch.Clicked += OnTogglePitchButtonClick;
+
             //Add map selected text TODO: remove later
             Logger.Add("MapSelected", "Map Selected: " + GameBase.SelectedBeatmap.Artist + " - " + GameBase.SelectedBeatmap.Title + " [" + GameBase.SelectedBeatmap.DifficultyName + "]", Color.Yellow);
             UpdateReady = true;
@@ -136,6 +148,10 @@ namespace Quaver.GameState.States
 
             //Select map
             GameBase.ChangeBeatmap(map);
+
+            // Change Pitch Text
+            TogglePitch.TextSprite.Text = $"Toggle Pitch {GameBase.SelectedBeatmap.Song.Pitched}";
+
             GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
 
             // Load background asynchronously.
@@ -200,6 +216,17 @@ namespace Quaver.GameState.States
 
             if (GameBase.SelectedBeatmap.Song != null)
                 GameBase.SelectedBeatmap.Song.ChangeSongSpeed();
+        }
+
+        /// <summary>
+        ///     Toggles pitching for speed modifications
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTogglePitchButtonClick(object sender, EventArgs e)
+        {
+            GameBase.SelectedBeatmap.Song.ToggleSongPitch();
+            TogglePitch.TextSprite.Text = $"Toggle Pitch {GameBase.SelectedBeatmap.Song.Pitched}";
         }
     }
 }
