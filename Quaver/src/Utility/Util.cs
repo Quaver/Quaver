@@ -18,10 +18,7 @@ namespace Quaver.Utility
         /// <returns></returns>
         internal static string ScoreToString(int score)
         {
-            var output = score.ToString();
-            for (var i = output.Length; i < 7; i++)
-                output = "0" + output;
-            return output;
+            return score.ToString("0000000");
         }
 
         /// <summary>
