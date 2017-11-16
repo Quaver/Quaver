@@ -82,7 +82,7 @@ namespace Quaver.Gameplay
             GameplayUI.UpdateAccuracyBox(index);
 
             //Display stuff
-            Playfield.UpdateJudge(index);
+            Playfield.UpdateJudge(index, release, offset);
 
         }
 

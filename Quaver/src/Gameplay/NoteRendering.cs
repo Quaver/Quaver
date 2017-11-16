@@ -126,7 +126,11 @@ namespace Quaver.Gameplay
                     ScoreManager.Count(5);
 
                     //If HitObject is an LN, kill it
-                    if (HitObjectPool[i].IsLongNote) KillNote(i);
+                    if (HitObjectPool[i].IsLongNote)
+                    {
+                        KillNote(i);
+                        ScoreManager.Count(5, true);
+                    }
 
                     //If HitObject is a LongNote, Recycle it
                     else RecycleNote(i);
