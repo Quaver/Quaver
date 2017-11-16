@@ -86,6 +86,12 @@ namespace Quaver.Gameplay
         ///     Used to reference the images for JudgeSprite
         /// </summary>
         private static Texture2D[] JudgeImages { get; set; }
+
+        private static Vector2[] JudgeSizes { get; set; }
+
+        private static Sprite OffsetMiddleGauge { get; set; }
+
+        private static TextBoxSprite ComboText { get; set; }
         
 
         /// <summary>
@@ -161,14 +167,40 @@ namespace Quaver.Gameplay
                 GameBase.LoadedSkin.JudgeMiss
             };
 
+            JudgeSizes = new Vector2[6];
+            for (var i = 0; i < 6; i++)
+            {
+                //todo: replace 40 with skin.ini value
+                JudgeSizes[i] = new Vector2(JudgeImages[i].Width, JudgeImages[i].Height) * 40f * (float)GameBase.WindowYRatio / JudgeImages[i].Height;
+            }
+
             //TODO: add judge scale
-            //var size = new Vector2(GameBase.LoadedSkin.JudgeMiss.Width, GameBase.LoadedSkin.JudgeMiss.Height)*(float)GameBase.WindowYRatio;
-            var size = new Vector2(JudgeImages[0].Width, JudgeImages[0].Height) * (float)GameBase.WindowYRatio * 0.5f;
             JudgeSprite = new Sprite()
             {
-                Size = size,
+                Size = JudgeSizes[0],
                 Alignment = Alignment.MidCenter,
                 Image = JudgeImages[0],
+                Parent = BoundaryOver
+            };
+
+            ComboText = new TextBoxSprite()
+            {
+                SizeX = 100,
+                SizeY = 20,
+                PositionY = 45f * (float)GameBase.WindowYRatio,
+                Alignment = Alignment.MidCenter,
+                TextAlignment = Alignment.TopCenter,
+                Text = "632x",
+                Font = Fonts.Medium16,
+                Parent = BoundaryOver
+            };
+
+            OffsetMiddleGauge = new Sprite()
+            {
+                SizeX = 2,
+                SizeY = 10f * (float)GameBase.WindowYRatio,
+                PositionY = 30f * (float)GameBase.WindowYRatio,
+                Alignment = Alignment.MidCenter,
                 Parent = BoundaryOver
             };
         }
@@ -226,9 +258,10 @@ namespace Quaver.Gameplay
         public static void UpdateJudge(int index)
         {
             //TODO: add judge scale
-            var size = new Vector2(JudgeImages[index].Width, JudgeImages[index].Height) * (float)GameBase.WindowYRatio * 0.5f;
+            var size = JudgeSizes[index];
             JudgeSprite.Size = size;
             JudgeSprite.Image = JudgeImages[index];
+            ComboText.Text = ScoreManager.Combo + "x";
         }
 
         /// <summary>
