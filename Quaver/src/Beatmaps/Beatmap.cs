@@ -154,8 +154,13 @@ namespace Quaver.Beatmaps
         ///     Loads a beatmaps's GameAudio file
         /// </summary>
         internal void LoadAudio()
-        {      
-            Song = new GameAudio(Config.Configuration.SongDirectory + "/" + Directory + "/" + AudioPath);
+        {
+            var audioPath = Config.Configuration.SongDirectory + "/" + Directory + "/" + AudioPath;
+
+            if (!File.Exists(audioPath))
+                return;
+
+            Song = new GameAudio(audioPath);
         }
 
         /// <summary>
