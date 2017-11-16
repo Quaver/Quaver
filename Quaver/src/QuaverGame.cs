@@ -190,7 +190,7 @@ namespace Quaver
             double dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Start SriteBatch
-            GameBase.SpriteBatch.Begin();
+            GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
             // Set Background Color
             GameBase.GraphicsDevice.Clear(Color.Black);

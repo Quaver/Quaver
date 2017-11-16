@@ -79,9 +79,46 @@ namespace Quaver.Graphics.Text
         public SpriteFont Font { get; set; } = Fonts.Medium12;
 
         /// <summary>
-        ///     The color of this object
+        ///     The tint this Text Object will inherit.
         /// </summary>
-        public Color TextColor = Color.White;
+        public Color TextColor
+        {
+            get
+            {
+                return _tint;
+
+            }
+            set
+            {
+                _tint = value;
+                _color = _tint * _alpha;
+            }
+
+        }
+        private Color _tint = Color.White;
+
+        /// <summary>
+        ///     The transparency of this Text Object.
+        /// </summary>
+        public float Alpha
+        {
+            get
+            {
+                return _alpha;
+
+            }
+            set
+            {
+                _alpha = value;
+                _color = _tint * _alpha;
+            }
+        }
+        private float _alpha = 1f;
+
+        /// <summary>
+        ///     The color of this Text Object.
+        /// </summary>
+        private Color _color = Color.White;
 
         public override void Update(double dt)
         {
@@ -116,7 +153,7 @@ namespace Quaver.Graphics.Text
             //TODO: SpriteFont.MeasureString()
             //Draw itself if it is in the window
             if (GameBase.Window.Intersects(GlobalRect))
-                GameBase.SpriteBatch.DrawString(Font, _text, new Vector2(GlobalTextRect.X, GlobalTextRect.Y), TextColor);
+                GameBase.SpriteBatch.DrawString(Font, _text, new Vector2(GlobalTextRect.X, GlobalTextRect.Y), _color);
 
             base.Draw();
         }
