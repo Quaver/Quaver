@@ -62,9 +62,6 @@ namespace Quaver.Gameplay
         internal static void Draw()
         {
             Boundary.Draw();
-            LeaderboardBox.Draw();
-            HollowBox.Draw();
-            AccuracyBox.Draw();
         }
 
         internal static void UnloadContent()
