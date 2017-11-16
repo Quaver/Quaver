@@ -69,7 +69,46 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         private Rectangle _renderRect;
 
-        public Color Tint { get; set; } = Color.White;
+        /// <summary>
+        ///     The tint this Sprite will inherit.
+        /// </summary>
+        public Color Tint
+        {
+            get
+            {
+                return _tint;
+                
+            }
+            set
+            {
+                _tint = value;
+                _color = _tint * _alpha;
+            } 
+            
+        }
+        private Color _tint = Color.White;
+
+        /// <summary>
+        ///     The transparency of this Sprite.
+        /// </summary>
+        public float Alpha {
+            get
+            {
+                return _alpha; 
+                
+            }
+            set
+            {
+                _alpha = value;
+                _color = _tint * _alpha;
+            } 
+        }
+        private float _alpha = 1f;
+
+        /// <summary>
+        ///     The color of this Sprite.
+        /// </summary>
+        private Color _color = Color.White;
 
         /// <summary>
         ///     Draws the sprite to the screen.
@@ -82,7 +121,7 @@ namespace Quaver.Graphics.Sprite
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             if (GameBase.Window.Intersects(GlobalRect) && Visible)
             {
-                GameBase.SpriteBatch.Draw(_image, _renderRect, null, Tint, _rotation, _origin, SpriteEffect, 0f);
+                GameBase.SpriteBatch.Draw(_image, _renderRect, null, _color, _rotation, _origin, SpriteEffect, 0f);
             }
 
             //Draw children
