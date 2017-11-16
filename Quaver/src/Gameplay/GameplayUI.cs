@@ -18,6 +18,8 @@ namespace Quaver.Gameplay
     {
         private static Sprite AccuracyBox { get; set; }
 
+        private static Boundary[] AccuracyDisplaySet { get; set; }
+
         private static TextBoxSprite[] AccuracyIndicatorText { get; set; }
 
         private static TextBoxSprite[] AccuracyCountText { get; set; }
@@ -39,23 +41,37 @@ namespace Quaver.Gameplay
             AccuracyBox = new Sprite()
             {
                 Alignment = Alignment.TopRight,
-                Size = new Vector2(230, 240),
+                Size = new Vector2(220, 240),
                 Parent = Boundary,
-                Tint = CustomColors.TransparentBlack //todo: remove later and use skin image
+                Alpha = 0.7f,
+                Tint = Color.Black //todo: remove later and use skin image
             };
 
-            AccuracyGraphBar = new Sprite[7];
+            AccuracyDisplaySet = new Boundary[7];
             for (var i = 0; i < 7; i++)
             {
-                AccuracyGraphBar[i] = new Sprite()
+                AccuracyDisplaySet[i] = new Boundary()
                 {
                     Parent = AccuracyBox,
                     Alignment = Alignment.TopLeft,
                     SizeX = AccuracyBox.SizeX - 20,
                     SizeY = 26,
                     PositionY = i * 25 + 55,
-                    PositionX = 10,
-                    Tint = i == 0 ? Color.White : CustomColors.JudgeColorsOpaque[i - 1]
+                    PositionX = 10
+                };
+            }
+
+            AccuracyGraphBar = new Sprite[6];
+            for (var i = 0; i < 6; i++)
+            {
+                AccuracyGraphBar[i] = new Sprite()
+                {
+                    Parent = AccuracyDisplaySet[i+1],
+                    Alignment = Alignment.MidLeft,
+                    Scale = Vector2.One,
+                    SizeY = -2,
+                    Tint = CustomColors.JudgeColors[i],
+                    Alpha = 0.12f
                 };
             }
 
@@ -64,18 +80,16 @@ namespace Quaver.Gameplay
             {
                 AccuracyIndicatorText[i] = new TextBoxSprite()
                 {
-                    Parent = AccuracyBox,
+                    Parent = AccuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
                     TextAlignment = Alignment.TopLeft,
-                    SizeX = AccuracyBox.SizeX-20,
-                    SizeY = 26,
+                    Scale = Vector2.One,
                     Textwrap = false,
                     Multiline = false,
                     Font = Fonts.Medium16,
-                    TextColor = i == 0 ? Color.White : CustomColors.JudgeColorsTransparent[i-1],
+                    TextColor = i == 0 ? Color.White : CustomColors.JudgeColors[i-1],
                     Text = i == 0 ? "Accuracy" : ScoreManager.JudgeNames[i-1],
-                    PositionY = i*25 + 55,
-                    PositionX = 10
+                    Alpha = 0.3f
                 };
             }
 
@@ -84,18 +98,15 @@ namespace Quaver.Gameplay
             {
                 AccuracyCountText[i] = new TextBoxSprite()
                 {
-                    Parent = AccuracyBox,
+                    Parent = AccuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
                     TextAlignment = Alignment.TopRight,
-                    SizeX = AccuracyBox.SizeX - 20,
-                    SizeY = 26,
+                    Scale = Vector2.One,
                     Textwrap = false,
                     Multiline = false,
                     Font = Fonts.Medium16,
-                    TextColor = i == 0 ? Color.White : CustomColors.JudgeColorsOpaque[i - 1],
-                    Text = i == 0 ? "00.00%" : "0 | 0",
-                    PositionY = AccuracyIndicatorText[i].PositionY,
-                    PositionX = 10
+                    TextColor = i == 0 ? Color.White : CustomColors.JudgeColors[i - 1],
+                    Text = i == 0 ? "00.00%" : "0 | 0"
                 };
             }
 
@@ -121,7 +132,8 @@ namespace Quaver.Gameplay
                 Size = new Vector2(230, 340),
                 Alignment = Alignment.MidLeft,
                 Parent = Boundary,
-                Tint = CustomColors.TransparentBlack //todo: remove later and use skin image
+                Alpha = 0.5f,
+                Tint = Color.Black //todo: remove later and use skin image
             };
         }
 
