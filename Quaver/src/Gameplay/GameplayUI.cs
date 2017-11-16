@@ -41,7 +41,8 @@ namespace Quaver.Gameplay
             AccuracyBox = new Sprite()
             {
                 Alignment = Alignment.TopRight,
-                Size = new Vector2(220, 240),
+                Size = new Vector2(220, 240) * (float)GameBase.WindowYRatio,
+                Position = new Vector2(-10,10),
                 Parent = Boundary,
                 Alpha = 0.7f,
                 Tint = Color.Black //todo: remove later and use skin image
@@ -54,10 +55,10 @@ namespace Quaver.Gameplay
                 {
                     Parent = AccuracyBox,
                     Alignment = Alignment.TopLeft,
-                    SizeX = AccuracyBox.SizeX - 20,
-                    SizeY = 26,
-                    PositionY = i * 25 + 55,
-                    PositionX = 10
+                    SizeX = AccuracyBox.SizeX - 10,
+                    SizeY = 26 * (float)GameBase.WindowYRatio,
+                    PositionY = (i * 25 + 55) * (float)GameBase.WindowYRatio,
+                    PositionX = 5
                 };
             }
 
@@ -84,6 +85,7 @@ namespace Quaver.Gameplay
                     Alignment = Alignment.TopLeft,
                     TextAlignment = Alignment.TopLeft,
                     Scale = Vector2.One,
+                    PositionX = 5,
                     Textwrap = false,
                     Multiline = false,
                     Font = Fonts.Medium16,
@@ -102,6 +104,7 @@ namespace Quaver.Gameplay
                     Alignment = Alignment.TopLeft,
                     TextAlignment = Alignment.TopRight,
                     Scale = Vector2.One,
+                    PositionX = -5,
                     Textwrap = false,
                     Multiline = false,
                     Font = Fonts.Medium16,
@@ -116,7 +119,7 @@ namespace Quaver.Gameplay
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.MidCenter,
                 SizeX = AccuracyBox.SizeX - 20,
-                SizeY = 55,
+                SizeY = 55 * (float)GameBase.WindowYRatio,
                 Textwrap = false,
                 Multiline = false,
                 Font = Fonts.Medium24,
