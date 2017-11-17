@@ -14,10 +14,13 @@ using Quaver.Graphics.Text;
 using Quaver.Skins;
 using Quaver.Utility;
 
-namespace Quaver.Gameplay
+namespace Quaver.Gameplay.GameplayRendering
 {
-    internal class Playfield : IGameplay
+    internal class Playfield : IGameplayRendering
     {
+
+        public PlayScreenState PlayScreen { get; set; }
+
         /// <summary>
         ///     The size of each HitObject.
         /// </summary>
@@ -109,7 +112,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
         /// </summary>
-        internal override void Initialize(PlayScreenState playScreen)
+        public void Initialize(PlayScreenState playScreen)
         {
             PlayScreen = playScreen;
 
@@ -251,6 +254,11 @@ namespace Quaver.Gameplay
             };
         }
 
+        public void Draw()
+        {
+            
+        }
+
         /// <summary>
         ///     Draws the first layer of the Playfield (Renders before Notes)
         /// </summary>
@@ -271,7 +279,7 @@ namespace Quaver.Gameplay
         ///     Updates the current playfield.
         /// </summary>
         /// <param name="dt"></param>
-        internal override void Update(double dt)
+        public void Update(double dt)
         {
             // Update the delta time tweening variable for animation.
             AlphaHold += dt;

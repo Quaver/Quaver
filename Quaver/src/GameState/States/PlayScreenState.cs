@@ -10,6 +10,7 @@ using Quaver.Beatmaps;
 using Quaver.Config;
 using Quaver.Discord;
 using Quaver.Gameplay;
+using Quaver.Gameplay.GameplayRendering;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
