@@ -15,6 +15,12 @@ namespace Quaver.QuaFile
         // Constructor
         internal Qua(string filePath)
         {
+            if (!File.Exists(filePath))
+            {
+                IsValidQua = false;
+                return;
+            }
+
             Parse(filePath);
         }
 
