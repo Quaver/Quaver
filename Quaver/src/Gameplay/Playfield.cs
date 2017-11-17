@@ -95,7 +95,7 @@ namespace Quaver.Gameplay
         private static Boundary OffsetGaugeBoundary { get; set; }
         private static Sprite OffsetGaugeMiddle { get; set; }
 
-        private const int OffsetIndicatorSize = 64;
+        private const int OffsetIndicatorSize = 32;
         private static float OffsetGaugeSize { get; set; }
 
         private static int CurrentOffsetObjectIndex { get; set; }
