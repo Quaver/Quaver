@@ -146,11 +146,8 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     TODO: Add Summary
         /// </summary>
-        public void Update(GameTime gameTime)
+        public void Update(double dt)
         {
-            // Get the current game time in milliseconds.
-            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
-
             // Set the current song time.
             Timing.Update(dt);
 

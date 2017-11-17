@@ -33,7 +33,7 @@ namespace Quaver.GameState
         ///     Called each frame. All game logic goes here.
         /// </summary>
         /// <param name="gameTime"></param>
-        void Update(GameTime gameTime);
+        void Update(double dt);
 
         /// <summary>
         ///     Handles drawing things to the screen.

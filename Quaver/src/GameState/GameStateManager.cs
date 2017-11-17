@@ -92,7 +92,7 @@ namespace Quaver.GameState
         ///     Updates the top screen.
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Update(GameTime gameTime)
+        public void Update(double dt)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Quaver.GameState
                     return;
 
                 if (States.Peek().UpdateReady)
-                    States.Peek().Update(gameTime);
+                    States.Peek().Update(dt);
             }
             catch (Exception ex)
             {
