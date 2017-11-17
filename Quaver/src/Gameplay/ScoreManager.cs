@@ -65,7 +65,7 @@ namespace Quaver.Gameplay
                 Accuracy += (JudgePressSpread[i] + JudgeReleaseSpread[i]) * HitWeighting[i];
             }
 
-            Accuracy /= (JudgeCount * 100);
+            Accuracy = Math.Max(Accuracy/(JudgeCount * 100),0);
 
             //todo: actual score calculation
             Score = (int)(1000000f * JudgeCount / 20000f);
