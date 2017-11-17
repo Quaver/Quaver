@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ManagedBass;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
@@ -15,101 +16,103 @@ using Quaver.Utility;
 
 namespace Quaver.Gameplay
 {
-    internal class Playfield
+    internal class Playfield : IGameplay
     {
         /// <summary>
         ///     The size of each HitObject.
         /// </summary>
-        internal static int PlayfieldObjectSize { get; set; }
+        internal int PlayfieldObjectSize { get; set; }
 
         /// <summary>
         ///     The size of the playfield padding.
         /// </summary>
-        private static int PlayfieldPadding { get; set; }
+        private int PlayfieldPadding { get; set; }
 
         /// <summary>
         ///     The padding of the receptors.
         /// </summary>
-        private static int ReceptorPadding { get; set; }
+        private int ReceptorPadding { get; set; }
 
         /// <summary>
         ///     TODO: CHANGE. Use Config Variable instead.
         /// </summary>
-        internal static int ReceptorYOffset { get; set; }
+        internal int ReceptorYOffset { get; set; }
 
         /// <summary>
         ///     TODO: The Playfield size. Load from skin -- About 400px wide.
         /// </summary>
-        internal static int PlayfieldSize { get; set; }
+        internal int PlayfieldSize { get; set; }
 
         /// <summary>
         ///     The X-position of each receptor.
         /// </summary>
-        internal static float[] ReceptorXPosition { get; set; } = new float[GameBase.SelectedBeatmap.Qua.KeyCount];
+        internal float[] ReceptorXPosition { get; set; } = new float[GameBase.SelectedBeatmap.Qua.KeyCount];
 
         /// <summary>
         ///     The receptor sprites.
         /// </summary>
-        private static Sprite[] Receptors { get; set; }
+        private Sprite[] Receptors { get; set; }
 
         /// <summary>
         ///     The target size for each receptors.
         /// </summary>
-        private static float[] ReceptorTargetSize { get; set; }
+        private float[] ReceptorTargetSize { get; set; }
 
         /// <summary>
         ///     The current size for each receptors. Used for animation.
         /// </summary>
-        private static float[] ReceptorCurrentSize { get; set; }
+        private float[] ReceptorCurrentSize { get; set; }
 
         /// <summary>
         ///     The first layer of the playfield. Used to render receptors/FX
         /// </summary>
-        private static Boundary BoundaryUnder { get; set; }
+        private Boundary BoundaryUnder { get; set; }
 
         /// <summary>
         ///     The second layer of the playfield. Used to render judge/HitBurst
         /// </summary>
-        private static Boundary BoundaryOver { get; set; }
+        private Boundary BoundaryOver { get; set; }
 
         /// <summary>
         ///     The background mask of the playfield.
         /// </summary>
-        private static Sprite BgMask { get; set; }
+        private Sprite BgMask { get; set; }
 
         /// <summary>
         ///     This displays the judging (MARV/PERF/GREAT/ect)
         /// </summary>
-        private static Sprite JudgeSprite { get; set; }
+        private Sprite JudgeSprite { get; set; }
 
         /// <summary>
         ///     Used to reference the images for JudgeSprite
         /// </summary>
-        private static Texture2D[] JudgeImages { get; set; }
+        private Texture2D[] JudgeImages { get; set; }
 
-        private static int PriorityJudgeImage { get; set; } = 0;
-        private static double PriorityJudgeLength { get; set; }
+        private int PriorityJudgeImage { get; set; } = 0;
+        private double PriorityJudgeLength { get; set; }
 
-        private static Vector2[] JudgeSizes { get; set; }
+        private Vector2[] JudgeSizes { get; set; }
 
-        private static Boundary OffsetGaugeBoundary { get; set; }
-        private static Sprite OffsetGaugeMiddle { get; set; }
+        private Boundary OffsetGaugeBoundary { get; set; }
+        private Sprite OffsetGaugeMiddle { get; set; }
 
         private const int OffsetIndicatorSize = 32;
-        private static float OffsetGaugeSize { get; set; }
+        private float OffsetGaugeSize { get; set; }
 
-        private static int CurrentOffsetObjectIndex { get; set; }
-        private static Sprite[] OffsetIndicatorsSprites { get; set; }
+        private int CurrentOffsetObjectIndex { get; set; }
+        private Sprite[] OffsetIndicatorsSprites { get; set; }
 
-        private static TextBoxSprite ComboText { get; set; }
-        private static double AlphaHold { get; set; }
+        private TextBoxSprite ComboText { get; set; }
+        private double AlphaHold { get; set; }
         
 
         /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
         /// </summary>
-        public static void Initialize()
+        internal override void Initialize(PlayScreenState playScreen)
         {
+            PlayScreen = playScreen;
+
             // Set default reference variables
             AlphaHold = 0;
             CurrentOffsetObjectIndex = 0;
@@ -223,7 +226,7 @@ namespace Quaver.Gameplay
                 Parent = BoundaryOver
             };
 
-            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (ScoreManager.HitWindow[4]*2);
+            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (PlayScreen.ScoreManager.HitWindow[4]*2);
 
             OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)
@@ -251,7 +254,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Draws the first layer of the Playfield (Renders before Notes)
         /// </summary>
-        public static void DrawUnder()
+        internal void DrawUnder()
         {
             BoundaryUnder.Draw();
         }
@@ -259,7 +262,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Draws the second layer of the Playfield (Renders after Notes)
         /// </summary>
-        public static void DrawOver()
+        internal void DrawOver()
         {
             BoundaryOver.Draw();
         }
@@ -268,7 +271,7 @@ namespace Quaver.Gameplay
         ///     Updates the current playfield.
         /// </summary>
         /// <param name="dt"></param>
-        public static void Update(double dt)
+        internal override void Update(double dt)
         {
             // Update the delta time tweening variable for animation.
             AlphaHold += dt;
@@ -313,15 +316,15 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Unloads content to free memory
         /// </summary>
-        public static void UnloadContent()
+        public  void UnloadContent()
         {
             BoundaryUnder.Destroy();
         }
 
-        public static void UpdateJudge(int index, bool release = false, double? offset = null)
+        public  void UpdateJudge(int index, bool release = false, double? offset = null)
         {
             //TODO: add judge scale
-            ComboText.Text = ScoreManager.Combo + "x";
+            ComboText.Text = PlayScreen.ScoreManager.Combo + "x";
             ComboText.Alpha = 1;
             JudgeSprite.Alpha = 1;
             AlphaHold = 0;
@@ -355,7 +358,7 @@ namespace Quaver.Gameplay
         /// Gets called whenever a key gets pressed. This method updates the receptor state.
         /// </summary>
         /// <param name="curReceptor"></param>
-        public static bool UpdateReceptor(int curReceptor, bool keyDown)
+        public bool UpdateReceptor(int curReceptor, bool keyDown)
         {
             if (keyDown)
             {

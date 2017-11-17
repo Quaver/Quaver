@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.GameState.States;
 using Quaver.Logging;
 
 namespace Quaver.Gameplay
@@ -11,14 +12,22 @@ namespace Quaver.Gameplay
     /// <summary>
     /// This class handles the interaction between note and input.
     /// </summary>
-    class NoteManager
+    class NoteManager : IGameplay
     {
+        internal override void Initialize(PlayScreenState playScreen)
+        {
+            PlayScreen = playScreen;
+        }
+
         /// <summary>
         /// This method gets called when a key gets pressed.
         /// </summary>
         /// <param name="keyLane"></param>
-        internal static void Input(int keyLane, bool keyDown)
+        public void Input(int keyLane, bool keyDown)
         {
+            // Update Receptor in Playfield
+            PlayScreen.Playfield.UpdateReceptor(keyLane, keyDown);
+
             //Check for Note press/LN press
             if (keyDown)
             {
@@ -27,9 +36,9 @@ namespace Quaver.Gameplay
                 int i;
 
                 //Search for closest HitObject that is inside the HitTiming Window
-                for (i = 0; i < NoteRendering.HitObjectPoolSize && i < NoteRendering.HitObjectPool.Count; i++)
+                for (i = 0; i < NoteRendering.HitObjectPoolSize && i < PlayScreen.NoteRendering.HitObjectPool.Count; i++)
                 {
-                    if (NoteRendering.HitObjectPool[i].KeyLane == keyLane + 1 && NoteRendering.HitObjectPool[i].StartTime - Timing.CurrentSongTime > -ScoreManager.HitWindow[4])
+                    if (PlayScreen.NoteRendering.HitObjectPool[i].KeyLane == keyLane + 1 && PlayScreen.NoteRendering.HitObjectPool[i].StartTime - PlayScreen.Timing.CurrentSongTime > -PlayScreen.ScoreManager.HitWindow[4])
                     {
                         noteIndex = i;
                         break;
@@ -42,21 +51,21 @@ namespace Quaver.Gameplay
                     //Check which HitWindow this object's timing is in
                     for (i = 0; i < 5; i++)
                     {
-                        if (Math.Abs(NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime) <= ScoreManager.HitWindow[i])
+                        if (Math.Abs(PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime) <= PlayScreen.ScoreManager.HitWindow[i])
                         {
                             //Score manager stuff
-                            ScoreManager.Count(i, false, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime);
+                            PlayScreen.ScoreManager.Count(i, false, PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime);
 
                             // If the player is spamming
                             if (i >= 3)
-                                NoteRendering.KillNote(noteIndex);
+                                PlayScreen.NoteRendering.KillNote(noteIndex);
                             else
                             {
                                 //If the object is an LN, hold it at the receptors
-                                if (NoteRendering.HitObjectPool[noteIndex].IsLongNote) NoteRendering.HoldNote(noteIndex);
+                                if (PlayScreen.NoteRendering.HitObjectPool[noteIndex].IsLongNote) PlayScreen.NoteRendering.HoldNote(noteIndex);
 
                                 //If the object is not an LN, recycle it.
-                                else NoteRendering.RecycleNote(noteIndex);
+                                else PlayScreen.NoteRendering.RecycleNote(noteIndex);
                             }
 
                             break;
@@ -72,9 +81,9 @@ namespace Quaver.Gameplay
                 int i;
 
                 //Search for closest HitObject that is inside the HitTiming Window
-                for (i = 0; i < NoteRendering.HitObjectHold.Count; i++)
+                for (i = 0; i < PlayScreen.NoteRendering.HitObjectHold.Count; i++)
                 {
-                    if (NoteRendering.HitObjectHold[i].KeyLane == keyLane + 1)
+                    if (PlayScreen.NoteRendering.HitObjectHold[i].KeyLane == keyLane + 1)
                     {
                         noteIndex = i;
                         break;
@@ -90,7 +99,7 @@ namespace Quaver.Gameplay
                     int releaseTiming = -1;
                     for (i = 0; i < 4; i++)
                     {
-                        if (Math.Abs(NoteRendering.HitObjectHold[noteIndex].EndTime - Timing.CurrentSongTime) <= ScoreManager.HitWindow[i] * 1.25f)
+                        if (Math.Abs(PlayScreen.NoteRendering.HitObjectHold[noteIndex].EndTime - PlayScreen.Timing.CurrentSongTime) <= PlayScreen.ScoreManager.HitWindow[i] * 1.25f)
                         {
                             releaseTiming = i;
                             break;
@@ -100,14 +109,14 @@ namespace Quaver.Gameplay
                     //If LN has been released during a HitWindow
                     if (releaseTiming > -1)
                     {
-                        ScoreManager.Count(i, true);
-                        NoteRendering.KillHold(noteIndex,true);
+                        PlayScreen.ScoreManager.Count(i, true);
+                        PlayScreen.NoteRendering.KillHold(noteIndex,true);
                     }
                     //If LN has been missed
                     else
                     {
-                        ScoreManager.Count(4, true);
-                        NoteRendering.KillHold(noteIndex);
+                        PlayScreen.ScoreManager.Count(4, true);
+                        PlayScreen.NoteRendering.KillHold(noteIndex);
                     }
                 }
             }
