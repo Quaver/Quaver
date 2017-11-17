@@ -14,8 +14,9 @@ namespace Quaver.Gameplay
     /// THIS CLASS IS IMPORTANT. This is where all the scoring will be calculated.
     /// This class will be updated in the future in such a way that it is near impossible to be manipulated with.
     /// </summary>
-    internal class ScoreManager : IGameplay
+    internal class ScoreManager
     {
+        internal PlayScreenState PlayScreen { get; set; }
         //Hit Timing Variables
         internal string[] JudgeNames { get; } = new string[6] { "MARV", "PERF", "GREAT", "GOOD", "OKAY", "MISS" };
 
@@ -93,7 +94,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Clear and Initialize Scoring related variables
         /// </summary>
-        internal override void Initialize(PlayScreenState playScreen)
+        internal void Initialize(PlayScreenState playScreen)
         {
             PlayScreen = playScreen;
             Accuracy = 0;

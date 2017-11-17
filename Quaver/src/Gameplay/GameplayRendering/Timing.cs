@@ -5,13 +5,15 @@ using Quaver.GameState.States;
 using Quaver.Modifiers;
 using Quaver.QuaFile;
 
-namespace Quaver.Gameplay
+namespace Quaver.Gameplay.GameplayRendering
 {
     /// <summary>
     /// This class deals with any timing and SV related calculations
     /// </summary>
-    internal class Timing : IGameplay
+    internal class Timing : IGameplayRendering
     {
+        public PlayScreenState PlayScreen { get; set; }
+
         //Gameplay Constants
         internal const int PlayStartDelayed = 3000; //How long to pause the audio before playing. Max is 10000ms.
 
@@ -37,7 +39,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Initialize Timing Contents.
         /// </summary>
-        internal override void Initialize(PlayScreenState playScreen)
+        public void Initialize(PlayScreenState playScreen)
         {
             PlayScreen = playScreen;
 
@@ -111,7 +113,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Unloads any objects to save memory
         /// </summary>
-        internal override void UnloadContent()
+        public void UnloadContent()
         {
             SvQueue.Clear();
             TimingQueue.Clear();
@@ -121,7 +123,7 @@ namespace Quaver.Gameplay
         ///     Set the position of the current play time
         /// </summary>
         /// <param name="dt"></param>
-        internal override void Update(double dt)
+        public void Update(double dt)
         {
             //Calculate Time after Song Done
             if (SongIsDone)
@@ -150,6 +152,11 @@ namespace Quaver.Gameplay
                 }
             }
             CurrentSongTime = ActualSongTime - Configuration.GlobalOffset;
+        }
+
+        public void Draw()
+        {
+            
         }
 
         internal void time_DestroyBars()

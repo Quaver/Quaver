@@ -20,18 +20,20 @@ using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.QuaFile;
 
-namespace Quaver.Gameplay
+namespace Quaver.Gameplay.GameplayRendering
 {
     /// <summary>
     /// This class manages anything relating to rendering the HitObjects. Note: This class does not do any timing/input calculation besides note removal after missing and late release.
     /// </summary>
-    internal class NoteRendering : IGameplay
+    internal class NoteRendering : IGameplayRendering
     {
+        public PlayScreenState PlayScreen { get; set; }
+
         //HitObjects
         internal List<HitObject> HitObjectPool { get; set; }
         internal List<HitObject> HitObjectDead { get; set; }
         internal List<HitObject> HitObjectHold { get; set; }
-        internal const int HitObjectPoolSize = 200;
+        internal int HitObjectPoolSize { get; } = 200;
         internal const uint RemoveTimeAfterMiss = 1000;
         internal Boundary Boundary;
 
@@ -47,7 +49,7 @@ namespace Quaver.Gameplay
         /// <summary>
         /// Initalize any HitObject related content. 
         /// </summary>
-        internal override void Initialize(PlayScreenState playScreen)
+        public void Initialize(PlayScreenState playScreen)
         {
             PlayScreen = playScreen;
 
@@ -111,7 +113,7 @@ namespace Quaver.Gameplay
         /// Updates any HitObject related content.
         /// </summary>
         /// <param name="dt"></param>
-        internal override void Update(double dt)
+        public void Update(double dt)
         {
             int i;
 
@@ -208,14 +210,14 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Draws whatever has to be rendered.
         /// </summary>
-        internal override void Draw()
+        public void Draw()
         {
             Boundary.Draw();
         }
         /// <summary>
         ///     Unloads content after the game is done.
         /// </summary>
-        internal override void UnloadContent()
+        public void UnloadContent()
         {
             Boundary.Destroy();
             HitObjectHold.Clear();
