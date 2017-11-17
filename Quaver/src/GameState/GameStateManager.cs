@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Gameplay;
+using Quaver.GameState.States;
 using Quaver.Logging;
 
 

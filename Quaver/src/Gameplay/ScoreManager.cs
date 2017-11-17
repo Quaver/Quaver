@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Logging;
 
@@ -13,36 +14,36 @@ namespace Quaver.Gameplay
     /// THIS CLASS IS IMPORTANT. This is where all the scoring will be calculated.
     /// This class will be updated in the future in such a way that it is near impossible to be manipulated with.
     /// </summary>
-    internal class ScoreManager
+    internal class ScoreManager : IGameplay
     {
         //Hit Timing Variables
-        internal static string[] JudgeNames { get; } = new string[6] { "MARV", "PERF", "GREAT", "GOOD", "OKAY", "MISS" };
+        internal string[] JudgeNames { get; } = new string[6] { "MARV", "PERF", "GREAT", "GOOD", "OKAY", "MISS" };
 
         //Hit Tracking (Judging/Scoring)
-        public static int[] JudgePressSpread { get; set; }
-        public static int[] JudgeReleaseSpread { get; set; }
-        public static int JudgeCount { get; set; }
+        internal int[] JudgePressSpread { get; set; }
+        internal int[] JudgeReleaseSpread { get; set; }
+        internal int JudgeCount { get; set; }
 
         //Hit Tracking (ms deviance)
-        public static List<double> MsDeviance { get; set; }
+        internal List<double> MsDeviance { get; set; }
 
         //Score tracking
-        public static int ConsistancyMultiplier { get; set; }
-        public static int Combo { get; set; }
-        public static int Score { get; set; }
+        internal int ConsistancyMultiplier { get; set; }
+        internal int Combo { get; set; }
+        internal int Score { get; set; }
 
         //Accuracy
-        public static float Accuracy { get; set; }
+        internal float Accuracy { get; set; }
 
         //Hit Window
-        internal static float[] HitWindow { get; } = new float[5] { 20, 44, 76, 106, 130 }; //todo: create OD curve
+        internal float[] HitWindow { get; } = new float[5] { 20, 44, 76, 106, 130 }; //todo: create OD curve
 
         /// <summary>
         /// This method is used to track and count scoring.
         /// </summary>
         /// <param name="index"></param>
         /// <param name="offset"></param>
-        public static void Count(int index, bool release = false, double? offset=null)
+        internal void Count(int index, bool release = false, double? offset=null)
         {
             //Update Judge Spread
             if (release) JudgeReleaseSpread[index]++;
@@ -82,18 +83,19 @@ namespace Quaver.Gameplay
             //Update Score
 
             //log scores
-            GameplayUI.UpdateAccuracyBox(index);
+            PlayScreen.GameplayUI.UpdateAccuracyBox(index);
 
             //Display stuff
-            Playfield.UpdateJudge(index, release, offset);
+            PlayScreen.Playfield.UpdateJudge(index, release, offset);
 
         }
 
         /// <summary>
         ///     Clear and Initialize Scoring related variables
         /// </summary>
-        public static void Initialize()
+        internal override void Initialize(PlayScreenState playScreen)
         {
+            PlayScreen = playScreen;
             Accuracy = 0;
             ConsistancyMultiplier = 0;
             Combo = 0;
