@@ -34,7 +34,8 @@ namespace Quaver.Gameplay
         internal int Score { get; set; }
 
         //Accuracy
-        internal float Accuracy { get; set; }
+        internal double Accuracy { get; set; }
+        internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, 25, -100, -200};
 
         //Hit Window
         internal float[] HitWindow { get; } = new float[5] { 20, 44, 76, 106, 130 }; //todo: create OD curve
@@ -58,11 +59,13 @@ namespace Quaver.Gameplay
                 MsDeviance.Add((double)offset);
             }
 
-            Accuracy = (JudgePressSpread[0] + JudgePressSpread[1] + JudgePressSpread[2] / 1.5f +
-                        JudgePressSpread[3] / 2f + JudgePressSpread[4] / 4f);
-            Accuracy += (JudgeReleaseSpread[0] + JudgeReleaseSpread[1] + JudgeReleaseSpread[2] / 1.5f +
-                         JudgeReleaseSpread[3] / 2f + JudgeReleaseSpread[4] / 4f);
-            Accuracy /= JudgeCount;
+            Accuracy = 0;
+            for (var i=0; i<6; i++)
+            {
+                Accuracy += (JudgePressSpread[i] + JudgeReleaseSpread[i]) * HitWeighting[i];
+            }
+
+            Accuracy /= (JudgeCount * 100);
 
             //todo: actual score calculation
             Score = (int)(1000000f * JudgeCount / 20000f);

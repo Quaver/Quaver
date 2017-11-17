@@ -199,7 +199,7 @@ namespace Quaver.Gameplay.GameplayRendering
             ScoreText.Text = Util.ScoreToString((int)CurrentScore);
 
             // Update Accuracy Text
-            CurrentAccuracy = Util.Tween(ScoreManager.Accuracy, (float)CurrentAccuracy, dt/10);
+            CurrentAccuracy = Util.Tween((float)ScoreManager.Accuracy, (float)CurrentAccuracy, dt/10);
             AccuracyCountText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
 
             // Update Boundary
