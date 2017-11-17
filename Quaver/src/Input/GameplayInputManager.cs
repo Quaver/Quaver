@@ -104,10 +104,8 @@ namespace Quaver.Input
                 GameBase.SelectedBeatmap.Song.Pause();
 
                 // Skip to 3 seconds before the notes start
-                GameBase.SelectedBeatmap.Song.SkipTo(qua.HitObjects[0].StartTime - 3000);
-
-                // Resume the song
-                GameBase.SelectedBeatmap.Song.Resume();
+                GameBase.SelectedBeatmap.Song.Play(qua.HitObjects[0].StartTime - 3000, GameBase.GameClock);
+                Timing.SongIsPlaying = true;
 
                 GameBase.ChangeDiscordPresenceGameplay(true);
             }
