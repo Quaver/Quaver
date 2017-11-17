@@ -128,9 +128,8 @@ namespace Quaver.GameState.States
             Buttons.Clear();
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(double dt)
         {
-            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
             Boundary.Update(dt);
 
             // Repeat the song preview if necessary

@@ -79,10 +79,8 @@ namespace Quaver.GameState.States
         ///     Update
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Update(GameTime gameTime)
+        public void Update(double dt)
         {
-            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
-
             // Play Random Maps during the main menu
             MenuAudioPlayer.PlayRandomBeatmaps();
 

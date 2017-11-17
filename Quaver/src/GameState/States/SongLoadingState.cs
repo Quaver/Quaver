@@ -43,7 +43,7 @@ namespace Quaver.GameState.States
         ///     Update
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Update(GameTime gameTime)
+        public void Update(double dt)
         {
         }
 

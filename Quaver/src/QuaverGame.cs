@@ -173,7 +173,7 @@ namespace Quaver
             BackgroundManager.Update(dt);
 
             // Update all game states.
-            GameBase.GameStateManager.Update(gameTime);
+            GameBase.GameStateManager.Update(dt);
 
             // Update Mouse Cursor
             GameBase.Cursor.Update(dt);
