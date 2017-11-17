@@ -41,12 +41,13 @@ namespace Quaver.Gameplay.GameplayRendering
 
         private double CurrentAccuracy { get; set; }
 
-        public PlayScreenState PlayScreen { get; set; }
+        private ScoreManager ScoreManager { get; set; }
 
         public void Initialize(PlayScreenState playScreen)
         {
             // Reference Variables
-            PlayScreen = playScreen;
+            ScoreManager = playScreen.ScoreManager;
+            //PlayScreen = playScreen;
             CurrentScore = 0;
             CurrentAccuracy = 0;
             NoteHolding = false;
@@ -111,7 +112,7 @@ namespace Quaver.Gameplay.GameplayRendering
                     Multiline = false,
                     Font = Fonts.Medium16,
                     TextColor = i == 0 ? Color.White : CustomColors.JudgeColors[i-1],
-                    Text = i == 0 ? "Accuracy" : PlayScreen.ScoreManager.JudgeNames[i-1],
+                    Text = i == 0 ? "Accuracy" : ScoreManager.JudgeNames[i-1],
                     Alpha = 0.3f
                 };
             }
@@ -163,13 +164,13 @@ namespace Quaver.Gameplay.GameplayRendering
 
         internal void UpdateAccuracyBox(int index)
         {
-            AccuracyCountText[index+1].Text = PlayScreen.ScoreManager.JudgePressSpread[index] + " | " + PlayScreen.ScoreManager.JudgeReleaseSpread[index];
+            AccuracyCountText[index+1].Text = ScoreManager.JudgePressSpread[index] + " | " + ScoreManager.JudgeReleaseSpread[index];
             //AccuracyCountText[0].Text = $"{ScoreManager.Accuracy * 100:0.00}%";
 
             //Calculate graph bars
             for (var i = 0; i < 6; i++)
             {
-                AccuracyGraphTargetScale[i] = (float)Math.Sqrt((double)(PlayScreen.ScoreManager.JudgePressSpread[i] + PlayScreen.ScoreManager.JudgeReleaseSpread[i]) / PlayScreen.ScoreManager.JudgeCount);
+                AccuracyGraphTargetScale[i] = (float)Math.Sqrt((double)(ScoreManager.JudgePressSpread[i] + ScoreManager.JudgeReleaseSpread[i]) / ScoreManager.JudgeCount);
             }
         }
 
@@ -186,11 +187,11 @@ namespace Quaver.Gameplay.GameplayRendering
             if (NoteHolding)
             {
                 CurrentScore += tween*4;
-                if (CurrentScore > PlayScreen.ScoreManager.Score) CurrentScore = PlayScreen.ScoreManager.Score;
+                if (CurrentScore > ScoreManager.Score) CurrentScore = ScoreManager.Score;
             }
             else
             {
-                CurrentScore = PlayScreen.ScoreManager.Score; // Util.Tween(ScoreManager.Score, (float)CurrentScore, tween);
+                CurrentScore = ScoreManager.Score; // Util.Tween(ScoreManager.Score, (float)CurrentScore, tween);
                 //if (CurrentScore > ScoreManager.Score) CurrentScore = ScoreManager.Score;
             }
 
@@ -198,7 +199,7 @@ namespace Quaver.Gameplay.GameplayRendering
             ScoreText.Text = Util.ScoreToString((int)CurrentScore);
 
             // Update Accuracy Text
-            CurrentAccuracy = Util.Tween(PlayScreen.ScoreManager.Accuracy, (float)CurrentAccuracy, dt/10);
+            CurrentAccuracy = Util.Tween(ScoreManager.Accuracy, (float)CurrentAccuracy, dt/10);
             AccuracyCountText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
 
             // Update Boundary

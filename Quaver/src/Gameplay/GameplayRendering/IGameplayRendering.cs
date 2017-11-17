@@ -9,8 +9,6 @@ namespace Quaver.Gameplay.GameplayRendering
 {
     internal interface IGameplayRendering
     {
-
-        PlayScreenState PlayScreen { get; set; }
         void Initialize(PlayScreenState playScreen);
         void UnloadContent();
         void Update(double dt);
