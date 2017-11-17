@@ -33,6 +33,13 @@ namespace Quaver.GameState.States
         public State CurrentState { get; set; } = State.PlayScreen;
         public bool UpdateReady { get; set; }
 
+        public GameplayUI GameplayUI;
+        public NoteManager NoteManager;
+        public NoteRendering NoteRendering;
+        public Playfield Playfield;
+        public ScoreManager ScoreManager;
+        public Timing Timing;
+
         //todo: remove. TEST.
         private Sprite TextUnder { get; set; }
         private TextBoxSprite SVText { get; set; }
@@ -40,7 +47,7 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     The input manager for this game state.
         /// </summary>
-        private GameplayInputManager InputManager { get; } = new GameplayInputManager();
+        private GameplayInputManager InputManager { get; set; }
 
         /// <summary>
         ///     The MD5 Hash of the played beatmap.
@@ -70,13 +77,23 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
+            // Create Gameplay classes
+            GameplayUI = new GameplayUI();
+            NoteManager = new NoteManager();
+            NoteRendering = new NoteRendering();
+            Playfield = new Playfield();
+            ScoreManager = new ScoreManager();
+            Timing = new Timing();
+            InputManager = new GameplayInputManager(NoteManager);
+
+            // Update window title
             GameBase.GameWindow.Title = $"Quaver - {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]";
 
             // Update Discord Presence
             GameBase.ChangeDiscordPresenceGameplay(false);
 
             // Clear score manager
-            ScoreManager.Initialize();
+            ScoreManager.Initialize(this);
 
             // Initialize Gameplay
             InitializeGameplay();
@@ -203,10 +220,12 @@ namespace Quaver.GameState.States
         /// </summary>
         private void InitializeGameplay()
         {
-            Playfield.Initialize();
-            Timing.Initialize(GameBase.SelectedBeatmap.Qua);
-            NoteRendering.Initialize(GameBase.SelectedBeatmap.Qua);
-            GameplayUI.Initialize();
+            Playfield.Initialize(this);
+            Timing.Initialize(this);
+            NoteRendering.Initialize(this);
+            GameplayUI.Initialize(this);
+            NoteManager.Initialize(this);
+            ScoreManager.Initialize(this);
         }
     }
 }

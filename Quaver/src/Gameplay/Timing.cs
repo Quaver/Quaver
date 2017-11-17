@@ -10,35 +10,37 @@ namespace Quaver.Gameplay
     /// <summary>
     /// This class deals with any timing and SV related calculations
     /// </summary>
-    internal static class Timing
+    internal class Timing : IGameplay
     {
         //Gameplay Constants
         internal const int PlayStartDelayed = 3000; //How long to pause the audio before playing. Max is 10000ms.
 
         //Audio Variables
-        private static double GameAudioLength { get; set; }
-        private static double SongEndOffset { get; set; }
-        internal static bool SongIsPlaying { get; set; }
+        private double GameAudioLength { get; set; }
+        private double SongEndOffset { get; set; }
+        internal bool SongIsPlaying { get; set; }
 
         //Gameplay Variables
-        private static double ActualSongTime { get; set; }
-        internal static double CurrentSongTime { get; set; }
-        internal static List<TimingObject> SvQueue { get; set; }
-        private static List<TimingObject> TimingQueue { get; set; }
+        private double ActualSongTime { get; set; }
+        internal double CurrentSongTime { get; set; }
+        internal List<TimingObject> SvQueue { get; set; }
+        private List<TimingObject> TimingQueue { get; set; }
 
         //SV + Timing Point Variables
         //private List<TimingObject> SvQueue, TimingQueue, _barQueue, _activeBars;
         //private GameObject[] _activeBarObjects;
 
         //Audio File Variables
-        internal static bool SongIsDone { get; set; }
-        private static float _averageBpm { get; set; } = 100;
+        internal bool SongIsDone { get; set; }
+        private float _averageBpm { get; set; } = 100;
 
         /// <summary>
         ///     Initialize Timing Contents.
         /// </summary>
-        internal static void Initialize(Qua Qua)
+        internal override void Initialize(PlayScreenState playScreen)
         {
+            PlayScreen = playScreen;
+
             //TODO: Timing Initializer
             GameAudioLength = GameBase.SelectedBeatmap.Song.GetAudioLength();
             SongEndOffset = 0;
@@ -56,18 +58,18 @@ namespace Quaver.Gameplay
 
             SvQueue = new List<TimingObject>();
             
-            for (i = 0; i < Qua.SliderVelocities.Count; i++)
+            for (i = 0; i < GameBase.SelectedBeatmap.Qua.SliderVelocities.Count; i++)
             {
-                CreateSV(Qua.SliderVelocities[i].StartTime, Qua.SliderVelocities[i].Multiplier);
+                CreateSV(GameBase.SelectedBeatmap.Qua.SliderVelocities[i].StartTime, GameBase.SelectedBeatmap.Qua.SliderVelocities[i].Multiplier);
             }
 
             TimingQueue = new List<TimingObject>();
-            for (i = 0; i < Qua.TimingPoints.Count; i++)
+            for (i = 0; i < GameBase.SelectedBeatmap.Qua.TimingPoints.Count; i++)
             {
                 TimingObject newTO = new TimingObject
                 {
-                    TargetTime = Qua.TimingPoints[i].StartTime,
-                    BPM = Qua.TimingPoints[i].Bpm
+                    TargetTime = GameBase.SelectedBeatmap.Qua.TimingPoints[i].StartTime,
+                    BPM = GameBase.SelectedBeatmap.Qua.TimingPoints[i].Bpm
                 };
                 TimingQueue.Add(newTO);
             }
@@ -88,15 +90,15 @@ namespace Quaver.Gameplay
             }
 
             //Calculates SV for efficiency
-            NoteRendering.SvCalc = new ulong[SvQueue.Count];
-            NoteRendering.SvCalc[0] = 0;
+            PlayScreen.NoteRendering.SvCalc = new ulong[SvQueue.Count];
+            PlayScreen.NoteRendering.SvCalc[0] = 0;
             ulong svPosTime = 0;
             for (i = 0; i < SvQueue.Count; i++)
             {
                 if (i + 1 < SvQueue.Count)
                 {
                     svPosTime += (ulong)((SvQueue[i + 1].TargetTime - SvQueue[i].TargetTime) * SvQueue[i].SvMultiplier);
-                    NoteRendering.SvCalc[i + 1] = svPosTime;
+                    PlayScreen.NoteRendering.SvCalc[i + 1] = svPosTime;
                 }
                 else break;
             }
@@ -109,7 +111,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Unloads any objects to save memory
         /// </summary>
-        internal static void UnloadContent()
+        internal override void UnloadContent()
         {
             SvQueue.Clear();
             TimingQueue.Clear();
@@ -119,7 +121,7 @@ namespace Quaver.Gameplay
         ///     Set the position of the current play time
         /// </summary>
         /// <param name="dt"></param>
-        internal static void Update(double dt)
+        internal override void Update(double dt)
         {
             //Calculate Time after Song Done
             if (SongIsDone)
@@ -150,13 +152,13 @@ namespace Quaver.Gameplay
             CurrentSongTime = ActualSongTime - Configuration.GlobalOffset;
         }
 
-        internal static void time_DestroyBars()
+        internal void time_DestroyBars()
         {
             //for (int i = 0; i < _activeBars.Count; i++) Destroy(_activeBars[i].TimingBar);
         }
 
         //Creates timing bars (used to measure 16 beats)
-        internal static void time_CreateBars()
+        internal void time_CreateBars()
         {
             /*
             int i = 0;
@@ -249,7 +251,7 @@ namespace Quaver.Gameplay
         }*/
 
         //Creates SV Points
-        internal static void CreateSV(float targetTime, float multiplier, int? index = null)
+        internal void CreateSV(float targetTime, float multiplier, int? index = null)
         {
             TimingObject newTp = new TimingObject();
             newTp.TargetTime = targetTime;
@@ -261,7 +263,7 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Convert Timing Point to SV
         /// </summary>
-        internal static void ConvertTPtoSV()
+        internal void ConvertTPtoSV()
         {
             //Create and converts timing points to SV's
             var lastIndex = 0;
@@ -297,7 +299,7 @@ namespace Quaver.Gameplay
         /// <summary>
         /// Calculate Average BPM of map
         /// </summary>
-        internal static void CalculateAverageBpm()
+        internal void CalculateAverageBpm()
         {
             //TODO: Make this calculate consistancy based average bpm instead of timing point that is longest
             //AverageBpm Reference Variables
@@ -334,7 +336,7 @@ namespace Quaver.Gameplay
 
 
         //Normalizes SV's in between each BPM change interval
-        internal static void NormalizeSVs()
+        internal void NormalizeSVs()
         {
             //Reference Variables + Sort
             var i = 0;
@@ -372,7 +374,7 @@ namespace Quaver.Gameplay
         }
 
         //Move Timing Bars
-        internal static void MoveTimingBars()
+        internal void MoveTimingBars()
         {
             /*
             if (_config_timingBars && !mod_split)

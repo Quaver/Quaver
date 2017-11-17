@@ -23,6 +23,11 @@ namespace Quaver.Input
         public State CurrentState { get; set; } = State.PlayScreen;
 
         /// <summary>
+        ///     The PlayScreenState this Input Manager is referencing
+        /// </summary>
+        private NoteManager NoteManager { get; set; }
+
+        /// <summary>
         ///     All of the lane keys mapped to a list
         /// </summary>
         private List<Keys> LaneKeys { get; } = new List<Keys>()
@@ -42,6 +47,11 @@ namespace Quaver.Input
         ///     Keeps track of whether or not the song intro was skipped.
         /// </summary>
         private bool IntroSkipped { get; set; }
+
+        internal GameplayInputManager(NoteManager noteManager)
+        {
+            NoteManager = noteManager;
+        }
 
         /// <summary>
         ///     Checks if the given input was given
@@ -74,7 +84,6 @@ namespace Quaver.Input
                 {
                     LaneKeyDown[i] = true;
                     NoteManager.Input(i,true);
-                    Playfield.UpdateReceptor(i, true);
                     GameBase.LoadedSkin.Hit.Play();
                 }
                 //Lane Key Release
@@ -82,7 +91,6 @@ namespace Quaver.Input
                 {
                     LaneKeyDown[i] = false;
                     NoteManager.Input(i, false);
-                    Playfield.UpdateReceptor(i, false);
                 }
             }
         }
@@ -105,7 +113,7 @@ namespace Quaver.Input
 
                 // Skip to 3 seconds before the notes start
                 GameBase.SelectedBeatmap.Song.Play(qua.HitObjects[0].StartTime - 3000, GameBase.GameClock);
-                Timing.SongIsPlaying = true;
+                NoteManager.PlayScreen.Timing.SongIsPlaying = true;
 
                 GameBase.ChangeDiscordPresenceGameplay(true);
             }
