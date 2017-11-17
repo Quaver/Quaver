@@ -48,8 +48,8 @@ namespace Quaver.Peppy
             // Run the converter for all file names
             Task.Run(() =>
             {
-                foreach (var fileName in openFileDialog.FileNames)
-                    ConvertOsz(fileName);
+                for (var i = 0; i < openFileDialog.FileNames.Length; i++)
+                    ConvertOsz(openFileDialog.FileNames[i], i);
 
             // When all the maps have been converted, select the last imported map and make that the selected one.
             }).ContinueWith(async t =>
@@ -111,13 +111,13 @@ namespace Quaver.Peppy
         ///     Responsible for converting a .osz file to a new song directory full of .qua
         /// </summary>
         /// <param name="fileName"></param>
-        private static void ConvertOsz(string fileName)
+        private static void ConvertOsz(string fileName, int num)
         {
             // Extract the .osu & relevant audio files, and attempt to convert them.
             // Once fully converted, create a new directory in the songs folder and 
             // tell GameBase that the import queue is ready. Depending on the current state,
             // we may import them automatically.
-            var extractPath = $@"{Config.Configuration.DataDirectory}/Temp/{new DirectoryInfo(fileName).Name}";
+            var extractPath = $@"{Config.Configuration.DataDirectory}/Temp/{num}";
 
             try
             {
@@ -139,14 +139,29 @@ namespace Quaver.Peppy
                 }
 
                 // Now that all of them are converted, we'll create a new directory with all of the files except for .osu
-                var newSongDir = $"{Config.Configuration.SongDirectory}/{new DirectoryInfo(fileName).Name.Replace(".osz", "")}";
+
+                var newSongDir = $"{Config.Configuration.SongDirectory}/{(int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds}";
 
                 Directory.CreateDirectory(newSongDir);
 
-                foreach (var file in Directory.GetFiles(extractPath))
+                // Get the files that are currently in the extract path
+                var filesInDir = Directory.GetFiles(extractPath);
+
+                for (var i = 0; i < filesInDir.Length; i++)
                 {
-                    if (Path.GetExtension(file) != ".osu")
-                        File.Move(file, $"{newSongDir}/{Path.GetFileName(file)}");
+                    switch (Path.GetExtension(filesInDir[i]))
+                    {
+                        case ".osu":
+                            // Ignore .osu files
+                            continue;
+                        case ".qua":
+                            // Rename the file
+                            File.Move(filesInDir[i], $"{newSongDir}/{i}.qua");
+                            break;
+                        default:
+                            File.Move(filesInDir[i], $"{newSongDir}/{Path.GetFileName(filesInDir[i])}");
+                            break;
+                    }               
                 }
                 
                 // Delete the entire temp directory.
@@ -155,6 +170,7 @@ namespace Quaver.Peppy
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 Logger.Log($"Error: There was an issue converting the .osz", Color.Red, 2f);
                 Logger.Log(e.Message, Color.Red);
             }
