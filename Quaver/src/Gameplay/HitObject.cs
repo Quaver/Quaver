@@ -71,6 +71,8 @@ namespace Quaver.Gameplay
         /// </summary>
         public bool IsLongNote { get; set; }
 
+        private Color deadColor { get; } = Color.Gray;
+
         /// <summary>
         /// The position of the HitObject Sprites
         /// </summary>
@@ -120,7 +122,7 @@ namespace Quaver.Gameplay
         /// </summary>
         public void Initialize(bool downScroll)
         {
-            HoldBodySprite = new Sprite()
+            if (IsLongNote) HoldBodySprite = new Sprite()
             {
                 Image = GameBase.LoadedSkin.NoteHoldBody,
                 Alignment = Alignment.TopLeft,
@@ -139,7 +141,7 @@ namespace Quaver.Gameplay
                 Parent = ParentContainer
             };
 
-            HoldEndSprite = new Sprite()
+            if (IsLongNote) HoldEndSprite = new Sprite()
             {
                 Image = GameBase.LoadedSkin.NoteHoldEnd,
                 Alignment = Alignment.TopLeft,
@@ -150,6 +152,7 @@ namespace Quaver.Gameplay
                 SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
             };
 
+            /*
             if (IsLongNote)
             {
                 HoldBodySprite.Visible = true;
@@ -159,7 +162,7 @@ namespace Quaver.Gameplay
             {
                 HoldBodySprite.Visible = false;
                 HoldEndSprite.Visible = false;
-            }
+            }*/
         }
 
         public void Update(bool downScroll)
@@ -183,8 +186,11 @@ namespace Quaver.Gameplay
         /// </summary>
         public void Destroy()
         {
-            HoldBodySprite.Destroy();
-            HoldEndSprite.Destroy();
+            if (IsLongNote)
+            {
+                HoldBodySprite.Destroy();
+                HoldEndSprite.Destroy();
+            }
             HitBodySprite.Destroy();
         }
 
@@ -193,10 +199,12 @@ namespace Quaver.Gameplay
         /// </summary>
         public void Kill()
         {
-            Color newTint = Color.Gray;
-            HoldBodySprite.Tint = newTint;
-            HoldEndSprite.Tint = newTint;
-            HitBodySprite.Tint = newTint;
+            if (IsLongNote)
+            {
+                HoldBodySprite.Tint = deadColor;
+                HoldEndSprite.Tint = deadColor;
+            }
+            HitBodySprite.Tint = deadColor;
         }
     }
 }
