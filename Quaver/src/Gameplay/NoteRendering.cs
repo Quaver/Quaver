@@ -185,7 +185,7 @@ namespace Quaver.Gameplay
             //Update Dead HitObjects
             for (i = 0; i < HitObjectDead.Count; i++)
             {
-                if (Timing.CurrentSongTime > HitObjectDead[i].EndTime + RemoveTimeAfterMiss)
+                if (Timing.CurrentSongTime > HitObjectDead[i].EndTime + RemoveTimeAfterMiss && Timing.CurrentSongTime > HitObjectDead[i].StartTime + RemoveTimeAfterMiss)
                 {
                     HitObjectDead[i].Destroy();
                     HitObjectDead.RemoveAt(i);
@@ -300,7 +300,7 @@ namespace Quaver.Gameplay
             HitObjectPool.RemoveAt(index);
 
             //Initialize the new HitObject (create the hit object sprites)
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll);
+            CreateNote();
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace Quaver.Gameplay
             HitObjectPool.RemoveAt(index);
 
             //Initialize the new HitObject (create the hit object sprites)
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll);
+            CreateNote();
         }
 
         /// <summary>
@@ -353,6 +353,11 @@ namespace Quaver.Gameplay
             HitObjectPool.RemoveAt(index);
 
             //Initialize the new HitObject (create the hit object sprites)
+            CreateNote();
+        }
+
+        internal static void CreateNote()
+        {
             if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll);
         }
     }
