@@ -188,7 +188,9 @@ namespace Quaver
         /// </summary>
         public static void ChangeBeatmap(Beatmap map)
         {
-            SelectedBeatmap.Song.Stop();
+            if (SelectedBeatmap.Song != null)
+                SelectedBeatmap.Song.Stop();
+
             SelectedBeatmap = map;
             SelectedBeatmap.LoadAudio();
         }

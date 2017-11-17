@@ -153,7 +153,9 @@ namespace Quaver.GameState.States
             // Change Pitch Text
             TogglePitch.TextSprite.Text = $"Toggle Pitch: {Configuration.Pitched}";
 
-            GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+            // Play Song
+            if (GameBase.SelectedBeatmap.Song != null)
+                GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
 
             // Load background asynchronously.
             Task.Run(() => GameBase.SelectedBeatmap.LoadBackground())
@@ -171,12 +173,15 @@ namespace Quaver.GameState.States
         /// </summary>
         private void RepeatSongPreview()
         {
-            if (GameBase.SelectedBeatmap.Song.GetAudioPosition() < GameBase.SelectedBeatmap.Song.GetAudioLength())
-                return;
+            if (GameBase.SelectedBeatmap.Song != null)
+            {
+                if (GameBase.SelectedBeatmap.Song.GetAudioPosition() < GameBase.SelectedBeatmap.Song.GetAudioLength())
+                    return;
 
-            GameBase.SelectedBeatmap.Song.Stop();
-            GameBase.SelectedBeatmap.LoadAudio();
-            GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+                GameBase.SelectedBeatmap.Song.Stop();
+                GameBase.SelectedBeatmap.LoadAudio();
+                GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+            }
         }
 
         /// <summary>
