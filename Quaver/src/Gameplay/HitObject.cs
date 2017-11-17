@@ -120,17 +120,19 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     This method initializes the HitObject sprites
         /// </summary>
-        public void Initialize(bool downScroll)
+        public void Initialize(bool downScroll, bool longNote)
         {
-            if (IsLongNote) HoldBodySprite = new Sprite()
-            {
-                Image = GameBase.LoadedSkin.NoteHoldBody,
-                Alignment = Alignment.TopLeft,
-                Position = _hitObjectPosition,
-                Size = new Vector2(HitObjectSize, InitialLongNoteSize),
-                Visible = false,
-                Parent = ParentContainer
-            };
+            IsLongNote = longNote;
+
+            if (longNote)
+                HoldBodySprite = new Sprite()
+                {
+                    Image = GameBase.LoadedSkin.NoteHoldBody,
+                    Alignment = Alignment.TopLeft,
+                    Position = _hitObjectPosition,
+                    Size = new Vector2(HitObjectSize, InitialLongNoteSize),
+                    Parent = ParentContainer
+                };
 
             HitBodySprite = new Sprite()
             {
@@ -141,28 +143,16 @@ namespace Quaver.Gameplay
                 Parent = ParentContainer
             };
 
-            if (IsLongNote) HoldEndSprite = new Sprite()
-            {
-                Image = GameBase.LoadedSkin.NoteHoldEnd,
-                Alignment = Alignment.TopLeft,
-                Position = _hitObjectPosition,
-                Size = Vector2.One * HitObjectSize,
-                Visible = false,
-                Parent = ParentContainer,
-                SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
-            };
-
-            /*
-            if (IsLongNote)
-            {
-                HoldBodySprite.Visible = true;
-                HoldEndSprite.Visible = true;
-            }
-            else
-            {
-                HoldBodySprite.Visible = false;
-                HoldEndSprite.Visible = false;
-            }*/
+            if (longNote) 
+                HoldEndSprite = new Sprite()
+                {
+                    Image = GameBase.LoadedSkin.NoteHoldEnd,
+                    Alignment = Alignment.TopLeft,
+                    Position = _hitObjectPosition,
+                    Size = Vector2.One * HitObjectSize,
+                    Parent = ParentContainer,
+                    SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
+                };
         }
 
         public void Update(bool downScroll)

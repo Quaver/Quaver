@@ -97,7 +97,7 @@ namespace Quaver.Gameplay
                 }
 
                 //Initialize Object and add it to HitObjectPool
-                if (i < HitObjectPoolSize) newObject.Initialize(Config.Configuration.DownScroll);
+                if (i < HitObjectPoolSize) newObject.Initialize(Config.Configuration.DownScroll, Qua.HitObjects[i].EndTime > 0);
                 HitObjectPool.Add(newObject);
             }
 
@@ -358,7 +358,7 @@ namespace Quaver.Gameplay
 
         internal static void CreateNote()
         {
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll);
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll, HitObjectPool[HitObjectPoolSize - 1].EndTime > 0);
         }
     }
 }
