@@ -111,8 +111,8 @@
     <Compile Include="src\Commands\Command\MapsetsCommand.cs" />
     <Compile Include="src\Discord\DiscordController.cs" />
     <Compile Include="src\Discord\DiscordRPC.cs" />
-    <Compile Include="src\Gameplay\GameplayUI.cs" />
-    <Compile Include="src\Gameplay\IGameplay.cs" />
+    <Compile Include="src\Gameplay\GameplayRendering\GameplayUI.cs" />
+    <Compile Include="src\Gameplay\GameplayRendering\IGameplayRendering.cs" />
     <Compile Include="src\GameState\States\ScoreScreenState.cs" />
     <Compile Include="src\GameState\States\SongSelectState.cs" />
     <Compile Include="src\GameState\States\MapImportLoadingState.cs" />
@@ -127,10 +127,10 @@
     <Compile Include="src\Logging\Logger.cs" />
     <Compile Include="src\Peppy\Osz.cs" />
     <Compile Include="src\Gameplay\NoteManager.cs" />
-    <Compile Include="src\Gameplay\NoteRendering.cs" />
-    <Compile Include="src\Gameplay\Timing.cs" />
+    <Compile Include="src\Gameplay\GameplayRendering\NoteRendering.cs" />
+    <Compile Include="src\Gameplay\GameplayRendering\Timing.cs" />
     <Compile Include="src\Gameplay\HitObject.cs" />
-    <Compile Include="src\Gameplay\Playfield.cs" />
+    <Compile Include="src\Gameplay\GameplayRendering\Playfield.cs" />
     <Compile Include="src\Gameplay\ScoreManager.cs" />
     <Compile Include="src\Gameplay\TimingObject.cs" />
     <Compile Include="src\GameState\States\MainMenuState.cs" />

@@ -12,9 +12,11 @@ namespace Quaver.Gameplay
     /// <summary>
     /// This class handles the interaction between note and input.
     /// </summary>
-    class NoteManager : IGameplay
+    class NoteManager
     {
-        internal override void Initialize(PlayScreenState playScreen)
+        public PlayScreenState PlayScreen { get; set; }
+
+        public void Initialize(PlayScreenState playScreen)
         {
             PlayScreen = playScreen;
         }
@@ -36,7 +38,7 @@ namespace Quaver.Gameplay
                 int i;
 
                 //Search for closest HitObject that is inside the HitTiming Window
-                for (i = 0; i < NoteRendering.HitObjectPoolSize && i < PlayScreen.NoteRendering.HitObjectPool.Count; i++)
+                for (i = 0; i < PlayScreen.NoteRendering.HitObjectPoolSize && i < PlayScreen.NoteRendering.HitObjectPool.Count; i++)
                 {
                     if (PlayScreen.NoteRendering.HitObjectPool[i].KeyLane == keyLane + 1 && PlayScreen.NoteRendering.HitObjectPool[i].StartTime - PlayScreen.Timing.CurrentSongTime > -PlayScreen.ScoreManager.HitWindow[4])
                     {

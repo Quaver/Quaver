@@ -10,12 +10,12 @@ using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Utility;
 
-namespace Quaver.Gameplay
+namespace Quaver.Gameplay.GameplayRendering
 {
     /// <summary>
     ///     This class Draws anything that will be shown to the player which is related to data
     /// </summary>
-    internal class GameplayUI : IGameplay
+    internal class GameplayUI : IGameplayRendering
     {
         private Sprite AccuracyBox { get; set; }
 
@@ -41,7 +41,9 @@ namespace Quaver.Gameplay
 
         private double CurrentAccuracy { get; set; }
 
-        internal override void Initialize(PlayScreenState playScreen)
+        public PlayScreenState PlayScreen { get; set; }
+
+        public void Initialize(PlayScreenState playScreen)
         {
             // Reference Variables
             PlayScreen = playScreen;
@@ -171,7 +173,7 @@ namespace Quaver.Gameplay
             }
         }
 
-        internal override void Update(double dt)
+        public void Update(double dt)
         {
             // Update Accuracy Graph Bars
             double tween = Math.Min(dt / 100, 1);
@@ -203,12 +205,12 @@ namespace Quaver.Gameplay
             Boundary.Update(dt);   
         }
 
-        internal override void Draw()
+        public void Draw()
         {
             Boundary.Draw();
         }
 
-        internal override void UnloadContent()
+        public void UnloadContent()
         {
             Boundary.Destroy();
         }
