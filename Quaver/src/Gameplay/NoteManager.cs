@@ -47,11 +47,18 @@ namespace Quaver.Gameplay
                             //Score manager stuff
                             ScoreManager.Count(i, false, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime);
 
-                            //If the object is an LN, hold it at the receptors
-                            if (NoteRendering.HitObjectPool[noteIndex].IsLongNote) NoteRendering.HoldNote(noteIndex);
+                            // If the player is spamming
+                            if (i >= 3)
+                                NoteRendering.KillNote(noteIndex);
+                            else
+                            {
+                                //If the object is an LN, hold it at the receptors
+                                if (NoteRendering.HitObjectPool[noteIndex].IsLongNote) NoteRendering.HoldNote(noteIndex);
 
-                            //If the object is not an LN, recycle it.
-                            else  NoteRendering.RecycleNote(noteIndex);
+                                //If the object is not an LN, recycle it.
+                                else NoteRendering.RecycleNote(noteIndex);
+                            }
+
                             break;
                         }
                     }
