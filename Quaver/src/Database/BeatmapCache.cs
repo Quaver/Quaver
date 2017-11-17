@@ -75,7 +75,15 @@ namespace Quaver.Database
             var quaFiles = Directory.GetFiles(Configuration.SongDirectory, "*.qua", SearchOption.AllDirectories);
             Logger.Log($"Found: {quaFiles.Length} .qua files in the /songs/ directory.", Color.Cyan);
 
+
             await CacheByFileCount(quaFiles);
+
+            // Remove any qua files from the list that don't actually exist.
+            var quaFileList = quaFiles.ToList();
+            quaFileList.RemoveAll(x => !File.Exists(x));
+            quaFiles = quaFileList.ToArray();
+            Logger.Log($"After removing missing .qua files, there are now {quaFiles.Length}", Color.Cyan);
+
             await CacheByMd5ChecksumAsync(quaFiles);
             await RemoveMissingBeatmaps();
         }
@@ -120,9 +128,11 @@ namespace Quaver.Database
                 beatmapsToCache.Add(newBeatmap);
             }
 
-            // Add beatmaps to database.
-            if (beatmapsToCache.Count > 0)
-                await InsertBeatmapsIntoDatabase(beatmapsToCache);
+            var finalList = await RemoveDuplicates(beatmapsToCache);
+
+            // Add new beatmaps to the database.
+            if (finalList.Count > 0)
+                await InsertBeatmapsIntoDatabase(finalList);
         }
 
         /// <summary>
@@ -163,9 +173,11 @@ namespace Quaver.Database
                 reprocessedBeatmaps.Add(processedMap);
             }
 
+            var finalList = await RemoveDuplicates(reprocessedBeatmaps);
+
             // Add new beatmaps to the database.
-            if (reprocessedBeatmaps.Count > 0)
-                await InsertBeatmapsIntoDatabase(reprocessedBeatmaps);
+            if (finalList.Count > 0)
+                await InsertBeatmapsIntoDatabase(finalList);
         }
 
         /// <summary>
@@ -217,8 +229,17 @@ namespace Quaver.Database
         /// <returns></returns>
         private static async Task InsertBeatmapsIntoDatabase(List<Beatmap> beatmaps)
         {
-            await new SQLiteAsyncConnection(DatabasePath).InsertAllAsync(beatmaps)
-                .ContinueWith(t => Logger.Log($"Successfully added {beatmaps.Count} beatmaps to the database", Color.Cyan));
+            try
+            {
+                if (beatmaps.Count > 0)
+                    await new SQLiteAsyncConnection(DatabasePath).InsertAllAsync(beatmaps)
+                        .ContinueWith(t => Logger.Log($"Successfully added {beatmaps.Count} beatmaps to the database", Color.Cyan));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         /// <summary>
@@ -241,6 +262,34 @@ namespace Quaver.Database
             {
                 Logger.Log(e.Message, Color.Red);
             }
+        }
+
+        /// <summary>
+        ///     Removes duplicate maps from a list of beatmaps.
+        /// </summary>
+        /// <param name="beatmaps"></param>
+        /// <returns></returns>
+        private static async Task<List<Beatmap>> RemoveDuplicates(List<Beatmap> beatmaps)
+        {
+            // Add a check for duplicate maps being inserted into the database.
+            // we do this by MD5 Checksum. Also delete them if that's the case.
+            var mapsInDb = await FetchAllBeatmaps();
+
+            // Create the final list of beatmaps to be added.
+            var finalMaps = new List<Beatmap>();
+
+            foreach (var map in beatmaps)
+            {
+                if (mapsInDb.Any(x => x.Md5Checksum == map.Md5Checksum))
+                {
+                    File.Delete(Configuration.SongDirectory + "/" + map.Directory + "/" + map.Path);
+                    continue;
+                }
+
+                finalMaps.Add(map);
+            }
+
+            return finalMaps;
         }
     }
 }
