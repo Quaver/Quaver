@@ -326,20 +326,16 @@ namespace Quaver.Gameplay
             JudgeSprite.Alpha = 1;
             AlphaHold = 0;
 
-            if (index >= PriorityJudgeImage && index >= 2)
+            if (index >= PriorityJudgeImage || PriorityJudgeLength <= 0)
             {
                 // Priority Judge Image to show
-                if (index == 2) PriorityJudgeLength = 200;
+                if (index < 2) PriorityJudgeLength = 100;
+                else if (index == 2) PriorityJudgeLength = 200;
                 else if (index == 3) PriorityJudgeLength = 300;
                 else PriorityJudgeLength = 500;
                 PriorityJudgeImage = index;
 
                 // Update judge sprite
-                JudgeSprite.Size = JudgeSizes[index];
-                JudgeSprite.Image = JudgeImages[index];
-            }
-            else if (PriorityJudgeLength <= 0)
-            {
                 JudgeSprite.Size = JudgeSizes[index];
                 JudgeSprite.Image = JudgeImages[index];
             }
