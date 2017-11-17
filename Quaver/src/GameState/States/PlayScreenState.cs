@@ -173,6 +173,11 @@ namespace Quaver.GameState.States
 
             //Todo: remove. TEST.
             TextUnder.Update(dt);
+
+            if (Timing.SongIsDone)
+            {
+                GameBase.GameStateManager.ChangeState(new ScoreScreenState());
+            }
         }
 
         /// <summary>

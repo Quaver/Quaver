@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Quaver.Config;
-
+using Quaver.GameState.States;
 using Quaver.Modifiers;
 using Quaver.QuaFile;
 
@@ -18,7 +18,7 @@ namespace Quaver.Gameplay
         //Audio Variables
         private static double GameAudioLength { get; set; }
         private static double SongEndOffset { get; set; }
-        public static bool SongIsPlaying { get; set; }
+        internal static bool SongIsPlaying { get; set; }
 
         //Gameplay Variables
         private static double ActualSongTime { get; set; }
@@ -31,7 +31,7 @@ namespace Quaver.Gameplay
         //private GameObject[] _activeBarObjects;
 
         //Audio File Variables
-        private static bool _songIsDone { get; set; }
+        internal static bool SongIsDone { get; set; }
         private static float _averageBpm { get; set; } = 100;
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Quaver.Gameplay
         internal static void Update(double dt)
         {
             //Calculate Time after Song Done
-            if (_songIsDone)
+            if (SongIsDone)
             {
                 SongEndOffset += dt;
                 ActualSongTime = GameAudioLength + SongEndOffset;
@@ -138,7 +138,13 @@ namespace Quaver.Gameplay
                         SongIsPlaying = true;
                         GameBase.SelectedBeatmap.Song.Play(0, GameBase.GameClock);
                     }
-                    ActualSongTime = (GameBase.SelectedBeatmap.Song.GetAudioPosition() + (ActualSongTime + dt)) / 2f;
+
+                    if (GameBase.SelectedBeatmap.Song.GetAudioPosition() >= GameBase.SelectedBeatmap.Song.GetAudioLength())
+                    {
+                        SongIsDone = true;
+                    }
+                    else
+                        ActualSongTime = (GameBase.SelectedBeatmap.Song.GetAudioPosition() + (ActualSongTime + dt)) / 2f;
                 }
             }
             CurrentSongTime = ActualSongTime - Configuration.GlobalOffset;
