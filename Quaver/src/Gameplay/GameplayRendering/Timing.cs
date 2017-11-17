@@ -12,8 +12,6 @@ namespace Quaver.Gameplay.GameplayRendering
     /// </summary>
     internal class Timing : IGameplayRendering
     {
-        public PlayScreenState PlayScreen { get; set; }
-
         //Gameplay Constants
         internal const int PlayStartDelayed = 3000; //How long to pause the audio before playing. Max is 10000ms.
 
@@ -41,7 +39,7 @@ namespace Quaver.Gameplay.GameplayRendering
         /// </summary>
         public void Initialize(PlayScreenState playScreen)
         {
-            PlayScreen = playScreen;
+            //PlayScreen = playScreen;
 
             //TODO: Timing Initializer
             GameAudioLength = GameBase.SelectedBeatmap.Song.GetAudioLength();
@@ -92,15 +90,15 @@ namespace Quaver.Gameplay.GameplayRendering
             }
 
             //Calculates SV for efficiency
-            PlayScreen.NoteRendering.SvCalc = new ulong[SvQueue.Count];
-            PlayScreen.NoteRendering.SvCalc[0] = 0;
+            playScreen.NoteRendering.SvCalc = new ulong[SvQueue.Count];
+            playScreen.NoteRendering.SvCalc[0] = 0;
             ulong svPosTime = 0;
             for (i = 0; i < SvQueue.Count; i++)
             {
                 if (i + 1 < SvQueue.Count)
                 {
                     svPosTime += (ulong)((SvQueue[i + 1].TargetTime - SvQueue[i].TargetTime) * SvQueue[i].SvMultiplier);
-                    PlayScreen.NoteRendering.SvCalc[i + 1] = svPosTime;
+                    playScreen.NoteRendering.SvCalc[i + 1] = svPosTime;
                 }
                 else break;
             }

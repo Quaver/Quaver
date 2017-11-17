@@ -18,8 +18,7 @@ namespace Quaver.Gameplay.GameplayRendering
 {
     internal class Playfield : IGameplayRendering
     {
-
-        public PlayScreenState PlayScreen { get; set; }
+        private ScoreManager ScoreManager { get; set; }
 
         /// <summary>
         ///     The size of each HitObject.
@@ -114,7 +113,8 @@ namespace Quaver.Gameplay.GameplayRendering
         /// </summary>
         public void Initialize(PlayScreenState playScreen)
         {
-            PlayScreen = playScreen;
+            ScoreManager = playScreen.ScoreManager;
+            //PlayScreen = playScreen;
 
             // Set default reference variables
             AlphaHold = 0;
@@ -229,7 +229,7 @@ namespace Quaver.Gameplay.GameplayRendering
                 Parent = BoundaryOver
             };
 
-            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (PlayScreen.ScoreManager.HitWindow[4]*2);
+            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (ScoreManager.HitWindow[4]*2);
 
             OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)
@@ -332,7 +332,7 @@ namespace Quaver.Gameplay.GameplayRendering
         public  void UpdateJudge(int index, bool release = false, double? offset = null)
         {
             //TODO: add judge scale
-            ComboText.Text = PlayScreen.ScoreManager.Combo + "x";
+            ComboText.Text = ScoreManager.Combo + "x";
             ComboText.Alpha = 1;
             JudgeSprite.Alpha = 1;
             AlphaHold = 0;
