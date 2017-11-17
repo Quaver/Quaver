@@ -140,7 +140,7 @@ namespace Quaver.Peppy
                         switch (key.Trim())
                         {
                             case "AudioFilename":
-                                AudioFilename = value;
+                                AudioFilename = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(value));
                                 break;
                             case "AudioLeadIn":
                                 AudioLeadIn = Int32.Parse(value, CultureInfo.InvariantCulture);
@@ -152,7 +152,7 @@ namespace Quaver.Peppy
                                 Countdown = Int32.Parse(value, CultureInfo.InvariantCulture);
                                 break;
                             case "SampleSet":
-                                SampleSet = value;
+                                SampleSet = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(value)); ;
                                 break;
                             case "StackLeniency":
                                 StackLeniency = float.Parse(value, CultureInfo.InvariantCulture);
@@ -217,28 +217,28 @@ namespace Quaver.Peppy
                         switch (key.Trim())
                         {
                             case "Title":
-                                Title = value;
+                                Title = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(value));
                                 break;
                             case "TitleUnicode":
                                 TitleUnicode = value;
                                 break;
                             case "Artist":
-                                Artist = value;
+                                Artist = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(value));
                                 break;
                             case "ArtistUnicode":
                                 ArtistUnicode = value;
                                 break;
                             case "Creator":
-                                Creator = value;
+                                Creator = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(value));
                                 break;
                             case "Version":
-                                Version = value;
+                                Version = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(value));
                                 break;
                             case "Source":
-                                Source = value;
+                                Source = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(value));
                                 break;
                             case "Tags":
-                                Tags = value;
+                                Tags = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(value));
                                 break;
                             case "BeatmapID":
                                 BeatmapID = Int32.Parse(value, CultureInfo.InvariantCulture);
