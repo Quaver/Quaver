@@ -111,7 +111,9 @@ namespace Quaver.GameState.States
 
         public void UnloadContent()
         {
-            UpdateReady = false;
+            Logger.Remove("MapSelected");
+
+           UpdateReady = false;
             PlayButton.Clicked -= PlayMap;
 
             //TODO: Remove button delegates ?
