@@ -140,7 +140,10 @@ namespace Quaver.Peppy
 
                 // Now that all of them are converted, we'll create a new directory with all of the files except for .osu
 
-                var newSongDir = $"{Config.Configuration.SongDirectory}/{(int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds}";
+                var newSongDir = $"{Config.Configuration.SongDirectory}/{new DirectoryInfo(fileName).Name}";
+
+                if (newSongDir.Length > 200)
+                    newSongDir = $"{Config.Configuration.SongDirectory}/{new DirectoryInfo(fileName).Name.Substring(0, 20)}";
 
                 Directory.CreateDirectory(newSongDir);
 
@@ -155,8 +158,18 @@ namespace Quaver.Peppy
                             // Ignore .osu files
                             continue;
                         case ".qua":
-                            // Rename the file
-                            File.Move(filesInDir[i], $"{newSongDir}/{i}.qua");
+                            // Try to create a similar path to the original. 
+                            // The reason we generate all these new file names is because
+                            // the path may end up being too long, and that throws an error.
+                            var newFile = $"{newSongDir}/{Path.GetFileName(filesInDir[i])}";
+
+                            if (newFile.Length > 200)
+                                newFile = $"{newSongDir}/{Path.GetFileName(filesInDir[i]).Substring(0, 60)}.qua";
+
+                            if (newFile.Length > 200 || File.Exists(newFile))
+                                newFile = $"{newSongDir}/{i}.qua";
+
+                            File.Move(filesInDir[i], newFile);
                             break;
                         default:
                             File.Move(filesInDir[i], $"{newSongDir}/{Path.GetFileName(filesInDir[i])}");
