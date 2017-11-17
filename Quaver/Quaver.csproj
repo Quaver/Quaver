@@ -305,11 +305,11 @@
     <EmbeddedResource Include="Resources\UI\set-select-mask.xnb" />
     <EmbeddedResource Include="Resources\UI\blank-box.xnb" />
     <EmbeddedResource Include="Resources\UI\hollow-box.xnb" />
-    <None Include="Resources\Fonts\Bold12.xnb" />
-    <None Include="Resources\Fonts\Medium12.xnb" />
-    <None Include="Resources\Fonts\Medium16.xnb" />
-    <None Include="Resources\Fonts\Medium24.xnb" />
-    <None Include="Resources\Fonts\Medium48.xnb" />
+    <EmbeddedResource Include="Resources\Fonts\Bold12.xnb" />
+    <EmbeddedResource Include="Resources\Fonts\Medium12.xnb" />
+    <EmbeddedResource Include="Resources\Fonts\Medium16.xnb" />
+    <EmbeddedResource Include="Resources\Fonts\Medium24.xnb" />
+    <EmbeddedResource Include="Resources\Fonts\Medium48.xnb" />
     <None Include="x64\libbass.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
