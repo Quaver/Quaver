@@ -30,7 +30,7 @@ namespace Quaver.Gameplay
         internal static List<HitObject> HitObjectPool { get; set; }
         internal static List<HitObject> HitObjectDead { get; set; }
         internal static List<HitObject> HitObjectHold { get; set; }
-        internal const int HitObjectPoolSize = 256;
+        internal const int HitObjectPoolSize = 200;
         internal const uint RemoveTimeAfterMiss = 1000;
         internal static Boundary Boundary;
 
