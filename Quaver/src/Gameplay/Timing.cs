@@ -18,7 +18,7 @@ namespace Quaver.Gameplay
         //Audio Variables
         private static double GameAudioLength { get; set; }
         private static double SongEndOffset { get; set; }
-        private static bool SongIsPlaying { get; set; }
+        public static bool SongIsPlaying { get; set; }
 
         //Gameplay Variables
         private static double ActualSongTime { get; set; }
