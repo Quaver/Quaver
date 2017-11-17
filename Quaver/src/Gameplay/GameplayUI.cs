@@ -152,7 +152,7 @@ namespace Quaver.Gameplay
                 Size = new Vector2(230, 400),
                 Alignment = Alignment.MidLeft,
                 Parent = Boundary,
-                Alpha = 0.5f,
+                Alpha = 0f,
                 Tint = Color.Black //todo: remove later and use skin image
             };
         }

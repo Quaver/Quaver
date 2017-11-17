@@ -124,8 +124,8 @@ namespace Quaver.GameState.States
                 Buttons[i].Clicked -= ClickEvents[i];
             }
             ClickEvents.Clear();
-            Buttons.Clear();
             Boundary.Destroy();
+            Buttons.Clear();
         }
 
         public void Update(GameTime gameTime)
