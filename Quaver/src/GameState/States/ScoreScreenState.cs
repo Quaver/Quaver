@@ -18,7 +18,7 @@ namespace Quaver.GameState.States
 
         public void UnloadContent() { }
 
-        public void Update(GameTime gameTime) { }
+        public void Update(double dt) { }
 
         public void Draw() { }
     }
