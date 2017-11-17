@@ -38,10 +38,13 @@ namespace Quaver.Gameplay
 
         private static double CurrentScore { get; set; }
 
+        private static double CurrentAccuracy { get; set; }
+
         internal static void Initialize()
         {
             // Reference Variables
             CurrentScore = 0;
+            CurrentAccuracy = 0;
             NoteHolding = false;
 
             // Create Boundary
@@ -157,7 +160,7 @@ namespace Quaver.Gameplay
         internal static void UpdateAccuracyBox(int index)
         {
             AccuracyCountText[index+1].Text = ScoreManager.JudgePressSpread[index] + " | " + ScoreManager.JudgeReleaseSpread[index];
-            AccuracyCountText[0].Text = $"{ScoreManager.Accuracy * 100:0.00}%";
+            //AccuracyCountText[0].Text = $"{ScoreManager.Accuracy * 100:0.00}%";
 
             //Calculate graph bars
             for (var i = 0; i < 6; i++)
@@ -189,6 +192,10 @@ namespace Quaver.Gameplay
 
             // Update Score Text
             ScoreText.Text = Util.ScoreToString((int)CurrentScore);
+
+            // Update Accuracy Text
+            CurrentAccuracy = Util.Tween(ScoreManager.Accuracy, (float)CurrentAccuracy, dt/10);
+            AccuracyCountText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
 
             // Update Boundary
             Boundary.Update(dt);   
