@@ -159,6 +159,12 @@ namespace Quaver.Config
         internal static bool Pitched { get => _pitched; set { _pitched = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
+        ///     Toggle to show the LN release counter in-game.
+        /// </summary>
+        private static bool _showReleaseCounter;
+        internal static bool ShowReleaseCounter { get => _showReleaseCounter; set { _showReleaseCounter = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
         ///     The key pressed for lane 1
         /// </summary>
         private static Keys _keyMania1 = Keys.D;
@@ -349,6 +355,7 @@ namespace Quaver.Config
             _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
             _debug = ConfigHelper.ReadBool(Debug, data["Debug"]);
             _pitched = ConfigHelper.ReadBool(Pitched, data["Pitched"]);
+            _showReleaseCounter = ConfigHelper.ReadBool(_showReleaseCounter, data["ShowReleaseCounter"]);
             _keyMania1 = ConfigHelper.ReadKeys(KeyMania1, data["KeyMania1"]);
             _keyMania2 = ConfigHelper.ReadKeys(KeyMania2, data["KeyMania2"]);
             _keyMania3 = ConfigHelper.ReadKeys(KeyMania3, data["KeyMania3"]);
