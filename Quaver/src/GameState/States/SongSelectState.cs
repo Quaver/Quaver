@@ -75,7 +75,6 @@ namespace Quaver.GameState.States
             // Create play button
             PlayButton = new TextButton(new Vector2(200, 30), "Play")
             {
-                Image = GameBase.UI.BlankBox,
                 Alignment = Alignment.TopRight,
                 Parent = Boundary
             };
@@ -84,7 +83,6 @@ namespace Quaver.GameState.States
             // Create back button
             BackButton = new TextButton(new Vector2(200, 50), "Back")
             {
-                Image = GameBase.UI.BlankBox,
                 Alignment = Alignment.BotCenter,
                 Parent = Boundary
             };
@@ -93,7 +91,6 @@ namespace Quaver.GameState.States
             // Create Speed Mod Button
             SpeedModButton = new TextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.GameClock}x")
             {
-                Image = GameBase.UI.BlankBox,
                 Alignment = Alignment.BotRight,
                 Parent = Boundary
             };
@@ -102,7 +99,6 @@ namespace Quaver.GameState.States
             // Create Speed Mod Button
             TogglePitch = new TextButton(new Vector2(200, 50), $"Toggle Pitch: {Configuration.Pitched}")
             {
-                Image = GameBase.UI.BlankBox,
                 Alignment = Alignment.MidRight,
                 Parent = Boundary
             };

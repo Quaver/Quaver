@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.Graphics;
+using Quaver.Graphics.Button;
+using Quaver.Graphics.Sprite;
 
 namespace Quaver.GameState.States
 {
@@ -12,14 +15,37 @@ namespace Quaver.GameState.States
         public State CurrentState { get; set; } = State.ScoreScreen;
         public bool UpdateReady { get; set; }
 
-        public void Initialize() { }
+        private TextButton BackButton { get; set; }
 
-        public void LoadContent() { }
+        public void Initialize()
+        {
+            BackButton = new TextButton(new Vector2(300,200),"SONG SELECT" )
+            {
+                Alignment = Alignment.TopRight
+            };
+            BackButton.Clicked += OnBackButtonClick;
 
-        public void UnloadContent() { }
+            UpdateReady = true;
+        }
 
-        public void Update(double dt) { }
+        private void OnBackButtonClick(object sender, EventArgs e)
+        {
+            GameBase.GameStateManager.ChangeState(new SongSelectState());
+        }
 
-        public void Draw() { }
+        public void UnloadContent()
+        {
+            BackButton.Destroy();
+        }
+
+        public void Update(double dt)
+        {
+            BackButton.Update(dt);
+        }
+
+        public void Draw()
+        {
+            BackButton.Draw();
+        }
     }
 }
