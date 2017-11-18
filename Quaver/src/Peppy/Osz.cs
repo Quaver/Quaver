@@ -125,7 +125,7 @@ namespace Quaver.Peppy
                 {
                     archive.ExtractAll(extractPath, ExtractExistingFileAction.OverwriteSilently);
                 }
-                    
+
                 // Now that we have them, proceed to convert them.
                 foreach (var file in Directory.GetFiles(extractPath, "*.osu", SearchOption.AllDirectories))
                 {
@@ -143,7 +143,8 @@ namespace Quaver.Peppy
                 var newSongDir = $"{Config.Configuration.SongDirectory}/{new DirectoryInfo(fileName).Name}";
 
                 if (newSongDir.Length > 200)
-                    newSongDir = $"{Config.Configuration.SongDirectory}/{new DirectoryInfo(fileName).Name.Substring(0, 20)}";
+                    newSongDir =
+                        $"{Config.Configuration.SongDirectory}/{new DirectoryInfo(fileName).Name.Substring(0, 20)}";
 
                 Directory.CreateDirectory(newSongDir);
 
@@ -174,11 +175,9 @@ namespace Quaver.Peppy
                         default:
                             File.Move(filesInDir[i], $"{newSongDir}/{Path.GetFileName(filesInDir[i])}");
                             break;
-                    }               
+                    }
                 }
-                
-                // Delete the entire temp directory.
-                Directory.Delete(extractPath, true);
+
                 Logger.Log($".osz has been successfully converted.", Color.Cyan, 2f);
             }
             catch (Exception e)
@@ -186,6 +185,11 @@ namespace Quaver.Peppy
                 Console.WriteLine(e.Message);
                 Logger.Log($"Error: There was an issue converting the .osz", Color.Red, 2f);
                 Logger.Log(e.Message, Color.Red);
+            }
+            // Delete the entire temp directory regardless of the outcome.
+            finally
+            {             
+                Directory.Delete(extractPath, true);
             }
         }
     }
