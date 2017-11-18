@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.Commands;
@@ -76,11 +77,18 @@ namespace Quaver
         /// </summary>
         private static void DeleteTemporaryFiles()
         {
-            foreach (var file in new DirectoryInfo(Configuration.DataDirectory).GetFiles("*", SearchOption.AllDirectories))
-                file.Delete();
+            try
+            {
+                foreach (var file in new DirectoryInfo(Configuration.DataDirectory).GetFiles("*", SearchOption.AllDirectories))
+                    file.Delete();
 
-            foreach (var dir in new DirectoryInfo(Configuration.DataDirectory).GetDirectories("*", SearchOption.AllDirectories))
-                dir.Delete(true);
+                foreach (var dir in new DirectoryInfo(Configuration.DataDirectory).GetDirectories("*", SearchOption.AllDirectories))
+                    dir.Delete(true);
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message, Color.Red);
+            }
         }
 
         /// <summary>
