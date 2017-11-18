@@ -128,7 +128,6 @@ namespace Quaver.Logging
         /// </summary>
         internal static void Log(string value, Color color, float duration = 2.5f)
         {
-            Console.WriteLine(RuntimeLogPath);
             if (RuntimeLogPath == null)
                 return;
 
