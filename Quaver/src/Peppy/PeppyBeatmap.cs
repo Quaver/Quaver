@@ -332,6 +332,9 @@ namespace Quaver.Peppy
                 {
                     if (line.Contains(","))
                     {
+                        if (line.Contains("P") || line.Contains("L") || line.Contains("|"))
+                            continue;
+
                         string[] values = line.Split(',');
 
                         // We'll need to parse LNs differently than normal HitObjects,
