@@ -32,9 +32,6 @@ namespace Quaver
             // Initialize Config
             Configuration.InitializeConfig();
 
-            // Create the log file.
-            Logger.CreateLogFile();
-
             // Initialize Discord RichPresence
             InitializeDiscordPresence();
 
