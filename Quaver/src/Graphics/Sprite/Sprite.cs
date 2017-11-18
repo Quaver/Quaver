@@ -10,7 +10,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 using Quaver.Utility;
 
-
 namespace Quaver.Graphics.Sprite
 {
     /// <summary>
@@ -26,7 +25,6 @@ namespace Quaver.Graphics.Sprite
             get
             {
                 return _image;
-                
             }
             set
             {
@@ -44,8 +42,7 @@ namespace Quaver.Graphics.Sprite
         public float Rotation {
             get
             {
-                return _rotation;
-                
+                return _rotation;   
             }
             set
             {
@@ -77,14 +74,12 @@ namespace Quaver.Graphics.Sprite
             get
             {
                 return _tint;
-                
             }
             set
             {
                 _tint = value;
                 _color = _tint * _alpha;
             } 
-            
         }
         private Color _tint = Color.White;
 
