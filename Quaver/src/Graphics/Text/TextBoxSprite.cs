@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Utility;
 
-
 namespace Quaver.Graphics.Text
 {
     /// <summary>
@@ -86,14 +85,12 @@ namespace Quaver.Graphics.Text
             get
             {
                 return _tint;
-
             }
             set
             {
                 _tint = value;
                 _color = _tint * _alpha;
             }
-
         }
         private Color _tint = Color.White;
 
@@ -105,7 +102,6 @@ namespace Quaver.Graphics.Text
             get
             {
                 return _alpha;
-
             }
             set
             {
