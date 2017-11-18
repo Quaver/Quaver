@@ -91,7 +91,6 @@ namespace Quaver.Gameplay
 
             //Display stuff
             PlayScreen.Playfield.UpdateJudge(index, release, offset);
-
         }
 
         /// <summary>

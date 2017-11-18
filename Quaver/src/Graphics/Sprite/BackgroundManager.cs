@@ -124,6 +124,5 @@ namespace Quaver.Graphics.Sprite
         {
             Background.Draw();
         }
-
     }
 }
