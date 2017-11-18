@@ -72,9 +72,9 @@ namespace Quaver.Graphics.Button
         public override void Update(double dt)
         {
             HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
-            CurrentTint.R = (byte)((HoverCurrentTween * 0.25 + 0.75f) * 255);
-            CurrentTint.G = (byte)((HoverCurrentTween * 0.25 + 0.75f) * 255);
-            CurrentTint.B = (byte)((HoverCurrentTween * 0.25 + 0.75f) * 255);
+            CurrentTint.R = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
+            CurrentTint.G = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
+            CurrentTint.B = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
             Tint = CurrentTint;
             
             //TextSprite.Update(dt);
