@@ -210,7 +210,7 @@ namespace Quaver
                 var unixDateTime = (DateTime.Now.ToLocalTime().ToUniversalTime() - epoch).TotalSeconds;
 
                 // Set Discord presence to the "time left" specified.
-                DiscordController.presence.endTimestamp = (long) (unixDateTime + timeLeft / 1000);
+                DiscordController.presence.endTimestamp = (long) (unixDateTime + (timeLeft / 1000));
             }
             else
             {

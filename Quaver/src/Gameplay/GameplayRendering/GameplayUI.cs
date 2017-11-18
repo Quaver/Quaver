@@ -78,7 +78,7 @@ namespace Quaver.Gameplay.GameplayRendering
                     Alignment = Alignment.TopLeft,
                     SizeX = AccuracyBox.SizeX - 10,
                     SizeY = 26 * (float)GameBase.WindowYRatio,
-                    PositionY = (i * 25 + 55) * (float)GameBase.WindowYRatio,
+                    PositionY = ((i * 25) + 55) * (float)GameBase.WindowYRatio,
                     PositionX = 5
                 };
             }
