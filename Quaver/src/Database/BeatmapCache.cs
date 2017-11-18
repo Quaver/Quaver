@@ -231,6 +231,9 @@ namespace Quaver.Database
         {
             try
             {
+                // Remove all the duplicate MD5 beatmaps in the list before inserting.
+                RemoveDuplicatesInList(beatmaps);
+
                 if (beatmaps.Count > 0)
                     await new SQLiteAsyncConnection(DatabasePath).InsertAllAsync(beatmaps)
                         .ContinueWith(t => Logger.Log($"Successfully added {beatmaps.Count} beatmaps to the database", Color.Cyan));
@@ -290,6 +293,35 @@ namespace Quaver.Database
             }
 
             return finalMaps;
+        }
+
+        /// <summary>
+        ///     Finds and removes duplicates in the list of beatmaps itself. This is usually called before inserting,
+        ///     to make sure we're not adding the same map twice.
+        /// </summary>
+        /// <param name="beatmaps"></param>
+        /// <returns></returns>
+        private static void RemoveDuplicatesInList(List<Beatmap> beatmaps)
+        {
+            var duplicateInsertEntries = beatmaps
+                .GroupBy(x => x.Md5Checksum)
+                .Select(g => g.Last())
+                .ToList();
+
+            // Delete all the duplicate entries
+            foreach (var map in duplicateInsertEntries)
+            {
+                try
+                {
+                    beatmaps.Remove(map);
+                    File.Delete($"{Configuration.SongDirectory}/{map.Directory}/{map.Path}");
+                    Logger.Log($"Removed duplicate map: {Configuration.SongDirectory}/{map.Directory}/{map.Path}", Color.Pink);
+                }
+                catch (Exception e)
+                {
+                    Logger.Log(e.Message, Color.Cyan);
+                }
+            }
         }
     }
 }
