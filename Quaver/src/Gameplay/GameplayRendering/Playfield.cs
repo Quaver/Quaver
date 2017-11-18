@@ -97,7 +97,6 @@ namespace Quaver.Gameplay.GameplayRendering
 
         private Boundary OffsetGaugeBoundary { get; set; }
         private Sprite OffsetGaugeMiddle { get; set; }
-
         private const int OffsetIndicatorSize = 32;
         private float OffsetGaugeSize { get; set; }
 
@@ -124,7 +123,7 @@ namespace Quaver.Gameplay.GameplayRendering
             PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
             PlayfieldPadding = (int) (GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowYRatio);
             ReceptorPadding = (int)(GameBase.LoadedSkin.NotePadding * GameBase.WindowYRatio);
-            PlayfieldSize = (PlayfieldObjectSize + ReceptorPadding) * GameBase.SelectedBeatmap.Qua.KeyCount + PlayfieldPadding * 2 - ReceptorPadding;
+            PlayfieldSize = ((PlayfieldObjectSize + ReceptorPadding) * GameBase.SelectedBeatmap.Qua.KeyCount) + (PlayfieldPadding * 2) - ReceptorPadding;
 
             // Calculate Config stuff
             ReceptorYOffset = Config.Configuration.DownScroll ? GameBase.Window.Bottom - GameBase.LoadedSkin.ReceptorYOffset - PlayfieldObjectSize : GameBase.LoadedSkin.ReceptorYOffset;
@@ -256,7 +255,7 @@ namespace Quaver.Gameplay.GameplayRendering
 
         public void Draw()
         {
-            
+            //draw stuff
         }
 
         /// <summary>
@@ -359,7 +358,6 @@ namespace Quaver.Gameplay.GameplayRendering
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].PositionX = -(float)offset * OffsetGaugeSize;
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Alpha = 0.5f;
             }
-
         }
 
         /// <summary>
