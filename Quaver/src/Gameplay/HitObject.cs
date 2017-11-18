@@ -11,7 +11,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 
-
 namespace Quaver.Gameplay
 {
     public class HitObject
@@ -161,10 +160,10 @@ namespace Quaver.Gameplay
             {
                 //Update HoldBody Position and Size
                 HoldBodySprite.SizeY = CurrentLongNoteSize;
-                HoldBodySprite.PositionY = downScroll ? -(float)CurrentLongNoteSize + HitObjectSize / 2f + _hitObjectPosition.Y : _hitObjectPosition.Y + HitObjectSize / 2f;
+                HoldBodySprite.PositionY = downScroll ? -(float)CurrentLongNoteSize + (HitObjectSize / 2f) + _hitObjectPosition.Y : _hitObjectPosition.Y + (HitObjectSize / 2f);
 
                 //Update Hold End Position
-                HoldEndSprite.PositionY = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.SizeY) : _hitObjectPosition.Y + HoldBodySprite.SizeY;
+                HoldEndSprite.PositionY = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.SizeY) : (_hitObjectPosition.Y + HoldBodySprite.SizeY);
             }
 
             //Update HitBody
