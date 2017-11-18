@@ -148,7 +148,7 @@ namespace Quaver.Logging
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+
             }
 
             if (!Configuration.Debug)
