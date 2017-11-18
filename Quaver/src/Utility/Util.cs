@@ -51,7 +51,7 @@ namespace Quaver.Utility
         internal static float Align(float scale, float objectSize, Vector2 boundary, float offset = 0)
         {
             //BoundaryMin + (BoundarySize - ObjectSize) * Scale + Offset
-            return Math.Min(boundary.X, boundary.Y) + (Math.Abs(boundary.X - boundary.Y) - objectSize) * scale + offset;
+            return Math.Min(boundary.X, boundary.Y) + ((Math.Abs(boundary.X - boundary.Y) - objectSize) * scale) + offset;
         }
 
         /// <summary>
