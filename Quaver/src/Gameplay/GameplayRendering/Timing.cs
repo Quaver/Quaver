@@ -154,7 +154,7 @@ namespace Quaver.Gameplay.GameplayRendering
 
         public void Draw()
         {
-            
+            //do stuff
         }
 
         internal void time_DestroyBars()
@@ -338,7 +338,6 @@ namespace Quaver.Gameplay.GameplayRendering
             }
             else _averageBpm = TimingQueue[0].BPM;
         }
-
 
         //Normalizes SV's in between each BPM change interval
         internal void NormalizeSVs()
