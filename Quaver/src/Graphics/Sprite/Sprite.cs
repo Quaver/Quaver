@@ -150,8 +150,8 @@ namespace Quaver.Graphics.Sprite
         private void RecalculateOrigin()
         {
             _renderRect = GlobalRect;
-            _renderRect.X = (int)(GlobalRect.X + GlobalRect.Width / 2f);
-            _renderRect.Y = (int)(GlobalRect.Y + GlobalRect.Height / 2f);
+            _renderRect.X = (int)(GlobalRect.X + (GlobalRect.Width / 2f));
+            _renderRect.Y = (int)(GlobalRect.Y + (GlobalRect.Height / 2f));
         }
     }
 }
