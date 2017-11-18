@@ -34,8 +34,7 @@ namespace Quaver.Peppy
                 InitialDirectory = "c:\\",
                 Filter = "Peppy Beatmap Set (*.osz)|*.osz",
                 FilterIndex = 0,
-                RestoreDirectory = true,
-                Multiselect = true
+                RestoreDirectory = true
             };
 
             // If the dialog couldn't be shown, that's an issue, so we'll return for now.
@@ -48,8 +47,7 @@ namespace Quaver.Peppy
             // Run the converter for all file names
             Task.Run(() =>
             {
-                for (var i = 0; i < openFileDialog.FileNames.Length; i++)
-                    ConvertOsz(openFileDialog.FileNames[i], i);
+                ConvertOsz(openFileDialog.FileName);
 
             // When all the maps have been converted, select the last imported map and make that the selected one.
             }).ContinueWith(async t =>
@@ -111,13 +109,13 @@ namespace Quaver.Peppy
         ///     Responsible for converting a .osz file to a new song directory full of .qua
         /// </summary>
         /// <param name="fileName"></param>
-        private static void ConvertOsz(string fileName, int num)
+        private static void ConvertOsz(string fileName)
         {
             // Extract the .osu & relevant audio files, and attempt to convert them.
             // Once fully converted, create a new directory in the songs folder and 
             // tell GameBase that the import queue is ready. Depending on the current state,
             // we may import them automatically.
-            var extractPath = $@"{Config.Configuration.DataDirectory}/Temp/{num}";
+            var extractPath = $@"{Config.Configuration.DataDirectory}/Temp/0";
 
             try
             {
