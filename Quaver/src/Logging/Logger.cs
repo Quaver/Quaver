@@ -123,7 +123,8 @@ namespace Quaver.Logging
                 return;
 
             // Put the time in front of the incoming log 
-            value = DateTime.Now.ToString("h:mm:ss") + " " + value;
+            value = "[" +DateTime.Now.ToString("h:mm:ss") + "] " + value;
+            Console.WriteLine(value);
 
             // Write to the log file
             try
