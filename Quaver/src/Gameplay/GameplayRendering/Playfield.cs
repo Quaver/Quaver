@@ -106,7 +106,6 @@ namespace Quaver.Gameplay.GameplayRendering
         private TextBoxSprite ComboText { get; set; }
         private double AlphaHold { get; set; }
         
-
         /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
         /// </summary>
@@ -163,7 +162,7 @@ namespace Quaver.Gameplay.GameplayRendering
             for (var i = 0; i < Receptors.Length; i++)
             {
                 // Set ReceptorXPos 
-                ReceptorXPosition[i] = PlayfieldPadding + (PlayfieldObjectSize + ReceptorPadding) * i;
+                ReceptorXPosition[i] = ((PlayfieldObjectSize + ReceptorPadding) * i) + PlayfieldPadding;
 
                 // Create new Receptor Sprite
                 Receptors[i] = new Sprite
