@@ -10,7 +10,6 @@ using Quaver.Gameplay;
 using Quaver.GameState.States;
 using Quaver.Logging;
 
-
 namespace Quaver.GameState
 {
     internal class GameStateManager
