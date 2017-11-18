@@ -76,7 +76,7 @@ namespace Quaver
         /// </summary>
         private static void DeleteTemporaryFiles()
         {
-            foreach (var file in new DirectoryInfo(Configuration.DataDirectory).GetFiles())
+            foreach (var file in new DirectoryInfo(Configuration.DataDirectory).GetFiles("*", SearchOption.AllDirectories))
                 file.Delete();
         }
 
