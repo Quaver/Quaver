@@ -305,7 +305,7 @@ namespace Quaver.Database
         {
             var duplicateInsertEntries = beatmaps
                 .GroupBy(x => x.Md5Checksum)
-                .Select(g => g.Last())
+                .Select(g => g.Count() > 1 ? g.First() : null)
                 .ToList();
 
             // Delete all the duplicate entries
@@ -314,6 +314,12 @@ namespace Quaver.Database
                 try
                 {
                     beatmaps.Remove(map);
+
+                    // Continue to the next map if the current one is indeed null.
+                    if (map == null)
+                        continue;
+
+                    // Delete the file if its actually a duplicate.
                     File.Delete($"{Configuration.SongDirectory}/{map.Directory}/{map.Path}");
                     Logger.Log($"Removed duplicate map: {Configuration.SongDirectory}/{map.Directory}/{map.Path}", Color.Pink);
                 }
