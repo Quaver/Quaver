@@ -35,7 +35,6 @@ namespace Quaver.Graphics.Sprite
         }
         private Texture2D _image = GameBase.UI.BlankBox;
 
-
         /// <summary>
         ///     Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
         /// </summary>
@@ -90,7 +89,6 @@ namespace Quaver.Graphics.Sprite
             get
             {
                 return _alpha; 
-                
             }
             set
             {
