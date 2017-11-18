@@ -131,7 +131,7 @@ namespace Quaver.GameState.States
             Boundary.Update(dt);
 
             // Repeat the song preview if necessary
-            RepeatSongPreview();;
+            RepeatSongPreview();
         }
 
         public void Draw()
