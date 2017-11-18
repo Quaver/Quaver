@@ -78,6 +78,9 @@ namespace Quaver
         {
             foreach (var file in new DirectoryInfo(Configuration.DataDirectory).GetFiles("*", SearchOption.AllDirectories))
                 file.Delete();
+
+            foreach (var dir in new DirectoryInfo(Configuration.DataDirectory).GetDirectories("*", SearchOption.AllDirectories))
+                dir.Delete(true);
         }
 
         /// <summary>
