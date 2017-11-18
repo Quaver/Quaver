@@ -10,7 +10,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 using Quaver.Utility;
 
-
 namespace Quaver.Graphics
 {
     /// <summary>
@@ -67,7 +66,6 @@ namespace Quaver.Graphics
         /// (Read-only) Returns the Drawable's GlobalRect.
         /// </summary>
         public Rectangle GlobalRect { get => _globalRect; }
-
 
         /// <summary>
         /// (Read-only) Returns the Drawable's LocalRect.
