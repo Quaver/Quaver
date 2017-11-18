@@ -187,14 +187,11 @@ namespace Quaver.Graphics.Text
                     //Check if text wrap should continue
                     textline++;
                     if (Textwrap && textline >= MaxTextLines) break;
-
                 }
                 else break;
                 wrappedText.Append(a + " ");
             }
-
             //Console.WriteLine("MAX: {0}, TOTAL {1}", MaxTextLines, textline);
-
             return wrappedText.ToString();
         }
     }
