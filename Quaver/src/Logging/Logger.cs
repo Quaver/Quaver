@@ -35,8 +35,16 @@ namespace Quaver.Logging
         {
             RuntimeLogPath = Configuration.LogsDirectory + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".log";
 
-            var file = File.Create(RuntimeLogPath);
-            file.Close();
+            try
+            {
+                var file = File.Create(RuntimeLogPath);
+                file.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         /// <summary>
@@ -141,7 +149,6 @@ namespace Quaver.Logging
             }
             catch (Exception e)
             {
-                // Don't bother
                 Console.WriteLine(e);
             }
 
