@@ -173,7 +173,7 @@ namespace Quaver.GameState.States
             IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.CurrentSongTime >= 5000);
 
             // Update the playfield
-            Playfield.Update(dt); ;
+            Playfield.Update(dt);
 
             // Update the Notes
             NoteRendering.Update(dt);
