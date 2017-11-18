@@ -47,30 +47,7 @@ namespace Quaver.GameState.States
             // Update Discord Presence
             GameBase.ChangeDiscordPresence("In song select");
 
-            //Create buttons for every beatmap set TODO: Use beatmap set instead of beatmaps
-            foreach (KeyValuePair<string, List<Beatmap>> mapset in GameBase.VisibleBeatmaps)
-            {
-                //Create Song Buttons
-                foreach (var map in mapset.Value)
-                {
-                    var newButton = new TextButton(new Vector2(300, 20),
-                        map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]")
-                    {
-                        Image = GameBase.UI.BlankBox,
-                        Alignment = Alignment.TopLeft,
-                        PositionY = ButtonPos,
-                        Parent = Boundary
-                    };
-                    newButton.TextSprite.TextAlignment = Alignment.MidLeft;
-
-                    var currentMap = map;
-                    EventHandler curEvent = (sender, e) => ButtonClick(sender, e, map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]", currentMap);
-                    ClickEvents.Add(curEvent);
-                    newButton.Clicked += curEvent;
-                    Buttons.Add(newButton);
-                    ButtonPos += 20;
-                }
-            }
+            CreateSongSelectButtons();
 
             // Create play button
             PlayButton = new TextButton(new Vector2(200, 30), "Play")
@@ -137,6 +114,34 @@ namespace Quaver.GameState.States
         public void Draw()
         {
             Boundary.Draw();
+        }
+
+        public void CreateSongSelectButtons()
+        {
+            //Create buttons for every beatmap set TODO: Use beatmap set instead of beatmaps
+            foreach (KeyValuePair<string, List<Beatmap>> mapset in GameBase.VisibleBeatmaps)
+            {
+                //Create Song Buttons
+                foreach (var map in mapset.Value)
+                {
+                    var newButton = new TextButton(new Vector2(300, 20),
+                        map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]")
+                    {
+                        Image = GameBase.UI.BlankBox,
+                        Alignment = Alignment.TopLeft,
+                        PositionY = ButtonPos,
+                        Parent = Boundary
+                    };
+                    newButton.TextSprite.TextAlignment = Alignment.MidLeft;
+
+                    var currentMap = map;
+                    EventHandler curEvent = (sender, e) => ButtonClick(sender, e, map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]", currentMap);
+                    ClickEvents.Add(curEvent);
+                    newButton.Clicked += curEvent;
+                    Buttons.Add(newButton);
+                    ButtonPos += 20;
+                }
+            }
         }
 
         //TODO: Remove
