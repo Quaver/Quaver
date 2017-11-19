@@ -109,6 +109,7 @@
     <Compile Include="src\Commands\ICommand.cs" />
     <Compile Include="src\Commands\Command\BeatmapsCommand.cs" />
     <Compile Include="src\Commands\Command\MapsetsCommand.cs" />
+    <Compile Include="src\Database\LocalScoreCache.cs" />
     <Compile Include="src\Discord\DiscordController.cs" />
     <Compile Include="src\Discord\DiscordRPC.cs" />
     <Compile Include="src\Gameplay\GameplayRendering\GameplayUI.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="src\QuaFile\Qua.cs" />
     <Compile Include="src\QuaFile\SliderVelocity.cs" />
     <Compile Include="src\QuaFile\TimingPoint.cs" />
+    <Compile Include="src\Scores\LocalScore.cs" />
     <Compile Include="src\Skins\Skin.cs" />
     <Compile Include="src\Tests\Audio.Test.cs" />
     <Compile Include="src\Tests\Json.Test.cs" />
