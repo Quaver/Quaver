@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.Config;
 using Quaver.Database;
 using Quaver.Gameplay;
 using Quaver.Graphics;
@@ -144,6 +145,7 @@ namespace Quaver.GameState.States
                 Rating = 0.0f,
                 Deviance = string.Join(",", ScoreData.MsDeviance),
                 Mods = GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier),
+                ScrollSpeed = Configuration.ScrollSpeed,
                 ReplayData = ""
             };
         }
