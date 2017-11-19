@@ -10,6 +10,7 @@ namespace Quaver.Modifiers
     {
         DifficultyIncrease,
         DifficultyDecrease,
-        Special
+        Special,
+        Speed
     }
 }
