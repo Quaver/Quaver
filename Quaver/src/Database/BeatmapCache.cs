@@ -59,9 +59,26 @@ namespace Quaver.Database
         /// </summary>
         private static async Task CreateBeatmapTableAsync()
         {
-            var conn = new SQLiteAsyncConnection(DatabasePath);
-            await conn.CreateTableAsync<Beatmap>();
-            Logger.Log($"Beatmap Database has been created.", Color.Cyan);
+            try
+            {
+                var conn = new SQLiteAsyncConnection(DatabasePath);
+                await conn.CreateTableAsync<Beatmap>();
+                Logger.Log($"Beatmap Database has been created.", Color.Cyan);
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    File.Delete(DatabasePath);
+                    await CreateBeatmapTableAsync();
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                    throw;
+                }
+                Logger.Log(e.Message, Color.Cyan);
+            }
         }
         
         /// <summary>
