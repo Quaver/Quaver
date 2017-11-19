@@ -75,6 +75,9 @@ namespace Quaver.GameState.States
             Title = title;
             DifficultyName = difficultyName;
 
+            // Round the MS Deviance to 2 decimal places
+            ScoreData.MsDeviance = ScoreData.MsDeviance.Select(x => Math.Round(x, 2)).ToList();
+
             // Insert the score into the database
             Task.Run(async () => { await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore()); });
 
