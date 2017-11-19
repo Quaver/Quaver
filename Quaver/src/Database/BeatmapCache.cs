@@ -67,17 +67,8 @@ namespace Quaver.Database
             }
             catch (Exception e)
             {
-                try
-                {
-                    File.Delete(DatabasePath);
-                    await CreateBeatmapTableAsync();
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception);
-                    throw;
-                }
                 Logger.Log(e.Message, Color.Cyan);
+                throw;
             }
         }
         
