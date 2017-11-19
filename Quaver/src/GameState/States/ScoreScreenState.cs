@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.Database;
 using Quaver.Gameplay;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
+using Quaver.Scores;
 
 namespace Quaver.GameState.States
 {
@@ -71,6 +74,9 @@ namespace Quaver.GameState.States
             Title = title;
             DifficultyName = difficultyName;
 
+            // Insert the score into the database
+            Task.Run(async () => { await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore()); });
+
             // Log relevant data
             Logger.Log($"User completed beatmap: {Artist} - {Title} - [{DifficultyName}]", Color.Cyan);
             Logger.Log("Beatmap MD5: " + BeatmapMd5, Color.Cyan);
@@ -108,6 +114,38 @@ namespace Quaver.GameState.States
         public void Draw()
         {
             BackButton.Draw();
+        }
+
+        /// <summary>
+        ///     Creates a local score object from the score given
+        /// </summary>
+        /// <returns></returns>
+        private LocalScore CreateLocalScore()
+        {
+            // Store the score in the database
+            return new LocalScore
+            {
+                BeatmapMd5 = BeatmapMd5,
+                DateTime = DateTime.Now.ToString(CultureInfo.InvariantCulture),
+                Score = ScoreData.Score,
+                Accuracy = ScoreData.Accuracy,
+                MaxCombo = ScoreData.Combo,
+                MarvPressCount = ScoreData.JudgePressSpread[0],
+                MarvReleaseCount = ScoreData.JudgeReleaseSpread[0],
+                PerfPressCount = ScoreData.JudgePressSpread[1],
+                PerfReleaseCount = ScoreData.JudgeReleaseSpread[1],
+                GreatPressCount = ScoreData.JudgePressSpread[2],
+                GreatReleaseCount = ScoreData.JudgeReleaseSpread[2],
+                GoodPressCount = ScoreData.JudgePressSpread[3],
+                GoodReleaseCount = ScoreData.JudgeReleaseSpread[3],
+                OkayPressCount = ScoreData.JudgePressSpread[4],
+                OkayReleaseCount = ScoreData.JudgeReleaseSpread[4],
+                Misses = ScoreData.JudgePressSpread[5] + ScoreData.JudgeReleaseSpread[5],
+                Rating = 0.0f,
+                Deviance = string.Join(",", ScoreData.MsDeviance),
+                Mods = GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier),
+                ReplayData = ""
+            };
         }
     }
 }
