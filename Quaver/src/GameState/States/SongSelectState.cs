@@ -205,25 +205,69 @@ namespace Quaver.GameState.States
         {
             try
             {
-                // Add the mod, but make sure it can only be between 0.75 and 2.0x speed.
-                if (GameBase.GameClock < 2.0)
-                    ModManager.AddMod(ModIdentifier.Speed, (float)Math.Round(GameBase.GameClock + 0.1f, 1));
-                else
-                    ModManager.AddMod(ModIdentifier.Speed, 0.5f);
+                // Activate the current speed mod depending on the (current game clock + 0.1)
+                switch ((float)Math.Round(GameBase.GameClock + 0.1f, 1))
+                {
+                    // In this case, 2.1 really means 0.5x, given that we're checking
+                    // for the current GameClock + 0.1. If it's 2.1, we reset it back to 0.5x
+                    case 2.1f:
+                        ModManager.AddMod(ModIdentifier.Speed05X);
+                        break;
+                    // If it ends up being 1.0x, we'll just go ahead and remove all the mods.
+                    case 1.0f:
+                        ModManager.RemoveSpeedMods();
+                        break;
+                    case 0.6f:
+                        ModManager.AddMod(ModIdentifier.Speed06X);
+                        break;
+                    case 0.7f:
+                        ModManager.AddMod(ModIdentifier.Speed07X);
+                        break;
+                    case 0.8f:
+                        ModManager.AddMod(ModIdentifier.Speed08X);
+                        break;
+                    case 0.9f:
+                        ModManager.AddMod(ModIdentifier.Speed09X);
+                        break;
+                    case 1.1f:
+                        ModManager.AddMod(ModIdentifier.Speed11X);
+                        break;
+                    case 1.2f:
+                        ModManager.AddMod(ModIdentifier.Speed12X);
+                        break;
+                    case 1.3f:
+                        ModManager.AddMod(ModIdentifier.Speed13X);
+                        break;
+                    case 1.4f:
+                        ModManager.AddMod(ModIdentifier.Speed14X);
+                        break;
+                    case 1.5f:
+                        ModManager.AddMod(ModIdentifier.Speed15X);
+                        break;
+                    case 1.6f:
+                        ModManager.AddMod(ModIdentifier.Speed16X);
+                        break;
+                    case 1.7f:
+                        ModManager.AddMod(ModIdentifier.Speed17X);
+                        break;
+                    case 1.8f:
+                        ModManager.AddMod(ModIdentifier.Speed18X);
+                        break;
+                    case 1.9f:
+                        ModManager.AddMod(ModIdentifier.Speed19X);
+                        break;
+                    case 2.0f:
+                        ModManager.AddMod(ModIdentifier.Speed20X);
+                        break;
+                }
             }
             catch (Exception ex)
             {
-                // Remove the mod if it ends up being 1.0x. This should always throw an exception due to the nature of how
-                // mods work
-                GameBase.GameClock = 1f;
-                ModManager.RemoveMod(ModIdentifier.Speed);
+                ModManager.RemoveSpeedMods();
             }
 
             // Change the song speed directly.
             SpeedModButton.TextSprite.Text = $"Add Speed Mod {GameBase.GameClock}x";
-
-            if (GameBase.SelectedBeatmap.Song != null)
-                GameBase.SelectedBeatmap.Song.ChangeSongSpeed();
         }
 
         /// <summary>
