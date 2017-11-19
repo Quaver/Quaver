@@ -98,6 +98,9 @@ namespace Quaver
             {
                 await GameBase.LoadAndSetBeatmaps();
 
+                // Create the local scores database if it doesn't already exist
+                await LocalScoreCache.CreateScoresDatabase();
+
                 // The visible beatmaps in song select should be every single mapset at the start of the game.
                 GameBase.VisibleBeatmaps = GameBase.Beatmaps;
             });
