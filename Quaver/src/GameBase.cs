@@ -236,11 +236,11 @@ namespace Quaver
                 mapLength = (Qua.FindSongLength(SelectedBeatmap.Qua) - SelectedBeatmap.Song.GetAudioPosition()) / GameClock;
 
             // Add mods to the string if mods exist
-            if (GameBase.CurrentGameModifiers.Count > 0)
+            if (CurrentGameModifiers.Count > 0)
             {
                 sb.Append(" with mods: ");
 
-                if (CurrentGameModifiers.Exists(x => x.ModIdentifier == ModIdentifier.Speed))
+                if (CurrentGameModifiers.Exists(x => x.Type == ModType.Speed))
                     sb.Append($"Speed {GameClock}x");
             }
 
