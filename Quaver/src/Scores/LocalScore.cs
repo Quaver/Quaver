@@ -121,6 +121,11 @@ namespace Quaver.Scores
         public int Mods { get; set; }
 
         /// <summary>
+        ///     The scroll speed the player used during this play.
+        /// </summary>
+        public int ScrollSpeed { get; set; }
+
+        /// <summary>
         ///     The replay data for this particular score.
         /// </summary>
         public string ReplayData { get; set; }
