@@ -488,6 +488,9 @@ namespace Quaver.QuaFile
         /// <returns></returns>
         internal static decimal FindCommonBpm(Qua qua)
         {
+            if (qua.TimingPoints.Count == 0)
+                return 0;
+
             return Math.Round((decimal)qua.TimingPoints.GroupBy(i => i.Bpm).OrderByDescending(grp => grp.Count())
                 .Select(grp => grp.Key).First(), 2, MidpointRounding.AwayFromZero);
         }
@@ -500,6 +503,9 @@ namespace Quaver.QuaFile
         /// <returns></returns>
         internal static int FindSongLength(Qua qua)
         {
+            if (qua.HitObjects.Count == 0)
+                return 0;
+
             // If the last object is a regular note, we return the start time
             // however if it's an LN, we return the end time.
             var lastHitObject = qua.HitObjects[qua.HitObjects.Count - 1];
