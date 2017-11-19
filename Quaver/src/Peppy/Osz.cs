@@ -34,7 +34,8 @@ namespace Quaver.Peppy
                 InitialDirectory = "c:\\",
                 Filter = "Peppy Beatmap Set (*.osz)|*.osz",
                 FilterIndex = 0,
-                RestoreDirectory = true
+                RestoreDirectory = true,
+                Multiselect = true
             };
 
             // If the dialog couldn't be shown, that's an issue, so we'll return for now.
@@ -44,21 +45,20 @@ namespace Quaver.Peppy
             // Proceed to extract and convert the map, show loading screen.
             GameBase.GameStateManager.AddState(new MapImportLoadingState());
 
+
+            var oldMaps = GameBase.Beatmaps;
+
             // Run the converter for all file names
             Task.Run(() =>
             {
-                ConvertOsz(openFileDialog.FileName);
+                for (var i = 0; i < openFileDialog.FileNames.Length; i++)
+                    ConvertOsz(openFileDialog.FileNames[i], i);
 
             // When all the maps have been converted, select the last imported map and make that the selected one.
-            }).ContinueWith(async t =>
+            }).ContinueWith(t =>
             {
                 // Update the selected beatmap with the new one.
                 // This button should only be on the song select state, so no need to check for states here.
-                var oldMaps = GameBase.Beatmaps;
-
-                // Load the beatmaps again automatically.
-                await GameBase.LoadAndSetBeatmaps();
-
                 var newMap = GameBase.Beatmaps.Where(x => !oldMaps.ContainsKey(x.Key))
                     .ToDictionary(x => x.Key, x => x.Value);
 
@@ -109,13 +109,13 @@ namespace Quaver.Peppy
         ///     Responsible for converting a .osz file to a new song directory full of .qua
         /// </summary>
         /// <param name="fileName"></param>
-        private static void ConvertOsz(string fileName)
+        private static void ConvertOsz(string fileName, int num)
         {
             // Extract the .osu & relevant audio files, and attempt to convert them.
             // Once fully converted, create a new directory in the songs folder and 
             // tell GameBase that the import queue is ready. Depending on the current state,
             // we may import them automatically.
-            var extractPath = $@"{Config.Configuration.DataDirectory}/Temp/0";
+            var extractPath = $@"{Config.Configuration.DataDirectory}/Temp/{num}";
 
             try
             {
@@ -176,6 +176,7 @@ namespace Quaver.Peppy
                     }
                 }
 
+                Task.Run(async () => await GameBase.LoadAndSetBeatmaps()).Wait();
                 Logger.Log($".osz has been successfully converted.", Color.Cyan, 2f);
             }
             catch (Exception e)
