@@ -9,6 +9,7 @@ using ManagedBass;
 using Ionic.Zip;
 using Microsoft.Xna.Framework;
 using Quaver.Beatmaps;
+using Quaver.Database;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.GameState.States;
@@ -45,9 +46,6 @@ namespace Quaver.Peppy
             // Proceed to extract and convert the map, show loading screen.
             GameBase.GameStateManager.AddState(new MapImportLoadingState());
 
-
-            var oldMaps = GameBase.Beatmaps;
-
             // Run the converter for all file names
             Task.Run(() =>
             {
@@ -55,8 +53,13 @@ namespace Quaver.Peppy
                     ConvertOsz(openFileDialog.FileNames[i], i);
 
             // When all the maps have been converted, select the last imported map and make that the selected one.
-            }).ContinueWith(t =>
+            }).ContinueWith(async t =>
             {
+                var oldMaps = GameBase.Beatmaps;
+
+                // Import all the maps to the db
+                await GameBase.LoadAndSetBeatmaps();
+
                 // Update the selected beatmap with the new one.
                 // This button should only be on the song select state, so no need to check for states here.
                 var newMap = GameBase.Beatmaps.Where(x => !oldMaps.ContainsKey(x.Key))
@@ -176,7 +179,6 @@ namespace Quaver.Peppy
                     }
                 }
 
-                Task.Run(async () => await GameBase.LoadAndSetBeatmaps()).Wait();
                 Logger.Log($".osz has been successfully converted.", Color.Cyan, 2f);
             }
             catch (Exception e)
