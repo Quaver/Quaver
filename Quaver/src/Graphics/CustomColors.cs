@@ -37,5 +37,15 @@ namespace Quaver.Graphics
         public static readonly Color JudgeMiss = new Color(255, 0, 0, 1);
 
         public static readonly Color[] JudgeColors = new Color[6] { JudgeMarv, JudgePerf, JudgeGreat, JudgeGood, JudgeOkay, JudgeMiss };
+
+        public static readonly Color GradeSSSS = new Color(255, 255, 255, 1);
+        public static readonly Color GradeSSS = new Color(255, 255, 255, 1);
+        public static readonly Color GradeSS = new Color(255, 255, 125, 1);
+        public static readonly Color GradeS = new Color(255, 255, 0, 1);
+        public static readonly Color GradeA = new Color(0, 255, 0, 1);
+        public static readonly Color GradeB = new Color(0, 30, 255, 1);
+        public static readonly Color GradeC = new Color(255, 0, 255, 1);
+        public static readonly Color GradeD = new Color(255, 70, 0, 1);
+        public static readonly Color GradeF = new Color(255, 0, 0, 1);
     }
 }
