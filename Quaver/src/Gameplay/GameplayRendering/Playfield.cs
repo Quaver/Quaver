@@ -90,6 +90,11 @@ namespace Quaver.Gameplay.GameplayRendering
         /// </summary>
         private Texture2D[] JudgeImages { get; set; }
 
+        /// <summary>
+        ///     When the JudgeSprite gets updated, it'll update JudgeSprite.PositionY to this variable.
+        /// </summary>
+        private float JudgeHitOffset { get; set; }
+
         private int PriorityJudgeImage { get; set; } = 0;
         private double PriorityJudgeLength { get; set; }
 
@@ -192,6 +197,7 @@ namespace Quaver.Gameplay.GameplayRendering
                 //todo: replace 40 with skin.ini value
                 JudgeSizes[i] = new Vector2(JudgeImages[i].Width, JudgeImages[i].Height) * 40f * (float)GameBase.WindowYRatio / JudgeImages[i].Height;
             }
+            JudgeHitOffset = -5f * (float)GameBase.WindowYRatio;
 
             //TODO: add judge scale
             JudgeSprite = new Sprite()
@@ -287,7 +293,7 @@ namespace Quaver.Gameplay.GameplayRendering
                 PriorityJudgeLength = 0;
                 PriorityJudgeImage = 0;
             }
-            dt = Math.Min(dt / 30, 1);
+            var tween = Math.Min(dt / 30, 1);
 
             // Update receptors
             for (var i = 0; i < GameBase.SelectedBeatmap.Qua.KeyCount; i++)
@@ -295,7 +301,7 @@ namespace Quaver.Gameplay.GameplayRendering
                 var receptorSizeOffset = (ReceptorCurrentSize[i] - 1) * PlayfieldObjectSize / 2f;
 
                 // Update receptor Size/Position
-                ReceptorCurrentSize[i] = Util.Tween(ReceptorTargetSize[i], ReceptorCurrentSize[i], dt);
+                ReceptorCurrentSize[i] = Util.Tween(ReceptorTargetSize[i], ReceptorCurrentSize[i], tween);
                 Receptors[i].Size = Vector2.One * ReceptorCurrentSize[i] * PlayfieldObjectSize;
                 Receptors[i].PositionX = ReceptorXPosition[i] - receptorSizeOffset;
                 Receptors[i].PositionY = ReceptorYOffset - receptorSizeOffset;
@@ -304,14 +310,15 @@ namespace Quaver.Gameplay.GameplayRendering
             // Update Offset Indicators
             foreach (var sprite in OffsetIndicatorsSprites)
             {
-                sprite.Alpha = Util.Tween(0, sprite.Alpha, dt / 35);
+                sprite.Alpha = Util.Tween(0, sprite.Alpha, tween/30);
             }
 
             // Update Judge Alpha
+            JudgeSprite.PositionY = Util.Tween(0, JudgeSprite.PositionY, tween/2);
             if (AlphaHold > 500 && PriorityJudgeLength <= 0)
             {
-                JudgeSprite.Alpha = Util.Tween(0, JudgeSprite.Alpha, dt / 4);
-                ComboText.Alpha = Util.Tween(0, ComboText.Alpha, dt / 4);
+                JudgeSprite.Alpha = Util.Tween(0, JudgeSprite.Alpha, tween/10);
+                ComboText.Alpha = Util.Tween(0, ComboText.Alpha, tween/10);
             }
 
             //Update Playfield + Children
@@ -338,8 +345,8 @@ namespace Quaver.Gameplay.GameplayRendering
             if (index >= PriorityJudgeImage || PriorityJudgeLength <= 0)
             {
                 // Priority Judge Image to show
-                if (index < 2) PriorityJudgeLength = 100;
-                else if (index == 2) PriorityJudgeLength = 200;
+                if (index < 2) PriorityJudgeLength = 50;
+                else if (index == 2) PriorityJudgeLength = 100;
                 else if (index == 3) PriorityJudgeLength = 300;
                 else PriorityJudgeLength = 500;
                 PriorityJudgeImage = index;
@@ -347,6 +354,7 @@ namespace Quaver.Gameplay.GameplayRendering
                 // Update judge sprite
                 JudgeSprite.Size = JudgeSizes[index];
                 JudgeSprite.Image = JudgeImages[index];
+                JudgeSprite.PositionY = JudgeHitOffset;
             }
 
             if (index != 5 && !release && offset != null)
