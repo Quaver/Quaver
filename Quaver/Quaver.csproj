@@ -188,6 +188,9 @@
     <Compile Include="src\QuaFile\Qua.cs" />
     <Compile Include="src\QuaFile\SliderVelocity.cs" />
     <Compile Include="src\QuaFile\TimingPoint.cs" />
+    <Compile Include="src\Replays\KeyPressState.cs" />
+    <Compile Include="src\Replays\Replay.cs" />
+    <Compile Include="src\Replays\ReplayFrame.cs" />
     <Compile Include="src\Scores\LocalScore.cs" />
     <Compile Include="src\Skins\Skin.cs" />
     <Compile Include="src\Tests\Audio.Test.cs" />
