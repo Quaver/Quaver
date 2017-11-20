@@ -28,6 +28,11 @@ namespace Quaver.Scores
         public string BeatmapMd5 { get; set; }
 
         /// <summary>
+        ///     The name of the player who set the score
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         ///     The date and time the score was achieved
         /// </summary>
         public string DateTime { get; set; }
