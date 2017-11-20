@@ -15,7 +15,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
-
+using Quaver.Modifiers;
 using Quaver.Peppy;
 
 namespace Quaver.GameState.States
@@ -50,6 +50,9 @@ namespace Quaver.GameState.States
         public void Initialize()
         {
             GameBase.GameWindow.Title = "Quaver";
+
+            // Remove speed mods upon going to the main menu so songs can be played at normal speed.
+            ModManager.RemoveSpeedMods();
 
             // Initialize the main menu's audio player.
             MenuAudioPlayer.Initialize();
