@@ -137,6 +137,12 @@ namespace Quaver.Gameplay.GameplayRendering
                 };
             }
 
+            GradeProgressBar = new BarDisplay(1f, AccuracyBox.SizeX, new Color[] { Color.Blue })
+            {
+                PositionY = AccuracyBox.SizeY+10,
+                Parent = AccuracyBox
+            };
+
             ScoreText = new TextBoxSprite()
             {
                 Parent = AccuracyBox,
