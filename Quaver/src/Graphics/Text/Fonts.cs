@@ -15,6 +15,6 @@ namespace Quaver.Graphics.Text
         public static SpriteFont Medium24 { get; } = GameBase.Content.Load<SpriteFont>("Medium24");
         public static SpriteFont Medium48 { get; } = GameBase.Content.Load<SpriteFont>("Medium48");
         public static SpriteFont Bold12 { get; } = GameBase.Content.Load<SpriteFont>("Bold12");
-        public static SpriteFont Test { get; } = GameBase.Content.Load<SpriteFont>("testFont");
+        public static SpriteFont Test { get; } = GameBase.Content.Load<SpriteFont>("Medium12");
     }
 }

@@ -295,7 +295,6 @@
     <None Include="app.manifest" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Resource1.resx" />
-    <EmbeddedResource Include="Resources\Fonts\testFont.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\column-bgmask.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\column-hitlighting.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\column-timingbar.xnb" />
@@ -328,6 +327,9 @@
     <EmbeddedResource Include="Resources\Fonts\Medium16.xnb" />
     <EmbeddedResource Include="Resources\Fonts\Medium24.xnb" />
     <EmbeddedResource Include="Resources\Fonts\Medium48.xnb" />
+    <None Include="Resources\UI\bar-cap.xnb" />
+    <None Include="Resources\UI\graph-axis-long.xnb" />
+    <None Include="Resources\UI\graph-axis-short.xnb" />
     <None Include="x64\libbass.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
