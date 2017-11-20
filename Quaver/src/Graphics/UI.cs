@@ -29,6 +29,8 @@ namespace Quaver.Graphics
         /// </summary>
         internal Texture2D HollowBox { get; set; }
 
+        internal Texture2D BarCap { get; set; }
+
         /// <summary>
         ///     Loads all the ui elements into content
         /// </summary>
@@ -38,6 +40,7 @@ namespace Quaver.Graphics
             SetSelectMask = GameBase.Content.Load<Texture2D>("set-select-mask");
             BlankBox = GameBase.Content.Load<Texture2D>("blank-box");
             HollowBox = GameBase.Content.Load<Texture2D>("hollow-box");
+            BarCap = GameBase.Content.Load<Texture2D>("bar-cap");
         }
     }
 }
