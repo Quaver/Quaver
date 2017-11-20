@@ -127,8 +127,9 @@ namespace Quaver.Gameplay.GameplayRendering
                 if (PlayScreen.Timing.CurrentSongTime > HitObjectPool[i].StartTime + PlayScreen.ScoreManager.HitWindow[4])
                 {
                     //Track note miss with ScoreManager
-                    //LogManager.QuickLog("NOTE INDEX: MISSED NOTE " + (HitObjectPool[i].KeyLane - 1), Color.IndianRed, 0.5f);
                     PlayScreen.ScoreManager.Count(5);
+                    PlayScreen.GameplayUI.UpdateAccuracyBox(5);
+                    PlayScreen.Playfield.UpdateJudge(5);
 
                     //If HitObject is an LN, kill it
                     if (HitObjectPool[i].IsLongNote)

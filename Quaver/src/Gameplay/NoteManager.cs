@@ -57,6 +57,8 @@ namespace Quaver.Gameplay
                         {
                             //Score manager stuff
                             PlayScreen.ScoreManager.Count(i, false, PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime);
+                            PlayScreen.GameplayUI.UpdateAccuracyBox(i);
+                            PlayScreen.Playfield.UpdateJudge(i, false, PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime);
 
                             // If the player is spamming
                             if (i >= 3)
@@ -112,12 +114,16 @@ namespace Quaver.Gameplay
                     if (releaseTiming > -1)
                     {
                         PlayScreen.ScoreManager.Count(i, true);
+                        PlayScreen.GameplayUI.UpdateAccuracyBox(i);
+                        PlayScreen.Playfield.UpdateJudge(i, true);
                         PlayScreen.NoteRendering.KillHold(noteIndex,true);
                     }
                     //If LN has been missed
                     else
                     {
                         PlayScreen.ScoreManager.Count(4, true);
+                        PlayScreen.GameplayUI.UpdateAccuracyBox(4);
+                        PlayScreen.Playfield.UpdateJudge(4, true);
                         PlayScreen.NoteRendering.KillHold(noteIndex);
                     }
                 }
