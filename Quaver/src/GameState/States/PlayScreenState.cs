@@ -93,9 +93,6 @@ namespace Quaver.GameState.States
             // Update Discord Presence
             GameBase.ChangeDiscordPresenceGameplay(false);
 
-            // Clear score manager TODO: get total notes + RELEASE LN count
-            ScoreManager.Initialize(GameBase.SelectedBeatmap.Qua.HitObjects.Count);
-
             // Initialize Gameplay
             InitializeGameplay();
 
@@ -224,7 +221,17 @@ namespace Quaver.GameState.States
             NoteRendering.Initialize(this);
             GameplayUI.Initialize(this);
             NoteManager.Initialize(this);
-            ScoreManager.Initialize(this);
+
+            //todo: temp
+            var count = 0;
+            var total = GameBase.SelectedBeatmap.Qua.HitObjects.Count;
+
+            foreach (var ho in GameBase.SelectedBeatmap.Qua.HitObjects)
+            {
+                if (ho.EndTime > ho.StartTime) count++;
+            }
+
+            ScoreManager.Initialize(total + count); //TODO: ADD RELEASE COUNTS AS WELL
         }
     }
 }
