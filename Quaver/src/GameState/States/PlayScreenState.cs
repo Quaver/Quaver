@@ -93,8 +93,8 @@ namespace Quaver.GameState.States
             // Update Discord Presence
             GameBase.ChangeDiscordPresenceGameplay(false);
 
-            // Clear score manager
-            ScoreManager.Initialize(this);
+            // Clear score manager TODO: get total notes + RELEASE LN count
+            ScoreManager.Initialize(GameBase.SelectedBeatmap.Qua.HitObjects.Count);
 
             // Initialize Gameplay
             InitializeGameplay();
