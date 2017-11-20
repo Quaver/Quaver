@@ -118,9 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="testFont" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Fonts\testFont.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="column-bgmask" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Skin\column-bgmask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -219,5 +216,17 @@
   </data>
   <data name="Medium48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Fonts\Medium48.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-cap" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\UI\bar-cap.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="blank-box1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\UI\blank-box.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="graph-axis-long" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\UI\graph-axis-long.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="graph-axis-short" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\UI\graph-axis-short.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
