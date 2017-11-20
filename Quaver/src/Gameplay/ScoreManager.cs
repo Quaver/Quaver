@@ -36,7 +36,7 @@ namespace Quaver.Gameplay
         //Accuracy Variables
         internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, 25, -75, -100 };
         internal float[] HitWindow { get; } = new float[5] { 20, 44, 76, 106, 130 };
-        internal int[] Grade { get; } = new int[8] { 70, 80, 85, 90, 95, 99, 100, 100 };
+        internal int[] Grade { get; } = new int[8] { 60, 70, 80, 90, 95, 99, 100, 100 };
 
         //Accuracy Scoring
         internal double Accuracy { get; set; }
@@ -61,14 +61,19 @@ namespace Quaver.Gameplay
                 MsDeviance.Add((double)offset);
             }
 
+            //Add JudgeSpread to Accuracy
             Accuracy = 0;
             RelativeAcc = 0;
             for (var i=0; i<6; i++)
             {
                 Accuracy += (JudgePressSpread[i] + JudgeReleaseSpread[i]) * HitWeighting[i];
+                if (i < 5) RelativeAcc += (JudgePressSpread[i] + JudgeReleaseSpread[i]) * HitWeighting[i];
             }
+            RelativeAcc += (TotalJudgeCount - JudgeCount) * HitWeighting[5];
 
-            Accuracy = Math.Max(Accuracy/(JudgeCount * 100),0);
+            //Average Accuracy
+            Accuracy = Math.Max(Accuracy / (JudgeCount * 100), 0);
+            RelativeAcc = Math.Max(RelativeAcc / (TotalJudgeCount * 100), -100);
 
             //todo: actual score calculation
             Score = (int)(1000000f * JudgeCount / 20000f);
@@ -97,6 +102,7 @@ namespace Quaver.Gameplay
         internal void Initialize(int Count)
         {
             Accuracy = 0;
+            RelativeAcc = 0;
             ConsistancyMultiplier = 0;
             Combo = 0;
             Score = 0;
@@ -110,9 +116,31 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Convert RelativeAcc to display how far until next grade on graph scale.
         /// </summary>
-        internal void RelativeAccGetScale()
+        internal float RelativeAccGetScale()
         {
+            var index = -1;
+            for (var i=0; i<8; i++)
+            {
+                if (RelativeAcc * 100 >= Grade[i]) index = i;
+                else break;
+            }
 
+            //Console.WriteLine(RelativeAcc*100);
+            if (index > 0)
+            {
+                //Console.WriteLine(index +": "+(((float)(100 * RelativeAcc) - Grade[index]) / (float)(Grade[index] - Grade[index - 1])));
+                return ((float)(100 * RelativeAcc) - Grade[index])/(float)(Grade[index] - Grade[index - 1]);
+            }
+            else if (index == 0)
+            {
+                //Console.WriteLine(index + ": " + (((float)(100 * RelativeAcc) - Grade[0]) / (float)(Grade[1] - Grade[0])));
+                return ((float)(100 * RelativeAcc) - Grade[0]) / (float)(Grade[1] - Grade[0]);
+            }
+            else
+            {
+                //Console.WriteLine("0: "+((float)(100 * Math.Max(RelativeAcc, 0)) / (float)Grade[0]));
+                return (float)(100 * Math.Max(RelativeAcc, 0))/(float)Grade[0];
+            }
         }
     }
 }

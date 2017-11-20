@@ -45,11 +45,13 @@ namespace Quaver.Gameplay.GameplayRendering
 
         private BarDisplay GradeProgressBar { get; set; }
 
+        private PlayScreenState PlayScreen { get; set; }
+
         public void Initialize(PlayScreenState playScreen)
         {
             // Reference Variables
             ScoreManager = playScreen.ScoreManager;
-            //PlayScreen = playScreen;
+            PlayScreen = playScreen;
             CurrentScore = 0;
             CurrentAccuracy = 0;
             NoteHolding = false;
@@ -137,7 +139,7 @@ namespace Quaver.Gameplay.GameplayRendering
                 };
             }
 
-            GradeProgressBar = new BarDisplay(1f, AccuracyBox.SizeX, new Color[] { Color.Blue, Color.Red, Color.Pink, Color.Green })
+            GradeProgressBar = new BarDisplay(1f, AccuracyBox.SizeX, new Color[] { Color.Red })
             {
                 PositionY = AccuracyBox.SizeY+10,
                 Parent = AccuracyBox
@@ -173,7 +175,6 @@ namespace Quaver.Gameplay.GameplayRendering
         internal void UpdateAccuracyBox(int index)
         {
             AccuracyCountText[index+1].Text = ScoreManager.JudgePressSpread[index] + " | " + ScoreManager.JudgeReleaseSpread[index];
-            //AccuracyCountText[0].Text = $"{ScoreManager.Accuracy * 100:0.00}%";
 
             //Calculate graph bars
             for (var i = 0; i < 6; i++)
@@ -185,7 +186,7 @@ namespace Quaver.Gameplay.GameplayRendering
         public void Update(double dt)
         {
             // Update Accuracy Graph Bars
-            double tween = Math.Min(dt / 100, 1);
+            double tween = Math.Min(dt / 50, 1);
             for (var i = 0; i < 6; i++)
             {
                 AccuracyGraphBar[i].ScaleX = Util.Tween(AccuracyGraphTargetScale[i], AccuracyGraphBar[i].ScaleX, tween);
@@ -194,7 +195,7 @@ namespace Quaver.Gameplay.GameplayRendering
             // If there's an active long note, the score will have a "slider" effect (+1 point every 25ms), otherwise it will tween normally
             if (NoteHolding)
             {
-                CurrentScore += tween*4;
+                CurrentScore += tween*2;
                 if (CurrentScore > ScoreManager.Score) CurrentScore = ScoreManager.Score;
             }
             else
@@ -207,8 +208,10 @@ namespace Quaver.Gameplay.GameplayRendering
             ScoreText.Text = Util.ScoreToString((int)CurrentScore);
 
             // Update Accuracy Text
-            CurrentAccuracy = Util.Tween((float)ScoreManager.Accuracy, (float)CurrentAccuracy, dt/10);
+            CurrentAccuracy = Util.Tween((float)ScoreManager.Accuracy, (float)CurrentAccuracy, tween);
             AccuracyCountText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
+            GradeProgressBar.BarScale[0] = Util.Tween(GradeProgressBar.BarScale[0], PlayScreen.ScoreManager.RelativeAccGetScale(), tween);
+            //GradeProgressBar.BarSpriteMiddle[0].Tint = CustomColors.gra
 
             // Update Boundary
             Boundary.Update(dt);   
