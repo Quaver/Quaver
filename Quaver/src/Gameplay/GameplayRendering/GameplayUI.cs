@@ -43,6 +43,8 @@ namespace Quaver.Gameplay.GameplayRendering
 
         private ScoreManager ScoreManager { get; set; }
 
+        private BarDisplay GradeProgressBar { get; set; }
+
         public void Initialize(PlayScreenState playScreen)
         {
             // Reference Variables
