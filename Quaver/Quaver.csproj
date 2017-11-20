@@ -174,7 +174,7 @@
     <Compile Include="src\Modifiers\ModIdentifier.cs" />
     <Compile Include="src\Modifiers\ModManager.cs" />
     <Compile Include="src\Modifiers\ModType.cs" />
-    <Compile Include="src\Modifiers\NoSliderVelocities.cs" />
+    <Compile Include="src\Modifiers\Mods\NoSliderVelocities.cs" />
     <Compile Include="src\Modifiers\Mods\Speed05X.cs" />
     <Compile Include="src\Notifications\Notification.cs" />
     <Compile Include="src\Graphics\CustomColors.cs" />

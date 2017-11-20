@@ -143,8 +143,15 @@ namespace Quaver.Modifiers
         /// </summary>
         public static void RemoveSpeedMods()
         {
-            GameBase.CurrentGameModifiers.RemoveAll(x => x.Type == ModType.Speed);
-            GameBase.GameClock = 1.0f;
+            try
+            {
+                GameBase.CurrentGameModifiers.RemoveAll(x => x.Type == ModType.Speed);
+                GameBase.GameClock = 1.0f;
+                GameBase.SelectedBeatmap.Song.ChangeSongSpeed();
+            }
+            catch (Exception e)
+            {
+            }
         }
     }
 }
