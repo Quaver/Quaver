@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,9 +49,11 @@ namespace Quaver.Graphics.Sprite
 
         private Sprite BarAxisMidBox { get; set; }
 
+        private Sprite BarAxisTopCorner { get; set; }
         private Sprite BarAxisTopBox { get; set; }
         private Sprite BarAxisTopCap { get; set; }
 
+        private Sprite BarAxisBotCorner { get; set; }
         private Sprite BarAxisBotBox { get; set; }
         private Sprite BarAxisBotCap { get; set; }
 
@@ -64,23 +67,33 @@ namespace Quaver.Graphics.Sprite
         public BarDisplay(float sScale, float length, Color[] BarColors, bool Vertical = false)
         {
             var bsize = BarColors.Length;
+            var sscale = BarDefaultSize * sScale;
             // Create Boundary Size and variables
             Length = length;
             SpriteScale = sScale;
             SizeX = length;
             SizeY = (((BarSpacing + BarDefaultSize) * bsize) + BarDefaultSize) * sScale;
 
-            BarScale = new float[bsize];
             _barScale = new float[bsize];
             BarSpriteMiddle = new Sprite[bsize];
             BarSpriteBegin = new Sprite[bsize];
             BarSpriteEnd = new Sprite[bsize];
 
             // Create Bar Axis
+
+            // Bar Axis Bot
+            BarAxisBotCorner = new Sprite()
+            {
+                Image = GameBase.UI.BarCorner,
+                Size = Vector2.One * sscale,
+                Parent = this
+            };
+
             BarAxisBotBox = new Sprite()
             {
-                SizeX = BarDefaultSize * sScale,
-                SizeY = (((BarSpacing + BarDefaultSize) * bsize) + BarDefaultSize) * sScale,
+                SizeX = sscale,
+                SizeY = (((BarSpacing + BarDefaultSize) * bsize)) * sScale,
+                PositionY = sscale,
                 Parent = this
 
             };
@@ -88,25 +101,39 @@ namespace Quaver.Graphics.Sprite
             BarAxisBotCap = new Sprite()
             {
                 Image = GameBase.UI.BarCap,
-                Size = Vector2.One * BarDefaultSize * sScale,
-                PositionY = BarAxisBotBox.SizeY,
+                Size = Vector2.One * sscale,
+                PositionY = BarAxisBotBox.SizeY + sscale,
                 SpriteEffect = SpriteEffects.FlipVertically,
                 Parent = this
             };
 
+
+            // Bar Axis Mid
             BarAxisMidBox = new Sprite()
             {
                 SizeX = length - (2 * BarDefaultSize),
-                SizeY = BarDefaultSize * sScale,
+                SizeY = sscale,
                 PositionX = BarAxisBotBox.SizeX,
+                Parent = this
+            };
+
+
+            //Bar Axis Topp
+            BarAxisTopCorner = new Sprite()
+            {
+                Image = GameBase.UI.BarCorner,
+                Rotation = 90,
+                Size = Vector2.One * sscale,
+                PositionX = BarAxisMidBox.PositionX + BarAxisMidBox.SizeX,
                 Parent = this
             };
 
             BarAxisTopBox = new Sprite()
             {
-                PositionX = length - (BarDefaultSize * sScale),
-                SizeX = BarDefaultSize * sScale,
-                SizeY = BarAxisBotBox.SizeY,
+                SizeX = sscale,
+                SizeY = (((BarSpacing + BarDefaultSize) * bsize)) * sScale,
+                PositionY = sscale,
+                PositionX = BarAxisTopCorner.PositionX,
                 Parent = this
 
             };
@@ -115,8 +142,8 @@ namespace Quaver.Graphics.Sprite
             {
                 Image = GameBase.UI.BarCap,
                 PositionX = BarAxisTopBox.PositionX,
-                Size = Vector2.One * BarDefaultSize * sScale,
-                PositionY = BarAxisTopBox.SizeY,
+                Size = Vector2.One * sscale,
+                PositionY = BarAxisTopBox.SizeY + sscale,
                 SpriteEffect = SpriteEffects.FlipVertically,
                 Parent = this
             };
@@ -124,14 +151,16 @@ namespace Quaver.Graphics.Sprite
             // Create Bar Sprites
             for (var i = 0; i < bsize; i++)
             {
+                _barScale[i] = Util.Random(0, 1);
+
                 BarSpriteBegin[i] = new Sprite()
                 {
                     Image = GameBase.UI.BarCap,
                     Rotation = -90,
                     Tint = BarColors[i],
-                    PositionX = BarDefaultSize * sScale,
+                    PositionX = sscale,
                     PositionY = ((((BarSpacing + BarDefaultSize) * i) + BarDefaultSize) * sScale) + BarSpacing,
-                    Size = Vector2.One * BarDefaultSize * sScale,
+                    Size = Vector2.One * sscale,
                     Parent = this
                 };
 
@@ -141,7 +170,7 @@ namespace Quaver.Graphics.Sprite
                     PositionX = BarSpriteBegin[i].PositionX + BarSpriteBegin[i].SizeX,
                     PositionY = BarSpriteBegin[i].PositionY,
                     SizeX = 0,
-                    SizeY = BarDefaultSize * sScale,
+                    SizeY = sscale,
                     Parent = this
                 };
 
@@ -151,8 +180,8 @@ namespace Quaver.Graphics.Sprite
                     Rotation = 90,
                     Alignment = Alignment.TopRight,
                     Tint = BarColors[i],
-                    PositionX = BarDefaultSize * sScale,
-                    Size = Vector2.One * BarDefaultSize * sScale,
+                    PositionX = sscale,
+                    Size = Vector2.One * sscale,
                     Parent = BarSpriteMiddle[i]
                 };
             }
@@ -169,7 +198,7 @@ namespace Quaver.Graphics.Sprite
             BarChanged = false;
             for (var i = 0; i < BarSpriteMiddle.Length; i++)
             {
-                BarSpriteMiddle[i].SizeX = Length - (BarDefaultSize * SpriteScale * 4);
+                BarSpriteMiddle[i].SizeX = (Length - (BarDefaultSize * SpriteScale * 4)) * _barScale[i];
             }
         }
     }
