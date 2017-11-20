@@ -25,6 +25,7 @@ namespace Quaver.Gameplay
         internal int JudgeCount { get; set; }
 
         //Hit Tracking (ms deviance)
+        internal int TotalJudgeCount { get; set; }
         internal List<double> MsDeviance { get; set; }
 
         //Score tracking
@@ -33,7 +34,7 @@ namespace Quaver.Gameplay
         internal int Score { get; set; }
 
         //Accuracy Variables
-        internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, 25, -100, -200 };
+        internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, 25, -75, -100 };
         internal float[] HitWindow { get; } = new float[5] { 20, 44, 76, 106, 130 };
         internal int[] Grade { get; } = new int[8] { 70, 80, 85, 90, 95, 99, 100, 100 };
 
@@ -92,7 +93,8 @@ namespace Quaver.Gameplay
         /// <summary>
         ///     Clear and Initialize Scoring related variables
         /// </summary>
-        internal void Initialize(PlayScreenState playScreen)
+        /// <param name="Count"> Total amount of hitobjects + releases</param>
+        internal void Initialize(int Count)
         {
             Accuracy = 0;
             ConsistancyMultiplier = 0;
@@ -102,6 +104,15 @@ namespace Quaver.Gameplay
             JudgeReleaseSpread = new int[6];
             JudgePressSpread = new int[6];
             MsDeviance = new List<double>();
+            TotalJudgeCount = Count;
+        }
+
+        /// <summary>
+        ///     Convert RelativeAcc to display how far until next grade on graph scale.
+        /// </summary>
+        internal void RelativeAccGetScale()
+        {
+
         }
     }
 }
