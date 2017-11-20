@@ -16,7 +16,6 @@ namespace Quaver.Gameplay
     /// </summary>
     internal class ScoreManager
     {
-        internal PlayScreenState PlayScreen { get; set; }
         //Hit Timing Variables
         internal string[] JudgeNames { get; } = new string[6] { "MARV", "PERF", "GREAT", "GOOD", "OKAY", "MISS" };
 
@@ -33,12 +32,14 @@ namespace Quaver.Gameplay
         internal int Combo { get; set; }
         internal int Score { get; set; }
 
-        //Accuracy
-        internal double Accuracy { get; set; }
-        internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, 25, -100, -200};
+        //Accuracy Variables
+        internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, 25, -100, -200 };
+        internal float[] HitWindow { get; } = new float[5] { 20, 44, 76, 106, 130 };
+        internal int[] Grade { get; } = new int[8] { 70, 80, 85, 90, 95, 99, 100, 100 };
 
-        //Hit Window
-        internal float[] HitWindow { get; } = new float[5] { 20, 44, 76, 106, 130 }; //todo: create OD curve
+        //Accuracy Scoring
+        internal double Accuracy { get; set; }
+        internal double RelativeAcc { get; set; }
 
         /// <summary>
         /// This method is used to track and count scoring.
@@ -60,6 +61,7 @@ namespace Quaver.Gameplay
             }
 
             Accuracy = 0;
+            RelativeAcc = 0;
             for (var i=0; i<6; i++)
             {
                 Accuracy += (JudgePressSpread[i] + JudgeReleaseSpread[i]) * HitWeighting[i];
@@ -85,12 +87,6 @@ namespace Quaver.Gameplay
             }
 
             //Update Score
-
-            //log scores
-            PlayScreen.GameplayUI.UpdateAccuracyBox(index);
-
-            //Display stuff
-            PlayScreen.Playfield.UpdateJudge(index, release, offset);
         }
 
         /// <summary>
@@ -98,7 +94,6 @@ namespace Quaver.Gameplay
         /// </summary>
         internal void Initialize(PlayScreenState playScreen)
         {
-            PlayScreen = playScreen;
             Accuracy = 0;
             ConsistancyMultiplier = 0;
             Combo = 0;
