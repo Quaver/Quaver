@@ -137,7 +137,7 @@ namespace Quaver.Gameplay.GameplayRendering
                 };
             }
 
-            GradeProgressBar = new BarDisplay(1f, AccuracyBox.SizeX, new Color[] { Color.Blue })
+            GradeProgressBar = new BarDisplay(1f, AccuracyBox.SizeX, new Color[] { Color.Blue, Color.Red, Color.Pink, Color.Green })
             {
                 PositionY = AccuracyBox.SizeY+10,
                 Parent = AccuracyBox

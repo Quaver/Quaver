@@ -29,7 +29,15 @@ namespace Quaver.Graphics
         /// </summary>
         internal Texture2D HollowBox { get; set; }
 
+        /// <summary>
+        ///     bar-cap
+        /// </summary>
         internal Texture2D BarCap { get; set; }
+
+        /// <summary>
+        ///     bar-corner
+        /// </summary>
+        internal Texture2D BarCorner { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -41,6 +49,7 @@ namespace Quaver.Graphics
             BlankBox = GameBase.Content.Load<Texture2D>("blank-box");
             HollowBox = GameBase.Content.Load<Texture2D>("hollow-box");
             BarCap = GameBase.Content.Load<Texture2D>("bar-cap");
+            BarCorner = GameBase.Content.Load<Texture2D>("bar-corner");
         }
     }
 }

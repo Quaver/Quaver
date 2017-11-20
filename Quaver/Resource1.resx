@@ -193,9 +193,6 @@
   <data name="set-select-mask" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\set-select-mask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="blank-box" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\UI\blank-box.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="hollow-box" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\hollow-box.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -220,7 +217,10 @@
   <data name="bar-cap" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\bar-cap.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="blank-box1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="bar-corner" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\UI\bar-corner.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="blank-box" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\blank-box.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="graph-axis-long" type="System.Resources.ResXFileRef, System.Windows.Forms">
