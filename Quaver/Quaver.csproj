@@ -328,10 +328,10 @@
     <EmbeddedResource Include="Resources\Fonts\Medium16.xnb" />
     <EmbeddedResource Include="Resources\Fonts\Medium24.xnb" />
     <EmbeddedResource Include="Resources\Fonts\Medium48.xnb" />
-    <None Include="Resources\UI\bar-cap.xnb" />
-    <None Include="Resources\UI\bar-corner.xnb" />
-    <None Include="Resources\UI\graph-axis-long.xnb" />
-    <None Include="Resources\UI\graph-axis-short.xnb" />
+    <EmbeddedResource Include="Resources\UI\bar-cap.xnb" />
+    <EmbeddedResource Include="Resources\UI\bar-corner.xnb" />
+    <EmbeddedResource Include="Resources\UI\graph-axis-long.xnb" />
+    <EmbeddedResource Include="Resources\UI\graph-axis-short.xnb" />
     <None Include="x64\libbass.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
