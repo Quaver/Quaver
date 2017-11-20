@@ -118,12 +118,7 @@ namespace Quaver.Gameplay
         /// </summary>
         internal float RelativeAccGetScale()
         {
-            var index = -1;
-            for (var i=0; i<8; i++)
-            {
-                if (RelativeAcc * 100 >= Grade[i]) index = i;
-                else break;
-            }
+            var index = GetRelativeAccIndex();
 
             //Console.WriteLine(RelativeAcc*100);
             if (index > 0)
@@ -141,6 +136,21 @@ namespace Quaver.Gameplay
                 //Console.WriteLine("0: "+((float)(100 * Math.Max(RelativeAcc, 0)) / (float)Grade[0]));
                 return (float)(100 * Math.Max(RelativeAcc, 0))/(float)Grade[0];
             }
+        }
+
+        /// <summary>
+        ///     Get the index for the relative acc.
+        /// </summary>
+        /// <returns></returns>
+        internal int GetRelativeAccIndex()
+        {
+            var index = -1;
+            for (var i = 0; i < 8; i++)
+            {
+                if (RelativeAcc * 100 >= Grade[i]) index = i;
+                else break;
+            }
+            return index;
         }
     }
 }

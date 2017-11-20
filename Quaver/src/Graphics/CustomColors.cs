@@ -47,5 +47,7 @@ namespace Quaver.Graphics
         public static readonly Color GradeC = new Color(255, 0, 255, 1);
         public static readonly Color GradeD = new Color(255, 70, 0, 1);
         public static readonly Color GradeF = new Color(255, 0, 0, 1);
+
+        public static readonly Color[] GradeColors = new Color[9] { GradeF, GradeD, GradeC, GradeB, GradeA, GradeS, GradeSS, GradeSSS, GradeSSSS };
     }
 }
