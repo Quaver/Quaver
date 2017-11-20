@@ -130,6 +130,7 @@ namespace Quaver.GameState.States
             return new LocalScore
             {
                 BeatmapMd5 = BeatmapMd5,
+                Name = Configuration.Username,
                 DateTime = DateTime.Now.ToString(CultureInfo.InvariantCulture),
                 Score = ScoreData.Score,
                 Accuracy = ScoreData.Accuracy,
