@@ -211,7 +211,7 @@ namespace Quaver.Gameplay.GameplayRendering
             CurrentAccuracy = Util.Tween((float)ScoreManager.Accuracy, (float)CurrentAccuracy, tween);
             AccuracyCountText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
             GradeProgressBar.BarScale[0] = Util.Tween(GradeProgressBar.BarScale[0], PlayScreen.ScoreManager.RelativeAccGetScale(), tween);
-            //GradeProgressBar.BarSpriteMiddle[0].Tint = CustomColors.gra
+            GradeProgressBar.BarSpriteMiddle[0].Tint = CustomColors.GradeColors[PlayScreen.ScoreManager.GetRelativeAccIndex()+1];
 
             // Update Boundary
             Boundary.Update(dt);   
