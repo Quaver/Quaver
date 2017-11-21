@@ -233,7 +233,7 @@ namespace Quaver.Utility
         /// <returns></returns>
         internal static Rectangle Vector4ToRectangle(Vector4 vect)
         {
-            return new Rectangle((int)vect.X, (int)vect.Y, (int)vect.W, (int)vect.Z);
+            return new Rectangle((int)Math.Ceiling(vect.X-1), (int)Math.Ceiling(vect.Y), (int)Math.Ceiling(vect.W), (int)Math.Ceiling(vect.Z));
         }
 
         /// <summary>
