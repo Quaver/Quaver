@@ -108,6 +108,59 @@ namespace Quaver.Utility
         }
 
         /// <summary>
+        /// Returns an aligned rectangle within a boundary.
+        /// </summary>
+        /// <param name="objectAlignment">The alignment of the object.</param>
+        /// <param name="objectRect">The size of the object.</param>
+        /// <param name="boundary">The Rectangle of the boundary.</param>
+        /// <returns></returns>
+        internal static Vector4 DrawRect(Alignment objectAlignment, Vector4 objectRect, Vector4 boundary)
+        {
+            float alignX = 0;
+            float alignY = 0;
+
+            // Set the X-Alignment Scale
+            switch (objectAlignment)
+            {
+                case Alignment.BotCenter:
+                case Alignment.MidCenter:
+                case Alignment.TopCenter:
+                    alignX = 0.5f;
+                    break;
+                case Alignment.BotRight:
+                case Alignment.MidRight:
+                case Alignment.TopRight:
+                    alignX = 1f;
+                    break;
+                default:
+                    break;
+            }
+
+            // Set the Y-Alignment Scale
+            switch (objectAlignment)
+            {
+                case Alignment.MidLeft:
+                case Alignment.MidCenter:
+                case Alignment.MidRight:
+                    alignY = 0.5f;
+                    break;
+                case Alignment.BotLeft:
+                case Alignment.BotCenter:
+                case Alignment.BotRight:
+                    alignY = 1f;
+                    break;
+                default:
+                    break;
+            }
+
+            //Set X and Y Alignments
+            alignX = Align(alignX, objectRect.W, new Vector2(boundary.X, boundary.X + boundary.W), objectRect.X);
+            alignY = Align(alignY, objectRect.Z, new Vector2(boundary.Y, boundary.Y + boundary.Z), objectRect.Y);
+
+            return new Vector4(alignX, alignY, objectRect.W, objectRect.Z);
+        }
+
+        /// <summary>
         /// Generates A random float between 2 numbers.
         /// </summary>
         /// <param name="min"></param>
