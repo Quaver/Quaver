@@ -47,7 +47,7 @@ namespace Quaver
             };
 
             // Set the global window size
-            GameBase.Window = new Rectangle(0, 0, GameBase.GraphicsManager.PreferredBackBufferWidth, GameBase.GraphicsManager.PreferredBackBufferHeight);
+            GameBase.Window = new Vector4(0, 0, GameBase.GraphicsManager.PreferredBackBufferHeight, GameBase.GraphicsManager.PreferredBackBufferWidth);
 
             IsFixedTimeStep = false;
 

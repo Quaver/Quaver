@@ -65,6 +65,8 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         private Rectangle _renderRect;
 
+        private Vector4 _renderVect;
+
         /// <summary>
         ///     The tint this Sprite will inherit.
         /// </summary>
@@ -112,7 +114,7 @@ namespace Quaver.Graphics.Sprite
 
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
-            if (GameBase.Window.Intersects(GlobalRect2) && Visible)
+            if (Util.Vector4Intercepts(GlobalVect, GameBase.Window) && Visible)
             //{
                 GameBase.SpriteBatch.Draw(_image, _renderRect, null, _color, _rotation, _origin, SpriteEffect, 0f);
             //}
@@ -142,11 +144,11 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         private void RecalculateOrigin()
         {
-            var temp = GlobalVect;
-            temp.X = (GlobalVect.X + (GlobalVect.W / 2f));
-            temp.Y = (GlobalVect.Y + (GlobalVect.Z / 2f));
+            _renderVect = GlobalVect;
+            _renderVect.X = (GlobalVect.X + (GlobalVect.W / 2f));
+            _renderVect.Y = (GlobalVect.Y + (GlobalVect.Z / 2f));
 
-            _renderRect = Util.Vector4ToRectangle(temp);
+            _renderRect = Util.Vector4ToRectangle(_renderVect);
         }
     }
 }
