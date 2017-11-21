@@ -60,7 +60,9 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     The Rectangle of the rendered text inside the TextSprite.
         /// </summary>
-        private Rectangle GlobalTextRect { get; set; }
+        private Vector4 _globalTextVect = Vector4.Zero;
+
+        private Vector2 _textPos = Vector2.Zero;
 
         /// <summary>
         ///     The Local Rectangle of the rendered text inside the TextSprite. Used to reference Text Size.
@@ -118,26 +120,8 @@ namespace Quaver.Graphics.Text
 
         public override void Update(double dt)
         {
-            if (Changed)
-            {
-                //Update TextSize
-                _textSize = Font.MeasureString(Text);
+            if (Changed) UpdateText();
 
-                //Update TextRect
-                _textVect.W = _textSize.X;
-                _textVect.Z = _textSize.Y;
-
-                //Update GlobalTextRect
-                GlobalTextRect = Util.Vector4ToRectangle(Util.DrawRect(TextAlignment, _textVect, GlobalVect));
-
-                if (Multiline)
-                {
-                    MaxTextLines = (int) Math.Max(Math.Floor(SizeY / _textSize.Y),1); //TODO: update later
-                    _text = WrapText(Text, false);
-                }
-                else if (Textwrap)
-                    _text = WrapText(Text, true);
-            }
             base.Update(dt);
         }
 
@@ -148,10 +132,33 @@ namespace Quaver.Graphics.Text
         {
             //TODO: SpriteFont.MeasureString()
             //Draw itself if it is in the window
-            //if (GameBase.Window.Intersects(GlobalRect2) && Visible)
-                GameBase.SpriteBatch.DrawString(Font, _text, new Vector2(GlobalTextRect.X, GlobalTextRect.Y), _color);
+            if (Util.Vector4Intercepts(GameBase.Window, GlobalVect) && Visible)
+                GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color);
 
             base.Draw();
+        }
+
+        private void UpdateText()
+        {
+            //Update TextSize
+            _textSize = Font.MeasureString(Text);
+
+            //Update TextRect
+            _textVect.W = _textSize.X;
+            _textVect.Z = _textSize.Y;
+
+            //Update GlobalTextRect
+            _globalTextVect = Util.DrawRect(TextAlignment, _textVect, GlobalVect);
+            _textPos.X = _globalTextVect.X;
+            _textPos.Y = _globalTextVect.Y;
+
+            if (Multiline)
+            {
+                MaxTextLines = (int)Math.Max(Math.Floor(SizeY / _textSize.Y), 1); //TODO: update later
+                _text = WrapText(Text, false);
+            }
+            else if (Textwrap)
+                _text = WrapText(Text, true);
         }
 
         private string WrapText(string text, bool singleLine)

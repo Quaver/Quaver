@@ -54,6 +54,7 @@ namespace Quaver.Utility
             return Math.Min(boundary.X, boundary.Y) + ((Math.Abs(boundary.X - boundary.Y) - objectSize) * scale) + offset;
         }
 
+        /*
         /// <summary>
         /// Returns an aligned rectangle within a boundary.
         /// </summary>
@@ -105,7 +106,7 @@ namespace Quaver.Utility
             alignY = Align(alignY, objectRect.Height, new Vector2(boundary.Y, boundary.Y + boundary.Height), objectRect.Y);
 
             return new Rectangle((int)alignX, (int)alignY, objectRect.Width, objectRect.Height);
-        }
+        }*/
 
         /// <summary>
         /// Returns an aligned rectangle within a boundary.
@@ -160,6 +161,7 @@ namespace Quaver.Utility
             return new Vector4(alignX, alignY, objectRect.Z, objectRect.W);
         }
 
+        /*
         /// <summary>
         /// Returns an aligned rectangle within a boundary.
         /// </summary>
@@ -211,8 +213,9 @@ namespace Quaver.Utility
             alignY = Align(alignY, objectRect.Z, new Vector2(boundary.Y, boundary.Y + boundary.Height), objectRect.Y);
 
             return new Vector4(alignX, alignY, objectRect.Z, objectRect.W);
-        }
+        }*/
 
+            /*
         /// <summary>
         ///     Convert a Rectangle to Vector4 value
         /// </summary>
@@ -221,7 +224,7 @@ namespace Quaver.Utility
         internal static Vector4 RectangleToVector4(Rectangle rect)
         {
             return new Vector4(rect.X, rect.Y, rect.Height, rect.Width);
-        }
+        }*/
 
         /// <summary>
         ///     Convert a Vector4 to Rectangle value
