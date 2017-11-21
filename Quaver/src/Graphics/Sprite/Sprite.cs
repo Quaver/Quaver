@@ -115,7 +115,7 @@ namespace Quaver.Graphics.Sprite
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             if (Util.Vector4Intercepts(GlobalVect, GameBase.Window) && Visible)
-            //{
+                //{
                 GameBase.SpriteBatch.Draw(_image, _renderRect, null, _color, _rotation, _origin, SpriteEffect, 0f);
             //}
 
