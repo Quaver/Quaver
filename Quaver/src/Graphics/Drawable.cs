@@ -64,7 +64,7 @@ namespace Quaver.Graphics
             }
         }
         
-        
+        /*
         /// <summary>
         /// (Read-only) Returns the Drawable's GlobalRect.
         /// </summary>
@@ -73,7 +73,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// (Read-only) Returns the Drawable's LocalRect.
         /// </summary>
-        public Rectangle LocalRect2 { get => _localRect; }
+        public Rectangle LocalRect2 { get => _localRect; }*/
 
         /// <summary>
         /// (Read-only) Returns the Drawable's GlobalRect.
@@ -251,8 +251,8 @@ namespace Quaver.Graphics
             }
             else
             {
-                _scaleSize.X = GameBase.Window.Width * _scalePercent.X;
-                _scaleSize.Y = GameBase.Window.Height * _scalePercent.Y;
+                _scaleSize.X = GameBase.Window.W * _scalePercent.X;
+                _scaleSize.Y = GameBase.Window.Z * _scalePercent.Y;
             }
             _absoluteSize.X = _localSize.X + _scaleSize.X;
             _absoluteSize.Y = _localSize.Y + _scaleSize.Y;
