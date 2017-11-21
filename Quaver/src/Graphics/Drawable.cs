@@ -226,8 +226,8 @@ namespace Quaver.Graphics
             //Calculate Scale
             if (_parent != null)
             {
-                _localVect.W = _localSize.X + _parent._globalVect.W * _localScale.X;
-                _localVect.Z = _localSize.Y + _parent._globalVect.Z * _localScale.Y;
+                _localVect.W = _localSize.X + _parent.GlobalVect.W * _localScale.X;
+                _localVect.Z = _localSize.Y + _parent.GlobalVect.Z * _localScale.Y;
             }
             else
             {
@@ -237,7 +237,7 @@ namespace Quaver.Graphics
 
             //Update Global Rect
             if (_parent != null)
-                _globalVect = Util.DrawRect(Alignment, _localVect, Parent._globalVect);
+                _globalVect = Util.DrawRect(Alignment, _localVect, Parent.GlobalVect);
             else
                 _globalVect = Util.DrawRect(Alignment, _localVect, GameBase.Window);
 
