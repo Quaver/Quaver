@@ -29,7 +29,7 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     The scale for every bar sprite
         /// </summary>
-        private float[] BarScale { get; set; }
+        public float[] BarScale { get; set; }
 
         private Sprite BarAxisMidBox { get; set; }
 
