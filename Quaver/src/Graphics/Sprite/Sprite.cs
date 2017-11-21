@@ -112,10 +112,10 @@ namespace Quaver.Graphics.Sprite
 
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
-            if (GameBase.Window.Intersects(GlobalRect) && Visible)
-            {
+            if (GameBase.Window.Intersects(GlobalRect2) && Visible)
+            //{
                 GameBase.SpriteBatch.Draw(_image, _renderRect, null, _color, _rotation, _origin, SpriteEffect, 0f);
-            }
+            //}
 
             //Draw children
             base.Draw();
@@ -142,9 +142,11 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         private void RecalculateOrigin()
         {
-            _renderRect = GlobalRect;
-            _renderRect.X = (int)(GlobalRect.X + (GlobalRect.Width / 2f));
-            _renderRect.Y = (int)(GlobalRect.Y + (GlobalRect.Height / 2f));
+            var temp = GlobalVect;
+            temp.X = (GlobalVect.X + (GlobalVect.W / 2f));
+            temp.Y = (GlobalVect.Y + (GlobalVect.Z / 2f));
+
+            _renderRect = Util.Vector4ToRectangle(temp);
         }
     }
 }

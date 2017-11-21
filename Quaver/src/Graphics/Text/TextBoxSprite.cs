@@ -65,7 +65,7 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     The Local Rectangle of the rendered text inside the TextSprite. Used to reference Text Size.
         /// </summary>
-        private Rectangle _textRect;
+        private Vector4 _textVect;
 
         /// <summary>
         ///     The size of the rendered text in a single row.
@@ -124,11 +124,11 @@ namespace Quaver.Graphics.Text
                 _textSize = Font.MeasureString(Text);
 
                 //Update TextRect
-                _textRect.Width = (int) _textSize.X;
-                _textRect.Height = (int) _textSize.Y;
+                _textVect.W = _textSize.X;
+                _textVect.Z = _textSize.Y;
 
                 //Update GlobalTextRect
-                GlobalTextRect = Util.DrawRect(TextAlignment, _textRect, GlobalRect);
+                GlobalTextRect = Util.Vector4ToRectangle(Util.DrawRect(TextAlignment, _textVect, GlobalVect));
 
                 if (Multiline)
                 {
@@ -148,7 +148,7 @@ namespace Quaver.Graphics.Text
         {
             //TODO: SpriteFont.MeasureString()
             //Draw itself if it is in the window
-            if (GameBase.Window.Intersects(GlobalRect) && Visible)
+            //if (GameBase.Window.Intersects(GlobalRect2) && Visible)
                 GameBase.SpriteBatch.DrawString(Font, _text, new Vector2(GlobalTextRect.X, GlobalTextRect.Y), _color);
 
             base.Draw();

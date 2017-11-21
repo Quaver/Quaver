@@ -157,7 +157,103 @@ namespace Quaver.Utility
             alignX = Align(alignX, objectRect.W, new Vector2(boundary.X, boundary.X + boundary.W), objectRect.X);
             alignY = Align(alignY, objectRect.Z, new Vector2(boundary.Y, boundary.Y + boundary.Z), objectRect.Y);
 
-            return new Vector4(alignX, alignY, objectRect.W, objectRect.Z);
+            return new Vector4(alignX, alignY, objectRect.Z, objectRect.W);
+        }
+
+        /// <summary>
+        /// Returns an aligned rectangle within a boundary.
+        /// </summary>
+        /// <param name="objectAlignment">The alignment of the object.</param>
+        /// <param name="objectRect">The size of the object.</param>
+        /// <param name="boundary">The Rectangle of the boundary.</param>
+        /// <returns></returns>
+        internal static Vector4 DrawRect(Alignment objectAlignment, Vector4 objectRect, Rectangle boundary)
+        {
+            float alignX = 0;
+            float alignY = 0;
+
+            // Set the X-Alignment Scale
+            switch (objectAlignment)
+            {
+                case Alignment.BotCenter:
+                case Alignment.MidCenter:
+                case Alignment.TopCenter:
+                    alignX = 0.5f;
+                    break;
+                case Alignment.BotRight:
+                case Alignment.MidRight:
+                case Alignment.TopRight:
+                    alignX = 1f;
+                    break;
+                default:
+                    break;
+            }
+
+            // Set the Y-Alignment Scale
+            switch (objectAlignment)
+            {
+                case Alignment.MidLeft:
+                case Alignment.MidCenter:
+                case Alignment.MidRight:
+                    alignY = 0.5f;
+                    break;
+                case Alignment.BotLeft:
+                case Alignment.BotCenter:
+                case Alignment.BotRight:
+                    alignY = 1f;
+                    break;
+                default:
+                    break;
+            }
+
+            //Set X and Y Alignments
+            alignX = Align(alignX, objectRect.W, new Vector2(boundary.X, boundary.X + boundary.Width), objectRect.X);
+            alignY = Align(alignY, objectRect.Z, new Vector2(boundary.Y, boundary.Y + boundary.Height), objectRect.Y);
+
+            return new Vector4(alignX, alignY, objectRect.Z, objectRect.W);
+        }
+
+        /// <summary>
+        ///     Convert a Rectangle to Vector4 value
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        internal static Vector4 RectangleToVector4(Rectangle rect)
+        {
+            return new Vector4(rect.X, rect.Y, rect.Height, rect.Width);
+        }
+
+        /// <summary>
+        ///     Convert a Vector4 to Rectangle value
+        /// </summary>
+        /// <param name="vect"></param>
+        /// <returns></returns>
+        internal static Rectangle Vector4ToRectangle(Vector4 vect)
+        {
+            return new Rectangle((int)vect.X, (int)vect.Y, (int)vect.W, (int)vect.Z);
+        }
+
+        /// <summary>
+        ///     Check if a Vector2 point is inside a Vector4 "Rect"
+        /// </summary>
+        /// <param name="vect"></param>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        internal static bool Vector4Contains(Vector4 vect, Vector2 point)
+        {
+            return (point.X >= vect.X && point.X <= vect.X + vect.W && point.Y >= vect.Y && point.Y <= vect.Y + vect.Z);
+        }
+
+        /// <summary>
+        ///     Check if a Vector4 intercepts with another Vector4
+        /// </summary>
+        /// <param name="vect"></param>
+        /// <param name="check"></param>
+        /// <returns></returns>
+        internal static bool Vector4Intercepts(Vector4 vect, Vector4 check)
+        {
+            //todo: develop this later.
+            return false;
         }
 
         /// <summary>

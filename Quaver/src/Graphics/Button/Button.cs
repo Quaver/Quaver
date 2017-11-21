@@ -63,13 +63,16 @@ namespace Quaver.Graphics.Button
         /// </summary>
         public override void Update(double dt)
         {
+            // Check if moouse is over
+            var over = Util.Vector4Contains(GlobalVect, Util.PointToVector2(GameBase.MouseState.Position));
+
             //Click logic
             if (GameBase.MouseState.LeftButton == ButtonState.Pressed)
             {
                 if (!MouseClicked)
                 {
                     MouseClicked = true;
-                    if (GlobalRect.Contains(GameBase.MouseState.Position)) OnClicked();
+                    if (over) OnClicked();
                 }
             }
             else
@@ -78,7 +81,6 @@ namespace Quaver.Graphics.Button
             }
 
             //Animation
-            var over = GlobalRect.Contains(GameBase.MouseState.Position);
             if (over && !MouseHovered)
             {
                 MouseHovered = true;
