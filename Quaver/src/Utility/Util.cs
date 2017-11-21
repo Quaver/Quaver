@@ -244,16 +244,36 @@ namespace Quaver.Utility
             return (point.X >= vect.X && point.X <= vect.X + vect.W && point.Y >= vect.Y && point.Y <= vect.Y + vect.Z);
         }
 
+        /*
         /// <summary>
         ///     Check if a Vector4 intercepts with another Vector4
         /// </summary>
-        /// <param name="vect"></param>
-        /// <param name="check"></param>
+        /// <param name="vect1"></param>
+        /// <param name="vect2"></param>
         /// <returns></returns>
-        internal static bool Vector4Intercepts(Vector4 vect, Vector4 check)
+        internal static bool Vector4BorderIntercepts(Vector4 vect1, Vector4 vect2)
         {
-            //todo: develop this later.
-            return false;
+            if ((vect2.X > vect1.X && vect2.X < vect1.X + vect1.W) ||
+                (vect2.Y > vect1.Y && vect2.Y < vect1.Y + vect1.Z) ||
+                (vect2.X + vect2.W > vect1.X && vect2.X + vect2.W < vect1.X + vect1.W) ||
+                (vect2.Y + vect2.Z > vect1.Y && vect2.Y + vect2.Z < vect1.Y + vect1.Z)) return true;
+            else return false;
+            return true;
+        }*/
+
+        /// <summary>
+        ///     Check if a Vector4 intercepts with another Vector4
+        /// </summary>
+        /// <param name="vect1"></param>
+        /// <param name="vect2"></param>
+        /// <returns></returns>
+        internal static bool Vector4Intercepts(Vector4 vect1, Vector4 vect2)
+        {
+            if (!(vect1.X + vect1.W < vect2.X ||
+                vect1.X > vect2.X + vect2.W ||
+                vect1.Y + vect1.Z < vect2.Y ||
+                vect1.Y > vect2.Y + vect2.Z)) return true;
+            else return false;
         }
 
         /// <summary>

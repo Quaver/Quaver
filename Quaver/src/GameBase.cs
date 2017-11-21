@@ -89,12 +89,12 @@ namespace Quaver
         /// <summary>
         ///     The rectangle this game will be rendered onto
         /// </summary>
-        public static Rectangle Window { get; set; } = new Rectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight); //TODO: Automatically set this rectangle as windoow size
+        public static Vector4 Window { get; set; } = new Vector4(0, 0, Configuration.WindowHeight, Configuration.WindowWidth); //TODO: Automatically set this rectangle as windoow size
 
         /// <summary>
         ///     WindowHeight / WindowWidth ratio
         /// </summary>
-        public static double WindowYRatio { get; set; } = Window.Height / ReferenceResolution.Y;
+        public static double WindowYRatio { get; set; } = Window.Z / ReferenceResolution.Y;
 
         /// <summary>
         ///     The game's clock. Essentially it controls which speed songs are played at.
@@ -150,12 +150,12 @@ namespace Quaver
         public static void UpdateWindow(Point newSize)
         {
             //TODO: unfinished
-            Window = new Rectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight);
+            Window = new Vector4(0, 0, Configuration.WindowHeight, Configuration.WindowWidth);
             Rectangle mainWindow = GraphicsDevice.PresentationParameters.Bounds;
 
             //Align letterboxed window
             Window = Util.DrawRect(Alignment.MidCenter, Window, mainWindow);
-            WindowYRatio = Window.Height / ReferenceResolution.Y;
+            WindowYRatio = Window.Z / ReferenceResolution.Y;
         }
 
         /// <summary>

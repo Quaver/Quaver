@@ -130,18 +130,18 @@ namespace Quaver.Gameplay.GameplayRendering
             PlayfieldSize = ((PlayfieldObjectSize + ReceptorPadding) * GameBase.SelectedBeatmap.Qua.KeyCount) + (PlayfieldPadding * 2) - ReceptorPadding;
 
             // Calculate Config stuff
-            ReceptorYOffset = Config.Configuration.DownScroll ? GameBase.Window.Bottom - GameBase.LoadedSkin.ReceptorYOffset - PlayfieldObjectSize : GameBase.LoadedSkin.ReceptorYOffset;
+            ReceptorYOffset = Config.Configuration.DownScroll ? (int)GameBase.Window.Z + (int)GameBase.Window.Y - GameBase.LoadedSkin.ReceptorYOffset - PlayfieldObjectSize : GameBase.LoadedSkin.ReceptorYOffset;
 
             // Create playfield boundary
             BoundaryUnder = new Boundary()
             {
-                Size = new Vector2(PlayfieldSize, GameBase.Window.Height),
+                Size = new Vector2(PlayfieldSize, GameBase.Window.Z),
                 Alignment = Alignment.TopCenter
             };
 
             BoundaryOver = new Boundary()
             {
-                Size = new Vector2(PlayfieldSize, GameBase.Window.Height),
+                Size = new Vector2(PlayfieldSize, GameBase.Window.Z),
                 Alignment = Alignment.TopCenter
             };
 
