@@ -154,7 +154,7 @@ namespace Quaver
             Rectangle mainWindow = GraphicsDevice.PresentationParameters.Bounds;
 
             //Align letterboxed window
-            Window = Util.DrawRect(Alignment.MidCenter, Window, mainWindow);
+            //Window = Util.DrawRect(Alignment.MidCenter, Window, mainWindow);
             WindowYRatio = Window.Z / ReferenceResolution.Y;
         }
 
