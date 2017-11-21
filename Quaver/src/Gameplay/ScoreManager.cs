@@ -67,7 +67,7 @@ namespace Quaver.Gameplay
             for (var i=0; i<6; i++)
             {
                 Accuracy += (JudgePressSpread[i] + JudgeReleaseSpread[i]) * HitWeighting[i];
-                if (i < 5) RelativeAcc += (JudgePressSpread[i] + JudgeReleaseSpread[i]) * HitWeighting[i];
+                RelativeAcc += (JudgePressSpread[i] + JudgeReleaseSpread[i]) * HitWeighting[i];
             }
             RelativeAcc += (TotalJudgeCount - JudgeCount) * HitWeighting[5];
 
