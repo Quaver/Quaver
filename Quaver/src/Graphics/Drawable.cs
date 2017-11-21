@@ -19,14 +19,16 @@ namespace Quaver.Graphics
     {
         //Local variables
         internal bool Changed { get; set; }
-        private Rectangle _localRect;
-        private Rectangle _globalRect;
+        private Vector4 _localVect;
+        private Vector4 _globalVect;
         private Drawable _parent;
         private Vector2 _scaleSize;
         private Vector2 _scalePercent;
         private Vector2 _localSize;
         private Vector2 _absoluteSize;
         private Vector2 _localPosition;
+        private Rectangle _localRect = new Rectangle();
+        private Rectangle _globalRect = new Rectangle();
 
         /// <summary>
         /// The alignment of the sprite relative to it's parent.
@@ -61,16 +63,27 @@ namespace Quaver.Graphics
                 Changed = true;
             }
         }
-
+        
+        
         /// <summary>
         /// (Read-only) Returns the Drawable's GlobalRect.
         /// </summary>
-        public Rectangle GlobalRect { get => _globalRect; }
+        public Rectangle GlobalRect2 { get => _globalRect; }
 
         /// <summary>
         /// (Read-only) Returns the Drawable's LocalRect.
         /// </summary>
-        public Rectangle LocalRect { get => _localRect; }
+        public Rectangle LocalRect2 { get => _localRect; }
+
+        /// <summary>
+        /// (Read-only) Returns the Drawable's GlobalRect.
+        /// </summary>
+        public Vector4 GlobalVect { get => _globalVect; }
+
+        /// <summary>
+        /// (Read-only) Returns the Drawable's LocalRect.
+        /// </summary>
+        public Vector4 LocalVect { get => _localVect; }
 
         /// <summary>
         /// The scale of the object relative to its parent.
@@ -233,8 +246,8 @@ namespace Quaver.Graphics
             //Calculate Scale
             if (_parent != null)
             {
-                _scaleSize.X = _parent._globalRect.Width * _scalePercent.X;
-                _scaleSize.Y = _parent._globalRect.Height * _scalePercent.Y;
+                _scaleSize.X = _parent._globalVect.W * _scalePercent.X;
+                _scaleSize.Y = _parent._globalVect.Z * _scalePercent.Y;
             }
             else
             {
@@ -243,14 +256,17 @@ namespace Quaver.Graphics
             }
             _absoluteSize.X = _localSize.X + _scaleSize.X;
             _absoluteSize.Y = _localSize.Y + _scaleSize.Y;
-            _localRect.Width = (int)_absoluteSize.X;
-            _localRect.Height = (int)_absoluteSize.Y;
+            _localVect.W = _absoluteSize.X;
+            _localVect.Z = _absoluteSize.Y;
+
+            _localRect = Util.Vector4ToRectangle(_localVect);
+            _globalRect = Util.Vector4ToRectangle(_globalVect);
 
             //Update Global Rect
             if (_parent != null)
-                _globalRect = Util.DrawRect(Alignment, _localRect, Parent._globalRect);
+                _globalVect = Util.DrawRect(Alignment, _localVect, Parent._globalVect);
             else
-                _globalRect = Util.DrawRect(Alignment, _localRect, GameBase.Window);
+                _globalVect = Util.DrawRect(Alignment, _localVect, GameBase.Window);
 
             Children.ForEach(x => x.RecalculateRect());
         }
@@ -276,8 +292,8 @@ namespace Quaver.Graphics
         /// </summary>
         private void SetLocalPosition()
         {
-            _localRect.X = (int)_localPosition.X;
-            _localRect.Y = (int)_localPosition.Y;
+            _localVect.X = _localPosition.X;
+            _localVect.Y = _localPosition.Y;
             Changed = true;
         }
     }
