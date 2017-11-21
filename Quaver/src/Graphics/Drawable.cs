@@ -22,13 +22,8 @@ namespace Quaver.Graphics
         private Vector4 _localVect;
         private Vector4 _globalVect;
         private Drawable _parent;
-        private Vector2 _scaleSize;
-        private Vector2 _scalePercent;
-        private Vector2 _localSize;
-        private Vector2 _absoluteSize;
-        private Vector2 _localPosition;
-        private Rectangle _localRect = new Rectangle();
-        private Rectangle _globalRect = new Rectangle();
+        private Vector2 _localScale;
+        private Vector2 _localSize; //blok
 
         /// <summary>
         /// The alignment of the sprite relative to it's parent.
@@ -63,17 +58,6 @@ namespace Quaver.Graphics
                 Changed = true;
             }
         }
-        
-        /*
-        /// <summary>
-        /// (Read-only) Returns the Drawable's GlobalRect.
-        /// </summary>
-        public Rectangle GlobalRect2 { get => _globalRect; }
-
-        /// <summary>
-        /// (Read-only) Returns the Drawable's LocalRect.
-        /// </summary>
-        public Rectangle LocalRect2 { get => _localRect; }*/
 
         /// <summary>
         /// (Read-only) Returns the Drawable's GlobalRect.
@@ -90,11 +74,11 @@ namespace Quaver.Graphics
         /// </summary>
         public Vector2 Scale
         {
-            get => _scalePercent;
+            get => _localScale;
             set
             {
-                _scalePercent = value;
-                SetLocalSize();
+                _localScale = value;
+                Changed = true;
             }
         }
 
@@ -103,11 +87,11 @@ namespace Quaver.Graphics
         /// </summary>
         public float ScaleX
         {
-            get => _scalePercent.X;
+            get => _localScale.X;
             set
             {
-                _scalePercent.X = value;
-                SetLocalSize();
+                _localScale.X = value;
+                Changed = true;
             }
         }
 
@@ -116,18 +100,13 @@ namespace Quaver.Graphics
         /// </summary>
         public float ScaleY
         {
-            get => _scalePercent.Y;
+            get => _localScale.Y;
             set
             {
-                _scalePercent.Y = value;
-                SetLocalSize();
+                _localScale.Y = value;
+                Changed = true;
             }
         }
-
-        /// <summary>
-        /// (Read-only) The size of the object after it has been scaled.
-        /// </summary>
-        public Vector2 AbsoluteSize { get => new Vector2(_absoluteSize.X, _absoluteSize.Y); }
 
         /// <summary>
         /// Extention of the object's Rect in relation with size
@@ -138,7 +117,7 @@ namespace Quaver.Graphics
             set
             {
                 _localSize = value;
-                SetLocalSize();
+                Changed = true;
             }
         }
 
@@ -151,7 +130,7 @@ namespace Quaver.Graphics
             set
             {
                 _localSize.X = value;
-                SetLocalSize();
+                Changed = true;
             }
         }
 
@@ -164,7 +143,7 @@ namespace Quaver.Graphics
             set
             {
                 _localSize.Y = value;
-                SetLocalSize();
+                Changed = true;
             }
         }
 
@@ -173,11 +152,12 @@ namespace Quaver.Graphics
         /// </summary>
         public Vector2 Position
         {
-            get => _localPosition;
+            get => new Vector2(_localVect.X, _localVect.Y);
             set
             {
-                _localPosition = value;
-                SetLocalPosition();
+                _localVect.X = value.X;
+                _localVect.Y = value.Y;
+                Changed = true;
             }
         }
 
@@ -186,11 +166,11 @@ namespace Quaver.Graphics
         /// </summary>
         public float PositionX
         {
-            get => _localPosition.X;
+            get => _localVect.X;
             set
             {
-                _localPosition.X = value;
-                SetLocalPosition();
+                _localVect.X = value;
+                Changed = true;
             }
         }
 
@@ -199,11 +179,11 @@ namespace Quaver.Graphics
         /// </summary>
         public float PositionY
         {
-            get => _localPosition.Y;
+            get => _localVect.Y;
             set
             {
-                _localPosition.Y = value;
-                SetLocalPosition();
+                _localVect.Y = value;
+                Changed = true;
             }
         }
 
@@ -241,26 +221,19 @@ namespace Quaver.Graphics
         /// <summary>
         /// This method will be called everytime a property of this object gets updated.
         /// </summary>
-        public void RecalculateRect()
+        internal void RecalculateRect()
         {
             //Calculate Scale
             if (_parent != null)
             {
-                _scaleSize.X = _parent._globalVect.W * _scalePercent.X;
-                _scaleSize.Y = _parent._globalVect.Z * _scalePercent.Y;
+                _localVect.W = _localSize.X + _parent._globalVect.W * _localScale.X;
+                _localVect.Z = _localSize.Y + _parent._globalVect.Z * _localScale.Y;
             }
             else
             {
-                _scaleSize.X = GameBase.Window.W * _scalePercent.X;
-                _scaleSize.Y = GameBase.Window.Z * _scalePercent.Y;
+                _localVect.W = _localSize.X + GameBase.Window.W * _localScale.X;
+                _localVect.Z = _localSize.Y + GameBase.Window.Z * _localScale.Y;
             }
-            _absoluteSize.X = _localSize.X + _scaleSize.X;
-            _absoluteSize.Y = _localSize.Y + _scaleSize.Y;
-            _localVect.W = _absoluteSize.X;
-            _localVect.Z = _absoluteSize.Y;
-
-            _localRect = Util.Vector4ToRectangle(_localVect);
-            _globalRect = Util.Vector4ToRectangle(_globalVect);
 
             //Update Global Rect
             if (_parent != null)
@@ -277,24 +250,6 @@ namespace Quaver.Graphics
         public void Destroy()
         {
             Parent = null;
-        }
-
-        /// <summary>
-        /// This method will get called everytime the size of this object changes.
-        /// </summary>
-        private void SetLocalSize()
-        {
-            Changed = true;
-        }
-
-        /// <summary>
-        /// This method will get called everytime the position of this object changes.
-        /// </summary>
-        private void SetLocalPosition()
-        {
-            _localVect.X = _localPosition.X;
-            _localVect.Y = _localPosition.Y;
-            Changed = true;
         }
     }
 }
