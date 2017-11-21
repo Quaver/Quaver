@@ -12,40 +12,24 @@ namespace Quaver.Graphics.Sprite
     internal class BarDisplay : Boundary
     {
         /// <summary>
-        ///     Will get toggled on if BarScale gets changed
-        /// </summary>
-        private bool BarChanged { get; set; } = true;
-
-        /// <summary>
         ///     The sprite-middle of every bar
         /// </summary>
-        public Sprite[] BarSpriteMiddle { get; set; }
+        private Sprite[] BarSpriteMiddle { get; set; }
 
         /// <summary>
         ///     The sprite-end of every bar
         /// </summary>
-        public Sprite[] BarSpriteEnd { get; set; }
+        private Sprite[] BarSpriteEnd { get; set; }
 
         /// <summary>
         ///     The sprite-begin of every bar
         /// </summary>
-        public Sprite[] BarSpriteBegin { get; set; }
+        private Sprite[] BarSpriteBegin { get; set; }
 
         /// <summary>
         ///     The scale for every bar sprite
         /// </summary>
-        public float[] BarScale {get; set;
-            /*get
-            {
-                return _barScale;
-            }
-            set
-            {
-                _barScale = value;
-                BarChanged = true;
-            }*/
-        }
-        private float[] _barScale { get; set; }
+        private float[] BarScale { get; set; }
 
         private Sprite BarAxisMidBox { get; set; }
 
@@ -74,7 +58,6 @@ namespace Quaver.Graphics.Sprite
             SizeX = length;
             SizeY = (((BarSpacing + BarDefaultSize) * bsize) + BarDefaultSize) * sScale;
 
-            _barScale = new float[bsize];
             BarScale = new float[bsize];
             BarSpriteMiddle = new Sprite[bsize];
             BarSpriteBegin = new Sprite[bsize];
@@ -152,7 +135,7 @@ namespace Quaver.Graphics.Sprite
             // Create Bar Sprites
             for (var i = 0; i < bsize; i++)
             {
-                _barScale[i] = 0;
+                BarScale[i] = 0;
 
                 BarSpriteBegin[i] = new Sprite()
                 {
@@ -188,21 +171,26 @@ namespace Quaver.Graphics.Sprite
             }
         }
 
-        public override void Update(double dt)
+        public void UpdateBar(int index, float value, Color? color = null)
         {
-            //if (BarChanged) RecalculateBars();
-            RecalculateBars();
-            base.Update(dt);
+            if (index < BarSpriteMiddle.Length)
+            {
+                BarScale[index] = value;
+                BarSpriteMiddle[index].SizeX = (Length - (BarDefaultSize * SpriteScale * 4)) * BarScale[index];
+                BarSpriteEnd[index].RecalculateRect();
+                if (color != null)
+                {
+                    BarSpriteMiddle[index].Tint = (Color)color;
+                    BarSpriteEnd[index].Tint = (Color)color;
+                    BarSpriteBegin[index].Tint = (Color)color;
+                }
+            }
         }
 
-        private void RecalculateBars()
+        public float GetBarScale(int index)
         {
-            BarChanged = false;
-            for (var i = 0; i < BarSpriteMiddle.Length; i++)
-            {
-                BarSpriteMiddle[i].SizeX = (Length - (BarDefaultSize * SpriteScale * 4)) * BarScale[i];
-                BarSpriteEnd[i].RecalculateRect(); //todo: remove
-            }
+            if (index < BarSpriteMiddle.Length) return BarScale[index];
+            else return 0;
         }
     }
 }
