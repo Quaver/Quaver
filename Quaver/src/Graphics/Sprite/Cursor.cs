@@ -64,9 +64,9 @@ namespace Quaver.Graphics.Sprite
             SizeY = SizeX;
 
             //Move Cursor
-            Position = Util.PointToVector2(GameBase.MouseState.Position);
-            PositionX -= (CursorSize + ClickCurrentSize) /2;
-            PositionY -= (CursorSize + ClickCurrentSize) /2;
+            //Position = Util.PointToVector2(GameBase.MouseState.Position);
+            PositionX = GameBase.MouseState.Position.X - (CursorSize + ClickCurrentSize) / 2;
+            PositionY = GameBase.MouseState.Position.Y - (CursorSize + ClickCurrentSize) / 2;
 
             base.Update(dt);
         }
