@@ -68,7 +68,7 @@ namespace Quaver
             {
                 var audioTimer = new System.Timers.Timer();
                 audioTimer.Elapsed += AudioTimerHandler;
-                audioTimer.Interval = 1000;
+                audioTimer.Interval = 500;
                 audioTimer.Enabled = true;
             });
         }
