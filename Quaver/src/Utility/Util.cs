@@ -48,10 +48,10 @@ namespace Quaver.Utility
         /// <param name="objectSize">The size of the object</param>
         /// <param name="boundary"></param>
         /// <returns></returns>
-        internal static float Align(float scale, float objectSize, Vector2 boundary, float offset = 0)
+        internal static float Align(float scale, float objectSize, float boundaryX, float boundaryY, float offset = 0)
         {
             //BoundaryMin + (BoundarySize - ObjectSize) * Scale + Offset
-            return Math.Min(boundary.X, boundary.Y) + ((Math.Abs(boundary.X - boundary.Y) - objectSize) * scale) + offset;
+            return Math.Min(boundaryX, boundaryY) + ((Math.Abs(boundaryX - boundaryY) - objectSize) * scale) + offset;
         }
 
         /*
@@ -155,8 +155,8 @@ namespace Quaver.Utility
             }
 
             //Set X and Y Alignments
-            alignX = Align(alignX, objectRect.W, new Vector2(boundary.X, boundary.X + boundary.W), objectRect.X);
-            alignY = Align(alignY, objectRect.Z, new Vector2(boundary.Y, boundary.Y + boundary.Z), objectRect.Y);
+            alignX = Align(alignX, objectRect.W, boundary.X, boundary.X + boundary.W, objectRect.X);
+            alignY = Align(alignY, objectRect.Z, boundary.Y, boundary.Y + boundary.Z, objectRect.Y);
 
             return new Vector4(alignX, alignY, objectRect.Z, objectRect.W);
         }
@@ -233,7 +233,7 @@ namespace Quaver.Utility
         /// <returns></returns>
         internal static Rectangle Vector4ToRectangle(Vector4 vect)
         {
-            return new Rectangle((int)Math.Ceiling(vect.X-1), (int)Math.Ceiling(vect.Y), (int)Math.Ceiling(vect.W), (int)Math.Ceiling(vect.Z));
+            return new Rectangle((int)Math.Ceiling(vect.X), (int)Math.Ceiling(vect.Y), (int)Math.Ceiling(vect.W), (int)Math.Ceiling(vect.Z));
         }
 
         /// <summary>
