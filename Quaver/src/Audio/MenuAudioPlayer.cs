@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Quaver.Beatmaps;
 using Quaver.Discord;
 using Quaver.Graphics.Sprite;
+using Quaver.Logging;
 
 namespace Quaver.Audio
 {
@@ -27,17 +29,22 @@ namespace Quaver.Audio
             {
                 // In the event that the song is already loaded up, we don't want to load it again
                 // through this state.
-                if (GameBase.SelectedBeatmap.Song != null)
+                if (GameBase.SelectedBeatmap.Song != null && GameBase.SelectedBeatmap.Song.GetAudioLength() > 1)
                     GameBase.SelectedBeatmap.Song.Resume();
                 else
                 {
                     // Here we assume that the song hasn't been loaded since its length is 0,
                     // so we'll attempt to load it up and play it.
                     GameBase.SelectedBeatmap.LoadAudio();
-                    GameBase.SelectedBeatmap.Song.Play();
+
+                    if (GameBase.SelectedBeatmap.Song != null && GameBase.SelectedBeatmap.Song.GetAudioLength() > 1)
+                    {
+                        Console.WriteLine(GameBase.SelectedBeatmap.Song.GetAudioLength());
+                        GameBase.SelectedBeatmap.Song.Play();
+                    }
+                        
                 }
 
-                // Set Rich Presence
                 GameBase.ChangeDiscordPresence($"In the main menu listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}");
             }
             else
@@ -56,15 +63,12 @@ namespace Quaver.Audio
             if (GameBase.Beatmaps.Count == 0)
                 return;
 
-            // Run a check if the selected map or song is currently null.
-            if (GameBase.SelectedBeatmap == null || GameBase.SelectedBeatmap.Song == null)
-                return;
-
-            if (GameBase.SelectedBeatmap.Song.GetAudioPosition() < GameBase.SelectedBeatmap.Song.GetAudioLength())
+            if (GameBase.SelectedBeatmap.Song != null &&  GameBase.SelectedBeatmap.Song.GetAudioPosition() < GameBase.SelectedBeatmap.Song.GetAudioLength())
                 return;
 
             // Stop the current track
-            GameBase.SelectedBeatmap.Song.Stop();
+            if (GameBase.SelectedBeatmap.Song != null && GameBase.SelectedBeatmap.Song.GetAudioLength() > 1)
+                GameBase.SelectedBeatmap.Song.Stop();
 
             // Select new map
             BeatmapUtils.SelectRandomBeatmap();
@@ -74,10 +78,13 @@ namespace Quaver.Audio
 
             // Load Background and change it
             GameBase.SelectedBeatmap.LoadBackground();
-            BackgroundManager.Change(GameBase.SelectedBeatmap.Background);
+
+            if (GameBase.SelectedBeatmap.Background != null)
+                BackgroundManager.Change(GameBase.SelectedBeatmap.Background);
 
             // Begin to play
-            GameBase.SelectedBeatmap.Song.Play();
+            if (GameBase.SelectedBeatmap.Song != null && GameBase.SelectedBeatmap.Song.GetAudioLength() > 1)
+                GameBase.SelectedBeatmap.Song.Play();
 
             // Set new Discord Rich Presence
             GameBase.ChangeDiscordPresence($"In the main menu listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}");
