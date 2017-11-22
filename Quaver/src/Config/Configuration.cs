@@ -164,7 +164,10 @@ namespace Quaver.Config
         private static bool _showReleaseCounter;
         internal static bool ShowReleaseCounter { get => _showReleaseCounter; set { _showReleaseCounter = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
-        private static bool _gradeBarRelative;
+        /// <summary>
+        ///     Toggle for Grade Bar relative accuracy
+        /// </summary>
+        private static bool _gradeBarRelative = true;
         internal static bool GradeBarRelative { get => _gradeBarRelative; set { _gradeBarRelative = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
