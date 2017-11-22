@@ -38,10 +38,7 @@ namespace Quaver.Audio
                     GameBase.SelectedBeatmap.LoadAudio();
 
                     if (GameBase.SelectedBeatmap.Song != null && GameBase.SelectedBeatmap.Song.GetAudioLength() > 1)
-                    {
-                        Console.WriteLine(GameBase.SelectedBeatmap.Song.GetAudioLength());
                         GameBase.SelectedBeatmap.Song.Play();
-                    }
                         
                 }
 
