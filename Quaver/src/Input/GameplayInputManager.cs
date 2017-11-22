@@ -84,7 +84,7 @@ namespace Quaver.Input
                 {
                     LaneKeyDown[i] = true;
                     NoteManager.Input(i,true);
-                    GameBase.LoadedSkin.Hit.Play();
+                    GameBase.LoadedSkin.Hit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
                 }
                 //Lane Key Release
                 else if (GameBase.KeyboardState.IsKeyUp(LaneKeys[i]) && LaneKeyDown[i])
