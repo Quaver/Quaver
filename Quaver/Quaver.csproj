@@ -328,16 +328,17 @@
     <EmbeddedResource Include="Resources\UI\bar-corner.xnb" />
     <EmbeddedResource Include="Resources\UI\graph-axis-long.xnb" />
     <EmbeddedResource Include="Resources\UI\graph-axis-short.xnb" />
-    <None Include="Resources\Default Skin\grade-small-a.xnb" />
-    <None Include="Resources\Default Skin\grade-small-b.xnb" />
-    <None Include="Resources\Default Skin\grade-small-c.xnb" />
-    <None Include="Resources\Default Skin\grade-small-d.xnb" />
-    <None Include="Resources\Default Skin\grade-small-f.xnb" />
-    <None Include="Resources\Default Skin\grade-small-s.xnb" />
-    <None Include="Resources\Default Skin\grade-small-ss.xnb" />
-    <None Include="Resources\Default Skin\grade-small-x.xnb" />
-    <None Include="Resources\Default Skin\grade-small-xx.xnb" />
-    <None Include="Resources\Default Skin\grade-small-xxx.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\grade-small-a.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\grade-small-b.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\grade-small-c.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\grade-small-d.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\grade-small-f.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\grade-small-s.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\grade-small-ss.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\grade-small-x.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\grade-small-xx.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\grade-small-xxx.xnb" />
+    <None Include="Resources\Default Skin\hit.xnb" />
     <None Include="x64\libbass.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -367,7 +368,6 @@
     <Content Include="x86\bass_fx.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Resources\Default Skin\hit.mp3" />
     <Content Include="x64\bass.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
