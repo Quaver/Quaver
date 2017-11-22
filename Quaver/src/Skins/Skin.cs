@@ -123,13 +123,16 @@ namespace Quaver.Skins
         internal Texture2D NoteHitObject2 { get; set; }
         internal Texture2D NoteHitObject3 { get; set; }
         internal Texture2D NoteHitObject4 { get; set; }
-        internal Texture2D RankingA { get; set; }
-        internal Texture2D RankingB { get; set; }
-        internal Texture2D RankingC { get; set; }
-        internal Texture2D RankingD { get; set; }
-        internal Texture2D RankingS { get; set; }
-        internal Texture2D RankingSS { get; set; }
-        internal Texture2D RankingX { get; set; }
+        internal Texture2D GradeSmallA { get; set; }
+        internal Texture2D GradeSmallB { get; set; }
+        internal Texture2D GradeSmallC { get; set; }
+        internal Texture2D GradeSmallD { get; set; }
+        internal Texture2D GradeSmallF { get; set; }
+        internal Texture2D GradeSmallS { get; set; }
+        internal Texture2D GradeSmallSS { get; set; }
+        internal Texture2D GradeSmallX { get; set; }
+        internal Texture2D GradeSmallXX { get; set; }
+        internal Texture2D GradeSmallXXX { get; set; }
         internal Texture2D NoteHoldEnd { get; set; }
         internal Texture2D NoteHoldBody { get; set; }
         internal Texture2D NoteReceptor { get; set; }
@@ -156,9 +159,12 @@ namespace Quaver.Skins
                 @"ranking-b",
                 @"ranking-c",
                 @"ranking-d",
+                @"ranking-f",
                 @"ranking-s",
                 @"ranking-ss",
                 @"ranking-x",
+                @"ranking-xx",
+                @"ranking-xxx",
                 @"note-holdend",
                 @"note-holdbody",
                 @"note-receptor",
@@ -221,26 +227,35 @@ namespace Quaver.Skins
                     case @"note-hitobject4":
                         NoteHitObject4 = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"ranking-a":
-                        RankingA = LoadIndividualElement(element, skinElementPath);
+                    case @"grade-small-a":
+                        GradeSmallA = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"ranking-b":
-                        RankingB = LoadIndividualElement(element, skinElementPath);
+                    case @"grade-small-b":
+                        GradeSmallB = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"ranking-c":
-                        RankingC = LoadIndividualElement(element, skinElementPath);
+                    case @"grade-small-c":
+                        GradeSmallC = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"ranking-d":
-                        RankingD = LoadIndividualElement(element, skinElementPath);
+                    case @"grade-small-d":
+                        GradeSmallD = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"ranking-s":
-                        RankingS = LoadIndividualElement(element, skinElementPath);
+                    case @"grade-small-f":
+                        GradeSmallF = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"ranking-ss":
-                        RankingSS = LoadIndividualElement(element, skinElementPath);
+                    case @"grade-small-s":
+                        GradeSmallS = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"ranking-x":
-                        RankingX = LoadIndividualElement(element, skinElementPath);
+                    case @"grade-small-ss":
+                        GradeSmallSS = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"grade-small-x":
+                        GradeSmallX = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"grade-small-xx":
+                        GradeSmallXX = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"grade-small-xxx":
+                        GradeSmallXXX = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"note-holdend":
                         NoteHoldEnd = LoadIndividualElement(element, skinElementPath);
