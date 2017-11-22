@@ -40,7 +40,7 @@ namespace Quaver.Gameplay
                 //Search for closest HitObject that is inside the HitTiming Window
                 for (i = 0; i < PlayScreen.NoteRendering.HitObjectPoolSize && i < PlayScreen.NoteRendering.HitObjectPool.Count; i++)
                 {
-                    if (PlayScreen.NoteRendering.HitObjectPool[i].KeyLane == keyLane + 1 && PlayScreen.NoteRendering.HitObjectPool[i].StartTime - PlayScreen.Timing.CurrentSongTime > -PlayScreen.ScoreManager.HitWindow[4])
+                    if (PlayScreen.NoteRendering.HitObjectPool[i].KeyLane == keyLane + 1 && PlayScreen.NoteRendering.HitObjectPool[i].StartTime - PlayScreen.Timing.CurrentSongTime > -PlayScreen.ScoreManager.HitWindowPress[4])
                     {
                         noteIndex = i;
                         break;
@@ -53,7 +53,7 @@ namespace Quaver.Gameplay
                     //Check which HitWindow this object's timing is in
                     for (i = 0; i < 5; i++)
                     {
-                        if (Math.Abs(PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime) <= PlayScreen.ScoreManager.HitWindow[i])
+                        if (Math.Abs(PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime) <= PlayScreen.ScoreManager.HitWindowPress[i])
                         {
                             //Score manager stuff
                             PlayScreen.ScoreManager.Count(i, false, PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime);
@@ -103,7 +103,7 @@ namespace Quaver.Gameplay
                     int releaseTiming = -1;
                     for (i = 0; i < 4; i++)
                     {
-                        if (Math.Abs(PlayScreen.NoteRendering.HitObjectHold[noteIndex].EndTime - PlayScreen.Timing.CurrentSongTime) <= PlayScreen.ScoreManager.HitWindow[i] * 1.25f)
+                        if (Math.Abs(PlayScreen.NoteRendering.HitObjectHold[noteIndex].EndTime - PlayScreen.Timing.CurrentSongTime) <= PlayScreen.ScoreManager.HitWindowRelease[i])
                         {
                             releaseTiming = i;
                             break;

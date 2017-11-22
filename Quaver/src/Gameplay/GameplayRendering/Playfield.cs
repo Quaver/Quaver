@@ -235,7 +235,7 @@ namespace Quaver.Gameplay.GameplayRendering
                 Parent = BoundaryOver
             };
 
-            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (ScoreManager.HitWindow[4]*2);
+            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (ScoreManager.HitWindowPress[4] * 2);
 
             OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)

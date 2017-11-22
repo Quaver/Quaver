@@ -124,7 +124,7 @@ namespace Quaver.Gameplay.GameplayRendering
             for (i=0; i < HitObjectPool.Count && i < HitObjectPoolSize; i++)
             {
                 //Note is not pressed (Missed)
-                if (PlayScreen.Timing.CurrentSongTime > HitObjectPool[i].StartTime + PlayScreen.ScoreManager.HitWindow[4])
+                if (PlayScreen.Timing.CurrentSongTime > HitObjectPool[i].StartTime + PlayScreen.ScoreManager.HitWindowPress[4])
                 {
                     //Track note miss with ScoreManager
                     PlayScreen.ScoreManager.Count(5);
@@ -158,7 +158,7 @@ namespace Quaver.Gameplay.GameplayRendering
             for (i = 0; i < HitObjectHold.Count; i++)
             {
                 //LN is missed
-                if (PlayScreen.Timing.CurrentSongTime > HitObjectHold[i].EndTime + PlayScreen.ScoreManager.HitWindow[4])
+                if (PlayScreen.Timing.CurrentSongTime > HitObjectHold[i].EndTime + PlayScreen.ScoreManager.HitWindowPress[4])
                 {
                     //Track LN late release with ScoreManager
                     PlayScreen.ScoreManager.Count(5,true);
