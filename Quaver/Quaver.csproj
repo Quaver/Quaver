@@ -315,13 +315,6 @@
     <EmbeddedResource Include="Resources\Default Skin\note-holdbody.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\note-holdend.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\note-receptor.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\ranking-a.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\ranking-b.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\ranking-c.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\ranking-d.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\ranking-s.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\ranking-ss.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\ranking-x.xnb" />
     <EmbeddedResource Include="Resources\UI\diff-select-mask.xnb" />
     <EmbeddedResource Include="Resources\UI\set-select-mask.xnb" />
     <EmbeddedResource Include="Resources\UI\blank-box.xnb" />
@@ -335,6 +328,16 @@
     <EmbeddedResource Include="Resources\UI\bar-corner.xnb" />
     <EmbeddedResource Include="Resources\UI\graph-axis-long.xnb" />
     <EmbeddedResource Include="Resources\UI\graph-axis-short.xnb" />
+    <None Include="Resources\Default Skin\grade-small-A.xnb" />
+    <None Include="Resources\Default Skin\grade-small-B.xnb" />
+    <None Include="Resources\Default Skin\grade-small-C.xnb" />
+    <None Include="Resources\Default Skin\grade-small-D.xnb" />
+    <None Include="Resources\Default Skin\grade-small-F.xnb" />
+    <None Include="Resources\Default Skin\grade-small-S.xnb" />
+    <None Include="Resources\Default Skin\grade-small-SS.xnb" />
+    <None Include="Resources\Default Skin\grade-small-X.xnb" />
+    <None Include="Resources\Default Skin\grade-small-XX.xnb" />
+    <None Include="Resources\Default Skin\grade-small-XXX.xnb" />
     <None Include="x64\libbass.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
