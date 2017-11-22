@@ -17,6 +17,7 @@ namespace Quaver.Gameplay.GameplayRendering
     /// </summary>
     internal class GameplayUI : IGameplayRendering
     {
+        //todo: document this crap later
         private Sprite AccuracyBox { get; set; }
 
         private Boundary[] AccuracyDisplaySet { get; set; }
@@ -53,6 +54,8 @@ namespace Quaver.Gameplay.GameplayRendering
 
         private PlayScreenState PlayScreen { get; set; }
 
+        private int CurrentGrade { get; set; }
+
         public void Initialize(PlayScreenState playScreen)
         {
             // Reference Variables
@@ -60,6 +63,7 @@ namespace Quaver.Gameplay.GameplayRendering
             PlayScreen = playScreen;
             CurrentScore = 0;
             CurrentAccuracy = 0;
+            CurrentGrade = 0;
             NoteHolding = false;
 
             // Create Boundary
@@ -246,9 +250,26 @@ namespace Quaver.Gameplay.GameplayRendering
             // Update Accuracy Text
             CurrentAccuracy = Util.Tween((float)ScoreManager.Accuracy, (float)CurrentAccuracy, tween);
             AccuracyCountText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
-            GradeProgressBar.UpdateBar(0, 
-                Util.Tween(PlayScreen.ScoreManager.RelativeAccGetScale(), GradeProgressBar.GetBarScale(0), tween*2), 
-                CustomColors.GradeColors[PlayScreen.ScoreManager.GetRelativeAccIndex() + 1]);
+
+            // Upgrade Grade Progress Bar
+            if (CurrentGrade != PlayScreen.ScoreManager.GetRelativeAccIndex())
+            {
+                //Upgrade Bar Images
+                CurrentGrade = PlayScreen.ScoreManager.GetRelativeAccIndex();
+                GradeLeft.Image = PlayScreen.ScoreManager.GradeImage[CurrentGrade + 1];
+                GradeRight.Image = PlayScreen.ScoreManager.GradeImage[CurrentGrade + 2];
+
+                //Upgrade Bar Color and Size
+                GradeProgressBar.UpdateBar(0,
+                Util.Tween(PlayScreen.ScoreManager.RelativeAccGetScale(), GradeProgressBar.GetBarScale(0), tween * 2),
+                CustomColors.GradeColors[CurrentGrade + 1]);
+            }
+            else
+            {
+                //Upgrade Bar Size
+                GradeProgressBar.UpdateBar(0,
+                Util.Tween(PlayScreen.ScoreManager.RelativeAccGetScale(), GradeProgressBar.GetBarScale(0), tween * 2));
+            }
 
             // Update Boundary
             Boundary.Update(dt);   

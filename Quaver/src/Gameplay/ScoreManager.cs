@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Logging;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Quaver.Gameplay
 {
@@ -33,10 +34,20 @@ namespace Quaver.Gameplay
         internal int Combo { get; set; }
         internal int Score { get; set; }
 
-        //Accuracy Variables
+        //Accuracy Reference Variables
         internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, 25, -75, -100 };
         internal float[] HitWindow { get; } = new float[5] { 20, 44, 76, 106, 130 };
-        internal int[] Grade { get; } = new int[8] { 60, 70, 80, 90, 95, 99, 100, 100 };
+        internal int[] GradePercentage { get; } = new int[8] { 60, 70, 80, 90, 95, 99, 100, 100 };
+        internal Texture2D[] GradeImage { get; } = new Texture2D [9]{
+            GameBase.LoadedSkin.GradeSmallF,
+            GameBase.LoadedSkin.GradeSmallD,
+            GameBase.LoadedSkin.GradeSmallC,
+            GameBase.LoadedSkin.GradeSmallB,
+            GameBase.LoadedSkin.GradeSmallA,
+            GameBase.LoadedSkin.GradeSmallS,
+            GameBase.LoadedSkin.GradeSmallSS,
+            GameBase.LoadedSkin.GradeSmallX,
+            GameBase.LoadedSkin.GradeSmallXX};
 
         //Accuracy Scoring
         internal double Accuracy { get; set; }
@@ -124,17 +135,17 @@ namespace Quaver.Gameplay
             if (index > 0)
             {
                 //Console.WriteLine(index +": "+(((float)(100 * RelativeAcc) - Grade[index]) / (float)(Grade[index] - Grade[index - 1])));
-                return ((float)(100 * RelativeAcc) - Grade[index])/(float)(Grade[index] - Grade[index - 1]);
+                return ((float)(100 * RelativeAcc) - GradePercentage[index]) / (GradePercentage[index] - GradePercentage[index - 1]);
             }
             else if (index == 0)
             {
                 //Console.WriteLine(index + ": " + (((float)(100 * RelativeAcc) - Grade[0]) / (float)(Grade[1] - Grade[0])));
-                return ((float)(100 * RelativeAcc) - Grade[0]) / (float)(Grade[1] - Grade[0]);
+                return ((float)(100 * RelativeAcc) - GradePercentage[0]) / (GradePercentage[1] - GradePercentage[0]);
             }
             else
             {
                 //Console.WriteLine("0: "+((float)(100 * Math.Max(RelativeAcc, 0)) / (float)Grade[0]));
-                return (float)(100 * Math.Max(RelativeAcc, 0))/(float)Grade[0];
+                return (float)(100 * Math.Max(RelativeAcc, 0)) / GradePercentage[0];
             }
         }
 
@@ -147,7 +158,7 @@ namespace Quaver.Gameplay
             var index = -1;
             for (var i = 0; i < 8; i++)
             {
-                if (RelativeAcc * 100 >= Grade[i]) index = i;
+                if (RelativeAcc * 100 >= GradePercentage[i]) index = i;
                 else break;
             }
             return index;
