@@ -127,9 +127,9 @@ namespace Quaver.Gameplay
             JudgeDifficulty = od;
 
             //Create Difficulty Curve
-            var curve = (float)Math.Pow(od+1, -0.42);
-            HitWindowPress = new float[5] { 18, 80 * curve, 132 * curve, 170 * curve, 250 * curve };
-            HitWindowRelease = new float[4] { 30, HitWindowPress[1]*1.25f, HitWindowPress[2] * 1.25f, HitWindowPress[3] * 1.25f };
+            var curve = (float)Math.Pow(od+1, -0.42) * GameBase.GameClock;
+            HitWindowPress = new float[5] { 18 * GameBase.GameClock, 80 * curve, 132 * curve, 170 * curve, 250 * curve };
+            HitWindowRelease = new float[4] { 30 * GameBase.GameClock, HitWindowPress[1]*1.25f, HitWindowPress[2] * 1.25f, HitWindowPress[3] * 1.25f };
         }
 
         /// <summary>
