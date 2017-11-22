@@ -43,7 +43,13 @@ namespace Quaver.Gameplay.GameplayRendering
 
         private ScoreManager ScoreManager { get; set; }
 
+        private Boundary GradeBox { get; set; }
+
         private BarDisplay GradeProgressBar { get; set; }
+
+        private Sprite GradeLeft { get; set; }
+
+        private Sprite GradeRight { get; set; }
 
         private PlayScreenState PlayScreen { get; set; }
 
@@ -155,12 +161,40 @@ namespace Quaver.Gameplay.GameplayRendering
                 PositionX = 10
             };
 
-            // Create Grade bar
-            GradeProgressBar = new BarDisplay((float)GameBase.WindowYRatio, AccuracyBox.SizeX - 74 * (float)GameBase.WindowYRatio, new Color[] { Color.Red })
+            // Create Grade box
+            GradeBox = new Boundary()
             {
-                PositionY = AccuracyBox.SizeY + 5 * (float)GameBase.WindowYRatio,
-                Alignment = Alignment.TopCenter,
-                Parent = AccuracyBox
+                Parent = AccuracyBox,
+                SizeX = AccuracyBox.SizeX,
+                SizeY = 26 * (float)GameBase.WindowYRatio,
+                Alignment = Alignment.BotLeft,
+                PositionY = 31 * (float)GameBase.WindowYRatio
+            };
+
+            GradeProgressBar = new BarDisplay((float)GameBase.WindowYRatio, AccuracyBox.SizeX - (GradeBox.SizeY * 2) - 30 * (float)GameBase.WindowYRatio, new Color[] { Color.Red })
+            {
+                Parent = GradeBox,
+                Position = Vector2.Zero,
+                Alignment = Alignment.MidCenter
+            };
+
+            GradeLeft = new Sprite()
+            {
+                Image = GameBase.LoadedSkin.GradeSmallF,
+                PositionX = 8 * (float)GameBase.WindowYRatio,
+                Size = Vector2.One * GradeBox.SizeY * (float)GameBase.WindowYRatio,
+                //PositionX = GradeProgressBar.PositionX - 32 * (float)GameBase.WindowYRatio,
+                Parent = GradeBox
+            };
+
+            GradeRight = new Sprite()
+            {
+                Image = GameBase.LoadedSkin.GradeSmallD,
+                PositionX = -8 * (float)GameBase.WindowYRatio,
+                Size = Vector2.One * GradeBox.SizeY * (float)GameBase.WindowYRatio,
+                Alignment = Alignment.TopRight,
+                //PositionX = GradeProgressBar.PositionX + GradeProgressBar.SizeX + 32 * (float)GameBase.WindowYRatio,
+                Parent = GradeBox
             };
 
             // Create new Leaderboard Box
