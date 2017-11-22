@@ -37,7 +37,8 @@ namespace Quaver.Gameplay
 
         //Accuracy Reference Variables
         internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, 25, -75, -100 };
-        internal float[] HitWindow { get; } = new float[5] { 20, 44, 76, 106, 130 };
+        internal float[] HitWindowPress { get; private set; }
+        internal float[] HitWindowRelease { get; private set; }
         internal int[] GradePercentage { get; } = new int[8] { 60, 70, 80, 90, 95, 99, 100, 100 };
         internal Texture2D[] GradeImage { get; } = new Texture2D [9]{
             GameBase.LoadedSkin.GradeSmallF,
@@ -126,7 +127,9 @@ namespace Quaver.Gameplay
             JudgeDifficulty = od;
 
             //Create Difficulty Curve
-
+            var curve = (float)Math.Pow(od+1, -0.42);
+            HitWindowPress = new float[5] { 18, 70 * curve, 90 * curve, 110 * curve, 150 * curve };
+            HitWindowRelease = new float[4] { 26, 115 * curve, 140 * curve, 160 * curve};
         }
 
         /// <summary>
