@@ -163,27 +163,6 @@
   <data name="note-receptor" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Skin\note-receptor.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="ranking-a" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\ranking-a.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="ranking-b" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\ranking-b.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="ranking-c" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\ranking-c.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="ranking-d" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\ranking-d.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="ranking-s" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\ranking-s.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="ranking-ss" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\ranking-ss.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="ranking-x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\ranking-x.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="note-holdend" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Skin\note-holdend.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -228,5 +207,35 @@
   </data>
   <data name="graph-axis-short" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\graph-axis-short.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grade-small-A" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\grade-small-A.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grade-small-B" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\grade-small-B.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grade-small-C" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\grade-small-C.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grade-small-D" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\grade-small-D.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grade-small-F" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\grade-small-F.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grade-small-S" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\grade-small-S.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grade-small-SS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\grade-small-SS.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grade-small-X" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\grade-small-X.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grade-small-XX" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\grade-small-XX.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="grade-small-XXX" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\grade-small-XXX.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
