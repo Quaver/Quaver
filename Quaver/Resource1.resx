@@ -196,9 +196,6 @@
   <data name="hollow-box" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\hollow-box.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="hit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\hit.mp3;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="Bold12" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Fonts\Bold12.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -228,5 +225,8 @@
   </data>
   <data name="graph-axis-short" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\graph-axis-short.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="hit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\hit.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

@@ -335,6 +335,7 @@
     <EmbeddedResource Include="Resources\UI\bar-corner.xnb" />
     <EmbeddedResource Include="Resources\UI\graph-axis-long.xnb" />
     <EmbeddedResource Include="Resources\UI\graph-axis-short.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\hit.xnb" />
     <None Include="x64\libbass.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -364,7 +365,6 @@
     <Content Include="x86\bass_fx.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Resources\Default Skin\hit.mp3" />
     <Content Include="x64\bass.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
