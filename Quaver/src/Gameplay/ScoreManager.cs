@@ -19,6 +19,7 @@ namespace Quaver.Gameplay
     {
         //Hit Timing Variables
         internal string[] JudgeNames { get; } = new string[6] { "MARV", "PERF", "GREAT", "GOOD", "OKAY", "MISS" };
+        internal float JudgeDifficulty { get; set; } = 10;
 
         //Hit Tracking (Judging/Scoring)
         internal int[] JudgePressSpread { get; set; }
@@ -110,10 +111,10 @@ namespace Quaver.Gameplay
         ///     Clear and Initialize Scoring related variables
         /// </summary>
         /// <param name="Count"> Total amount of hitobjects + releases</param>
-        internal void Initialize(int Count)
+        internal void Initialize(int Count, float od)
         {
             Accuracy = 0;
-            RelativeAcc = 0;
+            RelativeAcc = -200;
             ConsistancyMultiplier = 0;
             Combo = 0;
             Score = 0;
@@ -122,6 +123,10 @@ namespace Quaver.Gameplay
             JudgePressSpread = new int[6];
             MsDeviance = new List<double>();
             TotalJudgeCount = Count;
+            JudgeDifficulty = od;
+
+            //Create Difficulty Curve
+
         }
 
         /// <summary>
@@ -145,7 +150,7 @@ namespace Quaver.Gameplay
             else
             {
                 //Console.WriteLine("0: "+((float)(100 * Math.Max(RelativeAcc, 0)) / (float)Grade[0]));
-                return (float)(100 * Math.Max(RelativeAcc, 0)) / GradePercentage[0];
+                return (float)(100 * Math.Max(RelativeAcc+1, 0)) / (GradePercentage[0] + 100);
             }
         }
 
