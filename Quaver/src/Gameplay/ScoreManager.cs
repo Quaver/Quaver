@@ -34,6 +34,7 @@ namespace Quaver.Gameplay
         internal int ConsistancyMultiplier { get; set; }
         internal int Combo { get; set; }
         internal int Score { get; set; }
+        internal int Multiplier { get; set; }
 
         //Accuracy Reference Variables
         internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, 25, -75, -100 };
@@ -69,10 +70,7 @@ namespace Quaver.Gameplay
 
             //Update ms-deviance
             if (offset != null)
-            {
-                //Todo: ms deviance graphing/ displaying
                 MsDeviance.Add((double)offset);
-            }
 
             //Add JudgeSpread to Accuracy
             Accuracy = 0;
@@ -95,11 +93,14 @@ namespace Quaver.Gameplay
             if (index < 4)
             {
                 Combo++;
+                if (Multiplier < 150) Multiplier++;
                 if (index < 2) ConsistancyMultiplier++;
                 if (ConsistancyMultiplier > 200) ConsistancyMultiplier = 200;
             }
             else if (index >= 4)
             {
+                Multiplier -= 10;
+                if (Multiplier <= 0) Multiplier = 0;
                 Combo = 0;
                 ConsistancyMultiplier -= 10;
                 if (ConsistancyMultiplier < 0) ConsistancyMultiplier = 0;
