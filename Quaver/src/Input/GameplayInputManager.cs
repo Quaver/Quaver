@@ -108,9 +108,6 @@ namespace Quaver.Input
 
                 Logger.Log("Song has been successfully skipped to 3 seconds before the first HitObject.", Color.Pink);
 
-                // Pause the song temporarily.
-                GameBase.SelectedBeatmap.Song.Pause();
-
                 // Skip to 3 seconds before the notes start
                 GameBase.SelectedBeatmap.Song.Play(qua.HitObjects[0].StartTime - 3000, GameBase.GameClock);
                 NoteManager.PlayScreen.Timing.SongIsPlaying = true;
