@@ -197,9 +197,9 @@ namespace Quaver.Gameplay.GameplayRendering
             for (var i = 0; i < 6; i++)
             {
                 //todo: replace 40 with skin.ini value
-                JudgeSizes[i] = new Vector2(JudgeImages[i].Width, JudgeImages[i].Height) * 40f * (float)GameBase.WindowYRatio / JudgeImages[i].Height;
+                JudgeSizes[i] = new Vector2(JudgeImages[i].Width, JudgeImages[i].Height) * 40f * GameBase.WindowYRatio / JudgeImages[i].Height;
             }
-            JudgeHitOffset = -5f * (float)GameBase.WindowYRatio;
+            JudgeHitOffset = -5f * GameBase.WindowYRatio;
 
             //TODO: add judge scale
             JudgeSprite = new Sprite()
@@ -214,9 +214,9 @@ namespace Quaver.Gameplay.GameplayRendering
             // Create Combo Text
             ComboText = new TextBoxSprite()
             {
-                SizeX = 100 * (float)GameBase.WindowYRatio,
-                SizeY = 20 * (float)GameBase.WindowYRatio,
-                PositionY = 45 * (float)GameBase.WindowYRatio,
+                SizeX = 100 * GameBase.WindowYRatio,
+                SizeY = 20 * GameBase.WindowYRatio,
+                PositionY = 45 * GameBase.WindowYRatio,
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.TopCenter,
                 Text = "0x",
@@ -228,14 +228,14 @@ namespace Quaver.Gameplay.GameplayRendering
             // Create Offset Gauge
             OffsetGaugeBoundary = new Boundary()
             {
-                SizeX = 220 * (float)GameBase.WindowYRatio,
-                SizeY = 10 * (float)GameBase.WindowYRatio,
-                PositionY = 30 * (float)GameBase.WindowYRatio,
+                SizeX = 220 * GameBase.WindowYRatio,
+                SizeY = 10 * GameBase.WindowYRatio,
+                PositionY = 30 * GameBase.WindowYRatio,
                 Alignment = Alignment.MidCenter,
                 Parent = BoundaryOver
             };
 
-            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (ScoreManager.HitWindowPress[4] * 2 * (float)GameBase.WindowYRatio);
+            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (ScoreManager.HitWindowPress[4] * 2 * GameBase.WindowYRatio);
 
             OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)
