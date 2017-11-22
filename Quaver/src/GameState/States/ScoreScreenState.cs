@@ -87,7 +87,7 @@ namespace Quaver.GameState.States
             Logger.Log($"Beatmap: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]", Color.AliceBlue);
             Logger.Log("MD5 Checksum: " + BeatmapMd5, Color.Cyan);
             Logger.Log($"Date: {DateTime.Now.ToString(CultureInfo.InvariantCulture)}", Color.AliceBlue);
-            Logger.Log("Score: " + ScoreData.Score, Color.Cyan);
+            Logger.Log("Score: " + ScoreData.ScoreTotal, Color.Cyan);
             Logger.Log($"Accuracy: {Math.Round(ScoreData.Accuracy * 100, 2)}", Color.Cyan);
             Logger.Log($"Max Combo: {ScoreData.Combo}", Color.Cyan);
             Logger.Log("------------------------------", Color.AliceBlue);
@@ -136,7 +136,7 @@ namespace Quaver.GameState.States
                 BeatmapMd5 = BeatmapMd5,
                 Name = Configuration.Username,
                 DateTime = DateTime.Now.ToString(CultureInfo.InvariantCulture),
-                Score = ScoreData.Score,
+                Score = ScoreData.ScoreTotal,
                 Accuracy = Math.Round(ScoreData.Accuracy * 100, 2),
                 MaxCombo = ScoreData.Combo,
                 MarvPressCount = ScoreData.JudgePressSpread[0],
