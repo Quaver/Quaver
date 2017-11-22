@@ -148,7 +148,9 @@ namespace Quaver.Gameplay.GameplayRendering
             // Create BG Mask
             BgMask = new Sprite()
             {
-                Image = GameBase.LoadedSkin.ColumnBgMask,
+                //Image = GameBase.LoadedSkin.ColumnBgMask,
+                Tint = Color.Black, //todo: remove
+                Alpha = 0.8f, //todo: remove
                 Parent = BoundaryUnder,
                 Scale = Vector2.One
             };
