@@ -128,8 +128,8 @@ namespace Quaver.Gameplay
 
             //Create Difficulty Curve
             var curve = (float)Math.Pow(od+1, -0.42);
-            HitWindowPress = new float[5] { 18, 70 * curve, 90 * curve, 110 * curve, 150 * curve };
-            HitWindowRelease = new float[4] { 26, 115 * curve, 140 * curve, 160 * curve};
+            HitWindowPress = new float[5] { 18, 80 * curve, 146 * curve, 194 * curve, 220 * curve };
+            HitWindowRelease = new float[4] { 30, HitWindowPress[1]*1.25f, HitWindowPress[2] * 1.25f, HitWindowPress[3] * 1.25f };
         }
 
         /// <summary>

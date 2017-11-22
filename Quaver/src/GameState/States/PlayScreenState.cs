@@ -93,13 +93,14 @@ namespace Quaver.GameState.States
             // Update Discord Presence
             GameBase.ChangeDiscordPresenceGameplay(false);
 
-            // Initialize Gameplay
-            InitializeGameplay();
-
-            //Todo: Remove. Create loggers
+            //Todo: remove
             Logger.Add("KeyCount", "", Color.Pink);
             Logger.Add("SongPos", "", Color.White);
             Logger.Add("Skippable", "", CustomColors.NameTagAdmin);
+            Logger.Add("JudgeDifficulty", "", CustomColors.NameTagModerator);
+
+            // Initialize Gameplay
+            InitializeGameplay();
 
             //Todo: Remove. TEST.
             TestButton = new TextButton(new Vector2(200, 30), "BACK")
@@ -181,7 +182,7 @@ namespace Quaver.GameState.States
             // Check the input for this particular game state.
             InputManager.CheckInput(GameBase.SelectedBeatmap.Qua, IntroSkippable);
 
-            // Update Loggers
+            // Update Loggers. todo: remove
             Logger.Update("KeyCount", $"Key Count: {GameBase.SelectedBeatmap.Qua.KeyCount}");
             Logger.Update("SongPos", "Current Track Position: " + NoteRendering.TrackPosition);
             Logger.Update("Skippable", $"Intro Skippable: {IntroSkippable}");
@@ -234,6 +235,14 @@ namespace Quaver.GameState.States
             NoteRendering.Initialize(this);
             GameplayUI.Initialize(this);
             NoteManager.Initialize(this);
+
+            //Update logger. todo: remove
+            var loggertext = "Hitwindow: Judge: " + ScoreManager.JudgeDifficulty + "   Press: ";
+            foreach (var a in ScoreManager.HitWindowPress) loggertext += Math.Floor(a) + "ms, ";
+            loggertext += "   Release: ";
+            foreach (var a in ScoreManager.HitWindowRelease) loggertext += Math.Floor(a) + "ms, ";
+
+            Logger.Update("JudgeDifficulty", loggertext);
         }
     }
 }
