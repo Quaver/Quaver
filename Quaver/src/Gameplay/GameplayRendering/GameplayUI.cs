@@ -260,15 +260,14 @@ namespace Quaver.Gameplay.GameplayRendering
                 GradeRight.Image = PlayScreen.ScoreManager.GradeImage[CurrentGrade + 2];
 
                 //Upgrade Bar Color and Size
-                GradeProgressBar.UpdateBar(0,
-                Util.Tween(PlayScreen.ScoreManager.RelativeAccGetScale(), GradeProgressBar.GetBarScale(0), tween * 2),
+                GradeProgressBar.UpdateBar(0, PlayScreen.ScoreManager.RelativeAccGetScale(),
                 CustomColors.GradeColors[CurrentGrade + 1]);
             }
             else
             {
                 //Upgrade Bar Size
                 GradeProgressBar.UpdateBar(0,
-                Util.Tween(PlayScreen.ScoreManager.RelativeAccGetScale(), GradeProgressBar.GetBarScale(0), tween * 2));
+                Util.Tween(PlayScreen.ScoreManager.RelativeAccGetScale(), GradeProgressBar.GetBarScale(0), tween));
             }
 
             // Update Boundary
