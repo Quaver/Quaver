@@ -236,11 +236,11 @@ namespace Quaver.Gameplay.GameplayRendering
             if (NoteHolding)
             {
                 CurrentScore += tween*2;
-                if (CurrentScore > ScoreManager.Score) CurrentScore = ScoreManager.Score;
+                if (CurrentScore > ScoreManager.ScoreTotal) CurrentScore = ScoreManager.ScoreTotal;
             }
             else
             {
-                CurrentScore = ScoreManager.Score; // Util.Tween(ScoreManager.Score, (float)CurrentScore, tween);
+                CurrentScore = ScoreManager.ScoreTotal; // Util.Tween(ScoreManager.Score, (float)CurrentScore, tween);
                 //if (CurrentScore > ScoreManager.Score) CurrentScore = ScoreManager.Score;
             }
 
