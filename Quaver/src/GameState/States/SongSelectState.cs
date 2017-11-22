@@ -149,7 +149,10 @@ namespace Quaver.GameState.States
         {
             Logger.Update("MapSelected","Map Selected: "+text);
 
-            //Select map
+            // Get the background path from the previous map
+            var oldMapBgPath = GameBase.SelectedBeatmap.Directory +  "/" + GameBase.SelectedBeatmap.BackgroundPath;
+
+            // Select map
             GameBase.ChangeBeatmap(map);
 
             // Change Pitch Text
@@ -159,9 +162,10 @@ namespace Quaver.GameState.States
             if (GameBase.SelectedBeatmap.Song != null)
                 GameBase.SelectedBeatmap.Song.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
 
-            // Load background asynchronously.
-            Task.Run(() => GameBase.SelectedBeatmap.LoadBackground())
-                .ContinueWith(t => BackgroundManager.Change(GameBase.SelectedBeatmap.Background));
+            // Load background asynchronously if the backgrounds actually do differ
+            if (oldMapBgPath != map.Directory + "/" + map.BackgroundPath)
+                Task.Run(() => GameBase.SelectedBeatmap.LoadBackground())
+                    .ContinueWith(t => BackgroundManager.Change(GameBase.SelectedBeatmap.Background));
         }
 
         //TODO: Remove
