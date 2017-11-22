@@ -82,11 +82,15 @@ namespace Quaver.GameState.States
             Task.Run(async () => { await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore()); });
 
             // Log relevant data
-            Logger.Log($"User completed beatmap: {Artist} - {Title} - [{DifficultyName}]", Color.Cyan);
-            Logger.Log("Beatmap MD5: " + BeatmapMd5, Color.Cyan);
+            Logger.Log("------------------------------", Color.AliceBlue);
+            Logger.Log($"Player: '{Configuration.Username}' has completed a map!", Color.Cyan);
+            Logger.Log($"Beatmap: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]", Color.AliceBlue);
+            Logger.Log("MD5 Checksum: " + BeatmapMd5, Color.Cyan);
+            Logger.Log($"Date: {DateTime.Now.ToString(CultureInfo.InvariantCulture)}", Color.AliceBlue);
             Logger.Log("Score: " + ScoreData.Score, Color.Cyan);
-            Logger.Log($"Accuracy: {ScoreData.Accuracy}", Color.Cyan);
+            Logger.Log($"Accuracy: {Math.Round(ScoreData.Accuracy * 100, 2)}", Color.Cyan);
             Logger.Log($"Max Combo: {ScoreData.Combo}", Color.Cyan);
+            Logger.Log("------------------------------", Color.AliceBlue);
         }
 
         public void Initialize()
@@ -133,7 +137,7 @@ namespace Quaver.GameState.States
                 Name = Configuration.Username,
                 DateTime = DateTime.Now.ToString(CultureInfo.InvariantCulture),
                 Score = ScoreData.Score,
-                Accuracy = ScoreData.Accuracy,
+                Accuracy = Math.Round(ScoreData.Accuracy * 100, 2),
                 MaxCombo = ScoreData.Combo,
                 MarvPressCount = ScoreData.JudgePressSpread[0],
                 MarvReleaseCount = ScoreData.JudgeReleaseSpread[0],
