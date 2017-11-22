@@ -47,14 +47,13 @@ namespace Quaver.Database
         internal static async Task InsertScoreIntoDatabase(LocalScore score)
         {
             try
-            { 
+            {
                 if (score != null)
-                    await new SQLiteAsyncConnection(DatabasePath).InsertAsync(score)
-                        .ContinueWith(t => Logger.Log($"Successfully added score from beatmap: {score.BeatmapMd5} to the database.", Color.Cyan));
+                    await new SQLiteAsyncConnection(DatabasePath).InsertAsync(score);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.Log(e.Message, Color.Red);
                 throw;
             }
         }
