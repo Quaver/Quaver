@@ -17,16 +17,9 @@ namespace Quaver.Utility
         /// <returns></returns>
         internal static Texture2D Load(string path)
         {
-            try
+            using (var fileStream = new FileStream(path, FileMode.Open))
             {
-                using (var fileStream = new FileStream(path, FileMode.Open))
-                {
-                    return Texture2D.FromStream(GameBase.GraphicsDevice, fileStream);
-                }
-            }
-            catch (Exception e)
-            {
-                return new Texture2D(GameBase.GraphicsDevice, 1280, 720);
+                return Texture2D.FromStream(GameBase.GraphicsDevice, fileStream);
             }
         }
     }
