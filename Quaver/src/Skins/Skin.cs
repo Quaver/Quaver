@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Remoting.Channels;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Audio;
 using Quaver.Audio;
 using Quaver.Utility;
 
@@ -139,7 +140,7 @@ namespace Quaver.Skins
         internal Texture2D JudgePerfect { get; set; }
         internal Texture2D JudgeMarv { get; set; }
 
-        internal GameEffect Hit { get; set; }
+        internal SoundEffect Hit { get; set; }
 
         // Contains the file names of all skin elements
         private readonly string[] skinElements = new[]
@@ -269,7 +270,7 @@ namespace Quaver.Skins
                         JudgeMarv = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"hit":
-                        Hit = LoadGameEffectElement(Assembly.GetExecutingAssembly().GetManifestResourceStream("Quaver.Resources.Default_Skin.hit.mp3"), "hit.mp3");
+                        Hit = GameBase.Content.Load<SoundEffect>("hit");
                         break;
                     default:
                         break;
