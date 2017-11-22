@@ -161,7 +161,7 @@ namespace Quaver.Gameplay.GameplayRendering
                 if (PlayScreen.Timing.CurrentSongTime > HitObjectHold[i].EndTime + PlayScreen.ScoreManager.HitWindowPress[4])
                 {
                     //Track LN late release with ScoreManager
-                    PlayScreen.ScoreManager.Count(5,true);
+                    PlayScreen.ScoreManager.Count(4,true);
 
                     //Remove from LN Queue
                     HitObjectHold[i].Destroy();
