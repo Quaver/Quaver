@@ -216,12 +216,7 @@ namespace Quaver.GameState.States
         /// </summary>
         private void InitializeGameplay()
         {
-            Playfield.Initialize(this);
-            Timing.Initialize(this);
-            NoteRendering.Initialize(this);
-            GameplayUI.Initialize(this);
-            NoteManager.Initialize(this);
-
+            //Initialize Score Manager
             //todo: temp
             var count = 0;
             var total = GameBase.SelectedBeatmap.Qua.HitObjects.Count;
@@ -232,6 +227,13 @@ namespace Quaver.GameState.States
             }
 
             ScoreManager.Initialize(total + count, GameBase.SelectedBeatmap.Qua.Judge); //TODO: ADD RELEASE COUNTS AS WELL
+
+            //Initialize the rest
+            Playfield.Initialize(this);
+            Timing.Initialize(this);
+            NoteRendering.Initialize(this);
+            GameplayUI.Initialize(this);
+            NoteManager.Initialize(this);
         }
     }
 }
