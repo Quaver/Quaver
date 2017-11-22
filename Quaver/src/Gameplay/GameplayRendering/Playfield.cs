@@ -214,9 +214,9 @@ namespace Quaver.Gameplay.GameplayRendering
             // Create Combo Text
             ComboText = new TextBoxSprite()
             {
-                SizeX = 100,
-                SizeY = 20,
-                PositionY = 45f * (float)GameBase.WindowYRatio,
+                SizeX = 100 * (float)GameBase.WindowYRatio,
+                SizeY = 20 * (float)GameBase.WindowYRatio,
+                PositionY = 45 * (float)GameBase.WindowYRatio,
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.TopCenter,
                 Text = "0x",
@@ -228,14 +228,14 @@ namespace Quaver.Gameplay.GameplayRendering
             // Create Offset Gauge
             OffsetGaugeBoundary = new Boundary()
             {
-                SizeX = 200 * (float)GameBase.WindowYRatio,
-                SizeY = 10f * (float)GameBase.WindowYRatio,
-                PositionY = 30f * (float)GameBase.WindowYRatio,
+                SizeX = 220 * (float)GameBase.WindowYRatio,
+                SizeY = 10 * (float)GameBase.WindowYRatio,
+                PositionY = 30 * (float)GameBase.WindowYRatio,
                 Alignment = Alignment.MidCenter,
                 Parent = BoundaryOver
             };
 
-            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (ScoreManager.HitWindowPress[4] * 2  * (float)GameBase.WindowYRatio);
+            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (ScoreManager.HitWindowPress[4] * 2 * (float)GameBase.WindowYRatio);
 
             OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)
