@@ -121,9 +121,9 @@ namespace Quaver.Gameplay
                     //If LN has been missed
                     else
                     {
-                        PlayScreen.ScoreManager.Count(4, true);
-                        PlayScreen.GameplayUI.UpdateAccuracyBox(4);
-                        PlayScreen.Playfield.UpdateJudge(4, true);
+                        PlayScreen.ScoreManager.Count(5, true);
+                        PlayScreen.GameplayUI.UpdateAccuracyBox(5);
+                        PlayScreen.Playfield.UpdateJudge(5, true);
                         PlayScreen.NoteRendering.KillHold(noteIndex);
                     }
                 }
