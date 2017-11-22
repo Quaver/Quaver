@@ -231,7 +231,7 @@ namespace Quaver.GameState.States
                 if (ho.EndTime > ho.StartTime) count++;
             }
 
-            ScoreManager.Initialize(total + count, GameBase.SelectedBeatmap.Qua.AccuracyStrain); //TODO: ADD RELEASE COUNTS AS WELL
+            ScoreManager.Initialize(total + count, GameBase.SelectedBeatmap.Qua.Judge); //TODO: ADD RELEASE COUNTS AS WELL
         }
     }
 }
