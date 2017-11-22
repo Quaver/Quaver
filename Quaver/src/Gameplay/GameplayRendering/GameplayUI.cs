@@ -139,12 +139,6 @@ namespace Quaver.Gameplay.GameplayRendering
                 };
             }
 
-            GradeProgressBar = new BarDisplay(1f, AccuracyBox.SizeX, new Color[] { Color.Red })
-            {
-                PositionY = AccuracyBox.SizeY+10,
-                Parent = AccuracyBox
-            };
-
             ScoreText = new TextBoxSprite()
             {
                 Parent = AccuracyBox,
@@ -159,6 +153,14 @@ namespace Quaver.Gameplay.GameplayRendering
                 Text = "0000000",
                 PositionY = 0,
                 PositionX = 10
+            };
+
+            // Create Grade bar
+            GradeProgressBar = new BarDisplay((float)GameBase.WindowYRatio, AccuracyBox.SizeX - 74 * (float)GameBase.WindowYRatio, new Color[] { Color.Red })
+            {
+                PositionY = AccuracyBox.SizeY + 5 * (float)GameBase.WindowYRatio,
+                Alignment = Alignment.TopCenter,
+                Parent = AccuracyBox
             };
 
             // Create new Leaderboard Box
