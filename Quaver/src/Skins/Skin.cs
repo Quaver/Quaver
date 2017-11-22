@@ -126,6 +126,7 @@ namespace Quaver.Skins
         internal Texture2D GradeSmallB { get; set; }
         internal Texture2D GradeSmallC { get; set; }
         internal Texture2D GradeSmallD { get; set; }
+        internal Texture2D GradeSmallF { get; set; }
         internal Texture2D GradeSmallS { get; set; }
         internal Texture2D GradeSmallSS { get; set; }
         internal Texture2D GradeSmallX { get; set; }
@@ -157,6 +158,7 @@ namespace Quaver.Skins
                 @"ranking-b",
                 @"ranking-c",
                 @"ranking-d",
+                @"ranking-f",
                 @"ranking-s",
                 @"ranking-ss",
                 @"ranking-x",
@@ -235,6 +237,9 @@ namespace Quaver.Skins
                         break;
                     case @"grade-small-d":
                         GradeSmallD = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"grade-small-f":
+                        GradeSmallF = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"grade-small-s":
                         GradeSmallS = LoadIndividualElement(element, skinElementPath);
