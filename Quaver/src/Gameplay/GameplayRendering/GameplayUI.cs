@@ -76,7 +76,7 @@ namespace Quaver.Gameplay.GameplayRendering
             AccuracyBox = new Sprite()
             {
                 Alignment = Alignment.TopRight,
-                Size = new Vector2(220, 240) * (float)GameBase.WindowYRatio,
+                Size = new Vector2(220, 240) * GameBase.WindowYRatio,
                 Position = new Vector2(-10,10),
                 Parent = Boundary,
                 Alpha = 0.7f,
@@ -91,8 +91,8 @@ namespace Quaver.Gameplay.GameplayRendering
                     Parent = AccuracyBox,
                     Alignment = Alignment.TopLeft,
                     SizeX = AccuracyBox.SizeX - 10,
-                    SizeY = 26 * (float)GameBase.WindowYRatio,
-                    PositionY = ((i * 25) + 55) * (float)GameBase.WindowYRatio,
+                    SizeY = 26 * GameBase.WindowYRatio,
+                    PositionY = ((i * 25) + 55) * GameBase.WindowYRatio,
                     PositionX = 5
                 };
             }
@@ -155,7 +155,7 @@ namespace Quaver.Gameplay.GameplayRendering
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.MidCenter,
                 SizeX = AccuracyBox.SizeX - 20,
-                SizeY = 55 * (float)GameBase.WindowYRatio,
+                SizeY = 55 * GameBase.WindowYRatio,
                 Textwrap = false,
                 Multiline = false,
                 Font = Fonts.Medium24,
@@ -170,12 +170,12 @@ namespace Quaver.Gameplay.GameplayRendering
             {
                 Parent = AccuracyBox,
                 SizeX = AccuracyBox.SizeX,
-                SizeY = 26 * (float)GameBase.WindowYRatio,
+                SizeY = 26 * GameBase.WindowYRatio,
                 Alignment = Alignment.BotLeft,
-                PositionY = 31 * (float)GameBase.WindowYRatio
+                PositionY = 31 * GameBase.WindowYRatio
             };
 
-            GradeProgressBar = new BarDisplay((float)GameBase.WindowYRatio, AccuracyBox.SizeX - (GradeBox.SizeY * 2) - 30 * (float)GameBase.WindowYRatio, new Color[] { Color.Red })
+            GradeProgressBar = new BarDisplay(GameBase.WindowYRatio, AccuracyBox.SizeX - (GradeBox.SizeY * 2) - 30 * GameBase.WindowYRatio, new Color[] { Color.Red })
             {
                 Parent = GradeBox,
                 Position = Vector2.Zero,
@@ -185,19 +185,19 @@ namespace Quaver.Gameplay.GameplayRendering
             GradeLeft = new Sprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallF,
-                PositionX = 8 * (float)GameBase.WindowYRatio,
-                Size = Vector2.One * GradeBox.SizeY * (float)GameBase.WindowYRatio,
-                //PositionX = GradeProgressBar.PositionX - 32 * (float)GameBase.WindowYRatio,
+                PositionX = 8 * GameBase.WindowYRatio,
+                Size = Vector2.One * GradeBox.SizeY * GameBase.WindowYRatio,
+                //PositionX = GradeProgressBar.PositionX - 32 * GameBase.WindowYRatio,
                 Parent = GradeBox
             };
 
             GradeRight = new Sprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallD,
-                PositionX = -8 * (float)GameBase.WindowYRatio,
-                Size = Vector2.One * GradeBox.SizeY * (float)GameBase.WindowYRatio,
+                PositionX = -8 * GameBase.WindowYRatio,
+                Size = Vector2.One * GradeBox.SizeY * GameBase.WindowYRatio,
                 Alignment = Alignment.TopRight,
-                //PositionX = GradeProgressBar.PositionX + GradeProgressBar.SizeX + 32 * (float)GameBase.WindowYRatio,
+                //PositionX = GradeProgressBar.PositionX + GradeProgressBar.SizeX + 32 * GameBase.WindowYRatio,
                 Parent = GradeBox
             };
 
