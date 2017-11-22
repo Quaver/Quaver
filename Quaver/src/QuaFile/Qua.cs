@@ -27,7 +27,7 @@ namespace Quaver.QuaFile
         /// <summary>
         ///     The difficulty of accuracy for the map.
         /// </summary>
-        internal float AccuracyStrain { get; set; }
+        internal float Judge { get; set; }
 
         /// <summary>
         ///     The artist of the song.
@@ -77,7 +77,7 @@ namespace Quaver.QuaFile
         /// <summary>
         ///     The amount of hitpoints drain on the map.
         /// </summary>
-        internal float HpDrain { get; set; }
+        internal float Health { get; set; }
 
         /// <summary>
         ///     The key count for the map (Quaver only supports 4k and 7k)
@@ -349,10 +349,12 @@ namespace Quaver.QuaFile
             switch (key)
             {
                 case "HPDrain":
-                    HpDrain = float.Parse(value);
+                case "Health":
+                    Health = float.Parse(value);
                     break;
                 case "AccuracyStrain":
-                    AccuracyStrain = float.Parse(value);
+                case "Judge":
+                    Judge = float.Parse(value);
                     break;
                 case "KeyCount":
                     KeyCount = int.Parse(value);
