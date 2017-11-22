@@ -164,6 +164,9 @@ namespace Quaver.Config
         private static bool _showReleaseCounter;
         internal static bool ShowReleaseCounter { get => _showReleaseCounter; set { _showReleaseCounter = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
+        private static bool _gradeBarRelative;
+        internal static bool GradeBarRelative { get => _gradeBarRelative; set { _gradeBarRelative = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
         /// <summary>
         ///     The key pressed for lane 1
         /// </summary>
@@ -359,6 +362,7 @@ namespace Quaver.Config
             _debug = ConfigHelper.ReadBool(Debug, data["Debug"]);
             _pitched = ConfigHelper.ReadBool(Pitched, data["Pitched"]);
             _showReleaseCounter = ConfigHelper.ReadBool(_showReleaseCounter, data["ShowReleaseCounter"]);
+            _gradeBarRelative = ConfigHelper.ReadBool(_gradeBarRelative, data["GradeBarRelative"]);
             _keyMania1 = ConfigHelper.ReadKeys(KeyMania1, data["KeyMania1"]);
             _keyMania2 = ConfigHelper.ReadKeys(KeyMania2, data["KeyMania2"]);
             _keyMania3 = ConfigHelper.ReadKeys(KeyMania3, data["KeyMania3"]);
