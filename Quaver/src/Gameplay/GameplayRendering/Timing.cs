@@ -126,7 +126,7 @@ namespace Quaver.Gameplay.GameplayRendering
             //Calculate Time after Song Done
             if (SongIsDone)
             {
-                SongEndOffset += dt;
+                SongEndOffset += dt * GameBase.GameClock;
                 ActualSongTime = GameAudioLength + SongEndOffset;
             }
             //Calculate Actual Song Time
@@ -146,7 +146,7 @@ namespace Quaver.Gameplay.GameplayRendering
                         SongIsDone = true;
                     }
                     else
-                        ActualSongTime = (GameBase.SelectedBeatmap.Song.GetAudioPosition() + (ActualSongTime + dt)) / 2f;
+                        ActualSongTime = (GameBase.SelectedBeatmap.Song.GetAudioPosition() + (ActualSongTime + dt * GameBase.GameClock)) / 2f;
                 }
             }
             CurrentSongTime = ActualSongTime - Configuration.GlobalOffset;
