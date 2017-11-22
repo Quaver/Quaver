@@ -217,6 +217,14 @@ namespace Quaver
                 DiscordController.presence.endTimestamp = 0;
             }
 
+            DiscordController.presence.smallImageKey = "4k";
+
+            // Set presence based on keys
+            if (SelectedBeatmap.Keys == 4)            
+                DiscordController.presence.smallImageText = "4k";
+            else
+                DiscordController.presence.smallImageText = "7k";
+                
             DiscordRPC.UpdatePresence(ref DiscordController.presence);
         }
 
