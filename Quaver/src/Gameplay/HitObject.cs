@@ -156,27 +156,30 @@ namespace Quaver.Gameplay
 
         public void Update(bool downScroll)
         {
-            if (IsLongNote)
+            if (true) //todo: only update if object is inside boundary
             {
-                if (CurrentLongNoteSize <= 0)
+                if (IsLongNote)
                 {
-                    HoldBodySprite.Visible = false;
-                    HoldEndSprite.Visible = false;
+                    if (CurrentLongNoteSize <= 0)
+                    {
+                        HoldBodySprite.Visible = false;
+                        HoldEndSprite.Visible = false;
 
-                }
-                else
-                {
-                    //Update HoldBody Position and Size
-                    HoldBodySprite.SizeY = CurrentLongNoteSize;
-                    HoldBodySprite.PositionY = downScroll ? -(float)CurrentLongNoteSize + (HitObjectSize / 2f) + _hitObjectPosition.Y : _hitObjectPosition.Y + (HitObjectSize / 2f);
+                    }
+                    else
+                    {
+                        //Update HoldBody Position and Size
+                        HoldBodySprite.SizeY = CurrentLongNoteSize;
+                        HoldBodySprite.PositionY = downScroll ? -(float)CurrentLongNoteSize + (HitObjectSize / 2f) + _hitObjectPosition.Y : _hitObjectPosition.Y + (HitObjectSize / 2f);
 
-                    //Update Hold End Position
-                    HoldEndSprite.PositionY = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.SizeY) : (_hitObjectPosition.Y + HoldBodySprite.SizeY);
+                        //Update Hold End Position
+                        HoldEndSprite.PositionY = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.SizeY) : (_hitObjectPosition.Y + HoldBodySprite.SizeY);
+                    }
                 }
+
+                //Update HitBody
+                HitBodySprite.PositionY = _hitObjectPosition.Y;
             }
-
-            //Update HitBody
-            HitBodySprite.PositionY = _hitObjectPosition.Y;
         }
 
         /// <summary>
