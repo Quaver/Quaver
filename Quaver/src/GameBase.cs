@@ -89,12 +89,12 @@ namespace Quaver
         /// <summary>
         ///     The rectangle this game will be rendered onto
         /// </summary>
-        public static Vector4 Window { get; set; } = new Vector4(0, 0, Configuration.WindowHeight, Configuration.WindowWidth); //TODO: Automatically set this rectangle as windoow size
+        public static Vector4 Window { get; private set; } = new Vector4(0, 0, Configuration.WindowHeight, Configuration.WindowWidth); //TODO: Automatically set this rectangle as windoow size
 
         /// <summary>
         ///     WindowHeight / WindowWidth ratio
         /// </summary>
-        public static double WindowYRatio { get; set; } = Window.Z / ReferenceResolution.Y;
+        public static float WindowYRatio { get; private set; } = Window.Z / ReferenceResolution.Y;
 
         /// <summary>
         ///     The game's clock. Essentially it controls which speed songs are played at.
