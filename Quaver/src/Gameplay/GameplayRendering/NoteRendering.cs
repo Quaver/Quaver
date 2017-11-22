@@ -162,6 +162,8 @@ namespace Quaver.Gameplay.GameplayRendering
                 {
                     //Track LN late release with ScoreManager
                     PlayScreen.ScoreManager.Count(4,true);
+                    PlayScreen.GameplayUI.UpdateAccuracyBox(4);
+                    PlayScreen.Playfield.UpdateJudge(4);
 
                     //Remove from LN Queue
                     HitObjectHold[i].Destroy();
