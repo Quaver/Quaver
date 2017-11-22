@@ -35,6 +35,8 @@ namespace Quaver.Gameplay
         internal int ConsistancyMultiplier { get; set; }
         internal int Combo { get; set; }
         internal int ScoreTotal { get; set; }
+        internal int ScoreCount { get; set; }
+        internal int ScoreMax { get; set; }
         internal int MultiplierCount { get; set; }
         internal int MultiplierIndex { get; set; }
 
@@ -88,9 +90,6 @@ namespace Quaver.Gameplay
             Accuracy = Math.Max(Accuracy / (JudgeCount * 100), 0);
             RelativeAcc = Math.Max(RelativeAcc / (TotalJudgeCount * 100), -100);
 
-            //todo: actual score calculation
-            ScoreTotal = (int)(1000000f * JudgeCount / 20000f);
-
             //Update ConsistancyMultiplier and Combo
             if (index < 4)
             {
@@ -109,7 +108,9 @@ namespace Quaver.Gameplay
             }
             MultiplierIndex = (int)Math.Floor((float)MultiplierCount/50);
 
-            //Update Score
+            //Update Score todo: actual score calculation
+            ScoreTotal = (int)(1000000 * Math.Max((RelativeAcc + 1) / 2, 0)); //this is temp.
+            //ScoreTotal = (int)(1000000f * (ScoreTotal/ScoreMax));
         }
 
         /// <summary>
@@ -125,6 +126,8 @@ namespace Quaver.Gameplay
             MultiplierCount = 0;
             MultiplierIndex = 0;
             ScoreTotal = 0;
+            ScoreCount = 0;
+            ScoreMax = 0;
             JudgeCount = 0;
             JudgeReleaseSpread = new int[6];
             JudgePressSpread = new int[6];
