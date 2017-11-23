@@ -190,7 +190,7 @@ namespace Quaver.GameState.States
             //Todo: remove. TEST.
             TextUnder.Update(dt);
 
-            if (Timing.SongIsDone)
+            if (Timing.PlayingIsDone)
                 GameBase.GameStateManager.ChangeState(new ScoreScreenState(BeatmapMd5, ScoreManager, GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title, GameBase.SelectedBeatmap.DifficultyName));
         }
 
