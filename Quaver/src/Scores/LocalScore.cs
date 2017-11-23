@@ -113,14 +113,6 @@ namespace Quaver.Scores
         public float Rating { get; set; }
 
         /// <summary>
-        ///     The deviance in milliseconds for each note
-        ///     It should be stored in a list format that we'll have to parse since 
-        ///     the SQLite-Net library doesn't automatically do that for us.
-        ///     Example: (-10,5,200,2,0,3,-10...)
-        /// </summary>
-        public string Deviance { get; set; }
-
-        /// <summary>
         ///     Bitwise sum of the mods used in the play
         /// </summary>
         public int Mods { get; set; }

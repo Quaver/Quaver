@@ -75,9 +75,6 @@ namespace Quaver.GameState.States
             Title = title;
             DifficultyName = difficultyName;
 
-            // Round the MS Deviance to 2 decimal places
-            ScoreData.MsDeviance = ScoreData.MsDeviance.Select(x => Math.Round(x, 2)).ToList();
-
             // Insert the score into the database
             Task.Run(async () => { await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore()); });
 
@@ -151,7 +148,6 @@ namespace Quaver.GameState.States
                 OkayReleaseCount = ScoreData.JudgeReleaseSpread[4],
                 Misses = ScoreData.JudgePressSpread[5] + ScoreData.JudgeReleaseSpread[5],
                 Rating = 0.0f,
-                Deviance = string.Join(",", ScoreData.MsDeviance),
                 Mods = GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier),
                 ScrollSpeed = Configuration.ScrollSpeed,
                 ReplayData = ""
