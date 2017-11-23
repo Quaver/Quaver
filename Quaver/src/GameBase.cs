@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Quaver.Beatmaps;
 using Quaver.Database;
@@ -155,6 +156,12 @@ namespace Quaver
         ///     default skin
         /// </summary>
         public static UI UI { get; set; } = new UI();
+
+        /// <summary>
+        ///     Create a Stopwatch object for the game, This'll hold the time since the application
+        ///     was started.
+        /// </summary>
+        public static Stopwatch GameTime { get; set;} = Stopwatch.StartNew();
 
         /// <summary>
         ///     Whenever the settings for window size is changed, call this method to update the window.
