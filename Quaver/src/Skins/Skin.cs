@@ -144,6 +144,7 @@ namespace Quaver.Skins
         internal Texture2D JudgeMarv { get; set; }
 
         internal SoundEffect Hit { get; set; }
+        internal SoundEffect ComboBreak { get; set; }
 
         // Contains the file names of all skin elements
         private readonly string[] skinElements = new[]
@@ -174,7 +175,8 @@ namespace Quaver.Skins
                 @"judge-great",
                 @"judge-perfect",
                 @"judge-marv",
-                @"hit"
+                @"hit",
+                @"combobreak"
         };
 
         /// <summary>
@@ -286,6 +288,9 @@ namespace Quaver.Skins
                         break;
                     case @"hit":
                         Hit = GameBase.Content.Load<SoundEffect>("hit");
+                        break;
+                    case @"combobreak":
+                        ComboBreak = GameBase.Content.Load<SoundEffect>("combobreak");
                         break;
                     default:
                         break;
