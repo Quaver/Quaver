@@ -110,8 +110,10 @@ namespace Quaver.Input
                 Logger.Log("Song has been successfully skipped to 3 seconds before the first HitObject.", Color.Pink);
 
                 // Skip to 3 seconds before the notes start
+                SongManager.Load();
                 SongManager.SkipTo(qua.HitObjects[0].StartTime - 3000);
                 SongManager.Play();
+
                 NoteManager.PlayScreen.Timing.SongIsPlaying = true;
 
                 GameBase.ChangeDiscordPresenceGameplay(true);
