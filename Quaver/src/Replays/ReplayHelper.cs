@@ -67,7 +67,7 @@ namespace Quaver.Replays
                     }
 
                     // Add the song time since the last frame
-                    frame.TimeSinceLastFrame = (int)(elapsed - ReplayFrames.Last().GameTime);
+                    frame.TimeSinceLastFrame = frame.SongTime - ReplayFrames.Last().SongTime;
                     
                     // Grab the key press state of the last frame
                     var lastKeyPressState = ReplayFrames.Last().KeyPressState;
@@ -159,7 +159,7 @@ namespace Quaver.Replays
                 AutoFlush = true
             };
 
-            sw.WriteLine($"{frame.SongTime}|{frame.TimeSinceLastFrame}|{frame.KeyPressState.ToString()}");
+            sw.WriteLine($"{frame.TimeSinceLastFrame}|{frame.KeyPressState.ToString()}");
             sw.Close();
         }
     }
