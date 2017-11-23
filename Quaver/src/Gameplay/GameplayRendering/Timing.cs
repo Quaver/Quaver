@@ -46,30 +46,34 @@ namespace Quaver.Gameplay.GameplayRendering
             //TODO: Timing Initializer
             SongIsPlaying = false;
 
-            //Reference Variables
-            var i = 0;
-
             //Declare Other Values
             CurrentSongTime = -PlayStartDelayed;
             ActualSongTime = -PlayStartDelayed;
             //_activeBarObjects = new GameObject[maxNoteCount];
 
             //Get song end by last note
-            var lastho = GameBase.SelectedBeatmap.Qua.HitObjects[GameBase.SelectedBeatmap.Qua.HitObjects.Count - 1];
-            if (lastho.EndTime > lastho.StartTime) LastNoteEnd = lastho.EndTime;
-            else LastNoteEnd = lastho.StartTime;
-            PlayingEndOffset = LastNoteEnd + 3000;
+            LastNoteEnd = 0;
+            for (var i = GameBase.SelectedBeatmap.Qua.HitObjects.Count -1; i > 0; i--)
+            {
+                var ho = GameBase.SelectedBeatmap.Qua.HitObjects[i];
+                if (ho.EndTime > LastNoteEnd)
+                    LastNoteEnd = ho.EndTime;
+                else if (ho.StartTime > LastNoteEnd)
+                    LastNoteEnd = ho.StartTime;
+            }
+
+            PlayingEndOffset = LastNoteEnd + 10;
 
             //Create Timing Points + SVs on a list
             SvQueue = new List<TimingObject>();
             
-            for (i = 0; i < GameBase.SelectedBeatmap.Qua.SliderVelocities.Count; i++)
+            for (var i = 0; i < GameBase.SelectedBeatmap.Qua.SliderVelocities.Count; i++)
             {
                 CreateSV(GameBase.SelectedBeatmap.Qua.SliderVelocities[i].StartTime, GameBase.SelectedBeatmap.Qua.SliderVelocities[i].Multiplier);
             }
 
             TimingQueue = new List<TimingObject>();
-            for (i = 0; i < GameBase.SelectedBeatmap.Qua.TimingPoints.Count; i++)
+            for (var i = 0; i < GameBase.SelectedBeatmap.Qua.TimingPoints.Count; i++)
             {
                 TimingObject newTO = new TimingObject
                 {
@@ -98,7 +102,7 @@ namespace Quaver.Gameplay.GameplayRendering
             playScreen.NoteRendering.SvCalc = new ulong[SvQueue.Count];
             playScreen.NoteRendering.SvCalc[0] = 0;
             ulong svPosTime = 0;
-            for (i = 0; i < SvQueue.Count; i++)
+            for (var i = 0; i < SvQueue.Count; i++)
             {
                 if (i + 1 < SvQueue.Count)
                 {
