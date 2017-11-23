@@ -39,6 +39,7 @@ namespace Quaver.Gameplay
         private int ScoreMax { get; set; }
         internal int MultiplierCount { get; set; }
         internal int MultiplierIndex { get; set; }
+        internal int[] ScoreWeighting { get; } = new int[6] { 100, 100, 100, 100, 100, 100 };
 
         //Accuracy Reference Variables
         internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, 25, -75, -100 };
@@ -114,8 +115,7 @@ namespace Quaver.Gameplay
 
             //Update Multiplier index and score count
             MultiplierIndex = (int)Math.Floor((float)MultiplierCount/10);
-            if (index < 4)
-                ScoreCount += HitWeighting[index] + MultiplierIndex;
+            ScoreCount += ScoreWeighting[index] + MultiplierIndex;
 
             //Update Score todo: actual score calculation
             ScoreTotal = (int)(1000000 * ((float)ScoreCount / ScoreMax));
