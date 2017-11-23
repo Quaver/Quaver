@@ -65,9 +65,6 @@ namespace Quaver.Input
             // Check Skip Song Input
             SkipSong(qua, skippable);
 
-            // Check import beatmaps
-            ImportBeatmaps();
-
             // Pause game
             HandlePause();
         }
@@ -117,25 +114,6 @@ namespace Quaver.Input
                 NoteManager.PlayScreen.Timing.SongIsPlaying = true;
 
                 GameBase.ChangeDiscordPresenceGameplay(true);
-            }
-        }
-
-        /// <summary>
-        ///     Checks if the beatmap import queue is ready, and imports then if the user decides to.
-        /// </summary>
-        private void ImportBeatmaps()
-        {
-            // TODO: This is a beatmap import and sync test, eventually add this to its own game state
-            if (GameBase.KeyboardState.IsKeyDown(Keys.F5) && GameBase.ImportQueueReady)
-            {
-                GameBase.ImportQueueReady = false;
-
-                // Asynchronously load and set the GameBase beatmaps and visible ones.
-                Task.Run(async () =>
-                {
-                    await GameBase.LoadAndSetBeatmaps();
-                    GameBase.VisibleBeatmaps = GameBase.Beatmaps;
-                });
             }
         }
 
