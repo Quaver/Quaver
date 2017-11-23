@@ -120,20 +120,24 @@ namespace Quaver.Gameplay
             }
 
             //Update Multiplier index and score count
-            MultiplierIndex = (int)Math.Floor((float)MultiplierCount/10);
+            MultiplierIndex = (int)Math.Floor(MultiplierCount/10f);
             ScoreCount += ScoreWeighting[index] + MultiplierIndex;
 
             //Update Score todo: actual score calculation
             ScoreTotal = (int)(1000000 * ((float)ScoreCount / ScoreMax));
-            Console.WriteLine("Score Count: " + ScoreCount + "     Max: " + ScoreMax);
+            Console.WriteLine("Score Count: " + ScoreCount + "     Max: " + ScoreMax + "    Note: "+JudgeCount+"/"+ncount);
         }
+
+        private int ncount = 0; //todo: remove
 
         /// <summary>
         ///     Clear and Initialize Scoring related variables
         /// </summary>
         /// <param name="Count"> Total amount of hitobjects + releases</param>
-        internal void Initialize(int Count, float od)
+        internal void Initialize(int count, float od)
         {
+            ncount = count; //todo: remove
+
             Accuracy = 0;
             RelativeAcc = -200;
             Combo = 0;
@@ -144,7 +148,7 @@ namespace Quaver.Gameplay
             JudgeReleaseSpread = new int[6];
             JudgePressSpread = new int[6];
             MsDeviance = new List<double>();
-            TotalJudgeCount = Count;
+            TotalJudgeCount = count;
             JudgeDifficulty = od;
 
             //Create Difficulty Curve for od
@@ -154,13 +158,13 @@ namespace Quaver.Gameplay
 
             //count max score
             ScoreMax = 0;
-            if (Count < 150)
+            if (count < 150)
             {
-                for (var i = 0; i < 150 && i < Count; i++)
+                for (var i = 1; i < count; i++)
                     ScoreMax += 100 + (int)Math.Floor(i / 10f);
             }
             else
-                ScoreMax = 16165 + (Count - 150) * 115;
+                ScoreMax = 16065 + (count - 150) * 115;
 
             Console.WriteLine("Max Score: " + ScoreMax);
         }
