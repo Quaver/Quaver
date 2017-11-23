@@ -8,6 +8,7 @@ using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Logging;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Config;
 
 namespace Quaver.Gameplay
 {
@@ -32,7 +33,6 @@ namespace Quaver.Gameplay
         internal List<double> MsDeviance { get; set; }
 
         //Score tracking
-        internal int ConsistancyMultiplier { get; set; }
         internal int Combo { get; set; }
         internal int ScoreTotal { get; set; }
         private int ScoreCount { get; set; }
@@ -91,29 +91,35 @@ namespace Quaver.Gameplay
             RelativeAcc = Math.Max(RelativeAcc / (TotalJudgeCount * 100), -100);
 
             //Update Multiplier and Combo
+            //If note is pressed properly, count combo and multplier
             if (index < 4)
             {
                 Combo++;
                 if (MultiplierCount < 150) MultiplierCount++;
-                if (index < 2) ConsistancyMultiplier++;
-                if (ConsistancyMultiplier > 200) ConsistancyMultiplier = 200;
             }
+            //If note is not pressed properly:
             else if (index >= 4)
             {
+                //Play Combo-Break Sound
+                if (Combo >= 20)
+                    GameBase.LoadedSkin.ComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+
+                //Update Multiplier
                 MultiplierCount -= 10;
                 if (MultiplierCount <= 0) MultiplierCount = 0;
-                Combo = 0;
-                ConsistancyMultiplier -= 10;
-                if (ConsistancyMultiplier < 0) ConsistancyMultiplier = 0;
-            }
-            MultiplierIndex = (int)Math.Floor((float)MultiplierCount/10);
 
+                //Update Combo
+                Combo = 0;
+            }
+
+            //Update Multiplier index and score count
+            MultiplierIndex = (int)Math.Floor((float)MultiplierCount/10);
             if (index < 4)
-                ScoreCount += JudgePressSpread[index] + MultiplierIndex;
+                ScoreCount += HitWeighting[index] + MultiplierIndex;
 
             //Update Score todo: actual score calculation
-            ScoreTotal = (int)(1000000 * ((float)ScoreCount / ScoreMax)); //this is temp.
-            //ScoreTotal = (int)(1000000f * (ScoreTotal/ScoreMax));
+            ScoreTotal = (int)(1000000 * ((float)ScoreCount / ScoreMax));
+            Console.WriteLine("Score Count: " + ScoreCount + "     Max: " + ScoreMax);
         }
 
         /// <summary>
@@ -124,7 +130,6 @@ namespace Quaver.Gameplay
         {
             Accuracy = 0;
             RelativeAcc = -200;
-            ConsistancyMultiplier = 0;
             Combo = 0;
             MultiplierCount = 0;
             MultiplierIndex = 0;
@@ -145,7 +150,7 @@ namespace Quaver.Gameplay
             ScoreMax = 0;
             if (Count < 150)
             {
-                for (var i = 0; i < 150; i++)
+                for (var i = 0; i < 150 && i < Count; i++)
                     ScoreMax += 100 + (int)Math.Floor(i / 10f) * 10;
             }
             else

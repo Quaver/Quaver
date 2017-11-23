@@ -126,10 +126,6 @@ namespace Quaver.Gameplay.GameplayRendering
                 //Note is not pressed (Missed)
                 if (PlayScreen.Timing.CurrentSongTime > HitObjectPool[i].StartTime + PlayScreen.ScoreManager.HitWindowPress[4])
                 {
-                    // Play Combo Break Sound
-                    if (PlayScreen.ScoreManager.Combo >= 20)
-                        GameBase.LoadedSkin.ComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
-
                     //Track note miss with ScoreManager
                     PlayScreen.ScoreManager.Count(5);
                     PlayScreen.GameplayUI.UpdateAccuracyBox(5);
@@ -164,10 +160,6 @@ namespace Quaver.Gameplay.GameplayRendering
                 //LN is missed
                 if (PlayScreen.Timing.CurrentSongTime > HitObjectHold[i].EndTime + PlayScreen.ScoreManager.HitWindowPress[4])
                 {
-                    // Play Combo Break Sound
-                    if (PlayScreen.ScoreManager.Combo >= 20)
-                        GameBase.LoadedSkin.ComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
-
                     //Track LN late release with ScoreManager
                     PlayScreen.ScoreManager.Count(4,true);
                     PlayScreen.GameplayUI.UpdateAccuracyBox(4);
