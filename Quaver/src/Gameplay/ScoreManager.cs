@@ -151,10 +151,10 @@ namespace Quaver.Gameplay
             if (Count < 150)
             {
                 for (var i = 0; i < 150 && i < Count; i++)
-                    ScoreMax += 100 + (int)Math.Floor(i / 10f) * 10;
+                    ScoreMax += 100 + (int)Math.Floor(i / 10f);
             }
             else
-                ScoreMax = 25500 + (Count - 150) * 115;
+                ScoreMax = 16050 + (Count - 150) * 115;
 
             Console.WriteLine("Max Score: " + ScoreMax);
         }
