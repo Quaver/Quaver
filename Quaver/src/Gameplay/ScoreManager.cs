@@ -97,6 +97,7 @@ namespace Quaver.Gameplay
             {
                 Combo++;
                 if (MultiplierCount < 150) MultiplierCount++;
+                else MultiplierCount = 150; //idk... just to be safe
             }
             //If note is not pressed properly:
             else if (index >= 4)
@@ -106,8 +107,13 @@ namespace Quaver.Gameplay
                     GameBase.LoadedSkin.ComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
                 //Update Multiplier
-                MultiplierCount -= 10;
-                if (MultiplierCount <= 0) MultiplierCount = 0;
+                //MultiplierCount -= 10;
+
+                //todo: temp
+                if (MultiplierCount < 150) MultiplierCount++;
+                else MultiplierCount = 150; //idk... just to be safe
+
+                if (MultiplierCount < 0) MultiplierCount = 0;
 
                 //Update Combo
                 Combo = 0;
@@ -154,7 +160,7 @@ namespace Quaver.Gameplay
                     ScoreMax += 100 + (int)Math.Floor(i / 10f);
             }
             else
-                ScoreMax = 16050 + (Count - 150) * 115;
+                ScoreMax = 16165 + (Count - 150) * 115;
 
             Console.WriteLine("Max Score: " + ScoreMax);
         }
