@@ -18,6 +18,7 @@ using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Input;
 using Quaver.Logging;
+using Quaver.Replays;
 
 using Quaver.Modifiers;
 using Quaver.QuaFile;
@@ -64,6 +65,11 @@ namespace Quaver.GameState.States
         private Button TestButton { get; set; }
 
         /// <summary>
+        ///     Holds the list of replay frames for this state.
+        /// </summary>
+        private List<ReplayFrame> ReplayFrames { get; set;}
+
+        /// <summary>
         ///     Ctor, data passed in from loading state
         /// </summary>
         /// <param name="qua"></param>
@@ -86,6 +92,7 @@ namespace Quaver.GameState.States
             ScoreManager = new ScoreManager();
             Timing = new Timing();
             InputManager = new GameplayInputManager(NoteManager);
+            ReplayFrames = new List<ReplayFrame>();
 
             // Update window title
             GameBase.GameWindow.Title = $"Quaver - {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]";
@@ -93,6 +100,10 @@ namespace Quaver.GameState.States
             // Update Discord Presence
             GameBase.ChangeDiscordPresenceGameplay(false);
 
+            // Create the file for replays if debugging
+            if (Configuration.Debug)
+                File.Create(ReplayHelper.DebugFilePath);
+            
             //Todo: remove
             Logger.Add("KeyCount", "", Color.Pink);
             Logger.Add("SongPos", "", Color.White);
@@ -180,7 +191,7 @@ namespace Quaver.GameState.States
             GameplayUI.Update(dt);
 
             // Check the input for this particular game state.
-            InputManager.CheckInput(GameBase.SelectedBeatmap.Qua, IntroSkippable);
+            InputManager.CheckInput(GameBase.SelectedBeatmap.Qua, IntroSkippable, ReplayFrames);
 
             // Update Loggers. todo: remove
             Logger.Update("KeyCount", $"Key Count: {GameBase.SelectedBeatmap.Qua.KeyCount}");
