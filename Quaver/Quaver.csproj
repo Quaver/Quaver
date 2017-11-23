@@ -189,6 +189,7 @@
     <Compile Include="src\Replays\KeyPressState.cs" />
     <Compile Include="src\Replays\Replay.cs" />
     <Compile Include="src\Replays\ReplayFrame.cs" />
+    <Compile Include="src\Replays\ReplayHelper.cs" />
     <Compile Include="src\Scores\LocalScore.cs" />
     <Compile Include="src\Skins\Skin.cs" />
     <Compile Include="src\Tests\Audio.Test.cs" />
