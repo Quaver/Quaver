@@ -62,11 +62,11 @@ namespace Quaver.Gameplay.GameplayRendering
                     LastNoteEnd = ho.StartTime;
             }
 
-            PlayingEndOffset = LastNoteEnd + 10;
+            //Add offset after the last note
+            PlayingEndOffset = LastNoteEnd + 1000;
 
             //Create Timing Points + SVs on a list
             SvQueue = new List<TimingObject>();
-            
             for (var i = 0; i < GameBase.SelectedBeatmap.Qua.SliderVelocities.Count; i++)
             {
                 CreateSV(GameBase.SelectedBeatmap.Qua.SliderVelocities[i].StartTime, GameBase.SelectedBeatmap.Qua.SliderVelocities[i].Multiplier);
@@ -90,7 +90,7 @@ namespace Quaver.Gameplay.GameplayRendering
             if (ModManager.Activated(ModIdentifier.NoSliderVelocity) == false && SvQueue.Count > 1)
             {
                 ConvertTPtoSV();
-                //NormalizeSVs();
+                NormalizeSVs();
             }
             //If there's no SV, create a single SV Point
             else
