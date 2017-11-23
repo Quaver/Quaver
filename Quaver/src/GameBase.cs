@@ -17,6 +17,7 @@ using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
+using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.QuaFile;
 using Quaver.Utility;
@@ -145,6 +146,11 @@ namespace Quaver
         public static DiscordController DiscordController { get; set; }
 
         /// <summary>
+        ///     Keeps track of whether Discord Rich Presence has been initialized.
+        /// </summary>
+        public static bool DiscordRichPresencedInited { get; set; }
+
+        /// <summary>
         ///     Contains all of the loaded embedded UI .xnb resources that aren't apart of the
         ///     default skin
         /// </summary>
@@ -227,31 +233,38 @@ namespace Quaver
         /// <param name="details"></param>
         public static void ChangeDiscordPresence(string details, double timeLeft = 0)
         {
-            DiscordController.presence.details = details;
+            if (!DiscordRichPresencedInited)
+                return;
 
-            if (timeLeft != 0)
+            try
             {
-                // Get Current Unix Time
-                var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                var unixDateTime = (DateTime.Now.ToLocalTime().ToUniversalTime() - epoch).TotalSeconds;
+                DiscordController.presence.details = details;
 
-                // Set Discord presence to the "time left" specified.
-                DiscordController.presence.endTimestamp = (long) (unixDateTime + (timeLeft / 1000));
+                if (timeLeft != 0)
+                {
+                    // Get Current Unix Time
+                    var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                    var unixDateTime = (DateTime.Now.ToLocalTime().ToUniversalTime() - epoch).TotalSeconds;
+
+                    // Set Discord presence to the "time left" specified.
+                    DiscordController.presence.endTimestamp = (long)(unixDateTime + (timeLeft / 1000));
+                }
+                else
+                {
+                    DiscordController.presence.endTimestamp = 0;
+                }
+
+                DiscordController.presence.smallImageKey = "4k";
+
+                // Set presence based on keys
+                DiscordController.presence.smallImageText = (SelectedBeatmap.Keys == 4) ? "4 Keys" : "7 Keys";
+                DiscordRPC.UpdatePresence(ref DiscordController.presence);
             }
-            else
+            catch (Exception e)
             {
-                DiscordController.presence.endTimestamp = 0;
+                Logger.Log(e.Message, Color.Red);
+                throw;
             }
-
-            DiscordController.presence.smallImageKey = "4k";
-
-            // Set presence based on keys
-            if (SelectedBeatmap.Keys == 4)            
-                DiscordController.presence.smallImageText = "4k";
-            else
-                DiscordController.presence.smallImageText = "7k";
-                
-            DiscordRPC.UpdatePresence(ref DiscordController.presence);
         }
 
         /// <summary>
@@ -259,26 +272,36 @@ namespace Quaver
         /// </summary>
         public static void ChangeDiscordPresenceGameplay(bool skippedSong)
         {
-            var sb = new StringBuilder();
-            sb.Append($"Playing: {SelectedBeatmap.Artist} - {SelectedBeatmap.Title} [{SelectedBeatmap.DifficultyName}]");
+            if (!DiscordRichPresencedInited)
+                return;
 
-            // Get the original map length. 
-            double mapLength = Qua.FindSongLength(SelectedBeatmap.Qua) / GameClock;
-
-            // Get the new map length if it was skipped.
-            if (skippedSong)
-                mapLength = (Qua.FindSongLength(SelectedBeatmap.Qua) - SongManager.Position) / GameClock;
-
-            // Add mods to the string if mods exist
-            if (CurrentGameModifiers.Count > 0)
+            try
             {
-                sb.Append(" with mods: ");
+                var sb = new StringBuilder();
+                sb.Append($"Playing: {SelectedBeatmap.Artist} - {SelectedBeatmap.Title} [{SelectedBeatmap.DifficultyName}]");
 
-                if (CurrentGameModifiers.Exists(x => x.Type == ModType.Speed))
-                    sb.Append($"Speed {GameClock}x");
+                // Get the original map length. 
+                double mapLength = Qua.FindSongLength(SelectedBeatmap.Qua) / GameClock;
+
+                // Get the new map length if it was skipped.
+                if (skippedSong)
+                    mapLength = (Qua.FindSongLength(SelectedBeatmap.Qua) - SongManager.Position) / GameClock;
+
+                // Add mods to the string if mods exist
+                if (CurrentGameModifiers.Count > 0)
+                {
+                    sb.Append(" with mods: ");
+
+                    if (CurrentGameModifiers.Exists(x => x.Type == ModType.Speed))
+                        sb.Append($"Speed {GameClock}x");
+                }
+
+                ChangeDiscordPresence(sb.ToString(), mapLength);
             }
-
-            ChangeDiscordPresence(sb.ToString(), mapLength);
+            catch (Exception e)
+            {
+                Logger.Log(e.Message, Color.Red);
+            }
         }
     }
 }

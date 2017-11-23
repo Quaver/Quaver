@@ -135,6 +135,7 @@ namespace Quaver
         {
             BackgroundManager.UnloadContent();
             GameBase.GameStateManager.ClearStates();
+            Bass.Free();
             DiscordRPC.Shutdown();
         }
 
