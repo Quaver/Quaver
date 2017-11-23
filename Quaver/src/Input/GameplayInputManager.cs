@@ -13,6 +13,7 @@ using Quaver.Gameplay;
 using Quaver.GameState.States;
 using Quaver.Logging;
 using Quaver.QuaFile;
+using Quaver.Replays;
 
 namespace Quaver.Input
 {
@@ -57,7 +58,7 @@ namespace Quaver.Input
         /// <summary>
         ///     Checks if the given input was given
         /// </summary>
-        public void CheckInput(Qua qua, bool skippable)
+        public void CheckInput(Qua qua, bool skippable, List<ReplayFrame> ReplayFrames)
         {
             // Check Mania Key Presses
             HandleManiaKeyPresses();
@@ -67,6 +68,9 @@ namespace Quaver.Input
 
             // Pause game
             HandlePause();
+
+            // Add replay frames
+            ReplayHelper.AddReplayFrames(ReplayFrames, qua);
         }
 
         /// <summary>
