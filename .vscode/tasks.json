@@ -4,8 +4,8 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "taskName": "build",
-            "type": "process",
+            "label": "build",
+            "type": "shell",
             "command": "msbuild",
             "args": [
                 // Ask msbuild to generate full paths for file names.
