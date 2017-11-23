@@ -103,7 +103,8 @@ namespace Quaver.Graphics.Sprite
             if (newBG == null) return;
 
             //Update Image
-            Background.Image = newBG;
+            GameBase.CurrentBackground = newBG;
+            Background.Image = GameBase.CurrentBackground;
 
             //Update Background Image Resolution
             var bgYRatio = ((float)newBG.Height / newBG.Width) / ((float)GameBase.Window.Z / GameBase.Window.W);
