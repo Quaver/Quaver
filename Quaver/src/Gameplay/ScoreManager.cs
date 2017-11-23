@@ -100,7 +100,7 @@ namespace Quaver.Gameplay
                 else MultiplierCount = 150; //idk... just to be safe
             }
             //If note is not pressed properly:
-            else if (index >= 4)
+            else
             {
                 //Play Combo-Break Sound
                 if (Combo >= 20)
@@ -153,7 +153,7 @@ namespace Quaver.Gameplay
 
             //Create Difficulty Curve for od
             var curve = (float)Math.Pow(od+1, -0.42) * GameBase.GameClock;
-            HitWindowPress = new float[5] { 18 * GameBase.GameClock, 86 * curve, 132 * curve, 170 * curve, 250 * curve };
+            HitWindowPress = new float[5] { 20 * GameBase.GameClock, 96 * curve, 144 * curve, 180 * curve, 260 * curve };
             HitWindowRelease = new float[4] { 30 * GameBase.GameClock, HitWindowPress[1]*1.35f, HitWindowPress[2] * 1.35f, HitWindowPress[3] * 1.35f };
 
             //count max score
