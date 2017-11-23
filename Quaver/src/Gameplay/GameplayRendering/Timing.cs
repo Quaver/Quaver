@@ -375,7 +375,6 @@ namespace Quaver.Gameplay.GameplayRendering
                         {
                             if (SvQueue[i].TargetTime < TimingQueue[lastIndex + 1].TargetTime)
                             {
-                                Console.WriteLine(SvQueue[i].TargetTime);
                                 SvQueue[i].SvMultiplier =
                                     Math.Min(SvQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
                             }
