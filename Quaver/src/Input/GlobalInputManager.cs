@@ -51,7 +51,7 @@ namespace Quaver.Input
                 LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
 
                 // Change the master volume based on the new config value.
-                AudioHandler.ChangeMasterVolume();
+                SongManager.ChangeMasterVolume();
                 Logger.Log($"VolumeGlobal Changed To: {Config.Configuration.VolumeGlobal}", Color.Cyan);
             }
             // Lower volume if the user scrolls down
@@ -65,7 +65,7 @@ namespace Quaver.Input
                 LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
 
                 // Change the master volume based on the new config value.
-                AudioHandler.ChangeMasterVolume();
+                SongManager.ChangeMasterVolume();
                 Logger.Log($"VolumeGlobal Changed To: {Config.Configuration.VolumeGlobal}", Color.Cyan);
             }
         }

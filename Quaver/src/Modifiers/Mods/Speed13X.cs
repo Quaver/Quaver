@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.Audio;
 using Quaver.Logging;
 
 namespace Quaver.Modifiers.Mods
@@ -59,9 +60,7 @@ namespace Quaver.Modifiers.Mods
             GameBase.GameClock = 1.3f;
             Logger.Log($"Speed is now set to {GameBase.GameClock}x", Color.Cyan);
 
-            // Change the song's speed
-            if (GameBase.SelectedBeatmap.Song != null)
-                GameBase.SelectedBeatmap.Song.ChangeSongSpeed();
+            SongManager.ChangeSongSpeed();
         }
     }
 }

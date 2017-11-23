@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState;
@@ -188,11 +189,14 @@ namespace Quaver
         /// </summary>
         public static void ChangeBeatmap(Beatmap map)
         {
-            if (SelectedBeatmap.Song != null)
-                SelectedBeatmap.Song.Stop();
+            // Stop the song and free its resources
+            SongManager.Stop();
 
+            // Set the selected map
             SelectedBeatmap = map;
-            SelectedBeatmap.LoadAudio();
+
+            // Load the song
+            SongManager.Load();
         }
 
         /// <summary>
@@ -241,7 +245,7 @@ namespace Quaver
 
             // Get the new map length if it was skipped.
             if (skippedSong)
-                mapLength = (Qua.FindSongLength(SelectedBeatmap.Qua) - SelectedBeatmap.Song.GetAudioPosition()) / GameClock;
+                mapLength = (Qua.FindSongLength(SelectedBeatmap.Qua) - SongManager.Position) / GameClock;
 
             // Add mods to the string if mods exist
             if (CurrentGameModifiers.Count > 0)
