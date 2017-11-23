@@ -12,6 +12,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
+using Quaver.Replays;
 using Quaver.Scores;
 
 namespace Quaver.GameState.States
@@ -59,6 +60,11 @@ namespace Quaver.GameState.States
         private TextButton BackButton { get; set; }
 
         /// <summary>
+        ///     The replay frames that were captured during the previous play.
+        /// </summary>
+        private List<ReplayFrame> ReplayFrames { get; set; }
+
+        /// <summary>
         ///     Constructor - In order to get to this state, it's essential that you pass in 
         ///     the beatmap md5 and the score data.
         /// </summary>
@@ -67,13 +73,14 @@ namespace Quaver.GameState.States
         /// <param name="artist"></param>
         /// <param name="title"></param>
         /// <param name="difficultyName"></param>
-        public ScoreScreenState(string beatmapMd5, ScoreManager scoreData, string artist, string title, string difficultyName)
+        public ScoreScreenState(string beatmapMd5, ScoreManager scoreData, string artist, string title, string difficultyName, List<ReplayFrame> replayFrames)
         {
             BeatmapMd5 = beatmapMd5;
             ScoreData = scoreData;
             Artist = artist;
             Title = title;
             DifficultyName = difficultyName;
+            ReplayFrames = replayFrames;
 
             // Insert the score into the database
             Task.Run(async () => { await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore()); });
@@ -97,6 +104,8 @@ namespace Quaver.GameState.States
                 Alignment = Alignment.TopRight
             };
             BackButton.Clicked += OnBackButtonClick;
+
+            Logger.Log($"{ReplayFrames.Count} replay frames captured during that play.", Color.Pink);
 
             UpdateReady = true;
         }
