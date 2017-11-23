@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using ManagedBass;
 using Ionic.Zip;
 using Microsoft.Xna.Framework;
+using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.Database;
 using Quaver.Discord;
@@ -70,21 +71,14 @@ namespace Quaver.Peppy
                 {
                     BeatmapUtils.SelectRandomBeatmap();
 
-                    if (GameBase.SelectedBeatmap != null)
-                    {
-                        GameBase.SelectedBeatmap.LoadAudio();
-
-                        if (GameBase.SelectedBeatmap.Song != null)
-                            GameBase.SelectedBeatmap.Song.Play();
-                    }
+                    SongManager.Load();
+                    SongManager.Play();
                 }
                 else if (newMap.Count > 0)
                 {
                     var map = newMap.Values.Last().Last();
 
-                    // Stop the currently selected beatmap's song.
-                    if (GameBase.SelectedBeatmap != null)
-                        GameBase.SelectedBeatmap.Song.Stop();
+                    SongManager.Stop();
 
                     // Switch map and load audio for song and play it.
                     GameBase.ChangeBeatmap(map);
@@ -93,14 +87,12 @@ namespace Quaver.Peppy
                     GameBase.SelectedBeatmap.LoadBackground();
                     BackgroundManager.Change(GameBase.SelectedBeatmap.Background);
 
-                    if (GameBase.SelectedBeatmap.Song != null)
-                    {
-                        GameBase.SelectedBeatmap.Song.Play();
-                        // Set Rich Presence
-                        GameBase.DiscordController.presence.details =
-                            $"In the main menu listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
-                        DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
-                    }
+                    SongManager.Play();
+
+                    // Set Rich Presence
+                    GameBase.DiscordController.presence.details =
+                        $"In the main menu listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
+                    DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
                 }
 
                 Logger.Log("Successfully completed the conversion task. Stopping loader.", Color.Cyan);

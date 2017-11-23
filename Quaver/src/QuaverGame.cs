@@ -60,17 +60,6 @@ namespace Quaver
 
             // Start watching for directory changes.
             BeatmapImporter.WatchForChanges();
-
-            // Creates an audio timer that runs throughout the existence of this game instance
-            // and automagically frees up all available audio streams to prevent memory leaks.
-            // this was the best way i could figure out.
-            Task.Run(() =>
-            {
-                var audioTimer = new System.Timers.Timer();
-                audioTimer.Elapsed += AudioTimerHandler;
-                audioTimer.Interval = 500;
-                audioTimer.Enabled = true;
-            });
         }
 
         /// <summary>
@@ -214,16 +203,6 @@ namespace Quaver
             // Draw everything else in the base class
             base.Draw(gameTime);
             GameBase.SpriteBatch.End();
-        }
-
-        /// <summary>
-        ///     Frees all available audio streams every x seconds.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="e"></param>
-        private void AudioTimerHandler(object source, ElapsedEventArgs e)
-        {
-            Task.Run(() => AudioHandler.FreeAvailableStreams());
         }
     }
 }

@@ -128,12 +128,6 @@ namespace Quaver.Beatmaps
         public int SongLength { get; set; }
 
         /// <summary>
-        ///     The specific beatmap's song.
-        /// </summary>
-        [Ignore]
-        public GameAudio Song { get; set; }
-
-        /// <summary>
         ///     The beatmap's background texture.
         /// </summary>
         [Ignore]
@@ -149,19 +143,6 @@ namespace Quaver.Beatmaps
         ///     The amount of keys the beatmap has.
         /// </summary>
         public int Keys { get; set; }
-
-        /// <summary>
-        ///     Loads a beatmaps's GameAudio file
-        /// </summary>
-        internal void LoadAudio()
-        {
-            var audioPath = Config.Configuration.SongDirectory + "/" + Directory + "/" + AudioPath;
-
-            if (!File.Exists(audioPath))
-                return;
-
-            Song = new GameAudio(audioPath);
-        }
 
         /// <summary>
         ///     Loads a beatmaps background file.

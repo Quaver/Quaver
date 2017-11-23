@@ -312,19 +312,6 @@ namespace Quaver.Skins
         }
 
         /// <summary>
-        ///     Used for loading game effects on the skin.
-        /// </summary>
-        /// <param name="element"></param>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        private GameEffect LoadGameEffectElement(Stream stream, string path)
-        {
-            var fullPath = Configuration.SkinDirectory + "/" + Configuration.Skin + "/" + path;
-
-            return (File.Exists(fullPath)) ? new GameEffect(fullPath) : new GameEffect(stream);
-        }
-
-        /// <summary>
         ///     Reads a skin.ini file
         /// </summary>
         /// <param name="skinDir"></param>

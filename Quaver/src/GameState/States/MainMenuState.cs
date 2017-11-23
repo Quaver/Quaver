@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Audio;
 using Quaver.Beatmaps;
+using Quaver.Config;
 using Quaver.Discord;
 using Quaver.Gameplay;
 using Quaver.Graphics;

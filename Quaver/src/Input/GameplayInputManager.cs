@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Audio;
 using Quaver.GameState;
 using Quaver.Config;
 using Quaver.Database;
@@ -109,7 +110,8 @@ namespace Quaver.Input
                 Logger.Log("Song has been successfully skipped to 3 seconds before the first HitObject.", Color.Pink);
 
                 // Skip to 3 seconds before the notes start
-                GameBase.SelectedBeatmap.Song.Play(qua.HitObjects[0].StartTime - 3000, GameBase.GameClock);
+                SongManager.SkipTo(qua.HitObjects[0].StartTime - 3000);
+                SongManager.Play();
                 NoteManager.PlayScreen.Timing.SongIsPlaying = true;
 
                 GameBase.ChangeDiscordPresenceGameplay(true);
@@ -144,7 +146,7 @@ namespace Quaver.Input
                 return;
 
             // TODO: Implement actual pausing here. For now, we're just going to go back to the main menu.
-            GameBase.SelectedBeatmap.Song.Pause();
+            SongManager.Pause();
             GameBase.GameStateManager.ChangeState(new MainMenuState());
         }
     }
