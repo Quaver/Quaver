@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,6 +57,11 @@ namespace Quaver
         ///     The currently loaded Skin
         /// </summary>
         public static Skin LoadedSkin { get; set; }
+
+        /// <summary>
+        ///     The current background
+        /// </summary>
+        public static Texture2D CurrentBackground { get; set; }
 
         /// <summary>
         ///     A boolean flag that controls whether or not we have queued changes in the song's directory.
@@ -192,11 +198,30 @@ namespace Quaver
             // Stop the song and free its resources
             SongManager.Stop();
 
-            // Set the selected map
+            if (CurrentBackground != null)
+                CurrentBackground.Dispose();
+
+            SelectedBeatmap = null;
             SelectedBeatmap = map;
 
             // Load the song
             SongManager.Load();
+        }
+
+        /// <summary>
+        ///     Loads a beatmap's background
+        /// </summary>
+        public static void LoadBackground()
+        {
+            if (CurrentBackground != null)
+                CurrentBackground.Dispose();
+
+            var bgPath = Configuration.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.BackgroundPath;
+
+            if (!File.Exists(bgPath))
+                return;
+
+            CurrentBackground = ImageLoader.Load(bgPath);
         }
 
         /// <summary>
