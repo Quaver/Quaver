@@ -29,17 +29,14 @@ namespace Quaver.Audio
             {
                 // In the event that the song is already loaded up, we don't want to load it again
                 // through this state.
-                if (GameBase.SelectedBeatmap.Song != null && GameBase.SelectedBeatmap.Song.GetAudioLength() > 1)
-                    GameBase.SelectedBeatmap.Song.Resume();
+                if (SongManager.Length > 1)
+                    SongManager.Resume();
                 else
                 {
-                    // Here we assume that the song hasn't been loaded since its length is 0,
-                    // so we'll attempt to load it up and play it.
-                    GameBase.SelectedBeatmap.LoadAudio();
+                    SongManager.Load();
 
-                    if (GameBase.SelectedBeatmap.Song != null && GameBase.SelectedBeatmap.Song.GetAudioLength() > 1)
-                        GameBase.SelectedBeatmap.Song.Play();
-                        
+                    if (SongManager.Length > 1)
+                        SongManager.Play();
                 }
 
                 GameBase.ChangeDiscordPresence($"In the main menu listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}");
@@ -60,18 +57,17 @@ namespace Quaver.Audio
             if (GameBase.Beatmaps.Count == 0)
                 return;
 
-            if (GameBase.SelectedBeatmap.Song != null &&  GameBase.SelectedBeatmap.Song.GetAudioPosition() < GameBase.SelectedBeatmap.Song.GetAudioLength())
+            if (SongManager.Position < SongManager.Length)
                 return;
 
-            // Stop the current track
-            if (GameBase.SelectedBeatmap.Song != null && GameBase.SelectedBeatmap.Song.GetAudioLength() > 1)
-                GameBase.SelectedBeatmap.Song.Stop();
+            if (SongManager.Length > 1)
+                SongManager.Stop();
 
             // Select new map
             BeatmapUtils.SelectRandomBeatmap();
 
             // Load Audio
-            GameBase.SelectedBeatmap.LoadAudio();
+            SongManager.Load();
 
             // Load Background and change it
             GameBase.SelectedBeatmap.LoadBackground();
@@ -80,8 +76,8 @@ namespace Quaver.Audio
                 BackgroundManager.Change(GameBase.SelectedBeatmap.Background);
 
             // Begin to play
-            if (GameBase.SelectedBeatmap.Song != null && GameBase.SelectedBeatmap.Song.GetAudioLength() > 1)
-                GameBase.SelectedBeatmap.Song.Play();
+            if (SongManager.Length > 1)
+                SongManager.Play();
 
             // Set new Discord Rich Presence
             GameBase.ChangeDiscordPresence($"In the main menu listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}");

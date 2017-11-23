@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.Gameplay;
 using Quaver.Logging;
@@ -88,18 +89,18 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Responsible for getting the state ready to be changed, and then actually chjanging it.
+        ///     Responsible for getting the state ready to be changed, and then actually changing it.
         /// </summary>
         private void ChangeState()
         {
             try
             {
                 // Stop the current audio and load it again before moving onto the next state.
-                GameBase.SelectedBeatmap.Song.Stop();
-                GameBase.SelectedBeatmap.LoadAudio();
+                SongManager.Stop();
+                SongManager.Load();
 
                 // Detect if the audio can't be played.
-                if (GameBase.SelectedBeatmap.Song.GetAudioLength() < 1)
+                if (SongManager.Length < 1)
                     throw new Exception("[SONG LOADING STATE] Audio file could not be loaded.");
 
                 // Get the MD5 Hash of the played map and change the state.

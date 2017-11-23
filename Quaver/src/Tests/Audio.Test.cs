@@ -28,12 +28,12 @@ namespace Quaver.Tests
                 return;
             }
 
-            GameAudio song = new GameAudio(filePath);
+           /* GameAudio song = new GameAudio(filePath);
 
             const double positionInMilliseconds = 1000;
             song.Play(positionInMilliseconds);
             Console.WriteLine("[DEBUG] Current Audio Position - Started: " + song.GetAudioPosition());
-            Thread.Sleep(2000);
+            Thread.Sleep(2000); */
 
             /*song.Pause();
             Console.WriteLine("[DEBUG] Current Audio Position - Paused: " + song.GetAudioPosition());

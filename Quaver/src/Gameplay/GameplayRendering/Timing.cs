@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.GameState.States;
 using Quaver.Modifiers;
@@ -152,15 +153,15 @@ namespace Quaver.Gameplay.GameplayRendering
                     if (!SongIsPlaying)
                     {
                         SongIsPlaying = true;
-                        GameBase.SelectedBeatmap.Song.Play(0, GameBase.GameClock);
+                        SongManager.Play();
                     }
 
                     //If song time  > song end
-                    if (GameBase.SelectedBeatmap.Song.GetAudioPosition() >= LastNoteEnd)
+                    if (SongManager.Position >= LastNoteEnd)
                         SongIsDone = true;
                     //Calculate song pos from audio
                     else
-                        ActualSongTime = (GameBase.SelectedBeatmap.Song.GetAudioPosition() + (ActualSongTime + dt * GameBase.GameClock)) / 2f;
+                        ActualSongTime = (SongManager.Position + (ActualSongTime + dt * GameBase.GameClock)) / 2f;
                 }
             }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.Audio;
 using Quaver.Logging;
 using Quaver.Modifiers.Mods;
 
@@ -147,7 +148,7 @@ namespace Quaver.Modifiers
             {
                 GameBase.CurrentGameModifiers.RemoveAll(x => x.Type == ModType.Speed);
                 GameBase.GameClock = 1.0f;
-                GameBase.SelectedBeatmap.Song.ChangeSongSpeed();
+                SongManager.ChangeSongSpeed();
             }
             catch (Exception e)
             {

@@ -99,9 +99,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Resource1.Designer.cs" />
-    <Compile Include="src\Audio\AudioHandler.cs" />
-    <Compile Include="src\Audio\GameEffect.cs" />
     <Compile Include="src\Audio\MenuAudioPlayer.cs" />
+    <Compile Include="src\Audio\SongManager.cs" />
     <Compile Include="src\Commands\CommandHandler.cs" />
     <Compile Include="src\Commands\Command\BeatmapSearchCommand.cs" />
     <Compile Include="src\Commands\Command\ClearCommand.cs" />
@@ -160,7 +159,6 @@
     <Compile Include="src\Localization\Language.cs" />
     <Compile Include="src\Graphics\Sprite\Cursor.cs" />
     <Compile Include="src\GameBase.cs" />
-    <Compile Include="src\Audio\GameAudio.cs" />
     <Compile Include="src\Beatmaps\Beatmap.cs" />
     <Compile Include="src\Beatmaps\BeatmapUtils.cs" />
     <Compile Include="src\Config\ConfigHelper.cs" />
