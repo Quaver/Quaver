@@ -64,7 +64,7 @@ namespace Quaver.Gameplay.GameplayRendering
             }
 
             //Add offset after the last note
-            PlayingEndOffset = LastNoteEnd + 1000;
+            PlayingEndOffset = LastNoteEnd + 1500 * GameBase.GameClock;
 
             //Create Timing Points + SVs on a list
             SvQueue = new List<TimingObject>();
