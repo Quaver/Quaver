@@ -161,7 +161,7 @@ namespace Quaver.Gameplay.GameplayRendering
             for (i = 0; i < HitObjectHold.Count; i++)
             {
                 //LN is missed
-                if (PlayScreen.Timing.CurrentSongTime > HitObjectHold[i].EndTime + PlayScreen.ScoreManager.HitWindowPress[4])
+                if (PlayScreen.Timing.CurrentSongTime > HitObjectHold[i].EndTime + PlayScreen.ScoreManager.HitWindowRelease[3])
                 {
                     //Track LN late release with ScoreManager
                     PlayScreen.ScoreManager.Count(4,true);
