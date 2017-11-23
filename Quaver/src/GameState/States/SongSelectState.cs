@@ -162,8 +162,8 @@ namespace Quaver.GameState.States
 
             // Load background asynchronously if the backgrounds actually do differ
             if (oldMapBgPath != map.Directory + "/" + map.BackgroundPath)
-                Task.Run(() => GameBase.SelectedBeatmap.LoadBackground())
-                    .ContinueWith(t => BackgroundManager.Change(GameBase.SelectedBeatmap.Background));
+                Task.Run(() => GameBase.LoadBackground())
+                    .ContinueWith(t => BackgroundManager.Change(GameBase.CurrentBackground));
         }
 
         //TODO: Remove

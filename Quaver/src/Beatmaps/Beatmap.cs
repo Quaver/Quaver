@@ -128,12 +128,6 @@ namespace Quaver.Beatmaps
         public int SongLength { get; set; }
 
         /// <summary>
-        ///     The beatmap's background texture.
-        /// </summary>
-        [Ignore]
-        public Texture2D Background { get; set; }
-
-        /// <summary>
         ///     The actual parsed qua file for the beatmap.
         /// </summary>
         [Ignore]
@@ -143,19 +137,6 @@ namespace Quaver.Beatmaps
         ///     The amount of keys the beatmap has.
         /// </summary>
         public int Keys { get; set; }
-
-        /// <summary>
-        ///     Loads a beatmaps background file.
-        /// </summary>
-        internal void LoadBackground()
-        {
-            var bgPath = Config.Configuration.SongDirectory + "/" + Directory + "/" + BackgroundPath;
-
-            if (!File.Exists(bgPath))
-                return;
-
-            Background = ImageLoader.Load(bgPath);
-        }
 
         /// <summary>
         ///     Responsible for converting a Qua object, to a Beatmap object

@@ -84,8 +84,8 @@ namespace Quaver.Peppy
                     GameBase.ChangeBeatmap(map);
 
                     // Load and change background after import
-                    GameBase.SelectedBeatmap.LoadBackground();
-                    BackgroundManager.Change(GameBase.SelectedBeatmap.Background);
+                    GameBase.LoadBackground();
+                    BackgroundManager.Change(GameBase.CurrentBackground);
 
                     SongManager.Play();
 

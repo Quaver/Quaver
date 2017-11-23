@@ -206,6 +206,10 @@ namespace Quaver.Beatmaps
                 {
                     if (onMap == randomBeatmap)
                     {
+                        if (GameBase.CurrentBackground != null)
+                            GameBase.CurrentBackground.Dispose();
+
+                        GameBase.SelectedBeatmap = null;
                         GameBase.SelectedBeatmap = beatmap;
                         foundBeatmap = true;
                         break;

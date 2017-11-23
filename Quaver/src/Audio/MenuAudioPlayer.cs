@@ -70,10 +70,10 @@ namespace Quaver.Audio
             SongManager.Load();
 
             // Load Background and change it
-            GameBase.SelectedBeatmap.LoadBackground();
+            GameBase.LoadBackground();
 
-            if (GameBase.SelectedBeatmap.Background != null)
-                BackgroundManager.Change(GameBase.SelectedBeatmap.Background);
+            if (GameBase.CurrentBackground != null)
+                BackgroundManager.Change(GameBase.CurrentBackground);
 
             // Begin to play
             if (SongManager.Length > 1)
