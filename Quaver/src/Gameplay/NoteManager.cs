@@ -118,7 +118,7 @@ namespace Quaver.Gameplay
                         PlayScreen.Playfield.UpdateJudge(i, true);
                         PlayScreen.NoteRendering.KillHold(noteIndex,true);
                     }
-                    //If LN has been missed
+                    //If LN has been pressed early
                     else
                     {
                         PlayScreen.ScoreManager.Count(5, true);
