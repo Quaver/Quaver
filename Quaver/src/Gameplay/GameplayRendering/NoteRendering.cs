@@ -33,8 +33,8 @@ namespace Quaver.Gameplay.GameplayRendering
         internal List<HitObject> HitObjectPool { get; set; }
         internal List<HitObject> HitObjectDead { get; set; }
         internal List<HitObject> HitObjectHold { get; set; }
-        internal int HitObjectPoolSize { get; } = 200;
-        internal const uint RemoveTimeAfterMiss = 1000;
+        internal int HitObjectPoolSize { get; } = 255;
+        internal uint RemoveTimeAfterMiss;
         internal Boundary Boundary;
 
         //Track
@@ -56,6 +56,9 @@ namespace Quaver.Gameplay.GameplayRendering
             // Do config stuff
             ScrollNegativeFactor = Config.Configuration.DownScroll ? -1 : 1;
             ScrollSpeed = Configuration.ScrollSpeed / (20f * GameBase.GameClock); //todo: balance curve
+
+            // Modifiers
+            RemoveTimeAfterMiss = (uint)(1000 * GameBase.GameClock);
 
             //Initialize Track
             int i;
