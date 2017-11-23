@@ -35,8 +35,8 @@ namespace Quaver.Gameplay
         internal int ConsistancyMultiplier { get; set; }
         internal int Combo { get; set; }
         internal int ScoreTotal { get; set; }
-        internal int ScoreCount { get; set; }
-        internal int ScoreMax { get; set; }
+        private int ScoreCount { get; set; }
+        private int ScoreMax { get; set; }
         internal int MultiplierCount { get; set; }
         internal int MultiplierIndex { get; set; }
 
@@ -90,7 +90,7 @@ namespace Quaver.Gameplay
             Accuracy = Math.Max(Accuracy / (JudgeCount * 100), 0);
             RelativeAcc = Math.Max(RelativeAcc / (TotalJudgeCount * 100), -100);
 
-            //Update ConsistancyMultiplier and Combo
+            //Update Multiplier and Combo
             if (index < 4)
             {
                 Combo++;
@@ -106,10 +106,13 @@ namespace Quaver.Gameplay
                 ConsistancyMultiplier -= 10;
                 if (ConsistancyMultiplier < 0) ConsistancyMultiplier = 0;
             }
-            MultiplierIndex = (int)Math.Floor((float)MultiplierCount/50);
+            MultiplierIndex = (int)Math.Floor((float)MultiplierCount/10);
+
+            if (index < 4)
+                ScoreCount += JudgePressSpread[index] + MultiplierIndex;
 
             //Update Score todo: actual score calculation
-            ScoreTotal = (int)(1000000 * Math.Max((RelativeAcc + 1) / 2, 0)); //this is temp.
+            ScoreTotal = (int)(1000000 * ((float)ScoreCount / ScoreMax)); //this is temp.
             //ScoreTotal = (int)(1000000f * (ScoreTotal/ScoreMax));
         }
 
@@ -126,8 +129,6 @@ namespace Quaver.Gameplay
             MultiplierCount = 0;
             MultiplierIndex = 0;
             ScoreTotal = 0;
-            ScoreCount = 0;
-            ScoreMax = 0;
             JudgeCount = 0;
             JudgeReleaseSpread = new int[6];
             JudgePressSpread = new int[6];
@@ -135,10 +136,22 @@ namespace Quaver.Gameplay
             TotalJudgeCount = Count;
             JudgeDifficulty = od;
 
-            //Create Difficulty Curve
+            //Create Difficulty Curve for od
             var curve = (float)Math.Pow(od+1, -0.42) * GameBase.GameClock;
             HitWindowPress = new float[5] { 18 * GameBase.GameClock, 86 * curve, 132 * curve, 170 * curve, 250 * curve };
             HitWindowRelease = new float[4] { 30 * GameBase.GameClock, HitWindowPress[1]*1.35f, HitWindowPress[2] * 1.35f, HitWindowPress[3] * 1.35f };
+
+            //count max score
+            ScoreMax = 0;
+            if (Count < 150)
+            {
+                for (var i = 0; i < 150; i++)
+                    ScoreMax += 100 + (int)Math.Floor(i / 10f) * 10;
+            }
+            else
+                ScoreMax = 25500 + (Count - 150) * 115;
+
+            Console.WriteLine("Max Score: " + ScoreMax);
         }
 
         /// <summary>
