@@ -198,9 +198,6 @@ namespace Quaver
             // Stop the song and free its resources
             SongManager.Stop();
 
-            if (CurrentBackground != null)
-                CurrentBackground.Dispose();
-
             SelectedBeatmap = null;
             SelectedBeatmap = map;
 
