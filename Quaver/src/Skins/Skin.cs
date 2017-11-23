@@ -287,10 +287,10 @@ namespace Quaver.Skins
                         JudgeMarv = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"hit":
-                        Hit = GameBase.Content.Load<SoundEffect>("hit");
+                        Hit = LoadSoundEffectElement(element, skinElementPath);
                         break;
                     case @"combobreak":
-                        ComboBreak = GameBase.Content.Load<SoundEffect>("combobreak");
+                        ComboBreak = LoadSoundEffectElement(element, skinElementPath);
                         break;
                     default:
                         break;
@@ -314,6 +314,22 @@ namespace Quaver.Skins
             //Console.WriteLine($"[SKIN LOADER] Skin element: {element}.png could not be found. Resulting to default: {path}");
 
             return GameBase.Content.Load<Texture2D>(path);
+        }
+
+        /// <summary>
+        ///     Loads a sound effect element from a skin folder.
+        /// </summary>
+        private SoundEffect LoadSoundEffectElement(string element, string path)
+        {
+            //   Only load .wav files for skin elements
+            path = path.Replace(".png", ".wav");
+
+            // Load the actual file stream if it exists.
+            if (File.Exists(path))
+                return SoundEffect.FromStream(new FileStream(path, FileMode.Open));
+
+            // Load the default if the path doesn't exist
+            return GameBase.Content.Load<SoundEffect>(element);
         }
 
         /// <summary>
