@@ -8,17 +8,20 @@
             "type": "shell",
             "command": "msbuild",
             "args": [
-                // Ask msbuild to generate full paths for file names.
                 "/property:GenerateFullPaths=true",
                 "/t:build"
             ],
             "group": "build",
             "presentation": {
-                // Reveal the output only if unrecognized errors occur.
                 "reveal": "silent"
             },
-            // Use the standard MS compiler pattern to detect errors, warnings and infos
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "run",
+            "command": "${workspaceRoot}/Quaver/bin/debug/Quaver.exe",
+            "group": "test",
+            "problemMatcher": []
         }
     ]
 }
