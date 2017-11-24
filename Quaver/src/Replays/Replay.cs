@@ -140,7 +140,7 @@ namespace Quaver.Replays
             };
 
             foreach (var frame in ReplayFrames)
-                sw.WriteLine($"{frame.TimeSinceLastFrame}|{frame.KeyPressState.ToString()}");
+                sw.WriteLine($"{frame.SongTime}|{frame.KeyPressState.ToString()}");
 
             sw.Close();
         }

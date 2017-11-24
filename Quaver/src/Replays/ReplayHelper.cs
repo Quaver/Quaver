@@ -49,6 +49,10 @@ namespace Quaver.Replays
                         SongTime = (int)SongManager.Position,
                     };
 
+                    // Don't capture frames if the song hasn't started yet
+                    if (frame.SongTime == 0)
+                        return;
+
                     // Add the first frame to the list of replay frames.
                     if (ReplayFrames.Count == 0)
                     {
