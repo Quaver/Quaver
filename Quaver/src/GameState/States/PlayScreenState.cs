@@ -99,10 +99,6 @@ namespace Quaver.GameState.States
 
             // Update Discord Presence
             GameBase.ChangeDiscordPresenceGameplay(false);
-
-            // Create the file for replays if debugging
-            if (Configuration.Debug)
-                File.Create(Replay.DebugFilePath);
             
             //Todo: remove
             Logger.Add("KeyCount", "", Color.Pink);
