@@ -178,7 +178,7 @@ namespace Quaver.Replays
             {
                 var frame = new ReplayFrame
                 {
-                    SongTime = (int)(objectGroup.Key * GameBase.GameClock)
+                    SongTime = (int)(objectGroup.Key / GameBase.GameClock)
                 };
 
                 // Get the key press state of the current object group
@@ -211,7 +211,7 @@ namespace Quaver.Replays
                 // Add a new key up frame.
                 var frame = new ReplayFrame
                 {
-                    SongTime = (int) (objectGroup.Key * GameBase.GameClock),
+                    SongTime = (int) (objectGroup.Key / GameBase.GameClock),
                     KeyPressState = 0
                 };
 
