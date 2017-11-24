@@ -60,6 +60,11 @@ namespace Quaver.GameState.States
         private TextButton BackButton { get; set; }
 
         /// <summary>
+        ///     The replay from the previous play state
+        /// </summary>
+        private Replay Replay { get; set; }
+
+        /// <summary>
         ///     The replay frames that were captured during the previous play.
         /// </summary>
         private List<ReplayFrame> ReplayFrames { get; set; }
@@ -75,28 +80,22 @@ namespace Quaver.GameState.States
         /// <param name="difficultyName"></param>
         public ScoreScreenState(string beatmapMd5, ScoreManager scoreData, string artist, string title, string difficultyName, List<ReplayFrame> replayFrames)
         {
+            // Initialize data
             BeatmapMd5 = beatmapMd5;
             ScoreData = scoreData;
             Artist = artist;
             Title = title;
             DifficultyName = difficultyName;
             ReplayFrames = replayFrames;
+            Replay = CreateReplayFromScore();
 
             // Insert the score into the database
             Task.Run(async () => { await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore()); });
-
-            // Log relevant data
-            Logger.Log("------------------------------", Color.AliceBlue);
-            Logger.Log($"Player: '{Configuration.Username}' has completed a map!", Color.Cyan);
-            Logger.Log($"Beatmap: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]", Color.AliceBlue);
-            Logger.Log("MD5 Checksum: " + BeatmapMd5, Color.Cyan);
-            Logger.Log($"Date: {DateTime.Now.ToString(CultureInfo.InvariantCulture)}", Color.AliceBlue);
-            Logger.Log("Score: " + ScoreData.ScoreTotal, Color.Cyan);
-            Logger.Log($"Accuracy: {Math.Round(ScoreData.Accuracy * 100, 2)}", Color.Cyan);
-            Logger.Log($"Max Combo: {ScoreData.Combo}", Color.Cyan);
-            Logger.Log("------------------------------", Color.AliceBlue);
         }
 
+        /// <summary>
+        ///     Initialize
+        /// </summary>
         public void Initialize()
         {
             BackButton = new TextButton(new Vector2(300,200),"SONG SELECT" )
@@ -105,29 +104,45 @@ namespace Quaver.GameState.States
             };
             BackButton.Clicked += OnBackButtonClick;
 
-            Logger.Log($"{ReplayFrames.Count} replay frames captured during that play.", Color.Pink);
+            // Log the score
+            LogScore();
 
             UpdateReady = true;
         }
-
-        private void OnBackButtonClick(object sender, EventArgs e)
-        {
-            GameBase.GameStateManager.ChangeState(new SongSelectState());
-        }
-
+        
+        /// <summary>
+        ///     Unload
+        /// </summary>
         public void UnloadContent()
         {
             BackButton.Destroy();
         }
 
+        /// <summary>
+        ///     Update
+        /// </summary>
+        /// <param name="dt"></param>
         public void Update(double dt)
         {
             BackButton.Update(dt);
         }
 
+        /// <summary>
+        ///     Draw
+        /// </summary>
         public void Draw()
         {
             BackButton.Draw();
+        }
+
+        /// <summary>
+        ///     Back Button Click Event Handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackButtonClick(object sender, EventArgs e)
+        {
+            GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 
         /// <summary>
@@ -141,7 +156,7 @@ namespace Quaver.GameState.States
             {
                 BeatmapMd5 = BeatmapMd5,
                 Name = Configuration.Username,
-                DateTime = DateTime.Now.ToString(CultureInfo.InvariantCulture),
+                DateTime = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
                 Score = ScoreData.ScoreTotal,
                 Accuracy = Math.Round(ScoreData.Accuracy * 100, 2),
                 MaxCombo = ScoreData.Combo,
@@ -161,6 +176,64 @@ namespace Quaver.GameState.States
                 ScrollSpeed = Configuration.ScrollSpeed,
                 ReplayData = ""
             };
+        }
+
+        /// <summary>
+        ///     Creates a replay object from all the score data
+        /// </summary>
+        private Replay CreateReplayFromScore()
+        {
+            return new Replay
+            {
+                QuaverVersion = "b" + DateTime.Today.ToString("yyyyddMM"),
+                BeatmapMd5 = BeatmapMd5,
+                ReplayMd5 = "Not Implemented",
+                Name = Configuration.Username,
+                Date = DateTime.UtcNow,
+                Mods = GameBase.CurrentGameModifiers,
+                ScrollSpeed = Configuration.ScrollSpeed,
+                Score = ScoreData.ScoreTotal,
+                Accuracy = (float)Math.Round(ScoreData.Accuracy * 100, 2),
+                MaxCombo = ScoreData.Combo,
+                MarvPressCount = ScoreData.JudgePressSpread[0],
+                MarvReleaseCount = ScoreData.JudgeReleaseSpread[0],
+                PerfPressCount = ScoreData.JudgePressSpread[1],
+                PerfReleaseCount = ScoreData.JudgeReleaseSpread[1],
+                GreatPressCount = ScoreData.JudgePressSpread[2],
+                GreatReleaseCount = ScoreData.JudgeReleaseSpread[2],
+                GoodPressCount = ScoreData.JudgePressSpread[3],
+                GoodReleaseCount = ScoreData.JudgeReleaseSpread[3],
+                OkayPressCount = ScoreData.JudgePressSpread[4],
+                OkayReleaseCount = ScoreData.JudgeReleaseSpread[4],
+                Misses = ScoreData.JudgePressSpread[5] + ScoreData.JudgeReleaseSpread[5],
+                ReplayFrames = ReplayFrames
+            };
+        }
+
+        /// <summary>
+        ///     Logs the score to the runtime log and console.
+        /// </summary>
+        private void LogScore()
+        {
+            Logger.Log("----------------------------------------", Color.Pink);
+            Logger.Log($"Quaver Version: {Replay.QuaverVersion}", Color.Pink);
+            Logger.Log($"Beatmap MD5: {Replay.BeatmapMd5}", Color.Pink);
+            Logger.Log($"Replay MD5: {Replay.ReplayMd5}", Color.Pink);
+            Logger.Log($"Player: {Configuration.Username}", Color.Pink);
+            Logger.Log($"Date: {Replay.Date.ToString(CultureInfo.InvariantCulture)}", Color.Pink);
+            Logger.Log($"Mods: {GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier)}", Color.Pink);
+            Logger.Log($"Scroll Speed: {Configuration.ScrollSpeed}", Color.Pink);
+            Logger.Log($"Score: {Replay.Score}", Color.Pink);
+            Logger.Log($"Accuracy: {Replay.Accuracy}%", Color.Pink);
+            Logger.Log($"Max Combo: {Replay.MaxCombo}", Color.Pink);
+            Logger.Log($"Marv Count: {Replay.MarvPressCount + Replay.MarvReleaseCount}", Color.Pink);
+            Logger.Log($"Perf Count: {Replay.PerfPressCount + Replay.PerfReleaseCount}", Color.Pink);
+            Logger.Log($"Great Count: {Replay.GreatPressCount + Replay.GreatReleaseCount}", Color.Pink);
+            Logger.Log($"Good Count: {Replay.GoodPressCount + Replay.GoodReleaseCount}", Color.Pink);
+            Logger.Log($"Okay Count: {Replay.OkayPressCount + Replay.OkayReleaseCount}", Color.Pink);
+            Logger.Log($"Miss Count: {Replay.Misses}", Color.Pink);
+            Logger.Log($"Replay Frame Count: {Replay.ReplayFrames.Count}", Color.Pink);
+            Logger.Log("----------------------------------------", Color.Pink);
         }
     }
 }
