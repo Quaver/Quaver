@@ -143,5 +143,116 @@ namespace Quaver.Replays
                     break;
             }
         }
+
+        /// <summary>
+        ///     Generates a perfect, 0ms hit replay to be used during auto play
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        internal static Replay GeneratePerfectReplay(List<HitObject> hitObjects)
+        {
+            // Create the base replay object
+            var replay = new Replay()
+            {
+                Name = "Quaver",
+                Date = DateTime.UtcNow,
+                Score = 100000,
+                Accuracy = 100,
+                ReplayFrames = new List<ReplayFrame>()
+            };
+
+            // Create a dictionary in groups of the hit object's start times.
+            var startTimeGroup = hitObjects.GroupBy(x => x.StartTime).ToDictionary(x => x.Key, x => x.ToList());
+
+            // Create a dictionary in groups but this time of the object's end times. (LNs)
+            var endTimeGroup = hitObjects.GroupBy(x => x.EndTime).ToDictionary(x => x.Key, x => x.ToList());
+
+            // For every object we want to create a perfect frame hit. 
+            // To achieve this, we'll need to do two things:
+            //  - For every regular note, we'll need to add two frames
+            //      1. The initial key down frame
+            //      2. An additional frame 1ms later with key up.
+            //  - For every LN:
+            //      1. A frame on the object start time with key down.
+            //      2. A frame on the object end time with key up.
+            foreach (var objectGroup in startTimeGroup)
+            {
+                var frame = new ReplayFrame
+                {
+                    SongTime = (int)(objectGroup.Key * GameBase.GameClock)
+                };
+
+                // Get the key press state of the current object group
+                var kps = new KeyPressState();
+                objectGroup.Value.ForEach(x => kps = kps | ConvertKeyLaneToKeyPressState(x.KeyLane));
+
+                // Add the KeyPressState to the frame
+                frame.KeyPressState = kps;
+
+                // Add the key down replay frame to the list
+                replay.ReplayFrames.Add(frame);
+
+                // Now that we've added the first one, we need to add a second key up frame 1ms later
+                var keyUpFrame = new ReplayFrame
+                {
+                    SongTime = frame.SongTime + 1,
+                    KeyPressState = 0
+                };
+
+                replay.ReplayFrames.Add(keyUpFrame);
+            }
+
+            // LN Key Up Frames
+            foreach (var objectGroup in endTimeGroup)
+            {
+                // Disregard end times of 0, as those are just normal hit objects.
+                if (objectGroup.Key == 0)
+                    continue;
+
+                // Add a new key up frame.
+                var frame = new ReplayFrame
+                {
+                    SongTime = (int) (objectGroup.Key * GameBase.GameClock),
+                    KeyPressState = 0
+                };
+
+                replay.ReplayFrames.Add(frame);
+            }
+
+            // Order the frames by their start time
+            replay.ReplayFrames = replay.ReplayFrames.OrderBy(x => x.SongTime).ToList();
+
+            // Write the automatically generated file to a log file.
+            replay.WriteToLogFile(Configuration.DataDirectory + "/" + "autoplay_replay.txt");
+
+            return replay;
+        }
+
+        /// <summary>
+        ///     Converts a Qua key lane to a KeyPressState
+        /// </summary>
+        /// <param name="lane"></param>
+        /// <returns></returns>
+        private static KeyPressState ConvertKeyLaneToKeyPressState(int lane)
+        {
+            switch (lane)
+            {
+                case 1:
+                    return KeyPressState.K1;
+                case 2:
+                    return KeyPressState.K2;
+                case 3:
+                    return KeyPressState.K3;
+                case 4:
+                    return KeyPressState.K4;
+                case 5:
+                    return KeyPressState.K5;
+                case 6:
+                    return KeyPressState.K6;
+                case 7:
+                    return KeyPressState.K7;
+                default:
+                    return new KeyPressState();
+            }
+        }
     }
 }
