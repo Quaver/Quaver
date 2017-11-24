@@ -89,6 +89,9 @@ namespace Quaver.GameState.States
             ReplayFrames = replayFrames;
             Replay = CreateReplayFromScore();
 
+            // Write replay to log file if debug is toggled
+            Replay.WriteToLogFile();
+
             // Insert the score into the database
             Task.Run(async () => { await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore()); });
         }

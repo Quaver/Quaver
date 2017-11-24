@@ -102,7 +102,7 @@ namespace Quaver.GameState.States
 
             // Create the file for replays if debugging
             if (Configuration.Debug)
-                File.Create(ReplayHelper.DebugFilePath);
+                File.Create(Replay.DebugFilePath);
             
             //Todo: remove
             Logger.Add("KeyCount", "", Color.Pink);
