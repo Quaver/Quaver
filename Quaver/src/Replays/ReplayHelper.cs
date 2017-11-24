@@ -32,11 +32,6 @@ namespace Quaver.Replays
         internal static Task LastTask { get; set; }
 
         /// <summary>
-        ///     Stores the path of the test replay file
-        /// </summary>
-        internal static string DebugFilePath { get; } = Configuration.DataDirectory + "/" + "last_replay.txt";
-
-        /// <summary>
         ///     This adds the correct frames to replays, called every frame during gameplay
         /// </summary>
         internal static void AddReplayFrames(List<ReplayFrame> ReplayFrames, Qua qua)
@@ -60,8 +55,6 @@ namespace Quaver.Replays
                         // Check keyboard state
                         CheckKeyboardstate(qua, frame);
 
-                        AppendToDebugFile(frame);
-
                         ReplayFrames.Add(frame);
                         return;
                     }
@@ -79,17 +72,14 @@ namespace Quaver.Replays
                     // then this frame must be very important.
                     if (lastKeyPressState != frame.KeyPressState)
                     {
-                        AppendToDebugFile(frame);
                         ReplayFrames.Add(frame);
                         return;
                     }
 
+
                     // Start capturing frames at 60fps
                     if (ReplayFrames.Count != 0 && elapsed - ReplayFrames.Last().GameTime >= ReplayFpsInterval)
-                    {
-                        AppendToDebugFile(frame);
                         ReplayFrames.Add(frame);
-                    }
                 });
         }
 
@@ -143,24 +133,6 @@ namespace Quaver.Replays
                 default:
                     break;
             }
-        }
-
-        /// <summary>
-        ///     Appends a frame to a test file if debug mode is on.
-        /// </summary>
-        /// <param name="frame"></param>
-        private static void AppendToDebugFile(ReplayFrame frame)
-        {
-            if (!Configuration.Debug)
-                return;
-
-            var sw = new StreamWriter(DebugFilePath, true)
-            {
-                AutoFlush = true
-            };
-
-            sw.WriteLine($"{frame.TimeSinceLastFrame}|{frame.KeyPressState.ToString()}");
-            sw.Close();
         }
     }
 }

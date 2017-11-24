@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Config;
 using Quaver.Modifiers;
 
 namespace Quaver.Replays
@@ -118,5 +120,29 @@ namespace Quaver.Replays
         ///     The list of replay frame data contained in the replay
         /// </summary>
         public List<ReplayFrame> ReplayFrames { get; set; }
+
+        /// <summary>
+        ///     Stores the path of the test replay file
+        /// </summary>
+        internal static string DebugFilePath { get; } = Configuration.DataDirectory + "/" + "last_replay.txt";
+
+        /// <summary>
+        ///     Writes the replay to a log file if in debug mode
+        /// </summary>
+        internal void WriteToLogFile()
+        {
+            if (!Configuration.Debug)
+                return;
+
+            var sw = new StreamWriter(DebugFilePath, true)
+            {
+                AutoFlush = true
+            };
+
+            foreach (var frame in ReplayFrames)
+                sw.WriteLine($"{frame.TimeSinceLastFrame}|{frame.KeyPressState.ToString()}");
+
+            sw.Close();
+        }
     }
 }
