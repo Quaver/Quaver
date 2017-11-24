@@ -221,6 +221,14 @@ namespace Quaver.Replays
             // Order the frames by their start time
             replay.ReplayFrames = replay.ReplayFrames.OrderBy(x => x.SongTime).ToList();
 
+            // Last step ladies and gentlemen, and that's to remove the frames where
+            // another note is pressed while it's on the release frame. 
+            // so... just say peace out to the extra unneeded frame.
+            for (var i = 1; i < replay.ReplayFrames.Count; i++)
+                if (replay.ReplayFrames[i].SongTime == replay.ReplayFrames[i - 1].SongTime && replay.ReplayFrames[i].KeyPressState == 0)
+                    replay.ReplayFrames.RemoveAt(i);
+
+        
             // Write the automatically generated file to a log file.
             replay.WriteToLogFile(Configuration.DataDirectory + "/" + "autoplay_replay.txt");
 
