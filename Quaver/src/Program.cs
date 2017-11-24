@@ -102,6 +102,9 @@ namespace Quaver
         /// </summary>
         private static void SetupGame()
         {
+            // Set the build version
+            GameBase.BuildVersion = BeatmapUtils.GetMd5Checksum(Configuration.GameDirectory + "/" + "Quaver.exe");
+
             // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
             var loadGame = Task.Run(async () =>
             {

@@ -164,6 +164,11 @@ namespace Quaver
         public static Stopwatch GameTime { get; set;} = Stopwatch.StartNew();
 
         /// <summary>
+        ///     The build version of the game (The md5 hash of the exe)
+        /// </summary>
+        public static string BuildVersion { get; set; }
+
+        /// <summary>
         ///     Whenever the settings for window size is changed, call this method to update the window.
         /// </summary>
         /// <param name="newSize"></param>
