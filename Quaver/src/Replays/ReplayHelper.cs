@@ -36,6 +36,11 @@ namespace Quaver.Replays
         /// </summary>
         internal static void AddReplayFrames(List<ReplayFrame> ReplayFrames, Qua qua)
         {
+            if (LastTask != null && !LastTask.IsCompleted)
+            {
+                LastTask.Wait();
+            }
+                
             if (LastTask == null || LastTask.IsCompleted)
                 LastTask = Task.Run(() =>
                 {
