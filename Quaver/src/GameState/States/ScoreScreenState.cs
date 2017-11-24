@@ -185,7 +185,7 @@ namespace Quaver.GameState.States
         {
             return new Replay
             {
-                QuaverVersion = "b" + DateTime.Today.ToString("yyyyddMM"),
+                QuaverVersion = GameBase.BuildVersion,
                 BeatmapMd5 = BeatmapMd5,
                 ReplayMd5 = "Not Implemented",
                 Name = Configuration.Username,
