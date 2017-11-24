@@ -11,6 +11,7 @@ using Quaver.Beatmaps;
 using Quaver.Gameplay;
 using Quaver.Logging;
 using Quaver.QuaFile;
+using Quaver.Replays;
 
 namespace Quaver.GameState.States
 {
@@ -74,6 +75,11 @@ namespace Quaver.GameState.States
 
                 if (!qua.IsValidQua)
                     throw new Exception("[SONG LOADING STATE] The .qua file could NOT be loaded!");
+
+                // Test - Generates a perfect replay.
+                // TODO: Only create this if an auto-play game modifier is activated.
+                // The game should start in replay mode.
+                ReplayHelper.GeneratePerfectReplay(qua.HitObjects);
 
                 // Set the beatmap's Qua. 
                 // We parse it and set it each time the player is going to play to kmake sure they are
