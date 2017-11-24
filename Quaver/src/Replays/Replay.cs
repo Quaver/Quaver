@@ -129,12 +129,19 @@ namespace Quaver.Replays
         /// <summary>
         ///     Writes the replay to a log file if in debug mode
         /// </summary>
-        internal void WriteToLogFile()
+        internal void WriteToLogFile(string path = "")
         {
             if (!Configuration.Debug)
                 return;
 
-            var sw = new StreamWriter(DebugFilePath, true)
+            // Create file and close it.
+            if (path == "")
+                path = DebugFilePath;
+
+            var file = File.Create(path);
+            file.Close();
+
+            var sw = new StreamWriter(path, true)
             {
                 AutoFlush = true
             };
