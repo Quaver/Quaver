@@ -37,7 +37,7 @@ namespace Quaver.Replays
         /// <summary>
         ///     The bitwise combination of mods that were used during the replay
         /// </summary>
-        internal ModIdentifier Mods { get; set; }
+        internal List<IMod> Mods { get; set; }
 
         /// <summary>
         ///     The scroll speed the player used during this play.
