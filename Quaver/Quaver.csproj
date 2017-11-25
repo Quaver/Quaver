@@ -200,6 +200,22 @@
     <Compile Include="src\Utility\FpsCounter.cs" />
     <Compile Include="src\Utility\ImageLoader.cs" />
     <Compile Include="src\Utility\JsonResourceReader.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Common\CommandLineParser.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Common\CRC.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Common\InBuffer.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Common\OutBuffer.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Compress\LZMA\LzmaBase.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Compress\LZMA\LzmaDecoder.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Compress\LZMA\LzmaEncoder.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Compress\LZ\IMatchFinder.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Compress\LZ\LzBinTree.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Compress\LZ\LzInWindow.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Compress\LZ\LzOutWindow.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Compress\RangeCoder\RangeCoder.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Compress\RangeCoder\RangeCoderBit.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\Compress\RangeCoder\RangeCoderBitTree.cs" />
+    <Compile Include="src\Utility\SevenZip\7zip\ICoder.cs" />
+    <Compile Include="src\Utility\SevenZip\SevenZipHelper.cs" />
     <Compile Include="src\Utility\Util.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -92,6 +92,10 @@ namespace Quaver.GameState.States
             // Write replay to log file if debug is toggled
             Replay.WriteToLogFile();
 
+            // Automatically write the replay if in debug mode.
+            if (Configuration.Debug)
+                Replay.Write($"{Configuration.Username} - {Artist} - {Title} [{DifficultyName}] ({DateTime.UtcNow})");
+
             // Insert the score into the database
             Task.Run(async () => { await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore()); });
         }
@@ -218,7 +222,6 @@ namespace Quaver.GameState.States
         /// </summary>
         private void LogScore()
         {
-            Logger.Log("----------------------------------------", Color.Pink);
             Logger.Log($"Quaver Version: {Replay.QuaverVersion}", Color.Pink);
             Logger.Log($"Beatmap MD5: {Replay.BeatmapMd5}", Color.Pink);
             Logger.Log($"Replay MD5: {Replay.ReplayMd5}", Color.Pink);
@@ -236,7 +239,6 @@ namespace Quaver.GameState.States
             Logger.Log($"Okay Count: {Replay.OkayPressCount + Replay.OkayReleaseCount}", Color.Pink);
             Logger.Log($"Miss Count: {Replay.Misses}", Color.Pink);
             Logger.Log($"Replay Frame Count: {Replay.ReplayFrames.Count}", Color.Pink);
-            Logger.Log("----------------------------------------", Color.Pink);
         }
     }
 }
