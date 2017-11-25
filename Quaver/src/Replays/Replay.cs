@@ -43,7 +43,7 @@ namespace Quaver.Replays
         /// <summary>
         ///     The bitwise combination of mods that were used during the replay
         /// </summary>
-        internal List<IMod> Mods { get; set; }
+        internal ModIdentifier Mods { get; set; }
 
         /// <summary>
         ///     The scroll speed the player used during this play.
@@ -148,7 +148,7 @@ namespace Quaver.Replays
                 bw.Write(ReplayMd5);
                 bw.Write(Name);
                 bw.Write(Date.ToString(CultureInfo.InvariantCulture));
-                bw.Write(Mods.Sum(x => (int)x.ModIdentifier));
+                bw.Write((int)Mods);
                 bw.Write(ScrollSpeed);
                 bw.Write(Score);
                 bw.Write(Accuracy);
