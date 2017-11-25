@@ -329,5 +329,20 @@ namespace Quaver.Utility
                 return ms.ToArray();
             }
         }
+
+        /// <summary>
+        ///     Makes a string safe to be written as a file name.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        internal static string FileNameSafeString(string str)
+        {
+            var invalidPathChars = Path.GetInvalidFileNameChars();
+
+            foreach (var invalidChar in invalidPathChars)
+                str = str.Replace(invalidChar.ToString(), "");
+
+            return str;
+        }
     }
 }
