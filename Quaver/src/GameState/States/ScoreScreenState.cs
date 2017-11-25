@@ -71,6 +71,11 @@ namespace Quaver.GameState.States
         private List<ReplayFrame> ReplayFrames { get; set; }
 
         /// <summary>
+        ///     The path to save this particular replay at.
+        /// </summary>
+        private string ReplayPath { get; set; }
+
+        /// <summary>
         ///     Constructor - In order to get to this state, it's essential that you pass in 
         ///     the beatmap md5 and the score data.
         /// </summary>
@@ -90,15 +95,15 @@ namespace Quaver.GameState.States
             ReplayFrames = replayFrames;
             Replay = CreateReplayFromScore();
 
-            // Write replay to log file if debug is toggled
-            Replay.WriteToLogFile();
-
-            // Automatically write the replay if in debug mode.
-            if (Configuration.Debug)
-                Replay.Write($"{Configuration.Username} - {Artist} - {Title} [{DifficultyName}] ({DateTime.UtcNow})");
+            ReplayPath = $"{Configuration.Username} - {Artist} - {Title} [{DifficultyName}] ({DateTime.UtcNow})";
 
             // Insert the score into the database
-            Task.Run(async () => { await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore(Replay)); });
+            Task.Run(() =>
+            {
+                // Write replay to log file if debug is toggled
+                Replay.WriteToLogFile();
+                Replay.Write(ReplayPath, true);
+            }).ContinueWith(async (t) => await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore(Replay)));
         }
 
         /// <summary>
@@ -182,7 +187,7 @@ namespace Quaver.GameState.States
                 Rating = 0.0f,
                 Mods = GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier),
                 ScrollSpeed = Configuration.ScrollSpeed,
-                ReplayData = ""
+                ReplayData = ReplayPath += ".qua"
             };
         }
 
