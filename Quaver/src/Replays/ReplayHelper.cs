@@ -335,5 +335,19 @@ namespace Quaver.Replays
                     return new KeyPressState();
             }
         }
+
+        /// <summary>
+        ///     Converts all replay frames to a string
+        /// </summary>
+        public static string ReplayFramesToString(List<ReplayFrame> replayFrames)
+        {
+            // The format for the replay frames are the following:
+            //      SongTime|KeysPressed,
+            var frameStr = "";
+
+            replayFrames.ForEach(x => frameStr += $"{x.SongTime}|{(int)x.KeyPressState},");
+
+            return frameStr;
+        }
     }
 }
