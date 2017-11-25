@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -190,14 +191,13 @@ namespace Quaver.GameState.States
         /// </summary>
         private Replay CreateReplayFromScore()
         {
-            return new Replay
+            var rp = new Replay
             {
                 QuaverVersion = GameBase.BuildVersion,
                 BeatmapMd5 = BeatmapMd5,
                 ReplayMd5 = "Not Implemented",
                 Name = Configuration.Username,
                 Date = DateTime.UtcNow,
-                Mods = GameBase.CurrentGameModifiers,
                 ScrollSpeed = Configuration.ScrollSpeed,
                 Score = ScoreData.ScoreTotal,
                 Accuracy = (float)Math.Round(ScoreData.Accuracy * 100, 2),
@@ -215,6 +215,11 @@ namespace Quaver.GameState.States
                 Misses = ScoreData.JudgePressSpread[5] + ScoreData.JudgeReleaseSpread[5],
                 ReplayFrames = ReplayFrames
             };
+
+            // Add the mods to the replay
+            GameBase.CurrentGameModifiers.ForEach(x => rp.Mods = rp.Mods | x.ModIdentifier);
+
+            return rp;
         }
 
         /// <summary>
