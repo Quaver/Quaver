@@ -132,12 +132,17 @@ namespace Quaver.Replays
 
         /// <summary>
         ///     Writes the replay to a binary file (.qur)
+        ///     Returns the path to the file
         /// </summary>
-        internal void Write(string fileName)
+        internal string Write(string fileName, bool toDataDir = false)
         {
-            // Create the full path
-            var path = Configuration.ReplayDirectory + "/" + Util.FileNameSafeString(fileName) + ".qur";
-            Logger.Log(path, Color.AliceBlue);
+            var path = "";
+
+            // Create the full path depending on if we want to write it to the data directory or not
+            if (toDataDir)
+                path = Configuration.DataDirectory + "/r/" + Util.FileNameSafeString(fileName) + ".qur";
+            else
+                path = Configuration.ReplayDirectory + "/" + Util.FileNameSafeString(fileName) + ".qur";
 
             using (var replayDataStream = new MemoryStream(Encoding.ASCII.GetBytes(ReplayHelper.ReplayFramesToString(ReplayFrames))))
             using (var fs = new FileStream(path, FileMode.Create))
@@ -166,6 +171,8 @@ namespace Quaver.Replays
                 bw.Write(Misses);
                 SevenZip.Helper.Compress(replayDataStream, fs);
             }
+
+            return path;
         }
 
         /// <summary>
