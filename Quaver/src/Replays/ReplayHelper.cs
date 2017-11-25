@@ -46,6 +46,7 @@ namespace Quaver.Replays
             // Read the replay data
             using (var fs = new FileStream(path, FileMode.Open))
             using (var br = new BinaryReader(fs))
+            using (var outStream = new MemoryStream())
             {
                 replay.QuaverVersion = br.ReadString();
                 replay.BeatmapMd5 = br.ReadString();
@@ -73,30 +74,29 @@ namespace Quaver.Replays
                 replay.ReplayFrames = new List<ReplayFrame>();
 
                 // Decompress & Deserialize replay frames
-                using (var outStream = new MemoryStream())
+                SevenZip.Helper.Decompress(br.BaseStream, outStream);
+
+                // Split the frames up by commas
+                var frames = Encoding.ASCII.GetString(outStream.ToArray()).Split(',');
+
+                // Add all the replay frames to the object
+                foreach (var frame in frames)
                 {
-                    SevenZip.Helper.Decompress(br.BaseStream, outStream);
-
-                    var frames = Encoding.ASCII.GetString(outStream.ToArray()).Split(',');
-
-                    foreach (var frame in frames)
+                    try
                     {
-                        try
-                        {
-                            // Split up the frame string
-                            var frameSplit = frame.Split('|');
+                        // Split up the frame string by SongTime|KeyPressState
+                        var frameSplit = frame.Split('|');
 
-                            // Add the replay frame to the list!
-                            replay.ReplayFrames.Add(new ReplayFrame
-                            {
-                                SongTime = int.Parse(frameSplit[0]),
-                                KeyPressState = (KeyPressState)Enum.Parse(typeof(KeyPressState), frameSplit[1])
-                            });
-                        }
-                        catch (Exception e)
+                        // Add the replay frame to the list!
+                        replay.ReplayFrames.Add(new ReplayFrame
                         {
-                            continue;
-                        }
+                            SongTime = int.Parse(frameSplit[0]),
+                            KeyPressState = (KeyPressState)Enum.Parse(typeof(KeyPressState), frameSplit[1])
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        continue;
                     }
                 }
             }
