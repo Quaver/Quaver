@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Quaver.Config;
+using Quaver.Logging;
 using Quaver.Modifiers;
+using Quaver.Utility;
 
 namespace Quaver.Replays
 {
@@ -127,6 +131,44 @@ namespace Quaver.Replays
         internal static string DebugFilePath { get; } = Configuration.DataDirectory + "/" + "last_replay.txt";
 
         /// <summary>
+        ///     Writes the replay to a binary file (.qur)
+        /// </summary>
+        internal void Write(string fileName)
+        {
+            // Create the full path
+            var path = Configuration.ReplayDirectory + "/" + Util.FileNameSafeString(fileName) + ".qur";
+            Logger.Log(path, Color.AliceBlue);
+
+            using (var replayDataStream = new MemoryStream(Encoding.ASCII.GetBytes(ReplayFramesToString())))
+            using (var fs = new FileStream(path, FileMode.Create))
+            using (var bw = new BinaryWriter(fs))
+            {
+                bw.Write(QuaverVersion);
+                bw.Write(BeatmapMd5);
+                bw.Write(ReplayMd5);
+                bw.Write(Name);
+                bw.Write(Date.ToString(CultureInfo.InvariantCulture));
+                bw.Write(Mods.Sum(x => (int)x.ModIdentifier));
+                bw.Write(ScrollSpeed);
+                bw.Write(Score);
+                bw.Write(Accuracy);
+                bw.Write(MaxCombo);
+                bw.Write(MarvPressCount);
+                bw.Write(MarvReleaseCount);
+                bw.Write(PerfPressCount);
+                bw.Write(PerfReleaseCount);
+                bw.Write(GreatPressCount);
+                bw.Write(GreatReleaseCount);
+                bw.Write(GoodPressCount);
+                bw.Write(GoodReleaseCount);
+                bw.Write(OkayPressCount);
+                bw.Write(OkayReleaseCount);
+                bw.Write(Misses);
+                SevenZip.Helper.Compress(replayDataStream, fs);
+            }
+        }
+
+        /// <summary>
         ///     Writes the replay to a log file if in debug mode
         /// </summary>
         internal void WriteToLogFile(string path = "")
@@ -150,6 +192,20 @@ namespace Quaver.Replays
                 sw.WriteLine($"{frame.SongTime}|{frame.KeyPressState.ToString()}");
 
             sw.Close();
+        }
+
+        /// <summary>
+        ///     Converts all replay frames to a string
+        /// </summary>
+        private string ReplayFramesToString()
+        {
+            // The format for the replay frames are the following:
+            //      SongTime|KeysPressed,
+            var frameStr = "";
+
+            ReplayFrames.ForEach(x => frameStr += $"{x.SongTime}|{(int)x.KeyPressState},");
+
+            return frameStr;
         }
     }
 }
