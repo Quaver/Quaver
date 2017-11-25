@@ -218,20 +218,13 @@ namespace Quaver.Replays
         }
 
         /// <summary>
-        ///     Generates a perfect, 0ms hit replay to be used during auto play
+        ///     Generates a perfect, 0ms hit replay frames used for auto play
         /// </summary>
         /// <param name="hitObjects"></param>
-        internal static Replay GeneratePerfectReplay(List<HitObject> hitObjects)
+        internal static List<ReplayFrame> GeneratePerfectReplay(List<HitObject> hitObjects)
         {
-            // Create the base replay object
-            var replay = new Replay()
-            {
-                Name = "Quaver",
-                Date = DateTime.UtcNow,
-                Score = 100000,
-                Accuracy = 100,
-                ReplayFrames = new List<ReplayFrame>()
-            };
+            // Create the original list of replayh frames
+            var replayFrames = new List<ReplayFrame>();
 
             // Create a dictionary in groups of the hit object's start times.
             var startTimeGroup = hitObjects.GroupBy(x => x.StartTime).ToDictionary(x => x.Key, x => x.ToList());
@@ -262,7 +255,7 @@ namespace Quaver.Replays
                 frame.KeyPressState = kps;
 
                 // Add the key down replay frame to the list
-                replay.ReplayFrames.Add(frame);
+                replayFrames.Add(frame);
 
                 // Now that we've added the first one, we need to add a second key up frame 1ms later
                 var keyUpFrame = new ReplayFrame
@@ -271,7 +264,7 @@ namespace Quaver.Replays
                     KeyPressState = 0
                 };
 
-                replay.ReplayFrames.Add(keyUpFrame);
+                replayFrames.Add(keyUpFrame);
             }
 
             // LN Key Up Frames
@@ -288,24 +281,20 @@ namespace Quaver.Replays
                     KeyPressState = 0
                 };
 
-                replay.ReplayFrames.Add(frame);
+               replayFrames.Add(frame);
             }
 
             // Order the frames by their start time
-            replay.ReplayFrames = replay.ReplayFrames.OrderBy(x => x.SongTime).ToList();
+            replayFrames = replayFrames.OrderBy(x => x.SongTime).ToList();
 
             // Last step ladies and gentlemen, and that's to remove the frames where
             // another note is pressed while it's on the release frame. 
             // so... just say peace out to the extra unneeded frame.
-            for (var i = 1; i < replay.ReplayFrames.Count; i++)
-                if (replay.ReplayFrames[i].SongTime == replay.ReplayFrames[i - 1].SongTime && replay.ReplayFrames[i].KeyPressState == 0)
-                    replay.ReplayFrames.RemoveAt(i);
+            for (var i = 1; i < replayFrames.Count; i++)
+                if (replayFrames[i].SongTime == replayFrames[i - 1].SongTime && replayFrames[i].KeyPressState == 0)
+                    replayFrames.RemoveAt(i);
 
-        
-            // Write the automatically generated file to a log file.
-            replay.WriteToLogFile(Configuration.DataDirectory + "/" + "autoplay_replay.txt");
-
-            return replay;
+            return replayFrames;
         }
 
         /// <summary>
