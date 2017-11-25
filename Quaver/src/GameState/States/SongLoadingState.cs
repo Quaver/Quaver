@@ -76,9 +76,8 @@ namespace Quaver.GameState.States
                 if (!qua.IsValidQua)
                     throw new Exception("[SONG LOADING STATE] The .qua file could NOT be loaded!");
 
-                // Test - Generates a perfect replay.
-                // TODO: Only create this if an auto-play game modifier is activated.
-                // The game should start in replay mode.
+                // TODO: This is the list of perfect 0ms replay frames for auto play. 
+                // TODO: If we are loading the play state in replay mode, we should pass these frames to the next state.
                 var autoReplay = ReplayHelper.GeneratePerfectReplay(qua.HitObjects);
 
                 // Set the beatmap's Qua. 
