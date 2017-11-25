@@ -306,6 +306,8 @@ namespace Quaver.Config
 
             _dataDirectory = GameDirectory + "/Data";
             Directory.CreateDirectory(DataDirectory);
+            // Create data directory to store all of the game's replays.
+            Directory.CreateDirectory(DataDirectory + "/r/");
 
             _songDirectory = GameDirectory + "/Songs";
             Directory.CreateDirectory(SongDirectory);
