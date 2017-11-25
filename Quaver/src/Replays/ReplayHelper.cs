@@ -339,7 +339,7 @@ namespace Quaver.Replays
         /// <summary>
         ///     Converts all replay frames to a string
         /// </summary>
-        public static string ReplayFramesToString(List<ReplayFrame> replayFrames)
+        internal static string ReplayFramesToString(List<ReplayFrame> replayFrames)
         {
             // The format for the replay frames are the following:
             //      SongTime|KeysPressed,
