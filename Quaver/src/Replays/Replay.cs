@@ -131,6 +131,20 @@ namespace Quaver.Replays
         internal static string DebugFilePath { get; } = Configuration.DataDirectory + "/" + "last_replay.txt";
 
         /// <summary>
+        ///     Ctor - Create a blank replay object
+        /// </summary>
+        public Replay() { }
+
+        /// <summary>
+        ///     Ctor - Automatically reads a replay from a path.
+        /// </summary>
+        /// <param name="path"></param>
+        public Replay(string path)
+        {
+            Read(path);
+        }
+
+        /// <summary>
         ///     Writes the replay to a binary file (.qur)
         ///     Returns the path to the file
         /// </summary>
@@ -173,6 +187,74 @@ namespace Quaver.Replays
             }
 
             return path;
+        }
+
+        /// <summary>
+        ///     Deserializes a replay file into a replay object.
+        /// </summary>
+        /// <param name="path"></param>
+        private void Read(string path)
+        {
+            if (!File.Exists(path))
+                throw new FileNotFoundException();
+
+            // Read the replay data
+            using (var fs = new FileStream(path, FileMode.Open))
+            using (var br = new BinaryReader(fs))
+            using (var outStream = new MemoryStream())
+            {
+                QuaverVersion = br.ReadString();
+                BeatmapMd5 = br.ReadString();
+                ReplayMd5 = br.ReadString();
+                Name = br.ReadString();
+                Date = Convert.ToDateTime(br.ReadString());
+                Mods = (ModIdentifier)br.ReadInt32();
+                ScrollSpeed = br.ReadInt32();
+                Score = br.ReadInt32();
+                Accuracy = br.ReadSingle();
+                MaxCombo = br.ReadInt32();
+                MarvPressCount = br.ReadInt32();
+                MarvReleaseCount = br.ReadInt32();
+                PerfPressCount = br.ReadInt32();
+                PerfReleaseCount = br.ReadInt32();
+                GreatPressCount = br.ReadInt32();
+                GreatReleaseCount = br.ReadInt32();
+                GoodPressCount = br.ReadInt32();
+                GoodReleaseCount = br.ReadInt32();
+                OkayPressCount = br.ReadInt32();
+                OkayReleaseCount = br.ReadInt32();
+                Misses = br.ReadInt32();
+
+                // Create the new list of replay frames.
+                ReplayFrames = new List<ReplayFrame>();
+
+                // Decompress & Deserialize replay frames
+                SevenZip.Helper.Decompress(br.BaseStream, outStream);
+
+                // Split the frames up by commas
+                var frames = Encoding.ASCII.GetString(outStream.ToArray()).Split(',');
+
+                // Add all the replay frames to the object
+                foreach (var frame in frames)
+                {
+                    try
+                    {
+                        // Split up the frame string by SongTime|KeyPressState
+                        var frameSplit = frame.Split('|');
+
+                        // Add the replay frame to the list!
+                        ReplayFrames.Add(new ReplayFrame
+                        {
+                            SongTime = int.Parse(frameSplit[0]),
+                            KeyPressState = (KeyPressState)Enum.Parse(typeof(KeyPressState), frameSplit[1])
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        continue;
+                    }
+                }
+            }
         }
 
         /// <summary>
