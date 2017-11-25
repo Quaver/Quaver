@@ -32,6 +32,79 @@ namespace Quaver.Replays
         internal static Task LastTask { get; set; }
 
         /// <summary>
+        ///     Deserializes a replay file 
+        /// </summary>
+        /// <returns></returns>
+        internal static Replay ReadReplay(string path)
+        {
+            if (!File.Exists(path))
+                throw new FileNotFoundException();
+
+            // Create the replay object
+            var replay = new Replay();
+
+            // Read the replay data
+            using (var fs = new FileStream(path, FileMode.Open))
+            using (var br = new BinaryReader(fs))
+            {
+                replay.QuaverVersion = br.ReadString();
+                replay.BeatmapMd5 = br.ReadString();
+                replay.ReplayMd5 = br.ReadString();
+                replay.Name = br.ReadString();
+                replay.Date = Convert.ToDateTime(br.ReadString());
+                replay.Mods = (ModIdentifier)br.ReadInt32();
+                replay.ScrollSpeed = br.ReadInt32();
+                replay.Score = br.ReadInt32();
+                replay.Accuracy = br.ReadSingle();
+                replay.MaxCombo = br.ReadInt32();
+                replay.MarvPressCount = br.ReadInt32();
+                replay.MarvReleaseCount = br.ReadInt32();
+                replay.PerfPressCount = br.ReadInt32();
+                replay.PerfReleaseCount = br.ReadInt32();
+                replay.GreatPressCount = br.ReadInt32();
+                replay.GreatReleaseCount = br.ReadInt32();
+                replay.GoodPressCount = br.ReadInt32();
+                replay.GoodReleaseCount = br.ReadInt32();
+                replay.OkayPressCount = br.ReadInt32();
+                replay.OkayReleaseCount = br.ReadInt32();
+                replay.Misses = br.ReadInt32();
+
+                // Create the new list of replay frames.
+                replay.ReplayFrames = new List<ReplayFrame>();
+
+                // Decompress & Deserialize replay frames
+                using (var outStream = new MemoryStream())
+                {
+                    SevenZip.Helper.Decompress(br.BaseStream, outStream);
+
+                    var frames = Encoding.ASCII.GetString(outStream.ToArray()).Split(',');
+
+                    foreach (var frame in frames)
+                    {
+                        try
+                        {
+                            // Split up the frame string
+                            var frameSplit = frame.Split('|');
+
+                            // Add the replay frame to the list!
+                            replay.ReplayFrames.Add(new ReplayFrame
+                            {
+                                SongTime = int.Parse(frameSplit[0]),
+                                KeyPressState = (KeyPressState)Enum.Parse(typeof(KeyPressState), frameSplit[1])
+                            });
+                        }
+                        catch (Exception e)
+                        {
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            return replay;
+        }
+
+        /// <summary>
         ///     This adds the correct frames to replays, called every frame during gameplay
         /// </summary>
         internal static void AddReplayFrames(List<ReplayFrame> ReplayFrames, Qua qua)
