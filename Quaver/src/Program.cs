@@ -14,6 +14,7 @@ using Quaver.Config;
 using Quaver.Database;
 using Quaver.Discord;
 using Quaver.Logging;
+using Quaver.Replays;
 using Quaver.Tests;
 
 namespace Quaver
@@ -85,10 +86,10 @@ namespace Quaver
         {
             try
             {
-                foreach (var file in new DirectoryInfo(Configuration.DataDirectory).GetFiles("*", SearchOption.AllDirectories))
+                foreach (var file in new DirectoryInfo(Configuration.DataDirectory + "/temp/").GetFiles("*", SearchOption.AllDirectories))
                     file.Delete();
 
-                foreach (var dir in new DirectoryInfo(Configuration.DataDirectory).GetDirectories("*", SearchOption.AllDirectories))
+                foreach (var dir in new DirectoryInfo(Configuration.DataDirectory + "/temp/").GetDirectories("*", SearchOption.AllDirectories))
                     dir.Delete(true);
             }
             catch (Exception e)
