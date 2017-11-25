@@ -194,7 +194,6 @@ namespace Quaver.Config
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, Color.Red);
                 return defaultColor;
             }
         }
