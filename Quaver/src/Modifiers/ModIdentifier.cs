@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.Modifiers
 {
+    [Flags]
     internal enum ModIdentifier
     {
         NoSliderVelocity = 1 << 0, // No Slider Velocity
