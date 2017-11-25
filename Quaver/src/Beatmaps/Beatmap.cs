@@ -14,10 +14,14 @@ using SQLite;
 namespace Quaver.Beatmaps
 {
     internal class Beatmap
-    {   /// <summary>
+    {
+        [PrimaryKey]
+        [AutoIncrement]
+        public int Id { get; set; }
+
+        /// <summary>
         ///     The MD5 Of the file.
         /// </summary>
-        [PrimaryKey]
         public string Md5Checksum { get; set; }
 
         /// <summary>
