@@ -98,7 +98,7 @@ namespace Quaver.GameState.States
                 Replay.Write($"{Configuration.Username} - {Artist} - {Title} [{DifficultyName}] ({DateTime.UtcNow})");
 
             // Insert the score into the database
-            Task.Run(async () => { await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore()); });
+            Task.Run(async () => { await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore(Replay)); });
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Quaver.GameState.States
         ///     Creates a local score object from the score given
         /// </summary>
         /// <returns></returns>
-        private LocalScore CreateLocalScore()
+        private LocalScore CreateLocalScore(Replay rp)
         {
             // Store the score in the database
             return new LocalScore

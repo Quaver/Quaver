@@ -139,7 +139,7 @@ namespace Quaver.Replays
             var path = Configuration.ReplayDirectory + "/" + Util.FileNameSafeString(fileName) + ".qur";
             Logger.Log(path, Color.AliceBlue);
 
-            using (var replayDataStream = new MemoryStream(Encoding.ASCII.GetBytes(ReplayFramesToString())))
+            using (var replayDataStream = new MemoryStream(Encoding.ASCII.GetBytes(ReplayHelper.ReplayFramesToString(ReplayFrames))))
             using (var fs = new FileStream(path, FileMode.Create))
             using (var bw = new BinaryWriter(fs))
             {
@@ -192,20 +192,6 @@ namespace Quaver.Replays
                 sw.WriteLine($"{frame.SongTime}|{frame.KeyPressState.ToString()}");
 
             sw.Close();
-        }
-
-        /// <summary>
-        ///     Converts all replay frames to a string
-        /// </summary>
-        private string ReplayFramesToString()
-        {
-            // The format for the replay frames are the following:
-            //      SongTime|KeysPressed,
-            var frameStr = "";
-
-            ReplayFrames.ForEach(x => frameStr += $"{x.SongTime}|{(int)x.KeyPressState},");
-
-            return frameStr;
         }
     }
 }
