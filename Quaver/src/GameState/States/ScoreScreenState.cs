@@ -6,6 +6,7 @@ using System.Net.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Gameplay;
@@ -76,6 +77,11 @@ namespace Quaver.GameState.States
         private string ReplayPath { get; set; }
 
         /// <summary>
+        ///     The instance of the applause sound effect
+        /// </summary>
+        private SoundEffectInstance ApplauseInstance { get; set; }
+
+        /// <summary>
         ///     Constructor - In order to get to this state, it's essential that you pass in 
         ///     the beatmap md5 and the score data.
         /// </summary>
@@ -104,6 +110,9 @@ namespace Quaver.GameState.States
                 Replay.WriteToLogFile();
                 Replay.Write(ReplayPath, true);
             }).ContinueWith(async (t) => await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore(Replay)));
+
+            // Create an instance of the applause sound effect so that we can stop it later.
+            ApplauseInstance = GameBase.LoadedSkin.Applause.CreateInstance();
         }
 
         /// <summary>
@@ -118,6 +127,9 @@ namespace Quaver.GameState.States
             LogScore();
 
             UpdateReady = true;
+
+            // Play Applause
+            ApplauseInstance.Play();
         }
         
         /// <summary>
@@ -165,6 +177,7 @@ namespace Quaver.GameState.States
         /// <param name="e"></param>
         private void OnBackButtonClick(object sender, EventArgs e)
         {
+            ApplauseInstance.Stop(true);
             GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 
