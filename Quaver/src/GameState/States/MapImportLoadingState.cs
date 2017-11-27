@@ -13,9 +13,19 @@ namespace Quaver.GameState.States
 {
     internal class MapImportLoadingState : IGameState
     {
+        /// <summary>
+        ///     The current state
+        /// </summary>
         public State CurrentState { get; set; } = State.LoadingScreen;
+
+        /// <summary>
+        ///     Update Ready?
+        /// </summary>
         public bool UpdateReady { get; set; }
 
+        /// <summary>
+        ///     Initialize
+        /// </summary>
         public void Initialize()
         {
             // TODO: Add some sort of general loading screen here. The state is only going to be used during map importing.
@@ -23,10 +33,19 @@ namespace Quaver.GameState.States
             GameBase.ChangeDiscordPresence("Importing new charts");
         }
 
+        /// <summary>
+        ///     Unload
+        /// </summary>
         public void UnloadContent() { }
 
+        /// <summary>
+        ///     Update
+        /// </summary>
         public void Update(double dt) { }
 
+        /// <summary>
+        ///     Draw
+        /// </summary>
         public void Draw()
         {
             GameBase.GraphicsDevice.Clear(Color.Red);
