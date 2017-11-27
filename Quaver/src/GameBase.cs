@@ -213,7 +213,6 @@ namespace Quaver
         /// </summary>
         public static void ChangeBeatmap(Beatmap map)
         {
-            SelectedBeatmap = null;
             SelectedBeatmap = map;
         }
 
