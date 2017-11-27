@@ -126,20 +126,6 @@ namespace Quaver.GameState.States
                 Alignment = Alignment.TopRight
             };
 
-            var temp = "SV Points: ";
-            foreach (var sv in Timing.SvQueue) temp += "[" + sv.TargetTime + ", " + sv.SvMultiplier + "x], ";
-            SVText = new TextBoxSprite()
-            {
-                Size = new Vector2(240,190),
-                Position = new Vector2(5,5),
-                TextAlignment = Alignment.TopLeft,
-                Parent = TextUnder,
-                TextColor = Color.Yellow,
-                Multiline = true,
-                Textwrap = true,
-                Text = temp
-            };
-
             UpdateReady = true;
         }
 
