@@ -201,5 +201,15 @@ namespace Quaver.Audio
         {
             Bass.GlobalStreamVolume = Configuration.VolumeGlobal * 100;
         }
+
+        /// <summary>
+        ///     Stops the current song, reloads it, and plays at a given preview time.
+        /// </summary>
+        internal static void ReloadSong(bool loadAtPreview = false)
+        {
+            Stop();
+            Load();
+            Play(loadAtPreview);
+        }
     }
 }
