@@ -111,11 +111,8 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
-            BackButton = new TextButton(new Vector2(300,200),"SONG SELECT" )
-            {
-                Alignment = Alignment.TopRight
-            };
-            BackButton.Clicked += OnBackButtonClick;
+            // Iniitalize UI Elements
+            CreateBackButton();
 
             // Log the score
             LogScore();
@@ -146,6 +143,19 @@ namespace Quaver.GameState.States
         public void Draw()
         {
             BackButton.Draw();
+        }
+
+        /// <summary>
+        ///     Creates the back button
+        /// </summary>
+        private void CreateBackButton()
+        {
+            BackButton = new TextButton(new Vector2(300,200),"BACK" )
+            {
+                Alignment = Alignment.TopRight
+            };
+
+            BackButton.Clicked += OnBackButtonClick;
         }
 
         /// <summary>
