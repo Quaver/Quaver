@@ -352,7 +352,8 @@
     <EmbeddedResource Include="Resources\Default Skin\grade-small-xxx.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\combobreak.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\hit.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\applause.xnb" />    
+    <EmbeddedResource Include="Resources\Default Skin\applause.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\cursor.xnb" />
     <None Include="x64\libbass.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
