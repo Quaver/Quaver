@@ -142,6 +142,7 @@ namespace Quaver.Skins
         internal Texture2D JudgeGreat { get; set; }
         internal Texture2D JudgePerfect { get; set; }
         internal Texture2D JudgeMarv { get; set; }
+        internal Texture2D Cursor { get; set; }
 
         /// <summary>
         ///     Sound Effect elements in skin
@@ -179,6 +180,7 @@ namespace Quaver.Skins
                 @"judge-great",
                 @"judge-perfect",
                 @"judge-marv",
+                @"cursor",
                 @"hit",
                 @"combobreak",
                 @"applause"
@@ -299,6 +301,9 @@ namespace Quaver.Skins
                         break;
                     case @"applause":
                         Applause = LoadSoundEffectElement(element, skinElementPath);
+                        break;
+                    case @"cursor":
+                        Cursor = LoadIndividualElement(element, skinElementPath);
                         break;
                     default:
                         break;
