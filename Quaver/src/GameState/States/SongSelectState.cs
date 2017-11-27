@@ -23,23 +23,54 @@ namespace Quaver.GameState.States
 {
     internal class SongSelectState : IGameState
     {
+        /// <summary>
+        ///     The current state
+        /// </summary>
         public State CurrentState { get; set; } = State.MainMenu;
+
+        /// <summary>
+        ///     Update Ready?
+        /// </summary>
         public bool UpdateReady { get; set; }
 
-        //TODO: update later   TEST.
-        private List<Button> Buttons { get; set; } = new List<Button>();
-        private List<EventHandler> ClickEvents { get; set; } = new List<EventHandler>();
-        private Button PlayButton { get; set; }
+        /// <summary>
+        ///     Boundary
+        /// </summary>
         private Boundary Boundary { get; set; } = new Boundary();
-        private int ButtonPos { get; set; } = 50;
+       
+        /// <summary>
+        ///     Reference to the play button
+        /// </summary>        
+        private Button PlayButton { get; set; }
+
+        /// <summary>
+        ///     Reference to the back button
+        /// </summary>        
         private Button BackButton { get; set; }
 
-        // Test Mod Button
+        /// <summary>
+        ///     Reference to the speed mod button
+        /// </summary>
         private TextButton SpeedModButton { get; set; }
 
-        // Another test mod button
+        /// <summary>
+        ///     Reference to the toggle pitch button
+        /// </summary>
         private TextButton TogglePitch { get; set; }
 
+        /// <summary>
+        ///     Reference to the list of song select buttons
+        /// </summary>
+        private List<Button> Buttons { get; set; } = new List<Button>();
+
+        /// <summary>
+        ///     ButtonPos
+        /// </summary>
+        private int ButtonPos { get; set; } = 50;
+
+        /// <summary>
+        ///     Initialize
+        /// </summary>
         public void Initialize()
         {
             GameBase.GameWindow.Title = "Quaver";
@@ -47,62 +78,35 @@ namespace Quaver.GameState.States
             // Update Discord Presence
             GameBase.ChangeDiscordPresence("In song select");
 
+            // Initalize buttons
             CreateSongSelectButtons();
-
-            // Create play button
-            PlayButton = new TextButton(new Vector2(200, 30), "Play")
-            {
-                Alignment = Alignment.TopRight,
-                Parent = Boundary
-            };
-            PlayButton.Clicked += PlayMap;
-
-            // Create back button
-            BackButton = new TextButton(new Vector2(200, 50), "Back")
-            {
-                Alignment = Alignment.BotCenter,
-                Parent = Boundary
-            };
-            BackButton.Clicked += OnBackButtonClick;
-
-            // Create Speed Mod Button
-            SpeedModButton = new TextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.GameClock}x")
-            {
-                Alignment = Alignment.BotRight,
-                Parent = Boundary
-            };
-            SpeedModButton.Clicked += OnSpeedModButtonClick;
-
-            // Create Speed Mod Button
-            TogglePitch = new TextButton(new Vector2(200, 50), $"Toggle Pitch: {Configuration.Pitched}")
-            {
-                Alignment = Alignment.MidRight,
-                Parent = Boundary
-            };
-            TogglePitch.Clicked += OnTogglePitchButtonClick;
+            CreatePlayMapButton();
+            CreateBackButton();
+            CreateSpeedModButton();
+            CreateTogglePitchButton();
 
             //Add map selected text TODO: remove later
             Logger.Add("MapSelected", "Map Selected: " + GameBase.SelectedBeatmap.Artist + " - " + GameBase.SelectedBeatmap.Title + " [" + GameBase.SelectedBeatmap.DifficultyName + "]", Color.Yellow);
             UpdateReady = true;
         }
 
+        /// <summary>
+        ///     Unload
+        /// </summary>
         public void UnloadContent()
         {
             Logger.Remove("MapSelected");
 
-           UpdateReady = false;
-            PlayButton.Clicked -= PlayMap;
+            UpdateReady = false;
+            PlayButton.Clicked -= OnPlayMapButtonClick;
 
-            //TODO: Remove button delegates ?
-            for (int i=0; i<Buttons.Count; i++)
-            {
-                Buttons[i].Clicked -= ClickEvents[i];
-            }
-            ClickEvents.Clear();
             Boundary.Destroy();
             Buttons.Clear();
         }
 
+        /// <summary>
+        ///     Update
+        /// </summary>
         public void Update(double dt)
         {
             Boundary.Update(dt);
@@ -111,41 +115,55 @@ namespace Quaver.GameState.States
             RepeatSongPreview();
         }
 
+        /// <summary>
+        ///     Draw
+        /// </summary>
         public void Draw()
         {
             Boundary.Draw();
         }
 
+        /// <summary>
+        ///     Creates the song select buttons
+        /// </summary>
         public void CreateSongSelectButtons()
         {
             //Create buttons for every beatmap set TODO: Use beatmap set instead of beatmaps
-            foreach (KeyValuePair<string, List<Beatmap>> mapset in GameBase.VisibleBeatmaps)
+            foreach (var mapset in GameBase.VisibleBeatmaps)
             {
                 //Create Song Buttons
                 foreach (var map in mapset.Value)
                 {
-                    var newButton = new TextButton(new Vector2(300, 20),
-                        map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]")
+                    var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";
+
+                    // Create the new button
+                    var newButton = new TextButton(new Vector2(300, 20), mapText)
                     {
                         Image = GameBase.UI.BlankBox,
                         Alignment = Alignment.TopLeft,
                         PositionY = ButtonPos,
                         Parent = Boundary
                     };
+
+                    // Set text alignment
                     newButton.TextSprite.TextAlignment = Alignment.MidLeft;
 
-                    var currentMap = map;
-                    EventHandler curEvent = (sender, e) => ButtonClick(sender, e, map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]", currentMap);
-                    ClickEvents.Add(curEvent);
-                    newButton.Clicked += curEvent;
+                    // Define event handler for the button
+                    newButton.Clicked += (sender, e) => OnSongSelectButtonClick(sender, e, mapText, map);
+
+                    // Add the4 button the current list
                     Buttons.Add(newButton);
+
+                    // Change the Y value
                     ButtonPos += 20;
                 }
             }
         }
 
-        //TODO: Remove
-        public void ButtonClick(object sender, EventArgs e, string text, Beatmap map)
+        /// <summary>
+        ///     Changes the map when a song select button is clicked.
+        /// </summary>
+        public void OnSongSelectButtonClick(object sender, EventArgs e, string text, Beatmap map)
         {
             Logger.Update("MapSelected","Map Selected: "+text);
 
@@ -168,8 +186,25 @@ namespace Quaver.GameState.States
                     .ContinueWith(t => BackgroundManager.Change(GameBase.CurrentBackground));
         }
 
-        //TODO: Remove
-        public void PlayMap(object sender, EventArgs e)
+        /// <summary>
+        ///     Creates and initializes the play button
+        /// </summary>
+        private void CreatePlayMapButton()
+        {
+            // Create play button
+            PlayButton = new TextButton(new Vector2(200, 30), "Play Map")
+            {
+                Alignment = Alignment.TopRight,
+                Parent = Boundary
+            };
+
+            PlayButton.Clicked += OnPlayMapButtonClick;
+        }
+
+        /// <summary>
+        ///     Changes to the song loading state when the play map button is clicked.
+        /// </summary>
+        private void OnPlayMapButtonClick(object sender, EventArgs e)
         {
             GameBase.GameStateManager.ChangeState(new SongLoadingState());
         }
@@ -187,6 +222,20 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
+        ///     Creates the back button
+        /// </summary>        
+        private void CreateBackButton()
+        {
+            // Create back button
+            BackButton = new TextButton(new Vector2(200, 50), "Back")
+            {
+                Alignment = Alignment.BotCenter,
+                Parent = Boundary
+            };
+            BackButton.Clicked += OnBackButtonClick;
+        }
+
+        /// <summary>
         ///     Whenever the back button is clicked.
         /// </summary>
         /// <param name="sender"></param>
@@ -194,6 +243,20 @@ namespace Quaver.GameState.States
         private void OnBackButtonClick(object sender, EventArgs e)
         {
             GameBase.GameStateManager.ChangeState(new MainMenuState());
+        }
+
+        /// <summary>
+        ///     Creates the speed mod button
+        /// </summary>
+        private void CreateSpeedModButton()
+        {
+            // Create Speed Mod Button
+            SpeedModButton = new TextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.GameClock}x")
+            {
+                Alignment = Alignment.BotRight,
+                Parent = Boundary
+            };
+            SpeedModButton.Clicked += OnSpeedModButtonClick;
         }
 
         /// <summary>
@@ -268,6 +331,19 @@ namespace Quaver.GameState.States
 
             // Change the song speed directly.
             SpeedModButton.TextSprite.Text = $"Add Speed Mod {GameBase.GameClock}x";
+        }
+
+        /// <summary>
+        ///     Creates the toggle pitch button
+        /// </summary>
+        private void CreateTogglePitchButton()
+        {
+            TogglePitch = new TextButton(new Vector2(200, 50), $"Toggle Pitch: {Configuration.Pitched}")
+            {
+                Alignment = Alignment.MidRight,
+                Parent = Boundary
+            };
+            TogglePitch.Clicked += OnTogglePitchButtonClick;
         }
 
         /// <summary>
