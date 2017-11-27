@@ -151,14 +151,16 @@ namespace Quaver.GameState.States
 
             // Get the background path from the previous map
             var oldMapBgPath = GameBase.SelectedBeatmap.Directory +  "/" + GameBase.SelectedBeatmap.BackgroundPath;
+            var oldMapAudioPath = GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.AudioPath;
 
-            // Select map
             GameBase.ChangeBeatmap(map);
 
             // Change Pitch Text
             TogglePitch.TextSprite.Text = $"Toggle Pitch: {Configuration.Pitched}";
 
-            SongManager.Play(true);
+            // Only load the audio again if the new map's audio isn't the same as the old ones.
+            if (oldMapAudioPath != map.Directory + "/" + map.AudioPath)
+                SongManager.ReloadSong(true);    
 
             // Load background asynchronously if the backgrounds actually do differ
             if (oldMapBgPath != map.Directory + "/" + map.BackgroundPath)
@@ -181,9 +183,7 @@ namespace Quaver.GameState.States
                 return;
 
             // Reload the audio and play at the song preview
-            SongManager.Stop();
-            SongManager.Load();
-            SongManager.Play(true);
+            SongManager.ReloadSong(true);
         }
 
         /// <summary>
