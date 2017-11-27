@@ -209,18 +209,12 @@ namespace Quaver
         }
 
         /// <summary>
-        ///     Changes the map and loads the audio for it.
+        ///     Changes the map.
         /// </summary>
         public static void ChangeBeatmap(Beatmap map)
         {
-            // Stop the song and free its resources
-            SongManager.Stop();
-
             SelectedBeatmap = null;
             SelectedBeatmap = map;
-
-            // Load the song
-            SongManager.Load();
         }
 
         /// <summary>
