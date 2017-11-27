@@ -77,8 +77,7 @@ namespace Quaver.Peppy
                 else if (newMap.Count > 0)
                 {
                     var map = newMap.Values.Last().Last();
-
-                    SongManager.Stop();
+                    Console.WriteLine(map.Artist + " " + map.Title);
 
                     // Switch map and load audio for song and play it.
                     GameBase.ChangeBeatmap(map);
@@ -87,12 +86,14 @@ namespace Quaver.Peppy
                     GameBase.LoadBackground();
                     BackgroundManager.Change(GameBase.CurrentBackground);
 
-                    SongManager.Play();
+                    SongManager.ReloadSong();
 
                     // Set Rich Presence
-                    GameBase.DiscordController.presence.details =
-                        $"In the main menu listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
-                    DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+                    try {
+                        GameBase.DiscordController.presence.details =
+                            $"In the main menu listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
+                        DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+                    } catch (Exception ex) { }
                 }
 
                 Logger.Log("Successfully completed the conversion task. Stopping loader.", Color.Cyan);
