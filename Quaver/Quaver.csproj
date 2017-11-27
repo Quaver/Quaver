@@ -166,7 +166,6 @@
     <Compile Include="src\QuaverGame.cs" />
     <Compile Include="src\GameState\GameStateManager.cs" />
     <Compile Include="src\GameState\State.cs" />
-    <Compile Include="src\GameState\GameStateTemplate.cs" />
     <Compile Include="src\Modifiers\IMod.cs" />
     <Compile Include="src\Modifiers\ModIdentifier.cs" />
     <Compile Include="src\Modifiers\ModManager.cs" />
