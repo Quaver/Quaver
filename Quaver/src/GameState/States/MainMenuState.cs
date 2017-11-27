@@ -61,8 +61,9 @@ namespace Quaver.GameState.States
             //Initialize Menu Screen
             Boundary = new Boundary();
 
-            // Create Buttons
-            CreateButtons();
+            // Initialize the UI buttons
+            CreateImportButton();
+            CreateSongSelectButton();
 
             UpdateReady = true;
         }
@@ -98,23 +99,13 @@ namespace Quaver.GameState.States
             ImportPeppyButton.Draw();
         }
 
-        //TODO: Remove. Test function.
-        public void ButtonClick(object sender, EventArgs e)
-        {
-            // Stop the selected song since it's only played during the main menu.
-            //GameBase.SelectedBeatmap.Song.Stop();
-
-            //Change to SongSelectState
-            GameBase.GameStateManager.ChangeState(new SongSelectState());
-        }
-
         /// <summary>
-        ///     Responsible for creating the buttons to be displayed on the screen.
+        ///     Responsible for creating the button to move to the song select screen state
         /// </summary>
-        private void CreateButtons()
+        private void CreateSongSelectButton()
         {
             // Switch Song Select Button
-            SwitchSongSelectButton = new TextButton(new Vector2(200, 40), "Next State")
+            SwitchSongSelectButton = new TextButton(new Vector2(200, 40), "Song Select")
             {
                 Image = GameBase.LoadedSkin.NoteHoldBody,
                 Alignment = Alignment.MidCenter,
@@ -122,8 +113,23 @@ namespace Quaver.GameState.States
                 Parent = Boundary
             };
 
-            SwitchSongSelectButton.Clicked += ButtonClick;
+            SwitchSongSelectButton.Clicked += OnSongSelectButtonClick;
+        }
 
+        /// <summary>
+        ///     The event handler that switches to the song select screen
+        /// </summary>
+        public void OnSongSelectButtonClick(object sender, EventArgs e)
+        {
+            //Change to SongSelectState
+            GameBase.GameStateManager.ChangeState(new SongSelectState());
+        }
+
+        /// <summary>
+        ///     Responsible for creating the import .osz button
+        /// </summary>
+        private void CreateImportButton()
+        {
             // Import .osz Button
             ImportPeppyButton = new TextButton(new Vector2(200, 40), "Import .osz")
             {
