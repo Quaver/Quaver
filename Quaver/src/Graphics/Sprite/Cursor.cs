@@ -20,7 +20,7 @@ namespace Quaver.Graphics.Sprite
         private bool MouseDown { get; set; }
 
         //Cursor Size
-        private float CursorSize { get; set; } = 40;
+        private float CursorSize { get; set; } = 100;
 
         //Click Size
         private float ClickCurrentSize { get; set; }
@@ -29,7 +29,7 @@ namespace Quaver.Graphics.Sprite
         public Cursor()
         {
             Size = new Vector2(CursorSize, CursorSize);
-            Image = GameBase.LoadedSkin.NoteHitObject1;
+            Image = GameBase.LoadedSkin.Cursor;
             Alignment = Alignment.TopLeft;
             Position = Vector2.Zero;
         }
