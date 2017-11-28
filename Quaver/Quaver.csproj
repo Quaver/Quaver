@@ -356,6 +356,8 @@
     <EmbeddedResource Include="Resources\Default Skin\applause.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\cursor.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\screenshot.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\back.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\click.xnb" />
     <None Include="x64\libbass.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

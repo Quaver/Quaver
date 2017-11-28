@@ -151,6 +151,8 @@ namespace Quaver.Skins
         internal SoundEffect ComboBreak { get; set; }
         internal SoundEffect Applause { get; set; }
         internal SoundEffect Screenshot { get; set; }
+        internal SoundEffect Click { get; set; }
+        internal SoundEffect Back { get; set; }
 
         // Contains the file names of all skin elements
         private readonly string[] skinElements = new[]
@@ -185,7 +187,9 @@ namespace Quaver.Skins
                 @"hit",
                 @"combobreak",
                 @"applause",
-                @"screenshot"
+                @"screenshot",
+                @"click",
+                @"back"
         };
 
         /// <summary>
@@ -309,6 +313,12 @@ namespace Quaver.Skins
                         break;
                     case @"screenshot":
                         Screenshot = LoadSoundEffectElement(element, skinElementPath);
+                        break;
+                    case @"click":
+                        Click = LoadSoundEffectElement(element, skinElementPath);
+                        break;
+                    case @"back":
+                        Back = LoadSoundEffectElement(element, skinElementPath);
                         break;
                     default:
                         break;
