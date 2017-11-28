@@ -206,6 +206,7 @@ namespace Quaver.GameState.States
         /// </summary>
         private void OnPlayMapButtonClick(object sender, EventArgs e)
         {
+            GameBase.LoadedSkin.Click.Play((float) Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100,0, 0);
             GameBase.GameStateManager.ChangeState(new SongLoadingState());
         }
 
@@ -242,6 +243,7 @@ namespace Quaver.GameState.States
         /// <param name="e"></param>
         private void OnBackButtonClick(object sender, EventArgs e)
         {
+            GameBase.LoadedSkin.Back.Play((float) Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100,0, 0);
             GameBase.GameStateManager.ChangeState(new MainMenuState());
         }
 
