@@ -178,6 +178,7 @@ namespace Quaver.GameState.States
         private void OnBackButtonClick(object sender, EventArgs e)
         {
             ApplauseInstance.Stop(true);
+            GameBase.LoadedSkin.Back.Play((float) Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
             GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 
