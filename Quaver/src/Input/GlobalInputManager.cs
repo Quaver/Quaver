@@ -1,16 +1,23 @@
-﻿using System;
+﻿#define WINDOWS_STOREAPP
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using ManagedBass;
-using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Audio;
 using Quaver.Commands;
 using Quaver.GameState;
 using Quaver.Logging;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.Input
 {
@@ -27,12 +34,18 @@ namespace Quaver.Input
         private int LastScrollWheelValue { get; set; }
 
         /// <summary>
+        ///     Keeps track of if the user is currently taking a screenshot.
+        /// </summary>
+        private bool CurrentlyTakingScreenshot { get; set; }
+
+        /// <summary>
         ///     Check the input.
         /// </summary>
         public void CheckInput()
         {
             HandleVolumeChanges();
             ImportBeatmaps();
+            TakeScreenshot();
         }
 
         /// <summary>
@@ -71,7 +84,7 @@ namespace Quaver.Input
             }
         }
 
-                /// <summary>
+        /// <summary>
         ///     Checks if the beatmap import queue is ready, and imports then if the user decides to.
         /// </summary>
         private void ImportBeatmaps()
@@ -87,6 +100,43 @@ namespace Quaver.Input
                     await GameBase.LoadAndSetBeatmaps();
                     GameBase.VisibleBeatmaps = GameBase.Beatmaps;
                 });
+            }
+        }
+
+        /// <summary>
+        ///     Handles the taking of screenshots and saving them.
+        /// </summary>
+        private void TakeScreenshot()
+        {
+            // Prevent spamming. Don't run if we're already taking a screenshot.
+            if (CurrentlyTakingScreenshot)
+                return;
+
+            if (!GameBase.KeyboardState.IsKeyDown(Config.Configuration.KeyTakeScreenshot))
+                return;
+
+            CurrentlyTakingScreenshot = true;
+
+            // Create path for file
+            var path = Config.Configuration.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
+
+            // Get Window Bounds
+            var bounds = GameBase.GraphicsDevice.PresentationParameters.Bounds;
+
+            using (var bitmap = new Bitmap(bounds.Width, bounds.Height))
+            {
+                using (var g = System.Drawing.Graphics.FromImage(bitmap))
+                {
+                    var point = new Point(GameBase.GameWindow.Position.X, GameBase.GameWindow.Position.Y);
+                    g.CopyFromScreen(point, Point.Empty, new Size(bounds.Width, bounds.Height));
+                }
+
+                // Save the screenshot
+                bitmap.Save(path, ImageFormat.Jpeg);
+                Logger.Log($"Screenshot taken. Saved at: {path}", Color.Pink);
+
+                // Allow more screenshots to be taken.
+                CurrentlyTakingScreenshot = false;
             }
         }
     }
