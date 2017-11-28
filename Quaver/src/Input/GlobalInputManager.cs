@@ -18,6 +18,7 @@ using Quaver.Commands;
 using Quaver.GameState;
 using Quaver.Logging;
 using Color = Microsoft.Xna.Framework.Color;
+using Configuration = Quaver.Config.Configuration;
 
 namespace Quaver.Input
 {
@@ -116,6 +117,9 @@ namespace Quaver.Input
                 return;
 
             CurrentlyTakingScreenshot = true;
+
+            // Play screenshot sound effect
+            GameBase.LoadedSkin.Screenshot.Play((float) Config.Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
             // Create path for file
             var path = Config.Configuration.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
