@@ -279,6 +279,12 @@ namespace Quaver.Config
         internal static Keys KeySkipIntro { get => _keySkipIntro; set { _keySkipIntro = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
+        ///     The key to take a screenshot of the game window.
+        /// </summary>
+        private static Keys _keyTakeScreenshot = Keys.F12;
+        internal static Keys KeyTakeScreenshot { get => _keyTakeScreenshot; set { _keyTakeScreenshot = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
         ///     Important!
         ///     Responsible for initializing directory properties,
         ///     writing a new config file if it doesn't exist and also reading config files.
@@ -383,6 +389,7 @@ namespace Quaver.Config
             _keyIncreaseScrollSpeed = ConfigHelper.ReadKeys(KeyIncreaseScrollSpeed, data["KeyIncreaseScrollSpeed"]);
             _keyDecreaseScrollSpeed = ConfigHelper.ReadKeys(KeyDecreaseScrollSpeed, data["KeyDecreaseScrollSpeed"]);
             _keySkipIntro = ConfigHelper.ReadKeys(KeySkipIntro, data["KeySkipIntro"]);
+            _keyTakeScreenshot = ConfigHelper.ReadKeys(KeyTakeScreenshot, data["KeyTakeScreenshot"]);
                 
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync());
