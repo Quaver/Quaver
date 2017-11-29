@@ -30,6 +30,16 @@ namespace Quaver.Input
         private NoteManager NoteManager { get; set; }
 
         /// <summary>
+        ///     Is the game currently paused?
+        /// </summary>
+        private bool IsPaused { get; set; }
+
+        /// <summary>
+        ///     Keeps track of if the pause key is actually down.
+        /// </summary>
+        private bool PauseKeyDown { get; set; }
+
+        /// <summary>
         ///     All of the lane keys mapped to a list
         /// </summary>
         private List<Keys> LaneKeys { get; } = new List<Keys>()
@@ -60,14 +70,18 @@ namespace Quaver.Input
         /// </summary>
         public void CheckInput(Qua qua, bool skippable, List<ReplayFrame> ReplayFrames)
         {
+            // Pause game
+            HandlePause();
+
+            // Don't handle the below if the game is paused.
+            if (IsPaused)
+                return;
+
             // Check Mania Key Presses
             HandleManiaKeyPresses();
 
             // Check Skip Song Input
             SkipSong(qua, skippable);
-
-            // Pause game
-            HandlePause();
 
             // Add replay frames
             ReplayHelper.AddReplayFrames(ReplayFrames, qua);
@@ -126,12 +140,24 @@ namespace Quaver.Input
         /// </summary>
         private void HandlePause()
         {
-            if (!GameBase.KeyboardState.IsKeyDown(Configuration.KeyPause))
+            if (PauseKeyDown && !GameBase.KeyboardState.IsKeyDown(Configuration.KeyPause))
+                PauseKeyDown = false;
+
+            if (!GameBase.KeyboardState.IsKeyDown(Configuration.KeyPause) || PauseKeyDown || SongManager.Position < 1)
                 return;
 
+            PauseKeyDown = true;
+
             // TODO: Implement actual pausing here. For now, we're just going to go back to the main menu.
-            SongManager.Pause();
-            GameBase.GameStateManager.ChangeState(new MainMenuState());
+            IsPaused = !IsPaused;
+
+            if (!IsPaused)
+            {
+                SongManager.Pause();
+                return;
+            }
+
+            SongManager.Resume();
         }
     }
 }
