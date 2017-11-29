@@ -16,12 +16,6 @@ namespace Quaver.Gameplay.GameplayRendering
         //Gameplay Constants
         internal const int PlayStartDelayed = 3000; //How long to pause the audio before playing. Max is 10000ms.
 
-        /// <summary>
-        ///     It's assumed that BASS is the issue when music is being played. No matter what, the notes are always
-        ///     100ms late. This should make up for it.
-        /// </summary>
-        private int BassDelayOffset { get; } = 100;
-
         //Audio Variables
 
         internal bool SongIsPlaying { get; set; }
@@ -172,7 +166,7 @@ namespace Quaver.Gameplay.GameplayRendering
             }
 
             //Add global offset to actual song time
-            CurrentSongTime = ActualSongTime - Configuration.GlobalOffset + BassDelayOffset;
+            CurrentSongTime = ActualSongTime - Configuration.GlobalOffset + SongManager.BassDelayOffset;
         }
 
         public void Draw()
