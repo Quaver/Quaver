@@ -135,12 +135,33 @@ namespace Quaver.Gameplay
 
             HitBodySprite = new Sprite()
             {
-                Image = GameBase.LoadedSkin.NoteHitObject1,
                 Alignment = Alignment.TopLeft,
                 Position = _hitObjectPosition,
                 Size = Vector2.One * HitObjectSize,
                 Parent = ParentContainer
             };
+
+            // Choose the correct image based on the specific key lane.
+            switch (GameBase.SelectedBeatmap.Qua.KeyCount)
+            {
+                case 4:
+                    if (KeyLane == 1 || KeyLane == 4)
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject1;
+                    else
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject2;
+                    break;
+                case 7:
+                    if (KeyLane == 1 || KeyLane == 3 || KeyLane == 5 || KeyLane == 7)
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject1;
+                    else if (KeyLane == 2 || KeyLane == 6)
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject2;
+                    else if (KeyLane == 4)
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject3;
+                    break;
+                default:
+                    break;
+            }
+
 
             if (longNote) 
                 HoldEndSprite = new Sprite()
