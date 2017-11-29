@@ -26,11 +26,11 @@ namespace Quaver.Commands
             var i = 0;
             foreach (var mapset in GameBase.Beatmaps)
             {
-                foreach (var beatmap in mapset.Value)
+                /*foreach (var beatmap in mapset.Value)
                 {
                     commandString.AppendLine($"[{i}] {beatmap.Artist} - {beatmap.Title} [{beatmap.DifficultyName}]");
                     i++;
-                }
+                }*/
             }
             
             Console.WriteLine(commandString);

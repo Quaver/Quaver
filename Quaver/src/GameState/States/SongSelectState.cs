@@ -132,7 +132,7 @@ namespace Quaver.GameState.States
             foreach (var mapset in GameBase.VisibleBeatmaps)
             {
                 //Create Song Buttons
-                foreach (var map in mapset.Value)
+                foreach (var map in mapset.Beatmaps)
                 {
                     var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";
 
