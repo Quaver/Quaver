@@ -30,16 +30,25 @@ namespace Quaver.Beatmaps
         }
 
         /// <summary>
-        ///     Responsible for taking a list of beatmaps, and grouping each directory into a dictionary.
+        ///     Responsible for taking a list of beatmaps, and grouping each directory.
         /// </summary>
         /// <param name="beatmaps"></param>
         /// <returns></returns>
-        internal static Dictionary<string, List<Beatmap>> GroupBeatmapsByDirectory(List<Beatmap> beatmaps)
+        internal static List<Mapset> GroupBeatmapsByDirectory(List<Beatmap> beatmaps)
         {
-            return (from beatmap in beatmaps
-                    group beatmap by beatmap.Directory
-                into g
-                    select g).ToDictionary(x => x.Key, x => x.ToList());
+            // Group maps by directory.
+            var groupedMaps = beatmaps
+                .GroupBy(u => u.Directory)
+                .Select(grp => grp.ToList())
+                .ToList();
+
+            // Populate the mapsets with the grouped maps.
+            var mapsets = new List<Mapset>();
+
+            foreach (var mapset in groupedMaps)
+                mapsets.Add(new Mapset() { Directory = mapset.First().Directory, Beatmaps = mapset });
+
+            return mapsets;
         }
 
         /// <summary>
@@ -47,9 +56,9 @@ namespace Quaver.Beatmaps
         /// </summary>
         /// <param name="beatmaps"></param>
         /// <returns></returns>
-        internal static Dictionary<string, List<Beatmap>> OrderBeatmapsByTitle(Dictionary<string, List<Beatmap>> beatmaps)
+        internal static List<Mapset> OrderBeatmapsByTitle(List<Mapset> beatmaps)
         {
-            return beatmaps.OrderBy(x => x.Value[0].Title).ToDictionary(pair => pair.Key, pair => pair.Value);
+            return beatmaps.OrderBy(x => x.Directory).ToList();
         }
 
         /// <summary>
@@ -57,11 +66,9 @@ namespace Quaver.Beatmaps
         /// </summary>
         /// <param name="beatmaps"></param>
         /// <returns></returns>
-        internal static Dictionary<string, List<Beatmap>> OrderBeatmapsByArtist(Dictionary<string, List<Beatmap>> beatmaps)
+        internal static List<Mapset> OrderBeatmapsByArtist(List<Mapset> beatmaps)
         {
-            var dict = beatmaps.OrderBy(x => x.Value[0].Artist).ThenBy(x => x.Value[0].Title)
-                .ToDictionary(pair => pair.Key, pair => pair.Value);
-            return dict;
+            return beatmaps.OrderBy(x => x.Beatmaps[0].Artist).ThenBy(x => x.Beatmaps[0].Title).ToList();
         }
 
         /// <summary>
@@ -188,9 +195,9 @@ namespace Quaver.Beatmaps
             // Find the number of total beatmaps
             var totalMaps = 0;
 
-            foreach (KeyValuePair<string, List<Beatmap>> mapset in GameBase.Beatmaps)
+            foreach (var mapset in GameBase.Beatmaps)
             {
-                totalMaps += mapset.Value.Count;
+                totalMaps += mapset.Beatmaps.Count;
             }
 
             var rand = new Random();
@@ -198,11 +205,11 @@ namespace Quaver.Beatmaps
 
             // Find the totalMaps'th beatmap
             var onMap = 0;
-            foreach (KeyValuePair<string, List<Beatmap>> mapset in GameBase.Beatmaps)
+            foreach (var mapset in GameBase.Beatmaps)
             {
-                bool foundBeatmap = false;
+                var foundBeatmap = false;
 
-                foreach (var beatmap in mapset.Value)
+                foreach (var beatmap in mapset.Beatmaps)
                 {
                     if (onMap == randomBeatmap)
                     {

@@ -63,8 +63,7 @@ namespace Quaver.Peppy
 
                 // Update the selected beatmap with the new one.
                 // This button should only be on the song select state, so no need to check for states here.
-                var newMap = GameBase.Beatmaps.Where(x => !oldMaps.ContainsKey(x.Key))
-                    .ToDictionary(x => x.Key, x => x.Value);
+                var newMapsets = GameBase.Beatmaps.Where(x => !oldMaps.Any(y => y.Directory == x.Directory)).ToList();
 
                 // In the event that the user imports maps when there weren't any maps previously.
                if (oldMaps.Count == 0)
@@ -74,9 +73,9 @@ namespace Quaver.Peppy
                     SongManager.Load();
                     SongManager.Play();
                 }
-                else if (newMap.Count > 0)
-                {
-                    var map = newMap.Values.Last().Last();
+                else if (newMapsets.Count > 0)
+               {
+                    var map = newMapsets.Last().Beatmaps.Last();
                     Console.WriteLine(map.Artist + " " + map.Title);
 
                     // Switch map and load audio for song and play it.

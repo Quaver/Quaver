@@ -29,7 +29,7 @@ namespace Quaver.Database
         ///     Initializes and loads the beatmap database
         /// </summary>
         /// <returns></returns>
-        internal static async Task<Dictionary<string, List<Beatmap>>> LoadBeatmapDatabaseAsync()
+        internal static async Task<List<Mapset>> LoadBeatmapDatabaseAsync()
         {
             try
             {
@@ -42,7 +42,7 @@ namespace Quaver.Database
                 Logger.Log($"{beatmaps.Count} beatmaps have been successfully loaded.", Color.Cyan);
 
                 var maps = BeatmapUtils.GroupBeatmapsByDirectory(beatmaps);
-                Logger.Log($"Successfully loaded {beatmaps.Count} in {maps.Keys.Count} directories.", Color.Cyan);
+                Logger.Log($"Successfully loaded {beatmaps.Count} in {maps.Count} directories.", Color.Cyan);
 
                 return maps;
             }

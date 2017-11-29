@@ -26,7 +26,7 @@ namespace Quaver.Commands
             var i = 0;
             foreach (var mapset in GameBase.Beatmaps)
             {
-                commandString.AppendLine($"[{i}] {new DirectoryInfo(mapset.Key).Name}  - {mapset.Value.Count} maps");
+                //commandString.AppendLine($"[{i}] {new DirectoryInfo(mapset.Key).Name}  - {mapset.Value.Count} maps");
                 i++;
             }
             
