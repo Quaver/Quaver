@@ -35,6 +35,12 @@ namespace Quaver.Audio
         internal static double Length { get => GetAudioLength(); }
 
         /// <summary>
+        ///     It's assumed that BASS is the issue when music is being played. No matter what, the notes are always
+        ///     100ms late. This should make up for it.
+        /// </summary>
+        internal static int BassDelayOffset { get; set; } = 100;
+
+        /// <summary>
         ///     Loads up a song to be ready to be played.
         /// </summary>
         /// <param name="path"></param>

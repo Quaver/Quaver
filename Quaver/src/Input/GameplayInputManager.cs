@@ -112,7 +112,7 @@ namespace Quaver.Input
 
                 // Skip to 3 seconds before the notes start
                 SongManager.Load();
-                SongManager.SkipTo(qua.HitObjects[0].StartTime - 3000);
+                SongManager.SkipTo(qua.HitObjects[0].StartTime - 3000 + SongManager.BassDelayOffset);
                 SongManager.Play();
 
                 NoteManager.PlayScreen.Timing.SongIsPlaying = true;
