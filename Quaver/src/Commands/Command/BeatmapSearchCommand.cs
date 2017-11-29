@@ -19,7 +19,7 @@ namespace Quaver.Commands
 
         public void Execute(string[] args)
         {
-            var query = string.Join(" ", args.Skip(1).ToArray());
+            /*var query = string.Join(" ", args.Skip(1).ToArray());
 
             var foundMapsets = BeatmapUtils.SearchBeatmaps(GameBase.Beatmaps, query);
 
@@ -38,7 +38,7 @@ namespace Quaver.Commands
                 }
             }
 
-            Console.WriteLine(cmdString);;
+            Console.WriteLine(cmdString);*/
         }
     }
 }

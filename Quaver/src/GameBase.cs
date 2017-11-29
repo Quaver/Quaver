@@ -43,12 +43,12 @@ namespace Quaver
         /// <summary>
         ///     The current list of loaded beatmaps
         /// </summary>
-        public static Dictionary<string, List<Beatmap>> Beatmaps { get; set; }
+        public static List<Mapset> Beatmaps { get; set; }
 
         /// <summary>
         ///     The current list of ***visible*** beatmaps - Use these for song select!
         /// </summary>
-        public static Dictionary<string, List<Beatmap>> VisibleBeatmaps { get; set; }
+        public static List<Mapset> VisibleBeatmaps { get; set; }
 
         /// <summary>
         ///     The currently selected beatmap.
