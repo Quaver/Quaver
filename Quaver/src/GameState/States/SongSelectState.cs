@@ -76,7 +76,7 @@ namespace Quaver.GameState.States
             GameBase.GameWindow.Title = "Quaver";
 
             // Update Discord Presence
-            GameBase.ChangeDiscordPresence("In song select");
+            GameBase.ChangeDiscordPresence("Song Select", "In the menus");
 
             // Initalize buttons
             CreateSongSelectButtons();

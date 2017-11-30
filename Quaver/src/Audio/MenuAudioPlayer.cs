@@ -39,12 +39,12 @@ namespace Quaver.Audio
                         SongManager.Play();
                 }
 
-                GameBase.ChangeDiscordPresence($"In the main menu listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}");
+                GameBase.ChangeDiscordPresence($"{GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}", "Listening");
             }
             else
             {
                 // Set Rich Presence
-                GameBase.ChangeDiscordPresence("Idle");
+                GameBase.ChangeDiscordPresence("Idle", "In the menus");
             }
         }
 
@@ -80,7 +80,7 @@ namespace Quaver.Audio
                 SongManager.Play();
 
             // Set new Discord Rich Presence
-            GameBase.ChangeDiscordPresence($"In the main menu listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}");
+            GameBase.ChangeDiscordPresence($"{GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}", "Listening");
         }
     }
 }

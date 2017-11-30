@@ -87,12 +87,7 @@ namespace Quaver.Peppy
 
                     SongManager.ReloadSong();
 
-                    // Set Rich Presence
-                    try {
-                        GameBase.DiscordController.presence.details =
-                            $"In the main menu listening to: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}";
-                        DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
-                    } catch (Exception ex) { }
+                    GameBase.ChangeDiscordPresence($"{GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}", "Listening");
                 }
 
                 Logger.Log("Successfully completed the conversion task. Stopping loader.", Color.Cyan);
