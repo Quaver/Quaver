@@ -16,6 +16,7 @@ using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Replays;
 using Quaver.Scores;
+using Quaver.Graphics.Text;
 
 namespace Quaver.GameState.States
 {
@@ -82,6 +83,16 @@ namespace Quaver.GameState.States
         private SoundEffectInstance ApplauseInstance { get; set; }
 
         /// <summary>
+        ///     The Boundary Containing every Judge Text
+        /// </summary>
+        private Boundary JudgeInfoBoundary { get; set; }
+
+        /// <summary>
+        ///     The Text displaying Judge info
+        /// </summary>
+        private TextBoxSprite[] JudgeText { get; set; }
+
+        /// <summary>
         ///     Constructor - In order to get to this state, it's essential that you pass in 
         ///     the beatmap md5 and the score data.
         /// </summary>
@@ -121,7 +132,7 @@ namespace Quaver.GameState.States
         public void Initialize()
         {
             // Iniitalize UI Elements
-            CreateBackButton();
+            CreateUI();
 
             // Log the score
             LogScore();
@@ -147,6 +158,7 @@ namespace Quaver.GameState.States
         public void Update(double dt)
         {
             BackButton.Update(dt);
+            JudgeInfoBoundary.Update(dt);
         }
 
         /// <summary>
@@ -155,19 +167,47 @@ namespace Quaver.GameState.States
         public void Draw()
         {
             BackButton.Draw();
+            JudgeInfoBoundary.Draw();
         }
 
         /// <summary>
-        ///     Creates the back button
+        ///     Creates the UI
         /// </summary>
-        private void CreateBackButton()
+        private void CreateUI()
         {
+            // Create Back Button
             BackButton = new TextButton(new Vector2(300,200),"BACK" )
             {
                 Alignment = Alignment.TopRight
             };
 
             BackButton.Clicked += OnBackButtonClick;
+
+            //Create Judge Info Boundary
+            JudgeInfoBoundary = new Boundary()
+            {
+                SizeX = 500,
+                SizeY = 200,
+                Alignment = Alignment.MidCenter
+            };
+
+            //Create Judge Text
+            JudgeText = new TextBoxSprite[6];
+            for (var i=0; i<6; i++)
+            {
+                JudgeText[i] = new TextBoxSprite()
+                {
+                    Text = "[" + ScoreData.JudgeNames[i] + "]: Press: " + ScoreData.JudgePressSpread[i] + ", Release: " + ScoreData.JudgeReleaseSpread[i],
+                    TextColor = CustomColors.JudgeColors[i],
+                    Font = Fonts.Medium16,
+                    PositionY = 200 * i/6,
+                    ScaleX = 1,
+                    Textwrap = false,
+                    TextAlignment = Alignment.MidCenter,
+                    Multiline = false,
+                    Parent = JudgeInfoBoundary
+                };
+            }
         }
 
         /// <summary>
