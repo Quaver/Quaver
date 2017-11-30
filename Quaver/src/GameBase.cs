@@ -236,7 +236,7 @@ namespace Quaver
         ///     Responsible for changing the discord rich presence.
         /// </summary>
         /// <param name="details"></param>
-        public static void ChangeDiscordPresence(string details, double timeLeft = 0)
+        public static void ChangeDiscordPresence(string details, string state, double timeLeft = 0)
         {
             if (!DiscordRichPresencedInited)
                 return;
@@ -263,6 +263,7 @@ namespace Quaver
 
                 // Set presence based on keys
                 DiscordController.presence.smallImageText = (SelectedBeatmap.Keys == 4) ? "4 Keys" : "7 Keys";
+                DiscordController.presence.state = state;
                 DiscordRPC.UpdatePresence(ref DiscordController.presence);
             }
             catch (Exception e)
@@ -282,8 +283,7 @@ namespace Quaver
 
             try
             {
-                var sb = new StringBuilder();
-                sb.Append($"Playing: {SelectedBeatmap.Artist} - {SelectedBeatmap.Title} [{SelectedBeatmap.DifficultyName}]");
+                var mapString = $"{SelectedBeatmap.Artist} - {SelectedBeatmap.Title} [{SelectedBeatmap.DifficultyName}]";
 
                 // Get the original map length. 
                 double mapLength = Qua.FindSongLength(SelectedBeatmap.Qua) / GameClock;
@@ -292,16 +292,19 @@ namespace Quaver
                 if (skippedSong)
                     mapLength = (Qua.FindSongLength(SelectedBeatmap.Qua) - SongManager.Position) / GameClock;
 
+                var sb = new StringBuilder();
+                sb.Append("Playing");
+
                 // Add mods to the string if mods exist
                 if (CurrentGameModifiers.Count > 0)
                 {
-                    sb.Append(" with mods: ");
+                    sb.Append(" + ");
 
                     if (CurrentGameModifiers.Exists(x => x.Type == ModType.Speed))
                         sb.Append($"Speed {GameClock}x");
                 }
 
-                ChangeDiscordPresence(sb.ToString(), mapLength);
+                ChangeDiscordPresence(mapString, sb.ToString(), mapLength);
             }
             catch (Exception e)
             {
