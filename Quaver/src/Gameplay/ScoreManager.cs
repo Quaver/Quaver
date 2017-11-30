@@ -125,7 +125,7 @@ namespace Quaver.Gameplay
 
             //Update Score todo: actual score calculation
             ScoreTotal = (int)(1000000 * ((float)ScoreCount / ScoreMax));
-            Console.WriteLine("Score Count: " + ScoreCount + "     Max: " + ScoreMax + "    Note: "+JudgeCount+"/"+ncount);
+            //Console.WriteLine("Score Count: " + ScoreCount + "     Max: " + ScoreMax + "    Note: "+JudgeCount+"/"+ncount);
         }
 
         private int ncount = 0; //todo: remove
