@@ -109,6 +109,9 @@ namespace Quaver.Input
         /// </summary>
         private void TakeScreenshot()
         {
+            if (GameBase.KeyboardState.IsKeyUp(Configuration.KeyTakeScreenshot))
+                CurrentlyTakingScreenshot = false;
+
             // Prevent spamming. Don't run if we're already taking a screenshot.
             if (CurrentlyTakingScreenshot)
                 return;
@@ -122,7 +125,7 @@ namespace Quaver.Input
             GameBase.LoadedSkin.Screenshot.Play((float) Config.Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
             // Create path for file
-            var path = Config.Configuration.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".jpg";
+            var path = Config.Configuration.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".jpg";
 
             // Get Window Bounds
             var bounds = GameBase.GraphicsDevice.PresentationParameters.Bounds;
@@ -138,9 +141,6 @@ namespace Quaver.Input
                 // Save the screenshot
                 bitmap.Save(path, ImageFormat.Jpeg);
                 Logger.Log($"Screenshot taken. Saved at: {path}", Color.Pink);
-
-                // Allow more screenshots to be taken.
-                CurrentlyTakingScreenshot = false;
             }
         }
     }
