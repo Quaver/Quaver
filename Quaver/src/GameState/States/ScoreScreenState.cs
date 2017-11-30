@@ -87,10 +87,26 @@ namespace Quaver.GameState.States
         /// </summary>
         private Boundary JudgeInfoBoundary { get; set; }
 
+        //todo: have images and crap, but have the text only display number and not title
         /// <summary>
         ///     The Text displaying Judge info
         /// </summary>
         private TextBoxSprite[] JudgeText { get; set; }
+
+        /// <summary>
+        ///     The text that displays score
+        /// </summary>
+        private TextBoxSprite ScoreText { get; set; }
+
+        /// <summary>
+        ///     The text that displays max combo
+        /// </summary>
+        private TextBoxSprite ComboText { get; set; }
+
+        /// <summary>
+        ///     The text that displays accuracy
+        /// </summary>
+        private TextBoxSprite AccuracyText { get; set; }
 
         /// <summary>
         ///     Constructor - In order to get to this state, it's essential that you pass in 
@@ -186,7 +202,7 @@ namespace Quaver.GameState.States
             //Create Judge Info Boundary
             JudgeInfoBoundary = new Boundary()
             {
-                SizeX = 500,
+                SizeX = 300,
                 SizeY = 200,
                 Alignment = Alignment.MidCenter
             };
@@ -208,6 +224,36 @@ namespace Quaver.GameState.States
                     Parent = JudgeInfoBoundary
                 };
             }
+
+            //Create Score Text
+            ScoreText = new TextBoxSprite()
+            {
+                Text = ScoreData.ScoreTotal.ToString(),
+                Font = Fonts.Medium24,
+                TextAlignment = Alignment.MidLeft,
+                TextColor = Color.White,
+                Textwrap = false,
+                Multiline = false,
+                ScaleX = 1,
+                SizeY = 70,
+                PositionY = -70,
+                Parent = JudgeInfoBoundary
+            };
+
+            //Create Accuracy Text
+            AccuracyText = new TextBoxSprite()
+            {
+                Text = $"{ScoreData.Accuracy * 100:0.00}%",
+                Font = Fonts.Medium24,
+                TextAlignment = Alignment.MidRight,
+                TextColor = Color.White,
+                Textwrap = false,
+                Multiline = false,
+                ScaleX = 1,
+                SizeY = 70,
+                PositionY = -70,
+                Parent = JudgeInfoBoundary
+            };
         }
 
         /// <summary>
