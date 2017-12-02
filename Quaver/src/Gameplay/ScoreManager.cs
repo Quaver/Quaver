@@ -152,8 +152,8 @@ namespace Quaver.Gameplay
             JudgeDifficulty = od;
 
             //Create Difficulty Curve for od
-            var curve = (float)Math.Pow(od+1, -0.42) * GameBase.GameClock;
-            HitWindowPress = new float[5] { 20 * GameBase.GameClock, 96 * curve, 144 * curve, 180 * curve, 260 * curve };
+            var curve = (float)Math.Pow(od+1, -0.325) * GameBase.GameClock;
+            HitWindowPress = new float[5] { 20 * GameBase.GameClock, 96 * curve, 144 * curve, 192 * curve, 264 * curve };
             HitWindowRelease = new float[4] { 30 * GameBase.GameClock, HitWindowPress[1]*1.35f, HitWindowPress[2] * 1.35f, HitWindowPress[3] * 1.35f };
 
             //count max score
