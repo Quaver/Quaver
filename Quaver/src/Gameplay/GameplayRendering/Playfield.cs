@@ -175,7 +175,8 @@ namespace Quaver.Gameplay.GameplayRendering
                 Receptors[i] = new Sprite
                 {
                     Image = GameBase.LoadedSkin.NoteReceptor,
-                    Size = Vector2.One * PlayfieldObjectSize,
+                    SizeX = PlayfieldObjectSize,
+                    SizeY = PlayfieldObjectSize * (float)GameBase.LoadedSkin.NoteReceptor.Height / GameBase.LoadedSkin.NoteReceptor.Width,
                     Position = new Vector2(ReceptorXPosition[i], ReceptorYOffset),
                     Alignment = Alignment.TopLeft,
                     Parent = BoundaryUnder
@@ -298,6 +299,7 @@ namespace Quaver.Gameplay.GameplayRendering
             var tween = Math.Min(dt / 30, 1);
 
             // Update receptors
+            /*
             for (var i = 0; i < GameBase.SelectedBeatmap.Qua.KeyCount; i++)
             {
                 var receptorSizeOffset = (ReceptorCurrentSize[i] - 1) * PlayfieldObjectSize / 2f;
@@ -307,7 +309,7 @@ namespace Quaver.Gameplay.GameplayRendering
                 Receptors[i].Size = Vector2.One * ReceptorCurrentSize[i] * PlayfieldObjectSize;
                 Receptors[i].PositionX = ReceptorXPosition[i] - receptorSizeOffset;
                 Receptors[i].PositionY = ReceptorYOffset - receptorSizeOffset;
-            }
+            }*/
 
             // Update Offset Indicators
             foreach (var sprite in OffsetIndicatorsSprites)

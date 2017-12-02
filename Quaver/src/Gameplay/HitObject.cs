@@ -123,6 +123,7 @@ namespace Quaver.Gameplay
         {
             IsLongNote = longNote;
 
+            //Create hold body if this object is an LN
             if (longNote)
                 HoldBodySprite = new Sprite()
                 {
@@ -133,6 +134,7 @@ namespace Quaver.Gameplay
                     Parent = ParentContainer
                 };
 
+            //Create hit body
             HitBodySprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
@@ -162,7 +164,12 @@ namespace Quaver.Gameplay
                     break;
             }
 
+            // Scale hit object accordingly
+            HitBodySprite.SizeX = HitObjectSize;
+            HitBodySprite.SizeY = HitObjectSize * (float)HitBodySprite.Image.Height / HitBodySprite.Image.Width;
 
+
+            // Create hold body (placed ontop of hold body) if this is a long note.
             if (longNote) 
                 HoldEndSprite = new Sprite()
                 {
