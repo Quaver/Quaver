@@ -117,6 +117,11 @@ namespace Quaver.Gameplay
         private Sprite HoldEndSprite { get; set; }
 
         /// <summary>
+        ///     The offset of the hold body from hit body.
+        /// </summary>
+        private float HoldBodyOffset { get; set; }
+
+        /// <summary>
         ///     This method initializes the HitObject sprites
         /// </summary>
         public void Initialize(bool downScroll, bool longNote)
@@ -129,8 +134,8 @@ namespace Quaver.Gameplay
                 {
                     Image = GameBase.LoadedSkin.NoteHoldBody,
                     Alignment = Alignment.TopLeft,
-                    Position = _hitObjectPosition,
                     Size = new Vector2(HitObjectSize, InitialLongNoteSize),
+                    Position = _hitObjectPosition,
                     Parent = ParentContainer
                 };
 
@@ -166,7 +171,8 @@ namespace Quaver.Gameplay
 
             // Scale hit object accordingly
             HitBodySprite.SizeX = HitObjectSize;
-            HitBodySprite.SizeY = HitObjectSize * (float)HitBodySprite.Image.Height / HitBodySprite.Image.Width;
+            HitBodySprite.SizeY = HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width;
+            HoldBodyOffset = HitBodySprite.SizeY / 2;
 
 
             // Create hold body (placed ontop of hold body) if this is a long note.
@@ -176,7 +182,8 @@ namespace Quaver.Gameplay
                     Image = GameBase.LoadedSkin.NoteHoldEnd,
                     Alignment = Alignment.TopLeft,
                     Position = _hitObjectPosition,
-                    Size = Vector2.One * HitObjectSize,
+                    SizeX = HitObjectSize,
+                    SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnd.Height / GameBase.LoadedSkin.NoteHoldEnd.Width,
                     Parent = ParentContainer,
                     SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
                 };
@@ -198,10 +205,10 @@ namespace Quaver.Gameplay
                     {
                         //Update HoldBody Position and Size
                         HoldBodySprite.SizeY = CurrentLongNoteSize;
-                        HoldBodySprite.PositionY = downScroll ? -(float)CurrentLongNoteSize + (HitObjectSize / 2f) + _hitObjectPosition.Y : _hitObjectPosition.Y + (HitObjectSize / 2f);
+                        HoldBodySprite.PositionY = downScroll ? -(float)CurrentLongNoteSize - HoldBodyOffset + _hitObjectPosition.Y : _hitObjectPosition.Y + HoldBodyOffset;
 
                         //Update Hold End Position
-                        HoldEndSprite.PositionY = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.SizeY) : (_hitObjectPosition.Y + HoldBodySprite.SizeY);
+                        HoldEndSprite.PositionY = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.SizeY + HoldBodyOffset) : (_hitObjectPosition.Y + HoldBodySprite.SizeY - HoldBodyOffset);
                     }
                 }
 
