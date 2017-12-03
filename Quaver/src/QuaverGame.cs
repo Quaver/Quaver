@@ -129,8 +129,14 @@ namespace Quaver
         {
             BackgroundManager.UnloadContent();
             GameBase.GameStateManager.ClearStates();
-            Bass.Free();
-            DiscordRPC.Shutdown();
+            try
+            {
+                Bass.Free();
+                DiscordRPC.Shutdown();
+            }
+            catch (Exception e)
+            {
+            }
         }
 
         /// <summary>
