@@ -25,5 +25,7 @@ namespace Quaver.Modifiers
         Speed18X = 1 << 13, // Speed 1.8x
         Speed19X = 1 << 14, // Speed 1.9x
         Speed20X = 1 << 15, // Speed 2.0x
+        Strict = 1 << 16, // Makes the accuracy hit windows harder
+        Chill = 1 << 17, // Makes the accuracy hit windows easier
     }
 }
