@@ -74,6 +74,12 @@ namespace Quaver.Modifiers
                 case ModIdentifier.NoSliderVelocity:
                     mod = new NoSliderVelocities();
                     break;
+                case ModIdentifier.Strict:
+                    mod = new Strict();
+                    break;
+                case ModIdentifier.Chill:
+                    mod = new Chill();
+                    break;
                 default:
                     return;
             }
