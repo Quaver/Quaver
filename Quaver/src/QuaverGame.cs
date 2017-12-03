@@ -76,12 +76,6 @@ namespace Quaver
             // Enable console commands (Only applicable if on debug release)
             //CommandHandler.HandleConsoleCommand();
 
-            // Add some mods
-            // ModManager.AddMod(ModIdentifier.Speed, 1.5f);
-            // ModManager.AddMod(ModIdentifer.NoSliderVelocities);
-            // ModManager.RemoveMod(ModIdentifier.Speed);
-            // ModManager.RemoveAllMods();
-
             // TODO: Add your initialization logic here
             base.Initialize();
         }
