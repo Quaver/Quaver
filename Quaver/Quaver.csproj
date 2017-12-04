@@ -267,44 +267,12 @@
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
-    <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\x86\SDL2.dll">
-      <Link>x86\SDL2.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\x64\SDL2.dll">
-      <Link>x64\SDL2.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\x86\soft_oal.dll">
-      <Link>x86\soft_oal.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\x64\soft_oal.dll">
-      <Link>x64\soft_oal.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\x86\libSDL2-2.0.so.0">
-      <Link>x86\libSDL2-2.0.so.0</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\x64\libSDL2-2.0.so.0">
-      <Link>x64\libSDL2-2.0.so.0</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\x86\libopenal.so.1">
-      <Link>x86\libopenal.so.1</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\x64\libopenal.so.1">
-      <Link>x64\libopenal.so.1</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\libSDL2-2.0.0.dylib">
-      <Link>libSDL2-2.0.0.dylib</Link>
+      <Link>Lib\libSDL2-2.0.0.dylib</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\libopenal.1.dylib">
-      <Link>libopenal.1.dylib</Link>
+      <Link>Lib\libopenal.1.dylib</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll.config">
@@ -361,69 +329,40 @@
     <EmbeddedResource Include="Resources\Default Skin\screenshot.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\back.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\click.xnb" />
-    <None Include="x64\libbass.so">
+    <None Include="Lib\libopenal.so.1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="x64\libbass_fx.so">
+    <None Include="Lib\libSDL2-2.0.so.0">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="x64\libopenal.so.1">
+    <None Include="Lib\libbass.dylib">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="x64\libSDL2-2.0.so.0">
+    <None Include="Lib\libbass_fx.dylib">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="x86\libopenal.so.1">
+    <None Include="Lib\libbass.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="x86\libSDL2-2.0.so.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="x86_64\libbass.dylib">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="x86_64\libbass_fx.dylib">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="x86\libbass.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="x86\libbass_fx.so">
+    <None Include="Lib\libbass_fx.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="discord-rpc.dll">
+    <Content Include="Lib\discord-rpc.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="x64\e_sqlite3.dll">
+    <Content Include="Lib\INIFileParser.dll" />
+    <Content Include="Lib\SDL2.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="x64\SDL2.dll">
+    <Content Include="Lib\soft_oal.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="x64\soft_oal.dll">
+    <Content Include="Lib\bass_fx.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="x86\SDL2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86\soft_oal.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86_64\INIFileParser.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86\bass_fx.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x64\bass.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x64\bass_fx.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86\bass.dll">
+    <Content Include="Lib\bass.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -451,8 +390,24 @@
   <PropertyGroup>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\bass.dll" "$(ProjectDir)$(outDir)bass.dll"
+echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\bass_fx.dll" "$(ProjectDir)$(outDir)bass_fx.dll"
+echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\discord-rpc.dll" "$(ProjectDir)$(outDir)discord-rpc.dll"
+echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libbass.dylibl" "$(ProjectDir)$(outDir)libbass.dylib"
+echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libbass.so" "$(ProjectDir)$(outDir)libbass.so"
+echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libbass_fx.dylib" "$(ProjectDir)$(outDir)libbass_fx.dylib"
+echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libbass_fx.so" "$(ProjectDir)$(outDir)libbass_fx.so"
+echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libopenal.1.dylib" "$(ProjectDir)$(outDir)libopenal.1.dylib"
+echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libopenal.so.1" "$(ProjectDir)$(outDir)libopenal.so.1"
+echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libSDL2-2.0.0.dylib" "$(ProjectDir)$(outDir)libSDL2-2.0.0.dylib"
+echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libSDL2-2.0.so.0" "$(ProjectDir)$(outDir)libSDL2-2.0.so.0"
+echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\SDL2.dll" "$(ProjectDir)$(outDir)SDL2.dll"
+echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\soft_oal.dll" "$(ProjectDir)$(outDir)soft_oal.dll"
+echo f | xcopy /y "$(ProjectDir)$(outDir)x86\e_sqlite3.dll" "$(ProjectDir)$(outDir)e_sqlite3.dll"
+
+RD /S /Q "$(ProjectDir)$(outDir)x86\"
+RD /S /Q "$(ProjectDir)$(outDir)Lib\"
+RD /S /Q "$(ProjectDir)$(outDir)x64\"</PostBuildEvent>
   </PropertyGroup>
   <Target Name="BeforeBuild">
   </Target>
