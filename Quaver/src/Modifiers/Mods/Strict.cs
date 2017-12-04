@@ -21,7 +21,7 @@ namespace Quaver.Modifiers.Mods
 
         public bool Ranked { get; set; } = true;
 
-        public float ScoreMultiplierAddition { get; set; } = -0.5f;
+        public float ScoreMultiplierAddition { get; set; } = 0.1f;
 
         public ModIdentifier[] IncompatibleMods { get; set; } = {ModIdentifier.Chill};
 
