@@ -19,7 +19,7 @@ namespace Quaver.Modifiers.Mods
         /// <summary>
         ///     The identifier of the mod.
         /// </summary>
-        public ModIdentifier ModIdentifier { get; set; } = ModIdentifier.Speed05X;
+        public ModIdentifier ModIdentifier { get; set; } = ModIdentifier.Speed06X;
 
         /// <summary>
         ///     The type of mod as defined in the enum
