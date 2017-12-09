@@ -95,7 +95,7 @@ namespace Quaver.Config
         /// <summary>
         ///     The dim for backgrounds during gameplay
         /// </summary>
-        private static byte _backgroundBrightness = 100;
+        private static byte _backgroundBrightness = 20;
         internal static byte BackgroundBrightness { get => _backgroundBrightness; set { _backgroundBrightness = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
