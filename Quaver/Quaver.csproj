@@ -112,6 +112,7 @@
     <Compile Include="src\Discord\DiscordRPC.cs" />
     <Compile Include="src\Gameplay\GameplayRendering\GameplayUI.cs" />
     <Compile Include="src\Gameplay\GameplayRendering\IGameplayRendering.cs" />
+    <Compile Include="src\Gameplay\NoteDevianceData.cs" />
     <Compile Include="src\GameState\States\ScoreScreenState.cs" />
     <Compile Include="src\GameState\States\SongSelectState.cs" />
     <Compile Include="src\GameState\States\MapImportLoadingState.cs" />
