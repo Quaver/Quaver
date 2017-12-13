@@ -184,7 +184,7 @@ namespace Quaver
             //GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
             // Set Background Color
-            //GameBase.GraphicsDevice.Clear(Color.Black);
+            GameBase.GraphicsDevice.Clear(Color.Black);
 
             // Draw Background
             BackgroundManager.Draw();
