@@ -201,7 +201,7 @@ namespace Quaver.GameState.States
         private void CreateUI()
         {
             // Create Back Button
-            BackButton = new TextButton(new Vector2(300,200),"BACK" )
+            BackButton = new TextButton(new Vector2(150,40),"BACK" )
             {
                 Alignment = Alignment.TopRight
             };

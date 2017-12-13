@@ -122,6 +122,11 @@ namespace Quaver.Gameplay
         private float HoldBodyOffset { get; set; }
 
         /// <summary>
+        ///     The offset of the hold end from hold body.
+        /// </summary>
+        private float HoldEndOffset { get; set; }
+
+        /// <summary>
         ///     This method initializes the HitObject sprites
         /// </summary>
         public void Initialize(bool downScroll, bool longNote)
@@ -176,7 +181,8 @@ namespace Quaver.Gameplay
 
 
             // Create hold body (placed ontop of hold body) if this is a long note.
-            if (longNote) 
+            if (longNote)
+            {
                 HoldEndSprite = new Sprite()
                 {
                     Image = GameBase.LoadedSkin.NoteHoldEnd,
@@ -187,6 +193,8 @@ namespace Quaver.Gameplay
                     Parent = ParentContainer,
                     SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
                 };
+                HoldEndOffset = HoldEndSprite.SizeY / 2;
+            }
         }
 
         public void Update(bool downScroll)
@@ -204,11 +212,11 @@ namespace Quaver.Gameplay
                     else
                     {
                         //Update HoldBody Position and Size
-                        HoldBodySprite.SizeY = CurrentLongNoteSize + HoldBodyOffset;
+                        HoldBodySprite.SizeY = CurrentLongNoteSize;
                         HoldBodySprite.PositionY = downScroll ? -(float)CurrentLongNoteSize - HoldBodyOffset + _hitObjectPosition.Y : _hitObjectPosition.Y + HoldBodyOffset;
 
                         //Update Hold End Position
-                        HoldEndSprite.PositionY = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.SizeY + HoldBodyOffset) : (_hitObjectPosition.Y + HoldBodySprite.SizeY - HoldBodyOffset);
+                        HoldEndSprite.PositionY = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.SizeY - HoldEndOffset + HoldBodyOffset) : (_hitObjectPosition.Y + HoldBodySprite.SizeY + HoldEndOffset - HoldBodyOffset);
                     }
                 }
 
