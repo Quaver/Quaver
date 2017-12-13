@@ -87,6 +87,11 @@ namespace Quaver.GameState.States
         /// </summary>
         private Boundary JudgeInfoBoundary { get; set; }
 
+        /// <summary>
+        ///     Boundary containing ms deviance data ui
+        /// </summary>
+        private Sprite MsDevianceBoundary { get; set; }
+
         //todo: have images and crap, but have the text only display number and not title
         /// <summary>
         ///     The Text displaying Judge info
@@ -165,6 +170,8 @@ namespace Quaver.GameState.States
         public void UnloadContent()
         {
             BackButton.Destroy();
+            JudgeInfoBoundary.Destroy();
+            MsDevianceBoundary.Destroy();
         }
 
         /// <summary>
@@ -175,6 +182,7 @@ namespace Quaver.GameState.States
         {
             BackButton.Update(dt);
             JudgeInfoBoundary.Update(dt);
+            MsDevianceBoundary.Update(dt);
         }
 
         /// <summary>
@@ -184,6 +192,7 @@ namespace Quaver.GameState.States
         {
             BackButton.Draw();
             JudgeInfoBoundary.Draw();
+            MsDevianceBoundary.Draw();
         }
 
         /// <summary>
@@ -205,6 +214,16 @@ namespace Quaver.GameState.States
                 SizeX = 300,
                 SizeY = 200,
                 Alignment = Alignment.MidCenter
+            };
+
+            MsDevianceBoundary = new Sprite()
+            {
+                SizeX = 400,
+                SizeY = 150,
+                Alignment = Alignment.BotCenter,
+                Tint = Color.Black,
+                PositionY = -100,
+                Alpha = 0.5f
             };
 
             //Create Judge Text
@@ -254,6 +273,21 @@ namespace Quaver.GameState.States
                 PositionY = -70,
                 Parent = JudgeInfoBoundary
             };
+
+            //temp todo: create proper ms deviance display
+            foreach (var od in ScoreData.MsDeviance)
+            {
+                var odOb = new Sprite()
+                {
+                    PositionX = (float)od.Position * 400,
+                    PositionY = (float)od.Offset * 150/2,
+                    SizeX = 2,
+                    SizeY = 2,
+                    Tint = CustomColors.JudgeColors[od.Type],
+                    Alignment = Alignment.MidLeft,
+                    Parent = MsDevianceBoundary
+                };
+            }
         }
 
         /// <summary>
