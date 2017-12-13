@@ -18,6 +18,7 @@ using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.Peppy;
+using Quaver.QuaFile;
 
 namespace Quaver.GameState.States
 {
@@ -44,10 +45,18 @@ namespace Quaver.GameState.States
         public Button SwitchSongSelectButton { get; set; }
 
         /// <summary>
+        ///     Button to import .qum
+        /// </summary>
+        public Button ImportQumButton { get; set; }
+
+        /// <summary>
         ///     Button to import .osz
         /// </summary>
         public Button ImportPeppyButton { get; set; }
 
+        /// <summary>
+        ///     Initialize
+        /// </summary>
         public void Initialize()
         {
             GameBase.GameWindow.Title = "Quaver";
@@ -62,7 +71,8 @@ namespace Quaver.GameState.States
             Boundary = new Boundary();
 
             // Initialize the UI buttons
-            CreateImportButton();
+            CreateOszImportButton();
+            CreateQumImportButton();
             CreateSongSelectButton();
 
             UpdateReady = true;
@@ -97,6 +107,7 @@ namespace Quaver.GameState.States
         {
             SwitchSongSelectButton.Draw();
             ImportPeppyButton.Draw();
+            ImportQumButton.Draw();
         }
 
         /// <summary>
@@ -129,7 +140,7 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     Responsible for creating the import .osz button
         /// </summary>
-        private void CreateImportButton()
+        private void CreateOszImportButton()
         {
             // Import .osz Button
             ImportPeppyButton = new TextButton(new Vector2(200, 40), "Import .osz")
@@ -141,6 +152,24 @@ namespace Quaver.GameState.States
             };
 
             ImportPeppyButton.Clicked += Osz.OnImportButtonClick;
+        }
+
+
+        /// <summary>
+        ///     Responsible for creating the import .qum button
+        /// </summary>
+        private void CreateQumImportButton()
+        {
+            // Import .osz Button
+            ImportQumButton = new TextButton(new Vector2(200, 40), "Import .qum")
+            {
+                Image = GameBase.LoadedSkin.NoteHoldBody,
+                Alignment = Alignment.BotCenter,
+                Position = Vector2.Zero,
+                Parent = Boundary
+            };
+
+            ImportQumButton.Clicked += Qum.OnImportButtonClick;
         }
     }
 }
