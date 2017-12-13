@@ -42,8 +42,6 @@ namespace Quaver.Gameplay.GameplayRendering
         /// </summary>
         public void Initialize(PlayScreenState playScreen)
         {
-            //PlayScreen = playScreen;
-
             //TODO: Timing Initializer
             SongIsPlaying = false;
 
