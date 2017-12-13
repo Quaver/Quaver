@@ -222,7 +222,7 @@ namespace Quaver.GameState.States
             {
                 JudgeText[i] = new TextBoxSprite()
                 {
-                    Text = "[" + ScoreData.JudgeNames[i] + "]: Press: " + ScoreData.JudgePressSpread[i] + ", Release: " + ScoreData.JudgeReleaseSpread[i],
+                    Text = "[" + ScoreData.JudgeNames[i] + "]: Press|Release: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i],
                     TextColor = CustomColors.JudgeColors[i],
                     Font = Fonts.Medium16,
                     PositionY = 200 * i/6,
@@ -280,8 +280,10 @@ namespace Quaver.GameState.States
             //create note data graph todo: add text and stuff
             for (var i=0; i<5; i++)
             {
+                Sprite ob;
+
                 //bottom
-                var ob = new Sprite()
+                ob = new Sprite()
                 {
                     PositionY = MsDevianceBoundary.SizeY * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2,
                     ScaleX = 1,
@@ -355,6 +357,41 @@ namespace Quaver.GameState.States
                     };
                 }
             }
+
+            //create labels
+            TextBoxSprite label;
+            
+            //top
+            label = new TextBoxSprite()
+            {
+                Text = "Late (+" + Math.Floor(ScoreData.HitWindowPress[4]) + "ms)",
+                Font = Fonts.Medium12,
+                PositionX = 2,
+                PositionY = 2,
+                SizeX = 200,
+                SizeY = 50,
+                Alignment = Alignment.TopLeft,
+                TextAlignment = Alignment.TopLeft,
+                Multiline = false,
+                Textwrap = false,
+                Parent = MsDevianceBoundary
+            };
+
+            //bottom
+            label = new TextBoxSprite()
+            {
+                Text = "Early (-" + Math.Floor(ScoreData.HitWindowPress[4]) + "ms)",
+                Font = Fonts.Medium12,
+                PositionX = 2,
+                PositionY = -2,
+                SizeX = 200,
+                SizeY = 50,
+                Alignment = Alignment.BotLeft,
+                TextAlignment = Alignment.BotLeft,
+                Multiline = false,
+                Textwrap = false,
+                Parent = MsDevianceBoundary
+            };
         }
 
         /// <summary>
