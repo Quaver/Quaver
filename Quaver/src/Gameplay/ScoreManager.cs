@@ -30,7 +30,7 @@ namespace Quaver.Gameplay
 
         //Hit Tracking (ms deviance)
         internal int TotalJudgeCount { get; set; }
-        internal List<double> MsDeviance { get; set; }
+        internal List<NoteDevianceData> MsDeviance { get; set; }
 
         //Score tracking
         internal int Combo { get; set; }
@@ -75,7 +75,15 @@ namespace Quaver.Gameplay
 
             //Update ms-deviance
             if (offset != null)
-                MsDeviance.Add((double)offset);
+            {
+                NoteDevianceData noteData = new NoteDevianceData()
+                {
+                    Offset = (double)offset,
+                    //Position = (double)position,
+                    Type = index
+                };
+                MsDeviance.Add(noteData);
+            }
 
             //Add JudgeSpread to Accuracy
             Accuracy = 0;
@@ -147,7 +155,7 @@ namespace Quaver.Gameplay
             JudgeCount = 0;
             JudgeReleaseSpread = new int[6];
             JudgePressSpread = new int[6];
-            MsDeviance = new List<double>();
+            MsDeviance = new List<NoteDevianceData>();
             TotalJudgeCount = count;
             JudgeDifficulty = od;
 
