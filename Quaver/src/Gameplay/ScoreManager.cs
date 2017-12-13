@@ -66,7 +66,7 @@ namespace Quaver.Gameplay
         /// </summary>
         /// <param name="index"></param>
         /// <param name="offset"></param>
-        internal void Count(int index, bool release = false, double? offset=null)
+        internal void Count(int index, bool release = false, double? offset = null, double? songpos = null)
         {
             //Update Judge Spread
             if (release) JudgeReleaseSpread[index]++;
@@ -74,12 +74,12 @@ namespace Quaver.Gameplay
             JudgeCount++;
 
             //Update ms-deviance
-            if (offset != null)
+            if (offset != null && songpos != null)
             {
                 NoteDevianceData noteData = new NoteDevianceData()
                 {
                     Offset = (double)offset,
-                    //Position = (double)position,
+                    Position = (double)songpos,
                     Type = index
                 };
                 MsDeviance.Add(noteData);
