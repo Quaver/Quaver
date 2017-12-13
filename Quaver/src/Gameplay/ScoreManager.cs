@@ -9,6 +9,7 @@ using Quaver.Graphics;
 using Quaver.Logging;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
+using Quaver.Audio;
 
 namespace Quaver.Gameplay
 {
@@ -31,6 +32,7 @@ namespace Quaver.Gameplay
         //Hit Tracking (ms deviance)
         internal int TotalJudgeCount { get; set; }
         internal List<NoteDevianceData> MsDeviance { get; set; }
+        internal double SongLength { get; set; }
 
         //Score tracking
         internal int Combo { get; set; }
@@ -73,7 +75,7 @@ namespace Quaver.Gameplay
             else JudgePressSpread[index]++;
             JudgeCount++;
 
-            //Update ms-deviance
+            //record ms deviance data
             if (offset != null && songpos != null)
             {
                 NoteDevianceData noteData = new NoteDevianceData()
@@ -158,6 +160,7 @@ namespace Quaver.Gameplay
             MsDeviance = new List<NoteDevianceData>();
             TotalJudgeCount = count;
             JudgeDifficulty = od;
+            SongLength = SongManager.Length;
 
             //Create Difficulty Curve for od
             var curve = (float)Math.Pow(od+1, -0.325) * GameBase.GameClock;

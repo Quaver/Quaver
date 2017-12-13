@@ -130,7 +130,7 @@ namespace Quaver.Gameplay.GameplayRendering
                 if (PlayScreen.Timing.CurrentSongTime > HitObjectPool[i].StartTime + PlayScreen.ScoreManager.HitWindowPress[4])
                 {
                     //Track note miss with ScoreManager
-                    PlayScreen.ScoreManager.Count(5);
+                    PlayScreen.ScoreManager.Count(5, false, 0, PlayScreen.Timing.CurrentSongTime/ SongManager.Length);
                     PlayScreen.GameplayUI.UpdateAccuracyBox(5);
                     PlayScreen.Playfield.UpdateJudge(5);
 

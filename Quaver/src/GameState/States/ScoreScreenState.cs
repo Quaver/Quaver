@@ -216,16 +216,6 @@ namespace Quaver.GameState.States
                 Alignment = Alignment.MidCenter
             };
 
-            MsDevianceBoundary = new Sprite()
-            {
-                SizeX = 400,
-                SizeY = 150,
-                Alignment = Alignment.BotCenter,
-                Tint = Color.Black,
-                PositionY = -100,
-                Alpha = 0.5f
-            };
-
             //Create Judge Text
             JudgeText = new TextBoxSprite[6];
             for (var i=0; i<6; i++)
@@ -274,19 +264,79 @@ namespace Quaver.GameState.States
                 Parent = JudgeInfoBoundary
             };
 
-            //temp todo: create proper ms deviance display
-            foreach (var od in ScoreData.MsDeviance)
+            // create ms deviance box
+            MsDevianceBoundary = new Sprite()
             {
-                var odOb = new Sprite()
+                SizeX = 400,
+                SizeY = 150,
+                Alignment = Alignment.BotCenter,
+                Tint = Color.Black,
+                PositionY = -100,
+                Alpha = 0.5f
+            };
+
+            //temp todo: add text and stuff
+            for (var i=0; i<5; i++)
+            {
+                //bottom
+                var ob = new Sprite()
                 {
-                    PositionX = (float)od.Position * 400,
-                    PositionY = (float)od.Offset * 150/2,
-                    SizeX = 2,
-                    SizeY = 2,
-                    Tint = CustomColors.JudgeColors[od.Type],
+                    PositionY = MsDevianceBoundary.SizeY * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2,
+                    ScaleX = 1,
+                    SizeY = 1,
+                    Tint = CustomColors.JudgeColors[i],
+                    Alpha = 0.1f,
                     Alignment = Alignment.MidLeft,
                     Parent = MsDevianceBoundary
                 };
+
+                //top
+                ob = new Sprite()
+                {
+                    PositionY = -MsDevianceBoundary.SizeY * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2,
+                    ScaleX = 1,
+                    SizeY = 1,
+                    Tint = CustomColors.JudgeColors[i],
+                    Alpha = 0.1f,
+                    Alignment = Alignment.MidLeft,
+                    Parent = MsDevianceBoundary
+                };
+            }
+
+            //temp todo: create proper ms deviance display. make this not lag some how
+            //record misses
+            foreach (var ms in ScoreData.MsDeviance)
+            {
+                if (ms.Type == 5)
+                {
+                    Console.WriteLine("MISSS");
+                    var ob = new Sprite()
+                    {
+                        PositionX = ((float)ms.Position * MsDevianceBoundary.SizeX) - 1,
+                        SizeX = 1,
+                        ScaleY = 1,
+                        Tint = CustomColors.JudgeMiss,
+                        Alpha = 0.4f,
+                        Parent = MsDevianceBoundary
+                    };
+                }
+            }
+            //record other offset data
+            foreach (var ms in ScoreData.MsDeviance)
+            {
+                if (ms.Type != 5)
+                {
+                    var ob = new Sprite()
+                    {
+                        PositionX = ((float)ms.Position * MsDevianceBoundary.SizeX) - 1,
+                        PositionY = ((float)ms.Offset * (MsDevianceBoundary.SizeY / 2)) - 1,
+                        SizeX = 2,
+                        SizeY = 2,
+                        Tint = CustomColors.JudgeColors[ms.Type],
+                        Alignment = Alignment.MidLeft,
+                        Parent = MsDevianceBoundary
+                    };
+                }
             }
         }
 

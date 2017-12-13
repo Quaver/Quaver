@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.GameState.States;
 using Quaver.Logging;
+using Quaver.Audio;
 
 namespace Quaver.Gameplay
 {
@@ -56,7 +57,7 @@ namespace Quaver.Gameplay
                         if (Math.Abs(PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime) <= PlayScreen.ScoreManager.HitWindowPress[i])
                         {
                             //Score manager stuff
-                            PlayScreen.ScoreManager.Count(i, false, PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime, PlayScreen.Timing.CurrentSongTime/PlayScreen.Timing.LastNoteEnd);
+                            PlayScreen.ScoreManager.Count(i, false, PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime, PlayScreen.Timing.CurrentSongTime/ SongManager.Length);
                             PlayScreen.GameplayUI.UpdateAccuracyBox(i);
                             PlayScreen.Playfield.UpdateJudge(i, false, PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime);
 
