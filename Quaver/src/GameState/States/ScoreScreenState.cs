@@ -275,7 +275,9 @@ namespace Quaver.GameState.States
                 Alpha = 0.5f
             };
 
-            //temp todo: add text and stuff
+            //
+
+            //create note data graph todo: add text and stuff
             for (var i=0; i<5; i++)
             {
                 //bottom
@@ -303,13 +305,28 @@ namespace Quaver.GameState.States
                 };
             }
 
+            //record time intervals on graph every 15 seconds
+            int timeIndex = 1;
+            while (timeIndex * 15000 < ScoreData.SongLength)
+            {
+                var ob = new Sprite()
+                {
+                    PositionX = MsDevianceBoundary.SizeX * (float)((timeIndex*15000)/ ScoreData.SongLength),
+                    SizeX = 1,
+                    ScaleY = 1,
+                    Alpha = 0.2f,
+                    Parent = MsDevianceBoundary
+                };
+
+                timeIndex++;
+            }
+
             //temp todo: create proper ms deviance display. make this not lag some how
             //record misses
             foreach (var ms in ScoreData.MsDeviance)
             {
                 if (ms.Type == 5)
                 {
-                    Console.WriteLine("MISSS");
                     var ob = new Sprite()
                     {
                         PositionX = ((float)ms.Position * MsDevianceBoundary.SizeX) - 1,
