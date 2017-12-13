@@ -316,7 +316,7 @@ namespace Quaver.GameState.States
                     PositionX = MsDevianceBoundary.SizeX * (float)((timeIndex*15000)/ ScoreData.SongLength),
                     SizeX = 1,
                     ScaleY = 1,
-                    Alpha = 0.2f,
+                    Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
                     Parent = MsDevianceBoundary
                 };
 
