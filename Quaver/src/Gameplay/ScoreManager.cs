@@ -78,7 +78,7 @@ namespace Quaver.Gameplay
             {
                 NoteDevianceData noteData = new NoteDevianceData()
                 {
-                    Offset = (double)offset,
+                    Offset = (double)offset/HitWindowPress[4],
                     Position = (double)songpos,
                     Type = index
                 };

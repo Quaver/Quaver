@@ -56,7 +56,7 @@ namespace Quaver.Gameplay
                         if (Math.Abs(PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime) <= PlayScreen.ScoreManager.HitWindowPress[i])
                         {
                             //Score manager stuff
-                            PlayScreen.ScoreManager.Count(i, false, PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime, PlayScreen.Timing.CurrentSongTime);
+                            PlayScreen.ScoreManager.Count(i, false, PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime, PlayScreen.Timing.CurrentSongTime/PlayScreen.Timing.LastNoteEnd);
                             PlayScreen.GameplayUI.UpdateAccuracyBox(i);
                             PlayScreen.Playfield.UpdateJudge(i, false, PlayScreen.NoteRendering.HitObjectPool[noteIndex].StartTime - PlayScreen.Timing.CurrentSongTime);
 
