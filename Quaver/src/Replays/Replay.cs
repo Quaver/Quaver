@@ -145,7 +145,7 @@ namespace Quaver.Replays
         }
 
         /// <summary>
-        ///     Writes the replay to a binary file (.qur)
+        ///     Writes the replay to a binary file (.qr)
         ///     Returns the path to the file
         /// </summary>
         internal string Write(string fileName, bool toDataDir = false)
@@ -154,9 +154,9 @@ namespace Quaver.Replays
 
             // Create the full path depending on if we want to write it to the data directory or not
             if (toDataDir)
-                path = Configuration.DataDirectory + "/r/" + Util.FileNameSafeString(fileName) + ".qur";
+                path = Configuration.DataDirectory + "/r/" + Util.FileNameSafeString(fileName) + ".qr";
             else
-                path = Configuration.ReplayDirectory + "/" + Util.FileNameSafeString(fileName) + ".qur";
+                path = Configuration.ReplayDirectory + "/" + Util.FileNameSafeString(fileName) + ".qr";
 
             using (var replayDataStream = new MemoryStream(Encoding.ASCII.GetBytes(ReplayHelper.ReplayFramesToString(ReplayFrames))))
             using (var fs = new FileStream(path, FileMode.Create))
