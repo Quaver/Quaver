@@ -21,7 +21,7 @@ namespace Quaver.Graphics.Button
         public TextBoxSprite TextSprite { get; set; }
 
         //Constructor
-        public SongSelectButton(Qua qua) //Vector2 ButtonSize, string ButtonText)
+        public SongSelectButton(Qua qua, float ButtonSizeY) //Vector2 ButtonSize, string ButtonText)
         {
             /*
             TextSprite = new TextBoxSprite()
