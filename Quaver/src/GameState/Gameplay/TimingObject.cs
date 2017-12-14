@@ -1,4 +1,4 @@
-﻿namespace Quaver.Gameplay
+﻿namespace Quaver.GameState.Gameplay
 {
     internal class TimingObject
     {

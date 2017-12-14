@@ -9,8 +9,6 @@ using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.Config;
 using Quaver.Discord;
-using Quaver.Gameplay;
-using Quaver.Gameplay.GameplayRendering;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
@@ -20,6 +18,8 @@ using Quaver.Input;
 using Quaver.Logging;
 using Quaver.Replays;
 
+using Quaver.GameState.Gameplay;
+using Quaver.GameState.Gameplay.PlayScreen;
 using Quaver.Modifiers;
 using Quaver.QuaFile;
 using Quaver.Utility;

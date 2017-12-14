@@ -8,7 +8,7 @@ using Quaver.GameState.States;
 using Quaver.Logging;
 using Quaver.Audio;
 
-namespace Quaver.Gameplay
+namespace Quaver.GameState.Gameplay
 {
     /// <summary>
     /// This class handles the interaction between note and input.

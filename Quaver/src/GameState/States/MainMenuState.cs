@@ -11,7 +11,7 @@ using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.Config;
 using Quaver.Discord;
-using Quaver.Gameplay;
+using Quaver.GameState.Gameplay;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;

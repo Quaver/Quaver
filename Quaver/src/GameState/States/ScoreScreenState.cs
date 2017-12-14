@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Quaver.Config;
 using Quaver.Database;
-using Quaver.Gameplay;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
@@ -17,6 +16,7 @@ using Quaver.Logging;
 using Quaver.Replays;
 using Quaver.Scores;
 using Quaver.Graphics.Text;
+using Quaver.GameState.Gameplay;
 
 namespace Quaver.GameState.States
 {

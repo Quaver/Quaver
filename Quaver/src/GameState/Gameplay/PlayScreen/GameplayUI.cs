@@ -10,7 +10,7 @@ using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Utility;
 
-namespace Quaver.Gameplay.GameplayRendering
+namespace Quaver.GameState.Gameplay.PlayScreen
 {
     /// <summary>
     ///     This class Draws anything that will be shown to the player which is related to data

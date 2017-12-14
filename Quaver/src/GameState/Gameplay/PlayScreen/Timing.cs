@@ -6,7 +6,7 @@ using Quaver.GameState.States;
 using Quaver.Modifiers;
 using Quaver.QuaFile;
 
-namespace Quaver.Gameplay.GameplayRendering
+namespace Quaver.GameState.Gameplay.PlayScreen
 {
     /// <summary>
     /// This class deals with any timing and SV related calculations
