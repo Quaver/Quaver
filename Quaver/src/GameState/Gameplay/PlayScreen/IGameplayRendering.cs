@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Quaver.GameState.States;
 
-namespace Quaver.Gameplay.GameplayRendering
+namespace Quaver.GameState.Gameplay.PlayScreen
 {
     internal interface IGameplayRendering
     {

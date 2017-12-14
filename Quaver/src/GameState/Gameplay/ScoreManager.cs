@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.Audio;
 
-namespace Quaver.Gameplay
+namespace Quaver.GameState.Gameplay
 {
     /// <summary>
     /// THIS CLASS IS IMPORTANT. This is where all the scoring will be calculated.

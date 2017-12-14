@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 
-namespace Quaver.Gameplay
+namespace Quaver.GameState.Gameplay
 {
     public class HitObject
     {
