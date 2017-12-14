@@ -140,10 +140,15 @@ namespace Quaver.Input
         /// </summary>
         private void HandlePause()
         {
-            if (PauseKeyDown && !GameBase.KeyboardState.IsKeyDown(Configuration.KeyPause))
+            // TODO: Fix this and add pausing here - Before the song begins.
+            if (SongManager.Position == 0)
+                return;
+
+            if (GameBase.KeyboardState.IsKeyUp(Configuration.KeyPause))
                 PauseKeyDown = false;
 
-            if (!GameBase.KeyboardState.IsKeyDown(Configuration.KeyPause) || PauseKeyDown || SongManager.Position < 1)
+            // Prevent holding the pause key down
+            if (PauseKeyDown || !GameBase.KeyboardState.IsKeyDown(Configuration.KeyPause))
                 return;
 
             PauseKeyDown = true;
@@ -151,7 +156,7 @@ namespace Quaver.Input
             // TODO: Implement actual pausing here. For now, we're just going to go back to the main menu.
             IsPaused = !IsPaused;
 
-            if (!IsPaused)
+            if (IsPaused)
             {
                 SongManager.Pause();
                 return;
