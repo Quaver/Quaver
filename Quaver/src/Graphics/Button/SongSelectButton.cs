@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Text;
 
 using Quaver.Utility;
-using Quaver.QuaFile;
+using Quaver.Beatmaps;
 
 namespace Quaver.Graphics.Button
 {
@@ -18,23 +18,46 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class SongSelectButton : Button
     {
-        public TextBoxSprite TextSprite { get; set; }
+        public TextBoxSprite TitleText { get; set; }
+
+        public TextBoxSprite ArtistText { get; set; }
 
         //Constructor
-        public SongSelectButton(Qua qua, float ButtonSizeY) //Vector2 ButtonSize, string ButtonText)
+        public SongSelectButton(Beatmap map, float ButtonScale) //Vector2 ButtonSize, string ButtonText)
         {
-            /*
-            TextSprite = new TextBoxSprite()
+            var ButtonSizeY = 40 * ButtonScale;
+            var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";
+
+            SizeY = ButtonSizeY;
+            SizeX = ButtonSizeY * 8;
+
+            TitleText = new TextBoxSprite()
             {
-                Text = ButtonText,
-                Size = ButtonSize,
-                Alignment = Alignment.MidCenter,
-                TextAlignment = Alignment.MidCenter,
+                Text = map.Title,
+                Font = Fonts.Medium12,
+                ScaleY = 0.5f,
+                ScaleX = 1,
+                Alignment = Alignment.TopLeft,
+                TextAlignment = Alignment.BotCenter,
+                TextColor = Color.Black,
+                Multiline = false,
+                Textwrap = false,
                 Parent = this
             };
-            Size = ButtonSize;
-            Image = GameBase.UI.BlankBox;
-            TextSprite.TextColor = Color.Black;*/
+
+            ArtistText = new TextBoxSprite()
+            {
+                Text = map.Artist + " | "+ map.Creator,
+                Font = Fonts.Medium12,
+                ScaleY = 0.5f,
+                ScaleX = 1,
+                Alignment = Alignment.BotLeft,
+                TextAlignment = Alignment.TopCenter,
+                TextColor = Color.Black,
+                Multiline = false,
+                Textwrap = false,
+                Parent = this
+            };
         }
 
         /// <summary>
