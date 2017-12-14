@@ -11,7 +11,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     /// <summary>
     /// This class deals with any timing and SV related calculations
     /// </summary>
-    internal class Timing : IGameplayRendering
+    internal class Timing : IHelper
     {
         //Gameplay Constants
         internal const int PlayStartDelayed = 3000; //How long to pause the audio before playing. Max is 10000ms.
@@ -40,8 +40,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     Initialize Timing Contents.
         /// </summary>
-        public void Initialize(PlayScreenState playScreen)
+        public void Initialize(IGameState state)
         {
+            PlayScreenState playScreen = (PlayScreenState)state;
             //TODO: Timing Initializer
             SongIsPlaying = false;
 

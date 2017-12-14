@@ -25,7 +25,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     /// <summary>
     /// This class manages anything relating to rendering the HitObjects. Note: This class does not do any timing/input calculation besides note removal after missing and late release.
     /// </summary>
-    internal class NoteRendering : IGameplayRendering
+    internal class NoteRendering : IHelper
     {
         public PlayScreenState PlayScreen { get; set; }
 
@@ -49,8 +49,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         /// Initalize any HitObject related content. 
         /// </summary>
-        public void Initialize(PlayScreenState playScreen)
+        public void Initialize(IGameState state)
         {
+            PlayScreenState playScreen = (PlayScreenState)state;
             PlayScreen = playScreen;
 
             // Do config stuff
