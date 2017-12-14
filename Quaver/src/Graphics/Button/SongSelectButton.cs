@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Text;
 
 using Quaver.Utility;
-using Quaver.QuaFile;
+using Quaver.Beatmaps;
 
 namespace Quaver.Graphics.Button
 {
@@ -21,20 +21,23 @@ namespace Quaver.Graphics.Button
         public TextBoxSprite TextSprite { get; set; }
 
         //Constructor
-        public SongSelectButton(Qua qua, float ButtonSizeY) //Vector2 ButtonSize, string ButtonText)
+        public SongSelectButton(Beatmap map, float ButtonScale) //Vector2 ButtonSize, string ButtonText)
         {
-            /*
+            var ButtonSizeY = 40 * ButtonScale;
+            var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";
+
             TextSprite = new TextBoxSprite()
             {
-                Text = ButtonText,
-                Size = ButtonSize,
+                Text = mapText,
+                SizeY = ButtonSizeY,
+                SizeX = ButtonSizeY*8,
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.MidCenter,
                 Parent = this
             };
-            Size = ButtonSize;
-            Image = GameBase.UI.BlankBox;
-            TextSprite.TextColor = Color.Black;*/
+            SizeY = ButtonSizeY;
+            SizeX = ButtonSizeY * 8;
+            TextSprite.TextColor = Color.Black;
         }
 
         /// <summary>
