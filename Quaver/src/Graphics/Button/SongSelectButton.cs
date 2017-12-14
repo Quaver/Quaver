@@ -18,7 +18,9 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class SongSelectButton : Button
     {
-        public TextBoxSprite TextSprite { get; set; }
+        public TextBoxSprite TitleText { get; set; }
+
+        public TextBoxSprite ArtistText { get; set; }
 
         //Constructor
         public SongSelectButton(Beatmap map, float ButtonScale) //Vector2 ButtonSize, string ButtonText)
@@ -26,18 +28,36 @@ namespace Quaver.Graphics.Button
             var ButtonSizeY = 40 * ButtonScale;
             var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";
 
-            TextSprite = new TextBoxSprite()
-            {
-                Text = mapText,
-                SizeY = ButtonSizeY,
-                SizeX = ButtonSizeY*8,
-                Alignment = Alignment.MidCenter,
-                TextAlignment = Alignment.MidCenter,
-                Parent = this
-            };
             SizeY = ButtonSizeY;
             SizeX = ButtonSizeY * 8;
-            TextSprite.TextColor = Color.Black;
+
+            TitleText = new TextBoxSprite()
+            {
+                Text = map.Title,
+                Font = Fonts.Medium12,
+                ScaleY = 0.5f,
+                ScaleX = 1,
+                Alignment = Alignment.TopLeft,
+                TextAlignment = Alignment.BotCenter,
+                TextColor = Color.Black,
+                Multiline = false,
+                Textwrap = false,
+                Parent = this
+            };
+
+            ArtistText = new TextBoxSprite()
+            {
+                Text = map.Artist + " | "+ map.Creator,
+                Font = Fonts.Medium12,
+                ScaleY = 0.5f,
+                ScaleX = 1,
+                Alignment = Alignment.BotLeft,
+                TextAlignment = Alignment.TopCenter,
+                TextColor = Color.Black,
+                Multiline = false,
+                Textwrap = false,
+                Parent = this
+            };
         }
 
         /// <summary>

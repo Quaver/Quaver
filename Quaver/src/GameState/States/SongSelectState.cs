@@ -138,11 +138,9 @@ namespace Quaver.GameState.States
                         Image = GameBase.UI.BlankBox,
                         Alignment = Alignment.TopLeft,
                         PositionY = ButtonPos,
+                        PositionX = 5,
                         Parent = Boundary
                     };
-
-                    // Set text alignment
-                    newButton.TextSprite.TextAlignment = Alignment.MidLeft;
 
                     // Define event handler for the button
                     newButton.Clicked += (sender, e) => OnSongSelectButtonClick(sender, e, mapText, map);
@@ -151,7 +149,7 @@ namespace Quaver.GameState.States
                     Buttons.Add(newButton);
 
                     // Change the Y value
-                    ButtonPos += newButton.SizeY;
+                    ButtonPos += newButton.SizeY + 2;
                 }
             }
         }
