@@ -64,11 +64,6 @@ namespace Quaver.GameState.States
         private List<Button> Buttons { get; set; } = new List<Button>();
 
         /// <summary>
-        ///     ButtonPos
-        /// </summary>
-        private int ButtonPos { get; set; } = 50;
-
-        /// <summary>
         ///     Initialize
         /// </summary>
         public void Initialize()
@@ -128,6 +123,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void CreateSongSelectButtons()
         {
+            var ButtonPos = 50f;
             //Create buttons for every beatmap set TODO: Use beatmap set instead of beatmaps
             foreach (var mapset in GameBase.VisibleBeatmaps)
             {
@@ -137,16 +133,14 @@ namespace Quaver.GameState.States
                     var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";
 
                     // Create the new button
-                    var newButton = new TextButton(new Vector2(300, 20), mapText)
+                    var newButton = new SongSelectButton(map, 1)
                     {
                         Image = GameBase.UI.BlankBox,
                         Alignment = Alignment.TopLeft,
                         PositionY = ButtonPos,
+                        PositionX = 5,
                         Parent = Boundary
                     };
-
-                    // Set text alignment
-                    newButton.TextSprite.TextAlignment = Alignment.MidLeft;
 
                     // Define event handler for the button
                     newButton.Clicked += (sender, e) => OnSongSelectButtonClick(sender, e, mapText, map);
@@ -155,7 +149,7 @@ namespace Quaver.GameState.States
                     Buttons.Add(newButton);
 
                     // Change the Y value
-                    ButtonPos += 20;
+                    ButtonPos += newButton.SizeY + 2;
                 }
             }
         }
