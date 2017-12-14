@@ -101,6 +101,17 @@ namespace Quaver.QuaFile
             zip.Save(outputPath);
 
             Logger.Log($"Successfully exported {outputPath}", Color.Cyan);
+
+            // Open the folder where the file is contained.
+            if (!File.Exists(outputPath))
+                return;
+
+            // TODO: Fix for linux/mac.
+            try
+            {
+                Console.WriteLine(outputPath);
+                System.Diagnostics.Process.Start("explorer.exe", "/select," + "\"" + $@"{outputPath.Replace("/", "\\")}" + "\"");
+            } catch (Exception ex) { }
         }
     }
 }
