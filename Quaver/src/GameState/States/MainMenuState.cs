@@ -45,9 +45,9 @@ namespace Quaver.GameState.States
         public Button SwitchSongSelectButton { get; set; }
 
         /// <summary>
-        ///     Button to import .qum
+        ///     Button to import .qp
         /// </summary>
-        public Button ImportQumButton { get; set; }
+        public Button ImportQpButton { get; set; }
 
         /// <summary>
         ///     Button to import .osz
@@ -107,7 +107,7 @@ namespace Quaver.GameState.States
         {
             SwitchSongSelectButton.Draw();
             ImportPeppyButton.Draw();
-            ImportQumButton.Draw();
+            ImportQpButton.Draw();
         }
 
         /// <summary>
@@ -156,12 +156,12 @@ namespace Quaver.GameState.States
 
 
         /// <summary>
-        ///     Responsible for creating the import .qum button
+        ///     Responsible for creating the import .qp button
         /// </summary>
         private void CreateQumImportButton()
         {
             // Import .osz Button
-            ImportQumButton = new TextButton(new Vector2(200, 40), "Import .qum")
+            ImportQpButton = new TextButton(new Vector2(200, 40), "Import Quaver Mapset")
             {
                 Image = GameBase.LoadedSkin.NoteHoldBody,
                 Alignment = Alignment.BotCenter,
@@ -169,7 +169,7 @@ namespace Quaver.GameState.States
                 Parent = Boundary
             };
 
-            ImportQumButton.Clicked += Qum.OnImportButtonClick;
+            ImportQpButton.Clicked += Qp.OnImportButtonClick;
         }
     }
 }
