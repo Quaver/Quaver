@@ -20,7 +20,7 @@ using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.QuaFile;
 
-namespace Quaver.Gameplay.GameplayRendering
+namespace Quaver.GameState.Gameplay.PlayScreen
 {
     /// <summary>
     /// This class manages anything relating to rendering the HitObjects. Note: This class does not do any timing/input calculation besides note removal after missing and late release.

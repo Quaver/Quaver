@@ -14,7 +14,7 @@ using Quaver.Graphics.Text;
 using Quaver.Skins;
 using Quaver.Utility;
 
-namespace Quaver.Gameplay.GameplayRendering
+namespace Quaver.GameState.Gameplay.PlayScreen
 {
     internal class Playfield : IGameplayRendering
     {

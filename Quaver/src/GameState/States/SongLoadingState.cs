@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Beatmaps;
-using Quaver.Gameplay;
 using Quaver.Logging;
 using Quaver.QuaFile;
 using Quaver.Replays;
