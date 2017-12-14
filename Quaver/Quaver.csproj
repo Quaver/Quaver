@@ -112,7 +112,7 @@
     <Compile Include="src\Discord\DiscordRPC.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\GameplayUI.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\IGameplayRendering.cs" />
-    <Compile Include="src\GameState\Gameplay\NoteDevianceData.cs" />
+    <Compile Include="src\GameState\Gameplay\NoteRecord.cs" />
     <Compile Include="src\GameState\SongSelect\BeatmapOrganizerUI.cs" />
     <Compile Include="src\GameState\States\ScoreScreenState.cs" />
     <Compile Include="src\GameState\States\SongSelectState.cs" />

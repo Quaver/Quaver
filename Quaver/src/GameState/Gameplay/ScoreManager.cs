@@ -31,7 +31,7 @@ namespace Quaver.GameState.Gameplay
 
         //Hit Tracking (ms deviance)
         internal int TotalJudgeCount { get; set; }
-        internal List<NoteDevianceData> MsDeviance { get; set; }
+        internal List<NoteRecord> MsDeviance { get; set; }
         internal double SongLength { get; set; }
 
         //Score tracking
@@ -78,7 +78,7 @@ namespace Quaver.GameState.Gameplay
             //record ms deviance data
             if (offset != null && songpos != null)
             {
-                NoteDevianceData noteData = new NoteDevianceData()
+                NoteRecord noteData = new NoteRecord()
                 {
                     Offset = (double)offset/HitWindowPress[4],
                     Position = (double)songpos,
@@ -157,7 +157,7 @@ namespace Quaver.GameState.Gameplay
             JudgeCount = 0;
             JudgeReleaseSpread = new int[6];
             JudgePressSpread = new int[6];
-            MsDeviance = new List<NoteDevianceData>();
+            MsDeviance = new List<NoteRecord>();
             TotalJudgeCount = count;
             JudgeDifficulty = od;
             SongLength = SongManager.Length / GameBase.GameClock;
