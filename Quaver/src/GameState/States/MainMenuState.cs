@@ -50,6 +50,11 @@ namespace Quaver.GameState.States
         public Button ImportQpButton { get; set; }
 
         /// <summary>
+        ///     Button to export .qp
+        /// </summary>
+        public Button ExportQpButton { get; set; }
+
+        /// <summary>
         ///     Button to import .osz
         /// </summary>
         public Button ImportPeppyButton { get; set; }
@@ -72,8 +77,9 @@ namespace Quaver.GameState.States
 
             // Initialize the UI buttons
             CreateOszImportButton();
-            CreateQumImportButton();
+            CreateQpImportButton();
             CreateSongSelectButton();
+            CreateQpExportButton();
 
             UpdateReady = true;
         }
@@ -108,6 +114,7 @@ namespace Quaver.GameState.States
             SwitchSongSelectButton.Draw();
             ImportPeppyButton.Draw();
             ImportQpButton.Draw();
+            ExportQpButton.Draw();
         }
 
         /// <summary>
@@ -158,7 +165,7 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     Responsible for creating the import .qp button
         /// </summary>
-        private void CreateQumImportButton()
+        private void CreateQpImportButton()
         {
             // Import .osz Button
             ImportQpButton = new TextButton(new Vector2(200, 40), "Import Quaver Mapset")
@@ -170,6 +177,23 @@ namespace Quaver.GameState.States
             };
 
             ImportQpButton.Clicked += Qp.OnImportButtonClick;
+        }
+
+        /// <summary>
+        ///     Responsible for creating the import .qp button
+        /// </summary>
+        private void CreateQpExportButton()
+        {
+            // Import .osz Button
+            ExportQpButton = new TextButton(new Vector2(200, 40), "Export Current Mapset")
+            {
+                Image = GameBase.LoadedSkin.NoteHoldBody,
+                Alignment = Alignment.BotRight,
+                Position = Vector2.Zero,
+                Parent = Boundary
+            };
+
+            ExportQpButton.Clicked += Qp.OnExportButtonClick;
         }
     }
 }
