@@ -15,10 +15,10 @@ using Quaver.Logging;
 
 namespace Quaver.QuaFile
 {
-    internal class Qum
+    internal class Qp
     {
         /// <summary>
-        ///     Upon clicking the button to import a .qum archive, this will handle
+        ///     Upon clicking the button to import a .qp archive, this will handle
         ///     the dialog portion of it.
         /// </summary>
         /// <param name="sender"></param>
@@ -29,7 +29,7 @@ namespace Quaver.QuaFile
             var openFileDialog = new OpenFileDialog()
             {
                 InitialDirectory = "c:\\",
-                Filter = "Quaver Mapset (*.qum)|*.qum",
+                Filter = "Quaver Mapset (*.qp)|*.qp",
                 FilterIndex = 0,
                 RestoreDirectory = true,
                 Multiselect = true
@@ -56,7 +56,7 @@ namespace Quaver.QuaFile
         }
 
         /// <summary>
-        ///     Responsible for extracting the files from the .qum 
+        ///     Responsible for extracting the files from the .qp 
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="num"></param>
