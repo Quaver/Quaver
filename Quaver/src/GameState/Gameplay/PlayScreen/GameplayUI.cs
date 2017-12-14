@@ -15,7 +15,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     /// <summary>
     ///     This class Draws anything that will be shown to the player which is related to data
     /// </summary>
-    internal class GameplayUI : IGameplayRendering
+    internal class GameplayUI : IHelper
     {
         //todo: document this crap later
         private Sprite AccuracyBox { get; set; }
@@ -56,8 +56,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         private int CurrentGrade { get; set; }
 
-        public void Initialize(PlayScreenState playScreen)
+        public void Initialize(IGameState state)
         {
+            PlayScreenState playScreen = (PlayScreenState)state;
             // Reference Variables
             ScoreManager = playScreen.ScoreManager;
             PlayScreen = playScreen;

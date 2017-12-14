@@ -16,7 +16,7 @@ using Quaver.Utility;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
-    internal class Playfield : IGameplayRendering
+    internal class Playfield : IHelper
     {
         private ScoreManager ScoreManager { get; set; }
 
@@ -110,12 +110,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         private TextBoxSprite ComboText { get; set; }
         private double AlphaHold { get; set; }
-        
+
         /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
         /// </summary>
-        public void Initialize(PlayScreenState playScreen)
+        public void Initialize(IGameState state)
         {
+            PlayScreenState playScreen = (PlayScreenState)state;
             ScoreManager = playScreen.ScoreManager;
             //PlayScreen = playScreen;
 
