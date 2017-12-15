@@ -123,11 +123,13 @@ namespace Quaver.Skins
         internal Texture2D[] NoteHitObjects { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteHoldBodies { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteHoldEnds { get; set; } = new Texture2D[4];
+        internal Texture2D[] NoteReceptors { get; set; } = new Texture2D[4];
 
         // 7k
         internal Texture2D[] NoteHitObjects7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteHoldBodies7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteHoldEnds7K { get; set; } = new Texture2D[7];
+        internal Texture2D[] NoteReceptors7K { get; set; } = new Texture2D[7];
 
         internal Texture2D GradeSmallA { get; set; }
         internal Texture2D GradeSmallB { get; set; }
@@ -139,7 +141,6 @@ namespace Quaver.Skins
         internal Texture2D GradeSmallX { get; set; }
         internal Texture2D GradeSmallXX { get; set; }
         internal Texture2D GradeSmallXXX { get; set; }
-        internal Texture2D NoteReceptor { get; set; }
         internal Texture2D JudgeMiss { get; set; }
         internal Texture2D JudgeBad { get; set; }
         internal Texture2D JudgeGood { get; set; }
@@ -207,7 +208,17 @@ namespace Quaver.Skins
                 @"note-holdbody7k5",
                 @"note-holdbody7k6",
                 @"note-holdbody7k7",
-                @"note-receptor",
+                @"note-receptor1",
+                @"note-receptor2",
+                @"note-receptor3",
+                @"note-receptor4",
+                @"note-receptor7k1",
+                @"note-receptor7k2",
+                @"note-receptor7k3",
+                @"note-receptor7k4",
+                @"note-receptor7k5",
+                @"note-receptor7k6",
+                @"note-receptor7k7",
                 @"judge-miss",
                 @"judge-bad",
                 @"judge-good",
@@ -390,8 +401,38 @@ namespace Quaver.Skins
                     case @"note-holdbody7k7":
                         NoteHoldBodies7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor":
-                        NoteReceptor = LoadIndividualElement(element, skinElementPath);
+                    case @"note-receptor1":
+                        NoteReceptors[0] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor2":
+                        NoteReceptors[1] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor3":
+                        NoteReceptors[2] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor4":
+                        NoteReceptors[3] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor7k1":
+                        NoteReceptors7K[0] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor7k2":
+                        NoteReceptors7K[1] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor7k3":
+                        NoteReceptors7K[2] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor7k4":
+                        NoteReceptors7K[3] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor7k5":
+                        NoteReceptors7K[4] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor7k6":
+                        NoteReceptors7K[5] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor7k7":
+                        NoteReceptors7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-miss":
                         JudgeMiss = LoadIndividualElement(element, skinElementPath);
