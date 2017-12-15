@@ -297,13 +297,6 @@
     <EmbeddedResource Include="Resources\Default Skin\judge-marv.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\judge-miss.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\judge-perfect.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\note-hitobject1.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\note-hitobject2.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\note-hitobject3.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\note-hitobject4.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\note-holdbody.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\note-holdend.xnb" />
-    <EmbeddedResource Include="Resources\Default Skin\note-receptor.xnb" />
     <EmbeddedResource Include="Resources\UI\diff-select-mask.xnb" />
     <EmbeddedResource Include="Resources\UI\set-select-mask.xnb" />
     <EmbeddedResource Include="Resources\UI\blank-box.xnb" />
@@ -352,6 +345,50 @@
     <None Include="Lib\libbass_fx.so">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject2.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject3.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject4.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject7k1.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject7k2.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject7k3.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject7k4.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject7k5.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject7k6.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject7k7.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdbody1.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdbody2.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdbody3.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdbody4.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdbody7k1.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdbody7k2.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdbody7k3.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdbody7k4.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdbody7k5.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdbody7k6.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdbody7k7.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdend1.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdend2.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdend3.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdend4.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdend7k1.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdend7k2.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdend7k3.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdend7k4.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdend7k5.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdend7k6.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-holdend7k7.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-receptor1.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-receptor2.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-receptor3.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-receptor4.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-receptor7k1.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-receptor7k2.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-receptor7k3.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-receptor7k4.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-receptor7k5.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-receptor7k6.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-receptor7k7.xnb" />
+    <EmbeddedResource Include="Resources\Default Skin\note-hitobject1.xnb" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\discord-rpc.dll">
