@@ -40,7 +40,7 @@ namespace Quaver.Input
         private bool PauseKeyDown { get; set; }
 
         /// <summary>
-        ///     All of the lane keys mapped to a list
+        ///     A reference of all of the lane keys mapped to a list - 4K
         /// </summary>
         private List<Keys> LaneKeys { get; } = new List<Keys>()
         {
@@ -51,15 +51,34 @@ namespace Quaver.Input
         };
 
         /// <summary>
-        ///     Keeps track of unique key presses
+        ///     a reference of all of the lane keys mapped to a list - 7K
         /// </summary>
-        private bool[] LaneKeyDown { get; set; } = new bool[4];
+        private List<Keys> LaneKeys7K { get; } = new List<Keys>()
+        {
+            Configuration.KeyMania7k1,
+            Configuration.KeyMania7k2,
+            Configuration.KeyMania7k3,
+            Configuration.KeyMania7k4,
+            Configuration.KeyMania7k5,
+            Configuration.KeyMania7k6,
+            Configuration.KeyMania7k7
+        };
+
+        /// <summary>
+        ///     Keeps track of unique key presses - Initialized to 7 false bools, because the same is 
+        ///     used for both 4k and 7k.
+        /// </summary>
+        private List<bool> LaneKeyDown { get; set; } = new List<bool>() { false, false, false, false, false, false, false };
 
         /// <summary>
         ///     Keeps track of whether or not the song intro was skipped.
         /// </summary>
         private bool IntroSkipped { get; set; }
 
+        /// <summary>
+        ///     Ctor - 
+        /// </summary>
+        /// <param name="noteManager"></param>
         internal GameplayInputManager(NoteManager noteManager)
         {
             NoteManager = noteManager;
@@ -78,7 +97,7 @@ namespace Quaver.Input
                 return;
 
             // Check Mania Key Presses
-            HandleManiaKeyPresses();
+            HandleManiaKeyPresses(qua);
 
             // Check Skip Song Input
             SkipSong(qua, skippable);
@@ -90,20 +109,35 @@ namespace Quaver.Input
         /// <summary>
         ///     Handles what happens when a mania key is pressed and released.
         /// </summary>
-        private void HandleManiaKeyPresses()
+        private void HandleManiaKeyPresses(Qua qua)
         {
+            var inputKeys = new List<Keys>();
+
+            // Determine which set of keys to use based on the .qua
+            switch (qua.KeyCount)
+            {
+                case 4:
+                    inputKeys = LaneKeys;
+                    break;
+                case 7:
+                    inputKeys = LaneKeys7K;
+                    break;
+                default:
+                    break;
+            }
+
             // Update Lane Keys Receptor
-            for (var i = 0; i < LaneKeys.Count; i++)
+            for (var i = 0; i < inputKeys.Count; i++)
             {
                 //Lane Key Press
-                if (GameBase.KeyboardState.IsKeyDown(LaneKeys[i]) && !LaneKeyDown[i])
+                if (GameBase.KeyboardState.IsKeyDown(inputKeys[i]) && !LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = true;
                     NoteManager.Input(i,true);
                     GameBase.LoadedSkin.Hit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
                 }
                 //Lane Key Release
-                else if (GameBase.KeyboardState.IsKeyUp(LaneKeys[i]) && LaneKeyDown[i])
+                else if (GameBase.KeyboardState.IsKeyUp(inputKeys[i]) && LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = false;
                     NoteManager.Input(i, false);
