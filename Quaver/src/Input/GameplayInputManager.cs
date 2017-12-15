@@ -87,7 +87,7 @@ namespace Quaver.Input
         /// <summary>
         ///     Checks if the given input was given
         /// </summary>
-        public void CheckInput(Qua qua, bool skippable, List<ReplayFrame> ReplayFrames)
+        public void CheckInput(bool skippable, List<ReplayFrame> ReplayFrames)
         {
             // Pause game
             HandlePause();
@@ -97,24 +97,24 @@ namespace Quaver.Input
                 return;
 
             // Check Mania Key Presses
-            HandleManiaKeyPresses(qua);
+            HandleManiaKeyPresses();
 
             // Check Skip Song Input
-            SkipSong(qua, skippable);
+            SkipSong(skippable);
 
             // Add replay frames
-            ReplayHelper.AddReplayFrames(ReplayFrames, qua);
+            ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua);
         }
 
         /// <summary>
         ///     Handles what happens when a mania key is pressed and released.
         /// </summary>
-        private void HandleManiaKeyPresses(Qua qua)
+        private void HandleManiaKeyPresses()
         {
             var inputKeys = new List<Keys>();
 
             // Determine which set of keys to use based on the .qua
-            switch (qua.KeyCount)
+            switch (GameBase.SelectedBeatmap.Qua.KeyCount)
             {
                 case 4:
                     inputKeys = LaneKeys;
@@ -150,7 +150,7 @@ namespace Quaver.Input
         /// </summary>
         /// <param name="qua"></param>
         /// <param name="currentSongTime"></param>
-        private void SkipSong(Qua qua, bool skippable)
+        private void SkipSong(bool skippable)
         {
             if (skippable && GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !IntroSkipped)
             {
@@ -160,7 +160,7 @@ namespace Quaver.Input
 
                 // Skip to 3 seconds before the notes start
                 SongManager.Load();
-                SongManager.SkipTo(qua.HitObjects[0].StartTime - 3000 + SongManager.BassDelayOffset);
+                SongManager.SkipTo(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - 3000 + SongManager.BassDelayOffset);
                 SongManager.Play();
 
                 NoteManager.PlayScreen.Timing.SongIsPlaying = true;
@@ -193,10 +193,14 @@ namespace Quaver.Input
             if (IsPaused)
             {
                 SongManager.Pause();
+                
+                // Change Rich Presence
+                GameBase.ChangeDiscordPresence($"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]", "Paused");
                 return;
             }
 
             SongManager.Resume();
+            GameBase.ChangeDiscordPresenceGameplay(true);
         }
     }
 }
