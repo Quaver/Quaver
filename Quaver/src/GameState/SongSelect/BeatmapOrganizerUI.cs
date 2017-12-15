@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.Beatmaps;
+using Quaver.Graphics.Sprite;
+using Quaver.Audio;
 
 namespace Quaver.GameState.SongSelect
 {
@@ -17,15 +19,21 @@ namespace Quaver.GameState.SongSelect
         ///     Reference to the list of song select buttons
         /// </summary>
         private List<Button> SongSelectButtons { get; set; } = new List<Button>();
+
+        private Boundary Boundary { get; set; }
+
         public object TogglePitch { get; private set; }
 
         public void Draw()
         {
-            //throw new NotImplementedException();
+            Boundary.Draw();
         }
 
         public void Initialize(IGameState state)
         {
+
+            Boundary = new Boundary();
+
             CreateSongSelectButtons();
         }
 
@@ -36,7 +44,7 @@ namespace Quaver.GameState.SongSelect
 
         public void Update(double dt)
         {
-            //throw new NotImplementedException();
+            Boundary.Update(dt);
         }
 
         /// <summary>
@@ -60,7 +68,7 @@ namespace Quaver.GameState.SongSelect
                         Alignment = Alignment.TopLeft,
                         PositionY = ButtonPos,
                         PositionX = 5,
-                        //Parent = Boundary
+                        Parent = Boundary
                     };
 
                     // Define event handler for the button
@@ -85,12 +93,7 @@ namespace Quaver.GameState.SongSelect
             // Get the background path from the previous map
             var oldMapBgPath = GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.BackgroundPath;
             var oldMapAudioPath = GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.AudioPath;
-
             GameBase.ChangeBeatmap(map);
-
-            /*
-            // Change Pitch Text
-            TogglePitch.TextSprite.Text = $"Toggle Pitch: {Configuration.Pitched}";
 
             // Only load the audio again if the new map's audio isn't the same as the old ones.
             if (oldMapAudioPath != map.Directory + "/" + map.AudioPath)
@@ -100,7 +103,7 @@ namespace Quaver.GameState.SongSelect
             if (oldMapBgPath != map.Directory + "/" + map.BackgroundPath)
                 Task.Run(() => GameBase.LoadBackground())
                     .ContinueWith(t => BackgroundManager.Change(GameBase.CurrentBackground));
-                    */
+                    
         }
     }
 }
