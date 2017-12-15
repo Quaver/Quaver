@@ -145,27 +145,6 @@
   <data name="judge-perfect" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Skin\judge-perfect.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="note-hitobject1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\note-hitobject1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="note-hitobject2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\note-hitobject2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="note-hitobject3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\note-hitobject3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="note-hitobject4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\note-hitobject4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="note-holdbody" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\note-holdbody.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="note-receptor" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\note-receptor.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="note-holdend" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Skin\note-holdend.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="diff-select-mask" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\diff-select-mask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -255,5 +234,137 @@
   </data>
   <data name="screenshot" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Skin\screenshot.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject7k1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject7k1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject7k2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject7k2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject7k3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject7k3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject7k4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject7k4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject7k5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject7k5.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject7k6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject7k6.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject7k7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject7k7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdbody1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdbody1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdbody2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdbody2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdbody3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdbody3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdbody4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdbody4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdbody7k1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdbody7k1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdbody7k2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdbody7k2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdbody7k3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdbody7k3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdbody7k4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdbody7k4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdbody7k5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdbody7k5.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdbody7k6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdbody7k6.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdbody7k7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdbody7k7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdend1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdend1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdend2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdend2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdend3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdend3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdend4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdend4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdend7k1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdend7k1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdend7k2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdend7k2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdend7k3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdend7k3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdend7k4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdend7k4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdend7k5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdend7k5.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdend7k6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdend7k6.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-holdend7k7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-holdend7k7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-receptor1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-receptor1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-receptor2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-receptor2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-receptor3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-receptor3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-receptor4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-receptor4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-receptor7k1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-receptor7k1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-receptor7k2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-receptor7k2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-receptor7k3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-receptor7k3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-receptor7k4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-receptor7k4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-receptor7k5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-receptor7k5.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-receptor7k6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-receptor7k6.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-receptor7k7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-receptor7k7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="note-hitobject1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Skin\note-hitobject1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
