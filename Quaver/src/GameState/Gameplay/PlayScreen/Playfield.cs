@@ -175,13 +175,26 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 // Create new Receptor Sprite
                 Receptors[i] = new Sprite
                 {
-                    Image = GameBase.LoadedSkin.NoteReceptor,
+
                     SizeX = PlayfieldObjectSize,
-                    SizeY = PlayfieldObjectSize * (float)GameBase.LoadedSkin.NoteReceptor.Height / GameBase.LoadedSkin.NoteReceptor.Width,
+                    
                     Position = new Vector2(ReceptorXPosition[i], ReceptorYOffset),
                     Alignment = Alignment.TopLeft,
                     Parent = BoundaryUnder
                 };
+
+                // Set current receptor's image based on the current key count.
+                switch (GameBase.SelectedBeatmap.Qua.KeyCount)
+                {
+                    case 4:
+                        Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors[i];
+                        Receptors[i].SizeY = PlayfieldObjectSize * (float) GameBase.LoadedSkin.NoteReceptors[i].Height / GameBase.LoadedSkin.NoteReceptors[i].Width;
+                        break;
+                    case 7:
+                        Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors7K[i];
+                        Receptors[i].SizeY = PlayfieldObjectSize * (float) GameBase.LoadedSkin.NoteReceptors7K[i].Height / GameBase.LoadedSkin.NoteReceptors7K[i].Width;
+                        break;
+                }
             }
 
             // Create Judge Sprite/References
@@ -386,7 +399,17 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
             else
             {
-                Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptor;
+                // Set current receptor's image based on the current key count.
+                switch (GameBase.SelectedBeatmap.Qua.KeyCount)
+                {
+                    case 4:
+                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptors[curReceptor];
+                        break;
+                    case 7:
+                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptors7K[curReceptor];
+                        break;
+                }
+                
                 ReceptorTargetSize[curReceptor] = 1;
             }
 
