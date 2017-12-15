@@ -119,10 +119,42 @@ namespace Quaver.Skins
         internal Texture2D ColumnBgMask { get; set; }
         internal Texture2D ColumnHitLighting { get; set; }
         internal Texture2D ColumnTimingBar { get; set; }
+        // 4k
         internal Texture2D NoteHitObject1 { get; set; }
         internal Texture2D NoteHitObject2 { get; set; }
         internal Texture2D NoteHitObject3 { get; set; }
         internal Texture2D NoteHitObject4 { get; set; }
+        internal Texture2D NoteHoldBody1 { get; set; }
+        internal Texture2D NoteHoldBody2 { get; set; }
+        internal Texture2D NoteHoldBody3 { get; set; }
+        internal Texture2D NoteHoldBody4 { get; set; }
+        internal Texture2D NoteHoldEnd1 { get; set; }
+        internal Texture2D NoteHoldEnd2 { get; set; }
+        internal Texture2D NoteHoldEnd3 { get; set; }
+        internal Texture2D NoteHoldEnd4 { get; set; }
+        // 7k
+        internal Texture2D NoteHitObject7k1 { get; set; }
+        internal Texture2D NoteHitObject7k2 { get; set; }
+        internal Texture2D NoteHitObject7k3 { get; set; }
+        internal Texture2D NoteHitObject7k4 { get; set; }
+        internal Texture2D NoteHitObject7k5 { get; set; }
+        internal Texture2D NoteHitObject7k6 { get; set; }
+        internal Texture2D NoteHitObject7k7 { get; set; }
+        internal Texture2D NoteHoldBody7k1 { get; set; }
+        internal Texture2D NoteHoldBody7k2 { get; set; }
+        internal Texture2D NoteHoldBody7k3 { get; set; }
+        internal Texture2D NoteHoldBody7k4 { get; set; }
+        internal Texture2D NoteHoldBody7k5 { get; set; }
+        internal Texture2D NoteHoldBody7k6 { get; set; }
+        internal Texture2D NoteHoldBody7k7 { get; set; }
+        internal Texture2D NoteHoldEnd7k1 { get; set; }
+        internal Texture2D NoteHoldEnd7k2 { get; set; }
+        internal Texture2D NoteHoldEnd7k3 { get; set; }
+        internal Texture2D NoteHoldEnd7k4 { get; set; }
+        internal Texture2D NoteHoldEnd7k5 { get; set; }
+        internal Texture2D NoteHoldEnd7k6 { get; set; }
+        internal Texture2D NoteHoldEnd7k7 { get; set; }
+
         internal Texture2D GradeSmallA { get; set; }
         internal Texture2D GradeSmallB { get; set; }
         internal Texture2D GradeSmallC { get; set; }
@@ -133,8 +165,6 @@ namespace Quaver.Skins
         internal Texture2D GradeSmallX { get; set; }
         internal Texture2D GradeSmallXX { get; set; }
         internal Texture2D GradeSmallXXX { get; set; }
-        internal Texture2D NoteHoldEnd { get; set; }
-        internal Texture2D NoteHoldBody { get; set; }
         internal Texture2D NoteReceptor { get; set; }
         internal Texture2D JudgeMiss { get; set; }
         internal Texture2D JudgeBad { get; set; }
@@ -164,6 +194,13 @@ namespace Quaver.Skins
                 @"note-hitobject2",
                 @"note-hitobject3",
                 @"note-hitobject4",
+                @"note-hitobject7k1",
+                @"note-hitobject7k2",
+                @"note-hitobject7k3",
+                @"note-hitobject7k4",
+                @"note-hitobject7k5",
+                @"note-hitobject7k6",
+                @"note-hitobject7k7",
                 @"grade-small-a",
                 @"grade-small-b",
                 @"grade-small-c",
@@ -174,8 +211,28 @@ namespace Quaver.Skins
                 @"grade-small-x",
                 @"grade-small-xx",
                 @"grade-small-xxx",
-                @"note-holdend",
-                @"note-holdbody",
+                @"note-holdend1",
+                @"note-holdend2",
+                @"note-holdend3",
+                @"note-holdend4",
+                @"note-holdend7k1",
+                @"note-holdend7k2",
+                @"note-holdend7k3",
+                @"note-holdend7k4",
+                @"note-holdend7k5",
+                @"note-holdend7k6",
+                @"note-holdend7k7",
+                @"note-holdbody1",
+                @"note-holdbody2",
+                @"note-holdbody3",
+                @"note-holdbody4",
+                @"note-holdbody7k1",
+                @"note-holdbody7k2",
+                @"note-holdbody7k3",
+                @"note-holdbody7k4",
+                @"note-holdbody7k5",
+                @"note-holdbody7k6",
+                @"note-holdbody7k7",
                 @"note-receptor",
                 @"judge-miss",
                 @"judge-bad",
@@ -242,6 +299,27 @@ namespace Quaver.Skins
                     case @"note-hitobject4":
                         NoteHitObject4 = LoadIndividualElement(element, skinElementPath);
                         break;
+                    case @"note-hitobject7k1":
+                        NoteHitObject7k1 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-hitobject7k2":
+                        NoteHitObject7k2 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-hitobject7k3":
+                        NoteHitObject7k3 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-hitobject7k4":
+                        NoteHitObject7k4 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-hitobject7k5":
+                        NoteHitObject7k5 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-hitobject7k6":
+                        NoteHitObject7k6 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-hitobject7k7":
+                        NoteHitObject7k7 = LoadIndividualElement(element, skinElementPath);
+                        break;
                     case @"grade-small-a":
                         GradeSmallA = LoadIndividualElement(element, skinElementPath);
                         break;
@@ -272,11 +350,71 @@ namespace Quaver.Skins
                     case @"grade-small-xxx":
                         GradeSmallXXX = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdend":
-                        NoteHoldEnd = LoadIndividualElement(element, skinElementPath);
+                    case @"note-holdend1":
+                        NoteHoldEnd1 = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdbody":
-                        NoteHoldBody = LoadIndividualElement(element, skinElementPath);
+                    case @"note-holdend2":
+                        NoteHoldEnd2 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdend3":
+                        NoteHoldEnd3 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdend4":
+                        NoteHoldEnd4 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdend7k1":
+                        NoteHoldEnd7k1 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdend7k2":
+                        NoteHoldEnd7k2 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdend7k3":
+                        NoteHoldEnd7k3 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdend7k4":
+                        NoteHoldEnd7k4 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdend7k5":
+                        NoteHoldEnd7k5 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdend7k6":
+                        NoteHoldEnd7k6 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdend7k7":
+                        NoteHoldEnd7k7 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdbody1":
+                        NoteHoldBody1 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdbody2":
+                        NoteHoldBody2 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdbody3":
+                        NoteHoldBody3 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdbody4":
+                        NoteHoldBody4 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdbody7k1":
+                        NoteHoldBody7k1 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdbody7k2":
+                        NoteHoldBody7k2 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdbody7k3":
+                        NoteHoldBody7k3 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdbody7k4":
+                        NoteHoldBody7k4 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdbody7k5":
+                        NoteHoldBody7k5 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdbody7k6":
+                        NoteHoldBody7k6 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-holdbody7k7":
+                        NoteHoldBody7k7 = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"note-receptor":
                         NoteReceptor = LoadIndividualElement(element, skinElementPath);
