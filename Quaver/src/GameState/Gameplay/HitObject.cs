@@ -135,15 +135,48 @@ namespace Quaver.GameState.Gameplay
 
             //Create hold body if this object is an LN
             if (longNote)
+            {
                 HoldBodySprite = new Sprite()
                 {
-                    Image = GameBase.LoadedSkin.NoteHoldBody,
                     Alignment = Alignment.TopLeft,
                     Size = new Vector2(HitObjectSize, InitialLongNoteSize),
                     Position = _hitObjectPosition,
                     Parent = ParentContainer
                 };
 
+                // Choose the correct image based on the specific key lane.
+                switch (GameBase.SelectedBeatmap.Qua.KeyCount)
+                {
+                    case 4:
+                        if (KeyLane == 1)
+                            HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBody1;
+                        else if (KeyLane == 2)
+                            HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBody2;
+                        else if (KeyLane == 3)
+                            HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBody3;
+                        else if (KeyLane == 4)
+                            HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBody4;
+                        break;
+                    case 7:
+                        if (KeyLane == 1)
+                            HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBody7k1;
+                        else if (KeyLane == 2)
+                            HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBody7k2;
+                        else if (KeyLane == 3)
+                            HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBody7k3;
+                        else if (KeyLane == 4)
+                            HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBody7k4;
+                        else if (KeyLane == 5)
+                            HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBody7k5;
+                        else if (KeyLane == 6)
+                            HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBody7k6;
+                        else if (KeyLane == 7)
+                            HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBody7k7;
+                        break;
+                    default:
+                        break;
+                }
+            }
             //Create hit body
             HitBodySprite = new Sprite()
             {
@@ -157,18 +190,30 @@ namespace Quaver.GameState.Gameplay
             switch (GameBase.SelectedBeatmap.Qua.KeyCount)
             {
                 case 4:
-                    if (KeyLane == 1 || KeyLane == 4)
+                    if (KeyLane == 1)
                         HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject1;
-                    else
+                    else if (KeyLane == 2)
                         HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject2;
+                    else if (KeyLane == 3)
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject3;
+                    else if (KeyLane == 4)
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject4;
                     break;
                 case 7:
-                    if (KeyLane == 1 || KeyLane == 3 || KeyLane == 5 || KeyLane == 7)
-                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject1;
-                    else if (KeyLane == 2 || KeyLane == 6)
-                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject2;
+                    if (KeyLane == 1)
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject7k1;
+                    else if (KeyLane == 2)
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject7k2;
+                    else if (KeyLane == 3)
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject7k3;
                     else if (KeyLane == 4)
-                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject3;
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject7k4;
+                    else if (KeyLane == 5)
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject7k5;
+                    else if (KeyLane == 6)
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject7k6;
+                    else if (KeyLane == 7)
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObject7k7;
                     break;
                 default:
                     break;
@@ -185,15 +230,79 @@ namespace Quaver.GameState.Gameplay
             {
                 HoldEndSprite = new Sprite()
                 {
-                    Image = GameBase.LoadedSkin.NoteHoldEnd,
                     Alignment = Alignment.TopLeft,
                     Position = _hitObjectPosition,
                     SizeX = HitObjectSize,
-                    SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnd.Height / GameBase.LoadedSkin.NoteHoldEnd.Width,
                     Parent = ParentContainer,
                     SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
                 };
                 HoldEndOffset = HoldEndSprite.SizeY / 2;
+
+                // Choose the correct image based on the specific key lane.
+                switch (GameBase.SelectedBeatmap.Qua.KeyCount)
+                {
+                    case 4:
+                        if (KeyLane == 1)
+                        {
+                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnd1;
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnd1.Height / GameBase.LoadedSkin.NoteHoldEnd1.Width;
+                        }
+                        else if (KeyLane == 2)
+                        {
+                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnd2;
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnd2.Height / GameBase.LoadedSkin.NoteHoldEnd2.Width;
+                        }
+                        else if (KeyLane == 3)
+                        {
+                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnd3;
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnd3.Height / GameBase.LoadedSkin.NoteHoldEnd3.Width;
+                        }
+                        else if (KeyLane == 4)
+                        {
+                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnd4;
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnd4.Height / GameBase.LoadedSkin.NoteHoldEnd4.Width;
+                        }
+                        break;
+                    case 7:
+                        if (KeyLane == 1)
+                        {
+                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnd7k1;
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnd7k1.Height / GameBase.LoadedSkin.NoteHoldEnd7k1.Width;
+                        }
+                        else if (KeyLane == 2)
+                        {
+                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnd7k2;
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnd7k2.Height / GameBase.LoadedSkin.NoteHoldEnd7k2.Width;
+                        }
+                        else if (KeyLane == 3)
+                        {
+                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnd7k3;
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnd7k3.Height / GameBase.LoadedSkin.NoteHoldEnd7k3.Width;
+                        }
+                        else if (KeyLane == 4)
+                        {
+                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnd7k4;
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnd7k4.Height / GameBase.LoadedSkin.NoteHoldEnd7k4.Width;
+                        }
+                        else if (KeyLane == 5)
+                        {
+                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnd7k5;
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnd7k5.Height / GameBase.LoadedSkin.NoteHoldEnd7k5.Width;
+                        }
+                        else if (KeyLane == 6)
+                        {
+                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnd7k6;
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnd7k6.Height / GameBase.LoadedSkin.NoteHoldEnd7k6.Width;
+                        }
+                        else if (KeyLane == 7)
+                        {
+                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnd7k7;
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnd7k7.Height / GameBase.LoadedSkin.NoteHoldEnd7k7.Width;
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
