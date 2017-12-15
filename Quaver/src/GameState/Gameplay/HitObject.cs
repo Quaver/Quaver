@@ -213,7 +213,7 @@ namespace Quaver.GameState.Gameplay
                     {
                         //Update HoldBody Position and Size
                         HoldBodySprite.SizeY = CurrentLongNoteSize;
-                        HoldBodySprite.PositionY = downScroll ? -(float)CurrentLongNoteSize - HoldBodyOffset + _hitObjectPosition.Y : _hitObjectPosition.Y + HoldBodyOffset;
+                        HoldBodySprite.PositionY = downScroll ? -(float)CurrentLongNoteSize + HoldBodyOffset + _hitObjectPosition.Y : _hitObjectPosition.Y + HoldBodyOffset;
 
                         //Update Hold End Position
                         HoldEndSprite.PositionY = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.SizeY - HoldEndOffset + HoldBodyOffset) : (_hitObjectPosition.Y + HoldBodySprite.SizeY + HoldEndOffset - HoldBodyOffset);
