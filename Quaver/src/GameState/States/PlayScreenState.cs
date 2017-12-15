@@ -173,7 +173,7 @@ namespace Quaver.GameState.States
             GameplayUI.Update(dt);
 
             // Check the input for this particular game state.
-            InputManager.CheckInput(GameBase.SelectedBeatmap.Qua, IntroSkippable, ReplayFrames);
+            InputManager.CheckInput(IntroSkippable, ReplayFrames);
 
             // Update Loggers. todo: remove
             Logger.Update("KeyCount", $"Key Count: {GameBase.SelectedBeatmap.Qua.KeyCount}");

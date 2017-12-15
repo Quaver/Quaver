@@ -283,7 +283,7 @@ namespace Quaver
 
             try
             {
-                var mapString = $"{SelectedBeatmap.Artist} - {SelectedBeatmap.Title} [{SelectedBeatmap.DifficultyName}]";
+                var mapString = $"{SelectedBeatmap.Qua.Artist} - {SelectedBeatmap.Qua.Title} [{SelectedBeatmap.Qua.DifficultyName}]";
 
                 // Get the original map length. 
                 double mapLength = Qua.FindSongLength(SelectedBeatmap.Qua) / GameClock;
