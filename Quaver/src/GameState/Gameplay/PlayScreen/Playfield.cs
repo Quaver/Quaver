@@ -124,8 +124,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             AlphaHold = 0;
             CurrentOffsetObjectIndex = 0;
 
-            // Calculate skin reference variables.
-            PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
+            // Calculate skin reference variables - Set Object size based on key count as well.
+            if (GameBase.SelectedBeatmap.Qua.KeyCount == 4)
+                PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
+            else if (GameBase.SelectedBeatmap.Qua.KeyCount == 7)
+                PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowYRatio);
+
             PlayfieldPadding = (int) (GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowYRatio);
             ReceptorPadding = (int)(GameBase.LoadedSkin.NotePadding * GameBase.WindowYRatio);
             PlayfieldSize = ((PlayfieldObjectSize + ReceptorPadding) * GameBase.SelectedBeatmap.Qua.KeyCount) + (PlayfieldPadding * 2) - ReceptorPadding;

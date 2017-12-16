@@ -60,11 +60,13 @@ namespace Quaver.Skins
         /// Size of each lane in pixels.
         /// </summary>
         internal int ColumnSize { get; set; } = 80;
+        internal int ColumnSize7K { get; set; } = 50;
 
         /// <summary>
         /// The offset of the hit receptor
         /// </summary>
         internal int ReceptorYOffset { get; set; } = 50;
+
 
         /// <summary>
         /// The alignment of the playfield as a percentage. 
@@ -540,6 +542,7 @@ namespace Quaver.Skins
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, data["Gameplay"]["TimingBarPixelSize"]);
             HitLightingScale = ConfigHelper.ReadFloat(HitLightingScale, data["Gameplay"]["HitLightingScale"]);
             ColumnSize = ConfigHelper.ReadInt32(ColumnSize, data["Gameplay"]["ColumnSize"]);
+            ColumnSize7K = ConfigHelper.ReadInt32(ColumnSize7K, data["Gameplay"]["ColumnSize7k"]);
             ReceptorYOffset = ConfigHelper.ReadInt32(ReceptorYOffset, data["Gameplay"]["ReceptorYOffset"]);
             ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, data["Gameplay"]["ColumnAlignment"]);
             ColourLight1 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight1"]);
