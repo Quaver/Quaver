@@ -434,7 +434,6 @@ namespace Quaver.Peppy
             // # Difficulty
             fileString.AppendLine("# Difficulty");
             fileString.AppendLine("KeyCount: " + KeyCount);
-            fileString.AppendLine("Health: " + HPDrainRate);
             fileString.AppendLine("Judge: " + OverallDifficulty);
             fileString.AppendLine();
 
