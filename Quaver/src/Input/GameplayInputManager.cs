@@ -27,7 +27,7 @@ namespace Quaver.Input
         /// <summary>
         ///     The PlayScreenState this Input Manager is referencing
         /// </summary>
-        private NoteManager NoteManager { get; set; }
+        //private NoteManager NoteManager { get; set; }
 
         /// <summary>
         ///     Is the game currently paused?
@@ -68,7 +68,7 @@ namespace Quaver.Input
         ///     Keeps track of unique key presses - Initialized to 7 false bools, because the same is 
         ///     used for both 4k and 7k.
         /// </summary>
-        private List<bool> LaneKeyDown { get; set; } = new List<bool>() { false, false, false, false, false, false, false };
+        public List<bool> LaneKeyDown { get; set; } = new List<bool>() { false, false, false, false, false, false, false };
 
         /// <summary>
         ///     Keeps track of whether or not the song intro was skipped.
@@ -81,7 +81,7 @@ namespace Quaver.Input
         /// <param name="noteManager"></param>
         internal GameplayInputManager(NoteManager noteManager)
         {
-            NoteManager = noteManager;
+            //NoteManager = noteManager;
         }
 
         /// <summary>
@@ -133,14 +133,14 @@ namespace Quaver.Input
                 if (GameBase.KeyboardState.IsKeyDown(inputKeys[i]) && !LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = true;
-                    NoteManager.Input(i,true);
+                    //NoteManager.Input(i,true);
                     GameBase.LoadedSkin.Hit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
                 }
                 //Lane Key Release
                 else if (GameBase.KeyboardState.IsKeyUp(inputKeys[i]) && LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = false;
-                    NoteManager.Input(i, false);
+                    //NoteManager.Input(i, false);
                 }
             }
         }
@@ -163,7 +163,7 @@ namespace Quaver.Input
                 SongManager.SkipTo(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - 3000 + SongManager.BassDelayOffset);
                 SongManager.Play();
 
-                NoteManager.PlayScreen.Timing.SongIsPlaying = true;
+                //NoteManager.PlayScreen.Timing.SongIsPlaying = true;
 
                 GameBase.ChangeDiscordPresenceGameplay(true);
             }
