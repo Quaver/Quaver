@@ -502,10 +502,18 @@ namespace Quaver.QuaFile
             if (qua.HitObjects.Count == 0)
                 return 0;
 
-            // If the last object is a regular note, we return the start time
-            // however if it's an LN, we return the end time.
-            var lastHitObject = qua.HitObjects[qua.HitObjects.Count - 1];
-            return (lastHitObject.EndTime > 0) ? lastHitObject.EndTime : lastHitObject.StartTime;
+            //Get song end by last note
+            var LastNoteEnd = 0;
+            for (var i = GameBase.SelectedBeatmap.Qua.HitObjects.Count - 1; i > 0; i--)
+            {
+                var ho = GameBase.SelectedBeatmap.Qua.HitObjects[i];
+                if (ho.EndTime > LastNoteEnd)
+                    LastNoteEnd = ho.EndTime;
+                else if (ho.StartTime > LastNoteEnd)
+                    LastNoteEnd = ho.StartTime;
+            }
+
+            return LastNoteEnd;
         }
     }
 }
