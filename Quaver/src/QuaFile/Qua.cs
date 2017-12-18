@@ -504,9 +504,9 @@ namespace Quaver.QuaFile
 
             //Get song end by last note
             var LastNoteEnd = 0;
-            for (var i = GameBase.SelectedBeatmap.Qua.HitObjects.Count - 1; i > 0; i--)
+            for (var i = qua.HitObjects.Count - 1; i > 0; i--)
             {
-                var ho = GameBase.SelectedBeatmap.Qua.HitObjects[i];
+                var ho = qua.HitObjects[i];
                 if (ho.EndTime > LastNoteEnd)
                     LastNoteEnd = ho.EndTime;
                 else if (ho.StartTime > LastNoteEnd)
