@@ -73,7 +73,7 @@ namespace Quaver
             if (GameBase.Beatmaps.Count != 0) BeatmapUtils.SelectRandomBeatmap();
 
             // Enable console commands (Only applicable if on debug release)
-            //CommandHandler.HandleConsoleCommand();
+            CommandHandler.HandleConsoleCommand();
 
             // TODO: Add your initialization logic here
             base.Initialize();
