@@ -101,12 +101,12 @@
     <Compile Include="src\Audio\SongManager.cs" />
     <Compile Include="src\Beatmaps\Mapset.cs" />
     <Compile Include="src\Commands\CommandHandler.cs" />
-    <Compile Include="src\Commands\Command\BeatmapSearchCommand.cs" />
-    <Compile Include="src\Commands\Command\ClearCommand.cs" />
-    <Compile Include="src\Commands\Command\HelpCommand.cs" />
+    <Compile Include="src\Commands\SearchMaps.cs" />
+    <Compile Include="src\Commands\Clear.cs" />
+    <Compile Include="src\Commands\Help.cs" />
     <Compile Include="src\Commands\ICommand.cs" />
-    <Compile Include="src\Commands\Command\BeatmapsCommand.cs" />
-    <Compile Include="src\Commands\Command\MapsetsCommand.cs" />
+    <Compile Include="src\Commands\DisplayMaps.cs" />
+    <Compile Include="src\Commands\Mapsets.cs" />
     <Compile Include="src\Database\LocalScoreCache.cs" />
     <Compile Include="src\Discord\DiscordController.cs" />
     <Compile Include="src\Discord\DiscordRPC.cs" />
@@ -273,6 +273,7 @@
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
+    <None Include="app.config" />
     <None Include="C:\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\libSDL2-2.0.0.dylib">
       <Link>Lib\libSDL2-2.0.0.dylib</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
