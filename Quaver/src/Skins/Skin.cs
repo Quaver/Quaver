@@ -37,26 +37,6 @@ namespace Quaver.Skins
         internal string Version { get; set; } = "1.0";
 
         /// <summary>
-        /// Should we display the skin's custom menu background?
-        /// </summary>
-        internal bool CustomBackground { get; set; }
-
-        /// <summary>
-        /// Should the skin's cursor rotate?
-        /// </summary>
-        internal bool CursorRotate { get; set; } = true;
-
-        /// <summary>
-        /// Should the skin's cursor trail rotate?
-        /// </summary>
-        internal bool CursorTrailRotate { get; set; }
-
-        /// <summary>
-        /// Should the cursor expand when the mouse is clicked?
-        /// </summary>
-        internal bool CursorExpand { get; set; } = true;
-
-        /// <summary>
         ///     The padding (Positional offset) of the notes relative from the bg mask.
         /// </summary>
         internal int BgMaskPadding { get; set; } = 7;
@@ -80,18 +60,16 @@ namespace Quaver.Skins
         /// Size of each lane in pixels.
         /// </summary>
         internal int ColumnSize { get; set; } = 80;
+        internal int ColumnSize7K { get; set; } = 65;
 
         /// <summary>
         /// The offset of the hit receptor
         /// </summary>
         internal int ReceptorYOffset { get; set; } = 50;
 
+
         /// <summary>
-        ///     The alignment of the column
-        /// 
-        ///     "When read, it'll be between 0 and 1
-        ///     if it's 0, it'll snap to the left, 1 will snap to right
-        ///     0.5 to the middle"
+        /// The alignment of the playfield as a percentage. 
         /// </summary>
         internal byte ColumnAlignment { get; set; } = 50;
 
@@ -104,14 +82,6 @@ namespace Quaver.Skins
         internal Color ColourLight4 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
 
         /// <summary>
-        /// The colour of the actual lane
-        /// </summary>
-        internal Color Colour1 { get; set; } = new Color(new Vector4(255, 25, 255, 1));
-        internal Color Colour2 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
-        internal Color Colour3 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
-        internal Color Colour4 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
-
-        /// <summary>
         ///     All of the textures for the loaded skin elements. 
         ///     We first attempt to load the selected skin's elements, however if we can't,
         ///     it'll result it to the default.
@@ -119,18 +89,24 @@ namespace Quaver.Skins
         internal Texture2D ColumnBgMask { get; set; }
         internal Texture2D ColumnHitLighting { get; set; }
         internal Texture2D ColumnTimingBar { get; set; }
-        // 4k
+
+        // 4k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
+        // defined for each key lane.
         internal Texture2D[] NoteHitObjects { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteHoldBodies { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteHoldEnds { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptors { get; set; } = new Texture2D[4];
 
-        // 7k
+        // 7k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
+        // defined for each key lane.
         internal Texture2D[] NoteHitObjects7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteHoldBodies7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteHoldEnds7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteReceptors7K { get; set; } = new Texture2D[7];
 
+        /// <summary>
+        ///     Grades
+        /// </summary>
         internal Texture2D GradeSmallA { get; set; }
         internal Texture2D GradeSmallB { get; set; }
         internal Texture2D GradeSmallC { get; set; }
@@ -141,12 +117,20 @@ namespace Quaver.Skins
         internal Texture2D GradeSmallX { get; set; }
         internal Texture2D GradeSmallXX { get; set; }
         internal Texture2D GradeSmallXXX { get; set; }
+
+        /// <summary>
+        ///     Judge
+        /// </summary>
         internal Texture2D JudgeMiss { get; set; }
         internal Texture2D JudgeBad { get; set; }
         internal Texture2D JudgeGood { get; set; }
         internal Texture2D JudgeGreat { get; set; }
         internal Texture2D JudgePerfect { get; set; }
         internal Texture2D JudgeMarv { get; set; }
+
+        /// <summary>
+        ///     Cursor
+        /// </summary>
         internal Texture2D Cursor { get; set; }
 
         /// <summary>
@@ -165,10 +149,14 @@ namespace Quaver.Skins
                 @"column-bgmask",
                 @"column-hitlighting",
                 @"column-timingbar",
+
+                // 4k HitObjects
                 @"note-hitobject1",
                 @"note-hitobject2",
                 @"note-hitobject3",
                 @"note-hitobject4",
+
+                // 7k HitObjects
                 @"note-hitobject7k1",
                 @"note-hitobject7k2",
                 @"note-hitobject7k3",
@@ -176,6 +164,8 @@ namespace Quaver.Skins
                 @"note-hitobject7k5",
                 @"note-hitobject7k6",
                 @"note-hitobject7k7",
+
+                // Grades
                 @"grade-small-a",
                 @"grade-small-b",
                 @"grade-small-c",
@@ -186,10 +176,14 @@ namespace Quaver.Skins
                 @"grade-small-x",
                 @"grade-small-xx",
                 @"grade-small-xxx",
+
+                // 4k Hit Object Hold Ends
                 @"note-holdend1",
                 @"note-holdend2",
                 @"note-holdend3",
                 @"note-holdend4",
+
+                // 7k Hit Object Hold Ends
                 @"note-holdend7k1",
                 @"note-holdend7k2",
                 @"note-holdend7k3",
@@ -197,10 +191,14 @@ namespace Quaver.Skins
                 @"note-holdend7k5",
                 @"note-holdend7k6",
                 @"note-holdend7k7",
+
+                // 4k Hit Object Hold Bodies
                 @"note-holdbody1",
                 @"note-holdbody2",
                 @"note-holdbody3",
                 @"note-holdbody4",
+
+                // 7k Hit Object Hold Bodies
                 @"note-holdbody7k1",
                 @"note-holdbody7k2",
                 @"note-holdbody7k3",
@@ -208,10 +206,14 @@ namespace Quaver.Skins
                 @"note-holdbody7k5",
                 @"note-holdbody7k6",
                 @"note-holdbody7k7",
+
+                // 4k Note Receptors
                 @"note-receptor1",
                 @"note-receptor2",
                 @"note-receptor3",
                 @"note-receptor4",
+
+                // 7k Note Receptors
                 @"note-receptor7k1",
                 @"note-receptor7k2",
                 @"note-receptor7k3",
@@ -219,13 +221,19 @@ namespace Quaver.Skins
                 @"note-receptor7k5",
                 @"note-receptor7k6",
                 @"note-receptor7k7",
+
+                // Judge
                 @"judge-miss",
                 @"judge-bad",
                 @"judge-good",
                 @"judge-great",
                 @"judge-perfect",
                 @"judge-marv",
+
+                //  Cursor
                 @"cursor",
+
+                // Sound Effects
                 @"hit",
                 @"combobreak",
                 @"applause",
@@ -529,25 +537,18 @@ namespace Quaver.Skins
             Name = ConfigHelper.ReadString(Name, data["General"]["Name"]);
             Author = ConfigHelper.ReadString(Author, data["General"]["Author"]);
             Version = ConfigHelper.ReadString(Version, data["General"]["Version"]);
-            CustomBackground = ConfigHelper.ReadBool(CustomBackground, data["Menu"]["CustomBackground"]);
-            CursorRotate = ConfigHelper.ReadBool(CursorRotate, data["Cursor"]["CursorRotate"]);
-            CursorTrailRotate = ConfigHelper.ReadBool(CursorTrailRotate, data["Cursor"]["CursorTrailRotate"]);
-            CursorExpand = ConfigHelper.ReadBool(CursorExpand, data["Cursor"]["CursorExpand"]);
             BgMaskPadding = ConfigHelper.ReadInt32(BgMaskPadding, data["Gameplay"]["BgMaskPadding"]);
             NotePadding = ConfigHelper.ReadInt32(NotePadding, data["Gameplay"]["NotePadding"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, data["Gameplay"]["TimingBarPixelSize"]);
             HitLightingScale = ConfigHelper.ReadFloat(HitLightingScale, data["Gameplay"]["HitLightingScale"]);
             ColumnSize = ConfigHelper.ReadInt32(ColumnSize, data["Gameplay"]["ColumnSize"]);
+            ColumnSize7K = ConfigHelper.ReadInt32(ColumnSize7K, data["Gameplay"]["ColumnSize7k"]);
             ReceptorYOffset = ConfigHelper.ReadInt32(ReceptorYOffset, data["Gameplay"]["ReceptorYOffset"]);
             ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, data["Gameplay"]["ColumnAlignment"]);
             ColourLight1 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight1"]);
             ColourLight2 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight2"]);
             ColourLight3 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight3"]);
             ColourLight4 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight4"]);
-            Colour1 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["Colour1"]);
-            Colour2 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["Colour2"]);
-            Colour3 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["Colour3"]);
-            Colour4 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["Colour4"]);
         }
     }
 }

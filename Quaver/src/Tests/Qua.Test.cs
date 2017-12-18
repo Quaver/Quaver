@@ -43,7 +43,6 @@ namespace Quaver.Tests
                               $"AudioLeadIn: {qua.AudioLeadIn}\n" +
                               $"SongPreviewTime: {qua.SongPreviewTime}\n" +
                               $"BackgroundFile: {qua.BackgroundFile}\n" +
-                              $"HpDrain: {qua.Health}\n" +
                               $"AccuracyStreain: {qua.Judge}\n" +
                               $"Timing Points: {qua.TimingPoints.Count}\n" +
                               $"Slider Velocities: {qua.SliderVelocities.Count}\n" +
