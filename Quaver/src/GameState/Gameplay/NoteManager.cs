@@ -14,6 +14,7 @@ using Quaver.Graphics.Button;
 using Quaver.Graphics;
 using Quaver.Input;
 using Quaver.Replays;
+using Quaver.Config;
 
 namespace Quaver.GameState.Gameplay
 {
@@ -66,16 +67,6 @@ namespace Quaver.GameState.Gameplay
             BeatmapMd5 = beatmapMd5;
         }
 
-        /// <summary>
-        ///     Temporary method for back button click handling todo: remove
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void BackButtonClick(object sender, EventArgs e)
-        {
-            GameBase.GameStateManager.ChangeState(new SongSelectState());
-        }
-
         public void Draw()
         {
             TestButton.Draw();
@@ -95,10 +86,15 @@ namespace Quaver.GameState.Gameplay
             Playfield = new Playfield();
             Timing = new Timing();
             ScoreManager = new ScoreManager();
+            InputManager = new GameplayInputManager();
+            ReplayFrames = new List<ReplayFrame>();
 
             // Initialize Gameplay
-            
             InitializeGameplay(playScreen);
+
+            // Hook InputManager
+            InputManager.ManiaKeyPress += ManiaKeyDown;
+            InputManager.ManiaKeyRelease += ManiaKeyUp;
 
             //Todo: Remove. TEST.
             TestButton = new TextButton(new Vector2(200, 30), "BACK")
@@ -115,115 +111,6 @@ namespace Quaver.GameState.Gameplay
                 Size = new Vector2(250, 200),
                 Alignment = Alignment.TopRight
             };
-        }
-
-        /// <summary>
-        /// This method gets called when a key gets pressed.
-        /// </summary>
-        /// <param name="keyLane"></param>
-        public void Input(int keyLane, bool keyDown)
-        {
-            // Update Receptor in Playfield
-            Playfield.UpdateReceptor(keyLane, keyDown);
-
-            //Check for Note press/LN press
-            if (keyDown)
-            {
-                //Reference Variables
-                int noteIndex = -1;
-                int i;
-
-                //Search for closest HitObject that is inside the HitTiming Window
-                for (i = 0; i < NoteRendering.HitObjectPoolSize && i < NoteRendering.HitObjectPool.Count; i++)
-                {
-                    if (NoteRendering.HitObjectPool[i].KeyLane == keyLane + 1 && NoteRendering.HitObjectPool[i].StartTime - Timing.CurrentSongTime > -ScoreManager.HitWindowPress[4])
-                    {
-                        noteIndex = i;
-                        break;
-                    }
-                }
-
-                //If such HitObject exists, it will do key-press stuff to it
-                if (noteIndex > -1)
-                {
-                    //Check which HitWindow this object's timing is in
-                    for (i = 0; i < 5; i++)
-                    {
-                        if (Math.Abs(NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime) <= ScoreManager.HitWindowPress[i])
-                        {
-                            //Score manager stuff
-                            ScoreManager.Count(i, false, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime, Timing.CurrentSongTime/ SongManager.Length);
-                            GameplayUI.UpdateAccuracyBox(i);
-                            Playfield.UpdateJudge(i, false, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime);
-
-                            // If the player is spamming
-                            if (i >= 3)
-                                NoteRendering.KillNote(noteIndex);
-                            else
-                            {
-                                //If the object is an LN, hold it at the receptors
-                                if (NoteRendering.HitObjectPool[noteIndex].IsLongNote) NoteRendering.HoldNote(noteIndex);
-
-                                //If the object is not an LN, recycle it.
-                                else NoteRendering.RecycleNote(noteIndex);
-                            }
-
-                            break;
-                        }
-                    }
-                }
-            }
-            //Check for LN release
-            else
-            {
-                //Reference Variables
-                int noteIndex = -1;
-                int i;
-
-                //Search for closest HitObject that is inside the HitTiming Window
-                for (i = 0; i < NoteRendering.HitObjectHold.Count; i++)
-                {
-                    if (NoteRendering.HitObjectHold[i].KeyLane == keyLane + 1)
-                    {
-                        noteIndex = i;
-                        break;
-                    }
-                }
-
-                //If such HitObject exists, it will do key-press stuff to it
-                if (noteIndex > -1)
-                {
-                    //Check which HitWindow this object's timing is in.
-                    //Since it's an LN, the hit window is increased by 1.25x.
-                    //Only checks MARV/PERF/GREAT/GOOD
-                    int releaseTiming = -1;
-                    for (i = 0; i < 4; i++)
-                    {
-                        if (Math.Abs(NoteRendering.HitObjectHold[noteIndex].EndTime - Timing.CurrentSongTime) <= ScoreManager.HitWindowRelease[i])
-                        {
-                            releaseTiming = i;
-                            break;
-                        }
-                    }
-
-                    //If LN has been released during a HitWindow
-                    if (releaseTiming > -1)
-                    {
-                        ScoreManager.Count(i, true);
-                        GameplayUI.UpdateAccuracyBox(i);
-                        Playfield.UpdateJudge(i, true);
-                        NoteRendering.KillHold(noteIndex,true);
-                    }
-                    //If LN has been pressed early
-                    else
-                    {
-                        ScoreManager.Count(5, true);
-                        GameplayUI.UpdateAccuracyBox(5);
-                        Playfield.UpdateJudge(5, true);
-                        NoteRendering.KillHold(noteIndex);
-                    }
-                }
-            }
         }
 
         public void UnloadContent()
@@ -302,11 +189,6 @@ namespace Quaver.GameState.Gameplay
             NoteRendering.Initialize(state);
             GameplayUI.Initialize(state);
 
-            // Create Gameplay classes
-            InputManager = new GameplayInputManager(this); //todo: idk wtf this does yet - staravia
-            ReplayFrames = new List<ReplayFrame>();
-
-
             //todo: remove this. used for logging.
             // Create loggers
             Logger.Add("KeyCount", "", Color.Pink);
@@ -321,6 +203,121 @@ namespace Quaver.GameState.Gameplay
             foreach (var a in ScoreManager.HitWindowRelease) loggertext += Math.Floor(a) + "ms, ";
 
             // Logger.Update("JudgeDifficulty", loggertext);
+        }
+
+        /// <summary>
+        ///     Temporary method for back button click handling todo: remove
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void BackButtonClick(object sender, EventArgs e)
+        {
+            GameBase.GameStateManager.ChangeState(new SongSelectState());
+        }
+
+        public void ManiaKeyDown(object sender, ManiaKey keyLane)
+        {
+            // Play Audio
+            GameBase.LoadedSkin.Hit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+
+            // Update Receptor in Playfield
+            Playfield.UpdateReceptor(keyLane.GetKey(), true);
+
+            //Check for Note press/LN press
+            //Reference Variables
+            int noteIndex = -1;
+            int i;
+
+            //Search for closest HitObject that is inside the HitTiming Window
+            for (i = 0; i < NoteRendering.HitObjectPoolSize && i < NoteRendering.HitObjectPool.Count; i++)
+            {
+                if (NoteRendering.HitObjectPool[i].KeyLane == keyLane.GetKey() + 1 && NoteRendering.HitObjectPool[i].StartTime - Timing.CurrentSongTime > -ScoreManager.HitWindowPress[4])
+                {
+                    noteIndex = i;
+                    break;
+                }
+            }
+
+            //If such HitObject exists, it will do key-press stuff to it
+            if (noteIndex > -1)
+            {
+                //Check which HitWindow this object's timing is in
+                for (i = 0; i < 5; i++)
+                {
+                    if (Math.Abs(NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime) <= ScoreManager.HitWindowPress[i])
+                    {
+                        //Score manager stuff
+                        ScoreManager.Count(i, false, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime, Timing.CurrentSongTime / SongManager.Length);
+                        GameplayUI.UpdateAccuracyBox(i);
+                        Playfield.UpdateJudge(i, false, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime);
+
+                        // If the player is spamming
+                        if (i >= 3)
+                            NoteRendering.KillNote(noteIndex);
+                        else
+                        {
+                            //If the object is an LN, hold it at the receptors
+                            if (NoteRendering.HitObjectPool[noteIndex].IsLongNote) NoteRendering.HoldNote(noteIndex);
+
+                            //If the object is not an LN, recycle it.
+                            else NoteRendering.RecycleNote(noteIndex);
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void ManiaKeyUp(object sender, ManiaKey keyLane)
+        {
+            //Reference Variables
+            int noteIndex = -1;
+            int i;
+
+            //Search for closest HitObject that is inside the HitTiming Window
+            for (i = 0; i < NoteRendering.HitObjectHold.Count; i++)
+            {
+                if (NoteRendering.HitObjectHold[i].KeyLane == keyLane.GetKey() + 1)
+                {
+                    noteIndex = i;
+                    break;
+                }
+            }
+
+            //If such HitObject exists, it will do key-press stuff to it
+            if (noteIndex > -1)
+            {
+                //Check which HitWindow this object's timing is in.
+                //Since it's an LN, the hit window is increased by 1.25x.
+                //Only checks MARV/PERF/GREAT/GOOD
+                int releaseTiming = -1;
+                for (i = 0; i < 4; i++)
+                {
+                    if (Math.Abs(NoteRendering.HitObjectHold[noteIndex].EndTime - Timing.CurrentSongTime) <= ScoreManager.HitWindowRelease[i])
+                    {
+                        releaseTiming = i;
+                        break;
+                    }
+                }
+
+                //If LN has been released during a HitWindow
+                if (releaseTiming > -1)
+                {
+                    ScoreManager.Count(i, true);
+                    GameplayUI.UpdateAccuracyBox(i);
+                    Playfield.UpdateJudge(i, true);
+                    NoteRendering.KillHold(noteIndex, true);
+                }
+                //If LN has been pressed early
+                else
+                {
+                    ScoreManager.Count(5, true);
+                    GameplayUI.UpdateAccuracyBox(5);
+                    Playfield.UpdateJudge(5, true);
+                    NoteRendering.KillHold(noteIndex);
+                }
+            }
         }
     }
 }
