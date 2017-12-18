@@ -38,7 +38,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal Boundary Boundary;
 
         //Track
-        internal ulong[] SvCalc { get; set; } //Stores SV position data for efficiency
+        //internal ulong[] SvCalc { get; set; } //Stores SV position data for efficiency
         internal int CurrentSvIndex { get; set; }
         internal ulong TrackPosition { get; set; }
 
@@ -63,13 +63,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             //Initialize Track
             int i;
-            TrackPosition = (ulong)(-Timing.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
+            TrackPosition = (ulong)(-GameplayReferences.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
             CurrentSvIndex = 0;
 
             //Initialize Boundary
             Boundary = new Boundary()
             {
-                Size = new Vector2(PlayScreen.Playfield.PlayfieldSize, GameBase.Window.Z),
+                Size = new Vector2(GameplayReferences.PlayfieldSize, GameBase.Window.Z),
                 Alignment = Alignment.TopCenter
             };
 
@@ -86,16 +86,18 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     EndTime = GameBase.SelectedBeatmap.Qua.HitObjects[i].EndTime,
                     IsLongNote = GameBase.SelectedBeatmap.Qua.HitObjects[i].EndTime > 0,
                     KeyLane = GameBase.SelectedBeatmap.Qua.HitObjects[i].KeyLane,
-                    HitObjectSize = PlayScreen.Playfield.PlayfieldObjectSize,
-                    HitObjectPosition = new Vector2(PlayScreen.Playfield.ReceptorXPosition[GameBase.SelectedBeatmap.Qua.HitObjects[i].KeyLane-1], GameBase.SelectedBeatmap.Qua.HitObjects[i].StartTime * ScrollSpeed),
+                    HitObjectSize = GameplayReferences.PlayfieldObjectSize,
+                    HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[GameBase.SelectedBeatmap.Qua.HitObjects[i].KeyLane-1], GameBase.SelectedBeatmap.Qua.HitObjects[i].StartTime * ScrollSpeed),
                 };
 
+                
                 //Calculate SV Index for hit object
                 newObject.SvIndex = GetSvIndex(newObject.StartTime);
 
                 //Calculate Y-Offset From Receptor
                 newObject.OffsetFromReceptor = SvOffsetFromTime(newObject.StartTime, newObject.SvIndex);
 
+                
                 //If the object is a long note
                 if (newObject.IsLongNote)
                 {
@@ -108,8 +110,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 //Initialize Object and add it to HitObjectPool
                 if (i < HitObjectPoolSize) newObject.Initialize(Config.Configuration.DownScroll, GameBase.SelectedBeatmap.Qua.HitObjects[i].EndTime > 0);
                 HitObjectPool.Add(newObject);
+                
             }
-
             Logger.Log("Done loading HitObjects", Color.AntiqueWhite);
         }
 
@@ -122,24 +124,24 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             int i;
 
             //Update the position of the track
-            GetCurrentTrackPosition();
+            TrackPosition = GetCurrentTrackPosition();
 
             //Update Active HitObjects
             for (i=0; i < HitObjectPool.Count && i < HitObjectPoolSize; i++)
             {
-                //Note is not pressed (Missed)
-                if (PlayScreen.Timing.CurrentSongTime > HitObjectPool[i].StartTime + PlayScreen.ScoreManager.HitWindowPress[4])
+                //Note is missed
+                if (GameplayReferences.CurrentSongTime > HitObjectPool[i].StartTime + GameplayReferences.PressWindowLatest)
                 {
                     //Track note miss with ScoreManager
-                    PlayScreen.ScoreManager.Count(5, false, 0, PlayScreen.Timing.CurrentSongTime/ SongManager.Length);
-                    PlayScreen.GameplayUI.UpdateAccuracyBox(5);
-                    PlayScreen.Playfield.UpdateJudge(5);
+                    //todo: ScoreManager.Count(5, false, 0, CurrentSongTime/ SongManager.Length);
+                    //todo: GameplayUI.UpdateAccuracyBox(5);
+                    //todo: Playfield.UpdateJudge(5);
 
                     //If HitObject is an LN, kill it
                     if (HitObjectPool[i].IsLongNote)
                     {
                         KillNote(i);
-                        PlayScreen.ScoreManager.Count(5, true);
+                        //todo: ScoreManager.Count(5, true);
                     }
 
                     //If HitObject is a LongNote, Recycle it
@@ -156,18 +158,18 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
 
             //Update Hold Objects
-            if (HitObjectHold.Count == 0) PlayScreen.GameplayUI.NoteHolding = false;
-            else PlayScreen.GameplayUI.NoteHolding = true;
+            if (HitObjectHold.Count == 0) GameplayReferences.NoteHolding = false;
+            else GameplayReferences.NoteHolding = true;
 
             for (i = 0; i < HitObjectHold.Count; i++)
             {
                 //LN is missed
-                if (PlayScreen.Timing.CurrentSongTime > HitObjectHold[i].EndTime + PlayScreen.ScoreManager.HitWindowRelease[3])
+                if (GameplayReferences.CurrentSongTime > HitObjectHold[i].EndTime + GameplayReferences.ReleaseWindowLatest)
                 {
                     //Track LN late release with ScoreManager
-                    PlayScreen.ScoreManager.Count(4,true);
-                    PlayScreen.GameplayUI.UpdateAccuracyBox(4);
-                    PlayScreen.Playfield.UpdateJudge(4);
+                    //todo: ScoreManager.Count(4,true);
+                    //todo: GameplayUI.UpdateAccuracyBox(4);
+                    //todo: Playfield.UpdateJudge(4);
 
                     //Remove from LN Queue
                     HitObjectHold[i].Destroy();
@@ -178,10 +180,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 else
                 {
                     //Set LN Size and Note Position
-                    if (PlayScreen.Timing.CurrentSongTime > HitObjectHold[i].StartTime)
+                    if (GameplayReferences.CurrentSongTime > HitObjectHold[i].StartTime)
                     {
                         HitObjectHold[i].CurrentLongNoteSize = (ulong) ((HitObjectHold[i].LnOffsetFromReceptor - TrackPosition) * ScrollSpeed);
-                        HitObjectHold[i].HitObjectPositionY = PlayScreen.Playfield.ReceptorYOffset;
+                        HitObjectHold[i].HitObjectPositionY = GameplayReferences.ReceptorYOffset;
                     }
                     else
                     {
@@ -197,7 +199,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //Update Dead HitObjects
             for (i = 0; i < HitObjectDead.Count; i++)
             {
-                if (PlayScreen.Timing.CurrentSongTime > HitObjectDead[i].EndTime + RemoveTimeAfterMiss && PlayScreen.Timing.CurrentSongTime > HitObjectDead[i].StartTime + RemoveTimeAfterMiss)
+                if (GameplayReferences.CurrentSongTime > HitObjectDead[i].EndTime + RemoveTimeAfterMiss && GameplayReferences.CurrentSongTime > HitObjectDead[i].StartTime + RemoveTimeAfterMiss)
                 {
                     HitObjectDead[i].Destroy();
                     HitObjectDead.RemoveAt(i);
@@ -240,7 +242,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal ulong SvOffsetFromTime(float timeToOffset, int svIndex)
         {
             //If NoSV mod is enabled, return ms offset, else return sv offset calculation
-            return (ModManager.Activated(ModIdentifier.NoSliderVelocity)) ? (ulong) timeToOffset : SvCalc[svIndex] + (ulong)(15000 + ((timeToOffset - PlayScreen.Timing.SvQueue[svIndex].TargetTime) * PlayScreen.Timing.SvQueue[svIndex].SvMultiplier)) - 5000;
+            return (ModManager.Activated(ModIdentifier.NoSliderVelocity)) ? (ulong) timeToOffset : GameplayReferences.SvCalc[svIndex] + (ulong)(15000 + ((timeToOffset - GameplayReferences.SvQueue[svIndex].TargetTime) * GameplayReferences.SvQueue[svIndex].SvMultiplier)) - 5000;
         }
 
         /// <summary>
@@ -251,27 +253,27 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal float PosFromOffset(ulong offsetToPos)
         {
             //if (_mod_pull) return (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(offsetToPos - CurrentSongTime, 0f) * _ScrollSpeed));
-            return PlayScreen.Playfield.ReceptorYOffset + (((float)(10000 + offsetToPos - TrackPosition) - 10000f) * ScrollNegativeFactor * ScrollSpeed);
+            return GameplayReferences.ReceptorYOffset + (((float)(10000 + offsetToPos - TrackPosition) - 10000f) * ScrollNegativeFactor * ScrollSpeed);
         }
 
         /// <summary>
         /// Calculate track position
         /// </summary>
-        internal void GetCurrentTrackPosition()
+        internal ulong GetCurrentTrackPosition()
         {
-            if (PlayScreen.Timing.CurrentSongTime >= PlayScreen.Timing.SvQueue[PlayScreen.Timing.SvQueue.Count - 1].TargetTime)
+            if (GameplayReferences.CurrentSongTime >= GameplayReferences.SvQueue[GameplayReferences.SvQueue.Count - 1].TargetTime)
             {
-                CurrentSvIndex = PlayScreen.Timing.SvQueue.Count - 1;
+                CurrentSvIndex = GameplayReferences.SvQueue.Count - 1;
             }
-            else if (CurrentSvIndex < PlayScreen.Timing.SvQueue.Count - 2)
+            else if (CurrentSvIndex < GameplayReferences.SvQueue.Count - 2)
             {
-                for (int j = CurrentSvIndex; j < PlayScreen.Timing.SvQueue.Count - 1; j++)
+                for (int j = CurrentSvIndex; j < GameplayReferences.SvQueue.Count - 1; j++)
                 {
-                    if (PlayScreen.Timing.CurrentSongTime > PlayScreen.Timing.SvQueue[CurrentSvIndex + 1].TargetTime) CurrentSvIndex++;
+                    if (GameplayReferences.CurrentSongTime > GameplayReferences.SvQueue[CurrentSvIndex + 1].TargetTime) CurrentSvIndex++;
                     else break;
                 }
             }
-            TrackPosition = SvCalc[CurrentSvIndex] + (ulong)(((float)(PlayScreen.Timing.CurrentSongTime - (PlayScreen.Timing.SvQueue[CurrentSvIndex].TargetTime)) * PlayScreen.Timing.SvQueue[CurrentSvIndex].SvMultiplier) + 10000);
+            return GameplayReferences.SvCalc[CurrentSvIndex] + (ulong)(((float)(GameplayReferences.CurrentSongTime - (GameplayReferences.SvQueue[CurrentSvIndex].TargetTime)) * GameplayReferences.SvQueue[CurrentSvIndex].SvMultiplier) + 10000);
         }
 
         /// <summary>
@@ -282,12 +284,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal int GetSvIndex(float indexTime)
         {
             int newIndex = 0;
-            if (indexTime >= PlayScreen.Timing.SvQueue[PlayScreen.Timing.SvQueue.Count - 1].TargetTime) newIndex = PlayScreen.Timing.SvQueue.Count - 1;
+            if (indexTime >= GameplayReferences.SvQueue[GameplayReferences.SvQueue.Count - 1].TargetTime) newIndex = GameplayReferences.SvQueue.Count - 1;
             else
             {
-                for (int j = 0; j < PlayScreen.Timing.SvQueue.Count - 1; j++)
+                for (int j = 0; j < GameplayReferences.SvQueue.Count - 1; j++)
                 {
-                    if (indexTime < PlayScreen.Timing.SvQueue[j + 1].TargetTime)
+                    if (indexTime < GameplayReferences.SvQueue[j + 1].TargetTime)
                     {
                         newIndex = j;
                         break;
@@ -322,7 +324,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal void KillHold(int index, bool destroy = false)
         {
             //Update the object's position and size
-            HitObjectHold[index].StartTime = (float)PlayScreen.Timing.CurrentSongTime;
+            HitObjectHold[index].StartTime = (float)GameplayReferences.CurrentSongTime;
             HitObjectHold[index].SvIndex = GetSvIndex(HitObjectHold[index].StartTime);
             HitObjectHold[index].OffsetFromReceptor = SvOffsetFromTime(HitObjectHold[index].StartTime, HitObjectHold[index].SvIndex);
 
