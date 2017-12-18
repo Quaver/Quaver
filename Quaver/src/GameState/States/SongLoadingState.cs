@@ -109,7 +109,7 @@ namespace Quaver.GameState.States
 
                 // Get the MD5 Hash of the played map and change the state.
                 var quaPath = $"{Config.Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
-                GameBase.GameStateManager.ChangeState(new PlayScreenState(BeatmapUtils.GetMd5Checksum(quaPath)));
+                GameBase.GameStateManager.ChangeState(new PlayScreenState(GameBase.SelectedBeatmap.Qua, BeatmapUtils.GetMd5Checksum(quaPath)));
 
                 Logger.Log("Successfully changed to the gameplay state.", Color.Cyan);
             }
