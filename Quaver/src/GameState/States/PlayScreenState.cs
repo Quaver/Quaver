@@ -35,48 +35,18 @@ namespace Quaver.GameState.States
         public State CurrentState { get; set; } = State.PlayScreen;
         public bool UpdateReady { get; set; }
 
-        public GameplayUI GameplayUI;
-        public NoteManager NoteManager;
-        public NoteRendering NoteRendering;
-        public Playfield Playfield;
-        public ScoreManager ScoreManager;
-        public Timing Timing;
-
-        //todo: remove. TEST.
-        private Sprite TextUnder { get; set; }
-        private TextBoxSprite SVText { get; set; }
+        /// <summary>
+        ///     Note Manager
+        /// </summary>
+        private NoteManager NoteManager { get; set; }
 
         /// <summary>
-        ///     The input manager for this game state.
+        ///     Constructor, data passed in from loading state
         /// </summary>
-        private GameplayInputManager InputManager { get; set; }
-
-        /// <summary>
-        ///     The MD5 Hash of the played beatmap.
-        /// </summary>
-        private string BeatmapMd5 { get; set; }
-
-        /// <summary>
-        ///     Keeps track of whether or not the song intro is current skippable.
-        /// </summary>
-        private bool IntroSkippable { get; set; }
-
-        //TODO:Remove later.   TEST
-        private Button TestButton { get; set; }
-
-        /// <summary>
-        ///     Holds the list of replay frames for this state.
-        /// </summary>
-        private List<ReplayFrame> ReplayFrames { get; set;}
-
-        /// <summary>
-        ///     Ctor, data passed in from loading state
-        /// </summary>
-        /// <param name="qua"></param>
         /// <param name="beatmapMd5"></param>
         public PlayScreenState(string beatmapMd5)
         {
-            BeatmapMd5 = beatmapMd5;
+            NoteManager = new NoteManager(beatmapMd5);
         }
 
         /// <summary>
@@ -84,47 +54,14 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
-            // Create Gameplay classes
-            GameplayUI = new GameplayUI();
-            NoteManager = new NoteManager();
-            NoteRendering = new NoteRendering();
-            Playfield = new Playfield();
-            ScoreManager = new ScoreManager();
-            Timing = new Timing();
-            InputManager = new GameplayInputManager(NoteManager);
-            ReplayFrames = new List<ReplayFrame>();
+            // Initialize Note Manager
+            NoteManager.Initialize(this);
 
             // Update window title
             GameBase.GameWindow.Title = $"Quaver - {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]";
 
             // Update Discord Presence
             GameBase.ChangeDiscordPresenceGameplay(false);
-            
-            //Todo: remove
-            Logger.Add("KeyCount", "", Color.Pink);
-            Logger.Add("SongPos", "", Color.White);
-            Logger.Add("Skippable", "", CustomColors.NameTagAdmin);
-            Logger.Add("JudgeDifficulty", "", CustomColors.NameTagModerator);
-
-            // Initialize Gameplay
-            InitializeGameplay();
-
-            //Todo: Remove. TEST.
-            TestButton = new TextButton(new Vector2(200, 30), "BACK")
-            {
-                Image = GameBase.LoadedSkin.ColumnTimingBar,
-                Alignment = Alignment.TopCenter,
-                Parent = NoteRendering.Boundary
-            };
-            TestButton.Clicked += ButtonClick;
-
-            TextUnder = new Sprite()
-            {
-                Image = GameBase.UI.HollowBox,
-                Tint = Color.Blue,
-                Size = new Vector2(250,200),
-                Alignment = Alignment.TopRight
-            };
 
             UpdateReady = true;
         }
@@ -136,20 +73,8 @@ namespace Quaver.GameState.States
         {
             UpdateReady = false;
 
-            //Unload Content from other classes
-            NoteRendering.UnloadContent();
-            Timing.UnloadContent();
-            Playfield.UnloadContent();
-            GameplayUI.UnloadContent();
-
             //Remove Loggers
             Logger.Clear();
-
-            //Destroy boundarys
-            TestButton.Clicked -= ButtonClick;
-
-            //todo: temp
-            TextUnder.Destroy();
         }
 
         /// <summary>
@@ -157,34 +82,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Update(double dt)
         {
-            // Set the current song time.
-            Timing.Update(dt);
-
-            // Check if the song is currently skippable.
-            IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.CurrentSongTime >= 5000);
-
-            // Update the playfield
-            Playfield.Update(dt);
-
-            // Update the Notes
-            NoteRendering.Update(dt);
-
-            // Update Data Interface
-            GameplayUI.Update(dt);
-
-            // Check the input for this particular game state.
-            InputManager.CheckInput(IntroSkippable, ReplayFrames);
-
-            // Update Loggers. todo: remove
-            Logger.Update("KeyCount", $"Key Count: {GameBase.SelectedBeatmap.Qua.KeyCount}");
-            Logger.Update("SongPos", "Current Track Position: " + NoteRendering.TrackPosition);
-            Logger.Update("Skippable", $"Intro Skippable: {IntroSkippable}");
-
-            //Todo: remove. TEST.
-            TextUnder.Update(dt);
-
-            if (Timing.PlayingIsDone)
-                GameBase.GameStateManager.ChangeState(new ScoreScreenState(BeatmapMd5, ScoreManager, GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title, GameBase.SelectedBeatmap.DifficultyName, ReplayFrames));
+            NoteManager.Update(dt);
         }
 
         /// <summary>
@@ -192,50 +90,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Draw()
         {
-            Playfield.DrawUnder();
-            NoteRendering.Draw();
-            Playfield.DrawOver();
-            GameplayUI.Draw();
-            TestButton.Draw();
-            //TextUnder.Draw();
-        }
-
-        public void ButtonClick(object sender, EventArgs e)
-        {
-            GameBase.GameStateManager.ChangeState(new SongSelectState());
-        }
-
-        /// <summary>
-        ///     Solely responsible for intializing gameplay aspects
-        /// </summary>
-        private void InitializeGameplay()
-        {
-            //Initialize Score Manager
-            //todo: temp
-            var count = 0;
-            var total = GameBase.SelectedBeatmap.Qua.HitObjects.Count;
-
-            foreach (var ho in GameBase.SelectedBeatmap.Qua.HitObjects)
-            {
-                if (ho.EndTime > ho.StartTime) count++;
-            }
-
-            ScoreManager.Initialize(total + count, GameBase.SelectedBeatmap.Qua.Judge); //TODO: ADD RELEASE COUNTS AS WELL
-
-            //Initialize the rest
-            Playfield.Initialize(this);
-            Timing.Initialize(this);
-            NoteRendering.Initialize(this);
-            GameplayUI.Initialize(this);
-            NoteManager.Initialize(this);
-
-            //Update logger. todo: remove
-            var loggertext = "Hitwindow: Judge: " + ScoreManager.JudgeDifficulty + "   Press: ";
-            foreach (var a in ScoreManager.HitWindowPress) loggertext += Math.Floor(a) + "ms, ";
-            loggertext += "   Release: ";
-            foreach (var a in ScoreManager.HitWindowRelease) loggertext += Math.Floor(a) + "ms, ";
-
-            Logger.Update("JudgeDifficulty", loggertext);
+            NoteManager.Draw();
         }
     }
 }
