@@ -27,8 +27,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     /// </summary>
     internal class NoteRendering : IHelper
     {
-        public PlayScreenState PlayScreen { get; set; }
-
         //HitObjects
         internal List<HitObject> HitObjectPool { get; set; }
         internal List<HitObject> HitObjectDead { get; set; }
@@ -47,24 +45,31 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         private float ScrollSpeed { get; set; }
 
         /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <param name="qua"></param>
+        public NoteRendering(Qua qua)
+        {
+            //todo: qua stuff here
+        }
+
+        /// <summary>
         /// Initalize any HitObject related content. 
         /// </summary>
         public void Initialize(IGameState state)
         {
-            PlayScreenState playScreen = (PlayScreenState)state;
-            PlayScreen = playScreen;
-
-            // Do config stuff
-            ScrollNegativeFactor = Config.Configuration.DownScroll ? -1 : 1;
-            ScrollSpeed = Configuration.ScrollSpeed / (20f * GameBase.GameClock); //todo: balance curve
+            var qua = GameBase.SelectedBeatmap.Qua; //todo: remove
 
             // Modifiers
             RemoveTimeAfterMiss = (uint)(1000 * GameBase.GameClock);
 
             //Initialize Track
-            int i;
             TrackPosition = (ulong)(-GameplayReferences.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
             CurrentSvIndex = 0;
+
+            // Do config stuff
+            ScrollNegativeFactor = Config.Configuration.DownScroll ? -1 : 1;
+            ScrollSpeed = Configuration.ScrollSpeed / (20f * GameBase.GameClock); //todo: balance curve
 
             //Initialize Boundary
             Boundary = new Boundary()
@@ -72,46 +77,44 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Size = new Vector2(GameplayReferences.PlayfieldSize, GameBase.Window.Z),
                 Alignment = Alignment.TopCenter
             };
-
             //Initialize HitObjects
             HitObjectPool = new List<HitObject>();
             HitObjectDead = new List<HitObject>();
             HitObjectHold = new List<HitObject>();
-            for (i = 0; i < GameBase.SelectedBeatmap.Qua.HitObjects.Count; i++)
+            for (var i = 0; i < qua.HitObjects.Count; i++)
             {
                 HitObject newObject = new HitObject()
                 {
                     ParentContainer = Boundary,
-                    StartTime = GameBase.SelectedBeatmap.Qua.HitObjects[i].StartTime,
-                    EndTime = GameBase.SelectedBeatmap.Qua.HitObjects[i].EndTime,
-                    IsLongNote = GameBase.SelectedBeatmap.Qua.HitObjects[i].EndTime > 0,
-                    KeyLane = GameBase.SelectedBeatmap.Qua.HitObjects[i].KeyLane,
+                    StartTime = qua.HitObjects[i].StartTime,
+                    EndTime = qua.HitObjects[i].EndTime,
+                    IsLongNote = qua.HitObjects[i].EndTime > 0,
+                    KeyLane = qua.HitObjects[i].KeyLane,
                     HitObjectSize = GameplayReferences.PlayfieldObjectSize,
-                    HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[GameBase.SelectedBeatmap.Qua.HitObjects[i].KeyLane-1], GameBase.SelectedBeatmap.Qua.HitObjects[i].StartTime * ScrollSpeed),
+                    HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[qua.HitObjects[i].KeyLane - 1], qua.HitObjects[i].StartTime * ScrollSpeed),
                 };
 
-                
                 //Calculate SV Index for hit object
                 newObject.SvIndex = GetSvIndex(newObject.StartTime);
 
                 //Calculate Y-Offset From Receptor
                 newObject.OffsetFromReceptor = SvOffsetFromTime(newObject.StartTime, newObject.SvIndex);
 
-                
+
                 //If the object is a long note
                 if (newObject.IsLongNote)
                 {
                     //Set LN Variables
                     newObject.LnOffsetFromReceptor = SvOffsetFromTime(newObject.EndTime, GetSvIndex(newObject.EndTime));
-                    newObject.InitialLongNoteSize = (ulong)((newObject.LnOffsetFromReceptor - newObject.OffsetFromReceptor)*ScrollSpeed);
+                    newObject.InitialLongNoteSize = (ulong)((newObject.LnOffsetFromReceptor - newObject.OffsetFromReceptor) * ScrollSpeed);
                     newObject.CurrentLongNoteSize = newObject.InitialLongNoteSize;
                 }
 
                 //Initialize Object and add it to HitObjectPool
-                if (i < HitObjectPoolSize) newObject.Initialize(Config.Configuration.DownScroll, GameBase.SelectedBeatmap.Qua.HitObjects[i].EndTime > 0);
+                if (i < HitObjectPoolSize) newObject.Initialize(Config.Configuration.DownScroll, qua.HitObjects[i].EndTime > 0);
                 HitObjectPool.Add(newObject);
-                
             }
+
             Logger.Log("Done loading HitObjects", Color.AntiqueWhite);
         }
 
