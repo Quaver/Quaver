@@ -408,7 +408,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Quaver-Online\Quaver.Online\Quaver.Online.csproj">
+      <Project>{e8afe82b-4dda-4b46-bee7-75748e957ef3}</Project>
+      <Name>Quaver.Online</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
