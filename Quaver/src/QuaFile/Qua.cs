@@ -179,6 +179,9 @@ namespace Quaver.QuaFile
 
             // Run a final validity check on the Qua object.
             CheckQuaValidity();
+
+            // Lastly, sort the objects and finalize the Qua object
+            FinalizeQua();
         }
 
         /// <summary>
@@ -475,6 +478,16 @@ namespace Quaver.QuaFile
             // Check for bad key counts. We only support 4 and 7k
             if (KeyCount != 4 && KeyCount != 7)
                 IsValidQua = false;
+        }
+
+        /// <summary>
+        ///     Does some final sorting of the 
+        /// </summary>
+        private void FinalizeQua()
+        {
+            HitObjects = HitObjects.OrderBy(x => x.StartTime).ToList();
+            TimingPoints = TimingPoints.OrderBy(x => x.StartTime).ToList();
+            SliderVelocities = SliderVelocities.OrderBy(x => x.StartTime).ToList();
         }
 
         /// <summary>
