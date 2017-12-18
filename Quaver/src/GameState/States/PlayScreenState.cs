@@ -44,9 +44,9 @@ namespace Quaver.GameState.States
         ///     Constructor, data passed in from loading state
         /// </summary>
         /// <param name="beatmapMd5"></param>
-        public PlayScreenState(string beatmapMd5)
+        public PlayScreenState(Qua qua, string beatmapMd5)
         {
-            NoteManager = new NoteManager(beatmapMd5);
+            NoteManager = new NoteManager(qua, beatmapMd5);
         }
 
         /// <summary>
