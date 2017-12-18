@@ -23,7 +23,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         //Gameplay Variables
         private double ActualSongTime { get; set; }
         internal double CurrentSongTime { get; set; }
-        internal List<TimingObject> SvQueue { get; set; }
+        internal List<TimingObject> SvQueue { get; set; } //todo: remove
         private List<TimingObject> TimingQueue { get; set; }
         internal float LastNoteEnd { get; set; }
         internal float PlayingEndOffset { get; set; }
@@ -42,7 +42,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// </summary>
         public void Initialize(IGameState state)
         {
-            PlayScreenState playScreen = (PlayScreenState)state;
             //TODO: Timing Initializer
             SongIsPlaying = false;
 
@@ -99,18 +98,20 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
 
             //Calculates SV for efficiency
-            playScreen.NoteRendering.SvCalc = new ulong[SvQueue.Count];
-            playScreen.NoteRendering.SvCalc[0] = 0;
+            GameplayReferences.SvCalc = new ulong[SvQueue.Count];
+            GameplayReferences.SvCalc[0] = 0;
             ulong svPosTime = 0;
             for (var i = 0; i < SvQueue.Count; i++)
             {
                 if (i + 1 < SvQueue.Count)
                 {
                     svPosTime += (ulong)((SvQueue[i + 1].TargetTime - SvQueue[i].TargetTime) * SvQueue[i].SvMultiplier);
-                    playScreen.NoteRendering.SvCalc[i + 1] = svPosTime;
+                    GameplayReferences.SvCalc[i + 1] = svPosTime;
                 }
                 else break;
             }
+
+            GameplayReferences.SvQueue = SvQueue; //todo: implement properly
 
             //Create Timing bars
             //_barQueue = new List<TimingObject>();
