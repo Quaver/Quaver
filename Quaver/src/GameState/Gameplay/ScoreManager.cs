@@ -21,7 +21,6 @@ namespace Quaver.GameState.Gameplay
     {
         //todo: document this crap
         //Hit Timing Variables
-        internal string[] JudgeNames { get; } = new string[6] { "MARV", "PERF", "GREAT", "GOOD", "OKAY", "MISS" };
         internal float JudgeDifficulty { get; set; } = 10;
 
         //Hit Tracking (Judging/Scoring)
@@ -185,7 +184,7 @@ namespace Quaver.GameState.Gameplay
         /// </summary>
         internal float RelativeAccGetScale()
         {
-            var index = GetRelativeAccIndex();
+            var index = GetAccGradeIndex();
 
             //Console.WriteLine(RelativeAcc*100);
             if (index > 0)
@@ -209,7 +208,7 @@ namespace Quaver.GameState.Gameplay
         ///     Get the index for the relative acc.
         /// </summary>
         /// <returns></returns>
-        internal int GetRelativeAccIndex()
+        internal int GetAccGradeIndex()
         {
             var index = -1;
             for (var i = 0; i < 8; i++)
