@@ -456,7 +456,8 @@ echo f |  xcopy /y "$(ProjectDir)$(outDir)x86\e_sqlite3.dll" "$(ProjectDir)$(out
 RD /S /Q "$(ProjectDir)$(outDir)x86\"
 RD /S /Q "$(ProjectDir)$(outDir)Lib\"
 RD /S /Q "$(ProjectDir)$(outDir)x64\"
-</PostBuildEvent>
+
+$(SolutionDir)Quaver-Online\Quaver.Online\Build\build_tool.exe $(SolutionDir)Quaver-Online\Quaver.Online\post_build.crproj</PostBuildEvent>
   </PropertyGroup>
   <Target Name="BeforeBuild">
   </Target>
