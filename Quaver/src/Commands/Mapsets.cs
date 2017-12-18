@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.Commands
 {
-    internal class MapsetsCommand : ICommand
+    internal class Mapsets : ICommand
     {
         public string Name { get; set; } = "MAPSETS";
 
@@ -22,11 +22,10 @@ namespace Quaver.Commands
             var commandString = new StringBuilder();
             commandString.AppendLine();
 
-            //  It's a dictonary where the keys are strings, so please.
             var i = 0;
             foreach (var mapset in GameBase.Beatmaps)
             {
-                //commandString.AppendLine($"[{i}] {new DirectoryInfo(mapset.Key).Name}  - {mapset.Value.Count} maps");
+                commandString.AppendLine($"[{i}] {mapset.Directory} - {mapset.Beatmaps.Count} maps");
                 i++;
             }
             

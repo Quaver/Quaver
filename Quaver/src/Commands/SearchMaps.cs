@@ -7,7 +7,7 @@ using Quaver.Beatmaps;
 
 namespace Quaver.Commands
 {
-    internal class BeatmapSearchCommand : ICommand
+    internal class SearchMaps : ICommand
     {
         public string Name { get; set; } = "SEARCH";
 

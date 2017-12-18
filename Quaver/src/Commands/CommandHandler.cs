@@ -14,11 +14,11 @@ namespace Quaver.Commands
         /// </summary>
         public static ICommand[] Commands { get; set; } =
         {
-            new HelpCommand(),
-            new MapsetsCommand(),
-            new BeatmapsCommand(),
-            new ClearCommand(),
-            new BeatmapSearchCommand()
+            new Help(),
+            new Mapsets(),
+            new DisplayMaps(),
+            new Clear(),
+            new SearchMaps()
         };
 
         /// <summary>

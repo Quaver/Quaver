@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.Commands
 {
-    internal class HelpCommand : ICommand
+    internal class Help : ICommand
     {
         public string Name { get; set; } = "HELP";
 
