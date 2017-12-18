@@ -433,24 +433,25 @@
   <PropertyGroup>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\bass.dll" "$(ProjectDir)$(outDir)bass.dll"
-echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\bass_fx.dll" "$(ProjectDir)$(outDir)bass_fx.dll"
-echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\discord-rpc.dll" "$(ProjectDir)$(outDir)discord-rpc.dll"
-echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libbass.dylibl" "$(ProjectDir)$(outDir)libbass.dylib"
-echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libbass.so" "$(ProjectDir)$(outDir)libbass.so"
-echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libbass_fx.dylib" "$(ProjectDir)$(outDir)libbass_fx.dylib"
-echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libbass_fx.so" "$(ProjectDir)$(outDir)libbass_fx.so"
-echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libopenal.1.dylib" "$(ProjectDir)$(outDir)libopenal.1.dylib"
-echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libopenal.so.1" "$(ProjectDir)$(outDir)libopenal.so.1"
-echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libSDL2-2.0.0.dylib" "$(ProjectDir)$(outDir)libSDL2-2.0.0.dylib"
-echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\libSDL2-2.0.so.0" "$(ProjectDir)$(outDir)libSDL2-2.0.so.0"
-echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\SDL2.dll" "$(ProjectDir)$(outDir)SDL2.dll"
-echo f | xcopy /y "$(ProjectDir)$(outDir)Lib\soft_oal.dll" "$(ProjectDir)$(outDir)soft_oal.dll"
-echo f | xcopy /y "$(ProjectDir)$(outDir)x86\e_sqlite3.dll" "$(ProjectDir)$(outDir)e_sqlite3.dll"
+    <PostBuildEvent>echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\bass.dll" "$(ProjectDir)$(outDir)bass.dll"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\bass_fx.dll" "$(ProjectDir)$(outDir)bass_fx.dll"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\discord-rpc.dll" "$(ProjectDir)$(outDir)discord-rpc.dll"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libbass.dylibl" "$(ProjectDir)$(outDir)libbass.dylib"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libbass.so" "$(ProjectDir)$(outDir)libbass.so"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libbass_fx.dylib" "$(ProjectDir)$(outDir)libbass_fx.dylib"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libbass_fx.so" "$(ProjectDir)$(outDir)libbass_fx.so"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libopenal.1.dylib" "$(ProjectDir)$(outDir)libopenal.1.dylib"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libopenal.so.1" "$(ProjectDir)$(outDir)libopenal.so.1"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libSDL2-2.0.0.dylib" "$(ProjectDir)$(outDir)libSDL2-2.0.0.dylib"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libSDL2-2.0.so.0" "$(ProjectDir)$(outDir)libSDL2-2.0.so.0"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\SDL2.dll" "$(ProjectDir)$(outDir)SDL2.dll"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\soft_oal.dll" "$(ProjectDir)$(outDir)soft_oal.dll"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)x86\e_sqlite3.dll" "$(ProjectDir)$(outDir)e_sqlite3.dll"
 
 RD /S /Q "$(ProjectDir)$(outDir)x86\"
 RD /S /Q "$(ProjectDir)$(outDir)Lib\"
-RD /S /Q "$(ProjectDir)$(outDir)x64\"</PostBuildEvent>
+RD /S /Q "$(ProjectDir)$(outDir)x64\"
+</PostBuildEvent>
   </PropertyGroup>
   <Target Name="BeforeBuild">
   </Target>

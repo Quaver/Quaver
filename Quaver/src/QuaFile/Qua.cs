@@ -75,11 +75,6 @@ namespace Quaver.QuaFile
         internal List<HitObject> HitObjects { get; set; } = new List<HitObject>();
 
         /// <summary>
-        ///     The amount of hitpoints drain on the map.
-        /// </summary>
-        internal float Health { get; set; }
-
-        /// <summary>
         ///     The key count for the map (Quaver only supports 4k and 7k)
         /// </summary>
         internal int KeyCount { get; set; }
@@ -181,6 +176,9 @@ namespace Quaver.QuaFile
                     ParseEntireQua(fileSection, line);
                 }
             }
+
+            // Run a final validity check on the Qua object.
+            CheckQuaValidity();
         }
 
         /// <summary>
@@ -348,10 +346,6 @@ namespace Quaver.QuaFile
 
             switch (key)
             {
-                case "HPDrain":
-                case "Health":
-                    Health = float.Parse(value);
-                    break;
                 case "AccuracyStrain":
                 case "Judge":
                     Judge = float.Parse(value);
