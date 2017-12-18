@@ -25,11 +25,6 @@ namespace Quaver.Input
         public State CurrentState { get; set; } = State.PlayScreen;
 
         /// <summary>
-        ///     The PlayScreenState this Input Manager is referencing
-        /// </summary>
-        //private NoteManager NoteManager { get; set; }
-
-        /// <summary>
         ///     Is the game currently paused?
         /// </summary>
         private bool IsPaused { get; set; }
@@ -71,18 +66,19 @@ namespace Quaver.Input
         public List<bool> LaneKeyDown { get; set; } = new List<bool>() { false, false, false, false, false, false, false };
 
         /// <summary>
+        ///     EventHandler for when ever a mania key gets pressed
+        /// </summary>
+        public event EventHandler<ManiaKey> ManiaKeyPress;
+
+        /// <summary>
+        ///     EventHandler for when ever a mania key gets released
+        /// </summary>
+        public event EventHandler<ManiaKey> ManiaKeyRelease;
+
+        /// <summary>
         ///     Keeps track of whether or not the song intro was skipped.
         /// </summary>
         private bool IntroSkipped { get; set; }
-
-        /// <summary>
-        ///     Ctor - 
-        /// </summary>
-        /// <param name="noteManager"></param>
-        internal GameplayInputManager(NoteManager noteManager)
-        {
-            //NoteManager = noteManager;
-        }
 
         /// <summary>
         ///     Checks if the given input was given
@@ -90,7 +86,7 @@ namespace Quaver.Input
         public void CheckInput(bool skippable, List<ReplayFrame> ReplayFrames)
         {
             // Pause game
-            HandlePause();
+            //HandlePause();
 
             // Don't handle the below if the game is paused.
             if (IsPaused)
@@ -100,7 +96,7 @@ namespace Quaver.Input
             HandleManiaKeyPresses();
 
             // Check Skip Song Input
-            SkipSong(skippable);
+            //SkipSong(skippable);
 
             // Add replay frames
             ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua);
@@ -133,18 +129,21 @@ namespace Quaver.Input
                 if (GameBase.KeyboardState.IsKeyDown(inputKeys[i]) && !LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = true;
+                    ManiaKeyPress?.Invoke(this, new ManiaKey(i));
                     //NoteManager.Input(i,true);
-                    GameBase.LoadedSkin.Hit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+                    //GameBase.LoadedSkin.Hit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
                 }
                 //Lane Key Release
                 else if (GameBase.KeyboardState.IsKeyUp(inputKeys[i]) && LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = false;
+                    ManiaKeyRelease?.Invoke(this, new ManiaKey(i));
                     //NoteManager.Input(i, false);
                 }
             }
         }
 
+        /*
         /// <summary>
         ///     Detects if the song intro is skippable and will skip if the player decides to.
         /// </summary>
@@ -201,6 +200,6 @@ namespace Quaver.Input
 
             SongManager.Resume();
             GameBase.ChangeDiscordPresenceGameplay(true);
-        }
+        }*/
     }
 }
