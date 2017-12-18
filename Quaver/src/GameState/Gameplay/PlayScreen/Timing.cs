@@ -25,7 +25,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal double CurrentSongTime { get; set; }
         internal List<TimingObject> SvQueue { get; set; } //todo: remove
         private List<TimingObject> TimingQueue { get; set; }
-        internal float LastNoteEnd { get; set; }
         internal float PlayingEndOffset { get; set; }
 
         //SV + Timing Point Variables
@@ -38,46 +37,25 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         private float _averageBpm { get; set; } = 100;
 
         /// <summary>
-        ///     Initialize Timing Contents.
+        ///     Constructor
         /// </summary>
-        public void Initialize(IGameState state)
+        /// <param name="qua"></param>
+        public Timing(Qua qua)
         {
-            //TODO: Timing Initializer
-            SongIsPlaying = false;
-
-            //Declare Other Values
-            CurrentSongTime = -PlayStartDelayed;
-            ActualSongTime = -PlayStartDelayed;
-            //_activeBarObjects = new GameObject[maxNoteCount];
-
-            //Get song end by last note
-            LastNoteEnd = 0;
-            for (var i = GameBase.SelectedBeatmap.Qua.HitObjects.Count -1; i > 0; i--)
-            {
-                var ho = GameBase.SelectedBeatmap.Qua.HitObjects[i];
-                if (ho.EndTime > LastNoteEnd)
-                    LastNoteEnd = ho.EndTime;
-                else if (ho.StartTime > LastNoteEnd)
-                    LastNoteEnd = ho.StartTime;
-            }
-
-            //Add offset after the last note
-            PlayingEndOffset = LastNoteEnd + 1500 * GameBase.GameClock;
-
             //Create Timing Points + SVs on a list
             SvQueue = new List<TimingObject>();
-            for (var i = 0; i < GameBase.SelectedBeatmap.Qua.SliderVelocities.Count; i++)
+            for (var i = 0; i < qua.SliderVelocities.Count; i++)
             {
-                CreateSV(GameBase.SelectedBeatmap.Qua.SliderVelocities[i].StartTime, GameBase.SelectedBeatmap.Qua.SliderVelocities[i].Multiplier);
+                CreateSV(qua.SliderVelocities[i].StartTime, qua.SliderVelocities[i].Multiplier);
             }
 
             TimingQueue = new List<TimingObject>();
-            for (var i = 0; i < GameBase.SelectedBeatmap.Qua.TimingPoints.Count; i++)
+            for (var i = 0; i < qua.TimingPoints.Count; i++)
             {
                 TimingObject newTO = new TimingObject
                 {
-                    TargetTime = GameBase.SelectedBeatmap.Qua.TimingPoints[i].StartTime,
-                    BPM = GameBase.SelectedBeatmap.Qua.TimingPoints[i].Bpm
+                    TargetTime = qua.TimingPoints[i].StartTime,
+                    BPM = qua.TimingPoints[i].Bpm
                 };
                 TimingQueue.Add(newTO);
             }
@@ -94,7 +72,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //If there's no SV, create a single SV Point
             else
             {
-                CreateSV(0,1f);
+                CreateSV(0, 1f);
             }
 
             //Calculates SV for efficiency
@@ -112,6 +90,23 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
 
             GameplayReferences.SvQueue = SvQueue; //todo: implement properly
+        }
+
+        /// <summary>
+        ///     Initialize Timing Contents.
+        /// </summary>
+        public void Initialize(IGameState state)
+        {
+            //TODO: Timing Initializer
+            SongIsPlaying = false;
+
+            //Declare Other Values
+            CurrentSongTime = -PlayStartDelayed;
+            ActualSongTime = -PlayStartDelayed;
+            //_activeBarObjects = new GameObject[maxNoteCount];
+
+            //Add offset after the last note
+            PlayingEndOffset = GameBase.SelectedBeatmap.SongLength + 1500 * GameBase.GameClock;
 
             //Create Timing bars
             //_barQueue = new List<TimingObject>();
@@ -157,7 +152,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     }
 
                     //If song time  > song end
-                    if (SongManager.Position >= LastNoteEnd)
+                    if (SongManager.Position >= GameBase.SelectedBeatmap.SongLength)
                         SongIsDone = true;
                     //Calculate song pos from audio
                     else
@@ -344,10 +339,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     }
                     else if (i + 1 == TimingQueue.Count)
                     {
-                        if (LastNoteEnd - TimingQueue[i].TargetTime > longestBpmTime)
+                        if (GameBase.SelectedBeatmap.SongLength - TimingQueue[i].TargetTime > longestBpmTime)
                         {
                             avergeBpmIndex = i;
-                            longestBpmTime = LastNoteEnd - TimingQueue[i].TargetTime;
+                            longestBpmTime = GameBase.SelectedBeatmap.SongLength - TimingQueue[i].TargetTime;
                         }
                     }
                 }

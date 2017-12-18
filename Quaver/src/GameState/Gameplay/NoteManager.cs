@@ -15,6 +15,7 @@ using Quaver.Graphics;
 using Quaver.Input;
 using Quaver.Replays;
 using Quaver.Config;
+using Quaver.QuaFile;
 
 namespace Quaver.GameState.Gameplay
 {
@@ -39,6 +40,11 @@ namespace Quaver.GameState.Gameplay
         private string BeatmapMd5 { get; set; }
 
         /// <summary>
+        ///     The current Qua file that's being red
+        /// </summary>
+        private Qua CurrentQua { get; set; }
+
+        /// <summary>
         ///     The input manager for this game state.
         /// </summary>
         private GameplayInputManager InputManager { get; set; }
@@ -59,43 +65,34 @@ namespace Quaver.GameState.Gameplay
         private Button TestButton { get; set; }
 
         /// <summary>
-        ///     Constructor, data passed in from loading state
+        ///     Constructor
         /// </summary>
-        /// <param name="beatmapMd5"></param>
-        public NoteManager(string beatmapMd5)
+        /// <param name="qua"></param>
+        public NoteManager(Qua qua, string beatmapMd5)
         {
+            // Pass Parameters
             BeatmapMd5 = beatmapMd5;
-        }
+            CurrentQua = qua;
 
-        public void Draw()
-        {
-            TestButton.Draw();
-            TextUnder.Draw();
-            Playfield.DrawUnder();
-            NoteRendering.Draw();
-            Playfield.DrawOver();
-            GameplayUI.Draw();
-            TestButton.Draw();
-        }
-
-        public void Initialize(IGameState playScreen)
-        {
             // Create Class Components
             GameplayUI = new GameplayUI();
-            NoteRendering = new NoteRendering();
+            NoteRendering = new NoteRendering(qua);
             Playfield = new Playfield();
-            Timing = new Timing();
+            Timing = new Timing(qua);
             ScoreManager = new ScoreManager();
             InputManager = new GameplayInputManager();
             ReplayFrames = new List<ReplayFrame>();
 
             // Initialize Gameplay
-            InitializeGameplay(playScreen);
+            InitializeGameplay(null, qua);
 
             // Hook InputManager
             InputManager.ManiaKeyPress += ManiaKeyDown;
             InputManager.ManiaKeyRelease += ManiaKeyUp;
+        }
 
+        public void Initialize(IGameState playScreen)
+        {
             //Todo: Remove. TEST.
             TestButton = new TextButton(new Vector2(200, 30), "BACK")
             {
@@ -160,14 +157,24 @@ namespace Quaver.GameState.Gameplay
             
 
             if (Timing.PlayingIsDone)
-                GameBase.GameStateManager.ChangeState(new ScoreScreenState(BeatmapMd5, ScoreManager, GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title, GameBase.SelectedBeatmap.DifficultyName, ReplayFrames));
-                
+                GameBase.GameStateManager.ChangeState(new ScoreScreenState(BeatmapMd5, ScoreManager, GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title, GameBase.SelectedBeatmap.DifficultyName, ReplayFrames));  
+        }
+
+        public void Draw()
+        {
+            TestButton.Draw();
+            TextUnder.Draw();
+            Playfield.DrawUnder();
+            NoteRendering.Draw();
+            Playfield.DrawOver();
+            GameplayUI.Draw();
+            TestButton.Draw();
         }
 
         /// <summary>
         ///     Solely responsible for intializing gameplay aspects
         /// </summary>
-        private void InitializeGameplay(IGameState state)
+        private void InitializeGameplay(IGameState state, Qua qua)
         {
             //Initialize Score Manager
             //todo: temp
