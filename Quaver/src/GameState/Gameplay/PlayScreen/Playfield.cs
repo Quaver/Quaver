@@ -18,13 +18,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 {
     internal class Playfield : IHelper
     {
-        private ScoreManager ScoreManager { get; set; }
-
-        /// <summary>
-        ///     The size of each HitObject.
-        /// </summary>
-        internal int PlayfieldObjectSize { get; set; }
-
         /// <summary>
         ///     The size of the playfield padding.
         /// </summary>
@@ -34,21 +27,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         ///     The padding of the receptors.
         /// </summary>
         private int ReceptorPadding { get; set; }
-
-        /// <summary>
-        ///     TODO: CHANGE. Use Config Variable instead.
-        /// </summary>
-        internal int ReceptorYOffset { get; set; }
-
-        /// <summary>
-        ///     TODO: The Playfield size. Load from skin -- About 400px wide.
-        /// </summary>
-        internal int PlayfieldSize { get; set; }
-
-        /// <summary>
-        ///     The X-position of each receptor.
-        /// </summary>
-        internal float[] ReceptorXPosition { get; set; } = new float[GameBase.SelectedBeatmap.Qua.KeyCount];
 
         /// <summary>
         ///     The receptor sprites.
@@ -117,32 +95,32 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         public void Initialize(IGameState state)
         {
             PlayScreenState playScreen = (PlayScreenState)state;
-            ScoreManager = playScreen.ScoreManager;
             //PlayScreen = playScreen;
 
             // Set default reference variables
+            GameplayReferences.ReceptorXPosition = new float[GameBase.SelectedBeatmap.Qua.KeyCount];
             AlphaHold = 0;
             CurrentOffsetObjectIndex = 0;
 
             // Calculate skin reference variables.
-            PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
+            GameplayReferences.PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
             PlayfieldPadding = (int) (GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowYRatio);
             ReceptorPadding = (int)(GameBase.LoadedSkin.NotePadding * GameBase.WindowYRatio);
-            PlayfieldSize = ((PlayfieldObjectSize + ReceptorPadding) * GameBase.SelectedBeatmap.Qua.KeyCount) + (PlayfieldPadding * 2) - ReceptorPadding;
+            GameplayReferences.PlayfieldSize = ((GameplayReferences.PlayfieldObjectSize + ReceptorPadding) * GameBase.SelectedBeatmap.Qua.KeyCount) + (PlayfieldPadding * 2) - ReceptorPadding;
 
             // Calculate Config stuff
-            ReceptorYOffset = Config.Configuration.DownScroll ? (int)GameBase.Window.Z + (int)GameBase.Window.Y - GameBase.LoadedSkin.ReceptorYOffset - PlayfieldObjectSize : GameBase.LoadedSkin.ReceptorYOffset;
+            GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll ? (int)GameBase.Window.Z + (int)GameBase.Window.Y - GameBase.LoadedSkin.ReceptorYOffset - GameplayReferences.PlayfieldObjectSize : GameBase.LoadedSkin.ReceptorYOffset;
 
             // Create playfield boundary
             BoundaryUnder = new Boundary()
             {
-                Size = new Vector2(PlayfieldSize, GameBase.Window.Z),
+                Size = new Vector2(GameplayReferences.PlayfieldSize, GameBase.Window.Z),
                 Alignment = Alignment.TopCenter
             };
 
             BoundaryOver = new Boundary()
             {
-                Size = new Vector2(PlayfieldSize, GameBase.Window.Z),
+                Size = new Vector2(GameplayReferences.PlayfieldSize, GameBase.Window.Z),
                 Alignment = Alignment.TopCenter
             };
 
@@ -170,15 +148,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             for (var i = 0; i < Receptors.Length; i++)
             {
                 // Set ReceptorXPos 
-                ReceptorXPosition[i] = ((PlayfieldObjectSize + ReceptorPadding) * i) + PlayfieldPadding;
+                GameplayReferences.ReceptorXPosition[i] = ((GameplayReferences.PlayfieldObjectSize + ReceptorPadding) * i) + PlayfieldPadding;
 
                 // Create new Receptor Sprite
                 Receptors[i] = new Sprite
                 {
 
-                    SizeX = PlayfieldObjectSize,
+                    SizeX = GameplayReferences.PlayfieldObjectSize,
                     
-                    Position = new Vector2(ReceptorXPosition[i], ReceptorYOffset),
+                    Position = new Vector2(GameplayReferences.ReceptorXPosition[i], GameplayReferences.ReceptorYOffset),
                     Alignment = Alignment.TopLeft,
                     Parent = BoundaryUnder
                 };
@@ -188,11 +166,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     case 4:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors[i];
-                        Receptors[i].SizeY = PlayfieldObjectSize * (float) GameBase.LoadedSkin.NoteReceptors[i].Height / GameBase.LoadedSkin.NoteReceptors[i].Width;
+                        Receptors[i].SizeY = GameplayReferences.PlayfieldObjectSize * (float) GameBase.LoadedSkin.NoteReceptors[i].Height / GameBase.LoadedSkin.NoteReceptors[i].Width;
                         break;
                     case 7:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors7K[i];
-                        Receptors[i].SizeY = PlayfieldObjectSize * (float) GameBase.LoadedSkin.NoteReceptors7K[i].Height / GameBase.LoadedSkin.NoteReceptors7K[i].Width;
+                        Receptors[i].SizeY = GameplayReferences.PlayfieldObjectSize * (float) GameBase.LoadedSkin.NoteReceptors7K[i].Height / GameBase.LoadedSkin.NoteReceptors7K[i].Width;
                         break;
                 }
             }
@@ -250,7 +228,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Parent = BoundaryOver
             };
 
-            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (ScoreManager.HitWindowPress[4] * 2 * GameBase.WindowYRatio);
+            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / GameplayReferences.HitWindowSize;
 
             OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)
@@ -355,7 +333,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         public  void UpdateJudge(int index, bool release = false, double? offset = null)
         {
             //TODO: add judge scale
-            ComboText.Text = ScoreManager.Combo + "x";
+            ComboText.Text = GameplayReferences.Combo + "x";
             ComboText.Alpha = 1;
             JudgeSprite.Alpha = 1;
             AlphaHold = 0;

@@ -222,7 +222,7 @@ namespace Quaver.GameState.States
             {
                 JudgeText[i] = new TextBoxSprite()
                 {
-                    Text = "[" + ScoreData.JudgeNames[i] + "]: Press|Release: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i],
+                    Text = "[" + GameplayReferences.JudgeNames[i] + "]: Press|Release: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i],
                     TextColor = CustomColors.JudgeColors[i],
                     Font = Fonts.Medium16,
                     PositionY = 200 * i/6,

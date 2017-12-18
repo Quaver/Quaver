@@ -110,6 +110,7 @@
     <Compile Include="src\Database\LocalScoreCache.cs" />
     <Compile Include="src\Discord\DiscordController.cs" />
     <Compile Include="src\Discord\DiscordRPC.cs" />
+    <Compile Include="src\GameState\Gameplay\GameplayReferences.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\GameplayUI.cs" />
     <Compile Include="src\GameState\Gameplay\NoteRecord.cs" />
     <Compile Include="src\GameState\IHelper.cs" />
