@@ -42,10 +42,7 @@ namespace Quaver.Graphics.Button
         /// </summary>
         public void OnClicked()
         {
-            if (Clickable)
-            {
-                Clicked?.Invoke(this, null);
-            }
+            if (Clickable) Clicked?.Invoke(this, null);
         }
 
         /// <summary>
