@@ -41,6 +41,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         //Events
         internal event EventHandler PressMissed;
+        internal event EventHandler ReleaseSkipped;
         internal event EventHandler ReleaseMissed;
 
         //CONFIG (temp)
@@ -149,7 +150,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     if (HitObjectPool[i].IsLongNote)
                     {
                         KillNote(i);
-                        PressMissed?.Invoke(this, null);
+                        ReleaseSkipped?.Invoke(this, null);
                     }
 
                     //If HitObject is a LongNote, Recycle it
