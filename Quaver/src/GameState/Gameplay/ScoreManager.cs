@@ -111,10 +111,6 @@ namespace Quaver.GameState.Gameplay
             //If note is not pressed properly:
             else
             {
-                //Play Combo-Break Sound
-                if (Combo >= 20)
-                    GameBase.LoadedSkin.ComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
-
                 //Update Multiplier
                 //MultiplierCount -= 10;
 
