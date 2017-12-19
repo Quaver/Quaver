@@ -28,6 +28,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         private Sprite[] AccuracyGraphBar { get; set; }
 
+        private int[] NoteSpread { get; set; }
+
+        private int JudgeCount { get; set; }
+
         private float[] AccuracyGraphTargetScale { get; set; }
 
         private TextBoxSprite ScoreText { get; set; }
@@ -50,19 +54,17 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         private Sprite GradeRight { get; set; }
 
-        private PlayScreenState PlayScreen { get; set; }
-
         private int CurrentGrade { get; set; }
 
         public void Initialize(IGameState state)
         {
-            PlayScreenState playScreen = (PlayScreenState)state;
             // Reference Variables
-            PlayScreen = playScreen;
             CurrentScore = 0;
             CurrentAccuracy = 0;
             CurrentGrade = 0;
             NoteHolding = false;
+            NoteSpread = new int[6];
+            JudgeCount = 0;
 
             // Create Boundary
             Boundary = new Boundary();
@@ -210,16 +212,25 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             };
         }
 
-        internal void UpdateAccuracyBox(int index)
+        /// <summary>
+        ///     Update the accuracy box text and graph. (The box on the top right of the playscreen.)
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="pressSpread"></param>
+        /// <param name="releaseSpread"></param>
+        /// <param name="judgeCount"></param>
+        internal void UpdateAccuracyBox(int index, int pressSpread, int releaseSpread, int judgeCount)
         {
-            /*
-            AccuracyCountText[index+1].Text = JudgePressSpread[index] + " | " + JudgeReleaseSpread[index];
+            // Update Variables and Text
+            JudgeCount = judgeCount;
+            NoteSpread[index] = pressSpread + releaseSpread;
+            AccuracyCountText[index+1].Text = pressSpread + " | " + releaseSpread;
 
             //Calculate graph bars
             for (var i = 0; i < 6; i++)
             {
-                AccuracyGraphTargetScale[i] = (float)Math.Sqrt((double)(JudgePressSpread[i] + JudgeReleaseSpread[i]) / JudgeCount);
-            }*/
+                AccuracyGraphTargetScale[i] = (float)Math.Sqrt((double)(NoteSpread[i]) / JudgeCount);
+            }
         }
 
         public void Update(double dt)
