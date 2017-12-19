@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Quaver.GameState.Gameplay
 {
+    /// <summary>
+    ///     This class holds any reference variables for the gameplay state.
+    ///     Most of these variables will be gone later when a better flow is implemented.
+    /// </summary>
     internal static class GameplayReferences
     {
         internal static string[] JudgeNames { get; } = new string[6] { "MARV", "PERF", "GREAT", "GOOD", "OKAY", "MISS" };
@@ -17,7 +21,7 @@ namespace Quaver.GameState.Gameplay
 
         //todo: temp variables for scoremanager
         internal static int Combo { get; set; }
-        internal static float HitWindowSize { get; set; } = 1; // = HitWindowSize[4] * 2 * GameBase.WindowYRatio;
+        //internal static float HitWindowSize { get; set; } = 1; // = HitWindowSize[4] * 2 * GameBase.WindowYRatio;
         internal static float ScoreTotal { get; set; } = 0;
         internal static int GradeIndex { get; set; } = 0; // PlayScreen.GetRelativeGradeIndex()
         internal static float Accuracy { get; set; } = 0;
