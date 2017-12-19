@@ -151,7 +151,7 @@
     <Compile Include="src\Modifiers\Mods\Strict.cs" />
     <Compile Include="src\Peppy\Osz.cs" />
     <Compile Include="src\GameState\Gameplay\GameplayManager.cs" />
-    <Compile Include="src\GameState\Gameplay\PlayScreen\NoteRendering.cs" />
+    <Compile Include="src\GameState\Gameplay\PlayScreen\NoteManager.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\Timing.cs" />
     <Compile Include="src\GameState\Gameplay\HitObject.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\Playfield.cs" />
