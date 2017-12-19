@@ -144,14 +144,11 @@ namespace Quaver.GameState.Gameplay
             // Check if the song is currently skippable.
             IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.CurrentSongTime >= 5000);
 
-            // Update the playfield
+            // Update Helper Classes
             Playfield.Update(dt);
-
-            // Update the Notes
             NoteManager.Update(dt);
-
-            // Update Data Interface
             AccuracyBoxUI.Update(dt);
+            PlayfieldUI.Update(dt);
 
             // Check the input for this particular game state.
             InputManager.CheckInput(IntroSkippable, ReplayFrames);
