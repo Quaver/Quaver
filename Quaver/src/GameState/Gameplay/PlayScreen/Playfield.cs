@@ -235,7 +235,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Parent = BoundaryOver
             };
 
-            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / GameplayReferences.HitWindowSize;
+            //todo: OffsetGaugeBoundary.SizeX with a new size. Right now the offset gauge is the same size as the hitwindow
+            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (GameplayReferences.PressWindowLatest * 2 * GameBase.WindowYRatio);
 
             OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)

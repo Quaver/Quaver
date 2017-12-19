@@ -227,13 +227,13 @@ namespace Quaver.GameState.Gameplay
             // Play Audio
             GameBase.LoadedSkin.Hit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
-            // Update Receptor in Playfield
-            Playfield.UpdateReceptor(keyLane.GetKey(), true);
-
             //Check for Note press/LN press
             //Reference Variables
             int noteIndex = -1;
             int i;
+
+            // Update Receptor in Playfield
+            Playfield.UpdateReceptor(keyLane.GetKey(), true);
 
             //Search for closest HitObject that is inside the HitTiming Window
             for (i = 0; i < NoteRendering.HitObjectPoolSize && i < NoteRendering.HitObjectPool.Count; i++)
@@ -281,6 +281,9 @@ namespace Quaver.GameState.Gameplay
             //Reference Variables
             int noteIndex = -1;
             int i;
+
+            // Update Receptor in Playfield
+            Playfield.UpdateReceptor(keyLane.GetKey(), false);
 
             //Search for closest HitObject that is inside the HitTiming Window
             for (i = 0; i < NoteRendering.HitObjectHold.Count; i++)
