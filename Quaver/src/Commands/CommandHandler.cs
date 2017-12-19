@@ -19,7 +19,8 @@ namespace Quaver.Commands
             new DisplayMaps(),
             new Clear(),
             new SearchMaps(),
-            new Login()
+            new Login(),
+            new LoginDev()
         };
 
         /// <summary>
