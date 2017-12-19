@@ -30,8 +30,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         private int[] NoteSpread { get; set; }
 
-        private int JudgeCount { get; set; }
-
         private float[] AccuracyGraphTargetScale { get; set; }
 
         private TextBoxSprite ScoreText { get; set; }
@@ -64,7 +62,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             CurrentGrade = 0;
             NoteHolding = false;
             NoteSpread = new int[6];
-            JudgeCount = 0;
 
             // Create Boundary
             Boundary = new Boundary();
@@ -222,14 +219,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal void UpdateAccuracyBox(int index, int pressSpread, int releaseSpread, int judgeCount)
         {
             // Update Variables and Text
-            JudgeCount = judgeCount;
             NoteSpread[index] = pressSpread + releaseSpread;
             AccuracyCountText[index+1].Text = pressSpread + " | " + releaseSpread;
 
             //Calculate graph bars
             for (var i = 0; i < 6; i++)
             {
-                AccuracyGraphTargetScale[i] = (float)Math.Sqrt((double)(NoteSpread[i]) / JudgeCount);
+                AccuracyGraphTargetScale[i] = (float)Math.Sqrt((double)(NoteSpread[i]) / judgeCount);
             }
         }
 
