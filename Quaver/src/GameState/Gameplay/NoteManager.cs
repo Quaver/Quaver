@@ -222,6 +222,11 @@ namespace Quaver.GameState.Gameplay
             GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 
+        /// <summary>
+        ///     Everytime a mania key gets pressed, this method will look for the closest note and judge it
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="keyLane"></param>
         public void ManiaKeyDown(object sender, ManiaKey keyLane)
         {
             // Play Audio
@@ -276,6 +281,11 @@ namespace Quaver.GameState.Gameplay
             }
         }
 
+        /// <summary>
+        ///     Everytime a mania key gets released, this method will look for the closest note and judge it
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="keyLane"></param>
         public void ManiaKeyUp(object sender, ManiaKey keyLane)
         {
             //Reference Variables
