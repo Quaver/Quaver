@@ -89,6 +89,10 @@ namespace Quaver.GameState.Gameplay
             // Hook InputManager
             InputManager.ManiaKeyPress += ManiaKeyDown;
             InputManager.ManiaKeyRelease += ManiaKeyUp;
+
+            // Hook Missed Note Events
+            NoteRendering.PressMissed += PressMissed;
+            NoteRendering.ReleaseMissed += ReleaseMissed;
         }
 
         public void Initialize(IGameState playScreen)
@@ -338,6 +342,20 @@ namespace Quaver.GameState.Gameplay
                     NoteRendering.KillHold(noteIndex);
                 }
             }
+        }
+
+        public void PressMissed(object sender, EventArgs e)
+        {
+            ScoreManager.Count(5, false, 0, GameplayReferences.CurrentSongTime/ SongManager.Length);
+            GameplayUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount);
+            Playfield.UpdateJudge(5);
+        }
+
+        public void ReleaseMissed(object sender, EventArgs e)
+        {
+            ScoreManager.Count(4,true);
+            GameplayUI.UpdateAccuracyBox(4, ScoreManager.JudgePressSpread[4], ScoreManager.JudgeReleaseSpread[4], ScoreManager.JudgeCount);
+            Playfield.UpdateJudge(4);
         }
     }
 }

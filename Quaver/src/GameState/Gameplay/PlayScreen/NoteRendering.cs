@@ -36,9 +36,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal Boundary Boundary;
 
         //Track
-        //internal ulong[] SvCalc { get; set; } //Stores SV position data for efficiency
         internal int CurrentSvIndex { get; set; }
         internal ulong TrackPosition { get; set; }
+
+        //Events
+        internal event EventHandler PressMissed;
+        internal event EventHandler ReleaseMissed;
 
         //CONFIG (temp)
         private float ScrollNegativeFactor { get; set; }
@@ -71,13 +74,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             ScrollNegativeFactor = Config.Configuration.DownScroll ? -1 : 1;
             ScrollSpeed = Configuration.ScrollSpeed / (20f * GameBase.GameClock); //todo: balance curve
 
-            //Initialize Boundary
+            // Initialize Boundary
             Boundary = new Boundary()
             {
                 Size = new Vector2(GameplayReferences.PlayfieldSize, GameBase.Window.Z),
                 Alignment = Alignment.TopCenter
             };
-            //Initialize HitObjects
+            // Initialize HitObjects
             HitObjectPool = new List<HitObject>();
             HitObjectDead = new List<HitObject>();
             HitObjectHold = new List<HitObject>();
@@ -135,16 +138,18 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 //Note is missed
                 if (GameplayReferences.CurrentSongTime > HitObjectPool[i].StartTime + GameplayReferences.PressWindowLatest)
                 {
-                    //Track note miss with ScoreManager
-                    //todo: ScoreManager.Count(5, false, 0, CurrentSongTime/ SongManager.Length);
-                    //todo: GameplayUI.UpdateAccuracyBox(5);
-                    //todo: Playfield.UpdateJudge(5);
+                    //Invoke Miss Event
+                    PressMissed?.Invoke(this, null);
 
-                    //If HitObject is an LN, kill it
+                    //Play Combo-Break Sound
+                    if (GameplayReferences.Combo >= 20)
+                        GameBase.LoadedSkin.ComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+
+                    //If HitObject is an LN, kill it and count it as another miss
                     if (HitObjectPool[i].IsLongNote)
                     {
                         KillNote(i);
-                        //todo: ScoreManager.Count(5, true);
+                        PressMissed?.Invoke(this, null);
                     }
 
                     //If HitObject is a LongNote, Recycle it
@@ -169,10 +174,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 //LN is missed
                 if (GameplayReferences.CurrentSongTime > HitObjectHold[i].EndTime + GameplayReferences.ReleaseWindowLatest)
                 {
-                    //Track LN late release with ScoreManager
-                    //todo: ScoreManager.Count(4,true);
-                    //todo: GameplayUI.UpdateAccuracyBox(4);
-                    //todo: Playfield.UpdateJudge(4);
+                    //Invoke Miss Event
+                    ReleaseMissed?.Invoke(this, null);
+
+                    //Play Combo-Break Sound
+                    if (GameplayReferences.Combo >= 20)
+                        GameBase.LoadedSkin.ComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
                     //Remove from LN Queue
                     HitObjectHold[i].Destroy();
