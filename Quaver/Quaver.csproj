@@ -101,6 +101,7 @@
     <Compile Include="src\Audio\SongManager.cs" />
     <Compile Include="src\Beatmaps\Mapset.cs" />
     <Compile Include="src\Commands\CommandHandler.cs" />
+    <Compile Include="src\Commands\LoginDev.cs" />
     <Compile Include="src\Commands\Login.cs" />
     <Compile Include="src\Commands\SearchMaps.cs" />
     <Compile Include="src\Commands\Clear.cs" />
