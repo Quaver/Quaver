@@ -26,7 +26,7 @@ namespace Quaver.GameState.Gameplay
     {
         public GameplayUI GameplayUI { get; set; }
 
-        public NoteRendering NoteRendering { get; set; }
+        public NoteManager NoteManager { get; set; }
 
         public Playfield Playfield { get; set; }
 
@@ -76,7 +76,7 @@ namespace Quaver.GameState.Gameplay
 
             // Create Class Components
             GameplayUI = new GameplayUI();
-            NoteRendering = new NoteRendering(qua);
+            NoteManager = new NoteManager(qua);
             Playfield = new Playfield();
             Timing = new Timing(qua);
             ScoreManager = new ScoreManager();
@@ -91,9 +91,9 @@ namespace Quaver.GameState.Gameplay
             InputManager.ManiaKeyRelease += ManiaKeyUp;
 
             // Hook Missed Note Events
-            NoteRendering.PressMissed += PressMissed;
-            NoteRendering.ReleaseSkipped += ReleaseSkipped;
-            NoteRendering.ReleaseMissed += ReleaseMissed;
+            NoteManager.PressMissed += PressMissed;
+            NoteManager.ReleaseSkipped += ReleaseSkipped;
+            NoteManager.ReleaseMissed += ReleaseMissed;
         }
 
         public void Initialize(IGameState playScreen)
@@ -117,11 +117,11 @@ namespace Quaver.GameState.Gameplay
 
         public void UnloadContent()
         {
-            //NoteRendering.UnloadContent();
+            //NoteManager.UnloadContent();
             Timing.UnloadContent();
             Playfield.UnloadContent();
             GameplayUI.UnloadContent();
-            NoteRendering.UnloadContent();
+            NoteManager.UnloadContent();
 
             //todo: remove this later
             TestButton.Clicked -= BackButtonClick;
@@ -144,7 +144,7 @@ namespace Quaver.GameState.Gameplay
             Playfield.Update(dt);
 
             // Update the Notes
-            NoteRendering.Update(dt);
+            NoteManager.Update(dt);
 
             // Update Data Interface
             GameplayUI.Update(dt);
@@ -154,7 +154,7 @@ namespace Quaver.GameState.Gameplay
 
             // Update Loggers. todo: remove
             Logger.Update("KeyCount", $"Key Count: {GameBase.SelectedBeatmap.Qua.KeyCount}");
-            Logger.Update("SongPos", "Current Track Position: " + NoteRendering.TrackPosition);
+            Logger.Update("SongPos", "Current Track Position: " + NoteManager.TrackPosition);
             Logger.Update("Skippable", $"Intro Skippable: {IntroSkippable}");
 
             //Todo: remove. TEST.
@@ -170,7 +170,7 @@ namespace Quaver.GameState.Gameplay
             TestButton.Draw();
             TextUnder.Draw();
             Playfield.DrawUnder();
-            NoteRendering.Draw();
+            NoteManager.Draw();
             Playfield.DrawOver();
             GameplayUI.Draw();
             TestButton.Draw();
@@ -198,7 +198,7 @@ namespace Quaver.GameState.Gameplay
             //Initialize class components
             Playfield.Initialize(state);
             Timing.Initialize(state);
-            NoteRendering.Initialize(state);
+            NoteManager.Initialize(state);
             GameplayUI.Initialize(state);
 
             //todo: remove this. used for logging.
@@ -246,9 +246,9 @@ namespace Quaver.GameState.Gameplay
             Playfield.UpdateReceptor(keyLane.GetKey(), true);
 
             //Search for closest HitObject that is inside the HitTiming Window
-            for (i = 0; i < NoteRendering.HitObjectPoolSize && i < NoteRendering.HitObjectPool.Count; i++)
+            for (i = 0; i < NoteManager.HitObjectPoolSize && i < NoteManager.HitObjectPool.Count; i++)
             {
-                if (NoteRendering.HitObjectPool[i].KeyLane == keyLane.GetKey() + 1 && NoteRendering.HitObjectPool[i].StartTime - Timing.CurrentSongTime > -ScoreManager.HitWindowPress[4])
+                if (NoteManager.HitObjectPool[i].KeyLane == keyLane.GetKey() + 1 && NoteManager.HitObjectPool[i].StartTime - Timing.CurrentSongTime > -ScoreManager.HitWindowPress[4])
                 {
                     noteIndex = i;
                     break;
@@ -261,23 +261,23 @@ namespace Quaver.GameState.Gameplay
                 //Check which HitWindow this object's timing is in
                 for (i = 0; i < 5; i++)
                 {
-                    if (Math.Abs(NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime) <= ScoreManager.HitWindowPress[i])
+                    if (Math.Abs(NoteManager.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime) <= ScoreManager.HitWindowPress[i])
                     {
                         //Score manager stuff
-                        ScoreManager.Count(i, false, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime, Timing.CurrentSongTime / SongManager.Length);
+                        ScoreManager.Count(i, false, NoteManager.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime, Timing.CurrentSongTime / SongManager.Length);
                         GameplayUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount);
-                        Playfield.UpdateJudge(i, false, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime);
+                        Playfield.UpdateJudge(i, false, NoteManager.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime);
 
                         // If the player is spamming
                         if (i >= 3)
-                            NoteRendering.KillNote(noteIndex);
+                            NoteManager.KillNote(noteIndex);
                         else
                         {
                             //If the object is an LN, hold it at the receptors
-                            if (NoteRendering.HitObjectPool[noteIndex].IsLongNote) NoteRendering.HoldNote(noteIndex);
+                            if (NoteManager.HitObjectPool[noteIndex].IsLongNote) NoteManager.HoldNote(noteIndex);
 
                             //If the object is not an LN, recycle it.
-                            else NoteRendering.RecycleNote(noteIndex);
+                            else NoteManager.RecycleNote(noteIndex);
                         }
 
                         break;
@@ -301,9 +301,9 @@ namespace Quaver.GameState.Gameplay
             Playfield.UpdateReceptor(keyLane.GetKey(), false);
 
             //Search for closest HitObject that is inside the HitTiming Window
-            for (i = 0; i < NoteRendering.HitObjectHold.Count; i++)
+            for (i = 0; i < NoteManager.HitObjectHold.Count; i++)
             {
-                if (NoteRendering.HitObjectHold[i].KeyLane == keyLane.GetKey() + 1)
+                if (NoteManager.HitObjectHold[i].KeyLane == keyLane.GetKey() + 1)
                 {
                     noteIndex = i;
                     break;
@@ -319,7 +319,7 @@ namespace Quaver.GameState.Gameplay
                 int releaseTiming = -1;
                 for (i = 0; i < 4; i++)
                 {
-                    if (Math.Abs(NoteRendering.HitObjectHold[noteIndex].EndTime - Timing.CurrentSongTime) <= ScoreManager.HitWindowRelease[i])
+                    if (Math.Abs(NoteManager.HitObjectHold[noteIndex].EndTime - Timing.CurrentSongTime) <= ScoreManager.HitWindowRelease[i])
                     {
                         releaseTiming = i;
                         break;
@@ -332,7 +332,7 @@ namespace Quaver.GameState.Gameplay
                     ScoreManager.Count(i, true);
                     GameplayUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount);
                     Playfield.UpdateJudge(i, true);
-                    NoteRendering.KillHold(noteIndex, true);
+                    NoteManager.KillHold(noteIndex, true);
                 }
                 //If LN has been pressed early
                 else
@@ -340,7 +340,7 @@ namespace Quaver.GameState.Gameplay
                     ScoreManager.Count(5, true);
                     GameplayUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount);
                     Playfield.UpdateJudge(5, true);
-                    NoteRendering.KillHold(noteIndex);
+                    NoteManager.KillHold(noteIndex);
                 }
             }
         }
