@@ -38,7 +38,7 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     Note Manager
         /// </summary>
-        private NoteManager NoteManager { get; set; }
+        private GameplayManager GameplayManager { get; set; }
 
         /// <summary>
         ///     Constructor, data passed in from loading state
@@ -46,7 +46,7 @@ namespace Quaver.GameState.States
         /// <param name="beatmapMd5"></param>
         public PlayScreenState(Qua qua, string beatmapMd5)
         {
-            NoteManager = new NoteManager(qua, beatmapMd5);
+            GameplayManager = new GameplayManager(qua, beatmapMd5);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Quaver.GameState.States
         public void Initialize()
         {
             // Initialize Note Manager
-            NoteManager.Initialize(this);
+            GameplayManager.Initialize(this);
 
             // Update window title
             GameBase.GameWindow.Title = $"Quaver - {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]";
@@ -82,7 +82,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Update(double dt)
         {
-            NoteManager.Update(dt);
+            GameplayManager.Update(dt);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Draw()
         {
-            NoteManager.Draw();
+            GameplayManager.Draw();
         }
     }
 }

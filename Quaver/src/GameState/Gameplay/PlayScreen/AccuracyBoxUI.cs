@@ -15,7 +15,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     /// <summary>
     ///     This class Draws anything that will be shown to the player which is related to data
     /// </summary>
-    internal class GameplayUI : IHelper
+    internal class AccuracyBoxUI : IHelper
     {
         //todo: document this crap later
         private Sprite AccuracyBox { get; set; }
