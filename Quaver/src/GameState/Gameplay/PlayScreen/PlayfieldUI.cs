@@ -30,21 +30,64 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// </summary>
         private float JudgeHitOffset { get; set; }
 
+        /// <summary>
+        ///     The judge image that has priority other judge imaages that is displayed. Worse judgement has more priority (MISS > BAD > OKAY... ect)
+        /// </summary>
         private int PriorityJudgeImage { get; set; } = 0;
+
+        /// <summary>
+        ///     How long the prioritized judge image will be displayed for
+        /// </summary>
         private double PriorityJudgeLength { get; set; }
 
+        /// <summary>
+        ///     Reference to the size each judge image is
+        /// </summary>
         private Vector2[] JudgeSizes { get; set; }
 
+        /// <summary>
+        ///     The Parent of every Offset Gauge component
+        /// </summary>
         private Boundary OffsetGaugeBoundary { get; set; }
+
+        /// <summary>
+        ///     The white bar in the middle of the offset gauage
+        /// </summary>
         private Sprite OffsetGaugeMiddle { get; set; }
+
+        /// <summary>
+        ///     The bars which indicate how off players are from the receptor
+        /// </summary>
         private const int OffsetIndicatorSize = 32;
+
+        /// <summary>
+        ///     The size of the Offset Gauage
+        /// </summary>
         private float OffsetGaugeSize { get; set; }
 
+        /// <summary>
+        ///     Index of the current Offset Indicator. It will cycle through whatever the indicator size is to pool the indicator sprites
+        /// </summary>
         private int CurrentOffsetObjectIndex { get; set; }
+
+        /// <summary>
+        ///     The sprite for every Offset Indicator bar
+        /// </summary>
         private Sprite[] OffsetIndicatorsSprites { get; set; }
 
+        /// <summary>
+        ///     The text displaying combo
+        /// </summary>
         private TextBoxSprite ComboText { get; set; }
-        private double AlphaHold { get; set; }
+
+        /// <summary>
+        ///     The alpha of the entire UI set. Will turn invisible if the set is not being updated.
+        /// </summary>
+        private double SpriteAlphaHold { get; set; }
+
+        /// <summary>
+        ///     The parent of every Playfield UI Component
+        /// </summary>
         public Boundary Boundary { get; private set; }
 
         public void Draw()
@@ -55,7 +98,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         public void Initialize(IGameState state)
         {
             // Reference Variables
-            AlphaHold = 0;
+            SpriteAlphaHold = 0;
             CurrentOffsetObjectIndex = 0;
 
             // Create Judge Sprite/References
@@ -147,13 +190,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         public void UnloadContent()
         {
-            throw new NotImplementedException();
+            Boundary.Destroy();
+            //throw new NotImplementedException();
         }
 
         public void Update(double dt)
         {
             // Update the delta time tweening variable for animation.
-            AlphaHold += dt;
+            SpriteAlphaHold += dt;
             PriorityJudgeLength -= dt;
             if (PriorityJudgeLength <= 0)
             {
@@ -170,7 +214,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             // Update Judge Alpha
             JudgeSprite.PositionY = Util.Tween(0, JudgeSprite.PositionY, tween / 2);
-            if (AlphaHold > 500 && PriorityJudgeLength <= 0)
+            if (SpriteAlphaHold > 500 && PriorityJudgeLength <= 0)
             {
                 JudgeSprite.Alpha = Util.Tween(0, JudgeSprite.Alpha, tween / 10);
                 ComboText.Alpha = Util.Tween(0, ComboText.Alpha, tween / 10);
@@ -186,7 +230,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             ComboText.Text = GameplayReferences.Combo + "x";
             ComboText.Alpha = 1;
             JudgeSprite.Alpha = 1;
-            AlphaHold = 0;
+            SpriteAlphaHold = 0;
 
             if (index >= PriorityJudgeImage || PriorityJudgeLength <= 0)
             {
