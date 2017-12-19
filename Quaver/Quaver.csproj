@@ -150,7 +150,7 @@
     <Compile Include="src\Modifiers\Mods\Speed06X.cs" />
     <Compile Include="src\Modifiers\Mods\Strict.cs" />
     <Compile Include="src\Peppy\Osz.cs" />
-    <Compile Include="src\GameState\Gameplay\NoteManager.cs" />
+    <Compile Include="src\GameState\Gameplay\GameplayManager.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\NoteRendering.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\Timing.cs" />
     <Compile Include="src\GameState\Gameplay\HitObject.cs" />

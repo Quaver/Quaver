@@ -22,7 +22,7 @@ namespace Quaver.GameState.Gameplay
     /// <summary>
     /// This class handles the interaction between note and input.
     /// </summary>
-    class NoteManager : IHelper
+    class GameplayManager : IHelper
     {
         public GameplayUI GameplayUI { get; set; }
 
@@ -68,7 +68,7 @@ namespace Quaver.GameState.Gameplay
         ///     Constructor
         /// </summary>
         /// <param name="qua"></param>
-        public NoteManager(Qua qua, string beatmapMd5)
+        public GameplayManager(Qua qua, string beatmapMd5)
         {
             // Pass Parameters
             BeatmapMd5 = beatmapMd5;
