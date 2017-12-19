@@ -260,7 +260,7 @@ namespace Quaver.GameState.Gameplay
                     {
                         //Score manager stuff
                         ScoreManager.Count(i, false, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime, Timing.CurrentSongTime / SongManager.Length);
-                        GameplayUI.UpdateAccuracyBox(i);
+                        GameplayUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount);
                         Playfield.UpdateJudge(i, false, NoteRendering.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime);
 
                         // If the player is spamming
@@ -325,7 +325,7 @@ namespace Quaver.GameState.Gameplay
                 if (releaseTiming > -1)
                 {
                     ScoreManager.Count(i, true);
-                    GameplayUI.UpdateAccuracyBox(i);
+                    GameplayUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount);
                     Playfield.UpdateJudge(i, true);
                     NoteRendering.KillHold(noteIndex, true);
                 }
@@ -333,7 +333,7 @@ namespace Quaver.GameState.Gameplay
                 else
                 {
                     ScoreManager.Count(5, true);
-                    GameplayUI.UpdateAccuracyBox(5);
+                    GameplayUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount);
                     Playfield.UpdateJudge(5, true);
                     NoteRendering.KillHold(noteIndex);
                 }
