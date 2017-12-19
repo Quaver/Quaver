@@ -25,7 +25,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     /// <summary>
     /// This class manages anything relating to rendering the HitObjects. Note: This class does not do any timing/input calculation besides note removal after missing and late release.
     /// </summary>
-    internal class NoteRendering : IHelper
+    internal class NoteManager : IHelper
     {
         //HitObjects
         internal List<HitObject> HitObjectPool { get; set; }
@@ -52,7 +52,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         ///     Constructor
         /// </summary>
         /// <param name="qua"></param>
-        public NoteRendering(Qua qua)
+        public NoteManager(Qua qua)
         {
             //todo: qua stuff here
         }

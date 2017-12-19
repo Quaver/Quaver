@@ -113,8 +113,12 @@
     <Compile Include="src\Discord\DiscordController.cs" />
     <Compile Include="src\Discord\DiscordRPC.cs" />
     <Compile Include="src\GameState\Gameplay\GameplayReferences.cs" />
-    <Compile Include="src\GameState\Gameplay\PlayScreen\GameplayUI.cs" />
+    <Compile Include="src\GameState\Gameplay\PlayScreen\AccuracyBoxUI.cs" />
     <Compile Include="src\GameState\Gameplay\NoteRecord.cs" />
+    <Compile Include="src\GameState\Gameplay\PlayScreen\Particles.cs" />
+    <Compile Include="src\GameState\Gameplay\PlayScreen\PlayfieldUI.cs" />
+    <Compile Include="src\GameState\Gameplay\PlayScreen\SongProgressUI.cs" />
+    <Compile Include="src\GameState\Gameplay\PlayScreen\ScoreProgressUI.cs" />
     <Compile Include="src\GameState\IHelper.cs" />
     <Compile Include="src\GameState\SongSelect\BeatmapOrganizerUI.cs" />
     <Compile Include="src\GameState\States\ScoreScreenState.cs" />
@@ -150,8 +154,8 @@
     <Compile Include="src\Modifiers\Mods\Speed06X.cs" />
     <Compile Include="src\Modifiers\Mods\Strict.cs" />
     <Compile Include="src\Peppy\Osz.cs" />
-    <Compile Include="src\GameState\Gameplay\NoteManager.cs" />
-    <Compile Include="src\GameState\Gameplay\PlayScreen\NoteRendering.cs" />
+    <Compile Include="src\GameState\Gameplay\GameplayManager.cs" />
+    <Compile Include="src\GameState\Gameplay\PlayScreen\NoteManager.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\Timing.cs" />
     <Compile Include="src\GameState\Gameplay\HitObject.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\Playfield.cs" />
