@@ -92,6 +92,7 @@ namespace Quaver.GameState.Gameplay
 
             // Hook Missed Note Events
             NoteRendering.PressMissed += PressMissed;
+            NoteRendering.ReleaseSkipped += ReleaseSkipped;
             NoteRendering.ReleaseMissed += ReleaseMissed;
         }
 
@@ -347,6 +348,13 @@ namespace Quaver.GameState.Gameplay
         public void PressMissed(object sender, EventArgs e)
         {
             ScoreManager.Count(5, false, 0, GameplayReferences.CurrentSongTime/ SongManager.Length);
+            GameplayUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount);
+            Playfield.UpdateJudge(5);
+        }
+
+        public void ReleaseSkipped(object sender, EventArgs e)
+        {
+            ScoreManager.Count(5, true);
             GameplayUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount);
             Playfield.UpdateJudge(5);
         }
