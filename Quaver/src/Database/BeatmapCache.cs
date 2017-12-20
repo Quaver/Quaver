@@ -122,7 +122,7 @@ namespace Quaver.Database
                 if (beatmapsInDb.Any(beatmap => Configuration.SongDirectory.Replace("\\", "/") + "/" + beatmap.Directory + "/" + beatmap.Path.Replace("\\", "/") == file.Replace("\\", "/"))) continue;
 
                 // Try to parse the file and check if it is a legitimate .qua file.
-                var qua = await Qua.Create(file);
+                var qua = Qua.Parse(file);
                 if (!qua.IsValidQua)
                 {
                     Logger.Log($"Error: Qua File {file} could not be parsed.", Color.Red);
@@ -174,7 +174,7 @@ namespace Quaver.Database
                     continue;
 
                 // Parse the map again and add it to the list of maps to be added to the database.
-                var processedMap = new Beatmap().ConvertQuaToBeatmap(new Qua(map.Path), map.Path);
+                var processedMap = new Beatmap().ConvertQuaToBeatmap(Qua.Parse(map.Path), map.Path);
                 if (!processedMap.IsValidBeatmap)
                     return;
 

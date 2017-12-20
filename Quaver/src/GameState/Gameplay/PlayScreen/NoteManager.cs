@@ -93,9 +93,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     StartTime = qua.HitObjects[i].StartTime,
                     EndTime = qua.HitObjects[i].EndTime,
                     IsLongNote = qua.HitObjects[i].EndTime > 0,
-                    KeyLane = qua.HitObjects[i].KeyLane,
+                    KeyLane = qua.HitObjects[i].Lane,
                     HitObjectSize = GameplayReferences.PlayfieldObjectSize,
-                    HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[qua.HitObjects[i].KeyLane - 1], qua.HitObjects[i].StartTime * ScrollSpeed),
+                    HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1], qua.HitObjects[i].StartTime * ScrollSpeed),
                 };
 
                 //Calculate SV Index for hit object

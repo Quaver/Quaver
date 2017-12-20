@@ -112,6 +112,7 @@
     <Compile Include="src\Database\LocalScoreCache.cs" />
     <Compile Include="src\Discord\DiscordController.cs" />
     <Compile Include="src\Discord\DiscordRPC.cs" />
+    <Compile Include="src\Enums\GameModes.cs" />
     <Compile Include="src\GameState\Gameplay\GameplayReferences.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\AccuracyBoxUI.cs" />
     <Compile Include="src\GameState\Gameplay\NoteRecord.cs" />
@@ -195,10 +196,7 @@
     <Compile Include="src\Peppy\PeppyBeatmap.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\QuaFile\HitObject.cs" />
     <Compile Include="src\QuaFile\Qua.cs" />
-    <Compile Include="src\QuaFile\SliderVelocity.cs" />
-    <Compile Include="src\QuaFile\TimingPoint.cs" />
     <Compile Include="src\Replays\KeyPressState.cs" />
     <Compile Include="src\Replays\Replay.cs" />
     <Compile Include="src\Replays\ReplayFrame.cs" />

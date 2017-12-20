@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
+using Quaver.Enums;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 
@@ -145,14 +145,14 @@ namespace Quaver.GameState.Gameplay
                 };
 
                 // Choose the correct image based on the specific key lane.
-                switch (GameBase.SelectedBeatmap.Qua.KeyCount)
+                switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
-                    case 4:
+                    case GameModes.Keys4:
                         for (var i = 0; i < GameBase.LoadedSkin.NoteHoldBodies.Length; i++)
                             if (KeyLane - 1 == i)
                                 HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies[i];
                         break;
-                    case 7:
+                    case GameModes.Keys7:
                         for (var i = 0; i < GameBase.LoadedSkin.NoteHoldBodies7K.Length; i++)
                             if (KeyLane - 1 == i)
                                 HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies7K[i];
@@ -171,14 +171,14 @@ namespace Quaver.GameState.Gameplay
             };
 
             // Choose the correct image based on the specific key lane.
-            switch (GameBase.SelectedBeatmap.Qua.KeyCount)
+            switch (GameBase.SelectedBeatmap.Qua.Mode)
             {
-                case 4:
+                case GameModes.Keys4:
                     for (var i = 0; i < GameBase.LoadedSkin.NoteHitObjects.Length; i++)
                         if (KeyLane - 1 == i)
                             HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects[i];
                     break;
-                case 7:
+                case GameModes.Keys7:
                     for (var i = 0; i < GameBase.LoadedSkin.NoteHitObjects7K.Length; i++)
                         if (KeyLane - 1 == i)
                             HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects7K[i];
@@ -207,9 +207,9 @@ namespace Quaver.GameState.Gameplay
                 HoldEndOffset = HoldEndSprite.SizeY / 2;
 
                 // Choose the correct image based on the specific key lane.
-                switch (GameBase.SelectedBeatmap.Qua.KeyCount)
+                switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
-                    case 4:
+                    case GameModes.Keys4:
                         for (var i = 0; i < GameBase.LoadedSkin.NoteHoldEnds.Length; i++)
                         {
                             if (KeyLane - 1 != i)
@@ -219,7 +219,7 @@ namespace Quaver.GameState.Gameplay
                             HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds[i].Height / GameBase.LoadedSkin.NoteHoldEnds[i].Width;
                         }
                         break;
-                    case 7:
+                    case GameModes.Keys7:
                         for (var i = 0; i < GameBase.LoadedSkin.NoteHoldEnds7K.Length; i++)
                         {
                             if (KeyLane - 1 != i)

@@ -154,7 +154,7 @@ namespace Quaver.GameState.Gameplay
             InputManager.CheckInput(IntroSkippable, ReplayFrames);
 
             // Update Loggers. todo: remove
-            Logger.Update("KeyCount", $"Key Count: {GameBase.SelectedBeatmap.Qua.KeyCount}");
+            Logger.Update("KeyCount", $"Game Mode: {GameBase.SelectedBeatmap.Qua.Mode}");
             Logger.Update("SongPos", "Current Track Position: " + NoteManager.TrackPosition);
             Logger.Update("Skippable", $"Intro Skippable: {IntroSkippable}");
 

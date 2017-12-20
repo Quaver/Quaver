@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ManagedBass;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Enums;
 using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
@@ -52,20 +53,21 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //PlayScreen = playScreen;
 
             // Set default reference variables
-            GameplayReferences.ReceptorXPosition = new float[GameBase.SelectedBeatmap.Qua.KeyCount];
-
-            // Calculate skin reference variables.
-            GameplayReferences.PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
-
-            // Calculate skin reference variables - Set Object size based on key count as well.
-            if (GameBase.SelectedBeatmap.Qua.KeyCount == 4)
-                GameplayReferences.PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
-            else if (GameBase.SelectedBeatmap.Qua.KeyCount == 7)
-                GameplayReferences.PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowYRatio);
+            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            {
+                case GameModes.Keys4:
+                    GameplayReferences.ReceptorXPosition = new float[4];
+                    GameplayReferences.PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
+                    break;
+                case GameModes.Keys7:
+                    GameplayReferences.ReceptorXPosition = new float[7];
+                    GameplayReferences.PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowYRatio);
+                    break;
+            }
 
             PlayfieldPadding = (int) (GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowYRatio);
             ReceptorPadding = (int)(GameBase.LoadedSkin.NotePadding * GameBase.WindowYRatio);
-            GameplayReferences.PlayfieldSize = ((GameplayReferences.PlayfieldObjectSize + ReceptorPadding) * GameBase.SelectedBeatmap.Qua.KeyCount) + (PlayfieldPadding * 2) - ReceptorPadding;
+            GameplayReferences.PlayfieldSize = ((GameplayReferences.PlayfieldObjectSize + ReceptorPadding) * GameplayReferences.ReceptorXPosition.Length) + (PlayfieldPadding * 2) - ReceptorPadding;
 
             // Calculate Config stuff
             GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll ? (int)GameBase.Window.Z + (int)GameBase.Window.Y - GameBase.LoadedSkin.ReceptorYOffset - GameplayReferences.PlayfieldObjectSize : GameBase.LoadedSkin.ReceptorYOffset;
@@ -88,7 +90,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             };
 
             // Create Receptors
-            Receptors = new Sprite[GameBase.SelectedBeatmap.Qua.KeyCount];
+            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            {
+                case GameModes.Keys4:
+                    Receptors = new Sprite[4];
+                    break;
+                case GameModes.Keys7:
+                    Receptors = new Sprite[7];
+                    break;
+            }
 
             for (var i = 0; i < Receptors.Length; i++)
             {
@@ -107,13 +117,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 };
 
                 // Set current receptor's image based on the current key count.
-                switch (GameBase.SelectedBeatmap.Qua.KeyCount)
+                switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
-                    case 4:
+                    case GameModes.Keys4:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors[i];
                         Receptors[i].SizeY = GameplayReferences.PlayfieldObjectSize * (float) GameBase.LoadedSkin.NoteReceptors[i].Height / GameBase.LoadedSkin.NoteReceptors[i].Width;
                         break;
-                    case 7:
+                    case GameModes.Keys7:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors7K[i];
                         Receptors[i].SizeY = GameplayReferences.PlayfieldObjectSize * (float) GameBase.LoadedSkin.NoteReceptors7K[i].Height / GameBase.LoadedSkin.NoteReceptors7K[i].Width;
                         break;
@@ -157,12 +167,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             else
             {
                 // Set current receptor's image based on the current key count.
-                switch (GameBase.SelectedBeatmap.Qua.KeyCount)
+                switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
-                    case 4:
+                    case GameModes.Keys4:
                         Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptors[curReceptor];
                         break;
-                    case 7:
+                    case GameModes.Keys7:
                         Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptors7K[curReceptor];
                         break;
                 }
