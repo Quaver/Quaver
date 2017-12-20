@@ -9,6 +9,7 @@ using Quaver.Audio;
 using Quaver.GameState;
 using Quaver.Config;
 using Quaver.Database;
+using Quaver.Enums;
 using Quaver.GameState.States;
 using Quaver.Logging;
 using Quaver.QuaFile;
@@ -110,12 +111,12 @@ namespace Quaver.Input
             var inputKeys = new List<Keys>();
 
             // Determine which set of keys to use based on the .qua
-            switch (GameBase.SelectedBeatmap.Qua.KeyCount)
+            switch (GameBase.SelectedBeatmap.Qua.Mode)
             {
-                case 4:
+                case GameModes.Keys4:
                     inputKeys = LaneKeys;
                     break;
-                case 7:
+                case GameModes.Keys7:
                     inputKeys = LaneKeys7K;
                     break;
                 default:

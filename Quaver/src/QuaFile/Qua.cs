@@ -7,487 +7,149 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Logging;
+using Quaver.Peppy;
+using Quaver.Enums;
+using Newtonsoft.Json;
 
 namespace Quaver.QuaFile
 {
-    internal class Qua
+    public class Qua
     {
-        // Constructor
-        internal Qua(string filePath)
+        /// <summary>
+        ///     The format version of the .qua file, so we can keep track of how
+        ///     to deal with things depending on the version
+        /// </summary>
+        public int FormatVersion { get; set; }
+
+        /// <summary>
+        ///     The name of the audio file
+        /// </summary>
+        public string AudioFile { get; set; }
+
+        /// <summary>
+        ///     Time in milliseconds of the song where the preview starts
+        /// </summary>
+        public int SongPreviewTime { get; set; }
+
+        /// <summary>
+        ///     The name of the background file
+        /// </summary>
+        public string BackgroundFile { get; set; }
+
+        /// <summary>
+        ///     The unique Map Identifier (-1 if not submitted)
+        /// </summary>
+        public int MapId { get; set; }
+
+        /// <summary>
+        ///     The unique Map Set identifier (-1 if not submitted)
+        /// </summary>
+        public int MapSetId { get; set; }
+
+        /// <summary>
+        ///     The game mode for this map
+        /// </summary>
+        public GameModes Mode { get; set; }
+
+        /// <summary>
+        ///     The title of the song
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        ///     The artist of the song
+        /// </summary>
+        public string Artist { get; set; }
+
+        /// <summary>
+        ///     The source of the song (album, mixtape, etc.)
+        /// </summary>
+        public string Source { get; set; }
+
+        /// <summary>
+        ///     Any tags that could be used to help find the song.
+        /// </summary>
+        public string Tags { get; set; }
+
+        /// <summary>
+        ///     The creator of the map
+        /// </summary>
+        public string Creator { get; set; }
+
+        /// <summary>
+        ///     The difficulty name of the map.
+        /// </summary>
+        public string DifficultyName { get; set; }
+
+        /// <summary>
+        ///     A description about this map.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        ///     TODO: Remove.
+        /// </summary>
+        public int Judge { get; set; } = 0;
+
+        /// <summary>
+        ///     TimingPoint .qua data
+        /// </summary>
+        public List<TimingPointInfo> TimingPoints { get; set; }
+        /// <summary>
+        ///     Slider Velocity .qua data
+        /// </summary>
+        public List<SliderVelocityInfo> SliderVelocities { get; set; }
+
+        /// <summary>
+        ///     HitObject .qua data
+        /// </summary>
+        public List<HitObjectInfo> HitObjects { get; set; }
+
+        /// <summary>
+        ///     Is the Qua actually valid?
+        /// </summary>
+        [JsonIgnore]
+        public bool IsValidQua { get; set; }
+
+        /// <summary>
+        ///     Takes in a path to a .qua file and attempts to parse it.
+        ///     Will throw an error if unable to be parsed.
+        /// </summary>
+        /// <param name="path"></param>
+        public static Qua Parse(string path)
         {
-            if (!File.Exists(filePath))
+            var qua = new Qua();
+
+            using (var file = File.OpenText(path))
             {
-                IsValidQua = false;
-                return;
+                var serializer = new JsonSerializer();
+                qua = (Qua)serializer.Deserialize(file, typeof(Qua));
             }
 
-            Parse(filePath);
+            // Check the Qua object's validity.
+            qua.IsValidQua = CheckQuaValidity(qua);
+
+            // Try to sort the Qua before returning.
+            qua.Sort();
+
+            return qua;
         }
 
         /// <summary>
-        ///     The difficulty of accuracy for the map.
+        ///     Serializes the Qua object to a file.
         /// </summary>
-        internal float Judge { get; set; }
-
-        /// <summary>
-        ///     The artist of the song.
-        /// </summary>
-        internal string Artist { get; set; }
-
-        /// <summary>
-        ///     The unicode artist of the song.
-        /// </summary>
-        internal string ArtistUnicode { get; set; }
-
-        /// <summary>
-        ///     The name of the audio file (.ogg)
-        /// </summary>
-        internal string AudioFile { get; set; }
-
-        /// <summary>
-        ///     The amount of time before the audio starts.
-        /// </summary>
-        internal int AudioLeadIn { get; set; }
-
-        /// <summary>
-        ///     The file name of the song background.
-        /// </summary>
-        internal string BackgroundFile { get; set; }
-
-        /// <summary>
-        ///     The creator of the beatmap
-        /// </summary>
-        internal string Creator { get; set; }
-
-        /// <summary>
-        ///     A user defined description of the map.
-        /// </summary>
-        internal string Description { get; set; }
-
-        /// <summary>
-        ///     The name of the difficulty for the beatmap
-        /// </summary>
-        internal string DifficultyName { get; set; }
-
-        /// <summary>
-        ///     The physical hit objects in the map.
-        /// </summary>
-        internal List<HitObject> HitObjects { get; set; } = new List<HitObject>();
-
-        /// <summary>
-        ///     The key count for the map (Quaver only supports 4k and 7k)
-        /// </summary>
-        internal int KeyCount { get; set; }
-
-        /// <summary>
-        ///     Keeps track of whether or not the data in the QuaFile object is valid.
-        /// </summary>
-        internal bool IsValidQua { get; set; } = true;
-
-        /// <summary>
-        ///     The map's unique identifier if it was uploaded.
-        /// </summary>
-        internal int MapId { get; set; }
-
-        /// <summary>
-        ///     The mapset's unique identifier if it was uploaded.
-        /// </summary>
-        internal int MapSetId { get; set; }
-
-        /// <summary>
-        ///     The points in the map where the SV changes.
-        /// </summary>
-        internal List<SliderVelocity> SliderVelocities { get; set; } = new List<SliderVelocity>();
-
-        /// <summary>
-        ///     The offset of the song which will be used to play a preview during song select
-        /// </summary>
-        internal int SongPreviewTime { get; set; }
-
-        /// <summary>
-        ///     The source of the song (Album, Mixtape, etc.)
-        /// </summary>
-        internal string Source { get; set; }
-
-        /// <summary>
-        ///     Specific tags for the song (Used when searching)
-        /// </summary>
-        internal string Tags { get; set; }
-
-        /// <summary>
-        ///     All of the map's timing sections.
-        /// </summary>
-        internal List<TimingPoint> TimingPoints { get; set; } = new List<TimingPoint>();
-
-        /// <summary>
-        ///     The title of the song.
-        /// </summary>
-        internal string Title { get; set; }
-
-        /// <summary>
-        ///     The unicode title of the song.
-        /// </summary>
-        internal string TitleUnicode { get; set; }
-
-        /// <summary>
-        /// Asynchronously parses a .qua file and creates a Qua object
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        internal static async Task<Qua> Create(string filePath)
+        /// <param name="path"></param>
+        public void Save(string path)
         {
-            return await Task.Run(() => new Qua(filePath));
-        }
+            // Sort the object before saving.
+            Sort();
 
-        /// <summary>
-        ///     Parses the specified .qua file in the constructor.
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="gameplay"></param>
-        /// <returns></returns>
-        private void Parse(string filePath)
-        {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-
-            // If the file doesn't exist, or it doesn't have a .qua extension, 
-            // consider that an invalid Qua
-            if (!File.Exists(filePath) || !filePath.ToLower().EndsWith(".qua"))
+            // Save
+            using (var file = File.CreateText(path))
             {
-                IsValidQua = false;
-                return;
+                var serializer = new JsonSerializer() { Formatting = Formatting.Indented };
+                serializer.Serialize(file, this);
             }
-
-            // This will hold the current file section that we are parsing
-            var fileSection = "";
-
-            // Loop through all of the lines in the .qua file and begin parsing
-            using (var sr = new StreamReader(filePath))
-            {
-                while (sr.Peek() >= 0)
-                {
-                    // Read the current file line and get the file section associated with it.
-                    var line = sr.ReadLine().Trim();
-
-                    if (line == "")
-                        continue;
-
-                    fileSection = GetFileSection(line, fileSection);
-
-                    ParseEntireQua(fileSection, line);
-                }
-            }
-
-            // Run a final validity check on the Qua object.
-            CheckQuaValidity();
-
-            // Lastly, sort the objects and finalize the Qua object
-            FinalizeQua();
-        }
-
-        /// <summary>
-        ///     Runs a check and modifies the current section of the file we are parsing.
-        /// </summary>
-        /// <param name="line">The current line of the file.</param>
-        /// <param name="currentSection">The current section of the file.</param>
-        /// <returns></returns>
-        private static string GetFileSection(string line, string currentSection)
-        {
-            switch (line)
-            {
-                case "# General":
-                    return "General";
-                case "# Metadata":
-                    return "Metadata";
-                case "# Difficulty":
-                    return "Difficulty";
-                case "# Timing":
-                    return "Timing";
-                case "# SV":
-                    return "SV";
-                case "# HitObjects":
-                    return "HitObjects";
-                default:
-                    return currentSection;
-            }
-        }
-
-        /// <summary>
-        ///     This will parse the entire .qua file containing all the information, rather than to it's counterpart
-        ///     ParseQuaForGampeplay, which only parses the required data used for gameplay
-        /// </summary>
-        /// <param name="fileSection">The current file section</param>
-        /// <param name="line">The current line of the file.</param>
-        private void ParseEntireQua(string fileSection, string line)
-        {
-            try
-            {
-                switch (fileSection)
-                {
-                    case "General":
-                        ParseGeneral(line);
-                        break;
-                    case "Metadata":
-                        ParseMetadata(line);
-                        break;
-                    case "Difficulty":
-                        ParseDifficulty(line);
-                        break;
-                    case "Timing":
-                        ParseTiming(line);
-                        break;
-                    case "SV":
-                        ParseSliderVelocity(line);
-                        break;
-                    case "HitObjects":
-                        ParseHitObject(line);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Log(e.Message, Color.Red);
-                throw;
-            }
-        }
-
-        /// <summary>
-        ///     Parses the #General section of the file
-        /// </summary>
-        /// <param name="line">The current line of the file.</param>
-        private void ParseGeneral(string line)
-        {
-            if (!line.Contains(":"))
-                return;
-
-            var key = line.Substring(0, line.IndexOf(':')).Trim();
-            var value = line.Split(':').Last().Trim();
-
-            switch (key)
-            {
-                case "AudioFile":
-                    AudioFile = value;
-                    break;
-                case "AudioLeadIn":
-                    AudioLeadIn = int.Parse(value);
-                    break;
-                case "SongPreviewTime":
-                    SongPreviewTime = int.Parse(value);
-                    break;
-                case "BackgroundFile":
-                    BackgroundFile = value.Replace("\"", "");
-                    break;
-                default:
-                    break;
-            }        
-        }
-
-        /// <summary>
-        ///     Parses the #Metadata section of the file
-        /// </summary>
-        /// <param name="line">The current line of the file.</param>
-        private void ParseMetadata(string line)
-        {
-            if (!line.Contains(":"))
-                return;
-
-            var key = line.Substring(0, line.IndexOf(':')).Trim();
-            var value = line.Split(':').Last().Trim();
-
-            switch (key)
-            {
-                case "Title":
-                    Title = value;
-                    break;
-                case "TitleUnicode":
-                    TitleUnicode = value;
-                    break;
-                case "Artist":
-                    Artist = value;
-                    break;
-                case "ArtistUnicode":
-                    ArtistUnicode = value;
-                    break;
-                case "Source":
-                    Source = value;
-                    break;
-                case "Tags":
-                    Tags = value;
-                    break;
-                case "Creator":
-                    Creator = value;
-                    break;
-                case "DifficultyName":
-                    DifficultyName = value;
-                    break;
-                case "MapID":
-                    MapId = int.Parse(value);
-                    break;
-                case "MapSetID":
-                    MapSetId = int.Parse(value);
-                    break;
-                case "Description":
-                    Description = value;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        /// <summary>
-        ///     Parses the #Difficulty section of the file
-        /// </summary>
-        /// <param name="line">The current line of the file.</param>
-        private void ParseDifficulty(string line)
-        {
-            if (!line.Contains(":"))
-                return;
-
-            var key = line.Substring(0, line.IndexOf(':')).Trim();
-            var value = line.Split(':').Last().Trim();
-
-            switch (key)
-            {
-                case "AccuracyStrain":
-                case "Judge":
-                    Judge = float.Parse(value);
-                    break;
-                case "KeyCount":
-                    KeyCount = int.Parse(value);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        /// <summary>
-        ///     Parses the #Timing section of the file
-        /// </summary>
-        /// <param name="line">The current line of the file.</param>
-        private void ParseTiming(string line)
-        {
-            try
-            {
-                if (!line.Contains("|") || line.Contains("#"))
-                    return;
-
-                var values = line.Trim().Split('|');
-
-                if (values.Length != 2)
-                    IsValidQua = false;
-
-                var timing = new TimingPoint
-                {
-                    StartTime = float.Parse(values[0]),
-                    Bpm = float.Parse(values[1])
-                };
-
-                TimingPoints.Add(timing);
-            }
-            catch (Exception e)
-            {
-                Logger.Log(e.Message, Color.Red);
-                IsValidQua = false;
-            }
-        }
-
-        /// <summary>
-        ///     Parses the #SV section of the file
-        /// </summary>
-        /// <param name="line">The current line of the file.</param>
-        private void ParseSliderVelocity(string line)
-        {
-            try
-            {
-                if (!line.Contains("|") || line.Contains("#"))
-                    return;
-
-                var values = line.Trim().Split('|');
-
-                // There should only be 3 values in an SV, if not, it's an invalid map.
-                if (values.Length != 3)
-                    IsValidQua = false;
-
-                var sv = new SliderVelocity
-                {
-                    StartTime = float.Parse(values[0]),
-                    Multiplier = float.Parse(values[1]),
-                    Volume = int.Parse(values[2])
-                };
-
-                SliderVelocities.Add(sv);
-            }
-            catch (Exception e)
-            {
-                Logger.Log(e.Message, Color.Red);
-                IsValidQua = false;
-            }
-        }
-
-        /// <summary>
-        ///     Parses the #HitObject section of the file
-        /// </summary>
-        /// <param name="line">The current line of the file.</param>
-        private void ParseHitObject(string line)
-        {
-            try
-            {
-                if (!line.Contains("|") || line.Contains("HitObjects"))
-                    return;
-
-                var values = line.Trim().Split('|');
-
-                if (values.Length != 3)
-                    IsValidQua = false;
-
-                var ho = new HitObject
-                {
-                    StartTime = int.Parse(values[0]),
-                    KeyLane = int.Parse(values[1])
-                };
-
-                // If the key lane isn't in 1-4, then we'll consider the map to be invalid.
-                if (ho.KeyLane < 1 || ho.KeyLane > 7)
-                    IsValidQua = false;
-
-                ho.EndTime = int.Parse(values[2]);
-
-                HitObjects.Add(ho);
-            }
-            catch (Exception e)
-            {
-                Logger.Log(e.Message, Color.Red);
-                IsValidQua = false;
-            }
-        }
-
-        /// <summary>
-        ///     Responsible for checking the validity of a QuaFile.
-        /// </summary>
-        private void CheckQuaValidity()
-        {
-            // If there aren't any HitObjects
-            if (HitObjects.Count == 0)
-                IsValidQua = false;
-
-            // If there aren't any TimingPoints
-            if (TimingPoints.Count == 0)
-                IsValidQua = false;
-
-            // Check for bad key counts. We only support 4 and 7k
-            if (KeyCount != 4 && KeyCount != 7)
-                IsValidQua = false;
-        }
-
-        /// <summary>
-        ///     Does some final sorting of the 
-        /// </summary>
-        private void FinalizeQua()
-        {
-            HitObjects = HitObjects.OrderBy(x => x.StartTime).ToList();
-            TimingPoints = TimingPoints.OrderBy(x => x.StartTime).ToList();
-            SliderVelocities = SliderVelocities.OrderBy(x => x.StartTime).ToList();
         }
 
         /// <summary>
@@ -528,5 +190,195 @@ namespace Quaver.QuaFile
 
             return LastNoteEnd;
         }
+
+        /// <summary>
+        ///     Checks a Qua object's validity.
+        /// </summary>
+        /// <param name="qua"></param>
+        /// <returns></returns>
+        private static bool CheckQuaValidity(Qua qua)
+        {
+            // If there aren't any HitObjects
+            if (qua.HitObjects.Count == 0)
+                return false;
+
+            // If there aren't any TimingPoints
+            if (qua.TimingPoints.Count == 0)
+                return false;
+
+            // Check if the mode is actually valid
+            if (!Enum.IsDefined(typeof(GameModes), qua.Mode))
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        ///     Does some sorting of the Qua
+        /// </summary>
+        private void Sort()
+        {
+            try
+            {
+                HitObjects = HitObjects.OrderBy(x => x.StartTime).ToList();
+                TimingPoints = TimingPoints.OrderBy(x => x.StartTime).ToList();
+                SliderVelocities = SliderVelocities.OrderBy(x => x.StartTime).ToList();
+            }
+            catch (Exception e)
+            {
+                IsValidQua = false;
+            }
+        }
+
+        /// <summary>
+        ///     Converts an .osu file into a Qua object
+        /// </summary>
+        /// <param name="osu"></param>
+        /// <returns></returns>
+        public static Qua ConvertOsuBeatmap(PeppyBeatmap osu)
+        {
+            // Init Qua with general information
+            var qua = new Qua()
+            {
+                FormatVersion = 1,
+                AudioFile = osu.AudioFilename,
+                SongPreviewTime = osu.PreviewTime,
+                BackgroundFile = osu.Background,
+                MapId = -1,
+                MapSetId = -1,
+                Title = osu.Title,
+                Artist = osu.Artist,
+                Source = osu.Source,
+                Tags = osu.Tags,
+                Creator = osu.Creator,
+                DifficultyName = osu.Version,
+                Description = $"This is a Quaver converted version of {osu.Creator}'s map."
+            };
+
+            // Get the correct game mode based on the amount of keys the map has.
+            switch (osu.KeyCount)
+            {
+                case 4:
+                    qua.Mode = GameModes.Keys4;
+                    break;
+                case 7:
+                    qua.Mode = GameModes.Keys7;
+                    break;
+                default:
+                    break;
+            }
+
+            // Initialize lists
+            qua.TimingPoints = new List<TimingPointInfo>();
+            qua.SliderVelocities = new List<SliderVelocityInfo>();
+            qua.HitObjects = new List<HitObjectInfo>();
+
+            // Get Timing Info
+            foreach (var tp in osu.TimingPoints)
+                if (tp.Inherited == 1)
+                    qua.TimingPoints.Add(new TimingPointInfo { StartTime = tp.Offset, Bpm = 60000 / tp.MillisecondsPerBeat });
+
+            // Get SliderVelocity Info
+            foreach (var tp in osu.TimingPoints)
+                if (tp.Inherited == 0)
+                    qua.SliderVelocities.Add(new SliderVelocityInfo { StartTime = tp.Offset, Multiplier = (float)Math.Round(0.10 / ((tp.MillisecondsPerBeat / -100) / 10), 2) });
+
+            // Get HitObject Info
+            foreach (var hitObject in osu.HitObjects)
+            {
+                // Get the keyLane the hitObject is in
+                var keyLane = 0;
+
+                if (hitObject.Key1)
+                    keyLane = 1;
+                else if (hitObject.Key2)
+                    keyLane = 2;
+                else if (hitObject.Key3)
+                    keyLane = 3;
+                else if (hitObject.Key4)
+                    keyLane = 4;
+                else if (hitObject.Key5)
+                    keyLane = 5;
+                else if (hitObject.Key6)
+                    keyLane = 6;
+                else if (hitObject.Key7)
+                    keyLane = 7;
+
+                // Add HitObjects to the list depending on the object type
+                switch (hitObject.Type)
+                {
+                    // Normal HitObjects
+                    case 1:
+                    case 5:
+                        qua.HitObjects.Add(new HitObjectInfo { StartTime = hitObject.StartTime, Lane = keyLane, EndTime = 0 });
+                        break;
+                    case 128:
+                    case 22:
+                        qua.HitObjects.Add(new HitObjectInfo { StartTime = hitObject.StartTime, Lane = keyLane, EndTime = hitObject.EndTime });
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            // Do a validity check and some final sorting.
+            qua.IsValidQua = CheckQuaValidity(qua);
+            qua.Sort();
+
+            return qua;
+        }
+    }
+
+    /// <summary>
+    ///     TimingPoints section of the .qua
+    /// </summary>
+    public class TimingPointInfo
+    {
+        /// <summary>
+        ///     The time in milliseconds for when this timing point begins
+        /// </summary>
+        public float StartTime { get; set; }
+
+        /// <summary>
+        ///     The BPM during this timing point
+        /// </summary>
+        public float Bpm { get; set; }
+    }
+
+    /// <summary>
+    ///     SliderVelocities section of the .qua   
+    /// </summary>
+    public class SliderVelocityInfo
+    {
+        /// <summary>
+        ///     The time in milliseconds when the new SliderVelocity section begins
+        /// </summary>
+        public float StartTime { get; set; }
+
+        /// <summary>
+        ///     The velocity multiplier relative to the current timing section's BPM
+        /// </summary>
+        public float Multiplier { get; set; }
+    }
+
+    /// <summary>
+    ///     HitObjects section of the .qua
+    /// </summary>
+    public class HitObjectInfo
+    {
+        /// <summary>
+        ///     The time in milliseconds when the HitObject is supposed to be hit.
+        /// </summary>
+        public int StartTime { get; set; }
+
+        /// <summary>
+        ///     The lane the HitObject falls in
+        /// </summary>
+        public int Lane { get; set; }
+
+        /// <summary>
+        ///     The endtime of the HitObject (if greater than 0, it's considered a hold note.)
+        /// </summary>
+        public int EndTime { get; set; }
     }
 }

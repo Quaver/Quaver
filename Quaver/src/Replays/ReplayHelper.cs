@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Audio;
 using Quaver.Config;
+using Quaver.Enums;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.QuaFile;
@@ -97,9 +98,9 @@ namespace Quaver.Replays
         /// </summary>
         private static void CheckKeyboardstate(Qua qua, ReplayFrame frame)
         {
-            switch (qua.KeyCount)
+            switch (qua.Mode)
             {
-                case 4:
+                case GameModes.Keys4:
                     // Key 1
                     if (GameBase.KeyboardState.IsKeyDown(Configuration.KeyMania1))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K1;
@@ -116,7 +117,7 @@ namespace Quaver.Replays
                     if (GameBase.KeyboardState.IsKeyDown(Configuration.KeyMania4))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K4;
                     break;
-                case 7:
+                case GameModes.Keys7:
                     // Key 1
                     if (GameBase.KeyboardState.IsKeyDown(Configuration.KeyMania7k1))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K1;
@@ -148,7 +149,7 @@ namespace Quaver.Replays
         ///     Generates a perfect, 0ms hit replay frames used for auto play
         /// </summary>
         /// <param name="hitObjects"></param>
-        internal static List<ReplayFrame> GeneratePerfectReplay(List<HitObject> hitObjects)
+        internal static List<ReplayFrame> GeneratePerfectReplay(List<HitObjectInfo> hitObjects)
         {
             // Create the original list of replayh frames
             var replayFrames = new List<ReplayFrame>();
@@ -176,7 +177,7 @@ namespace Quaver.Replays
 
                 // Get the key press state of the current object group
                 var kps = new KeyPressState();
-                objectGroup.Value.ForEach(x => kps = kps | ConvertKeyLaneToKeyPressState(x.KeyLane));
+                objectGroup.Value.ForEach(x => kps = kps | ConvertKeyLaneToKeyPressState(x.Lane));
 
                 // Add the KeyPressState to the frame
                 frame.KeyPressState = kps;

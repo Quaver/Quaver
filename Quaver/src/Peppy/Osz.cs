@@ -16,6 +16,7 @@ using Quaver.GameState;
 using Quaver.GameState.States;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
+using Quaver.QuaFile;
 
 namespace Quaver.Peppy
 {
@@ -88,7 +89,8 @@ namespace Quaver.Peppy
                         return;
 
                     // Convert the map to .qua
-                    map.ConvertToQua();
+                    var qua = Qua.ConvertOsuBeatmap(map);
+                    qua.Save(map.OriginalFileName.Replace(".osu", ".qua"));
                 }
 
                 // Now that all of them are converted, we'll create a new directory with all of the files except for .osu

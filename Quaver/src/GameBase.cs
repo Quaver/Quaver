@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Content;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Discord;
+using Quaver.Enums;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
@@ -261,8 +262,19 @@ namespace Quaver
 
                 DiscordController.presence.smallImageKey = "4k";
 
-                // Set presence based on keys
-                DiscordController.presence.smallImageText = (SelectedBeatmap.Keys == 4) ? "4 Keys" : "7 Keys";
+                // Set presence based Mode
+                switch (SelectedBeatmap.Mode)
+                {
+                    case GameModes.Keys4:
+                        DiscordController.presence.smallImageText = "4 Keys";
+                        break;
+                    case GameModes.Keys7:
+                        DiscordController.presence.smallImageText = "7 Keys";
+                        break;
+                    default:
+                        break;
+                }
+
                 DiscordController.presence.state = state;
                 DiscordRPC.UpdatePresence(ref DiscordController.presence);
             }

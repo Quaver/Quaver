@@ -70,7 +70,7 @@ namespace Quaver.GameState.States
                 // Try and parse the .qua and check if it is valid.
                 var quaPath = $"{Config.Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
 
-                var qua = new Qua(quaPath);
+                var qua = Qua.Parse(quaPath);
 
                 if (!qua.IsValidQua)
                     throw new Exception("[SONG LOADING STATE] The .qua file could NOT be loaded!");
