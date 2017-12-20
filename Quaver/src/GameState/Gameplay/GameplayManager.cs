@@ -36,6 +36,12 @@ namespace Quaver.GameState.Gameplay
 
         private PlayfieldUI PlayfieldUI { get; set; }
 
+        //todo: initialize and implement these later
+        private HitBurst HitBurst { get; set; }
+        private Particles Particles { get; set; }
+        private ScoreProgressUI ScoreProgressUI { get; set; }
+        private SongProgressUI SongProgressUI { get; set; }
+
         /// <summary>
         ///     The MD5 Hash of the played beatmap.
         /// </summary>
