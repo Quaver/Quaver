@@ -147,7 +147,7 @@ namespace Quaver.QuaFile
             // Save
             using (var file = File.CreateText(path))
             {
-                var serializer = new JsonSerializer() { Formatting = Formatting.Indented };
+                var serializer = new JsonSerializer() { Formatting = Formatting.None };
                 serializer.Serialize(file, this);
             }
         }
