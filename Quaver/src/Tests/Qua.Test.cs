@@ -26,7 +26,7 @@ namespace Quaver.Tests
                 return;
             }
 
-            var watch = Stopwatch.StartNew();
+            /*var watch = Stopwatch.StartNew();
             var qua = new Qua(filePath);
             watch.Stop();
 
@@ -48,7 +48,7 @@ namespace Quaver.Tests
                               $"Slider Velocities: {qua.SliderVelocities.Count}\n" +
                               $"HitObjects: {qua.HitObjects.Count}\n" +
                               $"Parsing Took: {watch.ElapsedMilliseconds}ms to execute.\n" +
-                              $"-----------------------------------------\n");
+                              $"-----------------------------------------\n");*/
         }
     }
 }

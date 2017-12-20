@@ -11,7 +11,7 @@ using Quaver.Logging;
 
 namespace Quaver.Peppy
 {
-    internal class PeppyBeatmap
+    public class PeppyBeatmap
     {
         /// <summary>
         ///     The original file name of the .osu
@@ -294,7 +294,7 @@ namespace Quaver.Peppy
                     if (line.Contains("png") || line.Contains("jpg") || line.Contains("jpeg"))
                     {
                         string[] values = line.Split(',');
-                        Background = values[2];
+                        Background = values[2].Replace("\"", "");
                     }
                 }
 
@@ -392,116 +392,6 @@ namespace Quaver.Peppy
                         HitObjects.Add(hitObject);
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        ///     Converts a peppy beatmap to .qua format
-        ///     returns if the file was successfully 
-        /// </summary>
-        /// <returns></returns>
-        internal void ConvertToQua()
-        {
-            var fileExtension = ".qua";
-
-            // We'll need to build a string in the .qua file format. 
-            // For file format details, see Misc/file_format.qua
-            var fileString = new StringBuilder();
-
-            // # General     
-            fileString.AppendLine("# General");
-            fileString.AppendLine("AudioFile: " + AudioFilename);
-            fileString.AppendLine("AudioLeadIn: " + AudioLeadIn);
-            fileString.AppendLine("SongPreviewTime: " + PreviewTime);
-            fileString.AppendLine("BackgroundFile: " + Background);
-            fileString.AppendLine();
-
-            // # Metadata
-            fileString.AppendLine("# Metadata");
-            fileString.AppendLine("Title: " + Title);
-            fileString.AppendLine("TitleUnicode: " + TitleUnicode);
-            fileString.AppendLine("Artist: " + Artist);
-            fileString.AppendLine("ArtistUnicode: " + ArtistUnicode);
-            fileString.AppendLine("Source: " + Source);
-            fileString.AppendLine("Tags: " + Tags);
-            fileString.AppendLine("Creator: ");
-            fileString.AppendLine("DifficultyName: " + Version);
-            fileString.AppendLine("MapID: -1");
-            fileString.AppendLine("MapSetID: -1");
-            fileString.AppendLine("Description: This beatmap was converted from osu!mania");
-            fileString.AppendLine();
-
-            // # Difficulty
-            fileString.AppendLine("# Difficulty");
-            fileString.AppendLine("KeyCount: " + KeyCount);
-            fileString.AppendLine("Judge: " + OverallDifficulty);
-            fileString.AppendLine();
-
-            // # Timing (StartTime | BPM)
-            fileString.AppendLine("# Timing");
-            foreach (var timingPoint in TimingPoints)
-            {
-                // Find all of the red lined timing points and add their data to the string.
-                if (timingPoint.Inherited == 1)
-                    fileString.AppendLine(timingPoint.Offset + "|" + 60000 / timingPoint.MillisecondsPerBeat);
-            }
-
-            fileString.AppendLine();
-
-            // # SV (StartTime|Multiplier|Volume)
-            fileString.AppendLine("# SV");
-            foreach (var timingPoint in TimingPoints)
-            {
-                if (timingPoint.Inherited == 0)
-                    fileString.AppendLine(timingPoint.Offset + "|" + Math.Round(0.10 / ((timingPoint.MillisecondsPerBeat / -100) / 10), 2) + "|" + timingPoint.Volume);
-            }
-
-            fileString.AppendLine();
-
-            // # HitObject (StartTime|KeyLane|EndTime)
-            fileString.AppendLine("# HitObjects");
-            foreach (var hitObject in HitObjects)
-            {
-                // Get the keyLane the hitObject is in
-                var keyLane = 0;
-
-                if (hitObject.Key1)
-                    keyLane = 1;
-                else if (hitObject.Key2)
-                    keyLane = 2;
-                else if (hitObject.Key3)
-                    keyLane = 3;
-                else if (hitObject.Key4)
-                    keyLane = 4;
-                else if (hitObject.Key5)
-                    keyLane = 5;
-                else if (hitObject.Key6)
-                    keyLane = 6;
-                else if (hitObject.Key7)
-                    keyLane = 7;
-
-                // Normal HitObjects
-                if (hitObject.Type == 1 || hitObject.Type == 5)
-                    fileString.AppendLine(hitObject.StartTime + "|" + keyLane + "|" + "0");
-                // LNs
-                else if (hitObject.Type == 128 || hitObject.Type == 22)
-                    fileString.AppendLine(hitObject.StartTime + "|" + keyLane + "|" + hitObject.EndTime);
-            }
-
-            try
-            {
-                // Write the file.
-                var file = new StreamWriter(OriginalFileName.Replace(".osu", ".qua"))
-                {
-                    AutoFlush = true
-                };
-
-                file.WriteLine(fileString.ToString());
-                file.Close();
-            }
-            catch (Exception e)
-            {
-                Logger.Log(e.Message, Color.Red);
             }
         }
     }

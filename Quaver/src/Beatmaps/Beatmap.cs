@@ -7,6 +7,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Audio;
+using Quaver.Enums;
 using Quaver.QuaFile;
 using Quaver.Utility;
 using SQLite;
@@ -132,15 +133,15 @@ namespace Quaver.Beatmaps
         public int SongLength { get; set; }
 
         /// <summary>
+        ///     The Game Mode of the map
+        /// </summary>
+        public GameModes Mode { get; set; }
+
+        /// <summary>
         ///     The actual parsed qua file for the beatmap.
         /// </summary>
         [Ignore]
         public Qua Qua { get; set; }
-
-        /// <summary>
-        ///     The amount of keys the beatmap has.
-        /// </summary>
-        public int Keys { get; set; }
 
         /// <summary>
         ///     Responsible for converting a Qua object, to a Beatmap object
@@ -170,7 +171,7 @@ namespace Quaver.Beatmaps
                 Source = qua.Source,
                 Tags = qua.Tags,
                 SongLength = Qua.FindSongLength(qua),
-                Keys = qua.KeyCount
+                Mode = qua.Mode
             };
         }
     }
