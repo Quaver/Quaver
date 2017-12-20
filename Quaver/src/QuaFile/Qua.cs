@@ -265,6 +265,7 @@ namespace Quaver.QuaFile
                     qua.Mode = GameModes.Keys7;
                     break;
                 default:
+                    qua.Mode = (GameModes)(-1);
                     break;
             }
 
