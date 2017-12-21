@@ -283,7 +283,7 @@ namespace Quaver.GameState.Gameplay
                     {
                         //Score manager stuff
                         ScoreManager.Count(i, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime, CurrentSongTime / SongManager.Length);
-                        AccuracyBoxUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount);
+                        AccuracyBoxUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
                         PlayfieldUI.UpdateJudge(i, ScoreManager.Combo, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime);
 
                         // If the player is spamming
@@ -348,7 +348,7 @@ namespace Quaver.GameState.Gameplay
                 if (releaseTiming > -1)
                 {
                     ScoreManager.Count(i, true);
-                    AccuracyBoxUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount);
+                    AccuracyBoxUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
                     PlayfieldUI.UpdateJudge(i, ScoreManager.Combo, true);
                     NoteManager.KillHold(noteIndex, true);
                 }
@@ -356,7 +356,7 @@ namespace Quaver.GameState.Gameplay
                 else
                 {
                     ScoreManager.Count(5, true);
-                    AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount);
+                    AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
                     PlayfieldUI.UpdateJudge(5, ScoreManager.Combo, true);
                     NoteManager.KillHold(noteIndex);
                 }
@@ -366,21 +366,21 @@ namespace Quaver.GameState.Gameplay
         public void PressMissed(object sender, EventArgs e)
         {
             ScoreManager.Count(5, false, 0, CurrentSongTime/ SongManager.Length);
-            AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount);
+            AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
             PlayfieldUI.UpdateJudge(5, ScoreManager.Combo);
         }
 
         public void ReleaseSkipped(object sender, EventArgs e)
         {
             ScoreManager.Count(5, true);
-            AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount);
+            AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
             PlayfieldUI.UpdateJudge(5, ScoreManager.Combo);
         }
 
         public void ReleaseMissed(object sender, EventArgs e)
         {
             ScoreManager.Count(4,true);
-            AccuracyBoxUI.UpdateAccuracyBox(4, ScoreManager.JudgePressSpread[4], ScoreManager.JudgeReleaseSpread[4], ScoreManager.JudgeCount);
+            AccuracyBoxUI.UpdateAccuracyBox(4, ScoreManager.JudgePressSpread[4], ScoreManager.JudgeReleaseSpread[4], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
             PlayfieldUI.UpdateJudge(4, ScoreManager.Combo);
         }
     }
