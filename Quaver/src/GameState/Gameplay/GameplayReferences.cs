@@ -26,11 +26,10 @@ namespace Quaver.GameState.Gameplay
         internal static int GradeIndex { get; set; } = 0; // PlayScreen.GetRelativeGradeIndex()
         internal static float Accuracy { get; set; } = 0;
         internal static float AccScale { get; set; } // PlayScreen.RelativeAccGetScale()
-        internal static float PressWindowLatest { get; set; } = 70; // HitWindowPress[4]
-        internal static float ReleaseWindowLatest { get; set; } = 140; // HitWindowRelease[3]
+        internal static float PressWindowLatest { get; set; } // HitWindowPress[4]
+        internal static float ReleaseWindowLatest { get; set; } // HitWindowRelease[3]
 
         //todo: temp Timing variables
-        internal static double CurrentSongTime { get; set; }
         internal static List<TimingObject> SvQueue { get; set; }
         internal static int PlayStartDelayed { get; set; }
 
