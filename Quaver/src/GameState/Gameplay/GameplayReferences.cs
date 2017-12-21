@@ -30,7 +30,6 @@ namespace Quaver.GameState.Gameplay
         internal static float ReleaseWindowLatest { get; set; } = 140; // HitWindowRelease[3]
 
         //todo: temp Timing variables
-        internal static double CurrentSongTime { get; set; }
         internal static List<TimingObject> SvQueue { get; set; }
         internal static int PlayStartDelayed { get; set; }
 

@@ -22,7 +22,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         //Gameplay Variables
         private double ActualSongTime { get; set; }
-        internal double CurrentSongTime { get; set; }
         internal List<TimingObject> SvQueue { get; set; } //todo: remove
         private List<TimingObject> TimingQueue { get; set; }
         internal float PlayingEndOffset { get; set; }
@@ -101,7 +100,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             SongIsPlaying = false;
 
             //Declare Other Values
-            CurrentSongTime = -PlayStartDelayed;
             ActualSongTime = -PlayStartDelayed;
             //_activeBarObjects = new GameObject[maxNoteCount];
 
@@ -159,9 +157,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         ActualSongTime = (SongManager.Position + (ActualSongTime + dt * GameBase.GameClock)) / 2f;
                 }
             }
+        }
 
+        public double GeCurrentSongTime()
+        {
             //Add global offset to actual song time
-            CurrentSongTime = ActualSongTime - Configuration.GlobalOffset + SongManager.BassDelayOffset;
+            return ActualSongTime - Configuration.GlobalOffset + SongManager.BassDelayOffset;
         }
 
         public void Draw()
