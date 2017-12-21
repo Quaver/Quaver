@@ -18,7 +18,7 @@ namespace Quaver.GameState.SongSelect
         /// <summary>
         ///     Reference to the list of song select buttons
         /// </summary>
-        private List<Button> SongSelectButtons { get; set; } = new List<Button>();
+        private List<SongSelectButton> SongSelectButtons { get; set; } = new List<SongSelectButton>();
 
         private Boundary Boundary { get; set; }
 
@@ -110,7 +110,8 @@ namespace Quaver.GameState.SongSelect
 
         public void SetBeatmapOrganizerPosition(float scale)
         {
-            Boundary.PositionY = scale * -OrganizerSize;
+            Boundary.PositionY = scale * OrganizerSize;
+            Console.WriteLine(Boundary.PositionY);
         }
     }
 }
