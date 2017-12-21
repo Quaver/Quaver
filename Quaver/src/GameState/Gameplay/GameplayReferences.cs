@@ -20,7 +20,7 @@ namespace Quaver.GameState.Gameplay
         internal static ulong[] SvCalc { get; set; }
 
         //todo: temp variables for scoremanager
-        internal static int Combo { get; set; }
+        //internal static int Combo { get; set; }
         //internal static float HitWindowSize { get; set; } = 1; // = HitWindowSize[4] * 2 * GameBase.WindowYRatio;
         internal static float ScoreTotal { get; set; } = 0;
         internal static int GradeIndex { get; set; } = 0; // PlayScreen.GetRelativeGradeIndex()

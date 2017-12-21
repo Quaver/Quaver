@@ -144,7 +144,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     PressMissed?.Invoke(this, null);
 
                     //Play Combo-Break Sound
-                    if (GameplayReferences.Combo >= 20)
+                    //if (GameplayReferences.Combo >= 20)
                         GameBase.LoadedSkin.ComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
                     //If HitObject is an LN, kill it and count it as another miss
@@ -180,7 +180,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     ReleaseMissed?.Invoke(this, null);
 
                     //Play Combo-Break Sound
-                    if (GameplayReferences.Combo >= 20)
+                    //if (GameplayReferences.Combo >= 20)
                         GameBase.LoadedSkin.ComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
                     //Remove from LN Queue
