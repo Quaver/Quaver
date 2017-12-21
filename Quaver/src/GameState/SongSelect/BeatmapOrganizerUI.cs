@@ -24,6 +24,8 @@ namespace Quaver.GameState.SongSelect
 
         public object TogglePitch { get; private set; }
 
+        private float OrganizerSize { get; set; }
+
         public void Draw()
         {
             Boundary.Draw();
@@ -52,7 +54,7 @@ namespace Quaver.GameState.SongSelect
         /// </summary>
         public void CreateSongSelectButtons()
         {
-            var ButtonPos = 50f;
+            OrganizerSize = 50f;
             //Create buttons for every beatmap set TODO: Use beatmap set instead of beatmaps
             foreach (var mapset in GameBase.VisibleBeatmaps)
             {
@@ -66,7 +68,7 @@ namespace Quaver.GameState.SongSelect
                     {
                         Image = GameBase.UI.BlankBox,
                         Alignment = Alignment.TopLeft,
-                        PositionY = ButtonPos,
+                        PositionY = OrganizerSize,
                         PositionX = 5,
                         Parent = Boundary
                     };
@@ -78,7 +80,7 @@ namespace Quaver.GameState.SongSelect
                     SongSelectButtons.Add(newButton);
 
                     // Change the Y value
-                    ButtonPos += newButton.SizeY + 2;
+                    OrganizerSize += newButton.SizeY + 2;
                 }
             }
         }
@@ -86,7 +88,7 @@ namespace Quaver.GameState.SongSelect
         /// <summary>
         ///     Changes the map when a song select button is clicked.
         /// </summary>
-        public void OnSongSelectButtonClick(object sender, EventArgs e, string text, Beatmap map)
+        private void OnSongSelectButtonClick(object sender, EventArgs e, string text, Beatmap map)
         {
             Logger.Update("MapSelected", "Map Selected: " + text);
 
@@ -104,6 +106,11 @@ namespace Quaver.GameState.SongSelect
                 Task.Run(() => GameBase.LoadBackground())
                     .ContinueWith(t => BackgroundManager.Change(GameBase.CurrentBackground));
                     
+        }
+
+        public void SetBeatmapOrganizerPosition(float scale)
+        {
+            Boundary.PositionY = scale * -OrganizerSize;
         }
     }
 }
