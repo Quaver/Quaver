@@ -202,6 +202,7 @@ namespace Quaver.Graphics
             if (Changed)
             {
                 Changed = false;
+                Children.ForEach(x => x.Changed = true);
                 RecalculateRect();
             }
 
