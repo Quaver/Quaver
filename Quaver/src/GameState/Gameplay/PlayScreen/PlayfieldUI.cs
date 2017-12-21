@@ -191,7 +191,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         public void UnloadContent()
         {
             Boundary.Destroy();
-            //throw new NotImplementedException();
         }
 
         public void Update(double dt)
@@ -224,10 +223,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             Boundary.Update(dt);
         }
 
-        public void UpdateJudge(int index, bool release = false, double? offset = null)
+        public void UpdateJudge(int index, int combo, bool release = false, double? offset = null)
         {
             //TODO: add judge scale
-            ComboText.Text = GameplayReferences.Combo + "x";
+            ComboText.Text = combo + "x";
             ComboText.Alpha = 1;
             JudgeSprite.Alpha = 1;
             SpriteAlphaHold = 0;
