@@ -19,6 +19,8 @@ using Quaver.Logging;
 
 using Quaver.Modifiers;
 using Quaver.GameState.SongSelect;
+using Quaver.Input;
+using Quaver.Utility;
 
 namespace Quaver.GameState.States
 {
@@ -40,7 +42,7 @@ namespace Quaver.GameState.States
         ///     Boundary
         /// </summary>
         private Boundary Boundary { get; set; } = new Boundary();
-       
+
         /// <summary>
         ///     Reference to the play button
         /// </summary>        
@@ -61,6 +63,8 @@ namespace Quaver.GameState.States
         /// </summary>
         private TextButton TogglePitch { get; set; }
 
+        private SongSelectInputManager SongSelectInputManager { get; set;}
+
         /// <summary>
         ///     Initialize
         /// </summary>
@@ -71,6 +75,7 @@ namespace Quaver.GameState.States
             //Initialize Helpers
             BeatmapOrganizerUI = new BeatmapOrganizerUI();
             BeatmapOrganizerUI.Initialize(this);
+            SongSelectInputManager = new SongSelectInputManager();
 
             // Update Discord Presence
             GameBase.ChangeDiscordPresence("Song Select", "In the menus");
@@ -108,8 +113,11 @@ namespace Quaver.GameState.States
         {
             Boundary.Update(dt);
             BeatmapOrganizerUI.Update(dt);
+            SongSelectInputManager.CheckInput();
+            if (SongSelectInputManager.RightMouseIsDown) BeatmapOrganizerUI.SetBeatmapOrganizerPosition(GameBase.MouseState.Position.Y/(GameBase.Window.Y - GameBase.Window.Z));
+            //SetBeatmapOrganizerPosition
 
-            // Repeat the song preview if necessary
+                // Repeat the song preview if necessary
             RepeatSongPreview();
         }
 
