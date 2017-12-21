@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -10,6 +11,7 @@ using Quaver.Logging;
 using Quaver.Peppy;
 using Quaver.Enums;
 using Newtonsoft.Json;
+using Quaver.Replays;
 
 namespace Quaver.QuaFile
 {
@@ -118,13 +120,19 @@ namespace Quaver.QuaFile
         /// <param name="path"></param>
         public static Qua Parse(string path)
         {
+            if (!File.Exists(path))
+                throw new FileNotFoundException();
+
             var qua = new Qua();
 
-            using (var file = File.OpenText(path))
+            // Read the .qua file data
+            using (var fs = new FileStream(path, FileMode.Open))
+            using (var br = new BinaryReader(fs))
+            using (var outStream = new MemoryStream())
             {
-                var serializer = new JsonSerializer();
-                qua = (Qua)serializer.Deserialize(file, typeof(Qua));
-            }
+                SevenZip.Helper.Decompress(br.BaseStream, outStream);
+                qua = JsonConvert.DeserializeObject<Qua>(Encoding.ASCII.GetString(outStream.ToArray()));
+            } 
 
             // Check the Qua object's validity.
             qua.IsValidQua = CheckQuaValidity(qua);
@@ -144,11 +152,12 @@ namespace Quaver.QuaFile
             // Sort the object before saving.
             Sort();
 
-            // Save
-            using (var file = File.CreateText(path))
+            // Use LZMA compression to save the qua object to a file.
+            using (var quaStream = new MemoryStream(Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(this, Formatting.None))))
+            using (var fs = new FileStream(path, FileMode.Create))
+            using (var bw = new BinaryWriter(fs))
             {
-                var serializer = new JsonSerializer() { Formatting = Formatting.None };
-                serializer.Serialize(file, this);
+                SevenZip.Helper.Compress(quaStream, fs);
             }
         }
 
