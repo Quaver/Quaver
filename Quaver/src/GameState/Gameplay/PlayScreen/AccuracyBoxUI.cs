@@ -42,7 +42,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         private double CurrentScore { get; set; }
 
-        private double CurrentAccuracy { get; set; }
+        private float CurrentAccuracy { get; set; }
+
+        private float TargetAccuracy { get; set; }
 
         private Boundary GradeBox { get; set; }
 
@@ -216,9 +218,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <param name="pressSpread"></param>
         /// <param name="releaseSpread"></param>
         /// <param name="judgeCount"></param>
-        internal void UpdateAccuracyBox(int index, int pressSpread, int releaseSpread, int judgeCount)
+        internal void UpdateAccuracyBox(int index, int pressSpread, int releaseSpread, int judgeCount, int totalScore, double tarAcc)
         {
             // Update Variables and Text
+            CurrentScore = totalScore;
+            TargetAccuracy = (float)tarAcc;
             NoteSpread[index] = pressSpread + releaseSpread;
             AccuracyCountText[index+1].Text = pressSpread + " | " + releaseSpread;
 
@@ -239,6 +243,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
 
             // If there's an active long note, the score will have a "slider" effect (+1 point every 25ms), otherwise it will tween normally
+            /*
             if (NoteHolding)
             {
                 CurrentScore += tween*2;
@@ -248,13 +253,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 CurrentScore = GameplayReferences.ScoreTotal; // Util.Tween(Score, (float)CurrentScore, tween);
                 //if (CurrentScore > Score) CurrentScore = Score;
-            }
+            }*/
 
             // Update Score Text
             ScoreText.Text = Util.ScoreToString((int)CurrentScore);
 
             // Update Accuracy Text
-            CurrentAccuracy = Util.Tween((float)GameplayReferences.Accuracy, (float)CurrentAccuracy, tween);
+            CurrentAccuracy = Util.Tween(TargetAccuracy, CurrentAccuracy, tween);
             AccuracyCountText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
 
             // Upgrade Grade Progress Bar
