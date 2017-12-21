@@ -111,7 +111,6 @@ namespace Quaver.GameState.SongSelect
         public void SetBeatmapOrganizerPosition(float scale)
         {
             Boundary.PositionY = scale * OrganizerSize;
-            Console.WriteLine(Boundary.PositionY);
         }
     }
 }
