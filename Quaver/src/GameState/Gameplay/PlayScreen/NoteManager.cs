@@ -143,10 +143,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     //Invoke Miss Event
                     PressMissed?.Invoke(this, null);
 
-                    //Play Combo-Break Sound
-                    //if (GameplayReferences.Combo >= 20)
-                        GameBase.LoadedSkin.ComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
-
                     //If HitObject is an LN, kill it and count it as another miss
                     if (HitObjectPool[i].IsLongNote)
                     {
@@ -178,10 +174,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     //Invoke Miss Event
                     ReleaseMissed?.Invoke(this, null);
-
-                    //Play Combo-Break Sound
-                    //if (GameplayReferences.Combo >= 20)
-                        GameBase.LoadedSkin.ComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
                     //Remove from LN Queue
                     HitObjectHold[i].Destroy();

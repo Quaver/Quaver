@@ -365,6 +365,11 @@ namespace Quaver.GameState.Gameplay
 
         public void PressMissed(object sender, EventArgs e)
         {
+            // Play Combo-Break Sound
+            if (ScoreManager.Combo >= 20)
+                GameBase.LoadedSkin.ComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+
+            // Manage UI Helpers + Update Score Manager
             ScoreManager.Count(5, false, 0, CurrentSongTime/ SongManager.Length);
             AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
             PlayfieldUI.UpdateJudge(5, ScoreManager.Combo);
