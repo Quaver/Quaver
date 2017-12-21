@@ -127,8 +127,15 @@ namespace Quaver.Peppy
 
                             File.Move(filesInDir[i], newFile);
                             break;
-                        default:
+                        // We only allow certain file to be moved over, no .wav files, as those are usually
+                        // hitsounds from osu!
+                        case ".mp3":
+                        case ".jpg":
+                        case ".png":
+                        case ".jpeg":
                             File.Move(filesInDir[i], $"{newSongDir}/{Path.GetFileName(filesInDir[i])}");
+                            break;
+                        default:
                             break;
                     }
                 }
