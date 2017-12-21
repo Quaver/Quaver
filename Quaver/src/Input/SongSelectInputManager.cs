@@ -24,33 +24,55 @@ namespace Quaver.Input
         /// </summary>
         public State CurrentState { get; set; } = State.SongSelect;
 
-        public event EventHandler MouseDown;
-        public event EventHandler MouseUp;
+        public event EventHandler LeftMouseDown;
+        public event EventHandler LeftMouseUp;
+        public event EventHandler RightMouseDown;
+        public event EventHandler RightMouseUp;
 
-        public bool MouseIsDown { get; set; }
+        public bool LeftMouseIsDown { get; set; }
+        public bool RightMouseIsDown { get; set; }
 
         /// <summary>
         ///     Checks if the given input was given
         /// </summary>
-        public void CheckInput(Qua qua, bool skippable, List<ReplayFrame> ReplayFrames)
+        public void CheckInput()
         {
             // Mouse Event Handling
-            // Check for MouseDown
+            // Check for LeftMouseDown
             if (GameBase.MouseState.LeftButton == ButtonState.Pressed)
             {
-                if (!MouseIsDown)
+                if (!LeftMouseIsDown)
                 {
-                    MouseIsDown = true;
-                    MouseDown?.Invoke(this, null);
+                    LeftMouseIsDown = true;
+                    LeftMouseDown?.Invoke(this, null);
                 }
             }
-            // Check for MouseUp
+            // Check for LeftMouseUp
             else
             {
-                if (MouseIsDown)
+                if (LeftMouseIsDown)
                 {
-                    MouseIsDown = false;
-                    MouseUp?.Invoke(this, null);
+                    LeftMouseIsDown = false;
+                    LeftMouseUp?.Invoke(this, null);
+                }
+            }
+
+            // Check for RightMouseDown
+            if (GameBase.MouseState.RightButton == ButtonState.Pressed)
+            {
+                if (!RightMouseIsDown)
+                {
+                    RightMouseIsDown = true;
+                    RightMouseDown?.Invoke(this, null);
+                }
+            }
+            // Check for RightMouseUp
+            else
+            {
+                if (RightMouseIsDown)
+                {
+                    RightMouseIsDown = false;
+                    RightMouseUp?.Invoke(this, null);
                 }
             }
         }
