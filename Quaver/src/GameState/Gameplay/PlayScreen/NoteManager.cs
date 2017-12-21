@@ -38,6 +38,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         //Track
         internal int CurrentSvIndex { get; set; }
         internal ulong TrackPosition { get; set; }
+        internal double CurrentSongTime { get; set; }
 
         //Events
         internal event EventHandler PressMissed;
@@ -137,7 +138,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             for (i=0; i < HitObjectPool.Count && i < HitObjectPoolSize; i++)
             {
                 //Note is missed
-                if (GameplayReferences.CurrentSongTime > HitObjectPool[i].StartTime + GameplayReferences.PressWindowLatest)
+                if (CurrentSongTime > HitObjectPool[i].StartTime + GameplayReferences.PressWindowLatest)
                 {
                     //Invoke Miss Event
                     PressMissed?.Invoke(this, null);
@@ -173,7 +174,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             for (i = 0; i < HitObjectHold.Count; i++)
             {
                 //LN is missed
-                if (GameplayReferences.CurrentSongTime > HitObjectHold[i].EndTime + GameplayReferences.ReleaseWindowLatest)
+                if (CurrentSongTime > HitObjectHold[i].EndTime + GameplayReferences.ReleaseWindowLatest)
                 {
                     //Invoke Miss Event
                     ReleaseMissed?.Invoke(this, null);
@@ -191,7 +192,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 else
                 {
                     //Set LN Size and Note Position
-                    if (GameplayReferences.CurrentSongTime > HitObjectHold[i].StartTime)
+                    if (CurrentSongTime > HitObjectHold[i].StartTime)
                     {
                         HitObjectHold[i].CurrentLongNoteSize = (ulong) ((HitObjectHold[i].LnOffsetFromReceptor - TrackPosition) * ScrollSpeed);
                         HitObjectHold[i].HitObjectPositionY = GameplayReferences.ReceptorYOffset;
@@ -210,7 +211,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //Update Dead HitObjects
             for (i = 0; i < HitObjectDead.Count; i++)
             {
-                if (GameplayReferences.CurrentSongTime > HitObjectDead[i].EndTime + RemoveTimeAfterMiss && GameplayReferences.CurrentSongTime > HitObjectDead[i].StartTime + RemoveTimeAfterMiss)
+                if (CurrentSongTime > HitObjectDead[i].EndTime + RemoveTimeAfterMiss && CurrentSongTime > HitObjectDead[i].StartTime + RemoveTimeAfterMiss)
                 {
                     HitObjectDead[i].Destroy();
                     HitObjectDead.RemoveAt(i);
@@ -272,7 +273,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// </summary>
         internal ulong GetCurrentTrackPosition()
         {
-            if (GameplayReferences.CurrentSongTime >= GameplayReferences.SvQueue[GameplayReferences.SvQueue.Count - 1].TargetTime)
+            if (CurrentSongTime >= GameplayReferences.SvQueue[GameplayReferences.SvQueue.Count - 1].TargetTime)
             {
                 CurrentSvIndex = GameplayReferences.SvQueue.Count - 1;
             }
@@ -280,11 +281,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 for (int j = CurrentSvIndex; j < GameplayReferences.SvQueue.Count - 1; j++)
                 {
-                    if (GameplayReferences.CurrentSongTime > GameplayReferences.SvQueue[CurrentSvIndex + 1].TargetTime) CurrentSvIndex++;
+                    if (CurrentSongTime > GameplayReferences.SvQueue[CurrentSvIndex + 1].TargetTime) CurrentSvIndex++;
                     else break;
                 }
             }
-            return GameplayReferences.SvCalc[CurrentSvIndex] + (ulong)(((float)(GameplayReferences.CurrentSongTime - (GameplayReferences.SvQueue[CurrentSvIndex].TargetTime)) * GameplayReferences.SvQueue[CurrentSvIndex].SvMultiplier) + 10000);
+            return GameplayReferences.SvCalc[CurrentSvIndex] + (ulong)(((float)(CurrentSongTime - (GameplayReferences.SvQueue[CurrentSvIndex].TargetTime)) * GameplayReferences.SvQueue[CurrentSvIndex].SvMultiplier) + 10000);
         }
 
         /// <summary>
@@ -335,7 +336,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal void KillHold(int index, bool destroy = false)
         {
             //Update the object's position and size
-            HitObjectHold[index].StartTime = (float)GameplayReferences.CurrentSongTime;
+            HitObjectHold[index].StartTime = (float)CurrentSongTime;
             HitObjectHold[index].SvIndex = GetSvIndex(HitObjectHold[index].StartTime);
             HitObjectHold[index].OffsetFromReceptor = SvOffsetFromTime(HitObjectHold[index].StartTime, HitObjectHold[index].SvIndex);
 
