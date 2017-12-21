@@ -76,6 +76,8 @@ namespace Quaver.Input
         /// </summary>
         public event EventHandler<ManiaKey> ManiaKeyRelease;
 
+        public event EventHandler SkipSong;
+
         /// <summary>
         ///     Keeps track of whether or not the song intro was skipped.
         /// </summary>
@@ -167,8 +169,9 @@ namespace Quaver.Input
 
                 GameBase.ChangeDiscordPresenceGameplay(true);
             }
-        }
+        }*/
 
+        /*
         /// <summary>
         ///     Responsible for handling pausing 
         /// </summary>

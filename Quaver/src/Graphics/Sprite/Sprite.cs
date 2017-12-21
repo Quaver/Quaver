@@ -110,8 +110,6 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         public override void Draw()
         {
-            if (Changed) RecalculateOrigin();
-
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             if (Util.Vector4Intercepts(GlobalVect, GameBase.Window) && Visible)
