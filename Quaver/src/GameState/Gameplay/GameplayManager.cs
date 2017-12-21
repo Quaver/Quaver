@@ -68,7 +68,7 @@ namespace Quaver.GameState.Gameplay
         private bool IntroSkippable { get; set; }
 
         //todo: remove. TEST.
-        private Sprite TextUnder { get; set; }
+        private Sprite SvInfoTextBox { get; set; }
         private TextBoxSprite SVText { get; set; }
         private Button TestButton { get; set; }
 
@@ -115,7 +115,7 @@ namespace Quaver.GameState.Gameplay
             };
             TestButton.Clicked += BackButtonClick;
 
-            TextUnder = new Sprite()
+            SvInfoTextBox = new Sprite()
             {
                 Image = GameBase.UI.HollowBox,
                 Tint = Color.Blue,
@@ -135,13 +135,13 @@ namespace Quaver.GameState.Gameplay
 
             //todo: remove this later
             TestButton.Clicked -= BackButtonClick;
-            TextUnder.Destroy();
+            SvInfoTextBox.Destroy();
         }
 
         public void Update(double dt)
         {
             TestButton.Update(dt);
-            TextUnder.Update(dt);
+            SvInfoTextBox.Update(dt);
             
             // Set the current song time.
             Timing.Update(dt);
@@ -165,7 +165,7 @@ namespace Quaver.GameState.Gameplay
             Logger.Update("Skippable", $"Intro Skippable: {IntroSkippable}");
 
             //Todo: remove. TEST.
-            TextUnder.Update(dt);
+            SvInfoTextBox.Update(dt);
 
             if (Timing.PlayingIsDone)
                 GameBase.GameStateManager.ChangeState(new ScoreScreenState(BeatmapMd5, ScoreManager, GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title, GameBase.SelectedBeatmap.DifficultyName, ReplayFrames));  
@@ -174,7 +174,7 @@ namespace Quaver.GameState.Gameplay
         public void Draw()
         {
             TestButton.Draw();
-            TextUnder.Draw();
+            //SvInfoTextBox.Draw();
             Playfield.Draw();
             NoteManager.Draw();
             PlayfieldUI.Draw();
