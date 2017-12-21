@@ -388,5 +388,10 @@ namespace Quaver.GameState.Gameplay
             AccuracyBoxUI.UpdateAccuracyBox(4, ScoreManager.JudgePressSpread[4], ScoreManager.JudgeReleaseSpread[4], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
             PlayfieldUI.UpdateJudge(4, ScoreManager.Combo);
         }
+
+        public void SkipSong(object sender, EventArgs e)
+        {
+            
+        }
     }
 }
