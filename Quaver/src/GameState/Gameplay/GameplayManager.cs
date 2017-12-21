@@ -67,6 +67,11 @@ namespace Quaver.GameState.Gameplay
         /// </summary>
         private bool IntroSkippable { get; set; }
 
+        /// <summary>
+        ///     The Current Song Time
+        /// </summary>
+        private double CurrentSongTime { get; set; }
+
         //todo: remove. TEST.
         private Sprite SvInfoTextBox { get; set; }
         private TextBoxSprite SVText { get; set; }
@@ -145,12 +150,13 @@ namespace Quaver.GameState.Gameplay
             
             // Set the current song time.
             Timing.Update(dt);
-            GameplayReferences.CurrentSongTime = Timing.CurrentSongTime;
+            CurrentSongTime = Timing.GeCurrentSongTime();
 
             // Check if the song is currently skippable.
-            IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.CurrentSongTime >= 5000);
+            IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - CurrentSongTime >= 5000);
 
             // Update Helper Classes
+            NoteManager.CurrentSongTime = CurrentSongTime;
             Playfield.Update(dt);
             NoteManager.Update(dt);
             AccuracyBoxUI.Update(dt);
@@ -189,7 +195,8 @@ namespace Quaver.GameState.Gameplay
         {
             //Initialize Score Manager
             //todo: temp
-            
+            CurrentSongTime = 0;
+
             var count = 0;
             var total = GameBase.SelectedBeatmap.Qua.HitObjects.Count;
 
@@ -255,7 +262,7 @@ namespace Quaver.GameState.Gameplay
             //Search for closest HitObject that is inside the HitTiming Window
             for (i = 0; i < NoteManager.HitObjectPoolSize && i < NoteManager.HitObjectPool.Count; i++)
             {
-                if (NoteManager.HitObjectPool[i].KeyLane == keyLane.GetKey() + 1 && NoteManager.HitObjectPool[i].StartTime - Timing.CurrentSongTime > -ScoreManager.HitWindowPress[4])
+                if (NoteManager.HitObjectPool[i].KeyLane == keyLane.GetKey() + 1 && NoteManager.HitObjectPool[i].StartTime - CurrentSongTime > -ScoreManager.HitWindowPress[4])
                 {
                     noteIndex = i;
                     break;
@@ -268,12 +275,12 @@ namespace Quaver.GameState.Gameplay
                 //Check which HitWindow this object's timing is in
                 for (i = 0; i < 5; i++)
                 {
-                    if (Math.Abs(NoteManager.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime) <= ScoreManager.HitWindowPress[i])
+                    if (Math.Abs(NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime) <= ScoreManager.HitWindowPress[i])
                     {
                         //Score manager stuff
-                        ScoreManager.Count(i, false, NoteManager.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime, Timing.CurrentSongTime / SongManager.Length);
+                        ScoreManager.Count(i, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime, CurrentSongTime / SongManager.Length);
                         AccuracyBoxUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount);
-                        PlayfieldUI.UpdateJudge(i, false, NoteManager.HitObjectPool[noteIndex].StartTime - Timing.CurrentSongTime);
+                        PlayfieldUI.UpdateJudge(i, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime);
 
                         // If the player is spamming
                         if (i >= 3)
@@ -326,7 +333,7 @@ namespace Quaver.GameState.Gameplay
                 int releaseTiming = -1;
                 for (i = 0; i < 4; i++)
                 {
-                    if (Math.Abs(NoteManager.HitObjectHold[noteIndex].EndTime - Timing.CurrentSongTime) <= ScoreManager.HitWindowRelease[i])
+                    if (Math.Abs(NoteManager.HitObjectHold[noteIndex].EndTime - CurrentSongTime) <= ScoreManager.HitWindowRelease[i])
                     {
                         releaseTiming = i;
                         break;
@@ -354,7 +361,7 @@ namespace Quaver.GameState.Gameplay
 
         public void PressMissed(object sender, EventArgs e)
         {
-            ScoreManager.Count(5, false, 0, GameplayReferences.CurrentSongTime/ SongManager.Length);
+            ScoreManager.Count(5, false, 0, CurrentSongTime/ SongManager.Length);
             AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount);
             PlayfieldUI.UpdateJudge(5);
         }
