@@ -75,7 +75,13 @@ namespace Quaver.Skins
         /// <summary>
         ///     Determines whether or not to color the HitObjects by their snap distance
         /// </summary>
-        internal bool ColourObjectsBySnapDistance { get; set; } = false;
+        internal bool ColourObjectsBySnapDistance { get; set; }
+
+        /// <summary>
+        ///     Determines the FPS of the animations
+        ///     Max - 255fps.
+        /// </summary>
+        internal byte LightFramesPerSecond { get; set; } = 240;
 
         /// <summary>
         /// The colour that is used for the column's lighting.
@@ -589,6 +595,7 @@ namespace Quaver.Skins
             ReceptorYOffset = ConfigHelper.ReadInt32(ReceptorYOffset, data["Gameplay"]["ReceptorYOffset"]);
             ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, data["Gameplay"]["ColumnAlignment"]);
             ColourObjectsBySnapDistance = ConfigHelper.ReadBool(ColourObjectsBySnapDistance, data["Gameplay"]["ColourObjectsBySnapDistance"]);
+            LightFramesPerSecond = ConfigHelper.ReadByte(LightFramesPerSecond, data["Gameplay"]["LightsFramesPerSecond"]);
             ColourLight1 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight1"]);
             ColourLight2 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight2"]);
             ColourLight3 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight3"]);
