@@ -169,15 +169,19 @@ namespace Quaver.GameState.Gameplay
                         break;
                 }
             }
+
             //Create hit body
             HitBodySprite = new Sprite()
             {
-                Tint = NoteColor,
                 Alignment = Alignment.TopLeft,
                 Position = _hitObjectPosition,
                 Size = Vector2.One * HitObjectSize,
                 Parent = ParentContainer
             };
+
+            // Add the tint if the skin permits it.
+            if (GameBase.LoadedSkin.ColourObjectsBySnapDistance)
+                HitBodySprite.Tint = NoteColor;
 
             // Choose the correct image based on the specific key lane.
             switch (GameBase.SelectedBeatmap.Qua.Mode)
