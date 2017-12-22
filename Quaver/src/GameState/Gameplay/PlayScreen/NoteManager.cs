@@ -252,9 +252,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <returns></returns>
         internal Color GetSnapColor(float offset, float bpm)
         {
-            // Add 2ms offset buffer space to offset and subtract until the offset is less than a beat long
+            // Add 2ms offset buffer space to offset and get beat length
             var pos = offset+2;
             var beatlength = 60000 / bpm;
+
+            // subtract pos until it's less than beat length. multiple loops for efficiency
+            while (pos >= beatlength * 65536) pos -= beatlength * 65536;
+            while (pos >= beatlength * 4096) pos -= beatlength * 4096;
+            while (pos >= beatlength * 256) pos -= beatlength * 256;
+            while (pos >= beatlength * 16) pos -= beatlength * 16;
             while (pos >= beatlength) pos -= beatlength;
 
             // Calculate Note's snap index
