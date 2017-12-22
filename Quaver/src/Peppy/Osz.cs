@@ -86,7 +86,7 @@ namespace Quaver.Peppy
                     var map = new PeppyBeatmap(file);
 
                     if (!map.IsValid)
-                        return;
+                        continue;
 
                     // Convert the map to .qua
                     var qua = Qua.ConvertOsuBeatmap(map);
