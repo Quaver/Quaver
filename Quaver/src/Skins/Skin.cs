@@ -147,6 +147,11 @@ namespace Quaver.Skins
         internal SoundEffect Click { get; set; }
         internal SoundEffect Back { get; set; }
 
+        /// <summary>
+        ///  Animation Elements
+        /// </summary>
+        internal List<Texture2D> HitLighting { get; set; }
+
         // Contains the file names of all skin elements
         private readonly string[] skinElements = new[]
         {
@@ -243,7 +248,10 @@ namespace Quaver.Skins
                 @"applause",
                 @"screenshot",
                 @"click",
-                @"back"
+                @"back",
+
+                // Animation Frames
+                @"hitlighting"
         };
 
         /// <summary>
@@ -485,6 +493,9 @@ namespace Quaver.Skins
                     case @"back":
                         Back = LoadSoundEffectElement(element, skinElementPath);
                         break;
+                    case @"hitlighting":
+                        HitLighting = LoadAnimationElements(skinDir, element, 5);
+                        break;
                     default:
                         break;
                 }
@@ -507,6 +518,34 @@ namespace Quaver.Skins
             //Console.WriteLine($"[SKIN LOADER] Skin element: {element}.png could not be found. Resulting to default: {path}");
 
             return GameBase.Content.Load<Texture2D>(path);
+        }
+
+        /// <summary>
+        ///     Loads a list of elements to be used in an animation.
+        ///     Example:
+        ///         - hitlighitng-0
+        ///         - hitlighting-1
+        ///         - hitlighting-2
+        ///         //
+        ///         - holdlighting-0
+        ///         - holdlighting-1
+        ///         - holdlighting-2
+        /// </summary>
+        /// <param name="skinDir"></param>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        private List<Texture2D> LoadAnimationElements(string skinDir, string element, int defaultNum)
+        {
+            var animationList = new List<Texture2D>();
+
+            // Run a loop and check if each file in the animation exists,
+            for (var i = 0; File.Exists($"{skinDir}/{element}-{i}.png"); i++)
+                animationList.Add(ImageLoader.Load($"{skinDir}/{element}-{i}.png"));
+
+            // TODO: Run a check to see if the animation list has any in it.
+            // If it does, then return it. If not, then we want to load the default skin's 
+            // animations using the defaultNum specified.
+            return animationList;
         }
 
         /// <summary>
