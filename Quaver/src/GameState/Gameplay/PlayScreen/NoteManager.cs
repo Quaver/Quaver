@@ -274,6 +274,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     return CustomColors.SnapColors[i];
                 }
             }
+
+            // If it's not snapped to 1/16 or less, return 1/48 snap color
             return CustomColors.SnapColors[8];
         }
 

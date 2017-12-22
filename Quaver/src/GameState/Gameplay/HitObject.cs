@@ -246,7 +246,8 @@ namespace Quaver.GameState.Gameplay
 
         public void Update(bool downScroll)
         {
-            if (true) //todo: only update if object is inside boundary
+            // Only update note if it's inside the window
+            if ((downScroll && _hitObjectPosition.Y > GameBase.Window.Y) || (!downScroll && _hitObjectPosition.Y < GameBase.Window.Y + GameBase.Window.Z)) //todo: only update if object is inside boundary
             {
                 if (IsLongNote)
                 {
