@@ -108,9 +108,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
                 // Set Snap Color of Object
                 // Right now this method only changes the tint of the hitobject, but hopefully we can come up with something better
-                var ti = GetBpmIndex(newObject.StartTime);
-                newObject.NoteColor = GetSnapColor(newObject.StartTime - qua.TimingPoints[ti].StartTime, qua.TimingPoints[ti].Bpm);
-
+                if (GameBase.LoadedSkin.ColourObjectsBySnapDistance)
+                {
+                    var ti = GetBpmIndex(newObject.StartTime);
+                    newObject.NoteColor = GetSnapColor(newObject.StartTime - qua.TimingPoints[ti].StartTime, qua.TimingPoints[ti].Bpm);
+                }
 
                 // If the object is a long note
                 if (newObject.IsLongNote)
