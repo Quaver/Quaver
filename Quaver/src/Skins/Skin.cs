@@ -67,11 +67,15 @@ namespace Quaver.Skins
         /// </summary>
         internal int ReceptorYOffset { get; set; } = 50;
 
-
         /// <summary>
         /// The alignment of the playfield as a percentage. 
         /// </summary>
         internal byte ColumnAlignment { get; set; } = 50;
+
+        /// <summary>
+        ///     Determines whether or not to color the HitObjects by their snap distance
+        /// </summary>
+        internal bool ColourObjectsBySnapDistance { get; set; } = false;
 
         /// <summary>
         /// The colour that is used for the column's lighting.
@@ -545,6 +549,7 @@ namespace Quaver.Skins
             ColumnSize7K = ConfigHelper.ReadInt32(ColumnSize7K, data["Gameplay"]["ColumnSize7k"]);
             ReceptorYOffset = ConfigHelper.ReadInt32(ReceptorYOffset, data["Gameplay"]["ReceptorYOffset"]);
             ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, data["Gameplay"]["ColumnAlignment"]);
+            ColourObjectsBySnapDistance = ConfigHelper.ReadBool(ColourObjectsBySnapDistance, data["Gameplay"]["ColourObjectsBySnapDistance"]);
             ColourLight1 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight1"]);
             ColourLight2 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight2"]);
             ColourLight3 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight3"]);
