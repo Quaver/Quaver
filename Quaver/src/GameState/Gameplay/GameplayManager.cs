@@ -263,7 +263,7 @@ namespace Quaver.GameState.Gameplay
             // Update Receptor in Playfield
             Playfield.UpdateReceptor(keyLane.GetKey(), true);
 
-            //Search for closest HitObject that is inside the HitTiming Window
+            // Search for closest HitObject that is inside the HitTiming Window
             for (i = 0; i < NoteManager.HitObjectPoolSize && i < NoteManager.HitObjectPool.Count; i++)
             {
                 if (NoteManager.HitObjectPool[i].KeyLane == keyLane.GetKey() + 1 && NoteManager.HitObjectPool[i].StartTime - CurrentSongTime > -ScoreManager.HitWindowPress[4])
@@ -273,17 +273,18 @@ namespace Quaver.GameState.Gameplay
                 }
             }
 
-            //If such HitObject exists, it will do key-press stuff to it
+            // If such HitObject exists, it will do key-press stuff to it
             if (noteIndex > -1)
             {
-                //Check which HitWindow this object's timing is in
+                // Check which HitWindow this object's timing is in
                 for (i = 0; i < 5; i++)
                 {
                     if (Math.Abs(NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime) <= ScoreManager.HitWindowPress[i])
                     {
-                        //Score manager stuff
+                        // Update ScoreManager and UI if note was pressed on time
                         ScoreManager.Count(i, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime, CurrentSongTime / SongManager.Length);
                         AccuracyBoxUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
+                        AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
                         PlayfieldUI.UpdateJudge(i, ScoreManager.Combo, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime);
 
                         // If the player is spamming
@@ -291,10 +292,10 @@ namespace Quaver.GameState.Gameplay
                             NoteManager.KillNote(noteIndex);
                         else
                         {
-                            //If the object is an LN, hold it at the receptors
+                            // If the object is an LN, hold it at the receptors
                             if (NoteManager.HitObjectPool[noteIndex].IsLongNote) NoteManager.HoldNote(noteIndex);
 
-                            //If the object is not an LN, recycle it.
+                            // If the object is not an LN, recycle it.
                             else NoteManager.RecycleNote(noteIndex);
                         }
 
@@ -318,7 +319,7 @@ namespace Quaver.GameState.Gameplay
             // Update Receptor in Playfield
             Playfield.UpdateReceptor(keyLane.GetKey(), false);
 
-            //Search for closest HitObject that is inside the HitTiming Window
+            // Search for closest HitObject that is inside the HitTiming Window
             for (i = 0; i < NoteManager.HitObjectHold.Count; i++)
             {
                 if (NoteManager.HitObjectHold[i].KeyLane == keyLane.GetKey() + 1)
@@ -328,7 +329,7 @@ namespace Quaver.GameState.Gameplay
                 }
             }
 
-            //If such HitObject exists, it will do key-press stuff to it
+            // If such HitObject exists, it will do key-press stuff to it
             if (noteIndex > -1)
             {
                 //Check which HitWindow this object's timing is in.
@@ -344,19 +345,23 @@ namespace Quaver.GameState.Gameplay
                     }
                 }
 
-                //If LN has been released during a HitWindow
+                // If LN has been released during a HitWindow
                 if (releaseTiming > -1)
                 {
+                    // Update ScoreManager and UI if note was pressed on time
                     ScoreManager.Count(i, true);
                     AccuracyBoxUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
+                    AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
                     PlayfieldUI.UpdateJudge(i, ScoreManager.Combo, true);
                     NoteManager.KillHold(noteIndex, true);
                 }
-                //If LN has been pressed early
+                // If LN has been pressed early
                 else
                 {
+                    // Update ScoreManager and UI if note was pressed on time
                     ScoreManager.Count(5, true);
                     AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
+                    AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
                     PlayfieldUI.UpdateJudge(5, ScoreManager.Combo, true);
                     NoteManager.KillHold(noteIndex);
                 }
@@ -372,6 +377,7 @@ namespace Quaver.GameState.Gameplay
             // Manage UI Helpers + Update Score Manager
             ScoreManager.Count(5, false, 0, CurrentSongTime/ SongManager.Length);
             AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
+            AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
             PlayfieldUI.UpdateJudge(5, ScoreManager.Combo);
         }
 
@@ -379,6 +385,7 @@ namespace Quaver.GameState.Gameplay
         {
             ScoreManager.Count(5, true);
             AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
+            AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
             PlayfieldUI.UpdateJudge(5, ScoreManager.Combo);
         }
 
@@ -386,6 +393,7 @@ namespace Quaver.GameState.Gameplay
         {
             ScoreManager.Count(4,true);
             AccuracyBoxUI.UpdateAccuracyBox(4, ScoreManager.JudgePressSpread[4], ScoreManager.JudgeReleaseSpread[4], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
+            AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
             PlayfieldUI.UpdateJudge(4, ScoreManager.Combo);
         }
 

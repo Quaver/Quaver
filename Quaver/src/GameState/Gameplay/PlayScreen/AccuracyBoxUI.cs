@@ -38,7 +38,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         private Boundary Boundary { get; set; }
 
-        public bool NoteHolding { get; set; }
+        private bool NoteHolding { get; set; }
 
         private double CurrentScore { get; set; }
 
@@ -56,6 +56,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         private int CurrentGrade { get; set; }
 
+        private float ProgressBarScale { get; set; }
+
         public void Initialize(IGameState state)
         {
             // Reference Variables
@@ -64,6 +66,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             CurrentGrade = 0;
             NoteHolding = false;
             NoteSpread = new int[6];
+            ProgressBarScale = 0;
 
             // Create Boundary
             Boundary = new Boundary();
@@ -233,6 +236,25 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
         }
 
+        internal void UpdateGradeBar(int index, float scale)
+        {
+            //Update BarScale Animation
+            ProgressBarScale = scale;
+
+            //If the player got a different grade
+            if (CurrentGrade != index)
+            {
+                //Upgrade Bar Images
+                CurrentGrade = index;
+                GradeLeft.Image = GameplayReferences.GradeImages[CurrentGrade + 1];
+                GradeRight.Image = GameplayReferences.GradeImages[CurrentGrade + 2];
+
+                //Upgrade Bar Color and Size
+                GradeProgressBar.UpdateBar(0, scale,
+                CustomColors.GradeColors[CurrentGrade + 1]);
+            }
+        }
+
         public void Update(double dt)
         {
             // Update Accuracy Graph Bars
@@ -263,23 +285,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             AccuracyCountText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
 
             // Upgrade Grade Progress Bar
-            if (CurrentGrade != GameplayReferences.GradeIndex)
-            {
-                //Upgrade Bar Images
-                CurrentGrade = GameplayReferences.GradeIndex;
-                GradeLeft.Image = GameplayReferences.GradeImages[CurrentGrade + 1];
-                GradeRight.Image = GameplayReferences.GradeImages[CurrentGrade + 2];
-
-                //Upgrade Bar Color and Size
-                GradeProgressBar.UpdateBar(0, GameplayReferences.AccScale,
-                CustomColors.GradeColors[CurrentGrade + 1]);
-            }
-            else
-            {
-                //Upgrade Bar Size
-                GradeProgressBar.UpdateBar(0,
-                Util.Tween(GameplayReferences.AccScale, GradeProgressBar.GetBarScale(0), tween));
-            }
+            GradeProgressBar.UpdateBar(0,
+                Util.Tween(ProgressBarScale, GradeProgressBar.GetBarScale(0), tween));
 
             // Update Boundary
             Boundary.Update(dt);   
