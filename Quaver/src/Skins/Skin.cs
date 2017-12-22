@@ -158,6 +158,12 @@ namespace Quaver.Skins
         /// </summary>
         internal List<Texture2D> HitLighting { get; set; }
 
+        /// <summary>
+        ///     The number of files that will be loaded in the default skin
+        ///     for hitlighting animations.
+        /// </summary>
+        private int HitLightingAnimDefault { get; } = 5;
+
         // Contains the file names of all skin elements
         private readonly string[] skinElements = new[]
         {
@@ -500,7 +506,7 @@ namespace Quaver.Skins
                         Back = LoadSoundEffectElement(element, skinElementPath);
                         break;
                     case @"hitlighting":
-                        HitLighting = LoadAnimationElements(skinDir, element, 5);
+                        HitLighting = LoadAnimationElements(skinDir, element, HitLightingAnimDefault);
                         break;
                     default:
                         break;
