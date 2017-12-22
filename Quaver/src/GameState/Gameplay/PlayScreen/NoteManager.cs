@@ -28,6 +28,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     internal class NoteManager : IHelper
     {
         //HitObjects
+        private int[] BeatSnaps { get; } = new int[8] { 48, 24, 16, 12, 8, 6, 4, 3 };
         internal List<HitObject> HitObjectPool { get; set; }
         internal List<HitObject> HitObjectDead { get; set; }
         internal List<HitObject> HitObjectHold { get; set; }
@@ -99,14 +100,19 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1], qua.HitObjects[i].StartTime * ScrollSpeed),
                 };
 
-                //Calculate SV Index for hit object
+                // Calculate SV Index for hit object
                 newObject.SvIndex = GetSvIndex(newObject.StartTime);
 
-                //Calculate Y-Offset From Receptor
+                // Calculate Y-Offset From Receptor
                 newObject.OffsetFromReceptor = SvOffsetFromTime(newObject.StartTime, newObject.SvIndex);
 
+                // Set Snap Color of Object
+                // Right now this method only changes the tint of the hitobject, but hopefully we can come up with something better
+                var ti = GetBpmIndex(newObject.StartTime);
+                newObject.NoteColor = GetSnapColor(newObject.StartTime - qua.TimingPoints[ti].StartTime, qua.TimingPoints[ti].Bpm);
 
-                //If the object is a long note
+
+                // If the object is a long note
                 if (newObject.IsLongNote)
                 {
                     //Set LN Variables
@@ -115,8 +121,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     newObject.CurrentLongNoteSize = newObject.InitialLongNoteSize;
                 }
 
-                //Initialize Object and add it to HitObjectPool
-                if (i < HitObjectPoolSize) newObject.Initialize(Config.Configuration.DownScroll, qua.HitObjects[i].EndTime > 0);
+                // Initialize Object and add it to HitObjectPool
+                if (i < HitObjectPoolSize) newObject.Initialize(Configuration.DownScroll, qua.HitObjects[i].EndTime > 0);
                 HitObjectPool.Add(newObject);
             }
 
@@ -239,6 +245,33 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         }
 
         /// <summary>
+        ///     Returns color of note beatsnap
+        /// </summary>
+        /// <param name="timeToOffset"></param>
+        /// <param name="bpm"></param>
+        /// <returns></returns>
+        internal Color GetSnapColor(float offset, float bpm)
+        {
+            // Add 2ms offset buffer space to offset and subtract until the offset is less than a beat long
+            var pos = offset+2;
+            var beatlength = 60000 / bpm;
+            while (pos >= beatlength) pos -= beatlength;
+
+            // Calculate Note's snap index
+            int index = (int)(Math.Floor(48 * pos / beatlength));
+
+            // Return Color of snap index
+            for (var i=0; i< 8; i++)
+            {
+                if (index % BeatSnaps[i] == 0)
+                {
+                    return CustomColors.SnapColors[i];
+                }
+            }
+            return CustomColors.SnapColors[8];
+        }
+
+        /// <summary>
         /// Calculates the position of the hitobject from given time
         /// </summary>
         /// <param name="timeToPos"></param>
@@ -294,6 +327,31 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 for (int j = 0; j < GameplayReferences.SvQueue.Count - 1; j++)
                 {
                     if (indexTime < GameplayReferences.SvQueue[j + 1].TargetTime)
+                    {
+                        newIndex = j;
+                        break;
+                    }
+                }
+            }
+
+            return newIndex;
+        }
+
+        /// <summary>
+        /// Gets the Index of the Bpm timing point from the Bpm Queue List
+        /// </summary>
+        /// <param name="indexTime"></param>
+        /// <returns></returns>
+        internal int GetBpmIndex(float indexTime)
+        {
+            var tp = GameBase.SelectedBeatmap.Qua.TimingPoints;
+            int newIndex = 0;
+            if (indexTime >= tp[tp.Count - 1].StartTime) newIndex = tp.Count - 1;
+            else
+            {
+                for (int j = 0; j < tp.Count - 1; j++)
+                {
+                    if (indexTime < tp[j + 1].StartTime)
                     {
                         newIndex = j;
                         break;
