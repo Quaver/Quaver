@@ -161,6 +161,8 @@ namespace Quaver.Peppy
                                     break;
                                 case "Mode":
                                     Mode = Int32.Parse(value, CultureInfo.InvariantCulture);
+                                    if (Mode != 3)
+                                        IsValid = false;
                                     break;
                                 case "LetterboxInBreaks":
                                     LetterboxInBreaks = Int32.Parse(value, CultureInfo.InvariantCulture);
@@ -270,6 +272,8 @@ namespace Quaver.Peppy
                                     break;
                                 case "CircleSize":
                                     KeyCount = Int32.Parse(value, CultureInfo.InvariantCulture);
+                                    if (KeyCount != 4 && KeyCount != 7)
+                                        IsValid = false;
                                     break;
                                 case "OverallDifficulty":
                                     OverallDifficulty = float.Parse(value, CultureInfo.InvariantCulture);
@@ -376,6 +380,10 @@ namespace Quaver.Peppy
                                     hitObject.Key6 = true;
                                 else if (hitObject.X >= 475 && hitObject.X <= 547)
                                     hitObject.Key7 = true;
+                            }
+                            else
+                            {
+                                IsValid = false;
                             }
 
                             hitObject.Y = Int32.Parse(values[1], CultureInfo.InvariantCulture);
