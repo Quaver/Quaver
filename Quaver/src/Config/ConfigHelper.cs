@@ -140,6 +140,24 @@ namespace Quaver.Config
         }
 
         /// <summary>
+        ///     Reads a byte from the config file
+        /// </summary>
+        /// <param name="defaultVal"></param>
+        /// <param name="newVal"></param>
+        /// <returns></returns>
+        internal static byte ReadByte(byte defaultVal, string newVal)
+        {
+            try
+            {
+                return byte.Parse(newVal);
+            }
+            catch (Exception e)
+            {
+                return defaultVal;
+            }
+        }
+
+        /// <summary>
         ///     Reads a signed byte from the config file
         /// </summary>
         /// <param name="defaultVal"></param>
