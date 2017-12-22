@@ -70,7 +70,15 @@ namespace Quaver.GameState.Gameplay
         /// </summary>
         public bool IsLongNote { get; set; }
 
-        private Color deadColor { get; } = Color.Gray;
+        /// <summary>
+        /// Tint of object when it is killed
+        /// </summary>
+        private Color DeadColor { get; } = Color.Gray;
+
+        /// <summary>
+        /// Tint of object determined by it's beat snap
+        /// </summary>
+        public Color NoteColor { get; set; } = Color.White;
 
         /// <summary>
         /// The position of the HitObject Sprites
@@ -164,6 +172,7 @@ namespace Quaver.GameState.Gameplay
             //Create hit body
             HitBodySprite = new Sprite()
             {
+                Tint = NoteColor,
                 Alignment = Alignment.TopLeft,
                 Position = _hitObjectPosition,
                 Size = Vector2.One * HitObjectSize,
@@ -283,10 +292,10 @@ namespace Quaver.GameState.Gameplay
         {
             if (IsLongNote)
             {
-                HoldBodySprite.Tint = deadColor;
-                HoldEndSprite.Tint = deadColor;
+                HoldBodySprite.Tint = DeadColor;
+                HoldEndSprite.Tint = DeadColor;
             }
-            HitBodySprite.Tint = deadColor;
+            HitBodySprite.Tint = DeadColor;
         }
     }
 }
