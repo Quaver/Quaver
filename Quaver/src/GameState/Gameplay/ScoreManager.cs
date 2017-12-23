@@ -161,8 +161,8 @@ namespace Quaver.GameState.Gameplay
             //var curve = (float)Math.Pow(od+1, -0.325) * GameBase.GameClock;
             //HitWindowPress = new float[5] { 20 * GameBase.GameClock, 88 * curve, 122 * curve, 148 * curve, 214 * curve };
             //HitWindowRelease = new float[4] { 30 * GameBase.GameClock, HitWindowPress[1]*1.35f, HitWindowPress[2] * 1.35f, HitWindowPress[3] * 1.35f };
-            HitWindowPress = new float[5] { 18, 35, 72, 90, 150 };
-            HitWindowRelease = new float[4] { 18, 35, 72, 90 }; // 1.25x
+            HitWindowPress = new float[5] { 18, 43, 76, 106f, 130f };
+            HitWindowRelease = new float[4] { HitWindowPress[0] * 1.25f, HitWindowPress[1] * 1.25f, HitWindowPress[2] * 1.25f, HitWindowPress[3] * 1.25f }; // 1.25x
 
             //count max score
             ScoreMax = 0;
