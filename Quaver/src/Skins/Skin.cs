@@ -12,6 +12,7 @@ using System.Runtime.Remoting.Channels;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Audio;
 using Quaver.Audio;
+using Quaver.Logging;
 using Quaver.Utility;
 
 namespace Quaver.Skins
@@ -100,9 +101,15 @@ namespace Quaver.Skins
         internal Texture2D ColumnHitLighting { get; set; }
         internal Texture2D ColumnTimingBar { get; set; }
 
+
+        internal List<Texture2D> NoteHitObjects4K1 { get; set; }
+        internal List<Texture2D> NoteHitObjects4K2 { get; set; }
+        internal List<Texture2D> NoteHitObjects4K3 { get; set; }
+        internal List<Texture2D> NoteHitObjects4K4 { get; set; }
+
         // 4k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
-        internal Texture2D[] NoteHitObjects { get; set; } = new Texture2D[4];
+        internal List<List<Texture2D>> NoteHitObjects { get; set; } = new List<List<Texture2D>>();
         internal Texture2D[] NoteHoldBodies { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteHoldEnds { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptors { get; set; } = new Texture2D[4];
@@ -305,16 +312,16 @@ namespace Quaver.Skins
                         ColumnTimingBar = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"note-hitobject1":
-                        NoteHitObjects[0] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(skinDir, element, 0);
                         break;
                     case @"note-hitobject2":
-                        NoteHitObjects[1] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(skinDir, element, 1);
                         break;
                     case @"note-hitobject3":
-                        NoteHitObjects[2] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(skinDir, element, 2);
                         break;
                     case @"note-hitobject4":
-                        NoteHitObjects[3] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(skinDir, element, 3);
                         break;
                     case @"note-hitobject7k1":
                         NoteHitObjects7K[0] = LoadIndividualElement(element, skinElementPath);
@@ -533,9 +540,53 @@ namespace Quaver.Skins
         }
 
         /// <summary>
+        ///     Loads the HitObjects w/ note snapping
+        ///     Each hitobject lane, gets to have more images for each snap distance.
+        /// 
+        ///     Example:
+        ///         In "note-hitobjectx-y", (x is denoted as the lane, and y is the snap)
+        ///         That being said, note-hitobject3-16, would be the object in lane 3, with 16th snap. 
+        /// 
+        ///         NOTE: For 1/1, objects, there is no concept of y. So the HitObject in lane 4, with 1/1 snap
+        ///         would have a file name of note-hitobject4. This is so that we don't require filename changes
+        ///         even though the user may not use snapping.    
+        /// 
+        ///         - note-hitobject1 (Lane 1 Default which is also 1/1 snap.)
+        ///         - note-hitobject1-2 (Lane 1, 1/2 Snap)
+        ///         - note-hitobject1-3 (Lane 1, 1/3 Snap)
+        ///         - note-hitobject1-4 (Lane 1, 1/4 Snap)
+        ///         //
+        ///         - note-hitobject2 (Lane 2 Default which is also 1/1 snap.)
+        ///         - note-hitobject2-2 (Lane 2, 1/2 Snap)
+        /// </summary>
+        /// <param name="skinDir"></param>
+        /// <param name="element"></param>
+        /// <param name="defaultNum"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        private void LoadHitObjects(string skinDir, string element, int index)
+        {
+            var objectsList = new List<Texture2D>();
+
+            // First load the beginning HitObject element, that doesn't require snapping.
+            objectsList.Add(LoadIndividualElement(element, skinDir + $"/{element}.png"));
+
+            // For each snap we load the separate image for it. 
+            // It HAS to be loaded in an incremental fashion. 
+            // So you can't have 1/48, but not have 1/3, etc.
+            var snaps = new [] { 2, 3, 4, 6, 8, 12, 16, 48 };
+
+            // If it can find the appropriate files, load them.
+            for (var i = 0; i < snaps.Length && File.Exists($"{skinDir}/{element}-{snaps[i]}.png"); i++)
+                objectsList.Add(ImageLoader.Load($"{skinDir}/{element}-{snaps[i]}.png"));
+
+            NoteHitObjects.Insert(index, objectsList);
+        }
+
+        /// <summary>
         ///     Loads a list of elements to be used in an animation.
         ///     Example:
-        ///         - hitlighitng-0
+        ///         - hitlighting-0
         ///         - hitlighting-1
         ///         - hitlighting-2
         ///         //

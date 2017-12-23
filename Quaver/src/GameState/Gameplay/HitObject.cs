@@ -76,9 +76,10 @@ namespace Quaver.GameState.Gameplay
         private Color DeadColor { get; } = Color.Gray;
 
         /// <summary>
-        /// Tint of object determined by it's beat snap
+        ///     The index of which to snap the note
+        ///     See: Skin.cs
         /// </summary>
-        public Color NoteColor { get; set; } = Color.White;
+        public int SnapIndex { get; set; } = 1;
 
         /// <summary>
         /// The position of the HitObject Sprites
@@ -179,17 +180,26 @@ namespace Quaver.GameState.Gameplay
                 Parent = ParentContainer
             };
 
-            // Add the tint if the skin permits it.
-            if (GameBase.LoadedSkin.ColourObjectsBySnapDistance)
-                HitBodySprite.Tint = NoteColor;
-
             // Choose the correct image based on the specific key lane.
             switch (GameBase.SelectedBeatmap.Qua.Mode)
             {
                 case GameModes.Keys4:
-                    for (var i = 0; i < GameBase.LoadedSkin.NoteHitObjects.Length; i++)
-                        if (KeyLane - 1 == i)
-                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects[i];
+                    for (var i = 0; i < 4; i++)
+                    {
+                        try
+                        {
+                            // If the user has ColourObjectsBySnapDistance enabled in their skin,
+                            // we'll try to load give the object the correct snap colour,
+                            // otherwise, we default it to the default or first (1/1) texture in the list.
+                            if (GameBase.LoadedSkin.ColourObjectsBySnapDistance && GameBase.LoadedSkin.NoteHitObjects[KeyLane - 1][SnapIndex] != null)
+                                HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects[KeyLane - 1][SnapIndex];
+                        }
+                        catch (Exception e)
+                        {
+                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects[KeyLane - 1][0];
+                        }
+                    }
+
                     break;
                 case GameModes.Keys7:
                     for (var i = 0; i < GameBase.LoadedSkin.NoteHitObjects7K.Length; i++)
