@@ -156,9 +156,9 @@ namespace Quaver.GameState.Gameplay
                 switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
                     case GameModes.Keys4:
-                        for (var i = 0; i < GameBase.LoadedSkin.NoteHoldBodies.Length; i++)
+                        for (var i = 0; i < GameBase.LoadedSkin.NoteHoldBodies4K.Length; i++)
                             if (KeyLane - 1 == i)
-                                HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies[i];
+                                HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies4K[i];
                         break;
                     case GameModes.Keys7:
                         for (var i = 0; i < GameBase.LoadedSkin.NoteHoldBodies7K.Length; i++)
@@ -187,9 +187,9 @@ namespace Quaver.GameState.Gameplay
             switch (GameBase.SelectedBeatmap.Qua.Mode)
             {
                 case GameModes.Keys4:
-                    for (var i = 0; i < GameBase.LoadedSkin.NoteHitObjects.Length; i++)
+                    for (var i = 0; i < GameBase.LoadedSkin.NoteHitObjects4K.Length; i++)
                         if (KeyLane - 1 == i)
-                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects[i];
+                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[i];
                     break;
                 case GameModes.Keys7:
                     for (var i = 0; i < GameBase.LoadedSkin.NoteHitObjects7K.Length; i++)
@@ -223,13 +223,13 @@ namespace Quaver.GameState.Gameplay
                 switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
                     case GameModes.Keys4:
-                        for (var i = 0; i < GameBase.LoadedSkin.NoteHoldEnds.Length; i++)
+                        for (var i = 0; i < GameBase.LoadedSkin.NoteHoldEnds4K.Length; i++)
                         {
                             if (KeyLane - 1 != i)
                                 return;
 
-                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds[i];
-                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds[i].Height / GameBase.LoadedSkin.NoteHoldEnds[i].Width;
+                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[i];
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds4K[i].Height / GameBase.LoadedSkin.NoteHoldEnds4K[i].Width;
                         }
                         break;
                     case GameModes.Keys7:
