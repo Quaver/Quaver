@@ -111,7 +111,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 if (GameBase.LoadedSkin.ColourObjectsBySnapDistance)
                 {
                     var ti = GetBpmIndex(newObject.StartTime);
-                    newObject.NoteColor = GetSnapColor(newObject.StartTime - qua.TimingPoints[ti].StartTime, qua.TimingPoints[ti].Bpm);
+                    newObject.SnapIndex = GetSnapIndex(newObject.StartTime - qua.TimingPoints[ti].StartTime, qua.TimingPoints[ti].Bpm, newObject.KeyLane);
                 }
 
                 // If the object is a long note
@@ -252,10 +252,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <param name="timeToOffset"></param>
         /// <param name="bpm"></param>
         /// <returns></returns>
-        internal Color GetSnapColor(float offset, float bpm)
+        internal int GetSnapIndex(float offset, float bpm, int lane)
         {
             // Add 2ms offset buffer space to offset and get beat length
-            var pos = offset+2;
+            var pos = offset + 2;
             var beatlength = 60000 / bpm;
 
             // subtract pos until it's less than beat length. multiple loops for efficiency
@@ -266,19 +266,19 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             while (pos >= beatlength) pos -= beatlength;
 
             // Calculate Note's snap index
-            int index = (int)(Math.Floor(48 * pos / beatlength));
+            var index = (int)(Math.Floor(48 * pos / beatlength));
 
             // Return Color of snap index
             for (var i=0; i< 8; i++)
             {
                 if (index % BeatSnaps[i] == 0)
                 {
-                    return CustomColors.SnapColors[i];
+                    return i;
                 }
             }
 
             // If it's not snapped to 1/16 or less, return 1/48 snap color
-            return CustomColors.SnapColors[8];
+            return 8;
         }
 
         /// <summary>
