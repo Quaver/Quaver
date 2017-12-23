@@ -120,8 +120,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
                     case GameModes.Keys4:
-                        Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors[i];
-                        Receptors[i].SizeY = GameplayReferences.PlayfieldObjectSize * (float) GameBase.LoadedSkin.NoteReceptors[i].Height / GameBase.LoadedSkin.NoteReceptors[i].Width;
+                        Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors4K[i];
+                        Receptors[i].SizeY = GameplayReferences.PlayfieldObjectSize * (float) GameBase.LoadedSkin.NoteReceptors4K[i].Height / GameBase.LoadedSkin.NoteReceptors4K[i].Width;
                         break;
                     case GameModes.Keys7:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors7K[i];
@@ -170,7 +170,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
                     case GameModes.Keys4:
-                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptors[curReceptor];
+                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptors4K[curReceptor];
                         break;
                     case GameModes.Keys7:
                         Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptors7K[curReceptor];
