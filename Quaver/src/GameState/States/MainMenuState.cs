@@ -67,7 +67,8 @@ namespace Quaver.GameState.States
             GameBase.GameWindow.Title = "Quaver";
 
             // Remove speed mods upon going to the main menu so songs can be played at normal speed.
-            ModManager.RemoveSpeedMods();
+            if (GameBase.CurrentGameModifiers.Count > 0)
+                ModManager.RemoveSpeedMods();
 
             // Initialize the main menu's audio player.
             MenuAudioPlayer.Initialize();
