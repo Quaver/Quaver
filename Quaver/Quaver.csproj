@@ -140,6 +140,7 @@
     <Compile Include="src\Logging\Log.cs" />
     <Compile Include="src\Logging\Logger.cs" />
     <Compile Include="src\Modifiers\Mods\Chill.cs" />
+    <Compile Include="src\Modifiers\Mods\Speed.cs" />
     <Compile Include="src\Modifiers\Mods\Speed20X.cs" />
     <Compile Include="src\Modifiers\Mods\Speed19X.cs" />
     <Compile Include="src\Modifiers\Mods\Speed18X.cs" />

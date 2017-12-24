@@ -27,49 +27,21 @@ namespace Quaver.Modifiers
             switch (modIdentifier)
             {
                 case ModIdentifier.Speed05X:                  
-                    mod = new Speed05X();
-                    break;
                 case ModIdentifier.Speed06X:
-                    mod = new Speed06X();
-                    break;
                 case ModIdentifier.Speed07X:
-                    mod = new Speed07X();
-                    break;
                 case ModIdentifier.Speed08X:
-                    mod = new Speed08X();
-                    break;
                 case ModIdentifier.Speed09X:
-                    mod = new Speed09X();
-                    break;
                 case ModIdentifier.Speed11X:
-                    mod = new Speed11X();
-                    break;
                 case ModIdentifier.Speed12X:
-                    mod = new Speed12X();
-                    break;
                 case ModIdentifier.Speed13X:
-                    mod = new Speed13X();
-                    break;
                 case ModIdentifier.Speed14X:
-                    mod = new Speed14X();
-                    break;
                 case ModIdentifier.Speed15X:
-                    mod = new Speed15X();
-                    break;
                 case ModIdentifier.Speed16X:
-                    mod = new Speed16X();
-                    break;
                 case ModIdentifier.Speed17X:
-                    mod = new Speed17X();
-                    break;
                 case ModIdentifier.Speed18X:
-                    mod = new Speed18X();
-                    break;
                 case ModIdentifier.Speed19X:
-                    mod = new Speed19X();
-                    break;
                 case ModIdentifier.Speed20X:
-                    mod = new Speed20X();
+                    mod = new Speed(modIdentifier);
                     break;
                 case ModIdentifier.NoSliderVelocity:
                     mod = new NoSliderVelocities();
@@ -155,6 +127,8 @@ namespace Quaver.Modifiers
                 GameBase.CurrentGameModifiers.RemoveAll(x => x.Type == ModType.Speed);
                 GameBase.GameClock = 1.0f;
                 SongManager.ChangeSongSpeed();
+                Logger.Log($"Removed Speed Mods from the current game modifiers.", Color.Cyan);
+                Logger.Log($"Current Mods: {String.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ToString()))}", Color.Cyan);
             }
             catch (Exception e)
             {
