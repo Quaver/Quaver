@@ -101,18 +101,9 @@ namespace Quaver.Skins
         internal Texture2D ColumnHitLighting { get; set; }
         internal Texture2D ColumnTimingBar { get; set; }
 
-
-        internal List<Texture2D> NoteHitObjects4K1 { get; set; }
-        internal List<Texture2D> NoteHitObjects4K2 { get; set; }
-        internal List<Texture2D> NoteHitObjects4K3 { get; set; }
-        internal List<Texture2D> NoteHitObjects4K4 { get; set; }
-
         // 4k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
-        internal List<List<Texture2D>> NoteHitObjects { get; set; } = new List<List<Texture2D>>();
-        internal Texture2D[] NoteHoldBodies { get; set; } = new Texture2D[4];
-        internal Texture2D[] NoteHoldEnds { get; set; } = new Texture2D[4];
-        internal Texture2D[] NoteReceptors { get; set; } = new Texture2D[4];
+        internal List<List<Texture2D>> NoteHitObjects4K { get; set; } = new List<List<Texture2D>>();
         internal Texture2D[] NoteHoldBodies4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteHoldEnds4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptors4K { get; set; } = new Texture2D[4];
@@ -316,16 +307,16 @@ namespace Quaver.Skins
                         ColumnTimingBar = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"note-hitobject1":
-                        LoadHitObjects(skinDir, element, 0);
+                        LoadHitObjects(NoteHitObjects4K, skinDir, element, 0);
                         break;
                     case @"note-hitobject2":
-                        LoadHitObjects(skinDir, element, 1);
+                        LoadHitObjects(NoteHitObjects4K, skinDir, element, 1);
                         break;
                     case @"note-hitobject3":
-                        LoadHitObjects(skinDir, element, 2);
+                        LoadHitObjects(NoteHitObjects4K, skinDir, element, 2);
                         break;
                     case @"note-hitobject4":
-                        LoadHitObjects(skinDir, element, 3);
+                        LoadHitObjects(NoteHitObjects4K, skinDir, element, 3);
                         break;
                     case @"note-hitobject7k1":
                         NoteHitObjects7K[0] = LoadIndividualElement(element, skinElementPath);
@@ -568,7 +559,7 @@ namespace Quaver.Skins
         /// <param name="defaultNum"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private void LoadHitObjects(string skinDir, string element, int index)
+        private void LoadHitObjects(List<List<Texture2D>> HitObjects, string skinDir, string element, int index)
         {
             var objectsList = new List<Texture2D>();
 
@@ -584,7 +575,7 @@ namespace Quaver.Skins
             for (var i = 0; i < snaps.Length && File.Exists($"{skinDir}/{element}-{snaps[i]}.png"); i++)
                 objectsList.Add(ImageLoader.Load($"{skinDir}/{element}-{snaps[i]}.png"));
 
-            NoteHitObjects.Insert(index, objectsList);
+            HitObjects.Insert(index, objectsList);
         }
 
         /// <summary>

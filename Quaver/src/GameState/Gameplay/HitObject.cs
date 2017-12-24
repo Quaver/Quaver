@@ -191,14 +191,14 @@ namespace Quaver.GameState.Gameplay
                             // If the user has ColourObjectsBySnapDistance enabled in their skin,
                             // we'll try to load give the object the correct snap colour,
                             // otherwise, we default it to the default or first (1/1) texture in the list.
-                            if (GameBase.LoadedSkin.ColourObjectsBySnapDistance && GameBase.LoadedSkin.NoteHitObjects[KeyLane - 1][SnapIndex] != null)
-                                HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects[KeyLane - 1][SnapIndex];
+                            if (GameBase.LoadedSkin.ColourObjectsBySnapDistance && GameBase.LoadedSkin.NoteHitObjects4K[KeyLane - 1][SnapIndex] != null)
+                                HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[KeyLane - 1][SnapIndex];
                             else
-                                HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects[KeyLane - 1][0];
+                                HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[KeyLane - 1][0];
                         }
                         catch (Exception e)
                         {
-                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects[KeyLane - 1][0];
+                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[KeyLane - 1][0];
                         }
                     }
                     break;
