@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Beatmaps;
 using Quaver.Config;
 using Quaver.Logging;
-using Quaver.QuaFile;
+using Quaver.Maps;
 using SQLite;
 
 namespace Quaver.Database
@@ -80,19 +80,19 @@ namespace Quaver.Database
         private static async Task SyncBeatmapDatabaseAsync()
         {
             // Find all the.qua files in the directory.
-            var quaFiles = Directory.GetFiles(Configuration.SongDirectory, "*.qua", SearchOption.AllDirectories);
-            Logger.Log($"Found: {quaFiles.Length} .qua files in the /songs/ directory.", Color.Cyan);
+            var Mapss = Directory.GetFiles(Configuration.SongDirectory, "*.qua", SearchOption.AllDirectories);
+            Logger.Log($"Found: {Mapss.Length} .qua files in the /songs/ directory.", Color.Cyan);
 
 
-            await CacheByFileCount(quaFiles);
+            await CacheByFileCount(Mapss);
 
             // Remove any qua files from the list that don't actually exist.
-            var quaFileList = quaFiles.ToList();
-            quaFileList.RemoveAll(x => !File.Exists(x));
-            quaFiles = quaFileList.ToArray();
-            Logger.Log($"After removing missing .qua files, there are now {quaFiles.Length}", Color.Cyan);
+            var MapsList = Mapss.ToList();
+            MapsList.RemoveAll(x => !File.Exists(x));
+            Mapss = MapsList.ToArray();
+            Logger.Log($"After removing missing .qua files, there are now {Mapss.Length}", Color.Cyan);
 
-            await CacheByMd5ChecksumAsync(quaFiles);
+            await CacheByMd5ChecksumAsync(Mapss);
             await RemoveMissingBeatmaps();
         }
 
@@ -100,23 +100,23 @@ namespace Quaver.Database
         ///     Compares the amount of files on the file system vs. that of in the database.
         ///     It will add any of them that it finds aren't in there.
         /// </summary>
-        /// <param name="quaFiles"></param>
+        /// <param name="Mapss"></param>
         /// <returns></returns>
-        private static async Task CacheByFileCount(string[] quaFiles)
+        private static async Task CacheByFileCount(string[] Mapss)
         {
             var beatmapsInDb = await FetchAllBeatmaps();
 
             // We only want to add more beatmaps here if the counts don't add up.
-            if (beatmapsInDb.Count == quaFiles.Length)
+            if (beatmapsInDb.Count == Mapss.Length)
                 return;
 
-            Logger.Log($"Incorrect # of .qua files vs maps detected. {quaFiles.Length} vs {beatmapsInDb.Count}", Color.Red);
+            Logger.Log($"Incorrect # of .qua files vs maps detected. {Mapss.Length} vs {beatmapsInDb.Count}", Color.Red);
 
             // This'll store all the beatmaps we'll be adding into the database.
             var beatmapsToCache = new List<Beatmap>();
 
             // Parse & add each beatmap to the list of maps to cache if they aren't already in the database.
-            foreach (var file in quaFiles)
+            foreach (var file in Mapss)
             {
                 // Run a check to see if the beatmap path already exists in the database.
                 if (beatmapsInDb.Any(beatmap => Configuration.SongDirectory.Replace("\\", "/") + "/" + beatmap.Directory + "/" + beatmap.Path.Replace("\\", "/") == file.Replace("\\", "/"))) continue;
@@ -148,12 +148,12 @@ namespace Quaver.Database
         ///     and updates/adds/removes them from the database.
         /// </summary>
         /// <returns></returns>
-        private static async Task CacheByMd5ChecksumAsync(IEnumerable<string> quaFiles)
+        private static async Task CacheByMd5ChecksumAsync(IEnumerable<string> Mapss)
         {
             // This'll hold all of the MD5 Checksums of the .qua files in the directory.
             // Since this is an updated list, we'll use these to check if they are in the database and unchanged.
             var fileChecksums = new List<string>();
-            quaFiles.ToList().ForEach(qua => fileChecksums.Add(BeatmapUtils.GetMd5Checksum(qua)));
+            Mapss.ToList().ForEach(qua => fileChecksums.Add(BeatmapUtils.GetMd5Checksum(qua)));
 
             // Find all the beatmaps in the database
             var beatmapsInDb = await FetchAllBeatmaps();

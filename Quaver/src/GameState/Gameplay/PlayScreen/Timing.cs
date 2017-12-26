@@ -4,7 +4,7 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.GameState.States;
 using Quaver.Modifiers;
-using Quaver.QuaFile;
+using Quaver.Maps;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {

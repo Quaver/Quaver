@@ -15,7 +15,7 @@ using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Utility;
 
-namespace Quaver.QuaFile
+namespace Quaver.Maps
 {
     internal class Qp
     {

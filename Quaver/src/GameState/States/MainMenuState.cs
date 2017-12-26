@@ -18,7 +18,7 @@ using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.Peppy;
-using Quaver.QuaFile;
+using Quaver.Maps;
 
 namespace Quaver.GameState.States
 {
