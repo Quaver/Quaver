@@ -21,7 +21,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Modifiers;
-using Quaver.QuaFile;
+using Quaver.Maps;
 using Quaver.Utility;
 
 namespace Quaver

@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Audio;
 using Quaver.Enums;
-using Quaver.QuaFile;
+using Quaver.Maps;
 using Quaver.Utility;
 using SQLite;
 
