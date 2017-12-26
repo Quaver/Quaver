@@ -61,14 +61,14 @@ namespace Quaver.GameState.States
         /// <returns></returns>
         internal static async Task AfterImport()
         {
-            var oldMaps = GameBase.Beatmaps;
+            var oldMaps = GameBase.Mapsets;
 
             // Import all the maps to the db
             await GameBase.LoadAndSetBeatmaps();
 
             // Update the selected beatmap with the new one.
             // This button should only be on the song select state, so no need to check for states here.
-            var newMapsets = GameBase.Beatmaps.Where(x => !oldMaps.Any(y => y.Directory == x.Directory)).ToList();
+            var newMapsets = GameBase.Mapsets.Where(x => !oldMaps.Any(y => y.Directory == x.Directory)).ToList();
 
             // In the event that the user imports maps when there weren't any maps previously.
             if (oldMaps.Count == 0)

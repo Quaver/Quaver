@@ -56,7 +56,7 @@ namespace Quaver.GameState.SongSelect
         {
             OrganizerSize = 50f;
             //Create buttons for every beatmap set TODO: Use beatmap set instead of beatmaps
-            foreach (var mapset in GameBase.VisibleBeatmaps)
+            foreach (var mapset in GameBase.VisibleMapsets)
             {
                 //Create Song Buttons
                 foreach (var map in mapset.Beatmaps)

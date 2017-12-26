@@ -174,11 +174,7 @@ namespace Quaver.Database
                     continue;
 
                 // Parse the map again and add it to the list of maps to be added to the database.
-                var processedMap = new Beatmap().ConvertQuaToBeatmap(Qua.Parse(map.Path), map.Path);
-                if (!processedMap.IsValidBeatmap)
-                    return;
-
-                reprocessedBeatmaps.Add(processedMap);
+                reprocessedBeatmaps.Add(new Beatmap().ConvertQuaToBeatmap(Qua.Parse(map.Path), map.Path));
             }
 
             var finalList = await RemoveDuplicates(reprocessedBeatmaps);

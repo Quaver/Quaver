@@ -70,7 +70,7 @@ namespace Quaver
         protected override void Initialize()
         {
             // Select a random beatmap if we do in fact have beatmaps.
-            if (GameBase.Beatmaps.Count != 0) BeatmapUtils.SelectRandomBeatmap();
+            if (GameBase.Mapsets.Count != 0) BeatmapUtils.SelectRandomBeatmap();
 
             // Enable console commands (Only applicable if on debug release)
             CommandHandler.HandleConsoleCommand();
@@ -105,7 +105,7 @@ namespace Quaver
 
             //Initialize Background Manager. Use after Load UI.
             BackgroundManager.Initialize();
-            if (GameBase.Beatmaps.Count != 0)
+            if (GameBase.Mapsets.Count != 0)
             {
                 // Load background asynchronously.
                 Task.Run(() => GameBase.LoadBackground())
