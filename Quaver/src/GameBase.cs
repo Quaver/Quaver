@@ -44,12 +44,12 @@ namespace Quaver
         /// <summary>
         ///     The current list of loaded beatmaps
         /// </summary>
-        public static List<Mapset> Beatmaps { get; set; }
+        public static List<Mapset> Mapsets { get; set; }
 
         /// <summary>
         ///     The current list of ***visible*** beatmaps - Use these for song select!
         /// </summary>
-        public static List<Mapset> VisibleBeatmaps { get; set; }
+        public static List<Mapset> VisibleMapsets { get; set; }
 
         /// <summary>
         ///     The currently selected beatmap.
@@ -189,8 +189,8 @@ namespace Quaver
         /// </summary>
         public static async Task LoadAndSetBeatmaps()
         {
-            Beatmaps = BeatmapUtils.OrderBeatmapsByArtist(await BeatmapCache.LoadBeatmapDatabaseAsync());
-            VisibleBeatmaps = Beatmaps;
+            Mapsets = BeatmapUtils.OrderBeatmapsByArtist(await BeatmapCache.LoadBeatmapDatabaseAsync());
+            VisibleMapsets = Mapsets;
         }
 
         /// <summary>

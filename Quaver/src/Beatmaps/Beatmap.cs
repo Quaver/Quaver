@@ -26,12 +26,6 @@ namespace Quaver.Beatmaps
         public string Md5Checksum { get; set; }
 
         /// <summary>
-        ///     Is the beatmap valid and able to be played?
-        /// </summary>
-        [Ignore]
-        public bool IsValidBeatmap { get; set; }
-
-        /// <summary>
         ///     The directory of the beatmap
         /// </summary>
         public string Directory { get; set; }
@@ -154,7 +148,6 @@ namespace Quaver.Beatmaps
             return new Beatmap
             {
                 Md5Checksum = BeatmapUtils.GetMd5Checksum(path),
-                IsValidBeatmap = true,
                 Directory = new DirectoryInfo(System.IO.Path.GetDirectoryName(path)).Name.Replace("\\", "/"),
                 Path = System.IO.Path.GetFileName(path).Replace("\\", "/"),
                 Artist = qua.Artist,
