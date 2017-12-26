@@ -44,12 +44,12 @@ namespace Quaver.Beatmaps
         /// <summary>
         ///     The beatmap set id of the map.
         /// </summary>
-        public int BeatmapSetId { get; set; }
+        public int MapSetId { get; set; }
 
         /// <summary>
-        ///     The beatmap id of the map.
+        ///     The id of the map.
         /// </summary>
-        public int BeatmapId { get; set; }
+        public int MapId { get; set; }
 
         /// <summary>
         ///     The song's artist
@@ -79,8 +79,7 @@ namespace Quaver.Beatmaps
         /// <summary>
         ///     The last time the user has played the map.
         /// </summary>
-        public DateTime LastPlayed { get; set; } =
-            new DateTime(0001, 1, 1, 00, 00, 00); // 01/01/0001 00:00:00 - If never played
+        public string LastPlayed { get; set; } = new DateTime(0001, 1, 1, 00, 00, 00).ToString("yyyy-MM-dd HH:mm:ss"); // 01/01/0001 00:00:00 - If never played
 
         /// <summary>
         ///     The difficulty rating of the beatmap.
@@ -110,7 +109,7 @@ namespace Quaver.Beatmaps
         /// <summary>
         ///     The description of the beatmap
         /// </summary>
-        public string Description { get; set; } = "No Description";
+        public string Description { get; set; }
 
         /// <summary>
         ///     The source (album/mixtape/etc) of the beatmap
@@ -163,8 +162,9 @@ namespace Quaver.Beatmaps
                 AudioPath = qua.AudioFile,
                 AudioPreviewTime = qua.SongPreviewTime,
                 BackgroundPath = qua.BackgroundFile,
-                BeatmapId = qua.MapId,
-                BeatmapSetId = qua.MapSetId,
+                Description = qua.Description,
+                MapId = qua.MapId,
+                MapSetId = qua.MapSetId,
                 Bpm = Qua.FindCommonBpm(qua),
                 Creator = qua.Creator,
                 DifficultyName = qua.DifficultyName,
