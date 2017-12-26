@@ -147,12 +147,6 @@ namespace Quaver.Config
         internal static sbyte GlobalOffset { get => _globalOffset; set { _globalOffset = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
-        ///     Dictates whether or not to show logger messages
-        /// </summary>
-        private static bool _debug = true;
-        internal static bool Debug { get => _debug; set { _debug = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
         ///     Dictates whether or not the song audio is pitched while using the Speed mod.
         /// </summary>
         private static bool _pitched;
@@ -370,7 +364,6 @@ namespace Quaver.Config
             _downScroll = ConfigHelper.ReadBool(DownScroll, data["DownScroll"]);
             _globalOffset = ConfigHelper.ReadSignedByte(GlobalOffset, data["GlobalOffset"]);
             _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
-            _debug = ConfigHelper.ReadBool(Debug, data["Debug"]);
             _pitched = ConfigHelper.ReadBool(Pitched, data["Pitched"]);
             _showReleaseCounter = ConfigHelper.ReadBool(_showReleaseCounter, data["ShowReleaseCounter"]);
             _gradeBarRelative = ConfigHelper.ReadBool(_gradeBarRelative, data["GradeBarRelative"]);

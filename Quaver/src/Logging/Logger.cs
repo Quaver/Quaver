@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -60,11 +61,9 @@ namespace Quaver.Logging
         /// </summary>
         /// <param name="name"></param>
         /// <param name="color"></param>
+        [Conditional("DEBUG")]
         internal static void Add(string name, string value, Color color)
         {
-            if (!Configuration.Debug)
-                return;
-
             if (GameBase.Content == null)
                 return;
 
@@ -79,11 +78,9 @@ namespace Quaver.Logging
         /// <summary>
         ///     Updates a logger's values.
         /// </summary>
+        [Conditional("DEBUG")]
         internal static void Update(string name, string value)
         {
-            if (!Configuration.Debug)
-                return;
-
             if (GameBase.Content == null)
                 return;
 
@@ -98,11 +95,9 @@ namespace Quaver.Logging
         ///     Removes a log from the current list.
         /// </summary>
         /// <param name="name"></param>
+        [Conditional("DEBUG")]
         internal static void Remove(string name)
         {
-            if (!Configuration.Debug)
-                return;
-
             if (GameBase.Content == null)
                 return;
 
@@ -112,11 +107,9 @@ namespace Quaver.Logging
         /// <summary>
         ///     Clears all of the logs from the list.
         /// </summary>
+        [Conditional("DEBUG")]
         internal static void Clear()
         {
-            if (!Configuration.Debug)
-                return;
-
             if (GameBase.Content == null)
                 return;
 
@@ -151,9 +144,7 @@ namespace Quaver.Logging
 
             }
 
-            if (!Configuration.Debug)
-                return;
-
+#if DEBUG
             if (GameBase.Content == null)
                 return;
 
@@ -165,17 +156,16 @@ namespace Quaver.Logging
                 NoDuration = false,
                 Value = value
             });
+#endif
         }
 
         /// <summary>
         ///     Draws the logs onto the screen.
         /// </summary>
+        [Conditional("DEBUG")]
         internal static void Draw(double dt)
         {
-            if (!Configuration.Debug)
-                return;
-
-                        if (GameBase.Content == null)
+            if (GameBase.Content == null)
                 return;
 
             for (var i = 0; i < Logs.Count; i++)
