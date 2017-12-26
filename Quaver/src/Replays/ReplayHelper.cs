@@ -11,7 +11,7 @@ using Quaver.Config;
 using Quaver.Enums;
 using Quaver.Logging;
 using Quaver.Modifiers;
-using Quaver.QuaFile;
+using Quaver.Maps;
 
 namespace Quaver.Replays
 {

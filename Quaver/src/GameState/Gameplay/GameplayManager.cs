@@ -15,7 +15,7 @@ using Quaver.Graphics;
 using Quaver.Input;
 using Quaver.Replays;
 using Quaver.Config;
-using Quaver.QuaFile;
+using Quaver.Maps;
 
 namespace Quaver.GameState.Gameplay
 {

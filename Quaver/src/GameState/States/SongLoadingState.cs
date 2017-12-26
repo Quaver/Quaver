@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Beatmaps;
 using Quaver.Logging;
-using Quaver.QuaFile;
+using Quaver.Maps;
 using Quaver.Replays;
 
 namespace Quaver.GameState.States

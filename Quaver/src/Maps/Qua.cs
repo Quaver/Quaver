@@ -11,7 +11,7 @@ using Quaver.Peppy;
 using Quaver.Enums;
 using Newtonsoft.Json;
 
-namespace Quaver.QuaFile
+namespace Quaver.Maps
 {
     public class Qua
     {

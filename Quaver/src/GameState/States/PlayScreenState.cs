@@ -21,7 +21,7 @@ using Quaver.Replays;
 using Quaver.GameState.Gameplay;
 using Quaver.GameState.Gameplay.PlayScreen;
 using Quaver.Modifiers;
-using Quaver.QuaFile;
+using Quaver.Maps;
 using Quaver.Utility;
 using Button = Quaver.Graphics.Button.Button;
 
