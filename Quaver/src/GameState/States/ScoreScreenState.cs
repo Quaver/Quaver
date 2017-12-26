@@ -435,7 +435,7 @@ namespace Quaver.GameState.States
                 Rating = 0.0f,
                 Mods = GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier),
                 ScrollSpeed = Configuration.ScrollSpeed,
-                ReplayData = ReplayPath += ".qua"
+                ReplayData = ReplayPath += ".qr"
             };
         }
 
