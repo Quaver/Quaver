@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Quaver.Beatmaps;
 using Quaver.Graphics.Sprite;
 using Quaver.Audio;
+using Quaver.Database;
 
 namespace Quaver.GameState.SongSelect
 {
@@ -91,7 +93,7 @@ namespace Quaver.GameState.SongSelect
         private void OnSongSelectButtonClick(object sender, EventArgs e, string text, Beatmap map)
         {
             Logger.Update("MapSelected", "Map Selected: " + text);
-
+            
             // Get the background path from the previous map
             var oldMapBgPath = GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.BackgroundPath;
             var oldMapAudioPath = GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.AudioPath;
@@ -105,7 +107,13 @@ namespace Quaver.GameState.SongSelect
             if (oldMapBgPath != map.Directory + "/" + map.BackgroundPath)
                 Task.Run(() => GameBase.LoadBackground())
                     .ContinueWith(t => BackgroundManager.Change(GameBase.CurrentBackground));
-                    
+            
+            // Load all the local scores from this map 
+            // TODO: Add filters, this should come after there's some sort of UI to do so
+            // TODO #2: Actually display these scores on-screen somewhere. Add loading animation before running task.
+            // TODO #3: Move this somewhere so that it automatically loads the scores upon first load as well.
+            Task.Run(async () => await LocalScoreCache.SelectBeatmapScores(GameBase.SelectedBeatmap.Md5Checksum))
+                .ContinueWith(t => Logger.Log($"Successfully loaded {t.Result.Count} local scores for this map.", Color.Cyan));
         }
 
         public void SetBeatmapOrganizerPosition(float scale)
