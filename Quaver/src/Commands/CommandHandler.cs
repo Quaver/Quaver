@@ -20,7 +20,8 @@ namespace Quaver.Commands
             new Clear(),
             new SearchMaps(),
             new Login(),
-            new LoginDev()
+            new LoginDev(),
+            new GetScores()
         };
 
         /// <summary>
