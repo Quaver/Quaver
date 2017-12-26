@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Text;
 
 using Quaver.Utility;
-using Quaver.Beatmaps;
+using Quaver.Database.Beatmaps;
 
 namespace Quaver.Graphics.Button
 {

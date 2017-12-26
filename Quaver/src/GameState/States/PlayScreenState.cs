@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
-using Quaver.Beatmaps;
+using Quaver.Database.Beatmaps;
 using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Quaver.Beatmaps;
+using Quaver.Database.Beatmaps;
 using Quaver.Database;
 using Quaver.Skins;
 using Microsoft.Xna.Framework;
