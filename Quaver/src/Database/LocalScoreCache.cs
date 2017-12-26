@@ -40,6 +40,25 @@ namespace Quaver.Database
         }
 
         /// <summary>
+        ///     Grabs all the local scores from a particular beatmap by MD5 hash
+        /// </summary>
+        /// <param name="md5"></param>
+        /// <returns></returns>
+        internal static async Task<List<LocalScore>> SelectBeatmapScores(string md5)
+        {
+            try
+            {
+                var conn = new SQLiteAsyncConnection(DatabasePath);         
+                return await conn.Table<LocalScore>().Where(x => x.BeatmapMd5 == md5).ToListAsync();
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message, Color.Red);
+                return new List<LocalScore>();
+            }
+        }
+
+        /// <summary>
         ///     Responsible for inserting a score into the database
         /// </summary>
         /// <param name="beatmaps"></param>
