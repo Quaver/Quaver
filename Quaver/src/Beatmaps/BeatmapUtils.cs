@@ -189,13 +189,13 @@ namespace Quaver.Beatmaps
         /// </summary>
         public static void SelectRandomBeatmap()
         {
-            if (GameBase.Beatmaps.Count == 0)
+            if (GameBase.Mapsets.Count == 0)
                 return;
 
             // Find the number of total beatmaps
             var totalMaps = 0;
 
-            foreach (var mapset in GameBase.Beatmaps)
+            foreach (var mapset in GameBase.Mapsets)
             {
                 totalMaps += mapset.Beatmaps.Count;
             }
@@ -205,7 +205,7 @@ namespace Quaver.Beatmaps
 
             // Find the totalMaps'th beatmap
             var onMap = 0;
-            foreach (var mapset in GameBase.Beatmaps)
+            foreach (var mapset in GameBase.Mapsets)
             {
                 var foundBeatmap = false;
 

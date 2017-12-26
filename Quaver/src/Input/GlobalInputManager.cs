@@ -99,7 +99,7 @@ namespace Quaver.Input
                 Task.Run(async () =>
                 {
                     await GameBase.LoadAndSetBeatmaps();
-                    GameBase.VisibleBeatmaps = GameBase.Beatmaps;
+                    GameBase.VisibleMapsets = GameBase.Mapsets;
                 });
             }
         }

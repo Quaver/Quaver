@@ -23,7 +23,7 @@ namespace Quaver.Commands
             commandString.AppendLine();
 
             var i = 0;
-            foreach (var mapset in GameBase.Beatmaps)
+            foreach (var mapset in GameBase.Mapsets)
             {
                 commandString.AppendLine($"[{i}] {mapset.Directory} - {mapset.Beatmaps.Count} maps");
                 i++;

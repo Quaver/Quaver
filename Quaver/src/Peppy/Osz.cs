@@ -133,9 +133,8 @@ namespace Quaver.Peppy
                         case ".jpg":
                         case ".png":
                         case ".jpeg":
+                        case ".ogg":
                             File.Move(filesInDir[i], $"{newSongDir}/{Path.GetFileName(filesInDir[i])}");
-                            break;
-                        default:
                             break;
                     }
                 }
