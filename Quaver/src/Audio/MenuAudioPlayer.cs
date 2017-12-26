@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -17,11 +18,16 @@ namespace Quaver.Audio
     internal class MenuAudioPlayer
     {
         /// <summary>
+        ///     A reference to the last beatmap that was selected.
+        /// </summary>
+        private static Beatmap LastBeatmap { get; set; }
+
+        /// <summary>
         ///     Initializes the main menu's audio player.
         /// </summary>
         internal static void Initialize()
         {
-            if (GameBase.Beatmaps.Count == 0)
+            if (GameBase.Mapsets.Count == 0)
                 return; 
 
             // Load and play the randomly selected beatmap's song.
@@ -54,18 +60,22 @@ namespace Quaver.Audio
         /// </summary>
         internal static void PlayRandomBeatmaps()
         {
-            if (GameBase.Beatmaps.Count == 0)
+            if (GameBase.Mapsets.Count == 0 || SongManager.Position < SongManager.Length)
                 return;
-
-            if (SongManager.Position < SongManager.Length)
-                return;
-
+            
             if (SongManager.Length > 1)
                 SongManager.Stop();
 
             // Select new map
-            BeatmapUtils.SelectRandomBeatmap();
+            if (GameBase.Mapsets.Count > 1)
+                BeatmapUtils.SelectRandomBeatmap();
 
+            // Check if the newly selected map isn't the same as the last.
+            if (GameBase.SelectedBeatmap == LastBeatmap)
+                return;
+
+            LastBeatmap = GameBase.SelectedBeatmap;
+            
             // Load Audio
             SongManager.Load();
 
@@ -76,7 +86,7 @@ namespace Quaver.Audio
                 BackgroundManager.Change(GameBase.CurrentBackground);
 
             // Begin to play
-            if (SongManager.Length > 1)
+            if (SongManager.Length > 1 && SongManager.AudioStream != 0)
                 SongManager.Play();
 
             // Set new Discord Rich Presence
