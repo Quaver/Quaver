@@ -18,7 +18,7 @@ Quaver is still under development and should not be used for gameplay, and is on
 # Contributing 
 We are welcoming all contributions to our game. The best place to start contributing is by joining our [Discord Server](https://discord.gg/nJa8VFr). All of our main developers, contributors, testers, and community are there and is the best place for real-time collaboration.
 
-To start contributing, please work on the [dev branch](https://github.com/Swan/Quaver/tree/dev). This branch is for public development without any private submodules with mixed in code. Merges from master/other branches to the public development branch should be frequent. 
+To start contributing, we have made it very easy to begin developing. Given that we have private submodules, we have added the "Public" solution configuration which should ultimately remove all privatized library code that is mixed in. When using this, you should be able to compile as normal.
 
 Also, please note that our code is not perfect, but we do have certain standards in place for how we organize our code. It is best to follow those same practices unless you find something completely wrong with it - which in that case we are open for suggestions.
 
