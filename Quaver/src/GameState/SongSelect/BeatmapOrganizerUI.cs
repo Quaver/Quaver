@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Beatmaps;
+using Quaver.Database.Beatmaps;
 using Quaver.Graphics.Sprite;
 using Quaver.Audio;
 using Quaver.Database;

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using Ionic.Zip;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
-using Quaver.Beatmaps;
+using Quaver.Database.Beatmaps;
 using Quaver.Config;
 using Quaver.GameState.States;
 using Quaver.Graphics.Sprite;

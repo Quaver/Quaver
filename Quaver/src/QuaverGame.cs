@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Audio;
-using Quaver.Beatmaps;
+using Quaver.Database.Beatmaps;
 using Quaver.Database;
 using Quaver.GameState;
 using Quaver.GameState.States;

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
-using Quaver.Beatmaps;
+using Quaver.Database.Beatmaps;
 using Quaver.Discord;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
