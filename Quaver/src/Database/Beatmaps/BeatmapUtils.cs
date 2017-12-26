@@ -9,7 +9,7 @@ using ManagedBass;
 using Microsoft.Xna.Framework;
 using Quaver.Logging;
 
-namespace Quaver.Beatmaps
+namespace Quaver.Database.Beatmaps
 {
     internal static class BeatmapUtils
     {

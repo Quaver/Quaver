@@ -9,7 +9,7 @@ using ManagedBass;
 using Ionic.Zip;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
-using Quaver.Beatmaps;
+using Quaver.Database.Beatmaps;
 using Quaver.Database;
 using Quaver.Discord;
 using Quaver.GameState;

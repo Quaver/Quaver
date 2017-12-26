@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Quaver.Beatmaps
+namespace Quaver.Database.Beatmaps
 {
     internal class Mapset
     {

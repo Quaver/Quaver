@@ -12,7 +12,7 @@ using Quaver.Maps;
 using Quaver.Utility;
 using SQLite;
 
-namespace Quaver.Beatmaps
+namespace Quaver.Database.Beatmaps
 {
     internal class Beatmap
     {
