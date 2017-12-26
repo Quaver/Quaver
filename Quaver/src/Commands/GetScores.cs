@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.Database;
+using Quaver.Modifiers;
 
 namespace Quaver.Commands
 {
@@ -25,7 +26,7 @@ namespace Quaver.Commands
 
                 sb.AppendLine("Id | Name | Date | Score | Accuracy | Max Combo | Mods");
                 foreach (var score in scores)
-                    sb.AppendLine($"{score.Id} | {score.Name} | {score.DateTime} | {score.Score} | {score.Accuracy}% | {score.MaxCombo}x | {score.Mods}");
+                    sb.AppendLine($"{score.Id} | {score.Name} | {score.DateTime} | {score.Score} | {score.Accuracy}% | {score.MaxCombo}x | {(ModIdentifier)Enum.Parse(typeof(ModIdentifier), score.Mods.ToString())}");
                 
                 Console.WriteLine(sb.ToString());
             });
