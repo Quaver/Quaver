@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -260,11 +261,9 @@ namespace Quaver.Replays
         /// <summary>
         ///     Writes the replay to a log file if in debug mode
         /// </summary>
+        [Conditional("DEBUG")]
         internal void WriteToLogFile(string path = "")
         {
-            if (!Configuration.Debug)
-                return;
-
             // Create file and close it.
             if (path == "")
                 path = DebugFilePath;

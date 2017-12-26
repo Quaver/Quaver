@@ -19,8 +19,10 @@ namespace Quaver.Commands
             new DisplayMaps(),
             new Clear(),
             new SearchMaps(),
+#if !PUBLIC
             new Login(),
             new LoginDev(),
+#endif
             new GetScores()
         };
 
