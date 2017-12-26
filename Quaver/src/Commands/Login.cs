@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if !PUBLIC
 using Quaver.Online.Wobble;
+
 
 namespace Quaver.Commands
 {
@@ -30,3 +32,4 @@ namespace Quaver.Commands
         }
     }
 }
+#endif
