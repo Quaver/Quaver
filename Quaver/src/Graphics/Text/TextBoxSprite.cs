@@ -24,24 +24,17 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     Maximum lines of text this body can have before vertical overflow.
         /// </summary>
-        private int MaxTextLines { get; set; }
+        public int MaxTextLines { get; set; }
 
         /// <summary>
-        ///     The text of this TextSprite
+        ///     The alignment of the text.
         /// </summary>
-        public string Text {
-            get
-            {
-                return _text;
-            }
-            set
-            {
-                _text = value;
-                Changed = true;
-            } 
-        }
-
         public Alignment TextAlignment { get; set; } = Alignment.MidCenter;
+
+        /// <summary>
+        ///     The scale of the text.
+        /// </summary>
+        public float TextScale { get; set; } = 1.5f;
 
         /// <summary>
         ///     Determines if the text will stop before overflowing.
@@ -62,6 +55,9 @@ namespace Quaver.Graphics.Text
         /// </summary>
         private Vector4 _globalTextVect = Vector4.Zero;
 
+        /// <summary>
+        ///     The position of the text box
+        /// </summary>
         private Vector2 _textPos = Vector2.Zero;
 
         /// <summary>
@@ -70,7 +66,7 @@ namespace Quaver.Graphics.Text
         private Vector4 _textVect;
 
         /// <summary>
-        ///     The size of the rendered text in a single row.
+        ///     The size of the rendered text box in a single row.
         /// </summary>
         private Vector2 _textSize;
 
@@ -78,6 +74,22 @@ namespace Quaver.Graphics.Text
         ///     The font of this object
         /// </summary>
         public SpriteFont Font { get; set; } = Fonts.Medium12;
+
+        /// <summary>
+        ///     The text of this TextSprite
+        /// </summary>
+        public string Text
+        {
+            get
+            {
+                return _text;
+            }
+            set
+            {
+                _text = value;
+                Changed = true;
+            }
+        }
 
         /// <summary>
         ///     The tint this Text Object will inherit.
@@ -133,7 +145,19 @@ namespace Quaver.Graphics.Text
             //TODO: SpriteFont.MeasureString()
             //Draw itself if it is in the window
             if (Util.Vector4Intercepts(GameBase.Window, GlobalVect) && Visible)
-                GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color);
+                GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color, 0, Vector2.One, Vector2.One * TextScale, SpriteEffects.None, 0);
+
+            /*
+                 SpriteFont spriteFont,
+                 string text,
+                 Vector2 position,
+                 Color color,
+                 float rotation,
+                 Vector2 origin,
+                 Vector2 scale,
+                 SpriteEffects effects,
+                 float layerDepth
+            */
 
             base.Draw();
         }
