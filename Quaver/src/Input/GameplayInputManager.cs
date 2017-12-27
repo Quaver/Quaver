@@ -89,10 +89,6 @@ namespace Quaver.Input
             // Pause game
             //HandlePause();
 
-            // Don't handle the below if the game is paused.
-            //if (IsPaused)
-                return;
-
             // Check Mania Key Presses
             HandleManiaKeyPresses();
 
