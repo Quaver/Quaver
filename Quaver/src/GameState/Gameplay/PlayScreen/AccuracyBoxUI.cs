@@ -129,6 +129,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Font = Fonts.Medium16,
                     TextColor = i == 0 ? Color.White : CustomColors.JudgeColors[i-1],
                     Text = i == 0 ? "Accuracy" : GameplayReferences.JudgeNames[i-1],
+                    TextScale = GameBase.WindowYRatio,
                     Alpha = 0.3f
                 };
             }
@@ -147,7 +148,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Multiline = false,
                     Font = Fonts.Medium16,
                     TextColor = i == 0 ? Color.White : CustomColors.JudgeColors[i - 1],
-                    Text = i == 0 ? "00.00%" : "0 | 0"
+                    Text = i == 0 ? "00.00%" : "0 | 0",
+                    TextScale = GameBase.WindowYRatio,
                 };
             }
 
@@ -163,6 +165,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Font = Fonts.Medium24,
                 TextColor = Color.White,
                 Text = "0000000",
+                TextScale = GameBase.WindowYRatio,
                 PositionY = 0,
                 PositionX = 10
             };

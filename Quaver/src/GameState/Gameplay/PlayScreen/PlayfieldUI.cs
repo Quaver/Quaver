@@ -147,6 +147,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.TopCenter,
                 Text = "0x",
+                TextScale = GameBase.WindowYRatio,
                 Font = Fonts.Medium16,
                 Parent = Boundary,
                 Alpha = 0
