@@ -61,6 +61,16 @@ namespace Quaver
             {
                 GameBase.DiscordController = new DiscordController();
                 GameBase.DiscordController.Initialize();
+
+                // Create a new RichPresence
+                GameBase.DiscordController.presence = new DiscordRPC.RichPresence()
+                {
+                    details = "Idle",
+                    largeImageKey = "quaver",
+                    largeImageText = Configuration.Username
+                };
+                DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+
                 GameBase.DiscordRichPresencedInited = true;
             }
             catch (Exception e)
