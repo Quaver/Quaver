@@ -109,7 +109,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     ScaleX = 0,
                     ScaleY = 1,
                     SizeY = -2,
-                    Tint = CustomColors.JudgeColors[i],
+                    Tint = GameColors.JudgeColors[i],
                     Alpha = 0.12f
                 };
             }
@@ -127,7 +127,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Wordwrap = false,
                     Multiline = false,
                     Font = Fonts.Medium16,
-                    TextColor = i == 0 ? Color.White : CustomColors.JudgeColors[i-1],
+                    TextColor = i == 0 ? Color.White : GameColors.JudgeColors[i-1],
                     Text = i == 0 ? "Accuracy" : GameplayReferences.JudgeNames[i-1],
                     TextScale = GameBase.WindowYRatio,
                     Alpha = 0.3f
@@ -147,7 +147,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Wordwrap = false,
                     Multiline = false,
                     Font = Fonts.Medium16,
-                    TextColor = i == 0 ? Color.White : CustomColors.JudgeColors[i - 1],
+                    TextColor = i == 0 ? Color.White : GameColors.JudgeColors[i - 1],
                     Text = i == 0 ? "00.00%" : "0 | 0",
                     TextScale = GameBase.WindowYRatio,
                 };
@@ -254,7 +254,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
                 //Upgrade Bar Color and Size
                 GradeProgressBar.UpdateBar(0, scale,
-                CustomColors.GradeColors[CurrentGrade + 1]);
+                GameColors.GradeColors[CurrentGrade + 1]);
             }
         }
 

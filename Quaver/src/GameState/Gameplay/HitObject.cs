@@ -270,7 +270,6 @@ namespace Quaver.GameState.Gameplay
                     {
                         HoldBodySprite.Visible = false;
                         HoldEndSprite.Visible = false;
-
                     }
                     else
                     {

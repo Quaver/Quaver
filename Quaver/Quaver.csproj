@@ -209,7 +209,7 @@
     <Compile Include="src\Modifiers\ModType.cs" />
     <Compile Include="src\Modifiers\Mods\NoSliderVelocities.cs" />
     <Compile Include="src\Notifications\Notification.cs" />
-    <Compile Include="src\Graphics\CustomColors.cs" />
+    <Compile Include="src\Graphics\GameColors.cs" />
     <Compile Include="src\Graphics\Sprite\Sprite.cs" />
     <Compile Include="src\Graphics\Drawable.cs" />
     <Compile Include="src\Peppy\PeppyBeatmap.cs" />

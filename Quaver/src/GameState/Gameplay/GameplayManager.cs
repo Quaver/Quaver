@@ -234,8 +234,8 @@ namespace Quaver.GameState.Gameplay
             // Create loggers
             Logger.Add("KeyCount", "", Color.Pink);
             Logger.Add("SongPos", "", Color.White);
-            Logger.Add("Skippable", "", CustomColors.NameTagAdmin);
-            Logger.Add("JudgeDifficulty", "", CustomColors.NameTagModerator);
+            Logger.Add("Skippable", "", GameColors.NameTagAdmin);
+            Logger.Add("JudgeDifficulty", "", GameColors.NameTagModerator);
 
             // Update hit window logger
             var loggertext = "Hitwindow: Judge: " + ScoreManager.JudgeDifficulty + "   Press: ";
