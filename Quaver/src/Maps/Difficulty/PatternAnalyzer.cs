@@ -100,8 +100,8 @@ namespace Quaver.Maps.Difficulty
             var detectedPatterns = new List<VibroPatternInfo>();
 
             // The difference in milliseconds that would be detected as a vibro pattern.
-            // 88ms per hit is 170BPM, so if it's an less than that, that too would be considered vibro
-            const int vibroMsDiff = 88;
+            // 88ms per hit is ~165BPM, so if it's an less than that, that too would be considered vibro
+            const int vibroMsDiff = 91;
 
             // The number of objects required to be considered a vibro pattern
             const int consideredVibroNum = 4;
