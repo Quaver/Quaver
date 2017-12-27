@@ -48,7 +48,7 @@ namespace Quaver.Graphics.Text
         ///     If multiline is enabled, this value will stop vertical overflowing.
         ///     If multiline is disabled, this value will stop horizontal overflowing.
         /// </summary>
-        public bool Textwrap { get; set; } = true;
+        public bool Wordwrap { get; set; } = true;
 
         /// <summary>
         ///     Determines if more than 1 line of text should be used. 
@@ -157,7 +157,7 @@ namespace Quaver.Graphics.Text
                 MaxTextLines = (int)Math.Max(Math.Floor(SizeY / _textSize.Y), 1); //TODO: update later
                 _text = WrapText(Text, false);
             }
-            else if (Textwrap)
+            else if (Wordwrap)
                 _text = WrapText(Text, true);
         }
 
@@ -189,7 +189,7 @@ namespace Quaver.Graphics.Text
 
                     //Check if text wrap should continue
                     textline++;
-                    if (Textwrap && textline >= MaxTextLines) break;
+                    if (Wordwrap && textline >= MaxTextLines) break;
                 }
                 else break;
                 wrappedText.Append(a + " ");
