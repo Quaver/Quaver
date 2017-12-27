@@ -160,10 +160,10 @@ namespace Quaver.Maps.Difficulty
         ///     Detects jack patterns per key lane
         ///     
         ///     A Jack pattern can be considered as 2+ notes in succession in a given lane,
-        ///     at a bpm range of 95-175 (159ms - 85ms object start time differences).
+        ///     at a bpm range of 95-175 (159ms - 84ms object start time differences).
         /// 
         ///     One caveat about jacks is that there are certain patterns that make it harder or easier,
-        /// 
+        ///     but this function only detects per lane and not patterns like Jumps, Hands, and Quad Jacks
         /// </summary>
         /// <param name="hitObjects"></param>
         /// <returns></returns>
@@ -172,8 +172,8 @@ namespace Quaver.Maps.Difficulty
             var detectedPatterns = new List<JackPatternInfo>();
 
             // The difference in milliseconds of the range that would be detected as a jack pattern.
-            // 95BPM - 169BPM is considered jacks.
-            // That's around a 158ms start time difference per object
+            // 95BPM - 175BPM is considered jacks.
+            // That's around a 84-159ms start time difference per object
             const int minJackMsDiff = 84;
             const int maxJackMsDiff = 159;
 
