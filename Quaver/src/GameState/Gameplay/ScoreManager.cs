@@ -139,7 +139,7 @@ namespace Quaver.GameState.Gameplay
         ///     Clear and Initialize Scoring related variables
         /// </summary>
         /// <param name="Count"> Total amount of hitobjects + releases</param>
-        internal void Initialize(int count, float od)
+        internal void Initialize(int count)
         {
             ncount = count; //todo: remove
 
@@ -154,7 +154,6 @@ namespace Quaver.GameState.Gameplay
             JudgePressSpread = new int[6];
             MsDeviance = new List<NoteRecord>();
             TotalJudgeCount = count;
-            JudgeDifficulty = od;
             SongLength = SongManager.Length / GameBase.GameClock;
 
             //Create Difficulty Curve for od
