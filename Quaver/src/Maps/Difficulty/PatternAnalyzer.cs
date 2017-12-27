@@ -42,8 +42,6 @@ namespace Quaver.Maps.Difficulty
             Console.WriteLine($"Lane 5 Detected Vibro Patterns: {vibroPatternsLane5.Count}");
             Console.WriteLine($"Lane 6 Detected Vibro Patterns: {vibroPatternsLane6.Count}");
             Console.WriteLine($"Lane 7 Detected Vibro Patterns: {vibroPatternsLane7.Count}");*/
-            Console.WriteLine($"Total Detected Vibro Patterns: {detectedPatterns.Count}");
-
             return detectedPatterns;
         }
 
@@ -79,8 +77,6 @@ namespace Quaver.Maps.Difficulty
             Console.WriteLine($"Lane 5 Detected jack Patterns: {jackPatternsLane5.Count}");
             Console.WriteLine($"Lane 6 Detected jack Patterns: {jackPatternsLane6.Count}");
             Console.WriteLine($"Lane 7 Detected jack Patterns: {jackPatternsLane7.Count}");*/
-            Console.WriteLine($"Total Detected jack Patterns: {detectedPatterns.Count}");
-
             return detectedPatterns;
         }
 
@@ -124,11 +120,11 @@ namespace Quaver.Maps.Difficulty
 
                         // Add the last detected pattern to the list.
                         detectedPatterns.Add(new VibroPatternInfo
-                        {
-                           
+                        {                      
                             HitObjects = currentPattern,
                             Lane = currentPattern[0].Lane,
-                            TotalTime = currentPattern[currentPattern.Count - 1].StartTime - currentPattern[0].StartTime
+                            TotalTime = currentPattern[currentPattern.Count - 1].StartTime - currentPattern[0].StartTime,
+                            StartingObjectTime = currentPattern[0].StartTime
                         });
                     }
                         
@@ -143,7 +139,8 @@ namespace Quaver.Maps.Difficulty
                         {
                             HitObjects = currentPattern,
                             Lane = currentPattern[0].Lane,
-                            TotalTime = currentPattern[currentPattern.Count - 1].StartTime - currentPattern[0].StartTime
+                            TotalTime = currentPattern[currentPattern.Count - 1].StartTime - currentPattern[0].StartTime,
+                            StartingObjectTime = currentPattern[0].StartTime
                         });
 
                         // Clear list now that there's no more patterns to add
@@ -163,7 +160,7 @@ namespace Quaver.Maps.Difficulty
         ///     Detects jack patterns per key lane
         ///     
         ///     A Jack pattern can be considered as 2+ notes in succession in a given lane,
-        ///     at a bpm range of 95-169 (159ms - 89ms object start time differences).
+        ///     at a bpm range of 95-175 (159ms - 85ms object start time differences).
         /// 
         ///     One caveat about jacks is that there are certain patterns that make it harder or easier,
         /// 
@@ -177,8 +174,8 @@ namespace Quaver.Maps.Difficulty
             // The difference in milliseconds of the range that would be detected as a jack pattern.
             // 95BPM - 169BPM is considered jacks.
             // That's around a 158ms start time difference per object
-            const int minJackMsDiff = 89;
-            const int maxJackMsDiff = 158;
+            const int minJackMsDiff = 84;
+            const int maxJackMsDiff = 159;
 
             // The number of objects required to be considered a jack pattern
             const int consideredJackNum = 2;
@@ -211,13 +208,14 @@ namespace Quaver.Maps.Difficulty
                         {
                             HitObjects = currentPattern,
                             Lane = currentPattern[0].Lane,
-                            TotalTime = currentPattern[currentPattern.Count - 1].StartTime - currentPattern[0].StartTime
+                            TotalTime = currentPattern[currentPattern.Count - 1].StartTime - currentPattern[0].StartTime,
+                            StartingObjectTime = currentPattern[0].StartTime
                         });
                     }
 
                     // If we drop to here, this must mean that it is the end of the current pattern.
                     // So we can run a check to see how many objects are actually in the current pattern.
-                    // If it's >= 2 objects, then that must mean it's a jack pattern, so we can go ahead and 
+                    // If it's >= 2 objects and the average, then that must mean it's a jack pattern, so we can go ahead and 
                     // add it to the list of jack patterns
                     else if (currentPattern.Count >= consideredJackNum)
                     {
@@ -226,7 +224,8 @@ namespace Quaver.Maps.Difficulty
                         {
                             HitObjects = currentPattern,
                             Lane = currentPattern[0].Lane,
-                            TotalTime = currentPattern[currentPattern.Count - 1].StartTime - currentPattern[0].StartTime
+                            TotalTime = currentPattern[currentPattern.Count - 1].StartTime - currentPattern[0].StartTime,
+                            StartingObjectTime = currentPattern[0].StartTime
                         });
 
                         // Clear list now that there's no more patterns to add
