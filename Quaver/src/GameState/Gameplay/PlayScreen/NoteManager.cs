@@ -77,7 +77,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             // Do config stuff
             ScrollNegativeFactor = Config.Configuration.DownScroll ? -1 : 1;
-            ScrollSpeed = Configuration.ScrollSpeed / (20f * GameBase.GameClock); //todo: balance curve
+            ScrollSpeed = GameBase.WindowYRatio * Configuration.ScrollSpeed / (20f * GameBase.GameClock); //todo: balance curve
 
             // Initialize Boundary
             Boundary = new Boundary()
