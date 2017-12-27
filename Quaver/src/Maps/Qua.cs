@@ -11,6 +11,7 @@ using Quaver.Peppy;
 using Quaver.Enums;
 using Newtonsoft.Json;
 using Quaver.Maps.Difficulty;
+using Quaver.Maps.Difficulty.Structures;
 
 namespace Quaver.Maps
 {
@@ -156,7 +157,19 @@ namespace Quaver.Maps
             var hitObjects = DifficultyCalculator.RemoveArtificialDensity(this);
 
             var vibroPatterns = PatternAnalyzer.DetectVibroPatterns(hitObjects);
+
+            // Find all the jack patterns, then get rid of the ones that intersect with vibro patterns,
+            // so we can have an accurate distinction of what is considered vibro and what is considered jacks.
             var jackPatterns = PatternAnalyzer.DetectJackPatterns(hitObjects);
+
+            var intersectionPatterns = new List<JackPatternInfo>();
+
+            // Find all the intersection patterns and remove them.
+            jackPatterns.ForEach(x => vibroPatterns.ForEach(y => { if (x.StartingObjectTime == y.StartingObjectTime) intersectionPatterns.Add(x); }));
+            intersectionPatterns.ForEach(x => jackPatterns.Remove(x));
+
+            Console.WriteLine($"Detected: {vibroPatterns.Count} vibro patterns");
+            Console.WriteLine($"Detected: {jackPatterns.Count} jack patterns");
         }
 
         /// <summary>
