@@ -10,6 +10,7 @@ using Quaver.Logging;
 using Quaver.Peppy;
 using Quaver.Enums;
 using Newtonsoft.Json;
+using Quaver.Maps.Difficulty;
 
 namespace Quaver.Maps
 {
@@ -153,6 +154,14 @@ namespace Quaver.Maps
         }
 
         /// <summary>
+        ///     Calculates the difficulty of a Qua object
+        /// </summary>
+        public void CalculateDifficulty()
+        {
+            DifficultyCalculator.RemoveArtificialDensity(this);
+        }
+
+        /// <summary>
         /// Finds the most common BPM in a Qua object.
         /// </summary>
         /// <param name="qua"></param>
@@ -216,7 +225,7 @@ namespace Quaver.Maps
         /// <summary>
         ///     Does some sorting of the Qua
         /// </summary>
-        private void Sort()
+        public void Sort()
         {
             try
             {
