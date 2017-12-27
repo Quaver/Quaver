@@ -14,6 +14,11 @@ namespace Quaver.Maps.Difficulty.Structures
         int TotalTime { get; set; }
 
         /// <summary>
+        ///     The time of the hit object where this pattern begins
+        /// </summary>
+        int StartingObjectTime { get; set; }
+
+        /// <summary>
         ///     The list of hitobjects in this pattern
         /// </summary>
         List<HitObjectInfo> HitObjects { get; set; }
