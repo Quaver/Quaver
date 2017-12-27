@@ -10,6 +10,7 @@ using Quaver.Audio;
 using Quaver.Database.Beatmaps;
 using Quaver.Logging;
 using Quaver.Maps;
+using Quaver.Maps.Difficulty;
 using Quaver.Replays;
 
 namespace Quaver.GameState.States
@@ -71,13 +72,14 @@ namespace Quaver.GameState.States
                 var quaPath = $"{Config.Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
 
                 var qua = Qua.Parse(quaPath);
+                //qua.HitObjects = DifficultyCalculator.RemoveArtificialDensity(qua);
 
                 if (!qua.IsValidQua)
                     throw new Exception("[SONG LOADING STATE] The .qua file could NOT be loaded!");
 
                 // TODO: This is the list of perfect 0ms replay frames for auto play. 
                 // TODO: If we are loading the play state in replay mode, we should pass these frames to the next state.
-                var autoReplay = ReplayHelper.GeneratePerfectReplay(qua.HitObjects);
+                //var autoReplay = ReplayHelper.GeneratePerfectReplay(qua.HitObjects);
 
                 // Set the beatmap's Qua. 
                 // We parse it and set it each time the player is going to play to kmake sure they are
