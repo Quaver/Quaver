@@ -41,7 +41,7 @@ namespace Quaver.Graphics.Button
                 TextAlignment = Alignment.BotCenter,
                 TextColor = Color.Black,
                 Multiline = false,
-                Textwrap = false,
+                Wordwrap = false,
                 Parent = this
             };
 
@@ -55,7 +55,7 @@ namespace Quaver.Graphics.Button
                 TextAlignment = Alignment.TopCenter,
                 TextColor = Color.Black,
                 Multiline = false,
-                Textwrap = false,
+                Wordwrap = false,
                 Parent = this
             };
         }
