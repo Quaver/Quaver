@@ -91,7 +91,7 @@ namespace Quaver.Input
 
             // Don't handle the below if the game is paused.
             //if (IsPaused)
-            //    return;
+                return;
 
             // Check Mania Key Presses
             HandleManiaKeyPresses();
@@ -106,12 +106,6 @@ namespace Quaver.Input
                 SkipKeyDown = true;
                 SkipSong?.Invoke(this, null);
             }
-
-            // Check Skip Song Input
-            //SkipSong(skippable);
-
-            // Add replay frames
-            ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua);
         }
 
         /// <summary>
@@ -154,40 +148,5 @@ namespace Quaver.Input
                 }
             }
         }
-
-        /*
-        /// <summary>
-        ///     Responsible for handling pausing 
-        /// </summary>
-        private void HandlePause()
-        {
-            // TODO: Fix this and add pausing here - Before the song begins.
-            if (SongManager.Position == 0)
-                return;
-
-            if (GameBase.KeyboardState.IsKeyUp(Configuration.KeyPause))
-                PauseKeyDown = false;
-
-            // Prevent holding the pause key down
-            if (PauseKeyDown || !GameBase.KeyboardState.IsKeyDown(Configuration.KeyPause))
-                return;
-
-            PauseKeyDown = true;
-
-            // TODO: Implement actual pausing here. For now, we're just going to go back to the main menu.
-            IsPaused = !IsPaused;
-
-            if (IsPaused)
-            {
-                SongManager.Pause();
-                
-                // Change Rich Presence
-                GameBase.ChangeDiscordPresence($"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]", "Paused");
-                return;
-            }
-
-            SongManager.Resume();
-            GameBase.ChangeDiscordPresenceGameplay(true);
-        }*/
     }
 }
