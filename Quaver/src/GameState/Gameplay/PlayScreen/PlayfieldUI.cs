@@ -251,7 +251,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 CurrentOffsetObjectIndex++;
                 if (CurrentOffsetObjectIndex >= OffsetIndicatorSize) CurrentOffsetObjectIndex = 0;
-                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Tint = CustomColors.JudgeColors[index];
+                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Tint = GameColors.JudgeColors[index];
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].PositionX = -(float)offset * OffsetGaugeSize;
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Alpha = 0.5f;
             }

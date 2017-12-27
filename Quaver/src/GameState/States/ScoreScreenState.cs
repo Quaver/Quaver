@@ -223,7 +223,7 @@ namespace Quaver.GameState.States
                 JudgeText[i] = new TextBoxSprite()
                 {
                     Text = "[" + GameplayReferences.JudgeNames[i] + "]: Press|Release: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i],
-                    TextColor = CustomColors.JudgeColors[i],
+                    TextColor = GameColors.JudgeColors[i],
                     Font = Fonts.Medium16,
                     PositionY = 200 * i/6,
                     ScaleX = 1,
@@ -288,7 +288,7 @@ namespace Quaver.GameState.States
                     PositionY = MsDevianceBoundary.SizeY * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2,
                     ScaleX = 1,
                     SizeY = 1,
-                    Tint = CustomColors.JudgeColors[i],
+                    Tint = GameColors.JudgeColors[i],
                     Alpha = 0.1f,
                     Alignment = Alignment.MidLeft,
                     Parent = MsDevianceBoundary
@@ -300,7 +300,7 @@ namespace Quaver.GameState.States
                     PositionY = -MsDevianceBoundary.SizeY * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2,
                     ScaleX = 1,
                     SizeY = 1,
-                    Tint = CustomColors.JudgeColors[i],
+                    Tint = GameColors.JudgeColors[i],
                     Alpha = 0.1f,
                     Alignment = Alignment.MidLeft,
                     Parent = MsDevianceBoundary
@@ -334,7 +334,7 @@ namespace Quaver.GameState.States
                         PositionX = ((float)ms.Position * MsDevianceBoundary.SizeX) - 1,
                         SizeX = 1,
                         ScaleY = 1,
-                        Tint = CustomColors.JudgeMiss,
+                        Tint = GameColors.JudgeMiss,
                         Alpha = 0.4f,
                         Parent = MsDevianceBoundary
                     };
@@ -351,7 +351,7 @@ namespace Quaver.GameState.States
                         PositionY = ((float)ms.Offset * (MsDevianceBoundary.SizeY / 2)) - 1,
                         SizeX = 2,
                         SizeY = 2,
-                        Tint = CustomColors.JudgeColors[ms.Type],
+                        Tint = GameColors.JudgeColors[ms.Type],
                         Alignment = Alignment.MidLeft,
                         Parent = MsDevianceBoundary
                     };
@@ -480,23 +480,23 @@ namespace Quaver.GameState.States
         /// </summary>
         private void LogScore()
         {
-            Logger.Log($"Quaver Version: {Replay.QuaverVersion}", Color.Pink);
-            Logger.Log($"Beatmap MD5: {Replay.BeatmapMd5}", Color.Pink);
-            Logger.Log($"Replay MD5: {Replay.ReplayMd5}", Color.Pink);
-            Logger.Log($"Player: {Configuration.Username}", Color.Pink);
-            Logger.Log($"Date: {Replay.Date.ToString(CultureInfo.InvariantCulture)}", Color.Pink);
-            Logger.Log($"Mods: {GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier)}", Color.Pink);
-            Logger.Log($"Scroll Speed: {Configuration.ScrollSpeed}", Color.Pink);
-            Logger.Log($"Score: {Replay.Score}", Color.Pink);
-            Logger.Log($"Accuracy: {Replay.Accuracy}%", Color.Pink);
-            Logger.Log($"Max Combo: {Replay.MaxCombo}", Color.Pink);
-            Logger.Log($"Marv Count: {Replay.MarvPressCount + Replay.MarvReleaseCount}", Color.Pink);
-            Logger.Log($"Perf Count: {Replay.PerfPressCount + Replay.PerfReleaseCount}", Color.Pink);
-            Logger.Log($"Great Count: {Replay.GreatPressCount + Replay.GreatReleaseCount}", Color.Pink);
-            Logger.Log($"Good Count: {Replay.GoodPressCount + Replay.GoodReleaseCount}", Color.Pink);
-            Logger.Log($"Okay Count: {Replay.OkayPressCount + Replay.OkayReleaseCount}", Color.Pink);
-            Logger.Log($"Miss Count: {Replay.Misses}", Color.Pink);
-            Logger.Log($"Replay Frame Count: {Replay.ReplayFrames.Count}", Color.Pink);
+            Logger.Log($"Quaver Version: {Replay.QuaverVersion}", LogColors.GameInfo);
+            Logger.Log($"Beatmap MD5: {Replay.BeatmapMd5}", LogColors.GameInfo);
+            Logger.Log($"Replay MD5: {Replay.ReplayMd5}", LogColors.GameInfo);
+            Logger.Log($"Player: {Configuration.Username}", LogColors.GameInfo);
+            Logger.Log($"Date: {Replay.Date.ToString(CultureInfo.InvariantCulture)}", LogColors.GameInfo);
+            Logger.Log($"Mods: {GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier)}", LogColors.GameInfo);
+            Logger.Log($"Scroll Speed: {Configuration.ScrollSpeed}", LogColors.GameInfo);
+            Logger.Log($"Score: {Replay.Score}", LogColors.GameInfo);
+            Logger.Log($"Accuracy: {Replay.Accuracy}%", LogColors.GameInfo);
+            Logger.Log($"Max Combo: {Replay.MaxCombo}", LogColors.GameInfo);
+            Logger.Log($"Marv Count: {Replay.MarvPressCount + Replay.MarvReleaseCount}", LogColors.GameInfo);
+            Logger.Log($"Perf Count: {Replay.PerfPressCount + Replay.PerfReleaseCount}", LogColors.GameInfo);
+            Logger.Log($"Great Count: {Replay.GreatPressCount + Replay.GreatReleaseCount}", LogColors.GameInfo);
+            Logger.Log($"Good Count: {Replay.GoodPressCount + Replay.GoodReleaseCount}", LogColors.GameInfo);
+            Logger.Log($"Okay Count: {Replay.OkayPressCount + Replay.OkayReleaseCount}", LogColors.GameInfo);
+            Logger.Log($"Miss Count: {Replay.Misses}", LogColors.GameInfo);
+            Logger.Log($"Replay Frame Count: {Replay.ReplayFrames.Count}", LogColors.GameInfo);
         }
     }
 }
