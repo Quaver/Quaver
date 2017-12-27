@@ -209,7 +209,7 @@ namespace Quaver.Maps.Difficulty
                         currentPattern.Add(thisObject);
 
                         // This only applies to the last HitObject, but run the same check
-                        // to see if the pattern contains 2 or more notes.
+                        // to see if the pattern contains the required amount of notes
                         if (i != hitObjects.Count - 1 || currentPattern.Count < consideredJackNum)
                             continue;
 
@@ -222,10 +222,9 @@ namespace Quaver.Maps.Difficulty
                             StartingObjectTime = currentPattern[0].StartTime
                         });
                     }
-
                     // If we drop to here, this must mean that it is the end of the current pattern.
                     // So we can run a check to see how many objects are actually in the current pattern.
-                    // If it's >= 2 objects and the average, then that must mean it's a jack pattern, so we can go ahead and 
+                    // If it's >= the required amount of objects, then that must mean it's a jack pattern, so we can go ahead and 
                     // add it to the list of jack patterns
                     else if (currentPattern.Count >= consideredJackNum)
                     {
@@ -241,7 +240,7 @@ namespace Quaver.Maps.Difficulty
                         // Clear list now that there's no more patterns to add
                         currentPattern = new List<HitObjectInfo>();
                     }
-                    // At the end of the pattern but it isn't necessarily considered jacks (2 or less objects)
+                    // At the end of the pattern but it isn't necessarily considered jacks
                     else if (currentPattern.Count > 0)
                         currentPattern = new List<HitObjectInfo>();
                 }
