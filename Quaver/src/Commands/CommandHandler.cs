@@ -23,7 +23,8 @@ namespace Quaver.Commands
             new Login(),
             new LoginDev(),
 #endif
-            new GetScores()
+            new GetScores(),
+            new CalculateDifficulty()
         };
 
         /// <summary>
