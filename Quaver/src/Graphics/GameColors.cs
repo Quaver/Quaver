@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace Quaver.Graphics
 {
-    public struct CustomColors
+    public struct GameColors
     {
         /// <summary>
         /// Swan's favorite color; #db88c2. This color is used for the developers of the game.
@@ -64,5 +64,13 @@ namespace Quaver.Graphics
         public static readonly Color Snap16 = Color.Green;
         public static readonly Color Snap48 = Color.White;
         public static readonly Color[] SnapColors = new Color[9] { Snap1, Snap2, Snap3, Snap4, Snap6, Snap8, Snap12, Snap16, Snap48 };
+
+        //todo: documentation
+        //Logging and Other Game Colors
+        public static readonly Color GameError = Color.Red;
+        public static readonly Color GameWarning = Color.Yellow;
+        public static readonly Color GameSuccess = Color.Green;
+        public static readonly Color GameInfo = Color.LightGreen;
+        public static readonly Color GameImportant = Color.LightCyan;
     }
 }

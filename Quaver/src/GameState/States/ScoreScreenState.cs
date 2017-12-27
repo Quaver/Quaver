@@ -223,7 +223,7 @@ namespace Quaver.GameState.States
                 JudgeText[i] = new TextBoxSprite()
                 {
                     Text = "[" + GameplayReferences.JudgeNames[i] + "]: Press|Release: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i],
-                    TextColor = CustomColors.JudgeColors[i],
+                    TextColor = GameColors.JudgeColors[i],
                     Font = Fonts.Medium16,
                     PositionY = 200 * i/6,
                     ScaleX = 1,
@@ -288,7 +288,7 @@ namespace Quaver.GameState.States
                     PositionY = MsDevianceBoundary.SizeY * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2,
                     ScaleX = 1,
                     SizeY = 1,
-                    Tint = CustomColors.JudgeColors[i],
+                    Tint = GameColors.JudgeColors[i],
                     Alpha = 0.1f,
                     Alignment = Alignment.MidLeft,
                     Parent = MsDevianceBoundary
@@ -300,7 +300,7 @@ namespace Quaver.GameState.States
                     PositionY = -MsDevianceBoundary.SizeY * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2,
                     ScaleX = 1,
                     SizeY = 1,
-                    Tint = CustomColors.JudgeColors[i],
+                    Tint = GameColors.JudgeColors[i],
                     Alpha = 0.1f,
                     Alignment = Alignment.MidLeft,
                     Parent = MsDevianceBoundary
@@ -334,7 +334,7 @@ namespace Quaver.GameState.States
                         PositionX = ((float)ms.Position * MsDevianceBoundary.SizeX) - 1,
                         SizeX = 1,
                         ScaleY = 1,
-                        Tint = CustomColors.JudgeMiss,
+                        Tint = GameColors.JudgeMiss,
                         Alpha = 0.4f,
                         Parent = MsDevianceBoundary
                     };
@@ -351,7 +351,7 @@ namespace Quaver.GameState.States
                         PositionY = ((float)ms.Offset * (MsDevianceBoundary.SizeY / 2)) - 1,
                         SizeX = 2,
                         SizeY = 2,
-                        Tint = CustomColors.JudgeColors[ms.Type],
+                        Tint = GameColors.JudgeColors[ms.Type],
                         Alignment = Alignment.MidLeft,
                         Parent = MsDevianceBoundary
                     };
