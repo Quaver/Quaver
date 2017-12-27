@@ -151,6 +151,7 @@ namespace Quaver.GameState.Gameplay
 
         public void Update(double dt)
         {
+            // Update Drawables
             TestButton.Update(dt);
             SvInfoTextBox.Update(dt);
             
@@ -171,14 +172,18 @@ namespace Quaver.GameState.Gameplay
             // Check the input for this particular game state.
             InputManager.CheckInput(IntroSkippable, ReplayFrames);
 
+            // Record session with Replay Helper
+            ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua);
+
             // Update Loggers. todo: remove
             Logger.Update("KeyCount", $"Game Mode: {GameBase.SelectedBeatmap.Qua.Mode}");
             Logger.Update("SongPos", "Current Track Position: " + NoteManager.TrackPosition);
             Logger.Update("Skippable", $"Intro Skippable: {IntroSkippable}");
 
-            //Todo: remove. TEST.
+            //Todo: remove. below
             SvInfoTextBox.Update(dt);
 
+            // If the song is done, it'll change state. todo: add a method for this later
             if (Timing.PlayingIsDone)
                 GameBase.GameStateManager.ChangeState(new ScoreScreenState(BeatmapMd5, ScoreManager, GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title, GameBase.SelectedBeatmap.DifficultyName, ReplayFrames));  
         }
