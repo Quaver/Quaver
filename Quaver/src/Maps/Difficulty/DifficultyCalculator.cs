@@ -32,13 +32,11 @@ namespace Quaver.Maps.Difficulty
                 // We only want to run this on LN patterns, so skip normal notes.
                 if (qua.HitObjects[i].EndTime == 0) continue;
                 
-                // Find the timing point that the hit object is in range of.
+                // Find the current timing point and next long note in the map.
                 var currentTimingPoint = FindHitObjectTimingPoint(qua.HitObjects[i], qua.TimingPoints);
-                if (currentTimingPoint == null) continue;
-
-                // Find the next long note in the map
                 var nextLongNote = FindNextLongNote(qua.HitObjects, i);
-                if (nextLongNote == null) continue;
+
+                if (nextLongNote == null || currentTimingPoint == null) continue;
 
                 // Artificial Density Flags
                 var shortStartTimes = false; // If the LNs have an extremely short start time difference compared to the BPM snap. (>= 1/8 snap)
