@@ -280,7 +280,7 @@ namespace Quaver
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, Color.Red);
+                Logger.Log(e.Message, LogColors.GameError);
                 throw;
             }
         }
@@ -320,7 +320,7 @@ namespace Quaver
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, Color.Red);
+                Logger.Log(e.Message, LogColors.GameError);
             }
         }
     }

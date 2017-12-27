@@ -29,6 +29,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// </summary>
         private int ReceptorPadding { get; set; }
 
+        private int LaneSize { get; set; }
+
         /// <summary>
         ///     The receptor sprites.
         /// </summary>
@@ -45,6 +47,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         private Sprite BgMask { get; set; }
 
         /// <summary>
+        ///     The size of the playfield
+        /// </summary>
+        private float PlayfieldSize { get; set; }
+
+        /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
         /// </summary>
         public void Initialize(IGameState state)
@@ -57,25 +64,26 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 case GameModes.Keys4:
                     GameplayReferences.ReceptorXPosition = new float[4];
-                    GameplayReferences.PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
+                    LaneSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
                     break;
                 case GameModes.Keys7:
                     GameplayReferences.ReceptorXPosition = new float[7];
-                    GameplayReferences.PlayfieldObjectSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowYRatio);
+                    LaneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowYRatio);
                     break;
             }
 
-            PlayfieldPadding = (int) (GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowYRatio);
-            ReceptorPadding = (int)(GameBase.LoadedSkin.NotePadding * GameBase.WindowYRatio);
-            GameplayReferences.PlayfieldSize = ((GameplayReferences.PlayfieldObjectSize + ReceptorPadding) * GameplayReferences.ReceptorXPosition.Length) + (PlayfieldPadding * 2) - ReceptorPadding;
-
             // Calculate Config stuff
-            GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll ? (int)GameBase.Window.Z + (int)GameBase.Window.Y - GameBase.LoadedSkin.ReceptorYOffset - GameplayReferences.PlayfieldObjectSize : GameBase.LoadedSkin.ReceptorYOffset;
+            GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll ? (int)GameBase.Window.Z + (int)GameBase.Window.Y - GameBase.LoadedSkin.ReceptorYOffset - LaneSize : GameBase.LoadedSkin.ReceptorYOffset;
+            GameplayReferences.ReceptorYOffset *= GameBase.WindowYRatio;
+            PlayfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowYRatio);
+            ReceptorPadding = (int)(GameBase.LoadedSkin.NotePadding * GameBase.WindowYRatio);
+            PlayfieldSize = ((LaneSize + ReceptorPadding) * GameplayReferences.ReceptorXPosition.Length) + (PlayfieldPadding * 2) - ReceptorPadding;
+            GameplayReferences.PlayfieldSize = PlayfieldSize;
 
             // Create playfield boundary
             Boundary = new Boundary()
             {
-                Size = new Vector2(GameplayReferences.PlayfieldSize, GameBase.Window.Z),
+                Size = new Vector2(PlayfieldSize, GameBase.Window.Z),
                 Alignment = Alignment.TopCenter
             };
 
@@ -103,13 +111,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             for (var i = 0; i < Receptors.Length; i++)
             {
                 // Set ReceptorXPos 
-                GameplayReferences.ReceptorXPosition[i] = ((GameplayReferences.PlayfieldObjectSize + ReceptorPadding) * i) + PlayfieldPadding;
+                GameplayReferences.ReceptorXPosition[i] = ((LaneSize + ReceptorPadding) * i) + PlayfieldPadding;
 
                 // Create new Receptor Sprite
                 Receptors[i] = new Sprite
                 {
 
-                    SizeX = GameplayReferences.PlayfieldObjectSize,
+                    SizeX = LaneSize,
                     Position = new Vector2(GameplayReferences.ReceptorXPosition[i], GameplayReferences.ReceptorYOffset),
                     Alignment = Alignment.TopLeft,
                     Parent = Boundary
@@ -120,11 +128,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     case GameModes.Keys4:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors4K[i];
-                        Receptors[i].SizeY = GameplayReferences.PlayfieldObjectSize * GameBase.LoadedSkin.NoteReceptors4K[i].Height / GameBase.LoadedSkin.NoteReceptors4K[i].Width;
+                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptors4K[i].Height / GameBase.LoadedSkin.NoteReceptors4K[i].Width;
                         break;
                     case GameModes.Keys7:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors7K[i];
-                        Receptors[i].SizeY = GameplayReferences.PlayfieldObjectSize * GameBase.LoadedSkin.NoteReceptors7K[i].Height / GameBase.LoadedSkin.NoteReceptors7K[i].Width;
+                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptors7K[i].Height / GameBase.LoadedSkin.NoteReceptors7K[i].Width;
                         break;
                 }
             }

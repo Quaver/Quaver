@@ -26,14 +26,14 @@ namespace Quaver.Input
         public State CurrentState { get; set; } = State.PlayScreen;
 
         /// <summary>
-        ///     Is the game currently paused?
-        /// </summary>
-        private bool IsPaused { get; set; }
-
-        /// <summary>
-        ///     Keeps track of if the pause key is actually down.
+        ///     Keeps track of if the pause key is down.
         /// </summary>
         private bool PauseKeyDown { get; set; }
+
+        /// <summary>
+        ///     Keeps track if the skip key is down
+        /// </summary>
+        private bool SkipKeyDown { get; set; }
 
         /// <summary>
         ///     A reference of all of the lane keys mapped to a list - 4K
@@ -76,12 +76,35 @@ namespace Quaver.Input
         /// </summary>
         public event EventHandler<ManiaKey> ManiaKeyRelease;
 
+        /// <summary>
+        ///     EventHandler for when ever the skip key gets pressed
+        /// </summary>
         public event EventHandler SkipSong;
 
         /// <summary>
-        ///     Keeps track of whether or not the song intro was skipped.
+        ///     Mania keys for input
         /// </summary>
-        private bool IntroSkipped { get; set; }
+        private List<Keys> InputManiaKeys { get; set; }
+
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        public GameplayInputManager()
+        {
+            InputManiaKeys = new List<Keys>();
+            // Determine which set of keys to use based on the .qua
+            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            {
+                case GameModes.Keys4:
+                    InputManiaKeys = LaneKeys;
+                    break;
+                case GameModes.Keys7:
+                    InputManiaKeys = LaneKeys7K;
+                    break;
+                default:
+                    break;
+            }
+        }
 
         /// <summary>
         ///     Checks if the given input was given
@@ -91,18 +114,19 @@ namespace Quaver.Input
             // Pause game
             //HandlePause();
 
-            // Don't handle the below if the game is paused.
-            if (IsPaused)
-                return;
-
             // Check Mania Key Presses
             HandleManiaKeyPresses();
 
-            // Check Skip Song Input
-            //SkipSong(skippable);
-
-            // Add replay frames
-            ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua);
+            // Check skip
+            if (SkipKeyDown && GameBase.KeyboardState.IsKeyUp(Configuration.KeySkipIntro))
+            {
+                SkipKeyDown = false;
+            }
+            else if (!SkipKeyDown && GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro))
+            {
+                SkipKeyDown = true;
+                SkipSong?.Invoke(this, null);
+            }
         }
 
         /// <summary>
@@ -110,26 +134,11 @@ namespace Quaver.Input
         /// </summary>
         private void HandleManiaKeyPresses()
         {
-            var inputKeys = new List<Keys>();
-
-            // Determine which set of keys to use based on the .qua
-            switch (GameBase.SelectedBeatmap.Qua.Mode)
-            {
-                case GameModes.Keys4:
-                    inputKeys = LaneKeys;
-                    break;
-                case GameModes.Keys7:
-                    inputKeys = LaneKeys7K;
-                    break;
-                default:
-                    break;
-            }
-
             // Update Lane Keys Receptor
-            for (var i = 0; i < inputKeys.Count; i++)
+            for (var i = 0; i < InputManiaKeys.Count; i++)
             {
                 //Lane Key Press
-                if (GameBase.KeyboardState.IsKeyDown(inputKeys[i]) && !LaneKeyDown[i])
+                if (GameBase.KeyboardState.IsKeyDown(InputManiaKeys[i]) && !LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = true;
                     ManiaKeyPress?.Invoke(this, new ManiaKey(i));
@@ -137,7 +146,7 @@ namespace Quaver.Input
                     //GameBase.LoadedSkin.Hit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
                 }
                 //Lane Key Release
-                else if (GameBase.KeyboardState.IsKeyUp(inputKeys[i]) && LaneKeyDown[i])
+                else if (GameBase.KeyboardState.IsKeyUp(InputManiaKeys[i]) && LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = false;
                     ManiaKeyRelease?.Invoke(this, new ManiaKey(i));
@@ -145,65 +154,5 @@ namespace Quaver.Input
                 }
             }
         }
-
-        /*
-        /// <summary>
-        ///     Detects if the song intro is skippable and will skip if the player decides to.
-        /// </summary>
-        /// <param name="qua"></param>
-        /// <param name="currentSongTime"></param>
-        private void SkipSong(bool skippable)
-        {
-            if (skippable && GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !IntroSkipped)
-            {
-                IntroSkipped = true;
-
-                Logger.Log("Song has been successfully skipped to 3 seconds before the first HitObject.", Color.Pink);
-
-                // Skip to 3 seconds before the notes start
-                SongManager.Load();
-                SongManager.SkipTo(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - 3000 + SongManager.BassDelayOffset);
-                SongManager.Play();
-
-                //NoteManager.PlayScreen.Timing.SongIsPlaying = true;
-
-                GameBase.ChangeDiscordPresenceGameplay(true);
-            }
-        }*/
-
-        /*
-        /// <summary>
-        ///     Responsible for handling pausing 
-        /// </summary>
-        private void HandlePause()
-        {
-            // TODO: Fix this and add pausing here - Before the song begins.
-            if (SongManager.Position == 0)
-                return;
-
-            if (GameBase.KeyboardState.IsKeyUp(Configuration.KeyPause))
-                PauseKeyDown = false;
-
-            // Prevent holding the pause key down
-            if (PauseKeyDown || !GameBase.KeyboardState.IsKeyDown(Configuration.KeyPause))
-                return;
-
-            PauseKeyDown = true;
-
-            // TODO: Implement actual pausing here. For now, we're just going to go back to the main menu.
-            IsPaused = !IsPaused;
-
-            if (IsPaused)
-            {
-                SongManager.Pause();
-                
-                // Change Rich Presence
-                GameBase.ChangeDiscordPresence($"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]", "Paused");
-                return;
-            }
-
-            SongManager.Resume();
-            GameBase.ChangeDiscordPresenceGameplay(true);
-        }*/
     }
 }
