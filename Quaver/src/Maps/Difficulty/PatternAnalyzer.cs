@@ -81,6 +81,16 @@ namespace Quaver.Maps.Difficulty
         }
 
         /// <summary>
+        ///     Detects stream patterns
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        /// <returns></returns>
+        internal static List<StreamPatternInfo> DetectStreamPatterns(IReadOnlyList<HitObjectInfo> hitObjects)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         ///     Detects vibro patterns per lane.
         /// </summary>
         /// <param name="hitObjects"></param>

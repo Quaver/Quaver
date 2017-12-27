@@ -85,20 +85,30 @@ namespace Quaver.Maps.Difficulty
 
         /// <summary>
         ///     Calculates the difficulty of jack patterns
+        ///     
+        ///     Ideally jack difficulty should be based on the following:
+        ///         - Speed
+        ///         - Stamina
+        ///         - Pattern Type (Single/Jump/Hand/Quad Jacks)
         /// </summary>
         /// <param name="hitObjects"></param>
         /// <returns></returns>
-        internal static double CalculateJackDifficulty(IReadOnlyList<HitObjectInfo> hitObjects)
+        internal static double CalculateJackDifficulty(List<JackPatternInfo> patterns)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
         ///     Calculates the difficulty of stream patterns
+        ///     
+        ///     Stream difficulty should be based on the following:
+        ///         - Speed
+        ///         - Stamina
+        ///         - Pattern Type (Single/Jump/Hand/Quad Streams)
         /// </summary>
         /// <param name="hitObjects"></param>
         /// <returns></returns>
-        internal static double CalculateStreamDifficulty(IReadOnlyList<HitObjectInfo> hitObjects)
+        internal static double CalculateStreamDifficulty(List<StreamPatternInfo> patterns)
         {
             throw new NotImplementedException();
         }
