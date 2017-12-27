@@ -416,8 +416,7 @@ namespace Quaver.GameState.Gameplay
                 SongManager.SkipTo(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - 3000 + SongManager.BassDelayOffset);
                 SongManager.Play();
 
-                //NoteManager.PlayScreen.Timing.SongIsPlaying = true;
-
+                Timing.SongIsPlaying = true;
                 GameBase.ChangeDiscordPresenceGameplay(true);
             }
         }
