@@ -35,41 +35,30 @@ namespace Quaver.Maps.Difficulty
                 
                 // Find the timing point that the hit object is in range of.
                 var currentTimingPoint = FindHitObjectTimingPoint(qua.HitObjects[i], qua.TimingPoints);
-                if (currentTimingPoint == null)
-                    continue;
+                if (currentTimingPoint == null) continue;
 
                 // Find the next long note in the map
                 var nextLongNote = FindNextLongNote(qua.HitObjects, i);
-                if (nextLongNote == null)
-                    continue;
-
-                var millisecondsPerBeat = 60000 / currentTimingPoint.Bpm;
-
-                // Get the start time difference of both of the objects
-                var startTimeDiff = nextLongNote.StartTime - qua.HitObjects[i].StartTime;
-
-                // Find the snap distance between the two LN's.
-                var snapDistance = millisecondsPerBeat / startTimeDiff;
+                if (nextLongNote == null) continue;
 
                 // Artificial Density Flags
                 var shortStartTimes = false; // If the LNs have an extremely short start time difference compared to the BPM snap. (>= 1/8 snap)
                 var shortHoldTime = false; // If the LN has a short hold time to the point where it is 300-able by tapping
 
-                if (snapDistance >= 8)
-                    shortStartTimes = true;
+                // Find the amount of milliseconds per beat this BPM has
+                var millisecondsPerBeat = 60000 / currentTimingPoint.Bpm;
 
-                // Find the distance snap of the hold time for the current object
-                var currentObjectHoldTimeSnap = Math.Round(millisecondsPerBeat / (qua.HitObjects[i].EndTime - qua.HitObjects[i].StartTime), 0);
+                // Check if the snap distance of the two object's StartTime difference is too short.
+                // We consider them too short if the next object starts at a 1/8th note or smaller later.
+                if (millisecondsPerBeat / (nextLongNote.StartTime - qua.HitObjects[i].StartTime) >= 8) shortStartTimes = true;
 
-                // If the LN lasts for 1/8th of the beat or less, then that's considered artificial density.
-                if (currentObjectHoldTimeSnap >= 8)
-                    shortHoldTime = true;
+                // If the LN's hold time lasts for 1/8th of the beat or less, then that's considered artificial density.
+                if (Math.Round(millisecondsPerBeat / (qua.HitObjects[i].EndTime - qua.HitObjects[i].StartTime), 0) >= 8) shortHoldTime = true;
 
                 // If no artificial density flags were triggered for this pattern, then continue to the next object.
-                if (!shortStartTimes && !shortHoldTime)
-                    continue;
+                if (!shortStartTimes && !shortHoldTime) continue;
 
-                // Make the LN a normal note.
+                // Otherwise make the LN a normal note.
                 qua.HitObjects[i].EndTime = 0;
 
                 //Console.WriteLine($"Obj: {qua.HitObjects[i].StartTime} | TP: {currentTimingPoint.StartTime} | Next LN: {nextLongNote.StartTime} | Short Start: {shortStartTimes} | Short Hold: {shortHoldTime}");
