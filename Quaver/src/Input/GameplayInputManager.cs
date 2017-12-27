@@ -26,14 +26,14 @@ namespace Quaver.Input
         public State CurrentState { get; set; } = State.PlayScreen;
 
         /// <summary>
-        ///     Is the game currently paused?
-        /// </summary>
-        private bool IsPaused { get; set; }
-
-        /// <summary>
-        ///     Keeps track of if the pause key is actually down.
+        ///     Keeps track of if the pause key is down.
         /// </summary>
         private bool PauseKeyDown { get; set; }
+
+        /// <summary>
+        ///     Keeps track if the skip key is down
+        /// </summary>
+        private bool SkipKeyDown { get; set; }
 
         /// <summary>
         ///     A reference of all of the lane keys mapped to a list - 4K
@@ -76,12 +76,10 @@ namespace Quaver.Input
         /// </summary>
         public event EventHandler<ManiaKey> ManiaKeyRelease;
 
-        public event EventHandler SkipSong;
-
         /// <summary>
-        ///     Keeps track of whether or not the song intro was skipped.
+        ///     EventHandler for when ever the skip key gets pressed
         /// </summary>
-        private bool IntroSkipped { get; set; }
+        public event EventHandler SkipSong;
 
         /// <summary>
         ///     Checks if the given input was given
@@ -92,11 +90,22 @@ namespace Quaver.Input
             //HandlePause();
 
             // Don't handle the below if the game is paused.
-            if (IsPaused)
-                return;
+            //if (IsPaused)
+            //    return;
 
             // Check Mania Key Presses
             HandleManiaKeyPresses();
+
+            // Check skip
+            if (SkipKeyDown && GameBase.KeyboardState.IsKeyUp(Configuration.KeySkipIntro))
+            {
+                SkipKeyDown = false;
+            }
+            else if (!SkipKeyDown && GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro))
+            {
+                SkipKeyDown = true;
+                SkipSong?.Invoke(this, null);
+            }
 
             // Check Skip Song Input
             //SkipSong(skippable);
@@ -145,31 +154,6 @@ namespace Quaver.Input
                 }
             }
         }
-
-        /*
-        /// <summary>
-        ///     Detects if the song intro is skippable and will skip if the player decides to.
-        /// </summary>
-        /// <param name="qua"></param>
-        /// <param name="currentSongTime"></param>
-        private void SkipSong(bool skippable)
-        {
-            if (skippable && GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !IntroSkipped)
-            {
-                IntroSkipped = true;
-
-                Logger.Log("Song has been successfully skipped to 3 seconds before the first HitObject.", Color.Pink);
-
-                // Skip to 3 seconds before the notes start
-                SongManager.Load();
-                SongManager.SkipTo(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - 3000 + SongManager.BassDelayOffset);
-                SongManager.Play();
-
-                //NoteManager.PlayScreen.Timing.SongIsPlaying = true;
-
-                GameBase.ChangeDiscordPresenceGameplay(true);
-            }
-        }*/
 
         /*
         /// <summary>

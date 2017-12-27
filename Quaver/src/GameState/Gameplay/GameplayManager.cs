@@ -68,6 +68,11 @@ namespace Quaver.GameState.Gameplay
         private bool IntroSkippable { get; set; }
 
         /// <summary>
+        ///     Keeps track of whether or not the song intro was skipped.
+        /// </summary>
+        private bool IntroSkipped { get; set; }
+
+        /// <summary>
         ///     The Current Song Time
         /// </summary>
         private double CurrentSongTime { get; set; }
@@ -103,6 +108,7 @@ namespace Quaver.GameState.Gameplay
             // Hook InputManager
             InputManager.ManiaKeyPress += ManiaKeyDown;
             InputManager.ManiaKeyRelease += ManiaKeyUp;
+            InputManager.SkipSong += SkipSong;
 
             // Hook Missed Note Events
             NoteManager.PressMissed += PressMissed;
@@ -399,7 +405,21 @@ namespace Quaver.GameState.Gameplay
 
         public void SkipSong(object sender, EventArgs e)
         {
-            
+            if (IntroSkippable && GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !IntroSkipped)
+            {
+                IntroSkipped = true;
+
+                Logger.Log("Song has been successfully skipped to 3 seconds before the first HitObject.", Color.Pink);
+
+                // Skip to 3 seconds before the notes start
+                SongManager.Load();
+                SongManager.SkipTo(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - 3000 + SongManager.BassDelayOffset);
+                SongManager.Play();
+
+                //NoteManager.PlayScreen.Timing.SongIsPlaying = true;
+
+                GameBase.ChangeDiscordPresenceGameplay(true);
+            }
         }
     }
 }
