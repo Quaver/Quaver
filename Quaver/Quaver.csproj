@@ -128,6 +128,7 @@
     <Compile Include="Resource1.Designer.cs" />
     <Compile Include="src\Audio\MenuAudioPlayer.cs" />
     <Compile Include="src\Audio\SongManager.cs" />
+    <Compile Include="src\Commands\CalculateDifficulty.cs" />
     <Compile Include="src\Database\Beatmaps\Mapset.cs" />
     <Compile Include="src\Commands\CommandHandler.cs" />
     <Compile Include="src\Commands\GetScores.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="src\Input\SongSelectInputManager.cs" />
     <Compile Include="src\Logging\Log.cs" />
     <Compile Include="src\Logging\Logger.cs" />
+    <Compile Include="src\Maps\Difficulty\DifficultyCalculator.cs" />
     <Compile Include="src\Modifiers\Mods\Chill.cs" />
     <Compile Include="src\Modifiers\Mods\Speed.cs" />
     <Compile Include="src\Modifiers\Mods\Strict.cs" />
