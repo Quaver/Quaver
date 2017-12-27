@@ -30,8 +30,7 @@ namespace Quaver.Maps.Difficulty
             for (var i = 0; i < qua.HitObjects.Count; i++)
             {
                 // We only want to run this on LN patterns, so skip normal notes.
-                if (qua.HitObjects[i].EndTime == 0)
-                    continue;
+                if (qua.HitObjects[i].EndTime == 0) continue;
                 
                 // Find the timing point that the hit object is in range of.
                 var currentTimingPoint = FindHitObjectTimingPoint(qua.HitObjects[i], qua.TimingPoints);
