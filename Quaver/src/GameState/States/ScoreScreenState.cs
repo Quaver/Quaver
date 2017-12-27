@@ -227,7 +227,7 @@ namespace Quaver.GameState.States
                     Font = Fonts.Medium16,
                     PositionY = 200 * i/6,
                     ScaleX = 1,
-                    Textwrap = false,
+                    Wordwrap = false,
                     TextAlignment = Alignment.MidCenter,
                     Multiline = false,
                     Parent = JudgeInfoBoundary
@@ -241,7 +241,7 @@ namespace Quaver.GameState.States
                 Font = Fonts.Medium24,
                 TextAlignment = Alignment.MidLeft,
                 TextColor = Color.White,
-                Textwrap = false,
+                Wordwrap = false,
                 Multiline = false,
                 ScaleX = 1,
                 SizeY = 70,
@@ -256,7 +256,7 @@ namespace Quaver.GameState.States
                 Font = Fonts.Medium24,
                 TextAlignment = Alignment.MidRight,
                 TextColor = Color.White,
-                Textwrap = false,
+                Wordwrap = false,
                 Multiline = false,
                 ScaleX = 1,
                 SizeY = 70,
@@ -373,7 +373,7 @@ namespace Quaver.GameState.States
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
                 Multiline = false,
-                Textwrap = false,
+                Wordwrap = false,
                 Parent = MsDevianceBoundary
             };
 
@@ -389,7 +389,7 @@ namespace Quaver.GameState.States
                 Alignment = Alignment.BotLeft,
                 TextAlignment = Alignment.BotLeft,
                 Multiline = false,
-                Textwrap = false,
+                Wordwrap = false,
                 Parent = MsDevianceBoundary
             };
         }
