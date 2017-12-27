@@ -75,7 +75,7 @@ namespace Quaver.Maps
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, Color.Red);
+                Logger.Log(e.Message, LogColors.GameError);
             }
         }
 
@@ -100,7 +100,7 @@ namespace Quaver.Maps
             var outputPath = $"{Configuration.DataDirectory}/Maps/{GameBase.GameTime.ElapsedMilliseconds} {Util.FileNameSafeString(GameBase.SelectedBeatmap.Artist)} - {Util.FileNameSafeString(GameBase.SelectedBeatmap.Title)}.qp";
             zip.Save(outputPath);
 
-            Logger.Log($"Successfully exported {outputPath}", Color.Cyan);
+            Logger.Log($"Successfully exported {outputPath}", LogColors.GameSuccess);
 
             // Open the folder where the file is contained.
             if (!File.Exists(outputPath))

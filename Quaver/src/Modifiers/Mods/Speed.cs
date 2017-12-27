@@ -87,7 +87,7 @@ namespace Quaver.Modifiers.Mods
 
         public void InitializeMod()
         {
-            Logger.Log($"Speed is now set to {GameBase.GameClock}x", Color.Cyan);
+            Logger.Log($"Speed is now set to {GameBase.GameClock}x", LogColors.GameInfo);
 
             SongManager.ChangeSongSpeed();
         }

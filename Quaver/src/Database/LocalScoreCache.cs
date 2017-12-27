@@ -30,7 +30,7 @@ namespace Quaver.Database
             {
                 var conn = new SQLiteAsyncConnection(DatabasePath);
                 await conn.CreateTableAsync<LocalScore>();
-                Logger.Log($"Local Scores Database has been created.", Color.Cyan);
+                Logger.Log($"Local Scores Database has been created.", LogColors.GameImportant);
             }
             catch (Exception e)
             {

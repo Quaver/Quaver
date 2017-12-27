@@ -67,10 +67,12 @@ namespace Quaver.Graphics
 
         //todo: documentation
         //Logging and Other Game Colors
+        /*
         public static readonly Color GameError = Color.Red;
         public static readonly Color GameWarning = Color.Yellow;
         public static readonly Color GameSuccess = Color.Green;
         public static readonly Color GameInfo = Color.LightGreen;
         public static readonly Color GameImportant = Color.LightCyan;
+        */
     }
 }

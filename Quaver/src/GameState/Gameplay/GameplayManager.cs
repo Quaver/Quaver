@@ -414,7 +414,7 @@ namespace Quaver.GameState.Gameplay
             {
                 IntroSkipped = true;
 
-                Logger.Log("Song has been successfully skipped to 3 seconds before the first HitObject.", Color.Pink);
+                Logger.Log("Song has been successfully skipped to 3 seconds before the first HitObject.", LogColors.GameSuccess);
 
                 // Skip to 3 seconds before the notes start
                 SongManager.Load();

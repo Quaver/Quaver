@@ -169,6 +169,7 @@
     <Compile Include="src\Input\ManiaKey.cs" />
     <Compile Include="src\Input\SongSelectInputManager.cs" />
     <Compile Include="src\Logging\Log.cs" />
+    <Compile Include="src\Logging\LogColors.cs" />
     <Compile Include="src\Logging\Logger.cs" />
     <Compile Include="src\Maps\Difficulty\DifficultyCalculator.cs" />
     <Compile Include="src\Modifiers\Mods\Chill.cs" />

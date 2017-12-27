@@ -139,12 +139,12 @@ namespace Quaver.Peppy
                     }
                 }
 
-                Logger.Log($".osz has been successfully converted.", Color.Cyan, 2f);
+                Logger.Log($".osz has been successfully converted.", LogColors.GameSuccess, 2f);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                Logger.Log($"Error: There was an issue converting the .osz", Color.Red, 2f);
+                Logger.Log($"Error: There was an issue converting the .osz", LogColors.GameError, 2f);
                 Logger.Log(e.Message, Color.Red);
             }
             // Delete the entire temp directory regardless of the outcome.
