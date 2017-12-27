@@ -156,6 +156,7 @@ namespace Quaver.Maps
             var hitObjects = DifficultyCalculator.RemoveArtificialDensity(this);
 
             var vibroPatterns = PatternAnalyzer.DetectVibroPatterns(hitObjects);
+            var jackPatterns = PatternAnalyzer.DetectJackPatterns(hitObjects);
         }
 
         /// <summary>
