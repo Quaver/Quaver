@@ -168,8 +168,8 @@ namespace Quaver.Graphics.Text
             _textSize = Font.MeasureString(Text);
 
             //Update TextRect
-            _textVect.W = _textSize.X;
-            _textVect.Z = _textSize.Y;
+            _textVect.W = _textSize.X * TextScale;
+            _textVect.Z = _textSize.Y * TextScale;
 
             //Update GlobalTextRect
             _globalTextVect = Util.DrawRect(TextAlignment, _textVect, GlobalVect);
@@ -178,7 +178,7 @@ namespace Quaver.Graphics.Text
 
             if (Multiline)
             {
-                MaxTextLines = (int)Math.Max(Math.Floor(SizeY / _textSize.Y), 1); //TODO: update later
+                MaxTextLines = (int)Math.Max(Math.Floor(SizeY / _textSize.Y), 1); //TODO: implement max text lines update later
                 _text = WrapText(Text, false);
             }
             else if (Wordwrap)
