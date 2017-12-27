@@ -29,6 +29,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     {
         //HitObjects
         private int[] BeatSnaps { get; } = new int[8] { 48, 24, 16, 12, 8, 6, 4, 3 };
+        internal float HitPositionOffset { get; set; }
         internal List<HitObject> HitObjectPool { get; set; }
         internal List<HitObject> HitObjectDead { get; set; }
         internal List<HitObject> HitObjectHold { get; set; }
@@ -71,6 +72,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             //Initialize Track
             TrackPosition = (ulong)(-GameplayReferences.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
+            HitPositionOffset = GameplayReferences.ReceptorYOffset;
             CurrentSvIndex = 0;
 
             // Do config stuff
@@ -97,7 +99,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     IsLongNote = qua.HitObjects[i].EndTime > 0,
                     KeyLane = qua.HitObjects[i].Lane,
                     HitObjectSize = GameplayReferences.PlayfieldObjectSize,
-                    HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1], qua.HitObjects[i].StartTime * ScrollSpeed),
+                    HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1], 0),
                 };
 
                 // Calculate SV Index for hit object
@@ -105,6 +107,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
                 // Calculate Y-Offset From Receptor
                 newObject.OffsetFromReceptor = SvOffsetFromTime(newObject.StartTime, newObject.SvIndex);
+                newObject.HitObjectPositionY = newObject.OffsetFromReceptor + HitPositionOffset;
 
                 // Set Snap Color of Object
                 // Right now this method only changes the tint of the hitobject, but hopefully we can come up with something better
@@ -195,7 +198,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     if (CurrentSongTime > HitObjectHold[i].StartTime)
                     {
                         HitObjectHold[i].CurrentLongNoteSize = (ulong) ((HitObjectHold[i].LnOffsetFromReceptor - TrackPosition) * ScrollSpeed);
-                        HitObjectHold[i].HitObjectPositionY = GameplayReferences.ReceptorYOffset;
+                        HitObjectHold[i].HitObjectPositionY = HitPositionOffset;
                     }
                     else
                     {
@@ -300,7 +303,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal float PosFromOffset(ulong offsetToPos)
         {
             //if (_mod_pull) return (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(offsetToPos - CurrentSongTime, 0f) * _ScrollSpeed));
-            return GameplayReferences.ReceptorYOffset + (((float)(10000 + offsetToPos - TrackPosition) - 10000f) * ScrollNegativeFactor * ScrollSpeed);
+            return HitPositionOffset + (((float)(10000 + offsetToPos - TrackPosition) - 10000f) * ScrollNegativeFactor * ScrollSpeed);
         }
 
         /// <summary>
