@@ -88,11 +88,6 @@ namespace Quaver.Maps
         public string Description { get; set; }
 
         /// <summary>
-        ///     TODO: Remove.
-        /// </summary>
-        public int Judge { get; set; } = 0;
-
-        /// <summary>
         ///     TimingPoint .qua data
         /// </summary>
         public List<TimingPointInfo> TimingPoints { get; set; }

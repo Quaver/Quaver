@@ -206,7 +206,7 @@ namespace Quaver.GameState.Gameplay
             }
 
             ScoreManager = new ScoreManager();
-            ScoreManager.Initialize(total + count, GameBase.SelectedBeatmap.Qua.Judge); //TODO: ADD RELEASE COUNTS AS WELL
+            ScoreManager.Initialize(total + count); //TODO: ADD RELEASE COUNTS AS WELL
 
             // Declare Gameplay References
             GameplayReferences.PressWindowLatest = ScoreManager.HitWindowPress[4];
