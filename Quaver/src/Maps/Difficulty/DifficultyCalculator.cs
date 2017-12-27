@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Maps.Difficulty.Structures;
 
 namespace Quaver.Maps.Difficulty
 {
@@ -62,6 +63,44 @@ namespace Quaver.Maps.Difficulty
             }
 
             return qua.HitObjects;
+        }
+
+        /// <summary>
+        ///     Calculates the difficulty of vibro patterns.
+        ///     
+        ///     Vibro difficulty should be based on the following:
+        ///         - Speed
+        ///         - Stamina
+        ///         - Control (?)
+        /// 
+        ///     There needs to be some sort of line that compares vibro skill to jack & stream skill.
+        ///     Since vibro is an entirely different skill in itself, 
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        /// <returns></returns>
+        internal static double CalculateVibroDifficulty(List<VibroPatternInfo> patterns)
+        {
+            return 0;
+        }
+
+        /// <summary>
+        ///     Calculates the difficulty of jack patterns
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        /// <returns></returns>
+        internal static double CalculateJackDifficulty(IReadOnlyList<HitObjectInfo> hitObjects)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        ///     Calculates the difficulty of stream patterns
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        /// <returns></returns>
+        internal static double CalculateStreamDifficulty(IReadOnlyList<HitObjectInfo> hitObjects)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

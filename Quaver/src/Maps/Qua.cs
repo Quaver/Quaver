@@ -151,9 +151,30 @@ namespace Quaver.Maps
         /// <summary>
         ///     Calculates the difficulty of a Qua object
         /// </summary>
-        public void CalculateDifficulty()
+        internal void CalculateDifficulty()
         {
-            DifficultyCalculator.RemoveArtificialDensity(this);
+            var hitObjects = DifficultyCalculator.RemoveArtificialDensity(this);
+
+            var vibroPatterns = PatternAnalyzer.DetectVibroPatterns(hitObjects);
+        }
+
+        /// <summary>
+        ///     In Quaver, the key count is defined by the mode.
+        ///     See: GameModes.cs
+        /// </summary>
+        /// <returns></returns>
+        internal int FindKeyCountFromMode()
+        {
+            switch (Mode)
+            {
+                case GameModes.Keys4:
+                    return 4;
+                case GameModes.Keys7:
+                    return 7;
+                default:
+                    return -1;
+                    break;
+            }
         }
 
         /// <summary>
