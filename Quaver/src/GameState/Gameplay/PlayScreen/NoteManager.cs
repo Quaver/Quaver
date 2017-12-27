@@ -96,6 +96,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Size = new Vector2(GameplayReferences.PlayfieldSize, GameBase.Window.Z),
                 Alignment = Alignment.TopCenter
             };
+
             // Initialize HitObjects
             HitObjectPool = new List<HitObject>();
             HitObjectDead = new List<HitObject>();
