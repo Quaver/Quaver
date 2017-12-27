@@ -82,6 +82,31 @@ namespace Quaver.Input
         public event EventHandler SkipSong;
 
         /// <summary>
+        ///     Mania keys for input
+        /// </summary>
+        private List<Keys> InputManiaKeys { get; set; }
+
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        public GameplayInputManager()
+        {
+            InputManiaKeys = new List<Keys>();
+            // Determine which set of keys to use based on the .qua
+            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            {
+                case GameModes.Keys4:
+                    InputManiaKeys = LaneKeys;
+                    break;
+                case GameModes.Keys7:
+                    InputManiaKeys = LaneKeys7K;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
         ///     Checks if the given input was given
         /// </summary>
         public void CheckInput(bool skippable, List<ReplayFrame> ReplayFrames)
@@ -109,26 +134,11 @@ namespace Quaver.Input
         /// </summary>
         private void HandleManiaKeyPresses()
         {
-            var inputKeys = new List<Keys>();
-
-            // Determine which set of keys to use based on the .qua
-            switch (GameBase.SelectedBeatmap.Qua.Mode)
-            {
-                case GameModes.Keys4:
-                    inputKeys = LaneKeys;
-                    break;
-                case GameModes.Keys7:
-                    inputKeys = LaneKeys7K;
-                    break;
-                default:
-                    break;
-            }
-
             // Update Lane Keys Receptor
-            for (var i = 0; i < inputKeys.Count; i++)
+            for (var i = 0; i < InputManiaKeys.Count; i++)
             {
                 //Lane Key Press
-                if (GameBase.KeyboardState.IsKeyDown(inputKeys[i]) && !LaneKeyDown[i])
+                if (GameBase.KeyboardState.IsKeyDown(InputManiaKeys[i]) && !LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = true;
                     ManiaKeyPress?.Invoke(this, new ManiaKey(i));
@@ -136,7 +146,7 @@ namespace Quaver.Input
                     //GameBase.LoadedSkin.Hit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
                 }
                 //Lane Key Release
-                else if (GameBase.KeyboardState.IsKeyUp(inputKeys[i]) && LaneKeyDown[i])
+                else if (GameBase.KeyboardState.IsKeyUp(InputManiaKeys[i]) && LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = false;
                     ManiaKeyRelease?.Invoke(this, new ManiaKey(i));
