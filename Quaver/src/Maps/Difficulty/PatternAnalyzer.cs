@@ -17,23 +17,14 @@ namespace Quaver.Maps.Difficulty
         /// <returns></returns>
         internal static List<VibroPatternInfo> DetectVibroPatterns(IReadOnlyList<HitObjectInfo> hitObjects)
         {
-            // Get all detected vibro patterns per lane
-            var vibroPatternsLane1 = DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 1).ToList());
-            var vibroPatternsLane2 = DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 2).ToList());
-            var vibroPatternsLane3 = DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 3).ToList());
-            var vibroPatternsLane4 = DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 4).ToList());
-            var vibroPatternsLane5 = DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 5).ToList());
-            var vibroPatternsLane6 = DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 6).ToList());
-            var vibroPatternsLane7 = DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 7).ToList());
-
-            // Return all the vibro patterns concatenated by key lane
-            return vibroPatternsLane1
-                .Concat(vibroPatternsLane2)
-                .Concat(vibroPatternsLane3)
-                .Concat(vibroPatternsLane4)
-                .Concat(vibroPatternsLane5)
-                .Concat(vibroPatternsLane6)
-                .Concat(vibroPatternsLane7).ToList();
+            return DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 1).ToList())
+                .Concat(DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 2).ToList()))
+                .Concat(DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 3).ToList()))
+                .Concat(DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 4).ToList()))
+                .Concat(DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 5).ToList()))
+                .Concat(DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 6).ToList()))
+                .Concat(DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 7).ToList()))
+                .ToList();
         }
 
         /// <summary>
@@ -43,22 +34,14 @@ namespace Quaver.Maps.Difficulty
         /// <returns></returns>
         internal static List<JackPatternInfo> DetectJackPatterns(IReadOnlyList<HitObjectInfo> hitObjects)
         {
-            // Get all detected jack patterns per lane
-            var jackPatternsLane1 = DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 1).ToList());
-            var jackPatternsLane2 = DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 2).ToList());
-            var jackPatternsLane3 = DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 3).ToList());
-            var jackPatternsLane4 = DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 4).ToList());
-            var jackPatternsLane5 = DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 5).ToList());
-            var jackPatternsLane6 = DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 6).ToList());
-            var jackPatternsLane7 = DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 7).ToList());
-
-            return jackPatternsLane1
-                .Concat(jackPatternsLane2)
-                .Concat(jackPatternsLane3)
-                .Concat(jackPatternsLane4)
-                .Concat(jackPatternsLane5)
-                .Concat(jackPatternsLane6)
-                .Concat(jackPatternsLane7).ToList();
+            return DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 1).ToList())
+                .Concat(DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 2).ToList()))
+                .Concat(DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 3).ToList()))
+                .Concat(DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 4).ToList()))
+                .Concat(DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 5).ToList()))
+                .Concat(DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 6).ToList()))
+                .Concat(DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 7).ToList()))
+                .ToList();
         }
 
         /// <summary>
