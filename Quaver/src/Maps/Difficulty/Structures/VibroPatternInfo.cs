@@ -14,6 +14,11 @@ namespace Quaver.Maps.Difficulty.Structures
         public int TotalTime { get; set; }
 
         /// <summary>
+        ///     The time of the hit object where the pattern begins
+        /// </summary>
+        public int StartingObjectTime { get; set; }
+
+        /// <summary>
         ///     The key lane this vibro pattern takes place in
         /// </summary>
         public int Lane { get; set; }
