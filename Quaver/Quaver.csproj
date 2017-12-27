@@ -171,6 +171,8 @@
     <Compile Include="src\Logging\Log.cs" />
     <Compile Include="src\Logging\Logger.cs" />
     <Compile Include="src\Maps\Difficulty\DifficultyCalculator.cs" />
+    <Compile Include="src\Maps\Difficulty\PatternAnalyzer.cs" />
+    <Compile Include="src\Maps\Difficulty\Structures\VibroPatternInfo.cs" />
     <Compile Include="src\Modifiers\Mods\Chill.cs" />
     <Compile Include="src\Modifiers\Mods\Speed.cs" />
     <Compile Include="src\Modifiers\Mods\Strict.cs" />

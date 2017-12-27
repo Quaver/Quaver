@@ -22,10 +22,12 @@ namespace Quaver.Commands
             var argsList = new List<string>(args);
             argsList.RemoveAt(0);
             var path = string.Join(" ", argsList);
-            Console.WriteLine(path);
 
             var qua = Qua.Parse(path);
-            Console.WriteLine(qua.Artist);
+            Console.WriteLine();
+            Console.WriteLine($"Artist: {qua.Artist}");
+            Console.WriteLine($"Title: {qua.Title}");
+            Console.WriteLine($"Difficulty Name: {qua.DifficultyName}");
             qua.CalculateDifficulty();
         }
     }
