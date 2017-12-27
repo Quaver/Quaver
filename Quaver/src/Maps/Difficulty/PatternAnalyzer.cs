@@ -209,7 +209,7 @@ namespace Quaver.Maps.Difficulty
                         currentPattern.Add(thisObject);
 
                         // This only applies to the last HitObject, but run the same check
-                        // to see if the pattern contains 4 or more notes.
+                        // to see if the pattern contains 2 or more notes.
                         if (i != hitObjects.Count - 1 || currentPattern.Count < consideredJackNum)
                             continue;
 
