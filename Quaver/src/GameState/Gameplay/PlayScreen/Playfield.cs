@@ -110,7 +110,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
 
                     SizeX = GameplayReferences.PlayfieldObjectSize,
-                    
                     Position = new Vector2(GameplayReferences.ReceptorXPosition[i], GameplayReferences.ReceptorYOffset),
                     Alignment = Alignment.TopLeft,
                     Parent = Boundary
@@ -121,11 +120,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     case GameModes.Keys4:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors4K[i];
-                        Receptors[i].SizeY = GameplayReferences.PlayfieldObjectSize * (float) GameBase.LoadedSkin.NoteReceptors4K[i].Height / GameBase.LoadedSkin.NoteReceptors4K[i].Width;
+                        Receptors[i].SizeY = GameplayReferences.PlayfieldObjectSize * GameBase.LoadedSkin.NoteReceptors4K[i].Height / GameBase.LoadedSkin.NoteReceptors4K[i].Width;
                         break;
                     case GameModes.Keys7:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors7K[i];
-                        Receptors[i].SizeY = GameplayReferences.PlayfieldObjectSize * (float) GameBase.LoadedSkin.NoteReceptors7K[i].Height / GameBase.LoadedSkin.NoteReceptors7K[i].Width;
+                        Receptors[i].SizeY = GameplayReferences.PlayfieldObjectSize * GameBase.LoadedSkin.NoteReceptors7K[i].Height / GameBase.LoadedSkin.NoteReceptors7K[i].Width;
                         break;
                 }
             }
