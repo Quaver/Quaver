@@ -34,7 +34,7 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     The scale of the text.
         /// </summary>
-        public float TextScale { get; set; } = 1.5f;
+        public float TextScale { get; set; } = 1;
 
         /// <summary>
         ///     Determines if the text will stop before overflowing.
