@@ -190,7 +190,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             GradeLeft = new Sprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallF,
-                PositionX = 8 * GameBase.WindowYRatio,
+                //PositionX = 8,
                 Size = Vector2.One * GradeBox.SizeY * GameBase.WindowYRatio,
                 //PositionX = GradeProgressBar.PositionX - 32 * GameBase.WindowYRatio,
                 Parent = GradeBox
@@ -199,7 +199,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             GradeRight = new Sprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallD,
-                PositionX = -8 * GameBase.WindowYRatio,
+                //PositionX = -8,
                 Size = Vector2.One * GradeBox.SizeY * GameBase.WindowYRatio,
                 Alignment = Alignment.TopRight,
                 //PositionX = GradeProgressBar.PositionX + GradeProgressBar.SizeX + 32 * GameBase.WindowYRatio,
