@@ -27,22 +27,13 @@ namespace Quaver.Maps.Difficulty
             var vibroPatternsLane7 = DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 7).ToList());
 
             // Return all the vibro patterns concatenated by key lane
-            var detectedPatterns = vibroPatternsLane1
+            return vibroPatternsLane1
                 .Concat(vibroPatternsLane2)
                 .Concat(vibroPatternsLane3)
                 .Concat(vibroPatternsLane4)
                 .Concat(vibroPatternsLane5)
                 .Concat(vibroPatternsLane6)
                 .Concat(vibroPatternsLane7).ToList();
-
-            /*Console.WriteLine($"Lane 1 Detected Vibro Patterns: {vibroPatternsLane1.Count}");
-            Console.WriteLine($"Lane 2 Detected Vibro Patterns: {vibroPatternsLane2.Count}");
-            Console.WriteLine($"Lane 3 Detected Vibro Patterns: {vibroPatternsLane3.Count}");
-            Console.WriteLine($"Lane 4 Detected Vibro Patterns: {vibroPatternsLane4.Count}");
-            Console.WriteLine($"Lane 5 Detected Vibro Patterns: {vibroPatternsLane5.Count}");
-            Console.WriteLine($"Lane 6 Detected Vibro Patterns: {vibroPatternsLane6.Count}");
-            Console.WriteLine($"Lane 7 Detected Vibro Patterns: {vibroPatternsLane7.Count}");*/
-            return detectedPatterns;
         }
 
         /// <summary>
@@ -61,23 +52,13 @@ namespace Quaver.Maps.Difficulty
             var jackPatternsLane6 = DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 6).ToList());
             var jackPatternsLane7 = DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 7).ToList());
 
-            // Return all the jack patterns concatenated by key lane
-            var detectedPatterns = jackPatternsLane1
+            return jackPatternsLane1
                 .Concat(jackPatternsLane2)
                 .Concat(jackPatternsLane3)
                 .Concat(jackPatternsLane4)
                 .Concat(jackPatternsLane5)
                 .Concat(jackPatternsLane6)
                 .Concat(jackPatternsLane7).ToList();
-
-            /*Console.WriteLine($"Lane 1 Detected jack Patterns: {jackPatternsLane1.Count}");
-            Console.WriteLine($"Lane 2 Detected jack Patterns: {jackPatternsLane2.Count}");
-            Console.WriteLine($"Lane 3 Detected jack Patterns: {jackPatternsLane3.Count}");
-            Console.WriteLine($"Lane 4 Detected jack Patterns: {jackPatternsLane4.Count}");
-            Console.WriteLine($"Lane 5 Detected jack Patterns: {jackPatternsLane5.Count}");
-            Console.WriteLine($"Lane 6 Detected jack Patterns: {jackPatternsLane6.Count}");
-            Console.WriteLine($"Lane 7 Detected jack Patterns: {jackPatternsLane7.Count}");*/
-            return detectedPatterns;
         }
 
         /// <summary>
