@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace Quaver.Maps.Difficulty.Structures
 {
-    internal struct VibroPatternInfo
+    internal struct VibroPatternInfo : IPattern
     {
         /// <summary>
         ///     The amount of time the pattern lasts
         /// </summary>
-        internal int TotalTime { get; set; }
+        public int TotalTime { get; set; }
 
         /// <summary>
         ///     The key lane this vibro pattern takes place in
         /// </summary>
-        internal int Lane { get; set; }
+        public int Lane { get; set; }
 
         /// <summary>
         ///     The list of HitObjects in this vibro pattern
         /// </summary>
-        internal List<HitObjectInfo> HitObjects { get; set; }
+        public List<HitObjectInfo> HitObjects { get; set; }
     }
 }
