@@ -68,6 +68,11 @@ namespace Quaver.GameState.Gameplay
         private bool IntroSkippable { get; set; }
 
         /// <summary>
+        ///     Keeps track of whether or not the song intro was skipped.
+        /// </summary>
+        private bool IntroSkipped { get; set; }
+
+        /// <summary>
         ///     The Current Song Time
         /// </summary>
         private double CurrentSongTime { get; set; }
@@ -103,6 +108,7 @@ namespace Quaver.GameState.Gameplay
             // Hook InputManager
             InputManager.ManiaKeyPress += ManiaKeyDown;
             InputManager.ManiaKeyRelease += ManiaKeyUp;
+            InputManager.SkipSong += SkipSong;
 
             // Hook Missed Note Events
             NoteManager.PressMissed += PressMissed;
@@ -145,6 +151,7 @@ namespace Quaver.GameState.Gameplay
 
         public void Update(double dt)
         {
+            // Update Drawables
             TestButton.Update(dt);
             SvInfoTextBox.Update(dt);
             
@@ -165,14 +172,18 @@ namespace Quaver.GameState.Gameplay
             // Check the input for this particular game state.
             InputManager.CheckInput(IntroSkippable, ReplayFrames);
 
+            // Record session with Replay Helper
+            ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua);
+
             // Update Loggers. todo: remove
             Logger.Update("KeyCount", $"Game Mode: {GameBase.SelectedBeatmap.Qua.Mode}");
             Logger.Update("SongPos", "Current Track Position: " + NoteManager.TrackPosition);
             Logger.Update("Skippable", $"Intro Skippable: {IntroSkippable}");
 
-            //Todo: remove. TEST.
+            //Todo: remove. below
             SvInfoTextBox.Update(dt);
 
+            // If the song is done, it'll change state. todo: add a method for this later
             if (Timing.PlayingIsDone)
                 GameBase.GameStateManager.ChangeState(new ScoreScreenState(BeatmapMd5, ScoreManager, GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title, GameBase.SelectedBeatmap.DifficultyName, ReplayFrames));  
         }
@@ -223,8 +234,8 @@ namespace Quaver.GameState.Gameplay
             // Create loggers
             Logger.Add("KeyCount", "", Color.Pink);
             Logger.Add("SongPos", "", Color.White);
-            Logger.Add("Skippable", "", CustomColors.NameTagAdmin);
-            Logger.Add("JudgeDifficulty", "", CustomColors.NameTagModerator);
+            Logger.Add("Skippable", "", GameColors.NameTagAdmin);
+            Logger.Add("JudgeDifficulty", "", GameColors.NameTagModerator);
 
             // Update hit window logger
             var loggertext = "Hitwindow: Judge: " + ScoreManager.JudgeDifficulty + "   Press: ";
@@ -399,7 +410,20 @@ namespace Quaver.GameState.Gameplay
 
         public void SkipSong(object sender, EventArgs e)
         {
-            
+            if (IntroSkippable && GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !IntroSkipped)
+            {
+                IntroSkipped = true;
+
+                Logger.Log("Song has been successfully skipped to 3 seconds before the first HitObject.", LogColors.GameSuccess);
+
+                // Skip to 3 seconds before the notes start
+                SongManager.Load();
+                SongManager.SkipTo(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - 3000 + SongManager.BassDelayOffset);
+                SongManager.Play();
+
+                Timing.SongIsPlaying = true;
+                GameBase.ChangeDiscordPresenceGameplay(true);
+            }
         }
     }
 }

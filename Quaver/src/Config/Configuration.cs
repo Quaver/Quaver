@@ -329,7 +329,7 @@ namespace Quaver.Config
 
             // If we already have a config file, we'll just want to read that.
             ReadConfigFile();
-            Logger.Log("Config file has successfully been read.", Color.Cyan);
+            Logger.Log("Config file has successfully been read.", LogColors.GameImportant);
         }
 
         /// <summary>

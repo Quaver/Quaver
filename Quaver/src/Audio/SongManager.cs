@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using Quaver.Config;
 using Quaver.Logging;
 using Configuration = Quaver.Config.Configuration;
+using Quaver.Graphics;
 
 namespace Quaver.Audio
 {
@@ -103,7 +104,7 @@ namespace Quaver.Audio
                 return;
 
             Bass.ChannelPause(AudioStream);
-            Logger.Log($"Audio Stream {AudioStream} has been paused.", Color.Cyan);
+            Logger.Log($"Audio Stream {AudioStream} has been paused.", LogColors.GameInfo);
         }
 
         /// <summary>
@@ -115,7 +116,7 @@ namespace Quaver.Audio
                 return;
 
             Bass.ChannelPlay(AudioStream);
-            Logger.Log($"Audio Stream {AudioStream} has been resumed.", Color.Cyan);
+            Logger.Log($"Audio Stream {AudioStream} has been resumed.", LogColors.GameInfo);
         }
 
         /// <summary>

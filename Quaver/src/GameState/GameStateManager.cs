@@ -130,7 +130,7 @@ namespace Quaver.GameState
 
         private void Debug(Exception ex)
         {
-            Logger.Log(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n", Color.Red, 5.0f);
+            Logger.Log(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n", LogColors.GameError, 5.0f);
         }
     }
 }

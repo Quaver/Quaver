@@ -145,19 +145,12 @@ namespace Quaver.Graphics.Text
             //TODO: SpriteFont.MeasureString()
             //Draw itself if it is in the window
             if (Util.Vector4Intercepts(GameBase.Window, GlobalVect) && Visible)
-                GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color, 0, Vector2.One, Vector2.One * TextScale, SpriteEffects.None, 0);
-
-            /*
-                 SpriteFont spriteFont,
-                 string text,
-                 Vector2 position,
-                 Color color,
-                 float rotation,
-                 Vector2 origin,
-                 Vector2 scale,
-                 SpriteEffects effects,
-                 float layerDepth
-            */
+            {
+                if (TextScale == 1 )
+                    GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color);
+                else
+                    GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color, 0, Vector2.One, Vector2.One * TextScale, SpriteEffects.None, 0);
+            }
 
             base.Draw();
         }

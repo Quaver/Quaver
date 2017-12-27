@@ -19,6 +19,7 @@ using Quaver.Logging;
 
 using Quaver.Modifiers;
 using Quaver.Maps;
+using Quaver.Enums;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
@@ -48,7 +49,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal event EventHandler ReleaseMissed;
 
         //CONFIG (temp)
-        private float ScrollNegativeFactor { get; set; }
         private float ScrollSpeed { get; set; }
 
         /// <summary>
@@ -72,11 +72,22 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             //Initialize Track
             TrackPosition = (ulong)(-GameplayReferences.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
-            HitPositionOffset = GameplayReferences.ReceptorYOffset;
             CurrentSvIndex = 0;
+            switch (GameBase.SelectedBeatmap.Qua.Mode) //the hit position is determined by the receptor and object of the first lane
+            {
+                case GameModes.Keys4:
+                    HitPositionOffset = Config.Configuration.DownScroll 
+                        ? GameplayReferences.ReceptorYOffset 
+                        : GameplayReferences.ReceptorYOffset + ((GameBase.LoadedSkin.NoteReceptors4K[0].Height - GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height) * GameBase.WindowYRatio);
+                    break;
+                case GameModes.Keys7:
+                    HitPositionOffset = Config.Configuration.DownScroll 
+                        ? GameplayReferences.ReceptorYOffset 
+                        : GameplayReferences.ReceptorYOffset + ((GameBase.LoadedSkin.NoteReceptors4K[0].Height - GameBase.LoadedSkin.NoteHitObjects7K[0].Height) * GameBase.WindowYRatio);
+                    break;
+            }
 
             // Do config stuff
-            ScrollNegativeFactor = Config.Configuration.DownScroll ? -1 : 1;
             ScrollSpeed = GameBase.WindowYRatio * Configuration.ScrollSpeed / (20f * GameBase.GameClock); //todo: balance curve
 
             // Initialize Boundary
@@ -85,6 +96,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Size = new Vector2(GameplayReferences.PlayfieldSize, GameBase.Window.Z),
                 Alignment = Alignment.TopCenter
             };
+
             // Initialize HitObjects
             HitObjectPool = new List<HitObject>();
             HitObjectDead = new List<HitObject>();
@@ -98,7 +110,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     EndTime = qua.HitObjects[i].EndTime,
                     IsLongNote = qua.HitObjects[i].EndTime > 0,
                     KeyLane = qua.HitObjects[i].Lane,
-                    HitObjectSize = GameplayReferences.PlayfieldObjectSize,
+                    HitObjectSize = GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio,
                     HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1], 0),
                 };
 
@@ -131,7 +143,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 HitObjectPool.Add(newObject);
             }
 
-            Logger.Log("Done loading HitObjects", Color.AntiqueWhite);
+            Logger.Log("Done loading HitObjects", LogColors.GameInfo);
         }
 
         /// <summary>
@@ -303,7 +315,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal float PosFromOffset(ulong offsetToPos)
         {
             //if (_mod_pull) return (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(offsetToPos - CurrentSongTime, 0f) * _ScrollSpeed));
-            return HitPositionOffset + (((float)(10000 + offsetToPos - TrackPosition) - 10000f) * ScrollNegativeFactor * ScrollSpeed);
+            return Config.Configuration.DownScroll 
+                ? HitPositionOffset + (((10000 + offsetToPos - TrackPosition) - 10000f) * -ScrollSpeed)
+                : HitPositionOffset + (((10000 + offsetToPos - TrackPosition) - 10000f) * ScrollSpeed);
         }
 
         /// <summary>
