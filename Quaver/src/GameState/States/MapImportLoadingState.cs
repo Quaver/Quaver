@@ -97,7 +97,7 @@ namespace Quaver.GameState.States
                     $"{GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}", "Listening");
             }
 
-            Logger.Log("Successfully completed the conversion task. Stopping loader.", Color.Cyan);
+            Logger.Log("Successfully completed the conversion task. Stopping loader.", LogColors.GameImportant);
             GameBase.GameStateManager.RemoveState();
         }
     }
