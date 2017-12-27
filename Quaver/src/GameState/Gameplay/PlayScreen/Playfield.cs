@@ -47,6 +47,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         private Sprite BgMask { get; set; }
 
         /// <summary>
+        ///     The size of the playfield
+        /// </summary>
+        private float PlayfieldSize { get; set; }
+
+        /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
         /// </summary>
         public void Initialize(IGameState state)
@@ -67,18 +72,18 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     break;
             }
 
-            PlayfieldPadding = (int) (GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowYRatio);
-            ReceptorPadding = (int)(GameBase.LoadedSkin.NotePadding * GameBase.WindowYRatio);
-            GameplayReferences.PlayfieldSize = ((LaneSize + ReceptorPadding) * GameplayReferences.ReceptorXPosition.Length) + (PlayfieldPadding * 2) - ReceptorPadding;
-
             // Calculate Config stuff
             GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll ? (int)GameBase.Window.Z + (int)GameBase.Window.Y - GameBase.LoadedSkin.ReceptorYOffset - LaneSize : GameBase.LoadedSkin.ReceptorYOffset;
             GameplayReferences.ReceptorYOffset *= GameBase.WindowYRatio;
+            PlayfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowYRatio);
+            ReceptorPadding = (int)(GameBase.LoadedSkin.NotePadding * GameBase.WindowYRatio);
+            PlayfieldSize = ((LaneSize + ReceptorPadding) * GameplayReferences.ReceptorXPosition.Length) + (PlayfieldPadding * 2) - ReceptorPadding;
+            GameplayReferences.PlayfieldSize = PlayfieldSize;
 
             // Create playfield boundary
             Boundary = new Boundary()
             {
-                Size = new Vector2(GameplayReferences.PlayfieldSize, GameBase.Window.Z),
+                Size = new Vector2(PlayfieldSize, GameBase.Window.Z),
                 Alignment = Alignment.TopCenter
             };
 
