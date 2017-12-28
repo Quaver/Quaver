@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.Maps.Difficulty.Structures
 {
-    internal struct JackPatternInfo : IPattern
+    internal class JackPatternInfo : IPattern
     {
         /// <summary>
         ///     The total time this pattern takes
