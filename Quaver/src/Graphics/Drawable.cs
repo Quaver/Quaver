@@ -202,7 +202,6 @@ namespace Quaver.Graphics
             if (Changed)
             {
                 Changed = false;
-                Children.ForEach(x => x.Changed = true);
                 RecalculateRect();
             }
 
@@ -242,6 +241,7 @@ namespace Quaver.Graphics
             else
                 _globalVect = Util.DrawRect(Alignment, _localVect, GameBase.Window);
 
+            Children.ForEach(x => x.Changed = true);
             Children.ForEach(x => x.RecalculateRect());
         }
 
