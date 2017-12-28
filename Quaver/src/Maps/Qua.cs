@@ -154,22 +154,26 @@ namespace Quaver.Maps
         /// </summary>
         internal void CalculateDifficulty()
         {
+            if (HitObjects.Count == 0 || TimingPoints.Count == 0)
+                throw new ArgumentException();
+
             var hitObjects = DifficultyCalculator.RemoveArtificialDensity(this);
 
-            var vibroPatterns = PatternAnalyzer.DetectVibroPatterns(hitObjects);
+            var vibroPatterns = PatternAnalyzer.DetectAllLanePatterns(hitObjects, true);
 
-            // Find all the jack patterns, then get rid of the ones that intersect with vibro patterns,
-            // so we can have an accurate distinction of what is considered vibro and what is considered jacks.
-            var jackPatterns = PatternAnalyzer.DetectJackPatterns(hitObjects);
-
-            var intersectionPatterns = new List<JackPatternInfo>();
-
-            // Find all the intersection patterns and remove them.
-            jackPatterns.ForEach(x => vibroPatterns.ForEach(y => { if (x.StartingObjectTime == y.StartingObjectTime) intersectionPatterns.Add(x); }));
-            intersectionPatterns.ForEach(x => jackPatterns.Remove(x));
+            // Find all the jack patterns, then get rid of all vibro patterns that could've been placed in there.
+            var jackPatterns = PatternAnalyzer.DetectAllLanePatterns(hitObjects, false);
+            jackPatterns = PatternAnalyzer.RemoveVibroFromJacks(jackPatterns, vibroPatterns);
 
             Console.WriteLine($"Detected: {vibroPatterns.Count} vibro patterns");
             Console.WriteLine($"Detected: {jackPatterns.Count} jack patterns");
+
+            foreach (var vibroPatternInfo in jackPatterns)
+                Console.WriteLine($"Time: {vibroPatternInfo.StartingObjectTime} | Lane: {vibroPatternInfo.Lane} | Objects: {vibroPatternInfo.HitObjects.Count}");
+
+            Console.WriteLine();
+            foreach (var vibroPatternInfo in vibroPatterns)
+                Console.WriteLine($"Time: {vibroPatternInfo.StartingObjectTime} | Lane: {vibroPatternInfo.Lane} | Objects: {vibroPatternInfo.HitObjects.Count}");
         }
 
         /// <summary>
