@@ -10,38 +10,72 @@ namespace Quaver.Maps.Difficulty
     internal static class PatternAnalyzer
     {
         /// <summary>
+        ///     The minimum BPM to be considered vibro
+        /// </summary>
+        private static int VibroBaseBpm { get; set; } = 160;
+
+        /// <summary>
+        ///     The minimum BPM to be considered jacks
+        /// </summary>
+        private static int JackBaseBpm { get; set; } = 95;
+
+        /// <summary>
         ///     Detects vibro patterns for ther entire map
         /// </summary>
         /// <param name="hitObjects"></param>
         /// <param name="KeyCount"></param>
         /// <returns></returns>
-        internal static List<VibroPatternInfo> DetectVibroPatterns(IReadOnlyList<HitObjectInfo> hitObjects)
+        internal static List<JackPatternInfo> DetectAllLanePatterns(IReadOnlyList<HitObjectInfo> hitObjects, bool detectVibro)
         {
-            return DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 1).ToList())
-                .Concat(DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 2).ToList()))
-                .Concat(DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 3).ToList()))
-                .Concat(DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 4).ToList()))
-                .Concat(DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 5).ToList()))
-                .Concat(DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 6).ToList()))
-                .Concat(DetectLaneVibroPatterns(hitObjects.Where(x => x.Lane == 7).ToList()))
+            return DetectLanePatterns(hitObjects.Where(x => x.Lane == 1). ToList(), detectVibro)
+                .Concat(DetectLanePatterns(hitObjects.Where(x => x.Lane == 2). ToList(), detectVibro))
+                .Concat(DetectLanePatterns(hitObjects.Where(x => x.Lane == 3). ToList(), detectVibro))
+                .Concat(DetectLanePatterns(hitObjects.Where(x => x.Lane == 4). ToList(), detectVibro))
+                .Concat(DetectLanePatterns(hitObjects.Where(x => x.Lane == 5). ToList(), detectVibro))
+                .Concat(DetectLanePatterns(hitObjects.Where(x => x.Lane == 6). ToList(), detectVibro))
+                .Concat(DetectLanePatterns(hitObjects.Where(x => x.Lane == 7). ToList(), detectVibro))
                 .ToList();
         }
 
         /// <summary>
-        ///     Detects jack patterns for the entire map.
-        /// </summary>
+        ///     Detects vibro patterns per key lane
+        ///     
+        ///     A vibro pattern can be considered as 4 notes in succession for a lane
+        ///     with the objects having a 1/4th millisecond difference of a base bpm
         /// <param name="hitObjects"></param>
         /// <returns></returns>
-        internal static List<JackPatternInfo> DetectJackPatterns(IReadOnlyList<HitObjectInfo> hitObjects)
-        {
-            return DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 1).ToList())
-                .Concat(DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 2).ToList()))
-                .Concat(DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 3).ToList()))
-                .Concat(DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 4).ToList()))
-                .Concat(DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 5).ToList()))
-                .Concat(DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 6).ToList()))
-                .Concat(DetectLaneJackPatterns(hitObjects.Where(x => x.Lane == 7).ToList()))
-                .ToList();
+        private static List<JackPatternInfo> DetectLanePatterns(IReadOnlyList<HitObjectInfo> hitObjects, bool detectVibro)
+        { 
+            var baseBpm = (detectVibro) ? VibroBaseBpm : JackBaseBpm;
+            var requiredPatternObjects = (detectVibro) ? 4 : 2; // The amount of objects required to be considered a pattern (Vibro : Jack)
+            var detectedPatterns = new List<JackPatternInfo>(); // Detected patterns
+            var patternObjects = new List<HitObjectInfo>(); // The current pattern's objects
+
+            // Begin analyzing patterns
+            for (var i = 1; i < hitObjects.Count; i++)
+            {
+                // Consider the current object apart of the pattern if the time difference of the objects is <= the threshold.
+                var startTimeDiff = Math.Abs(hitObjects[i].StartTime - hitObjects[i - 1].StartTime);
+                if (startTimeDiff <= 60000 / baseBpm / 4)
+                {
+                    patternObjects.Add(hitObjects[i]);
+
+                    // This applies to the last HitObject. Add the pattern to the list if it is.
+                    if (i != hitObjects.Count - 1 || patternObjects.Count < requiredPatternObjects)
+                        continue;
+
+                    detectedPatterns.Add(CreateJackPattern(patternObjects));
+                    continue;
+                } 
+
+                // If the pattern was cut off by another object but meets the required # objects to be considered a pattern.
+                if (patternObjects.Count >= requiredPatternObjects)
+                    detectedPatterns.Add(CreateJackPattern(patternObjects));
+
+                patternObjects = new List<HitObjectInfo>();
+            }
+
+            return detectedPatterns;
         }
 
         /// <summary>
@@ -55,163 +89,45 @@ namespace Quaver.Maps.Difficulty
         }
 
         /// <summary>
-        ///     Detects vibro patterns per lane.
+        ///     Removes vibro 
         /// </summary>
-        /// <param name="hitObjects"></param>
         /// <returns></returns>
-        private static List<VibroPatternInfo> DetectLaneVibroPatterns(IReadOnlyList<HitObjectInfo> hitObjects)
+        internal static List<JackPatternInfo> RemoveVibroFromJacks(List<JackPatternInfo> jacks, List<JackPatternInfo> vibro)
         {
-            var detectedPatterns = new List<VibroPatternInfo>();
+            // Remove jack patterns that intersect with vibro at the same start time.
+            var intersectionPatterns = new List<JackPatternInfo>();
+            jacks.ForEach(x => vibro.ForEach(y => { if (x.StartingObjectTime == y.StartingObjectTime) intersectionPatterns.Add(x); }));
+            intersectionPatterns.ForEach(x => jacks.Remove(x));
 
-            // The difference in milliseconds that would be detected as a vibro pattern.
-            // 88ms per hit is ~165BPM, so if it's an less than that, that too would be considered vibro
-            const int vibroMsDiff = 91;
+            var objectsToRemove = new Dictionary<int, List<HitObjectInfo>>();
 
-            // The number of objects required to be considered a vibro pattern
-            const int consideredVibroNum = 4;
-
-            // Stores the current objects in a given pattern that is being analyzed
-            var currentPattern = new List<HitObjectInfo>();
-
-            // Begin analyzing vibro patterns
-            for (var i = 1; i < hitObjects.Count; i++)
+            for (var i = 0; i < jacks.Count; i++)
             {
-                try
-                {
-                    var thisObject = hitObjects[i];
-                    var previousObject = hitObjects[i - 1];
-
-                    // If the start time difference of the current and previous object are 
-                    // the vibro ms diff or faster, then we'll consider that apart of a vibro pattern.
-                    if (Math.Abs(thisObject.StartTime - previousObject.StartTime) <= vibroMsDiff)
-                    {
-                        currentPattern.Add(thisObject);
-
-                        // This only applies to the last HitObject, but run the same check
-                        // to see if the pattern contains 4 or more notes.
-                        if (i != hitObjects.Count - 1 || currentPattern.Count < consideredVibroNum)
-                            continue;
-
-                        // Add the last detected pattern to the list.
-                        detectedPatterns.Add(new VibroPatternInfo
-                        {                      
-                            HitObjects = currentPattern,
-                            Lane = currentPattern[0].Lane,
-                            TotalTime = currentPattern[currentPattern.Count - 1].StartTime - currentPattern[0].StartTime,
-                            StartingObjectTime = currentPattern[0].StartTime
-                        });
-                    }
-                        
-                    // If we drop to here, this must mean that it is the end of the current pattern.
-                    // So we can run a check to see how many objects are actually in the current pattern.
-                    // If it's >= 4 objects, then that must mean it's a vibro pattern, so we can go ahead and 
-                    // add it to the list of vibro patterns
-                    else if (currentPattern.Count >= consideredVibroNum)
-                    {
-                        // Add the detected pattern to the current list
-                        detectedPatterns.Add(new VibroPatternInfo
-                        {
-                            HitObjects = currentPattern,
-                            Lane = currentPattern[0].Lane,
-                            TotalTime = currentPattern[currentPattern.Count - 1].StartTime - currentPattern[0].StartTime,
-                            StartingObjectTime = currentPattern[0].StartTime
-                        });
-
-                        // Clear list now that there's no more patterns to add
-                        currentPattern = new List<HitObjectInfo>();
-                    }
-                    // At the end of the pattern but it isn't necessarily considered vibro (3 or less objects)
-                    else if (currentPattern.Count > 0)
-                        currentPattern = new List<HitObjectInfo>();
-                }
-                catch (Exception) { }
+                var detectedVibroPatterns = DetectLanePatterns(jacks[i].HitObjects, true);
+                foreach (var detectedVibroPattern in detectedVibroPatterns)
+                    objectsToRemove.Add(i, detectedVibroPattern.HitObjects);
             }
 
-            return detectedPatterns;
+            foreach (var objPattern in objectsToRemove)
+                jacks[objPattern.Key].HitObjects = jacks[objPattern.Key].HitObjects.Except(objPattern.Value).ToList();
+
+            return jacks;
         }
 
         /// <summary>
-        ///     Detects jack patterns per key lane
-        ///     
-        ///     A Jack pattern can be considered as 2+ notes in succession in a given lane,
-        ///     at a bpm range of 95-175 (159ms - 84ms object start time differences).
-        /// 
-        ///     One caveat about jacks is that there are certain patterns that make it harder or easier,
-        ///     but this function only detects per lane and not patterns like Jumps, Hands, and Quad Jacks
+        ///     Creates and returns an instance of a vibro pattern
         /// </summary>
         /// <param name="hitObjects"></param>
         /// <returns></returns>
-        private static List<JackPatternInfo> DetectLaneJackPatterns(IReadOnlyList<HitObjectInfo> hitObjects)
+        private static JackPatternInfo CreateJackPattern(List<HitObjectInfo> hitObjects)
         {
-            var detectedPatterns = new List<JackPatternInfo>();
-
-            // The difference in milliseconds of the range that would be detected as a jack pattern.
-            // 95BPM - 175BPM is considered jacks.
-            // That's around a 84-159ms start time difference per object
-            const int minJackMsDiff = 84;
-            const int maxJackMsDiff = 159;
-
-            // The number of objects required to be considered a jack pattern
-            const int consideredJackNum = 2;
-
-            // Stores the current objects in a given pattern that is being analyzed
-            var currentPattern = new List<HitObjectInfo>();
-
-            // Begin analyzing jack patterns
-            for (var i = 1; i < hitObjects.Count; i++)
+            return new JackPatternInfo()
             {
-                try
-                {
-                    var thisObject = hitObjects[i];
-                    var previousObject = hitObjects[i - 1];
-
-                    // If the start time difference of the current and previous object are 
-                    // in range of the min and max jack millisecond difference
-                    var startTimeDiff = Math.Abs(thisObject.StartTime - previousObject.StartTime);
-                    if (startTimeDiff >= minJackMsDiff && startTimeDiff <= maxJackMsDiff)
-                    {
-                        currentPattern.Add(thisObject);
-
-                        // This only applies to the last HitObject, but run the same check
-                        // to see if the pattern contains the required amount of notes
-                        if (i != hitObjects.Count - 1 || currentPattern.Count < consideredJackNum)
-                            continue;
-
-                        // Add the last detected pattern to the list.
-                        detectedPatterns.Add(new JackPatternInfo
-                        {
-                            HitObjects = currentPattern,
-                            Lane = currentPattern[0].Lane,
-                            TotalTime = currentPattern[currentPattern.Count - 1].StartTime - currentPattern[0].StartTime,
-                            StartingObjectTime = currentPattern[0].StartTime
-                        });
-                    }
-                    // If we drop to here, this must mean that it is the end of the current pattern.
-                    // So we can run a check to see how many objects are actually in the current pattern.
-                    // If it's >= the required amount of objects, then that must mean it's a jack pattern, so we can go ahead and 
-                    // add it to the list of jack patterns
-                    else if (currentPattern.Count >= consideredJackNum)
-                    {
-                        // Add the detected pattern to the current list
-                        detectedPatterns.Add(new JackPatternInfo
-                        {
-                            HitObjects = currentPattern,
-                            Lane = currentPattern[0].Lane,
-                            TotalTime = currentPattern[currentPattern.Count - 1].StartTime - currentPattern[0].StartTime,
-                            StartingObjectTime = currentPattern[0].StartTime
-                        });
-
-                        // Clear list now that there's no more patterns to add
-                        currentPattern = new List<HitObjectInfo>();
-                    }
-                    // At the end of the pattern but it isn't necessarily considered jacks
-                    else if (currentPattern.Count > 0)
-                        currentPattern = new List<HitObjectInfo>();
-                }
-                catch (Exception) { }
-            }
-
-            return detectedPatterns;
+                HitObjects = hitObjects,
+                Lane = hitObjects[0].Lane,
+                TotalTime = hitObjects[hitObjects.Count - 1].StartTime - hitObjects[0].StartTime,
+                StartingObjectTime = hitObjects[0].StartTime
+            };
         }
     }
 }
