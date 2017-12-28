@@ -89,7 +89,8 @@ namespace Quaver.Maps.Difficulty
         }
 
         /// <summary>
-        ///     Removes vibro 
+        ///     Removes any HitObjects that are apart of vibro patterns in the jack patterns.
+        ///     It uses the same vibro detection, so we're just getting rid of duplicates here.
         /// </summary>
         /// <returns></returns>
         internal static List<JackPatternInfo> RemoveVibroFromJacks(List<JackPatternInfo> jacks, List<JackPatternInfo> vibro)
