@@ -21,21 +21,22 @@ namespace Quaver.Maps.Difficulty
         /// </summary>
         /// <param name="qua"></param>
         /// <returns></returns>
-        internal static List<HitObjectInfo> RemoveArtificialDensity(Qua qua)
+        internal static List<HitObjectInfo> RemoveArtificialDensity(List<HitObjectInfo> hitObjects, List<TimingPointInfo> timingPoints)
         {
             // First sort the Qua by StartTime so we can accurately
             // find information about the map 
-            qua.Sort();
+            hitObjects = hitObjects.OrderBy(x => x.StartTime).ToList();
+            timingPoints = timingPoints.OrderBy(x => x.StartTime).ToList();
 
             // Start removing artificial density patterns.
-            for (var i = 0; i < qua.HitObjects.Count; i++)
+            for (var i = 0; i < hitObjects.Count; i++)
             {
                 // We only want to run this on LN patterns, so skip normal notes.
-                if (qua.HitObjects[i].EndTime == 0) continue;
+                if (hitObjects[i].EndTime == 0) continue;
                 
                 // Find the current timing point and next long note in the map.
-                var currentTimingPoint = FindHitObjectTimingPoint(qua.HitObjects[i], qua.TimingPoints);
-                var nextLongNote = FindNextLongNote(qua.HitObjects, i);
+                var currentTimingPoint = FindHitObjectTimingPoint(hitObjects[i], timingPoints);
+                var nextLongNote = FindNextLongNote(hitObjects, i);
 
                 if (nextLongNote == null || currentTimingPoint == null) continue;
 
@@ -48,21 +49,21 @@ namespace Quaver.Maps.Difficulty
 
                 // Check if the snap distance of the two object's StartTime difference is too short.
                 // We consider them too short if the next object starts at a 1/8th note or smaller later.
-                if (millisecondsPerBeat / (nextLongNote.StartTime - qua.HitObjects[i].StartTime) >= 8) shortStartTimes = true;
+                if (millisecondsPerBeat / (nextLongNote.StartTime - hitObjects[i].StartTime) >= 8) shortStartTimes = true;
 
                 // If the LN's hold time lasts for 1/8th of the beat or less, then that's considered artificial density.
-                if (Math.Round(millisecondsPerBeat / (qua.HitObjects[i].EndTime - qua.HitObjects[i].StartTime), 0) >= 8) shortHoldTime = true;
+                if (Math.Round(millisecondsPerBeat / (hitObjects[i].EndTime - hitObjects[i].StartTime), 0) >= 8) shortHoldTime = true;
 
                 // If no artificial density flags were triggered for this pattern, then continue to the next object.
                 if (!shortStartTimes && !shortHoldTime) continue;
 
                 // Otherwise make the LN a normal note.
-                qua.HitObjects[i].EndTime = 0;
+                hitObjects[i].EndTime = 0;
 
-                //Console.WriteLine($"Obj: {qua.HitObjects[i].StartTime} | TP: {currentTimingPoint.StartTime} | Next LN: {nextLongNote.StartTime} | Short Start: {shortStartTimes} | Short Hold: {shortHoldTime}");
+                //Console.WriteLine($"Obj: {hitObjects[i].StartTime} | TP: {currentTimingPoint.StartTime} | Next LN: {nextLongNote.StartTime} | Short Start: {shortStartTimes} | Short Hold: {shortHoldTime}");
             }
 
-            return qua.HitObjects;
+            return hitObjects;
         }
 
         /// <summary>
