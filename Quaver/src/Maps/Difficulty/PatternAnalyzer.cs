@@ -99,17 +99,18 @@ namespace Quaver.Maps.Difficulty
             jacks.ForEach(x => vibro.ForEach(y => { if (x.StartingObjectTime == y.StartingObjectTime) intersectionPatterns.Add(x); }));
             intersectionPatterns.ForEach(x => jacks.Remove(x));
 
-            var objectsToRemove = new Dictionary<int, List<HitObjectInfo>>();
+            // Tuple stored as, <index of jack patterns, list of objects>
+            var objectsToRemove = new List<Tuple<int, List<HitObjectInfo>>>();
 
             for (var i = 0; i < jacks.Count; i++)
             {
                 var detectedVibroPatterns = DetectLanePatterns(jacks[i].HitObjects, true);
                 foreach (var detectedVibroPattern in detectedVibroPatterns)
-                    objectsToRemove.Add(i, detectedVibroPattern.HitObjects);
+                    objectsToRemove.Add(Tuple.Create(i, detectedVibroPattern.HitObjects));
             }
 
             foreach (var objPattern in objectsToRemove)
-                jacks[objPattern.Key].HitObjects = jacks[objPattern.Key].HitObjects.Except(objPattern.Value).ToList();
+                jacks[objPattern.Item1].HitObjects = jacks[objPattern.Item1].HitObjects.Except(objPattern.Item2).ToList();
 
             return jacks;
         }
