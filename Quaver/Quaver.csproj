@@ -176,7 +176,6 @@
     <Compile Include="src\Maps\Difficulty\Structures\IPattern.cs" />
     <Compile Include="src\Maps\Difficulty\Structures\JackPatternInfo.cs" />
     <Compile Include="src\Maps\Difficulty\Structures\StreamPatternInfo.cs" />
-    <Compile Include="src\Maps\Difficulty\Structures\VibroPatternInfo.cs" />
     <Compile Include="src\Modifiers\Mods\Chill.cs" />
     <Compile Include="src\Modifiers\Mods\Speed.cs" />
     <Compile Include="src\Modifiers\Mods\Strict.cs" />
