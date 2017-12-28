@@ -10,6 +10,7 @@ using Quaver.Logging;
 using Quaver.Peppy;
 using Quaver.Enums;
 using Newtonsoft.Json;
+using Quaver.Graphics;
 using Quaver.Maps.Difficulty;
 using Quaver.Maps.Difficulty.Structures;
 
@@ -152,20 +153,34 @@ namespace Quaver.Maps
         /// <summary>
         ///     Calculates the difficulty of a Qua object
         /// </summary>
-        internal void CalculateDifficulty()
+        internal void CalculateDifficulty(float rate = 1.0f)
         {
             if (HitObjects.Count == 0 || TimingPoints.Count == 0)
                 throw new ArgumentException();
 
-            var hitObjects = DifficultyCalculator.RemoveArtificialDensity(this);
+            // C# Meme, Clone the list of list of hitobjects & timing points
+            // since they are reference types.
+            var hitObjects = new List<HitObjectInfo>();
+            HitObjects.ForEach(x => hitObjects.Add((HitObjectInfo)x.Clone()));
 
+            var timingPoints = new List<TimingPointInfo>();
+            TimingPoints.ForEach(x => timingPoints.Add((TimingPointInfo)x.Clone()));
+
+            // Change the rate
+            hitObjects.ForEach(x => { x.StartTime = (int)Math.Round(x.StartTime / rate, 0); });
+            timingPoints.ForEach(x => { x.StartTime = (int)Math.Round(x.StartTime / rate, 0); });
+
+            // Remvoe artificial density caused in the map
+            hitObjects = DifficultyCalculator.RemoveArtificialDensity(hitObjects, timingPoints);
+
+            // Find all the vibro patterns in the map.
             var vibroPatterns = PatternAnalyzer.DetectAllLanePatterns(hitObjects, true);
 
-            // Find all the jack patterns, then get rid of all vibro patterns that could've been placed in there.
+            // Find all the jack patterns, then get rid of all vibro patterns that are detected within them.
             var jackPatterns = PatternAnalyzer.RemoveVibroFromJacks(PatternAnalyzer.DetectAllLanePatterns(hitObjects, false), vibroPatterns); 
 
-            Console.WriteLine($"Detected: {vibroPatterns.Count} unique vibro patterns");
-            Console.WriteLine($"Detected: {jackPatterns.Count} unique jack patterns");
+            Logger.Log($"Detected: {vibroPatterns.Count} unique vibro patterns", LogColors.GameInfo);
+            Logger.Log($"Detected: {jackPatterns.Count} unique jack patterns", LogColors.GameInfo);
         }
 
         /// <summary>
@@ -368,7 +383,7 @@ namespace Quaver.Maps
     /// <summary>
     ///     TimingPoints section of the .qua
     /// </summary>
-    public class TimingPointInfo
+    public class TimingPointInfo : ICloneable
     {
         /// <summary>
         ///     The time in milliseconds for when this timing point begins
@@ -379,6 +394,11 @@ namespace Quaver.Maps
         ///     The BPM during this timing point
         /// </summary>
         public float Bpm { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 
     /// <summary>
@@ -400,7 +420,7 @@ namespace Quaver.Maps
     /// <summary>
     ///     HitObjects section of the .qua
     /// </summary>
-    public class HitObjectInfo
+    public class HitObjectInfo : ICloneable
     {
         /// <summary>
         ///     The time in milliseconds when the HitObject is supposed to be hit.
@@ -416,5 +436,10 @@ namespace Quaver.Maps
         ///     The endtime of the HitObject (if greater than 0, it's considered a hold note.)
         /// </summary>
         public int EndTime { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

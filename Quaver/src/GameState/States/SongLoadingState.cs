@@ -87,6 +87,7 @@ namespace Quaver.GameState.States
                 GameBase.SelectedBeatmap.Qua = qua;
 
                 Logger.Log("Finished loading Beatmap", LogColors.GameSuccess);
+                GameBase.SelectedBeatmap.Qua.CalculateDifficulty(GameBase.GameClock);
             }
             catch (Exception ex)
             {
