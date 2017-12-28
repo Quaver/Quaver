@@ -78,7 +78,7 @@ namespace Quaver.Maps.Difficulty
         /// </summary>
         /// <param name="hitObjects"></param>
         /// <returns></returns>
-        internal static double CalculateVibroDifficulty(List<VibroPatternInfo> patterns)
+        internal static double CalculateVibroDifficulty(List<JackPatternInfo> patterns)
         {
             return 0;
         }
