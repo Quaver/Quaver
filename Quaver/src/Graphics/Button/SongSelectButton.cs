@@ -10,6 +10,7 @@ using Quaver.Graphics.Text;
 
 using Quaver.Utility;
 using Quaver.Database.Beatmaps;
+using Quaver.Graphics.Sprite;
 
 namespace Quaver.Graphics.Button
 {
@@ -18,9 +19,19 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class SongSelectButton : Button
     {
-        public TextBoxSprite TitleText { get; set; }
+        private TextBoxSprite TitleText { get; set; }
 
-        public TextBoxSprite ArtistText { get; set; }
+        private TextBoxSprite ArtistText { get; set; }
+
+        private TextBoxSprite DiffText { get; set; }
+
+        private Boundary ModeAndGradeBoundaryOutter { get; set; }
+
+        private Boundary ModeAndGradeBoundaryInner { get; set; }
+
+        private Sprite.Sprite GameModeImage { get; set; }
+
+        private Sprite.Sprite GradeImage { get; set; }
 
         //Constructor
         public SongSelectButton(Beatmap map, float ButtonScale) //Vector2 ButtonSize, string ButtonText)
@@ -36,12 +47,13 @@ namespace Quaver.Graphics.Button
                 Text = map.Title,
                 Font = Fonts.Medium12,
                 ScaleY = 0.5f,
-                ScaleX = 1,
-                Alignment = Alignment.TopLeft,
-                TextAlignment = Alignment.BotCenter,
+                ScaleX = 0.8f,
+                Alignment = Alignment.TopRight,
+                TextAlignment = Alignment.BotLeft,
                 TextColor = Color.Black,
                 Multiline = false,
                 Wordwrap = false,
+                TextScale = ButtonScale,
                 Parent = this
             };
 
@@ -50,14 +62,63 @@ namespace Quaver.Graphics.Button
                 Text = map.Artist + " | "+ map.Creator,
                 Font = Fonts.Medium12,
                 ScaleY = 0.5f,
-                ScaleX = 1,
-                Alignment = Alignment.BotLeft,
-                TextAlignment = Alignment.TopCenter,
+                ScaleX = 0.8f,
+                Alignment = Alignment.BotRight,
+                TextAlignment = Alignment.TopLeft,
                 TextColor = Color.Black,
                 Multiline = false,
                 Wordwrap = false,
+                TextScale = 0.9f * ButtonScale,
                 Parent = this
             };
+
+            DiffText = new TextBoxSprite()
+            {
+                Text = "00.00",
+                Font = Fonts.Bold12,
+                ScaleY = 0.5f,
+                ScaleX = 0.2f,
+                Alignment = Alignment.TopLeft,
+                TextAlignment = Alignment.BotCenter,
+                TextColor = Color.Red,
+                Multiline = false,
+                Wordwrap = false,
+                TextScale = ButtonScale,
+                Parent = this
+            };
+
+            /*
+            ModeAndGradeBoundaryOutter = new Boundary()
+            {
+                ScaleX = 0.2f,
+                ScaleY = 0.5f,
+                Alignment = Alignment.BotLeft,
+                Parent = this
+            };
+
+            ModeAndGradeBoundaryInner = new Boundary()
+            {
+                SizeX = 35 * ButtonScale,
+                ScaleY = 1,
+                Alignment = Alignment.MidCenter,
+                Parent = ModeAndGradeBoundaryOutter
+            };*/
+
+            GameModeImage = new Sprite.Sprite()
+            {
+                ScaleX = 0.2f,
+                ScaleY = 0.5f,
+                Alignment = Alignment.BotLeft,
+                Parent = this
+            };
+
+            /*
+            GradeImage = new Sprite.Sprite()
+            {
+                Size = Vector2.One * 15 * ButtonScale,
+                Alignment = Alignment.MidLeft,
+                Parent = ModeAndGradeBoundaryOutter
+            };*/
         }
 
         /// <summary>
