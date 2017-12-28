@@ -87,7 +87,7 @@ namespace Quaver.Graphics.Button
                 Parent = this
             };
 
-            /*
+            
             ModeAndGradeBoundaryOutter = new Boundary()
             {
                 ScaleX = 0.2f,
@@ -96,6 +96,7 @@ namespace Quaver.Graphics.Button
                 Parent = this
             };
 
+            /*
             ModeAndGradeBoundaryInner = new Boundary()
             {
                 SizeX = 35 * ButtonScale,
@@ -109,16 +110,18 @@ namespace Quaver.Graphics.Button
                 ScaleX = 0.2f,
                 ScaleY = 0.5f,
                 Alignment = Alignment.BotLeft,
+                Alpha = 0,
                 Parent = this
             };
 
-            /*
+            
             GradeImage = new Sprite.Sprite()
             {
                 Size = Vector2.One * 15 * ButtonScale,
-                Alignment = Alignment.MidLeft,
-                Parent = ModeAndGradeBoundaryOutter
-            };*/
+                Tint = Color.Red,
+                Alignment = Alignment.MidCenter,
+                Parent = GameModeImage
+            };
         }
 
         /// <summary>
