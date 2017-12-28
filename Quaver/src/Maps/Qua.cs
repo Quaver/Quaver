@@ -162,18 +162,10 @@ namespace Quaver.Maps
             var vibroPatterns = PatternAnalyzer.DetectAllLanePatterns(hitObjects, true);
 
             // Find all the jack patterns, then get rid of all vibro patterns that could've been placed in there.
-            var jackPatterns = PatternAnalyzer.DetectAllLanePatterns(hitObjects, false);
-            jackPatterns = PatternAnalyzer.RemoveVibroFromJacks(jackPatterns, vibroPatterns);
+            var jackPatterns = PatternAnalyzer.RemoveVibroFromJacks(PatternAnalyzer.DetectAllLanePatterns(hitObjects, false), vibroPatterns); 
 
-            Console.WriteLine($"Detected: {vibroPatterns.Count} vibro patterns");
-            Console.WriteLine($"Detected: {jackPatterns.Count} jack patterns");
-
-            foreach (var vibroPatternInfo in jackPatterns)
-                Console.WriteLine($"Time: {vibroPatternInfo.StartingObjectTime} | Lane: {vibroPatternInfo.Lane} | Objects: {vibroPatternInfo.HitObjects.Count}");
-
-            Console.WriteLine();
-            foreach (var vibroPatternInfo in vibroPatterns)
-                Console.WriteLine($"Time: {vibroPatternInfo.StartingObjectTime} | Lane: {vibroPatternInfo.Lane} | Objects: {vibroPatternInfo.HitObjects.Count}");
+            Console.WriteLine($"Detected: {vibroPatterns.Count} unique vibro patterns");
+            Console.WriteLine($"Detected: {jackPatterns.Count} unique jack patterns");
         }
 
         /// <summary>
