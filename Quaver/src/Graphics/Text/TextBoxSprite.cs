@@ -22,11 +22,6 @@ namespace Quaver.Graphics.Text
         private string _text = "";
 
         /// <summary>
-        ///     Maximum lines of text this body can have before vertical overflow.
-        /// </summary>
-        public int MaxTextLines { get; set; }
-
-        /// <summary>
         ///     The alignment of the text.
         /// </summary>
         public Alignment TextAlignment { get; set; } = Alignment.MidCenter;
@@ -37,18 +32,9 @@ namespace Quaver.Graphics.Text
         public float TextScale { get; set; } = 1;
 
         /// <summary>
-        ///     Determines if the text will stop before overflowing.
-        ///     If multiline is enabled, this value will stop vertical overflowing.
-        ///     If multiline is disabled, this value will stop horizontal overflowing.
+        ///     How the text will wrap/scale inside the text box
         /// </summary>
-        public bool Wordwrap { get; set; } = true;
-
-        /// <summary>
-        ///     Determines if more than 1 line of text should be used. 
-        ///     If wordwrap is enabled, it will cut off the bottom. 
-        ///     If word wrap isn't enabled, it will not cut off at the bottom.
-        /// </summary>
-        public bool Multiline { get; set; }
+        public TextBoxStyle TextBoxStyle { get; set; } = TextBoxStyle.OverflowSingleLine;
 
         /// <summary>
         ///     The Rectangle of the rendered text inside the TextSprite.
@@ -169,16 +155,37 @@ namespace Quaver.Graphics.Text
             _textPos.X = _globalTextVect.X;
             _textPos.Y = _globalTextVect.Y;
 
+            // Update text with given textbox style
+            switch (TextBoxStyle)
+            {
+                case TextBoxStyle.OverflowMultiLine:
+                    _text = WrapText(Text, true, true);
+                    break;
+                case TextBoxStyle.WordwrapMultiLine:
+                    _text = WrapText(Text, true);
+                    break;
+                case TextBoxStyle.OverflowSingleLine:
+                    _text = Text;
+                    break;
+                case TextBoxStyle.WordwrapSingleLine:
+                    _text = WrapText(Text, false);
+                    break;
+                case TextBoxStyle.ScaledSingleLine:
+                    _text = Text; //todo: scale text
+                    break;
+            }
+
+            /*
             if (Multiline)
             {
                 MaxTextLines = (int)Math.Max(Math.Floor(SizeY / _textSize.Y), 1); //TODO: implement max text lines update later
                 _text = WrapText(Text, false);
             }
             else if (Wordwrap)
-                _text = WrapText(Text, true);
+                _text = WrapText(Text, true);*/
         }
 
-        private string WrapText(string text, bool singleLine)
+        private string WrapText(string text, bool multiLine, bool overflow = false)
         {
             //Check if text is not short enough to fit on its on box
             if (Font.MeasureString(text).X < SizeX) return text;
@@ -189,6 +196,7 @@ namespace Quaver.Graphics.Text
             var linewidth = 0f;
             var spaceWidth = Font.MeasureString(" ").X;
             var textline = 0;
+            var MaxTextLines = 99; //todo: remove
 
             //Update Text
             foreach (var a in words)
@@ -198,7 +206,7 @@ namespace Quaver.Graphics.Text
                 {
                     linewidth += size.X + spaceWidth;
                 }
-                else if (!singleLine)
+                else if (multiLine)
                 {
                     //Add new line
                     wrappedText.Append("\n");
@@ -206,7 +214,7 @@ namespace Quaver.Graphics.Text
 
                     //Check if text wrap should continue
                     textline++;
-                    if (Wordwrap && textline >= MaxTextLines) break;
+                    if (textline >= MaxTextLines) break;
                 }
                 else break;
                 wrappedText.Append(a + " ");
