@@ -107,15 +107,11 @@ namespace Quaver.Graphics.Sprite
             Background.Image = GameBase.CurrentBackground;
 
             //Update Background Image Resolution
-            var bgYRatio = ((float)newBG.Height / newBG.Width) / ((float)GameBase.Window.Z / GameBase.Window.W);
+            var bgYRatio = ((float)newBG.Height / newBG.Width) / (GameBase.Window.Z / GameBase.Window.W);
             if (bgYRatio > 1)
-            {
-                Background.Size = new Vector2(newBG.Width, newBG.Height) * ((float)GameBase.Window.W / newBG.Width);
-            }
+                Background.Size = new Vector2(newBG.Width, newBG.Height) * (GameBase.Window.W / newBG.Width);
             else
-            {
-                Background.Size = new Vector2(newBG.Width, newBG.Height) * ((float)GameBase.Window.Z / newBG.Height);
-            }
+                Background.Size = new Vector2(newBG.Width, newBG.Height) * (GameBase.Window.Z / newBG.Height);
         }
 
         /// <summary>
