@@ -190,8 +190,8 @@ namespace Quaver.Graphics.Button
             CurrentTint.B = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
 
             Tint = CurrentTint;
-            //GradeImage.Tint = Tint;
-            //GameModeImage.Tint = Tint;
+            GradeImage.Tint = Tint;
+            GameModeImage.Tint = Tint;
             
             //TextSprite.Update(dt);
             base.Update(dt);
