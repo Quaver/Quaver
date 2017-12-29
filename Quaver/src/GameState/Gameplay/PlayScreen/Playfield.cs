@@ -65,16 +65,20 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 case GameModes.Keys4:
                     GameplayReferences.ReceptorXPosition = new float[4];
                     LaneSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
+                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll
+                        ? GameBase.Window.Z + GameBase.Window.Y - (GameBase.LoadedSkin.ReceptorYOffset + GameBase.LoadedSkin.NoteReceptors4K[0].Height) * GameBase.WindowYRatio
+                        : GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowYRatio;
                     break;
                 case GameModes.Keys7:
                     GameplayReferences.ReceptorXPosition = new float[7];
                     LaneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowYRatio);
+                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll
+                        ? GameBase.Window.Z + GameBase.Window.Y - (GameBase.LoadedSkin.ReceptorYOffset + GameBase.LoadedSkin.NoteReceptors7K[0].Height) * GameBase.WindowYRatio
+                        : GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowYRatio;
                     break;
             }
 
             // Calculate Config stuff
-            GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll ? (int)GameBase.Window.Z + (int)GameBase.Window.Y - GameBase.LoadedSkin.ReceptorYOffset - LaneSize : GameBase.LoadedSkin.ReceptorYOffset;
-            GameplayReferences.ReceptorYOffset *= GameBase.WindowYRatio;
             PlayfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowYRatio);
             ReceptorPadding = (int)(GameBase.LoadedSkin.NotePadding * GameBase.WindowYRatio);
             PlayfieldSize = ((LaneSize + ReceptorPadding) * GameplayReferences.ReceptorXPosition.Length) + (PlayfieldPadding * 2) - ReceptorPadding;
