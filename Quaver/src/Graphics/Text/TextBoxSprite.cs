@@ -177,9 +177,6 @@ namespace Quaver.Graphics.Text
             _textVect.W = _textSize.X * _textScale;
             _textVect.Z = _textSize.Y * _textScale;
 
-            if (TextBoxStyle == TextBoxStyle.ScaledSingleLine)
-            Console.WriteLine(_textScale);
-
             //Update GlobalTextRect
             _globalTextVect = Util.DrawRect(TextAlignment, _textVect, GlobalVect);
             _textPos.X = _globalTextVect.X;
