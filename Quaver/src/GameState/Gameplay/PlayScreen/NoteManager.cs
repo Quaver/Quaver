@@ -28,6 +28,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     /// </summary>
     internal class NoteManager : IHelper
     {
+        //Measure Bars
+        private MeasureBarManager MeasureBarManager { get; set; }
+
         //HitObjects
         private int[] BeatSnaps { get; } = new int[8] { 48, 24, 16, 12, 8, 6, 4, 3 };
         internal float HitPositionOffset { get; set; }
@@ -66,6 +69,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         public void Initialize(IGameState state)
         {
             var qua = GameBase.SelectedBeatmap.Qua; //todo: remove
+            MeasureBarManager = new MeasureBarManager();
 
             // Modifiers
             RemoveTimeAfterMiss = (uint)(1000 * GameBase.GameClock);
@@ -156,6 +160,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             //Update the position of the track
             TrackPosition = GetCurrentTrackPosition();
+
+            //Update MeasureBar Manager
+            //todo: check if timing bars are enabled
+            if (true)
+            {
+                MeasureBarManager.TrackPosition = TrackPosition;
+                MeasureBarManager.Update(dt);
+            }
 
             //Update Active HitObjects
             for (i=0; i < HitObjectPool.Count && i < HitObjectPoolSize; i++)
