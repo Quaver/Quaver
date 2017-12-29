@@ -23,7 +23,7 @@ namespace Quaver.Graphics
         private Vector4 _globalVect;
         private Drawable _parent;
         private Vector2 _localScale;
-        private Vector2 _localSize; //blok
+        private Vector2 _localSize;
 
         /// <summary>
         /// The alignment of the sprite relative to it's parent.
@@ -146,6 +146,21 @@ namespace Quaver.Graphics
                 Changed = true;
             }
         }
+
+        /// <summary>
+        ///     The absolute X size of this object (Read only)
+        /// </summary>
+        public float AbsoluteSizeX { get => _localVect.W; }
+
+        /// <summary>
+        ///     The absolute Y size of this object (Read only)
+        /// </summary>
+        public float AbsoluteSizeY { get => _localVect.W; }
+
+        /// <summary>
+        ///     The absolute size of this object (Read only)
+        /// </summary>
+        public Vector2 AbsoluteSize { get => new Vector2(_localVect.W, _localVect.Z); }
 
         /// <summary>
         /// This is the object's position relative to its parent.
