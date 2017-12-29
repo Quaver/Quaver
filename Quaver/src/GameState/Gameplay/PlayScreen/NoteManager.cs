@@ -168,7 +168,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     MeasureBarManager.BarObjectActive[i].BarSprite.PositionY = PosFromOffset(MeasureBarManager.BarObjectActive[i].OffsetFromReceptor);
                 }
                 MeasureBarManager.Update(dt);
-                Console.WriteLine(MeasureBarManager.BarObjectActive[0].BarSprite.PositionY);
+                //Console.WriteLine(MeasureBarManager.BarObjectActive[0].BarSprite.PositionY);
             }
 
             //Update Active HitObjects
