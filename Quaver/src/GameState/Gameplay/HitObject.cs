@@ -66,11 +66,6 @@ namespace Quaver.GameState.Gameplay
         public bool IsLongNote { get; set; }
 
         /// <summary>
-        /// Tint of object when it is killed
-        /// </summary>
-        private Color DeadColor { get; } = Color.Gray;
-
-        /// <summary>
         ///     The index of which to snap the note
         ///     See: Skin.cs
         /// </summary>
@@ -302,10 +297,10 @@ namespace Quaver.GameState.Gameplay
         {
             if (IsLongNote)
             {
-                HoldBodySprite.Tint = DeadColor;
-                HoldEndSprite.Tint = DeadColor;
+                HoldBodySprite.Tint = Color.DimGray;
+                HoldEndSprite.Tint = Color.DimGray;
             }
-            HitBodySprite.Tint = DeadColor;
+            HitBodySprite.Tint = Color.DimGray;
         }
     }
 }
