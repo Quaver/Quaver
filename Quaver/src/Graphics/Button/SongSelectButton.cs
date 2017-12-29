@@ -25,9 +25,7 @@ namespace Quaver.Graphics.Button
 
         private TextBoxSprite DiffText { get; set; }
 
-        private Boundary ModeAndGradeBoundaryOutter { get; set; }
-
-        private Boundary ModeAndGradeBoundaryInner { get; set; }
+        private Sprite.Sprite UnderlayImage { get; set; }
 
         private Sprite.Sprite GameModeImage { get; set; }
 
@@ -47,16 +45,15 @@ namespace Quaver.Graphics.Button
                 Text = map.Title,
                 Font = Fonts.Medium48,
                 ScaleY = 0.5f,
-                ScaleX = 0.8f,
+                ScaleX = 0.825f,
                 SizeX = -5 * ButtonScale,
                 PositionX = -5 * ButtonScale,
                 SizeY = -2 * ButtonScale,
                 PositionY = 2 * ButtonScale,
                 Alignment = Alignment.TopRight,
                 TextAlignment = Alignment.BotLeft,
-                TextColor = Color.Black,
-                TextScale = ButtonScale,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
+                TextColor = Color.Black,
                 Parent = this
             };
 
@@ -65,16 +62,15 @@ namespace Quaver.Graphics.Button
                 Text = map.Artist + " | "+ map.Creator,
                 Font = Fonts.Medium48,
                 ScaleY = 0.5f,
-                ScaleX = 0.8f,
+                ScaleX = 0.825f,
                 SizeX = -5 * ButtonScale,
                 PositionX = -5 * ButtonScale,
-                SizeY = -2 * ButtonScale,
-                PositionY = -2 * ButtonScale,
+                SizeY = -5 * ButtonScale,
+                PositionY = -5 * ButtonScale,
                 Alignment = Alignment.BotRight,
                 TextAlignment = Alignment.TopLeft,
-                TextColor = Color.Black,
-                TextScale = 0.9f * ButtonScale,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
+                TextColor = Color.Black,
                 Parent = this
             };
 
@@ -83,20 +79,15 @@ namespace Quaver.Graphics.Button
                 Text = "00.00",
                 Font = Fonts.Bold12,
                 ScaleY = 0.5f,
-                ScaleX = 0.2f,
+                ScaleX = 0.175f,
+                SizeY = -5 * ButtonScale,
+                PositionY = 5 * ButtonScale,
+                SizeX = -6 * ButtonScale,
+                PositionX = 2 * ButtonScale,
                 Alignment = Alignment.TopLeft,
-                TextAlignment = Alignment.BotCenter,
+                TextAlignment = Alignment.BotRight,
+                TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                 TextColor = Color.Red,
-                TextScale = ButtonScale,
-                Parent = this
-            };
-
-            
-            ModeAndGradeBoundaryOutter = new Boundary()
-            {
-                ScaleX = 0.2f,
-                ScaleY = 0.5f,
-                Alignment = Alignment.BotLeft,
                 Parent = this
             };
 
@@ -109,10 +100,14 @@ namespace Quaver.Graphics.Button
                 Parent = ModeAndGradeBoundaryOutter
             };*/
 
-            GameModeImage = new Sprite.Sprite()
+            UnderlayImage = new Sprite.Sprite()
             {
-                ScaleX = 0.2f,
+                ScaleX = 0.175f,
                 ScaleY = 0.5f,
+                SizeY = -5 * ButtonScale,
+                PositionY = -5 * ButtonScale,
+                SizeX = -6 * ButtonScale,
+                PositionX = 2 * ButtonScale,
                 Alignment = Alignment.BotLeft,
                 Alpha = 0,
                 Parent = this
@@ -121,10 +116,21 @@ namespace Quaver.Graphics.Button
             
             GradeImage = new Sprite.Sprite()
             {
-                Size = Vector2.One * 15 * ButtonScale,
-                Tint = Color.Red,
-                Alignment = Alignment.MidCenter,
-                Parent = GameModeImage
+                Size = Vector2.One * 14 * ButtonScale,
+                PositionX = -16 * ButtonScale,
+                Alpha = 1f,
+                Image = GameBase.LoadedSkin.GradeSmallA,
+                Alignment = Alignment.MidRight,
+                Parent = UnderlayImage
+            };
+
+            GameModeImage = new Sprite.Sprite()
+            {
+                Size = Vector2.One * 14 * ButtonScale,
+                Image = GameBase.LoadedSkin.Cursor,
+                Alpha = 0.5f,
+                Alignment = Alignment.MidRight,
+                Parent = UnderlayImage
             };
         }
 
