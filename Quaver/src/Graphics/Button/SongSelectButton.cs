@@ -20,6 +20,8 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class SongSelectButton : Button
     {
+        public bool Selected { get; set; }
+
         private TextBoxSprite TitleText { get; set; }
 
         private TextBoxSprite ArtistText { get; set; }
@@ -184,7 +186,11 @@ namespace Quaver.Graphics.Button
         /// </summary>
         public override void Update(double dt)
         {
-            HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
+            if (Selected)
+                HoverCurrentTween = Util.Tween(1, HoverCurrentTween, Math.Min(dt / 40, 1));
+            else
+                HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
+
             CurrentTint.R = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
             CurrentTint.G = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
             CurrentTint.B = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
