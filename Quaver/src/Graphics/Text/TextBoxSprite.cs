@@ -169,13 +169,16 @@ namespace Quaver.Graphics.Text
                     break;
                 case TextBoxStyle.ScaledSingleLine:
                     _text = Text;
-                    _textScale = ScaleText(AbsoluteSize, _textSize) * TextScale; //AbsoluteSizeX / _textSize.X * TextScale;
+                    _textScale = ScaleText(AbsoluteSize, _textSize * TextScale) * TextScale;
                     break;
             }
 
             //Update TextRect
             _textVect.W = _textSize.X * _textScale;
             _textVect.Z = _textSize.Y * _textScale;
+
+            if (TextBoxStyle == TextBoxStyle.ScaledSingleLine)
+            Console.WriteLine(_textScale);
 
             //Update GlobalTextRect
             _globalTextVect = Util.DrawRect(TextAlignment, _textVect, GlobalVect);

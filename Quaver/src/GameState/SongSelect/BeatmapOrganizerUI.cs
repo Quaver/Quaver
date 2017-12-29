@@ -66,7 +66,7 @@ namespace Quaver.GameState.SongSelect
                     var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";
 
                     // Create the new button
-                    var newButton = new SongSelectButton(map, 1)
+                    var newButton = new SongSelectButton(map, GameBase.WindowYRatio)
                     {
                         Image = GameBase.UI.BlankBox,
                         Alignment = Alignment.TopLeft,
