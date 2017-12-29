@@ -12,12 +12,12 @@ namespace Quaver.Maps.Difficulty
         /// <summary>
         ///     The minimum BPM to be considered vibro
         /// </summary>
-        private static int VibroBaseBpm { get; set; } = 160;
+        private static int VibroBaseBpm { get; } = 160;
 
         /// <summary>
         ///     The minimum BPM to be considered jacks
         /// </summary>
-        private static int JackBaseBpm { get; set; } = 95;
+        private static int JackBaseBpm { get; } = 95;
 
         /// <summary>
         ///     Detects vibro patterns for ther entire map
@@ -38,12 +38,19 @@ namespace Quaver.Maps.Difficulty
         }
 
         /// <summary>
-        ///     Detects vibro patterns per key lane
+        ///     Detects vibro/jack patterns per key lane
         ///     
-        ///     A vibro pattern can be considered as 4 notes in succession for a lane
-        ///     with the objects having a 1/4th millisecond difference of a base bpm
+        ///     A vibro pattern can be considered as 4 or more notes in succession for a lane
+        ///     with the objects having a 1/4th snap millisecond difference of a base bpm
+        /// 
+        ///     A jack pattern can be considered as 2 or more notes in succession for a lane
+        ///     with the objects having a 1/4th snap millisecond difference of a base bpm.
+        /// 
+        ///     A jack pattern may include vibro patterns, however they are to be removed when
+        ///     calculating difficulty: See: RemoveVibroFromJacks()
         /// <param name="hitObjects"></param>
         /// <returns></returns>
+        /// </summary>
         private static List<JackPatternInfo> DetectLanePatterns(IReadOnlyList<HitObjectInfo> hitObjects, bool detectVibro)
         { 
             var baseBpm = (detectVibro) ? VibroBaseBpm : JackBaseBpm;
@@ -130,6 +137,117 @@ namespace Quaver.Maps.Difficulty
                 TotalTime = hitObjects[hitObjects.Count - 1].StartTime - hitObjects[0].StartTime,
                 StartingObjectTime = hitObjects[0].StartTime
             };
+        }
+
+        /// <summary>
+        ///     Removes any patterns that contain artificial density
+        ///     This is essentially a C# port of Swan's ManiaStarReducer.
+        /// 
+        ///     Essentially it goes through the map and finds patterns that contain
+        ///     artificial density and replaces them with a normal note.
+        /// 
+        ///     You can read more about it at the original repository:
+        ///     https://github.com/Swan/ManiaStarReducer
+        /// </summary>
+        /// <param name="qua"></param>
+        /// <returns></returns>
+        internal static List<HitObjectInfo> RemoveArtificialDensity(List<HitObjectInfo> hitObjects, List<TimingPointInfo> timingPoints)
+        {
+            // First sort the Qua by StartTime so we can accurately
+            // find information about the map 
+            hitObjects = hitObjects.OrderBy(x => x.StartTime).ToList();
+            timingPoints = timingPoints.OrderBy(x => x.StartTime).ToList();
+
+            // Start removing artificial density patterns.
+            for (var i = 0; i < hitObjects.Count; i++)
+            {
+                // We only want to run this on LN patterns, so skip normal notes.
+                if (hitObjects[i].EndTime == 0) continue;
+
+                // Find the current timing point and next long note in the map.
+                var currentTimingPoint = FindHitObjectTimingPoint(hitObjects[i], timingPoints);
+                var nextLongNote = FindNextLongNote(hitObjects, i);
+
+                if (nextLongNote == null || currentTimingPoint == null) continue;
+
+                // Artificial Density Flags
+                var shortStartTimes = false; // If the LNs have an extremely short start time difference compared to the BPM snap. (>= 1/8 snap)
+                var shortHoldTime = false; // If the LN has a short hold time to the point where it is 300-able by tapping
+
+                // Find the amount of milliseconds per beat this BPM has
+                var millisecondsPerBeat = 60000 / currentTimingPoint.Bpm;
+
+                // Check if the snap distance of the two object's StartTime difference is too short.
+                // We consider them too short if the next object starts at a 1/8th note or smaller later.
+                if (millisecondsPerBeat / (nextLongNote.StartTime - hitObjects[i].StartTime) >= 8) shortStartTimes = true;
+
+                // If the LN's hold time lasts for 1/8th of the beat or less, then that's considered artificial density.
+                if (Math.Round(millisecondsPerBeat / (hitObjects[i].EndTime - hitObjects[i].StartTime), 0) >= 8) shortHoldTime = true;
+
+                // If no artificial density flags were triggered for this pattern, then continue to the next object.
+                if (!shortStartTimes && !shortHoldTime) continue;
+
+                // Otherwise make the LN a normal note.
+                hitObjects[i].EndTime = 0;
+
+                //Console.WriteLine($"Obj: {hitObjects[i].StartTime} | TP: {currentTimingPoint.StartTime} | Next LN: {nextLongNote.StartTime} | Short Start: {shortStartTimes} | Short Hold: {shortHoldTime}");
+            }
+
+            return hitObjects;
+        }
+
+        /// <summary>
+        ///     Searches through provided timing points and finds the one the 
+        ///     HitObject is in range of. 
+        /// </summary>
+        /// <param name="hitObject"></param>
+        /// <param name="timingPoints"></param>
+        /// <returns></returns>
+        private static TimingPointInfo FindHitObjectTimingPoint(HitObjectInfo hitObject, IReadOnlyList<TimingPointInfo> timingPoints)
+        {
+            for (var j = 0; j < timingPoints.Count; j++)
+            {
+                try
+                {
+                    var hitObjectStart = hitObject.StartTime;
+                    var timingPointStart = timingPoints[j].StartTime;
+                    var nextTimingPointStart = timingPoints[j + 1].StartTime;
+
+                    if (hitObjectStart >= timingPointStart && hitObjectStart < nextTimingPointStart)
+                        return timingPoints[j];
+
+                }
+                catch (Exception e)
+                {
+                    return timingPoints[j];
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Finds the next long note in a map given a starting index.
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        /// <param name="startingIndex"></param>
+        /// <returns></returns>
+        private static HitObjectInfo FindNextLongNote(IReadOnlyList<HitObjectInfo> hitObjects, int startingIndex)
+        {
+            for (var i = startingIndex + 1; i < hitObjects.Count; i++)
+            {
+                try
+                {
+                    if (hitObjects[i].EndTime > 0)
+                        return hitObjects[i];
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+            }
+
+            return null;
         }
     }
 }
