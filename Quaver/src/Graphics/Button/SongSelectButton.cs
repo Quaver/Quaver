@@ -41,19 +41,7 @@ namespace Quaver.Graphics.Button
             SizeY = ButtonSizeY;
             SizeX = ButtonSizeY * 8;
 
-            /*
-            Task.Run(() =>
-            {
-                try
-                {
-                    Image = ImageLoader.Load(Configuration.SongDirectory + "/" + map.Directory + "/" + map.BackgroundPath);
-                }
-                catch
-                {
-                    Exception ex;
-                }
-            });
-            */
+            //Task.Run(() => { Image = ImageLoader.Load(Configuration.SongDirectory + "/" + map.Directory + "/" + map.BackgroundPath); });
 
             TitleText = new TextBoxSprite()
             {
@@ -68,7 +56,7 @@ namespace Quaver.Graphics.Button
                 Alignment = Alignment.TopRight,
                 TextAlignment = Alignment.BotLeft,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
-                TextColor = Color.White,
+                TextColor = Color.Black,
                 Parent = this
             };
 
@@ -85,7 +73,7 @@ namespace Quaver.Graphics.Button
                 Alignment = Alignment.BotRight,
                 TextAlignment = Alignment.TopLeft,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
-                TextColor = Color.White,
+                TextColor = Color.Black,
                 Parent = this
             };
 
@@ -186,9 +174,9 @@ namespace Quaver.Graphics.Button
         public override void Update(double dt)
         {
             HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
-            CurrentTint.R = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 150);
-            CurrentTint.G = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 150);
-            CurrentTint.B = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 150);
+            CurrentTint.R = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
+            CurrentTint.G = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
+            CurrentTint.B = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
 
             Tint = CurrentTint;
             //GradeImage.Tint = Tint;
