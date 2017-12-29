@@ -110,7 +110,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 HitObject newObject = new HitObject()
                 {
-                    ParentContainer = Boundary,
                     StartTime = qua.HitObjects[i].StartTime,
                     EndTime = qua.HitObjects[i].EndTime,
                     IsLongNote = qua.HitObjects[i].EndTime > 0,
@@ -141,7 +140,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 }
 
                 // Initialize Object and add it to HitObjectPool
-                if (i < HitObjectPoolSize) newObject.Initialize(Configuration.DownScroll, qua.HitObjects[i].EndTime > 0);
+                if (i < HitObjectPoolSize) newObject.Initialize(Configuration.DownScroll, qua.HitObjects[i].EndTime > 0, Boundary);
                 HitObjectPool.Add(newObject);
             }
 
@@ -470,7 +469,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         internal void CreateNote()
         {
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll, HitObjectPool[HitObjectPoolSize - 1].EndTime > 0);
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll, HitObjectPool[HitObjectPoolSize - 1].EndTime > 0, Boundary);
         }
     }
 }

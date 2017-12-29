@@ -21,11 +21,6 @@ namespace Quaver.GameState.Gameplay
         private Vector2 _hitObjectPosition;
 
         /// <summary>
-        /// The parent of the HitObjects
-        /// </summary>
-        internal Drawable ParentContainer { get; set; }
-
-        /// <summary>
         /// The lane which the HitObject belongs to.
         /// </summary>
         public int KeyLane { get; set; }
@@ -128,7 +123,7 @@ namespace Quaver.GameState.Gameplay
         /// <summary>
         ///     This method initializes the HitObject sprites
         /// </summary>
-        public void Initialize(bool downScroll, bool longNote)
+        internal void Initialize(bool downScroll, bool longNote, Drawable parent)
         {
             IsLongNote = longNote;
 
@@ -140,7 +135,7 @@ namespace Quaver.GameState.Gameplay
                     Alignment = Alignment.TopLeft,
                     Size = new Vector2(HitObjectSize, InitialLongNoteSize),
                     Position = _hitObjectPosition,
-                    Parent = ParentContainer
+                    Parent = parent
                 };
 
                 // Choose the correct image based on the specific key lane.
@@ -167,7 +162,7 @@ namespace Quaver.GameState.Gameplay
                 Alignment = Alignment.TopLeft,
                 Position = _hitObjectPosition,
                 Size = Vector2.One * HitObjectSize,
-                Parent = ParentContainer
+                Parent = parent
             };
 
             // Choose the correct image based on the specific key lane.
@@ -215,7 +210,7 @@ namespace Quaver.GameState.Gameplay
                     Alignment = Alignment.TopLeft,
                     Position = _hitObjectPosition,
                     SizeX = HitObjectSize,
-                    Parent = ParentContainer,
+                    Parent = parent,
                     SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
                 };
                 HoldEndOffset = HoldEndSprite.SizeY / 2;
