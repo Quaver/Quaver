@@ -11,6 +11,7 @@ using Quaver.Graphics.Text;
 using Quaver.Utility;
 using Quaver.Database.Beatmaps;
 using Quaver.Graphics.Sprite;
+using Quaver.Config;
 
 namespace Quaver.Graphics.Button
 {
@@ -32,13 +33,15 @@ namespace Quaver.Graphics.Button
         private Sprite.Sprite GradeImage { get; set; }
 
         //Constructor
-        public SongSelectButton(Beatmap map, float ButtonScale) //Vector2 ButtonSize, string ButtonText)
+        public SongSelectButton(Beatmap map, float ButtonScale)
         {
             var ButtonSizeY = 40 * ButtonScale;
             var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";
 
             SizeY = ButtonSizeY;
             SizeX = ButtonSizeY * 8;
+
+            //Task.Run(() => { Image = ImageLoader.Load(Configuration.SongDirectory + "/" + map.Directory + "/" + map.BackgroundPath); });
 
             TitleText = new TextBoxSprite()
             {
