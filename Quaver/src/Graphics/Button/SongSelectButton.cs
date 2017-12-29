@@ -41,7 +41,17 @@ namespace Quaver.Graphics.Button
             SizeY = ButtonSizeY;
             SizeX = ButtonSizeY * 8;
 
-            //Task.Run(() => { Image = ImageLoader.Load(Configuration.SongDirectory + "/" + map.Directory + "/" + map.BackgroundPath); });
+            Task.Run(() =>
+            {
+                try
+                {
+                    Image = ImageLoader.Load(Configuration.SongDirectory + "/" + map.Directory + "/" + map.BackgroundPath);
+                }
+                catch (Exception e)
+                {
+                    // Thhe background could be loaded, so do whatever fallback here.   
+                }
+            });
 
             TitleText = new TextBoxSprite()
             {
