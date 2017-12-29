@@ -27,7 +27,7 @@ namespace Quaver.Graphics.Text
         public Alignment TextAlignment { get; set; } = Alignment.MidCenter;
 
         /// <summary>
-        ///     The scale of the text.
+        ///     The target scale of the text.
         /// </summary>
         public float TextScale { get; set; } = 1;
 
@@ -55,6 +55,11 @@ namespace Quaver.Graphics.Text
         ///     The size of the rendered text box in a single row.
         /// </summary>
         private Vector2 _textSize;
+
+        /// <summary>
+        ///     The scale of the text.
+        /// </summary>
+        private float _textScale { get; set; } = 1;
 
         /// <summary>
         ///     The font of this object
@@ -132,10 +137,10 @@ namespace Quaver.Graphics.Text
             //Draw itself if it is in the window
             if (Util.Vector4Intercepts(GameBase.Window, GlobalVect) && Visible)
             {
-                if (TextScale == 1 )
+                if (_textScale == 1 )
                     GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color);
                 else
-                    GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color, 0, Vector2.One, Vector2.One * TextScale, SpriteEffects.None, 0);
+                    GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color, 0, Vector2.One, Vector2.One * _textScale, SpriteEffects.None, 0);
             }
 
             base.Draw();
@@ -145,15 +150,7 @@ namespace Quaver.Graphics.Text
         {
             //Update TextSize
             _textSize = Font.MeasureString(Text);
-
-            //Update TextRect
-            _textVect.W = _textSize.X * TextScale;
-            _textVect.Z = _textSize.Y * TextScale;
-
-            //Update GlobalTextRect
-            _globalTextVect = Util.DrawRect(TextAlignment, _textVect, GlobalVect);
-            _textPos.X = _globalTextVect.X;
-            _textPos.Y = _globalTextVect.Y;
+            _textScale = TextScale;
 
             // Update text with given textbox style
             switch (TextBoxStyle)
@@ -171,18 +168,28 @@ namespace Quaver.Graphics.Text
                     _text = WrapText(Text, false);
                     break;
                 case TextBoxStyle.ScaledSingleLine:
-                    _text = Text; //todo: scale text
+                    _text = Text;
+                    _textScale = ScaleText(Size, _textSize) * TextScale;
                     break;
             }
 
-            /*
-            if (Multiline)
-            {
-                MaxTextLines = (int)Math.Max(Math.Floor(SizeY / _textSize.Y), 1); //TODO: implement max text lines update later
-                _text = WrapText(Text, false);
-            }
-            else if (Wordwrap)
-                _text = WrapText(Text, true);*/
+            //Update TextRect
+            _textVect.W = _textSize.X * _textScale;
+            _textVect.Z = _textSize.Y * _textScale;
+
+            //Update GlobalTextRect
+            _globalTextVect = Util.DrawRect(TextAlignment, _textVect, GlobalVect);
+            _textPos.X = _globalTextVect.X;
+            _textPos.Y = _globalTextVect.Y;
+        }
+
+        private float ScaleText(Vector2 boundary, Vector2 textboxsize)
+        {
+            var sizeYRatio = (boundary.Y / boundary.X) / (textboxsize.Y / textboxsize.X);
+            if (sizeYRatio > 1)
+                return (textboxsize.X / boundary.X);
+            else
+                return (textboxsize.Y / boundary.Y);
         }
 
         private string WrapText(string text, bool multiLine, bool overflow = false)
