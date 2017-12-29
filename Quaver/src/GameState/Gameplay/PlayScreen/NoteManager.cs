@@ -158,12 +158,17 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //Update the position of the track
             TrackPosition = GetCurrentTrackPosition();
 
-            //Update MeasureBar Manager
-            //todo: check if timing bars are enabled
+            //Update Bars
+            //todo: check if bars are enabled
             if (true)
             {
                 MeasureBarManager.TrackPosition = TrackPosition;
+                for (i = 0; i < MeasureBarManager.BarObjectActive.Count; i++)
+                {
+                    MeasureBarManager.BarObjectActive[i].BarSprite.PositionY = PosFromOffset(MeasureBarManager.BarObjectActive[i].OffsetFromReceptor);
+                }
                 MeasureBarManager.Update(dt);
+                Console.WriteLine(MeasureBarManager.BarObjectActive[0].BarSprite.PositionY);
             }
 
             //Update Active HitObjects
@@ -257,6 +262,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// </summary>
         public void Draw()
         {
+            //Update Bars
+            //todo: check if bars are enabled
+            if (true)
+            {
+                MeasureBarManager.Draw();
+            }
             Boundary.Draw();
         }
         /// <summary>
