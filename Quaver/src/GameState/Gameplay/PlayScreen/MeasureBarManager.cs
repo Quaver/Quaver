@@ -21,7 +21,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         public void Initialize(IGameState state)
         {
-            Boundary = new Boundary();
+            Boundary = new Boundary()
+            {
+                Alignment = Graphics.Alignment.MidCenter,
+                SizeX = GameplayReferences.PlayfieldSize
+            };
             BarObjectQueue = new List<BarObject>();
             CreateBarQueue();
         }
@@ -61,7 +65,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     curTime += bpmInterval;
                 }
             }
-            Console.WriteLine("Total Timing Bars: " + BarObjectQueue.Count);
+            //Console.WriteLine("Total Timing Bars: " + BarObjectQueue.Count);
 
             //todo: remove this. temp
             BarObjectActive = BarObjectQueue;
