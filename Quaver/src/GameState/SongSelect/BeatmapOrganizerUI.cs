@@ -64,10 +64,12 @@ namespace Quaver.GameState.SongSelect
                 var button = SongSelectButtons[i];
                 var selectedOffset = Math.Abs(SelectedMapTween - i)+1;
 
-                button.PositionX = 
+                /*button.PositionX = 
                     (float)Math.Sin(Math.PI * (Boundary.PositionY + button.PositionY)/ GameBase.Window.Z) * 30 
                     + 50/ selectedOffset
-                    - 30;
+                    - 30;*/
+                button.PositionX = 30 / selectedOffset + 5;
+
             }
             Boundary.Update(dt);
         }
