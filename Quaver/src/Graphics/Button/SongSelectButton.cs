@@ -52,6 +52,7 @@ namespace Quaver.Graphics.Button
                 TextAlignment = Alignment.BotLeft,
                 TextColor = Color.Black,
                 TextScale = ButtonScale,
+                TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                 Parent = this
             };
 
@@ -65,6 +66,7 @@ namespace Quaver.Graphics.Button
                 TextAlignment = Alignment.TopLeft,
                 TextColor = Color.Black,
                 TextScale = 0.9f * ButtonScale,
+                TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                 Parent = this
             };
 

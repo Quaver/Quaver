@@ -169,13 +169,16 @@ namespace Quaver.Graphics.Text
                     break;
                 case TextBoxStyle.ScaledSingleLine:
                     _text = Text;
-                    _textScale = ScaleText(Size, _textSize) * TextScale;
+                    _textScale = ScaleText(AbsoluteSize, _textSize) * TextScale; //AbsoluteSizeX / _textSize.X * TextScale;
                     break;
             }
 
             //Update TextRect
             _textVect.W = _textSize.X * _textScale;
             _textVect.Z = _textSize.Y * _textScale;
+
+            if (TextBoxStyle == TextBoxStyle.ScaledSingleLine)
+            Console.WriteLine(_textScale);
 
             //Update GlobalTextRect
             _globalTextVect = Util.DrawRect(TextAlignment, _textVect, GlobalVect);
@@ -187,9 +190,9 @@ namespace Quaver.Graphics.Text
         {
             var sizeYRatio = (boundary.Y / boundary.X) / (textboxsize.Y / textboxsize.X);
             if (sizeYRatio > 1)
-                return (textboxsize.X / boundary.X);
+                return (boundary.X / textboxsize.X);
             else
-                return (textboxsize.Y / boundary.Y);
+                return (boundary.Y / textboxsize.Y);
         }
 
         private string WrapText(string text, bool multiLine, bool overflow = false)
@@ -209,7 +212,7 @@ namespace Quaver.Graphics.Text
             foreach (var a in words)
             {
                 Vector2 size = Font.MeasureString(a);
-                if (linewidth + size.X < SizeX)
+                if (linewidth + size.X < AbsoluteSizeX)
                 {
                     linewidth += size.X + spaceWidth;
                 }
