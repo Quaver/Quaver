@@ -10,7 +10,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     class MeasureBarManager : IHelper
     {
         internal ulong TrackPosition { get; set; }
-        Boundary Boundary { get; set; }
+        private Boundary Boundary { get; set; }
+        private List<BarObject> BarObjectQueue { get; set; }
+        private List<BarObject> BarObjectActive { get; set; }
 
         public void Draw()
         {
@@ -20,6 +22,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         public void Initialize(IGameState state)
         {
             Boundary = new Boundary();
+            BarObjectQueue = new List<BarObject>();
             CreateBarQueue();
         }
 
@@ -36,62 +39,29 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         //Creates timing bars (used to measure 16 beats)
         internal void CreateBarQueue()
         {
-            /*
-            int i = 0;
-            if (!mod_split && _config_timingBars)
+            for (var i = 0; i < GameBase.SelectedBeatmap.Qua.TimingPoints.Count; i++)
             {
-                float curBarTime = 0;
-                for (i = 0; i < TimingQueue.Count; i++)
+                var startTime = GameBase.SelectedBeatmap.Qua.TimingPoints[i].StartTime;
+                var endTime = 0f;
+                var curTime = startTime;
+                var bpmInterval = GameBase.SelectedBeatmap.Qua.TimingPoints[i].Bpm * 1000 / 60;
+
+                if (i + 1 < GameBase.SelectedBeatmap.Qua.TimingPoints.Count)
+                    endTime = GameBase.SelectedBeatmap.Qua.TimingPoints[i + 1].StartTime;
+                else
+                    endTime = GameBase.SelectedBeatmap.SongLength;
+
+                while (curTime < endTime - 1)
                 {
-                    curBarTime = TimingQueue[i].StartTime;
-
-                    if (_barQueue.Count > 0 && _barQueue[0].StartTime + 2 > curBarTime) _barQueue.RemoveAt(0);
-                    curBarTime += 1000f * 4f * 60f / (TimingQueue[i].BPM);
-                    TimingObject curTiming;
-
-                    if (i + 1 < TimingQueue.Count)
+                    var newBar = new BarObject()
                     {
-                        while (curBarTime < TimingQueue[i + 1].StartTime)
-                        {
-                            curTiming = new TimingObject();
-                            curTiming.StartTime = (int)(curBarTime);
-                            _barQueue.Add(curTiming);
-                            curBarTime += 1000f * 4f * 60f / (TimingQueue[i].BPM);
-                        }
-                    }
-                    else
-                    {
-                        while (curBarTime < _songAudio.clip.length * 1000f)
-                        {
-                            curTiming = new TimingObject();
-                            curTiming.StartTime = (int)(curBarTime);
-                            _barQueue.Add(curTiming);
-                            curBarTime += 1000f * 4f * 60f / (TimingQueue[i].BPM);
-                        }
-                    }
+                        OffsetFromReceptor = 0
+                    };
+                    BarObjectQueue.Add(newBar);
+                    curTime += bpmInterval;
                 }
-
-                //Create all bars in music
-                List<TimingObject> tempBars = new List<TimingObject>();
-                for (i = 0; i < _barQueue.Count; i++)
-                {
-                    TimingObject hoo = new TimingObject();
-
-                    hoo.StartTime = _barQueue[i].StartTime;
-                    tempBars.Add(hoo);
-                }
-                _barQueue = new List<TimingObject>(tempBars);
-
-                //Create starting bars
-                _activeBars = new List<TimingObject>();
-                for (i = 0; i < maxNoteCount; i++)
-                {
-                    if (_barQueue.Count > 0) _activeBarObjects[i] = time_InstantiateBar(null);
-                    else break;
-                }
-
             }
-            */
+            Console.WriteLine("Total Timing Bars: " + BarObjectQueue.Count);
         }
 
         //Creates a bar object
