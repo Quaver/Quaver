@@ -20,14 +20,14 @@ namespace Quaver.GameState.Gameplay
         /// </summary>
         internal Sprite BarSprite { get; set; }
 
-        internal void Initialize(Drawable parent, float sizeX, float sizeY, float posY)
+        internal void Initialize(Drawable parent, float sizeY, float posY)
         {
             //Create bar
             BarSprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
                 PositionY = posY,
-                SizeX = sizeX,
+                ScaleX = 1,
                 SizeY = sizeY,
                 Parent = parent
             };

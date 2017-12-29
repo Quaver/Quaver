@@ -11,8 +11,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     {
         internal ulong TrackPosition { get; set; }
         private Boundary Boundary { get; set; }
-        private List<BarObject> BarObjectQueue { get; set; }
-        private List<BarObject> BarObjectActive { get; set; }
+        internal List<BarObject> BarObjectQueue { get; set; }
+        internal List<BarObject> BarObjectActive { get; set; }
 
         public void Draw()
         {
@@ -55,13 +55,25 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     var newBar = new BarObject()
                     {
-                        OffsetFromReceptor = 0
+                        OffsetFromReceptor = (ulong)curTime
                     };
                     BarObjectQueue.Add(newBar);
                     curTime += bpmInterval;
                 }
             }
             Console.WriteLine("Total Timing Bars: " + BarObjectQueue.Count);
+
+            //todo: remove this. temp
+            BarObjectActive = BarObjectQueue;
+            for (var i=0; i< BarObjectActive.Count; i++)
+            {
+                BarObjectActive[i].Initialize(Boundary, 2, 0);
+            }
+        }
+
+        internal void RecycleBar()
+        {
+            //BarObjectQueue
         }
 
         //Creates a bar object
