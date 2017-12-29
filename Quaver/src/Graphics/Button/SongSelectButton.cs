@@ -45,7 +45,7 @@ namespace Quaver.Graphics.Button
             TitleText = new TextBoxSprite()
             {
                 Text = map.Title,
-                Font = Fonts.Medium12,
+                Font = Fonts.Medium48,
                 ScaleY = 0.5f,
                 ScaleX = 0.8f,
                 SizeX = -5 * ButtonScale,
@@ -63,7 +63,7 @@ namespace Quaver.Graphics.Button
             ArtistText = new TextBoxSprite()
             {
                 Text = map.Artist + " | "+ map.Creator,
-                Font = Fonts.Medium12,
+                Font = Fonts.Medium48,
                 ScaleY = 0.5f,
                 ScaleX = 0.8f,
                 SizeX = -5 * ButtonScale,
