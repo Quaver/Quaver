@@ -71,7 +71,7 @@ namespace Quaver.GameState.SongSelect
                         Image = GameBase.UI.BlankBox,
                         Alignment = Alignment.TopLeft,
                         PositionY = OrganizerSize,
-                        PositionX = 5,
+                        PositionX = 5 + OrganizerSize*0.2f,
                         Parent = Boundary
                     };
 
@@ -119,6 +119,7 @@ namespace Quaver.GameState.SongSelect
         public void SetBeatmapOrganizerPosition(float scale)
         {
             Boundary.PositionY = scale * OrganizerSize;
+            Boundary.PositionX = scale * OrganizerSize * 0.2f;
         }
     }
 }
