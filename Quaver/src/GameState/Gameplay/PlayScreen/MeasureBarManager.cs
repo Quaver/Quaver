@@ -65,7 +65,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     curTime += bpmInterval;
                 }
             }
-            //Console.WriteLine("Total Timing Bars: " + BarObjectQueue.Count);
+            Console.WriteLine("Total Timing Bars: " + BarObjectQueue.Count);
 
             //todo: remove this. temp
             BarObjectActive = BarObjectQueue;
