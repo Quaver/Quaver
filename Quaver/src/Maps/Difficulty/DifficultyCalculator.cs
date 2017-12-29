@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Quaver.Maps.Difficulty.Structures;
+using Quaver.Maps.Difficulty.Patterns;
 
 namespace Quaver.Maps.Difficulty
 {

@@ -12,7 +12,6 @@ using Quaver.Enums;
 using Newtonsoft.Json;
 using Quaver.Graphics;
 using Quaver.Maps.Difficulty;
-using Quaver.Maps.Difficulty.Structures;
 
 namespace Quaver.Maps
 {
