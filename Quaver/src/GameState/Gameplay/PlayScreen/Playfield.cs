@@ -65,15 +65,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 case GameModes.Keys4:
                     GameplayReferences.ReceptorXPosition = new float[4];
                     LaneSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio);
-                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll
-                        ? GameBase.Window.Z + GameBase.Window.Y - (GameBase.LoadedSkin.ReceptorYOffset + GameBase.LoadedSkin.NoteReceptors4K[0].Height) * GameBase.WindowYRatio
+                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll //todo: use list for scaling
+                        ? GameBase.Window.Z + GameBase.Window.Y - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowYRatio + (LaneSize * GameBase.LoadedSkin.NoteReceptors4K[0].Height / GameBase.LoadedSkin.NoteReceptors4K[0].Width))
                         : GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowYRatio;
                     break;
                 case GameModes.Keys7:
                     GameplayReferences.ReceptorXPosition = new float[7];
                     LaneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowYRatio);
-                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll
-                        ? GameBase.Window.Z + GameBase.Window.Y - (GameBase.LoadedSkin.ReceptorYOffset + GameBase.LoadedSkin.NoteReceptors7K[0].Height) * GameBase.WindowYRatio
+                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll //todo: use list for scaling
+                        ? GameBase.Window.Z + GameBase.Window.Y - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowYRatio + (LaneSize * GameBase.LoadedSkin.NoteReceptors7K[0].Height / GameBase.LoadedSkin.NoteReceptors7K[0].Width))
                         : GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowYRatio;
                     break;
             }
