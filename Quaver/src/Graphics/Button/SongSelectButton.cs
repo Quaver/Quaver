@@ -34,6 +34,21 @@ namespace Quaver.Graphics.Button
 
         private Sprite.Sprite GradeImage { get; set; }
 
+        /// <summary>
+        ///     Current tween value of the object. Used for animation.
+        /// </summary>
+        private float HoverCurrentTween { get; set; }
+
+        /// <summary>
+        ///     Target tween value of the object. Used for animation.
+        /// </summary>
+        private float HoverTargetTween { get; set; } = 0.6f;
+
+        /// <summary>
+        ///     Current Color/Tint of the object.
+        /// </summary>
+        private Color CurrentTint = Color.White;
+
         //Constructor
         public SongSelectButton(Beatmap map, float ButtonScale)
         {
@@ -151,26 +166,11 @@ namespace Quaver.Graphics.Button
         }
 
         /// <summary>
-        ///     Current tween value of the object. Used for animation.
-        /// </summary>
-        private float HoverCurrentTween { get; set; }
-
-        /// <summary>
-        ///     Target tween value of the object. Used for animation.
-        /// </summary>
-        private float HoverTargetTween { get; set; }
-
-        /// <summary>
-        ///     Current Color/Tint of the object.
-        /// </summary>
-        private Color CurrentTint = Color.White;
-
-        /// <summary>
         ///     This method is called when the mouse hovers over the button
         /// </summary>
         public override void MouseOver()
         {
-            HoverTargetTween = 1;
+            HoverTargetTween = 0.85f;
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Quaver.Graphics.Button
         /// </summary>
         public override void MouseOut()
         {
-            HoverTargetTween = 0;
+            HoverTargetTween = 0.6f;
         }
 
         /// <summary>
@@ -191,9 +191,9 @@ namespace Quaver.Graphics.Button
             else
                 HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
 
-            CurrentTint.R = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
-            CurrentTint.G = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
-            CurrentTint.B = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
+            CurrentTint.R = (byte)(HoverCurrentTween * 255);
+            CurrentTint.G = (byte)(HoverCurrentTween * 255);
+            CurrentTint.B = (byte)(HoverCurrentTween * 255);
 
             Tint = CurrentTint;
             GradeImage.Tint = Tint;
