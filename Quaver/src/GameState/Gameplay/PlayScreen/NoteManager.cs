@@ -70,6 +70,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         {
             var qua = GameBase.SelectedBeatmap.Qua; //todo: remove
             MeasureBarManager = new MeasureBarManager();
+            MeasureBarManager.Initialize(state);
 
             // Modifiers
             RemoveTimeAfterMiss = (uint)(1000 * GameBase.GameClock);
