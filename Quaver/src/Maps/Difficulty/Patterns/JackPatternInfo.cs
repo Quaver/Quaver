@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Quaver.Maps.Difficulty.Structures
+namespace Quaver.Maps.Difficulty.Patterns
 {
-    internal struct StreamPatternInfo : IPattern
+    internal class JackPatternInfo : IPattern
     {
         /// <summary>
-        ///     The amount of time the pattern lasts
+        ///     The total time this pattern takes
         /// </summary>
         public int TotalTime { get; set; }
 
@@ -19,7 +19,12 @@ namespace Quaver.Maps.Difficulty.Structures
         public int StartingObjectTime { get; set; }
 
         /// <summary>
-        ///     The list of HitObjects in this vibro pattern
+        ///     The lane the pattern takes place in
+        /// </summary>
+        public int Lane { get; set; }
+
+        /// <summary>
+        ///     The list of HitObjects in this pattern
         /// </summary>
         public List<HitObjectInfo> HitObjects { get; set; }
     }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Quaver.Maps.Difficulty.Structures
+namespace Quaver.Maps.Difficulty.Patterns
 {
     internal interface IPattern
     {

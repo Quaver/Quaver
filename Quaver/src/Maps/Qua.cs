@@ -170,8 +170,8 @@ namespace Quaver.Maps
             hitObjects.ForEach(x => { x.StartTime = (int)Math.Round(x.StartTime / rate, 0); });
             timingPoints.ForEach(x => { x.StartTime = (int)Math.Round(x.StartTime / rate, 0); });
 
-            // Remvoe artificial density caused in the map
-            hitObjects = DifficultyCalculator.RemoveArtificialDensity(hitObjects, timingPoints);
+            // Remove artificial density in the map.
+            hitObjects = PatternAnalyzer.RemoveArtificialDensity(hitObjects, timingPoints);
 
             // Find all the vibro patterns in the map.
             var vibroPatterns = PatternAnalyzer.DetectAllLanePatterns(hitObjects, true);
@@ -179,6 +179,7 @@ namespace Quaver.Maps
             // Find all the jack patterns, then get rid of all vibro patterns that are detected within them.
             var jackPatterns = PatternAnalyzer.RemoveVibroFromJacks(PatternAnalyzer.DetectAllLanePatterns(hitObjects, false), vibroPatterns); 
 
+            // TODO: Find all stream patterns
             Logger.Log($"Detected: {vibroPatterns.Count} unique vibro patterns", LogColors.GameInfo);
             Logger.Log($"Detected: {jackPatterns.Count} unique jack patterns", LogColors.GameInfo);
         }
