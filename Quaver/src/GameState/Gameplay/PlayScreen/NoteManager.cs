@@ -119,11 +119,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1], 0),
                 };
 
-                // Calculate SV Index for hit object
-                newObject.SvIndex = GetSvIndex(newObject.StartTime);
-
                 // Calculate Y-Offset From Receptor
-                newObject.OffsetFromReceptor = SvOffsetFromTime(newObject.StartTime, newObject.SvIndex);
+                newObject.OffsetFromReceptor = SvOffsetFromTime(newObject.StartTime, GetSvIndex(newObject.StartTime));
                 newObject.HitObjectPositionY = newObject.OffsetFromReceptor + HitPositionOffset;
 
                 // Set Snap Color of Object
@@ -427,8 +424,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         {
             //Update the object's position and size
             HitObjectHold[index].StartTime = (float)CurrentSongTime;
-            HitObjectHold[index].SvIndex = GetSvIndex(HitObjectHold[index].StartTime);
-            HitObjectHold[index].OffsetFromReceptor = SvOffsetFromTime(HitObjectHold[index].StartTime, HitObjectHold[index].SvIndex);
+            HitObjectHold[index].OffsetFromReceptor = SvOffsetFromTime(HitObjectHold[index].StartTime, GetSvIndex(HitObjectHold[index].StartTime));
 
             //Kill the object and add it to the HitObjectDead pool
             if (destroy) HitObjectHold[index].Destroy();
