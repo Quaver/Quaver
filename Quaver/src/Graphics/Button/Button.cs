@@ -30,7 +30,7 @@ namespace Quaver.Graphics.Button
         /// <summary>
         ///     Internally used to detect when a button gets clicked once. (To ensure it doesnt click every frame when user holds down the mouse button.)
         /// </summary>
-        private bool MouseClicked { get; set; }
+        private bool MouseClicked { get; set; } = true;
 
         /// <summary>
         ///     This event handler is used to detect when this object gets clicked. Used externally
