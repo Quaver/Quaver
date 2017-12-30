@@ -78,17 +78,25 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //Initialize Track
             TrackPosition = (ulong)(-GameplayReferences.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
             CurrentSvIndex = 0;
-            switch (GameBase.SelectedBeatmap.Qua.Mode) //the hit position is determined by the receptor and object of the first lane
+            switch (GameBase.SelectedBeatmap.Qua.Mode) 
+                //the hit position is determined by the receptor and object of the first lane
+                //the math here is kinda ugly, i plan on cleaning this up later
             {
                 case GameModes.Keys4:
-                    HitPositionOffset = Config.Configuration.DownScroll 
-                        ? GameplayReferences.ReceptorYOffset 
-                        : GameplayReferences.ReceptorYOffset + ((GameBase.LoadedSkin.NoteReceptors4K[0].Height - GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height) * GameBase.WindowYRatio);
+                    HitPositionOffset = Config.Configuration.DownScroll
+                        ? GameplayReferences.ReceptorYOffset
+                        : GameplayReferences.ReceptorYOffset
+                        + GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio
+                        * ((GameBase.LoadedSkin.NoteReceptors4K[0].Height / GameBase.LoadedSkin.NoteReceptors4K[0].Width)
+                        - (GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
                     break;
                 case GameModes.Keys7:
-                    HitPositionOffset = Config.Configuration.DownScroll 
-                        ? GameplayReferences.ReceptorYOffset 
-                        : GameplayReferences.ReceptorYOffset + ((GameBase.LoadedSkin.NoteReceptors4K[0].Height - GameBase.LoadedSkin.NoteHitObjects7K[0].Height) * GameBase.WindowYRatio);
+                    HitPositionOffset = Config.Configuration.DownScroll
+                        ? GameplayReferences.ReceptorYOffset
+                        : GameplayReferences.ReceptorYOffset
+                        + GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio
+                        * ((GameBase.LoadedSkin.NoteReceptors7K[0].Height / GameBase.LoadedSkin.NoteReceptors7K[0].Width)
+                        - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
                     break;
             }
 
