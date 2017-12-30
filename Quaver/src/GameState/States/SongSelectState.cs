@@ -138,7 +138,7 @@ namespace Quaver.GameState.States
             // Create play button
             PlayButton = new TextButton(new Vector2(200, 30), "Play Map")
             {
-                Alignment = Alignment.TopRight,
+                Alignment = Alignment.TopLeft,
                 Parent = Boundary
             };
 
@@ -199,7 +199,7 @@ namespace Quaver.GameState.States
             // Create Speed Mod Button
             SpeedModButton = new TextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.GameClock}x")
             {
-                Alignment = Alignment.BotRight,
+                Alignment = Alignment.BotLeft,
                 Parent = Boundary
             };
             SpeedModButton.Clicked += OnSpeedModButtonClick;
@@ -286,7 +286,7 @@ namespace Quaver.GameState.States
         {
             TogglePitch = new TextButton(new Vector2(200, 50), $"Toggle Pitch: {Configuration.Pitched}")
             {
-                Alignment = Alignment.MidRight,
+                Alignment = Alignment.MidLeft,
                 Parent = Boundary
             };
             TogglePitch.Clicked += OnTogglePitchButtonClick;
