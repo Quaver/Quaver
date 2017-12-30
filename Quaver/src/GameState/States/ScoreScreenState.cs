@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Quaver.Config;
 using Quaver.Database;
+using Quaver.Enums;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
@@ -17,6 +18,7 @@ using Quaver.Replays;
 using Quaver.Scores;
 using Quaver.Graphics.Text;
 using Quaver.GameState.Gameplay;
+using Quaver.Utility;
 
 namespace Quaver.GameState.States
 {
@@ -136,12 +138,37 @@ namespace Quaver.GameState.States
             ReplayPath = $"{Configuration.Username} - {Artist} - {Title} [{DifficultyName}] ({DateTime.UtcNow})";
 
             // Insert the score into the database
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 // Write replay to log file if debug is toggled
                 Replay.WriteToLogFile();
                 Replay.Write(ReplayPath, true);
-            }).ContinueWith(async (t) => await LocalScoreCache.InsertScoreIntoDatabase(CreateLocalScore(Replay)));
+
+                try
+                {
+                    var newScore = CreateLocalScore(Replay);
+
+                    // Insert the score in the DB.
+                    await LocalScoreCache.InsertScoreIntoDatabase(newScore);
+
+                    var previousScores = await LocalScoreCache.SelectBeatmapScores(beatmapMd5);
+
+                    if (previousScores.Count > 0)
+                        previousScores = previousScores.OrderByDescending(x => x.Score).ToList();
+
+                    // If this score is higher than the last or there are no scores, we want to update this 
+                    // beatmap's cache.
+                    if (previousScores.Count > 0 && scoreData.ScoreTotal >= previousScores[0].Score)
+                        GameBase.SelectedBeatmap.HighestRank = newScore.Grade;
+
+                    GameBase.SelectedBeatmap.LastPlayed = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    await BeatmapCache.UpdateBeatmap(GameBase.SelectedBeatmap);
+                }
+                catch (Exception e)
+                {
+                    Logger.Log(e.Message, LogColors.GameError);
+                }
+            });
 
             // Create an instance of the applause sound effect so that we can stop it later.
             ApplauseInstance = GameBase.LoadedSkin.Applause.CreateInstance();
@@ -410,6 +437,7 @@ namespace Quaver.GameState.States
                 DateTime = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
                 Score = ScoreData.ScoreTotal,
                 Accuracy = Math.Round(ScoreData.Accuracy * 100, 2),
+                Grade = Util.GetGradeFromAccuracy((float)Math.Round(ScoreData.Accuracy * 100, 2)),
                 MaxCombo = ScoreData.Combo,
                 MarvPressCount = ScoreData.JudgePressSpread[0],
                 MarvReleaseCount = ScoreData.JudgeReleaseSpread[0],

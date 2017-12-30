@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Enums;
 using SQLite;
 
 namespace Quaver.Scores
@@ -41,6 +42,11 @@ namespace Quaver.Scores
         ///     The score the player achieved
         /// </summary>
         public int Score { get; set; }
+
+        /// <summary>
+        ///     The grade achieved for this score
+        /// </summary>
+        public Grades Grade { get; set; }
 
         /// <summary>
         ///     The accuracy the player achieved
