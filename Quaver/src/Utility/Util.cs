@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.Enums;
 using Quaver.Graphics;
 
 namespace Quaver.Utility
@@ -344,6 +345,33 @@ namespace Quaver.Utility
                 str = str.Replace(invalidChar.ToString(), "");
 
             return str;
+        }
+
+        /// <summary>
+        ///     Gets the grade from an accuracy value
+        /// </summary>
+        /// <param name="accuracy"></param>
+        /// <returns></returns>
+        internal static Grades GetGradeFromAccuracy(float accuracy, bool isPerfect = false)
+        {
+            if (accuracy == 100 && isPerfect)
+                return Grades.XX;
+            if (accuracy == 100 && !isPerfect)
+                return Grades.X;
+            if (accuracy >= 99)
+                return Grades.SS;
+            if (accuracy >= 95)
+                return Grades.S;
+            if (accuracy >= 90)
+                return Grades.A;
+            if (accuracy >= 80)
+                return Grades.B;
+            if (accuracy >= 70)
+                return Grades.C;
+            if (accuracy >= 60)
+                return Grades.D;
+            else
+                return Grades.F;
         }
     }
 }
