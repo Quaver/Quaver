@@ -68,7 +68,7 @@ namespace Quaver.GameState.SongSelect
                     (float)Math.Sin(Math.PI * (Boundary.PositionY + button.PositionY)/ GameBase.Window.Z) * 30 
                     + 50/ selectedOffset
                     - 30;*/
-                button.PositionX = 30 / selectedOffset + 5;
+                button.PositionX = -(30 / selectedOffset) - 5;
 
             }
             Boundary.Update(dt);
@@ -93,9 +93,9 @@ namespace Quaver.GameState.SongSelect
                     var newButton = new SongSelectButton(map, GameBase.WindowYRatio)
                     {
                         Image = GameBase.UI.BlankBox,
-                        Alignment = Alignment.TopLeft,
+                        Alignment = Alignment.TopRight,
                         PositionY = OrganizerSize,
-                        PositionX = 5,
+                        PositionX = -5,
                         Parent = Boundary
                     };
 
