@@ -24,7 +24,8 @@ namespace Quaver.Commands
             new LoginDev(),
 #endif
             new GetScores(),
-            new CalculateDifficulty()
+            new CalculateDifficulty(),
+            new OsuDbCommand()
         };
 
         /// <summary>
