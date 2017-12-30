@@ -333,5 +333,24 @@ namespace Quaver.Database
                 }
             }
         }
+
+        /// <summary>
+        ///     Updates a beatmap in the database
+        /// </summary>
+        /// <param name="beatmap"></param>
+        /// <returns></returns>
+        internal static async Task UpdateBeatmap(Beatmap beatmap)
+        {
+            try
+            {
+                var conn = new SQLiteAsyncConnection(DatabasePath);
+                await conn.ExecuteAsync("UPDATE Beatmap SET HighestRank = ?, LastPlayed = ? Where Id = ?", beatmap.HighestRank, beatmap.LastPlayed, beatmap.Id);
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message, LogColors.GameError);
+                throw;
+            }
+        }
     }
 }
