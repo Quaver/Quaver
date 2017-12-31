@@ -182,6 +182,8 @@
     <Compile Include="src\Maps\Difficulty\Patterns\ChordType.cs" />
     <Compile Include="src\Maps\Difficulty\Patterns\IPattern.cs" />
     <Compile Include="src\Maps\Difficulty\Patterns\JackPatternInfo.cs" />
+    <Compile Include="src\Maps\Difficulty\Patterns\PatternList.cs" />
+    <Compile Include="src\Maps\Difficulty\Patterns\PatternType.cs" />
     <Compile Include="src\Maps\Difficulty\Patterns\StreamPatternInfo.cs" />
     <Compile Include="src\Modifiers\Mods\Chill.cs" />
     <Compile Include="src\Modifiers\Mods\Speed.cs" />
