@@ -20,6 +20,14 @@ namespace Quaver.Maps.Difficulty
         private static int JackBaseBpm { get; } = 95;
 
         /// <summary>
+        ///     The absolute minimum bpm to be considered a chord.
+        ///     Note: This is very strict, because we are trying to detect individual 
+        ///     chords, so they'd have to be very very close together in start time difference
+        ///     to be considered a chord.
+        /// </summary>
+        private static int ChordBaseBpm { get; } = 1000;
+
+        /// <summary>
         ///     Detects vibro patterns for ther entire map
         /// </summary>
         /// <param name="hitObjects"></param>
@@ -96,6 +104,53 @@ namespace Quaver.Maps.Difficulty
         }
 
         /// <summary>
+        ///     Detects chord patterns
+        ///
+        ///     A chord pattern is defined as 2 or more notes that can register as 100% accuracy hits if
+        ///     pressed at the same time.
+        ///     
+        ///     This usually 99BPM and below
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        /// <returns></returns>
+        internal static List<ChordPatternInfo> DetectChordPatterns(IReadOnlyList<HitObjectInfo> hitObjects)
+        {
+            var requiredPatternObjects = 2; // The amount of objects required to be considered a pattern
+            var detectedPatterns = new List<ChordPatternInfo>(); // Detected patterns
+            var patternObjects = new List<HitObjectInfo>(); // The current pattern's objects
+
+            // Begin analyzing patterns
+            for (var i = 1; i < hitObjects.Count; i++)
+            {
+                // Consider the current object apart of the pattern if the time difference of the objects is <= the threshold.
+                var startTimeDiff = Math.Abs(hitObjects[i].StartTime - hitObjects[i - 1].StartTime);
+                if (startTimeDiff <= 60000 / ChordBaseBpm / 4)
+                {
+                    patternObjects.Add(hitObjects[i - 1]);
+
+                    // This applies to the last HitObject. Add the pattern to the list if it is.
+                    if (i != hitObjects.Count - 1 || patternObjects.Count < requiredPatternObjects)
+                        continue;
+
+                    detectedPatterns.Add(CreateChordPattern(patternObjects));
+                    continue;
+                }
+
+                // If the pattern was cut off by another object, we want to add the current one, since that
+                // is techinically still apart of the pattern (Only applicible to chords in this circumstance)
+                patternObjects.Add(hitObjects[i]);
+
+                // If the pattern was cut off by another object but meets the required # objects to be considered a pattern.
+                if (patternObjects.Count >= requiredPatternObjects)
+                    detectedPatterns.Add(CreateChordPattern(patternObjects));
+
+                patternObjects = new List<HitObjectInfo>();
+            }
+
+            return detectedPatterns;
+        }
+
+        /// <summary>
         ///     Removes any HitObjects that are apart of vibro patterns in the jack patterns.
         ///     It uses the same vibro detection, so we're just getting rid of duplicates here.
         /// </summary>
@@ -124,7 +179,7 @@ namespace Quaver.Maps.Difficulty
         }
 
         /// <summary>
-        ///     Creates and returns an instance of a vibro pattern
+        ///     Creates and returns an instance of a jack pattern
         /// </summary>
         /// <param name="hitObjects"></param>
         /// <returns></returns>
@@ -136,6 +191,40 @@ namespace Quaver.Maps.Difficulty
                 Lane = hitObjects[0].Lane,
                 TotalTime = hitObjects[hitObjects.Count - 1].StartTime - hitObjects[0].StartTime,
                 StartingObjectTime = hitObjects[0].StartTime
+            };
+        }
+
+        /// <summary>
+        ///     Creates and returns an instance of a chord pattern
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        /// <returns></returns>
+        private static ChordPatternInfo CreateChordPattern(List<HitObjectInfo> hitObjects)
+        {
+            ChordType chordType;
+
+            switch (hitObjects.Count)
+            {
+                case 4:
+                    chordType = ChordType.Quad;
+                    break;
+                case 3:
+                    chordType = ChordType.Hand;
+                    break;
+                case 2:
+                    chordType = ChordType.Jump;
+                    break;
+                default:
+                    chordType = ChordType.FivePlus;
+                    break;
+            }
+
+            return new ChordPatternInfo()
+            {
+                HitObjects = hitObjects,
+                TotalTime = hitObjects[hitObjects.Count - 1].StartTime - hitObjects[0].StartTime,
+                StartingObjectTime = hitObjects[0].StartTime,
+                ChordType = chordType      
             };
         }
 
