@@ -182,9 +182,18 @@ namespace Quaver.Maps
             // Find all chord patterns
             var chordPatterns = PatternAnalyzer.DetectChordPatterns(hitObjects);
 
+            // Find all stream patterns
+            var streamPatterns = PatternAnalyzer.DetectStreamPatterns(hitObjects);
+
+            foreach (var patt in streamPatterns)
+            {
+                Console.WriteLine($"{patt.StartingObjectTime} | {patt.TotalTime} | {patt.HitObjects.Count}");
+            }
+
             // TODO: Find all stream patterns
             Logger.Log($"Detected: {vibroPatterns.Count} unique vibro patterns", LogColors.GameInfo);
             Logger.Log($"Detected: {jackPatterns.Count} unique jack patterns", LogColors.GameInfo);
+            Logger.Log($"Detected: {streamPatterns.Count} unique stream patterns", LogColors.GameInfo);
             Logger.Log($"Detected: {chordPatterns.Where(x => x.ChordType == ChordType.Jump).ToList().Count} unique Jump chord patterns", LogColors.GameInfo);
             Logger.Log($"Detected: {chordPatterns.Where(x => x.ChordType == ChordType.Hand).ToList().Count} unique Hand chord patterns", LogColors.GameInfo);
             Logger.Log($"Detected: {chordPatterns.Where(x => x.ChordType == ChordType.Quad).ToList().Count} unique Quad chord patterns", LogColors.GameInfo);
