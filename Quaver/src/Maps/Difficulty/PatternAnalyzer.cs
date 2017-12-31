@@ -15,9 +15,19 @@ namespace Quaver.Maps.Difficulty
         private static int VibroBaseBpm { get; } = 160;
 
         /// <summary>
+        ///     The required amount of objects required for a vibro pattern
+        /// </summary>
+        private static int RequiredVibroObjects { get; } = 4;
+
+        /// <summary>
         ///     The minimum BPM to be considered jacks
         /// </summary>
         private static int JackBaseBpm { get; } = 95;
+
+        /// <summary>
+        ///     The required amount of objects required for a vibro pattern
+        /// </summary>
+        private static int RequiredJackObjects { get; } = 2;
 
         /// <summary>
         ///     The absolute minimum bpm to be considered a chord.
@@ -28,164 +38,204 @@ namespace Quaver.Maps.Difficulty
         private static int ChordBaseBpm { get; } = 1000;
 
         /// <summary>
+        ///     The required amount of objects for a chord pattern.
+        /// </summary>
+        private static int RequiredChordObjects { get; } = 2;
+
+        /// <summary>
         ///     The minimum bpm to be considered a stream pattern
         /// </summary>
         private static int StreamBaseBpm { get; } = 120;
 
         /// <summary>
-        ///     Detects vibro patterns for ther entire map
+        ///     The required amount of objects for a stream pattern.
         /// </summary>
-        /// <param name="hitObjects"></param>
-        /// <param name="KeyCount"></param>
-        /// <returns></returns>
-        internal static List<JackPatternInfo> DetectAllLanePatterns(IReadOnlyList<HitObjectInfo> hitObjects, bool detectVibro)
-        {
-            return DetectLanePatterns(hitObjects.Where(x => x.Lane == 1). ToList(), detectVibro)
-                .Concat(DetectLanePatterns(hitObjects.Where(x => x.Lane == 2). ToList(), detectVibro))
-                .Concat(DetectLanePatterns(hitObjects.Where(x => x.Lane == 3). ToList(), detectVibro))
-                .Concat(DetectLanePatterns(hitObjects.Where(x => x.Lane == 4). ToList(), detectVibro))
-                .Concat(DetectLanePatterns(hitObjects.Where(x => x.Lane == 5). ToList(), detectVibro))
-                .Concat(DetectLanePatterns(hitObjects.Where(x => x.Lane == 6). ToList(), detectVibro))
-                .Concat(DetectLanePatterns(hitObjects.Where(x => x.Lane == 7). ToList(), detectVibro))
-                .ToList();
-        }
+        private static int RequiredStreamObjects { get; } = 3;
 
         /// <summary>
-        ///     Detects vibro/jack patterns per key lane
-        ///     
-        ///     A vibro pattern can be considered as 4 or more notes in succession for a lane
-        ///     with the objects having a 1/4th snap millisecond difference of a base bpm
-        /// 
-        ///     A jack pattern can be considered as 2 or more notes in succession for a lane
-        ///     with the objects having a 1/4th snap millisecond difference of a base bpm.
-        /// 
-        ///     A jack pattern may include vibro patterns, however they are to be removed when
-        ///     calculating difficulty: See: RemoveVibroFromJacks()
-        /// <param name="hitObjects"></param>
-        /// <returns></returns>
-        /// </summary>
-        private static List<JackPatternInfo> DetectLanePatterns(IReadOnlyList<HitObjectInfo> hitObjects, bool detectVibro)
-        { 
-            var baseBpm = (detectVibro) ? VibroBaseBpm : JackBaseBpm;
-            var requiredPatternObjects = (detectVibro) ? 4 : 2; // The amount of objects required to be considered a pattern (Vibro : Jack)
-            var detectedPatterns = new List<JackPatternInfo>(); // Detected patterns
-            var patternObjects = new List<HitObjectInfo>(); // The current pattern's objects
-
-            // Begin analyzing patterns
-            for (var i = 1; i < hitObjects.Count; i++)
-            {
-                // Consider the current object apart of the pattern if the time difference of the objects is <= the threshold.
-                var startTimeDiff = Math.Abs(hitObjects[i].StartTime - hitObjects[i - 1].StartTime);
-                if (startTimeDiff <= 60000 / baseBpm / 4)
-                {
-                    patternObjects.Add(hitObjects[i]);
-
-                    // This applies to the last HitObject. Add the pattern to the list if it is.
-                    if (i != hitObjects.Count - 1 || patternObjects.Count < requiredPatternObjects)
-                        continue;
-
-                    detectedPatterns.Add(CreateJackPattern(patternObjects));
-                    continue;
-                } 
-
-                // If the pattern was cut off by another object but meets the required # objects to be considered a pattern.
-                if (patternObjects.Count >= requiredPatternObjects)
-                    detectedPatterns.Add(CreateJackPattern(patternObjects));
-
-                patternObjects = new List<HitObjectInfo>();
-            }
-
-            return detectedPatterns;
-        }
-
-        /// <summary>
-        ///     Detects stream patterns
+        ///     Analyzes a map for different types of patterns
         /// </summary>
         /// <param name="hitObjects"></param>
         /// <returns></returns>
-        internal static List<StreamPatternInfo> DetectStreamPatterns(IReadOnlyList<HitObjectInfo> hitObjects)
+        internal static PatternList AnalyzeMapPatterns(IReadOnlyList<HitObjectInfo> hitObjects)
         {
-            var requiredPatternObjects = 3; // The amount of objects required to be considered a pattern
-            var detectedPatterns = new List<StreamPatternInfo>(); // Detected Patterns
-            var patternObjects = new List<HitObjectInfo>(); // Current Pattern Objects
+            // Holds the list of patterns that will be returned.
+            var patterns = new PatternList()
+            {
+                Streams = new List<StreamPatternInfo>(),
+                Jacks = new List<JackPatternInfo>(),
+                Vibro = new List<JackPatternInfo>(),
+                Chords = new List<ChordPatternInfo>()
+            };
 
-            // Begin analyzing patterns
+            // Current Stream Objects
+            var currentStreamObjects = new List<HitObjectInfo>();
+
+            // Current Chord Objects
+            var currentChordObjects = new List<HitObjectInfo>();
+
+            // Current 7 lists of jack patterns for each key lane.
+            var currentJackObjects = new List<List<HitObjectInfo>>
+            {
+                new List<HitObjectInfo>(), new List<HitObjectInfo>(),
+                new List<HitObjectInfo>(), new List<HitObjectInfo>(), 
+                new List<HitObjectInfo>(), new List<HitObjectInfo>(),
+                new List<HitObjectInfo>()
+            };
+
+            // Current 7 lists of vibro patterns for each key lane.
+            var currentVibroObjects = new List<List<HitObjectInfo>>
+            {
+                new List<HitObjectInfo>(), new List<HitObjectInfo>(),
+                new List<HitObjectInfo>(), new List<HitObjectInfo>(),
+                new List<HitObjectInfo>(), new List<HitObjectInfo>(),
+                new List<HitObjectInfo>()
+            };
+
+            // Begin analyzing stream/chord patterns
             for (var i = 1; i < hitObjects.Count; i++)
             {
-                // Consider the current object apart of the pattern if the time difference of the objects is <= the threshold.
-                // Also we check if the 
-                var startTimeDiff = Math.Abs(hitObjects[i].StartTime - hitObjects[i - 1].StartTime);
-                if (startTimeDiff <= 60000 / StreamBaseBpm / 4 && hitObjects[i].Lane != hitObjects[i - 1].Lane)
+                var timeDifference = Math.Abs(hitObjects[i].StartTime - hitObjects[i - 1].StartTime);
+
+                #region streamDetection
+                if (IsPatternObject(timeDifference, hitObjects[i], hitObjects[i - 1], PatternType.Stream))
                 {
-                    patternObjects.Add(hitObjects[i -1]);
+                    currentStreamObjects.Add(hitObjects[i - 1]);
 
-                    // This applies to the last HitObject. Add the pattern to the list if it is.
-                    if (i != hitObjects.Count - 1 || patternObjects.Count < requiredPatternObjects)
-                        continue;
-
-                    detectedPatterns.Add(CreateStreamPattern(patternObjects));
-                    continue;
+                    // This applies to the last HitObject, add the last pattern to the list of that's the case.
+                    if (i == hitObjects.Count - 1 && currentStreamObjects.Count >= RequiredStreamObjects)
+                        patterns.Streams.Add(CreateStreamPattern(currentStreamObjects));
                 }
+                else
+                {
+                    // If the pattern was cut off by another object, we want to add the current one, since that
+                    // is techinically still apart of the pattern (Only applicible to chords in this circumstance)
+                    currentStreamObjects.Add(hitObjects[i]);
 
-                // If the pattern was cut off by another object, we want to add the current one, since that
-                // is techinically still apart of the pattern (Only applicible to chords in this circumstance)
-                patternObjects.Add(hitObjects[i]);
+                    // If the pattern was cut off by another object but meets the required # objects to be considered a stream pattern.
+                    if (currentStreamObjects.Count >= RequiredStreamObjects)
+                        patterns.Streams.Add(CreateStreamPattern(currentStreamObjects));
 
-                // If the pattern was cut off by another object but meets the required # objects to be considered a pattern.
-                if (patternObjects.Count >= requiredPatternObjects)
-                    detectedPatterns.Add(CreateStreamPattern(patternObjects));
+                    currentStreamObjects = new List<HitObjectInfo>();
+                }
+                #endregion
 
-                patternObjects = new List<HitObjectInfo>();
+                #region chordDetection
+                if (IsPatternObject(timeDifference, hitObjects[i], hitObjects[i - 1], PatternType.Chord))
+                {
+                    currentChordObjects.Add(hitObjects[i - 1]);
+
+                    // This applies to the last HitObject, add the last pattern to the list of that's the case.
+                    if (i == hitObjects.Count - 1 && currentChordObjects.Count >= RequiredChordObjects)
+                        patterns.Chords.Add(CreateChordPattern(currentChordObjects));
+                }
+                else
+                {
+                    // If the pattern was cut off by another object, we want to add the current one, since that
+                    // is techinically still apart of the pattern (Only applicible to chords in this circumstance)
+                    currentChordObjects.Add(hitObjects[i]);
+
+                    // If the pattern was cut off by another object but meets the required # objects to be considered a chord pattern.
+                    if (currentChordObjects.Count >= RequiredChordObjects)
+                        patterns.Chords.Add(CreateChordPattern(currentChordObjects));
+
+                    currentChordObjects = new List<HitObjectInfo>();
+                }
+                #endregion
             }
 
-            return detectedPatterns;
+            #region jackVibroDetection
+            // Analyze jack/vibro patterns - At this point we want to order the objects by lane, 
+            // so we can accurately detect them
+            // TODO: Have a variable stored for each lane which contains the start time to compare by - Potential optimization
+            hitObjects = hitObjects.OrderBy(x => x.Lane).ToList();
+
+            for (var i = 1; i < hitObjects.Count; i++)
+            {
+                var timeDifference = Math.Abs(hitObjects[i].StartTime - hitObjects[i - 1].StartTime);
+
+                #region jack
+                if (IsPatternObject(timeDifference, hitObjects[i], hitObjects[i - 1], PatternType.Jack))
+                {
+                    currentJackObjects[hitObjects[i].Lane - 1].Add(hitObjects[i - 1]);
+
+                    // This applies to the last HitObject, add the last pattern to the list of that's the case.
+                    if ((i == hitObjects.Count - 1 || hitObjects[i].Lane != hitObjects[i + 1].Lane) && currentJackObjects[hitObjects[i].Lane - 1].Count >= RequiredJackObjects)
+                        patterns.Jacks.Add(CreateJackPattern(currentJackObjects[hitObjects[i].Lane - 1]));
+
+                    #region vibro
+                    // A vibro pattern will always be a jack pattern, but we want to do individual checking here while we're at it.
+                    // they will be removed from jacks before returnning.
+                    if (IsPatternObject(timeDifference, hitObjects[i], hitObjects[i - 1], PatternType.Vibro))
+                    {
+                        currentVibroObjects[hitObjects[i].Lane - 1].Add(hitObjects[i - 1]);
+
+                        // This applies to the last HitObject or the last in the lane, add the last pattern to the list of that's the case.
+                        if (i == hitObjects.Count - 1 || hitObjects[i].Lane != hitObjects[i + 1].Lane && currentVibroObjects[hitObjects[i].Lane - 1].Count >= RequiredVibroObjects)
+                            patterns.Vibro.Add(CreateJackPattern(currentVibroObjects[hitObjects[i].Lane - 1]));
+                            
+                    }
+                    else
+                    {
+                        // If the pattern was cut off by another object, we want to add the current one
+                        currentVibroObjects[hitObjects[i].Lane - 1].Add(hitObjects[i]);
+
+                        // If the pattern was cut off by another object but meets the required # objects to be considered a vibro pattern.
+                        if (currentVibroObjects[hitObjects[i].Lane - 1].Count >= RequiredVibroObjects)
+                            patterns.Vibro.Add(CreateJackPattern(currentVibroObjects[hitObjects[i].Lane - 1]));
+
+                        currentVibroObjects[hitObjects[i].Lane - 1] = new List<HitObjectInfo>();
+                    }
+                    #endregion
+                }
+                else
+                {
+                    currentJackObjects[hitObjects[i].Lane - 1].Add(hitObjects[i]);
+
+                    // If the pattern was cut off by another object but meets the required # objects to be considered a jack pattern.
+                    if (currentJackObjects[hitObjects[i].Lane - 1].Count >= RequiredJackObjects)
+                        patterns.Jacks.Add(CreateJackPattern(currentJackObjects[hitObjects[i].Lane - 1]));
+
+                    currentJackObjects[hitObjects[i].Lane - 1] = new List<HitObjectInfo>();
+
+                    // If the pattern was cut off by another object but meets the required # objects to be considered a vibro pattern.
+                    if (currentVibroObjects[hitObjects[i].Lane - 1].Count >= RequiredVibroObjects)
+                        patterns.Vibro.Add(CreateJackPattern(currentVibroObjects[hitObjects[i].Lane - 1]));
+
+                    currentVibroObjects[hitObjects[i].Lane - 1] = new List<HitObjectInfo>();
+                }
+                #endregion
+            }
+            #endregion
+
+            // Finally, remove the vibro patterns from jacks
+            patterns.Jacks = RemoveVibroFromJacks(patterns.Jacks, patterns.Vibro);
+            return patterns;
         }
 
         /// <summary>
-        ///     Detects chord patterns
-        ///
-        ///     A chord pattern is defined as 2 or more notes that can register as 100% accuracy hits if
-        ///     pressed at the same time.
-        ///     
-        ///     This usually 99BPM and below
+        ///     Checks if an object is apart of a given pattern
         /// </summary>
-        /// <param name="hitObjects"></param>
+        /// <param name="timeDiff"></param>
+        /// <param name="currentObject"></param>
+        /// <param name="previousObject"></param>
+        /// <param name="type"></param>
         /// <returns></returns>
-        internal static List<ChordPatternInfo> DetectChordPatterns(IReadOnlyList<HitObjectInfo> hitObjects)
+        private static bool IsPatternObject(int timeDiff, HitObjectInfo currentObject, HitObjectInfo previousObject, PatternType type)
         {
-            var requiredPatternObjects = 2; // The amount of objects required to be considered a pattern
-            var detectedPatterns = new List<ChordPatternInfo>(); // Detected patterns
-            var patternObjects = new List<HitObjectInfo>(); // The current pattern's objects
-
-            // Begin analyzing patterns
-            for (var i = 1; i < hitObjects.Count; i++)
+            switch (type)
             {
-                // Consider the current object apart of the pattern if the time difference of the objects is <= the threshold.
-                var startTimeDiff = Math.Abs(hitObjects[i].StartTime - hitObjects[i - 1].StartTime);
-                if (startTimeDiff <= 60000 / ChordBaseBpm / 4)
-                {
-                    patternObjects.Add(hitObjects[i - 1]);
-
-                    // This applies to the last HitObject. Add the pattern to the list if it is.
-                    if (i != hitObjects.Count - 1 || patternObjects.Count < requiredPatternObjects)
-                        continue;
-
-                    detectedPatterns.Add(CreateChordPattern(patternObjects));
-                    continue;
-                }
-
-                // If the pattern was cut off by another object, we want to add the current one, since that
-                // is techinically still apart of the pattern (Only applicible to chords in this circumstance)
-                patternObjects.Add(hitObjects[i]);
-
-                // If the pattern was cut off by another object but meets the required # objects to be considered a pattern.
-                if (patternObjects.Count >= requiredPatternObjects)
-                    detectedPatterns.Add(CreateChordPattern(patternObjects));
-
-                patternObjects = new List<HitObjectInfo>();
+                case PatternType.Stream:
+                    return timeDiff <= 60000 / StreamBaseBpm / 4 && currentObject.Lane != previousObject.Lane;
+                case PatternType.Jack:
+                    return timeDiff <= 60000 / JackBaseBpm / 4;
+                case PatternType.Chord:
+                    return timeDiff <= 60000 / ChordBaseBpm / 4;
+                case PatternType.Vibro:
+                    return timeDiff <= 60000 / VibroBaseBpm / 4;
+                default:
+                    return false;
             }
-
-            return detectedPatterns;
         }
 
         /// <summary>
@@ -205,8 +255,8 @@ namespace Quaver.Maps.Difficulty
 
             for (var i = 0; i < jacks.Count; i++)
             {
-                var detectedVibroPatterns = DetectLanePatterns(jacks[i].HitObjects, true);
-                foreach (var detectedVibroPattern in detectedVibroPatterns)
+                var detectedVibroPatterns = AnalyzeMapPatterns(jacks[i].HitObjects);
+                foreach (var detectedVibroPattern in detectedVibroPatterns.Vibro)
                     objectsToRemove.Add(Tuple.Create(i, detectedVibroPattern.HitObjects));
             }
 
