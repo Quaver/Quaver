@@ -12,6 +12,7 @@ using Quaver.Enums;
 using Newtonsoft.Json;
 using Quaver.Graphics;
 using Quaver.Maps.Difficulty;
+using Quaver.Maps.Difficulty.Patterns;
 
 namespace Quaver.Maps
 {
@@ -176,11 +177,18 @@ namespace Quaver.Maps
             var vibroPatterns = PatternAnalyzer.DetectAllLanePatterns(hitObjects, true);
 
             // Find all the jack patterns, then get rid of all vibro patterns that are detected within them.
-            var jackPatterns = PatternAnalyzer.RemoveVibroFromJacks(PatternAnalyzer.DetectAllLanePatterns(hitObjects, false), vibroPatterns); 
+            var jackPatterns = PatternAnalyzer.RemoveVibroFromJacks(PatternAnalyzer.DetectAllLanePatterns(hitObjects, false), vibroPatterns);
+
+            // Find all chord patterns
+            var chordPatterns = PatternAnalyzer.DetectChordPatterns(hitObjects);
 
             // TODO: Find all stream patterns
             Logger.Log($"Detected: {vibroPatterns.Count} unique vibro patterns", LogColors.GameInfo);
             Logger.Log($"Detected: {jackPatterns.Count} unique jack patterns", LogColors.GameInfo);
+            Logger.Log($"Detected: {chordPatterns.Where(x => x.ChordType == ChordType.Jump).ToList().Count} unique Jump chord patterns", LogColors.GameInfo);
+            Logger.Log($"Detected: {chordPatterns.Where(x => x.ChordType == ChordType.Hand).ToList().Count} unique Hand chord patterns", LogColors.GameInfo);
+            Logger.Log($"Detected: {chordPatterns.Where(x => x.ChordType == ChordType.Quad).ToList().Count} unique Quad chord patterns", LogColors.GameInfo);
+            Logger.Log($"Detected: {chordPatterns.Where(x => x.ChordType == ChordType.FivePlus).ToList().Count} unique 5+ chord patterns", LogColors.GameInfo);
         }
 
         /// <summary>
