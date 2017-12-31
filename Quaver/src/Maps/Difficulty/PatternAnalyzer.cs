@@ -28,6 +28,11 @@ namespace Quaver.Maps.Difficulty
         private static int ChordBaseBpm { get; } = 1000;
 
         /// <summary>
+        ///     The minimum bpm to be considered a stream pattern
+        /// </summary>
+        private static int StreamBaseBpm { get; } = 120;
+
+        /// <summary>
         ///     Detects vibro patterns for ther entire map
         /// </summary>
         /// <param name="hitObjects"></param>
@@ -100,7 +105,40 @@ namespace Quaver.Maps.Difficulty
         /// <returns></returns>
         internal static List<StreamPatternInfo> DetectStreamPatterns(IReadOnlyList<HitObjectInfo> hitObjects)
         {
-            throw new NotImplementedException();
+            var requiredPatternObjects = 3; // The amount of objects required to be considered a pattern
+            var detectedPatterns = new List<StreamPatternInfo>(); // Detected Patterns
+            var patternObjects = new List<HitObjectInfo>(); // Current Pattern Objects
+
+            // Begin analyzing patterns
+            for (var i = 1; i < hitObjects.Count; i++)
+            {
+                // Consider the current object apart of the pattern if the time difference of the objects is <= the threshold.
+                // Also we check if the 
+                var startTimeDiff = Math.Abs(hitObjects[i].StartTime - hitObjects[i - 1].StartTime);
+                if (startTimeDiff <= 60000 / StreamBaseBpm / 4 && hitObjects[i].Lane != hitObjects[i - 1].Lane)
+                {
+                    patternObjects.Add(hitObjects[i -1]);
+
+                    // This applies to the last HitObject. Add the pattern to the list if it is.
+                    if (i != hitObjects.Count - 1 || patternObjects.Count < requiredPatternObjects)
+                        continue;
+
+                    detectedPatterns.Add(CreateStreamPattern(patternObjects));
+                    continue;
+                }
+
+                // If the pattern was cut off by another object, we want to add the current one, since that
+                // is techinically still apart of the pattern (Only applicible to chords in this circumstance)
+                patternObjects.Add(hitObjects[i]);
+
+                // If the pattern was cut off by another object but meets the required # objects to be considered a pattern.
+                if (patternObjects.Count >= requiredPatternObjects)
+                    detectedPatterns.Add(CreateStreamPattern(patternObjects));
+
+                patternObjects = new List<HitObjectInfo>();
+            }
+
+            return detectedPatterns;
         }
 
         /// <summary>
@@ -229,6 +267,21 @@ namespace Quaver.Maps.Difficulty
         }
 
         /// <summary>
+        ///     Creates and returns an instance of a chord pattern
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        /// <returns></returns>
+        private static StreamPatternInfo CreateStreamPattern(List<HitObjectInfo> hitObjects)
+        {
+            return new StreamPatternInfo()
+            {
+                HitObjects = hitObjects,
+                TotalTime = hitObjects[hitObjects.Count - 1].StartTime - hitObjects[0].StartTime,
+                StartingObjectTime = hitObjects[0].StartTime,
+            };
+        }
+
+        /// <summary>
         ///     Removes any patterns that contain artificial density
         ///     This is essentially a C# port of Swan's ManiaStarReducer.
         /// 
@@ -306,7 +359,7 @@ namespace Quaver.Maps.Difficulty
                         return timingPoints[j];
 
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return timingPoints[j];
                 }
@@ -330,7 +383,7 @@ namespace Quaver.Maps.Difficulty
                     if (hitObjects[i].EndTime > 0)
                         return hitObjects[i];
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return null;
                 }
