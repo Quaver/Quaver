@@ -173,31 +173,18 @@ namespace Quaver.Maps
             // Remove artificial density in the map.
             hitObjects = PatternAnalyzer.RemoveArtificialDensity(hitObjects, timingPoints);
 
-            // Find all the vibro patterns in the map.
-            var vibroPatterns = PatternAnalyzer.DetectAllLanePatterns(hitObjects, true);
+            // Find all map patterns
+            var patterns = PatternAnalyzer.AnalyzeMapPatterns(hitObjects);
 
-            // Find all the jack patterns, then get rid of all vibro patterns that are detected within them.
-            var jackPatterns = PatternAnalyzer.RemoveVibroFromJacks(PatternAnalyzer.DetectAllLanePatterns(hitObjects, false), vibroPatterns);
+            Logger.Log($"Detected: {patterns.Vibro.Count} unique vibro patterns", LogColors.GameInfo);
+            Logger.Log($"Detected: {patterns.Jacks.Count} unique jack patterns", LogColors.GameInfo);
+            Logger.Log($"Detected: {patterns.Streams.Count} unique stream patterns", LogColors.GameInfo);
+            Logger.Log($"Detected: {patterns.Chords.Count} unique chord patterns", LogColors.GameInfo);
 
-            // Find all chord patterns
-            var chordPatterns = PatternAnalyzer.DetectChordPatterns(hitObjects);
-
-            // Find all stream patterns
-            var streamPatterns = PatternAnalyzer.DetectStreamPatterns(hitObjects);
-
-            foreach (var patt in streamPatterns)
-            {
-                Console.WriteLine($"{patt.StartingObjectTime} | {patt.TotalTime} | {patt.HitObjects.Count}");
-            }
-
-            // TODO: Find all stream patterns
-            Logger.Log($"Detected: {vibroPatterns.Count} unique vibro patterns", LogColors.GameInfo);
-            Logger.Log($"Detected: {jackPatterns.Count} unique jack patterns", LogColors.GameInfo);
-            Logger.Log($"Detected: {streamPatterns.Count} unique stream patterns", LogColors.GameInfo);
-            Logger.Log($"Detected: {chordPatterns.Where(x => x.ChordType == ChordType.Jump).ToList().Count} unique Jump chord patterns", LogColors.GameInfo);
-            Logger.Log($"Detected: {chordPatterns.Where(x => x.ChordType == ChordType.Hand).ToList().Count} unique Hand chord patterns", LogColors.GameInfo);
-            Logger.Log($"Detected: {chordPatterns.Where(x => x.ChordType == ChordType.Quad).ToList().Count} unique Quad chord patterns", LogColors.GameInfo);
-            Logger.Log($"Detected: {chordPatterns.Where(x => x.ChordType == ChordType.FivePlus).ToList().Count} unique 5+ chord patterns", LogColors.GameInfo);
+            Logger.Log($"Detected: {patterns.Chords.Where(x => x.ChordType == ChordType.Jump).ToList().Count} unique Jump chord patterns", LogColors.GameInfo);
+            Logger.Log($"Detected: {patterns.Chords.Where(x => x.ChordType == ChordType.Hand).ToList().Count} unique Hand chord patterns", LogColors.GameInfo);
+            Logger.Log($"Detected: {patterns.Chords.Where(x => x.ChordType == ChordType.Quad).ToList().Count} unique Quad chord patterns", LogColors.GameInfo);
+            Logger.Log($"Detected: {patterns.Chords.Where(x => x.ChordType == ChordType.FivePlus).ToList().Count} unique 5+ chord patterns", LogColors.GameInfo);
         }
 
         /// <summary>
