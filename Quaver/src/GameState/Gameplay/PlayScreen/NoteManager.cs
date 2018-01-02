@@ -86,7 +86,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     HitPositionOffset = Config.Configuration.DownScroll
                         ? GameplayReferences.ReceptorYOffset
                         : GameplayReferences.ReceptorYOffset
-                        + GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio
+                        + GameBase.LoadedSkin.ColumnSize * GameBase.WindowUIScale
                         * ((GameBase.LoadedSkin.NoteReceptors4K[0].Height / GameBase.LoadedSkin.NoteReceptors4K[0].Width)
                         - (GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
                     break;
@@ -94,14 +94,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     HitPositionOffset = Config.Configuration.DownScroll
                         ? GameplayReferences.ReceptorYOffset
                         : GameplayReferences.ReceptorYOffset
-                        + GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio
+                        + GameBase.LoadedSkin.ColumnSize * GameBase.WindowUIScale
                         * ((GameBase.LoadedSkin.NoteReceptors7K[0].Height / GameBase.LoadedSkin.NoteReceptors7K[0].Width)
                         - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
                     break;
             }
 
             // Do config stuff
-            ScrollSpeed = GameBase.WindowYRatio * Configuration.ScrollSpeed / (20f * GameBase.GameClock); //todo: balance curve
+            ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed / (20f * GameBase.GameClock); //todo: balance curve
 
             // Initialize Boundary
             Boundary = new Boundary()
@@ -122,7 +122,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     EndTime = qua.HitObjects[i].EndTime,
                     IsLongNote = qua.HitObjects[i].EndTime > 0,
                     KeyLane = qua.HitObjects[i].Lane,
-                    HitObjectSize = GameBase.LoadedSkin.ColumnSize * GameBase.WindowYRatio,
+                    HitObjectSize = GameBase.LoadedSkin.ColumnSize * GameBase.WindowUIScale,
                     HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1], 0),
                 };
 

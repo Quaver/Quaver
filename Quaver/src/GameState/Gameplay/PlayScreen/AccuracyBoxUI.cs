@@ -78,7 +78,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             AccuracyBox = new Sprite()
             {
                 Alignment = Alignment.TopRight,
-                Size = new Vector2(220, 240) * GameBase.WindowYRatio,
+                Size = new Vector2(220, 240) * GameBase.WindowUIScale,
                 Position = new Vector2(-10,10),
                 Parent = Boundary,
                 Alpha = 0.7f,
@@ -93,8 +93,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Parent = AccuracyBox,
                     Alignment = Alignment.TopLeft,
                     SizeX = AccuracyBox.SizeX - 10,
-                    SizeY = 26 * GameBase.WindowYRatio,
-                    PositionY = ((i * 25) + 55) * GameBase.WindowYRatio,
+                    SizeY = 26 * GameBase.WindowUIScale,
+                    PositionY = ((i * 25) + 55) * GameBase.WindowUIScale,
                     PositionX = 5
                 };
             }
@@ -127,7 +127,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Font = Fonts.Medium16,
                     TextColor = i == 0 ? Color.White : GameColors.JudgeColors[i-1],
                     Text = i == 0 ? "Accuracy" : GameplayReferences.JudgeNames[i-1],
-                    TextScale = GameBase.WindowYRatio,
+                    TextScale = GameBase.WindowUIScale,
                     Alpha = 0.3f
                 };
             }
@@ -145,7 +145,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Font = Fonts.Medium16,
                     TextColor = i == 0 ? Color.White : GameColors.JudgeColors[i - 1],
                     Text = i == 0 ? "00.00%" : "0 | 0",
-                    TextScale = GameBase.WindowYRatio,
+                    TextScale = GameBase.WindowUIScale,
                 };
             }
 
@@ -155,11 +155,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.MidCenter,
                 SizeX = AccuracyBox.SizeX - 20,
-                SizeY = 55 * GameBase.WindowYRatio,
+                SizeY = 55 * GameBase.WindowUIScale,
                 Font = Fonts.Medium24,
                 TextColor = Color.White,
                 Text = "0000000",
-                TextScale = GameBase.WindowYRatio,
+                TextScale = GameBase.WindowUIScale,
                 PositionY = 0,
                 PositionX = 10
             };
@@ -169,12 +169,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 Parent = AccuracyBox,
                 SizeX = AccuracyBox.SizeX,
-                SizeY = 26 * GameBase.WindowYRatio,
+                SizeY = 26 * GameBase.WindowUIScale,
                 Alignment = Alignment.BotLeft,
-                PositionY = 31 * GameBase.WindowYRatio
+                PositionY = 31 * GameBase.WindowUIScale
             };
 
-            GradeProgressBar = new BarDisplay(GameBase.WindowYRatio, AccuracyBox.SizeX - (GradeBox.SizeY * 2) - 30 * GameBase.WindowYRatio, new Color[] { Color.Red })
+            GradeProgressBar = new BarDisplay(GameBase.WindowUIScale, AccuracyBox.SizeX - (GradeBox.SizeY * 2) - 30 * GameBase.WindowUIScale, new Color[] { Color.Red })
             {
                 Parent = GradeBox,
                 Position = Vector2.Zero,
@@ -185,8 +185,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 Image = GameBase.LoadedSkin.GradeSmallF,
                 //PositionX = 8,
-                Size = Vector2.One * GradeBox.SizeY * GameBase.WindowYRatio,
-                //PositionX = GradeProgressBar.PositionX - 32 * GameBase.WindowYRatio,
+                Size = Vector2.One * GradeBox.SizeY * GameBase.WindowUIScale,
+                //PositionX = GradeProgressBar.PositionX - 32 * GameBase.WindowUIScale,
                 Parent = GradeBox
             };
 
@@ -194,9 +194,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 Image = GameBase.LoadedSkin.GradeSmallD,
                 //PositionX = -8,
-                Size = Vector2.One * GradeBox.SizeY * GameBase.WindowYRatio,
+                Size = Vector2.One * GradeBox.SizeY * GameBase.WindowUIScale,
                 Alignment = Alignment.TopRight,
-                //PositionX = GradeProgressBar.PositionX + GradeProgressBar.SizeX + 32 * GameBase.WindowYRatio,
+                //PositionX = GradeProgressBar.PositionX + GradeProgressBar.SizeX + 32 * GameBase.WindowUIScale,
                 Parent = GradeBox
             };
 
