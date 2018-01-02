@@ -298,9 +298,12 @@ namespace Quaver.GameState.Gameplay
                         AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
                         PlayfieldUI.UpdateJudge(i, ScoreManager.Combo, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime);
 
-                        // If the player is spamming
+                        // If the player is spamming - This is why thie game is so hard wtf
                         if (i >= 3)
-                            NoteManager.KillNote(noteIndex);
+                            //NoteManager.KillNote(noteIndex);
+                        {
+                            
+                        }
                         else
                         {
                             // If the object is an LN, hold it at the receptors
