@@ -25,7 +25,8 @@ namespace Quaver.Commands
 #endif
             new GetScores(),
             new CalculateDifficulty(),
-            new OsuDbCommand()
+            new OsuDbCommand(),
+            new ParseStepMania()
         };
 
         /// <summary>
