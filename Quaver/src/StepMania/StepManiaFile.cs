@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Quaver.StepMania
 {
-    internal class Sm
+    internal class StepManiaFile
     {
         /// <summary>
         ///     The title of the track
@@ -47,9 +50,92 @@ namespace Quaver.StepMania
         ///     The time in the song where the song's preview is played.
         /// </summary>
         internal float SampleStart { get; set; }
+
+        /// <summary>
+        ///     The BPMs of the map
+        /// </summary>
+        internal List<Bpm> Bpms { get; set; }
+
+        /// <summary>
+        ///     The list of charts in the map.
+        /// </summary>
+        internal List<Chart> Charts { get; set; }
+
+        /// <summary>
+        ///     Parses a StepManiaFile
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        internal static StepManiaFile Parse(string path)
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
+            var sm = new StepManiaFile { Bpms = new List<Bpm>(), Charts = new List<Chart>() };
+
+            foreach (var line in File.ReadAllLines(path))
+            {
+                if (line.Contains("#"))
+                {
+                    var key = line.Substring(0, line.IndexOf(':')).Trim().ToUpper();
+                    var value = line.Split(':').Last().Trim();
+
+                    if (key != "#NOTES")
+                        value = value.Replace(";", "");
+
+                    switch (key)
+                    {
+                        case "#TITLE":
+                            sm.Title = value;
+                            Console.WriteLine(value);
+                            break;
+                        case "#SUBTITLE":
+                            sm.Subtitle = value;
+                            Console.WriteLine(value);
+                            break;
+                        case "#ARTIST":
+                            sm.Artist = value;
+                            Console.WriteLine(value);
+                            break;
+                        case "#CREDIT":
+                            sm.Credit = value;
+                            Console.WriteLine(value);
+                            break;
+                        case "#MUSIC":
+                            sm.Music = value;
+                            Console.WriteLine(value);
+                            break;
+                        case "#BACKGROUND":
+                            sm.Background = value;
+                            Console.WriteLine(value);
+                            break;
+                        case "#OFFSET":
+                            sm.Offset = float.Parse(value);
+                            Console.WriteLine(sm.Offset);
+                            break;
+                        case "#SAMPLESTART":
+                            sm.SampleStart = float.Parse(value);
+                            Console.WriteLine(sm.SampleStart);
+                            break;
+                        case "#BPMS":
+                            var bpms = value.Split(',').ToList();
+
+                            foreach (var bpm in bpms)
+                            {
+                                // An individual bpm is split by "offset=bpm"
+                                var bpmSplit = bpm.Split('=').ToList();
+                                sm.Bpms.Add(new Bpm { StartTime = float.Parse(bpmSplit[0]), BeatsPerMinute = float.Parse(bpmSplit[1])});
+                                Console.WriteLine(bpmSplit[0] + "|" + bpmSplit[1]);
+                            }
+                            break;
+                    }
+                }
+            }
+
+            return sm;
+        }
     }
 
-    internal struct Bpms
+    internal struct Bpm
     {
         /// <summary>
         ///     The start time of the BPM section
@@ -59,10 +145,10 @@ namespace Quaver.StepMania
         /// <summary>
         ///     The actual BPM
         /// </summary>
-        internal float Bpm { get; set; }
+        internal float BeatsPerMinute { get; set; }
     }
 
-    internal struct Charts
+    internal struct Chart
     {
         /// <summary>
         ///     The type of chart
