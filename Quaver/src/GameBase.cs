@@ -104,7 +104,7 @@ namespace Quaver
         /// <summary>
         ///     WindowHeight / WindowWidth ratio
         /// </summary>
-        public static float WindowYRatio { get; private set; } = Window.Z / ReferenceResolution.Y;
+        public static float WindowUIScale { get; private set; } = Window.Z / ReferenceResolution.Y;
 
         /// <summary>
         ///     The game's clock. Essentially it controls which speed songs are played at.
@@ -181,7 +181,7 @@ namespace Quaver
 
             //Align letterboxed window
             //Window = Util.DrawRect(Alignment.MidCenter, Window, mainWindow);
-            WindowYRatio = Window.Z / ReferenceResolution.Y;
+            WindowUIScale = Window.Z / ReferenceResolution.Y;
         }
 
         /// <summary>

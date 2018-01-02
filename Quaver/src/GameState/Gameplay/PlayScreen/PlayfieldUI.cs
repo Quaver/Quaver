@@ -116,9 +116,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             for (var i = 0; i < 6; i++)
             {
                 //todo: replace 40 with skin.ini value
-                JudgeSizes[i] = new Vector2(JudgeImages[i].Width, JudgeImages[i].Height) * 40f * GameBase.WindowYRatio / JudgeImages[i].Height;
+                JudgeSizes[i] = new Vector2(JudgeImages[i].Width, JudgeImages[i].Height) * 40f * GameBase.WindowUIScale / JudgeImages[i].Height;
             }
-            JudgeHitOffset = -5f * GameBase.WindowYRatio;
+            JudgeHitOffset = -5f * GameBase.WindowUIScale;
 
             // Create Boundary
             Boundary = new Boundary()
@@ -141,13 +141,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create Combo Text
             ComboText = new TextBoxSprite()
             {
-                SizeX = 100 * GameBase.WindowYRatio,
-                SizeY = 20 * GameBase.WindowYRatio,
-                PositionY = 45 * GameBase.WindowYRatio,
+                SizeX = 100 * GameBase.WindowUIScale,
+                SizeY = 20 * GameBase.WindowUIScale,
+                PositionY = 45 * GameBase.WindowUIScale,
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.TopCenter,
                 Text = "0x",
-                TextScale = GameBase.WindowYRatio,
+                TextScale = GameBase.WindowUIScale,
                 Font = Fonts.Medium16,
                 Parent = Boundary,
                 Alpha = 0
@@ -156,15 +156,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create Offset Gauge
             OffsetGaugeBoundary = new Boundary()
             {
-                SizeX = 220 * GameBase.WindowYRatio,
-                SizeY = 10 * GameBase.WindowYRatio,
-                PositionY = 30 * GameBase.WindowYRatio,
+                SizeX = 220 * GameBase.WindowUIScale,
+                SizeY = 10 * GameBase.WindowUIScale,
+                PositionY = 30 * GameBase.WindowUIScale,
                 Alignment = Alignment.MidCenter,
                 Parent = Boundary
             };
 
             //todo: OffsetGaugeBoundary.SizeX with a new size. Right now the offset gauge is the same size as the hitwindow
-            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (GameplayReferences.PressWindowLatest * 2 * GameBase.WindowYRatio);
+            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (GameplayReferences.PressWindowLatest * 2 * GameBase.WindowUIScale);
 
             OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)
