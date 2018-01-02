@@ -26,6 +26,28 @@ namespace Quaver.Commands
             try
             {
                 var sm = StepManiaFile.Parse(path);
+
+                var sb = new StringBuilder();
+                sb.AppendLine("Artist: " + sm.Artist);
+                sb.AppendLine("Title: " + sm.Title);
+                sb.AppendLine("Subtitle: " + sm.Subtitle);
+                sb.AppendLine("Creator: " + sm.Credit);
+                sb.AppendLine("Music: " + sm.Music);
+                sb.AppendLine("Background: " + sm.Background);
+                sb.AppendLine("Offset: " + sm.Offset);
+                sb.AppendLine("Sample Start: " + sm.SampleStart);
+                sb.AppendLine("BPM Count " + sm.Bpms.Count);
+
+                foreach (var chart in sm.Charts)
+                {
+                    sb.AppendLine("//////////////////////////////////////");
+                    sb.AppendLine("Chart Type: " + chart.ChartType);
+                    sb.AppendLine("Difficulty: " + chart.Difficulty);
+                    sb.AppendLine("Description: " + chart.Description);
+                    sb.AppendLine("Measure Count: " + chart.Measures.Count);
+                }
+
+                Console.WriteLine(sb.ToString());
             }
             catch (Exception e)
             {
