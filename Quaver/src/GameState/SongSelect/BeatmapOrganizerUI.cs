@@ -90,7 +90,7 @@ namespace Quaver.GameState.SongSelect
                     var index = SongSelectButtons.Count;
 
                     // Create the new button
-                    var newButton = new SongSelectButton(map, GameBase.WindowYRatio)
+                    var newButton = new SongSelectButton(map, GameBase.WindowUIScale)
                     {
                         Image = GameBase.UI.BlankBox,
                         Alignment = Alignment.TopRight,
