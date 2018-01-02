@@ -75,8 +75,8 @@ namespace Quaver.StepMania
             var file = File.ReadAllLines(path);
 
             var inNotes = false; // Keeps track of if we are currently in the #NOTES section
-            var inNoteData = false;
-            var currentColons = 0; // Keeps track of the c
+            var inNoteData = false; // Keeps track of it we are parsing the actual note data.
+            var currentColons = 0; // Keeps track of the current amount of colons in the notes section
 
             foreach (var line in file)
             {
