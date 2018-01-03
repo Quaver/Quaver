@@ -39,7 +39,7 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     The Rectangle of the rendered text inside the TextSprite.
         /// </summary>
-        private Vector4 _globalTextVect = Vector4.Zero;
+        private DrawRectangle _globalTextVect = new DrawRectangle();
 
         /// <summary>
         ///     The position of the text box
@@ -49,7 +49,7 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     The Local Rectangle of the rendered text inside the TextSprite. Used to reference Text Size.
         /// </summary>
-        private Vector4 _textVect;
+        private DrawRectangle _textVect = new DrawRectangle();
 
         /// <summary>
         ///     The size of the rendered text box in a single row.
@@ -135,7 +135,7 @@ namespace Quaver.Graphics.Text
         {
             //TODO: SpriteFont.MeasureString()
             //Draw itself if it is in the window
-            if (Util.Vector4Intercepts(GameBase.Window, GlobalVect) && Visible)
+            if (Util.RectangleIntercepts(GameBase.Window, GlobalVect) && Visible)
             {
                 if (_textScale == 1 )
                     GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color);
@@ -174,11 +174,11 @@ namespace Quaver.Graphics.Text
             }
 
             //Update TextRect
-            _textVect.W = _textSize.X * _textScale;
-            _textVect.Z = _textSize.Y * _textScale;
+            _textVect.Width = _textSize.X * _textScale;
+            _textVect.Height = _textSize.Y * _textScale;
 
             //Update GlobalTextRect
-            _globalTextVect = Util.DrawRect(TextAlignment, _textVect, GlobalVect);
+            _globalTextVect = Util.AlignRect(TextAlignment, _textVect, GlobalVect);
             _textPos.X = _globalTextVect.X;
             _textPos.Y = _globalTextVect.Y;
         }

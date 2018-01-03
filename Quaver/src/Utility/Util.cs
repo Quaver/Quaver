@@ -55,7 +55,6 @@ namespace Quaver.Utility
             return Math.Min(boundaryX, boundaryY) + ((Math.Abs(boundaryX - boundaryY) - objectSize) * scale) + offset;
         }
 
-        /*
         /// <summary>
         /// Returns an aligned rectangle within a boundary.
         /// </summary>
@@ -63,7 +62,7 @@ namespace Quaver.Utility
         /// <param name="objectRect">The size of the object.</param>
         /// <param name="boundary">The Rectangle of the boundary.</param>
         /// <returns></returns>
-        internal static Rectangle DrawRect(Alignment objectAlignment, Rectangle objectRect, Rectangle boundary)
+        internal static DrawRectangle AlignRect(Alignment objectAlignment, DrawRectangle objectRect, DrawRectangle boundary)
         {
             float alignX = 0;
             float alignY = 0;
@@ -103,12 +102,13 @@ namespace Quaver.Utility
             }
 
             //Set X and Y Alignments
-            alignX = Align(alignX, objectRect.Width, new Vector2(boundary.X, boundary.X + boundary.Width), objectRect.X);
-            alignY = Align(alignY, objectRect.Height, new Vector2(boundary.Y, boundary.Y + boundary.Height), objectRect.Y);
+            alignX = Align(alignX, objectRect.Width, boundary.X, boundary.X + boundary.Width, objectRect.X);
+            alignY = Align(alignY, objectRect.Height, boundary.Y, boundary.Y + boundary.Height, objectRect.Y);
 
-            return new Rectangle((int)alignX, (int)alignY, objectRect.Width, objectRect.Height);
-        }*/
+            return new DrawRectangle(alignX, alignY, objectRect.Width, objectRect.Height);
+        }
 
+        /*
         /// <summary>
         /// Returns an aligned rectangle within a boundary.
         /// </summary>
@@ -160,60 +160,6 @@ namespace Quaver.Utility
             alignY = Align(alignY, objectRect.Z, boundary.Y, boundary.Y + boundary.Z, objectRect.Y);
 
             return new Vector4(alignX, alignY, objectRect.Z, objectRect.W);
-        }
-
-        /*
-        /// <summary>
-        /// Returns an aligned rectangle within a boundary.
-        /// </summary>
-        /// <param name="objectAlignment">The alignment of the object.</param>
-        /// <param name="objectRect">The size of the object.</param>
-        /// <param name="boundary">The Rectangle of the boundary.</param>
-        /// <returns></returns>
-        internal static Vector4 DrawRect(Alignment objectAlignment, Vector4 objectRect, Rectangle boundary)
-        {
-            float alignX = 0;
-            float alignY = 0;
-
-            // Set the X-Alignment Scale
-            switch (objectAlignment)
-            {
-                case Alignment.BotCenter:
-                case Alignment.MidCenter:
-                case Alignment.TopCenter:
-                    alignX = 0.5f;
-                    break;
-                case Alignment.BotRight:
-                case Alignment.MidRight:
-                case Alignment.TopRight:
-                    alignX = 1f;
-                    break;
-                default:
-                    break;
-            }
-
-            // Set the Y-Alignment Scale
-            switch (objectAlignment)
-            {
-                case Alignment.MidLeft:
-                case Alignment.MidCenter:
-                case Alignment.MidRight:
-                    alignY = 0.5f;
-                    break;
-                case Alignment.BotLeft:
-                case Alignment.BotCenter:
-                case Alignment.BotRight:
-                    alignY = 1f;
-                    break;
-                default:
-                    break;
-            }
-
-            //Set X and Y Alignments
-            alignX = Align(alignX, objectRect.W, new Vector2(boundary.X, boundary.X + boundary.Width), objectRect.X);
-            alignY = Align(alignY, objectRect.Z, new Vector2(boundary.Y, boundary.Y + boundary.Height), objectRect.Y);
-
-            return new Vector4(alignX, alignY, objectRect.Z, objectRect.W);
         }*/
 
             /*
@@ -227,6 +173,7 @@ namespace Quaver.Utility
             return new Vector4(rect.X, rect.Y, rect.Height, rect.Width);
         }*/
 
+            /*
         /// <summary>
         ///     Convert a Vector4 to Rectangle value
         /// </summary>
@@ -236,8 +183,9 @@ namespace Quaver.Utility
         {
             //return new Rectangle((int)(vect.X), (int)(vect.Y), (int)(vect.W), (int)(vect.Z));
             return new Rectangle((int)Math.Ceiling(vect.X), (int)Math.Ceiling(vect.Y), (int)Math.Ceiling(vect.W), (int)Math.Ceiling(vect.Z));
-        }
+        }*/
 
+        /*
         /// <summary>
         ///     Check if a Vector2 point is inside a Vector4 "Rect"
         /// </summary>
@@ -247,7 +195,7 @@ namespace Quaver.Utility
         internal static bool Vector4Contains(Vector4 vect, Vector2 point)
         {
             return (point.X >= vect.X && point.X <= vect.X + vect.W && point.Y >= vect.Y && point.Y <= vect.Y + vect.Z);
-        }
+        }*/
 
         /*
         /// <summary>
@@ -266,6 +214,7 @@ namespace Quaver.Utility
             return true;
         }*/
 
+            /*
         /// <summary>
         ///     Check if a Vector4 intercepts with another Vector4
         /// </summary>
@@ -278,6 +227,41 @@ namespace Quaver.Utility
                 vect1.X > vect2.X + vect2.W ||
                 vect1.Y + vect1.Z < vect2.Y ||
                 vect1.Y > vect2.Y + vect2.Z)) return true;
+            else return false;
+        }*/
+
+        /// <summary>
+        ///     Convert Drawable.DrawRectangle to Xna.Framework.Rectangle
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        internal static Rectangle DrawRectToRectangle(DrawRectangle rect)
+        {
+            return new Rectangle((int)Math.Ceiling(rect.X), (int)Math.Ceiling(rect.Y), (int)Math.Ceiling(rect.Width), (int)Math.Ceiling(rect.Height));
+        }
+
+        /// <summary>
+        ///      Check if a Vector2 point is inside a DrawRectangle
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        internal static bool RectangleContains(DrawRectangle rect, Vector2 point)
+        {
+            return (point.X >= rect.X && point.X <= rect.X + rect.Width && point.Y >= rect.Y && point.Y <= rect.Y + rect.Height);
+        }
+
+        /// <summary>
+        ///     Check if 2 DrawRectangles are Intercepting
+        /// </summary>
+        /// <param name="rect1"></param>
+        /// <param name="rect2"></param>
+        /// <returns></returns>
+        internal static bool RectangleIntercepts(DrawRectangle rect1, DrawRectangle rect2)
+        {
+            if (!(rect1.X + rect1.Width < rect2.X ||
+                rect1.X > rect2.X + rect2.Width ||
+                rect1.Y + rect1.Height < rect2.Y ||
+                rect1.Y > rect2.Y + rect2.Height)) return true;
             else return false;
         }
 
