@@ -21,9 +21,9 @@ namespace Quaver.Graphics
         internal bool Changed { get; set; }
         private DrawRectangle _localRectangle = new DrawRectangle();
         private DrawRectangle _globalRectangle = new DrawRectangle();
-        private Drawable _parent;
-        private Vector2 _localScale;
-        private Vector2 _localSize;
+        private Drawable _parent = null;
+        private Vector2 _localScale = new Vector2();
+        private Vector2 _localSize = new Vector2();
 
         /// <summary>
         /// The alignment of the sprite relative to it's parent.
@@ -239,6 +239,7 @@ namespace Quaver.Graphics
         internal void RecalculateRect()
         {
             //Calculate Scale
+            //todo: fix
             if (_parent != null)
             {
                 _localRectangle.Width = _localSize.X + _parent.GlobalRectangle.Width * _localScale.X;
