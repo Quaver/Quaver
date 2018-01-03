@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Quaver.Graphics;
 using Quaver.Maps.Difficulty;
 using Quaver.Maps.Difficulty.Patterns;
+using Quaver.StepMania;
 
 namespace Quaver.Maps
 {
@@ -381,6 +382,69 @@ namespace Quaver.Maps
             qua.Sort();
 
             return qua;
+        }
+
+        /// <summary>
+        ///     Converts a StepMania file object into a list of Qua.
+        /// </summary>
+        /// <param name="sm"></param>
+        /// <returns></returns>
+        public static List<Qua> ConvertStepManiaChart(StepManiaFile sm)
+        {
+            var maps = new List<Qua>();
+
+            // Set the base Qua data
+            var baseQua = new Qua
+            {
+                Artist = sm.Artist,
+                Title = sm.Title,
+                Creator = sm.Credit,
+                Source = sm.Subtitle,
+                AudioFile = sm.Music,
+                BackgroundFile = sm.Background,
+                Description = "This map was converted from StepMania.",
+                FormatVersion = 1,
+                MapId = -1,
+                MapSetId = -1,
+                Mode = GameModes.Keys4,
+                Tags = "",
+                SongPreviewTime = (int) (sm.SampleStart * 1000f),
+                HitObjects = new List<HitObjectInfo>(),
+                TimingPoints = new List<TimingPointInfo>(),
+                SliderVelocities = new List<SliderVelocityInfo>()
+            };
+
+            // Stores the total track time throughout the map
+            var totalTrackTime = 0;
+
+            // Find the time in milliseconds of the timing points and add them to the list
+            for (var i = 0; i < sm.Bpms.Count; i++)
+            {
+                if (i == 0)
+                {
+                    var trackTime = (int)Math.Round(60000 / sm.Bpms[i].BeatsPerMinute * sm.Bpms[i].Beats - sm.Offset * 1000, 0, MidpointRounding.AwayFromZero);
+                    totalTrackTime += trackTime;
+
+                    // Add the new timing point
+                    baseQua.TimingPoints.Add(new TimingPointInfo { StartTime = totalTrackTime, Bpm = sm.Bpms[i].BeatsPerMinute });
+                }
+
+                if (sm.Bpms.Count > i + 1)
+                {
+                    var trackTime = (int)Math.Round(60000 / sm.Bpms[i].BeatsPerMinute * Math.Abs(sm.Bpms[i + 1].Beats - sm.Bpms[i].Beats), 0, MidpointRounding.AwayFromZero);
+                    totalTrackTime += trackTime;
+                    
+                    // Add the new timing point
+                    baseQua.TimingPoints.Add(new TimingPointInfo { StartTime = totalTrackTime, Bpm = sm.Bpms[i + 1].BeatsPerMinute });
+                }
+            }
+
+            foreach (var tp in baseQua.TimingPoints)
+            {
+                Console.WriteLine(tp.StartTime + " | " + tp.Bpm);   
+            }
+
+            return maps;
         }
     }
 
