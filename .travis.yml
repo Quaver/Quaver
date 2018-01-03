@@ -7,7 +7,7 @@ global:
 - Configuration=Public
 
 git:
-  submodules: true
+  submodules: false
   
 branches:
   only:
@@ -15,7 +15,6 @@ branches:
 
 before_install:
 - git clone ssh://git@github.com/Swan/Quaver.Online.git
-- git submodule update --init --recursive
 
 install:
 - wget -O MonoGame.pkg "http://teamcity.monogame.net/guestAuth/repository/download/MonoGame_PackageMacAndLinux/.lastSuccessful/MonoGame.pkg?branch_MonoGame=%3Cdefault%3E"
