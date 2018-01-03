@@ -33,7 +33,7 @@ namespace Quaver.Graphics.Button
         /// <summary>
         ///     This method is called when the mouse hovers over the button
         /// </summary>
-        public override void MouseOver()
+        internal override void MouseOver()
         {
             HoverTargetTween = 1;
         }
@@ -41,7 +41,7 @@ namespace Quaver.Graphics.Button
         /// <summary>
         ///     This method is called when the Mouse hovers out of the button
         /// </summary>
-        public override void MouseOut()
+        internal override void MouseOut()
         {
             HoverTargetTween = 0;
         }
@@ -49,7 +49,7 @@ namespace Quaver.Graphics.Button
         /// <summary>
         ///     This method will be used for button logic and animation
         /// </summary>
-        public override void Update(double dt)
+        internal override void Update(double dt)
         {
             HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
             CurrentTint.R = (byte)((HoverCurrentTween * 0.25 + 0.75f) * 255);

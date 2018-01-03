@@ -20,7 +20,7 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     Image Texture of the sprite.
         /// </summary>
-        public Texture2D Image
+        internal Texture2D Image
         {
             get
             {
@@ -38,7 +38,7 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
         /// </summary>
-        public float Rotation {
+        internal float Rotation {
             get
             {
                 return _rotation;   
@@ -53,7 +53,7 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     The Effects this sprite will inherit.
         /// </summary>
-        public SpriteEffects SpriteEffect { get; set; } = SpriteEffects.None;
+        internal SpriteEffects SpriteEffect { get; set; } = SpriteEffects.None;
 
         /// <summary>
         ///     The origin of this object used for rotation.
@@ -70,7 +70,7 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     The tint this Sprite will inherit.
         /// </summary>
-        public Color Tint
+        internal Color Tint
         {
             get
             {
@@ -87,7 +87,7 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     The transparency of this Sprite.
         /// </summary>
-        public float Alpha {
+        internal float Alpha {
             get
             {
                 return _alpha; 
@@ -108,7 +108,7 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     Draws the sprite to the screen.
         /// </summary>
-        public override void Draw()
+        internal override void Draw()
         {
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
@@ -123,7 +123,7 @@ namespace Quaver.Graphics.Sprite
         ///     Update the sprite every frame.
         /// </summary>
         /// <param name="dt"></param>
-        public override void Update(double dt)
+        internal override void Update(double dt)
         {
             //_rotation += 0.0007f;
             if (Changed)

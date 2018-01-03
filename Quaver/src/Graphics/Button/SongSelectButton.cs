@@ -20,7 +20,7 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class SongSelectButton : Button
     {
-        public bool Selected { get; set; }
+        internal bool Selected { get; set; }
 
         private TextBoxSprite TitleText { get; set; }
 
@@ -50,7 +50,7 @@ namespace Quaver.Graphics.Button
         private Color CurrentTint = Color.White;
 
         //Constructor
-        public SongSelectButton(Beatmap map, float ButtonScale)
+        internal SongSelectButton(Beatmap map, float ButtonScale)
         {
             var ButtonSizeY = 40 * ButtonScale;
             var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";
@@ -168,7 +168,7 @@ namespace Quaver.Graphics.Button
         /// <summary>
         ///     This method is called when the mouse hovers over the button
         /// </summary>
-        public override void MouseOver()
+        internal override void MouseOver()
         {
             HoverTargetTween = 0.85f;
         }
@@ -176,7 +176,7 @@ namespace Quaver.Graphics.Button
         /// <summary>
         ///     This method is called when the Mouse hovers out of the button
         /// </summary>
-        public override void MouseOut()
+        internal override void MouseOut()
         {
             HoverTargetTween = 0.6f;
         }
@@ -184,7 +184,7 @@ namespace Quaver.Graphics.Button
         /// <summary>
         ///     This method will be used for button logic and animation
         /// </summary>
-        public override void Update(double dt)
+        internal override void Update(double dt)
         {
             if (Selected)
                 HoverCurrentTween = Util.Tween(1, HoverCurrentTween, Math.Min(dt / 40, 1));

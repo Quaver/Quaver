@@ -28,17 +28,17 @@ namespace Quaver.Graphics
         /// <summary>
         /// The alignment of the sprite relative to it's parent.
         /// </summary>
-        public Alignment Alignment { get; set; } = Alignment.TopLeft;
+        internal Alignment Alignment { get; set; } = Alignment.TopLeft;
 
         /// <summary>
         /// The children of this object that depend on this object's position/size.
         /// </summary>
-        public List<Drawable> Children { get; set; } = new List<Drawable>();
+        internal List<Drawable> Children { get; set; } = new List<Drawable>();
 
         /// <summary>
         /// The parent of this object which it depends on for position/size.
         /// </summary>
-        public Drawable Parent
+        internal Drawable Parent
         {
             get => _parent;
             set
@@ -62,17 +62,17 @@ namespace Quaver.Graphics
         /// <summary>
         /// (Read-only) Returns the Drawable's GlobalRect.
         /// </summary>
-        public DrawRectangle GlobalVect { get => _globalVect; }
+        internal DrawRectangle GlobalVect { get => _globalVect; }
 
         /// <summary>
         /// (Read-only) Returns the Drawable's LocalRect.
         /// </summary>
-        public DrawRectangle LocalVect { get => _localVect; }
+        internal DrawRectangle LocalVect { get => _localVect; }
 
         /// <summary>
         /// The scale of the object relative to its parent.
         /// </summary>
-        public Vector2 Scale
+        internal Vector2 Scale
         {
             get => _localScale;
             set
@@ -85,7 +85,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// The X scale of the object relative to its parent.
         /// </summary>
-        public float ScaleX
+        internal float ScaleX
         {
             get => _localScale.X;
             set
@@ -98,7 +98,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// The Y scale of the object relative to its parent.
         /// </summary>
-        public float ScaleY
+        internal float ScaleY
         {
             get => _localScale.Y;
             set
@@ -111,7 +111,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// Extention of the object's Rect in relation with size
         /// </summary>
-        public Vector2 Size
+        internal Vector2 Size
         {
             get => _localSize;
             set
@@ -124,7 +124,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// The X Size of the Object.
         /// </summary>
-        public float SizeX
+        internal float SizeX
         {
             get => _localSize.X;
             set
@@ -137,7 +137,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// The Y Size of the Object.
         /// </summary>
-        public float SizeY
+        internal float SizeY
         {
             get => _localSize.Y;
             set
@@ -150,22 +150,22 @@ namespace Quaver.Graphics
         /// <summary>
         ///     The absolute X size of this object (Read only)
         /// </summary>
-        public float AbsoluteSizeX { get => _localVect.Width; }
+        internal float AbsoluteSizeX { get => _localVect.Width; }
 
         /// <summary>
         ///     The absolute Y size of this object (Read only)
         /// </summary>
-        public float AbsoluteSizeY { get => _localVect.Height; }
+        internal float AbsoluteSizeY { get => _localVect.Height; }
 
         /// <summary>
         ///     The absolute size of this object (Read only)
         /// </summary>
-        public Vector2 AbsoluteSize { get => new Vector2(_localVect.Width, _localVect.Height); }
+        internal Vector2 AbsoluteSize { get => new Vector2(_localVect.Width, _localVect.Height); }
 
         /// <summary>
         /// This is the object's position relative to its parent.
         /// </summary>
-        public Vector2 Position
+        internal Vector2 Position
         {
             get => new Vector2(_localVect.X, _localVect.Y);
             set
@@ -179,7 +179,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// The X Position of the Object.
         /// </summary>
-        public float PositionX
+        internal float PositionX
         {
             get => _localVect.X;
             set
@@ -192,7 +192,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// The Y Position of the Object.
         /// </summary>
-        public float PositionY
+        internal float PositionY
         {
             get => _localVect.Y;
             set
@@ -205,13 +205,13 @@ namespace Quaver.Graphics
         /// <summary>
         /// Determines if the Object is going to get drawn.
         /// </summary>
-        public bool Visible { get; set; } = true;
+        internal bool Visible { get; set; } = true;
 
         /// <summary>
         /// This method gets called every frame to update the object.
         /// </summary>
         /// <param name="dt"></param>
-        public virtual void Update(double dt)
+        internal virtual void Update(double dt)
         {
             //Animation logic
             if (Changed)
@@ -227,7 +227,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// This method gets called every frame to draw the object.
         /// </summary>
-        public virtual void Draw()
+        internal virtual void Draw()
         {
             if (Visible)
             Children.ForEach(x => x.Draw());
@@ -263,7 +263,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// This method is called when the object will be removed from memory.
         /// </summary>
-        public void Destroy()
+        internal void Destroy()
         {
             Parent = null;
         }
