@@ -11,5 +11,5 @@ install:
 - sudo installer -pkg "MonoGame.pkg" -target /
 
 script:
-- nuget Quaver.sln
+- nuget restore Quaver.sln
 - msbuild Quaver/Quaver.csproj /p:Configuration=Public /v:d /t:Build
