@@ -439,13 +439,9 @@ namespace Quaver.Maps
                 }
             }
 
-            foreach (var tp in baseQua.TimingPoints)
-            {
-                Console.WriteLine(tp.StartTime + " | " + tp.Bpm);   
-            }
-
             return maps;
         }
+
     }
 
     /// <summary>
