@@ -236,6 +236,24 @@ namespace Quaver.StepMania
 
             return sm;
         }
+
+        /// <summary>
+        ///     Gets the BPM Index from a given beat in the map
+        /// </summary>
+        /// <param name="sm"></param>
+        /// <returns></returns>
+        internal static int GetBpmIndexFromBeat(StepManiaFile sm, int beat)
+        {
+            var currentBpm = 0;
+
+            for (var i = 0; i < sm.Bpms.Count; i++)
+            {
+                if (sm.Bpms[i].Beats <= beat)
+                    currentBpm = i;
+            }
+
+            return currentBpm;
+        }
     }
 
     /// <summary>
@@ -310,7 +328,5 @@ namespace Quaver.StepMania
         Normal, // 1
         HoldHead, // 2
         HoldTail, // 3
-        RollHead, // 4
-        Mine // M
     }
 }
