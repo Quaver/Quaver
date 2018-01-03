@@ -63,9 +63,9 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     The Rectangle used to render the sprite.
         /// </summary>
-        private Rectangle _renderRect;
+        private Rectangle _renderRectangle;
 
-        private DrawRectangle _renderVect = new DrawRectangle();
+        private DrawRectangle _originRectangle = new DrawRectangle();
 
         /// <summary>
         ///     The tint this Sprite will inherit.
@@ -113,7 +113,7 @@ namespace Quaver.Graphics.Sprite
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             if (Util.RectangleIntercepts(GlobalRectangle, GameBase.Window) && Visible)
-                GameBase.SpriteBatch.Draw(_image, _renderRect, null, _color, _rotation, _origin, SpriteEffect, 0f);
+                GameBase.SpriteBatch.Draw(_image, _renderRectangle, null, _color, _rotation, _origin, SpriteEffect, 0f);
 
             //Draw children
             base.Draw();
@@ -140,11 +140,11 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         private void RecalculateOrigin()
         {
-            _renderVect = GlobalRectangle;
-            _renderVect.X = (GlobalRectangle.X + (GlobalRectangle.Width / 2f));
-            _renderVect.Y = (GlobalRectangle.Y + (GlobalRectangle.Height / 2f));
+            _originRectangle = GlobalRectangle;
+            _originRectangle.X = (GlobalRectangle.X + (GlobalRectangle.Width / 2f));
+            _originRectangle.Y = (GlobalRectangle.Y + (GlobalRectangle.Height / 2f));
 
-            _renderRect = Util.DrawRectToRectangle(_renderVect);
+            _renderRectangle = Util.DrawRectToRectangle(_originRectangle);
         }
     }
 }
