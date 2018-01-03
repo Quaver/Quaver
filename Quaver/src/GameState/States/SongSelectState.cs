@@ -114,7 +114,7 @@ namespace Quaver.GameState.States
             Boundary.Update(dt);
             BeatmapOrganizerUI.Update(dt);
             SongSelectInputManager.CheckInput();
-            if (SongSelectInputManager.RightMouseIsDown) BeatmapOrganizerUI.SetBeatmapOrganizerPosition(GameBase.MouseState.Position.Y/(GameBase.Window.Y - GameBase.Window.Z));
+            if (SongSelectInputManager.RightMouseIsDown) BeatmapOrganizerUI.SetBeatmapOrganizerPosition(GameBase.MouseState.Position.Y/(GameBase.Window.Y - GameBase.Window.Height));
             //SetBeatmapOrganizerPosition
 
                 // Repeat the song preview if necessary

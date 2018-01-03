@@ -66,14 +66,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     GameplayReferences.ReceptorXPosition = new float[4];
                     LaneSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowUIScale);
                     GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll //todo: use list for scaling
-                        ? GameBase.Window.Z + GameBase.Window.Y - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (LaneSize * GameBase.LoadedSkin.NoteReceptors4K[0].Height / GameBase.LoadedSkin.NoteReceptors4K[0].Width))
+                        ? GameBase.Window.Height + GameBase.Window.Y - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (LaneSize * GameBase.LoadedSkin.NoteReceptors4K[0].Height / GameBase.LoadedSkin.NoteReceptors4K[0].Width))
                         : GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale;
                     break;
                 case GameModes.Keys7:
                     GameplayReferences.ReceptorXPosition = new float[7];
                     LaneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);
                     GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll //todo: use list for scaling
-                        ? GameBase.Window.Z + GameBase.Window.Y - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (LaneSize * GameBase.LoadedSkin.NoteReceptors7K[0].Height / GameBase.LoadedSkin.NoteReceptors7K[0].Width))
+                        ? GameBase.Window.Height + GameBase.Window.Y - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (LaneSize * GameBase.LoadedSkin.NoteReceptors7K[0].Height / GameBase.LoadedSkin.NoteReceptors7K[0].Width))
                         : GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale;
                     break;
             }
@@ -87,7 +87,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create playfield boundary
             Boundary = new Boundary()
             {
-                Size = new Vector2(PlayfieldSize, GameBase.Window.Z),
+                Size = new Vector2(PlayfieldSize, GameBase.Window.Height),
                 Alignment = Alignment.TopCenter
             };
 

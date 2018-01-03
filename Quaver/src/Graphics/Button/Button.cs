@@ -61,7 +61,7 @@ namespace Quaver.Graphics.Button
         public override void Update(double dt)
         {
             // Check if moouse is over
-            var over = Util.Vector4Contains(GlobalVect, Util.PointToVector2(GameBase.MouseState.Position));
+            var over = Util.RectangleContains(GlobalVect, Util.PointToVector2(GameBase.MouseState.Position));
 
             //Click logic
             if (GameBase.MouseState.LeftButton == ButtonState.Pressed)
