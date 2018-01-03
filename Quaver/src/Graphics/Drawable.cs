@@ -19,8 +19,8 @@ namespace Quaver.Graphics
     {
         //Local variables
         internal bool Changed { get; set; }
-        private DrawRectangle _localVect = new DrawRectangle();
-        private DrawRectangle _globalVect = new DrawRectangle();
+        private DrawRectangle _localRectangle = new DrawRectangle();
+        private DrawRectangle _globalRectangle = new DrawRectangle();
         private Drawable _parent;
         private Vector2 _localScale;
         private Vector2 _localSize;
@@ -62,12 +62,12 @@ namespace Quaver.Graphics
         /// <summary>
         /// (Read-only) Returns the Drawable's GlobalRect.
         /// </summary>
-        internal DrawRectangle GlobalVect { get => _globalVect; }
+        internal DrawRectangle GlobalRectangle { get => _globalRectangle; }
 
         /// <summary>
         /// (Read-only) Returns the Drawable's LocalRect.
         /// </summary>
-        internal DrawRectangle LocalVect { get => _localVect; }
+        internal DrawRectangle LocalRectangle { get => _localRectangle; }
 
         /// <summary>
         /// The scale of the object relative to its parent.
@@ -150,28 +150,28 @@ namespace Quaver.Graphics
         /// <summary>
         ///     The absolute X size of this object (Read only)
         /// </summary>
-        internal float AbsoluteSizeX { get => _localVect.Width; }
+        internal float AbsoluteSizeX { get => _localRectangle.Width; }
 
         /// <summary>
         ///     The absolute Y size of this object (Read only)
         /// </summary>
-        internal float AbsoluteSizeY { get => _localVect.Height; }
+        internal float AbsoluteSizeY { get => _localRectangle.Height; }
 
         /// <summary>
         ///     The absolute size of this object (Read only)
         /// </summary>
-        internal Vector2 AbsoluteSize { get => new Vector2(_localVect.Width, _localVect.Height); }
+        internal Vector2 AbsoluteSize { get => new Vector2(_localRectangle.Width, _localRectangle.Height); }
 
         /// <summary>
         /// This is the object's position relative to its parent.
         /// </summary>
         internal Vector2 Position
         {
-            get => new Vector2(_localVect.X, _localVect.Y);
+            get => new Vector2(_localRectangle.X, _localRectangle.Y);
             set
             {
-                _localVect.X = value.X;
-                _localVect.Y = value.Y;
+                _localRectangle.X = value.X;
+                _localRectangle.Y = value.Y;
                 Changed = true;
             }
         }
@@ -181,10 +181,10 @@ namespace Quaver.Graphics
         /// </summary>
         internal float PositionX
         {
-            get => _localVect.X;
+            get => _localRectangle.X;
             set
             {
-                _localVect.X = value;
+                _localRectangle.X = value;
                 Changed = true;
             }
         }
@@ -194,10 +194,10 @@ namespace Quaver.Graphics
         /// </summary>
         internal float PositionY
         {
-            get => _localVect.Y;
+            get => _localRectangle.Y;
             set
             {
-                _localVect.Y = value;
+                _localRectangle.Y = value;
                 Changed = true;
             }
         }
@@ -241,20 +241,20 @@ namespace Quaver.Graphics
             //Calculate Scale
             if (_parent != null)
             {
-                _localVect.Width = _localSize.X + _parent.GlobalVect.Width * _localScale.X;
-                _localVect.Height = _localSize.Y + _parent.GlobalVect.Height * _localScale.Y;
+                _localRectangle.Width = _localSize.X + _parent.GlobalRectangle.Width * _localScale.X;
+                _localRectangle.Height = _localSize.Y + _parent.GlobalRectangle.Height * _localScale.Y;
             }
             else
             {
-                _localVect.Width = _localSize.X + GameBase.Window.Width * _localScale.X;
-                _localVect.Height = _localSize.Y + GameBase.Window.Height * _localScale.Y;
+                _localRectangle.Width = _localSize.X + GameBase.Window.Width * _localScale.X;
+                _localRectangle.Height = _localSize.Y + GameBase.Window.Height * _localScale.Y;
             }
 
             //Update Global Rect
             if (_parent != null)
-                _globalVect = Util.AlignRect(Alignment, _localVect, Parent.GlobalVect);
+                _globalRectangle = Util.AlignRect(Alignment, _localRectangle, Parent.GlobalRectangle);
             else
-                _globalVect = Util.AlignRect(Alignment, _localVect, GameBase.Window);
+                _globalRectangle = Util.AlignRect(Alignment, _localRectangle, GameBase.Window);
 
             Children.ForEach(x => x.Changed = true);
             Children.ForEach(x => x.RecalculateRect());
