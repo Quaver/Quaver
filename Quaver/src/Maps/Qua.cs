@@ -422,8 +422,8 @@ namespace Quaver.Maps
             {
                 if (i == 0)
                 {
-                    var trackTime = (int)Math.Round(60000 / sm.Bpms[i].BeatsPerMinute * sm.Bpms[i].Beats - sm.Offset * 1000, 0, MidpointRounding.AwayFromZero);
-                    totalTrackTime += trackTime;
+                    // Add the first timing point to the total track time to get the correct offset.
+                    totalTrackTime += (int)Math.Round(60000 / sm.Bpms[i].BeatsPerMinute * sm.Bpms[i].Beats - sm.Offset * 1000, 0);
 
                     // Add the new timing point
                     baseQua.TimingPoints.Add(new TimingPointInfo { StartTime = totalTrackTime, Bpm = sm.Bpms[i].BeatsPerMinute });
@@ -431,8 +431,8 @@ namespace Quaver.Maps
 
                 if (sm.Bpms.Count > i + 1)
                 {
-                    var trackTime = (int)Math.Round(60000 / sm.Bpms[i].BeatsPerMinute * Math.Abs(sm.Bpms[i + 1].Beats - sm.Bpms[i].Beats), 0, MidpointRounding.AwayFromZero);
-                    totalTrackTime += trackTime;
+                    // Add to the total track time for the next point
+                    totalTrackTime += (int)Math.Round(60000 / sm.Bpms[i].BeatsPerMinute * Math.Abs(sm.Bpms[i + 1].Beats - sm.Bpms[i].Beats), 0);
                     
                     // Add the new timing point
                     baseQua.TimingPoints.Add(new TimingPointInfo { StartTime = totalTrackTime, Bpm = sm.Bpms[i + 1].BeatsPerMinute });
