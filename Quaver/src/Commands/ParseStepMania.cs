@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Maps;
 using Quaver.StepMania;
 
 namespace Quaver.Commands
@@ -48,6 +49,10 @@ namespace Quaver.Commands
                 }
 
                 Console.WriteLine(sb.ToString());
+
+                Console.WriteLine("----------------------");
+
+                var qua = Qua.ConvertStepManiaChart(sm);
             }
             catch (Exception e)
             {
