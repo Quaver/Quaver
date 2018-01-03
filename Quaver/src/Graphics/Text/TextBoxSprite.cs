@@ -24,22 +24,22 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     The alignment of the text.
         /// </summary>
-        public Alignment TextAlignment { get; set; } = Alignment.MidCenter;
+        internal Alignment TextAlignment { get; set; } = Alignment.MidCenter;
 
         /// <summary>
         ///     The target scale of the text.
         /// </summary>
-        public float TextScale { get; set; } = 1;
+        internal float TextScale { get; set; } = 1;
 
         /// <summary>
         ///     How the text will wrap/scale inside the text box
         /// </summary>
-        public TextBoxStyle TextBoxStyle { get; set; } = TextBoxStyle.OverflowSingleLine;
+        internal TextBoxStyle TextBoxStyle { get; set; } = TextBoxStyle.OverflowSingleLine;
 
         /// <summary>
         ///     The Rectangle of the rendered text inside the TextSprite.
         /// </summary>
-        private Vector4 _globalTextVect = Vector4.Zero;
+        private DrawRectangle _globalTextVect = new DrawRectangle();
 
         /// <summary>
         ///     The position of the text box
@@ -49,7 +49,7 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     The Local Rectangle of the rendered text inside the TextSprite. Used to reference Text Size.
         /// </summary>
-        private Vector4 _textVect;
+        private DrawRectangle _textVect = new DrawRectangle();
 
         /// <summary>
         ///     The size of the rendered text box in a single row.
@@ -64,12 +64,12 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     The font of this object
         /// </summary>
-        public SpriteFont Font { get; set; } = Fonts.Medium12;
+        internal SpriteFont Font { get; set; } = Fonts.Medium12;
 
         /// <summary>
         ///     The text of this TextSprite
         /// </summary>
-        public string Text
+        internal string Text
         {
             get
             {
@@ -85,7 +85,7 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     The tint this Text Object will inherit.
         /// </summary>
-        public Color TextColor
+        internal Color TextColor
         {
             get
             {
@@ -102,7 +102,7 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     The transparency of this Text Object.
         /// </summary>
-        public float Alpha
+        internal float Alpha
         {
             get
             {
@@ -121,7 +121,7 @@ namespace Quaver.Graphics.Text
         /// </summary>
         private Color _color = Color.White;
 
-        public override void Update(double dt)
+        internal override void Update(double dt)
         {
             if (Changed) UpdateText();
 
@@ -131,11 +131,11 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     Draws the sprite to the screen.
         /// </summary>
-        public override void Draw()
+        internal override void Draw()
         {
             //TODO: SpriteFont.MeasureString()
             //Draw itself if it is in the window
-            if (Util.Vector4Intercepts(GameBase.Window, GlobalVect) && Visible)
+            if (Util.RectangleIntercepts(GameBase.Window, GlobalRectangle) && Visible)
             {
                 if (_textScale == 1 )
                     GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color);
@@ -174,11 +174,11 @@ namespace Quaver.Graphics.Text
             }
 
             //Update TextRect
-            _textVect.W = _textSize.X * _textScale;
-            _textVect.Z = _textSize.Y * _textScale;
+            _textVect.Width = _textSize.X * _textScale;
+            _textVect.Height = _textSize.Y * _textScale;
 
             //Update GlobalTextRect
-            _globalTextVect = Util.DrawRect(TextAlignment, _textVect, GlobalVect);
+            _globalTextVect = Util.AlignRect(TextAlignment, _textVect, GlobalRectangle);
             _textPos.X = _globalTextVect.X;
             _textPos.Y = _globalTextVect.Y;
         }
