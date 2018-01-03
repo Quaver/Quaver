@@ -9,6 +9,10 @@ global:
 git:
   submodules: false
   
+branches:
+  only:
+  - master
+
 install:
 - wget -O MonoGame.pkg "http://teamcity.monogame.net/guestAuth/repository/download/MonoGame_PackageMacAndLinux/.lastSuccessful/MonoGame.pkg?branch_MonoGame=%3Cdefault%3E"
 - sudo installer -pkg "MonoGame.pkg" -target /
