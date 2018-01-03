@@ -135,7 +135,7 @@ namespace Quaver.Graphics.Text
         {
             //TODO: SpriteFont.MeasureString()
             //Draw itself if it is in the window
-            if (Util.RectangleIntercepts(GameBase.Window, GlobalVect) && Visible)
+            if (Util.RectangleIntercepts(GameBase.Window, GlobalRectangle) && Visible)
             {
                 if (_textScale == 1 )
                     GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color);
@@ -178,7 +178,7 @@ namespace Quaver.Graphics.Text
             _textVect.Height = _textSize.Y * _textScale;
 
             //Update GlobalTextRect
-            _globalTextVect = Util.AlignRect(TextAlignment, _textVect, GlobalVect);
+            _globalTextVect = Util.AlignRect(TextAlignment, _textVect, GlobalRectangle);
             _textPos.X = _globalTextVect.X;
             _textPos.Y = _globalTextVect.Y;
         }
