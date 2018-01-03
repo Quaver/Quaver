@@ -26,7 +26,7 @@ namespace Quaver.Graphics.Sprite
         private float ClickCurrentSize { get; set; }
         private float ClickTargetSize { get; set; }
 
-        public Cursor()
+        internal Cursor()
         {
             Size = new Vector2(CursorSize, CursorSize);
             Image = GameBase.LoadedSkin.Cursor;
@@ -39,7 +39,7 @@ namespace Quaver.Graphics.Sprite
             //Do stuff to cursor when mouse is clicked
         }
 
-        public override void Update(double dt)
+        internal override void Update(double dt)
         {
             //Mouse Click
             if (GameBase.MouseState.LeftButton == ButtonState.Pressed)
