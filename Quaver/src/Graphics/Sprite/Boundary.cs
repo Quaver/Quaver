@@ -21,8 +21,8 @@ namespace Quaver.Graphics.Sprite
         // Constructor
         public Boundary()
         {
-            SizeX = GameBase.Window.W;
-            SizeY = GameBase.Window.Z;
+            SizeX = GameBase.Window.Width;
+            SizeY = GameBase.Window.Height;
             PositionX = GameBase.Window.X;
             PositionY = GameBase.Window.Y;
         }

@@ -19,26 +19,26 @@ namespace Quaver.Graphics
     {
         //Local variables
         internal bool Changed { get; set; }
-        private Vector4 _localVect;
-        private Vector4 _globalVect;
-        private Drawable _parent;
-        private Vector2 _localScale;
-        private Vector2 _localSize;
+        private DrawRectangle _localRectangle = new DrawRectangle();
+        private DrawRectangle _globalRectangle = new DrawRectangle();
+        private Drawable _parent = null;
+        private Vector2 _localScale = new Vector2();
+        private Vector2 _localSize = new Vector2();
 
         /// <summary>
         /// The alignment of the sprite relative to it's parent.
         /// </summary>
-        public Alignment Alignment { get; set; } = Alignment.TopLeft;
+        internal Alignment Alignment { get; set; } = Alignment.TopLeft;
 
         /// <summary>
         /// The children of this object that depend on this object's position/size.
         /// </summary>
-        public List<Drawable> Children { get; set; } = new List<Drawable>();
+        internal List<Drawable> Children { get; set; } = new List<Drawable>();
 
         /// <summary>
         /// The parent of this object which it depends on for position/size.
         /// </summary>
-        public Drawable Parent
+        internal Drawable Parent
         {
             get => _parent;
             set
@@ -62,17 +62,17 @@ namespace Quaver.Graphics
         /// <summary>
         /// (Read-only) Returns the Drawable's GlobalRect.
         /// </summary>
-        public Vector4 GlobalVect { get => _globalVect; }
+        internal DrawRectangle GlobalRectangle { get => _globalRectangle; }
 
         /// <summary>
         /// (Read-only) Returns the Drawable's LocalRect.
         /// </summary>
-        public Vector4 LocalVect { get => _localVect; }
+        internal DrawRectangle LocalRectangle { get => _localRectangle; }
 
         /// <summary>
         /// The scale of the object relative to its parent.
         /// </summary>
-        public Vector2 Scale
+        internal Vector2 Scale
         {
             get => _localScale;
             set
@@ -85,7 +85,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// The X scale of the object relative to its parent.
         /// </summary>
-        public float ScaleX
+        internal float ScaleX
         {
             get => _localScale.X;
             set
@@ -98,7 +98,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// The Y scale of the object relative to its parent.
         /// </summary>
-        public float ScaleY
+        internal float ScaleY
         {
             get => _localScale.Y;
             set
@@ -111,7 +111,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// Extention of the object's Rect in relation with size
         /// </summary>
-        public Vector2 Size
+        internal Vector2 Size
         {
             get => _localSize;
             set
@@ -124,7 +124,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// The X Size of the Object.
         /// </summary>
-        public float SizeX
+        internal float SizeX
         {
             get => _localSize.X;
             set
@@ -137,7 +137,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// The Y Size of the Object.
         /// </summary>
-        public float SizeY
+        internal float SizeY
         {
             get => _localSize.Y;
             set
@@ -150,28 +150,28 @@ namespace Quaver.Graphics
         /// <summary>
         ///     The absolute X size of this object (Read only)
         /// </summary>
-        public float AbsoluteSizeX { get => _localVect.W; }
+        internal float AbsoluteSizeX { get => _localRectangle.Width; }
 
         /// <summary>
         ///     The absolute Y size of this object (Read only)
         /// </summary>
-        public float AbsoluteSizeY { get => _localVect.W; }
+        internal float AbsoluteSizeY { get => _localRectangle.Height; }
 
         /// <summary>
         ///     The absolute size of this object (Read only)
         /// </summary>
-        public Vector2 AbsoluteSize { get => new Vector2(_localVect.W, _localVect.Z); }
+        internal Vector2 AbsoluteSize { get => new Vector2(_localRectangle.Width, _localRectangle.Height); }
 
         /// <summary>
         /// This is the object's position relative to its parent.
         /// </summary>
-        public Vector2 Position
+        internal Vector2 Position
         {
-            get => new Vector2(_localVect.X, _localVect.Y);
+            get => new Vector2(_localRectangle.X, _localRectangle.Y);
             set
             {
-                _localVect.X = value.X;
-                _localVect.Y = value.Y;
+                _localRectangle.X = value.X;
+                _localRectangle.Y = value.Y;
                 Changed = true;
             }
         }
@@ -179,12 +179,12 @@ namespace Quaver.Graphics
         /// <summary>
         /// The X Position of the Object.
         /// </summary>
-        public float PositionX
+        internal float PositionX
         {
-            get => _localVect.X;
+            get => _localRectangle.X;
             set
             {
-                _localVect.X = value;
+                _localRectangle.X = value;
                 Changed = true;
             }
         }
@@ -192,12 +192,12 @@ namespace Quaver.Graphics
         /// <summary>
         /// The Y Position of the Object.
         /// </summary>
-        public float PositionY
+        internal float PositionY
         {
-            get => _localVect.Y;
+            get => _localRectangle.Y;
             set
             {
-                _localVect.Y = value;
+                _localRectangle.Y = value;
                 Changed = true;
             }
         }
@@ -205,13 +205,13 @@ namespace Quaver.Graphics
         /// <summary>
         /// Determines if the Object is going to get drawn.
         /// </summary>
-        public bool Visible { get; set; } = true;
+        internal bool Visible { get; set; } = true;
 
         /// <summary>
         /// This method gets called every frame to update the object.
         /// </summary>
         /// <param name="dt"></param>
-        public virtual void Update(double dt)
+        internal virtual void Update(double dt)
         {
             //Animation logic
             if (Changed)
@@ -227,7 +227,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// This method gets called every frame to draw the object.
         /// </summary>
-        public virtual void Draw()
+        internal virtual void Draw()
         {
             if (Visible)
             Children.ForEach(x => x.Draw());
@@ -239,22 +239,23 @@ namespace Quaver.Graphics
         internal void RecalculateRect()
         {
             //Calculate Scale
+            //todo: fix
             if (_parent != null)
             {
-                _localVect.W = _localSize.X + _parent.GlobalVect.W * _localScale.X;
-                _localVect.Z = _localSize.Y + _parent.GlobalVect.Z * _localScale.Y;
+                _localRectangle.Width = _localSize.X + _parent.GlobalRectangle.Width * _localScale.X;
+                _localRectangle.Height = _localSize.Y + _parent.GlobalRectangle.Height * _localScale.Y;
             }
             else
             {
-                _localVect.W = _localSize.X + GameBase.Window.W * _localScale.X;
-                _localVect.Z = _localSize.Y + GameBase.Window.Z * _localScale.Y;
+                _localRectangle.Width = _localSize.X + GameBase.Window.Width * _localScale.X;
+                _localRectangle.Height = _localSize.Y + GameBase.Window.Height * _localScale.Y;
             }
 
             //Update Global Rect
             if (_parent != null)
-                _globalVect = Util.DrawRect(Alignment, _localVect, Parent.GlobalVect);
+                _globalRectangle = Util.AlignRect(Alignment, _localRectangle, Parent.GlobalRectangle);
             else
-                _globalVect = Util.DrawRect(Alignment, _localVect, GameBase.Window);
+                _globalRectangle = Util.AlignRect(Alignment, _localRectangle, GameBase.Window);
 
             Children.ForEach(x => x.Changed = true);
             Children.ForEach(x => x.RecalculateRect());
@@ -263,7 +264,7 @@ namespace Quaver.Graphics
         /// <summary>
         /// This method is called when the object will be removed from memory.
         /// </summary>
-        public void Destroy()
+        internal void Destroy()
         {
             Parent = null;
         }

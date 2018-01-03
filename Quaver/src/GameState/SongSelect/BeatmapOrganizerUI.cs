@@ -120,7 +120,7 @@ namespace Quaver.GameState.SongSelect
             SongSelectButtons[SelectedMapIndex].Selected = false;
             SongSelectButtons[index].Selected = true;
             SelectedMapIndex = index;
-            TargetPosition = GameBase.Window.Y + (GameBase.Window.Z / 2) - ((float)index / SongSelectButtons.Count) * OrganizerSize;
+            TargetPosition = GameBase.Window.Y + (GameBase.Window.Height / 2) - ((float)index / SongSelectButtons.Count) * OrganizerSize;
 
             // Get the background path from the previous map
             var oldMapBgPath = GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.BackgroundPath;
