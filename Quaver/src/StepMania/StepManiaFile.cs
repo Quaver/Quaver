@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.StepMania
 {
-    internal class StepManiaFile
+    public class StepManiaFile
     {
         /// <summary>
         ///     The title of the track
@@ -121,7 +121,7 @@ namespace Quaver.StepMania
                             {
                                 // An individual bpm is split by "offset=bpm"
                                 var bpmSplit = bpm.Split('=').ToList();
-                                sm.Bpms.Add(new Bpm { StartTime = float.Parse(bpmSplit[0]), BeatsPerMinute = float.Parse(bpmSplit[1])});
+                                sm.Bpms.Add(new Bpm { Beats = float.Parse(bpmSplit[0]), BeatsPerMinute = float.Parse(bpmSplit[1])});
                             }
                             continue;
                         case "#NOTES":
@@ -244,9 +244,9 @@ namespace Quaver.StepMania
     internal struct Bpm
     {
         /// <summary>
-        ///     The start time of the BPM section
+        ///     The amount of beats in the map the bpm begins at
         /// </summary>
-        internal float StartTime { get; set; }
+        internal float Beats { get; set; }
 
         /// <summary>
         ///     The actual BPM
