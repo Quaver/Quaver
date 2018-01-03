@@ -38,7 +38,7 @@ namespace Quaver.Graphics
         /// <param name="y"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        internal DrawRectangle(float x=0, float y=0, float width=0, float height = 0)
+        internal DrawRectangle(float x = 0, float y = 0, float width = 0, float height = 0)
         {
             X = x;
             Y = y;
