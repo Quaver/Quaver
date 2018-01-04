@@ -158,7 +158,6 @@ namespace Quaver.GameState.Gameplay
             {
                 Alignment = Alignment.TopLeft,
                 Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
-                Size = new UDim2(HitObjectSize, HitObjectSize),
                 Parent = parent
             };
 
