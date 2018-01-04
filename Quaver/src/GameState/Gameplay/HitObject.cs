@@ -197,9 +197,9 @@ namespace Quaver.GameState.Gameplay
             }
 
             // Scale hit object accordingly
-            HitBodySprite.Size.X.Offset = HitObjectSize;
-            HitBodySprite.Size.Y.Offset = HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width;
-            HoldBodyOffset = HitBodySprite.Size.Y.Offset / 2;
+            HitBodySprite.SizeX = HitObjectSize;
+            HitBodySprite.SizeY = HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width;
+            HoldBodyOffset = HitBodySprite.SizeY / 2;
 
 
             // Create hold body (placed ontop of hold body) if this is a long note.
@@ -213,7 +213,7 @@ namespace Quaver.GameState.Gameplay
                     Parent = parent,
                     SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
                 };
-                HoldEndOffset = HoldEndSprite.Size.Y.Offset / 2;
+                HoldEndOffset = HoldEndSprite.SizeY / 2;
 
                 // Choose the correct image based on the specific key lane.
                 switch (GameBase.SelectedBeatmap.Qua.Mode)
@@ -225,7 +225,7 @@ namespace Quaver.GameState.Gameplay
                                 return;
 
                             HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[i];
-                            HoldEndSprite.Size.Y.Offset = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds4K[i].Height / GameBase.LoadedSkin.NoteHoldEnds4K[i].Width;
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds4K[i].Height / GameBase.LoadedSkin.NoteHoldEnds4K[i].Width;
                         }
                         break;
                     case GameModes.Keys7:
@@ -235,7 +235,7 @@ namespace Quaver.GameState.Gameplay
                                 return;
 
                             HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds7K[i];
-                            HoldEndSprite.Size.Y.Offset = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds7K[i].Height / GameBase.LoadedSkin.NoteHoldEnds7K[i].Width;
+                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds7K[i].Height / GameBase.LoadedSkin.NoteHoldEnds7K[i].Width;
                         }
                         break;
                     default:
@@ -247,7 +247,7 @@ namespace Quaver.GameState.Gameplay
         public void Update(bool downScroll)
         {
             // Only update note if it's inside the window
-            if ((downScroll && _hitObjectPosition.Y + HitBodySprite.Size.Y.Offset > GameBase.Window.Y) || (!downScroll && _hitObjectPosition.Y < GameBase.Window.Y + GameBase.Window.Height)) //todo: only update if object is inside boundary
+            if ((downScroll && _hitObjectPosition.Y + HitBodySprite.SizeY > GameBase.Window.Y) || (!downScroll && _hitObjectPosition.Y < GameBase.Window.Y + GameBase.Window.Height)) //todo: only update if object is inside boundary
             {
                 if (IsLongNote)
                 {
@@ -259,16 +259,16 @@ namespace Quaver.GameState.Gameplay
                     else
                     {
                         //Update HoldBody Position and Size
-                        HoldBodySprite.Size.Y.Offset = CurrentLongNoteSize;
-                        HoldBodySprite.Position.Y.Offset = downScroll ? -(float)CurrentLongNoteSize + HoldBodyOffset + _hitObjectPosition.Y : _hitObjectPosition.Y + HoldBodyOffset;
+                        HoldBodySprite.SizeY = CurrentLongNoteSize;
+                        HoldBodySprite.PosY = downScroll ? -(float)CurrentLongNoteSize + HoldBodyOffset + _hitObjectPosition.Y : _hitObjectPosition.Y + HoldBodyOffset;
 
                         //Update Hold End Position
-                        HoldEndSprite.Position.Y.Offset = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.Size.Y.Offset - HoldEndOffset + HoldBodyOffset) : (_hitObjectPosition.Y + HoldBodySprite.Size.Y.Offset + HoldEndOffset - HoldBodyOffset);
+                        HoldEndSprite.PosY = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.SizeY - HoldEndOffset + HoldBodyOffset) : (_hitObjectPosition.Y + HoldBodySprite.SizeY + HoldEndOffset - HoldBodyOffset);
                     }
                 }
 
                 //Update HitBody
-                HitBodySprite.Position.Y.Offset = _hitObjectPosition.Y;
+                HitBodySprite.PosY = _hitObjectPosition.Y;
             }
         }
 
