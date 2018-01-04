@@ -13,21 +13,16 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     /// </summary>
     internal class Timing : IHelper
     {
-        //Gameplay Constants
-        internal const int PlayStartDelayed = 3000; //How long to pause the audio before playing. Max is 10000ms.
-
         //Audio Variables
-
         internal bool SongIsPlaying { get; set; }
 
         //Gameplay Variables
         private double ActualSongTime { get; set; }
-        internal List<TimingObject> SvQueue { get; set; } //todo: remove
-        private List<TimingObject> TimingQueue { get; set; }
         internal float PlayingEndOffset { get; set; }
+        private List<TimingObject> TimingQueue { get; set; }
 
         //SV + Timing Point Variables
-        //private List<TimingObject> SvQueue, TimingQueue, _barQueue, _activeBars;
+        //private List<TimingObject> svQueue, TimingQueue, _barQueue, _activeBars;
         //private GameObject[] _activeBarObjects;
 
         //Audio File Variables
@@ -42,10 +37,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         public Timing(Qua qua)
         {
             //Create Timing Points + SVs on a list
-            SvQueue = new List<TimingObject>();
+            var svQueue = new List<TimingObject>();
             for (var i = 0; i < qua.SliderVelocities.Count; i++)
             {
-                CreateSV(qua.SliderVelocities[i].StartTime, qua.SliderVelocities[i].Multiplier);
+                CreateSV(svQueue, qua.SliderVelocities[i].StartTime, qua.SliderVelocities[i].Multiplier);
             }
 
             TimingQueue = new List<TimingObject>();
@@ -61,34 +56,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             //Calculate Average BPM
             CalculateAverageBpm();
-
-            //Create SVs
-            if (ModManager.Activated(ModIdentifier.NoSliderVelocity) == false && SvQueue.Count > 1)
-            {
-                ConvertTPtoSV();
-                NormalizeSVs();
-            }
-            //If there's no SV, create a single SV Point
-            else
-            {
-                CreateSV(0, 1f);
-            }
-
-            //Calculates SV for efficiency
-            GameplayReferences.SvCalc = new ulong[SvQueue.Count];
-            GameplayReferences.SvCalc[0] = 0;
-            ulong svPosTime = 0;
-            for (var i = 0; i < SvQueue.Count; i++)
-            {
-                if (i + 1 < SvQueue.Count)
-                {
-                    svPosTime += (ulong)((SvQueue[i + 1].TargetTime - SvQueue[i].TargetTime) * SvQueue[i].SvMultiplier);
-                    GameplayReferences.SvCalc[i + 1] = svPosTime;
-                }
-                else break;
-            }
-
-            GameplayReferences.SvQueue = SvQueue; //todo: implement properly
         }
 
         /// <summary>
@@ -100,7 +67,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             SongIsPlaying = false;
 
             //Declare Other Values
-            ActualSongTime = -PlayStartDelayed;
+            ActualSongTime = -GameplayReferences.PlayStartDelayed;
             //_activeBarObjects = new GameObject[maxNoteCount];
 
             //Add offset after the last note
@@ -111,12 +78,48 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //time_CreateBars();
         }
 
+        internal ulong[] GetSVCalc(List<TimingObject> svQueue)
+        {
+            //Calculates SV for efficiency
+            var svCalc = new ulong[svQueue.Count];
+            svCalc[0] = 0;
+            ulong svPosTime = 0;
+            for (var i = 0; i < svQueue.Count; i++)
+            {
+                if (i + 1 < svQueue.Count)
+                {
+                    svPosTime += (ulong)((svQueue[i + 1].TargetTime - svQueue[i].TargetTime) * svQueue[i].SvMultiplier);
+                    svCalc[i + 1] = svPosTime;
+                }
+                else break;
+            }
+
+            return svCalc;
+        }
+
+        internal List<TimingObject> GetSVQueue()
+        {
+            var svQueue = new List<TimingObject>();
+            //Create SVs
+            if (ModManager.Activated(ModIdentifier.NoSliderVelocity) == false && svQueue.Count > 1)
+            {
+                ConvertTPtoSV(svQueue);
+                NormalizeSVs(svQueue);
+            }
+            //If there's no SV, create a single SV Point
+            else
+            {
+                CreateSV(svQueue, 0, 1f);
+            }
+
+            return svQueue;
+        }
+
         /// <summary>
         ///     Unloads any objects to save memory
         /// </summary>
         public void UnloadContent()
         {
-            SvQueue.Clear();
             TimingQueue.Clear();
         }
 
@@ -176,49 +179,49 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         }
 
         //Creates SV Points
-        internal void CreateSV(float targetTime, float multiplier, int? index = null)
+        internal void CreateSV(List<TimingObject> svQueue, float targetTime, float multiplier, int? index = null)
         {
             TimingObject newTp = new TimingObject();
             newTp.TargetTime = targetTime;
             newTp.SvMultiplier = multiplier;
-            if (index != null) SvQueue.Insert((int)index, newTp);
-            else SvQueue.Add(newTp);
+            if (index != null) svQueue.Insert((int)index, newTp);
+            else svQueue.Add(newTp);
         }
 
         /// <summary>
         ///     Convert Timing Point to SV
         /// </summary>
-        internal void ConvertTPtoSV()
+        internal void ConvertTPtoSV(List<TimingObject> svQueue)
         {
             //Create and converts timing points to SV's
             var lastIndex = 0;
             foreach (TimingObject timeObject in TimingQueue)
             {
-                if (timeObject.TargetTime < SvQueue[0].TargetTime)
+                if (timeObject.TargetTime < svQueue[0].TargetTime)
                 {
                     if (Math.Abs(timeObject.BPM- _averageBpm) <= 0.02)
-                        CreateSV(timeObject.TargetTime, 1, 0);
+                        CreateSV(svQueue, timeObject.TargetTime, 1, 0);
                     else
-                        CreateSV(timeObject.TargetTime, SvQueue[0].SvMultiplier, 0);
+                        CreateSV(svQueue, timeObject.TargetTime, svQueue[0].SvMultiplier, 0);
                 }
-                else if (timeObject.TargetTime > SvQueue[SvQueue.Count - 1].TargetTime)
-                    CreateSV(timeObject.TargetTime, SvQueue[SvQueue.Count - 1].SvMultiplier);
+                else if (timeObject.TargetTime > svQueue[svQueue.Count - 1].TargetTime)
+                    CreateSV(svQueue, timeObject.TargetTime, svQueue[svQueue.Count - 1].SvMultiplier);
                 else
                 {
-                    for (var i = lastIndex; i < SvQueue.Count; i++)
+                    for (var i = lastIndex; i < svQueue.Count; i++)
                     {
-                        if (i + 1 >= SvQueue.Count) //|| !(timeObject.TargetTime < SvQueue[i + 1].TargetTime))
+                        if (i + 1 >= svQueue.Count) //|| !(timeObject.TargetTime < svQueue[i + 1].TargetTime))
                             continue;
-                        if (Math.Abs(timeObject.TargetTime - SvQueue[i].TargetTime) > 1f)
+                        if (Math.Abs(timeObject.TargetTime - svQueue[i].TargetTime) > 1f)
                         {
-                            CreateSV(timeObject.TargetTime, 1f, lastIndex);
+                            CreateSV(svQueue, timeObject.TargetTime, 1f, lastIndex);
                             lastIndex = i+1;
                         }
                         break;
                     }
                 }
             }
-            SvQueue.Sort((p1, p2) => p1.TargetTime.CompareTo(p2.TargetTime));
+            svQueue.Sort((p1, p2) => p1.TargetTime.CompareTo(p2.TargetTime));
         }
 
         /// <summary>
@@ -260,7 +263,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         }
 
         //Normalizes SV's in between each BPM change interval
-        internal void NormalizeSVs()
+        internal void NormalizeSVs(List<TimingObject> svQueue)
         {
             //Reference Variables + Sort
             var i = 0;
@@ -270,27 +273,27 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //Normalize
             if (TimingQueue.Count >= 1)
             {
-                for (i = 0; i < SvQueue.Count; i++)
+                for (i = 0; i < svQueue.Count; i++)
                 {
                     for (j = lastIndex; j < TimingQueue.Count; j++)
                     {
                         if (j + 1 < TimingQueue.Count)
                         {
-                            if (SvQueue[i].TargetTime < TimingQueue[lastIndex + 1].TargetTime)
+                            if (svQueue[i].TargetTime < TimingQueue[lastIndex + 1].TargetTime)
                             {
-                                SvQueue[i].SvMultiplier =
-                                    Math.Min(SvQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
+                                svQueue[i].SvMultiplier =
+                                    Math.Min(svQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
                             }
                             else
                             {
-                                SvQueue[i].SvMultiplier =
-                                    Math.Min(SvQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
+                                svQueue[i].SvMultiplier =
+                                    Math.Min(svQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
                                 lastIndex = j;
                             }
                             break;
                         }
-                        SvQueue[i].SvMultiplier =
-                            Math.Min(SvQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
+                        svQueue[i].SvMultiplier =
+                            Math.Min(svQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
                     }
                 }
             }
