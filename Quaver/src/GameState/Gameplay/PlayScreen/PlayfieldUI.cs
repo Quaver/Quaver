@@ -247,7 +247,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 CurrentOffsetObjectIndex++;
                 if (CurrentOffsetObjectIndex >= OffsetIndicatorSize) CurrentOffsetObjectIndex = 0;
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Tint = GameColors.JudgeColors[index];
-                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Position.X.Offset = -(float)offset * OffsetGaugeSize;
+                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].PosX = -(float)offset * OffsetGaugeSize;
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Alpha = 0.5f;
             }
         }
