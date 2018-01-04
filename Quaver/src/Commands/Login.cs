@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Online;
 #if !PUBLIC
 using Quaver.Framework;
 
@@ -28,7 +29,7 @@ namespace Quaver.Commands
             }
 
             // Connect
-            RattleClient.Connect(args[1], args[2]);
+            RattleClient.Connect(args[1], args[2], Rattle.OnlineEvents);
         }
     }
 }
