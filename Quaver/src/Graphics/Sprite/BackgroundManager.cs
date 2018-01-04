@@ -44,6 +44,8 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         public static float Brightness { get; set; } = 1;
 
+        public static bool TintReady { get; set; } = true;
+
         /// <summary>
         ///     Initializes the background.
         /// </summary>
@@ -74,6 +76,8 @@ namespace Quaver.Graphics.Sprite
         {
             //Tween Color
             float tween = (float)Math.Min(dt / 400, 1);
+
+            if (TintReady)
             CurrentColor = Vector3.Lerp(CurrentColor, TargetColor, tween);
 
             //Update Color
@@ -93,11 +97,6 @@ namespace Quaver.Graphics.Sprite
         /// <param name="newBG"></param>
         public static void Change(Texture2D newBG = null)
         {
-            //Update Background Color
-            Brightness = Configuration.BackgroundBrightness / 100f;
-            TargetColor = Vector3.One * Brightness;
-            CurrentColor = Vector3.Zero;
-
             //Checks if image is not null
             if (newBG == null) return;
 
@@ -118,6 +117,21 @@ namespace Quaver.Graphics.Sprite
             }
 
             Background.Image = GameBase.CurrentBackground;
+            TintReady = true;
+        }
+
+        /// <summary>
+        ///     Make the Background Black and turn TintReady off
+        /// </summary>
+        public static void Blacken()
+        {
+            // Update TintReady
+            TintReady = false;
+
+            // Update Background Color
+            Brightness = Configuration.BackgroundBrightness / 100f;
+            TargetColor = Vector3.One * Brightness;
+            CurrentColor = Vector3.Zero;
         }
 
         /// <summary>
