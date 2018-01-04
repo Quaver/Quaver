@@ -19,6 +19,12 @@ namespace Quaver.Graphics
         /// <summary>
         ///     Offset of this value
         /// </summary>
-        internal int Offset { get; set; }
+        internal float Offset { get; set; }
+
+        internal UDim(float offset = 0, float scale = 0)
+        {
+            Offset = offset;
+            Scale = scale;
+        }
     }
 }

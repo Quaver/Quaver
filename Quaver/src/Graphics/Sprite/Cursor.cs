@@ -20,7 +20,7 @@ namespace Quaver.Graphics.Sprite
         private bool MouseDown { get; set; }
 
         //Cursor Size
-        private float CursorSize { get; set; } = 100;
+        private float CursorSize { get; set; } = 30;
 
         //Click Size
         private float ClickCurrentSize { get; set; }
@@ -28,10 +28,9 @@ namespace Quaver.Graphics.Sprite
 
         internal Cursor()
         {
-            Size = new Vector2(CursorSize, CursorSize);
+            Size = new UDim2(CursorSize, CursorSize);
             Image = GameBase.LoadedSkin.Cursor;
             Alignment = Alignment.TopLeft;
-            Position = Vector2.Zero;
         }
 
         private void MouseClicked()
@@ -60,13 +59,13 @@ namespace Quaver.Graphics.Sprite
 
             //Resize Cursor
             ClickCurrentSize = Util.Tween(ClickTargetSize, ClickCurrentSize, Math.Min(dt / 40, 1));
-            SizeX = CursorSize + ClickCurrentSize;
-            SizeY = SizeX;
+            Size.X.Offset = CursorSize + ClickCurrentSize;
+            Size.Y.Offset = Size.X.Offset;
 
             //Move Cursor
             //Position = Util.PointToVector2(GameBase.MouseState.Position);
-            PositionX = GameBase.MouseState.Position.X - (CursorSize + ClickCurrentSize) / 2;
-            PositionY = GameBase.MouseState.Position.Y - (CursorSize + ClickCurrentSize) / 2;
+            Position.X.Offset = GameBase.MouseState.Position.X - (CursorSize + ClickCurrentSize) / 2;
+            Position.Y.Offset = GameBase.MouseState.Position.Y - (CursorSize + ClickCurrentSize) / 2;
 
             base.Update(dt);
         }

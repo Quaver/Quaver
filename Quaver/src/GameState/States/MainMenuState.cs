@@ -102,6 +102,7 @@ namespace Quaver.GameState.States
         {
             // Play Random Maps during the main menu
             MenuAudioPlayer.PlayRandomBeatmaps();
+            //Console.WriteLine(SwitchSongSelectButton.GlobalRectangle.X + ", " + SwitchSongSelectButton.GlobalRectangle.Y + ", " + SwitchSongSelectButton.GlobalRectangle.Width + ", " + SwitchSongSelectButton.GlobalRectangle.Height);
 
             //Update Menu Screen Boundary
             Boundary.Update(dt);
@@ -128,7 +129,6 @@ namespace Quaver.GameState.States
             {
                 Image = GameBase.LoadedSkin.NoteHoldEnds4K[0],
                 Alignment = Alignment.MidCenter,
-                Position = Vector2.Zero,
                 Parent = Boundary
             };
 
@@ -155,7 +155,6 @@ namespace Quaver.GameState.States
             {
                 Image = GameBase.LoadedSkin.NoteHoldEnds4K[0],
                 Alignment = Alignment.TopCenter,
-                Position = Vector2.Zero,
                 Parent = Boundary
             };
 
@@ -173,7 +172,6 @@ namespace Quaver.GameState.States
             {
                 Image = GameBase.LoadedSkin.NoteHoldEnds4K[0],
                 Alignment = Alignment.BotCenter,
-                Position = Vector2.Zero,
                 Parent = Boundary
             };
 
@@ -190,7 +188,6 @@ namespace Quaver.GameState.States
             {
                 Image = GameBase.LoadedSkin.NoteHoldEnds4K[0],
                 Alignment = Alignment.BotRight,
-                Position = Vector2.Zero,
                 Parent = Boundary
             };
 

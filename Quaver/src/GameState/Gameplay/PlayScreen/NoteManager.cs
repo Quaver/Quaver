@@ -106,7 +106,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Initialize Boundary
             Boundary = new Boundary()
             {
-                Size = new Vector2(GameplayReferences.PlayfieldSize, GameBase.Window.Height),
+                Size = new UDim2(GameplayReferences.PlayfieldSize, GameBase.Window.Height),
                 Alignment = Alignment.TopCenter
             };
 
@@ -173,7 +173,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 MeasureBarManager.TrackPosition = TrackPosition;
                 for (i = 0; i < MeasureBarManager.BarObjectActive.Count; i++)
                 {
-                    MeasureBarManager.BarObjectActive[i].BarSprite.PositionY = PosFromOffset(MeasureBarManager.BarObjectActive[i].OffsetFromReceptor);
+                    MeasureBarManager.BarObjectActive[i].BarSprite.Position.Y.Offset = PosFromOffset(MeasureBarManager.BarObjectActive[i].OffsetFromReceptor);
                 }
                 MeasureBarManager.Update(dt);
                 //Console.WriteLine(MeasureBarManager.BarObjectActive[0].BarSprite.PositionY);
