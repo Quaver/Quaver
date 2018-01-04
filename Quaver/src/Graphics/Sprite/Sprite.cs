@@ -58,7 +58,7 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     The origin of this object used for rotation.
         /// </summary>
-        private Vector2 _origin = new Vector2(GameBase.UI.BlankBox.Width/2f, GameBase.UI.BlankBox.Width/2f); //TODO: bake this value later
+        private Vector2 _origin = new Vector2(GameBase.UI.BlankBox.Width/2f, GameBase.UI.BlankBox.Height/2f); //TODO: bake this value later
 
         /// <summary>
         ///     The Rectangle used to render the sprite.
@@ -140,7 +140,8 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         private void RecalculateOrigin()
         {
-            _originRectangle = GlobalRectangle;
+            _originRectangle.Width = GlobalRectangle.Width;
+            _originRectangle.Height = GlobalRectangle.Height;
             _originRectangle.X = (GlobalRectangle.X + (GlobalRectangle.Width / 2f));
             _originRectangle.Y = (GlobalRectangle.Y + (GlobalRectangle.Height / 2f));
 
