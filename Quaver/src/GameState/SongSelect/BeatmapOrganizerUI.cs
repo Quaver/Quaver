@@ -131,6 +131,7 @@ namespace Quaver.GameState.SongSelect
                 SongManager.ReloadSong(true);
 
             // Load background asynchronously if the backgrounds actually do differ
+            BackgroundManager.Blacken();
             if (oldMapBgPath != map.Directory + "/" + map.BackgroundPath)
                 Task.Run(() => GameBase.LoadBackground())
                     .ContinueWith(t => BackgroundManager.Change(GameBase.CurrentBackground));
