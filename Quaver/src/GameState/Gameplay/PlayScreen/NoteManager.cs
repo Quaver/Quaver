@@ -28,6 +28,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     /// </summary>
     internal class NoteManager : IHelper
     {
+        //SV
+        internal ulong[] SvCalc { get; set; }
+        internal List<TimingObject> SvQueue { get; set; }
+
         //Measure Bars
         private MeasureBarManager MeasureBarManager { get; set; }
 
@@ -76,7 +80,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             RemoveTimeAfterMiss = (uint)(1000 * GameBase.GameClock);
 
             //Initialize Track
-            TrackPosition = (ulong)(-GameplayReferences.PlayStartDelayed + 10000f); //10000ms added since curSVPos is a ulong
+            TrackPosition = (ulong)(-GameplayReferences.PlayStartDelayed + 10000); //10000ms added since curSVPos is a ulong. -2000 offset is the wait time before song starts
             CurrentSvIndex = 0;
             switch (GameBase.SelectedBeatmap.Qua.Mode) 
                 //the hit position is determined by the receptor and object of the first lane
@@ -209,8 +213,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
 
             //Update Hold Objects
-            if (HitObjectHold.Count == 0) GameplayReferences.NoteHolding = false;
-            else GameplayReferences.NoteHolding = true;
 
             for (i = 0; i < HitObjectHold.Count; i++)
             {
@@ -332,7 +334,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal ulong SvOffsetFromTime(float timeToOffset, int svIndex)
         {
             //If NoSV mod is enabled, return ms offset, else return sv offset calculation
-            return (ModManager.Activated(ModIdentifier.NoSliderVelocity)) ? (ulong) timeToOffset : GameplayReferences.SvCalc[svIndex] + (ulong)(15000 + ((timeToOffset - GameplayReferences.SvQueue[svIndex].TargetTime) * GameplayReferences.SvQueue[svIndex].SvMultiplier)) - 5000;
+            return (ModManager.Activated(ModIdentifier.NoSliderVelocity)) ? (ulong) timeToOffset : SvCalc[svIndex] + (ulong)(15000 + ((timeToOffset - SvQueue[svIndex].TargetTime) * SvQueue[svIndex].SvMultiplier)) - 5000;
         }
 
         /// <summary>
@@ -353,19 +355,19 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// </summary>
         internal ulong GetCurrentTrackPosition()
         {
-            if (CurrentSongTime >= GameplayReferences.SvQueue[GameplayReferences.SvQueue.Count - 1].TargetTime)
+            if (CurrentSongTime >= SvQueue[SvQueue.Count - 1].TargetTime)
             {
-                CurrentSvIndex = GameplayReferences.SvQueue.Count - 1;
+                CurrentSvIndex = SvQueue.Count - 1;
             }
-            else if (CurrentSvIndex < GameplayReferences.SvQueue.Count - 2)
+            else if (CurrentSvIndex < SvQueue.Count - 2)
             {
-                for (int j = CurrentSvIndex; j < GameplayReferences.SvQueue.Count - 1; j++)
+                for (int j = CurrentSvIndex; j < SvQueue.Count - 1; j++)
                 {
-                    if (CurrentSongTime > GameplayReferences.SvQueue[CurrentSvIndex + 1].TargetTime) CurrentSvIndex++;
+                    if (CurrentSongTime > SvQueue[CurrentSvIndex + 1].TargetTime) CurrentSvIndex++;
                     else break;
                 }
             }
-            return GameplayReferences.SvCalc[CurrentSvIndex] + (ulong)(((float)(CurrentSongTime - (GameplayReferences.SvQueue[CurrentSvIndex].TargetTime)) * GameplayReferences.SvQueue[CurrentSvIndex].SvMultiplier) + 10000);
+            return SvCalc[CurrentSvIndex] + (ulong)(((float)(CurrentSongTime - (SvQueue[CurrentSvIndex].TargetTime)) * SvQueue[CurrentSvIndex].SvMultiplier) + 10000);
         }
 
         /// <summary>
@@ -376,12 +378,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal int GetSvIndex(float indexTime)
         {
             int newIndex = 0;
-            if (indexTime >= GameplayReferences.SvQueue[GameplayReferences.SvQueue.Count - 1].TargetTime) newIndex = GameplayReferences.SvQueue.Count - 1;
+            if (indexTime >= SvQueue[SvQueue.Count - 1].TargetTime) newIndex = SvQueue.Count - 1;
             else
             {
-                for (int j = 0; j < GameplayReferences.SvQueue.Count - 1; j++)
+                for (int j = 0; j < SvQueue.Count - 1; j++)
                 {
-                    if (indexTime < GameplayReferences.SvQueue[j + 1].TargetTime)
+                    if (indexTime < SvQueue[j + 1].TargetTime)
                     {
                         newIndex = j;
                         break;
