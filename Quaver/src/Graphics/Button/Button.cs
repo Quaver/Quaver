@@ -43,6 +43,7 @@ namespace Quaver.Graphics.Button
         internal void OnClicked()
         {
             if (Clickable) Clicked?.Invoke(this, null);
+            Console.WriteLine(this+": "+GlobalRectangle.X+", " + GlobalRectangle.Y + ", " + GlobalRectangle.Width + ", " + GlobalRectangle.Height);
         }
 
         /// <summary>
