@@ -161,7 +161,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             };
 
             //todo: OffsetGaugeBoundary.SizeX with a new size. Right now the offset gauge is the same size as the hitwindow
-            OffsetGaugeSize = OffsetGaugeBoundary.Size.X.Offset / (GameplayReferences.PressWindowLatest * 2 * GameBase.WindowUIScale);
+            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (GameplayReferences.PressWindowLatest * 2 * GameBase.WindowUIScale);
 
             OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)
@@ -207,7 +207,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
 
             // Update Judge Alpha
-            JudgeSprite.Position.Y.Offset = Util.Tween(0, JudgeSprite.Position.Y.Offset, tween / 2);
+            JudgeSprite.PosY = Util.Tween(0, JudgeSprite.PosY, tween / 2);
             if (SpriteAlphaHold > 500 && PriorityJudgeLength <= 0)
             {
                 JudgeSprite.Alpha = Util.Tween(0, JudgeSprite.Alpha, tween / 10);
@@ -236,10 +236,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 PriorityJudgeImage = index;
 
                 // Update judge sprite
-                JudgeSprite.Size.X.Offset = JudgeSizes[index].X;
-                JudgeSprite.Size.Y.Offset = JudgeSizes[index].Y;
+                JudgeSprite.SizeX = JudgeSizes[index].X;
+                JudgeSprite.SizeY = JudgeSizes[index].Y;
                 JudgeSprite.Image = JudgeImages[index];
-                JudgeSprite.Position.Y.Offset = JudgeHitOffset;
+                JudgeSprite.PosY = JudgeHitOffset;
             }
 
             if (index != 5 && !release && offset != null)
