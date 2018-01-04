@@ -73,7 +73,7 @@ namespace Quaver.Graphics.Sprite
         public static void Update(double dt)
         {
             //Tween Color
-            float tween = (float)Math.Min(dt / 300, 1);
+            float tween = (float)Math.Min(dt / 400, 1);
             CurrentColor = Vector3.Lerp(CurrentColor, TargetColor, tween);
 
             //Update Color
@@ -103,14 +103,21 @@ namespace Quaver.Graphics.Sprite
 
             //Update Image
             GameBase.CurrentBackground = newBG;
-            Background.Image = GameBase.CurrentBackground;
 
             //Update Background Image Resolution
             var bgYRatio = ((float)newBG.Height / newBG.Width) / (GameBase.Window.Height / GameBase.Window.Width);
             if (bgYRatio > 1)
-                Background.Size = new UDim2(newBG.Width * (GameBase.Window.Width / newBG.Width), newBG.Height * (GameBase.Window.Height / newBG.Height));
+            {
+                Background.SizeX = newBG.Width * (GameBase.Window.Width / newBG.Width);
+                Background.SizeY = newBG.Height * (GameBase.Window.Width / newBG.Width);
+            }
             else
-                Background.Size = new UDim2(newBG.Width * (GameBase.Window.Height / newBG.Height), newBG.Height * (GameBase.Window.Height / newBG.Height));
+            {
+                Background.SizeX = newBG.Width * (GameBase.Window.Height / newBG.Height);
+                Background.SizeY = newBG.Height * (GameBase.Window.Height / newBG.Height);
+            }
+
+            Background.Image = GameBase.CurrentBackground;
         }
 
         /// <summary>
