@@ -131,11 +131,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     case GameModes.Keys4:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors4K[i];
-                        Receptors[i].Size.Y.Offset = LaneSize * GameBase.LoadedSkin.NoteReceptors4K[i].Height / GameBase.LoadedSkin.NoteReceptors4K[i].Width;
+                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptors4K[i].Height / GameBase.LoadedSkin.NoteReceptors4K[i].Width;
                         break;
                     case GameModes.Keys7:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors7K[i];
-                        Receptors[i].Size.Y.Offset = LaneSize * GameBase.LoadedSkin.NoteReceptors7K[i].Height / GameBase.LoadedSkin.NoteReceptors7K[i].Width;
+                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptors7K[i].Height / GameBase.LoadedSkin.NoteReceptors7K[i].Width;
                         break;
                 }
             }
