@@ -184,7 +184,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             MeasureBarManager.BarObjectActive = MeasureBarManager.BarObjectQueue;
             for (var i = 0; i < MeasureBarManager.BarObjectActive.Count; i++)
             {
-                MeasureBarManager.BarObjectActive[i].Initialize(Boundary, 2, 0);
+                MeasureBarManager.BarObjectActive[i].Initialize(Boundary, 1, 0);
             }
 
             Logger.Log("Done loading HitObjects", LogColors.GameInfo);
