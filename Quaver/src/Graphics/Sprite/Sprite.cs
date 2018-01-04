@@ -141,12 +141,19 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         private void RecalculateOrigin()
         {
+            // Update Origin Rect
             _originRectangle.Width = GlobalRectangle.Width;
             _originRectangle.Height = GlobalRectangle.Height;
             _originRectangle.X = (GlobalRectangle.X + (GlobalRectangle.Width / 2f));
             _originRectangle.Y = (GlobalRectangle.Y + (GlobalRectangle.Height / 2f));
 
-            _renderRectangle = Util.DrawRectToRectangle(_originRectangle);
+            // Update Render Rect
+            _renderRectangle.X = (int)_originRectangle.X;
+            _renderRectangle.Y = (int)_originRectangle.Y;
+            _renderRectangle.Width = (int)_originRectangle.Width;
+            _renderRectangle.Height = (int)_originRectangle.Height;
+
+            //_renderRectangle = Util.DrawRectToRectangle(_originRectangle);
         }
     }
 }

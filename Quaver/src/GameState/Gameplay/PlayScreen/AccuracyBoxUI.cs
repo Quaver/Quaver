@@ -92,7 +92,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     Parent = AccuracyBox,
                     Alignment = Alignment.TopLeft,
-                    Size = new UDim2(AccuracyBox.Size.X.Offset - 10, 26 * GameBase.WindowUIScale),
+                    Size = new UDim2(AccuracyBox.SizeX - 10, 26 * GameBase.WindowUIScale),
                     Position = new UDim2(5, ((i * 25) + 55) * GameBase.WindowUIScale)
                 };
             }
@@ -150,7 +150,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Parent = AccuracyBox,
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.MidCenter,
-                Size = new UDim2(AccuracyBox.Size.X.Offset - 20, 55 * GameBase.WindowUIScale),
+                Size = new UDim2(AccuracyBox.SizeX - 20, 55 * GameBase.WindowUIScale),
                 Position = new UDim2(10, 0),
                 Font = Fonts.Medium24,
                 TextColor = Color.White,
@@ -162,12 +162,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             GradeBox = new Boundary()
             {
                 Parent = AccuracyBox,
-                Size = new UDim2(AccuracyBox.Size.X.Offset, 26 * GameBase.WindowUIScale),
+                Size = new UDim2(AccuracyBox.SizeX, 26 * GameBase.WindowUIScale),
                 Position = new UDim2(0, 31 * GameBase.WindowUIScale),
                 Alignment = Alignment.BotLeft,
             };
 
-            GradeProgressBar = new BarDisplay(GameBase.WindowUIScale, AccuracyBox.Size.X.Offset - (GradeBox.Size.Y.Offset * 2) - 30 * GameBase.WindowUIScale, new Color[] { Color.Red })
+            GradeProgressBar = new BarDisplay(GameBase.WindowUIScale, AccuracyBox.SizeX - (GradeBox.SizeY * 2) - 30 * GameBase.WindowUIScale, new Color[] { Color.Red })
             {
                 Parent = GradeBox,
                 Alignment = Alignment.MidCenter
@@ -176,7 +176,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             GradeLeft = new Sprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallF,
-                Size = new UDim2(GradeBox.Size.Y.Offset * GameBase.WindowUIScale, GradeBox.Size.Y.Offset * GameBase.WindowUIScale),
+                Size = new UDim2(GradeBox.SizeY * GameBase.WindowUIScale, GradeBox.SizeY * GameBase.WindowUIScale),
                 //PositionX = GradeProgressBar.PositionX - 32 * GameBase.WindowUIScale,
                 Parent = GradeBox
             };
@@ -184,7 +184,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             GradeRight = new Sprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallD,
-                Size = new UDim2(GradeBox.Size.Y.Offset * GameBase.WindowUIScale, GradeBox.Size.Y.Offset * GameBase.WindowUIScale),
+                Size = new UDim2(GradeBox.SizeY * GameBase.WindowUIScale, GradeBox.SizeY * GameBase.WindowUIScale),
                 Alignment = Alignment.TopRight,
                 //PositionX = GradeProgressBar.PositionX + GradeProgressBar.SizeX + 32 * GameBase.WindowUIScale,
                 Parent = GradeBox
@@ -248,7 +248,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             double tween = Math.Min(dt / 50, 1);
             for (var i = 0; i < 6; i++)
             {
-                AccuracyGraphBar[i].Size.X.Scale = Util.Tween(AccuracyGraphTargetScale[i], AccuracyGraphBar[i].Size.X.Scale, tween);
+                AccuracyGraphBar[i].ScaleX = Util.Tween(AccuracyGraphTargetScale[i], AccuracyGraphBar[i].ScaleX, tween);
             }
 
             // If there's an active long note, the score will have a "slider" effect (+1 point every 25ms), otherwise it will tween normally
