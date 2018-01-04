@@ -126,6 +126,7 @@ namespace Quaver.GameState.Gameplay
         internal void Initialize(bool downScroll, bool longNote, Drawable parent)
         {
             IsLongNote = longNote;
+            var keyLaneIndex = KeyLane - 1;
 
             //Create hold body if this object is an LN
             if (longNote)
@@ -142,14 +143,10 @@ namespace Quaver.GameState.Gameplay
                 switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
                     case GameModes.Keys4:
-                        for (var i = 0; i < GameBase.LoadedSkin.NoteHoldBodies4K.Length; i++)
-                            if (KeyLane - 1 == i)
-                                HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies4K[i];
+                        HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies4K[keyLaneIndex];
                         break;
                     case GameModes.Keys7:
-                        for (var i = 0; i < GameBase.LoadedSkin.NoteHoldBodies7K.Length; i++)
-                            if (KeyLane - 1 == i)
-                                HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies7K[i];
+                        HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies7K[keyLaneIndex];
                         break;
                     default:
                         break;
@@ -176,20 +173,20 @@ namespace Quaver.GameState.Gameplay
                             // If the user has ColourObjectsBySnapDistance enabled in their skin,
                             // we'll try to load give the object the correct snap colour,
                             // otherwise, we default it to the default or first (1/1) texture in the list.
-                            if (GameBase.LoadedSkin.ColourObjectsBySnapDistance && GameBase.LoadedSkin.NoteHitObjects4K[KeyLane - 1][SnapIndex] != null)
-                                HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[KeyLane - 1][SnapIndex];
+                            if (GameBase.LoadedSkin.ColourObjectsBySnapDistance && GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][SnapIndex] != null)
+                                HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][SnapIndex];
                             else
-                                HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[KeyLane - 1][0];
+                                HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
                         }
                         catch (Exception e)
                         {
-                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[KeyLane - 1][0];
+                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
                         }
                     }
                     break;
                 case GameModes.Keys7:
                     for (var i = 0; i < GameBase.LoadedSkin.NoteHitObjects7K.Length; i++)
-                        if (KeyLane - 1 == i)
+                        if (keyLaneIndex == i)
                             HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects7K[i];
                     break;
                 default:
@@ -219,24 +216,12 @@ namespace Quaver.GameState.Gameplay
                 switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
                     case GameModes.Keys4:
-                        for (var i = 0; i < GameBase.LoadedSkin.NoteHoldEnds4K.Length; i++)
-                        {
-                            if (KeyLane - 1 != i)
-                                return;
-
-                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[i];
-                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds4K[i].Height / GameBase.LoadedSkin.NoteHoldEnds4K[i].Width;
-                        }
+                        HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex];
+                        HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Height / GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Width;
                         break;
                     case GameModes.Keys7:
-                        for (var i = 0; i < GameBase.LoadedSkin.NoteHoldEnds7K.Length; i++)
-                        {
-                            if (KeyLane - 1 != i)
-                                return;
-
-                            HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds7K[i];
-                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds7K[i].Height / GameBase.LoadedSkin.NoteHoldEnds7K[i].Width;
-                        }
+                        HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex];
+                        HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex].Height / GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex].Width;
                         break;
                     default:
                         break;
