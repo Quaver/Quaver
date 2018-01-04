@@ -78,8 +78,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             AccuracyBox = new Sprite()
             {
                 Alignment = Alignment.TopRight,
-                Size = new Vector2(220, 240) * GameBase.WindowUIScale,
-                Position = new Vector2(-10,10),
+                Size = new UDim2(220 * GameBase.WindowUIScale, 240 * GameBase.WindowUIScale),
+                Position = new UDim2(-10,10),
                 Parent = Boundary,
                 Alpha = 0.7f,
                 Tint = Color.Black //todo: remove later and use skin image
@@ -92,10 +92,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     Parent = AccuracyBox,
                     Alignment = Alignment.TopLeft,
-                    SizeX = AccuracyBox.SizeX - 10,
-                    SizeY = 26 * GameBase.WindowUIScale,
-                    PositionY = ((i * 25) + 55) * GameBase.WindowUIScale,
-                    PositionX = 5
+                    Size = new UDim2(AccuracyBox.Size.X.Offset - 10, 26 * GameBase.WindowUIScale),
+                    Position = new UDim2(5, ((i * 25) + 55) * GameBase.WindowUIScale)
                 };
             }
 
@@ -106,9 +104,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     Parent = AccuracyDisplaySet[i+1],
                     Alignment = Alignment.MidLeft,
-                    ScaleX = 0,
-                    ScaleY = 1,
-                    SizeY = -2,
+                    Size = new UDim2(0, -2, 0, 1),
                     Tint = GameColors.JudgeColors[i],
                     Alpha = 0.12f
                 };
@@ -122,8 +118,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Parent = AccuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
                     TextAlignment = Alignment.MidLeft,
-                    Scale = Vector2.One,
-                    PositionX = 5,
+                    Size = new UDim2(0, 0, 1, 1),
+                    Position = new UDim2(5, 0),
                     Font = Fonts.Medium16,
                     TextColor = i == 0 ? Color.White : GameColors.JudgeColors[i-1],
                     Text = i == 0 ? "Accuracy" : GameplayReferences.JudgeNames[i-1],
@@ -140,8 +136,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Parent = AccuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
                     TextAlignment = Alignment.MidRight,
-                    Scale = Vector2.One,
-                    PositionX = -5,
+                    Size = new UDim2(0, 0, 1, 1),
+                    Position = new UDim2(-5, 0),
                     Font = Fonts.Medium16,
                     TextColor = i == 0 ? Color.White : GameColors.JudgeColors[i - 1],
                     Text = i == 0 ? "00.00%" : "0 | 0",
@@ -154,38 +150,33 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Parent = AccuracyBox,
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.MidCenter,
-                SizeX = AccuracyBox.SizeX - 20,
-                SizeY = 55 * GameBase.WindowUIScale,
+                Size = new UDim2(AccuracyBox.Size.X.Offset - 20, 55 * GameBase.WindowUIScale),
+                Position = new UDim2(10, 0),
                 Font = Fonts.Medium24,
                 TextColor = Color.White,
                 Text = "0000000",
                 TextScale = GameBase.WindowUIScale,
-                PositionY = 0,
-                PositionX = 10
             };
 
             // Create Grade box
             GradeBox = new Boundary()
             {
                 Parent = AccuracyBox,
-                SizeX = AccuracyBox.SizeX,
-                SizeY = 26 * GameBase.WindowUIScale,
+                Size = new UDim2(AccuracyBox.Size.X.Offset, 26 * GameBase.WindowUIScale),
+                Position = new UDim2(0, 31 * GameBase.WindowUIScale),
                 Alignment = Alignment.BotLeft,
-                PositionY = 31 * GameBase.WindowUIScale
             };
 
-            GradeProgressBar = new BarDisplay(GameBase.WindowUIScale, AccuracyBox.SizeX - (GradeBox.SizeY * 2) - 30 * GameBase.WindowUIScale, new Color[] { Color.Red })
+            GradeProgressBar = new BarDisplay(GameBase.WindowUIScale, AccuracyBox.Size.X.Offset - (GradeBox.Size.Y.Offset * 2) - 30 * GameBase.WindowUIScale, new Color[] { Color.Red })
             {
                 Parent = GradeBox,
-                Position = Vector2.Zero,
                 Alignment = Alignment.MidCenter
             };
 
             GradeLeft = new Sprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallF,
-                //PositionX = 8,
-                Size = Vector2.One * GradeBox.SizeY * GameBase.WindowUIScale,
+                Size = new UDim2(GradeBox.Size.Y.Offset * GameBase.WindowUIScale, GradeBox.Size.Y.Offset * GameBase.WindowUIScale),
                 //PositionX = GradeProgressBar.PositionX - 32 * GameBase.WindowUIScale,
                 Parent = GradeBox
             };
@@ -193,8 +184,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             GradeRight = new Sprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallD,
-                //PositionX = -8,
-                Size = Vector2.One * GradeBox.SizeY * GameBase.WindowUIScale,
+                Size = new UDim2(GradeBox.Size.Y.Offset * GameBase.WindowUIScale, GradeBox.Size.Y.Offset * GameBase.WindowUIScale),
                 Alignment = Alignment.TopRight,
                 //PositionX = GradeProgressBar.PositionX + GradeProgressBar.SizeX + 32 * GameBase.WindowUIScale,
                 Parent = GradeBox
@@ -203,7 +193,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create new Leaderboard Box
             LeaderboardBox = new Sprite()
             {
-                Size = new Vector2(230, 400),
+                Size = new UDim2(230, 400),
                 Alignment = Alignment.MidLeft,
                 Parent = Boundary,
                 Alpha = 0f,
@@ -258,7 +248,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             double tween = Math.Min(dt / 50, 1);
             for (var i = 0; i < 6; i++)
             {
-                AccuracyGraphBar[i].ScaleX = Util.Tween(AccuracyGraphTargetScale[i], AccuracyGraphBar[i].ScaleX, tween);
+                AccuracyGraphBar[i].Size.X.Scale = Util.Tween(AccuracyGraphTargetScale[i], AccuracyGraphBar[i].Size.X.Scale, tween);
             }
 
             // If there's an active long note, the score will have a "slider" effect (+1 point every 25ms), otherwise it will tween normally

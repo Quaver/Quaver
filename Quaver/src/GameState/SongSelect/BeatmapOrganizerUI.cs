@@ -56,7 +56,7 @@ namespace Quaver.GameState.SongSelect
         public void Update(double dt)
         {
             var tween = Math.Min(dt / 70, 1);
-            Boundary.PositionY = Util.Tween(TargetPosition, Boundary.PositionY, tween);
+            Boundary.Position.Y.Offset = Util.Tween(TargetPosition, Boundary.Position.Y.Offset, tween);
             SelectedMapTween = Util.Tween(SelectedMapIndex, SelectedMapTween, tween);
             //GameBase.Window.Y-(GameBase.Window.Z/2f)
             for (var i=0; i<SongSelectButtons.Count; i++)
@@ -68,7 +68,7 @@ namespace Quaver.GameState.SongSelect
                     (float)Math.Sin(Math.PI * (Boundary.PositionY + button.PositionY)/ GameBase.Window.Z) * 30 
                     + 50/ selectedOffset
                     - 30;*/
-                button.PositionX = -(30 / selectedOffset) - 5;
+                button.Position.X.Offset = -(30 / selectedOffset) - 5;
 
             }
             Boundary.Update(dt);
@@ -94,8 +94,7 @@ namespace Quaver.GameState.SongSelect
                     {
                         Image = GameBase.UI.BlankBox,
                         Alignment = Alignment.TopRight,
-                        PositionY = OrganizerSize,
-                        PositionX = -5,
+                        Position = new UDim2(-5, OrganizerSize),
                         Parent = Boundary
                     };
 
@@ -106,7 +105,7 @@ namespace Quaver.GameState.SongSelect
                     SongSelectButtons.Add(newButton);
 
                     // Change the Y value
-                    OrganizerSize += newButton.SizeY + 2;
+                    OrganizerSize += newButton.Size.Y.Offset + 2;
                 }
             }
         }

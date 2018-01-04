@@ -195,7 +195,7 @@ namespace Quaver.Graphics.Text
         private string WrapText(string text, bool multiLine, bool overflow = false)
         {
             //Check if text is not short enough to fit on its on box
-            if (Font.MeasureString(text).X < SizeX) return text;
+            if (Font.MeasureString(text).X < Size.X.Offset) return text;
 
             //Reference Variables
             string[] words = text.Split(' ');
@@ -209,7 +209,7 @@ namespace Quaver.Graphics.Text
             foreach (var a in words)
             {
                 Vector2 size = Font.MeasureString(a);
-                if (linewidth + size.X < AbsoluteSizeX)
+                if (linewidth + size.X < AbsoluteSize.X)
                 {
                     linewidth += size.X + spaceWidth;
                 }

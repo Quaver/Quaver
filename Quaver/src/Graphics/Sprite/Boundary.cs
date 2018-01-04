@@ -18,13 +18,21 @@ namespace Quaver.Graphics.Sprite
     /// </summary>
     internal class Boundary : Drawable
     {
-        // Constructor
-        public Boundary()
+        /// <summary>
+        ///     Create a new Boundary Given Xposition, Yposition, Xsize, Ysize
+        /// </summary>
+        /// <param name="xPosition"></param>
+        /// <param name="yPosition"></param>
+        /// <param name="xSize"></param>
+        /// <param name="ySize"></param>
+        public Boundary(float? xPosition = null, float? yPosition = null, float? xSize = null, float? ySize = null)
         {
-            SizeX = GameBase.Window.Width;
-            SizeY = GameBase.Window.Height;
-            PositionX = GameBase.Window.X;
-            PositionY = GameBase.Window.Y;
+            //Size.X.Offset = (float)GameBase.Window.Width;
+            //Size.Y.Offset = (float)GameBase.Window.Height;
+            Size.X.Offset = xSize != null ? (float)xSize : GameBase.Window.Width;
+            Size.Y.Offset = ySize != null ? (float)ySize : GameBase.Window.Height;
+            Position.X.Offset = xPosition != null ? (float)xPosition : GameBase.Window.X;
+            Position.Y.Offset = yPosition != null ? (float)yPosition : GameBase.Window.Y;
         }
     }
 }

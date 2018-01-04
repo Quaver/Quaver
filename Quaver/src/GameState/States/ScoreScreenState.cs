@@ -238,8 +238,7 @@ namespace Quaver.GameState.States
             //Create Judge Info Boundary
             JudgeInfoBoundary = new Boundary()
             {
-                SizeX = 300,
-                SizeY = 200,
+                Size = new UDim2(300, 200),
                 Alignment = Alignment.MidCenter
             };
 
@@ -252,8 +251,8 @@ namespace Quaver.GameState.States
                     Text = "[" + GameplayReferences.JudgeNames[i] + "]: Press|Release: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i],
                     TextColor = GameColors.JudgeColors[i],
                     Font = Fonts.Medium16,
-                    PositionY = 200 * i/6,
-                    ScaleX = 1,
+                    Position = new UDim2(0,200 * i/6),
+                    Size = new UDim2(0, 0, 1, 0),
                     TextAlignment = Alignment.MidCenter,
                     Parent = JudgeInfoBoundary
                 };
@@ -266,9 +265,8 @@ namespace Quaver.GameState.States
                 Font = Fonts.Medium24,
                 TextAlignment = Alignment.MidLeft,
                 TextColor = Color.White,
-                ScaleX = 1,
-                SizeY = 70,
-                PositionY = -70,
+                Position = new UDim2(0, -70),
+                Size = new UDim2(0, 70, 1, 0),
                 Parent = JudgeInfoBoundary
             };
 
@@ -279,20 +277,18 @@ namespace Quaver.GameState.States
                 Font = Fonts.Medium24,
                 TextAlignment = Alignment.MidRight,
                 TextColor = Color.White,
-                ScaleX = 1,
-                SizeY = 70,
-                PositionY = -70,
+                Position = new UDim2(0, -70),
+                Size = new UDim2(0, 70, 1, 0),
                 Parent = JudgeInfoBoundary
             };
 
             // create ms deviance box
             MsDevianceBoundary = new Sprite()
             {
-                SizeX = 400,
-                SizeY = 150,
+                Size = new UDim2(400, 150),
+                Position = new UDim2(0, -100),
                 Alignment = Alignment.BotCenter,
                 Tint = Color.Black,
-                PositionY = -100,
                 Alpha = 0.5f
             };
 
@@ -306,9 +302,8 @@ namespace Quaver.GameState.States
                 //bottom
                 ob = new Sprite()
                 {
-                    PositionY = MsDevianceBoundary.SizeY * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2,
-                    ScaleX = 1,
-                    SizeY = 1,
+                    Position = new UDim2(0, MsDevianceBoundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
+                    Size = new UDim2(0, 1, 1, 0),
                     Tint = GameColors.JudgeColors[i],
                     Alpha = 0.1f,
                     Alignment = Alignment.MidLeft,
@@ -318,9 +313,8 @@ namespace Quaver.GameState.States
                 //top
                 ob = new Sprite()
                 {
-                    PositionY = -MsDevianceBoundary.SizeY * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2,
-                    ScaleX = 1,
-                    SizeY = 1,
+                    Position = new UDim2(0, -MsDevianceBoundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
+                    Size = new UDim2(0, 1, 1, 0),
                     Tint = GameColors.JudgeColors[i],
                     Alpha = 0.1f,
                     Alignment = Alignment.MidLeft,
@@ -334,9 +328,8 @@ namespace Quaver.GameState.States
             {
                 var ob = new Sprite()
                 {
-                    PositionX = MsDevianceBoundary.SizeX * (float)((timeIndex*15000)/ ScoreData.SongLength),
-                    SizeX = 1,
-                    ScaleY = 1,
+                    Position = new UDim2(MsDevianceBoundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
+                    Size = new UDim2(0, 1, 1, 0),
                     Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
                     Parent = MsDevianceBoundary
                 };
@@ -352,9 +345,8 @@ namespace Quaver.GameState.States
                 {
                     var ob = new Sprite()
                     {
-                        PositionX = ((float)ms.Position * MsDevianceBoundary.SizeX) - 1,
-                        SizeX = 1,
-                        ScaleY = 1,
+                        Position = new UDim2(((float)ms.Position * MsDevianceBoundary.Size.X.Offset) - 1, 0),
+                        Size = new UDim2(1, 0, 0, 1),
                         Tint = GameColors.JudgeMiss,
                         Alpha = 0.4f,
                         Parent = MsDevianceBoundary
@@ -368,10 +360,8 @@ namespace Quaver.GameState.States
                 {
                     var ob = new Sprite()
                     {
-                        PositionX = ((float)ms.Position * MsDevianceBoundary.SizeX) - 1,
-                        PositionY = ((float)ms.Offset * (MsDevianceBoundary.SizeY / 2)) - 1,
-                        SizeX = 2,
-                        SizeY = 2,
+                        Position = new UDim2(((float)ms.Position * MsDevianceBoundary.Size.X.Offset) - 1, ((float)ms.Offset * (MsDevianceBoundary.Size.Y.Offset / 2)) - 1),
+                        Size = new UDim2(2, 2),
                         Tint = GameColors.JudgeColors[ms.Type],
                         Alignment = Alignment.MidLeft,
                         Parent = MsDevianceBoundary
@@ -387,10 +377,8 @@ namespace Quaver.GameState.States
             {
                 Text = "Late (+" + Math.Floor(ScoreData.HitWindowPress[4]) + "ms)",
                 Font = Fonts.Medium12,
-                PositionX = 2,
-                PositionY = 2,
-                SizeX = 200,
-                SizeY = 50,
+                Position = new UDim2(2, 2),
+                Size = new UDim2(200, 50),
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
                 Parent = MsDevianceBoundary
@@ -401,10 +389,8 @@ namespace Quaver.GameState.States
             {
                 Text = "Early (-" + Math.Floor(ScoreData.HitWindowPress[4]) + "ms)",
                 Font = Fonts.Medium12,
-                PositionX = 2,
-                PositionY = -2,
-                SizeX = 200,
-                SizeY = 50,
+                Position = new UDim2(2, -2),
+                Size = new UDim2(200, 50),
                 Alignment = Alignment.BotLeft,
                 TextAlignment = Alignment.BotLeft,
                 Parent = MsDevianceBoundary

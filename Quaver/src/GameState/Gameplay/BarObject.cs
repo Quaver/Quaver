@@ -26,9 +26,8 @@ namespace Quaver.GameState.Gameplay
             BarSprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
-                PositionY = posY,
-                ScaleX = 1,
-                SizeY = sizeY,
+                Position = new UDim2(0, posY),
+                Size = new UDim2(0, sizeY, 1, 0),
                 Parent = parent
             };
         }

@@ -123,15 +123,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create Boundary
             Boundary = new Boundary()
             {
-                SizeX = GameplayReferences.PlayfieldSize,
-                ScaleY = 1,
+                Size = new UDim2(GameplayReferences.PlayfieldSize, 0, 0, 1),
                 Alignment = Alignment.MidCenter
             };
 
             // TODO: add judge scale
             JudgeSprite = new Sprite()
             {
-                Size = JudgeSizes[0],
+                Size = new UDim2(JudgeSizes[0].X, JudgeSizes[0].Y),
                 Alignment = Alignment.MidCenter,
                 Image = JudgeImages[0],
                 Parent = Boundary,
@@ -141,9 +140,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create Combo Text
             ComboText = new TextBoxSprite()
             {
-                SizeX = 100 * GameBase.WindowUIScale,
-                SizeY = 20 * GameBase.WindowUIScale,
-                PositionY = 45 * GameBase.WindowUIScale,
+                Size = new UDim2(100 * GameBase.WindowUIScale, 20 * GameBase.WindowUIScale),
+                Position = new UDim2(0, 45 * GameBase.WindowUIScale),
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.TopCenter,
                 Text = "0x",
@@ -156,15 +154,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create Offset Gauge
             OffsetGaugeBoundary = new Boundary()
             {
-                SizeX = 220 * GameBase.WindowUIScale,
-                SizeY = 10 * GameBase.WindowUIScale,
-                PositionY = 30 * GameBase.WindowUIScale,
+                Size = new UDim2(220 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale),
+                Position = new UDim2(0, 30 * GameBase.WindowUIScale),
                 Alignment = Alignment.MidCenter,
                 Parent = Boundary
             };
 
             //todo: OffsetGaugeBoundary.SizeX with a new size. Right now the offset gauge is the same size as the hitwindow
-            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (GameplayReferences.PressWindowLatest * 2 * GameBase.WindowUIScale);
+            OffsetGaugeSize = OffsetGaugeBoundary.Size.X.Offset / (GameplayReferences.PressWindowLatest * 2 * GameBase.WindowUIScale);
 
             OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)
@@ -172,18 +169,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 OffsetIndicatorsSprites[i] = new Sprite()
                 {
                     Parent = OffsetGaugeBoundary,
-                    ScaleY = 1,
-                    SizeX = 4,
+                    Size = new UDim2(4, 0, 0, 1),
                     Alignment = Alignment.MidCenter,
-                    PositionX = 0,
                     Alpha = 0
                 };
             }
 
             OffsetGaugeMiddle = new Sprite()
             {
-                SizeX = 2,
-                ScaleY = 1,
+                Size = new UDim2(2, 0, 0, 1),
                 Alignment = Alignment.MidCenter,
                 Parent = OffsetGaugeBoundary
             };
@@ -213,7 +207,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
 
             // Update Judge Alpha
-            JudgeSprite.PositionY = Util.Tween(0, JudgeSprite.PositionY, tween / 2);
+            JudgeSprite.Position.Y.Offset = Util.Tween(0, JudgeSprite.Position.Y.Offset, tween / 2);
             if (SpriteAlphaHold > 500 && PriorityJudgeLength <= 0)
             {
                 JudgeSprite.Alpha = Util.Tween(0, JudgeSprite.Alpha, tween / 10);
@@ -242,9 +236,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 PriorityJudgeImage = index;
 
                 // Update judge sprite
-                JudgeSprite.Size = JudgeSizes[index];
+                JudgeSprite.Size.X.Offset = JudgeSizes[index].X;
+                JudgeSprite.Size.Y.Offset = JudgeSizes[index].Y;
                 JudgeSprite.Image = JudgeImages[index];
-                JudgeSprite.PositionY = JudgeHitOffset;
+                JudgeSprite.Position.Y.Offset = JudgeHitOffset;
             }
 
             if (index != 5 && !release && offset != null)
@@ -252,7 +247,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 CurrentOffsetObjectIndex++;
                 if (CurrentOffsetObjectIndex >= OffsetIndicatorSize) CurrentOffsetObjectIndex = 0;
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Tint = GameColors.JudgeColors[index];
-                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].PositionX = -(float)offset * OffsetGaugeSize;
+                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Position.X.Offset = -(float)offset * OffsetGaugeSize;
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Alpha = 0.5f;
             }
         }
