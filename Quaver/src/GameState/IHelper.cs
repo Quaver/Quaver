@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.GameState
 {
-    interface IHelper
+    internal interface IHelper
     {
         void Initialize(IGameState state);
         void UnloadContent();
