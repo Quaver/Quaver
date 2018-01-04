@@ -329,7 +329,7 @@ namespace Quaver.GameState.States
                 var ob = new Sprite()
                 {
                     Position = new UDim2(MsDevianceBoundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
-                    Size = new UDim2(0, 1, 1, 0),
+                    Size = new UDim2(1, 0, 0, 1),
                     Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
                     Parent = MsDevianceBoundary
                 };
