@@ -133,8 +133,8 @@ namespace Quaver.GameState.Gameplay
                 HoldBodySprite = new Sprite()
                 {
                     Alignment = Alignment.TopLeft,
-                    Size = new Vector2(HitObjectSize, InitialLongNoteSize),
-                    Position = _hitObjectPosition,
+                    Size = new UDim2(HitObjectSize, InitialLongNoteSize),
+                    Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
                     Parent = parent
                 };
 
@@ -160,8 +160,8 @@ namespace Quaver.GameState.Gameplay
             HitBodySprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
-                Position = _hitObjectPosition,
-                Size = Vector2.One * HitObjectSize,
+                Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
+                Size = new UDim2(HitObjectSize, HitObjectSize),
                 Parent = parent
             };
 
@@ -197,9 +197,9 @@ namespace Quaver.GameState.Gameplay
             }
 
             // Scale hit object accordingly
-            HitBodySprite.SizeX = HitObjectSize;
-            HitBodySprite.SizeY = HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width;
-            HoldBodyOffset = HitBodySprite.SizeY / 2;
+            HitBodySprite.Size.X.Offset = HitObjectSize;
+            HitBodySprite.Size.Y.Offset = HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width;
+            HoldBodyOffset = HitBodySprite.Size.Y.Offset / 2;
 
 
             // Create hold body (placed ontop of hold body) if this is a long note.
@@ -208,12 +208,12 @@ namespace Quaver.GameState.Gameplay
                 HoldEndSprite = new Sprite()
                 {
                     Alignment = Alignment.TopLeft,
-                    Position = _hitObjectPosition,
-                    SizeX = HitObjectSize,
+                    Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
+                    Size = new UDim2(HitObjectSize, 0),
                     Parent = parent,
                     SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
                 };
-                HoldEndOffset = HoldEndSprite.SizeY / 2;
+                HoldEndOffset = HoldEndSprite.Size.Y.Offset / 2;
 
                 // Choose the correct image based on the specific key lane.
                 switch (GameBase.SelectedBeatmap.Qua.Mode)
@@ -225,7 +225,7 @@ namespace Quaver.GameState.Gameplay
                                 return;
 
                             HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[i];
-                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds4K[i].Height / GameBase.LoadedSkin.NoteHoldEnds4K[i].Width;
+                            HoldEndSprite.Size.Y.Offset = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds4K[i].Height / GameBase.LoadedSkin.NoteHoldEnds4K[i].Width;
                         }
                         break;
                     case GameModes.Keys7:
@@ -235,7 +235,7 @@ namespace Quaver.GameState.Gameplay
                                 return;
 
                             HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds7K[i];
-                            HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds7K[i].Height / GameBase.LoadedSkin.NoteHoldEnds7K[i].Width;
+                            HoldEndSprite.Size.Y.Offset = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds7K[i].Height / GameBase.LoadedSkin.NoteHoldEnds7K[i].Width;
                         }
                         break;
                     default:
@@ -247,7 +247,7 @@ namespace Quaver.GameState.Gameplay
         public void Update(bool downScroll)
         {
             // Only update note if it's inside the window
-            if ((downScroll && _hitObjectPosition.Y + HitBodySprite.SizeY > GameBase.Window.Y) || (!downScroll && _hitObjectPosition.Y < GameBase.Window.Y + GameBase.Window.Height)) //todo: only update if object is inside boundary
+            if ((downScroll && _hitObjectPosition.Y + HitBodySprite.Size.Y.Offset > GameBase.Window.Y) || (!downScroll && _hitObjectPosition.Y < GameBase.Window.Y + GameBase.Window.Height)) //todo: only update if object is inside boundary
             {
                 if (IsLongNote)
                 {
@@ -259,16 +259,16 @@ namespace Quaver.GameState.Gameplay
                     else
                     {
                         //Update HoldBody Position and Size
-                        HoldBodySprite.SizeY = CurrentLongNoteSize;
-                        HoldBodySprite.PositionY = downScroll ? -(float)CurrentLongNoteSize + HoldBodyOffset + _hitObjectPosition.Y : _hitObjectPosition.Y + HoldBodyOffset;
+                        HoldBodySprite.Size.Y.Offset = CurrentLongNoteSize;
+                        HoldBodySprite.Position.Y.Offset = downScroll ? -(float)CurrentLongNoteSize + HoldBodyOffset + _hitObjectPosition.Y : _hitObjectPosition.Y + HoldBodyOffset;
 
                         //Update Hold End Position
-                        HoldEndSprite.PositionY = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.SizeY - HoldEndOffset + HoldBodyOffset) : (_hitObjectPosition.Y + HoldBodySprite.SizeY + HoldEndOffset - HoldBodyOffset);
+                        HoldEndSprite.Position.Y.Offset = downScroll ? (_hitObjectPosition.Y - HoldBodySprite.Size.Y.Offset - HoldEndOffset + HoldBodyOffset) : (_hitObjectPosition.Y + HoldBodySprite.Size.Y.Offset + HoldEndOffset - HoldBodyOffset);
                     }
                 }
 
                 //Update HitBody
-                HitBodySprite.PositionY = _hitObjectPosition.Y;
+                HitBodySprite.Position.Y.Offset = _hitObjectPosition.Y;
             }
         }
 

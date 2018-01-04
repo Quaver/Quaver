@@ -130,7 +130,7 @@ namespace Quaver.GameState.Gameplay
             {
                 Image = GameBase.UI.HollowBox,
                 Tint = Color.Blue,
-                Size = new Vector2(250, 200),
+                Size = new UDim2(250, 500),
                 Alignment = Alignment.TopRight
             };
         }

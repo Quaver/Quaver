@@ -55,8 +55,8 @@ namespace Quaver.Graphics.Button
             var ButtonSizeY = 40 * ButtonScale;
             var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";
 
-            SizeY = ButtonSizeY;
-            SizeX = ButtonSizeY * 8;
+            Size.Y.Offset = ButtonSizeY;
+            Size.X.Offset = ButtonSizeY * 8;
 
             //Load and set BG Image
             /*
@@ -75,12 +75,8 @@ namespace Quaver.Graphics.Button
             {
                 Text = map.Title,
                 Font = Fonts.Medium48,
-                ScaleY = 0.5f,
-                ScaleX = 0.825f,
-                SizeX = -5 * ButtonScale,
-                PositionX = -5 * ButtonScale,
-                SizeY = -2 * ButtonScale,
-                PositionY = 2 * ButtonScale,
+                Size = new UDim2(-5 * ButtonScale, -2 * ButtonScale, 0.825f, 0.5f),
+                Position = new UDim2(-5 * ButtonScale, 2 * ButtonScale),
                 Alignment = Alignment.TopRight,
                 TextAlignment = Alignment.BotLeft,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
@@ -92,12 +88,8 @@ namespace Quaver.Graphics.Button
             {
                 Text = map.Artist + " | "+ map.Creator,
                 Font = Fonts.Medium48,
-                ScaleY = 0.5f,
-                ScaleX = 0.825f,
-                SizeX = -5 * ButtonScale,
-                PositionX = -5 * ButtonScale,
-                SizeY = -5 * ButtonScale,
-                PositionY = -5 * ButtonScale,
+                Position = new UDim2(-5 * ButtonScale, -5 * ButtonScale),
+                Size = new UDim2(-5 * ButtonScale, -5 * ButtonScale, 0.825f, 0.5f),
                 Alignment = Alignment.BotRight,
                 TextAlignment = Alignment.TopLeft,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
@@ -109,12 +101,8 @@ namespace Quaver.Graphics.Button
             {
                 Text = "00.00",
                 Font = Fonts.Bold12,
-                ScaleY = 0.5f,
-                ScaleX = 0.175f,
-                SizeY = -5 * ButtonScale,
-                PositionY = 5 * ButtonScale,
-                SizeX = -6 * ButtonScale,
-                PositionX = 2 * ButtonScale,
+                Position = new UDim2(2 * ButtonScale, 5 * ButtonScale),
+                Size = new UDim2(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.BotRight,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
@@ -131,14 +119,10 @@ namespace Quaver.Graphics.Button
                 Parent = ModeAndGradeBoundaryOutter
             };*/
 
-            UnderlayImage = new Sprite.Sprite()
+            UnderlayImage = new Sprite.Sprite
             {
-                ScaleX = 0.175f,
-                ScaleY = 0.5f,
-                SizeY = -5 * ButtonScale,
-                PositionY = -5 * ButtonScale,
-                SizeX = -6 * ButtonScale,
-                PositionX = 2 * ButtonScale,
+                Position = new UDim2(2 * ButtonScale, -5 * ButtonScale),
+                Size = new UDim2(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
                 Alignment = Alignment.BotLeft,
                 Alpha = 0,
                 Parent = this
@@ -147,8 +131,8 @@ namespace Quaver.Graphics.Button
             
             GradeImage = new Sprite.Sprite()
             {
-                Size = Vector2.One * 14 * ButtonScale,
-                PositionX = -16 * ButtonScale,
+                Position = new UDim2(-16 * ButtonScale, 0),
+                Size = new UDim2(14 * ButtonScale, 14 * ButtonScale),
                 Alpha = 1f,
                 Image = GameBase.LoadedSkin.GradeSmallA,
                 Alignment = Alignment.MidRight,
@@ -157,7 +141,7 @@ namespace Quaver.Graphics.Button
 
             GameModeImage = new Sprite.Sprite()
             {
-                Size = Vector2.One * 14 * ButtonScale,
+                Size = new UDim2(14 * ButtonScale, 14 * ButtonScale),
                 Image = GameBase.LoadedSkin.Cursor,
                 Alpha = 0.5f,
                 Alignment = Alignment.MidRight,

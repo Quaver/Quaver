@@ -25,12 +25,13 @@ namespace Quaver.Graphics.Button
             TextSprite = new TextBoxSprite()
             {
                 Text = ButtonText,
-                Size = ButtonSize,
+                Size = new UDim2(ButtonSize.X, ButtonSize.Y),
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.MidCenter,
                 Parent = this
             };
-            Size = ButtonSize;
+            Size.X.Offset = ButtonSize.X;
+            Size.Y.Offset = ButtonSize.Y;
             Image = GameBase.UI.BlankBox;
             TextSprite.TextColor = Color.Black;
         }

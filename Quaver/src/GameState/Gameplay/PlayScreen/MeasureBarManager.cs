@@ -21,10 +21,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         public void Initialize(IGameState state)
         {
-            Boundary = new Boundary()
+            Boundary = new Boundary(null, null, GameplayReferences.PlayfieldSize, null)
             {
-                Alignment = Graphics.Alignment.MidCenter,
-                SizeX = GameplayReferences.PlayfieldSize
+                Alignment = Graphics.Alignment.MidCenter
             };
             BarObjectQueue = new List<BarObject>();
             CreateBarQueue();

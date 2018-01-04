@@ -87,7 +87,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create playfield boundary
             Boundary = new Boundary()
             {
-                Size = new Vector2(PlayfieldSize, GameBase.Window.Height),
+                Size = new UDim2(PlayfieldSize, GameBase.Window.Height),
                 Alignment = Alignment.TopCenter
             };
 
@@ -98,7 +98,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Tint = Color.Black, //todo: remove
                 Alpha = 0.8f, //todo: remove
                 Parent = Boundary,
-                Scale = Vector2.One
+                Size = new UDim2(0, 0, 1, 1)
             };
 
             // Create Receptors
@@ -120,9 +120,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 // Create new Receptor Sprite
                 Receptors[i] = new Sprite
                 {
-
-                    SizeX = LaneSize,
-                    Position = new Vector2(GameplayReferences.ReceptorXPosition[i], GameplayReferences.ReceptorYOffset),
+                    Size = new UDim2(LaneSize, 0),
+                    Position = new UDim2(GameplayReferences.ReceptorXPosition[i], GameplayReferences.ReceptorYOffset),
                     Alignment = Alignment.TopLeft,
                     Parent = Boundary
                 };
@@ -132,11 +131,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     case GameModes.Keys4:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors4K[i];
-                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptors4K[i].Height / GameBase.LoadedSkin.NoteReceptors4K[i].Width;
+                        Receptors[i].Size.Y.Offset = LaneSize * GameBase.LoadedSkin.NoteReceptors4K[i].Height / GameBase.LoadedSkin.NoteReceptors4K[i].Width;
                         break;
                     case GameModes.Keys7:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors7K[i];
-                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptors7K[i].Height / GameBase.LoadedSkin.NoteReceptors7K[i].Width;
+                        Receptors[i].Size.Y.Offset = LaneSize * GameBase.LoadedSkin.NoteReceptors7K[i].Height / GameBase.LoadedSkin.NoteReceptors7K[i].Width;
                         break;
                 }
             }
