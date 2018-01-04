@@ -132,13 +132,20 @@ namespace Quaver.GameState.SongSelect
 
             // Load background asynchronously if the backgrounds actually do differ
             if (oldMapBgPath != map.Directory + "/" + map.BackgroundPath)
+            {
                 Task.Run(() =>
-                    {
-                        BackgroundManager.Blacken();
-                        GameBase.LoadBackground();
-                    })
-                    .ContinueWith(t => BackgroundManager.Change(GameBase.CurrentBackground));
-            
+                {
+                    // Fade effect and make the current bg go black while we load the next bg.
+                    BackgroundManager.Blacken();
+
+                    GameBase.LoadBackground();
+                }).ContinueWith(t =>
+                {
+                    // After loading, change the background
+                    BackgroundManager.Change(GameBase.CurrentBackground);
+                });
+            }
+          
             // Load all the local scores from this map 
             // TODO: Add filters, this should come after there's some sort of UI to do so
             // TODO #2: Actually display these scores on-screen somewhere. Add loading animation before running task.
