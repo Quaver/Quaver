@@ -171,6 +171,8 @@
     <Compile Include="src\Graphics\Text\Fonts.cs" />
     <Compile Include="src\Graphics\Text\TextBoxSprite.cs" />
     <Compile Include="src\Graphics\Text\TextBoxStyle.cs" />
+    <Compile Include="src\Graphics\UDim2.cs" />
+    <Compile Include="src\Graphics\UDim.cs" />
     <Compile Include="src\Graphics\UI.cs" />
     <Compile Include="src\Graphics\Sprite\BackgroundManager.cs" />
     <Compile Include="src\Input\ManiaKey.cs" />
