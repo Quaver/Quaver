@@ -42,6 +42,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         //Creates timing bars (used to measure 16 beats)
         internal void CreateBarQueue()
         {
+            /*
             for (var i = 0; i < GameBase.SelectedBeatmap.Qua.TimingPoints.Count; i++)
             {
                 var startTime = GameBase.SelectedBeatmap.Qua.TimingPoints[i].StartTime;
@@ -71,7 +72,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             for (var i=0; i< BarObjectActive.Count; i++)
             {
                 BarObjectActive[i].Initialize(Boundary, 2, 0);
-            }
+            }*/
         }
 
         internal void RecycleBar()
