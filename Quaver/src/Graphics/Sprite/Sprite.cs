@@ -31,6 +31,7 @@ namespace Quaver.Graphics.Sprite
                 _image = value;
                 _origin.X = _image.Width / 2f;
                 _origin.Y = _image.Height / 2f;
+                Changed = true;
             }
         }
         private Texture2D _image = GameBase.UI.BlankBox;

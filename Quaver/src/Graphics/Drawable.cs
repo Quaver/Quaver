@@ -22,21 +22,83 @@ namespace Quaver.Graphics
         private DrawRectangle _localRectangle = new DrawRectangle();
         private DrawRectangle _globalRectangle = new DrawRectangle();
         private Drawable _parent = null;
-        //private Vector2 _localScale = new Vector2();
-        //private Vector2 _local_size = new Vector2();
         internal UDim2 _position = new UDim2();
         internal UDim2 _size = new UDim2();
-        internal UDim2 Position { get => _position;
+
+        /// <summary>
+        ///     Position of this Object
+        /// </summary>
+        internal UDim2 Position
+        {
+            get => _position;
             set
             {
                 _position = value;
                 Changed = true;
             }
         }
-        internal UDim2 Size { get => _size;
+
+        /// <summary>
+        ///     X Position of this object
+        /// </summary>
+        internal float PosX
+        {
+            get => _position.X.Offset;
+            set
+            {
+                _position.X.Offset = value;
+                Changed = true;
+            }
+        }
+
+        /// <summary>
+        ///     Y Position of this object
+        /// </summary>
+        internal float PosY
+        {
+            get => _position.Y.Offset;
+            set
+            {
+                _position.Y.Offset = value;
+                Changed = true;
+            }
+        }
+
+        /// <summary>
+        ///     Size of this object
+        /// </summary>
+        internal UDim2 Size
+        {
+            get => _size;
             set
             {
                 _size = value;
+                Changed = true;
+            }
+        }
+
+        /// <summary>
+        ///     X Size of this object
+        /// </summary>
+        internal float SizeX
+        {
+            get => _size.X.Offset;
+            set
+            {
+                _size.X.Offset = value;
+                Changed = true;
+            }
+        }
+
+        /// <summary>
+        ///     Y Size of this object
+        /// </summary>
+        internal float SizeY
+        {
+            get => _size.Y.Offset;
+            set
+            {
+                _size.Y.Offset = value;
                 Changed = true;
             }
         }
@@ -107,11 +169,11 @@ namespace Quaver.Graphics
         internal virtual void Update(double dt)
         {
             //Animation logic
-            //if (Changed)
-            //{
-                //Changed = false;
+            if (Changed)
+            {
+                Changed = false;
                 RecalculateRect();
-            //}
+            }
 
             //Update Children
             Children.ForEach(x => x.Update(dt));

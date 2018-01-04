@@ -59,13 +59,13 @@ namespace Quaver.Graphics.Sprite
 
             //Resize Cursor
             ClickCurrentSize = Util.Tween(ClickTargetSize, ClickCurrentSize, Math.Min(dt / 40, 1));
-            Size.X.Offset = CursorSize + ClickCurrentSize;
-            Size.Y.Offset = Size.X.Offset;
+            SizeX = CursorSize + ClickCurrentSize;
+            SizeY = SizeX;
 
             //Move Cursor
             //Position = Util.PointToVector2(GameBase.MouseState.Position);
-            Position.X.Offset = GameBase.MouseState.Position.X - (CursorSize + ClickCurrentSize) / 2;
-            Position.Y.Offset = GameBase.MouseState.Position.Y - (CursorSize + ClickCurrentSize) / 2;
+            PosX = GameBase.MouseState.Position.X - (CursorSize + ClickCurrentSize) / 2;
+            PosY = GameBase.MouseState.Position.Y - (CursorSize + ClickCurrentSize) / 2;
 
             base.Update(dt);
         }
