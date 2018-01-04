@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 #if !PUBLIC
-using Quaver.Online.Wobble;
+using Quaver.Online;
 
 namespace Quaver.Commands
 {
@@ -27,7 +27,7 @@ namespace Quaver.Commands
             }
 
             // Connect
-            SocketClient.Connect(args[1], args[2], true);
+            RattleClient.Connect(args[1], args[2], true);
         }
     }
 }
