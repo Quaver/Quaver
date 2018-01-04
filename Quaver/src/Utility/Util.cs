@@ -148,6 +148,7 @@ namespace Quaver.Utility
         /// <returns></returns>
         internal static Rectangle DrawRectToRectangle(DrawRectangle rect)
         {
+            //return new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
             return new Rectangle((int)Math.Ceiling(rect.X), (int)Math.Ceiling(rect.Y), (int)Math.Ceiling(rect.Width), (int)Math.Ceiling(rect.Height));
         }
 
@@ -251,22 +252,22 @@ namespace Quaver.Utility
         {
             if (accuracy == 100 && isPerfect)
                 return Grades.XX;
-            if (accuracy == 100 && !isPerfect)
+            else if (accuracy == 100 && !isPerfect)
                 return Grades.X;
-            if (accuracy >= 99)
+            else if (accuracy >= 99)
                 return Grades.SS;
-            if (accuracy >= 95)
+            else if (accuracy >= 95)
                 return Grades.S;
-            if (accuracy >= 90)
+            else if (accuracy >= 90)
                 return Grades.A;
-            if (accuracy >= 80)
+            else if (accuracy >= 80)
                 return Grades.B;
-            if (accuracy >= 70)
+            else if (accuracy >= 70)
                 return Grades.C;
-            if (accuracy >= 60)
+            else if (accuracy >= 60)
                 return Grades.D;
-            else
-                return Grades.F;
+            
+           return Grades.F;
         }
     }
 }

@@ -104,6 +104,32 @@ namespace Quaver.Graphics
         }
 
         /// <summary>
+        ///     X Scale of this object
+        /// </summary>
+        internal float ScaleX
+        {
+            get => _size.X.Scale;
+            set
+            {
+                _size.X.Scale = value;
+                Changed = true;
+            }
+        }
+
+        /// <summary>
+        ///     Y Scale of this object
+        /// </summary>
+        internal float ScaleY
+        {
+            get => _size.Y.Scale;
+            set
+            {
+                _size.Y.Scale = value;
+                Changed = true;
+            }
+        }
+
+        /// <summary>
         ///     The alignment of the sprite relative to it's parent.
         /// </summary>
         internal Alignment Alignment { get; set; } = Alignment.TopLeft;
