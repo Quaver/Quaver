@@ -56,21 +56,21 @@ namespace Quaver.GameState.SongSelect
         public void Update(double dt)
         {
             var tween = Math.Min(dt / 70, 1);
-            Boundary.PosY = Util.Tween(TargetPosition, Boundary.PosY, tween);
-            SelectedMapTween = Util.Tween(SelectedMapIndex, SelectedMapTween, tween);
-            //GameBase.Window.Y-(GameBase.Window.Z/2f)
+
+            // Update Position of Boundary
+            var posDifference = Util.Tween(TargetPosition, Boundary.PosY, tween) - Boundary.PosY;
+            if (Math.Abs(posDifference) > 0.5f) Boundary.PosY += posDifference;
+
+            /* SelectedMapTween = Util.Tween(SelectedMapIndex, SelectedMapTween, tween);
             for (var i=0; i<SongSelectButtons.Count; i++)
             {
                 var button = SongSelectButtons[i];
                 var selectedOffset = Math.Abs(SelectedMapTween - i)+1;
 
-                /*button.PositionX = 
-                    (float)Math.Sin(Math.PI * (Boundary.PositionY + button.PositionY)/ GameBase.Window.Z) * 30 
-                    + 50/ selectedOffset
-                    - 30;*/
                 button.PosX = -(30 / selectedOffset) - 5;
 
-            }
+            }*/
+
             Boundary.Update(dt);
         }
 
