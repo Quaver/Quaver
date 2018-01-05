@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using ManagedBass;
 using osu.Shared;
 using osu_database_reader.BinaryFiles;
+using Quaver.API.Osu;
 using Quaver.Logging;
-using Quaver.Maps;
-using Quaver.Peppy;
 using Quaver.Utility;
 using Configuration = Quaver.Config.Configuration;
+using Quaver.API.Maps;
 
 namespace Quaver.Commands
 {

@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Quaver.Maps;
 using System.IO;
 
 namespace Quaver.Tests

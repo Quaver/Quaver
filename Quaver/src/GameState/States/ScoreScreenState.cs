@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Quaver.Config;
 using Quaver.Database;
-using Quaver.Enums;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;

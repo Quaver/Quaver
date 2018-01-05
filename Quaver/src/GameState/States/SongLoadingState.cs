@@ -9,9 +9,8 @@ using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Database.Beatmaps;
 using Quaver.Logging;
-using Quaver.Maps;
-using Quaver.Maps.Difficulty;
 using Quaver.Replays;
+using Quaver.API.Maps;
 
 namespace Quaver.GameState.States
 {

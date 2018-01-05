@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Quaver.Enums;
+using Quaver.API.Enums;
 using SQLite;
 
 namespace Quaver.Scores

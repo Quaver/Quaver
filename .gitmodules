@@ -1,3 +1,6 @@
 [submodule "Quaver-Framework"]
 	path = Quaver-Framework
 	url = git@github.com:Swan/Quaver-Framework.git
+[submodule "Quaver-API"]
+	path = Quaver-API
+	url = git@github.com:Swan/Quaver-API

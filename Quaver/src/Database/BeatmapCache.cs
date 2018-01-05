@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.API.Maps;
 using Quaver.Database.Beatmaps;
 using Quaver.Config;
 using Quaver.Logging;
-using Quaver.Maps;
 using SQLite;
 
 namespace Quaver.Database

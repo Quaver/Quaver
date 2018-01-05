@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.API.Maps;
 using Quaver.GameState.States;
 using Quaver.Logging;
 using Quaver.Audio;
@@ -15,7 +16,6 @@ using Quaver.Graphics;
 using Quaver.Input;
 using Quaver.Replays;
 using Quaver.Config;
-using Quaver.Maps;
 
 namespace Quaver.GameState.Gameplay
 {

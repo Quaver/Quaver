@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ManagedBass;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Enums;
+using Quaver.API.Enums;
 using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
