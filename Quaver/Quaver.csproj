@@ -145,8 +145,6 @@
     <Compile Include="src\Database\LocalScoreCache.cs" />
     <Compile Include="src\Discord\DiscordController.cs" />
     <Compile Include="src\Discord\DiscordRPC.cs" />
-    <Compile Include="src\Enums\GameModes.cs" />
-    <Compile Include="src\Enums\Grades.cs" />
     <Compile Include="src\GameState\Gameplay\BarObject.cs" />
     <Compile Include="src\GameState\Gameplay\GameplayReferences.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\AccuracyBoxUI.cs" />
@@ -180,20 +178,10 @@
     <Compile Include="src\Logging\Log.cs" />
     <Compile Include="src\Logging\LogColors.cs" />
     <Compile Include="src\Logging\Logger.cs" />
-    <Compile Include="src\Maps\Difficulty\DifficultyCalculator.cs" />
-    <Compile Include="src\Maps\Difficulty\PatternAnalyzer.cs" />
-    <Compile Include="src\Maps\Difficulty\Patterns\ChordPatternInfo.cs" />
-    <Compile Include="src\Maps\Difficulty\Patterns\ChordType.cs" />
-    <Compile Include="src\Maps\Difficulty\Patterns\IPattern.cs" />
-    <Compile Include="src\Maps\Difficulty\Patterns\JackPatternInfo.cs" />
-    <Compile Include="src\Maps\Difficulty\Patterns\PatternList.cs" />
-    <Compile Include="src\Maps\Difficulty\Patterns\PatternType.cs" />
-    <Compile Include="src\Maps\Difficulty\Patterns\StreamPatternInfo.cs" />
     <Compile Include="src\Modifiers\Mods\Chill.cs" />
     <Compile Include="src\Modifiers\Mods\Speed.cs" />
     <Compile Include="src\Modifiers\Mods\Strict.cs" />
     <Compile Include="src\Online\Rattle.cs" />
-    <Compile Include="src\Peppy\Osz.cs" />
     <Compile Include="src\GameState\Gameplay\GameplayManager.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\NoteManager.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\Timing.cs" />
@@ -218,7 +206,6 @@
     <Compile Include="src\Config\Configuration.cs" />
     <Compile Include="src\Database\BeatmapCache.cs" />
     <Compile Include="src\Database\BeatmapImporter.cs" />
-    <Compile Include="src\Maps\Qp.cs" />
     <Compile Include="src\QuaverGame.cs" />
     <Compile Include="src\GameState\GameStateManager.cs" />
     <Compile Include="src\GameState\State.cs" />
@@ -231,17 +218,14 @@
     <Compile Include="src\Graphics\GameColors.cs" />
     <Compile Include="src\Graphics\Sprite\Sprite.cs" />
     <Compile Include="src\Graphics\Drawable.cs" />
-    <Compile Include="src\Peppy\PeppyBeatmap.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Maps\Qua.cs" />
     <Compile Include="src\Replays\KeyPressState.cs" />
     <Compile Include="src\Replays\Replay.cs" />
     <Compile Include="src\Replays\ReplayFrame.cs" />
     <Compile Include="src\Replays\ReplayHelper.cs" />
     <Compile Include="src\Scores\LocalScore.cs" />
     <Compile Include="src\Skins\Skin.cs" />
-    <Compile Include="src\StepMania\StepManiaFile.cs" />
     <Compile Include="src\Tests\Audio.Test.cs" />
     <Compile Include="src\Tests\Json.Test.cs" />
     <Compile Include="src\Tests\Qua.Test.cs" />
@@ -486,6 +470,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Quaver-API\Quaver-API\Quaver-API.csproj">
+      <Project>{0c6869bd-4e34-4c92-a853-e09f2b320601}</Project>
+      <Name>Quaver-API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Quaver-Framework\Quaver-Framework\Quaver-Framework.csproj">
       <Project>{e8afe82b-4dda-4b46-bee7-75748e957ef3}</Project>
       <Name>Quaver-Framework</Name>

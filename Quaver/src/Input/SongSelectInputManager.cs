@@ -11,7 +11,6 @@ using Quaver.Config;
 using Quaver.Database;
 using Quaver.GameState.States;
 using Quaver.Logging;
-using Quaver.Maps;
 using Quaver.Replays;
 using Quaver.GameState.Gameplay;
 

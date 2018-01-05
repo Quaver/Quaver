@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Enums;
+using Quaver.API.Enums;
 using Quaver.Graphics;
 
 namespace Quaver.Utility

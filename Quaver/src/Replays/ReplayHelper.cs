@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
+using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Config;
-using Quaver.Enums;
 using Quaver.Logging;
 using Quaver.Modifiers;
-using Quaver.Maps;
 
 namespace Quaver.Replays
 {

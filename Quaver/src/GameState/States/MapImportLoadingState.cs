@@ -9,7 +9,6 @@ using Quaver.Database.Beatmaps;
 using Quaver.Discord;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
-using Quaver.Maps;
 
 namespace Quaver.GameState.States
 {
