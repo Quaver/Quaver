@@ -266,10 +266,10 @@ namespace Quaver
                 switch (SelectedBeatmap.Mode)
                 {
                     case GameModes.Keys4:
-                        DiscordController.presence.smallImageText = "4 Keys";
+                        DiscordController.presence.smallImageText = "Mania 4K";
                         break;
                     case GameModes.Keys7:
-                        DiscordController.presence.smallImageText = "7 Keys";
+                        DiscordController.presence.smallImageText = "Mania 7K";
                         break;
                     default:
                         break;
