@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
+using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Database.Beatmaps;
 using Quaver.Config;
@@ -21,7 +22,6 @@ using Quaver.Replays;
 using Quaver.GameState.Gameplay;
 using Quaver.GameState.Gameplay.PlayScreen;
 using Quaver.Modifiers;
-using Quaver.Maps;
 using Quaver.Utility;
 using Button = Quaver.Graphics.Button.Button;
 

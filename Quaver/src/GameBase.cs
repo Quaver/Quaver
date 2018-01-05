@@ -12,16 +12,16 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
+using Quaver.API.Enums;
+using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Discord;
-using Quaver.Enums;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Modifiers;
-using Quaver.Maps;
 using Quaver.Utility;
 
 namespace Quaver

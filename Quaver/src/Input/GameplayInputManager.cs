@@ -5,14 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
 using Quaver.Audio;
 using Quaver.GameState;
 using Quaver.Config;
 using Quaver.Database;
-using Quaver.Enums;
 using Quaver.GameState.States;
 using Quaver.Logging;
-using Quaver.Maps;
 using Quaver.Replays;
 using Quaver.GameState.Gameplay;
 

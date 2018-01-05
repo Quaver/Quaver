@@ -6,9 +6,9 @@ using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Enums;
+using Quaver.API.Maps;
 using Quaver.Audio;
-using Quaver.Enums;
-using Quaver.Maps;
 using Quaver.Utility;
 using SQLite;
 

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Quaver.Maps;
-using Quaver.StepMania;
+using Quaver.API.Maps;
+using Quaver.API.StepMania;
 
 namespace Quaver.Commands
 {
