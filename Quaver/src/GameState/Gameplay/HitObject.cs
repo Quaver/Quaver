@@ -209,7 +209,6 @@ namespace Quaver.GameState.Gameplay
                     Parent = parent,
                     SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
                 };
-                HoldEndOffset = HoldEndSprite.SizeY / 2;
 
                 // Choose the correct image based on the specific key lane.
                 switch (GameBase.SelectedBeatmap.Qua.Mode)
@@ -225,6 +224,9 @@ namespace Quaver.GameState.Gameplay
                     default:
                         break;
                 }
+
+                //Update Hold End Size
+                HoldEndOffset = HoldEndSprite.SizeY / 2;
             }
         }
 
