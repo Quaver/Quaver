@@ -43,7 +43,7 @@ namespace Quaver.GameState.Gameplay
         internal int[] ScoreWeighting { get; } = new int[6] { 100, 100, 100, 100, 100, 100 };
 
         //Accuracy Reference Variables
-        internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, 25, -75, -100 };
+        internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, -50, -100, 0 };
         internal float[] HitWindowPress { get; private set; }
         internal float[] HitWindowRelease { get; private set; }
         internal int[] GradePercentage { get; } = new int[8] { 60, 70, 80, 90, 95, 99, 100, 100 };
@@ -160,10 +160,13 @@ namespace Quaver.GameState.Gameplay
             //var curve = (float)Math.Pow(od+1, -0.325) * GameBase.GameClock;
             //HitWindowPress = new float[5] { 20 * GameBase.GameClock, 88 * curve, 122 * curve, 148 * curve, 214 * curve };
             //HitWindowRelease = new float[4] { 30 * GameBase.GameClock, HitWindowPress[1]*1.35f, HitWindowPress[2] * 1.35f, HitWindowPress[3] * 1.35f };
-            HitWindowPress = new float[5] { 18, 43, 76, 106f, 130f };
-            HitWindowRelease = new float[4] { HitWindowPress[0] * 1.25f, HitWindowPress[1] * 1.25f, HitWindowPress[2] * 1.25f, HitWindowPress[3] * 1.25f }; // 1.25x
 
-            //count max score
+            //Update Hit Window
+            //This is similar to stepmania J4
+            HitWindowPress = new float[5] { 18, 45, 90, 135, 180 };
+            HitWindowRelease = new float[4] { HitWindowPress[0] * 1.5f, HitWindowPress[1] * 1.5f, HitWindowPress[2] * 1.5f, HitWindowPress[3] * 1.5f };
+
+            // Count max score
             ScoreMax = 0;
             if (count < 150)
             {
