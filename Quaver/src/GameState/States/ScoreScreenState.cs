@@ -248,12 +248,12 @@ namespace Quaver.GameState.States
             {
                 JudgeText[i] = new TextBoxSprite()
                 {
-                    Text = "[" + GameplayReferences.JudgeNames[i] + "]: Press|Release: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i],
+                    Text = "[" + GameplayReferences.JudgeNames[i] + "]: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i] + " Total: "+(ScoreData.JudgePressSpread[i] + ScoreData.JudgeReleaseSpread[i]),
                     TextColor = GameColors.JudgeColors[i],
                     Font = Fonts.Medium16,
                     Position = new UDim2(0,200 * i/6),
                     Size = new UDim2(0, 0, 1, 0),
-                    TextAlignment = Alignment.MidCenter,
+                    TextAlignment = Alignment.MidRight,
                     Parent = JudgeInfoBoundary
                 };
             }
@@ -345,8 +345,8 @@ namespace Quaver.GameState.States
                 {
                     var ob = new Sprite()
                     {
-                        Position = new UDim2(((float)ms.Position * MsDevianceBoundary.Size.X.Offset) - 1, 0),
-                        Size = new UDim2(1, 0, 0, 1),
+                        Position = new UDim2(((float)ms.Position * MsDevianceBoundary.Size.X.Offset) - 1f, 0),
+                        Size = new UDim2(2, 0, 0, 1),
                         Tint = GameColors.JudgeMiss,
                         Alpha = 0.4f,
                         Parent = MsDevianceBoundary
@@ -360,8 +360,8 @@ namespace Quaver.GameState.States
                 {
                     var ob = new Sprite()
                     {
-                        Position = new UDim2(((float)ms.Position * MsDevianceBoundary.Size.X.Offset) - 1, ((float)ms.Offset * (MsDevianceBoundary.Size.Y.Offset / 2)) - 1),
-                        Size = new UDim2(2, 2),
+                        Position = new UDim2(((float)ms.Position * MsDevianceBoundary.Size.X.Offset) - 1.5f, ((float)ms.Offset * (MsDevianceBoundary.Size.Y.Offset / 2f)) - 1.5f),
+                        Size = new UDim2(3, 3),
                         Tint = GameColors.JudgeColors[ms.Type],
                         Alignment = Alignment.MidLeft,
                         Parent = MsDevianceBoundary
