@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if !PUBLIC
 using Quaver.Framework.Events;
 using Quaver.Logging;
 
@@ -93,3 +94,4 @@ namespace Quaver.Online
         }
     }
 }
+#endif
