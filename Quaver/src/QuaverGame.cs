@@ -22,8 +22,9 @@ using System.Windows.Forms;
 using Quaver.Commands;
 using Quaver.Discord;
 using Quaver.Graphics.Sprite;
-using Quaver.Online;
-
+#if !PUBLIC
+using Quaver.Online;   
+#endif
 namespace Quaver
 {
     /// <summary>
@@ -70,8 +71,10 @@ namespace Quaver
         /// </summary>
         protected override void Initialize()
         {
+#if !PUBLIC
             // Initialize OnlineEvents
             Rattle.Initialize();
+#endif
 
             // Select a random beatmap if we do in fact have beatmaps.
             if (GameBase.Mapsets.Count != 0) BeatmapUtils.SelectRandomBeatmap();

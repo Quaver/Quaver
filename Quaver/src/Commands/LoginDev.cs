@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Quaver.Online;
 #if !PUBLIC
+using Quaver.Online;
 using Quaver.Framework;
 
 namespace Quaver.Commands
