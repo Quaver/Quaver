@@ -172,6 +172,9 @@ namespace Quaver.GameState.States
 
             // Create an instance of the applause sound effect so that we can stop it later.
             ApplauseInstance = GameBase.LoadedSkin.Applause.CreateInstance();
+
+            // Set Rich Presence for this state
+            SetDiscordRichPresence();
         }
 
         /// <summary>
@@ -501,6 +504,18 @@ namespace Quaver.GameState.States
             Logger.Log($"Okay Count: {Replay.OkayPressCount + Replay.OkayReleaseCount}", LogColors.GameInfo);
             Logger.Log($"Miss Count: {Replay.Misses}", LogColors.GameInfo);
             Logger.Log($"Replay Frame Count: {Replay.ReplayFrames.Count}", LogColors.GameInfo);
+        }
+
+        /// <summary>
+        ///     Sets the Discord Rich Presence for the score screen state
+        /// </summary>
+        private void SetDiscordRichPresence()
+        {
+            // Set Discord Rich Presence w/ score data
+            var mapData = $"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]";
+            var accuracy = (float)Math.Round(ScoreData.Accuracy * 100, 2);
+
+            GameBase.ChangeDiscordPresence(mapData, $"Finished - {accuracy}% - {Util.GetGradeFromAccuracy(accuracy).ToString()}");
         }
     }
 }
