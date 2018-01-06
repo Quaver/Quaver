@@ -21,7 +21,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         public void Initialize(IGameState state)
         {
-            Boundary = new Boundary(null, null, GameplayReferences.PlayfieldSize, null)
+            Boundary = new Boundary(0, 0, GameplayReferences.PlayfieldSize, null)
             {
                 Alignment = Graphics.Alignment.MidCenter
             };

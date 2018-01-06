@@ -109,7 +109,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Initialize Boundary
             Boundary = new Boundary()
             {
-                Size = new UDim2(GameplayReferences.PlayfieldSize, GameBase.Window.Height),
+                Size = new UDim2(GameplayReferences.PlayfieldSize, 0, 0, 1),
                 Alignment = Alignment.TopCenter
             };
 

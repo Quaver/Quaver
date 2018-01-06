@@ -25,14 +25,14 @@ namespace Quaver.Graphics.Sprite
         /// <param name="yPosition"></param>
         /// <param name="xSize"></param>
         /// <param name="ySize"></param>
-        public Boundary(float? xPosition = null, float? yPosition = null, float? xSize = null, float? ySize = null)
+        public Boundary(float xPosition = 0, float yPosition = 0, float? xSize = null, float? ySize = null)
         {
             //Size.X.Offset = (float)GameBase.Window.Width;
             //Size.Y.Offset = (float)GameBase.Window.Height;
-            Size.X.Offset = xSize != null ? (float)xSize : GameBase.Window.Width;
-            Size.Y.Offset = ySize != null ? (float)ySize : GameBase.Window.Height;
-            Position.X.Offset = xPosition != null ? (float)xPosition : GameBase.Window.X;
-            Position.Y.Offset = yPosition != null ? (float)yPosition : GameBase.Window.Y;
+            Size.X.Offset = xSize != null ? (float)xSize : GameBase.WindowRectangle.Width;
+            Size.Y.Offset = ySize != null ? (float)ySize : GameBase.WindowRectangle.Height;
+            Position.X.Offset = xPosition;
+            Position.Y.Offset = yPosition;
         }
     }
 }
