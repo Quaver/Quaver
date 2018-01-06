@@ -22,10 +22,7 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         internal Texture2D Image
         {
-            get
-            {
-                return _image;
-            }
+            get => _image;
             set
             {
                 _image = value;
@@ -40,10 +37,7 @@ namespace Quaver.Graphics.Sprite
         ///     Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
         /// </summary>
         internal float Rotation {
-            get
-            {
-                return _rotation;   
-            }
+            get => _rotation;
             set
             {
                 _rotation = MathHelper.ToRadians(value);
@@ -73,10 +67,7 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         internal Color Tint
         {
-            get
-            {
-                return _tint;
-            }
+            get => _tint;
             set
             {
                 _tint = value;
@@ -89,10 +80,7 @@ namespace Quaver.Graphics.Sprite
         ///     The transparency of this Sprite.
         /// </summary>
         internal float Alpha {
-            get
-            {
-                return _alpha; 
-            }
+            get => _alpha;
             set
             {
                 _alpha = value;
