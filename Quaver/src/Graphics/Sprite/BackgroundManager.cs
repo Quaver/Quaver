@@ -139,9 +139,7 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         public static void Draw()
         {
-            GameBase.SpriteBatch.Begin();
             Background.Draw();
-            GameBase.SpriteBatch.End();
         }
     }
 }

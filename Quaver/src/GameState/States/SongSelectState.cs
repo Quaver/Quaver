@@ -127,6 +127,7 @@ namespace Quaver.GameState.States
         public void Draw()
         {
             GameBase.SpriteBatch.Begin();
+            BackgroundManager.Draw();
             Boundary.Draw();
             BeatmapOrganizerUI.Draw();
             GameBase.SpriteBatch.End();
