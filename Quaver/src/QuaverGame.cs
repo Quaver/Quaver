@@ -204,36 +204,32 @@ namespace Quaver
             //GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             //GameBase.SpriteBatch.Begin();
 
+            // Set Render Target
             GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
+
+            // Set Background as transparent
             GameBase.GraphicsDevice.Clear(Color.White * 0);
 
             // Draw Background
             BackgroundManager.Draw();
 
-            // Set Background Color
-            //GameBase.GraphicsDevice.Clear(Color.Black);
-
-            //for (var i = 0; i < 4; i++)
-            //    GameBase.SpriteBatch.Draw(RenderedImages[i], Vector2.Zero, Color.White * RenderAlpha[i]);
-
             // Draw from State Manager
             GameBase.GameStateManager.Draw();
-
-            //Draw cursor
-            GameBase.Cursor.Draw();
 
             // Draw the FPS Counter
             if (Config.Configuration.FpsCounter)
                 FpsCounter.Draw();
 
-            //Draw log manager logs
+            // Draw Cursor
+            GameBase.SpriteBatch.Begin();
+            GameBase.Cursor.Draw();
+            GameBase.SpriteBatch.End();
+
+            // Draw logs
             Logger.Draw(dt);
 
-            // Draw everything else in the base class
-
-            base.Draw(gameTime);
-
-            //GameBase.SpriteBatch.End();
+            // Draw Base
+            // base.Draw(gameTime);
         }
     }
 }

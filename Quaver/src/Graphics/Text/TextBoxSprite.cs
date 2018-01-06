@@ -137,13 +137,10 @@ namespace Quaver.Graphics.Text
             //Draw itself if it is in the window
             if (Util.RectangleIntercepts(GameBase.WindowRectangle, GlobalRectangle) && Visible)
             {
-                GameBase.SpriteBatch.Begin();
                 if (_textScale == 1 )
                     GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color);
                 else
                     GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color, 0, Vector2.One, Vector2.One * _textScale, SpriteEffects.None, 0);
-
-                GameBase.SpriteBatch.End();
             }
 
             base.Draw();
