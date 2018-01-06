@@ -113,7 +113,7 @@ namespace Quaver.Graphics.Sprite
         {
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
-            if (Util.RectangleIntercepts(GlobalRectangle, GameBase.Window) && Visible)
+            if (Util.RectangleIntercepts(GlobalRectangle, GameBase.WindowRectangle) && Visible)
                 GameBase.SpriteBatch.Draw(_image, _renderRectangle, null, _color, _rotation, _origin, SpriteEffect, 0f);
 
             //Draw children

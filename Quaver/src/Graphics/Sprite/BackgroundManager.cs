@@ -53,7 +53,7 @@ namespace Quaver.Graphics.Sprite
         {
             Background = new Sprite()
             {
-                Size = new UDim2(GameBase.Window.Width, GameBase.Window.Height),
+                Size = new UDim2(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.MidCenter,
                 Image = GameBase.UI.DiffSelectMask,
                 Tint = Color.Gray
@@ -104,16 +104,16 @@ namespace Quaver.Graphics.Sprite
             GameBase.CurrentBackground = newBG;
 
             //Update Background Image Resolution
-            var bgYRatio = ((float)newBG.Height / newBG.Width) / (GameBase.Window.Height / GameBase.Window.Width);
+            var bgYRatio = ((float)newBG.Height / newBG.Width) / (GameBase.WindowRectangle.Height / GameBase.WindowRectangle.Width);
             if (bgYRatio > 1)
             {
-                Background.SizeX = newBG.Width * (GameBase.Window.Width / newBG.Width);
-                Background.SizeY = newBG.Height * (GameBase.Window.Width / newBG.Width);
+                Background.SizeX = newBG.Width * (GameBase.WindowRectangle.Width / newBG.Width);
+                Background.SizeY = newBG.Height * (GameBase.WindowRectangle.Width / newBG.Width);
             }
             else
             {
-                Background.SizeX = newBG.Width * (GameBase.Window.Height / newBG.Height);
-                Background.SizeY = newBG.Height * (GameBase.Window.Height / newBG.Height);
+                Background.SizeX = newBG.Width * (GameBase.WindowRectangle.Height / newBG.Height);
+                Background.SizeY = newBG.Height * (GameBase.WindowRectangle.Height / newBG.Height);
             }
 
             Background.Image = GameBase.CurrentBackground;
