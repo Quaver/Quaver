@@ -16,6 +16,7 @@ using Quaver.Graphics;
 using Quaver.Input;
 using Quaver.Replays;
 using Quaver.Config;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Quaver.GameState.Gameplay
 {
@@ -82,6 +83,10 @@ namespace Quaver.GameState.Gameplay
         private TextBoxSprite SVText { get; set; }
         private Button TestButton { get; set; }
 
+        //Rendering
+        private RenderTarget2D[] RenderedHitObjects { get; set; } = new RenderTarget2D[8];
+        private Color[] RenderedAlphas { get; set; } = new Color[8];
+
         /// <summary>
         ///     Constructor
         /// </summary>
@@ -114,6 +119,13 @@ namespace Quaver.GameState.Gameplay
             NoteManager.PressMissed += PressMissed;
             NoteManager.ReleaseSkipped += ReleaseSkipped;
             NoteManager.ReleaseMissed += ReleaseMissed;
+
+            // Initialize Rendering
+            for (var i = 0; i < RenderedHitObjects.Length; i++)
+            {
+                RenderedHitObjects[i] = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
+                RenderedAlphas[i] = Color.White * (1f / (1 + i));
+            }
         }
 
         public void Initialize(IGameState playScreen)
@@ -190,13 +202,38 @@ namespace Quaver.GameState.Gameplay
 
         public void Draw()
         {
-            TestButton.Draw();
+            // Draw stuff under notes (such as playfield + particles)
+            GameBase.SpriteBatch.Begin();
             //SvInfoTextBox.Draw();
+            TestButton.Draw();
             Playfield.Draw();
+            GameBase.SpriteBatch.End();
+
+            // Draw Notes and Bars
+            Texture2D rendered = GameBase.MainRenderTarget;
+            for (int i = RenderedHitObjects.Length - 1; i > 0; i--)
+                RenderedHitObjects[i] = RenderedHitObjects[i - 1];
+            GameBase.GraphicsDevice.SetRenderTarget(RenderedHitObjects[0]);
+            GameBase.GraphicsDevice.Clear(Color.White * 0);
+            GameBase.SpriteBatch.Begin();
             NoteManager.Draw();
+            GameBase.SpriteBatch.End();
+
+            GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
+            GameBase.SpriteBatch.Begin();
+            //GameBase.SpriteBatch.Draw(rendered, Vector2.Zero, Color.White);
+
+            //Texture2D texture = new Texture2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
+            for (int i = RenderedHitObjects.Length - 1; i >= 0; i--)
+                GameBase.SpriteBatch.Draw(RenderedHitObjects[i], Vector2.Zero, RenderedAlphas[i]);
+            GameBase.SpriteBatch.End();
+
+             // Draw stuff over hit objects (such as UI)
+            GameBase.SpriteBatch.Begin();
             PlayfieldUI.Draw();
             AccuracyBoxUI.Draw();
             TestButton.Draw();
+            GameBase.SpriteBatch.End();
         }
 
         /// <summary>

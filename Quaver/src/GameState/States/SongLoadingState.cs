@@ -53,6 +53,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Draw()
         {
+            // todo: Implement map loading drawing
             //GameBase.GraphicsDevice.Clear(Color.Red);
         }
 

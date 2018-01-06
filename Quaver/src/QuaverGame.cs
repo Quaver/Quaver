@@ -216,17 +216,12 @@ namespace Quaver
             // Draw from State Manager
             GameBase.GameStateManager.Draw();
 
-            // Draw the FPS Counter
-            if (Config.Configuration.FpsCounter)
-                FpsCounter.Draw();
-
-            // Draw Cursor
+            // Draw Cursor, Logging, and FPS Counter
             GameBase.SpriteBatch.Begin();
             GameBase.Cursor.Draw();
-            GameBase.SpriteBatch.End();
-
-            // Draw logs
             Logger.Draw(dt);
+            if (Config.Configuration.FpsCounter) FpsCounter.Draw();
+            GameBase.SpriteBatch.End();
 
             // Draw Base
             // base.Draw(gameTime);
