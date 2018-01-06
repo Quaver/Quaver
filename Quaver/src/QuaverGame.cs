@@ -37,11 +37,6 @@ namespace Quaver
         /// </summary>
         private GlobalInputManager GlobalInputManager { get; } = new GlobalInputManager();
 
-        //todo: remove
-        private RenderTarget2D[] RenderedImages { get; set; } = new RenderTarget2D[4];
-        private float[] RenderAlpha { get; set; } = new float[4];
-        private int RenderIndex { get; set; } = 0;
-
         public QuaverGame()
         {
             // Set the global graphics device manager & set Window width & height.
@@ -128,13 +123,6 @@ namespace Quaver
             // Create Cursor. Use after LoadSkin
             GameBase.LoadCursor();
 
-            // Create Render Images for blur
-            for (var i = 0; i < 4; i++)
-            {
-                RenderedImages[i] = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
-                RenderAlpha[i] = 0;
-            }
-
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
             GameBase.GameStateManager.ChangeState(new MainMenuState());             
@@ -215,6 +203,9 @@ namespace Quaver
 
             //GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             //GameBase.SpriteBatch.Begin();
+
+            GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
+            GameBase.GraphicsDevice.Clear(Color.White * 0);
 
             // Draw Background
             BackgroundManager.Draw();

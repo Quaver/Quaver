@@ -79,6 +79,11 @@ namespace Quaver
         /// <summary>
         /// 
         /// </summary>
+        public static RenderTarget2D MainRenderTarget { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static GraphicsDeviceManager GraphicsManager { get; set; }
 
         /// <summary>
@@ -180,6 +185,7 @@ namespace Quaver
         {
             //TODO: unfinished
             WindowRectangle = new DrawRectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight);
+            MainRenderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             //Rectangle mainWindow = GraphicsDevice.PresentationParameters.Bounds;
 
             //Align letterboxed window
