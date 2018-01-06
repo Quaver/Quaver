@@ -37,6 +37,11 @@ namespace Quaver
         /// </summary>
         private GlobalInputManager GlobalInputManager { get; } = new GlobalInputManager();
 
+        //todo: remove
+        private RenderTarget2D[] RenderedImages { get; set; } = new RenderTarget2D[4];
+        private float[] RenderAlpha { get; set; } = new float[4];
+        private int RenderIndex { get; set; } = 0;
+
         public QuaverGame()
         {
             // Set the global graphics device manager & set Window width & height.
@@ -44,6 +49,7 @@ namespace Quaver
             {
                 PreferredBackBufferWidth = Config.Configuration.WindowWidth,
                 PreferredBackBufferHeight = Config.Configuration.WindowHeight,
+                IsFullScreen = true,
                 SynchronizeWithVerticalRetrace = false // Turns off vsync
             };
 
@@ -122,6 +128,13 @@ namespace Quaver
             // Create Cursor. Use after LoadSkin
             GameBase.LoadCursor();
 
+            // Create Render Images for blur
+            for (var i = 0; i < 4; i++)
+            {
+                RenderedImages[i] = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
+                RenderAlpha[i] = 0;
+            }
+
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
             GameBase.GameStateManager.ChangeState(new MainMenuState());             
@@ -184,19 +197,38 @@ namespace Quaver
         protected override void Draw(GameTime gameTime)
         {
             double dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+            //GameBase.GraphicsDevice.SetRenderTarget(testTarget);
 
-            // Start SriteBatch
+            //todo: remove
+            // Draw images for blurring
+            GameBase.GraphicsDevice.SetRenderTarget(RenderedImages[RenderIndex]);
+            GameBase.GraphicsDevice.Clear(Color.White * 0);
             GameBase.SpriteBatch.Begin();
-            //GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            GameBase.GameStateManager.Draw();
+            GameBase.SpriteBatch.End();
+            GameBase.GraphicsDevice.SetRenderTarget(null);
+            for (var i = 0; i < 4; i++) RenderAlpha[i] *= 0.5f;
+            RenderIndex = RenderIndex == 3 ? 0 : RenderIndex + 1;
+            RenderAlpha[RenderIndex] = 0.25f;
 
-            // Set Background Color
-            GameBase.GraphicsDevice.Clear(Color.Black);
+
+            //GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            GameBase.SpriteBatch.Begin();
 
             // Draw Background
             BackgroundManager.Draw();
 
-            // Draw the game states
+            // Set Background Color
+            GameBase.GraphicsDevice.Clear(Color.Black);
+
+            for (var i = 0; i < 4; i++)
+                GameBase.SpriteBatch.Draw(RenderedImages[i], Vector2.Zero, Color.White * RenderAlpha[i]);
+
+            // Draw from State Manager
             GameBase.GameStateManager.Draw();
+
+            //Draw cursor
+            GameBase.Cursor.Draw();
 
             // Draw the FPS Counter
             if (Config.Configuration.FpsCounter)
@@ -205,11 +237,9 @@ namespace Quaver
             //Draw log manager logs
             Logger.Draw(dt);
 
-            //Draw cursor
-            GameBase.Cursor.Draw();
-
             // Draw everything else in the base class
             base.Draw(gameTime);
+
             GameBase.SpriteBatch.End();
         }
     }
