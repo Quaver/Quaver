@@ -94,17 +94,20 @@ namespace Quaver
         /// <summary>
         ///     The reference resolution for UI and game elements
         /// </summary>
-        public static Vector2 ReferenceResolution { get; } = new Vector2(1280, 720);
+        public static Point ReferenceResolution { get; } = new Point(1280, 720);
 
+        /*
         /// <summary>
         ///     The rectangle this game will be rendered onto
         /// </summary>
-        public static DrawRectangle Window { get; private set; } = new DrawRectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight); //TODO: Automatically set this rectangle as windoow size through method
+        public static DrawRectangle Window { get; private set; } = new DrawRectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight); //TODO: Automatically set this rectangle as windoow size through method*/
+
+        public static DrawRectangle WindowRectangle { get; set; } = new DrawRectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight);
 
         /// <summary>
         ///     WindowHeight / WindowWidth ratio
         /// </summary>
-        public static float WindowUIScale { get; private set; } = Window.Height / ReferenceResolution.Y; //TODO: Automatically set this rectangle as windoow size through method
+        public static float WindowUIScale { get; private set; } = WindowRectangle.Height / ReferenceResolution.Y; //TODO: Automatically set this rectangle as windoow size through method
 
         /// <summary>
         ///     The game's clock. Essentially it controls which speed songs are played at.
@@ -176,12 +179,12 @@ namespace Quaver
         public static void UpdateWindow(Point newSize)
         {
             //TODO: unfinished
-            Window = new DrawRectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight);
-            Rectangle mainWindow = GraphicsDevice.PresentationParameters.Bounds;
+            WindowRectangle = new DrawRectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight);
+            //Rectangle mainWindow = GraphicsDevice.PresentationParameters.Bounds;
 
             //Align letterboxed window
             //Window = Util.DrawRect(Alignment.MidCenter, Window, mainWindow);
-            WindowUIScale = Window.Height / ReferenceResolution.Y;
+            WindowUIScale = WindowRectangle.Y / ReferenceResolution.Y;
         }
 
         /// <summary>

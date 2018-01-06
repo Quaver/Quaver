@@ -231,8 +231,8 @@ namespace Quaver.Graphics
             }
             else
             {
-                _localRectangle.Width = _size.X.Offset + GameBase.Window.Width * _size.X.Scale;
-                _localRectangle.Height = _size.Y.Offset + GameBase.Window.Height * _size.Y.Scale;
+                _localRectangle.Width = _size.X.Offset + GameBase.WindowRectangle.Width * _size.X.Scale;
+                _localRectangle.Height = _size.Y.Offset + GameBase.WindowRectangle.Height * _size.Y.Scale;
                 _localRectangle.X = _position.X.Offset; //todo: implement scale
                 _localRectangle.Y = _position.Y.Offset; //todo: implement scale
                 //Console.WriteLine(GameBase.Window.X + ", " + GameBase.Window.Y + ", " + GameBase.Window.Width + ", " + GameBase.Window.Height);
@@ -243,7 +243,7 @@ namespace Quaver.Graphics
             if (_parent != null)
                 _globalRectangle = Util.AlignRect(Alignment, _localRectangle, Parent.GlobalRectangle);
             else
-                _globalRectangle = Util.AlignRect(Alignment, _localRectangle, GameBase.Window);
+                _globalRectangle = Util.AlignRect(Alignment, _localRectangle, GameBase.WindowRectangle);
 
             //Console.WriteLine(_localRectangle.X + ", " + _localRectangle.Y + ", " + _localRectangle.Width + ", " + _localRectangle.Height);
             //Console.WriteLine(_globalRectangle.X + ", " + _globalRectangle.Y + ", " + _globalRectangle.Width + ", " + _globalRectangle.Height);
