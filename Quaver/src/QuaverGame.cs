@@ -49,7 +49,7 @@ namespace Quaver
             {
                 PreferredBackBufferWidth = Config.Configuration.WindowWidth,
                 PreferredBackBufferHeight = Config.Configuration.WindowHeight,
-                IsFullScreen = true,
+                IsFullScreen = Config.Configuration.WindowFullScreen,
                 SynchronizeWithVerticalRetrace = false // Turns off vsync
             };
 
