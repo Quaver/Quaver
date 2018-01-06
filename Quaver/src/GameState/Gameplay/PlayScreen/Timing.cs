@@ -194,14 +194,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             var lastIndex = 0;
             foreach (TimingObject timeObject in TimingQueue)
             {
-                if (timeObject.TargetTime < svQueue[0].TargetTime)
+                if (timeObject.TargetTime < svQueue[0].TargetTime + 1)
                 {
                     if (Math.Abs(timeObject.BPM- _averageBpm) <= 0.02)
                         CreateSV(svQueue, timeObject.TargetTime, 1, 0);
                     else
                         CreateSV(svQueue, timeObject.TargetTime, svQueue[0].SvMultiplier, 0);
                 }
-                else if (timeObject.TargetTime > svQueue[svQueue.Count - 1].TargetTime)
+                else if (timeObject.TargetTime > svQueue[svQueue.Count - 1].TargetTime - 1)
                     CreateSV(svQueue, timeObject.TargetTime, svQueue[svQueue.Count - 1].SvMultiplier);
                 else
                 {
@@ -209,9 +209,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     {
                         if (i + 1 >= svQueue.Count) //|| !(timeObject.TargetTime < svQueue[i + 1].TargetTime))
                             continue;
-                        if (Math.Abs(timeObject.TargetTime - svQueue[i].TargetTime) > 1f)
+                        if (Math.Abs(timeObject.TargetTime - svQueue[i].TargetTime) > 1)
                         {
-                            CreateSV(svQueue, timeObject.TargetTime, 1f, lastIndex);
+                            CreateSV(svQueue, timeObject.TargetTime, 1, lastIndex);
                             lastIndex = i+1;
                         }
                         break;
