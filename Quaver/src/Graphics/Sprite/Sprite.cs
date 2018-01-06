@@ -154,8 +154,6 @@ namespace Quaver.Graphics.Sprite
             _renderRectangle.Y = (int)_originRectangle.Y;
             _renderRectangle.Width = (int)_originRectangle.Width;
             _renderRectangle.Height = (int)_originRectangle.Height;
-
-            //_renderRectangle = Util.DrawRectToRectangle(_originRectangle);
         }
     }
 }

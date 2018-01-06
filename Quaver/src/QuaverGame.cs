@@ -123,6 +123,9 @@ namespace Quaver
             // Create Cursor. Use after LoadSkin
             GameBase.LoadCursor();
 
+            // Set Render Target
+            GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
+
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
             GameBase.GameStateManager.ChangeState(new MainMenuState());             
@@ -185,35 +188,11 @@ namespace Quaver
         protected override void Draw(GameTime gameTime)
         {
             double dt = gameTime.ElapsedGameTime.TotalMilliseconds;
-            //GameBase.GraphicsDevice.SetRenderTarget(testTarget);
 
-            //todo: remove
-            // Draw images for blurring
-            /*
-            GameBase.GraphicsDevice.SetRenderTarget(RenderedImages[RenderIndex]);
-            GameBase.GraphicsDevice.Clear(Color.White * 0);
-            GameBase.SpriteBatch.Begin();
-            GameBase.GameStateManager.Draw();
-            GameBase.SpriteBatch.End();
-            GameBase.GraphicsDevice.SetRenderTarget(null);
-            for (var i = 0; i < 4; i++) RenderAlpha[i] *= 0.5f;
-            RenderIndex = RenderIndex == 3 ? 0 : RenderIndex + 1;
-            RenderAlpha[RenderIndex] = 0.25f;
-            */
-
-            //GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            //GameBase.SpriteBatch.Begin();
-
-            // Set Render Target
-            GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
-
-            // Set Background as transparent
+            // Clear Background so it doesnt render everything from previous frame
             GameBase.GraphicsDevice.Clear(Color.White * 0);
 
-            // Draw Background
-            BackgroundManager.Draw();
-
-            // Draw from State Manager
+            // Draw from Game State Manager
             GameBase.GameStateManager.Draw();
 
             // Draw Cursor, Logging, and FPS Counter
