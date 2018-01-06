@@ -115,9 +115,7 @@ namespace Quaver.Graphics.Sprite
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             if (Util.RectangleIntercepts(GlobalRectangle, GameBase.WindowRectangle) && Visible)
             {
-                GameBase.SpriteBatch.Begin();
                 GameBase.SpriteBatch.Draw(_image, _renderRectangle, null, _color, _rotation, _origin, SpriteEffect, 0f);
-                GameBase.SpriteBatch.End();
             }
 
             //Draw children
