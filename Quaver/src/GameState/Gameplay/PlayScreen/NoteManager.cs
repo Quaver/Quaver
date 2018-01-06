@@ -54,9 +54,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal event EventHandler ReleaseSkipped;
         internal event EventHandler ReleaseMissed;
 
-        //Rendering
-        private RenderTarget2D[] RenderedImages { get; set; } = new RenderTarget2D[16];
-
         //CONFIG (temp)
         private float ScrollSpeed { get; set; }
 
@@ -67,7 +64,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         public NoteManager(Qua qua)
         {
             //todo: qua stuff here
-            RenderedImages[0] = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
         }
 
         /// <summary>
@@ -305,26 +301,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// </summary>
         public void Draw()
         {
-            //todo: check if bars are enabled
-
-            //Texture2D rendered = GameBase.MainRenderTarget;
-            //GameBase.GraphicsDevice.SetRenderTarget(RenderedImages[0]);
-            //GameBase.GraphicsDevice.Clear(Color.White * 0);
-
-            //for (var i = 0; i < 4; i++) RenderAlpha[i] *= 0.5f;
-            //RenderIndex = RenderIndex == 3 ? 0 : RenderIndex + 1;
-            //RenderAlpha[RenderIndex] = 0.25f;
-
             if (true) MeasureBarManager.Draw();
             Boundary.Draw();
-
-            //GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
-
-            /*
-            GameBase.SpriteBatch.Begin();
-            //GameBase.SpriteBatch.Draw(rendered, Vector2.Zero, Color.White);
-            GameBase.SpriteBatch.Draw(RenderedImages[0], Vector2.Zero, Color.Blue);
-            GameBase.SpriteBatch.End();*/
         }
         /// <summary>
         ///     Unloads content after the game is done.

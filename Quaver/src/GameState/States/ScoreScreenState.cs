@@ -219,9 +219,11 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Draw()
         {
+            GameBase.SpriteBatch.Begin();
             BackButton.Draw();
             JudgeInfoBoundary.Draw();
             MsDevianceBoundary.Draw();
+            GameBase.SpriteBatch.End();
         }
 
         /// <summary>

@@ -168,7 +168,6 @@ namespace Quaver.Logging
             if (GameBase.Content == null)
                 return;
 
-            GameBase.SpriteBatch.Begin();
             for (var i = 0; i < Logs.Count; i++)
             {
                 if (Logs[i].Value == null)
@@ -187,7 +186,6 @@ namespace Quaver.Logging
                 Logs.RemoveAt(i);
                 i--;
             }
-            GameBase.SpriteBatch.End();
         }
     }
 }
