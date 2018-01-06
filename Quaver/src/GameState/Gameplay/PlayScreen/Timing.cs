@@ -78,43 +78,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //time_CreateBars();
         }
 
-        internal ulong[] GetSVCalc(List<TimingObject> svQueue)
-        {
-            //Calculates SV for efficiency
-            var svCalc = new ulong[svQueue.Count];
-            svCalc[0] = 0;
-            ulong svPosTime = 0;
-            for (var i = 0; i < svQueue.Count; i++)
-            {
-                if (i + 1 < svQueue.Count)
-                {
-                    svPosTime += (ulong)((svQueue[i + 1].TargetTime - svQueue[i].TargetTime) * svQueue[i].SvMultiplier);
-                    svCalc[i + 1] = svPosTime;
-                }
-                else break;
-            }
-
-            return svCalc;
-        }
-
-        internal List<TimingObject> GetSVQueue()
-        {
-            var svQueue = new List<TimingObject>();
-            //Create SVs
-            if (ModManager.Activated(ModIdentifier.NoSliderVelocity) == false && svQueue.Count > 1)
-            {
-                ConvertTPtoSV(svQueue);
-                NormalizeSVs(svQueue);
-            }
-            //If there's no SV, create a single SV Point
-            else
-            {
-                CreateSV(svQueue, 0, 1f);
-            }
-
-            return svQueue;
-        }
-
         /// <summary>
         ///     Unloads any objects to save memory
         /// </summary>
@@ -162,24 +125,58 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
         }
 
-        public double GeCurrentSongTime()
+        internal double GeCurrentSongTime()
         {
             //Add global offset to actual song time
             return ActualSongTime - Configuration.GlobalOffset + SongManager.BassDelayOffset;
         }
 
-        public void Draw()
+        internal ulong[] GetSVCalc(List<TimingObject> svQueue)
         {
-            //do stuff
+            //Calculates SV for efficiency
+            var svCalc = new ulong[svQueue.Count];
+            svCalc[0] = 0;
+            ulong svPosTime = 0;
+            for (var i = 0; i < svQueue.Count; i++)
+            {
+                if (i + 1 < svQueue.Count)
+                {
+                    svPosTime += (ulong)((svQueue[i + 1].TargetTime - svQueue[i].TargetTime) * svQueue[i].SvMultiplier);
+                    svCalc[i + 1] = svPosTime;
+                }
+                else break;
+            }
+
+            return svCalc;
         }
 
-        internal void time_DestroyBars()
+        internal List<TimingObject> GetSVQueue()
         {
-            //for (int i = 0; i < _activeBars.Count; i++) Destroy(_activeBars[i].TimingBar);
+            var svQueue = new List<TimingObject>();
+            //Create SVs
+            if (ModManager.Activated(ModIdentifier.NoSliderVelocity) == false)
+            {
+                foreach (var sv in GameBase.SelectedBeatmap.Qua.SliderVelocities)
+                    CreateSV(svQueue, sv.StartTime, sv.Multiplier);
+
+                if (svQueue.Count >= 1)
+                {
+                    svQueue = ConvertTPtoSV(svQueue);
+                    svQueue = NormalizeSVs(svQueue);
+                }
+                else CreateSV(svQueue, 0, 1f);
+            }
+            //If there's no SV, create a single SV Point
+            else
+            {
+                CreateSV(svQueue, 0, 1f);
+            }
+
+            return svQueue;
         }
 
         //Creates SV Points
-        internal void CreateSV(List<TimingObject> svQueue, float targetTime, float multiplier, int? index = null)
+        private void CreateSV(List<TimingObject> svQueue, float targetTime, float multiplier, int? index = null)
         {
             TimingObject newTp = new TimingObject();
             newTp.TargetTime = targetTime;
@@ -191,7 +188,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     Convert Timing Point to SV
         /// </summary>
-        internal void ConvertTPtoSV(List<TimingObject> svQueue)
+        internal List<TimingObject> ConvertTPtoSV(List<TimingObject> svQueue)
         {
             //Create and converts timing points to SV's
             var lastIndex = 0;
@@ -222,6 +219,46 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 }
             }
             svQueue.Sort((p1, p2) => p1.TargetTime.CompareTo(p2.TargetTime));
+            return svQueue;
+        }
+
+        //Normalizes SV's in between each BPM change interval
+        internal List<TimingObject> NormalizeSVs(List<TimingObject> svQueue)
+        {
+            //Reference Variables + Sort
+            var i = 0;
+            var j = 0;
+            var lastIndex = 0;
+
+            //Normalize
+            if (TimingQueue.Count >= 1)
+            {
+                for (i = 0; i < svQueue.Count; i++)
+                {
+                    for (j = lastIndex; j < TimingQueue.Count; j++)
+                    {
+                        if (j + 1 < TimingQueue.Count)
+                        {
+                            if (svQueue[i].TargetTime < TimingQueue[lastIndex + 1].TargetTime)
+                            {
+                                svQueue[i].SvMultiplier =
+                                    Math.Min(svQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
+                            }
+                            else
+                            {
+                                svQueue[i].SvMultiplier =
+                                    Math.Min(svQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
+                                lastIndex = j;
+                            }
+                            break;
+                        }
+                        svQueue[i].SvMultiplier =
+                            Math.Min(svQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
+                    }
+                }
+            }
+
+            return svQueue;
         }
 
         /// <summary>
@@ -262,63 +299,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             else _averageBpm = TimingQueue[0].BPM;
         }
 
-        //Normalizes SV's in between each BPM change interval
-        internal void NormalizeSVs(List<TimingObject> svQueue)
+        public void Draw()
         {
-            //Reference Variables + Sort
-            var i = 0;
-            var j = 0;
-            var lastIndex = 0;
-
-            //Normalize
-            if (TimingQueue.Count >= 1)
-            {
-                for (i = 0; i < svQueue.Count; i++)
-                {
-                    for (j = lastIndex; j < TimingQueue.Count; j++)
-                    {
-                        if (j + 1 < TimingQueue.Count)
-                        {
-                            if (svQueue[i].TargetTime < TimingQueue[lastIndex + 1].TargetTime)
-                            {
-                                svQueue[i].SvMultiplier =
-                                    Math.Min(svQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
-                            }
-                            else
-                            {
-                                svQueue[i].SvMultiplier =
-                                    Math.Min(svQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
-                                lastIndex = j;
-                            }
-                            break;
-                        }
-                        svQueue[i].SvMultiplier =
-                            Math.Min(svQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm, 128f);
-                    }
-                }
-            }
-        }
-
-        //Move Timing Bars
-        internal void MoveTimingBars()
-        {
-            /*
-            if (_config_timingBars && !mod_split)
-            {
-                if (_activeBars.Count > 0 && CurrentSongTime > _activeBars[0].StartTime + missTime)
-                {
-                    time_RemoveBar(_activeBars[0].TimingBar);
-                    _activeBars.RemoveAt(0);
-                }
-                else
-                {
-                    for (int k = 0; k < _activeBars.Count; k++)
-                    {
-                        _activeBars[k].TimingBar.transform.localPosition = new Vector3(0f, PosFromSV(_activeBars[k].StartTime), 2f);
-                    }
-                }
-            }
-            */
+            //do stuff
         }
     }
 }
