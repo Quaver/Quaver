@@ -119,6 +119,7 @@ namespace Quaver.GameState.States
         public void Draw()
         {
             GameBase.SpriteBatch.Begin();
+            BackgroundManager.Draw();
             SwitchSongSelectButton.Draw();
             ImportPeppyButton.Draw();
             ImportQpButton.Draw();
@@ -134,7 +135,6 @@ namespace Quaver.GameState.States
             // Switch Song Select Button
             SwitchSongSelectButton = new TextButton(new Vector2(200, 40), "Song Select")
             {
-                Image = GameBase.LoadedSkin.NoteHoldEnds4K[0],
                 Alignment = Alignment.MidCenter,
                 Parent = Boundary
             };
@@ -160,7 +160,6 @@ namespace Quaver.GameState.States
             // Import .osz Button
             ImportPeppyButton = new TextButton(new Vector2(200, 40), "Import .osz")
             {
-                Image = GameBase.LoadedSkin.NoteHoldEnds4K[0],
                 Alignment = Alignment.TopCenter,
                 Parent = Boundary
             };
@@ -177,7 +176,6 @@ namespace Quaver.GameState.States
             // Import .osz Button
             ImportQpButton = new TextButton(new Vector2(200, 40), "Import Quaver Mapset")
             {
-                Image = GameBase.LoadedSkin.NoteHoldEnds4K[0],
                 Alignment = Alignment.BotCenter,
                 Parent = Boundary
             };
@@ -193,7 +191,6 @@ namespace Quaver.GameState.States
             // Import .osz Button
             ExportQpButton = new TextButton(new Vector2(200, 40), "Export Current Mapset")
             {
-                Image = GameBase.LoadedSkin.NoteHoldEnds4K[0],
                 Alignment = Alignment.BotRight,
                 Parent = Boundary
             };
