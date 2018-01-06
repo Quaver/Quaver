@@ -201,6 +201,7 @@ namespace Quaver
 
             //todo: remove
             // Draw images for blurring
+            /*
             GameBase.GraphicsDevice.SetRenderTarget(RenderedImages[RenderIndex]);
             GameBase.GraphicsDevice.Clear(Color.White * 0);
             GameBase.SpriteBatch.Begin();
@@ -210,19 +211,19 @@ namespace Quaver
             for (var i = 0; i < 4; i++) RenderAlpha[i] *= 0.5f;
             RenderIndex = RenderIndex == 3 ? 0 : RenderIndex + 1;
             RenderAlpha[RenderIndex] = 0.25f;
-
+            */
 
             //GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            GameBase.SpriteBatch.Begin();
+            //GameBase.SpriteBatch.Begin();
 
             // Draw Background
             BackgroundManager.Draw();
 
             // Set Background Color
-            GameBase.GraphicsDevice.Clear(Color.Black);
+            //GameBase.GraphicsDevice.Clear(Color.Black);
 
-            for (var i = 0; i < 4; i++)
-                GameBase.SpriteBatch.Draw(RenderedImages[i], Vector2.Zero, Color.White * RenderAlpha[i]);
+            //for (var i = 0; i < 4; i++)
+            //    GameBase.SpriteBatch.Draw(RenderedImages[i], Vector2.Zero, Color.White * RenderAlpha[i]);
 
             // Draw from State Manager
             GameBase.GameStateManager.Draw();
@@ -238,9 +239,10 @@ namespace Quaver
             Logger.Draw(dt);
 
             // Draw everything else in the base class
+
             base.Draw(gameTime);
 
-            GameBase.SpriteBatch.End();
+            //GameBase.SpriteBatch.End();
         }
     }
 }
