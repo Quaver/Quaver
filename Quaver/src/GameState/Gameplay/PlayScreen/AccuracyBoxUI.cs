@@ -78,7 +78,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             AccuracyBox = new Sprite()
             {
                 Alignment = Alignment.TopRight,
-                Size = new UDim2(220 * GameBase.WindowUIScale, 240 * GameBase.WindowUIScale),
+                Size = new UDim2(200 * GameBase.WindowUIScale, 240 * GameBase.WindowUIScale),
                 Position = new UDim2(-10,10),
                 Parent = Boundary,
                 Alpha = 0.7f,
