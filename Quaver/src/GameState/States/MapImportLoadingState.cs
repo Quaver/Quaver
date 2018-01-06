@@ -49,7 +49,12 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Draw()
         {
+            // todo: Implement loading state drawing
+            /*
+            GameBase.SpriteBatch.Begin();
             GameBase.GraphicsDevice.Clear(Color.Red);
+            GameBase.SpriteBatch.End();
+            */
         }
 
 

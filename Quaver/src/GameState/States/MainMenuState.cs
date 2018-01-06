@@ -118,10 +118,12 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Draw()
         {
+            GameBase.SpriteBatch.Begin();
             SwitchSongSelectButton.Draw();
             ImportPeppyButton.Draw();
             ImportQpButton.Draw();
             ExportQpButton.Draw();
+            GameBase.SpriteBatch.End();
         }
 
         /// <summary>

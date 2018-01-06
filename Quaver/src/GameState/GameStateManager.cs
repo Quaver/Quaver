@@ -114,7 +114,6 @@ namespace Quaver.GameState
         /// </summary>
         public void Draw()
         {
-            GameBase.SpriteBatch.Begin();
             try
             {
                 if (States.Count == 0)
@@ -127,7 +126,6 @@ namespace Quaver.GameState
             {
                 Debug(ex);
             }
-            GameBase.SpriteBatch.End();
         }
 
         private void Debug(Exception ex)
