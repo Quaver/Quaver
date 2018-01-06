@@ -470,7 +470,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Quaver-API\Quaver-API\Quaver-API.csproj">
+    <ProjectReference Include="..\Quaver-API\Quaver-API\Quaver-API.csproj">
       <Project>{0c6869bd-4e34-4c92-a853-e09f2b320601}</Project>
       <Name>Quaver-API</Name>
     </ProjectReference>
