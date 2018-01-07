@@ -34,7 +34,7 @@ namespace Quaver.Logging
         /// </summary>
         internal static void CreateLogFile()
         {
-            RuntimeLogPath = Configuration.LogsDirectory + "/" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".log";
+            RuntimeLogPath = Configuration.LogsDirectory + "/" + "runtime.log";
 
             try
             {
