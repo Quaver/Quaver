@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Framework.Events.Packets;
+using Quaver.Framework.Events.Packets.Structures;
 #if !PUBLIC
 using Quaver.Framework.Events;
 using Quaver.Logging;
@@ -65,10 +67,39 @@ namespace Quaver.Online
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void OnRattleLoginReply(object sender, PacketEventArgs e)
+        private static void OnRattleLoginReply(object sender, LoginReplyEventArgs e)
         {
-            Console.WriteLine(e.Data);
-            Logger.Log("Received a login reply from the Quaver server", LogColors.GameInfo);
+            var response = e.Data;
+
+            // Handle incorrect login errors
+            if (!response.Success)
+            {
+                switch (response.Error)
+                {
+                    case LoginError.None:
+                        // This should never happen - server will always return a successful login w/ no error
+                        break;
+                    case LoginError.AlreadyConnected:
+                        break;
+                    case LoginError.Banned:
+                        break;
+                    case LoginError.InvalidCredentials:
+                        break;
+                    case LoginError.Require2FA:
+                        break;
+                    default:
+                        break;
+                }
+
+                Logger.Log($"Login failed", LogColors.GameError);
+                return;
+            }
+
+            var log = $"Successfully logged in as {response.CurrentClient.Username} #{response.CurrentClient.UserId} \n" +
+                      $"You are logging in from {response.CurrentClient.Country} w/ time offset: {response.CurrentClient.TimeOffset} \n" +
+                      $"There are currently: {response.OnlineClients.Count + 1} users online.";
+
+            Logger.Log(log, LogColors.GameInfo);
         }
 
         /// <summary>
