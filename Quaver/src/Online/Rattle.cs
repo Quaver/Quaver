@@ -11,12 +11,27 @@ using Quaver.Logging;
 
 namespace Quaver.Online
 {
-    internal class Rattle
+    internal static class Rattle
     {
         /// <summary>
         ///     Initialize a new OnlineEvents instance
         /// </summary>
         internal static OnlineEvents OnlineEvents { get; set; } = new OnlineEvents();
+
+        /// <summary>
+        ///     Keeps track if the user is still logged in
+        /// </summary>
+        internal static bool IsLoggedIn;
+
+        /// <summary>
+        ///     The online client that is logged in.
+        /// </summary>
+        internal static OnlineClient Client { get; set; }
+
+        /// <summary>
+        ///     The list currently online users
+        /// </summary>
+        internal static List<OnlineClient> OnlineClients { get; set; }
 
         /// <summary>
         ///     Initializes the online event hooking
@@ -48,6 +63,11 @@ namespace Quaver.Online
         /// <param name="e"></param>
         private static void OnConnectionError(object sender, PacketEventArgs e)
         {
+            // Log out user
+            IsLoggedIn = false;
+            Client = null;
+            OnlineClients = null;
+
             Logger.Log("A connection error occurred.", LogColors.GameError);
         }
 
@@ -58,6 +78,11 @@ namespace Quaver.Online
         /// <param name="e"></param>
         private static void OnDisconnection(object sender, PacketEventArgs e)
         {
+            // Log out user
+            IsLoggedIn = false;
+            Client = null;
+            OnlineClients = null;
+
             Console.WriteLine(e.Data);
             Logger.Log("Disconnected from the Quaver server", LogColors.GameWarning);
         }
@@ -95,9 +120,17 @@ namespace Quaver.Online
                 return;
             }
 
-            var log = $"Successfully logged in as {response.CurrentClient.Username} #{response.CurrentClient.UserId} \n" +
-                      $"You are logging in from {response.CurrentClient.Country} w/ time offset: {response.CurrentClient.TimeOffset} \n" +
-                      $"There are currently: {response.OnlineClients.Count + 1} users online.";
+            // Set the current client 
+            Client = response.CurrentClient;
+            IsLoggedIn = true;
+
+            // Add self to list of online clients
+            OnlineClients = response.OnlineClients;
+            OnlineClients.Add(Client);
+
+            var log = $"Successfully logged in as {Client.Username} #{Client.UserId} \n" +
+                      $"You are logging in from {Client.Country} w/ time offset: {Client.TimeOffset} \n" +
+                      $"There are currently: {OnlineClients.Count} users online.";
 
             Logger.Log(log, LogColors.GameInfo);
         }
