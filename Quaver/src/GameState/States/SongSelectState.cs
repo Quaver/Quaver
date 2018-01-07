@@ -78,7 +78,7 @@ namespace Quaver.GameState.States
             SongSelectInputManager = new SongSelectInputManager();
 
             // Update Discord Presence
-            GameBase.ChangeDiscordPresence("Song Select", "In the menus");
+            DiscordController.ChangeDiscordPresence("Song Select", "In the menus");
 
             // Initalize buttons
             CreatePlayMapButton();

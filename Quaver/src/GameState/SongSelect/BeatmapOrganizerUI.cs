@@ -124,7 +124,7 @@ namespace Quaver.GameState.SongSelect
             // Get the background path from the previous map
             var oldMapBgPath = GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.BackgroundPath;
             var oldMapAudioPath = GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.AudioPath;
-            GameBase.ChangeBeatmap(map);
+            Beatmap.ChangeBeatmap(map);
 
             // Only load the audio again if the new map's audio isn't the same as the old ones.
             if (oldMapAudioPath != map.Directory + "/" + map.AudioPath)
@@ -138,7 +138,7 @@ namespace Quaver.GameState.SongSelect
                     // Fade effect and make the current bg go black while we load the next bg.
                     BackgroundManager.Blacken();
 
-                    GameBase.LoadBackground();
+                    BackgroundManager.LoadBackground();
                 }).ContinueWith(t =>
                 {
                     // After loading, change the background

@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Audio;
 using Quaver.Commands;
+using Quaver.Database;
 using Quaver.GameState;
 using Quaver.Logging;
 using Color = Microsoft.Xna.Framework.Color;
@@ -98,7 +99,7 @@ namespace Quaver.Input
                 // Asynchronously load and set the GameBase beatmaps and visible ones.
                 Task.Run(async () =>
                 {
-                    await GameBase.LoadAndSetBeatmaps();
+                    await BeatmapCache.LoadAndSetBeatmaps();
                     GameBase.VisibleMapsets = GameBase.Mapsets;
                 });
             }

@@ -109,7 +109,7 @@ namespace Quaver
             // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
             var loadGame = Task.Run(async () =>
             {
-                await GameBase.LoadAndSetBeatmaps();
+                await BeatmapCache.LoadAndSetBeatmaps();
 
                 // Create the local scores database if it doesn't already exist
                 await LocalScoreCache.CreateScoresDatabase();

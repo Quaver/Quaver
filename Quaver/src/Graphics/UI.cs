@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Config;
 
 namespace Quaver.Graphics
 {
@@ -50,6 +52,22 @@ namespace Quaver.Graphics
             HollowBox = GameBase.Content.Load<Texture2D>("hollow-box");
             BarCap = GameBase.Content.Load<Texture2D>("bar-cap");
             BarCorner = GameBase.Content.Load<Texture2D>("bar-corner");
+        }
+
+        /// <summary>
+        ///     Whenever the settings for window size is changed, call this method to update the window.
+        /// </summary>
+        /// <param name="newSize"></param>
+        public static void UpdateWindow(Point newSize)
+        {
+            // NOTE: Unfinished
+            GameBase.WindowRectangle = new DrawRectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight);
+            GameBase.MainRenderTarget = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
+            //Rectangle mainWindow = GraphicsDevice.PresentationParameters.Bounds;
+
+            //Align letterboxed window
+            //Window = Util.DrawRect(Alignment.MidCenter, Window, mainWindow);
+            GameBase.WindowUIScale = GameBase.WindowRectangle.Y / GameBase.ReferenceResolution.Y;
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
+using Quaver.Commands;
 using Quaver.Database.Beatmaps;
 using Quaver.Config;
 using Quaver.Logging;
@@ -26,10 +27,19 @@ namespace Quaver.Database
         private static readonly string DatabasePath = Configuration.GameDirectory + "/quaver.db";
 
         /// <summary>
+        ///     Responsible for loading and setting our global beatmaps variable.
+        /// </summary>
+        public static async Task LoadAndSetBeatmaps()
+        {
+            GameBase.Mapsets = BeatmapUtils.OrderBeatmapsByArtist(await LoadBeatmapDatabaseAsync());
+            GameBase.VisibleMapsets = GameBase.Mapsets;
+        }
+
+        /// <summary>
         ///     Initializes and loads the beatmap database
         /// </summary>
         /// <returns></returns>
-        internal static async Task<List<Mapset>> LoadBeatmapDatabaseAsync()
+        private static async Task<List<Mapset>> LoadBeatmapDatabaseAsync()
         {
             try
             {

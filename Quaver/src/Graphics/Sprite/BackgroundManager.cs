@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -140,6 +141,22 @@ namespace Quaver.Graphics.Sprite
         public static void Draw()
         {
             Background.Draw();
+        }
+
+        /// <summary>
+        ///     Loads a beatmap's background
+        /// </summary>
+        public static void LoadBackground()
+        {
+            if (GameBase.CurrentBackground != null)
+                GameBase.CurrentBackground.Dispose();
+
+            var bgPath = Configuration.SongDirectory + "/" + GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.BackgroundPath;
+
+            if (!File.Exists(bgPath))
+                return;
+
+            GameBase.CurrentBackground = ImageLoader.Load(bgPath);
         }
     }
 }

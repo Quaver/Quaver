@@ -168,5 +168,13 @@ namespace Quaver.Database.Beatmaps
                 Mode = qua.Mode
             };
         }
+
+        /// <summary>
+        ///     Changes selected beatmap
+        /// </summary>
+        public static void ChangeBeatmap(Beatmap map)
+        {
+            GameBase.SelectedBeatmap = map;
+        }
     }
 }
