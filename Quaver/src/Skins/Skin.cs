@@ -12,6 +12,7 @@ using System.Runtime.Remoting.Channels;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Audio;
 using Quaver.Audio;
+using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Utility;
 
@@ -282,6 +283,15 @@ namespace Quaver.Skins
 
             // Load all skin elements
             LoadSkinElements(skinDirectory);
+        }
+
+        /// <summary>
+        ///     Loads the skin defined in the config file. 
+        /// </summary>
+        public static void LoadSkin()
+        {
+            GameBase.LoadedSkin = new Skin(Configuration.Skin);
+            GameBase.Cursor = new Cursor();
         }
 
         /// <summary>

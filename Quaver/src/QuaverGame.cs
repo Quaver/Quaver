@@ -102,11 +102,11 @@ namespace Quaver
             //Create new GameStateManager Instance
             GameBase.Content = Content;
 
-            // Load the Game Skin Before Starting
-            GameBase.LoadSkin();
-
             // Load UI .xnb elements
             GameBase.UI.LoadElementsAsContent();
+
+            // Load the Game Skin Before Starting
+            Skin.LoadSkin();
 
             // Initialze the logger
             Logger.Initialize();
@@ -116,12 +116,12 @@ namespace Quaver
             if (GameBase.Mapsets.Count != 0)
             {
                 // Load background asynchronously.
-                Task.Run(() => GameBase.LoadBackground())
+                Task.Run(() => BackgroundManager.LoadBackground())
                     .ContinueWith(t => BackgroundManager.Change(GameBase.CurrentBackground));
             }
 
             // Create Cursor. Use after LoadSkin
-            GameBase.LoadCursor();
+
 
             // Set Render Target
             GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);

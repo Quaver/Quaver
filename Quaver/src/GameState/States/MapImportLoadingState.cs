@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
+using Quaver.Database;
 using Quaver.Database.Beatmaps;
 using Quaver.Discord;
 using Quaver.Graphics.Sprite;
@@ -30,8 +31,7 @@ namespace Quaver.GameState.States
         public void Initialize()
         {
             // TODO: Add some sort of general loading screen here. The state is only going to be used during map importing.
-            // Set Rich Presence
-            GameBase.ChangeDiscordPresence("Importing maps", "In the menus");
+            DiscordController.ChangeDiscordPresence("Importing maps", "In the menus");
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Quaver.GameState.States
             var oldMaps = GameBase.Mapsets;
 
             // Import all the maps to the db
-            await GameBase.LoadAndSetBeatmaps();
+            await BeatmapCache.LoadAndSetBeatmaps();
 
             // Update the selected beatmap with the new one.
             // This button should only be on the song select state, so no need to check for states here.
@@ -78,7 +78,7 @@ namespace Quaver.GameState.States
             if (oldMaps.Count == 0)
             {
                 BeatmapUtils.SelectRandomBeatmap();
-                GameBase.LoadBackground();
+                BackgroundManager.LoadBackground();
                 BackgroundManager.Change(GameBase.CurrentBackground);
                 SongManager.Load();
                 SongManager.Play();
@@ -89,16 +89,15 @@ namespace Quaver.GameState.States
                 Console.WriteLine(map.Artist + " " + map.Title);
 
                 // Switch map and load audio for song and play it.
-                GameBase.ChangeBeatmap(map);
+                Beatmap.ChangeBeatmap(map);
 
                 // Load and change background after import
-                GameBase.LoadBackground();
+                BackgroundManager.LoadBackground();
                 BackgroundManager.Change(GameBase.CurrentBackground);
 
                 SongManager.ReloadSong();
 
-                GameBase.ChangeDiscordPresence(
-                    $"{GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}", "Listening");
+                DiscordController.ChangeDiscordPresence($"{GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}", "Listening");
             }
 
             Logger.Log("Successfully completed the conversion task. Stopping loader.", LogColors.GameImportant);
