@@ -64,9 +64,7 @@ namespace Quaver.Online
         private static void OnConnectionError(object sender, PacketEventArgs e)
         {
             // Log out user
-            IsLoggedIn = false;
-            Client = null;
-            OnlineClients = null;
+            Logout();
 
             Logger.Log("A connection error occurred.", LogColors.GameError);
         }
@@ -79,9 +77,7 @@ namespace Quaver.Online
         private static void OnDisconnection(object sender, PacketEventArgs e)
         {
             // Log out user
-            IsLoggedIn = false;
-            Client = null;
-            OnlineClients = null;
+            Logout();
 
             Console.WriteLine(e.Data);
             Logger.Log("Disconnected from the Quaver server", LogColors.GameWarning);
@@ -155,6 +151,16 @@ namespace Quaver.Online
         {
             Console.WriteLine(e.Data);
             Logger.Log("Received RattleUserDisconnected packet", LogColors.GameInfo);
+        }
+
+        /// <summary>
+        ///     Logs out the user completely
+        /// </summary>
+        internal static void Logout(bool tellServer = false)
+        {
+            IsLoggedIn = false;
+            Client = null;
+            OnlineClients = null;
         }
     }
 }
