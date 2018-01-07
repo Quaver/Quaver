@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Quaver.Config;
 using Quaver.Database;
+using Quaver.Discord;
 using Quaver.Graphics;
 using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
@@ -516,7 +517,7 @@ namespace Quaver.GameState.States
             var mapData = $"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]";
             var accuracy = (float)Math.Round(ScoreData.Accuracy * 100, 2);
 
-            GameBase.ChangeDiscordPresence(mapData, $"Finished - {accuracy}% - {Util.GetGradeFromAccuracy(accuracy).ToString()}");
+            DiscordController.ChangeDiscordPresence(mapData, $"Finished - {accuracy}% - {Util.GetGradeFromAccuracy(accuracy).ToString()}");
         }
     }
 }

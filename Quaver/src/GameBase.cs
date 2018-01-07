@@ -112,7 +112,7 @@ namespace Quaver
         /// <summary>
         ///     WindowHeight / WindowWidth ratio
         /// </summary>
-        public static float WindowUIScale { get; private set; } = WindowRectangle.Height / ReferenceResolution.Y; //TODO: Automatically set this rectangle as windoow size through method
+        public static float WindowUIScale { get; set; } = WindowRectangle.Height / ReferenceResolution.Y; //TODO: Automatically set this rectangle as windoow size through method
 
         /// <summary>
         ///     The game's clock. Essentially it controls which speed songs are played at.
@@ -148,7 +148,7 @@ namespace Quaver
         /// <summary>
         /// The mouse cursor
         /// </summary>
-        public static Cursor Cursor { get; private set; }
+        public static Cursor Cursor { get; set; }
 
         /// <summary>
         ///     The current Discord Controller for RichPresence.
@@ -176,161 +176,5 @@ namespace Quaver
         ///     The build version of the game (The md5 hash of the exe)
         /// </summary>
         public static string BuildVersion { get; set; }
-
-        /// <summary>
-        ///     Whenever the settings for window size is changed, call this method to update the window.
-        /// </summary>
-        /// <param name="newSize"></param>
-        public static void UpdateWindow(Point newSize)
-        {
-            //TODO: unfinished
-            WindowRectangle = new DrawRectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight);
-            MainRenderTarget = new RenderTarget2D(GraphicsDevice, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-            //Rectangle mainWindow = GraphicsDevice.PresentationParameters.Bounds;
-
-            //Align letterboxed window
-            //Window = Util.DrawRect(Alignment.MidCenter, Window, mainWindow);
-            WindowUIScale = WindowRectangle.Y / ReferenceResolution.Y;
-        }
-
-        /// <summary>
-        ///     Responsible for loading and setting our global beatmaps variable.
-        /// </summary>
-        public static async Task LoadAndSetBeatmaps()
-        {
-            Mapsets = BeatmapUtils.OrderBeatmapsByArtist(await BeatmapCache.LoadBeatmapDatabaseAsync());
-            VisibleMapsets = Mapsets;
-        }
-
-        /// <summary>
-        ///     Loads the skin defined in the config file. 
-        /// </summary>
-        public static void LoadSkin()
-        {
-            LoadedSkin = new Skin(Configuration.Skin);
-        }
-
-        /// <summary>
-        ///     Initialize Cursor. Only called once per game.
-        /// </summary>
-        public static void LoadCursor()
-        {
-            Cursor = new Cursor();
-        }
-
-        /// <summary>
-        ///     Changes the map.
-        /// </summary>
-        public static void ChangeBeatmap(Beatmap map)
-        {
-            SelectedBeatmap = map;
-        }
-
-        /// <summary>
-        ///     Loads a beatmap's background
-        /// </summary>
-        public static void LoadBackground()
-        {
-            if (CurrentBackground != null)
-                CurrentBackground.Dispose();
-
-            var bgPath = Configuration.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.BackgroundPath;
-
-            if (!File.Exists(bgPath))
-                return;
-
-            CurrentBackground = ImageLoader.Load(bgPath);
-        }
-
-        /// <summary>
-        ///     Responsible for changing the discord rich presence.
-        /// </summary>
-        /// <param name="details"></param>
-        public static void ChangeDiscordPresence(string details, string state, double timeLeft = 0)
-        {
-            if (!DiscordRichPresencedInited)
-                return;
-
-            try
-            {
-                DiscordController.presence.details = details;
-
-                if (timeLeft != 0)
-                {
-                    // Get Current Unix Time
-                    var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                    var unixDateTime = (DateTime.Now.ToLocalTime().ToUniversalTime() - epoch).TotalSeconds;
-
-                    // Set Discord presence to the "time left" specified.
-                    DiscordController.presence.endTimestamp = (long)(unixDateTime + (timeLeft / 1000));
-                }
-                else
-                {
-                    DiscordController.presence.endTimestamp = 0;
-                }
-
-                DiscordController.presence.smallImageKey = "4k";
-
-                // Set presence based Mode
-                switch (SelectedBeatmap.Mode)
-                {
-                    case GameModes.Keys4:
-                        DiscordController.presence.smallImageText = "Mania 4K";
-                        break;
-                    case GameModes.Keys7:
-                        DiscordController.presence.smallImageText = "Mania 7K";
-                        break;
-                    default:
-                        break;
-                }
-
-                DiscordController.presence.state = state;
-                DiscordRPC.UpdatePresence(ref DiscordController.presence);
-            }
-            catch (Exception e)
-            {
-                Logger.Log(e.Message, LogColors.GameError);
-                throw;
-            }
-        }
-
-        /// <summary>
-        ///     Responsible for handling discord presence w/ mods if any exist.
-        /// </summary>
-        public static void ChangeDiscordPresenceGameplay(bool skippedSong)
-        {
-            if (!DiscordRichPresencedInited)
-                return;
-
-            try
-            {
-                var mapString = $"{SelectedBeatmap.Qua.Artist} - {SelectedBeatmap.Qua.Title} [{SelectedBeatmap.Qua.DifficultyName}]";
-
-                // Get the original map length. 
-                double mapLength = Qua.FindSongLength(SelectedBeatmap.Qua) / GameClock;
-
-                // Get the new map length if it was skipped.
-                if (skippedSong)
-                    mapLength = (Qua.FindSongLength(SelectedBeatmap.Qua) - SongManager.Position) / GameClock;
-
-                var sb = new StringBuilder();
-                sb.Append("Playing");
-
-                // Add mods to the string if mods exist
-                if (CurrentGameModifiers.Count > 0)
-                {
-                    sb.Append(" + ");
-
-                    if (CurrentGameModifiers.Exists(x => x.Type == ModType.Speed))
-                        sb.Append($"Speed {GameClock}x");
-                }
-
-                ChangeDiscordPresence(mapString, sb.ToString(), mapLength);
-            }
-            catch (Exception e)
-            {
-                Logger.Log(e.Message, LogColors.GameError);
-            }
-        }
     }
 }

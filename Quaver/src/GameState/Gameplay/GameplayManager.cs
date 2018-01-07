@@ -17,6 +17,7 @@ using Quaver.Input;
 using Quaver.Replays;
 using Quaver.Config;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Discord;
 
 namespace Quaver.GameState.Gameplay
 {
@@ -464,7 +465,7 @@ namespace Quaver.GameState.Gameplay
                 SongManager.Play();
 
                 Timing.SongIsPlaying = true;
-                GameBase.ChangeDiscordPresenceGameplay(true);
+                DiscordController.ChangeDiscordPresenceGameplay(true);
             }
         }
     }
