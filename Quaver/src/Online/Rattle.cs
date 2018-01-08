@@ -152,10 +152,15 @@ namespace Quaver.Online
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void OnRattleUserDisconnected(object sender, PacketEventArgs e)
+        private static void OnRattleUserDisconnected(object sender, UserDisconnectedEventArgs e)
         {
-            Console.WriteLine(e.Data);
-            Logger.Log("Received RattleUserDisconnected packet", LogColors.GameInfo);
+            var disconnectedUser = OnlineClients.Find(x => x.UserId == e.Data.UserId);
+            OnlineClients.Remove(disconnectedUser);
+
+            var log = $"User: {disconnectedUser.Username} #{disconnectedUser.UserId} has disconnected.\n" +
+                      $"There are now {OnlineClients.Count} users online";
+
+            Logger.Log(log, LogColors.GameInfo);
         }
 
         /// <summary>
