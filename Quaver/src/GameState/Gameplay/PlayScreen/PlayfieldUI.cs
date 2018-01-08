@@ -90,6 +90,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// </summary>
         public Boundary Boundary { get; private set; }
 
+        private Boundary HealthMultiplierBoundary { get; set; }
+
+        private Sprite HealthBarOver { get; set; }
+
+        private Sprite HealthBarUnder { get; set; }
+
+        private Sprite[] MultiplierBars { get; set; }
+
         public void Draw()
         {
             Boundary.Draw();
@@ -181,6 +189,45 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Alignment = Alignment.MidCenter,
                 Parent = OffsetGaugeBoundary
             };
+
+            // Create Health Bar
+            HealthMultiplierBoundary = new Boundary()
+            {
+                Size = new UDim2(GameplayReferences.PlayfieldSize - 4, 20 * GameBase.WindowUIScale),
+                PosY = Config.Configuration.DownScroll ? -2 : 2,
+                Alignment = Config.Configuration.DownScroll ? Alignment.BotCenter : Alignment.TopCenter,
+                Parent = Boundary
+            };
+
+            HealthBarUnder = new Sprite()
+            {
+                Size = new UDim2(0, 10 * GameBase.WindowUIScale -1, 1, 0),
+                Alignment = Config.Configuration.DownScroll ? Alignment.BotCenter : Alignment.TopCenter,
+                Parent = HealthMultiplierBoundary
+            };
+
+            HealthBarOver = new Sprite()
+            {
+                Size = new UDim2(-2, -2, 1, 1),
+                PosX = 1,
+                Parent = HealthBarUnder,
+                Alignment = Alignment.MidLeft,
+                Tint = Color.Green
+            };
+
+            // Create Multiplier Bars
+            MultiplierBars = new Sprite[15];
+            for (var i = 0; i < 15; i++)
+            {
+                MultiplierBars[i] = new Sprite()
+                {
+                    Size = new UDim2(15 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale -1),
+                    PosX = (7.5f-i) * 17 * GameBase.WindowUIScale,
+                    PosY = Config.Configuration.DownScroll ? 0 : 10 * GameBase.WindowUIScale + 1,
+                    Alignment = Config.Configuration.DownScroll ? Alignment.BotCenter : Alignment.TopCenter,
+                    Parent = HealthMultiplierBoundary
+                };
+            }
         }
 
         public void UnloadContent()
