@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if !PUBLIC
 using Quaver.Framework.Events.Packets;
 using Quaver.Framework.Events.Packets.Structures;
-#if !PUBLIC
 using Quaver.Framework.Events;
 using Quaver.Logging;
 
@@ -64,7 +64,7 @@ namespace Quaver.Online
         private static void OnConnectionError(object sender, PacketEventArgs e)
         {
             // Log out user
-            Logout();
+            ResetLogin();
 
             Logger.Log("A connection error occurred.", LogColors.GameError);
         }
@@ -77,9 +77,7 @@ namespace Quaver.Online
         private static void OnDisconnection(object sender, PacketEventArgs e)
         {
             // Log out user
-            Logout();
-
-            Console.WriteLine(e.Data);
+            ResetLogin();
             Logger.Log("Disconnected from the Quaver server", LogColors.GameWarning);
         }
 
@@ -156,7 +154,7 @@ namespace Quaver.Online
         /// <summary>
         ///     Logs out the user completely
         /// </summary>
-        internal static void Logout(bool tellServer = false)
+        internal static void ResetLogin(bool tellServer = false)
         {
             IsLoggedIn = false;
             Client = null;
