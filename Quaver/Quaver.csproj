@@ -446,6 +446,13 @@
     <None Include="Resources\Default Skin\note-receptor-down2.xnb" />
     <None Include="Resources\Default Skin\note-receptor-down3.xnb" />
     <None Include="Resources\Default Skin\note-receptor-down4.xnb" />
+    <None Include="Resources\Default Skin\note-receptor7k11.xnb" />
+    <None Include="Resources\Default Skin\note-receptor7k21.xnb" />
+    <None Include="Resources\Default Skin\note-receptor7k31.xnb" />
+    <None Include="Resources\Default Skin\note-receptor7k41.xnb" />
+    <None Include="Resources\Default Skin\note-receptor7k51.xnb" />
+    <None Include="Resources\Default Skin\note-receptor7k61.xnb" />
+    <None Include="Resources\Default Skin\note-receptor7k71.xnb" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\discord-rpc.dll">
