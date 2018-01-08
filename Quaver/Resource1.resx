@@ -145,37 +145,37 @@
   <data name="judge-perfect" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Skin\judge-perfect.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="diff-select-mask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="main-diff-select-mask" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\diff-select-mask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="set-select-mask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="main-set-select-mask" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\set-select-mask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="hollow-box" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="main-hollow-box" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\hollow-box.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Bold12" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="font-bold12" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Fonts\Bold12.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Medium12" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="font-medium12" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Fonts\Medium12.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Medium16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="font-medium16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Fonts\Medium16.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Medium24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="font-medium24" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Fonts\Medium24.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Medium48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="font-medium48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Fonts\Medium48.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="bar-cap" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="main-bar-cap" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\bar-cap.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="bar-corner" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="main-bar-corner" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\bar-corner.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="blank-box" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="main-blank-box" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\blank-box.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="graph-axis-long" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -223,7 +223,7 @@
   <data name="sound-applause" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Skin\applause.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="cursor" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="main-cursor" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Skin\cursor.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="sound-back" type="System.Resources.ResXFileRef, System.Windows.Forms">

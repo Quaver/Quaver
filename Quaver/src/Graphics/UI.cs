@@ -46,12 +46,12 @@ namespace Quaver.Graphics
         /// </summary>
         public void LoadElementsAsContent()
         {
-            DiffSelectMask = GameBase.Content.Load<Texture2D>("diff-select-mask");
-            SetSelectMask = GameBase.Content.Load<Texture2D>("set-select-mask");
-            BlankBox = GameBase.Content.Load<Texture2D>("blank-box");
-            HollowBox = GameBase.Content.Load<Texture2D>("hollow-box");
-            BarCap = GameBase.Content.Load<Texture2D>("bar-cap");
-            BarCorner = GameBase.Content.Load<Texture2D>("bar-corner");
+            DiffSelectMask = GameBase.Content.Load<Texture2D>("main-diff-select-mask");
+            SetSelectMask = GameBase.Content.Load<Texture2D>("main-set-select-mask");
+            BlankBox = GameBase.Content.Load<Texture2D>("main-blank-box");
+            HollowBox = GameBase.Content.Load<Texture2D>("main-hollow-box");
+            BarCap = GameBase.Content.Load<Texture2D>("main-bar-cap");
+            BarCorner = GameBase.Content.Load<Texture2D>("main-bar-corner");
         }
 
         /// <summary>
