@@ -19,6 +19,7 @@ using Quaver.Scores;
 using Quaver.Graphics.Text;
 using Quaver.GameState.Gameplay;
 using Quaver.Utility;
+using Quaver.Audio;
 
 namespace Quaver.GameState.States
 {
@@ -137,6 +138,15 @@ namespace Quaver.GameState.States
 
             ReplayPath = $"{Configuration.Username} - {Artist} - {Title} [{DifficultyName}] ({DateTime.UtcNow})";
 
+            // If failed, stop song and play fail sound
+            if (ScoreData.Failed)
+            {
+                SongManager.Stop();
+                ApplauseInstance = GameBase.LoadedSkin.SoundComboBreak.CreateInstance();
+            }
+            // If passed, play audio
+            else ApplauseInstance = GameBase.LoadedSkin.SoundApplause.CreateInstance();
+
             // Insert the score into the database
             Task.Run(async () =>
             {
@@ -169,9 +179,6 @@ namespace Quaver.GameState.States
                     Logger.Log(e.Message, LogColors.GameError);
                 }
             });
-
-            // Create an instance of the applause sound effect so that we can stop it later.
-            ApplauseInstance = GameBase.LoadedSkin.SoundApplause.CreateInstance();
 
             // Set Rich Presence for this state
             SetDiscordRichPresence();
