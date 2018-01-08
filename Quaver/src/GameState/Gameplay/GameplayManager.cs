@@ -201,8 +201,8 @@ namespace Quaver.GameState.Gameplay
             SvInfoTextBox.Update(dt);
 
             // If the song is done, it'll change state. todo: add a method for this later
-            if (Timing.PlayingIsDone)
-                GameBase.GameStateManager.ChangeState(new ScoreScreenState(BeatmapMd5, ScoreManager, GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title, GameBase.SelectedBeatmap.DifficultyName, ReplayFrames));  
+            if (Timing.PlayingIsDone || ScoreManager.Failed)
+                GameBase.GameStateManager.ChangeState(new ScoreScreenState(BeatmapMd5, ScoreManager, GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title, GameBase.SelectedBeatmap.DifficultyName, ReplayFrames));
         }
 
         public void Draw()
