@@ -42,6 +42,11 @@ namespace Quaver.GameState.Gameplay
         internal int MultiplierIndex { get; set; }
         internal int[] ScoreWeighting { get; } = new int[6] { 100, 100, 100, 100, 100, 100 };
 
+        //Health tracking
+        internal bool Failed { get; private set; }
+        internal float Health { get; private set; }
+        internal int[] HealthWeighting { get; } = new int[6] { 2, 1, 0, -2, -6, -4 };
+
         //Accuracy Reference Variables
         internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, -50, -100, 0 };
         internal float[] HitWindowPress { get; private set; }
@@ -128,6 +133,15 @@ namespace Quaver.GameState.Gameplay
             MultiplierIndex = (int)Math.Floor(MultiplierCount/10f);
             ScoreCount += ScoreWeighting[index] + MultiplierIndex;
 
+            //Update Health
+            Health += HealthWeighting[index];
+            if (Health <= 0)
+            {
+                Failed = true;
+                Health = 0;
+            }
+            else if (Health > 100) Health = 100;
+
             //Update Score todo: actual score calculation
             ScoreTotal = (int)(1000000 * ((float)ScoreCount / ScoreMax));
             //Console.WriteLine("Score Count: " + ScoreCount + "     Max: " + ScoreMax + "    Note: "+JudgeCount+"/"+ncount);
@@ -150,6 +164,7 @@ namespace Quaver.GameState.Gameplay
             MultiplierIndex = 0;
             ScoreTotal = 0;
             JudgeCount = 0;
+            Health = 100;
             JudgeReleaseSpread = new int[6];
             JudgePressSpread = new int[6];
             MsDeviance = new List<NoteRecord>();
