@@ -340,11 +340,15 @@ namespace Quaver.GameState.Gameplay
                         AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
                         PlayfieldUI.UpdateJudge(i, ScoreManager.Combo, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime);
 
-                        // If the player is spamming (Swan: This is why the game looks so weird)
+                        // If the player is spamming
                         if (i >= 3)
-                            //NoteManager.KillNote(noteIndex);
                         {
-                            
+                            //todo: (Swan: This is why the game looks so weird)
+                            //If the object is an LN, don't forget to count it
+                            if (NoteManager.HitObjectPool[noteIndex].IsLongNote)
+                                ReleaseSkipped(null, null);
+
+                            NoteManager.RecycleNote(noteIndex);
                         }
                         else
                         {
@@ -391,27 +395,27 @@ namespace Quaver.GameState.Gameplay
                 //Check which HitWindow this object's timing is in.
                 //Since it's an LN, the hit window is increased by 1.25x.
                 //Only checks MARV/PERF/GREAT/GOOD
-                int releaseTiming = -1;
+                int rIndex = -1;
                 for (i = 0; i < 4; i++)
                 {
-                    if (Math.Abs(NoteManager.HitObjectHold[noteIndex].EndTime - CurrentSongTime) <= ScoreManager.HitWindowRelease[i])
+                    if (Math.Abs(NoteManager.HitObjectHold[noteIndex].EndTime - CurrentSongTime) < ScoreManager.HitWindowRelease[i])
                     {
-                        releaseTiming = i;
+                        rIndex = i;
                         break;
                     }
                 }
 
                 // If LN has been released during a HitWindow
-                if (releaseTiming > -1)
+                if (rIndex > -1)
                 {
                     // Update ScoreManager and UI if note was pressed on time
-                    ScoreManager.Count(i, true);
-                    AccuracyBoxUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
+                    ScoreManager.Count(rIndex, true);
+                    AccuracyBoxUI.UpdateAccuracyBox(rIndex, ScoreManager.JudgePressSpread[rIndex], ScoreManager.JudgeReleaseSpread[rIndex], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
                     AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
-                    PlayfieldUI.UpdateJudge(i, ScoreManager.Combo, true);
+                    PlayfieldUI.UpdateJudge(rIndex, ScoreManager.Combo, true);
                     NoteManager.KillHold(noteIndex, true);
                 }
-                // If LN has been pressed early
+                // If LN has been released early
                 else
                 {
                     // Update ScoreManager and UI if note was pressed on time
@@ -447,7 +451,7 @@ namespace Quaver.GameState.Gameplay
 
         public void ReleaseMissed(object sender, EventArgs e)
         {
-            ScoreManager.Count(4,true);
+            ScoreManager.Count(4, true);
             AccuracyBoxUI.UpdateAccuracyBox(4, ScoreManager.JudgePressSpread[4], ScoreManager.JudgeReleaseSpread[4], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
             AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
             PlayfieldUI.UpdateJudge(4, ScoreManager.Combo);
