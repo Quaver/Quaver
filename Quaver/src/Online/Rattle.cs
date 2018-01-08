@@ -134,10 +134,17 @@ namespace Quaver.Online
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void OnRattleUserConnected(object sender, PacketEventArgs e)
+        private static void OnRattleUserConnected(object sender, UserConnectedEventArgs e)
         {
-            Console.WriteLine(e.Data);
-            Logger.Log("Received RattleUserConnected packet", LogColors.GameInfo);
+            var client = e.Data;
+
+            // Add the new client to the list of online users
+            OnlineClients.Add(client);
+
+            var log = $"{client.Username} #{client.UserId} has logged into the server.\n" +
+                      $"There are now {OnlineClients.Count} users online.";
+
+            Logger.Log(log, LogColors.GameInfo);
         }
 
         /// <summary>
