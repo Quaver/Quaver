@@ -45,7 +45,7 @@ namespace Quaver.GameState.Gameplay
         //Health tracking
         internal bool Failed { get; private set; }
         internal float Health { get; private set; }
-        internal int[] HealthWeighting { get; } = new int[6] { 2, 1, 0, -2, -6, -4 };
+        internal int[] HealthWeighting { get; } = new int[6] { 2, 2, 1, -2, -6, -4 };
 
         //Accuracy Reference Variables
         internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, -50, -100, 0 };
