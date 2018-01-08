@@ -136,8 +136,7 @@ namespace Quaver.GameState.Gameplay
             //Todo: Remove. TEST.
             TestButton = new TextButton(new Vector2(200, 30), "BACK")
             {
-                Image = GameBase.LoadedSkin.ColumnTimingBar,
-                Alignment = Alignment.TopCenter
+                Alignment = Alignment.MidLeft
             };
             TestButton.Clicked += BackButtonClick;
 
