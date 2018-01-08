@@ -171,7 +171,7 @@ namespace Quaver.GameState.States
             });
 
             // Create an instance of the applause sound effect so that we can stop it later.
-            ApplauseInstance = GameBase.LoadedSkin.Applause.CreateInstance();
+            ApplauseInstance = GameBase.LoadedSkin.SoundApplause.CreateInstance();
 
             // Set Rich Presence for this state
             SetDiscordRichPresence();
@@ -410,7 +410,7 @@ namespace Quaver.GameState.States
         private void OnBackButtonClick(object sender, EventArgs e)
         {
             ApplauseInstance.Stop(true);
-            GameBase.LoadedSkin.Back.Play((float) Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+            GameBase.LoadedSkin.SoundBack.Play((float) Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
             GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 

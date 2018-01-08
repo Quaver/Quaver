@@ -123,7 +123,7 @@ namespace Quaver.Input
             CurrentlyTakingScreenshot = true;
 
             // Play screenshot sound effect
-            GameBase.LoadedSkin.Screenshot.Play((float) Config.Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+            GameBase.LoadedSkin.SoundScreenshot.Play((float) Config.Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
             // Create path for file
             var path = Config.Configuration.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".jpg";
