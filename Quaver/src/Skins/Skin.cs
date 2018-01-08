@@ -655,7 +655,7 @@ namespace Quaver.Skins
                 if (File.Exists($"{skinDir}/{element}-{snaps[i]}.png"))
                     objectsList.Add(ImageLoader.Load($"{skinDir}/{element}-{snaps[i]}.png"));
                 else
-                    objectsList.Add(GameBase.Content.Load<Texture2D>("blank-box"));
+                    objectsList.Add(GameBase.Content.Load<Texture2D>("main-blank-box"));
             }
 
             HitObjects.Insert(index, objectsList);
