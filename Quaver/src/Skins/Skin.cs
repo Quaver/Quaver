@@ -149,7 +149,7 @@ namespace Quaver.Skins
         internal Texture2D Cursor { get; set; }
 
         /// <summary>
-        ///     Sound Effect elements in skin
+        ///     Sound Effect elements in skin7k-note-hitobject-
         /// </summary>
         internal SoundEffect Hit { get; set; }
         internal SoundEffect ComboBreak { get; set; }
@@ -177,19 +177,19 @@ namespace Quaver.Skins
                 @"column-timingbar",
 
                 // 4k HitObjects
-                @"note-hitobject4k1",
-                @"note-hitobject4k2",
-                @"note-hitobject4k3",
-                @"note-hitobject4k4",
+                @"4k-note-hitobject-1",
+                @"4k-note-hitobject-2",
+                @"4k-note-hitobject-3",
+                @"4k-note-hitobject-4",
 
                 // 7k HitObjects
-                @"note-hitobject7k1",
-                @"note-hitobject7k2",
-                @"note-hitobject7k3",
-                @"note-hitobject7k4",
-                @"note-hitobject7k5",
-                @"note-hitobject7k6",
-                @"note-hitobject7k7",
+                @"7k-note-hitobject-1",
+                @"7k-note-hitobject-2",
+                @"7k-note-hitobject-3",
+                @"7k-note-hitobject-4",
+                @"7k-note-hitobject-5",
+                @"7k-note-hitobject-6",
+                @"7k-note-hitobject-7",
 
                 // Grades
                 @"grade-small-a",
@@ -204,65 +204,65 @@ namespace Quaver.Skins
                 @"grade-small-xxx",
 
                 // 4k Hit Object Hold Ends
-                @"note-holdend4k1",
-                @"note-holdend4k2",
-                @"note-holdend4k3",
-                @"note-holdend4k4",
+                @"4k-note-holdend-1",
+                @"4k-note-holdend-2",
+                @"4k-note-holdend-3",
+                @"4k-note-holdend-4",
 
                 // 7k Hit Object Hold Ends
-                @"note-holdend7k1",
-                @"note-holdend7k2",
-                @"note-holdend7k3",
-                @"note-holdend7k4",
-                @"note-holdend7k5",
-                @"note-holdend7k6",
-                @"note-holdend7k7",
+                @"7k-note-holdend-1",
+                @"7k-note-holdend-2",
+                @"7k-note-holdend-3",
+                @"7k-note-holdend-4",
+                @"7k-note-holdend-5",
+                @"7k-note-holdend-6",
+                @"7k-note-holdend-7",
 
                 // 4k Hit Object Hold Bodies
-                @"note-holdbody4k1",
-                @"note-holdbody4k2",
-                @"note-holdbody4k3",
-                @"note-holdbody4k4",
+                @"4k-note-holdbody-1",
+                @"4k-note-holdbody-2",
+                @"4k-note-holdbody-3",
+                @"4k-note-holdbody-4",
 
                 // 7k Hit Object Hold Bodies
-                @"note-holdbody7k1",
-                @"note-holdbody7k2",
-                @"note-holdbody7k3",
-                @"note-holdbody7k4",
-                @"note-holdbody7k5",
-                @"note-holdbody7k6",
-                @"note-holdbody7k7",
+                @"7k-note-holdbody-1",
+                @"7k-note-holdbody-2",
+                @"7k-note-holdbody-3",
+                @"7k-note-holdbody-4",
+                @"7k-note-holdbody-5",
+                @"7k-note-holdbody-6",
+                @"7k-note-holdbody-7",
 
                 // 4k Note Receptors
-                @"note-receptor4k-up1",
-                @"note-receptor4k-up2",
-                @"note-receptor4k-up3",
-                @"note-receptor4k-up4",
+                @"4k-note-receptor-up-1",
+                @"4k-note-receptor-up-2",
+                @"4k-note-receptor-up-3",
+                @"4k-note-receptor-up-4",
 
                 // 4k Note Receptors Down
-                @"note-receptor4k-down1",
-                @"note-receptor4k-down2",
-                @"note-receptor4k-down3",
-                @"note-receptor4k-down4",
+                @"4k-note-receptor-down-1",
+                @"4k-note-receptor-down-2",
+                @"4k-note-receptor-down-3",
+                @"4k-note-receptor-down-4",
 
 
                 // 7k Note Receptors
-                @"note-receptor7k-up1",
-                @"note-receptor7k-up2",
-                @"note-receptor7k-up3",
-                @"note-receptor7k-up4",
-                @"note-receptor7k-up5",
-                @"note-receptor7k-up6",
-                @"note-receptor7k-up7",
+                @"7k-note-receptor-up-1",
+                @"7k-note-receptor-up-2",
+                @"7k-note-receptor-up-3",
+                @"7k-note-receptor-up-4",
+                @"7k-note-receptor-up-5",
+                @"7k-note-receptor-up-6",
+                @"7k-note-receptor-up-7",
 
                 // 7k Note Receptors Down
-                @"note-receptor7k-down1",
-                @"note-receptor7k-down2",
-                @"note-receptor7k-down3",
-                @"note-receptor7k-down4",
-                @"note-receptor7k-down5",
-                @"note-receptor7k-down6",
-                @"note-receptor7k-down7",
+                @"7k-note-receptor-down-1",
+                @"7k-note-receptor-down-2",
+                @"7k-note-receptor-down-3",
+                @"7k-note-receptor-down-4",
+                @"7k-note-receptor-down-5",
+                @"7k-note-receptor-down-6",
+                @"7k-note-receptor-down-7",
 
                 // Judge
                 @"judge-miss",
@@ -334,37 +334,37 @@ namespace Quaver.Skins
                     case @"column-timingbar":
                         ColumnTimingBar = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-hitobject4k1":
+                    case @"4k-note-hitobject-1":
                         LoadHitObjects(NoteHitObjects4K, skinDir, element, 0);
                         break;
-                    case @"note-hitobject4k2":
+                    case @"4k-note-hitobject-2":
                         LoadHitObjects(NoteHitObjects4K, skinDir, element, 1);
                         break;
-                    case @"note-hitobject4k3":
+                    case @"4k-note-hitobject-3":
                         LoadHitObjects(NoteHitObjects4K, skinDir, element, 2);
                         break;
-                    case @"note-hitobject4k4":
+                    case @"4k-note-hitobject-4":
                         LoadHitObjects(NoteHitObjects4K, skinDir, element, 3);
                         break;
-                    case @"note-hitobject7k1":
+                    case @"7k-note-hitobject-1":
                         NoteHitObjects7K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-hitobject7k2":
+                    case @"7k-note-hitobject-2":
                         NoteHitObjects7K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-hitobject7k3":
+                    case @"7k-note-hitobject-3":
                         NoteHitObjects7K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-hitobject7k4":
+                    case @"7k-note-hitobject-4":
                         NoteHitObjects7K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-hitobject7k5":
+                    case @"7k-note-hitobject-5":
                         NoteHitObjects7K[4] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-hitobject7k6":
+                    case @"7k-note-hitobject-6":
                         NoteHitObjects7K[5] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-hitobject7k7":
+                    case @"7k-note-hitobject-7":
                         NoteHitObjects7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"grade-small-a":
@@ -397,136 +397,136 @@ namespace Quaver.Skins
                     case @"grade-small-xxx":
                         GradeSmallXXX = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdend4k1":
+                    case @"4k-note-holdend-1":
                         NoteHoldEnds4K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdend4k2":
+                    case @"4k-note-holdend-2":
                         NoteHoldEnds4K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdend4k3":
+                    case @"4k-note-holdend-3":
                         NoteHoldEnds4K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdend4k4":
+                    case @"4k-note-holdend-4":
                         NoteHoldEnds4K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdend7k1":
+                    case @"7k-note-holdend-1":
                         NoteHoldEnds7K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdend7k2":
+                    case @"7k-note-holdend-2":
                         NoteHoldEnds7K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdend7k3":
+                    case @"7k-note-holdend-3":
                         NoteHoldEnds7K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdend7k4":
+                    case @"7k-note-holdend-4":
                         NoteHoldEnds7K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdend7k5":
+                    case @"7k-note-holdend-5":
                         NoteHoldEnds7K[4] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdend7k6":
+                    case @"7k-note-holdend-6":
                         NoteHoldEnds7K[5] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdend7k7":
+                    case @"7k-note-holdend-7":
                         NoteHoldEnds7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdbody4k1":
+                    case @"4k-note-holdbody-1":
                         NoteHoldBodies4K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdbody4k2":
+                    case @"4k-note-holdbody-2":
                         NoteHoldBodies4K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdbody4k3":
+                    case @"4k-note-holdbody-3":
                         NoteHoldBodies4K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdbody4k4":
+                    case @"4k-note-holdbody-4":
                         NoteHoldBodies4K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdbody7k1":
+                    case @"7k-note-holdbody-1":
                         NoteHoldBodies7K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdbody7k2":
+                    case @"7k-note-holdbody-2":
                         NoteHoldBodies7K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdbody7k3":
+                    case @"7k-note-holdbody-3":
                         NoteHoldBodies7K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdbody7k4":
+                    case @"7k-note-holdbody-4":
                         NoteHoldBodies7K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdbody7k5":
+                    case @"7k-note-holdbody-5":
                         NoteHoldBodies7K[4] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdbody7k6":
+                    case @"7k-note-holdbody-6":
                         NoteHoldBodies7K[5] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-holdbody7k7":
+                    case @"7k-note-holdbody-7":
                         NoteHoldBodies7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor4k-up1":
+                    case @"4k-note-receptor-up-1":
                         NoteReceptorsUp4K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor4k-up2":
+                    case @"4k-note-receptor-up-2":
                         NoteReceptorsUp4K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor4k-up3":
+                    case @"4k-note-receptor-up-3":
                         NoteReceptorsUp4K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor4k-up4":
+                    case @"4k-note-receptor-up-4":
                         NoteReceptorsUp4K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor4k-down1":
+                    case @"4k-note-receptor-down-1":
                         NoteReceptorsDown4K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor4k-down2":
+                    case @"4k-note-receptor-down-2":
                         NoteReceptorsDown4K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor4k-down3":
+                    case @"4k-note-receptor-down-3":
                         NoteReceptorsDown4K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor4k-down4":
+                    case @"4k-note-receptor-down-4":
                         NoteReceptorsDown4K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-up1":
+                    case @"7k-note-receptor-up-1":
                         NoteReceptorsUp7K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-up2":
+                    case @"7k-note-receptor-up-2":
                         NoteReceptorsUp7K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-up3":
+                    case @"7k-note-receptor-up-3":
                         NoteReceptorsUp7K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-up4":
+                    case @"7k-note-receptor-up-4":
                         NoteReceptorsUp7K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-up5":
+                    case @"7k-note-receptor-up-5":
                         NoteReceptorsUp7K[4] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-up6":
+                    case @"7k-note-receptor-up-6":
                         NoteReceptorsUp7K[5] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-up7":
+                    case @"7k-note-receptor-up-7":
                         NoteReceptorsUp7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-down1":
+                    case @"7k-note-receptor-down-1":
                         NoteReceptorsDown7K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-down2":
+                    case @"7k-note-receptor-down-2":
                         NoteReceptorsDown7K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-down3":
+                    case @"7k-note-receptor-down-3":
                         NoteReceptorsDown7K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-down4":
+                    case @"7k-note-receptor-down-4":
                         NoteReceptorsDown7K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-down5":
+                    case @"7k-note-receptor-down-5":
                         NoteReceptorsDown7K[4] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-down6":
+                    case @"7k-note-receptor-down-6":
                         NoteReceptorsDown7K[5] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"note-receptor7k-down7":
+                    case @"7k-note-receptor-down-7":
                         NoteReceptorsDown7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-miss":
