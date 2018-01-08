@@ -116,11 +116,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     }
 
                     //If song time  > song end
-                    if (SongManager.Position >= GameBase.SelectedBeatmap.SongLength)
+                    if (SongManager.Position >= GameBase.SelectedBeatmap.SongLength || ActualSongTime >= PlayingEndOffset)
                         SongIsDone = true;
                     //Calculate song pos from audio
                     else
-                        ActualSongTime = (SongManager.Position + (ActualSongTime + dt * GameBase.GameClock)) / 2f;
+                        ActualSongTime = (SongManager.Position + (ActualSongTime + (dt * GameBase.GameClock))) / 2f;
                 }
             }
         }
