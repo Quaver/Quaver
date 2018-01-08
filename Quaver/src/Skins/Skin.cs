@@ -151,12 +151,12 @@ namespace Quaver.Skins
         /// <summary>
         ///     Sound Effect elements in skin7k-note-hitobject-
         /// </summary>
-        internal SoundEffect Hit { get; set; }
-        internal SoundEffect ComboBreak { get; set; }
-        internal SoundEffect Applause { get; set; }
-        internal SoundEffect Screenshot { get; set; }
-        internal SoundEffect Click { get; set; }
-        internal SoundEffect Back { get; set; }
+        internal SoundEffect SoundHit { get; set; }
+        internal SoundEffect SoundComboBreak { get; set; }
+        internal SoundEffect SoundApplause { get; set; }
+        internal SoundEffect SoundScreenshot { get; set; }
+        internal SoundEffect SoundClick { get; set; }
+        internal SoundEffect SoundBack { get; set; }
 
         /// <summary>
         ///  Animation Elements
@@ -276,12 +276,12 @@ namespace Quaver.Skins
                 @"cursor",
 
                 // Sound Effects
-                @"hit",
-                @"combobreak",
-                @"applause",
-                @"screenshot",
-                @"click",
-                @"back",
+                @"sound-hit",
+                @"sound-combobreak",
+                @"sound-applause",
+                @"sound-screenshot",
+                @"sound-click",
+                @"sound-back",
 
                 // Animation Frames
                 @"hitlighting"
@@ -547,26 +547,26 @@ namespace Quaver.Skins
                     case @"judge-marv":
                         JudgeMarv = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"hit":
-                        Hit = LoadSoundEffectElement(element, skinElementPath);
+                    case @"sound-hit":
+                        SoundHit = LoadSoundEffectElement(element, skinElementPath);
                         break;
-                    case @"combobreak":
-                        ComboBreak = LoadSoundEffectElement(element, skinElementPath);
+                    case @"sound-combobreak":
+                        SoundComboBreak = LoadSoundEffectElement(element, skinElementPath);
                         break;
-                    case @"applause":
-                        Applause = LoadSoundEffectElement(element, skinElementPath);
+                    case @"sound-applause":
+                        SoundApplause = LoadSoundEffectElement(element, skinElementPath);
+                        break;
+                    case @"sound-screenshot":
+                        SoundScreenshot = LoadSoundEffectElement(element, skinElementPath);
+                        break;
+                    case @"sound-click":
+                        SoundClick = LoadSoundEffectElement(element, skinElementPath);
+                        break;
+                    case @"sound-back":
+                        SoundBack = LoadSoundEffectElement(element, skinElementPath);
                         break;
                     case @"cursor":
                         Cursor = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"screenshot":
-                        Screenshot = LoadSoundEffectElement(element, skinElementPath);
-                        break;
-                    case @"click":
-                        Click = LoadSoundEffectElement(element, skinElementPath);
-                        break;
-                    case @"back":
-                        Back = LoadSoundEffectElement(element, skinElementPath);
                         break;
                     case @"hitlighting":
                         HitLighting = LoadAnimationElements(skinDir, element, HitLightingAnimDefault);

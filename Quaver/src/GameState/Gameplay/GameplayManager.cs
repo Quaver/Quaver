@@ -304,7 +304,7 @@ namespace Quaver.GameState.Gameplay
         public void ManiaKeyDown(object sender, ManiaKey keyLane)
         {
             // Play Audio
-            GameBase.LoadedSkin.Hit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+            GameBase.LoadedSkin.SoundHit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
             //Check for Note press/LN press
             //Reference Variables
@@ -426,7 +426,7 @@ namespace Quaver.GameState.Gameplay
         {
             // Play Combo-Break Sound
             if (ScoreManager.Combo >= 20)
-                GameBase.LoadedSkin.ComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+                GameBase.LoadedSkin.SoundComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
             // Manage UI Helpers + Update Score Manager
             ScoreManager.Count(5, false, 0, CurrentSongTime/ SongManager.Length);
