@@ -22,6 +22,7 @@ namespace Quaver.Commands
 #if !PUBLIC
             new Login(),
             new LoginDev(),
+            new Logout(),
 #endif
             new GetScores(),
             new CalculateDifficulty(),
