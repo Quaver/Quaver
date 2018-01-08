@@ -40,7 +40,7 @@ namespace Quaver.GameState.Gameplay
         private int ScoreMax { get; set; }
         internal int MultiplierCount { get; set; }
         internal int MultiplierIndex { get; set; }
-        internal int[] ScoreWeighting { get; } = new int[6] { 100, 100, 100, 100, 100, 100 };
+        internal int[] ScoreWeighting { get; } = new int[6] { 100, 95, 75, 50, 25, 0 };
 
         //Health tracking
         internal bool Failed { get; private set; }
@@ -75,6 +75,7 @@ namespace Quaver.GameState.Gameplay
         internal void Count(int index, bool release = false, double? offset = null, double? songpos = null)
         {
             //Update Judge Spread
+            JudgeCount++;
             if (release) JudgeReleaseSpread[index]++;
             else JudgePressSpread[index]++;
 
@@ -91,16 +92,14 @@ namespace Quaver.GameState.Gameplay
             }
 
             //Add JudgeSpread to Accuracy
-            JudgeCount = 0;
             Accuracy = 0;
             RelativeAcc = 0;
+            RelativeAcc += (TotalJudgeCount - JudgeCount) * HitWeighting[5];
             for (var i=0; i<6; i++)
             {
                 Accuracy += (JudgePressSpread[i] + JudgeReleaseSpread[i]) * HitWeighting[i];
                 RelativeAcc += (JudgePressSpread[i] + JudgeReleaseSpread[i]) * HitWeighting[i];
-                JudgeCount += JudgePressSpread[i] + JudgeReleaseSpread[i];
             }
-            RelativeAcc += (TotalJudgeCount - JudgeCount) * HitWeighting[5];
 
             //Average Accuracy
             Accuracy = Math.Max(Accuracy / (JudgeCount * 100), 0);
@@ -110,20 +109,18 @@ namespace Quaver.GameState.Gameplay
             //If note is pressed properly, count combo and multplier
             if (index < 4)
             {
-                Combo++;
+                //Update Multiplier
                 if (MultiplierCount < 150) MultiplierCount++;
                 else MultiplierCount = 150; //idk... just to be safe
+
+                //Update Combo
+                Combo++;
             }
             //If note is not pressed properly:
             else
             {
                 //Update Multiplier
-                //MultiplierCount -= 10;
-
-                //todo: temp
-                if (MultiplierCount < 150) MultiplierCount++;
-                else MultiplierCount = 150; //idk... just to be safe
-
+                MultiplierCount -= 10;
                 if (MultiplierCount < 0) MultiplierCount = 0;
 
                 //Update Combo
@@ -145,10 +142,8 @@ namespace Quaver.GameState.Gameplay
 
             //Update Score todo: actual score calculation
             ScoreTotal = (int)(1000000 * ((float)ScoreCount / ScoreMax));
-            Logger.Log("Score Count: " + ScoreCount + "     Max: " + ScoreMax + "    Note: "+JudgeCount+"/"+ncount, LogColors.GameInfo);
+            //Logger.Log("Score Count: " + ScoreCount + "     Max: " + ScoreMax + "    Note: "+JudgeCount+"/"+ncount, LogColors.GameInfo);
         }
-
-        private int ncount = 0; //todo: remove
 
         /// <summary>
         ///     Clear and Initialize Scoring related variables
@@ -156,8 +151,6 @@ namespace Quaver.GameState.Gameplay
         /// <param name="Count"> Total amount of hitobjects + releases</param>
         internal void Initialize(int count)
         {
-            ncount = count; //todo: remove
-
             Accuracy = 0;
             RelativeAcc = -200;
             Combo = 0;

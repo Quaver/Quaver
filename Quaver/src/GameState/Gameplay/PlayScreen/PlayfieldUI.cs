@@ -318,7 +318,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal void UpdateMultiplierBars(int total)
         {
             //total should be between or equal to 0 and 15
-            if (total > 15 || total < 1) return;
+            if (total > 15 || total < 0) return;
 
             // If a new bar turns active, do fx and stuff
             if (total > ActiveMultiplierBars)
@@ -330,7 +330,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             else if (total < ActiveMultiplierBars)
             {
                 ActiveMultiplierBars = total;
-                MultiplierBars[total-1].Image = GameBase.UI.HollowBox;
+                MultiplierBars[total].Image = GameBase.UI.HollowBox;
             }
         }
 
