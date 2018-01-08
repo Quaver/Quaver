@@ -234,35 +234,35 @@ namespace Quaver.Skins
                 @"7k-note-holdbody-7",
 
                 // 4k Note Receptors
-                @"4k-note-receptor-up-1",
-                @"4k-note-receptor-up-2",
-                @"4k-note-receptor-up-3",
-                @"4k-note-receptor-up-4",
+                @"4k-receptor-up-1",
+                @"4k-receptor-up-2",
+                @"4k-receptor-up-3",
+                @"4k-receptor-up-4",
 
                 // 4k Note Receptors Down
-                @"4k-note-receptor-down-1",
-                @"4k-note-receptor-down-2",
-                @"4k-note-receptor-down-3",
-                @"4k-note-receptor-down-4",
+                @"4k-receptor-down-1",
+                @"4k-receptor-down-2",
+                @"4k-receptor-down-3",
+                @"4k-receptor-down-4",
 
 
                 // 7k Note Receptors
-                @"7k-note-receptor-up-1",
-                @"7k-note-receptor-up-2",
-                @"7k-note-receptor-up-3",
-                @"7k-note-receptor-up-4",
-                @"7k-note-receptor-up-5",
-                @"7k-note-receptor-up-6",
-                @"7k-note-receptor-up-7",
+                @"7k-receptor-up-1",
+                @"7k-receptor-up-2",
+                @"7k-receptor-up-3",
+                @"7k-receptor-up-4",
+                @"7k-receptor-up-5",
+                @"7k-receptor-up-6",
+                @"7k-receptor-up-7",
 
                 // 7k Note Receptors Down
-                @"7k-note-receptor-down-1",
-                @"7k-note-receptor-down-2",
-                @"7k-note-receptor-down-3",
-                @"7k-note-receptor-down-4",
-                @"7k-note-receptor-down-5",
-                @"7k-note-receptor-down-6",
-                @"7k-note-receptor-down-7",
+                @"7k-receptor-down-1",
+                @"7k-receptor-down-2",
+                @"7k-receptor-down-3",
+                @"7k-receptor-down-4",
+                @"7k-receptor-down-5",
+                @"7k-receptor-down-6",
+                @"7k-receptor-down-7",
 
                 // Judge
                 @"judge-miss",
@@ -463,70 +463,70 @@ namespace Quaver.Skins
                     case @"7k-note-holdbody-7":
                         NoteHoldBodies7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-receptor-up-1":
+                    case @"4k-receptor-up-1":
                         NoteReceptorsUp4K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-receptor-up-2":
+                    case @"4k-receptor-up-2":
                         NoteReceptorsUp4K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-receptor-up-3":
+                    case @"4k-receptor-up-3":
                         NoteReceptorsUp4K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-receptor-up-4":
+                    case @"4k-receptor-up-4":
                         NoteReceptorsUp4K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-receptor-down-1":
+                    case @"4k-receptor-down-1":
                         NoteReceptorsDown4K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-receptor-down-2":
+                    case @"4k-receptor-down-2":
                         NoteReceptorsDown4K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-receptor-down-3":
+                    case @"4k-receptor-down-3":
                         NoteReceptorsDown4K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-receptor-down-4":
+                    case @"4k-receptor-down-4":
                         NoteReceptorsDown4K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-up-1":
+                    case @"7k-receptor-up-1":
                         NoteReceptorsUp7K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-up-2":
+                    case @"7k-receptor-up-2":
                         NoteReceptorsUp7K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-up-3":
+                    case @"7k-receptor-up-3":
                         NoteReceptorsUp7K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-up-4":
+                    case @"7k-receptor-up-4":
                         NoteReceptorsUp7K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-up-5":
+                    case @"7k-receptor-up-5":
                         NoteReceptorsUp7K[4] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-up-6":
+                    case @"7k-receptor-up-6":
                         NoteReceptorsUp7K[5] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-up-7":
+                    case @"7k-receptor-up-7":
                         NoteReceptorsUp7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-down-1":
+                    case @"7k-receptor-down-1":
                         NoteReceptorsDown7K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-down-2":
+                    case @"7k-receptor-down-2":
                         NoteReceptorsDown7K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-down-3":
+                    case @"7k-receptor-down-3":
                         NoteReceptorsDown7K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-down-4":
+                    case @"7k-receptor-down-4":
                         NoteReceptorsDown7K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-down-5":
+                    case @"7k-receptor-down-5":
                         NoteReceptorsDown7K[4] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-down-6":
+                    case @"7k-receptor-down-6":
                         NoteReceptorsDown7K[5] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-receptor-down-7":
+                    case @"7k-receptor-down-7":
                         NoteReceptorsDown7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-miss":
@@ -593,11 +593,11 @@ namespace Quaver.Skins
             //Console.WriteLine($"[SKIN LOADER] Skin element: {element}.png could not be found. Resulting to default: {path}");
 
             // Default Texture for unloaded skin elements
-            //Texture2D texture = GameBase.Content.Load<Texture2D>("blank-box");
+            Texture2D texture = GameBase.Content.Load<Texture2D>("main-blank-box");
 
             // Check if skin exists
             // Todo: remove this. Only for debugging
-            /*
+            
             try
             {
                 texture = GameBase.Content.Load<Texture2D>(path);
@@ -606,10 +606,10 @@ namespace Quaver.Skins
             {
                 Logger.Log("Default skin element not found: " + path, LogColors.GameError);
             }
-            */
+            
             // Return skin texture
-            return GameBase.Content.Load<Texture2D>(path);
-            //return texture;
+            //return GameBase.Content.Load<Texture2D>(path);
+            return texture;
         }
 
         /// <summary>
@@ -654,8 +654,7 @@ namespace Quaver.Skins
             {
                 if (File.Exists($"{skinDir}/{element}-{snaps[i]}.png"))
                     objectsList.Add(ImageLoader.Load($"{skinDir}/{element}-{snaps[i]}.png"));
-                else
-                    objectsList.Add(GameBase.Content.Load<Texture2D>("main-blank-box"));
+                else break;
             }
 
             HitObjects.Insert(index, objectsList);
