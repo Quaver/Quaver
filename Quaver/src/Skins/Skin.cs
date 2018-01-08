@@ -647,7 +647,7 @@ namespace Quaver.Skins
             // For each snap we load the separate image for it. 
             // It HAS to be loaded in an incremental fashion. 
             // So you can't have 1/48, but not have 1/3, etc.
-            var snaps = new [] { 2, 3, 4, 6, 8, 12, 16, 48 };
+            var snaps = new [] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
 
             // If it can find the appropriate files, load them.
             for (var i = 0; i < snaps.Length && File.Exists($"{skinDir}/{element}-{snaps[i]}.png"); i++)
