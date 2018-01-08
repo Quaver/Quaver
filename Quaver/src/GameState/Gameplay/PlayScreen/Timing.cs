@@ -67,11 +67,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             SongIsPlaying = false;
 
             //Declare Other Values
-            ActualSongTime = -GameplayReferences.PlayStartDelayed;
+            ActualSongTime = -GameplayReferences.PlayStartDelayed * GameBase.GameClock;
             //_activeBarObjects = new GameObject[maxNoteCount];
 
             //Add offset after the last note
-            PlayingEndOffset = GameBase.SelectedBeatmap.SongLength + 1500 * GameBase.GameClock;
+            PlayingEndOffset = GameBase.SelectedBeatmap.SongLength + (SongManager.BassDelayOffset - Configuration.GlobalOffset + 1500) * GameBase.GameClock;
 
             //Create Timing bars
             //_barQueue = new List<TimingObject>();
