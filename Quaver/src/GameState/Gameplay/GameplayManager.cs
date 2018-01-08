@@ -183,6 +183,8 @@ namespace Quaver.GameState.Gameplay
             AccuracyBoxUI.Update(dt);
             PlayfieldUI.Update(dt);
 
+            PlayfieldUI.UpdateMultiplierBars(ScoreManager.MultiplierIndex);
+
             // Check the input for this particular game state.
             InputManager.CheckInput(IntroSkippable, ReplayFrames);
 

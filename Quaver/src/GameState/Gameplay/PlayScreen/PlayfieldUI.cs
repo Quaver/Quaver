@@ -98,6 +98,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         private Sprite[] MultiplierBars { get; set; }
 
+        private int ActiveMultiplierBars { get; set; }
+
         public void Draw()
         {
             Boundary.Draw();
@@ -108,6 +110,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Reference Variables
             SpriteAlphaHold = 0;
             CurrentOffsetObjectIndex = 0;
+            ActiveMultiplierBars = 0;
 
             // Create Judge Sprite/References
             JudgeImages = new Texture2D[6]
@@ -221,10 +224,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 MultiplierBars[i] = new Sprite()
                 {
-                    Size = new UDim2(15 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale -1),
-                    PosX = (7.5f-i) * 17 * GameBase.WindowUIScale,
+                    Size = new UDim2(14 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale -1),
+                    PosX = (i-7.5f) * 16 * GameBase.WindowUIScale,
                     PosY = Config.Configuration.DownScroll ? 0 : 10 * GameBase.WindowUIScale + 1,
-                    Alignment = Config.Configuration.DownScroll ? Alignment.BotCenter : Alignment.TopCenter,
+                    Alignment = Alignment.TopCenter,
+                    Image = GameBase.UI.HollowBox,
                     Parent = HealthMultiplierBoundary
                 };
             }
@@ -265,6 +269,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             Boundary.Update(dt);
         }
 
+        /// <summary>
+        ///     Update Judge Image and Combo/Note ms offset
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="combo"></param>
+        /// <param name="release"></param>
+        /// <param name="offset"></param>
         public void UpdateJudge(int index, int combo, bool release = false, double? offset = null)
         {
             //TODO: add judge scale
@@ -296,6 +307,30 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Tint = GameColors.JudgeColors[index];
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].PosX = -(float)offset * OffsetGaugeSize;
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Alpha = 0.5f;
+            }
+        }
+
+        /// <summary>
+        ///     Update Multiplier bars
+        ///     todo: create cool fx
+        /// </summary>
+        /// <param name="total"></param>
+        public void UpdateMultiplierBars(int total)
+        {
+            //total should be between or equal to 0 and 15
+            if (total > 15 || total < 1) return;
+
+            // If a new bar turns active, do fx and stuff
+            if (total > ActiveMultiplierBars)
+            {
+                ActiveMultiplierBars = total;
+                MultiplierBars[total-1].Image = GameBase.UI.BlankBox;
+            }
+            // If a new bar turns inactive
+            else if (total < ActiveMultiplierBars)
+            {
+                ActiveMultiplierBars = total;
+                MultiplierBars[total-1].Image = GameBase.UI.HollowBox;
             }
         }
     }
