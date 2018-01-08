@@ -40,7 +40,7 @@ namespace Quaver.GameState.Gameplay
         private int ScoreMax { get; set; }
         internal int MultiplierCount { get; set; }
         internal int MultiplierIndex { get; set; }
-        internal int[] ScoreWeighting { get; } = new int[6] { 100, 95, 75, 50, 25, 0 };
+        internal int[] ScoreWeighting { get; } = new int[6] { 100, 80, 50, 25, 10, 0 };
 
         //Health tracking
         internal bool Failed { get; private set; }
@@ -110,8 +110,16 @@ namespace Quaver.GameState.Gameplay
             if (index < 4)
             {
                 //Update Multiplier
-                if (MultiplierCount < 150) MultiplierCount++;
-                else MultiplierCount = 150; //idk... just to be safe
+                if (index == 3)
+                {
+                    MultiplierCount -= 10;
+                    if (MultiplierCount < 0) MultiplierCount = 0;
+                }
+                else
+                {
+                    if (MultiplierCount < 150) MultiplierCount++;
+                    else MultiplierCount = 150; //idk... just to be safe
+                }
 
                 //Update Combo
                 Combo++;
@@ -120,7 +128,7 @@ namespace Quaver.GameState.Gameplay
             else
             {
                 //Update Multiplier
-                MultiplierCount -= 10;
+                MultiplierCount -= 20;
                 if (MultiplierCount < 0) MultiplierCount = 0;
 
                 //Update Combo

@@ -330,7 +330,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             else if (total < ActiveMultiplierBars)
             {
                 ActiveMultiplierBars = total;
-                MultiplierBars[total].Image = GameBase.UI.HollowBox;
+                for (var i = 1; i <= 15; i++)
+                {
+                    if (i > total)
+                        MultiplierBars[i-1].Image = GameBase.UI.HollowBox;
+                    else
+                        MultiplierBars[i-1].Image = GameBase.UI.BlankBox;
+                }
             }
         }
 
