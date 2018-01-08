@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Discord;
@@ -138,10 +139,10 @@ namespace Quaver.GameState.States
 
             ReplayPath = $"{Configuration.Username} - {Artist} - {Title} [{DifficultyName}] ({DateTime.UtcNow})";
 
-            // TODO: Add an audio fade out effect here instead of abruptly stoppingit
+            // TODO: Add an audio fade out effect here instead of abruptly stopping it. If failed, it should abruptly stop in the play state. Not here.
             SongManager.Stop();
 
-            // If failed, stop song and play fail sound
+            // TODO: The failed sound should play in the play state before switching to this one, however this is ok for now.
             ApplauseInstance = (ScoreData.Failed) ? GameBase.LoadedSkin.SoundComboBreak.CreateInstance() : GameBase.LoadedSkin.SoundApplause.CreateInstance();
 
             // Insert the score into the database
@@ -424,6 +425,8 @@ namespace Quaver.GameState.States
         /// <returns></returns>
         private LocalScore CreateLocalScore(Replay rp)
         {
+            var grade = (ScoreData.Failed) ? Grades.F : Util.GetGradeFromAccuracy((float) Math.Round(ScoreData.Accuracy * 100, 2));
+
             // Store the score in the database
             return new LocalScore
             {
@@ -432,7 +435,7 @@ namespace Quaver.GameState.States
                 DateTime = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
                 Score = ScoreData.ScoreTotal,
                 Accuracy = Math.Round(ScoreData.Accuracy * 100, 2),
-                Grade = Util.GetGradeFromAccuracy((float)Math.Round(ScoreData.Accuracy * 100, 2)),
+                Grade = grade,
                 MaxCombo = ScoreData.Combo,
                 MarvPressCount = ScoreData.JudgePressSpread[0],
                 MarvReleaseCount = ScoreData.JudgeReleaseSpread[0],
@@ -520,8 +523,10 @@ namespace Quaver.GameState.States
             // Set Discord Rich Presence w/ score data
             var mapData = $"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]";
             var accuracy = (float)Math.Round(ScoreData.Accuracy * 100, 2);
+            var grade = (ScoreData.Failed) ? Grades.F : Util.GetGradeFromAccuracy(accuracy);
+            var status = (ScoreData.Failed) ? "Failed" : "Finished";
 
-            DiscordController.ChangeDiscordPresence(mapData, $"Finished - {accuracy}% - {Util.GetGradeFromAccuracy(accuracy).ToString()}");
+            DiscordController.ChangeDiscordPresence(mapData, $"{status} - {accuracy}% - {grade.ToString()}");
         }
     }
 }
