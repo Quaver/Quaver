@@ -108,6 +108,7 @@ namespace Quaver.Skins
         internal Texture2D[] NoteHoldBodies4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteHoldEnds4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptors4K { get; set; } = new Texture2D[4];
+        internal Texture2D[] NoteReceptorsDown4K { get; set; } = new Texture2D[4];
 
 
         // 7k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
@@ -116,6 +117,7 @@ namespace Quaver.Skins
         internal Texture2D[] NoteHoldBodies7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteHoldEnds7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteReceptors7K { get; set; } = new Texture2D[7];
+        internal Texture2D[] NoteReceptorDown7K { get; set; } = new Texture2D[7];
 
         /// <summary>
         ///     Grades
@@ -237,6 +239,13 @@ namespace Quaver.Skins
                 @"note-receptor3",
                 @"note-receptor4",
 
+                // 4k Note Receptors Down
+                @"note-receptor-down1",
+                @"note-receptor-down2",
+                @"note-receptor-down3",
+                @"note-receptor-down4",
+
+
                 // 7k Note Receptors
                 @"note-receptor7k1",
                 @"note-receptor7k2",
@@ -245,6 +254,15 @@ namespace Quaver.Skins
                 @"note-receptor7k5",
                 @"note-receptor7k6",
                 @"note-receptor7k7",
+
+                // 7k Note Receptors Down
+                @"note-receptor7k-down1",
+                @"note-receptor7k-down2",
+                @"note-receptor7k-down3",
+                @"note-receptor7k-down4",
+                @"note-receptor7k-down5",
+                @"note-receptor7k-down6",
+                @"note-receptor7k-down7",
 
                 // Judge
                 @"judge-miss",
@@ -456,6 +474,18 @@ namespace Quaver.Skins
                         break;
                     case @"note-receptor4":
                         NoteReceptors4K[3] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor-down1":
+                        NoteReceptorsDown4K[0] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor-down2":
+                        NoteReceptorsDown4K[1] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor-down3":
+                        NoteReceptorsDown4K[2] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"note-receptor-down4":
+                        NoteReceptorsDown4K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"note-receptor7k1":
                         NoteReceptors7K[0] = LoadIndividualElement(element, skinElementPath);

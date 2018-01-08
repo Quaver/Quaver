@@ -443,6 +443,10 @@
     <EmbeddedResource Include="Resources\Default Skin\note-receptor7k6.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\note-receptor7k7.xnb" />
     <EmbeddedResource Include="Resources\Default Skin\note-hitobject1.xnb" />
+    <None Include="Resources\Default Skin\note-receptor-down1.xnb" />
+    <None Include="Resources\Default Skin\note-receptor-down2.xnb" />
+    <None Include="Resources\Default Skin\note-receptor-down3.xnb" />
+    <None Include="Resources\Default Skin\note-receptor-down4.xnb" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\discord-rpc.dll">
