@@ -138,14 +138,11 @@ namespace Quaver.GameState.States
 
             ReplayPath = $"{Configuration.Username} - {Artist} - {Title} [{DifficultyName}] ({DateTime.UtcNow})";
 
+            // TODO: Add an audio fade out effect here instead of abruptly stoppingit
+            SongManager.Stop();
+
             // If failed, stop song and play fail sound
-            if (ScoreData.Failed)
-            {
-                SongManager.Stop();
-                ApplauseInstance = GameBase.LoadedSkin.SoundComboBreak.CreateInstance();
-            }
-            // If passed, play audio
-            else ApplauseInstance = GameBase.LoadedSkin.SoundApplause.CreateInstance();
+            ApplauseInstance = (ScoreData.Failed) ? GameBase.LoadedSkin.SoundComboBreak.CreateInstance() : GameBase.LoadedSkin.SoundApplause.CreateInstance();
 
             // Insert the score into the database
             Task.Run(async () =>
