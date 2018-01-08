@@ -184,6 +184,7 @@ namespace Quaver.GameState.Gameplay
             PlayfieldUI.Update(dt);
 
             PlayfieldUI.UpdateMultiplierBars(ScoreManager.MultiplierIndex);
+            PlayfieldUI.UpdateHealthBar(ScoreManager.Health);
 
             // Check the input for this particular game state.
             InputManager.CheckInput(IntroSkippable, ReplayFrames);

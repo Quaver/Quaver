@@ -276,7 +276,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <param name="combo"></param>
         /// <param name="release"></param>
         /// <param name="offset"></param>
-        public void UpdateJudge(int index, int combo, bool release = false, double? offset = null)
+        internal void UpdateJudge(int index, int combo, bool release = false, double? offset = null)
         {
             //TODO: add judge scale
             ComboText.Text = combo + "x";
@@ -315,7 +315,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         ///     todo: create cool fx
         /// </summary>
         /// <param name="total"></param>
-        public void UpdateMultiplierBars(int total)
+        internal void UpdateMultiplierBars(int total)
         {
             //total should be between or equal to 0 and 15
             if (total > 15 || total < 1) return;
@@ -332,6 +332,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 ActiveMultiplierBars = total;
                 MultiplierBars[total-1].Image = GameBase.UI.HollowBox;
             }
+        }
+
+        /// <summary>
+        ///     Update the health bar
+        /// </summary>
+        /// <param name="health"></param>
+        internal void UpdateHealthBar(float health)
+        {
+            HealthBarOver.ScaleX = health / 100;
         }
     }
 }
