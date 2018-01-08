@@ -273,7 +273,7 @@ namespace Quaver.Skins
                 @"judge-marv",
 
                 //  Cursor
-                @"cursor",
+                @"main-cursor",
 
                 // Sound Effects
                 @"sound-hit",
@@ -565,7 +565,7 @@ namespace Quaver.Skins
                     case @"sound-back":
                         SoundBack = LoadSoundEffectElement(element, skinElementPath);
                         break;
-                    case @"cursor":
+                    case @"main-cursor":
                         Cursor = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"hitlighting":
