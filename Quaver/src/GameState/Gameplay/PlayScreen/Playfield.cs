@@ -172,7 +172,17 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             if (keyDown)
             {
                 //TODO: CHANGE TO RECEPTOR_DOWN SKIN LATER WHEN RECEPTOR IS PRESSED
-                Receptors[curReceptor].Image = GameBase.LoadedSkin.ColumnHitLighting;
+                //Receptors[curReceptor].Image = GameBase.LoadedSkin.ColumnHitLighting;
+                switch (GameBase.SelectedBeatmap.Qua.Mode)
+                {
+                    case GameModes.Keys4:
+                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptorsDown4K[curReceptor];
+                        break;
+                    case GameModes.Keys7:
+                        Receptors[curReceptor].Image = GameBase.LoadedSkin.ColumnHitLighting;
+                        //Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptorsDown7K[curReceptor];
+                        break;
+                }
             }
             else
             {
