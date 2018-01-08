@@ -77,7 +77,6 @@ namespace Quaver.GameState.Gameplay
             //Update Judge Spread
             if (release) JudgeReleaseSpread[index]++;
             else JudgePressSpread[index]++;
-            JudgeCount++;
 
             //record ms deviance data
             if (offset != null && songpos != null)
@@ -92,12 +91,14 @@ namespace Quaver.GameState.Gameplay
             }
 
             //Add JudgeSpread to Accuracy
+            JudgeCount = 0;
             Accuracy = 0;
             RelativeAcc = 0;
             for (var i=0; i<6; i++)
             {
                 Accuracy += (JudgePressSpread[i] + JudgeReleaseSpread[i]) * HitWeighting[i];
                 RelativeAcc += (JudgePressSpread[i] + JudgeReleaseSpread[i]) * HitWeighting[i];
+                JudgeCount += JudgePressSpread[i] + JudgeReleaseSpread[i];
             }
             RelativeAcc += (TotalJudgeCount - JudgeCount) * HitWeighting[5];
 
@@ -144,7 +145,7 @@ namespace Quaver.GameState.Gameplay
 
             //Update Score todo: actual score calculation
             ScoreTotal = (int)(1000000 * ((float)ScoreCount / ScoreMax));
-            //Console.WriteLine("Score Count: " + ScoreCount + "     Max: " + ScoreMax + "    Note: "+JudgeCount+"/"+ncount);
+            Logger.Log("Score Count: " + ScoreCount + "     Max: " + ScoreMax + "    Note: "+JudgeCount+"/"+ncount, LogColors.GameInfo);
         }
 
         private int ncount = 0; //todo: remove
@@ -178,20 +179,22 @@ namespace Quaver.GameState.Gameplay
 
             //Update Hit Window
             //This is similar to stepmania J4
-            HitWindowPress = new float[5] { 18, 45, 90, 135, 180 };
+            HitWindowPress = new float[5] { 18, 45, 90, 135, 200 };
             HitWindowRelease = new float[4] { HitWindowPress[0] * 1.5f, HitWindowPress[1] * 1.5f, HitWindowPress[2] * 1.5f, HitWindowPress[3] * 1.5f };
 
             // Count max score
             ScoreMax = 0;
+            /*for (var i = 1; i < 150; i++)
+                ScoreMax += 100 + (int)Math.Floor(i / 10f);
+            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAA: "+ScoreMax);*/
+
             if (count < 150)
             {
-                for (var i = 1; i < count; i++)
+                for (var i = 1; i < count+1; i++)
                     ScoreMax += 100 + (int)Math.Floor(i / 10f);
             }
             else
-                ScoreMax = 16065 + (count - 150) * 115;
-
-            Console.WriteLine("Max Score: " + ScoreMax);
+                ScoreMax = 15950 + (count - 149) * 115;
         }
 
         /// <summary>
@@ -226,7 +229,7 @@ namespace Quaver.GameState.Gameplay
         internal int GetAccGradeIndex()
         {
             var index = -1;
-            for (var i = 0; i < 8; i++)
+            for (var i = 0; i < 7; i++)
             {
                 if (RelativeAcc * 100 >= GradePercentage[i]) index = i;
                 else break;
