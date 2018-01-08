@@ -593,7 +593,7 @@ namespace Quaver.Skins
             //Console.WriteLine($"[SKIN LOADER] Skin element: {element}.png could not be found. Resulting to default: {path}");
 
             // Default Texture for unloaded skin elements
-            Texture2D texture = GameBase.Content.Load<Texture2D>("blank-box");
+            //Texture2D texture = GameBase.Content.Load<Texture2D>("blank-box");
 
             // Check if skin exists
             // Todo: remove this. Only for debugging
@@ -650,8 +650,13 @@ namespace Quaver.Skins
             var snaps = new [] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
 
             // If it can find the appropriate files, load them.
-            for (var i = 0; i < snaps.Length && File.Exists($"{skinDir}/{element}-{snaps[i]}.png"); i++)
-                objectsList.Add(ImageLoader.Load($"{skinDir}/{element}-{snaps[i]}.png"));
+            for (var i = 0; i < snaps.Length; i++)
+            {
+                if (File.Exists($"{skinDir}/{element}-{snaps[i]}.png"))
+                    objectsList.Add(ImageLoader.Load($"{skinDir}/{element}-{snaps[i]}.png"));
+                else
+                    objectsList.Add(GameBase.Content.Load<Texture2D>("blank-box"));
+            }
 
             HitObjects.Insert(index, objectsList);
         }
