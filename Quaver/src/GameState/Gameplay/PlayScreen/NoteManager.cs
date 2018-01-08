@@ -90,7 +90,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         ? GameplayReferences.ReceptorYOffset
                         : GameplayReferences.ReceptorYOffset
                         + GameBase.LoadedSkin.ColumnSize * GameBase.WindowUIScale
-                        * ((GameBase.LoadedSkin.NoteReceptors4K[0].Height / GameBase.LoadedSkin.NoteReceptors4K[0].Width)
+                        * ((GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
                         - (GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
                     break;
                 case GameModes.Keys7:
@@ -98,7 +98,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         ? GameplayReferences.ReceptorYOffset
                         : GameplayReferences.ReceptorYOffset
                         + GameBase.LoadedSkin.ColumnSize * GameBase.WindowUIScale
-                        * ((GameBase.LoadedSkin.NoteReceptors7K[0].Height / GameBase.LoadedSkin.NoteReceptors7K[0].Width)
+                        * ((GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
                         - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
                     break;
             }

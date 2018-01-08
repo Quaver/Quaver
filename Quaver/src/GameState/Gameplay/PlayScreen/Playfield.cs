@@ -66,14 +66,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     GameplayReferences.ReceptorXPosition = new float[4];
                     LaneSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowUIScale);
                     GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll //todo: use list for scaling
-                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (LaneSize * GameBase.LoadedSkin.NoteReceptors4K[0].Height / GameBase.LoadedSkin.NoteReceptors4K[0].Width))
+                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width))
                         : GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale;
                     break;
                 case GameModes.Keys7:
                     GameplayReferences.ReceptorXPosition = new float[7];
                     LaneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);
                     GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll //todo: use list for scaling
-                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (LaneSize * GameBase.LoadedSkin.NoteReceptors7K[0].Height / GameBase.LoadedSkin.NoteReceptors7K[0].Width))
+                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (LaneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
                         : GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale;
                     break;
             }
@@ -130,12 +130,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
                     case GameModes.Keys4:
-                        Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors4K[i];
-                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptors4K[i].Height / GameBase.LoadedSkin.NoteReceptors4K[i].Width;
+                        Receptors[i].Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i];
+                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width;
                         break;
                     case GameModes.Keys7:
-                        Receptors[i].Image = GameBase.LoadedSkin.NoteReceptors7K[i];
-                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptors7K[i].Height / GameBase.LoadedSkin.NoteReceptors7K[i].Width;
+                        Receptors[i].Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i];
+                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width;
                         break;
                 }
             }
@@ -179,8 +179,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptorsDown4K[curReceptor];
                         break;
                     case GameModes.Keys7:
-                        Receptors[curReceptor].Image = GameBase.LoadedSkin.ColumnHitLighting;
-                        //Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptorsDown7K[curReceptor];
+                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptorsDown7K[curReceptor];
                         break;
                 }
             }
@@ -190,10 +189,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
                     case GameModes.Keys4:
-                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptors4K[curReceptor];
+                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptorsUp4K[curReceptor];
                         break;
                     case GameModes.Keys7:
-                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptors7K[curReceptor];
+                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptorsUp7K[curReceptor];
                         break;
                 }
             }
