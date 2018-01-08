@@ -128,7 +128,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal double GeCurrentSongTime()
         {
             //Add global offset to actual song time
-            return ActualSongTime + SongManager.BassDelayOffset - (Configuration.GlobalOffset * GameBase.GameClock);
+            return ActualSongTime + (SongManager.BassDelayOffset - Configuration.GlobalOffset) * GameBase.GameClock;
         }
 
         internal ulong[] GetSVCalc(List<TimingObject> svQueue)
