@@ -211,6 +211,13 @@ namespace Quaver.GameState.Gameplay
             HitWindowPress = new float[5] { 18, 45, 80, 110, 200 };
             HitWindowRelease = new float[4] { HitWindowPress[0] * 1.5f, HitWindowPress[1] * 1.5f, HitWindowPress[2] * 1.5f, HitWindowPress[3] * 1.5f };
 
+            for (int i = 0; i < 4; i++)
+            {
+                HitWindowPress[i] = HitWindowPress[i] * GameBase.GameClock;
+                HitWindowRelease[i] = HitWindowRelease[i] * GameBase.GameClock;
+            }
+            HitWindowPress[4] = HitWindowPress[4] * GameBase.GameClock;
+
             // Calculate max score
             if (count < 150)
             {
