@@ -208,7 +208,7 @@ namespace Quaver.GameState.Gameplay
 
             //Update Hit Window
             //This is similar to stepmania J4
-            HitWindowPress = new float[5] { 18, 45, 90, 135, 200 };
+            HitWindowPress = new float[5] { 18, 45, 80, 110, 200 };
             HitWindowRelease = new float[4] { HitWindowPress[0] * 1.5f, HitWindowPress[1] * 1.5f, HitWindowPress[2] * 1.5f, HitWindowPress[3] * 1.5f };
 
             // Count max score
