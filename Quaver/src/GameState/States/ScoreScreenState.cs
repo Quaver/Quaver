@@ -205,10 +205,13 @@ namespace Quaver.GameState.States
             // Log the score
             LogScore();
 
-            UpdateReady = true;
+            //Unload ScoreManager Data
+            ScoreData.UnloadData();
 
             // Play Applause
             ApplauseInstance.Play();
+
+            UpdateReady = true;
         }
         
         /// <summary>

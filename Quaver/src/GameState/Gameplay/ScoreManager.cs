@@ -223,6 +223,16 @@ namespace Quaver.GameState.Gameplay
         }
 
         /// <summary>
+        ///     This is used to unload data after it has been read in score screen to save space.
+        /// </summary>
+        internal void UnloadData()
+        {
+            HealthData = null;
+            AccuracyData = null;
+            MsDevianceData = null;
+        }
+
+        /// <summary>
         ///     Convert RelativeAcc to display how far until next grade on graph scale.
         /// </summary>
         internal float GetRelativeAccScale()
