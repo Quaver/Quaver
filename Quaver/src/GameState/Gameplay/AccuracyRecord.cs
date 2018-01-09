@@ -17,5 +17,10 @@ namespace Quaver.GameState.Gameplay
         ///     Records note's song position
         /// </summary>
         internal double Position { get; set; }
+
+        /// <summary>
+        ///     The current grade of this value
+        /// </summary>
+        internal int Type { get; set; }
     }
 }
