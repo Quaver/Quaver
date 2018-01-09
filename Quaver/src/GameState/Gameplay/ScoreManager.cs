@@ -42,7 +42,7 @@ namespace Quaver.GameState.Gameplay
         private int ScoreMax { get; set; }
         internal int MultiplierCount { get; set; }
         internal int MultiplierIndex { get; set; }
-        internal int[] ScoreWeighting { get; } = new int[6] { 100, 80, 50, 25, 10, 0 };
+        internal int[] ScoreWeighting { get; } = new int[6] { 100, 50, 25, 10, 5, 0 };
 
         //Health tracking
         internal bool Failed { get; private set; }
@@ -127,7 +127,7 @@ namespace Quaver.GameState.Gameplay
 
             //Update Multiplier index and score count
             MultiplierIndex = (int)Math.Floor(MultiplierCount/10f);
-            ScoreCount += ScoreWeighting[index] + (MultiplierIndex * 3);
+            ScoreCount += ScoreWeighting[index] + (MultiplierIndex * 10);
 
             //Update Health
             Health += HealthWeighting[index];
@@ -211,15 +211,15 @@ namespace Quaver.GameState.Gameplay
             HitWindowPress = new float[5] { 18, 45, 80, 110, 200 };
             HitWindowRelease = new float[4] { HitWindowPress[0] * 1.5f, HitWindowPress[1] * 1.5f, HitWindowPress[2] * 1.5f, HitWindowPress[3] * 1.5f };
 
-            // Count max score
+            // Calculate max score
             if (count < 150)
             {
                 ScoreMax = 0;
                 for (var i = 1; i < count+1; i++)
-                    ScoreMax += 100 + 3*(int)Math.Floor(i / 10f);
+                    ScoreMax += 100 + 10*(int)Math.Floor(i / 10f);
             }
             else
-                ScoreMax = 18195 + (count - 149) * 145;
+                ScoreMax = 25650 + (count - 149) * 250;
         }
 
         /// <summary>
