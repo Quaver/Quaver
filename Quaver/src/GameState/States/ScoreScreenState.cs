@@ -96,6 +96,16 @@ namespace Quaver.GameState.States
         /// </summary>
         private Sprite MsDevianceBoundary { get; set; }
 
+        /// <summary>
+        ///     Boundary containing accuracy data
+        /// </summary>
+        private Sprite AccuracyDataBoundary { get; set; }
+
+        /// <summary>
+        ///     Boundary containing health data
+        /// </summary>
+        private Sprite HealthDataBoundary { get; set; }
+
         //todo: have images and crap, but have the text only display number and not title
         /// <summary>
         ///     The Text displaying Judge info
@@ -249,163 +259,16 @@ namespace Quaver.GameState.States
             //Create Judge Info Boundary
             JudgeInfoBoundary = new Boundary()
             {
-                Size = new UDim2(300, 200),
-                Alignment = Alignment.MidCenter
+                Size = new UDim2(350, 240),
+                PosX = 10,
+                Alignment = Alignment.TopLeft
             };
-
-            //Create Judge Text
-            JudgeText = new TextBoxSprite[6];
-            for (var i=0; i<6; i++)
-            {
-                JudgeText[i] = new TextBoxSprite()
-                {
-                    Text = "[" + GameplayReferences.JudgeNames[i] + "]: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i] + " Total: "+(ScoreData.JudgePressSpread[i] + ScoreData.JudgeReleaseSpread[i]),
-                    TextColor = GameColors.JudgeColors[i],
-                    Font = Fonts.Medium16,
-                    Position = new UDim2(0,200 * i/6),
-                    Size = new UDim2(0, 0, 1, 0),
-                    TextAlignment = Alignment.MidRight,
-                    Parent = JudgeInfoBoundary
-                };
-            }
-
-            //Create Score Text
-            ScoreText = new TextBoxSprite()
-            {
-                Text = ScoreData.ScoreTotal.ToString(),
-                Font = Fonts.Medium24,
-                TextAlignment = Alignment.MidLeft,
-                TextColor = Color.White,
-                Position = new UDim2(0, -70),
-                Size = new UDim2(0, 70, 1, 0),
-                Parent = JudgeInfoBoundary
-            };
-
-            //Create Accuracy Text
-            AccuracyText = new TextBoxSprite()
-            {
-                Text = $"{ScoreData.Accuracy * 100:0.00}%",
-                Font = Fonts.Medium24,
-                TextAlignment = Alignment.MidRight,
-                TextColor = Color.White,
-                Position = new UDim2(0, -70),
-                Size = new UDim2(0, 70, 1, 0),
-                Parent = JudgeInfoBoundary
-            };
-
-            // create ms deviance box
-            MsDevianceBoundary = new Sprite()
-            {
-                Size = new UDim2(400, 150),
-                Position = new UDim2(0, -100),
-                Alignment = Alignment.BotCenter,
-                Tint = Color.Black,
-                Alpha = 0.5f
-            };
-
-            //
 
             //create note data graph todo: add text and stuff
-            for (var i=0; i<5; i++)
-            {
-                Sprite ob;
-
-                //bottom
-                ob = new Sprite()
-                {
-                    Position = new UDim2(0, MsDevianceBoundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
-                    Size = new UDim2(0, 1, 1, 0),
-                    Tint = GameColors.JudgeColors[i],
-                    Alpha = 0.1f,
-                    Alignment = Alignment.MidLeft,
-                    Parent = MsDevianceBoundary
-                };
-
-                //top
-                ob = new Sprite()
-                {
-                    Position = new UDim2(0, -MsDevianceBoundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
-                    Size = new UDim2(0, 1, 1, 0),
-                    Tint = GameColors.JudgeColors[i],
-                    Alpha = 0.1f,
-                    Alignment = Alignment.MidLeft,
-                    Parent = MsDevianceBoundary
-                };
-            }
-
-            //record time intervals on graph every 15 seconds
-            int timeIndex = 1;
-            while (timeIndex * 15000 < ScoreData.SongLength)
-            {
-                var ob = new Sprite()
-                {
-                    Position = new UDim2(MsDevianceBoundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
-                    Size = new UDim2(1, 0, 0, 1),
-                    Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
-                    Parent = MsDevianceBoundary
-                };
-
-                timeIndex++;
-            }
-
-            //temp todo: create proper ms deviance display. make this not lag some how
-            //record misses
-            foreach (var ms in ScoreData.MsDevianceData)
-            {
-                if (ms.Type == 5)
-                {
-                    var ob = new Sprite()
-                    {
-                        Position = new UDim2(((float)ms.Position * MsDevianceBoundary.Size.X.Offset) - 1f, 0),
-                        Size = new UDim2(2, 0, 0, 1),
-                        Tint = GameColors.JudgeMiss,
-                        Alpha = 0.4f,
-                        Parent = MsDevianceBoundary
-                    };
-                }
-            }
-            //record other offset data
-            foreach (var ms in ScoreData.MsDevianceData)
-            {
-                if (ms.Type != 5)
-                {
-                    var ob = new Sprite()
-                    {
-                        Position = new UDim2(((float)ms.Position * MsDevianceBoundary.Size.X.Offset) - 1.5f, ((float)ms.Offset * (MsDevianceBoundary.Size.Y.Offset / 2f)) - 1.5f),
-                        Size = new UDim2(3, 3),
-                        Tint = GameColors.JudgeColors[ms.Type],
-                        Alignment = Alignment.MidLeft,
-                        Parent = MsDevianceBoundary
-                    };
-                }
-            }
-
-            //create labels
-            TextBoxSprite label;
-            
-            //top
-            label = new TextBoxSprite()
-            {
-                Text = "Late (+" + Math.Floor(ScoreData.HitWindowPress[4]) + "ms)",
-                Font = Fonts.Medium12,
-                Position = new UDim2(2, 2),
-                Size = new UDim2(200, 50),
-                Alignment = Alignment.TopLeft,
-                TextAlignment = Alignment.TopLeft,
-                Parent = MsDevianceBoundary
-            };
-
-            //bottom
-            label = new TextBoxSprite()
-            {
-                Text = "Early (-" + Math.Floor(ScoreData.HitWindowPress[4]) + "ms)",
-                Font = Fonts.Medium12,
-                Position = new UDim2(2, -2),
-                Size = new UDim2(200, 50),
-                Alignment = Alignment.BotLeft,
-                TextAlignment = Alignment.BotLeft,
-                Parent = MsDevianceBoundary
-            };
+            CreateJudgeWindowUI();
+            CreateMsDevianceUI();
+            CreateAccuracyDataUI();
+            CreateHealthDataUI();
         }
 
         /// <summary>
@@ -528,6 +391,186 @@ namespace Quaver.GameState.States
             var status = (ScoreData.Failed) ? "Failed" : "Finished";
 
             DiscordController.ChangeDiscordPresence(mapData, $"{status} - {accuracy}% - {grade.ToString()}");
+        }
+
+        /// <summary>
+        ///     Create UI set relating to note deviance
+        /// </summary>
+        private void CreateMsDevianceUI()
+        {
+            // create ms deviance box
+            MsDevianceBoundary = new Sprite()
+            {
+                Size = new UDim2(400, 150),
+                Position = new UDim2(10, -10),
+                Alignment = Alignment.BotLeft,
+                Tint = Color.Black,
+                Alpha = 0.5f
+            };
+
+            // create labels for hit windows
+            for (var i = 0; i < 5; i++)
+            {
+                Sprite ob;
+
+                //bottom
+                ob = new Sprite()
+                {
+                    Position = new UDim2(0, MsDevianceBoundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
+                    Size = new UDim2(0, 1, 1, 0),
+                    Tint = GameColors.JudgeColors[i],
+                    Alpha = 0.1f,
+                    Alignment = Alignment.MidLeft,
+                    Parent = MsDevianceBoundary
+                };
+
+                //top
+                ob = new Sprite()
+                {
+                    Position = new UDim2(0, -MsDevianceBoundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
+                    Size = new UDim2(0, 1, 1, 0),
+                    Tint = GameColors.JudgeColors[i],
+                    Alpha = 0.1f,
+                    Alignment = Alignment.MidLeft,
+                    Parent = MsDevianceBoundary
+                };
+            }
+
+            //record time intervals on graph every 15 seconds
+            int timeIndex = 1;
+            while (timeIndex * 15000 < ScoreData.SongLength)
+            {
+                var ob = new Sprite()
+                {
+                    Position = new UDim2(MsDevianceBoundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
+                    Size = new UDim2(1, 0, 0, 1),
+                    Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
+                    Parent = MsDevianceBoundary
+                };
+
+                timeIndex++;
+            }
+
+            //temp todo: create proper ms deviance display. make this not lag some how
+            //record misses
+            foreach (var ms in ScoreData.MsDevianceData)
+            {
+                if (ms.Type == 5)
+                {
+                    var ob = new Sprite()
+                    {
+                        Position = new UDim2(((float)ms.Position * MsDevianceBoundary.Size.X.Offset) - 1f, 0),
+                        Size = new UDim2(2, 0, 0, 1),
+                        Tint = GameColors.JudgeMiss,
+                        Alpha = 0.4f,
+                        Parent = MsDevianceBoundary
+                    };
+                }
+            }
+            //record other offset data
+            foreach (var ms in ScoreData.MsDevianceData)
+            {
+                if (ms.Type != 5)
+                {
+                    var ob = new Sprite()
+                    {
+                        Position = new UDim2(((float)ms.Position * MsDevianceBoundary.Size.X.Offset) - 1.5f, ((float)ms.Offset * (MsDevianceBoundary.Size.Y.Offset / 2f)) - 1.5f),
+                        Size = new UDim2(3, 3),
+                        Tint = GameColors.JudgeColors[ms.Type],
+                        Alignment = Alignment.MidLeft,
+                        Parent = MsDevianceBoundary
+                    };
+                }
+            }
+
+            //create labels
+            TextBoxSprite label;
+
+            //top
+            label = new TextBoxSprite()
+            {
+                Text = "Late (+" + Math.Floor(ScoreData.HitWindowPress[4]) + "ms)",
+                Font = Fonts.Medium12,
+                Position = new UDim2(2, 2),
+                Size = new UDim2(200, 50),
+                Alignment = Alignment.TopLeft,
+                TextAlignment = Alignment.TopLeft,
+                Parent = MsDevianceBoundary
+            };
+
+            //bottom
+            label = new TextBoxSprite()
+            {
+                Text = "Early (-" + Math.Floor(ScoreData.HitWindowPress[4]) + "ms)",
+                Font = Fonts.Medium12,
+                Position = new UDim2(2, -2),
+                Size = new UDim2(200, 50),
+                Alignment = Alignment.BotLeft,
+                TextAlignment = Alignment.BotLeft,
+                Parent = MsDevianceBoundary
+            };
+        }
+
+        /// <summary>
+        ///     Create UI set relating to Health
+        /// </summary>
+        private void CreateHealthDataUI()
+        {
+
+        }
+        
+        /// <summary>
+        ///     Create UI set relating to accuracy
+        /// </summary>
+        private void CreateAccuracyDataUI()
+        {
+
+        }
+
+        /// <summary>
+        ///     Create UI displaying judge count and score/acc
+        /// </summary>
+        private void CreateJudgeWindowUI()
+        {
+            //Create Judge Text
+            JudgeText = new TextBoxSprite[6];
+            for (var i = 0; i < 6; i++)
+            {
+                JudgeText[i] = new TextBoxSprite()
+                {
+                    Text = "[" + GameplayReferences.JudgeNames[i] + "]: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i] + " Total: " + (ScoreData.JudgePressSpread[i] + ScoreData.JudgeReleaseSpread[i]),
+                    TextColor = GameColors.JudgeColors[i],
+                    Font = Fonts.Medium16,
+                    Position = new UDim2(0, 200 * i / 6 + 100),
+                    Size = new UDim2(0, 0, 1, 0),
+                    TextAlignment = Alignment.MidRight,
+                    Parent = JudgeInfoBoundary
+                };
+            }
+
+            //Create Score Text
+            ScoreText = new TextBoxSprite()
+            {
+                Text = ScoreData.ScoreTotal.ToString(),
+                Font = Fonts.Medium24,
+                TextAlignment = Alignment.MidLeft,
+                TextColor = Color.White,
+                Position = new UDim2(0, 30),
+                Size = new UDim2(0, 70, 1, 0),
+                Parent = JudgeInfoBoundary
+            };
+
+            //Create Accuracy Text
+            AccuracyText = new TextBoxSprite()
+            {
+                Text = $"{ScoreData.Accuracy * 100:0.00}%",
+                Font = Fonts.Medium24,
+                TextAlignment = Alignment.MidRight,
+                TextColor = Color.White,
+                Position = new UDim2(0, 30),
+                Size = new UDim2(0, 70, 1, 0),
+                Parent = JudgeInfoBoundary
+            };
         }
     }
 }
