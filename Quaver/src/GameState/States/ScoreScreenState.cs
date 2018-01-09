@@ -226,6 +226,7 @@ namespace Quaver.GameState.States
         public void Draw()
         {
             GameBase.SpriteBatch.Begin();
+            BackgroundManager.Draw();
             BackButton.Draw();
             JudgeInfoBoundary.Draw();
             MsDevianceBoundary.Draw();
@@ -349,7 +350,7 @@ namespace Quaver.GameState.States
 
             //temp todo: create proper ms deviance display. make this not lag some how
             //record misses
-            foreach (var ms in ScoreData.MsDeviance)
+            foreach (var ms in ScoreData.MsDevianceData)
             {
                 if (ms.Type == 5)
                 {
@@ -364,7 +365,7 @@ namespace Quaver.GameState.States
                 }
             }
             //record other offset data
-            foreach (var ms in ScoreData.MsDeviance)
+            foreach (var ms in ScoreData.MsDevianceData)
             {
                 if (ms.Type != 5)
                 {
