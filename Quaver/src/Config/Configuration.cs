@@ -75,6 +75,12 @@ namespace Quaver.Config
         internal static string Skin { get => _skin; set { _skin = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
+        ///     The default skin that will be loaded if the skin property is blank
+        /// </summary>
+        private static DefaultSkins _defaultSkin = DefaultSkins.Arrow;
+        internal static DefaultSkins DefaultSkin { get => _defaultSkin; set { _defaultSkin = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
         ///     The master volume of the game.
         /// </summary>
         private static byte _volumeGlobal = 100;
@@ -364,6 +370,7 @@ namespace Quaver.Config
             _downScroll = ConfigHelper.ReadBool(DownScroll, data["DownScroll"]);
             _globalOffset = ConfigHelper.ReadSignedByte(GlobalOffset, data["GlobalOffset"]);
             _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
+            _defaultSkin = ConfigHelper.ReadDefaultSkin(DefaultSkin, data["DefaultSkin"]);
             _pitched = ConfigHelper.ReadBool(Pitched, data["Pitched"]);
             _showReleaseCounter = ConfigHelper.ReadBool(_showReleaseCounter, data["ShowReleaseCounter"]);
             _gradeBarRelative = ConfigHelper.ReadBool(_gradeBarRelative, data["GradeBarRelative"]);
@@ -477,5 +484,14 @@ namespace Quaver.Config
                 return false;
             }
         }
+    }
+
+    /// <summary>
+    ///     Enum containing a number representation of the default skins we have available
+    /// </summary>
+    internal enum DefaultSkins
+    {
+        Bar,
+        Arrow
     }
 }
