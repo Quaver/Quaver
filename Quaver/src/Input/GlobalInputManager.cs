@@ -126,7 +126,7 @@ namespace Quaver.Input
             GameBase.LoadedSkin.SoundScreenshot.Play((float) Config.Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
             // Create path for file
-            var path = Config.Configuration.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".jpg";
+            var path = Config.Configuration.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyy-MM-dd HHmmssfff") + ".jpg";
 
             // Get Window Bounds
             var bounds = GameBase.GraphicsDevice.PresentationParameters.Bounds;
