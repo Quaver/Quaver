@@ -511,7 +511,70 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateHealthDataUI()
         {
+            //Create Boundary for Health Data Display
+            HealthDataBoundary = new Sprite()
+            {
+                Size = new UDim2(400, 150),
+                Position = new UDim2(-10, -170),
+                Alignment = Alignment.BotRight,
+                Tint = Color.Black,
+                Alpha = 0.5f,
+                Parent = Boundary
+            };
 
+            //Record time intervals on graph every 15 seconds
+            int timeIndex = 1;
+            while (timeIndex * 15000 < ScoreData.SongLength)
+            {
+                var ob = new Sprite()
+                {
+                    Position = new UDim2(MsDevianceBoundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
+                    Size = new UDim2(1, 0, 0, 1),
+                    Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
+                    Parent = HealthDataBoundary
+                };
+
+                timeIndex++;
+            }
+
+            //Display Health chart
+            foreach (var health in ScoreData.HealthData)
+            {
+                var ob = new Sprite()
+                {
+                    Position = new UDim2((float)(health.Position * HealthDataBoundary.Size.X.Offset) - 1.5f, (float)((1 - health.Health) * HealthDataBoundary.Size.Y.Offset) - 1.5f),
+                    Size = new UDim2(3, 3),
+                    Tint = Color.Green,
+                    Parent = HealthDataBoundary
+                };
+            }
+
+            //Create labels
+            TextBoxSprite label;
+
+            //Top
+            label = new TextBoxSprite()
+            {
+                Text = "Health 100%",
+                Font = Fonts.Medium12,
+                Position = new UDim2(2, 2),
+                Size = new UDim2(200, 50),
+                Alignment = Alignment.TopLeft,
+                TextAlignment = Alignment.TopLeft,
+                Parent = HealthDataBoundary
+            };
+
+            //Bottom
+            label = new TextBoxSprite()
+            {
+                Text = "Health 0%",
+                Font = Fonts.Medium12,
+                Position = new UDim2(2, -2),
+                Size = new UDim2(200, 50),
+                Alignment = Alignment.BotLeft,
+                TextAlignment = Alignment.BotLeft,
+                Parent = HealthDataBoundary
+            };
         }
         
         /// <summary>
@@ -530,7 +593,7 @@ namespace Quaver.GameState.States
                 Parent = Boundary
             };
 
-            //record time intervals on graph every 15 seconds
+            //Record time intervals on graph every 15 seconds
             int timeIndex = 1;
             while (timeIndex * 15000 < ScoreData.SongLength)
             {
@@ -545,7 +608,7 @@ namespace Quaver.GameState.States
                 timeIndex++;
             }
 
-            // create labels for grade windows
+            //Create labels for grade windows
             for (var i = 1; i < 7; i++)
             {
                 Sprite ob = new Sprite()
@@ -561,7 +624,6 @@ namespace Quaver.GameState.States
             //Display accuracy chart
             foreach (var acc in ScoreData.AccuracyData)
             {
-                Console.WriteLine(acc.Accuracy);
                 var ob = new Sprite()
                 {
                     Position = new UDim2((float)(acc.Position * AccuracyDataBoundary.Size.X.Offset) - 1.5f, (float)((1 - (acc.Accuracy-0.7) * (1 / 0.3)) * AccuracyDataBoundary.Size.Y.Offset) - 1.5f),
