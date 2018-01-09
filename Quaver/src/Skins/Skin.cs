@@ -589,27 +589,20 @@ namespace Quaver.Skins
                 return ImageLoader.Load(path);
 
             // Otherwise, we'll have to change the path to that of the default element and load that instead.
-            path = $"{element}";
-            //Console.WriteLine($"[SKIN LOADER] Skin element: {element}.png could not be found. Resulting to default: {path}");
+            path = element;
 
-            // Default Texture for unloaded skin elements
-            Texture2D texture = GameBase.Content.Load<Texture2D>("main-blank-box");
-
-            // Check if skin exists
-            // Todo: remove this. Only for debugging
-            
+            // Load default skin element    
             try
             {
-                texture = GameBase.Content.Load<Texture2D>(path);
+                // Load based on which default skin is loaded
+                // prepend with 'arrow' for the file name if the arrow skin is selected.
+                return GameBase.Content.Load<Texture2D>(path);
             }
             catch
             {
                 Logger.Log("Default skin element not found: " + path, LogColors.GameError);
-            }
-            
-            // Return skin texture
-            //return GameBase.Content.Load<Texture2D>(path);
-            return texture;
+                return GameBase.Content.Load<Texture2D>("main-blank-box");
+            }    
         }
 
         /// <summary>
