@@ -215,5 +215,16 @@ namespace Quaver.Config
                 return defaultColor;
             }
         }
+
+        /// <summary>
+        ///     Reads a DefaultSkin 
+        /// </summary>
+        /// <param name="defaultSkin"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        internal static DefaultSkins ReadDefaultSkin(DefaultSkins defaultSkin, string newVal)
+        {
+            return Enum.TryParse(newVal, out DefaultSkins newDefault) ? newDefault : defaultSkin;
+        }
     }
 }
