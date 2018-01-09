@@ -266,7 +266,7 @@ namespace Quaver.GameState.Gameplay
             // Initialize class components
             Playfield.Initialize(state);
             Timing.Initialize(state);
-            NoteManager.SvQueue = Timing.GetSVQueue();
+            NoteManager.SvQueue = Timing.GetSVQueue(qua);
             NoteManager.SvCalc = Timing.GetSVCalc(NoteManager.SvQueue);
             NoteManager.Initialize(state);
             AccuracyBoxUI.Initialize(state);
