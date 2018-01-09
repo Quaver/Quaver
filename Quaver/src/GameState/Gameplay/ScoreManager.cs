@@ -153,19 +153,25 @@ namespace Quaver.GameState.Gameplay
                     MsDevianceData.Add(noteData);
                 }
 
+                //Acc Data
+                if (Accuracy > 0.7)
+                {
+                    AccuracyRecord accData = new AccuracyRecord()
+                    {
+                        Accuracy = Accuracy,
+                        Position = (double)songpos,
+                        Type = GetAccGradeIndex(Accuracy) + 1
+                    };
+                    AccuracyData.Add(accData);
+                }
+
                 //Health Data
                 HealthRecord healthData = new HealthRecord()
                 {
                     Health = Health / 100f,
                     Position = (double)songpos
                 };
-
-                //Acc Data
-                AccuracyRecord accData = new AccuracyRecord()
-                {
-                    Accuracy = Accuracy,
-                    Position = (double)songpos
-                };
+                HealthData.Add(healthData);
             }
 
             //Update Score todo: actual score calculation
@@ -245,12 +251,14 @@ namespace Quaver.GameState.Gameplay
         ///     Get the index for the relative acc.
         /// </summary>
         /// <returns></returns>
-        internal int GetAccGradeIndex()
+        internal int GetAccGradeIndex(double acc = -1)
         {
+            if (acc < 0) acc = RelativeAcc;
+
             var index = -1;
             for (var i = 0; i < 7; i++)
             {
-                if (RelativeAcc * 100 >= GradePercentage[i]) index = i;
+                if (acc * 100 >= GradePercentage[i]) index = i;
                 else break;
             }
             return index;
