@@ -151,13 +151,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //Create SVs
             if (ModManager.Activated(ModIdentifier.NoSliderVelocity) == false)
             {
-                foreach (var sv in qua.SliderVelocities)
-                    CreateSV(svQueue, sv.StartTime, sv.Multiplier);
+                //Todo: Implement SV change
+                CreateSV(svQueue, 0, 1f);
+                //foreach (var sv in qua.SliderVelocities)
+                //    CreateSV(svQueue, sv.StartTime, sv.Multiplier);
 
                 if (svQueue.Count >= 1)
                 {
-                    ConvertTPtoSV(svQueue);
-                    NormalizeSVs(svQueue);
+                    //ConvertTPtoSV(svQueue);
+                    //NormalizeSVs(svQueue);
                 }
                 else CreateSV(svQueue, 0, 1f);
             }
@@ -193,11 +195,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             for (i = 0; i < TimingQueue.Count; i++)
             {
-                for (j = lastIndex; j < svQueue.Count - 1; j++)
+                for (j = 0; j < svQueue.Count; j++)
                 {
                     if (TimingQueue[i].TargetTime > svQueue[j].TargetTime)
                     {
-                        lastIndex = j;
+                        lastIndex = Math.Max(j - 1, 0);
                         break;
                     }
                 }
@@ -205,7 +207,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     CreateSV(bpmObjects, TimingQueue[i].TargetTime, 1);
 
                 else if (Math.Abs(TimingQueue[i].TargetTime - svQueue[lastIndex].TargetTime) > 1)
-                    CreateSV(bpmObjects, TimingQueue[i].TargetTime, 1); //svQueue[lastIndex].SvMultiplier
+                    CreateSV(bpmObjects, TimingQueue[i].TargetTime, svQueue[lastIndex].SvMultiplier); //svQueue[lastIndex].SvMultiplier
             }
             foreach (var ob in bpmObjects) svQueue.Add(ob);
             svQueue.Sort((p1, p2) => p1.TargetTime.CompareTo(p2.TargetTime));
@@ -224,15 +226,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             for (i = 0; i < svQueue.Count; i++)
             {
-                for (j = lastIndex; j < TimingQueue.Count; j++)
+                for (j = 0; j < TimingQueue.Count; j++)
                 {
                     if (svQueue[i].TargetTime > TimingQueue[j].TargetTime - 1)
                     {
-                        lastIndex = j;
+                        lastIndex = Math.Max(j - 1, 0);
                         break;
                     }
-                    svQueue[i].SvMultiplier = svQueue[i].SvMultiplier * TimingQueue[j].BPM / _averageBpm;
                 }
+                svQueue[i].SvMultiplier = svQueue[i].SvMultiplier * TimingQueue[lastIndex].BPM / _averageBpm;
             }
         }
 
