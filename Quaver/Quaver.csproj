@@ -148,6 +148,8 @@
     <Compile Include="src\Discord\DiscordRPC.cs" />
     <Compile Include="src\GameState\Gameplay\BarObject.cs" />
     <Compile Include="src\GameState\Gameplay\GameplayReferences.cs" />
+    <Compile Include="src\GameState\Gameplay\AccuracyRecord.cs" />
+    <Compile Include="src\GameState\Gameplay\HealthRecord.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\AccuracyBoxUI.cs" />
     <Compile Include="src\GameState\Gameplay\NoteRecord.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\HitBurst.cs" />

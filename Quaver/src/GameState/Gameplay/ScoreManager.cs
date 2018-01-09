@@ -28,10 +28,12 @@ namespace Quaver.GameState.Gameplay
         internal int[] JudgeReleaseSpread { get; set; }
         internal int JudgeCount { get; set; }
 
-        //Hit Tracking (ms deviance)
+        //Hit Tracking (ms deviance) and other data
         internal int TotalJudgeCount { get; set; }
-        internal List<NoteRecord> MsDeviance { get; set; }
         internal double SongLength { get; set; }
+        internal List<NoteRecord> MsDevianceData { get; private set; }
+        internal List<AccuracyRecord> AccuracyData { get; private set; }
+        internal List<HealthRecord> HealthData { get; private set; }
 
         //Score tracking
         internal int Combo { get; set; }
@@ -78,18 +80,6 @@ namespace Quaver.GameState.Gameplay
             JudgeCount++;
             if (release) JudgeReleaseSpread[index]++;
             else JudgePressSpread[index]++;
-
-            //record ms deviance data
-            if (offset != null && songpos != null)
-            {
-                NoteRecord noteData = new NoteRecord()
-                {
-                    Offset = (double)offset/HitWindowPress[4],
-                    Position = (double)songpos,
-                    Type = index
-                };
-                MsDeviance.Add(noteData);
-            }
 
             //Add JudgeSpread to Accuracy
             Accuracy = 0;
@@ -148,6 +138,36 @@ namespace Quaver.GameState.Gameplay
             }
             else if (Health > 100) Health = 100;
 
+            //Record Data
+            if (songpos != null)
+            {
+                //Note ms deviance data
+                if (offset != null)
+                {
+                    NoteRecord noteData = new NoteRecord()
+                    {
+                        Offset = (double)offset / HitWindowPress[4],
+                        Position = (double)songpos,
+                        Type = index
+                    };
+                    MsDevianceData.Add(noteData);
+                }
+
+                //Health Data
+                HealthRecord healthData = new HealthRecord()
+                {
+                    Health = Health / 100f,
+                    Position = (double)songpos
+                };
+
+                //Acc Data
+                AccuracyRecord accData = new AccuracyRecord()
+                {
+                    Accuracy = Accuracy,
+                    Position = (double)songpos
+                };
+            }
+
             //Update Score todo: actual score calculation
             ScoreTotal = (int)(1000000 * ((float)ScoreCount / ScoreMax));
             //Logger.Log("Score Count: " + ScoreCount + "     Max: " + ScoreMax + "    Note: "+JudgeCount+"/"+ncount, LogColors.GameInfo);
@@ -169,7 +189,9 @@ namespace Quaver.GameState.Gameplay
             Health = 100;
             JudgeReleaseSpread = new int[6];
             JudgePressSpread = new int[6];
-            MsDeviance = new List<NoteRecord>();
+            MsDevianceData = new List<NoteRecord>();
+            AccuracyData = new List<AccuracyRecord>();
+            HealthData = new List<HealthRecord>();
             TotalJudgeCount = count;
             SongLength = SongManager.Length / GameBase.GameClock;
 
