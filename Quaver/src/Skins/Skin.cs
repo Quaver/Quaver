@@ -26,53 +26,53 @@ namespace Quaver.Skins
         /// <summary>
         /// Name of the skin
         /// </summary>
-        internal string Name { get; set; } = "Default";
+        internal string Name { get; set; }
 
         /// <summary>
         /// Author of the skin
         /// </summary>
-        internal string Author { get; set; } = "Quaver Team";
+        internal string Author { get; set; }
 
         /// <summary>
         /// Version number of the skin
         /// </summary>
-        internal string Version { get; set; } = "1.0";
+        internal string Version { get; set; }
 
         /// <summary>
         ///     The padding (Positional offset) of the notes relative from the bg mask.
         /// </summary>
-        internal int BgMaskPadding { get; set; } = 7;
+        internal int BgMaskPadding { get; set; } 
 
         /// <summary>
         ///     The padding (Positional offset) of the notes relative from eachother.
         /// </summary>
-        internal int NotePadding { get; set; } = 1;
+        internal int NotePadding { get; set; }
 
         /// <summary>
         ///     The size of the timing pars (in pixels).
         /// </summary>
-        internal int TimingBarPixelSize { get; set; } = 2;
+        internal int TimingBarPixelSize { get; set; }
 
         /// <summary>
         ///     The scale of the hitlighting objects.
         /// </summary>
-        internal float HitLightingScale { get; set; } = 4.0f;
+        internal float HitLightingScale { get; set; }
 
         /// <summary>
         /// Size of each lane in pixels.
         /// </summary>
-        internal int ColumnSize { get; set; } = 80;
-        internal int ColumnSize7K { get; set; } = 65;
+        internal int ColumnSize { get; set; }
+        internal int ColumnSize7K { get; set; }
 
         /// <summary>
         /// The offset of the hit receptor
         /// </summary>
-        internal int ReceptorYOffset { get; set; } = 50;
+        internal int ReceptorYOffset { get; set; }
 
         /// <summary>
         /// The alignment of the playfield as a percentage. 
         /// </summary>
-        internal byte ColumnAlignment { get; set; } = 50;
+        internal byte ColumnAlignment { get; set; }
 
         /// <summary>
         ///     Determines whether or not to color the HitObjects by their snap distance
@@ -83,15 +83,15 @@ namespace Quaver.Skins
         ///     Determines the FPS of the animations
         ///     Max - 255fps.
         /// </summary>
-        internal byte LightFramesPerSecond { get; set; } = 240;
+        internal byte LightFramesPerSecond { get; set; }
 
         /// <summary>
         /// The colour that is used for the column's lighting.
         /// </summary>
-        internal Color ColourLight1 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
-        internal Color ColourLight2 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
-        internal Color ColourLight3 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
-        internal Color ColourLight4 { get; set; } = new Color(new Vector4(255, 255, 255, 1));
+        internal Color ColourLight1 { get; set; }
+        internal Color ColourLight2 { get; set; }
+        internal Color ColourLight3 { get; set; }
+        internal Color ColourLight4 { get; set; }
 
         /// <summary>
         ///     All of the textures for the loaded skin elements. 
@@ -596,6 +596,16 @@ namespace Quaver.Skins
             {
                 // Load based on which default skin is loaded
                 // prepend with 'arrow' for the file name if the arrow skin is selected.
+                switch (Configuration.DefaultSkin)
+                {
+                    case DefaultSkins.Arrow:
+                        path = "arrow-" + path;
+                        break;
+                    case DefaultSkins.Bar:
+                        path = "bar-" + path;
+                        break;
+                }
+
                 return GameBase.Content.Load<Texture2D>(path);
             }
             catch
@@ -637,6 +647,13 @@ namespace Quaver.Skins
             // First load the beginning HitObject element, that doesn't require snapping.
             objectsList.Add(LoadIndividualElement(element, skinDir + $"/{element}.png"));
 
+            // Don't bother looking for snap objects if the skin config doesn't permit it.
+            if (!ColourObjectsBySnapDistance)
+            {
+                HitObjects.Insert(index, objectsList);
+                return;
+            }
+
             // For each snap we load the separate image for it. 
             // It HAS to be loaded in an incremental fashion. 
             // So you can't have 1/48, but not have 1/3, etc.
@@ -644,11 +661,7 @@ namespace Quaver.Skins
 
             // If it can find the appropriate files, load them.
             for (var i = 0; i < snaps.Length; i++)
-            {
-                if (File.Exists($"{skinDir}/{element}-{snaps[i]}.png"))
-                    objectsList.Add(ImageLoader.Load($"{skinDir}/{element}-{snaps[i]}.png"));
-                else break;
-            }
+                objectsList.Add(LoadIndividualElement($"{element}-{snaps[i]}", skinDir + $"/{element}-{snaps[i]}.png"));
 
             HitObjects.Insert(index, objectsList);
         }
@@ -656,13 +669,13 @@ namespace Quaver.Skins
         /// <summary>
         ///     Loads a list of elements to be used in an animation.
         ///     Example:
-        ///         - hitlighting-0
-        ///         - hitlighting-1
-        ///         - hitlighting-2
+        ///         - hitlighting@0
+        ///         - hitlighting@1
+        ///         - hitlighting@2
         ///         //
-        ///         - holdlighting-0
-        ///         - holdlighting-1
-        ///         - holdlighting-2
+        ///         - holdlighting@0
+        ///         - holdlighting@1
+        ///         - holdlighting@2
         /// </summary>
         /// <param name="skinDir"></param>
         /// <param name="element"></param>
@@ -694,22 +707,75 @@ namespace Quaver.Skins
                 return SoundEffect.FromStream(new FileStream(path, FileMode.Open));
 
             // Load the default if the path doesn't exist
+            switch (Configuration.DefaultSkin)
+            {
+                case DefaultSkins.Arrow:
+                    element = "arrow-" + element;
+                    break;
+                case DefaultSkins.Bar:
+                    element = "bar-" + element;
+                    break;
+            }
+
             return GameBase.Content.Load<SoundEffect>(element);
         }
 
         /// <summary>
-        ///     Reads a skin.ini file
+        ///     Reads a skin.ini file/sets skin config
         /// </summary>
         /// <param name="skinDir"></param>
         private void ReadSkinConfig(string skinDir)
         {
+            // Before trying to read the skin.ini file, set the defaults
+            // based on the default skin loaded
+            switch (Configuration.DefaultSkin)
+            {
+                case DefaultSkins.Bar:
+                    Name = "Default Bar Skin";
+                    Author = "Quaver Team";
+                    Version = "1.0";
+                    BgMaskPadding = 7;
+                    NotePadding = 1;
+                    TimingBarPixelSize = 2;
+                    HitLightingScale = 4.0f;
+                    ColumnSize = 95;
+                    ColumnSize7K = 65;
+                    ReceptorYOffset = 50;
+                    ColumnAlignment = 50;
+                    ColourObjectsBySnapDistance = false;
+                    LightFramesPerSecond = 240;
+                    ColourLight1 = new Color(new Vector4(255, 255, 255, 1));
+                    ColourLight2 = new Color(new Vector4(255, 255, 255, 1));
+                    ColourLight3 = new Color(new Vector4(255, 255, 255, 1));
+                    ColourLight4 = new Color(new Vector4(255, 255, 255, 1));
+                    break;
+                case DefaultSkins.Arrow:
+                    Name = "Default Arrow Skin";
+                    Author = "Quaver Team";
+                    Version = "1.0";
+                    BgMaskPadding = 7;
+                    NotePadding = 1;
+                    TimingBarPixelSize = 2;
+                    HitLightingScale = 4.0f;
+                    ColumnSize = 100;
+                    ColumnSize7K = 65;
+                    ReceptorYOffset = 50;
+                    ColumnAlignment = 50;
+                    ColourObjectsBySnapDistance = true;
+                    LightFramesPerSecond = 240;
+                    ColourLight1 = new Color(new Vector4(255, 255, 255, 1));
+                    ColourLight2 = new Color(new Vector4(255, 255, 255, 1));
+                    ColourLight3 = new Color(new Vector4(255, 255, 255, 1));
+                    ColourLight4 = new Color(new Vector4(255, 255, 255, 1));
+                    break;
+            }
+
             // Check if skin.ini file exists.
             if (!File.Exists(skinDir + "/skin.ini"))
                 return;
 
             // Begin Parsing skin.ini if it does.
             var data = new FileIniDataParser().ReadFile(skinDir + "/skin.ini");
-
             Name = ConfigHelper.ReadString(Name, data["General"]["Name"]);
             Author = ConfigHelper.ReadString(Author, data["General"]["Author"]);
             Version = ConfigHelper.ReadString(Version, data["General"]["Version"]);
