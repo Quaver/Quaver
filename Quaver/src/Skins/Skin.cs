@@ -611,19 +611,19 @@ namespace Quaver.Skins
         /// 
         ///     Example:
         ///         In "note-hitobjectx-y", (x is denoted as the lane, and y is the snap)
-        ///         That being said, note-hitobject3-16, would be the object in lane 3, with 16th snap. 
+        ///         That being said, note-hitobject3-16th, would be the object in lane 3, with 16th snap. 
         /// 
         ///         NOTE: For 1/1, objects, there is no concept of y. So the HitObject in lane 4, with 1/1 snap
         ///         would have a file name of note-hitobject4. This is so that we don't require filename changes
         ///         even though the user may not use snapping.    
         /// 
         ///         - note-hitobject1 (Lane 1 Default which is also 1/1 snap.)
-        ///         - note-hitobject1-2 (Lane 1, 1/2 Snap)
-        ///         - note-hitobject1-3 (Lane 1, 1/3 Snap)
-        ///         - note-hitobject1-4 (Lane 1, 1/4 Snap)
+        ///         - note-hitobject1-2nd (Lane 1, 1/2 Snap)
+        ///         - note-hitobject1-3rd (Lane 1, 1/3 Snap)
+        ///         - note-hitobject1-4th (Lane 1, 1/4 Snap)
         ///         //
         ///         - note-hitobject2 (Lane 2 Default which is also 1/1 snap.)
-        ///         - note-hitobject2-2 (Lane 2, 1/2 Snap)
+        ///         - note-hitobject2-2nd (Lane 2, 1/2 Snap)
         /// </summary>
         /// <param name="skinDir"></param>
         /// <param name="element"></param>
