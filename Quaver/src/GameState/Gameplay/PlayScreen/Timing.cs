@@ -156,8 +156,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
                 if (svQueue.Count >= 1)
                 {
-                    //ConvertTPtoSV(svQueue);
-                    //NormalizeSVs(svQueue);
+                    ConvertTPtoSV(svQueue);
+                    NormalizeSVs(svQueue);
                 }
                 else CreateSV(svQueue, 0, 1f);
             }
@@ -186,26 +186,28 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal void ConvertTPtoSV(List<TimingObject> svQueue)
         {
             //Create and converts timing points to SV's
-            var lastIndex = 0;
-            var i = 0;
+            int lastIndex = 0;
+            int i = 0;
+            int j = 0;
+            List<TimingObject> bpmObjects = new List<TimingObject>();
 
-            foreach (TimingObject timeObject in TimingQueue)
+            for (i = 0; i < TimingQueue.Count; i++)
             {
-                for (i=lastIndex; i<svQueue.Count-1; i++)
+                for (j = lastIndex; j < svQueue.Count - 1; j++)
                 {
-                    if (timeObject.TargetTime > svQueue[i+1].TargetTime - 1)
+                    if (TimingQueue[i].TargetTime > svQueue[j].TargetTime)
                     {
-                        lastIndex = i;
+                        lastIndex = j;
                         break;
                     }
-
-                    if (timeObject.TargetTime < svQueue[i].TargetTime)
-                        CreateSV(svQueue, timeObject.TargetTime, TimingQueue[i].BPM/_averageBpm);
-
-                    else if (Math.Abs(timeObject.TargetTime - svQueue[i].TargetTime) > 1)
-                        CreateSV(svQueue, timeObject.TargetTime, svQueue[i].SvMultiplier);
                 }
+                if (TimingQueue[i].TargetTime < svQueue[0].TargetTime - 1)
+                    CreateSV(bpmObjects, TimingQueue[i].TargetTime, 1);
+
+                else if (Math.Abs(TimingQueue[i].TargetTime - svQueue[lastIndex].TargetTime) > 1)
+                    CreateSV(bpmObjects, TimingQueue[i].TargetTime, 1); //svQueue[lastIndex].SvMultiplier
             }
+            foreach (var ob in bpmObjects) svQueue.Add(ob);
             svQueue.Sort((p1, p2) => p1.TargetTime.CompareTo(p2.TargetTime));
         }
 
@@ -220,16 +222,16 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //Normalize
             if (TimingQueue.Count == 0) return;
 
-            for (i = 0; i < TimingQueue.Count; i++)
+            for (i = 0; i < svQueue.Count; i++)
             {
-                for (j = lastIndex; j < svQueue.Count; j++)
+                for (j = lastIndex; j < TimingQueue.Count; j++)
                 {
-                    if (svQueue[j].TargetTime > TimingQueue[i].TargetTime - 1)
+                    if (svQueue[i].TargetTime > TimingQueue[j].TargetTime - 1)
                     {
                         lastIndex = j;
                         break;
                     }
-                    svQueue[j].SvMultiplier *= TimingQueue[i].BPM / _averageBpm;
+                    svQueue[i].SvMultiplier = svQueue[i].SvMultiplier * TimingQueue[j].BPM / _averageBpm;
                 }
             }
         }
