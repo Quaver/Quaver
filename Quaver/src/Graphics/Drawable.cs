@@ -254,9 +254,6 @@ namespace Quaver.Graphics
         /// <summary>
         ///     This method is called when the object will be removed from memory.
         /// </summary>
-        internal void Destroy()
-        {
-            Parent = null;
-        }
+        internal virtual void Destroy() => Parent = null;
     }
 }
