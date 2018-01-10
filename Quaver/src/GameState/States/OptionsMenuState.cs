@@ -41,6 +41,7 @@ namespace Quaver.GameState.States
             CreateManiaKeyButtons();
             CreateSkinSelectButtons();
             CreateBackButton();
+            CreateGraphicsOptionButtons();
 
             UpdateReady = true;
         }
@@ -164,6 +165,83 @@ namespace Quaver.GameState.States
                 };
                 SkinSelectButton.Add(skin);
             }
+        }
+
+        private void CreateGraphicsOptionButtons()
+        {
+            TextButton button;
+            var ob = new TextBoxSprite()
+            {
+                SizeX = 400,
+                SizeY = 70,
+                PosY = 340,
+                TextAlignment = Alignment.BotCenter,
+                Alignment = Alignment.TopCenter,
+                Font = Fonts.Medium24,
+                Text = "Graphics",
+                Parent = Boundary
+            };
+
+            ob = new TextBoxSprite()
+            {
+                SizeX = 400,
+                SizeY = 20,
+                PosY = 420,
+                TextAlignment = Alignment.BotCenter,
+                Alignment = Alignment.TopCenter,
+                Text = "Resolution",
+                Parent = Boundary
+            };
+
+            ob = new TextBoxSprite()
+            {
+                SizeX = 400,
+                SizeY = 20,
+                PosY = 490,
+                TextAlignment = Alignment.BotCenter,
+                Alignment = Alignment.TopCenter,
+                Text = "Other",
+                Parent = Boundary
+            };
+
+            for (var i = 0; i < 4; i++)
+            {
+                //todo: hook this to an event/method or something
+                button = new TextButton(new Vector2(150, 30), "1920x1080")
+                {
+                    PosY = 450,
+                    PosX = (i - 1.5f) * 160f,
+                    Alignment = Alignment.TopCenter,
+                    Parent = Boundary
+                };
+                //todo: add to a button list
+                //SkinSelectButton.Add(button);
+            }
+
+            //Toggle Buttons
+            button = new TextButton(new Vector2(200, 30), "Letterboxing: On")
+            {
+                PosY = 520,
+                PosX = (-1) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = Boundary
+            };
+
+            button = new TextButton(new Vector2(200, 30), "FullScreen: Off")
+            {
+                PosY = 520,
+                //PosX = (0.5f) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = Boundary
+            };
+
+            button = new TextButton(new Vector2(200, 30), "BG Brightness: 100%")
+            {
+                PosY = 520,
+                PosX = (1) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = Boundary
+            };
         }
     }
 }
