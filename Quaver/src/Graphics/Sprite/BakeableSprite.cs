@@ -29,7 +29,13 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         internal void Bake()
         {
-            //BakedTexture = new RenderTarget2D(GameBase.GraphicsDevice, )
+            BakedTexture = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
+            GameBase.GraphicsDevice.SetRenderTarget(BakedTexture);
+            GameBase.SpriteBatch.Begin();
+            Children.ForEach(x => x.Draw());
+            GameBase.SpriteBatch.End();
+            GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
+            Children.ForEach(x => x.Destroy());
         }
 
         /// <summary>
@@ -37,7 +43,7 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         internal override void Draw()
         {
-
+            GameBase.SpriteBatch.Draw(BakedTexture, Vector2.Zero, Color.White);
         }
     }
 }
