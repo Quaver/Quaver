@@ -223,9 +223,8 @@ namespace Quaver.GameState.States
         {
             BackButton.Destroy();
             Boundary.Destroy();
-            PlayStatsSprite.Destroy();
         }
-        int asdd = 0;
+
         /// <summary>
         ///     Update
         /// </summary>
@@ -234,12 +233,6 @@ namespace Quaver.GameState.States
         {
             BackButton.Update(dt);
             Boundary.Update(dt);
-            if (asdd == 150)
-            {
-                PlayStatsSprite.Bake();
-                asdd = 200;
-            }
-            else asdd++;
         }
 
         /// <summary>
