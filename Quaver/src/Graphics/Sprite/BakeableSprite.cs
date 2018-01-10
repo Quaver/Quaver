@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 using Quaver.Utility;
-
+using Quaver.Logging;
 
 namespace Quaver.Graphics.Sprite
 {
@@ -29,14 +29,25 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         internal void Bake()
         {
-            BakedTexture = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
+            BakedTexture = new RenderTarget2D(GameBase.GraphicsDevice, (int)Math.Ceiling(AbsoluteSize.X), (int)Math.Ceiling(AbsoluteSize.Y));
+            Alpha = 0;
             GameBase.GraphicsDevice.SetRenderTarget(BakedTexture);
+            GameBase.GraphicsDevice.Clear(Color.White * 0);
             GameBase.SpriteBatch.Begin();
             Draw();
             GameBase.SpriteBatch.End();
             GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
             Children = new List<Drawable>();
             Image = BakedTexture;
+            Alpha = 1;
+        }
+
+        /// <summary>
+        ///     Draw
+        /// </summary>
+        internal override void Draw()
+        {
+            base.Draw();
         }
     }
 }
