@@ -25,6 +25,7 @@ namespace Quaver.Commands
             new Logout(),
             new LeaveChatChannel(),
             new JoinChatChannel(),
+            new SendMessage(),
 #endif
             new GetScores(),
             new CalculateDifficulty(),
