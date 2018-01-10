@@ -594,6 +594,17 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateAccuracyDataUI()
         {
+            double lowestAcc = 100;
+            foreach (var acc in ScoreData.AccuracyData)
+            {
+                if (acc.Accuracy < lowestAcc)
+                {
+                    lowestAcc = acc.Accuracy;
+                }
+            }
+            lowestAcc = Math.Max(0, (Math.Floor(lowestAcc * 1000) / 10) - 2);
+            float lowAccRatio = (float)(1 / (100 - lowestAcc));
+
             //Create Boundary for Accuracy Display
             AccuracyDataBoundary = new Sprite()
             {
@@ -623,14 +634,17 @@ namespace Quaver.GameState.States
             //Create labels for grade windows
             for (var i = 1; i < 7; i++)
             {
-                Sprite ob = new Sprite()
+                if (ScoreData.GradePercentage[i] > lowestAcc)
                 {
-                    Position = new UDim2(0, MsDevianceBoundary.Size.Y.Offset * (1 - ((ScoreData.GradePercentage[i] - 70) * (1f / 30)))),
-                    Size = new UDim2(0, 1, 1, 0),
-                    Tint = GameColors.GradeColors[i + 1],
-                    Alpha = 0.2f,
-                    Parent = AccuracyDataBoundary
-                };
+                    Sprite ob = new Sprite()
+                    {
+                        Position = new UDim2(0, MsDevianceBoundary.Size.Y.Offset * (float)(1 - ((ScoreData.GradePercentage[i] - lowestAcc) * lowAccRatio))),
+                        Size = new UDim2(0, 1, 1, 0),
+                        Tint = GameColors.GradeColors[i + 1],
+                        Alpha = 0.2f,
+                        Parent = AccuracyDataBoundary
+                    };
+                }
             }
 
             //Display accuracy chart
@@ -638,7 +652,7 @@ namespace Quaver.GameState.States
             {
                 var ob = new Sprite()
                 {
-                    Position = new UDim2((float)(acc.Position * AccuracyDataBoundary.Size.X.Offset) - 1.5f, (float)((1 - (acc.Accuracy-0.7) * (1 / 0.3)) * AccuracyDataBoundary.Size.Y.Offset) - 1.5f),
+                    Position = new UDim2((float)(acc.Position * AccuracyDataBoundary.Size.X.Offset) - 1.5f, (float)((1 - (acc.Accuracy - lowestAcc) * lowAccRatio) * AccuracyDataBoundary.Size.Y.Offset) - 1.5f),
                     Size = new UDim2(3, 3),
                     Tint = GameColors.GradeColors[acc.Type],
                     Parent = AccuracyDataBoundary
@@ -663,7 +677,7 @@ namespace Quaver.GameState.States
             //bottom
             label = new TextBoxSprite()
             {
-                Text = "Acc 70%",
+                Text = $@"Acc {lowestAcc}%",
                 Font = Fonts.Medium12,
                 Position = new UDim2(2, -2),
                 Size = new UDim2(200, 50),
