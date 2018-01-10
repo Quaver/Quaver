@@ -89,5 +89,11 @@ namespace Quaver.Graphics.Button
         {
             if (Clickable) Clicked?.Invoke(this, null);
         }
+
+        internal override void Destroy()
+        {
+            GameBase.GlobalInputManager.LeftClicked -= MouseClicked;
+            base.Destroy();
+        }
     }
 }

@@ -101,6 +101,8 @@ namespace Quaver.GameState.States
         public void UnloadContent()
         {
             UpdateReady = false;
+            SwitchSongSelectButton.Clicked -= OnSongSelectButtonClick;
+            OptionsMenuButton.Clicked -= OnOptionsSelectButtonClick;
             Boundary.Destroy();
         }
 
