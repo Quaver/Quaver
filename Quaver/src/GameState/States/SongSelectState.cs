@@ -46,12 +46,12 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     Reference to the play button
         /// </summary>        
-        private Button PlayButton { get; set; }
+        private TextButton PlayButton { get; set; }
 
         /// <summary>
         ///     Reference to the back button
         /// </summary>        
-        private Button BackButton { get; set; }
+        private TextButton BackButton { get; set; }
 
         /// <summary>
         ///     Reference to the speed mod button
@@ -99,7 +99,11 @@ namespace Quaver.GameState.States
             Logger.Remove("MapSelected");
 
             UpdateReady = false;
-            //PlayButton.Clicked -= OnPlayMapButtonClick;
+            PlayButton.Clicked -= OnPlayMapButtonClick;
+            BackButton.Clicked -= OnBackButtonClick;
+            SpeedModButton.Clicked -= OnSpeedModButtonClick;
+            TogglePitch.Clicked -= OnTogglePitchButtonClick;
+
 
             BeatmapOrganizerUI.UnloadContent();
 
