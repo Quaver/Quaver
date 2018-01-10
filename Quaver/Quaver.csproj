@@ -184,6 +184,7 @@
     <Compile Include="src\Modifiers\Mods\Chill.cs" />
     <Compile Include="src\Modifiers\Mods\Speed.cs" />
     <Compile Include="src\Modifiers\Mods\Strict.cs" />
+    <Compile Include="src\Online\ChatChannel.cs" />
     <Compile Include="src\Online\Rattle.cs" />
     <Compile Include="src\GameState\Gameplay\GameplayManager.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\NoteManager.cs" />
