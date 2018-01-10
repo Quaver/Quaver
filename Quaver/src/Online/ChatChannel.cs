@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if !PUBLIC
 using Quaver.Framework.Events.Packets.Structures;
 
 namespace Quaver.Online
@@ -15,3 +16,4 @@ namespace Quaver.Online
         internal string ChannelName { get; set; }
     }
 }
+#endif
