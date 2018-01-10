@@ -38,14 +38,6 @@ namespace Quaver.Graphics.Button
         internal event EventHandler Clicked;
 
         /// <summary>
-        ///     This method is called when the button gets clicked
-        /// </summary>
-        internal void OnClicked()
-        {
-            if (Clickable) Clicked?.Invoke(this, null);
-        }
-
-        /// <summary>
         ///     This method is called when the mouse hovers over the button
         /// </summary>
         internal abstract void MouseOver();
@@ -78,11 +70,24 @@ namespace Quaver.Graphics.Button
             base.Update(dt);
         }
 
+        /// <summary>
+        ///     This method checks if the mouse has clicked this button specifically
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MouseClicked(object sender, EventArgs e)
         {
             if (MouseHovered) {
                 OnClicked();
             }
+        }
+
+        /// <summary>
+        ///     This method is called when the button gets clicked
+        /// </summary>
+        internal void OnClicked()
+        {
+            if (Clickable) Clicked?.Invoke(this, null);
         }
     }
 }
