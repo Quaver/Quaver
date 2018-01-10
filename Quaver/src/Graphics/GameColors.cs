@@ -12,44 +12,44 @@ namespace Quaver.Graphics
         /// <summary>
         /// Swan's favorite color; #db88c2. This color is used for the developers of the game.
         /// </summary>
-        public static readonly Color NameTagAdmin = new Color(219, 136, 194, 1);
+        public static readonly Color NameTagAdmin = new Color(219, 136, 194);
 
         /// <summary>
         /// Nametag color for Community Managers, Map Nominators, ect.
         /// </summary>
-        public static readonly Color NameTagModerator = new Color(59, 233, 106, 1);
+        public static readonly Color NameTagModerator = new Color(59, 233, 106);
 
         /// <summary>
         /// Nametag color for Quaver Supporters/Donators.
         /// </summary>
-        public static readonly Color NameTagSupporter = new Color(76, 146, 211, 1);
+        public static readonly Color NameTagSupporter = new Color(76, 146, 211);
 
         /// <summary>
         /// Nametag color for regular users.
         /// </summary>
-        public static readonly Color NameTagRegular = new Color(76, 146, 211, 1);
+        public static readonly Color NameTagRegular = new Color(76, 146, 211);
 
         //todo: documentation.
         //Judge Colors
-        public static readonly Color JudgeMarv = new Color(255, 255, 200, 1);
-        public static readonly Color JudgePerf = new Color(255, 255, 0, 1);
-        public static readonly Color JudgeGreat = new Color(0, 255, 0, 1);
-        public static readonly Color JudgeGood = new Color(0, 168, 255, 1);
-        public static readonly Color JudgeOkay = new Color(255, 0, 255, 1);
-        public static readonly Color JudgeMiss = new Color(255, 0, 0, 1);
+        public static readonly Color JudgeMarv = new Color(255, 255, 200);
+        public static readonly Color JudgePerf = new Color(255, 255, 0);
+        public static readonly Color JudgeGreat = new Color(0, 255, 0);
+        public static readonly Color JudgeGood = new Color(0, 168, 255);
+        public static readonly Color JudgeOkay = new Color(255, 0, 255);
+        public static readonly Color JudgeMiss = new Color(255, 0, 0);
         public static readonly Color[] JudgeColors = new Color[6] { JudgeMarv, JudgePerf, JudgeGreat, JudgeGood, JudgeOkay, JudgeMiss };
 
         //todo: documentation.
         //Grade Colors
-        public static readonly Color GradeSSSS = new Color(255, 255, 255, 1);
-        public static readonly Color GradeSSS = new Color(255, 255, 255, 1);
-        public static readonly Color GradeSS = new Color(255, 255, 125, 1);
-        public static readonly Color GradeS = new Color(255, 255, 0, 1);
-        public static readonly Color GradeA = new Color(0, 255, 0, 1);
-        public static readonly Color GradeB = new Color(0, 30, 255, 1);
-        public static readonly Color GradeC = new Color(255, 0, 255, 1);
-        public static readonly Color GradeD = new Color(255, 70, 0, 1);
-        public static readonly Color GradeF = new Color(255, 0, 0, 1);
+        public static readonly Color GradeSSSS = new Color(255, 255, 255);
+        public static readonly Color GradeSSS = new Color(255, 255, 255);
+        public static readonly Color GradeSS = new Color(255, 255, 125);
+        public static readonly Color GradeS = new Color(255, 255, 0);
+        public static readonly Color GradeA = new Color(0, 255, 0);
+        public static readonly Color GradeB = new Color(0, 30, 255);
+        public static readonly Color GradeC = new Color(255, 0, 255);
+        public static readonly Color GradeD = new Color(255, 70, 0);
+        public static readonly Color GradeF = new Color(255, 0, 0);
         public static readonly Color[] GradeColors = new Color[9] { GradeF, GradeD, GradeC, GradeB, GradeA, GradeS, GradeSS, GradeSSS, GradeSSSS };
 
         //todo: documentation.
