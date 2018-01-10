@@ -32,7 +32,7 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     This will bake all the children of this object onto a texture and destroy them.
         /// </summary>
-        internal void Bake()
+        private void Bake()
         {
             BakedTexture = new RenderTarget2D(GameBase.GraphicsDevice, (int)Math.Ceiling(AbsoluteSize.X), (int)Math.Ceiling(AbsoluteSize.Y));
             Alpha = 0;
