@@ -344,9 +344,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         ///     Update the health bar
         /// </summary>
         /// <param name="health"></param>
-        internal void UpdateHealthBar(float health)
+        internal void UpdateHealthBar(double health)
         {
-            HealthBarOver.ScaleX = health / 100;
+            HealthBarOver.ScaleX = (float)health / 100;
         }
     }
 }
