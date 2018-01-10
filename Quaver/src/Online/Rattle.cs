@@ -51,6 +51,7 @@ namespace Quaver.Online
             OnlineEvents.RattleUserConnected += OnRattleUserConnected;
             OnlineEvents.RattleUserDisconnected += OnRattleUserDisconnected;
             OnlineEvents.RattleUserJoinedChatChannel += OnRattleUserJoinedChatChannel;
+            OnlineEvents.RattleSendMessage += OnRattleSendMessage;
         }
 
         /// <summary>
@@ -189,6 +190,25 @@ namespace Quaver.Online
             // TODO: Add some sort of UI here displaying the newly joined channel
                 
             Logger.Log("Joined chat channel: " + packet.Channel, LogColors.GameInfo);
+        }
+
+        /// <summary>
+        ///     On RattleSendMessage event hook
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnRattleSendMessage(object sender, RattleSendMessageEventArgs e)
+        {
+            var packet = e.Data;
+
+            // Find the online user with the user id in the packet
+            var messageSender = OnlineClients.Find(x => x.UserId == packet.UserId);
+
+            // Don't display if the message sender is null or 
+            if (messageSender == null || messageSender.UserId == Client.UserId)
+                return;
+            
+            Logger.Log($"<{packet.Message.Channel}> {messageSender.Username}: {packet.Message.Text}", LogColors.GameInfo);
         }
 
         /// <summary>
