@@ -154,16 +154,13 @@ namespace Quaver.GameState.Gameplay
                 }
 
                 //Acc Data
-                if (Accuracy > 0.7)
+                AccuracyRecord accData = new AccuracyRecord()
                 {
-                    AccuracyRecord accData = new AccuracyRecord()
-                    {
-                        Accuracy = Accuracy,
-                        Position = (double)songpos,
-                        Type = GetAccGradeIndex(Accuracy) + 1
-                    };
-                    AccuracyData.Add(accData);
-                }
+                    Accuracy = Accuracy,
+                    Position = (double)songpos,
+                    Type = GetAccGradeIndex(Accuracy) + 1
+                };
+                AccuracyData.Add(accData);
 
                 //Health Data
                 HealthRecord healthData = new HealthRecord()
