@@ -50,6 +50,11 @@ namespace Quaver.GameState.States
         public Button SwitchSongSelectButton { get; set; }
 
         /// <summary>
+        ///     Button to switch to the options menu
+        /// </summary>
+        public Button OptionsMenuButton { get; set; }
+
+        /// <summary>
         ///     Button to import .qp
         /// </summary>
         public Button ImportQpButton { get; set; }
@@ -84,7 +89,7 @@ namespace Quaver.GameState.States
             // Initialize the UI buttons
             CreateOszImportButton();
             CreateQpImportButton();
-            CreateSongSelectButton();
+            CreateMenuButtons();
             CreateQpExportButton();
 
             UpdateReady = true;
@@ -121,6 +126,7 @@ namespace Quaver.GameState.States
             GameBase.SpriteBatch.Begin();
             BackgroundManager.Draw();
             SwitchSongSelectButton.Draw();
+            OptionsMenuButton.Draw();
             ImportPeppyButton.Draw();
             ImportQpButton.Draw();
             ExportQpButton.Draw();
@@ -130,7 +136,7 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     Responsible for creating the button to move to the song select screen state
         /// </summary>
-        private void CreateSongSelectButton()
+        private void CreateMenuButtons()
         {
             // Switch Song Select Button
             SwitchSongSelectButton = new TextButton(new Vector2(200, 40), "Song Select")
@@ -138,8 +144,15 @@ namespace Quaver.GameState.States
                 Alignment = Alignment.MidCenter,
                 Parent = Boundary
             };
-
             SwitchSongSelectButton.Clicked += OnSongSelectButtonClick;
+
+            OptionsMenuButton = new TextButton(new Vector2(200, 40), "Options")
+            {
+                Alignment = Alignment.MidCenter,
+                PosY = 50,
+                Parent = Boundary
+            };
+            OptionsMenuButton.Clicked += OnOptionsSelectButtonClick;
         }
 
         /// <summary>
@@ -150,6 +163,12 @@ namespace Quaver.GameState.States
             //Change to SongSelectState
             GameBase.LoadedSkin.SoundClick.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
             GameBase.GameStateManager.ChangeState(new SongSelectState());
+        }
+
+        public void OnOptionsSelectButtonClick(object sender, EventArgs e)
+        {
+            GameBase.LoadedSkin.SoundClick.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+            GameBase.GameStateManager.ChangeState(new OptionsMenuState());
         }
 
         /// <summary>
