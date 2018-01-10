@@ -41,6 +41,16 @@ namespace Quaver.Input
         private bool CurrentlyTakingScreenshot { get; set; }
 
         /// <summary>
+        ///     Global click event
+        /// </summary>
+        public event EventHandler LeftClicked;
+
+        /// <summary>
+        ///     Is determined by whether mouse is down or not.
+        /// </summary>
+        private bool MouseIsDown { get; set; }
+
+        /// <summary>
         ///     Check the input.
         /// </summary>
         public void CheckInput()
@@ -48,6 +58,26 @@ namespace Quaver.Input
             HandleVolumeChanges();
             ImportBeatmaps();
             TakeScreenshot();
+            HandleClick();
+        }
+
+        private void HandleClick()
+        {
+            if (MouseIsDown)
+            {
+                if (GameBase.MouseState.LeftButton == ButtonState.Released)
+                {
+                    MouseIsDown = false;
+                }
+            }
+            else
+            {
+                if (GameBase.MouseState.LeftButton == ButtonState.Pressed)
+                {
+                    MouseIsDown = true;
+                    LeftClicked?.Invoke(this, null);
+                }
+            }
         }
 
         /// <summary>

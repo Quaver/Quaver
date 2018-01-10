@@ -17,6 +17,11 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal abstract class Button : Sprite.Sprite
     {
+        internal Button()
+        {
+            GameBase.GlobalInputManager.LeftClicked += MouseClicked;
+        }
+
         /// <summary>
         ///     Used to detect when the user hovers over the button so the MouseOver() and MouseOut() methods get called only once.
         /// </summary>
@@ -26,11 +31,6 @@ namespace Quaver.Graphics.Button
         ///     Determines if the Event Listener will be fired if the button is clicked.
         /// </summary>
         internal bool Clickable { get; set; } = true;
-
-        /// <summary>
-        ///     Internally used to detect when a button gets clicked once. (To ensure it doesnt click every frame when user holds down the mouse button.)
-        /// </summary>
-        private bool MouseClicked { get; set; } = true;
 
         /// <summary>
         ///     This event handler is used to detect when this object gets clicked. Used externally
@@ -63,20 +63,6 @@ namespace Quaver.Graphics.Button
             // Check if moouse is over
             var over = Util.RectangleContains(GlobalRectangle, Util.PointToVector2(GameBase.MouseState.Position));
 
-            //Click logic
-            if (GameBase.MouseState.LeftButton == ButtonState.Pressed)
-            {
-                if (!MouseClicked)
-                {
-                    MouseClicked = true;
-                    if (over) OnClicked();
-                }
-            }
-            else
-            {
-                MouseClicked = false;
-            }
-
             //Animation
             if (over && !MouseHovered)
             {
@@ -90,6 +76,13 @@ namespace Quaver.Graphics.Button
             }
 
             base.Update(dt);
+        }
+
+        private void MouseClicked(object sender, EventArgs e)
+        {
+            if (MouseHovered) {
+                OnClicked();
+            }
         }
     }
 }
