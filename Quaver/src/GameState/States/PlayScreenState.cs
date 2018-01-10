@@ -73,6 +73,8 @@ namespace Quaver.GameState.States
         {
             UpdateReady = false;
 
+            GameplayManager.UnloadContent();
+
             //Remove Loggers
             Logger.Clear();
         }
