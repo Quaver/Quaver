@@ -86,6 +86,8 @@ namespace Quaver.GameState.States
         /// </summary>
         private SoundEffectInstance ApplauseInstance { get; set; }
 
+        private BakeableSprite PlayStatsSprite { get; set; }
+
         /// <summary>
         ///     The Boundary Containing every Judge Text
         /// </summary>
@@ -221,6 +223,7 @@ namespace Quaver.GameState.States
         {
             BackButton.Destroy();
             Boundary.Destroy();
+            PlayStatsSprite.Destroy();
         }
 
         /// <summary>
@@ -231,6 +234,7 @@ namespace Quaver.GameState.States
         {
             BackButton.Update(dt);
             Boundary.Update(dt);
+            PlayStatsSprite.Update(dt);
         }
 
         /// <summary>
@@ -242,6 +246,7 @@ namespace Quaver.GameState.States
             BackgroundManager.Draw();
             BackButton.Draw();
             Boundary.Draw();
+            PlayStatsSprite.Draw();
             GameBase.SpriteBatch.End();
         }
 
@@ -262,10 +267,12 @@ namespace Quaver.GameState.States
             BackButton.Clicked += OnBackButtonClick;
 
             //create note data graph todo: add text and stuff
+            PlayStatsSprite = new BakeableSprite();
             CreateJudgeWindowUI();
             CreateMsDevianceUI();
             CreateAccuracyDataUI();
             CreateHealthDataUI();
+            PlayStatsSprite.Bake();
         }
 
         /// <summary>
@@ -403,7 +410,7 @@ namespace Quaver.GameState.States
                 Alignment = Alignment.BotLeft,
                 Tint = Color.Black,
                 Alpha = 0.5f,
-                Parent = Boundary
+                Parent = PlayStatsSprite
             };
 
             // create labels for hit windows
@@ -522,7 +529,7 @@ namespace Quaver.GameState.States
                 Alignment = Alignment.BotRight,
                 Tint = Color.Black,
                 Alpha = 0.5f,
-                Parent = Boundary
+                Parent = PlayStatsSprite
             };
 
             //Record time intervals on graph every 15 seconds
@@ -593,7 +600,7 @@ namespace Quaver.GameState.States
                 Alignment = Alignment.BotRight,
                 Tint = Color.Black,
                 Alpha = 0.5f,
-                Parent = Boundary
+                Parent = PlayStatsSprite
             };
 
             //Record time intervals on graph every 15 seconds
@@ -675,7 +682,7 @@ namespace Quaver.GameState.States
                 Size = new UDim2(350, 240),
                 PosX = 10,
                 Alignment = Alignment.TopLeft,
-                Parent = Boundary
+                Parent = PlayStatsSprite
             };
 
             //Create Judge Text
