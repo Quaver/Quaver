@@ -161,6 +161,7 @@
     <Compile Include="src\GameState\Gameplay\PlayScreen\ScoreProgressUI.cs" />
     <Compile Include="src\GameState\IHelper.cs" />
     <Compile Include="src\GameState\SongSelect\BeatmapOrganizerUI.cs" />
+    <Compile Include="src\GameState\States\OptionsMenuState.cs" />
     <Compile Include="src\GameState\States\ScoreScreenState.cs" />
     <Compile Include="src\GameState\States\SongSelectState.cs" />
     <Compile Include="src\GameState\States\MapImportLoadingState.cs" />
