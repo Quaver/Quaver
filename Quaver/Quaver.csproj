@@ -168,6 +168,7 @@
     <Compile Include="src\Graphics\Button\BasicButton.cs" />
     <Compile Include="src\Graphics\DrawRectangle.cs" />
     <Compile Include="src\Graphics\Sprite\BarDisplay.cs" />
+    <Compile Include="src\Graphics\Sprite\BakeableSprite.cs" />
     <Compile Include="src\Graphics\Sprite\Boundary.cs" />
     <Compile Include="src\Graphics\Text\Fonts.cs" />
     <Compile Include="src\Graphics\Text\TextBoxSprite.cs" />
