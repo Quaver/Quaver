@@ -23,6 +23,7 @@ using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.Utility;
+using Quaver.Input;
 
 namespace Quaver
 {
@@ -31,6 +32,11 @@ namespace Quaver
     /// </summary>
     internal static class GameBase
     {
+        /// <summary>
+        ///     The global input manager. For all inputs that are the same across every state.
+        /// </summary>
+        public static GlobalInputManager GlobalInputManager { get; } = new GlobalInputManager();
+
         /// <summary>
         ///     Reference to the Game's window.
         /// </summary>

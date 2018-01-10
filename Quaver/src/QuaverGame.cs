@@ -32,11 +32,6 @@ namespace Quaver
     /// </summary>
     public class QuaverGame : Game
     {
-        /// <summary>
-        ///     The global input manager. For all inputs that are the same across every state.
-        /// </summary>
-        private GlobalInputManager GlobalInputManager { get; } = new GlobalInputManager();
-
         public QuaverGame()
         {
             // Set the global graphics device manager & set Window width & height.
@@ -159,7 +154,7 @@ namespace Quaver
             double dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Check Global Input
-            GlobalInputManager.CheckInput();
+            GameBase.GlobalInputManager.CheckInput();
 
             // Update Keyboard States
             GameBase.KeyboardState = Keyboard.GetState();
