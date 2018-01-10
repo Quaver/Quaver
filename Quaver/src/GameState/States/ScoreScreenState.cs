@@ -221,6 +221,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void UnloadContent()
         {
+            BackButton.Clicked -= OnBackButtonClick;
             BackButton.Destroy();
             Boundary.Destroy();
         }

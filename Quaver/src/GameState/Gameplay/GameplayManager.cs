@@ -82,7 +82,7 @@ namespace Quaver.GameState.Gameplay
         //todo: remove. TEST.
         private Sprite SvInfoTextBox { get; set; }
         private TextBoxSprite SVText { get; set; }
-        private Button TestButton { get; set; }
+        private TextButton TestButton { get; set; }
 
         //Rendering
         private RenderTarget2D[] RenderedHitObjects { get; set; } = new RenderTarget2D[8];
