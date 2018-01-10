@@ -25,6 +25,11 @@ namespace Quaver.Graphics.Sprite
         private RenderTarget2D BakedTexture { get;  set; }
 
         /// <summary>
+        ///     Determines if the object is ready to be baked
+        /// </summary>
+        internal bool BakeReady { get; set; } = true;
+
+        /// <summary>
         ///     This will bake all the children of this object onto a texture and destroy them.
         /// </summary>
         internal void Bake()
@@ -45,9 +50,16 @@ namespace Quaver.Graphics.Sprite
         /// <summary>
         ///     Draw
         /// </summary>
-        internal override void Draw()
+        internal override void Update(double dt)
         {
-            base.Draw();
+            base.Update(dt);
+
+            // Bake the object after this object has been updated
+            if (BakeReady)
+            {
+                BakeReady = false;
+                Bake();
+            }
         }
     }
 }
