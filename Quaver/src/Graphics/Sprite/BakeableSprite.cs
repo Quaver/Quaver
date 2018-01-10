@@ -17,7 +17,7 @@ namespace Quaver.Graphics.Sprite
     ///     This is used for optimization for static sprites. 
     ///     All sprites will be saved onto a texture to save space
     /// </summary>
-    internal class BakeableSprite : Drawable
+    internal class BakeableSprite : Sprite
     {
         /// <summary>
         ///     All sprites will be baked onto here
@@ -32,18 +32,11 @@ namespace Quaver.Graphics.Sprite
             BakedTexture = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
             GameBase.GraphicsDevice.SetRenderTarget(BakedTexture);
             GameBase.SpriteBatch.Begin();
-            Children.ForEach(x => x.Draw());
+            Draw();
             GameBase.SpriteBatch.End();
             GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
-            Children.ForEach(x => x.Destroy());
-        }
-
-        /// <summary>
-        ///     Draw
-        /// </summary>
-        internal override void Draw()
-        {
-            GameBase.SpriteBatch.Draw(BakedTexture, Vector2.Zero, Color.White);
+            Children = new List<Drawable>();
+            Image = BakedTexture;
         }
     }
 }
