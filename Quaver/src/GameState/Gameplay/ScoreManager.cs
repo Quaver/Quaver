@@ -47,7 +47,7 @@ namespace Quaver.GameState.Gameplay
         //Health tracking
         internal bool Failed { get; private set; }
         internal float Health { get; private set; }
-        internal int[] HealthWeighting { get; } = new int[6] { 2, 2, 1, -2, -4, -4 };
+        internal float[] HealthWeighting { get; } = new float[6] { 1, 0.8f, 0.2f, -1, -2, -2 };
 
         //Accuracy Reference Variables
         internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, -50, -100, 0 };
@@ -205,7 +205,7 @@ namespace Quaver.GameState.Gameplay
 
             //Update Hit Window
             //This is similar to stepmania J4
-            HitWindowPress = new float[5] { 18, 45, 80, 110, 200 };
+            HitWindowPress = new float[5] { 18, 45, 80, 100, 200 };
             HitWindowRelease = new float[4] { HitWindowPress[0] * 1.5f, HitWindowPress[1] * 1.5f, HitWindowPress[2] * 1.5f, HitWindowPress[3] * 1.5f };
 
             for (int i = 0; i < 4; i++)
