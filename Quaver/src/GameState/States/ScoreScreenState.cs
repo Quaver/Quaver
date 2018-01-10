@@ -225,7 +225,7 @@ namespace Quaver.GameState.States
             Boundary.Destroy();
             PlayStatsSprite.Destroy();
         }
-
+        int asdd = 0;
         /// <summary>
         ///     Update
         /// </summary>
@@ -234,7 +234,12 @@ namespace Quaver.GameState.States
         {
             BackButton.Update(dt);
             Boundary.Update(dt);
-            PlayStatsSprite.Update(dt);
+            if (asdd == 150)
+            {
+                PlayStatsSprite.Bake();
+                asdd = 200;
+            }
+            else asdd++;
         }
 
         /// <summary>
@@ -246,7 +251,6 @@ namespace Quaver.GameState.States
             BackgroundManager.Draw();
             BackButton.Draw();
             Boundary.Draw();
-            PlayStatsSprite.Draw();
             GameBase.SpriteBatch.End();
         }
 
@@ -267,12 +271,17 @@ namespace Quaver.GameState.States
             BackButton.Clicked += OnBackButtonClick;
 
             //create note data graph todo: add text and stuff
-            PlayStatsSprite = new BakeableSprite();
+            PlayStatsSprite = new BakeableSprite()
+            {
+                Parent = Boundary,
+                ScaleX = 1,
+                ScaleY = 1
+            };
+
             CreateJudgeWindowUI();
             CreateMsDevianceUI();
             CreateAccuracyDataUI();
             CreateHealthDataUI();
-            PlayStatsSprite.Bake();
         }
 
         /// <summary>
