@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 #if !PUBLIC
@@ -34,6 +35,11 @@ namespace Quaver.Online
         internal static List<OnlineClient> OnlineClients { get; set; }
 
         /// <summary>
+        ///     The list of chat channels the user is in
+        /// </summary>
+        internal static List<ChatChannel> ChatChannels { get; set; } = new List<ChatChannel>();
+
+        /// <summary>
         ///     Initializes the online event hooking
         /// </summary>
         internal static void Initialize()
@@ -44,6 +50,7 @@ namespace Quaver.Online
             OnlineEvents.RattleLoginReply += OnRattleLoginReply;
             OnlineEvents.RattleUserConnected += OnRattleUserConnected;
             OnlineEvents.RattleUserDisconnected += OnRattleUserDisconnected;
+            OnlineEvents.RattleUserJoinedChatChannel += OnRattleUserJoinedChatChannel;
         }
 
         /// <summary>
@@ -161,6 +168,27 @@ namespace Quaver.Online
                       $"There are now {OnlineClients.Count} users online";
 
             Logger.Log(log, LogColors.GameInfo);
+        }
+
+        /// <summary>
+        ///     On RattleUserJoinedChatChannel hook
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnRattleUserJoinedChatChannel(object sender, UserJoinedChatChannelEventArgs e)
+        {
+            var packet = e.Data;
+
+            // If the packet return a failure or the chat channel already exists, return.
+            if (!packet.Success || ChatChannels.Find(x => x.ChannelName == packet.Channel) != null)
+                return;
+
+            // If no channel was found, add a new one.
+            ChatChannels.Add(new ChatChannel { ChannelName = packet.Channel });
+
+            // TODO: Add some sort of UI here displaying the newly joined channel
+                
+            Logger.Log("Joined chat channel: " + packet.Channel, LogColors.GameInfo);
         }
 
         /// <summary>
