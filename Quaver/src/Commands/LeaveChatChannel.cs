@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.Logging;
@@ -30,6 +31,8 @@ namespace Quaver.Commands
                 return;
             }
 
+            // Remove channels from list
+            Rattle.ChatChannels.RemoveAll(x => x.ChannelName == args[1]);
             Logger.Log($"Successfully left chat channel: {args[1]}", LogColors.GameSuccess);
         }
     }
