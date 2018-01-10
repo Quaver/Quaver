@@ -151,6 +151,16 @@ namespace Quaver.GameState.Gameplay
 
         public void UnloadContent()
         {
+            // Unhook InputManager
+            InputManager.ManiaKeyPress -= ManiaKeyDown;
+            InputManager.ManiaKeyRelease -= ManiaKeyUp;
+            InputManager.SkipSong -= SkipSong;
+
+            // Unook Missed Note Events
+            NoteManager.PressMissed -= PressMissed;
+            NoteManager.ReleaseSkipped -= ReleaseSkipped;
+            NoteManager.ReleaseMissed -= ReleaseMissed;
+
             //NoteManager.UnloadContent();
             Timing.UnloadContent();
             Playfield.UnloadContent();
@@ -160,6 +170,7 @@ namespace Quaver.GameState.Gameplay
 
             //todo: remove this later
             TestButton.Clicked -= BackButtonClick;
+
             SvInfoTextBox.Destroy();
         }
 
