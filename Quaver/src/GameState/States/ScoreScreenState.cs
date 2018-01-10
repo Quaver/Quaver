@@ -652,7 +652,7 @@ namespace Quaver.GameState.States
             {
                 var ob = new Sprite()
                 {
-                    Position = new UDim2((float)(acc.Position * AccuracyDataBoundary.Size.X.Offset) - 1.5f, (float)((1 - (acc.Accuracy - lowestAcc) * lowAccRatio) * AccuracyDataBoundary.Size.Y.Offset) - 1.5f),
+                    Position = new UDim2((float)(acc.Position * AccuracyDataBoundary.Size.X.Offset) - 1.5f, (float)(  (1 - (((acc.Accuracy * 100) - lowestAcc) * lowAccRatio)) * AccuracyDataBoundary.Size.Y.Offset) - 1.5f),
                     Size = new UDim2(3, 3),
                     Tint = GameColors.GradeColors[acc.Type],
                     Parent = AccuracyDataBoundary
