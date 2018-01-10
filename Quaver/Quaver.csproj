@@ -129,6 +129,7 @@
     <Compile Include="src\Audio\MenuAudioPlayer.cs" />
     <Compile Include="src\Audio\SongManager.cs" />
     <Compile Include="src\Commands\CalculateDifficulty.cs" />
+    <Compile Include="src\Commands\JoinChatChannel.cs" />
     <Compile Include="src\Commands\LeaveChatChannel.cs" />
     <Compile Include="src\Commands\Logout.cs" />
     <Compile Include="src\Commands\OsuDbCommand.cs" />
