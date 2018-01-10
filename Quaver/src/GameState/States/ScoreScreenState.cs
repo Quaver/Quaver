@@ -85,49 +85,11 @@ namespace Quaver.GameState.States
         ///     The instance of the applause sound effect
         /// </summary>
         private SoundEffectInstance ApplauseInstance { get; set; }
-
+        
+        /// <summary>
+        ///     Static image of the players' play stats
+        /// </summary>
         private BakeableSprite PlayStatsSprite { get; set; }
-
-        /// <summary>
-        ///     The Boundary Containing every Judge Text
-        /// </summary>
-        private Boundary JudgeInfoBoundary { get; set; }
-
-        /// <summary>
-        ///     Boundary containing ms deviance data ui
-        /// </summary>
-        private Sprite MsDevianceBoundary { get; set; }
-
-        /// <summary>
-        ///     Boundary containing accuracy data
-        /// </summary>
-        private Sprite AccuracyDataBoundary { get; set; }
-
-        /// <summary>
-        ///     Boundary containing health data
-        /// </summary>
-        private Sprite HealthDataBoundary { get; set; }
-
-        //todo: have images and crap, but have the text only display number and not title
-        /// <summary>
-        ///     The Text displaying Judge info
-        /// </summary>
-        private TextBoxSprite[] JudgeText { get; set; }
-
-        /// <summary>
-        ///     The text that displays score
-        /// </summary>
-        private TextBoxSprite ScoreText { get; set; }
-
-        /// <summary>
-        ///     The text that displays max combo
-        /// </summary>
-        private TextBoxSprite ComboText { get; set; }
-
-        /// <summary>
-        ///     The text that displays accuracy
-        /// </summary>
-        private TextBoxSprite AccuracyText { get; set; }
 
         private Boundary Boundary { get; set; }
 
@@ -406,7 +368,7 @@ namespace Quaver.GameState.States
         private void CreateMsDevianceUI()
         {
             // create ms deviance box
-            MsDevianceBoundary = new Sprite()
+            var boundary = new Sprite()
             {
                 Size = new UDim2(400, 150),
                 Position = new UDim2(10, -10),
@@ -424,23 +386,23 @@ namespace Quaver.GameState.States
                 //bottom
                 ob = new Sprite()
                 {
-                    Position = new UDim2(0, MsDevianceBoundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
+                    Position = new UDim2(0, boundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
                     Size = new UDim2(0, 1, 1, 0),
                     Tint = GameColors.JudgeColors[i],
                     Alpha = 0.2f,
                     Alignment = Alignment.MidLeft,
-                    Parent = MsDevianceBoundary
+                    Parent = boundary
                 };
 
                 //top
                 ob = new Sprite()
                 {
-                    Position = new UDim2(0, -MsDevianceBoundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
+                    Position = new UDim2(0, -boundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
                     Size = new UDim2(0, 1, 1, 0),
                     Tint = GameColors.JudgeColors[i],
                     Alpha = 0.2f,
                     Alignment = Alignment.MidLeft,
-                    Parent = MsDevianceBoundary
+                    Parent = boundary
                 };
             }
 
@@ -450,10 +412,10 @@ namespace Quaver.GameState.States
             {
                 var ob = new Sprite()
                 {
-                    Position = new UDim2(MsDevianceBoundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
+                    Position = new UDim2(boundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
                     Size = new UDim2(1, 0, 0, 1),
                     Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
-                    Parent = MsDevianceBoundary
+                    Parent = boundary
                 };
 
                 timeIndex++;
@@ -467,11 +429,11 @@ namespace Quaver.GameState.States
                 {
                     var ob = new Sprite()
                     {
-                        Position = new UDim2(((float)ms.Position * MsDevianceBoundary.Size.X.Offset) - 1f, 0),
+                        Position = new UDim2(((float)ms.Position * boundary.Size.X.Offset) - 1f, 0),
                         Size = new UDim2(2, 0, 0, 1),
                         Tint = GameColors.JudgeMiss,
                         Alpha = 0.4f,
-                        Parent = MsDevianceBoundary
+                        Parent = boundary
                     };
                 }
             }
@@ -482,11 +444,11 @@ namespace Quaver.GameState.States
                 {
                     var ob = new Sprite()
                     {
-                        Position = new UDim2((float)(ms.Position * MsDevianceBoundary.Size.X.Offset) - 1.5f, (float)(ms.Offset * (MsDevianceBoundary.Size.Y.Offset / 2)) - 1.5f),
+                        Position = new UDim2((float)(ms.Position * boundary.Size.X.Offset) - 1.5f, (float)(ms.Offset * (boundary.Size.Y.Offset / 2)) - 1.5f),
                         Size = new UDim2(3, 3),
                         Tint = GameColors.JudgeColors[ms.Type],
                         Alignment = Alignment.MidLeft,
-                        Parent = MsDevianceBoundary
+                        Parent = boundary
                     };
                 }
             }
@@ -503,7 +465,7 @@ namespace Quaver.GameState.States
                 Size = new UDim2(200, 50),
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
-                Parent = MsDevianceBoundary
+                Parent = boundary
             };
 
             //bottom
@@ -515,7 +477,7 @@ namespace Quaver.GameState.States
                 Size = new UDim2(200, 50),
                 Alignment = Alignment.BotLeft,
                 TextAlignment = Alignment.BotLeft,
-                Parent = MsDevianceBoundary
+                Parent = boundary
             };
         }
 
@@ -525,7 +487,7 @@ namespace Quaver.GameState.States
         private void CreateHealthDataUI()
         {
             //Create Boundary for Health Data Display
-            HealthDataBoundary = new Sprite()
+            var boundary = new Sprite()
             {
                 Size = new UDim2(400, 150),
                 Position = new UDim2(-10, -170),
@@ -541,10 +503,10 @@ namespace Quaver.GameState.States
             {
                 var ob = new Sprite()
                 {
-                    Position = new UDim2(MsDevianceBoundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
+                    Position = new UDim2(boundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
                     Size = new UDim2(1, 0, 0, 1),
                     Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
-                    Parent = HealthDataBoundary
+                    Parent = boundary
                 };
 
                 timeIndex++;
@@ -555,10 +517,10 @@ namespace Quaver.GameState.States
             {
                 var ob = new Sprite()
                 {
-                    Position = new UDim2((float)(health.Position * HealthDataBoundary.Size.X.Offset) - 1.5f, (float)((1 - health.Health) * HealthDataBoundary.Size.Y.Offset) - 1.5f),
+                    Position = new UDim2((float)(health.Position * boundary.Size.X.Offset) - 1.5f, (float)((1 - health.Health) * boundary.Size.Y.Offset) - 1.5f),
                     Size = new UDim2(3, 3),
                     Tint = Color.Green,
-                    Parent = HealthDataBoundary
+                    Parent = boundary
                 };
             }
 
@@ -574,7 +536,7 @@ namespace Quaver.GameState.States
                 Size = new UDim2(200, 50),
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
-                Parent = HealthDataBoundary
+                Parent = boundary
             };
 
             //Bottom
@@ -586,7 +548,7 @@ namespace Quaver.GameState.States
                 Size = new UDim2(200, 50),
                 Alignment = Alignment.BotLeft,
                 TextAlignment = Alignment.BotLeft,
-                Parent = HealthDataBoundary
+                Parent = boundary
             };
         }
         
@@ -607,7 +569,7 @@ namespace Quaver.GameState.States
             float lowAccRatio = (float)(1 / (100 - lowestAcc));
 
             //Create Boundary for Accuracy Display
-            AccuracyDataBoundary = new Sprite()
+            var boundary = new Sprite()
             {
                 Size = new UDim2(400, 150),
                 Position = new UDim2(-10, -10),
@@ -623,10 +585,10 @@ namespace Quaver.GameState.States
             {
                 var ob = new Sprite()
                 {
-                    Position = new UDim2(MsDevianceBoundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
+                    Position = new UDim2(boundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
                     Size = new UDim2(1, 0, 0, 1),
                     Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
-                    Parent = AccuracyDataBoundary
+                    Parent = boundary
                 };
 
                 timeIndex++;
@@ -639,11 +601,11 @@ namespace Quaver.GameState.States
                 {
                     Sprite ob = new Sprite()
                     {
-                        Position = new UDim2(0, MsDevianceBoundary.Size.Y.Offset * (float)(1 - ((ScoreData.GradePercentage[i] - lowestAcc) * lowAccRatio))),
+                        Position = new UDim2(0, boundary.Size.Y.Offset * (float)(1 - ((ScoreData.GradePercentage[i] - lowestAcc) * lowAccRatio))),
                         Size = new UDim2(0, 1, 1, 0),
                         Tint = GameColors.GradeColors[i + 1],
                         Alpha = 0.2f,
-                        Parent = AccuracyDataBoundary
+                        Parent = boundary
                     };
                 }
             }
@@ -653,10 +615,10 @@ namespace Quaver.GameState.States
             {
                 var ob = new Sprite()
                 {
-                    Position = new UDim2((float)(acc.Position * AccuracyDataBoundary.Size.X.Offset) - 1.5f, (float)(  (1 - (((acc.Accuracy * 100) - lowestAcc) * lowAccRatio)) * AccuracyDataBoundary.Size.Y.Offset) - 1.5f),
+                    Position = new UDim2((float)(acc.Position * boundary.Size.X.Offset) - 1.5f, (float)(  (1 - (((acc.Accuracy * 100) - lowestAcc) * lowAccRatio)) * boundary.Size.Y.Offset) - 1.5f),
                     Size = new UDim2(3, 3),
                     Tint = GameColors.GradeColors[acc.Type],
-                    Parent = AccuracyDataBoundary
+                    Parent = boundary
                 };
             }
 
@@ -672,7 +634,7 @@ namespace Quaver.GameState.States
                 Size = new UDim2(200, 50),
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
-                Parent = AccuracyDataBoundary
+                Parent = boundary
             };
 
             //bottom
@@ -684,7 +646,7 @@ namespace Quaver.GameState.States
                 Size = new UDim2(200, 50),
                 Alignment = Alignment.BotLeft,
                 TextAlignment = Alignment.BotLeft,
-                Parent = AccuracyDataBoundary
+                Parent = boundary
             };
         }
 
@@ -694,7 +656,8 @@ namespace Quaver.GameState.States
         private void CreateJudgeWindowUI()
         {
             //Create Judge Info Boundary
-            JudgeInfoBoundary = new Boundary()
+            TextBoxSprite ob;
+            var boundary = new Boundary()
             {
                 Size = new UDim2(350, 240),
                 PosX = 10,
@@ -703,10 +666,9 @@ namespace Quaver.GameState.States
             };
 
             //Create Judge Text
-            JudgeText = new TextBoxSprite[6];
             for (var i = 0; i < 6; i++)
             {
-                JudgeText[i] = new TextBoxSprite()
+                ob = new TextBoxSprite()
                 {
                     Text = "[" + GameplayReferences.JudgeNames[i] + "]: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i] + " Total: " + (ScoreData.JudgePressSpread[i] + ScoreData.JudgeReleaseSpread[i]),
                     TextColor = GameColors.JudgeColors[i],
@@ -714,12 +676,12 @@ namespace Quaver.GameState.States
                     Position = new UDim2(0, 200 * i / 6 + 100),
                     Size = new UDim2(0, 0, 1, 0),
                     TextAlignment = Alignment.MidRight,
-                    Parent = JudgeInfoBoundary
+                    Parent = boundary
                 };
             }
 
             //Create Score Text
-            ScoreText = new TextBoxSprite()
+            ob = new TextBoxSprite()
             {
                 Text = ScoreData.ScoreTotal.ToString(),
                 Font = Fonts.Medium24,
@@ -727,11 +689,11 @@ namespace Quaver.GameState.States
                 TextColor = Color.White,
                 Position = new UDim2(0, 30),
                 Size = new UDim2(0, 70, 1, 0),
-                Parent = JudgeInfoBoundary
+                Parent = boundary
             };
 
             //Create Accuracy Text
-            AccuracyText = new TextBoxSprite()
+            ob = new TextBoxSprite()
             {
                 Text = $"{ScoreData.Accuracy * 100:0.00}%",
                 Font = Fonts.Medium24,
@@ -739,7 +701,7 @@ namespace Quaver.GameState.States
                 TextColor = Color.White,
                 Position = new UDim2(0, 30),
                 Size = new UDim2(0, 70, 1, 0),
-                Parent = JudgeInfoBoundary
+                Parent = boundary
             };
         }
     }
