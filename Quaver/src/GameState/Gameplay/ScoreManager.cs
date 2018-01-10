@@ -172,7 +172,7 @@ namespace Quaver.GameState.Gameplay
             }
 
             //Update Score todo: actual score calculation
-            ScoreTotal = (int)(1000000 * ((float)ScoreCount / ScoreMax));
+            ScoreTotal = (int)(1000000 * ((double)ScoreCount / ScoreMax));
             //Logger.Log("Score Count: " + ScoreCount + "     Max: " + ScoreMax + "    Note: "+JudgeCount+"/"+ncount, LogColors.GameInfo);
         }
 
