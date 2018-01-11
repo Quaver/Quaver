@@ -63,6 +63,11 @@ namespace Quaver.GameState.States
         /// </summary>
         private TextButton TogglePitch { get; set; }
 
+        /// <summary>
+        ///     Position of mouse from previous frame
+        /// </summary>
+        private float PreviousMouseYPosition { get; set; }
+
         private SongSelectInputManager SongSelectInputManager { get; set;}
 
         /// <summary>
@@ -115,13 +120,21 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Update(double dt)
         {
+            //Check input to update song select ui
+            SongSelectInputManager.CheckInput();
+            var moueYPos = GameBase.MouseState.Position.Y;
+            if (SongSelectInputManager.RightMouseIsDown)
+                BeatmapOrganizerUI.SetBeatmapOrganizerPosition(-moueYPos / GameBase.WindowRectangle.Height);
+            else if (SongSelectInputManager.LeftMouseIsDown)
+                BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
+
+            PreviousMouseYPosition = moueYPos;
+
+            //Update Objects
             Boundary.Update(dt);
             BeatmapOrganizerUI.Update(dt);
-            SongSelectInputManager.CheckInput();
-            if (SongSelectInputManager.RightMouseIsDown) BeatmapOrganizerUI.SetBeatmapOrganizerPosition(GameBase.MouseState.Position.Y/(-GameBase.WindowRectangle.Height));
-            //SetBeatmapOrganizerPosition
 
-                // Repeat the song preview if necessary
+            // Repeat the song preview if necessary
             RepeatSongPreview();
         }
 
