@@ -182,5 +182,41 @@ namespace Quaver
         ///     The build version of the game (The md5 hash of the exe)
         /// </summary>
         public static string BuildVersion { get; set; }
+
+        /// <summary>
+        ///     This method changes the window to match configuration settings
+        /// </summary>
+        /// <param name="resolution"></param>
+        /// <param name="fullscreen"></param>
+        /// <param name="letterbox"></param>
+        public static void ChangeWindow(bool fullscreen, bool letterbox, Point? resolution = null)
+        {
+            // Change Resolution
+            if (resolution != null)
+            {
+                GraphicsManager.PreferredBackBufferWidth = resolution.Value.X;
+                GraphicsManager.PreferredBackBufferHeight = resolution.Value.Y;
+                WindowRectangle = new DrawRectangle(0, 0, resolution.Value.X, resolution.Value.Y);
+                WindowUIScale = WindowRectangle.Height / ReferenceResolution.Y;
+            }
+
+            // Update Fullscreen
+            if (fullscreen != GraphicsManager.IsFullScreen)
+                GraphicsManager.IsFullScreen = fullscreen;
+
+            // Update letter boxing
+            if (letterbox)
+            {
+                //do stuff
+            }
+
+
+            Logger.Log("Window settings changed:", LogColors.GameImportant);
+            Logger.Log("Window Resolution: "+ GraphicsManager.PreferredBackBufferWidth + "x" + GraphicsManager.PreferredBackBufferHeight, LogColors.GameInfo);
+            Logger.Log("Window Letterboxing: " + letterbox, LogColors.GameInfo);
+            Logger.Log("Window Fullscreen: "+ GraphicsManager.IsFullScreen, LogColors.GameInfo);
+
+            GraphicsManager.ApplyChanges();
+        }
     }
 }
