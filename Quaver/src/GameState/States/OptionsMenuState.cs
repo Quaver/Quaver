@@ -192,12 +192,13 @@ namespace Quaver.GameState.States
             for (var i = 0; i < AvailableSkins.Length; i++)
                 AvailableSkins[i] = new DirectoryInfo(AvailableSkins[i]).Name;
 
-            var median = AvailableSkins.Length % 2 == 0 ? AvailableSkins.Length / 2f - 0.5f : (float)Math.Floor(AvailableSkins.Length / 2f);
-            for (var i = 0; i < AvailableSkins.Length; i++)
+            var length = AvailableSkins.Length + 2;
+            var median = length % 2 == 0 ? length / 2f - 0.5f : (float)Math.Floor(length / 2f);
+            for (var i = 0; i < length; i++)
             {
                 //todo: hook this to an event/method or something
-                var skin = AvailableSkins[i];
-                var button = new TextButton(new Vector2(150, 30), AvailableSkins[i])
+                var skin = i < AvailableSkins.Length ? AvailableSkins[i] : "default";
+                var button = new TextButton(new Vector2(150, 30), skin)
                 {
                     PosY = 300,
                     PosX = (i - median) * 160f,
