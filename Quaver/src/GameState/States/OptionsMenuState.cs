@@ -38,10 +38,11 @@ namespace Quaver.GameState.States
         private TextButton LetterBoxingButton { get; set; }
         private List<TextButton> ResolutionButtons { get; set; }
         private List<EventHandler> ResolutionEvents { get; set; }
-        private Point[] CommonResolutions { get; } = new Point[10]
+        private Point[] CommonResolutions { get; } = 
         {
             new Point(800, 600), new Point(1024, 768), new Point(1152, 864), new Point(1280, 960), new Point(1280, 1024),
-            new Point(1024, 600), new Point(1280, 720), new Point(1366, 768), new Point(1440, 900), new Point(1680, 1050)
+            new Point(1024, 600), new Point(1280, 720), new Point(1366, 768), new Point(1440, 900), new Point(1600, 900),
+            new Point(1680, 1050)
         };
 
 
