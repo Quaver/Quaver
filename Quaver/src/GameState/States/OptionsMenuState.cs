@@ -197,7 +197,11 @@ namespace Quaver.GameState.States
             for (var i = 0; i < length; i++)
             {
                 //todo: hook this to an event/method or something
-                var skin = i < AvailableSkins.Length ? AvailableSkins[i] : "default";
+                string skin;
+                if (i < AvailableSkins.Length) skin = AvailableSkins[i];
+                else if (i == AvailableSkins.Length) skin = "default bars";
+                else skin = "default arrows";
+
                 var button = new TextButton(new Vector2(150, 30), skin)
                 {
                     PosY = 300,
@@ -415,7 +419,19 @@ namespace Quaver.GameState.States
 
         private void OnSkinSelectButtonClicked(object sender, EventArgs e, string skin)
         {
-            Configuration.Skin = skin;
+            if (skin == "default arrows")
+            {
+                Configuration.Skin = "";
+                Configuration.DefaultSkin = DefaultSkins.Arrow;
+            }
+            else if (skin == "default bars")
+            {
+                Configuration.Skin = "";
+                Configuration.DefaultSkin = DefaultSkins.Bar;
+            }
+            else
+                Configuration.Skin = skin;
+
             Skin.LoadSkin();
         }
     }
