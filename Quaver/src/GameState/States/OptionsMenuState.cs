@@ -18,6 +18,7 @@ namespace Quaver.GameState.States
 {
     class OptionsMenuState : IGameState
     {
+        //todo: documentation
         public State CurrentState { get; set; }
         public bool UpdateReady { get; set; }
 
@@ -96,6 +97,9 @@ namespace Quaver.GameState.States
             GameBase.GameStateManager.ChangeState(new MainMenuState());
         }
 
+        /// <summary>
+        ///     Create back button
+        /// </summary>
         private void CreateBackButton()
         {
             //Todo: Remove. TEST.
@@ -107,6 +111,9 @@ namespace Quaver.GameState.States
             BackButton.Clicked += BackButtonClick;
         }
 
+        /// <summary>
+        ///     Creates UI relating to Mania Keybinding
+        /// </summary>
         private void CreateManiaKeyButtons()
         {
             var ob = new TextBoxSprite()
@@ -171,6 +178,9 @@ namespace Quaver.GameState.States
             }
         }
 
+        /// <summary>
+        ///     Creates UI relating to Skins Options
+        /// </summary>
         private void CreateSkinSelectButtons()
         {
             var ob = new TextBoxSprite()
@@ -216,6 +226,9 @@ namespace Quaver.GameState.States
             }
         }
 
+        /// <summary>
+        ///     Create UI relating to Graphics Options
+        /// </summary>
         private void CreateGraphicsOptionButtons()
         {
             var ob = new TextBoxSprite()
@@ -417,6 +430,12 @@ namespace Quaver.GameState.States
             Boundary.SizeY = GameBase.WindowRectangle.Height;
         }
 
+        /// <summary>
+        ///     Loads a skin after a button triggers this method
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="skin"></param>
         private void OnSkinSelectButtonClicked(object sender, EventArgs e, string skin)
         {
             if (skin == "default arrows")
