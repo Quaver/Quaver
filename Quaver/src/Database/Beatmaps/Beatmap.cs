@@ -131,6 +131,11 @@ namespace Quaver.Database.Beatmaps
         public GameModes Mode { get; set; }
 
         /// <summary>
+        ///     The local offset for this map
+        /// </summary>
+        public int LocalOffset { get; set; }
+
+        /// <summary>
         ///     The actual parsed qua file for the beatmap.
         /// </summary>
         [Ignore]
