@@ -24,11 +24,13 @@ namespace Quaver.GameState.States
         private TextButton[] ManiaKeys4K { get; set; }
         private TextButton[] ManiaKeys7K { get; set; }
         private List<TextButton> SkinSelectButton { get; set; }
+        private TextButton BackgroundBrightnessButton { get; set; }
 
 
         public void Draw()
         {
             GameBase.SpriteBatch.Begin();
+            BackgroundManager.Draw();
             Boundary.Draw();
             GameBase.SpriteBatch.End();
         }
@@ -50,6 +52,7 @@ namespace Quaver.GameState.States
         {
             Boundary.Destroy();
             BackButton.Clicked -= BackButtonClick;
+            BackgroundBrightnessButton.Clicked -= OnBrightnessButtonClicked;
         }
 
         public void Update(double dt)
@@ -235,13 +238,60 @@ namespace Quaver.GameState.States
                 Parent = Boundary
             };
 
-            button = new TextButton(new Vector2(200, 30), "BG Brightness: 100%")
+            BackgroundBrightnessButton = new TextButton(new Vector2(200, 30), $@"BG Brightness: {Configuration.BackgroundBrightness}%")
             {
                 PosY = 520,
                 PosX = (1) * 210f,
                 Alignment = Alignment.TopCenter,
                 Parent = Boundary
             };
+            BackgroundBrightnessButton.Clicked += OnBrightnessButtonClicked;
         }
+
+        private void OnBrightnessButtonClicked(object sender, EventArgs e)
+        {
+            var brightness = Configuration.BackgroundBrightness;
+            switch (brightness)
+            {
+                case 0:
+                    Configuration.BackgroundBrightness = 5;
+                    break;
+                case 5:
+                    Configuration.BackgroundBrightness = 10;
+                    break;
+                case 10:
+                    Configuration.BackgroundBrightness = 20;
+                    break;
+                case 20:
+                    Configuration.BackgroundBrightness = 40;
+                    break;
+                case 40:
+                    Configuration.BackgroundBrightness = 60;
+                    break;
+                case 60:
+                    Configuration.BackgroundBrightness = 80;
+                    break;
+                case 80:
+                    Configuration.BackgroundBrightness = 100;
+                    break;
+                default:
+                    Configuration.BackgroundBrightness = 0;
+                    break;
+            }
+            BackgroundManager.Blacken();
+            BackgroundManager.TintReady = true;
+            BackgroundBrightnessButton.TextSprite.Text = $@"BG Brightness: {Configuration.BackgroundBrightness}%";
+        }
+
+        private void FullscreenButtonClicked()
+        {
+
+        }
+
+        private void LetterboxButtonClicked()
+        {
+
+        }
+
     }
 }
