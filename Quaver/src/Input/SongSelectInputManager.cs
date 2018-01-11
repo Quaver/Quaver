@@ -28,8 +28,25 @@ namespace Quaver.Input
         public event EventHandler RightMouseDown;
         public event EventHandler RightMouseUp;
 
+        /// <summary>
+        ///     Is determined by whether the left mouse is down
+        /// </summary>
         public bool LeftMouseIsDown { get; set; }
+
+        /// <summary>
+        ///     Is determined by whether the right mouse is down
+        /// </summary>
         public bool RightMouseIsDown { get; set; }
+
+        /// <summary>
+        ///     Total amount of scrolling in the current frame
+        /// </summary>
+        public int CurrentScrollAmount { get; set; }
+
+        /// <summary>
+        ///     Total amount of scrolling from the previous frame
+        /// </summary>
+        private int LastScrollAmount { get; set; } = 0;
 
         /// <summary>
         ///     Checks if the given input was given
@@ -74,6 +91,10 @@ namespace Quaver.Input
                     RightMouseUp?.Invoke(this, null);
                 }
             }
+
+            // Check scroll wheel input
+            CurrentScrollAmount = GameBase.MouseState.ScrollWheelValue - LastScrollAmount;
+            LastScrollAmount = GameBase.MouseState.ScrollWheelValue;
         }
     }
 }
