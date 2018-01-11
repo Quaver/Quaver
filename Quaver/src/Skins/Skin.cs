@@ -793,6 +793,8 @@ namespace Quaver.Skins
             ColourLight2 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight2"]);
             ColourLight3 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight3"]);
             ColourLight4 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight4"]);
+
+            Logger.Log($@"Skin loaded: {skinDir}", LogColors.GameImportant);
         }
     }
 }

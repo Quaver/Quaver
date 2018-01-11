@@ -6,8 +6,10 @@ using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Logging;
+using Quaver.Skins;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +27,11 @@ namespace Quaver.GameState.States
         private TextButton BackButton { get; set; }
         private TextButton[] ManiaKeys4K { get; set; }
         private TextButton[] ManiaKeys7K { get; set; }
-        private List<TextButton> SkinSelectButton { get; set; }
+
+        private string[] AvailableSkins { get; set; }
+        private List<TextButton> SkinSelectButtons { get; set; }
+        private List<EventHandler> SkinSelectEvents { get; set; }
+
         private TextButton BackgroundBrightnessButton { get; set; }
         private TextButton FullscreenButton { get; set; }
         private TextButton LetterBoxingButton { get; set; }
@@ -179,25 +185,34 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
 
-            SkinSelectButton = new List<TextButton>();
-            var skins = new String[4] { "skin 1", "skin 2", "skin 3", "skin 4" }; //todo: this is placeholder until i get back
-            for (var i = 0; i < 4; i++)
+            SkinSelectButtons = new List<TextButton>();
+            SkinSelectEvents = new List<EventHandler>();
+
+            AvailableSkins = Directory.GetDirectories(Configuration.SkinDirectory);
+            for (var i = 0; i < AvailableSkins.Length; i++)
+                AvailableSkins[i] = new DirectoryInfo(AvailableSkins[i]).Name;
+
+            var median = AvailableSkins.Length % 2 == 0 ? AvailableSkins.Length / 2f - 0.5f : (float)Math.Floor(AvailableSkins.Length / 2f);
+            for (var i = 0; i < AvailableSkins.Length; i++)
             {
                 //todo: hook this to an event/method or something
-                var skin = new TextButton(new Vector2(150, 30), skins[i])
+                var skin = AvailableSkins[i];
+                var button = new TextButton(new Vector2(150, 30), AvailableSkins[i])
                 {
                     PosY = 300,
-                    PosX = (i - 1.5f) * 160f,
+                    PosX = (i - median) * 160f,
                     Alignment = Alignment.TopCenter,
                     Parent = ButtonsContainer
                 };
-                SkinSelectButton.Add(skin);
+                EventHandler newEvent = (sender, e) => OnSkinSelectButtonClicked(sender, e, skin);
+                button.Clicked += newEvent;
+                SkinSelectButtons.Add(button);
+                SkinSelectEvents.Add(newEvent);
             }
         }
 
         private void CreateGraphicsOptionButtons()
         {
-            TextButton button;
             var ob = new TextBoxSprite()
             {
                 SizeX = 400,
@@ -233,6 +248,7 @@ namespace Quaver.GameState.States
             };
 
             // Create Resolution Buttons
+            TextButton button;
             ResolutionButtons = new List<TextButton>();
             ResolutionEvents = new List<EventHandler>();
             for (var i = 0; i < 5; i++)
@@ -299,6 +315,11 @@ namespace Quaver.GameState.States
             BackgroundBrightnessButton.Clicked += OnBrightnessButtonClicked;
         }
 
+        /// <summary>
+        ///     Gets called when brightness button gets clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnBrightnessButtonClicked(object sender, EventArgs e)
         {
             var brightness = Configuration.BackgroundBrightness;
@@ -333,6 +354,11 @@ namespace Quaver.GameState.States
             BackgroundManager.Readjust();
         }
 
+        /// <summary>
+        ///     Gets called everytime fullscreen button gets clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnFullscreenButtonClicked(object sender, EventArgs e)
         {
             var fullscreen = Configuration.WindowFullScreen;
@@ -350,6 +376,11 @@ namespace Quaver.GameState.States
             BackgroundManager.Readjust();
         }
 
+        /// <summary>
+        ///     Gets called everytime letterbox button gets clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnLetterboxButtonClicked(object sender, EventArgs e)
         {
             var letterboxed = Configuration.WindowLetterboxed;
@@ -367,12 +398,24 @@ namespace Quaver.GameState.States
             BackgroundManager.Readjust();
         }
 
+        /// <summary>
+        ///     Gets called when a resolution option button gets clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="index"></param>
         private void OnResolutionButtonClicked(object sender, EventArgs e, int index)
         {
             GameBase.ChangeWindow(Configuration.WindowFullScreen, Configuration.WindowLetterboxed, CommonResolutions[index]);
             BackgroundManager.Readjust();
             Boundary.SizeX = GameBase.WindowRectangle.Width;
             Boundary.SizeY = GameBase.WindowRectangle.Height;
+        }
+
+        private void OnSkinSelectButtonClicked(object sender, EventArgs e, string skin)
+        {
+            Configuration.Skin = skin;
+            Skin.LoadSkin();
         }
     }
 }
