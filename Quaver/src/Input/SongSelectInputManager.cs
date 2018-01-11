@@ -55,6 +55,8 @@ namespace Quaver.Input
         public bool DownArrowIsDown { get; set; }
         public bool UpArrowIsDown { get; set; }
 
+        public int MouseYPos { get; set; }
+
         /// <summary>
         ///     Checks if the given input was given
         /// </summary>
@@ -138,6 +140,7 @@ namespace Quaver.Input
             else if (RightArrowIsDown)
                 RightArrowIsDown = false;
 
+            MouseYPos = GameBase.MouseState.Position.Y;
         }
     }
 }
