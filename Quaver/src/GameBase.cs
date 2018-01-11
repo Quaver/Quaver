@@ -194,6 +194,8 @@ namespace Quaver
             // Change Resolution
             if (resolution != null)
             {
+                Configuration.WindowWidth = resolution.Value.X;
+                Configuration.WindowHeight = resolution.Value.Y;
                 GraphicsManager.PreferredBackBufferWidth = resolution.Value.X;
                 GraphicsManager.PreferredBackBufferHeight = resolution.Value.Y;
                 WindowRectangle = new DrawRectangle(0, 0, resolution.Value.X, resolution.Value.Y);
