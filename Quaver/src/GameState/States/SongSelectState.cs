@@ -137,16 +137,15 @@ namespace Quaver.GameState.States
             //Check input to update song select ui
             TimeElapsedSinceStartup += (float)dt;
             KeyboardScrollBuffer += (float)dt;
-            var moueYPos = GameBase.MouseState.Position.Y;
 
             // It will ignore input until 250ms go by
-            if (TimeElapsedSinceStartup > 250)
+            if (!BeatmapOrganizerUI.ScrollingDisabled && TimeElapsedSinceStartup > 250)
             {
                 SongSelectInputManager.CheckInput();
 
                 // Check and update any mouse input
                 if (SongSelectInputManager.RightMouseIsDown)
-                    BeatmapOrganizerUI.SetBeatmapOrganizerPosition(-moueYPos / GameBase.WindowRectangle.Height);
+                    BeatmapOrganizerUI.SetBeatmapOrganizerPosition(-SongSelectInputManager.MouseYPos / GameBase.WindowRectangle.Height);
                 else if (SongSelectInputManager.LeftMouseIsDown)
                     BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
                 else if (SongSelectInputManager.CurrentScrollAmount != 0)
@@ -165,9 +164,8 @@ namespace Quaver.GameState.States
                     if (scroll > 0) ScrollUpMapIndex();
                     else if (scroll < 0) ScrollDownMapIndex();
                 }
+                PreviousMouseYPosition = SongSelectInputManager.MouseYPos;
             }
-
-            PreviousMouseYPosition = moueYPos;
 
             //Update Objects
             Boundary.Update(dt);
