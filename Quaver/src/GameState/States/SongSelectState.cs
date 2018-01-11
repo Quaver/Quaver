@@ -36,6 +36,9 @@ namespace Quaver.GameState.States
         /// </summary>
         public bool UpdateReady { get; set; }
 
+        /// <summary>
+        ///     The UI that controls and displays beatmap selection
+        /// </summary>
         private BeatmapOrganizerUI BeatmapOrganizerUI { get; set; }
 
         /// <summary>
@@ -68,7 +71,20 @@ namespace Quaver.GameState.States
         /// </summary>
         private float PreviousMouseYPosition { get; set; }
 
+        /// <summary>
+        ///     Current Input Manager for this state
+        /// </summary>
         private SongSelectInputManager SongSelectInputManager { get; set;}
+
+        /// <summary>
+        ///     Determines how much time has passed since initiation
+        /// </summary>
+        private float TimeElapsedSinceStartup { get; set; }
+
+        /// <summary>
+        ///     Stops the Beatmap Organizer from scrolling too fast on high framerate
+        /// </summary>
+        private float KeyboardScrollBuffer { get; set; }
 
         /// <summary>
         ///     Initialize
@@ -109,9 +125,7 @@ namespace Quaver.GameState.States
             SpeedModButton.Clicked -= OnSpeedModButtonClick;
             TogglePitch.Clicked -= OnTogglePitchButtonClick;
 
-
             BeatmapOrganizerUI.UnloadContent();
-
             Boundary.Destroy();
         }
 
@@ -121,15 +135,37 @@ namespace Quaver.GameState.States
         public void Update(double dt)
         {
             //Check input to update song select ui
-            SongSelectInputManager.CheckInput();
+            TimeElapsedSinceStartup += (float)dt;
+            KeyboardScrollBuffer += (float)dt;
             var moueYPos = GameBase.MouseState.Position.Y;
 
-            if (SongSelectInputManager.RightMouseIsDown)
-                BeatmapOrganizerUI.SetBeatmapOrganizerPosition(-moueYPos / GameBase.WindowRectangle.Height);
-            else if (SongSelectInputManager.LeftMouseIsDown)
-                BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
-            else if (SongSelectInputManager.CurrentScrollAmount != 0)
-                BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);
+            // It will ignore input until 250ms go by
+            if (TimeElapsedSinceStartup > 250)
+            {
+                SongSelectInputManager.CheckInput();
+
+                // Check and update any mouse input
+                if (SongSelectInputManager.RightMouseIsDown)
+                    BeatmapOrganizerUI.SetBeatmapOrganizerPosition(-moueYPos / GameBase.WindowRectangle.Height);
+                else if (SongSelectInputManager.LeftMouseIsDown)
+                    BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
+                else if (SongSelectInputManager.CurrentScrollAmount != 0)
+                    BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);
+
+                // Check and update any keyboard input
+                int scroll = 0;
+                if (SongSelectInputManager.UpArrowIsDown || SongSelectInputManager.LeftArrowIsDown)
+                    scroll += 1;
+                if (SongSelectInputManager.RightArrowIsDown || SongSelectInputManager.DownArrowIsDown)
+                    scroll -= 1;
+
+                if (scroll != 0 && KeyboardScrollBuffer > 100)
+                {
+                    KeyboardScrollBuffer = 0;
+                    if (scroll > 0) ScrollUpMapIndex();
+                    else if (scroll < 0) ScrollDownMapIndex();
+                }
+            }
 
             PreviousMouseYPosition = moueYPos;
 
@@ -175,6 +211,16 @@ namespace Quaver.GameState.States
         {
             GameBase.LoadedSkin.SoundClick.Play((float) Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100,0, 0);
             GameBase.GameStateManager.ChangeState(new SongLoadingState());
+        }
+
+        private void ScrollUpMapIndex()
+        {
+            BeatmapOrganizerUI.OffsetBeatmapOrganizerIndex(-1);
+        }
+
+        private void ScrollDownMapIndex()
+        {
+            BeatmapOrganizerUI.OffsetBeatmapOrganizerIndex(1);
         }
 
         /// <summary>

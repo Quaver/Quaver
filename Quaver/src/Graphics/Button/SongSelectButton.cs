@@ -22,6 +22,8 @@ namespace Quaver.Graphics.Button
     {
         internal bool Selected { get; set; }
 
+        internal Beatmap Map { get; set; }
+
         private TextBoxSprite TitleText { get; set; }
 
         private TextBoxSprite ArtistText { get; set; }
