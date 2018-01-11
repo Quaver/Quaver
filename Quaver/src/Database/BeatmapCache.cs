@@ -362,5 +362,25 @@ namespace Quaver.Database
                 throw;
             }
         }
+
+        /// <summary>
+        ///     Method to update local offset in beatmap
+        /// </summary>
+        /// <param name="beatmap"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        internal static async Task UpdateLocalOffset(Beatmap beatmap, int offset)
+        {
+            try
+            {
+                var conn = new SQLiteAsyncConnection(DatabasePath);
+                await conn.ExecuteAsync("UPDATE Beatmap SET LocalOffset = ? Where Id = ?", offset, beatmap.Id);
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message, LogColors.GameError);
+                throw;
+            }
+        }
     }
 }
