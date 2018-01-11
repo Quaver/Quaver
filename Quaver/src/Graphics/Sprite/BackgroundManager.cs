@@ -105,20 +105,29 @@ namespace Quaver.Graphics.Sprite
             GameBase.CurrentBackground = newBG;
 
             //Update Background Image Resolution
-            var bgYRatio = ((float)newBG.Height / newBG.Width) / (GameBase.WindowRectangle.Height / GameBase.WindowRectangle.Width);
+            Background.Image = GameBase.CurrentBackground;
+            Readjust();
+        }
+
+        /// <summary>
+        ///     This method will be called everytime the config or background has been changed
+        /// </summary>
+        public static void Readjust()
+        {
+            TintReady = true;
+            Brightness = Configuration.BackgroundBrightness / 100f;
+
+            var bgYRatio = ((float)Background.Image.Height / Background.Image.Width) / (GameBase.WindowRectangle.Height / GameBase.WindowRectangle.Width);
             if (bgYRatio > 1)
             {
-                Background.SizeX = newBG.Width * (GameBase.WindowRectangle.Width / newBG.Width);
-                Background.SizeY = newBG.Height * (GameBase.WindowRectangle.Width / newBG.Width);
+                Background.SizeX = Background.Image.Width * (GameBase.WindowRectangle.Width / Background.Image.Width);
+                Background.SizeY = Background.Image.Height * (GameBase.WindowRectangle.Width / Background.Image.Width);
             }
             else
             {
-                Background.SizeX = newBG.Width * (GameBase.WindowRectangle.Height / newBG.Height);
-                Background.SizeY = newBG.Height * (GameBase.WindowRectangle.Height / newBG.Height);
+                Background.SizeX = Background.Image.Width * (GameBase.WindowRectangle.Height / Background.Image.Height);
+                Background.SizeY = Background.Image.Height * (GameBase.WindowRectangle.Height / Background.Image.Height);
             }
-
-            Background.Image = GameBase.CurrentBackground;
-            TintReady = true;
         }
 
         /// <summary>

@@ -27,6 +27,13 @@ namespace Quaver.GameState.States
         private TextButton BackgroundBrightnessButton { get; set; }
         private TextButton FullscreenButton { get; set; }
         private TextButton LetterBoxingButton { get; set; }
+        private List<TextButton> ResolutionButtons { get; set; }
+        private List<EventHandler> ResolutionEvents { get; set; }
+        private Point[] CommonResolutions { get; } = new Point[10]
+        {
+            new Point(800, 600), new Point(1024, 768), new Point(1152, 864), new Point(1280, 960), new Point(1280, 1024),
+            new Point(1024, 600), new Point(1280, 720), new Point(1366, 768), new Point(1440, 900), new Point(1680, 1050)
+        };
 
 
         public void Draw()
@@ -52,9 +59,16 @@ namespace Quaver.GameState.States
 
         public void UnloadContent()
         {
-            Boundary.Destroy();
+            for (var i=0; i<10; i++)
+                ResolutionButtons[i].Clicked -= ResolutionEvents[i];
+            ResolutionEvents.Clear();
+
             BackButton.Clicked -= BackButtonClick;
             BackgroundBrightnessButton.Clicked -= OnBrightnessButtonClicked;
+            FullscreenButton.Clicked -= OnFullscreenButtonClicked;
+            LetterBoxingButton.Clicked -= OnLetterboxButtonClicked;
+
+            Boundary.Destroy();
         }
 
         public void Update(double dt)
@@ -202,49 +216,73 @@ namespace Quaver.GameState.States
             {
                 SizeX = 400,
                 SizeY = 20,
-                PosY = 490,
+                PosY = 530,
                 TextAlignment = Alignment.BotCenter,
                 Alignment = Alignment.TopCenter,
                 Text = "Other",
                 Parent = Boundary
             };
 
-            for (var i = 0; i < 4; i++)
+            // Create Resolution Buttons
+            ResolutionButtons = new List<TextButton>();
+            ResolutionEvents = new List<EventHandler>();
+            for (var i = 0; i < 5; i++)
             {
                 //todo: hook this to an event/method or something
-                button = new TextButton(new Vector2(150, 30), "1920x1080")
+                var index = i;
+                button = new TextButton(new Vector2(150, 30), $@"{CommonResolutions[i].X}x{CommonResolutions[i].Y}")
                 {
                     PosY = 450,
-                    PosX = (i - 1.5f) * 160f,
+                    PosX = (i - 2f) * 160f,
                     Alignment = Alignment.TopCenter,
                     Parent = Boundary
                 };
-                //todo: add to a button list
-                //SkinSelectButton.Add(button);
+                EventHandler newEvent = (sender, e) => OnResolutionButtonClicked(sender, e, index);
+                button.Clicked += newEvent;
+                ResolutionButtons.Add(button);
+                ResolutionEvents.Add(newEvent);
+            }
+            for (var i = 5; i < 10; i++)
+            {
+                //todo: hook this to an event/method or something
+                var index = i;
+                button = new TextButton(new Vector2(150, 30), $@"{CommonResolutions[i].X}x{CommonResolutions[i].Y}")
+                {
+                    PosY = 490,
+                    PosX = (i - 7f) * 160f,
+                    Alignment = Alignment.TopCenter,
+                    Parent = Boundary
+                };
+                EventHandler newEvent = (sender, e) => OnResolutionButtonClicked(sender, e, index);
+                button.Clicked += newEvent;
+                ResolutionButtons.Add(button);
+                ResolutionEvents.Add(newEvent);
             }
 
-            //Toggle Buttons
+            // Create Letterbox Option Button
             LetterBoxingButton = new TextButton(new Vector2(200, 30), $@"Letterboxing: {Configuration.WindowLetterboxed}")
             {
-                PosY = 520,
+                PosY = 560,
                 PosX = (-1) * 210f,
                 Alignment = Alignment.TopCenter,
                 Parent = Boundary
             };
             LetterBoxingButton.Clicked += OnLetterboxButtonClicked;
 
+            // Create Fullscreen Option Button
             FullscreenButton = new TextButton(new Vector2(200, 30), $@"FullScreen: {Configuration.WindowFullScreen}")
             {
-                PosY = 520,
+                PosY = 560,
                 //PosX = (0.5f) * 210f,
                 Alignment = Alignment.TopCenter,
                 Parent = Boundary
             };
             FullscreenButton.Clicked += OnFullscreenButtonClicked;
 
+            // Create Background Brightness Button
             BackgroundBrightnessButton = new TextButton(new Vector2(200, 30), $@"BG Brightness: {Configuration.BackgroundBrightness}%")
             {
-                PosY = 520,
+                PosY = 560,
                 PosX = (1) * 210f,
                 Alignment = Alignment.TopCenter,
                 Parent = Boundary
@@ -282,9 +320,8 @@ namespace Quaver.GameState.States
                     Configuration.BackgroundBrightness = 0;
                     break;
             }
-            BackgroundManager.Blacken();
-            BackgroundManager.TintReady = true;
             BackgroundBrightnessButton.TextSprite.Text = $@"BG Brightness: {Configuration.BackgroundBrightness}%";
+            BackgroundManager.Readjust();
         }
 
         private void OnFullscreenButtonClicked(object sender, EventArgs e)
@@ -301,6 +338,7 @@ namespace Quaver.GameState.States
             }
             FullscreenButton.TextSprite.Text = $@"FullScreen: {Configuration.WindowFullScreen}";
             GameBase.ChangeWindow(Configuration.WindowFullScreen, Configuration.WindowLetterboxed);
+            BackgroundManager.Readjust();
         }
 
         private void OnLetterboxButtonClicked(object sender, EventArgs e)
@@ -317,7 +355,15 @@ namespace Quaver.GameState.States
             }
             LetterBoxingButton.TextSprite.Text = $@"Letterboxing: {Configuration.WindowLetterboxed}";
             GameBase.ChangeWindow(Configuration.WindowFullScreen, Configuration.WindowLetterboxed);
+            BackgroundManager.Readjust();
         }
 
+        private void OnResolutionButtonClicked(object sender, EventArgs e, int index)
+        {
+            GameBase.ChangeWindow(Configuration.WindowFullScreen, Configuration.WindowLetterboxed, CommonResolutions[index]);
+            BackgroundManager.Readjust();
+            Boundary.SizeX = GameBase.WindowRectangle.Width;
+            Boundary.SizeY = GameBase.WindowRectangle.Height;
+        }
     }
 }
