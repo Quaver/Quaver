@@ -20,6 +20,8 @@ namespace Quaver.GameState.States
         public bool UpdateReady { get; set; }
 
         private Boundary Boundary { get; set; }
+        private Boundary ButtonsContainer { get; set; }
+
         private TextButton BackButton { get; set; }
         private TextButton[] ManiaKeys4K { get; set; }
         private TextButton[] ManiaKeys7K { get; set; }
@@ -46,9 +48,16 @@ namespace Quaver.GameState.States
 
         public void Initialize()
         {
-            //throw new NotImplementedException();
             Logger.Log("Options Menu Button Clicked", LogColors.GameImportant, 5);
+
             Boundary = new Boundary();
+            ButtonsContainer = new Boundary()
+            {
+                SizeY = 700,
+                Alignment = Alignment.MidCenter,
+                Parent = Boundary
+            };
+
             CreateManiaKeyButtons();
             CreateSkinSelectButtons();
             CreateBackButton();
@@ -102,7 +111,7 @@ namespace Quaver.GameState.States
                 Alignment = Alignment.TopCenter,
                 Font = Fonts.Medium24,
                 Text = "Key Bindings",
-                Parent = Boundary
+                Parent = ButtonsContainer
             };
 
             ob = new TextBoxSprite()
@@ -113,7 +122,7 @@ namespace Quaver.GameState.States
                 TextAlignment = Alignment.BotCenter,
                 Alignment = Alignment.TopCenter,
                 Text = "Mania 4K",
-                Parent = Boundary
+                Parent = ButtonsContainer
             };
 
             ob = new TextBoxSprite()
@@ -124,7 +133,7 @@ namespace Quaver.GameState.States
                 TextAlignment = Alignment.BotCenter,
                 Alignment = Alignment.TopCenter,
                 Text = "Mania 7K",
-                Parent = Boundary
+                Parent = ButtonsContainer
             };
 
             ManiaKeys4K = new TextButton[4];
@@ -137,7 +146,7 @@ namespace Quaver.GameState.States
                     PosY = 110,
                     PosX = (i - 1.5f) * 110f,
                     Alignment = Alignment.TopCenter,
-                    Parent = Boundary
+                    Parent = ButtonsContainer
                 };
             }
 
@@ -151,7 +160,7 @@ namespace Quaver.GameState.States
                     PosY = 180,
                     PosX = (i - 3f) * 110f,
                     Alignment = Alignment.TopCenter,
-                    Parent = Boundary
+                    Parent = ButtonsContainer
                 };
             }
         }
@@ -167,7 +176,7 @@ namespace Quaver.GameState.States
                 Alignment = Alignment.TopCenter,
                 Font = Fonts.Medium24,
                 Text = "Select Skin",
-                Parent = Boundary
+                Parent = ButtonsContainer
             };
 
             SkinSelectButton = new List<TextButton>();
@@ -180,7 +189,7 @@ namespace Quaver.GameState.States
                     PosY = 300,
                     PosX = (i - 1.5f) * 160f,
                     Alignment = Alignment.TopCenter,
-                    Parent = Boundary
+                    Parent = ButtonsContainer
                 };
                 SkinSelectButton.Add(skin);
             }
@@ -198,7 +207,7 @@ namespace Quaver.GameState.States
                 Alignment = Alignment.TopCenter,
                 Font = Fonts.Medium24,
                 Text = "Graphics",
-                Parent = Boundary
+                Parent = ButtonsContainer
             };
 
             ob = new TextBoxSprite()
@@ -209,7 +218,7 @@ namespace Quaver.GameState.States
                 TextAlignment = Alignment.BotCenter,
                 Alignment = Alignment.TopCenter,
                 Text = "Resolution",
-                Parent = Boundary
+                Parent = ButtonsContainer
             };
 
             ob = new TextBoxSprite()
@@ -220,7 +229,7 @@ namespace Quaver.GameState.States
                 TextAlignment = Alignment.BotCenter,
                 Alignment = Alignment.TopCenter,
                 Text = "Other",
-                Parent = Boundary
+                Parent = ButtonsContainer
             };
 
             // Create Resolution Buttons
@@ -235,7 +244,7 @@ namespace Quaver.GameState.States
                     PosY = 450,
                     PosX = (i - 2f) * 160f,
                     Alignment = Alignment.TopCenter,
-                    Parent = Boundary
+                    Parent = ButtonsContainer
                 };
                 EventHandler newEvent = (sender, e) => OnResolutionButtonClicked(sender, e, index);
                 button.Clicked += newEvent;
@@ -251,7 +260,7 @@ namespace Quaver.GameState.States
                     PosY = 490,
                     PosX = (i - 7f) * 160f,
                     Alignment = Alignment.TopCenter,
-                    Parent = Boundary
+                    Parent = ButtonsContainer
                 };
                 EventHandler newEvent = (sender, e) => OnResolutionButtonClicked(sender, e, index);
                 button.Clicked += newEvent;
@@ -265,7 +274,7 @@ namespace Quaver.GameState.States
                 PosY = 560,
                 PosX = (-1) * 210f,
                 Alignment = Alignment.TopCenter,
-                Parent = Boundary
+                Parent = ButtonsContainer
             };
             LetterBoxingButton.Clicked += OnLetterboxButtonClicked;
 
@@ -275,7 +284,7 @@ namespace Quaver.GameState.States
                 PosY = 560,
                 //PosX = (0.5f) * 210f,
                 Alignment = Alignment.TopCenter,
-                Parent = Boundary
+                Parent = ButtonsContainer
             };
             FullscreenButton.Clicked += OnFullscreenButtonClicked;
 
@@ -285,7 +294,7 @@ namespace Quaver.GameState.States
                 PosY = 560,
                 PosX = (1) * 210f,
                 Alignment = Alignment.TopCenter,
-                Parent = Boundary
+                Parent = ButtonsContainer
             };
             BackgroundBrightnessButton.Clicked += OnBrightnessButtonClicked;
         }
