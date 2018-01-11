@@ -369,6 +369,7 @@ namespace Quaver.GameState.States
                     break;
             }
             BackgroundBrightnessButton.TextSprite.Text = $@"BG Brightness: {Configuration.BackgroundBrightness}%";
+            BackgroundManager.Blacken();
             BackgroundManager.Readjust();
         }
 
