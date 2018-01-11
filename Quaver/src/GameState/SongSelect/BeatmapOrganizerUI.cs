@@ -167,5 +167,10 @@ namespace Quaver.GameState.SongSelect
         {
             TargetPosition = scale * OrganizerSize;
         }
+
+        public void OffsetBeatmapOrganizerPosition(float offset)
+        {
+            TargetPosition += offset;
+        }
     }
 }
