@@ -46,8 +46,8 @@ namespace Quaver.GameState.SongSelect
         {
 
             Boundary = new Boundary();
-
             CreateSongSelectButtons();
+            SelectMap((int)Math.Floor(Util.Random(0, SongSelectButtons.Count)));
         }
 
         public void UnloadContent()
@@ -93,12 +93,12 @@ namespace Quaver.GameState.SongSelect
                 //Create Song Buttons
                 foreach (var map in mapset.Beatmaps)
                 {
-                    var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";
                     var index = SongSelectButtons.Count;
 
                     // Create the new button
                     var newButton = new SongSelectButton(map, GameBase.WindowUIScale)
                     {
+                        Map = map,
                         Image = GameBase.UI.BlankBox,
                         Alignment = Alignment.TopRight,
                         Position = new UDim2(-5, OrganizerSize),
@@ -106,7 +106,7 @@ namespace Quaver.GameState.SongSelect
                     };
 
                     // Define event handler for the button
-                    EventHandler newEvent = (sender, e) => OnSongSelectButtonClick(sender, e, mapText, map, index);
+                    EventHandler newEvent = (sender, e) => OnSongSelectButtonClick(sender, e, index);
                     newButton.Clicked += newEvent;
 
                     // Add the4 button the current list
@@ -122,9 +122,16 @@ namespace Quaver.GameState.SongSelect
         /// <summary>
         ///     Changes the map when a song select button is clicked.
         /// </summary>
-        private void OnSongSelectButtonClick(object sender, EventArgs e, string text, Beatmap map, int index)
+        private void OnSongSelectButtonClick(object sender, EventArgs e, int index)
         {
-            Logger.Update("MapSelected", "Map Selected: " + text);
+            SelectMap(index);
+        }
+
+        private void SelectMap(int index)
+        {
+            var map = SongSelectButtons[index].Map;
+            Logger.Update("MapSelected", "Map Selected: " + map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]");
+
             SongSelectButtons[SelectedMapIndex].Selected = false;
             SongSelectButtons[index].Selected = true;
             SelectedMapIndex = index;
@@ -154,7 +161,7 @@ namespace Quaver.GameState.SongSelect
                     BackgroundManager.Change(GameBase.CurrentBackground);
                 });
             }
-          
+
             // Load all the local scores from this map 
             // TODO: Add filters, this should come after there's some sort of UI to do so
             // TODO #2: Actually display these scores on-screen somewhere. Add loading animation before running task.
@@ -171,6 +178,15 @@ namespace Quaver.GameState.SongSelect
         public void OffsetBeatmapOrganizerPosition(float offset)
         {
             TargetPosition += offset;
+        }
+
+        public void OffsetBeatmapOrganizerIndex(int offset)
+        {
+            var newIndex = SelectedMapIndex + offset;
+            if (newIndex >= 0 && newIndex < SongSelectButtons.Count)
+            {
+                
+            }
         }
     }
 }
