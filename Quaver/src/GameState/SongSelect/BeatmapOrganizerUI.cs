@@ -185,7 +185,7 @@ namespace Quaver.GameState.SongSelect
             var newIndex = SelectedMapIndex + offset;
             if (newIndex >= 0 && newIndex < SongSelectButtons.Count)
             {
-                
+                SelectMap(newIndex);
             }
         }
     }

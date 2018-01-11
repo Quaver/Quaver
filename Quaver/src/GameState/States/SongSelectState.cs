@@ -82,6 +82,11 @@ namespace Quaver.GameState.States
         private float TimeElapsedSinceStartup { get; set; }
 
         /// <summary>
+        ///     Stops the Beatmap Organizer from scrolling too fast on high framerate
+        /// </summary>
+        private float KeyboardScrollBuffer { get; set; }
+
+        /// <summary>
         ///     Initialize
         /// </summary>
         public void Initialize()
@@ -120,9 +125,7 @@ namespace Quaver.GameState.States
             SpeedModButton.Clicked -= OnSpeedModButtonClick;
             TogglePitch.Clicked -= OnTogglePitchButtonClick;
 
-
             BeatmapOrganizerUI.UnloadContent();
-
             Boundary.Destroy();
         }
 
@@ -133,6 +136,7 @@ namespace Quaver.GameState.States
         {
             //Check input to update song select ui
             TimeElapsedSinceStartup += (float)dt;
+            KeyboardScrollBuffer += (float)dt;
             var moueYPos = GameBase.MouseState.Position.Y;
 
             // It will ignore input until 250ms go by
@@ -149,6 +153,18 @@ namespace Quaver.GameState.States
                     BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);
 
                 // Check and update any keyboard input
+                int scroll = 0;
+                if (SongSelectInputManager.UpArrowIsDown || SongSelectInputManager.LeftArrowIsDown)
+                    scroll += 1;
+                if (SongSelectInputManager.RightArrowIsDown || SongSelectInputManager.DownArrowIsDown)
+                    scroll -= 1;
+
+                if (scroll != 0 && KeyboardScrollBuffer > 100)
+                {
+                    KeyboardScrollBuffer = 0;
+                    if (scroll > 0) ScrollUpMapIndex();
+                    else if (scroll < 0) ScrollDownMapIndex();
+                }
             }
 
             PreviousMouseYPosition = moueYPos;
@@ -195,6 +211,16 @@ namespace Quaver.GameState.States
         {
             GameBase.LoadedSkin.SoundClick.Play((float) Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100,0, 0);
             GameBase.GameStateManager.ChangeState(new SongLoadingState());
+        }
+
+        private void ScrollUpMapIndex()
+        {
+            BeatmapOrganizerUI.OffsetBeatmapOrganizerIndex(-1);
+        }
+
+        private void ScrollDownMapIndex()
+        {
+            BeatmapOrganizerUI.OffsetBeatmapOrganizerIndex(1);
         }
 
         /// <summary>

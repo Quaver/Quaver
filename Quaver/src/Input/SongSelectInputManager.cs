@@ -25,6 +25,10 @@ namespace Quaver.Input
 
         public event EventHandler LeftMouseClicked;
         public event EventHandler RightMouseClicked;
+        public event EventHandler LeftArrowPressed;
+        public event EventHandler RightArrowPressed;
+        public event EventHandler DownArrowPressed;
+        public event EventHandler UpArrowPressed;
 
         /// <summary>
         ///     Is determined by whether the left mouse is down
@@ -46,6 +50,11 @@ namespace Quaver.Input
         /// </summary>
         private int LastScrollAmount { get; set; } = 0;
 
+        public bool LeftArrowIsDown { get; set; }
+        public bool RightArrowIsDown { get; set; }
+        public bool DownArrowIsDown { get; set; }
+        public bool UpArrowIsDown { get; set; }
+
         /// <summary>
         ///     Checks if the given input was given
         /// </summary>
@@ -61,7 +70,6 @@ namespace Quaver.Input
                     LeftMouseClicked?.Invoke(this, null);
                 }
             }
-            // Check for LeftMouseUp
             else if (LeftMouseIsDown)
                 LeftMouseIsDown = false;
 
@@ -74,13 +82,62 @@ namespace Quaver.Input
                     RightMouseClicked?.Invoke(this, null);
                 }
             }
-            // Check for RightMouseUp
             else if (RightMouseIsDown)
                 RightMouseIsDown = false;
 
             // Check scroll wheel input
             CurrentScrollAmount = GameBase.MouseState.ScrollWheelValue - LastScrollAmount;
             LastScrollAmount = GameBase.MouseState.ScrollWheelValue;
+
+            // Keyboard Event Handling
+            // Up arrow
+            if (GameBase.KeyboardState.IsKeyDown(Keys.Up))
+            {
+                if (!UpArrowIsDown)
+                {
+                    UpArrowIsDown = true;
+                    UpArrowPressed?.Invoke(this, null);
+                }
+            }
+            else if (UpArrowIsDown)
+                UpArrowIsDown = false;
+
+            // Down arrow
+            if (GameBase.KeyboardState.IsKeyDown(Keys.Down))
+            {
+                if (!DownArrowIsDown)
+                {
+                    DownArrowIsDown = true;
+                    DownArrowPressed?.Invoke(this, null);
+                }
+            }
+            else if (DownArrowIsDown)
+                DownArrowIsDown = false;
+
+            // Left arrow
+            if (GameBase.KeyboardState.IsKeyDown(Keys.Left))
+            {
+                if (!LeftArrowIsDown)
+                {
+                    LeftArrowIsDown = true;
+                    LeftArrowPressed?.Invoke(this, null);
+                }
+            }
+            else if (LeftArrowIsDown)
+                LeftArrowIsDown = false;
+
+            // Right arrow
+            if (GameBase.KeyboardState.IsKeyDown(Keys.Right))
+            {
+                if (!RightArrowIsDown)
+                {
+                    RightArrowIsDown = true;
+                    RightArrowPressed?.Invoke(this, null);
+                }
+            }
+            else if (RightArrowIsDown)
+                RightArrowIsDown = false;
+
         }
     }
 }
