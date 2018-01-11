@@ -27,6 +27,8 @@ namespace Quaver.GameState.SongSelect
 
         private Boundary Boundary { get; set; }
 
+        public bool ScrollingDisabled { get; set; }
+
         public object TogglePitch { get; private set; }
 
         private float OrganizerSize { get; set; }
@@ -129,6 +131,7 @@ namespace Quaver.GameState.SongSelect
 
         private void SelectMap(int index)
         {
+            ScrollingDisabled = true;
             var map = SongSelectButtons[index].Map;
             Logger.Update("MapSelected", "Map Selected: " + map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]");
 
@@ -153,7 +156,6 @@ namespace Quaver.GameState.SongSelect
                 {
                     // Fade effect and make the current bg go black while we load the next bg.
                     BackgroundManager.Blacken();
-
                     BackgroundManager.LoadBackground();
                 }).ContinueWith(t =>
                 {
@@ -168,6 +170,9 @@ namespace Quaver.GameState.SongSelect
             // TODO #3: Move this somewhere so that it automatically loads the scores upon first load as well.
             Task.Run(async () => await LocalScoreCache.SelectBeatmapScores(GameBase.SelectedBeatmap.Md5Checksum))
                 .ContinueWith(t => Logger.Log($"Successfully loaded {t.Result.Count} local scores for this map.", LogColors.GameImportant));
+
+            //TODO: make it so scrolling is disabled until background has been loaded
+            ScrollingDisabled = false;
         }
 
         public void SetBeatmapOrganizerPosition(float scale)
@@ -177,7 +182,7 @@ namespace Quaver.GameState.SongSelect
 
         public void OffsetBeatmapOrganizerPosition(float offset)
         {
-            TargetPosition += offset;
+            TargetPosition += offset * 2;
         }
 
         public void OffsetBeatmapOrganizerIndex(int offset)
