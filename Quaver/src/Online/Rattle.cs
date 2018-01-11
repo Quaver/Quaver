@@ -204,22 +204,49 @@ namespace Quaver.Online
             // Find the online user with the user id in the packet
             var messageSender = OnlineClients.Find(x => x.UserId == packet.UserId);
 
-            // Don't display if the message sender is null or the message sender is self
-            if (messageSender == null || messageSender.UserId == Client.UserId)
+            // Don't do anything if the message sender is null - This should happen if the user goes offline after sending it. :/
+            // TODO: Fix that.
+            if (messageSender == null)
                 return;
-            
-            // If no chat channel was found - Only applicable to private messages in this case - Add a new one.
-            if (ChatChannels.Find(x => string.Equals(x.ChannelName, packet.Message.Channel, StringComparison.CurrentCultureIgnoreCase)) == null)
+
+            // If no chat channel was found, add it to the list of chat channels
+            if (ChatChannels.All(x => x.ChannelName.ToLower() != packet.Message.Channel.ToLower()))
                 ChatChannels.Add(new ChatChannel { ChannelName = packet.Message.Channel });
 
-            // Handle Message
+
+            // If a private message was sent to the user
+            if (packet.Message.Channel.ToLower() == messageSender.Username.ToLower())
+                HandlePrivateMessage(messageSender, packet);
+            else
+                HandlePublicMessage(messageSender, packet);
+        }
+
+        /// <summary>
+        ///     Handles sent public messages
+        /// </summary>
+        /// <param name="packet"></param>
+        private static void HandlePublicMessage(OnlineClient messageSender, ChatMessagePacket packet)
+        {
+            // Don't handle public messages by the current client
+            if (messageSender.Username.ToLower() == Client.Username.ToLower())
+                return;
+
             Logger.Log($"{messageSender.Username} @{packet.Message.Channel}: {packet.Message.Text}", LogColors.GameInfo);
+        }
+
+        /// <summary>
+        ///     Handles sent private messages
+        /// </summary>
+        /// <param name="packet"></param>
+        private static void HandlePrivateMessage(OnlineClient messageSender, ChatMessagePacket packet)
+        {
+            Logger.Log($"From: {messageSender.Username}: {packet.Message.Text}", LogColors.GameInfo);
         }
 
         /// <summary>
         ///     Logs out the user completely
         /// </summary>
-        internal static void ResetLogin(bool tellServer = false)
+        private static void ResetLogin(bool tellServer = false)
         {
             IsLoggedIn = false;
             Client = null;
