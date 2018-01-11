@@ -123,10 +123,13 @@ namespace Quaver.GameState.States
             //Check input to update song select ui
             SongSelectInputManager.CheckInput();
             var moueYPos = GameBase.MouseState.Position.Y;
+
             if (SongSelectInputManager.RightMouseIsDown)
                 BeatmapOrganizerUI.SetBeatmapOrganizerPosition(-moueYPos / GameBase.WindowRectangle.Height);
             else if (SongSelectInputManager.LeftMouseIsDown)
                 BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
+            else if (SongSelectInputManager.CurrentScrollAmount != 0)
+                BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);
 
             PreviousMouseYPosition = moueYPos;
 
