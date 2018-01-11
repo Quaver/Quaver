@@ -44,7 +44,7 @@ namespace Quaver.Commands
                 return;
             }
 
-            Logger.Log($"<{message.Channel}> {Rattle.Client.Username}: {message.Text}", LogColors.GameInfo);
+            Logger.Log($"{Rattle.Client.Username} @{message.Channel}: {message.Text}", LogColors.GameInfo);
         }
     }
 }
