@@ -26,8 +26,8 @@ namespace Quaver.GameState.States
         private Boundary ButtonsContainer { get; set; }
 
         private TextButton BackButton { get; set; }
-        private TextButton[] ManiaKeys4K { get; set; }
-        private TextButton[] ManiaKeys7K { get; set; }
+        private KeyBindButton[] ManiaKeys4K { get; set; }
+        private KeyBindButton[] ManiaKeys7K { get; set; }
 
         private string[] AvailableSkins { get; set; }
         private List<TextButton> SkinSelectButtons { get; set; }
@@ -149,12 +149,12 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
 
-            ManiaKeys4K = new TextButton[4];
+            ManiaKeys4K = new KeyBindButton[4];
             var keys = new Keys[4] { Configuration.KeyMania1, Configuration.KeyMania2, Configuration.KeyMania3, Configuration.KeyMania4 };
             for (var i=0; i<4; i++)
             {
                 //todo: hook this to an event/method or something
-                ManiaKeys4K[i] = new TextButton(new Vector2(100, 30), keys[i].ToString())
+                ManiaKeys4K[i] = new KeyBindButton(new Vector2(100, 30), keys[i].ToString())
                 {
                     PosY = 110,
                     PosX = (i - 1.5f) * 110f,
@@ -163,12 +163,12 @@ namespace Quaver.GameState.States
                 };
             }
 
-            ManiaKeys7K = new TextButton[7];
+            ManiaKeys7K = new KeyBindButton[7];
             keys = new Keys[7] { Configuration.KeyMania7k1, Configuration.KeyMania7k2, Configuration.KeyMania7k3, Configuration.KeyMania7k4, Configuration.KeyMania7k5, Configuration.KeyMania7k6, Configuration.KeyMania7k7 };
             for (var i = 0; i < 7; i++)
             {
                 //todo: hook this to an event/method or something
-                ManiaKeys7K[i] = new TextButton(new Vector2(100, 30), keys[i].ToString())
+                ManiaKeys7K[i] = new KeyBindButton(new Vector2(100, 30), keys[i].ToString())
                 {
                     PosY = 180,
                     PosX = (i - 3f) * 110f,
