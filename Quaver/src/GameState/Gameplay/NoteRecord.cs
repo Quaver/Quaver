@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.GameState.Gameplay
 {
-    class NoteRecord
+    struct NoteRecord
     {
         /// <summary>
         ///     Records how off the note pressed is from receptor
