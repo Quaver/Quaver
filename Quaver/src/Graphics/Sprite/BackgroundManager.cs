@@ -101,11 +101,11 @@ namespace Quaver.Graphics.Sprite
             //Checks if image is not null
             if (newBG == null) return;
 
-            //Update Image
+            //Update  Background Image
             GameBase.CurrentBackground = newBG;
+            Background.Image = newBG;
 
-            //Update Background Image Resolution
-            Background.Image = GameBase.CurrentBackground;
+            //Readjust image
             Readjust();
         }
 
