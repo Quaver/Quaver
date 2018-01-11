@@ -181,7 +181,7 @@ namespace Quaver.Online
             var packet = e.Data;
 
             // If the packet return a failure or the chat channel already exists, return.
-            if (!packet.Success || ChatChannels.Find(x => x.ChannelName == packet.Channel) != null)
+            if (!packet.Success || ChatChannels.Find(x => x.ChannelName.ToLower() == packet.Channel.ToLower()) != null)
                 return;
 
             // If no channel was found, add a new one.
@@ -204,11 +204,16 @@ namespace Quaver.Online
             // Find the online user with the user id in the packet
             var messageSender = OnlineClients.Find(x => x.UserId == packet.UserId);
 
-            // Don't display if the message sender is null or 
+            // Don't display if the message sender is null or the message sender is self
             if (messageSender == null || messageSender.UserId == Client.UserId)
                 return;
             
-            Logger.Log($"<{packet.Message.Channel}> {messageSender.Username}: {packet.Message.Text}", LogColors.GameInfo);
+            // If no chat channel was found - Only applicable to private messages in this case - Add a new one.
+            if (ChatChannels.Find(x => string.Equals(x.ChannelName, packet.Message.Channel, StringComparison.CurrentCultureIgnoreCase)) == null)
+                ChatChannels.Add(new ChatChannel { ChannelName = packet.Message.Channel });
+
+            // Handle Message
+            Logger.Log($"{messageSender.Username} @{packet.Message.Channel}: {packet.Message.Text}", LogColors.GameInfo);
         }
 
         /// <summary>
@@ -218,7 +223,8 @@ namespace Quaver.Online
         {
             IsLoggedIn = false;
             Client = null;
-            OnlineClients = null;
+            OnlineClients =new List<OnlineClient>();
+            ChatChannels = new List<ChatChannel>();
         }
     }
 }
