@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.GameState.Gameplay
 {
-    class AccuracyRecord
+    struct AccuracyRecord
     {
         /// <summary>
         ///     Records the player's multiplier percentage

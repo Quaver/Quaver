@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.Replays
 {
-    internal class ReplayFrame
+    internal struct ReplayFrame
     {
         /// <summary>
         ///     Holds the game time the frame was captured at

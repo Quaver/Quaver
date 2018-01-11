@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.GameState.Gameplay
 {
-    class HealthRecord
+    struct HealthRecord
     {
         /// <summary>
         ///     Records the player's health percentage
