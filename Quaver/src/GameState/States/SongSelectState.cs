@@ -36,6 +36,9 @@ namespace Quaver.GameState.States
         /// </summary>
         public bool UpdateReady { get; set; }
 
+        /// <summary>
+        ///     The UI that controls and displays beatmap selection
+        /// </summary>
         private BeatmapOrganizerUI BeatmapOrganizerUI { get; set; }
 
         /// <summary>
@@ -68,7 +71,15 @@ namespace Quaver.GameState.States
         /// </summary>
         private float PreviousMouseYPosition { get; set; }
 
+        /// <summary>
+        ///     Current Input Manager for this state
+        /// </summary>
         private SongSelectInputManager SongSelectInputManager { get; set;}
+
+        /// <summary>
+        ///     Determines how much time has passed since initiation
+        /// </summary>
+        private float TimeElapsedSinceStartup { get; set; }
 
         /// <summary>
         ///     Initialize
@@ -121,15 +132,24 @@ namespace Quaver.GameState.States
         public void Update(double dt)
         {
             //Check input to update song select ui
-            SongSelectInputManager.CheckInput();
+            TimeElapsedSinceStartup += (float)dt;
             var moueYPos = GameBase.MouseState.Position.Y;
 
-            if (SongSelectInputManager.RightMouseIsDown)
-                BeatmapOrganizerUI.SetBeatmapOrganizerPosition(-moueYPos / GameBase.WindowRectangle.Height);
-            else if (SongSelectInputManager.LeftMouseIsDown)
-                BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
-            else if (SongSelectInputManager.CurrentScrollAmount != 0)
-                BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);
+            // It will ignore input until 250ms go by
+            if (TimeElapsedSinceStartup > 250)
+            {
+                SongSelectInputManager.CheckInput();
+
+                // Check and update any mouse input
+                if (SongSelectInputManager.RightMouseIsDown)
+                    BeatmapOrganizerUI.SetBeatmapOrganizerPosition(-moueYPos / GameBase.WindowRectangle.Height);
+                else if (SongSelectInputManager.LeftMouseIsDown)
+                    BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
+                else if (SongSelectInputManager.CurrentScrollAmount != 0)
+                    BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);
+
+                // Check and update any keyboard input
+            }
 
             PreviousMouseYPosition = moueYPos;
 
