@@ -23,10 +23,8 @@ namespace Quaver.Input
         /// </summary>
         public State CurrentState { get; set; } = State.SongSelect;
 
-        public event EventHandler LeftMouseDown;
-        public event EventHandler LeftMouseUp;
-        public event EventHandler RightMouseDown;
-        public event EventHandler RightMouseUp;
+        public event EventHandler LeftMouseClicked;
+        public event EventHandler RightMouseClicked;
 
         /// <summary>
         ///     Is determined by whether the left mouse is down
@@ -60,18 +58,12 @@ namespace Quaver.Input
                 if (!LeftMouseIsDown)
                 {
                     LeftMouseIsDown = true;
-                    LeftMouseDown?.Invoke(this, null);
+                    LeftMouseClicked?.Invoke(this, null);
                 }
             }
             // Check for LeftMouseUp
-            else
-            {
-                if (LeftMouseIsDown)
-                {
-                    LeftMouseIsDown = false;
-                    LeftMouseUp?.Invoke(this, null);
-                }
-            }
+            else if (LeftMouseIsDown)
+                LeftMouseIsDown = false;
 
             // Check for RightMouseDown
             if (GameBase.MouseState.RightButton == ButtonState.Pressed)
@@ -79,18 +71,12 @@ namespace Quaver.Input
                 if (!RightMouseIsDown)
                 {
                     RightMouseIsDown = true;
-                    RightMouseDown?.Invoke(this, null);
+                    RightMouseClicked?.Invoke(this, null);
                 }
             }
             // Check for RightMouseUp
-            else
-            {
-                if (RightMouseIsDown)
-                {
-                    RightMouseIsDown = false;
-                    RightMouseUp?.Invoke(this, null);
-                }
-            }
+            else if (RightMouseIsDown)
+                RightMouseIsDown = false;
 
             // Check scroll wheel input
             CurrentScrollAmount = GameBase.MouseState.ScrollWheelValue - LastScrollAmount;
