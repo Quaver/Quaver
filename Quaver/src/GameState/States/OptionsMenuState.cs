@@ -25,6 +25,8 @@ namespace Quaver.GameState.States
         private TextButton[] ManiaKeys7K { get; set; }
         private List<TextButton> SkinSelectButton { get; set; }
         private TextButton BackgroundBrightnessButton { get; set; }
+        private TextButton FullscreenButton { get; set; }
+        private TextButton LetterBoxingButton { get; set; }
 
 
         public void Draw()
@@ -222,21 +224,23 @@ namespace Quaver.GameState.States
             }
 
             //Toggle Buttons
-            button = new TextButton(new Vector2(200, 30), "Letterboxing: On")
+            LetterBoxingButton = new TextButton(new Vector2(200, 30), $@"Letterboxing: {Configuration.WindowLetterboxed}")
             {
                 PosY = 520,
                 PosX = (-1) * 210f,
                 Alignment = Alignment.TopCenter,
                 Parent = Boundary
             };
+            LetterBoxingButton.Clicked += OnLetterboxButtonClicked;
 
-            button = new TextButton(new Vector2(200, 30), "FullScreen: Off")
+            FullscreenButton = new TextButton(new Vector2(200, 30), $@"FullScreen: {Configuration.WindowFullScreen}")
             {
                 PosY = 520,
                 //PosX = (0.5f) * 210f,
                 Alignment = Alignment.TopCenter,
                 Parent = Boundary
             };
+            FullscreenButton.Clicked += OnFullscreenButtonClicked;
 
             BackgroundBrightnessButton = new TextButton(new Vector2(200, 30), $@"BG Brightness: {Configuration.BackgroundBrightness}%")
             {
@@ -283,14 +287,36 @@ namespace Quaver.GameState.States
             BackgroundBrightnessButton.TextSprite.Text = $@"BG Brightness: {Configuration.BackgroundBrightness}%";
         }
 
-        private void FullscreenButtonClicked()
+        private void OnFullscreenButtonClicked(object sender, EventArgs e)
         {
-
+            var fullscreen = Configuration.WindowFullScreen;
+            switch (fullscreen)
+            {
+                case true:
+                    Configuration.WindowFullScreen = false;
+                    break;
+                case false:
+                    Configuration.WindowFullScreen = true;
+                    break;
+            }
+            FullscreenButton.TextSprite.Text = $@"FullScreen: {Configuration.WindowFullScreen}";
+            GameBase.ChangeWindow(Configuration.WindowFullScreen, Configuration.WindowLetterboxed);
         }
 
-        private void LetterboxButtonClicked()
+        private void OnLetterboxButtonClicked(object sender, EventArgs e)
         {
-
+            var letterboxed = Configuration.WindowLetterboxed;
+            switch (letterboxed)
+            {
+                case true:
+                    Configuration.WindowLetterboxed = false;
+                    break;
+                case false:
+                    Configuration.WindowLetterboxed = true;
+                    break;
+            }
+            LetterBoxingButton.TextSprite.Text = $@"Letterboxing: {Configuration.WindowLetterboxed}";
+            GameBase.ChangeWindow(Configuration.WindowFullScreen, Configuration.WindowLetterboxed);
         }
 
     }
