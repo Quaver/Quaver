@@ -24,6 +24,8 @@ namespace Quaver.Graphics.Button
 
         internal StringBuilder CurrentTextField { get; private set; }
 
+        internal bool Selected { get; private set; }
+
         internal TextInputField(Vector2 ButtonSize, string placeHolderText)
         {
             TextSprite = new TextBoxSprite()
@@ -66,7 +68,8 @@ namespace Quaver.Graphics.Button
         /// </summary>
         internal override void MouseOver()
         {
-            HoverTargetTween = 1;
+            if (!Selected)
+                HoverTargetTween = 1;
         }
 
         /// <summary>
@@ -74,7 +77,8 @@ namespace Quaver.Graphics.Button
         /// </summary>
         internal override void MouseOut()
         {
-            HoverTargetTween = 0;
+            if (!Selected)
+                HoverTargetTween = 0;
         }
 
         /// <summary>
@@ -92,17 +96,32 @@ namespace Quaver.Graphics.Button
             base.Update(dt);
         }
 
+        /// <summary>
+        ///     Checks for any key strokes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnTextEntered(object sender, TextInputEventArgs e)
         {
-            try
+            if (Selected)
             {
-                CurrentTextField.Append(e.Character.ToString());
-                TextSprite.Text = CurrentTextField.ToString();
+                try
+                {
+                    CurrentTextField.Append(e.Character.ToString());
+                    TextSprite.Text = CurrentTextField.ToString();
+                }
+                catch
+                {
+                    Logger.Log("could not write character: " + e.Character, LogColors.GameWarning);
+                }
             }
-            catch
-            {
-                Logger.Log("could not write character: " + e.Character, LogColors.GameWarning);
-            }
+        }
+
+        internal override void OnClicked()
+        {
+            Selected = Selected ? false : true;
+            HoverTargetTween = 1;
+            base.OnClicked();
         }
 
         internal override void Destroy()

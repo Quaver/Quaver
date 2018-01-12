@@ -85,7 +85,7 @@ namespace Quaver.Graphics.Button
         /// <summary>
         ///     This method is called when the button gets clicked
         /// </summary>
-        internal void OnClicked()
+        internal virtual void OnClicked()
         {
             if (Clickable) Clicked?.Invoke(this, null);
         }
