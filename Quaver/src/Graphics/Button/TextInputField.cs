@@ -107,6 +107,22 @@ namespace Quaver.Graphics.Button
             {
                 try
                 {
+                    // Handle CTRL+ inputs
+                    if (GameBase.KeyboardState.IsKeyDown(Keys.LeftControl) || GameBase.KeyboardState.IsKeyDown(Keys.RightControl))
+                    {
+                        // Based on the key pressed, we'll perform some other actions
+                        switch (e.Key)
+                        {
+                            // Handle CTRL+Back
+                            case Keys.Back:
+                                CurrentTextField.Length = 0;
+                                TextSprite.Text = CurrentTextField.ToString();
+                                return;
+                        }
+                        return;
+                    }
+
+                    // Handle normal key inputs
                     switch (e.Key)
                     {
                         case Keys.Back:
