@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Quaver.Audio;
 #if !PUBLIC
 using Quaver.Framework.Events.Packets;
 using Quaver.Framework.Events.Packets.Structures;
@@ -52,6 +54,7 @@ namespace Quaver.Online
             OnlineEvents.RattleUserDisconnected += OnRattleUserDisconnected;
             OnlineEvents.RattleUserJoinedChatChannel += OnRattleUserJoinedChatChannel;
             OnlineEvents.RattleSendMessage += OnRattleSendMessage;
+            OnlineEvents.RattleChicken += OnRattleChicken;
         }
 
         /// <summary>
@@ -219,6 +222,16 @@ namespace Quaver.Online
                 HandlePrivateMessage(messageSender, packet);
             else
                 HandlePublicMessage(messageSender, packet);
+        }
+
+        /// <summary>
+        ///     On RattleChicken event hook
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnRattleChicken(object sender, PacketEventArgs e)
+        {
+            // TBD
         }
 
         /// <summary>
