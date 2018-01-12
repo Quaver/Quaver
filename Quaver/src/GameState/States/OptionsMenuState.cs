@@ -188,7 +188,7 @@ namespace Quaver.GameState.States
                     Alignment = Alignment.TopCenter,
                     Parent = ButtonsContainer
                 };
-                ManiaEvent7K[i] = (sender, e) => OnManiaKey4KPressed(sender, e, index);
+                ManiaEvent7K[i] = (sender, e) => OnManiaKey7KPressed(sender, e, index);
                 ManiaKeys7K[i].KeyChanged += ManiaEvent7K[i];
             }
         }
