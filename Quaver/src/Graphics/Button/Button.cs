@@ -77,9 +77,18 @@ namespace Quaver.Graphics.Button
         /// <param name="e"></param>
         private void MouseClicked(object sender, EventArgs e)
         {
-            if (MouseHovered) {
+            if (MouseHovered)
                 OnClicked();
-            }
+            else
+                OnClickedOutside();
+        }
+
+        /// <summary>
+        ///     This method is called when the player has clicked outside the button
+        /// </summary>
+        internal virtual void OnClickedOutside()
+        {
+
         }
 
         /// <summary>
