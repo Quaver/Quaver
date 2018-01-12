@@ -152,14 +152,14 @@ namespace Quaver.Logging
 
             try
             {
-                /*Logs.Add(new Log()
+                Logs.Add(new Log()
                 {
                     Name = "LogMethod",
                     Color = color,
                     Duration = duration,
                     NoDuration = false,
                     Value = value
-                });*/
+                });
             }
             catch (Exception e)
             {
