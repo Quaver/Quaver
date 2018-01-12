@@ -79,7 +79,7 @@ namespace Quaver
             CommandHandler.HandleConsoleCommand();
 
             // Handle Text Input
-            GameBase.GameWindow.TextInput += TextEndered;
+            //GameBase.GameWindow.TextInput += TextEndered;
 
             // TODO: Add your initialization logic here
             base.Initialize();
@@ -204,9 +204,10 @@ namespace Quaver
             // base.Draw(gameTime);
         }
 
+        /*
         private void TextEndered(object sender, TextInputEventArgs e)
         {
             Logger.Log("User Pressed: " + e.Key.ToString() + " which maps to character: " + e.Character.ToString(), LogColors.GameImportant);
-        }
+        }*/
     }
 }

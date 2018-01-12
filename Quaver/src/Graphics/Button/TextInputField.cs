@@ -32,14 +32,18 @@ namespace Quaver.Graphics.Button
                 Size = new UDim2(ButtonSize.X - 4, ButtonSize.Y - 4),
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.BotLeft,
-                TextBoxStyle = TextBoxStyle.OverflowSingleLine,
+                TextBoxStyle = TextBoxStyle.WordwrapSingleLine,
                 Parent = this
             };
             Size.X.Offset = ButtonSize.X;
             Size.Y.Offset = ButtonSize.Y;
             Image = GameBase.UI.BlankBox;
             TextSprite.TextColor = Color.White;
+
             PlaceHolderText = placeHolderText;
+            CurrentTextField = new StringBuilder();
+
+            GameBase.GameWindow.TextInput += OnTextEntered;
         }
 
         /// <summary>
@@ -86,6 +90,25 @@ namespace Quaver.Graphics.Button
 
             //TextSprite.Update(dt);
             base.Update(dt);
+        }
+
+        private void OnTextEntered(object sender, TextInputEventArgs e)
+        {
+            try
+            {
+                CurrentTextField.Append(e.Character.ToString());
+                TextSprite.Text = CurrentTextField.ToString();
+            }
+            catch
+            {
+                Logger.Log("could not write character: " + e.Character, LogColors.GameWarning);
+            }
+        }
+
+        internal override void Destroy()
+        {
+            GameBase.GameWindow.TextInput -= OnTextEntered;
+            base.Destroy();
         }
     }
 }
