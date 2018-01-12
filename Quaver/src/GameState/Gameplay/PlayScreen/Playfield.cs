@@ -20,18 +20,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     internal class Playfield : IHelper
     {
         /// <summary>
-        ///     The size of the playfield padding.
-        /// </summary>
-        private int PlayfieldPadding { get; set; }
-
-        /// <summary>
-        ///     The padding of the receptors.
-        /// </summary>
-        private int ReceptorPadding { get; set; }
-
-        private int LaneSize { get; set; }
-
-        /// <summary>
         ///     The receptor sprites.
         /// </summary>
         private Sprite[] Receptors { get; set; }
@@ -42,21 +30,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         private Boundary Boundary { get; set; }
 
         /// <summary>
-        ///     The background mask of the playfield.
-        /// </summary>
-        private Sprite BgMask { get; set; }
-
-        /// <summary>
-        ///     The size of the playfield
-        /// </summary>
-        private float PlayfieldSize { get; set; }
-
-        /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
         /// </summary>
         public void Initialize(IGameState state)
         {
             PlayScreenState playScreen = (PlayScreenState)state;
+            int laneSize = 0;
             //PlayScreen = playScreen;
 
             // Set default reference variables
@@ -64,35 +43,35 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 case GameModes.Keys4:
                     GameplayReferences.ReceptorXPosition = new float[4];
-                    LaneSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowUIScale);
+                    laneSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowUIScale);
                     GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll //todo: use list for scaling
-                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width))
+                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width))
                         : GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale;
                     break;
                 case GameModes.Keys7:
                     GameplayReferences.ReceptorXPosition = new float[7];
-                    LaneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);
+                    laneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);
                     GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll //todo: use list for scaling
-                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (LaneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
+                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
                         : GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale;
                     break;
             }
 
             // Calculate Config stuff
-            PlayfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowUIScale);
-            ReceptorPadding = (int)(GameBase.LoadedSkin.NotePadding * GameBase.WindowUIScale);
-            PlayfieldSize = ((LaneSize + ReceptorPadding) * GameplayReferences.ReceptorXPosition.Length) + (PlayfieldPadding * 2) - ReceptorPadding;
-            GameplayReferences.PlayfieldSize = PlayfieldSize;
+            var playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowUIScale);
+            var receptorPadding = (int)(GameBase.LoadedSkin.NotePadding * GameBase.WindowUIScale);
+            var playfieldSize = ((laneSize + receptorPadding) * GameplayReferences.ReceptorXPosition.Length) + (playfieldPadding * 2) - receptorPadding;
+            GameplayReferences.PlayfieldSize = playfieldSize;
 
             // Create playfield boundary
             Boundary = new Boundary()
             {
-                Size = new UDim2(PlayfieldSize, GameBase.WindowRectangle.Height),
+                Size = new UDim2(playfieldSize, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.TopCenter
             };
 
             // Create BG Mask
-            BgMask = new Sprite()
+            var bgMask = new Sprite()
             {
                 //Image = GameBase.LoadedSkin.ColumnBgMask,
                 Tint = Color.Black, //todo: remove
@@ -115,12 +94,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             for (var i = 0; i < Receptors.Length; i++)
             {
                 // Set ReceptorXPos 
-                GameplayReferences.ReceptorXPosition[i] = ((LaneSize + ReceptorPadding) * i) + PlayfieldPadding;
+                GameplayReferences.ReceptorXPosition[i] = ((laneSize + receptorPadding) * i) + playfieldPadding;
 
                 // Create new Receptor Sprite
                 Receptors[i] = new Sprite
                 {
-                    Size = new UDim2(LaneSize, 0),
+                    Size = new UDim2(laneSize, 0),
                     Position = new UDim2(GameplayReferences.ReceptorXPosition[i], GameplayReferences.ReceptorYOffset),
                     Alignment = Alignment.TopLeft,
                     Parent = Boundary
@@ -131,11 +110,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     case GameModes.Keys4:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i];
-                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width;
+                        Receptors[i].SizeY = laneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width;
                         break;
                     case GameModes.Keys7:
                         Receptors[i].Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i];
-                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width;
+                        Receptors[i].SizeY = laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width;
                         break;
                 }
             }
