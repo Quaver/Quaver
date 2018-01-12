@@ -30,6 +30,9 @@ namespace Quaver
         [STAThread]
         private static void Main()
         {
+            // Set UTF-8 encoding for console outputs
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
             // Initialize Config
             Configuration.InitializeConfig();
 
