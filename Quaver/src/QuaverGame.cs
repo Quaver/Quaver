@@ -78,6 +78,9 @@ namespace Quaver
             // Enable console commands (Only applicable if on debug release)
             CommandHandler.HandleConsoleCommand();
 
+            // Handle Text Input
+            GameBase.GameWindow.TextInput += TextEndered;
+
             // TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -199,6 +202,11 @@ namespace Quaver
 
             // Draw Base
             // base.Draw(gameTime);
+        }
+
+        private void TextEndered(object sender, TextInputEventArgs e)
+        {
+            Logger.Log("User Pressed: " + e.Key.ToString() + " which maps to character: " + e.Character.ToString(), LogColors.GameImportant);
         }
     }
 }
