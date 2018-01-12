@@ -228,6 +228,31 @@ namespace Quaver.Graphics.Button
                 if (TextHighlighted)
                     Clipboard.SetText(TextSprite.Text);
             }
+            // CTRL + V (Paste)
+            else if (GameBase.KeyboardState.IsKeyDown(Keys.V))
+            {
+                // If the text is highlighted, then we need to replace it 
+                if (TextHighlighted)
+                {
+                    // Don't do anything if the clip board is empty
+                    if (Clipboard.GetText() == "")
+                        return;
+
+                    CurrentTextField.Length = 0;
+                    // Append clipboard text
+                    CurrentTextField.Append(Clipboard.GetText());
+                    TextSprite.Text = CurrentTextField.ToString();
+                    return;
+                }
+
+                // Normal pasting
+                var oldText = CurrentTextField.ToString();
+
+                // Append old text + new text
+                CurrentTextField.Length = 0;               
+                CurrentTextField.Append(oldText + Clipboard.GetText());
+                TextSprite.Text = CurrentTextField.ToString();
+            }
         }
     }
 }
