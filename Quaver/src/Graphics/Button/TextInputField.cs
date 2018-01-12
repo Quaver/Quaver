@@ -19,12 +19,24 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class TextInputField : Button
     {
+        /// <summary>
+        ///     The Text box spprite
+        /// </summary>
         internal TextBoxSprite TextSprite { get; set; }
 
+        /// <summary>
+        ///     The place holder text for the input field
+        /// </summary>
         internal string PlaceHolderText { get; private set; }
 
+        /// <summary>
+        ///     The current text in the box
+        /// </summary>
         internal StringBuilder CurrentTextField { get; private set; }
 
+        /// <summary>
+        ///     If the text input is currently selected
+        /// </summary>
         internal bool Selected { get; private set; }
 
         /// <summary>
@@ -32,6 +44,11 @@ namespace Quaver.Graphics.Button
         /// </summary>
         private bool TextHighlighted { get; set; }
 
+        /// <summary>
+        ///     Ctor - Creates the text box
+        /// </summary>
+        /// <param name="ButtonSize"></param>
+        /// <param name="placeHolderText"></param>
         internal TextInputField(Vector2 ButtonSize, string placeHolderText)
         {
             TextSprite = new TextBoxSprite()
@@ -168,6 +185,9 @@ namespace Quaver.Graphics.Button
             }
         }
 
+        /// <summary>
+        ///  Unselects the text box
+        /// </summary>
         internal void UnSelect()
         {
             Selected = false;
@@ -175,9 +195,13 @@ namespace Quaver.Graphics.Button
             CurrentTextField.Clear();
         }
 
+        /// <summary>
+        ///     When yoou click into the text box
+        /// </summary>
         internal override void OnClicked()
         {
-            Selected = Selected ? false : true;
+            Selected = !Selected;
+
             if (Selected)
             {
                 TextSprite.Text = CurrentTextField.ToString();
@@ -186,6 +210,9 @@ namespace Quaver.Graphics.Button
             base.OnClicked();
         }
 
+        /// <summary>
+        ///     When you click outside of the text box
+        /// </summary>
         internal override void OnClickedOutside()
         {
             if (Selected)
