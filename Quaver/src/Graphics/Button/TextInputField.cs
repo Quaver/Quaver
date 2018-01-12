@@ -97,6 +97,9 @@ namespace Quaver.Graphics.Button
             CurrentTint.B = (byte)(((HoverCurrentTween * 0.25) + 0.15f) * 255);
             Tint = CurrentTint;
 
+            // Handles CTRL+Key presses
+            HandleCtrlKeybinds();
+
             //TextSprite.Update(dt);
             base.Update(dt);
         }
@@ -112,48 +115,28 @@ namespace Quaver.Graphics.Button
             {
                 try
                 {
-                    // Handle CTRL+ inputs
-                    if (GameBase.KeyboardState.IsKeyDown(Keys.LeftControl) || GameBase.KeyboardState.IsKeyDown(Keys.RightControl))
-                    {
-                        Console.WriteLine(e.Key);
-                        // Based on the key pressed, we'll perform some other actions
-                        switch (e.Key)
-                        {
-                            // Handle CTRL+Back
-                            case Keys.Back:
-                                CurrentTextField.Length = 0;
-                                TextSprite.Text = CurrentTextField.ToString();
-                                return;
-                        }
-
-                        // Handle CTRL+A 
-                        if (GameBase.KeyboardState.IsKeyDown(Keys.A))
-                        {
-                            Console.WriteLine("hi");
-                            TextHighlighted = true;
-                        }
-                    }
-
-
                     // If the text is highlighted for a CTRL + A operation, then we need to handle that separately
                     if (TextHighlighted)
                     {
+                        // Reset the text
+                        CurrentTextField.Length = 0;
+
                         switch (e.Key)
                         {
-                            // If it's one of the keys that crash you and dont have an input, then just empty the string
+                            // If it's one of the keys that crash you and dont have an input, just clear
                             case Keys.Back:
                             case Keys.Tab:
                             case Keys.Delete:
-                                CurrentTextField.Length = 0;
-                                TextSprite.Text = CurrentTextField.ToString();
-                                return;
+                                break;
                             // For all other key presses, we reset the string and append the new character
                             default:
-                                CurrentTextField.Length = 0;
                                 CurrentTextField.Append(e.Character.ToString());
-                                TextHighlighted = false;
-                                return;
+                                break;
                         }
+
+                        TextSprite.Text = CurrentTextField.ToString();
+                        TextHighlighted = false;
+                        return;
                     }
                     // Handle normal key inputs
                     switch (e.Key)
@@ -207,6 +190,29 @@ namespace Quaver.Graphics.Button
         {
             GameBase.GameWindow.TextInput -= OnTextEntered;
             base.Destroy();
+        }
+
+        /// <summary>
+        ///     Handles CTRL+Key presses
+        /// </summary>
+        private void HandleCtrlKeybinds()
+        {
+            if (!GameBase.KeyboardState.IsKeyDown(Keys.LeftControl) && !GameBase.KeyboardState.IsKeyDown(Keys.RightControl) || !Selected)
+                return;
+
+            // CTRL + A 
+            if (GameBase.KeyboardState.IsKeyDown(Keys.A))
+            {
+                // Set the text highligting to true, signifying that we are ready for to clear the input
+                TextHighlighted = true;
+            }
+            // CTRL + BackSpace
+            else if (GameBase.KeyboardState.IsKeyDown(Keys.Back))
+            {
+                // Clear the entire input
+                CurrentTextField.Length = 0;
+                TextSprite.Text = CurrentTextField.ToString();
+            }
         }
     }
 }
