@@ -113,6 +113,36 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Alignment = Alignment.TopCenter
             };
 
+            // Initialize Timing Bars
+            // todo: Initialize from MeasureBarManager
+            for (var i = 0; i < GameBase.SelectedBeatmap.Qua.TimingPoints.Count; i++)
+            {
+                var startTime = GameBase.SelectedBeatmap.Qua.TimingPoints[i].StartTime;
+                var endTime = 0f;
+                var curTime = startTime;
+                var bpmInterval = 4000 * 60 / GameBase.SelectedBeatmap.Qua.TimingPoints[i].Bpm;
+
+                if (i + 1 < GameBase.SelectedBeatmap.Qua.TimingPoints.Count)
+                    endTime = GameBase.SelectedBeatmap.Qua.TimingPoints[i + 1].StartTime;
+                else
+                    endTime = GameBase.SelectedBeatmap.SongLength;
+
+                while (curTime < endTime - 1)
+                {
+                    var newBar = new BarObject();
+                    newBar.OffsetFromReceptor = SvOffsetFromTime(curTime, GetSvIndex(curTime));
+                    MeasureBarManager.BarObjectQueue.Add(newBar);
+                    curTime += bpmInterval;
+                }
+            }
+
+            //todo: remove this. temp
+            MeasureBarManager.BarObjectActive = MeasureBarManager.BarObjectQueue;
+            for (var i = 0; i < MeasureBarManager.BarObjectActive.Count; i++)
+            {
+                MeasureBarManager.BarObjectActive[i].Initialize(Boundary, 1, 0);
+            }
+
             // Initialize HitObjects
             HitObjectPool = new List<HitObject>();
             HitObjectDead = new List<HitObject>();
@@ -153,37 +183,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 // Initialize Object and add it to HitObjectPool
                 if (i < HitObjectPoolSize) newObject.Initialize(Configuration.DownScroll, qua.HitObjects[i].EndTime > 0, Boundary);
                 HitObjectPool.Add(newObject);
-            }
-
-            // Initialize Timing Bars
-            // todo: Initialize from MeasureBarManager
-            for (var i = 0; i < GameBase.SelectedBeatmap.Qua.TimingPoints.Count; i++)
-            {
-                var startTime = GameBase.SelectedBeatmap.Qua.TimingPoints[i].StartTime;
-                var endTime = 0f;
-                var curTime = startTime;
-                var bpmInterval = 4000 * 60 / GameBase.SelectedBeatmap.Qua.TimingPoints[i].Bpm;
-
-                if (i + 1 < GameBase.SelectedBeatmap.Qua.TimingPoints.Count)
-                    endTime = GameBase.SelectedBeatmap.Qua.TimingPoints[i + 1].StartTime;
-                else
-                    endTime = GameBase.SelectedBeatmap.SongLength;
-
-                while (curTime < endTime - 1)
-                {
-                    var newBar = new BarObject();
-                    newBar.OffsetFromReceptor = SvOffsetFromTime(curTime, GetSvIndex(curTime));
-                    MeasureBarManager.BarObjectQueue.Add(newBar);
-                    curTime += bpmInterval;
-                }
-            }
-            Console.WriteLine("Total Timing Bars: " + MeasureBarManager.BarObjectQueue.Count);
-
-            //todo: remove this. temp
-            MeasureBarManager.BarObjectActive = MeasureBarManager.BarObjectQueue;
-            for (var i = 0; i < MeasureBarManager.BarObjectActive.Count; i++)
-            {
-                MeasureBarManager.BarObjectActive[i].Initialize(Boundary, 1, 0);
             }
 
             Logger.Log("Done loading HitObjects", LogColors.GameInfo);
