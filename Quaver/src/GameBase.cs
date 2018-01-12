@@ -24,6 +24,7 @@ using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.Utility;
 using Quaver.Input;
+using Quaver.Graphics.GameOverlay;
 
 namespace Quaver
 {
@@ -66,6 +67,8 @@ namespace Quaver
         ///     The currently loaded Skin
         /// </summary>
         public static Skin LoadedSkin { get; set; }
+
+        public static GameOverlay GameOverlay { get; set; } = new GameOverlay();
 
         /// <summary>
         ///     The current background
