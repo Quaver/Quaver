@@ -20,11 +20,15 @@ namespace Quaver.Graphics.Button
     {
         internal TextBoxSprite TextSprite { get; set; }
 
-        internal KeyBindButton(Vector2 ButtonSize, string ButtonText)
+        internal Keys CurrentKey { get; private set; }
+
+        internal bool Selected { get; private set; }
+
+        internal KeyBindButton(Vector2 ButtonSize, Keys key)
         {
             TextSprite = new TextBoxSprite()
             {
-                Text = ButtonText,
+                Text = key.ToString(),
                 Size = new UDim2(ButtonSize.X, ButtonSize.Y),
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.MidCenter,
@@ -34,6 +38,9 @@ namespace Quaver.Graphics.Button
             Size.Y.Offset = ButtonSize.Y;
             Image = GameBase.UI.BlankBox;
             TextSprite.TextColor = Color.Black;
+            Tint = Color.LightPink;
+
+            GameBase.GameWindow.TextInput += OnTextEntered;
         }
 
         /// <summary>
@@ -73,13 +80,80 @@ namespace Quaver.Graphics.Button
         internal override void Update(double dt)
         {
             HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
-            CurrentTint.R = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
-            CurrentTint.G = (byte)(((HoverCurrentTween * 0.5) + 0.5f) * 255);
-            CurrentTint.B = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
-            Tint = CurrentTint;
+            //CurrentTint.R = (byte)((HoverCurrentTween * Tint.R / 255f * 0.65f + 0.35f) * 255);
+            //CurrentTint.G = (byte)((HoverCurrentTween * Tint.G / 255f * 0.65f + 0.35f) * 255);
+            //CurrentTint.B = (byte)((HoverCurrentTween * Tint.B / 255f * 0.65f + 0.35f) * 255);
+            //Tint = CurrentTint;
 
             //TextSprite.Update(dt);
             base.Update(dt);
+        }
+
+        /// <summary>
+        ///     Checks for any key strokes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTextEntered(object sender, TextInputEventArgs e)
+        {
+            if (Selected)
+            {
+                try
+                {
+                    // Handle normal key inputs
+                    switch (e.Key)
+                    {
+                        case Keys.Back:
+                            break;
+                        case Keys.Tab:
+                            break;
+                        case Keys.Delete:
+                            break;
+                        case Keys.Enter:
+                            break;
+                        default:
+                            CurrentKey = e.Key;
+                            break;
+                    }
+                    UnSelect();
+                }
+                catch
+                {
+                    Logger.Log("could not select key: " + e.Character, LogColors.GameWarning);
+                }
+            }
+        }
+
+        internal void UnSelect()
+        {
+            Tint = Color.LightPink;
+            Selected = false;
+            HoverTargetTween = 0;
+            TextSprite.Text = CurrentKey.ToString();
+        }
+
+        internal override void OnClicked()
+        {
+            Selected = Selected ? false : true;
+            if (Selected)
+            {
+                Tint = Color.LightYellow;
+                TextSprite.Text = "Press Key";
+                HoverTargetTween = 1;
+            }
+            base.OnClicked();
+        }
+
+        internal override void OnClickedOutside()
+        {
+            if (Selected)
+                UnSelect();
+        }
+
+        internal override void Destroy()
+        {
+            GameBase.GameWindow.TextInput -= OnTextEntered;
+            base.Destroy();
         }
     }
 }

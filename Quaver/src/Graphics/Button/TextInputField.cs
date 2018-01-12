@@ -159,15 +159,21 @@ namespace Quaver.Graphics.Button
         internal override void OnClicked()
         {
             Selected = Selected ? false : true;
-            TextSprite.Text = CurrentTextField.ToString();
-            HoverTargetTween = 1;
+            if (Selected)
+            {
+                TextSprite.Text = CurrentTextField.ToString();
+                HoverTargetTween = 1;
+            }
             base.OnClicked();
         }
 
         internal override void OnClickedOutside()
         {
-            UnSelect();
-            TextSprite.Text = PlaceHolderText;
+            if (Selected)
+            {
+                UnSelect();
+                TextSprite.Text = PlaceHolderText;
+            }
         }
 
         internal override void Destroy()
