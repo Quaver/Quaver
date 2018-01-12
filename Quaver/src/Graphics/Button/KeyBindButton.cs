@@ -41,6 +41,7 @@ namespace Quaver.Graphics.Button
             Image = GameBase.UI.BlankBox;
             TextSprite.TextColor = Color.Black;
             Tint = Color.LightPink;
+            CurrentKey = key;
 
             GameBase.GameWindow.TextInput += OnTextEntered;
         }
