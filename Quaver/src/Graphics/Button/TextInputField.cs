@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Quaver.Logging;
 
 using Quaver.Utility;
 using Quaver.Graphics.Text;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Graphics.Button
 {
@@ -144,6 +145,7 @@ namespace Quaver.Graphics.Button
                     {
                         case Keys.Back:
                             CurrentTextField.Length--;
+                            TextSprite.Text = CurrentTextField.ToString();
                             break;
                         case Keys.Tab:
                             break;
@@ -219,6 +221,12 @@ namespace Quaver.Graphics.Button
                 // Clear the entire input
                 CurrentTextField.Length = 0;
                 TextSprite.Text = CurrentTextField.ToString();
+            }
+            // CTRL + C (Copy)
+            else if (GameBase.KeyboardState.IsKeyDown(Keys.C))
+            {
+                if (TextHighlighted)
+                    Clipboard.SetText(TextSprite.Text);
             }
         }
     }
