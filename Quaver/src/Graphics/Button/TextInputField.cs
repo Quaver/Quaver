@@ -138,6 +138,7 @@ namespace Quaver.Graphics.Button
                         TextHighlighted = false;
                         return;
                     }
+
                     // Handle normal key inputs
                     switch (e.Key)
                     {
