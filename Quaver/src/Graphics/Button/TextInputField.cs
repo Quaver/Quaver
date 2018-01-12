@@ -20,20 +20,26 @@ namespace Quaver.Graphics.Button
     {
         internal TextBoxSprite TextSprite { get; set; }
 
-        internal TextInputField(Vector2 ButtonSize, string ButtonText)
+        internal string PlaceHolderText { get; private set; }
+
+        internal StringBuilder CurrentTextField { get; private set; }
+
+        internal TextInputField(Vector2 ButtonSize, string placeHolderText)
         {
             TextSprite = new TextBoxSprite()
             {
-                Text = ButtonText,
-                Size = new UDim2(ButtonSize.X, ButtonSize.Y),
+                Text = placeHolderText,
+                Size = new UDim2(ButtonSize.X - 4, ButtonSize.Y - 4),
                 Alignment = Alignment.MidCenter,
-                TextAlignment = Alignment.MidCenter,
+                TextAlignment = Alignment.BotLeft,
+                TextBoxStyle = TextBoxStyle.OverflowSingleLine,
                 Parent = this
             };
             Size.X.Offset = ButtonSize.X;
             Size.Y.Offset = ButtonSize.Y;
             Image = GameBase.UI.BlankBox;
-            TextSprite.TextColor = Color.Black;
+            TextSprite.TextColor = Color.White;
+            PlaceHolderText = placeHolderText;
         }
 
         /// <summary>
@@ -73,9 +79,9 @@ namespace Quaver.Graphics.Button
         internal override void Update(double dt)
         {
             HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
-            CurrentTint.R = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
-            CurrentTint.G = (byte)(((HoverCurrentTween * 0.5) + 0.5f) * 255);
-            CurrentTint.B = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
+            CurrentTint.R = (byte)(((HoverCurrentTween * 0.25) + 0.15f) * 255);
+            CurrentTint.G = (byte)(((HoverCurrentTween * 0.25) + 0.15f) * 255);
+            CurrentTint.B = (byte)(((HoverCurrentTween * 0.25) + 0.15f) * 255);
             Tint = CurrentTint;
 
             //TextSprite.Update(dt);
