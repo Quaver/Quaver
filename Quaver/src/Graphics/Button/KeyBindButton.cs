@@ -24,6 +24,8 @@ namespace Quaver.Graphics.Button
 
         internal bool Selected { get; private set; }
 
+        internal event EventHandler KeyChanged;
+
         internal KeyBindButton(Vector2 ButtonSize, Keys key)
         {
             TextSprite = new TextBoxSprite()
@@ -39,6 +41,7 @@ namespace Quaver.Graphics.Button
             Image = GameBase.UI.BlankBox;
             TextSprite.TextColor = Color.Black;
             Tint = Color.LightPink;
+            CurrentKey = key;
 
             GameBase.GameWindow.TextInput += OnTextEntered;
         }
@@ -113,6 +116,7 @@ namespace Quaver.Graphics.Button
                             break;
                         default:
                             CurrentKey = e.Key;
+                            KeyChanged?.Invoke(this, null);
                             break;
                     }
                     UnSelect();
