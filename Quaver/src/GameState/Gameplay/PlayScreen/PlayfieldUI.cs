@@ -16,14 +16,44 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     class PlayfieldUI : IHelper
     {
         /// <summary>
+        ///     The parent of every Playfield UI Component
+        /// </summary>
+        public Boundary Boundary { get; private set; }
+
+        /// <summary>
         ///     This displays the judging (MARV/PERF/GREAT/ect)
         /// </summary>
         private Sprite JudgeSprite { get; set; }
 
         /// <summary>
+        ///     The sprite for every Offset Indicator bar
+        /// </summary>
+        private Sprite[] OffsetIndicatorsSprites { get; set; }
+
+        /// <summary>
+        ///     Bar images which display the player's current multiplier
+        /// </summary>
+        private Sprite[] MultiplierBars { get; set; }
+
+        /// <summary>
+        ///     The player's health bar
+        /// </summary>
+        private Sprite HealthBarOver { get; set; }
+
+        /// <summary>
         ///     Used to reference the images for JudgeSprite
         /// </summary>
         private Texture2D[] JudgeImages { get; set; }
+
+        /// <summary>
+        ///     Reference to the size each judge image is
+        /// </summary>
+        private Vector2[] JudgeSizes { get; set; }
+
+        /// <summary>
+        ///     The text displaying combo
+        /// </summary>
+        private TextBoxSprite ComboText { get; set; }
 
         /// <summary>
         ///     When the JudgeSprite gets updated, it'll update JudgeSprite.PositionY to this variable.
@@ -41,21 +71,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         private double PriorityJudgeLength { get; set; }
 
         /// <summary>
-        ///     Reference to the size each judge image is
-        /// </summary>
-        private Vector2[] JudgeSizes { get; set; }
-
-        /// <summary>
-        ///     The Parent of every Offset Gauge component
-        /// </summary>
-        private Boundary OffsetGaugeBoundary { get; set; }
-
-        /// <summary>
-        ///     The white bar in the middle of the offset gauage
-        /// </summary>
-        private Sprite OffsetGaugeMiddle { get; set; }
-
-        /// <summary>
         ///     The bars which indicate how off players are from the receptor
         /// </summary>
         private const int OffsetIndicatorSize = 32;
@@ -71,33 +86,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         private int CurrentOffsetObjectIndex { get; set; }
 
         /// <summary>
-        ///     The sprite for every Offset Indicator bar
-        /// </summary>
-        private Sprite[] OffsetIndicatorsSprites { get; set; }
-
-        /// <summary>
-        ///     The text displaying combo
-        /// </summary>
-        private TextBoxSprite ComboText { get; set; }
-
-        /// <summary>
         ///     The alpha of the entire UI set. Will turn invisible if the set is not being updated.
         /// </summary>
         private double SpriteAlphaHold { get; set; }
 
         /// <summary>
-        ///     The parent of every Playfield UI Component
+        ///     Total number of multiplier bars which are active
         /// </summary>
-        public Boundary Boundary { get; private set; }
-
-        private Boundary HealthMultiplierBoundary { get; set; }
-
-        private Sprite HealthBarOver { get; set; }
-
-        private Sprite HealthBarUnder { get; set; }
-
-        private Sprite[] MultiplierBars { get; set; }
-
         private int ActiveMultiplierBars { get; set; }
 
         public void Draw()
@@ -163,7 +158,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             };
 
             // Create Offset Gauge
-            OffsetGaugeBoundary = new Boundary()
+            var offsetGaugeBoundary = new Boundary()
             {
                 Size = new UDim2(220 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale),
                 Position = new UDim2(0, 30 * GameBase.WindowUIScale),
@@ -171,30 +166,30 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Parent = Boundary
             };
 
-            //todo: OffsetGaugeBoundary.SizeX with a new size. Right now the offset gauge is the same size as the hitwindow
-            OffsetGaugeSize = OffsetGaugeBoundary.SizeX / (GameplayReferences.PressWindowLatest * 2 * GameBase.WindowUIScale);
+            //todo: offsetGaugeBoundary.SizeX with a new size. Right now the offset gauge is the same size as the hitwindow
+            OffsetGaugeSize = offsetGaugeBoundary.SizeX / (GameplayReferences.PressWindowLatest * 2 * GameBase.WindowUIScale);
 
             OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)
             {
                 OffsetIndicatorsSprites[i] = new Sprite()
                 {
-                    Parent = OffsetGaugeBoundary,
+                    Parent = offsetGaugeBoundary,
                     Size = new UDim2(4, 0, 0, 1),
                     Alignment = Alignment.MidCenter,
                     Alpha = 0
                 };
             }
 
-            OffsetGaugeMiddle = new Sprite()
+            var offsetGaugeMiddle = new Sprite()
             {
                 Size = new UDim2(2, 0, 0, 1),
                 Alignment = Alignment.MidCenter,
-                Parent = OffsetGaugeBoundary
+                Parent = offsetGaugeBoundary
             };
 
             // Create Health Bar
-            HealthMultiplierBoundary = new Boundary()
+            var healthMultiplierBoundary = new Boundary()
             {
                 Size = new UDim2(GameplayReferences.PlayfieldSize - 4, 20 * GameBase.WindowUIScale),
                 PosY = Config.Configuration.DownScroll ? -2 : 2,
@@ -202,18 +197,18 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Parent = Boundary
             };
 
-            HealthBarUnder = new Sprite()
+            var healthBarUnder = new Sprite()
             {
                 Size = new UDim2(0, 10 * GameBase.WindowUIScale -1, 1, 0),
                 Alignment = Config.Configuration.DownScroll ? Alignment.BotCenter : Alignment.TopCenter,
-                Parent = HealthMultiplierBoundary
+                Parent = healthMultiplierBoundary
             };
 
             HealthBarOver = new Sprite()
             {
                 Size = new UDim2(-2, -2, 1, 1),
                 PosX = 1,
-                Parent = HealthBarUnder,
+                Parent = healthBarUnder,
                 Alignment = Alignment.MidLeft,
                 Tint = Color.Green
             };
@@ -229,7 +224,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     PosY = Config.Configuration.DownScroll ? 0 : 10 * GameBase.WindowUIScale + 1,
                     Alignment = Alignment.TopCenter,
                     Image = GameBase.UI.HollowBox,
-                    Parent = HealthMultiplierBoundary
+                    Parent = healthMultiplierBoundary
                 };
             }
         }
@@ -298,6 +293,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 JudgeSprite.SizeY = JudgeSizes[index].Y;
                 JudgeSprite.Image = JudgeImages[index];
                 JudgeSprite.PosY = JudgeHitOffset;
+                JudgeSprite.Update(0);
             }
 
             if (index != 5 && !release && offset != null)
@@ -307,6 +303,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Tint = GameColors.JudgeColors[index];
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].PosX = -(float)offset * OffsetGaugeSize;
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Alpha = 0.5f;
+                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Update(0);
             }
         }
 
