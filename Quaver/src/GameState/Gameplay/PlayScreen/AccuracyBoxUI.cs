@@ -17,45 +17,74 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     /// </summary>
     internal class AccuracyBoxUI : IHelper
     {
-        //todo: document this crap later
-        private Sprite AccuracyBox { get; set; }
-
-        private Boundary[] AccuracyDisplaySet { get; set; }
-
-        private TextBoxSprite[] AccuracyIndicatorText { get; set; }
-
-        private TextBoxSprite[] AccuracyCountText { get; set; }
-
-        private Sprite[] AccuracyGraphBar { get; set; }
-
-        private int[] NoteSpread { get; set; }
-
-        private float[] AccuracyGraphTargetScale { get; set; }
-
-        private TextBoxSprite ScoreText { get; set; }
-
-        private Sprite LeaderboardBox { get; set; }
-
+        /// <summary>
+        ///     Boundary that holds all UI element for this object
+        /// </summary>
         private Boundary Boundary { get; set; }
 
-        private bool NoteHolding { get; set; }
+        /// <summary>
+        ///     Text box which displays a count of every judgement
+        /// </summary>
+        private TextBoxSprite[] AccuracyCountText { get; set; }
 
-        private double CurrentScore { get; set; }
+        /// <summary>
+        ///     The graph which displays judgement count relative to total count of every judgement
+        /// </summary>
+        private Sprite[] AccuracyGraphBar { get; set; }
 
-        private float CurrentAccuracy { get; set; }
-
-        private float TargetAccuracy { get; set; }
-
-        private Boundary GradeBox { get; set; }
-
-        private BarDisplay GradeProgressBar { get; set; }
-
+        /// <summary>
+        ///     Grade image which sits at the left side of the grade progress bar
+        /// </summary>
         private Sprite GradeLeft { get; set; }
 
+        /// <summary>
+        ///     Grade image which sits at the right side of the grade progress bar
+        /// </summary>
         private Sprite GradeRight { get; set; }
 
+        /// <summary>
+        ///     Bar which shows how far the player is from acheiving a certain grade
+        /// </summary>
+        private BarDisplay GradeProgressBar { get; set; }
+
+        /// <summary>
+        ///     Counts the number of total judgement for each hit window to display
+        /// </summary>
+        private int[] JudgementCount { get; set; }
+
+        /// <summary>
+        ///     Target size for each accuracy graph sprite
+        /// </summary>
+        private float[] AccuracyGraphTargetScale { get; set; }
+
+        /// <summary>
+        ///     Text which displays current score
+        /// </summary>
+        private TextBoxSprite ScoreText { get; set; }
+
+        /// <summary>
+        ///     Current score the player has. Used for animation/UI.
+        /// </summary>
+        private double CurrentScore { get; set; }
+
+        /// <summary>
+        ///     Current accuracy the player has. Used for animation
+        /// </summary>
+        private float CurrentAccuracy { get; set; }
+
+        /// <summary>
+        ///     The text that will be used to display accuracy. Determined by animation
+        /// </summary>
+        private float TargetAccuracy { get; set; }
+
+        /// <summary>
+        ///     Current grade the player has achieved
+        /// </summary>
         private int CurrentGrade { get; set; }
 
+        /// <summary>
+        ///     Current size of the grade progress bar
+        /// </summary>
         private float ProgressBarScale { get; set; }
 
         public void Initialize(IGameState state)
@@ -64,8 +93,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             CurrentScore = 0;
             CurrentAccuracy = 0;
             CurrentGrade = 0;
-            NoteHolding = false;
-            NoteSpread = new int[6];
+            JudgementCount = new int[6];
             ProgressBarScale = 0;
 
             // Create Boundary
@@ -75,7 +103,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             AccuracyGraphTargetScale = new float[6];
 
             // Create new Accuracy Box
-            AccuracyBox = new Sprite()
+            var accuracyBox = new Sprite()
             {
                 Alignment = Alignment.TopRight,
                 Size = new UDim2(200 * GameBase.WindowUIScale, 240 * GameBase.WindowUIScale),
@@ -85,14 +113,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Tint = Color.Black //todo: remove later and use skin image
             };
 
-            AccuracyDisplaySet = new Boundary[7];
+            var accuracyDisplaySet = new Boundary[7];
             for (var i = 0; i < 7; i++)
             {
-                AccuracyDisplaySet[i] = new Boundary()
+                accuracyDisplaySet[i] = new Boundary()
                 {
-                    Parent = AccuracyBox,
+                    Parent = accuracyBox,
                     Alignment = Alignment.TopLeft,
-                    Size = new UDim2(AccuracyBox.SizeX - 10, 26 * GameBase.WindowUIScale),
+                    Size = new UDim2(accuracyBox.SizeX - 10, 26 * GameBase.WindowUIScale),
                     Position = new UDim2(5, ((i * 25) + 55) * GameBase.WindowUIScale)
                 };
             }
@@ -102,7 +130,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 AccuracyGraphBar[i] = new Sprite()
                 {
-                    Parent = AccuracyDisplaySet[i+1],
+                    Parent = accuracyDisplaySet[i+1],
                     Alignment = Alignment.MidLeft,
                     Size = new UDim2(0, -2, 0, 1),
                     Tint = GameColors.JudgeColors[i],
@@ -110,12 +138,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 };
             }
 
-            AccuracyIndicatorText = new TextBoxSprite[7];
+            var accuracyIndicatorText = new TextBoxSprite[7];
             for (var i = 0; i < 7; i++)
             {
-                AccuracyIndicatorText[i] = new TextBoxSprite()
+                accuracyIndicatorText[i] = new TextBoxSprite()
                 {
-                    Parent = AccuracyDisplaySet[i],
+                    Parent = accuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
                     TextAlignment = Alignment.MidLeft,
                     Size = new UDim2(0, 0, 1, 1),
@@ -133,7 +161,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 AccuracyCountText[i] = new TextBoxSprite()
                 {
-                    Parent = AccuracyDisplaySet[i],
+                    Parent = accuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
                     TextAlignment = Alignment.MidRight,
                     Size = new UDim2(0, 0, 1, 1),
@@ -147,10 +175,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             ScoreText = new TextBoxSprite()
             {
-                Parent = AccuracyBox,
+                Parent = accuracyBox,
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.MidCenter,
-                Size = new UDim2(AccuracyBox.SizeX - 20, 55 * GameBase.WindowUIScale),
+                Size = new UDim2(accuracyBox.SizeX - 20, 55 * GameBase.WindowUIScale),
                 Position = new UDim2(10, 0),
                 Font = Fonts.Medium24,
                 TextColor = Color.White,
@@ -159,38 +187,39 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             };
 
             // Create Grade box
-            GradeBox = new Boundary()
+            var gradeBox = new Boundary()
             {
-                Parent = AccuracyBox,
-                Size = new UDim2(AccuracyBox.SizeX, 26 * GameBase.WindowUIScale),
+                Parent = accuracyBox,
+                Size = new UDim2(accuracyBox.SizeX, 26 * GameBase.WindowUIScale),
                 Position = new UDim2(0, 31 * GameBase.WindowUIScale),
                 Alignment = Alignment.BotLeft,
             };
 
-            GradeProgressBar = new BarDisplay(GameBase.WindowUIScale, AccuracyBox.SizeX - (GradeBox.SizeY * 2) - 30 * GameBase.WindowUIScale, new Color[] { Color.Red })
+            GradeProgressBar = new BarDisplay(GameBase.WindowUIScale, accuracyBox.SizeX - (gradeBox.SizeY * 2) - 30 * GameBase.WindowUIScale, new Color[] { Color.Red })
             {
-                Parent = GradeBox,
+                Parent = gradeBox,
                 Alignment = Alignment.MidCenter
             };
 
             GradeLeft = new Sprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallF,
-                Size = new UDim2(GradeBox.SizeY * GameBase.WindowUIScale, GradeBox.SizeY * GameBase.WindowUIScale),
+                Size = new UDim2(gradeBox.SizeY * GameBase.WindowUIScale, gradeBox.SizeY * GameBase.WindowUIScale),
                 //PositionX = GradeProgressBar.PositionX - 32 * GameBase.WindowUIScale,
-                Parent = GradeBox
+                Parent = gradeBox
             };
 
             GradeRight = new Sprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallD,
-                Size = new UDim2(GradeBox.SizeY * GameBase.WindowUIScale, GradeBox.SizeY * GameBase.WindowUIScale),
+                Size = new UDim2(gradeBox.SizeY * GameBase.WindowUIScale, gradeBox.SizeY * GameBase.WindowUIScale),
                 Alignment = Alignment.TopRight,
                 //PositionX = GradeProgressBar.PositionX + GradeProgressBar.SizeX + 32 * GameBase.WindowUIScale,
-                Parent = GradeBox
+                Parent = gradeBox
             };
 
-            // Create new Leaderboard Box
+            // todo: Create new Leaderboard Box
+            /*
             LeaderboardBox = new Sprite()
             {
                 Size = new UDim2(230, 400),
@@ -198,7 +227,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Parent = Boundary,
                 Alpha = 0f,
                 Tint = Color.Black //todo: remove later and use skin image
-            };
+            };*/
         }
 
         /// <summary>
@@ -213,13 +242,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Update Variables and Text
             CurrentScore = totalScore;
             TargetAccuracy = (float)tarAcc;
-            NoteSpread[index] = pressSpread + releaseSpread;
+            JudgementCount[index] = pressSpread + releaseSpread;
             AccuracyCountText[index+1].Text = pressSpread + " | " + releaseSpread;
 
             //Calculate graph bars
             for (var i = 0; i < 6; i++)
             {
-                AccuracyGraphTargetScale[i] = (float)Math.Sqrt((double)(NoteSpread[i]) / judgeCount);
+                AccuracyGraphTargetScale[i] = (float)Math.Sqrt((double)(JudgementCount[i]) / judgeCount);
             }
         }
 
