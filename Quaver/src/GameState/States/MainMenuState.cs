@@ -69,9 +69,6 @@ namespace Quaver.GameState.States
         /// </summary>
         public Button ImportPeppyButton { get; set; }
 
-        //todo: remove. test input
-        TextInputField TestTextInput { get; set; }
-
         /// <summary>
         ///     Initialize
         /// </summary>
@@ -94,14 +91,6 @@ namespace Quaver.GameState.States
             CreateQpImportButton();
             CreateMenuButtons();
             CreateQpExportButton();
-
-            // todo: remove this later
-            TestTextInput = new TextInputField(new Vector2(400, 30), "Type something")
-            {
-                PosY = 200,
-                Alignment = Alignment.MidCenter,
-                Parent = Boundary
-            };
 
             UpdateReady = true;
         }

@@ -124,6 +124,9 @@ namespace Quaver
             // Set Render Target
             GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
 
+            // Set up overlay
+            GameBase.GameOverlay.Initialize();
+
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
             GameBase.GameStateManager.ChangeState(new MainMenuState());             
@@ -136,6 +139,7 @@ namespace Quaver
         protected override void UnloadContent()
         {
             BackgroundManager.UnloadContent();
+            GameBase.GameOverlay.UnloadContent();
             GameBase.GameStateManager.ClearStates();
             try
             {
@@ -169,6 +173,7 @@ namespace Quaver
 
             // Update Background from Background Manager
             BackgroundManager.Update(dt);
+            GameBase.GameOverlay.Update(dt);
 
             // Update all game states.
             GameBase.GameStateManager.Update(dt);
@@ -195,7 +200,9 @@ namespace Quaver
 
             // Draw Cursor, Logging, and FPS Counter
             GameBase.SpriteBatch.Begin();
+            GameBase.GameOverlay.Draw();
             GameBase.Cursor.Draw();
+
             Logger.Draw(dt);
             if (Config.Configuration.FpsCounter) FpsCounter.Draw();
             GameBase.SpriteBatch.End();
