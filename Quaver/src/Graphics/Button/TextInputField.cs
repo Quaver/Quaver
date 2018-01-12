@@ -124,6 +124,15 @@ namespace Quaver.Graphics.Button
             base.OnClicked();
         }
 
+        internal override void OnClickedOutside()
+        {
+            Selected = false;
+            HoverTargetTween = 0;
+
+            CurrentTextField.Clear();
+            TextSprite.Text = PlaceHolderText;
+        }
+
         internal override void Destroy()
         {
             GameBase.GameWindow.TextInput -= OnTextEntered;
