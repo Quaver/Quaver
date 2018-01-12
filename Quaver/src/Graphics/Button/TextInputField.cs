@@ -107,7 +107,20 @@ namespace Quaver.Graphics.Button
             {
                 try
                 {
-                    CurrentTextField.Append(e.Character.ToString());
+                    switch (e.Key)
+                    {
+                        case Keys.Back:
+                            CurrentTextField.Length--;
+                            break;
+                        case Keys.Tab:
+                            break;
+                        case Keys.Delete:
+                            break;
+                        default:
+                            CurrentTextField.Append(e.Character.ToString());
+                            break;
+                    }
+
                     TextSprite.Text = CurrentTextField.ToString();
                 }
                 catch
