@@ -154,7 +154,7 @@ namespace Quaver.GameState.States
             for (var i=0; i<4; i++)
             {
                 //todo: hook this to an event/method or something
-                ManiaKeys4K[i] = new KeyBindButton(new Vector2(100, 30), keys[i].ToString())
+                ManiaKeys4K[i] = new KeyBindButton(new Vector2(100, 30), keys[i])
                 {
                     PosY = 110,
                     PosX = (i - 1.5f) * 110f,
@@ -168,7 +168,7 @@ namespace Quaver.GameState.States
             for (var i = 0; i < 7; i++)
             {
                 //todo: hook this to an event/method or something
-                ManiaKeys7K[i] = new KeyBindButton(new Vector2(100, 30), keys[i].ToString())
+                ManiaKeys7K[i] = new KeyBindButton(new Vector2(100, 30), keys[i])
                 {
                     PosY = 180,
                     PosX = (i - 3f) * 110f,
