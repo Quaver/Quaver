@@ -26,6 +26,11 @@ namespace Quaver.Graphics.Button
 
         internal bool Selected { get; private set; }
 
+        /// <summary>
+        ///     If the text is currently highlighted for a CTRL+A operation
+        /// </summary>
+        private bool TextHighlighted { get; set; }
+
         internal TextInputField(Vector2 ButtonSize, string placeHolderText)
         {
             TextSprite = new TextBoxSprite()
@@ -110,6 +115,7 @@ namespace Quaver.Graphics.Button
                     // Handle CTRL+ inputs
                     if (GameBase.KeyboardState.IsKeyDown(Keys.LeftControl) || GameBase.KeyboardState.IsKeyDown(Keys.RightControl))
                     {
+                        Console.WriteLine(e.Key);
                         // Based on the key pressed, we'll perform some other actions
                         switch (e.Key)
                         {
@@ -119,9 +125,36 @@ namespace Quaver.Graphics.Button
                                 TextSprite.Text = CurrentTextField.ToString();
                                 return;
                         }
-                        return;
+
+                        // Handle CTRL+A 
+                        if (GameBase.KeyboardState.IsKeyDown(Keys.A))
+                        {
+                            Console.WriteLine("hi");
+                            TextHighlighted = true;
+                        }
                     }
 
+
+                    // If the text is highlighted for a CTRL + A operation, then we need to handle that separately
+                    if (TextHighlighted)
+                    {
+                        switch (e.Key)
+                        {
+                            // If it's one of the keys that crash you and dont have an input, then just empty the string
+                            case Keys.Back:
+                            case Keys.Tab:
+                            case Keys.Delete:
+                                CurrentTextField.Length = 0;
+                                TextSprite.Text = CurrentTextField.ToString();
+                                return;
+                            // For all other key presses, we reset the string and append the new character
+                            default:
+                                CurrentTextField.Length = 0;
+                                CurrentTextField.Append(e.Character.ToString());
+                                TextHighlighted = false;
+                                return;
+                        }
+                    }
                     // Handle normal key inputs
                     switch (e.Key)
                     {
