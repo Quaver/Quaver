@@ -31,7 +31,7 @@ namespace Quaver.Graphics.Button
             TextSprite = new TextBoxSprite()
             {
                 Text = placeHolderText,
-                Size = new UDim2(ButtonSize.X - 4, ButtonSize.Y - 4),
+                Size = new UDim2(ButtonSize.X - 8, ButtonSize.Y - 4),
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.BotLeft,
                 TextBoxStyle = TextBoxStyle.WordwrapSingleLine,
@@ -132,12 +132,15 @@ namespace Quaver.Graphics.Button
                             break;
                         case Keys.Delete:
                             break;
+                        case Keys.Enter:
+                            TextSprite.Text = CurrentTextField.ToString();
+                            UnSelect();
+                            break;
                         default:
                             CurrentTextField.Append(e.Character.ToString());
+                            TextSprite.Text = CurrentTextField.ToString();
                             break;
                     }
-
-                    TextSprite.Text = CurrentTextField.ToString();
                 }
                 catch
                 {
@@ -146,19 +149,24 @@ namespace Quaver.Graphics.Button
             }
         }
 
+        internal void UnSelect()
+        {
+            Selected = false;
+            HoverTargetTween = 0;
+            CurrentTextField.Clear();
+        }
+
         internal override void OnClicked()
         {
             Selected = Selected ? false : true;
+            TextSprite.Text = CurrentTextField.ToString();
             HoverTargetTween = 1;
             base.OnClicked();
         }
 
         internal override void OnClickedOutside()
         {
-            Selected = false;
-            HoverTargetTween = 0;
-
-            CurrentTextField.Clear();
+            UnSelect();
             TextSprite.Text = PlaceHolderText;
         }
 
