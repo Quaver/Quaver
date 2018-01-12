@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.Graphics.Text;
+using Quaver.Utility;
 
 namespace Quaver.Logging
 {
@@ -125,8 +126,9 @@ namespace Quaver.Logging
                 return;
 
             // Put the time in front of the incoming log 
-            value = "[" +DateTime.Now.ToString("h:mm:ss") + "] " + value;
-            Console.WriteLine(value);
+            var val = Encoding.UTF8.GetBytes("[" +DateTime.Now.ToString("h:mm:ss") + "] " + value);
+            
+            Console.WriteLine(Encoding.UTF8.GetString(val));
 
             // Write to the log file
             try
@@ -148,14 +150,20 @@ namespace Quaver.Logging
             if (GameBase.Content == null)
                 return;
 
-            Logs.Add(new Log()
+            try
             {
-                Name = "LogMethod",
-                Color = color,
-                Duration = duration,
-                NoDuration = false,
-                Value = value
-            });
+                /*Logs.Add(new Log()
+                {
+                    Name = "LogMethod",
+                    Color = color,
+                    Duration = duration,
+                    NoDuration = false,
+                    Value = value
+                });*/
+            }
+            catch (Exception e)
+            {
+            }
 #endif
         }
 
