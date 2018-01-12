@@ -209,25 +209,28 @@ namespace Quaver.Graphics.Button
             if (!GameBase.KeyboardState.IsKeyDown(Keys.LeftControl) && !GameBase.KeyboardState.IsKeyDown(Keys.RightControl) || !Selected)
                 return;
 
-            // CTRL + A 
+            // CTRL + A (Select all text)
             if (GameBase.KeyboardState.IsKeyDown(Keys.A))
             {
                 // Set the text highligting to true, signifying that we are ready for to clear the input
                 TextHighlighted = true;
             }
-            // CTRL + BackSpace
+
+            // CTRL + BackSpace (Clear Input)
             else if (GameBase.KeyboardState.IsKeyDown(Keys.Back))
             {
                 // Clear the entire input
                 CurrentTextField.Length = 0;
                 TextSprite.Text = CurrentTextField.ToString();
             }
+
             // CTRL + C (Copy)
             else if (GameBase.KeyboardState.IsKeyDown(Keys.C))
             {
                 if (TextHighlighted)
                     Clipboard.SetText(TextSprite.Text);
             }
+
             // CTRL + V (Paste)
             else if (GameBase.KeyboardState.IsKeyDown(Keys.V))
             {
