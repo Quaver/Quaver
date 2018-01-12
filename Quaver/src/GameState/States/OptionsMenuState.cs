@@ -28,6 +28,8 @@ namespace Quaver.GameState.States
         private TextButton BackButton { get; set; }
         private KeyBindButton[] ManiaKeys4K { get; set; }
         private KeyBindButton[] ManiaKeys7K { get; set; }
+        private EventHandler[] ManiaEvent4K { get; set; }
+        private EventHandler[] ManiaEvent7K { get; set; }
 
         private string[] AvailableSkins { get; set; }
         private List<TextButton> SkinSelectButtons { get; set; }
@@ -75,7 +77,7 @@ namespace Quaver.GameState.States
 
         public void UnloadContent()
         {
-            for (var i=0; i<10; i++)
+            for (var i = 0; i < 10; i++)
                 ResolutionButtons[i].Clicked -= ResolutionEvents[i];
             ResolutionEvents.Clear();
 
@@ -83,6 +85,11 @@ namespace Quaver.GameState.States
             BackgroundBrightnessButton.Clicked -= OnBrightnessButtonClicked;
             FullscreenButton.Clicked -= OnFullscreenButtonClicked;
             LetterBoxingButton.Clicked -= OnLetterboxButtonClicked;
+
+            for (var i = 0; i < 4; i++)
+                ManiaKeys4K[i].KeyChanged -= ManiaEvent4K[i];
+            for (var i = 0; i < 7; i++)
+                ManiaKeys7K[i].KeyChanged -= ManiaEvent7K[i];
 
             Boundary.Destroy();
         }
@@ -150,10 +157,12 @@ namespace Quaver.GameState.States
             };
 
             ManiaKeys4K = new KeyBindButton[4];
+            ManiaEvent4K = new EventHandler[4];
             var keys = new Keys[4] { Configuration.KeyMania1, Configuration.KeyMania2, Configuration.KeyMania3, Configuration.KeyMania4 };
             for (var i=0; i<4; i++)
             {
                 //todo: hook this to an event/method or something
+                var index = i;
                 ManiaKeys4K[i] = new KeyBindButton(new Vector2(100, 30), keys[i])
                 {
                     PosY = 110,
@@ -161,13 +170,17 @@ namespace Quaver.GameState.States
                     Alignment = Alignment.TopCenter,
                     Parent = ButtonsContainer
                 };
+                ManiaEvent4K[i] = (sender, e) => OnManiaKey4KPressed(sender, e, index);
+                ManiaKeys4K[i].KeyChanged += ManiaEvent4K[i];
             }
 
             ManiaKeys7K = new KeyBindButton[7];
+            ManiaEvent7K = new EventHandler[7];
             keys = new Keys[7] { Configuration.KeyMania7k1, Configuration.KeyMania7k2, Configuration.KeyMania7k3, Configuration.KeyMania7k4, Configuration.KeyMania7k5, Configuration.KeyMania7k6, Configuration.KeyMania7k7 };
             for (var i = 0; i < 7; i++)
             {
                 //todo: hook this to an event/method or something
+                var index = i;
                 ManiaKeys7K[i] = new KeyBindButton(new Vector2(100, 30), keys[i])
                 {
                     PosY = 180,
@@ -175,6 +188,8 @@ namespace Quaver.GameState.States
                     Alignment = Alignment.TopCenter,
                     Parent = ButtonsContainer
                 };
+                ManiaEvent7K[i] = (sender, e) => OnManiaKey7KPressed(sender, e, index);
+                ManiaKeys7K[i].KeyChanged += ManiaEvent7K[i];
             }
         }
 
@@ -331,6 +346,65 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
             BackgroundBrightnessButton.Clicked += OnBrightnessButtonClicked;
+        }
+
+        /// <summary>
+        ///     When a mania 4K keybinding gets updated
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="index"></param>
+        private void OnManiaKey4KPressed(object sender, EventArgs e, int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    Configuration.KeyMania1 = ManiaKeys4K[index].CurrentKey;
+                    break;
+                case 1:
+                    Configuration.KeyMania2 = ManiaKeys4K[index].CurrentKey;
+                    break;
+                case 2:
+                    Configuration.KeyMania3 = ManiaKeys4K[index].CurrentKey;
+                    break;
+                case 3:
+                    Configuration.KeyMania4 = ManiaKeys4K[index].CurrentKey;
+                    break;
+            }
+        }
+
+        /// <summary>
+        ///     When a mania 7K keybinding gets updated
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="index"></param>
+        private void OnManiaKey7KPressed(object sender, EventArgs e, int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    Configuration.KeyMania7k1 = ManiaKeys7K[index].CurrentKey;
+                    break;
+                case 1:
+                    Configuration.KeyMania7k2 = ManiaKeys7K[index].CurrentKey;
+                    break;
+                case 2:
+                    Configuration.KeyMania7k3 = ManiaKeys7K[index].CurrentKey;
+                    break;
+                case 3:
+                    Configuration.KeyMania7k4 = ManiaKeys7K[index].CurrentKey;
+                    break;
+                case 4:
+                    Configuration.KeyMania7k5 = ManiaKeys7K[index].CurrentKey;
+                    break;
+                case 5:
+                    Configuration.KeyMania7k6 = ManiaKeys7K[index].CurrentKey;
+                    break;
+                case 6:
+                    Configuration.KeyMania7k7 = ManiaKeys7K[index].CurrentKey;
+                    break;
+            }
         }
 
         /// <summary>
