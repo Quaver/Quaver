@@ -40,6 +40,11 @@ namespace Quaver.Graphics.Button
         internal bool Selected { get; private set; }
 
         /// <summary>
+        ///     Determines if the field should be cleared when it is deselected
+        /// </summary>
+        internal bool ClearFieldWhenDeselected { get; set; }
+
+        /// <summary>
         ///     If the text is currently highlighted for a CTRL+A operation
         /// </summary>
         private bool TextHighlighted { get; set; }
@@ -170,6 +175,10 @@ namespace Quaver.Graphics.Button
                             break;
                         case Keys.Enter:
                             TextSprite.Text = CurrentTextField.ToString();
+
+                            //todo: trigger chat/field entered event before clearing 
+                            CurrentTextField.Clear();
+                            TextSprite.Text = PlaceHolderText;
                             UnSelect();
                             break;
                         default:
@@ -192,7 +201,13 @@ namespace Quaver.Graphics.Button
         {
             Selected = false;
             HoverTargetTween = 0;
-            CurrentTextField.Clear();
+
+            // Clears text field to placeholder ClearFieldWhenDeselected is true
+            if (ClearFieldWhenDeselected)
+            {
+                CurrentTextField.Clear();
+                TextSprite.Text = PlaceHolderText;
+            }
         }
 
         /// <summary>
@@ -204,7 +219,10 @@ namespace Quaver.Graphics.Button
 
             if (Selected)
             {
-                TextSprite.Text = CurrentTextField.ToString();
+                // Clears text if ClearFieldWhenDeselected is true
+                if (ClearFieldWhenDeselected)
+                    TextSprite.Text = CurrentTextField.ToString();
+
                 HoverTargetTween = 1;
             }
             base.OnClicked();
@@ -216,10 +234,7 @@ namespace Quaver.Graphics.Button
         internal override void OnClickedOutside()
         {
             if (Selected)
-            {
                 UnSelect();
-                TextSprite.Text = PlaceHolderText;
-            }
         }
 
         internal override void Destroy()
