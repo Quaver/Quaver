@@ -22,6 +22,7 @@ namespace Quaver.Graphics.GameOverlay
         public void UnloadContent()
         {
             ChatManager.UnloadContent();
+            GameBase.GlobalInputManager.GameOverlayToggled -= ToggleVisiblity;
         }
 
         public void Draw()
