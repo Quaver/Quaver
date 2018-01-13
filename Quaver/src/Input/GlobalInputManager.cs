@@ -95,14 +95,14 @@ namespace Quaver.Input
         {
             if (GameOverlayButtonIsDown)
             {
-                if (GameBase.KeyboardState.IsKeyUp(Keys.F8))
+                if (GameBase.KeyboardState.IsKeyUp(Configuration.KeyToggleOverlay))
                 {
                     GameOverlayButtonIsDown = false;
                 }
             }
             else
             {
-                if (GameBase.KeyboardState.IsKeyDown(Keys.F8))
+                if (GameBase.KeyboardState.IsKeyDown(Configuration.KeyToggleOverlay))
                 {
                     GameOverlayButtonIsDown = true;
                     GameOverlayToggled?.Invoke(this, null);

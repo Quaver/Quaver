@@ -285,6 +285,12 @@ namespace Quaver.Config
         internal static Keys KeyTakeScreenshot { get => _keyTakeScreenshot; set { _keyTakeScreenshot = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
+        ///     The key to toggle the overlay
+        /// </summary>
+        private static Keys _keyToggleOverlay = Keys.F8;
+        internal static Keys KeyToggleOverlay { get => _keyToggleOverlay; set { _keyToggleOverlay = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
         ///     Important!
         ///     Responsible for initializing directory properties,
         ///     writing a new config file if it doesn't exist and also reading config files.
@@ -390,6 +396,7 @@ namespace Quaver.Config
             _keyDecreaseScrollSpeed = ConfigHelper.ReadKeys(KeyDecreaseScrollSpeed, data["KeyDecreaseScrollSpeed"]);
             _keySkipIntro = ConfigHelper.ReadKeys(KeySkipIntro, data["KeySkipIntro"]);
             _keyTakeScreenshot = ConfigHelper.ReadKeys(KeyTakeScreenshot, data["KeyTakeScreenshot"]);
+            _keyToggleOverlay = ConfigHelper.ReadKeys(KeyToggleOverlay, data["KeyToggleOverlay"]);
                 
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync());
