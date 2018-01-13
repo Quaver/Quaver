@@ -46,9 +46,19 @@ namespace Quaver.Input
         public event EventHandler LeftClicked;
 
         /// <summary>
-        ///     Is determined by whether mouse is down or not.
+        ///     Gets triggered everytime GameOverlay key gets pressed
         /// </summary>
-        private bool MouseIsDown { get; set; }
+        public event EventHandler GameOverlayToggled;
+
+        /// <summary>
+        ///     Is determined by whether left mouse button is down or not.
+        /// </summary>
+        private bool LeftMouseButtonIsDown { get; set; }
+
+        /// <summary>
+        ///     Is determined by whether game overlay button is down or not.
+        /// </summary>
+        private bool GameOverlayButtonIsDown { get; set; }
 
         /// <summary>
         ///     Check the input.
@@ -58,24 +68,44 @@ namespace Quaver.Input
             HandleVolumeChanges();
             ImportBeatmaps();
             TakeScreenshot();
-            HandleClick();
+            HandleMouseInput();
+            HandleKeyboardInput();
         }
 
-        private void HandleClick()
+        private void HandleMouseInput()
         {
-            if (MouseIsDown)
+            if (LeftMouseButtonIsDown)
             {
                 if (GameBase.MouseState.LeftButton == ButtonState.Released)
                 {
-                    MouseIsDown = false;
+                    LeftMouseButtonIsDown = false;
                 }
             }
             else
             {
                 if (GameBase.MouseState.LeftButton == ButtonState.Pressed)
                 {
-                    MouseIsDown = true;
+                    LeftMouseButtonIsDown = true;
                     LeftClicked?.Invoke(this, null);
+                }
+            }
+        }
+
+        private void HandleKeyboardInput()
+        {
+            if (GameOverlayButtonIsDown)
+            {
+                if (GameBase.KeyboardState.IsKeyUp(Keys.F8))
+                {
+                    GameOverlayButtonIsDown = false;
+                }
+            }
+            else
+            {
+                if (GameBase.KeyboardState.IsKeyDown(Keys.F8))
+                {
+                    GameOverlayButtonIsDown = true;
+                    GameOverlayToggled?.Invoke(this, null);
                 }
             }
         }
