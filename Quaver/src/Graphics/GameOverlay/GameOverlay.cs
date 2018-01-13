@@ -16,6 +16,7 @@ namespace Quaver.Graphics.GameOverlay
         public void Initialize()
         {
             ChatManager.Initialize();
+            GameBase.GlobalInputManager.GameOverlayToggled += ToggleVisiblity;
         }
 
         public void UnloadContent()
@@ -33,6 +34,25 @@ namespace Quaver.Graphics.GameOverlay
         {
             if (Active)
                 ChatManager.Update(dt);
+        }
+
+        /// <summary>
+        ///     Toggles the overlay's visibility
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ToggleVisiblity(object sender, EventArgs e)
+        {
+            // Toggle on
+            if (!Active)
+            {
+                Active = true;
+            }
+            // Toggle off
+            else
+            {
+                Active = false;
+            }
         }
     }
 }
