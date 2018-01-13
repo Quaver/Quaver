@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Quaver.Input
 {
-    internal class ManiaKey : EventArgs
+    internal class ManiaKeyEventArgs : EventArgs
     {
         private int Key { get; set; }
 
-        internal ManiaKey(int key)
+        internal ManiaKeyEventArgs(int key)
         {
             Key = key;
         }

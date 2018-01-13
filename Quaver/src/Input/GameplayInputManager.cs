@@ -68,12 +68,12 @@ namespace Quaver.Input
         /// <summary>
         ///     EventHandler for when ever a mania key gets pressed
         /// </summary>
-        public event EventHandler<ManiaKey> ManiaKeyPress;
+        public event EventHandler<ManiaKeyEventArgs> ManiaKeyPress;
 
         /// <summary>
         ///     EventHandler for when ever a mania key gets released
         /// </summary>
-        public event EventHandler<ManiaKey> ManiaKeyRelease;
+        public event EventHandler<ManiaKeyEventArgs> ManiaKeyRelease;
 
         /// <summary>
         ///     EventHandler for when ever the skip key gets pressed
@@ -140,7 +140,7 @@ namespace Quaver.Input
                 if (GameBase.KeyboardState.IsKeyDown(InputManiaKeys[i]) && !LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = true;
-                    ManiaKeyPress?.Invoke(this, new ManiaKey(i));
+                    ManiaKeyPress?.Invoke(this, new ManiaKeyEventArgs(i));
                     //NoteManager.Input(i,true);
                     //GameBase.LoadedSkin.Hit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
                 }
@@ -148,7 +148,7 @@ namespace Quaver.Input
                 else if (GameBase.KeyboardState.IsKeyUp(InputManiaKeys[i]) && LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = false;
-                    ManiaKeyRelease?.Invoke(this, new ManiaKey(i));
+                    ManiaKeyRelease?.Invoke(this, new ManiaKeyEventArgs(i));
                     //NoteManager.Input(i, false);
                 }
             }
