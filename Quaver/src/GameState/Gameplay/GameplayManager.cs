@@ -314,7 +314,7 @@ namespace Quaver.GameState.Gameplay
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="keyLane"></param>
-        public void ManiaKeyDown(object sender, ManiaKey keyLane)
+        public void ManiaKeyDown(object sender, ManiaKeyEventArgs keyLane)
         {
             // Play Audio
             GameBase.LoadedSkin.SoundHit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
@@ -381,7 +381,7 @@ namespace Quaver.GameState.Gameplay
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="keyLane"></param>
-        public void ManiaKeyUp(object sender, ManiaKey keyLane)
+        public void ManiaKeyUp(object sender, ManiaKeyEventArgs keyLane)
         {
             //Reference Variables
             int noteIndex = -1;
