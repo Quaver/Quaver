@@ -513,6 +513,7 @@ namespace Quaver.GameState.States
             }
 
             //Display Health chart
+            /*
             foreach (var health in ScoreData.HealthData)
             {
                 var ob = new Sprite()
@@ -522,7 +523,61 @@ namespace Quaver.GameState.States
                     Tint = Color.Green,
                     Parent = boundary
                 };
+            }*/
+
+            //todo: cleanup code and make it look better
+            float maxOffset = 100;
+            double currentPosition = 0;
+            int currentIndex = 0;
+            double currentOffset = ScoreData.HealthData[currentIndex].Health;
+            float sizeX = boundary.Size.X.Offset;
+            float sizeY = boundary.Size.Y.Offset;
+
+            double targetPosition = ScoreData.HealthData[currentIndex + 1].Position * sizeX;
+            double targetOffset = ScoreData.HealthData[currentIndex + 1].Health;
+            double splineOffsetSize = (targetOffset - currentOffset);
+            double splinePositionSize = Math.Abs(targetPosition - currentPosition);
+
+            double curYpos = currentOffset;
+
+            while (currentPosition < sizeX || currentPosition < ScoreData.HealthData[ScoreData.HealthData.Count -1].Position * sizeX)
+            {
+                currentPosition += 1f;
+                if (currentPosition > targetPosition)
+                {
+                    if (currentIndex < ScoreData.HealthData.Count - 2)
+                    {
+                        currentIndex++;
+                        targetPosition = (float)ScoreData.HealthData[currentIndex + 1].Position * sizeX;
+                        targetOffset = ScoreData.HealthData[currentIndex + 1].Health;
+                        currentOffset = ScoreData.HealthData[currentIndex].Health;
+                        splineOffsetSize = /*Mathf.Abs*/ (targetOffset - currentOffset);
+                        splinePositionSize = Math.Abs(targetPosition - currentPosition);
+                    }
+                    else if (currentIndex == ScoreData.HealthData.Count - 2)
+                    {
+                        currentIndex++;
+                        targetPosition = ScoreData.HealthData[currentIndex].Position * sizeX;
+                        targetOffset = ScoreData.HealthData[currentIndex].Health;
+                        currentOffset = ScoreData.HealthData[currentIndex].Health;
+                        splineOffsetSize = (targetOffset - currentOffset);
+                        splinePositionSize = Math.Abs(targetPosition - currentPosition);
+                    }
+                }
+
+                var target = (1 - (targetPosition - currentPosition) / splinePositionSize) * splineOffsetSize + currentOffset;
+                curYpos += ((1 - target) * sizeY - curYpos) / 20f;
+
+                var ob = new Sprite(){
+                    Position = new UDim2((float)currentPosition, (float)curYpos),
+                    Size = new UDim2(3,3),
+                    Tint = Color.Lime,
+                    Parent = boundary
+                };
+
+                Console.WriteLine(currentPosition + ", "+curYpos);
             }
+
 
             //Create labels
             TextBoxSprite label;
