@@ -30,7 +30,7 @@ namespace Quaver.GameState.Gameplay
 
         //Hit Tracking (ms deviance) and other data
         internal int TotalJudgeCount { get; set; }
-        internal double SongLength { get; set; }
+        internal double PlayTimeTotal { get; set; }
         internal List<NoteRecord> MsDevianceData { get; private set; }
         internal List<AccuracyRecord> AccuracyData { get; private set; }
         internal List<HealthRecord> HealthData { get; private set; }
@@ -196,7 +196,9 @@ namespace Quaver.GameState.Gameplay
             AccuracyData = new List<AccuracyRecord>();
             HealthData = new List<HealthRecord>();
             TotalJudgeCount = count;
-            SongLength = SongManager.Length / GameBase.GameClock;
+            
+            //todo: get actual playtime total
+            PlayTimeTotal = SongManager.Length / GameBase.GameClock;
 
             //Create Difficulty Curve for od
             //var curve = (float)Math.Pow(od+1, -0.325) * GameBase.GameClock;
