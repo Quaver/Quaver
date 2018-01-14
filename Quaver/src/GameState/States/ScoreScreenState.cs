@@ -542,7 +542,7 @@ namespace Quaver.GameState.States
 
             while (currentPosition < sizeX || currentPosition < ScoreData.HealthData[ScoreData.HealthData.Count -1].Position * sizeX)
             {
-                currentPosition += 1f;
+                currentPosition += 0.5f;
                 if (currentPosition > targetPosition)
                 {
                     if (currentIndex < ScoreData.HealthData.Count - 2)
@@ -566,12 +566,12 @@ namespace Quaver.GameState.States
                 }
 
                 var target = (1 - (targetPosition - currentPosition) / splinePositionSize) * splineOffsetSize + currentOffset;
-                curYpos += ((1 - target) * sizeY - curYpos) / 20f;
+                curYpos += ((1 - target) * sizeY - curYpos) / 10f;
 
                 var ob = new Sprite(){
                     Position = new UDim2((float)currentPosition, (float)curYpos),
                     Size = new UDim2(3,3),
-                    Tint = Color.Lime,
+                    Tint = new Color((float)curYpos/ sizeY, 1 - (float)curYpos/ sizeY, 0),
                     Parent = boundary
                 };
 
