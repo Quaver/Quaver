@@ -408,11 +408,11 @@ namespace Quaver.GameState.States
 
             //record time intervals on graph every 15 seconds
             int timeIndex = 1;
-            while (timeIndex * 15000 < ScoreData.SongLength)
+            while (timeIndex * 15000 < ScoreData.PlayTimeTotal)
             {
                 var ob = new Sprite()
                 {
-                    Position = new UDim2(boundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
+                    Position = new UDim2(boundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.PlayTimeTotal), 0),
                     Size = new UDim2(1, 0, 0, 1),
                     Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
                     Parent = boundary
@@ -499,11 +499,11 @@ namespace Quaver.GameState.States
 
             //Record time intervals on graph every 15 seconds
             int timeIndex = 1;
-            while (timeIndex * 15000 < ScoreData.SongLength)
+            while (timeIndex * 15000 < ScoreData.PlayTimeTotal)
             {
                 var ob = new Sprite()
                 {
-                    Position = new UDim2(boundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
+                    Position = new UDim2(boundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.PlayTimeTotal), 0),
                     Size = new UDim2(1, 0, 0, 1),
                     Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
                     Parent = boundary
@@ -636,11 +636,11 @@ namespace Quaver.GameState.States
 
             //Record time intervals on graph every 15 seconds
             int timeIndex = 1;
-            while (timeIndex * 15000 < ScoreData.SongLength)
+            while (timeIndex * 15000 < ScoreData.PlayTimeTotal)
             {
                 var ob = new Sprite()
                 {
-                    Position = new UDim2(boundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.SongLength), 0),
+                    Position = new UDim2(boundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.PlayTimeTotal), 0),
                     Size = new UDim2(1, 0, 0, 1),
                     Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
                     Parent = boundary
