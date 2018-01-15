@@ -514,6 +514,7 @@ namespace Quaver.GameState.States
             CreateTimeMarkers(boundary);
 
             //Create labels for grade windows
+            List<Sprite> guides = new List<Sprite>();
             for (var i = 1; i < 7; i++)
             {
                 if (ScoreData.GradePercentage[i] > lowestAcc)
@@ -526,10 +527,12 @@ namespace Quaver.GameState.States
                         Alpha = 0.2f,
                         Parent = boundary
                     };
+                    guides.Add(ob);
                 }
             }
 
             //Display accuracy chart
+            /*
             foreach (var acc in ScoreData.AccuracyData)
             {
                 var ob = new Sprite()
@@ -539,7 +542,29 @@ namespace Quaver.GameState.States
                     Tint = GameColors.GradeColors[ScoreData.GetAccGradeIndex(acc.Value) + 1],
                     Parent = boundary
                 };
-            }
+            }*/
+            var graphElements = InterpolateGraph(ScoreData.AccuracyData, boundary.SizeX, boundary.SizeY);
+            float scale;
+            foreach (var ob in graphElements)
+            {
+                Color tint = guides[0].Tint;
+                for (int i = 0; i < guides.Count; i++)
+                {
+                    if (ob.PosY > guides[i].PosY)
+                    {
+                        tint = guides[i].Tint;
+                        break;
+                    }
+                }
+
+                scale = ob.PosY / boundary.SizeY;
+                ob.Tint = tint;
+                ob.PosX -= 1.5f;
+                ob.PosY -= 1.5f;
+                ob.Parent = boundary;
+            };
+
+
             CreateAxisLabels(boundary, "Acc 100%", $@"Acc {lowestAcc}%");
         }
 
@@ -634,7 +659,7 @@ namespace Quaver.GameState.States
                 }
 
                 target = (1 - (targetPosition - currentPosition) / splinePositionSize) * splineOffsetSize + currentOffset;
-                curYpos += ((1 - target) * sizeY - curYpos) / 10f;
+                curYpos += ((1 - target) * sizeY - curYpos) / 4f;
 
                 var ob = new Sprite()
                 {
