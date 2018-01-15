@@ -153,20 +153,26 @@ namespace Quaver.GameState.Gameplay
                 }
 
                 //Acc Data
-                var accData = new GameplayData()
+                if (songPos > AccuracyData.Last().Position + 2000 || Math.Abs(AccuracyData.Last().Value - Accuracy) > 0.002)
                 {
-                    Value = Accuracy,
-                    Position = (double)songPos,
-                };
-                AccuracyData.Add(accData);
+                    var accData = new GameplayData()
+                    {
+                        Value = Accuracy,
+                        Position = (double)songPos,
+                    };
+                    AccuracyData.Add(accData);
+                }
 
                 //Health Data
-                var healthData = new GameplayData()
+                if (songPos > HealthData.Last().Position + 5000 || Math.Abs(HealthData.Last().Value - Health) > 2)
                 {
-                    Value = Health / 100,
-                    Position = (double)songPos
-                };
-                HealthData.Add(healthData);
+                    var healthData = new GameplayData()
+                    {
+                        Value = Health / 100,
+                        Position = (double)songPos
+                    };
+                    HealthData.Add(healthData);
+                }
             }
 
             //Update Score todo: actual score calculation
@@ -194,6 +200,23 @@ namespace Quaver.GameState.Gameplay
             AccuracyData = new List<GameplayData>();
             HealthData = new List<GameplayData>();
             TotalJudgeCount = count;
+
+            //Create first value of data at point 0
+            //Acc Data
+            var accData = new GameplayData()
+            {
+                Value = 1,
+                Position = 0
+            };
+            AccuracyData.Add(accData);
+
+            //Health Data
+            var healthData = new GameplayData()
+            {
+                Value = 1,
+                Position = 0
+            };
+            HealthData.Add(healthData);
 
             //Create Difficulty Curve for od
             //var curve = (float)Math.Pow(od+1, -0.325) * GameBase.GameClock;
