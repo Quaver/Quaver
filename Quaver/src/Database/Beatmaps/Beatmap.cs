@@ -170,7 +170,8 @@ namespace Quaver.Database.Beatmaps
                 Source = qua.Source,
                 Tags = qua.Tags,
                 SongLength = Qua.FindSongLength(qua),
-                Mode = qua.Mode
+                Mode = qua.Mode,
+                DifficultyRating = qua.CalculateFakeDifficulty()
             };
         }
 
