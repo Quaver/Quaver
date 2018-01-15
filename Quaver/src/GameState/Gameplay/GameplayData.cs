@@ -6,21 +6,16 @@ using System.Threading.Tasks;
 
 namespace Quaver.GameState.Gameplay
 {
-    struct NoteRecord
+    struct GameplayData
     {
         /// <summary>
-        ///     Records how off the note pressed is from receptor
+        ///     Value of Data
         /// </summary>
-        internal double Offset { get; set; }
+        internal double Value { get; set; }
 
         /// <summary>
         ///     Records note's song position
         /// </summary>
         internal double Position { get; set; }
-
-        /// <summary>
-        ///     What type of color/judgement the note is. (Perf/Great/ect.)
-        /// </summary>
-        internal int Type { get; set; }
     }
 }
