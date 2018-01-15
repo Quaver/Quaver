@@ -71,10 +71,6 @@ namespace Quaver
             // Initialize OnlineEvents
             Rattle.Initialize();
 #endif
-
-            // Select a random beatmap if we do in fact have beatmaps.
-            if (GameBase.Mapsets.Count != 0) BeatmapUtils.SelectRandomBeatmap();
-
             // Enable console commands (Only applicable if on debug release)
             CommandHandler.HandleConsoleCommand();
 
@@ -111,15 +107,10 @@ namespace Quaver
 
             //Initialize Background Manager. Use after Load UI.
             BackgroundManager.Initialize();
+
+            // Select a random beatmap if we do in fact have beatmaps.
             if (GameBase.Mapsets.Count != 0)
-            {
-                // Load background asynchronously.
-                Task.Run(() => BackgroundManager.LoadBackground())
-                    .ContinueWith(t => BackgroundManager.Change(GameBase.CurrentBackground));
-            }
-
-            // Create Cursor. Use after LoadSkin
-
+                BeatmapUtils.SelectRandomBeatmap();
 
             // Set Render Target
             GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
