@@ -11,6 +11,7 @@ using Quaver.Database.Beatmaps;
 using Quaver.Logging;
 using Quaver.Replays;
 using Quaver.API.Maps;
+using Quaver.Config;
 
 namespace Quaver.GameState.States
 {
@@ -85,6 +86,15 @@ namespace Quaver.GameState.States
                 // We parse it and set it each time the player is going to play to kmake sure they are
                 // actually playing the correct map.
                 GameBase.SelectedBeatmap.Qua = qua;
+
+                // Asynchronously write to a file for livestreamers the difficulty rating
+                Task.Run(async () =>
+                {
+                    using (var writer = File.CreateText(Configuration.DataDirectory + "/temp/Now Playing/difficulty.txt"))
+                    {
+                        await writer.WriteAsync($"{Math.Round(GameBase.SelectedBeatmap.Qua.CalculateFakeDifficulty(), 2)}");
+                    }
+                });
 
                 Logger.Log("Finished loading Beatmap", LogColors.GameSuccess);
                 GameBase.SelectedBeatmap.Qua.CalculateDifficulty(GameBase.GameClock);
