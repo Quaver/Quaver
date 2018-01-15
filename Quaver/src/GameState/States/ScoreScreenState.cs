@@ -632,12 +632,12 @@ namespace Quaver.GameState.States
             int currentIndex = 0;
 
             double currentPosition = 0;
-            double currentOffset = ScoreData.HealthData[currentIndex].Value;
+            double currentOffset = graph[currentIndex].Value;
             //float sizeX = boundary.Size.X.Offset;
             //float sizeY = boundary.Size.Y.Offset;
 
-            double targetPosition = ScoreData.HealthData[currentIndex + 1].Position / ScoreData.PlayTimeTotal * boundarySizeX;
-            double targetOffset = (ScoreData.HealthData[currentIndex + 1].Value - dataLowestY) * lowestRatio;
+            double targetPosition = graph[currentIndex + 1].Position / ScoreData.PlayTimeTotal * boundarySizeX;
+            double targetOffset = (graph[currentIndex + 1].Value - dataLowestY) * lowestRatio;
             double splineOffsetSize = (targetOffset - currentOffset);
             double splinePositionSize = Math.Abs(targetPosition - currentPosition);
             double curYpos = currentOffset;
@@ -648,7 +648,7 @@ namespace Quaver.GameState.States
                 currentPosition += 0.25f;
                 if (currentPosition > targetPosition)
                 {
-                    if (currentIndex < ScoreData.HealthData.Count - 2)
+                    if (currentIndex < graph.Count - 2)
                     {
                         currentIndex++;
                         targetPosition = (float)graph[currentIndex + 1].Position / ScoreData.PlayTimeTotal * boundarySizeX;
@@ -662,7 +662,7 @@ namespace Quaver.GameState.States
                 }
 
                 target = (1 - (targetPosition - currentPosition) / splinePositionSize) * splineOffsetSize + currentOffset;
-                curYpos += ((1 - target) * boundarySizeY - curYpos) / 8f;
+                curYpos += ((1 - target) * boundarySizeY - curYpos) / 12f;
 
                 var ob = new Sprite()
                 {
