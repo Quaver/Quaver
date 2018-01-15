@@ -641,15 +641,15 @@ namespace Quaver.GameState.States
             double splineOffsetSize = (targetOffset - currentOffset);
             double splinePositionSize = Math.Abs(targetPosition - currentPosition);
             double curYpos = currentOffset;
-            double prevYpos = curYpos;
             double target;
 
+            int iter = 0;
             while (currentPosition < boundarySizeX)
             {
+                iter++;
                 target = (1 - (targetPosition - currentPosition) / splinePositionSize) * splineOffsetSize + currentOffset;
                 curYpos += ((1 - target) * boundarySizeY - curYpos) / 12f;
-                currentPosition += 1 / (0.75 + Math.Abs(curYpos - prevYpos));
-                prevYpos = curYpos;
+                currentPosition += 1 / (1 + Math.Abs((targetPosition - currentPosition) / splinePositionSize));
 
                 if (currentPosition > targetPosition)
                 {
