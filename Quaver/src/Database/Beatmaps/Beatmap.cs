@@ -5,12 +5,15 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
+using ManagedBass;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Utility;
 using SQLite;
+using Configuration = Quaver.Config.Configuration;
 
 namespace Quaver.Database.Beatmaps
 {
@@ -181,6 +184,14 @@ namespace Quaver.Database.Beatmaps
         public static void ChangeBeatmap(Beatmap map)
         {
             GameBase.SelectedBeatmap = map;
+
+            Task.Run(async () =>
+            {
+                using (var writer = File.CreateText(Configuration.DataDirectory + "/temp/Now Playing/map.txt"))
+                {
+                    await writer.WriteAsync($"{map.Artist} - {map.Title} [{map.DifficultyName}]");
+                }
+            });
         }
     }
 }
