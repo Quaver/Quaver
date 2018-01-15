@@ -94,6 +94,7 @@ namespace Quaver
 
                 foreach (var dir in new DirectoryInfo(Configuration.DataDirectory + "/temp/").GetDirectories("*", SearchOption.AllDirectories))
                     dir.Delete(true);
+
             }
             catch (Exception e)
             {
@@ -106,6 +107,9 @@ namespace Quaver
         /// </summary>
         private static void SetupGame()
         {
+            // Create now playing folder
+            Directory.CreateDirectory(Configuration.DataDirectory + "/temp/Now Playing/");
+
             // Set the build version
             GameBase.BuildVersion = BeatmapUtils.GetMd5Checksum(Configuration.GameDirectory + "/" + "Quaver.exe");
 
