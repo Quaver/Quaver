@@ -581,7 +581,8 @@ namespace Quaver.GameState.States
             {
                 Size = new UDim2(350, 240),
                 PosX = 10,
-                Alignment = Alignment.TopLeft,
+                PosY = 50,
+                Alignment = Alignment.TopCenter,
                 Parent = PlayStatsSprite
             };
 
@@ -674,6 +675,13 @@ namespace Quaver.GameState.States
                     {
                         currentIndex++;
                         targetPosition = (float)graph[currentIndex + 1].Position / ScoreData.PlayTimeTotal * boundarySizeX;
+
+                        while (currentIndex < graph.Count - 2 && currentPosition > targetPosition)
+                        {
+                            currentIndex++;
+                            targetPosition = (float)graph[currentIndex + 1].Position / ScoreData.PlayTimeTotal * boundarySizeX;
+                        }
+
                         targetOffset = (graph[currentIndex + 1].Value - dataLowestY) * lowestRatio;
                         currentOffset = (graph[currentIndex].Value - dataLowestY) * lowestRatio;
                         splineOffsetSize = targetOffset - currentOffset;
