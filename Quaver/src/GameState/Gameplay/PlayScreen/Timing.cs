@@ -118,7 +118,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
         }
 
-        internal double GeCurrentSongTime()
+        internal double GetCurrentSongTime()
         {
             //Add global offset to actual song time
             return ActualSongTime + (SongManager.BassDelayOffset - Configuration.GlobalOffset) * GameBase.GameClock;

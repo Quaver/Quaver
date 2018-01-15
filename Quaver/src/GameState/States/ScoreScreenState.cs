@@ -407,78 +407,47 @@ namespace Quaver.GameState.States
             }
 
             //record time intervals on graph every 15 seconds
-            int timeIndex = 1;
-            while (timeIndex * 15000 < ScoreData.PlayTimeTotal)
-            {
-                var ob = new Sprite()
-                {
-                    Position = new UDim2(boundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.PlayTimeTotal), 0),
-                    Size = new UDim2(1, 0, 0, 1),
-                    Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
-                    Parent = boundary
-                };
-
-                timeIndex++;
-            }
+            CreateTimeLabels(boundary);
 
             //temp todo: create proper ms deviance display. make this not lag some how
             //record misses
-            foreach (var ms in ScoreData.MsDevianceData)
+            foreach (var ms in ScoreData.NoteDevianceData)
             {
-                if (ms.Type == 5)
+                if (ms.Value > ScoreData.HitWindowPress[4])
                 {
                     var ob = new Sprite()
                     {
-                        Position = new UDim2(((float)ms.Position * boundary.Size.X.Offset) - 1f, 0),
+                        Position = new UDim2(((float)(ms.Position / ScoreData.PlayTimeTotal) * boundary.Size.X.Offset) - 1f, 0),
                         Size = new UDim2(2, 0, 0, 1),
                         Tint = GameColors.JudgeMiss,
-                        Alpha = 0.4f,
+                        Alpha = 0.25f,
                         Parent = boundary
                     };
                 }
             }
             //record other offset data
-            foreach (var ms in ScoreData.MsDevianceData)
+            foreach (var ms in ScoreData.NoteDevianceData)
             {
-                if (ms.Type != 5)
+                if (ms.Value < ScoreData.HitWindowPress[4])
                 {
+                    int tint = 0;
+                    for (tint = 0; tint < 4; tint++)
+                    {
+                        if (Math.Abs(ms.Value) < ScoreData.HitWindowPress[tint]) break;
+                    }
+
                     var ob = new Sprite()
                     {
-                        Position = new UDim2((float)(ms.Position * boundary.Size.X.Offset) - 1.5f, (float)(ms.Offset * (boundary.Size.Y.Offset / 2)) - 1.5f),
+                        Position = new UDim2((float)(ms.Position / ScoreData.PlayTimeTotal * boundary.Size.X.Offset) - 1.5f, (float)(ms.Value * (boundary.Size.Y.Offset / 2) / ScoreData.HitWindowPress[4]) - 1.5f),
                         Size = new UDim2(3, 3),
-                        Tint = GameColors.JudgeColors[ms.Type],
+                        Tint = GameColors.JudgeColors[tint],
                         Alignment = Alignment.MidLeft,
                         Parent = boundary
                     };
                 }
             }
 
-            //create labels
-            TextBoxSprite label;
-
-            //top
-            label = new TextBoxSprite()
-            {
-                Text = "Late (+" + Math.Floor(ScoreData.HitWindowPress[4]) + "ms)",
-                Font = Fonts.Medium12,
-                Position = new UDim2(2, 2),
-                Size = new UDim2(200, 50),
-                Alignment = Alignment.TopLeft,
-                TextAlignment = Alignment.TopLeft,
-                Parent = boundary
-            };
-
-            //bottom
-            label = new TextBoxSprite()
-            {
-                Text = "Early (-" + Math.Floor(ScoreData.HitWindowPress[4]) + "ms)",
-                Font = Fonts.Medium12,
-                Position = new UDim2(2, -2),
-                Size = new UDim2(200, 50),
-                Alignment = Alignment.BotLeft,
-                TextAlignment = Alignment.BotLeft,
-                Parent = boundary
-            };
+            CreateAxisLabels(boundary, "Late (+" + Math.Floor(ScoreData.HitWindowPress[4]) + "ms)", "Early (-" + Math.Floor(ScoreData.HitWindowPress[4]) + "ms)");
         }
 
         /// <summary>
@@ -498,19 +467,7 @@ namespace Quaver.GameState.States
             };
 
             //Record time intervals on graph every 15 seconds
-            int timeIndex = 1;
-            while (timeIndex * 15000 < ScoreData.PlayTimeTotal)
-            {
-                var ob = new Sprite()
-                {
-                    Position = new UDim2(boundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.PlayTimeTotal), 0),
-                    Size = new UDim2(1, 0, 0, 1),
-                    Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
-                    Parent = boundary
-                };
-
-                timeIndex++;
-            }
+            CreateTimeLabels(boundary);
 
             //Display Health chart
             /*
@@ -529,18 +486,18 @@ namespace Quaver.GameState.States
             float maxOffset = 100;
             double currentPosition = 0;
             int currentIndex = 0;
-            double currentOffset = ScoreData.HealthData[currentIndex].Health;
+            double currentOffset = ScoreData.HealthData[currentIndex].Value;
             float sizeX = boundary.Size.X.Offset;
             float sizeY = boundary.Size.Y.Offset;
 
-            double targetPosition = ScoreData.HealthData[currentIndex + 1].Position * sizeX;
-            double targetOffset = ScoreData.HealthData[currentIndex + 1].Health;
+            double targetPosition = ScoreData.HealthData[currentIndex + 1].Position / ScoreData.PlayTimeTotal * sizeX;
+            double targetOffset = ScoreData.HealthData[currentIndex + 1].Value;
             double splineOffsetSize = (targetOffset - currentOffset);
             double splinePositionSize = Math.Abs(targetPosition - currentPosition);
 
             double curYpos = currentOffset;
 
-            while (currentPosition < sizeX || currentPosition < ScoreData.HealthData[ScoreData.HealthData.Count -1].Position * sizeX)
+            while (currentPosition < sizeX)
             {
                 currentPosition += 0.5f;
                 if (currentPosition > targetPosition)
@@ -548,18 +505,18 @@ namespace Quaver.GameState.States
                     if (currentIndex < ScoreData.HealthData.Count - 2)
                     {
                         currentIndex++;
-                        targetPosition = (float)ScoreData.HealthData[currentIndex + 1].Position * sizeX;
-                        targetOffset = ScoreData.HealthData[currentIndex + 1].Health;
-                        currentOffset = ScoreData.HealthData[currentIndex].Health;
+                        targetPosition = (float)ScoreData.HealthData[currentIndex + 1].Position / ScoreData.PlayTimeTotal * sizeX;
+                        targetOffset = ScoreData.HealthData[currentIndex + 1].Value;
+                        currentOffset = ScoreData.HealthData[currentIndex].Value;
                         splineOffsetSize = /*Mathf.Abs*/ (targetOffset - currentOffset);
                         splinePositionSize = Math.Abs(targetPosition - currentPosition);
                     }
                     else if (currentIndex == ScoreData.HealthData.Count - 2)
                     {
                         currentIndex++;
-                        targetPosition = ScoreData.HealthData[currentIndex].Position * sizeX;
-                        targetOffset = ScoreData.HealthData[currentIndex].Health;
-                        currentOffset = ScoreData.HealthData[currentIndex].Health;
+                        targetPosition = ScoreData.HealthData[currentIndex].Position / ScoreData.PlayTimeTotal * sizeX;
+                        targetOffset = ScoreData.HealthData[currentIndex].Value;
+                        currentOffset = ScoreData.HealthData[currentIndex].Value;
                         splineOffsetSize = (targetOffset - currentOffset);
                         splinePositionSize = Math.Abs(targetPosition - currentPosition);
                     }
@@ -575,36 +532,10 @@ namespace Quaver.GameState.States
                     Parent = boundary
                 };
 
-                Console.WriteLine(currentPosition + ", "+curYpos);
+                //Console.WriteLine(currentPosition + ", "+curYpos);
             }
 
-
-            //Create labels
-            TextBoxSprite label;
-
-            //Top
-            label = new TextBoxSprite()
-            {
-                Text = "Health 100%",
-                Font = Fonts.Medium12,
-                Position = new UDim2(2, 2),
-                Size = new UDim2(200, 50),
-                Alignment = Alignment.TopLeft,
-                TextAlignment = Alignment.TopLeft,
-                Parent = boundary
-            };
-
-            //Bottom
-            label = new TextBoxSprite()
-            {
-                Text = "Health 0%",
-                Font = Fonts.Medium12,
-                Position = new UDim2(2, -2),
-                Size = new UDim2(200, 50),
-                Alignment = Alignment.BotLeft,
-                TextAlignment = Alignment.BotLeft,
-                Parent = boundary
-            };
+            CreateAxisLabels(boundary, "Health 100%", "Health 0%");
         }
         
         /// <summary>
@@ -615,9 +546,9 @@ namespace Quaver.GameState.States
             double lowestAcc = 100;
             foreach (var acc in ScoreData.AccuracyData)
             {
-                if (acc.Accuracy < lowestAcc)
+                if (acc.Value < lowestAcc)
                 {
-                    lowestAcc = acc.Accuracy;
+                    lowestAcc = acc.Value;
                 }
             }
             lowestAcc = Math.Max(0, (Math.Floor(lowestAcc * 1000) / 10) - 2);
@@ -635,19 +566,7 @@ namespace Quaver.GameState.States
             };
 
             //Record time intervals on graph every 15 seconds
-            int timeIndex = 1;
-            while (timeIndex * 15000 < ScoreData.PlayTimeTotal)
-            {
-                var ob = new Sprite()
-                {
-                    Position = new UDim2(boundary.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.PlayTimeTotal), 0),
-                    Size = new UDim2(1, 0, 0, 1),
-                    Alpha = timeIndex % 4 == 0 ? 0.5f : 0.15f,
-                    Parent = boundary
-                };
-
-                timeIndex++;
-            }
+            CreateTimeLabels(boundary);
 
             //Create labels for grade windows
             for (var i = 1; i < 7; i++)
@@ -670,39 +589,13 @@ namespace Quaver.GameState.States
             {
                 var ob = new Sprite()
                 {
-                    Position = new UDim2((float)(acc.Position * boundary.Size.X.Offset) - 1.5f, (float)(  (1 - (((acc.Accuracy * 100) - lowestAcc) * lowAccRatio)) * boundary.Size.Y.Offset) - 1.5f),
+                    Position = new UDim2((float)(acc.Position / ScoreData.PlayTimeTotal * boundary.Size.X.Offset) - 1.5f, (float)(  (1 - (((acc.Value * 100) - lowestAcc) * lowAccRatio)) * boundary.Size.Y.Offset) - 1.5f),
                     Size = new UDim2(3, 3),
-                    Tint = GameColors.GradeColors[acc.Type],
+                    Tint = GameColors.GradeColors[ScoreData.GetAccGradeIndex(acc.Value) + 1],
                     Parent = boundary
                 };
             }
-
-            //create labels
-            TextBoxSprite label;
-
-            //top
-            label = new TextBoxSprite()
-            {
-                Text = "Acc 100%",
-                Font = Fonts.Medium12,
-                Position = new UDim2(2, 2),
-                Size = new UDim2(200, 50),
-                Alignment = Alignment.TopLeft,
-                TextAlignment = Alignment.TopLeft,
-                Parent = boundary
-            };
-
-            //bottom
-            label = new TextBoxSprite()
-            {
-                Text = $@"Acc {lowestAcc}%",
-                Font = Fonts.Medium12,
-                Position = new UDim2(2, -2),
-                Size = new UDim2(200, 50),
-                Alignment = Alignment.BotLeft,
-                TextAlignment = Alignment.BotLeft,
-                Parent = boundary
-            };
+            CreateAxisLabels(boundary, "Acc 100%", $@"Acc {lowestAcc}%");
         }
 
         /// <summary>
@@ -758,6 +651,57 @@ namespace Quaver.GameState.States
                 Size = new UDim2(0, 70, 1, 0),
                 Parent = boundary
             };
+        }
+
+        private List<Sprite> InterpolateGraph(List<GameplayData> graph)
+        {
+            List<Sprite> graphElements = new List<Sprite>();
+            return graphElements;
+        }
+
+        private void CreateAxisLabels(Drawable parent, string topLabel, string botLabel)
+        {
+            //top
+            var label = new TextBoxSprite()
+            {
+                Text = topLabel,
+                Font = Fonts.Medium12,
+                Position = new UDim2(2, 2),
+                Size = new UDim2(200, 50),
+                Alignment = Alignment.TopLeft,
+                TextAlignment = Alignment.TopLeft,
+                Parent = parent
+            };
+
+            //bottom
+            label = new TextBoxSprite()
+            {
+                Text = botLabel,
+                Font = Fonts.Medium12,
+                Position = new UDim2(2, -2),
+                Size = new UDim2(200, 50),
+                Alignment = Alignment.BotLeft,
+                TextAlignment = Alignment.BotLeft,
+                Parent = parent
+            };
+        }
+
+        private void CreateTimeLabels(Drawable parent)
+        {
+            //Record time intervals on graph every 15 seconds
+            int timeIndex = 1;
+            while (timeIndex * 15000 < ScoreData.PlayTimeTotal)
+            {
+                var ob = new Sprite()
+                {
+                    Position = new UDim2(parent.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.PlayTimeTotal), 0),
+                    Size = new UDim2(1, 0, 0, 1),
+                    Alpha = timeIndex % 4 == 0 ? 0.5f : 0.1f,
+                    Parent = parent
+                };
+
+                timeIndex++;
+            }
         }
     }
 }

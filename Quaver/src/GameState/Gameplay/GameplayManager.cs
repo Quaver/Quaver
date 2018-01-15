@@ -182,7 +182,7 @@ namespace Quaver.GameState.Gameplay
             
             // Set the current song time.
             Timing.Update(dt);
-            CurrentSongTime = Timing.GeCurrentSongTime();
+            CurrentSongTime = Timing.GetCurrentSongTime();
 
             // Check if the song is currently skippable.
             IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - CurrentSongTime >= 5000);
@@ -213,7 +213,11 @@ namespace Quaver.GameState.Gameplay
 
             // If the song is done, it'll change state. todo: add a method for this later
             if (Timing.PlayingIsDone || ScoreManager.Failed)
+            {
+                //Logger.Log("DONE", LogColors.GameImportant);
+                ScoreManager.PlayTimeTotal = CurrentSongTime * GameBase.GameClock;
                 GameBase.GameStateManager.ChangeState(new ScoreScreenState(BeatmapMd5, ScoreManager, GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title, GameBase.SelectedBeatmap.DifficultyName, ReplayFrames));
+            }
         }
 
         public void Draw()
@@ -255,10 +259,11 @@ namespace Quaver.GameState.Gameplay
         /// </summary>
         private void InitializeGameplay(IGameState state, Qua qua)
         {
-            //Initialize Score Manager
-            //todo: temp
+            // Get Song Time
             CurrentSongTime = 0;
 
+            // Initialize Score Manager
+            // Get total judge count (press + release)
             var count = 0;
             var total = GameBase.SelectedBeatmap.Qua.HitObjects.Count;
 
@@ -346,7 +351,7 @@ namespace Quaver.GameState.Gameplay
                     if (Math.Abs(NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime) <= ScoreManager.HitWindowPress[i])
                     {
                         // Update ScoreManager and UI if note was pressed on time
-                        ScoreManager.Count(i, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime, CurrentSongTime / SongManager.Length);
+                        ScoreManager.Count(i, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime, CurrentSongTime * GameBase.GameClock);
                         AccuracyBoxUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
                         AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
                         PlayfieldUI.UpdateJudge(i, ScoreManager.Combo, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime);
@@ -446,7 +451,7 @@ namespace Quaver.GameState.Gameplay
                 GameBase.LoadedSkin.SoundComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
             // Manage UI Helpers + Update Score Manager
-            ScoreManager.Count(5, false, 0, CurrentSongTime/ SongManager.Length);
+            ScoreManager.Count(5, false, 0, CurrentSongTime * GameBase.GameClock);
             AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
             AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
             PlayfieldUI.UpdateJudge(5, ScoreManager.Combo);
