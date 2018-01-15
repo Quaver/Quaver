@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ManagedBass;
 using Microsoft.Xna.Framework;
+using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 
 namespace Quaver.Database.Beatmaps
@@ -213,12 +214,12 @@ namespace Quaver.Database.Beatmaps
                 {
                     if (onMap == randomBeatmap)
                     {
-                        if (GameBase.CurrentBackground != null)
-                            GameBase.CurrentBackground.Dispose();
+                        // Switch map and load audio for song and play it.
+                        Beatmap.ChangeBeatmap(beatmap);
 
-                        GameBase.SelectedBeatmap = null;
-                        GameBase.SelectedBeatmap = beatmap;
-                        foundBeatmap = true;
+                        // Load and change background after import
+                        BackgroundManager.LoadBackground();
+                        BackgroundManager.Change(GameBase.CurrentBackground);
                         break;
                     }
 
