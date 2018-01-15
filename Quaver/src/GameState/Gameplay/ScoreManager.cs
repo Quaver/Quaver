@@ -153,7 +153,7 @@ namespace Quaver.GameState.Gameplay
                 }
 
                 //Acc Data
-                if (songPos > AccuracyData.Last().Position + 2000 || Math.Abs(AccuracyData.Last().Value - Accuracy) > 0.002)
+                //if (songPos > AccuracyData.Last().Position + 100 || Math.Abs(AccuracyData.Last().Value - Accuracy) > 0.01)
                 {
                     var accData = new GameplayData()
                     {
@@ -164,7 +164,7 @@ namespace Quaver.GameState.Gameplay
                 }
 
                 //Health Data
-                if (songPos > HealthData.Last().Position + 5000 || Math.Abs(HealthData.Last().Value - Health) > 2)
+                //if (songPos > HealthData.Last().Position + 500 || Math.Abs(HealthData.Last().Value - Health) > 2)
                 {
                     var healthData = new GameplayData()
                     {
