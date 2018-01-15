@@ -524,7 +524,7 @@ namespace Quaver.GameState.States
                     {
                         Position = new UDim2(0, boundary.Size.Y.Offset * (float)(1 - ((ScoreData.GradePercentage[i] - lowestAcc) * lowAccRatio))),
                         Size = new UDim2(0, 1, 1, 0),
-                        Tint = GameColors.GradeColors[i + 1],
+                        Tint = GameColors.GradeColors[i+1],
                         Alpha = 0.2f,
                         Parent = boundary
                     };
@@ -533,28 +533,29 @@ namespace Quaver.GameState.States
             }
 
             //Display accuracy chart
-            /*
-            foreach (var acc in ScoreData.AccuracyData)
-            {
-                var ob = new Sprite()
-                {
-                    Position = new UDim2((float)(acc.Position / ScoreData.PlayTimeTotal * boundary.Size.X.Offset) - 1.5f, (float)(  (1 - (((acc.Value * 100) - lowestAcc) * lowAccRatio)) * boundary.Size.Y.Offset) - 1.5f),
-                    Size = new UDim2(3, 3),
-                    Tint = GameColors.GradeColors[ScoreData.GetAccGradeIndex(acc.Value) + 1],
-                    Parent = boundary
-                };
-            }*/
             var graphElements = InterpolateGraph(ScoreData.AccuracyData, boundary.SizeX, boundary.SizeY, lowestAcc/100);
             float scale;
+            Console.WriteLine(guides.Count);
             foreach (var ob in graphElements)
             {
                 Color tint = guides[0].Tint;
-                for (int i = 0; i < guides.Count; i++)
+                if (ob.PosY <= 0.01)
                 {
-                    if (ob.PosY > guides[i].PosY)
+                    tint = GameColors.GradeColors[7];
+                }
+                else if (ob.PosY > guides[0].PosY)
+                {
+                    tint = GameColors.GradeColors[7 - guides.Count];
+                }
+                else
+                {
+                    for (int i = 0; i < guides.Count; i++)
                     {
-                        tint = guides[i].Tint;
-                        break;
+                        if (ob.PosY > guides[i].PosY)
+                        {
+                            tint = guides[Math.Max(i - 1, 0)].Tint;
+                            break;
+                        }
                     }
                 }
 
