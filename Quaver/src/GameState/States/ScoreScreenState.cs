@@ -644,6 +644,7 @@ namespace Quaver.GameState.States
             double currentPosition = 0;
             double currentOffset = graph[currentIndex].Value;
             double curYpos = currentOffset;
+            double prevYpos = curYpos;
 
             // Target values
             double targetPosition = graph[currentIndex + 1].Position / ScoreData.PlayTimeTotal * boundarySizeX;
@@ -660,10 +661,11 @@ namespace Quaver.GameState.States
             {
                 // Calculate currentY value of graph
                 target = (1 - (targetPosition - currentPosition) / splinePositionSize) * splineOffsetSize + currentOffset;
-                curYpos += ((1 - target) * boundarySizeY - curYpos) / 12f;
+                curYpos += ((1 - target) * boundarySizeY - curYpos) / 6f;
 
                 // Calculate current X value of graph
-                currentPosition += 1 / (1 + Math.Abs((targetPosition - currentPosition) / splinePositionSize));
+                currentPosition += 1 / (1 + Math.Abs(Math.Pow(curYpos - prevYpos,2)));//Math.Abs((targetPosition - currentPosition) / splinePositionSize));
+                prevYpos = curYpos;
 
                 // If the current X value is greater than the X value of the next point, change the current index to the next point
                 if (currentPosition > targetPosition)
