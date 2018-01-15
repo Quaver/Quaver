@@ -625,32 +625,47 @@ namespace Quaver.GameState.States
             };
         }
 
+        /// <summary>
+        ///     Returns a list of graph elements used to display a curve for a set of gameplay data.
+        /// </summary>
+        /// <param name="graph">The list of gameplay data</param>
+        /// <param name="boundarySizeX">Size of boundary parent (x offset)</param>
+        /// <param name="boundarySizeY">Size of boundary parent (y offset)</param>
+        /// <param name="dataLowestY">Lowest point of the data set</param>
+        /// <returns></returns>
         private List<Sprite> InterpolateGraph(List<GameplayData> graph, float boundarySizeX, float boundarySizeY, double dataLowestY)
         {
+            // Create graph elements and any references to object
             List<Sprite> graphElements = new List<Sprite>();
             double lowestRatio = (1 / (1 - dataLowestY));
             int currentIndex = 0;
 
+            // Current position and offset values
             double currentPosition = 0;
             double currentOffset = graph[currentIndex].Value;
-            //float sizeX = boundary.Size.X.Offset;
-            //float sizeY = boundary.Size.Y.Offset;
+            double curYpos = currentOffset;
 
+            // Target values
             double targetPosition = graph[currentIndex + 1].Position / ScoreData.PlayTimeTotal * boundarySizeX;
             double targetOffset = (graph[currentIndex + 1].Value - dataLowestY) * lowestRatio;
-            double splineOffsetSize = (targetOffset - currentOffset);
-            double splinePositionSize = Math.Abs(targetPosition - currentPosition);
-            double curYpos = currentOffset;
             double target;
 
-            int iter = 0;
+            // Splining
+            double splineOffsetSize = (targetOffset - currentOffset);
+            double splinePositionSize = Math.Abs(targetPosition - currentPosition);
+
+            // This algorithm first calculates the slope between two points and creates the graph elements accordingly
+            // The algorithm simultaneously applies a B-Spline algorithm to smoothen the curve of the graph
             while (currentPosition < boundarySizeX)
             {
-                iter++;
+                // Calculate currentY value of graph
                 target = (1 - (targetPosition - currentPosition) / splinePositionSize) * splineOffsetSize + currentOffset;
                 curYpos += ((1 - target) * boundarySizeY - curYpos) / 12f;
+
+                // Calculate current X value of graph
                 currentPosition += 1 / (1 + Math.Abs((targetPosition - currentPosition) / splinePositionSize));
 
+                // If the current X value is greater than the X value of the next point, change the current index to the next point
                 if (currentPosition > targetPosition)
                 {
                     if (currentIndex < graph.Count - 2)
@@ -666,6 +681,7 @@ namespace Quaver.GameState.States
                         break;
                 }
 
+                // Create graph element
                 var ob = new Sprite()
                 {
                     Position = new UDim2((float)currentPosition, (float)curYpos),
@@ -676,6 +692,12 @@ namespace Quaver.GameState.States
             return graphElements;
         }
 
+        /// <summary>
+        ///     Create 2 Y-axis labels for a graph.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="topLabel"></param>
+        /// <param name="botLabel"></param>
         private void CreateAxisLabels(Drawable parent, string topLabel, string botLabel)
         {
             //top
@@ -703,6 +725,10 @@ namespace Quaver.GameState.States
             };
         }
 
+        /// <summary>
+        ///     Create time markers for a graph.
+        /// </summary>
+        /// <param name="parent"></param>
         private void CreateTimeMarkers(Drawable parent)
         {
             //Record time intervals on graph every 15 seconds
