@@ -641,11 +641,16 @@ namespace Quaver.GameState.States
             double splineOffsetSize = (targetOffset - currentOffset);
             double splinePositionSize = Math.Abs(targetPosition - currentPosition);
             double curYpos = currentOffset;
+            double prevYpos = curYpos;
             double target;
 
             while (currentPosition < boundarySizeX)
             {
-                currentPosition += 0.25f;
+                target = (1 - (targetPosition - currentPosition) / splinePositionSize) * splineOffsetSize + currentOffset;
+                curYpos += ((1 - target) * boundarySizeY - curYpos) / 12f;
+                currentPosition += 1 / (0.75 + Math.Abs(curYpos - prevYpos));
+                prevYpos = curYpos;
+
                 if (currentPosition > targetPosition)
                 {
                     if (currentIndex < graph.Count - 2)
@@ -661,13 +666,10 @@ namespace Quaver.GameState.States
                         break;
                 }
 
-                target = (1 - (targetPosition - currentPosition) / splinePositionSize) * splineOffsetSize + currentOffset;
-                curYpos += ((1 - target) * boundarySizeY - curYpos) / 12f;
-
                 var ob = new Sprite()
                 {
                     Position = new UDim2((float)currentPosition, (float)curYpos),
-                    Size = new UDim2(3, 3),
+                    Size = new UDim2(3, 3)
                 };
                 graphElements.Add(ob);
             }
