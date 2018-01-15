@@ -406,8 +406,8 @@ namespace Quaver.GameState.States
                 };
             }
 
-            //record time intervals on graph every 15 seconds
-            CreateTimeLabels(boundary);
+            // Create time markers
+            CreateTimeMarkers(boundary);
 
             //temp todo: create proper ms deviance display. make this not lag some how
             //record misses
@@ -466,74 +466,19 @@ namespace Quaver.GameState.States
                 Parent = PlayStatsSprite
             };
 
-            //Record time intervals on graph every 15 seconds
-            CreateTimeLabels(boundary);
+            // Create time markers
+            CreateTimeMarkers(boundary);
 
-            //Display Health chart
-            /*
-            foreach (var health in ScoreData.HealthData)
+            var graphElements = InterpolateGraph(ScoreData.HealthData, boundary.SizeX, boundary.SizeY);
+            float scale;
+            foreach (var ob in graphElements)
             {
-                var ob = new Sprite()
-                {
-                    Position = new UDim2((float)(health.Position * boundary.Size.X.Offset) - 1.5f, (float)((1 - health.Health) * boundary.Size.Y.Offset) - 1.5f),
-                    Size = new UDim2(3, 3),
-                    Tint = Color.Green,
-                    Parent = boundary
-                };
-            }*/
-
-            //todo: cleanup code and make it look better
-            float maxOffset = 100;
-            double currentPosition = 0;
-            int currentIndex = 0;
-            double currentOffset = ScoreData.HealthData[currentIndex].Value;
-            float sizeX = boundary.Size.X.Offset;
-            float sizeY = boundary.Size.Y.Offset;
-
-            double targetPosition = ScoreData.HealthData[currentIndex + 1].Position / ScoreData.PlayTimeTotal * sizeX;
-            double targetOffset = ScoreData.HealthData[currentIndex + 1].Value;
-            double splineOffsetSize = (targetOffset - currentOffset);
-            double splinePositionSize = Math.Abs(targetPosition - currentPosition);
-
-            double curYpos = currentOffset;
-
-            while (currentPosition < sizeX)
-            {
-                currentPosition += 0.5f;
-                if (currentPosition > targetPosition)
-                {
-                    if (currentIndex < ScoreData.HealthData.Count - 2)
-                    {
-                        currentIndex++;
-                        targetPosition = (float)ScoreData.HealthData[currentIndex + 1].Position / ScoreData.PlayTimeTotal * sizeX;
-                        targetOffset = ScoreData.HealthData[currentIndex + 1].Value;
-                        currentOffset = ScoreData.HealthData[currentIndex].Value;
-                        splineOffsetSize = /*Mathf.Abs*/ (targetOffset - currentOffset);
-                        splinePositionSize = Math.Abs(targetPosition - currentPosition);
-                    }
-                    else if (currentIndex == ScoreData.HealthData.Count - 2)
-                    {
-                        currentIndex++;
-                        targetPosition = ScoreData.HealthData[currentIndex].Position / ScoreData.PlayTimeTotal * sizeX;
-                        targetOffset = ScoreData.HealthData[currentIndex].Value;
-                        currentOffset = ScoreData.HealthData[currentIndex].Value;
-                        splineOffsetSize = (targetOffset - currentOffset);
-                        splinePositionSize = Math.Abs(targetPosition - currentPosition);
-                    }
-                }
-
-                var target = (1 - (targetPosition - currentPosition) / splinePositionSize) * splineOffsetSize + currentOffset;
-                curYpos += ((1 - target) * sizeY - curYpos) / 10f;
-
-                var ob = new Sprite(){
-                    Position = new UDim2((float)currentPosition, (float)curYpos),
-                    Size = new UDim2(3,3),
-                    Tint = new Color((float)curYpos/ sizeY, 1 - (float)curYpos/ sizeY, 0),
-                    Parent = boundary
-                };
-
-                //Console.WriteLine(currentPosition + ", "+curYpos);
-            }
+                scale = ob.PosY / boundary.SizeY;
+                ob.Tint = new Color(scale, 1 - scale, 0);
+                ob.PosX -= 1.5f;
+                ob.PosY -= 1.5f;
+                ob.Parent = boundary;
+            };
 
             CreateAxisLabels(boundary, "Health 100%", "Health 0%");
         }
@@ -565,8 +510,8 @@ namespace Quaver.GameState.States
                 Parent = PlayStatsSprite
             };
 
-            //Record time intervals on graph every 15 seconds
-            CreateTimeLabels(boundary);
+            // Create time markers
+            CreateTimeMarkers(boundary);
 
             //Create labels for grade windows
             for (var i = 1; i < 7; i++)
@@ -653,9 +598,51 @@ namespace Quaver.GameState.States
             };
         }
 
-        private List<Sprite> InterpolateGraph(List<GameplayData> graph)
+        private List<Sprite> InterpolateGraph(List<GameplayData> graph, float sizeX, float sizeY)
         {
             List<Sprite> graphElements = new List<Sprite>();
+            int currentIndex = 0;
+
+            double currentPosition = 0;
+            double currentOffset = ScoreData.HealthData[currentIndex].Value;
+            //float sizeX = boundary.Size.X.Offset;
+            //float sizeY = boundary.Size.Y.Offset;
+
+            double targetPosition = ScoreData.HealthData[currentIndex + 1].Position / ScoreData.PlayTimeTotal * sizeX;
+            double targetOffset = ScoreData.HealthData[currentIndex + 1].Value;
+            double splineOffsetSize = (targetOffset - currentOffset);
+            double splinePositionSize = Math.Abs(targetPosition - currentPosition);
+            double curYpos = currentOffset;
+            double target;
+
+            while (currentPosition < sizeX)
+            {
+                currentPosition += 0.5f;
+                if (currentPosition > targetPosition)
+                {
+                    if (currentIndex < ScoreData.HealthData.Count - 2)
+                    {
+                        currentIndex++;
+                        targetPosition = (float)graph[currentIndex + 1].Position / ScoreData.PlayTimeTotal * sizeX;
+                        targetOffset = graph[currentIndex + 1].Value;
+                        currentOffset = graph[currentIndex].Value;
+                        splineOffsetSize = targetOffset - currentOffset;
+                        splinePositionSize = Math.Abs(targetPosition - currentPosition);
+                    }
+                    else
+                        break;
+                }
+
+                target = (1 - (targetPosition - currentPosition) / splinePositionSize) * splineOffsetSize + currentOffset;
+                curYpos += ((1 - target) * sizeY - curYpos) / 10f;
+
+                var ob = new Sprite()
+                {
+                    Position = new UDim2((float)currentPosition, (float)curYpos),
+                    Size = new UDim2(3, 3),
+                };
+                graphElements.Add(ob);
+            }
             return graphElements;
         }
 
@@ -686,7 +673,7 @@ namespace Quaver.GameState.States
             };
         }
 
-        private void CreateTimeLabels(Drawable parent)
+        private void CreateTimeMarkers(Drawable parent)
         {
             //Record time intervals on graph every 15 seconds
             int timeIndex = 1;
