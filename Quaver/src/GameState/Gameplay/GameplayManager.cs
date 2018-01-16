@@ -364,7 +364,8 @@ namespace Quaver.GameState.Gameplay
                             if (NoteManager.HitObjectPool[noteIndex].IsLongNote)
                                 ReleaseSkipped(null, null);
 
-                            NoteManager.RecycleNote(noteIndex);
+                            NoteManager.KillNote(noteIndex);
+                            //NoteManager.RecycleNote(noteIndex);
                         }
                         else
                         {
