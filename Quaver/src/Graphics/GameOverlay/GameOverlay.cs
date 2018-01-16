@@ -54,6 +54,15 @@ namespace Quaver.Graphics.GameOverlay
         }
 
         /// <summary>
+        ///     Call this method whenever the screen resolution changes
+        /// </summary>
+        public void RecalculateWindow()
+        {
+            ChatManager.RecalculateWindow();
+            MenuOverlay.RecalculateWindow();
+        }
+
+        /// <summary>
         ///     Toggles the overlay's visibility
         /// </summary>
         /// <param name="sender"></param>

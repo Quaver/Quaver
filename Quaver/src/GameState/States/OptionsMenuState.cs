@@ -503,6 +503,7 @@ namespace Quaver.GameState.States
             BackgroundManager.Readjust();
             Boundary.SizeX = GameBase.WindowRectangle.Width;
             Boundary.SizeY = GameBase.WindowRectangle.Height;
+            GameBase.GameOverlay.RecalculateWindow();
         }
 
         /// <summary>
