@@ -278,10 +278,10 @@ namespace Quaver.GameState.Gameplay
         {
             if (IsLongNote)
             {
-                HoldBodySprite.Tint = Color.DimGray;
-                HoldEndSprite.Tint = Color.DimGray;
+                HoldBodySprite.Tint = GameColors.DeadNote;
+                HoldEndSprite.Tint = GameColors.DeadNote;
             }
-            HitBodySprite.Tint = Color.DimGray;
+            HitBodySprite.Tint = GameColors.DeadNote;
         }
     }
 }
