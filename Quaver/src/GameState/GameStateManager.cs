@@ -78,6 +78,7 @@ namespace Quaver.GameState
         {
             try
             {
+                GameBase.GameOverlay.OverlayActive = false;
                 ClearStates();
                 AddState(screen);
             }

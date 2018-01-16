@@ -1,4 +1,4 @@
-﻿using Quaver.Graphics.GameOverlay.Chat;
+﻿using Quaver.Graphics.GameOverlay.Multiplayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,32 +9,48 @@ namespace Quaver.Graphics.GameOverlay
 {
     class GameOverlay : IGameOverlayComponent
     {
-        bool Active { get; set; } = false;
+        internal bool MultiplayerActive { get; set; }
+
+        internal bool OverlayActive { get; set; }
 
         ChatManager ChatManager { get; set; } = new ChatManager();
+
+        MenuOverlay MenuOverlay { get; set; } = new MenuOverlay();
 
         public void Initialize()
         {
             ChatManager.Initialize();
+            MenuOverlay.Initialize();
             GameBase.GlobalInputManager.GameOverlayToggled += ToggleVisiblity;
         }
 
         public void UnloadContent()
         {
             ChatManager.UnloadContent();
+            MenuOverlay.UnloadContent();
             GameBase.GlobalInputManager.GameOverlayToggled -= ToggleVisiblity;
         }
 
         public void Draw()
         {
-            if (Active)
-                ChatManager.Draw();
+            if (OverlayActive)
+            {
+                MenuOverlay.Draw();
+
+                if (MultiplayerActive)
+                    ChatManager.Draw();
+            }
         }
 
         public void Update(double dt)
         {
-            if (Active)
-                ChatManager.Update(dt);
+            if (OverlayActive)
+            {
+                MenuOverlay.Update(dt);
+
+                if (MultiplayerActive)
+                    ChatManager.Update(dt);
+            }
         }
 
         /// <summary>
@@ -45,14 +61,14 @@ namespace Quaver.Graphics.GameOverlay
         private void ToggleVisiblity(object sender, EventArgs e)
         {
             // Toggle on
-            if (!Active)
+            if (!MultiplayerActive)
             {
-                Active = true;
+                MultiplayerActive = true;
             }
             // Toggle off
             else
             {
-                Active = false;
+                MultiplayerActive = false;
             }
         }
     }
