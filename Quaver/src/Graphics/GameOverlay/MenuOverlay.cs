@@ -83,6 +83,11 @@ namespace Quaver.Graphics.GameOverlay
             };
         }
 
+        public void RecalculateWindow()
+        {
+            Boundary.Size = new UDim2(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height);
+        }
+
         public void UnloadContent()
         {
             Boundary.Destroy();
