@@ -610,7 +610,7 @@ namespace Quaver.Skins
             }
             catch
             {
-                Logger.Log("Default skin element not found: " + path, LogColors.GameError);
+                Logger.Log("Default skin element not found: " + path, LogColors.GameError, 1.5f);
                 return GameBase.Content.Load<Texture2D>("main-blank-box");
             }    
         }
