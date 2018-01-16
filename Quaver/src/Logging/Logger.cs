@@ -181,7 +181,7 @@ namespace Quaver.Logging
                 if (Logs[i].Value == null)
                     continue;
 
-                GameBase.SpriteBatch.DrawString(Font, Logs[i].Value, new Vector2(0, i * 20), Logs[i].Color);
+                GameBase.SpriteBatch.DrawString(Font, Logs[i].Value, new Vector2(0, i * 20 + 40), Logs[i].Color);
 
                 if (Logs[i].NoDuration)
                     continue;
