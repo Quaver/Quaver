@@ -101,7 +101,7 @@ namespace Quaver.Graphics.Button
 
             DiffText = new TextBoxSprite()
             {
-                Text = "00.00",
+                Text = string.Format("{0:f2}", map.DifficultyRating),
                 Font = Fonts.Bold12,
                 Position = new UDim2(2 * ButtonScale, 5 * ButtonScale),
                 Size = new UDim2(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
