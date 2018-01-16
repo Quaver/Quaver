@@ -624,6 +624,8 @@ namespace Quaver.GameState.States
                 Size = new UDim2(0, 70, 1, 0),
                 Parent = boundary
             };
+
+            var graphElements = CreateJudgeSpreadPiChart(boundary, 75);
         }
 
         /// <summary>
@@ -755,6 +757,66 @@ namespace Quaver.GameState.States
 
                 timeIndex++;
             }
+        }
+
+        private List<Sprite> CreateJudgeSpreadPiChart(Boundary parent, double radius)
+        {
+            List<Sprite> graphElements = new List<Sprite>();
+            List<Boundary> graphSector = new List<Boundary>();
+            int[] totalSpreadCount = new int[6];
+            int totalJudgeCount = 0;
+            double[] judgeSpreadRatio = new double[6];
+            double interval = 20 / (Math.PI * radius);
+
+            for (var i = 0; i < 6; i++)
+            {
+                totalSpreadCount[i] = ScoreData.JudgePressSpread[i] + ScoreData.JudgeReleaseSpread[i];
+                totalJudgeCount += totalSpreadCount[i];
+                judgeSpreadRatio[i] = totalJudgeCount;
+            }
+            for (var i = 0; i < 6; i++)
+            {
+                judgeSpreadRatio[i] = judgeSpreadRatio[i] / totalJudgeCount;
+            }
+
+            double position = 0;
+            int tint = 0;
+            double drawPause = 1;
+            while (position < 100)
+            {
+                if (tint < 5 && position / 100 >= judgeSpreadRatio[tint])
+                {
+                    tint = tint + 1;
+                    drawPause = 1;
+                }
+                Console.WriteLine("TINT: " + tint);
+
+                if (drawPause < 0)
+                {
+                    for (int i =0; i< 10; i++)
+                    {
+                        var ob = new Sprite()
+                        {
+                            Position = new UDim2
+                            (
+                                (float)(Math.Cos(position / 100 * Math.PI * 2) * (radius - (1 * i))),
+                                (float)(Math.Sin(position / 100 * Math.PI * 2) * (radius - (1 * i))) + 200
+                            ),
+                            Tint = GameColors.JudgeColors[tint],
+                            Size = new UDim2(2, 2),
+                            Parent = parent
+                        };
+                        graphElements.Add(ob);
+                    }
+                }
+
+                position += interval;
+                if (drawPause >= 0) drawPause -= interval;
+            }
+
+            parent.Update(0);
+
+            return graphElements;
         }
     }
 }

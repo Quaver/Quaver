@@ -27,8 +27,6 @@ namespace Quaver.Graphics.Sprite
         /// <param name="ySize"></param>
         public Boundary(float xPosition = 0, float yPosition = 0, float? xSize = null, float? ySize = null)
         {
-            //Size.X.Offset = (float)GameBase.Window.Width;
-            //Size.Y.Offset = (float)GameBase.Window.Height;
             Size.X.Offset = xSize != null ? (float)xSize : GameBase.WindowRectangle.Width;
             Size.Y.Offset = ySize != null ? (float)ySize : GameBase.WindowRectangle.Height;
             Position.X.Offset = xPosition;
