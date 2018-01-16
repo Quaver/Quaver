@@ -24,8 +24,8 @@ namespace Quaver.GameState.Gameplay
         internal float JudgeDifficulty { get; set; } = 10;
 
         //Hit Tracking (Judging/Scoring)
-        internal int[] JudgePressSpread { get; set; }
-        internal int[] JudgeReleaseSpread { get; set; }
+        internal int[] JudgePressSpread { get; private set; }
+        internal int[] JudgeReleaseSpread { get; private set; }
         internal int JudgeCount { get; set; }
 
         //Hit Tracking (ms deviance) and other data
