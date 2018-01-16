@@ -29,6 +29,8 @@ namespace Quaver.Graphics
         /// </summary>
         public static readonly Color NameTagRegular = new Color(76, 146, 211);
 
+        public static readonly Color DeadNote = new Color(40, 40, 40);
+
         //todo: documentation.
         //Judge Colors
         public static readonly Color JudgeMarv = new Color(255, 255, 200);
