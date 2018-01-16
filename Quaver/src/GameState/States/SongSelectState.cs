@@ -196,7 +196,7 @@ namespace Quaver.GameState.States
         private void CreatePlayMapButton()
         {
             // Create play button
-            PlayButton = new TextButton(new Vector2(200, 30), "Play Map")
+            PlayButton = new TextButton(new Vector2(200, 50), "Play Map")
             {
                 PosY = 140,
                 Alignment = Alignment.TopLeft,
@@ -270,6 +270,7 @@ namespace Quaver.GameState.States
             // Create Speed Mod Button
             SpeedModButton = new TextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.GameClock}x")
             {
+                PosY = - 120,
                 Alignment = Alignment.BotLeft,
                 Parent = Boundary
             };
