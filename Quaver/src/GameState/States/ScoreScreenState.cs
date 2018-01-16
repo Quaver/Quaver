@@ -767,7 +767,6 @@ namespace Quaver.GameState.States
             int totalJudgeCount = 0;
             double[] judgeSpreadRatio = new double[6];
             double interval = 20 / (Math.PI * radius);
-
             for (var i = 0; i < 6; i++)
             {
                 totalSpreadCount[i] = ScoreData.JudgePressSpread[i] + ScoreData.JudgeReleaseSpread[i];
