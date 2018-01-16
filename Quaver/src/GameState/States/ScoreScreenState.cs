@@ -224,6 +224,7 @@ namespace Quaver.GameState.States
             // Create Back Button
             BackButton = new TextButton(new Vector2(150,40),"BACK" )
             {
+                PosY = 70,
                 Alignment = Alignment.TopRight
             };
 

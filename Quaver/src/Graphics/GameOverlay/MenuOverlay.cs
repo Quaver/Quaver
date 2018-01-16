@@ -27,7 +27,7 @@ namespace Quaver.Graphics.GameOverlay
             {
                 Size = new UDim2(0, 80, 1, 0),
                 Alignment = Alignment.BotLeft,
-                Tint = new Color(2, 0, 20),
+                Tint = new Color(0, 4, 16),
                 Parent = Boundary
             };
 
@@ -36,7 +36,7 @@ namespace Quaver.Graphics.GameOverlay
             {
                 Size = new UDim2(0, 30, 1, 0),
                 Alignment = Alignment.TopLeft,
-                Tint = new Color(2, 0, 20),
+                Tint = new Color(0, 4, 16),
                 Parent = Boundary
             };
 
@@ -46,7 +46,7 @@ namespace Quaver.Graphics.GameOverlay
             {
                 Size = new UDim2(0, 1, 1, 0),
                 Alignment = Alignment.BotLeft,
-                Tint = Color.BlueViolet,
+                Tint = Color.DeepSkyBlue,
                 Parent = top
             };
 
@@ -54,7 +54,7 @@ namespace Quaver.Graphics.GameOverlay
             {
                 Size = new UDim2(0, 1, 1, 0),
                 Alignment = Alignment.TopLeft,
-                Tint = Color.BlueViolet,
+                Tint = Color.DeepSkyBlue,
                 Parent = bot
             };
 
