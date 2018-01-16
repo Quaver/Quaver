@@ -625,7 +625,8 @@ namespace Quaver.GameState.States
                 Parent = boundary
             };
 
-            var graphElements = CreateJudgeSpreadPiChart(boundary, 75);
+            // Create a hollow pi chart
+            CreateJudgeSpreadPiChart(boundary, 75, new Vector2(0, 200));
         }
 
         /// <summary>
@@ -759,63 +760,73 @@ namespace Quaver.GameState.States
             }
         }
 
-        private List<Sprite> CreateJudgeSpreadPiChart(Boundary parent, double radius)
+        /// <summary>
+        ///     Creates a hollow pi graph with data set from the player's judge sprad
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="radius"></param>
+        /// <returns></returns>
+        private void CreateJudgeSpreadPiChart(Boundary parent, double radius, Vector2 offset)
         {
-            List<Sprite> graphElements = new List<Sprite>();
-            List<Boundary> graphSector = new List<Boundary>();
+            // Variables used for calculation
             int[] totalSpreadCount = new int[6];
             int totalJudgeCount = 0;
             double[] judgeSpreadRatio = new double[6];
+            double circularRatio = 1 / 100 * Math.PI * 2;
+
+            // Drawing/looping variables
+            int tint = 0;
+            double position = 0;
+            double drawPause = 1;
+
+            // How much to rotate by in percentage
             double interval = 20 / (Math.PI * radius);
+
+            // Calculate count/ratio variables
             for (var i = 0; i < 6; i++)
             {
                 totalSpreadCount[i] = ScoreData.JudgePressSpread[i] + ScoreData.JudgeReleaseSpread[i];
                 totalJudgeCount += totalSpreadCount[i];
                 judgeSpreadRatio[i] = totalJudgeCount;
             }
-            for (var i = 0; i < 6; i++)
-            {
-                judgeSpreadRatio[i] = judgeSpreadRatio[i] / totalJudgeCount;
-            }
 
-            double position = 0;
-            int tint = 0;
-            double drawPause = 1;
+            // Calculate judge count ratio
+            for (var i = 0; i < 6; i++)
+                judgeSpreadRatio[i] = judgeSpreadRatio[i] / totalJudgeCount;
+
+            // This algorithm loops through by drawing each section by rotation (determined by postion)
+            // It will draw a hollow pi graph with "dots" aka 2x2 squares
             while (position < 100)
             {
+                // If a section is done drawing, it will switch to the next color
+                // It will also stop drawing for 1% of the graph to allow a void inbetween each section
                 if (tint < 5 && position / 100 >= judgeSpreadRatio[tint])
                 {
                     tint = tint + 1;
                     drawPause = 1;
                 }
-                Console.WriteLine("TINT: " + tint);
 
+                // If it's not "paused," it will keep on drawing
                 if (drawPause < 0)
-                {
                     for (int i =0; i< 10; i++)
                     {
                         var ob = new Sprite()
                         {
                             Position = new UDim2
                             (
-                                (float)(Math.Cos(position / 100 * Math.PI * 2) * (radius - (1 * i))),
-                                (float)(Math.Sin(position / 100 * Math.PI * 2) * (radius - (1 * i))) + 200
+                                (float)(Math.Cos(position * circularRatio) * (radius - (1 * i))) + offset.X,
+                                (float)(Math.Sin(position * circularRatio) * (radius - (1 * i))) + offset.Y
                             ),
                             Tint = GameColors.JudgeColors[tint],
                             Size = new UDim2(2, 2),
                             Parent = parent
                         };
-                        graphElements.Add(ob);
                     }
-                }
 
+                // Update position and draw pausing
                 position += interval;
                 if (drawPause >= 0) drawPause -= interval;
             }
-
-            parent.Update(0);
-
-            return graphElements;
         }
     }
 }
