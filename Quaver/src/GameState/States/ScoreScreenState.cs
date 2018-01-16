@@ -772,7 +772,7 @@ namespace Quaver.GameState.States
             int[] totalSpreadCount = new int[6];
             int totalJudgeCount = 0;
             double[] judgeSpreadRatio = new double[6];
-            double circularRatio = 1 / 100 * Math.PI * 2;
+            double circularRatio = 0.02 * Math.PI;
 
             // Drawing/looping variables
             int tint = 0;
@@ -807,7 +807,7 @@ namespace Quaver.GameState.States
                 }
 
                 // If it's not "paused," it will keep on drawing
-                if (drawPause < 0)
+                if (drawPause <= 0)
                     for (int i =0; i< 10; i++)
                     {
                         var ob = new Sprite()
@@ -825,7 +825,7 @@ namespace Quaver.GameState.States
 
                 // Update position and draw pausing
                 position += interval;
-                if (drawPause >= 0) drawPause -= interval;
+                if (drawPause > 0) drawPause -= interval;
             }
         }
     }
