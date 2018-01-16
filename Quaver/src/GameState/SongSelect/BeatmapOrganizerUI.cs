@@ -169,7 +169,7 @@ namespace Quaver.GameState.SongSelect
             // TODO #2: Actually display these scores on-screen somewhere. Add loading animation before running task.
             // TODO #3: Move this somewhere so that it automatically loads the scores upon first load as well.
             Task.Run(async () => await LocalScoreCache.SelectBeatmapScores(GameBase.SelectedBeatmap.Md5Checksum))
-                .ContinueWith(t => Logger.Log($"Successfully loaded {t.Result.Count} local scores for this map.", LogColors.GameImportant));
+                .ContinueWith(t => Logger.Log($"Successfully loaded {t.Result.Count} local scores for this map.", LogColors.GameInfo,0.2f));
 
             //TODO: make it so scrolling is disabled until background has been loaded
             ScrollingDisabled = false;
