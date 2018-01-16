@@ -12,5 +12,6 @@ namespace Quaver.Graphics.GameOverlay
         void UnloadContent();
         void Update(double dt);
         void Draw();
+        void RecalculateWindow();
     }
 }
