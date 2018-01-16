@@ -107,6 +107,9 @@ namespace Quaver.GameState.States
             CreateSpeedModButton();
             CreateTogglePitchButton();
 
+            // Update overlay
+            GameBase.GameOverlay.OverlayActive = true;
+
             //Add map selected text TODO: remove later
             Logger.Add("MapSelected", "Map Selected: " + GameBase.SelectedBeatmap.Artist + " - " + GameBase.SelectedBeatmap.Title + " [" + GameBase.SelectedBeatmap.DifficultyName + "]", Color.Yellow);
             UpdateReady = true;
@@ -195,6 +198,7 @@ namespace Quaver.GameState.States
             // Create play button
             PlayButton = new TextButton(new Vector2(200, 30), "Play Map")
             {
+                PosY = 140,
                 Alignment = Alignment.TopLeft,
                 Parent = Boundary
             };

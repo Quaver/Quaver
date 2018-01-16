@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Quaver.Graphics.GameOverlay.Chat
+namespace Quaver.Graphics.GameOverlay.Multiplayer
 {
     class ChatManager : IGameOverlayComponent
     {

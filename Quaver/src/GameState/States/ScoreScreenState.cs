@@ -175,6 +175,9 @@ namespace Quaver.GameState.States
             // Play Applause
             ApplauseInstance.Play();
 
+            // Update overlay
+            GameBase.GameOverlay.OverlayActive = true;
+
             UpdateReady = true;
         }
         
@@ -371,7 +374,7 @@ namespace Quaver.GameState.States
             var boundary = new Sprite()
             {
                 Size = new UDim2(400, 150),
-                Position = new UDim2(10, -10),
+                Position = new UDim2(10, -90),
                 Alignment = Alignment.BotLeft,
                 Tint = Color.Black,
                 Alpha = 0.5f,
@@ -460,7 +463,7 @@ namespace Quaver.GameState.States
             var boundary = new Sprite()
             {
                 Size = new UDim2(400, 150),
-                Position = new UDim2(-10, -170),
+                Position = new UDim2(-10, -160 - 90),
                 Alignment = Alignment.BotRight,
                 Tint = Color.Black,
                 Alpha = 0.5f,
@@ -504,7 +507,7 @@ namespace Quaver.GameState.States
             var boundary = new Sprite()
             {
                 Size = new UDim2(400, 150),
-                Position = new UDim2(-10, -10),
+                Position = new UDim2(-10, -90),
                 Alignment = Alignment.BotRight,
                 Tint = Color.Black,
                 Alpha = 0.5f,
