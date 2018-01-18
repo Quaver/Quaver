@@ -248,7 +248,7 @@ namespace Quaver.Graphics.Button
         /// </summary>
         private void HandleCtrlKeybinds()
         {
-            if (!GameBase.KeyboardState.IsKeyDown(Keys.LeftControl) && !GameBase.KeyboardState.IsKeyDown(Keys.RightControl) || !Selected)
+            if ((!GameBase.KeyboardState.IsKeyDown(Keys.LeftControl) && !GameBase.KeyboardState.IsKeyDown(Keys.RightControl)) || !Selected)
                 return;
 
             // CTRL + A (Select all text)
