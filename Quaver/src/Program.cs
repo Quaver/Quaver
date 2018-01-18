@@ -94,7 +94,6 @@ namespace Quaver
 
                 foreach (var dir in new DirectoryInfo(Configuration.DataDirectory + "/temp/").GetDirectories("*", SearchOption.AllDirectories))
                     dir.Delete(true);
-
             }
             catch (Exception e)
             {
@@ -124,7 +123,6 @@ namespace Quaver
                 // The visible beatmaps in song select should be every single mapset at the start of the game.
                 GameBase.VisibleMapsets = GameBase.Mapsets;
             });
-
             Task.WaitAll(loadGame);
         }
     }
