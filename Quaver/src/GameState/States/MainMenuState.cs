@@ -308,7 +308,10 @@ namespace Quaver.GameState.States
                 Console.WriteLine(outputPath);
                 System.Diagnostics.Process.Start("explorer.exe", "/select," + "\"" + $@"{outputPath.Replace("/", "\\")}" + "\"");
             }
-            catch (Exception ex) { }
+            catch (Exception ex) 
+            { 
+                //Logger.Error(ex);
+            }
         }
 
         /// <summary>
