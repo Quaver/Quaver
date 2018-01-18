@@ -89,7 +89,6 @@ namespace Quaver.Graphics.Sprite
                 Parent = this
             };
 
-
             // Bar Axis Mid
             BarAxisMidBox = new Sprite()
             {
@@ -97,7 +96,6 @@ namespace Quaver.Graphics.Sprite
                 Position = new UDim2(BarAxisBotBox.Size.X.Offset, 0),
                 Parent = this
             };
-
 
             //Bar Axis Topp
             BarAxisTopCorner = new Sprite()
@@ -114,7 +112,6 @@ namespace Quaver.Graphics.Sprite
                 Size = new UDim2(sscale, (((BarSpacing + BarDefaultSize) * bsize)) * sScale),
                 Position = new UDim2(BarAxisTopCorner.Position.X.Offset, sscale),
                 Parent = this
-
             };
 
             BarAxisTopCap = new Sprite()
