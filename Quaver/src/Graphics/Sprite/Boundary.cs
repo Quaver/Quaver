@@ -10,7 +10,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 using Quaver.Utility;
 
-
 namespace Quaver.Graphics.Sprite
 {
     /// <summary>
