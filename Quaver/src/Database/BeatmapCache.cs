@@ -93,7 +93,6 @@ namespace Quaver.Database
             var Mapss = Directory.GetFiles(Configuration.SongDirectory, "*.qua", SearchOption.AllDirectories);
             Logger.Log($"Found: {Mapss.Length} .qua files in the /songs/ directory.", Color.Cyan);
 
-
             await CacheByFileCount(Mapss);
 
             // Remove any qua files from the list that don't actually exist.
@@ -221,9 +220,7 @@ namespace Quaver.Database
                 {
                     Logger.Log(e.Message, Color.Red);
                 }
-                             
             }
-
             await DeleteBeatmapsFromDatabase(mapsToDelete);
         }
 
