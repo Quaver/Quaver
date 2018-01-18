@@ -86,7 +86,6 @@ namespace Quaver.Replays
                         return;
                     }
 
-
                     // Start capturing frames at 60fps
                     if (ReplayFrames.Count != 0 && elapsed - ReplayFrames.Last().GameTime >= ReplayFpsInterval)
                         ReplayFrames.Add(frame);
