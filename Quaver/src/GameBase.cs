@@ -179,7 +179,7 @@ namespace Quaver
         ///     Create a Stopwatch object for the game, This'll hold the time since the application
         ///     was started.
         /// </summary>
-        public static Stopwatch GameTime { get; set;} = Stopwatch.StartNew();
+        public static Stopwatch GameTime { get; set; } = Stopwatch.StartNew();
 
         /// <summary>
         ///     The build version of the game (The md5 hash of the exe)
