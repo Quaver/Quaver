@@ -88,7 +88,7 @@ namespace Quaver.Graphics.Button
         /// </summary>
         internal virtual void OnClickedOutside()
         {
-
+            //todo: do stuff
         }
 
         /// <summary>
