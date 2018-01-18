@@ -35,6 +35,5 @@ namespace Quaver.GameState.Gameplay
         //internal static float PlayfieldLaneSize { get; set; } //todo: remove
         internal static float[] ReceptorXPosition { get; set; } //used more than once
         internal static float ReceptorYOffset { get; set; } //used more than once
-
     }
 }
