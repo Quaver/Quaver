@@ -196,8 +196,7 @@ namespace Quaver.GameState.Gameplay
             HitBodySprite.SizeX = HitObjectSize;
             HitBodySprite.SizeY = HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width;
             HoldBodyOffset = HitBodySprite.SizeY / 2;
-
-
+            
             // Create hold body (placed ontop of hold body) if this is a long note.
             if (longNote)
             {
