@@ -78,7 +78,6 @@ namespace Quaver.Graphics.Sprite
                 Size = new UDim2(sscale, (((BarSpacing + BarDefaultSize) * bsize)) * sScale),
                 Position = new UDim2(0, sscale),
                 Parent = this
-
             };
 
             BarAxisBotCap = new Sprite()
