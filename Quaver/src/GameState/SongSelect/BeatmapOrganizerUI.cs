@@ -45,7 +45,6 @@ namespace Quaver.GameState.SongSelect
 
         public void Initialize(IGameState state)
         {
-
             Boundary = new Boundary();
             CreateSongSelectButtons();
             SelectMap((int)Math.Floor(Util.Random(0, SongSelectButtons.Count)));
