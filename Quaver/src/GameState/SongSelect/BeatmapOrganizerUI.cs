@@ -17,7 +17,6 @@ namespace Quaver.GameState.SongSelect
 {
     class BeatmapOrganizerUI : IHelper
     {
-
         /// <summary>
         ///     Reference to the list of song select buttons
         /// </summary>
