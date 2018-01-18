@@ -129,7 +129,6 @@ namespace Quaver.Graphics.Button
                 Alpha = 0,
                 Parent = this
             };
-
             
             GradeImage = new Sprite.Sprite()
             {
