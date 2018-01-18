@@ -205,7 +205,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 }
                 if (TimingQueue[i].TargetTime < svQueue[0].TargetTime - 1)
                     CreateSV(bpmObjects, TimingQueue[i].TargetTime, 1);
-
                 else if (Math.Abs(TimingQueue[i].TargetTime - svQueue[lastIndex].TargetTime) > 1)
                     CreateSV(bpmObjects, TimingQueue[i].TargetTime, svQueue[lastIndex].SvMultiplier); //svQueue[lastIndex].SvMultiplier
             }
