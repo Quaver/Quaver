@@ -74,7 +74,7 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     Current Input Manager for this state
         /// </summary>
-        private SongSelectInputManager SongSelectInputManager { get; set;}
+        private SongSelectInputManager SongSelectInputManager { get; set; }
 
         /// <summary>
         ///     Determines how much time has passed since initiation
