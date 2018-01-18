@@ -143,7 +143,7 @@ namespace Quaver.Logging
             }
             catch (Exception e)
             {
-
+                //todo: do stuff
             }
 
 #if DEBUG
