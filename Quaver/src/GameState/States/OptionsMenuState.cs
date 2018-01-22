@@ -62,8 +62,8 @@ namespace Quaver.GameState.States
             Boundary = new Boundary();
             ButtonsContainer = new Boundary()
             {
-                SizeY = 700,
-                Alignment = Alignment.MidCenter,
+                SizeY = 850,
+                Alignment = Alignment.TopCenter,
                 Parent = Boundary
             };
 
@@ -71,6 +71,7 @@ namespace Quaver.GameState.States
             CreateSkinSelectButtons();
             CreateBackButton();
             CreateGraphicsOptionButtons();
+            CreateGameplayOptionsButtons();
 
             UpdateReady = true;
         }
@@ -97,6 +98,7 @@ namespace Quaver.GameState.States
         public void Update(double dt)
         {
             Boundary.Update(dt);
+            ButtonsContainer.PosY = -(GameBase.MouseState.Position.Y / GameBase.WindowRectangle.Height) * Math.Max(ButtonsContainer.SizeY - GameBase.WindowRectangle.Height, 0);
         }
 
         private void BackButtonClick(object sender, EventArgs e)
@@ -346,6 +348,84 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
             BackgroundBrightnessButton.Clicked += OnBrightnessButtonClicked;
+        }
+
+        private void CreateGameplayOptionsButtons()
+        {
+            // text info
+            var ob = new TextBoxSprite()
+            {
+                SizeX = 400,
+                SizeY = 70,
+                PosY = 600,
+                TextAlignment = Alignment.BotCenter,
+                Alignment = Alignment.TopCenter,
+                Font = Fonts.Medium24,
+                Text = "Gameplay",
+                Parent = ButtonsContainer
+            };
+
+            // scroll speed 
+            var button = new TextButton(new Vector2(200, 30), $@"ScrollSpeed: {Configuration.ScrollSpeed}")
+            {
+                PosY = 680,
+                PosX = (-2) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            // scroll direction
+            button = new TextButton(new Vector2(200, 30), $@"Downscroll: {Configuration.DownScroll}")
+            {
+                PosY = 680,
+                PosX = (-1) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            // note coloring
+            button = new TextButton(new Vector2(200, 30), $@"Note snap coloring: {true}")
+            {
+                PosY = 680,
+                PosX = (0) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            // receptor sizes
+            button = new TextButton(new Vector2(200, 30), $@"Lane Size 4K: {GameBase.LoadedSkin.ColumnSize}")
+            {
+                PosY = 680,
+                PosX = (1) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            button = new TextButton(new Vector2(200, 30), $@"Lane Size 7K: {GameBase.LoadedSkin.ColumnSize}")
+            {
+                PosY = 680,
+                PosX = (2) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            // show accuracy box
+            button = new TextButton(new Vector2(200, 30), $@"Show Accuracy Box: {true}")
+            {
+                PosY = 720,
+                PosX = (-0.5f) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            // show playfield overlay
+            button = new TextButton(new Vector2(200, 30), $@"Show Playfield Overlay: {true}")
+            {
+                PosY = 720,
+                PosX = (0.5f) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
         }
 
         /// <summary>
