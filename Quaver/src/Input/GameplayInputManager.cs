@@ -39,10 +39,10 @@ namespace Quaver.Input
         /// </summary>
         private List<Keys> LaneKeys { get; } = new List<Keys>()
         {
-            Configuration.KeyMania1,
-            Configuration.KeyMania2,
-            Configuration.KeyMania3,
-            Configuration.KeyMania4
+            Configuration.KeyMania4k1,
+            Configuration.KeyMania4k2,
+            Configuration.KeyMania4k3,
+            Configuration.KeyMania4k4
         };
 
         /// <summary>

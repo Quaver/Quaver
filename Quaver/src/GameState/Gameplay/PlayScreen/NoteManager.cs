@@ -86,7 +86,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 //the math here is kinda ugly, i plan on cleaning this up later
             {
                 case GameModes.Keys4:
-                    HitPositionOffset = Config.Configuration.DownScroll
+                    HitPositionOffset = Config.Configuration.DownScroll4k
                         ? GameplayReferences.ReceptorYOffset
                         : GameplayReferences.ReceptorYOffset
                         + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
@@ -94,7 +94,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         - (GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
                     break;
                 case GameModes.Keys7:
-                    HitPositionOffset = Config.Configuration.DownScroll
+                    HitPositionOffset = Config.Configuration.DownScroll7k
                         ? GameplayReferences.ReceptorYOffset
                         : GameplayReferences.ReceptorYOffset
                         + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
@@ -181,7 +181,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 }
 
                 // Initialize Object and add it to HitObjectPool
-                if (i < HitObjectPoolSize) newObject.Initialize(Configuration.DownScroll, qua.HitObjects[i].EndTime > 0, Boundary);
+                if (i < HitObjectPoolSize) newObject.Initialize(Configuration.DownScroll4k, qua.HitObjects[i].EndTime > 0, Boundary);
                 HitObjectPool.Add(newObject);
             }
 
@@ -237,7 +237,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     // Set new hit object position with the current x, and a new y
                     HitObjectPool[i].HitObjectPositionY = PosFromOffset(HitObjectPool[i].OffsetFromReceptor);
-                    HitObjectPool[i].Update(Config.Configuration.DownScroll);
+                    HitObjectPool[i].Update(Config.Configuration.DownScroll4k);
                 }
             }
 
@@ -271,7 +271,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     }
 
                     //Update HitObject
-                    HitObjectHold[i].Update(Config.Configuration.DownScroll);
+                    HitObjectHold[i].Update(Config.Configuration.DownScroll4k);
                 }
             }
 
@@ -287,7 +287,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 else
                 {
                     HitObjectDead[i].HitObjectPositionY = PosFromOffset(HitObjectDead[i].OffsetFromReceptor);
-                    HitObjectDead[i].Update(Config.Configuration.DownScroll);
+                    HitObjectDead[i].Update(Config.Configuration.DownScroll4k);
                 }
             }
 
@@ -368,7 +368,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal float PosFromOffset(ulong offsetToPos)
         {
             //if (_mod_pull) return (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(offsetToPos - CurrentSongTime, 0f) * _ScrollSpeed));
-            return Config.Configuration.DownScroll 
+            return Config.Configuration.DownScroll4k
                 ? HitPositionOffset + (((10000 + offsetToPos - TrackPosition) - 10000f) * -ScrollSpeed)
                 : HitPositionOffset + (((10000 + offsetToPos - TrackPosition) - 10000f) * ScrollSpeed);
         }
@@ -513,7 +513,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         internal void CreateNote()
         {
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll, HitObjectPool[HitObjectPoolSize - 1].EndTime > 0, Boundary);
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(Config.Configuration.DownScroll4k, HitObjectPool[HitObjectPoolSize - 1].EndTime > 0, Boundary);
         }
     }
 }
