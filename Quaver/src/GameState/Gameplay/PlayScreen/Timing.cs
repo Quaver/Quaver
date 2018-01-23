@@ -20,6 +20,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         private double ActualSongTime { get; set; }
         internal float PlayingEndOffset { get; set; }
         private List<TimingObject> TimingQueue { get; set; }
+        internal bool Paused { get; private set; }
 
         //SV + Timing Point Variables
         //private List<TimingObject> svQueue, TimingQueue, _barQueue, _activeBars;
@@ -85,6 +86,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <param name="dt"></param>
         public void Update(double dt)
         {
+            if (Paused) return;
+            
             //Calculate Time after Song Done
             if (SongIsDone)
             {
@@ -116,6 +119,18 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         ActualSongTime = (SongManager.Position + (ActualSongTime + (dt * GameBase.GameClock))) / 2f;
                 }
             }
+        }
+
+        internal void Pause()
+        {
+            Paused = true;
+            SongManager.Pause();
+        }
+
+        internal void Unpause()
+        {
+            Paused = false;
+            SongManager.Resume();
         }
 
         internal double GetCurrentSongTime()
