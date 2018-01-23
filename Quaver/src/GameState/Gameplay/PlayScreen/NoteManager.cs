@@ -89,7 +89,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     HitPositionOffset = Config.Configuration.DownScroll
                         ? GameplayReferences.ReceptorYOffset
                         : GameplayReferences.ReceptorYOffset
-                        + GameBase.LoadedSkin.ColumnSize * GameBase.WindowUIScale
+                        + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
                         * ((GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
                         - (GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
                     break;
@@ -97,7 +97,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     HitPositionOffset = Config.Configuration.DownScroll
                         ? GameplayReferences.ReceptorYOffset
                         : GameplayReferences.ReceptorYOffset
-                        + GameBase.LoadedSkin.ColumnSize * GameBase.WindowUIScale
+                        + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
                         * ((GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
                         - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
                     break;
@@ -155,7 +155,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     EndTime = qua.HitObjects[i].EndTime,
                     IsLongNote = qua.HitObjects[i].EndTime > 0,
                     KeyLane = qua.HitObjects[i].Lane,
-                    HitObjectSize = GameBase.LoadedSkin.ColumnSize * GameBase.WindowUIScale,
+                    HitObjectSize = GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale, //column size 7k
                     HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1], 0),
                 };
 

@@ -39,27 +39,31 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //PlayScreen = playScreen;
 
             // Set default reference variables
+            int playfieldPadding = 0;
+            int receptorPadding = 0;
             switch (GameBase.SelectedBeatmap.Qua.Mode)
             {
                 case GameModes.Keys4:
                     GameplayReferences.ReceptorXPosition = new float[4];
-                    laneSize = (int)(GameBase.LoadedSkin.ColumnSize * GameBase.WindowUIScale);
+                    laneSize = (int)(GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale);
+                    playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding4K * GameBase.WindowUIScale);
+                    receptorPadding = (int)(GameBase.LoadedSkin.NotePadding4K * GameBase.WindowUIScale);
                     GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll //todo: use list for scaling
-                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width))
-                        : GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale;
+                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset4K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width))
+                        : GameBase.LoadedSkin.ReceptorYOffset4K * GameBase.WindowUIScale;
                     break;
                 case GameModes.Keys7:
                     GameplayReferences.ReceptorXPosition = new float[7];
                     laneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);
+                    playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding7K * GameBase.WindowUIScale);
+                    receptorPadding = (int)(GameBase.LoadedSkin.NotePadding7K * GameBase.WindowUIScale);
                     GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll //todo: use list for scaling
-                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
-                        : GameBase.LoadedSkin.ReceptorYOffset * GameBase.WindowUIScale;
+                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset7K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
+                        : GameBase.LoadedSkin.ReceptorYOffset7K * GameBase.WindowUIScale;
                     break;
             }
 
             // Calculate Config stuff
-            var playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding * GameBase.WindowUIScale);
-            var receptorPadding = (int)(GameBase.LoadedSkin.NotePadding * GameBase.WindowUIScale);
             var playfieldSize = ((laneSize + receptorPadding) * GameplayReferences.ReceptorXPosition.Length) + (playfieldPadding * 2) - receptorPadding;
             GameplayReferences.PlayfieldSize = playfieldSize;
 

@@ -413,7 +413,7 @@ namespace Quaver.GameState.States
             };
 
             // receptor sizes
-            LaneSize4KButton = new TextButton(new Vector2(200, 30), $@"Lane Size 4K: {GameBase.LoadedSkin.ColumnSize}")
+            LaneSize4KButton = new TextButton(new Vector2(200, 30), $@"Lane Size 4K: {GameBase.LoadedSkin.ColumnSize4K}")
             {
                 PosY = 680,
                 PosX = (1.5f) * 210f,
@@ -421,7 +421,7 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
 
-            LaneSize7KButton = new TextButton(new Vector2(200, 30), $@"Lane Size 7K: {GameBase.LoadedSkin.ColumnSize}")
+            LaneSize7KButton = new TextButton(new Vector2(200, 30), $@"Lane Size 7K: {GameBase.LoadedSkin.ColumnSize7K}")
             {
                 PosY = 680,
                 PosX = (2.5f) * 210f,
