@@ -116,6 +116,7 @@ namespace Quaver.GameState.Gameplay
             InputManager.ManiaKeyPress += ManiaKeyDown;
             InputManager.ManiaKeyRelease += ManiaKeyUp;
             InputManager.SkipSong += SkipSong;
+            InputManager.PauseSong += PauseSong;
 
             // Hook Missed Note Events
             NoteManager.PressMissed += PressMissed;
@@ -155,6 +156,7 @@ namespace Quaver.GameState.Gameplay
             InputManager.ManiaKeyPress -= ManiaKeyDown;
             InputManager.ManiaKeyRelease -= ManiaKeyUp;
             InputManager.SkipSong -= SkipSong;
+            InputManager.PauseSong -= PauseSong;
 
             // Unook Missed Note Events
             NoteManager.PressMissed -= PressMissed;
@@ -207,6 +209,7 @@ namespace Quaver.GameState.Gameplay
             Logger.Update("KeyCount", $"Game Mode: {GameBase.SelectedBeatmap.Qua.Mode}");
             Logger.Update("SongPos", "Current Track Position: " + NoteManager.TrackPosition);
             Logger.Update("Skippable", $"Intro Skippable: {IntroSkippable}");
+            Logger.Update("Paused", "Paused: " + Timing.Paused.ToString());
 
             //Todo: remove. below
             SvInfoTextBox.Update(dt);
@@ -293,7 +296,7 @@ namespace Quaver.GameState.Gameplay
             Logger.Add("KeyCount", "", Color.Pink);
             Logger.Add("SongPos", "", Color.White);
             Logger.Add("Skippable", "", GameColors.NameTagAdmin);
-            Logger.Add("JudgeDifficulty", "", GameColors.NameTagModerator);
+            Logger.Add("Paused", "", GameColors.NameTagModerator);
 
             // Update hit window logger
             var loggertext = "Hitwindow: Judge: " + ScoreManager.JudgeDifficulty + "   Press: ";
@@ -490,6 +493,14 @@ namespace Quaver.GameState.Gameplay
                 Timing.SongIsPlaying = true;
                 DiscordController.ChangeDiscordPresenceGameplay(true);
             }
+        }
+
+        public void PauseSong(object sender, EventArgs e)
+        {
+            if (Timing.Paused)
+                Timing.Unpause();
+            else
+                Timing.Pause();
         }
     }
 }

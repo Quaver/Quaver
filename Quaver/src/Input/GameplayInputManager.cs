@@ -162,15 +162,12 @@ namespace Quaver.Input
                 {
                     LaneKeyDown[i] = true;
                     ManiaKeyPress?.Invoke(this, new ManiaKeyEventArgs(i));
-                    //NoteManager.Input(i,true);
-                    //GameBase.LoadedSkin.Hit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
                 }
                 //Lane Key Release
                 else if (GameBase.KeyboardState.IsKeyUp(InputManiaKeys[i]) && LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = false;
                     ManiaKeyRelease?.Invoke(this, new ManiaKeyEventArgs(i));
-                    //NoteManager.Input(i, false);
                 }
             }
         }
