@@ -25,16 +25,19 @@ namespace Quaver.GameState.States
         private Boundary Boundary { get; set; }
         private Boundary ButtonsContainer { get; set; }
 
+        // Key Bindings
         private TextButton BackButton { get; set; }
         private KeyBindButton[] ManiaKeys4K { get; set; }
         private KeyBindButton[] ManiaKeys7K { get; set; }
         private EventHandler[] ManiaEvent4K { get; set; }
         private EventHandler[] ManiaEvent7K { get; set; }
 
+        // Skin Options
         private string[] AvailableSkins { get; set; }
         private List<TextButton> SkinSelectButtons { get; set; }
         private List<EventHandler> SkinSelectEvents { get; set; }
 
+        // Graphics Options
         private TextButton BackgroundBrightnessButton { get; set; }
         private TextButton FullscreenButton { get; set; }
         private TextButton LetterBoxingButton { get; set; }
@@ -46,6 +49,15 @@ namespace Quaver.GameState.States
             new Point(1280, 720), new Point(1366, 768), new Point(1440, 900), new Point(1600, 900), new Point(1680, 1050),
         };
 
+        // Gameplay Options
+        private TextButton ScrollSpeedButton { get; set; }
+        private TextButton ScrollDirection4KButton { get; set; }
+        private TextButton ScrollDirection7KButton { get; set; }
+        private TextButton ShowAccuracyUIButton { get; set; }
+        private TextButton ShowPlayfieldUIButton { get; set; }
+        private TextButton ShowNoteColoringButton { get; set; }
+        private TextButton LaneSize4KButton { get; set; }
+        private TextButton LaneSize7KButton { get; set; }
 
         public void Draw()
         {
@@ -366,51 +378,59 @@ namespace Quaver.GameState.States
             };
 
             // scroll speed 
-            var button = new TextButton(new Vector2(200, 30), $@"ScrollSpeed: {Configuration.ScrollSpeed}")
+            ScrollSpeedButton = new TextButton(new Vector2(200, 30), $@"ScrollSpeed: {Configuration.ScrollSpeed}")
             {
                 PosY = 680,
-                PosX = (-2) * 210f,
+                PosX = (-2.5f) * 210f,
                 Alignment = Alignment.TopCenter,
                 Parent = ButtonsContainer
             };
 
             // scroll direction
-            button = new TextButton(new Vector2(200, 30), $@"Downscroll: {Configuration.DownScroll}")
+            ScrollDirection4KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 4K: {Configuration.DownScroll}")
             {
                 PosY = 680,
-                PosX = (-1) * 210f,
+                PosX = (-1.5f) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            ScrollDirection7KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 4K: {Configuration.DownScroll}")
+            {
+                PosY = 680,
+                PosX = (-0.5f) * 210f,
                 Alignment = Alignment.TopCenter,
                 Parent = ButtonsContainer
             };
 
             // note coloring
-            button = new TextButton(new Vector2(200, 30), $@"Note snap coloring: {true}")
+            ShowNoteColoringButton = new TextButton(new Vector2(200, 30), $@"Note snap coloring: {true}")
             {
                 PosY = 680,
-                PosX = (0) * 210f,
+                PosX = (0.5f) * 210f,
                 Alignment = Alignment.TopCenter,
                 Parent = ButtonsContainer
             };
 
             // receptor sizes
-            button = new TextButton(new Vector2(200, 30), $@"Lane Size 4K: {GameBase.LoadedSkin.ColumnSize}")
+            LaneSize4KButton = new TextButton(new Vector2(200, 30), $@"Lane Size 4K: {GameBase.LoadedSkin.ColumnSize}")
             {
                 PosY = 680,
-                PosX = (1) * 210f,
+                PosX = (1.5f) * 210f,
                 Alignment = Alignment.TopCenter,
                 Parent = ButtonsContainer
             };
 
-            button = new TextButton(new Vector2(200, 30), $@"Lane Size 7K: {GameBase.LoadedSkin.ColumnSize}")
+            LaneSize7KButton = new TextButton(new Vector2(200, 30), $@"Lane Size 7K: {GameBase.LoadedSkin.ColumnSize}")
             {
                 PosY = 680,
-                PosX = (2) * 210f,
+                PosX = (2.5f) * 210f,
                 Alignment = Alignment.TopCenter,
                 Parent = ButtonsContainer
             };
 
             // show accuracy box
-            button = new TextButton(new Vector2(200, 30), $@"Show Accuracy Box: {true}")
+            ShowAccuracyUIButton = new TextButton(new Vector2(200, 30), $@"Show Accuracy Box: {true}")
             {
                 PosY = 720,
                 PosX = (-0.5f) * 210f,
@@ -419,7 +439,7 @@ namespace Quaver.GameState.States
             };
 
             // show playfield overlay
-            button = new TextButton(new Vector2(200, 30), $@"Show Playfield Overlay: {true}")
+            ShowPlayfieldUIButton = new TextButton(new Vector2(200, 30), $@"Show Playfield Overlay: {true}")
             {
                 PosY = 720,
                 PosX = (0.5f) * 210f,
@@ -427,6 +447,47 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
         }
+
+        private void OnScrollSpeedButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnScrollDirection4KButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnScrollDirection7KButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnShowAccuracyUIButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnShowPlayfieldUIButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnNoteColorButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnLaneSize4KButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnLaneSize7KButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
 
         /// <summary>
         ///     When a mania 4K keybinding gets updated
