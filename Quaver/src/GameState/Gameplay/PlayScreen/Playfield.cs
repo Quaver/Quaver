@@ -48,7 +48,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     laneSize = (int)(GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale);
                     playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding4K * GameBase.WindowUIScale);
                     receptorPadding = (int)(GameBase.LoadedSkin.NotePadding4K * GameBase.WindowUIScale);
-                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll //todo: use list for scaling
+                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll4k //todo: use list for scaling
                         ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset4K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width))
                         : GameBase.LoadedSkin.ReceptorYOffset4K * GameBase.WindowUIScale;
                     break;
@@ -57,7 +57,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     laneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);
                     playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding7K * GameBase.WindowUIScale);
                     receptorPadding = (int)(GameBase.LoadedSkin.NotePadding7K * GameBase.WindowUIScale);
-                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll //todo: use list for scaling
+                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll7k //todo: use list for scaling
                         ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset7K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
                         : GameBase.LoadedSkin.ReceptorYOffset7K * GameBase.WindowUIScale;
                     break;

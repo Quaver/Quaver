@@ -172,7 +172,7 @@ namespace Quaver.GameState.States
 
             ManiaKeys4K = new KeyBindButton[4];
             ManiaEvent4K = new EventHandler[4];
-            var keys = new Keys[4] { Configuration.KeyMania1, Configuration.KeyMania2, Configuration.KeyMania3, Configuration.KeyMania4 };
+            var keys = new Keys[4] { Configuration.KeyMania4k1, Configuration.KeyMania4k2, Configuration.KeyMania4k3, Configuration.KeyMania4k4 };
             for (var i=0; i<4; i++)
             {
                 //todo: hook this to an event/method or something
@@ -387,7 +387,7 @@ namespace Quaver.GameState.States
             };
 
             // scroll direction
-            ScrollDirection4KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 4K: {Configuration.DownScroll}")
+            ScrollDirection4KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 4K: {Configuration.DownScroll4k}")
             {
                 PosY = 680,
                 PosX = (-1.5f) * 210f,
@@ -395,7 +395,7 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
 
-            ScrollDirection7KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 4K: {Configuration.DownScroll}")
+            ScrollDirection7KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 7K: {Configuration.DownScroll7k}")
             {
                 PosY = 680,
                 PosX = (-0.5f) * 210f,
@@ -500,16 +500,16 @@ namespace Quaver.GameState.States
             switch (index)
             {
                 case 0:
-                    Configuration.KeyMania1 = ManiaKeys4K[index].CurrentKey;
+                    Configuration.KeyMania4k1 = ManiaKeys4K[index].CurrentKey;
                     break;
                 case 1:
-                    Configuration.KeyMania2 = ManiaKeys4K[index].CurrentKey;
+                    Configuration.KeyMania4k2 = ManiaKeys4K[index].CurrentKey;
                     break;
                 case 2:
-                    Configuration.KeyMania3 = ManiaKeys4K[index].CurrentKey;
+                    Configuration.KeyMania4k3 = ManiaKeys4K[index].CurrentKey;
                     break;
                 case 3:
-                    Configuration.KeyMania4 = ManiaKeys4K[index].CurrentKey;
+                    Configuration.KeyMania4k4 = ManiaKeys4K[index].CurrentKey;
                     break;
             }
         }
