@@ -35,6 +35,11 @@ namespace Quaver.Input
         private bool SkipKeyDown { get; set; }
 
         /// <summary>
+        ///     Keeps track if the pause button is down
+        /// </summary>
+        private bool PauseButtonDown { get; set; }
+
+        /// <summary>
         ///     A reference of all of the lane keys mapped to a list - 4K
         /// </summary>
         private List<Keys> LaneKeys { get; } = new List<Keys>()
@@ -81,6 +86,11 @@ namespace Quaver.Input
         public event EventHandler SkipSong;
 
         /// <summary>
+        ///     Event gets triggered everytime the player hits the pause key
+        /// </summary>
+        public event EventHandler PauseSong;
+
+        /// <summary>
         ///     Mania keys for input
         /// </summary>
         private List<Keys> InputManiaKeys { get; set; }
@@ -125,6 +135,17 @@ namespace Quaver.Input
             {
                 SkipKeyDown = true;
                 SkipSong?.Invoke(this, null);
+            }
+
+            // Check pause
+            if (PauseButtonDown && GameBase.KeyboardState.IsKeyUp(Configuration.KeyPause))
+            {
+                PauseButtonDown = false;
+            }
+            else if (!PauseButtonDown && GameBase.KeyboardState.IsKeyDown(Configuration.KeyPause))
+            {
+                PauseButtonDown = true;
+                PauseSong?.Invoke(this, null);
             }
         }
 
