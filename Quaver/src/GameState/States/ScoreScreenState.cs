@@ -818,8 +818,8 @@ namespace Quaver.GameState.States
                         {
                             Position = new UDim2
                             (
-                                (float)(Math.Cos(position * circularRatio) * (radius - (1 * i))) + offset.X,
-                                (float)(Math.Sin(position * circularRatio) * (radius - (1 * i))) + offset.Y
+                                (float)(Math.Cos(position * circularRatio - Math.PI / 2) * (radius - (1 * i))) + offset.X,
+                                (float)(Math.Sin(position * circularRatio - Math.PI / 2) * (radius - (1 * i))) + offset.Y
                             ),
                             Tint = GameColors.JudgeColors[tint],
                             Size = new UDim2(2, 2),
