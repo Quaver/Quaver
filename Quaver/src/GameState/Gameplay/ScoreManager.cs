@@ -20,6 +20,9 @@ namespace Quaver.GameState.Gameplay
     internal class ScoreManager
     {
         //todo: document this crap
+        //Pausing
+        internal int TotalPauses = 0;
+
         //Hit Timing Variables
         internal float JudgeDifficulty { get; set; } = 10;
 
@@ -194,6 +197,7 @@ namespace Quaver.GameState.Gameplay
             ScoreTotal = 0;
             JudgeCount = 0;
             Health = 100;
+            TotalPauses = 0;
             JudgeReleaseSpread = new int[6];
             JudgePressSpread = new int[6];
             NoteDevianceData = new List<GameplayData>();
