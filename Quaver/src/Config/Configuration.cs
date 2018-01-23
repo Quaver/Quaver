@@ -117,6 +117,18 @@ namespace Quaver.Config
         internal static int WindowWidth { get => _windowWidth; set{ _windowWidth = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
+        ///     4k Hit Position offset from receptor
+        /// </summary>
+        private static int _hitPositionOffset4k = 0;
+        internal static int HitPositionOffset4k { get => _hitPositionOffset4k; set { _hitPositionOffset4k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
+        ///     7k Hit Position offset from receptor
+        /// </summary>
+        private static int _hitPositionOffset7k = 0;
+        internal static int HitPositionOffset7k { get => _hitPositionOffset7k; set { _hitPositionOffset7k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
         ///     Is the window fullscreen?
         /// </summary>
         private static bool _windowFullScreen;
@@ -375,6 +387,8 @@ namespace Quaver.Config
             _backgroundBrightness = ConfigHelper.ReadPercentage(BackgroundBrightness, data["BackgroundBrightness"]);
             _windowHeight = ConfigHelper.ReadInt32(WindowHeight, data["WindowHeight"]);
             _windowWidth = ConfigHelper.ReadInt32(WindowWidth, data["WindowWidth"]);
+            _hitPositionOffset4k = ConfigHelper.ReadInt32(HitPositionOffset4k, data["HitPositionOffset4k"]);
+            _hitPositionOffset7k = ConfigHelper.ReadInt32(HitPositionOffset7k, data["HitPositionOffset7k"]);
             _windowFullScreen = ConfigHelper.ReadBool(WindowFullScreen, data["WindowFullScreen"]);
             _windowLetterboxed = ConfigHelper.ReadBool(WindowLetterboxed, data["WindowLetterboxed"]);
             _fpsCounter = ConfigHelper.ReadBool(FpsCounter, data["FpsCounter"]);
