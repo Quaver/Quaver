@@ -190,11 +190,14 @@ namespace Quaver.GameState.Gameplay
             IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - CurrentSongTime >= 5000);
 
             // Update Helper Classes
-            NoteManager.CurrentSongTime = CurrentSongTime;
-            Playfield.Update(dt);
-            NoteManager.Update(dt);
-            AccuracyBoxUI.Update(dt);
-            PlayfieldUI.Update(dt);
+            if (!Timing.Paused)
+            {
+                NoteManager.CurrentSongTime = CurrentSongTime;
+                Playfield.Update(dt);
+                NoteManager.Update(dt);
+                AccuracyBoxUI.Update(dt);
+                PlayfieldUI.Update(dt);
+            }
 
             PlayfieldUI.UpdateMultiplierBars(ScoreManager.MultiplierIndex);
             PlayfieldUI.UpdateHealthBar(ScoreManager.Health);
@@ -324,6 +327,10 @@ namespace Quaver.GameState.Gameplay
         /// <param name="keyLane"></param>
         public void ManiaKeyDown(object sender, ManiaKeyEventArgs keyLane)
         {
+            // It will not read input if the game is paused
+            if (Timing.Paused)
+                return;
+
             // Play Audio
             GameBase.LoadedSkin.SoundHit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
@@ -392,6 +399,10 @@ namespace Quaver.GameState.Gameplay
         /// <param name="keyLane"></param>
         public void ManiaKeyUp(object sender, ManiaKeyEventArgs keyLane)
         {
+            // It will not read input if the game is paused
+            if (Timing.Paused)
+                return;
+
             //Reference Variables
             int noteIndex = -1;
             int i;
