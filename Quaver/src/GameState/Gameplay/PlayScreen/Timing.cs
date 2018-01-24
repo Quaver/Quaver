@@ -86,6 +86,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <param name="dt"></param>
         public void Update(double dt)
         {
+            // Do not do anything if paused
             if (Paused) return;
             
             //Calculate Time after Song Done
