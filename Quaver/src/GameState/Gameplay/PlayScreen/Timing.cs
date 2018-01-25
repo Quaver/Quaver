@@ -60,8 +60,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //TODO: Timing Initializer
             SongIsPlaying = false;
 
-            //Declare Other Values
-            ActualSongTime = -GameplayReferences.PlayStartDelayed * GameBase.GameClock;
+            //Declare Other Values. 
+            // Game starts 3 seconds before song
+            ActualSongTime = -3000 * GameBase.GameClock;
             //_activeBarObjects = new GameObject[maxNoteCount];
 
             //Add offset after the last note
