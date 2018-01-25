@@ -35,14 +35,19 @@ namespace Quaver.Input
         private bool SkipKeyDown { get; set; }
 
         /// <summary>
+        ///     Keeps track if the pause button is down
+        /// </summary>
+        private bool PauseButtonDown { get; set; }
+
+        /// <summary>
         ///     A reference of all of the lane keys mapped to a list - 4K
         /// </summary>
         private List<Keys> LaneKeys { get; } = new List<Keys>()
         {
-            Configuration.KeyMania1,
-            Configuration.KeyMania2,
-            Configuration.KeyMania3,
-            Configuration.KeyMania4
+            Configuration.KeyMania4k1,
+            Configuration.KeyMania4k2,
+            Configuration.KeyMania4k3,
+            Configuration.KeyMania4k4
         };
 
         /// <summary>
@@ -79,6 +84,11 @@ namespace Quaver.Input
         ///     EventHandler for when ever the skip key gets pressed
         /// </summary>
         public event EventHandler SkipSong;
+
+        /// <summary>
+        ///     Event gets triggered everytime the player hits the pause key
+        /// </summary>
+        public event EventHandler PauseSong;
 
         /// <summary>
         ///     Mania keys for input
@@ -126,6 +136,17 @@ namespace Quaver.Input
                 SkipKeyDown = true;
                 SkipSong?.Invoke(this, null);
             }
+
+            // Check pause
+            if (PauseButtonDown && GameBase.KeyboardState.IsKeyUp(Configuration.KeyPause))
+            {
+                PauseButtonDown = false;
+            }
+            else if (!PauseButtonDown && GameBase.KeyboardState.IsKeyDown(Configuration.KeyPause))
+            {
+                PauseButtonDown = true;
+                PauseSong?.Invoke(this, null);
+            }
         }
 
         /// <summary>
@@ -141,15 +162,12 @@ namespace Quaver.Input
                 {
                     LaneKeyDown[i] = true;
                     ManiaKeyPress?.Invoke(this, new ManiaKeyEventArgs(i));
-                    //NoteManager.Input(i,true);
-                    //GameBase.LoadedSkin.Hit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
                 }
                 //Lane Key Release
                 else if (GameBase.KeyboardState.IsKeyUp(InputManiaKeys[i]) && LaneKeyDown[i])
                 {
                     LaneKeyDown[i] = false;
                     ManiaKeyRelease?.Invoke(this, new ManiaKeyEventArgs(i));
-                    //NoteManager.Input(i, false);
                 }
             }
         }
