@@ -81,8 +81,10 @@ namespace Quaver.GameState.Gameplay
         {
             //Update Judge Spread
             JudgeCount++;
-            if (release) JudgeReleaseSpread[index]++;
-            else JudgePressSpread[index]++;
+            if (release)
+                JudgeReleaseSpread[index]++;
+            else
+                JudgePressSpread[index]++;
 
             //Add JudgeSpread to Accuracy
             Accuracy = 0;
@@ -94,30 +96,32 @@ namespace Quaver.GameState.Gameplay
                 RelativeAcc += (JudgePressSpread[i] + JudgeReleaseSpread[i]) * HitWeighting[i];
             }
 
-            //Average Accuracy
+            //Update Average Accuracy
             Accuracy = Math.Max(Accuracy / (JudgeCount * 100), 0);
             RelativeAcc = Math.Max(RelativeAcc / (TotalJudgeCount * 100), -100);
 
-            //Update Multiplier and Combo
-            //If note is pressed properly, count combo and multplier
+            //If note is not pressed properly, update combo and multplier
             if (index < 4)
             {
                 //Update Multiplier
                 if (index == 3)
                 {
                     MultiplierCount -= 10;
-                    if (MultiplierCount < 0) MultiplierCount = 0;
+                    if (MultiplierCount < 0)
+                        MultiplierCount = 0;
                 }
                 else
                 {
-                    if (MultiplierCount < 150) MultiplierCount++;
-                    else MultiplierCount = 150; //idk... just to be safe
+                    if (MultiplierCount < 150)
+                        MultiplierCount++;
+                    else
+                        MultiplierCount = 150; //idk... just to be safe
                 }
 
                 //Update Combo
                 Combo++;
             }
-            //If note is not pressed properly:
+            //If player combo breaks, reset combo and punish multiplier
             else
             {
                 //Update Multiplier
@@ -128,10 +132,6 @@ namespace Quaver.GameState.Gameplay
                 Combo = 0;
             }
 
-            //Update Multiplier index and score count
-            MultiplierIndex = (int)Math.Floor(MultiplierCount/10f);
-            ScoreCount += ScoreWeighting[index] + (MultiplierIndex * 10);
-
             //Update Health
             Health += HealthWeighting[index];
             if (Health <= 0)
@@ -139,48 +139,41 @@ namespace Quaver.GameState.Gameplay
                 Failed = true;
                 Health = 0;
             }
-            else if (Health > 100) Health = 100;
+            else if (Health > 100)
+                Health = 100;
+
+            //Update Multiplier index and score count
+            MultiplierIndex = (int)Math.Floor(MultiplierCount/10f);
+            ScoreCount += ScoreWeighting[index] + (MultiplierIndex * 10);
 
             //Record Data
             if (songPos != null)
             {
                 //Note ms deviance data
                 if (offset != null)
+                NoteDevianceData.Add(new GameplayData()
                 {
-                    var noteData = new GameplayData()
-                    {
-                        Value = index != 5 ? (double)offset : HitWindowPress[4] + 1,
-                        Position = (double)songPos,
-                    };
-                    NoteDevianceData.Add(noteData);
-                }
+                    Value = index != 5 ? (double)offset : HitWindowPress[4] + 1,
+                    Position = (double)songPos
+                });
 
                 //Acc Data
-                //if (songPos > AccuracyData.Last().Position + 100 || Math.Abs(AccuracyData.Last().Value - Accuracy) > 0.01)
+                AccuracyData.Add(new GameplayData()
                 {
-                    var accData = new GameplayData()
-                    {
-                        Value = Accuracy,
-                        Position = (double)songPos,
-                    };
-                    AccuracyData.Add(accData);
-                }
+                    Value = Accuracy,
+                    Position = (double)songPos
+                });
 
                 //Health Data
-                //if (songPos > HealthData.Last().Position + 500 || Math.Abs(HealthData.Last().Value - Health) > 2)
+                HealthData.Add(new GameplayData()
                 {
-                    var healthData = new GameplayData()
-                    {
-                        Value = Health / 100,
-                        Position = (double)songPos
-                    };
-                    HealthData.Add(healthData);
-                }
+                    Value = Health / 100,
+                    Position = (double)songPos
+                });
             }
 
             //Update Score todo: actual score calculation
             ScoreTotal = (int)(1000000 * ((double)ScoreCount / ScoreMax));
-            //Logger.Log("Score Count: " + ScoreCount + "     Max: " + ScoreMax + "    Note: "+JudgeCount+"/"+ncount, LogColors.GameInfo);
         }
 
         /// <summary>
