@@ -649,10 +649,9 @@ namespace Quaver.GameState.States
             int currentIndex = 0;
 
             // Current position and offset values
-            double currentPosition = 0;
+            double currentXPos = 0;
             double currentOffset = graph[currentIndex].Value;
-            double curYpos = currentOffset;
-            double prevYpos = curYpos;
+            double currentYpos = currentOffset;
 
             // Target values
             double targetPosition = graph[currentIndex + 1].Position / ScoreData.PlayTimeTotal * boundarySizeX;
@@ -661,29 +660,33 @@ namespace Quaver.GameState.States
 
             // Splining
             double splineOffsetSize = (targetOffset - currentOffset);
-            double splinePositionSize = Math.Abs(targetPosition - currentPosition);
+            double splinePositionSize = Math.Abs(targetPosition - currentXPos);
+            double splineTarget;
+            double splineSign;
 
             // This algorithm first calculates the slope between two points and creates the graph elements accordingly
             // The algorithm simultaneously applies a B-Spline algorithm to smoothen the curve of the graph
-            while (currentPosition < boundarySizeX)
+            while (currentXPos < boundarySizeX)
             {
                 // Calculate currentY value of graph
-                target = (1 - (targetPosition - currentPosition) / splinePositionSize) * splineOffsetSize + currentOffset;
-                curYpos += Math.Sign(boundarySizeY) *Math.Min(((1 - target) * boundarySizeY - curYpos) / 6f,2.5);
+                target = (1 - (targetPosition - currentXPos) / splinePositionSize) * splineOffsetSize + currentOffset;
+                splineTarget = ((1 - target) * boundarySizeY - currentYpos) / 6;
+                splineSign = Math.Sign(splineTarget);
+                splineTarget = Math.Min(Math.Abs(splineTarget), 2.9);
+                currentYpos += splineSign * splineTarget;
 
                 // Calculate current X value of graph
-                currentPosition += 1 / (1 + Math.Abs(curYpos - prevYpos));//Math.Abs((targetPosition - currentPosition) / splinePositionSize));
-                prevYpos = curYpos;
+                currentXPos += 1 / (1 + splineTarget);//Math.Abs((targetPosition - currentXPos) / splinePositionSize));
 
                 // If the current X value is greater than the X value of the next point, change the current index to the next point
-                if (currentPosition > targetPosition)
+                if (currentXPos > targetPosition)
                 {
                     if (currentIndex < graph.Count - 2)
                     {
                         currentIndex++;
                         targetPosition = (float)graph[currentIndex + 1].Position / ScoreData.PlayTimeTotal * boundarySizeX;
 
-                        while (currentIndex < graph.Count - 2 && currentPosition > targetPosition)
+                        while (currentIndex < graph.Count - 2 && currentXPos > targetPosition)
                         {
                             currentIndex++;
                             targetPosition = (float)graph[currentIndex + 1].Position / ScoreData.PlayTimeTotal * boundarySizeX;
@@ -692,7 +695,7 @@ namespace Quaver.GameState.States
                         targetOffset = (graph[currentIndex + 1].Value - dataLowestY) * lowestRatio;
                         currentOffset = (graph[currentIndex].Value - dataLowestY) * lowestRatio;
                         splineOffsetSize = targetOffset - currentOffset;
-                        splinePositionSize = Math.Abs(targetPosition - currentPosition);
+                        splinePositionSize = Math.Abs(targetPosition - currentXPos);
                     }
                     else
                         break;
@@ -701,7 +704,7 @@ namespace Quaver.GameState.States
                 // Create graph element
                 var ob = new Sprite()
                 {
-                    Position = new UDim2((float)currentPosition, (float)curYpos),
+                    Position = new UDim2((float)currentXPos, (float)currentYpos),
                     Size = new UDim2(3, 3)
                 };
                 graphElements.Add(ob);
