@@ -122,9 +122,9 @@ namespace Quaver.Utility
                 else if (AverageFpsIntervals[i] < 1000)
                     GameBase.SpriteBatch.Draw(GameBase.UI.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.DeepSkyBlue * 0.5f);
                 else if (AverageFpsIntervals[i] < 1500)
-                    GameBase.SpriteBatch.Draw(GameBase.UI.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.LightBlue * 0.25f);
+                    GameBase.SpriteBatch.Draw(GameBase.UI.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.LightBlue * 0.35f);
                 else
-                    GameBase.SpriteBatch.Draw(GameBase.UI.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.Azure * 0.15f);
+                    GameBase.SpriteBatch.Draw(GameBase.UI.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.Azure * 0.25f);
             }
         }
     }
