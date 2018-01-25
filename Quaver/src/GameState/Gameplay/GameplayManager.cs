@@ -79,6 +79,11 @@ namespace Quaver.GameState.Gameplay
         /// </summary>
         private double CurrentSongTime { get; set; }
 
+        /// <summary>
+        ///     Is determined by whether the game is paused or not.
+        /// </summary>
+        internal bool Paused { get; private set; }
+
         //todo: remove. TEST.
         private Sprite SvInfoTextBox { get; set; }
         private TextBoxSprite SVText { get; set; }
@@ -190,7 +195,7 @@ namespace Quaver.GameState.Gameplay
             IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - CurrentSongTime >= 5000);
 
             // Update Helper Classes
-            if (!Timing.Paused)
+            if (!Paused)
             {
                 NoteManager.CurrentSongTime = CurrentSongTime;
                 Playfield.Update(dt);
@@ -212,7 +217,7 @@ namespace Quaver.GameState.Gameplay
             Logger.Update("KeyCount", $"Game Mode: {GameBase.SelectedBeatmap.Qua.Mode}");
             Logger.Update("SongPos", "Current Track Position: " + NoteManager.TrackPosition);
             Logger.Update("Skippable", $"Intro Skippable: {IntroSkippable}");
-            Logger.Update("Paused", "Paused: " + Timing.Paused.ToString());
+            Logger.Update("Paused", "Paused: " + Paused.ToString());
 
             //Todo: remove. below
             SvInfoTextBox.Update(dt);
@@ -295,19 +300,10 @@ namespace Quaver.GameState.Gameplay
             PlayfieldUI.Initialize(state);
 
             //todo: remove this. used for logging.
-            // Create loggers
             Logger.Add("KeyCount", "", Color.Pink);
             Logger.Add("SongPos", "", Color.White);
             Logger.Add("Skippable", "", GameColors.NameTagAdmin);
             Logger.Add("Paused", "", GameColors.NameTagModerator);
-
-            // Update hit window logger
-            var loggertext = "Hitwindow: Judge: " + ScoreManager.JudgeDifficulty + "   Press: ";
-            foreach (var a in ScoreManager.HitWindowPress) loggertext += Math.Floor(a) + "ms, ";
-            loggertext += "   Release: ";
-            foreach (var a in ScoreManager.HitWindowRelease) loggertext += Math.Floor(a) + "ms, ";
-
-            // Logger.Update("JudgeDifficulty", loggertext);
         }
 
         /// <summary>
@@ -328,7 +324,7 @@ namespace Quaver.GameState.Gameplay
         public void ManiaKeyDown(object sender, ManiaKeyEventArgs keyLane)
         {
             // It will not read input if the game is paused
-            if (Timing.Paused)
+            if (Paused)
                 return;
 
             // Play Audio
@@ -400,7 +396,7 @@ namespace Quaver.GameState.Gameplay
         public void ManiaKeyUp(object sender, ManiaKeyEventArgs keyLane)
         {
             // It will not read input if the game is paused
-            if (Timing.Paused)
+            if (Paused)
                 return;
 
             //Reference Variables
@@ -508,10 +504,18 @@ namespace Quaver.GameState.Gameplay
 
         public void PauseSong(object sender, EventArgs e)
         {
-            if (Timing.Paused)
-                Timing.Unpause();
+            // If the game is paused, it will unpause.
+            if (Paused)
+            {
+                Paused = false;
+                SongManager.Resume();
+            }
+            // If the game is not paused, it will pause.
             else
-                Timing.Pause();
+            {
+                Paused = true;
+                SongManager.Pause();
+            }
         }
     }
 }
