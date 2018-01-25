@@ -78,8 +78,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Modifiers
             RemoveTimeAfterMiss = (uint)(1000 * GameBase.GameClock);
 
-            //Initialize Track
-            TrackPosition = (ulong)(-GameplayReferences.PlayStartDelayed + 10000); //10000ms added since curSVPos is a ulong. -2000 offset is the wait time before song starts
+            // Get Hit Position
             CurrentSvIndex = 0;
             switch (GameBase.SelectedBeatmap.Qua.Mode) 
                 //the hit position is determined by the receptor and object of the first lane
@@ -105,6 +104,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             // Do config stuff
             ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed / (20f * GameBase.GameClock); //todo: balance curve
+
+            //Initialize Track
+            TrackPosition = GetCurrentTrackPosition();
+            //TrackPosition = (ulong)(-GameplayReferences.PlayStartDelayed + 10000); //10000ms added since curSVPos is a ulong. -2000 offset is the wait time before song starts
 
             // Initialize Boundary
             Boundary = new Boundary()
