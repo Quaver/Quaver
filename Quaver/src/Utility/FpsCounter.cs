@@ -51,7 +51,12 @@ namespace Quaver.Utility
         /// <summary>
         ///     The current Max FPS
         /// </summary>
-        private static double CurrentMaxFPS;
+        private static double CurrentMaxFPS = 10000;
+
+        /// <summary>
+        ///     The target Max FPS used for animating the graph
+        /// </summary>
+        private static double TargetMaxFPS;
 
         /// <summary>
         /// Use this to calculate FPS on every frame.
@@ -71,18 +76,18 @@ namespace Quaver.Utility
             if (!DisplayGraph) return;
 
             // Shift AverageFpsIntervals back by 1 and calculate max fps
-            CurrentMaxFPS = 10;
+            TargetMaxFPS = 0;
             for (var i = 39; i > 0; i--)
             {
                 AverageFpsIntervals[i] = AverageFpsIntervals[i - 1];
-                if (AverageFpsIntervals[i] > CurrentMaxFPS) CurrentMaxFPS = AverageFpsIntervals[i];
+                if (AverageFpsIntervals[i] > TargetMaxFPS) TargetMaxFPS = AverageFpsIntervals[i];
+                AverageFpsIntervals[0] = FpsCurrent;
             }
 
-            // Calculate current position on list + max fps
-            if (FpsCurrent > CurrentMaxFPS) CurrentMaxFPS = FpsCurrent;
-                CurrentMaxFPS += 10;
-
-            AverageFpsIntervals[0] = FpsCurrent;
+            // Calculate Max FPS
+            if (FpsCurrent > CurrentMaxFPS) TargetMaxFPS = FpsCurrent;
+            TargetMaxFPS += 10;
+            CurrentMaxFPS += (TargetMaxFPS - CurrentMaxFPS) / 6;
 
             // Calculate Current bar sizes for graph
             for (var i = 0; i < 40; i++)
