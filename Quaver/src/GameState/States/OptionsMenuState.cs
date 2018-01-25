@@ -25,16 +25,19 @@ namespace Quaver.GameState.States
         private Boundary Boundary { get; set; }
         private Boundary ButtonsContainer { get; set; }
 
+        // Key Bindings
         private TextButton BackButton { get; set; }
         private KeyBindButton[] ManiaKeys4K { get; set; }
         private KeyBindButton[] ManiaKeys7K { get; set; }
         private EventHandler[] ManiaEvent4K { get; set; }
         private EventHandler[] ManiaEvent7K { get; set; }
 
+        // Skin Options
         private string[] AvailableSkins { get; set; }
         private List<TextButton> SkinSelectButtons { get; set; }
         private List<EventHandler> SkinSelectEvents { get; set; }
 
+        // Graphics Options
         private TextButton BackgroundBrightnessButton { get; set; }
         private TextButton FullscreenButton { get; set; }
         private TextButton LetterBoxingButton { get; set; }
@@ -46,6 +49,15 @@ namespace Quaver.GameState.States
             new Point(1280, 720), new Point(1366, 768), new Point(1440, 900), new Point(1600, 900), new Point(1680, 1050),
         };
 
+        // Gameplay Options
+        private TextButton ScrollSpeedButton { get; set; }
+        private TextButton ScrollDirection4KButton { get; set; }
+        private TextButton ScrollDirection7KButton { get; set; }
+        private TextButton ShowAccuracyUIButton { get; set; }
+        private TextButton ShowPlayfieldUIButton { get; set; }
+        private TextButton ShowNoteColoringButton { get; set; }
+        private TextButton LaneSize4KButton { get; set; }
+        private TextButton LaneSize7KButton { get; set; }
 
         public void Draw()
         {
@@ -62,8 +74,8 @@ namespace Quaver.GameState.States
             Boundary = new Boundary();
             ButtonsContainer = new Boundary()
             {
-                SizeY = 700,
-                Alignment = Alignment.MidCenter,
+                SizeY = 850,
+                Alignment = Alignment.TopCenter,
                 Parent = Boundary
             };
 
@@ -71,6 +83,7 @@ namespace Quaver.GameState.States
             CreateSkinSelectButtons();
             CreateBackButton();
             CreateGraphicsOptionButtons();
+            CreateGameplayOptionsButtons();
 
             UpdateReady = true;
         }
@@ -97,6 +110,7 @@ namespace Quaver.GameState.States
         public void Update(double dt)
         {
             Boundary.Update(dt);
+            ButtonsContainer.PosY = -(GameBase.MouseState.Position.Y / GameBase.WindowRectangle.Height) * Math.Max(ButtonsContainer.SizeY - GameBase.WindowRectangle.Height, 0);
         }
 
         private void BackButtonClick(object sender, EventArgs e)
@@ -158,7 +172,7 @@ namespace Quaver.GameState.States
 
             ManiaKeys4K = new KeyBindButton[4];
             ManiaEvent4K = new EventHandler[4];
-            var keys = new Keys[4] { Configuration.KeyMania1, Configuration.KeyMania2, Configuration.KeyMania3, Configuration.KeyMania4 };
+            var keys = new Keys[4] { Configuration.KeyMania4k1, Configuration.KeyMania4k2, Configuration.KeyMania4k3, Configuration.KeyMania4k4 };
             for (var i=0; i<4; i++)
             {
                 //todo: hook this to an event/method or something
@@ -348,6 +362,133 @@ namespace Quaver.GameState.States
             BackgroundBrightnessButton.Clicked += OnBrightnessButtonClicked;
         }
 
+        private void CreateGameplayOptionsButtons()
+        {
+            // text info
+            var ob = new TextBoxSprite()
+            {
+                SizeX = 400,
+                SizeY = 70,
+                PosY = 600,
+                TextAlignment = Alignment.BotCenter,
+                Alignment = Alignment.TopCenter,
+                Font = Fonts.Medium24,
+                Text = "Gameplay",
+                Parent = ButtonsContainer
+            };
+
+            // scroll speed 
+            ScrollSpeedButton = new TextButton(new Vector2(200, 30), $@"ScrollSpeed: {Configuration.ScrollSpeed}")
+            {
+                PosY = 680,
+                PosX = (-2.5f) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            // scroll direction
+            ScrollDirection4KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 4K: {Configuration.DownScroll4k}")
+            {
+                PosY = 680,
+                PosX = (-1.5f) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            ScrollDirection7KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 7K: {Configuration.DownScroll7k}")
+            {
+                PosY = 680,
+                PosX = (-0.5f) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            // note coloring
+            ShowNoteColoringButton = new TextButton(new Vector2(200, 30), $@"Note snap coloring: {true}")
+            {
+                PosY = 680,
+                PosX = (0.5f) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            // receptor sizes
+            LaneSize4KButton = new TextButton(new Vector2(200, 30), $@"Lane Size 4K: {GameBase.LoadedSkin.ColumnSize4K}")
+            {
+                PosY = 680,
+                PosX = (1.5f) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            LaneSize7KButton = new TextButton(new Vector2(200, 30), $@"Lane Size 7K: {GameBase.LoadedSkin.ColumnSize7K}")
+            {
+                PosY = 680,
+                PosX = (2.5f) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            // show accuracy box
+            ShowAccuracyUIButton = new TextButton(new Vector2(200, 30), $@"Show Accuracy Box: {true}")
+            {
+                PosY = 720,
+                PosX = (-0.5f) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+
+            // show playfield overlay
+            ShowPlayfieldUIButton = new TextButton(new Vector2(200, 30), $@"Show Playfield Overlay: {true}")
+            {
+                PosY = 720,
+                PosX = (0.5f) * 210f,
+                Alignment = Alignment.TopCenter,
+                Parent = ButtonsContainer
+            };
+        }
+
+        private void OnScrollSpeedButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnScrollDirection4KButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnScrollDirection7KButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnShowAccuracyUIButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnShowPlayfieldUIButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnNoteColorButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnLaneSize4KButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnLaneSize7KButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+
         /// <summary>
         ///     When a mania 4K keybinding gets updated
         /// </summary>
@@ -359,16 +500,16 @@ namespace Quaver.GameState.States
             switch (index)
             {
                 case 0:
-                    Configuration.KeyMania1 = ManiaKeys4K[index].CurrentKey;
+                    Configuration.KeyMania4k1 = ManiaKeys4K[index].CurrentKey;
                     break;
                 case 1:
-                    Configuration.KeyMania2 = ManiaKeys4K[index].CurrentKey;
+                    Configuration.KeyMania4k2 = ManiaKeys4K[index].CurrentKey;
                     break;
                 case 2:
-                    Configuration.KeyMania3 = ManiaKeys4K[index].CurrentKey;
+                    Configuration.KeyMania4k3 = ManiaKeys4K[index].CurrentKey;
                     break;
                 case 3:
-                    Configuration.KeyMania4 = ManiaKeys4K[index].CurrentKey;
+                    Configuration.KeyMania4k4 = ManiaKeys4K[index].CurrentKey;
                     break;
             }
         }

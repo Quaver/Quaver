@@ -101,19 +101,19 @@ namespace Quaver.Replays
             {
                 case GameModes.Keys4:
                     // Key 1
-                    if (GameBase.KeyboardState.IsKeyDown(Configuration.KeyMania1))
+                    if (GameBase.KeyboardState.IsKeyDown(Configuration.KeyMania4k1))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K1;
 
                     // Key 2
-                    if (GameBase.KeyboardState.IsKeyDown(Configuration.KeyMania2))
+                    if (GameBase.KeyboardState.IsKeyDown(Configuration.KeyMania4k2))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K2;
 
                     // Key 3
-                    if (GameBase.KeyboardState.IsKeyDown(Configuration.KeyMania3))
+                    if (GameBase.KeyboardState.IsKeyDown(Configuration.KeyMania4k3))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K3;
 
                     // Key 4
-                    if (GameBase.KeyboardState.IsKeyDown(Configuration.KeyMania4))
+                    if (GameBase.KeyboardState.IsKeyDown(Configuration.KeyMania4k4))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K4;
                     break;
                 case GameModes.Keys7:

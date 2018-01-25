@@ -41,12 +41,26 @@ namespace Quaver.Skins
         /// <summary>
         ///     The padding (Positional offset) of the notes relative from the bg mask.
         /// </summary>
-        internal int BgMaskPadding { get; set; } 
+        internal int BgMaskPadding4K { get; set; }
+        internal int BgMaskPadding7K { get; set; }
 
         /// <summary>
         ///     The padding (Positional offset) of the notes relative from eachother.
         /// </summary>
-        internal int NotePadding { get; set; }
+        internal int NotePadding4K { get; set; }
+        internal int NotePadding7K { get; set; }
+
+        /// <summary>
+        /// Size of each lane in pixels.
+        /// </summary>
+        internal int ColumnSize4K { get; set; }
+        internal int ColumnSize7K { get; set; }
+
+        /// <summary>
+        /// The offset of the hit receptor
+        /// </summary>
+        internal int ReceptorYOffset4K { get; set; }
+        internal int ReceptorYOffset7K { get; set; }
 
         /// <summary>
         ///     The size of the timing pars (in pixels).
@@ -59,23 +73,12 @@ namespace Quaver.Skins
         internal float HitLightingScale { get; set; }
 
         /// <summary>
-        /// Size of each lane in pixels.
-        /// </summary>
-        internal int ColumnSize { get; set; }
-        internal int ColumnSize7K { get; set; }
-
-        /// <summary>
-        /// The offset of the hit receptor
-        /// </summary>
-        internal int ReceptorYOffset { get; set; }
-
-        /// <summary>
         /// The alignment of the playfield as a percentage. 
         /// </summary>
         internal byte ColumnAlignment { get; set; }
 
         /// <summary>
-        ///     Determines whether or not to color the HitObjects by their snap distance
+        ///     Determines whether or not to color the HitObjects by their snap distance. 4K ONLY.
         /// </summary>
         internal bool ColourObjectsBySnapDistance { get; set; }
 
@@ -88,18 +91,39 @@ namespace Quaver.Skins
         /// <summary>
         /// The colour that is used for the column's lighting.
         /// </summary>
-        internal Color ColourLight1 { get; set; }
-        internal Color ColourLight2 { get; set; }
-        internal Color ColourLight3 { get; set; }
-        internal Color ColourLight4 { get; set; }
+        internal Color SnapColor1st { get; set; }
+        internal Color SnapColor2nd { get; set; }
+        internal Color SnapColor3rd { get; set; }
+        internal Color SnapColor4th { get; set; }
+        internal Color SnapColor6th { get; set; }
+        internal Color SnapColor8th { get; set; }
+        internal Color SnapColor12th { get; set; }
+        internal Color SnapColor16th { get; set; }
+        internal Color SnapColor48th { get; set; }
+        internal Color[] SnapColors { get; set; }
 
         /// <summary>
         ///     All of the textures for the loaded skin elements. 
         ///     We first attempt to load the selected skin's elements, however if we can't,
         ///     it'll result it to the default.
         /// </summary>
-        internal Texture2D ColumnBgMask { get; set; }
-        internal Texture2D ColumnHitLighting { get; set; }
+        internal Texture2D ColumnBgMask4K { get; set; }
+        internal Texture2D ColumnBgMask7K { get; set; }
+
+        internal Texture2D ColumnHitLighting4K1 { get; set; }
+        internal Texture2D ColumnHitLighting4K2 { get; set; }
+        internal Texture2D ColumnHitLighting4K3 { get; set; }
+        internal Texture2D ColumnHitLighting4K4 { get; set; }
+
+        internal Texture2D ColumnHitLighting7K1 { get; set; }
+        internal Texture2D ColumnHitLighting7K2 { get; set; }
+        internal Texture2D ColumnHitLighting7K3 { get; set; }
+        internal Texture2D ColumnHitLighting7K4 { get; set; }
+        internal Texture2D ColumnHitLighting7K5 { get; set; }
+        internal Texture2D ColumnHitLighting7K6 { get; set; }
+        internal Texture2D ColumnHitLighting7K7 { get; set; }
+
+
         internal Texture2D ColumnTimingBar { get; set; }
 
         // 4k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
@@ -173,8 +197,22 @@ namespace Quaver.Skins
         private readonly string[] skinElements = new[]
         {
                 @"column-bgmask",
-                @"column-hitlighting",
                 @"column-timingbar",
+
+                // 4k HitLighting
+                @"4k-column-hitlighting-1",
+                @"4k-column-hitlighting-2",
+                @"4k-column-hitlighting-3",
+                @"4k-column-hitlighting-4",
+
+                // 7k HitLighting
+                @"7k-column-hitlighting-1",
+                @"7k-column-hitlighting-2",
+                @"7k-column-hitlighting-3",
+                @"7k-column-hitlighting-4",
+                @"7k-column-hitlighting-5",
+                @"7k-column-hitlighting-6",
+                @"7k-column-hitlighting-7",
 
                 // 4k HitObjects
                 @"4k-note-hitobject-1",
@@ -325,14 +363,35 @@ namespace Quaver.Skins
                 // Load up all the skin elements.
                 switch (element)
                 {
-                    case @"column-bgmask":
-                        ColumnBgMask = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"column-hitlighting":
-                        ColumnHitLighting = LoadIndividualElement(element, skinElementPath);
+                    case @"4k-column-bgmask":
+                        ColumnBgMask4K = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"column-timingbar":
                         ColumnTimingBar = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"4k-column-hitlighting-1":
+                        ColumnHitLighting4K1 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"4k-column-hitlighting-2":
+                        ColumnHitLighting4K2 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"4k-column-hitlighting-3":
+                        ColumnHitLighting4K3 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"4k-column-hitlighting-4":
+                        ColumnHitLighting4K4 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-column-hitlighting-1":
+                        ColumnHitLighting7K1 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-column-hitlighting-2":
+                        ColumnHitLighting7K2 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-column-hitlighting-3":
+                        ColumnHitLighting7K3 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-column-hitlighting-4":
+                        ColumnHitLighting7K4 = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-hitobject-1":
                         LoadHitObjects(NoteHitObjects4K, skinDir, element, 0);
@@ -734,39 +793,75 @@ namespace Quaver.Skins
                     Name = "Default Bar Skin";
                     Author = "Quaver Team";
                     Version = "1.0";
-                    BgMaskPadding = 7;
-                    NotePadding = 1;
+                    BgMaskPadding4K = 5;
+                    BgMaskPadding7K = 5;
+                    NotePadding4K = 2;
+                    NotePadding7K = 0;
                     TimingBarPixelSize = 2;
                     HitLightingScale = 4.0f;
-                    ColumnSize = 95;
+                    ColumnSize4K = 95;
                     ColumnSize7K = 65;
-                    ReceptorYOffset = 50;
+                    ReceptorYOffset4K = 50;
+                    ReceptorYOffset7K = 0;
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = false;
                     LightFramesPerSecond = 240;
-                    ColourLight1 = new Color(new Vector4(255, 255, 255, 1));
-                    ColourLight2 = new Color(new Vector4(255, 255, 255, 1));
-                    ColourLight3 = new Color(new Vector4(255, 255, 255, 1));
-                    ColourLight4 = new Color(new Vector4(255, 255, 255, 1));
+                    SnapColors = new Color[9]
+                    {
+                        SnapColor1st = new Color(255, 0, 0),
+                        SnapColor2nd = new Color(0, 0, 255),
+                        SnapColor3rd = new Color(125, 0, 255),
+                        SnapColor4th = new Color(255, 255, 0),
+                        SnapColor6th = new Color(255, 0, 255),
+                        SnapColor8th = new Color(255, 125, 0),
+                        SnapColor12th = new Color(0, 255, 255),
+                        SnapColor16th = new Color(0, 255, 0),
+                        SnapColor48th = new Color(255, 255, 255)
+                    };
+                    /*
+                    SnapColor1st = new Color(255, 0, 0);
+                    SnapColor2nd = new Color(0, 0, 255);
+                    SnapColor3rd = new Color(125, 0, 255);
+                    SnapColor4th = new Color(255, 255, 0);
+                    SnapColor6th = new Color(255, 0, 255);
+                    SnapColor8th = new Color(255, 125, 0);
+                    SnapColor12th = new Color(0, 255, 255);
+                    SnapColor16th = new Color(0, 255, 0);
+                    SnapColor48th = new Color(255, 255, 255);
+                    */
                     break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
                     Author = "Quaver Team";
                     Version = "1.0";
-                    BgMaskPadding = 7;
-                    NotePadding = 1;
+                    Name = "Default Bar Skin";
+                    Author = "Quaver Team";
+                    Version = "1.0";
+                    BgMaskPadding4K = 5;
+                    BgMaskPadding7K = 5;
+                    NotePadding4K = 2;
+                    NotePadding7K = 0;
                     TimingBarPixelSize = 2;
                     HitLightingScale = 4.0f;
-                    ColumnSize = 100;
+                    ColumnSize4K = 95;
                     ColumnSize7K = 65;
-                    ReceptorYOffset = 50;
+                    ReceptorYOffset4K = 50;
+                    ReceptorYOffset7K = 0;
                     ColumnAlignment = 50;
-                    ColourObjectsBySnapDistance = true;
+                    ColourObjectsBySnapDistance = false;
                     LightFramesPerSecond = 240;
-                    ColourLight1 = new Color(new Vector4(255, 255, 255, 1));
-                    ColourLight2 = new Color(new Vector4(255, 255, 255, 1));
-                    ColourLight3 = new Color(new Vector4(255, 255, 255, 1));
-                    ColourLight4 = new Color(new Vector4(255, 255, 255, 1));
+                    SnapColors = new Color[9]
+                    {
+                        SnapColor1st = new Color(255, 0, 0),
+                        SnapColor2nd = new Color(0, 0, 255),
+                        SnapColor3rd = new Color(125, 0, 255),
+                        SnapColor4th = new Color(255, 255, 0),
+                        SnapColor6th = new Color(255, 0, 255),
+                        SnapColor8th = new Color(255, 125, 0),
+                        SnapColor12th = new Color(0, 255, 255),
+                        SnapColor16th = new Color(0, 255, 0),
+                        SnapColor48th = new Color(255, 255, 255)
+                    };
                     break;
             }
 
@@ -779,20 +874,38 @@ namespace Quaver.Skins
             Name = ConfigHelper.ReadString(Name, data["General"]["Name"]);
             Author = ConfigHelper.ReadString(Author, data["General"]["Author"]);
             Version = ConfigHelper.ReadString(Version, data["General"]["Version"]);
-            BgMaskPadding = ConfigHelper.ReadInt32(BgMaskPadding, data["Gameplay"]["BgMaskPadding"]);
-            NotePadding = ConfigHelper.ReadInt32(NotePadding, data["Gameplay"]["NotePadding"]);
+            BgMaskPadding4K = ConfigHelper.ReadInt32(BgMaskPadding4K, data["Gameplay"]["BgMaskPadding4K"]);
+            BgMaskPadding7K = ConfigHelper.ReadInt32(BgMaskPadding7K, data["Gameplay"]["BgMaskPadding7K"]);
+            NotePadding4K = ConfigHelper.ReadInt32(NotePadding4K, data["Gameplay"]["NotePadding4K"]);
+            NotePadding7K = ConfigHelper.ReadInt32(NotePadding7K, data["Gameplay"]["NotePadding7K"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, data["Gameplay"]["TimingBarPixelSize"]);
             HitLightingScale = ConfigHelper.ReadFloat(HitLightingScale, data["Gameplay"]["HitLightingScale"]);
-            ColumnSize = ConfigHelper.ReadInt32(ColumnSize, data["Gameplay"]["ColumnSize"]);
+            ColumnSize4K = ConfigHelper.ReadInt32(ColumnSize4K, data["Gameplay"]["ColumnSize"]);
             ColumnSize7K = ConfigHelper.ReadInt32(ColumnSize7K, data["Gameplay"]["ColumnSize7k"]);
-            ReceptorYOffset = ConfigHelper.ReadInt32(ReceptorYOffset, data["Gameplay"]["ReceptorYOffset"]);
+            ReceptorYOffset4K = ConfigHelper.ReadInt32(ReceptorYOffset4K, data["Gameplay"]["ReceptorYOffset"]);
             ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, data["Gameplay"]["ColumnAlignment"]);
             ColourObjectsBySnapDistance = ConfigHelper.ReadBool(ColourObjectsBySnapDistance, data["Gameplay"]["ColourObjectsBySnapDistance"]);
             LightFramesPerSecond = ConfigHelper.ReadByte(LightFramesPerSecond, data["Gameplay"]["LightsFramesPerSecond"]);
+
+            //todo: read snap colors successfully
+            SnapColors = new Color[9]
+                    {
+                        SnapColor1st = new Color(255, 0, 0),
+                        SnapColor2nd = new Color(0, 0, 255),
+                        SnapColor3rd = new Color(125, 0, 255),
+                        SnapColor4th = new Color(255, 255, 0),
+                        SnapColor6th = new Color(255, 0, 255),
+                        SnapColor8th = new Color(255, 125, 0),
+                        SnapColor12th = new Color(0, 255, 255),
+                        SnapColor16th = new Color(0, 255, 0),
+                        SnapColor48th = new Color(255, 255, 255)
+                    };
+
+            /*
             ColourLight1 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight1"]);
             ColourLight2 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight2"]);
             ColourLight3 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight3"]);
-            ColourLight4 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight4"]);
+            ColourLight4 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight4"]);*/
 
             Logger.Log($@"Skin loaded: {skinDir}", LogColors.GameImportant);
         }

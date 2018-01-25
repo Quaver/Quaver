@@ -59,8 +59,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //TODO: Timing Initializer
             SongIsPlaying = false;
 
-            //Declare Other Values
-            ActualSongTime = -GameplayReferences.PlayStartDelayed * GameBase.GameClock;
+            //Declare Other Values. 
+            // Game starts 3 seconds before song
+            ActualSongTime = -3000 * GameBase.GameClock;
             //_activeBarObjects = new GameObject[maxNoteCount];
 
             //Add offset after the last note
@@ -92,30 +93,31 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
                 //If song is done and song time is over playingEndOffset, the play session is done
                 if (ActualSongTime >= PlayingEndOffset) PlayingIsDone = true;
+                return;
             }
 
-            //Calculate Actual Song Time if song is not done
-            else
+            //If the audio didn't even start yet, it will calculate actual song time with delta time.
+            if (ActualSongTime < 0)
             {
-                //If the audio didn't even start yet
-                if (ActualSongTime < 0) ActualSongTime += dt * GameBase.GameClock;
-                else
-                {
-                    //If song time > 0 and audio hasnt played yet
-                    if (!SongIsPlaying)
-                    {
-                        SongIsPlaying = true;
-                        SongManager.Play();
-                    }
-
-                    //If song time  > song end
-                    if (SongManager.Position >= GameBase.SelectedBeatmap.SongLength || ActualSongTime >= PlayingEndOffset)
-                        SongIsDone = true;
-                    //Calculate song pos from audio
-                    else
-                        ActualSongTime = (SongManager.Position + (ActualSongTime + (dt * GameBase.GameClock))) / 2f;
-                }
+                ActualSongTime += dt * GameBase.GameClock;
+                return;
             }
+
+            //Play audio if song time is >= 0
+            if (!SongIsPlaying)
+            {
+                SongIsPlaying = true;
+                SongManager.Play();
+            }
+
+            //If song time  > song end, song is done.
+            if (SongManager.Position + 1 > SongManager.Length || ActualSongTime >= PlayingEndOffset)
+            {
+                SongIsDone = true;
+            }
+
+            //Calculate song pos from audio
+            ActualSongTime = (SongManager.Position + (ActualSongTime + (dt * GameBase.GameClock))) / 2f;
         }
 
         internal double GetCurrentSongTime()

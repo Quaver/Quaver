@@ -11,6 +11,7 @@ using Quaver.Logging;
 using Quaver.Utility;
 using Quaver.Graphics.Text;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
+using Quaver.Input;
 
 namespace Quaver.Graphics.Button
 {
@@ -48,6 +49,11 @@ namespace Quaver.Graphics.Button
         ///     If the text is currently highlighted for a CTRL+A operation
         /// </summary>
         private bool TextHighlighted { get; set; }
+
+        /// <summary>
+        ///     This event gets called everytime player finishes inputting into the field.
+        /// </summary>
+        internal event EventHandler InputFinished;
 
         /// <summary>
         ///     Ctor - Creates the text box
@@ -165,22 +171,29 @@ namespace Quaver.Graphics.Button
                     // Handle normal key inputs
                     switch (e.Key)
                     {
+                        // Ignore these keys
+                        case Keys.Tab:
+                        case Keys.Delete:
+                            break;
+
+                        // Back spacking
                         case Keys.Back:
                             CurrentTextField.Length--;
                             TextSprite.Text = CurrentTextField.ToString();
                             break;
-                        case Keys.Tab:
-                            break;
-                        case Keys.Delete:
-                            break;
-                        case Keys.Enter:
-                            TextSprite.Text = CurrentTextField.ToString();
 
-                            //todo: trigger chat/field entered event before clearing 
-                            CurrentTextField.Clear();
+                        // Trigger Event if Input Finished (enter key)
+                        case Keys.Enter:
+                            // Trigger Input Finished Event
+                            InputFinished?.Invoke(this, new StringInputEventArgs(CurrentTextField.ToString()));
+
+                            // Reset textfield and reset text to placeholder
                             TextSprite.Text = PlaceHolderText;
+                            CurrentTextField.Clear();
                             UnSelect();
                             break;
+
+                        // Input text
                         default:
                             CurrentTextField.Append(e.Character.ToString());
                             TextSprite.Text = CurrentTextField.ToString();

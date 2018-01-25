@@ -79,6 +79,11 @@ namespace Quaver.GameState.Gameplay
         /// </summary>
         private double CurrentSongTime { get; set; }
 
+        /// <summary>
+        ///     Is determined by whether the game is paused or not.
+        /// </summary>
+        internal bool Paused { get; private set; }
+
         //todo: remove. TEST.
         private Sprite SvInfoTextBox { get; set; }
         private TextBoxSprite SVText { get; set; }
@@ -116,6 +121,7 @@ namespace Quaver.GameState.Gameplay
             InputManager.ManiaKeyPress += ManiaKeyDown;
             InputManager.ManiaKeyRelease += ManiaKeyUp;
             InputManager.SkipSong += SkipSong;
+            InputManager.PauseSong += PauseSong;
 
             // Hook Missed Note Events
             NoteManager.PressMissed += PressMissed;
@@ -155,6 +161,7 @@ namespace Quaver.GameState.Gameplay
             InputManager.ManiaKeyPress -= ManiaKeyDown;
             InputManager.ManiaKeyRelease -= ManiaKeyUp;
             InputManager.SkipSong -= SkipSong;
+            InputManager.PauseSong -= PauseSong;
 
             // Unook Missed Note Events
             NoteManager.PressMissed -= PressMissed;
@@ -188,11 +195,14 @@ namespace Quaver.GameState.Gameplay
             IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - CurrentSongTime >= 5000);
 
             // Update Helper Classes
-            NoteManager.CurrentSongTime = CurrentSongTime;
-            Playfield.Update(dt);
-            NoteManager.Update(dt);
-            AccuracyBoxUI.Update(dt);
-            PlayfieldUI.Update(dt);
+            if (!Paused)
+            {
+                NoteManager.CurrentSongTime = CurrentSongTime;
+                Playfield.Update(dt);
+                NoteManager.Update(dt);
+                AccuracyBoxUI.Update(dt);
+                PlayfieldUI.Update(dt);
+            }
 
             PlayfieldUI.UpdateMultiplierBars(ScoreManager.MultiplierIndex);
             PlayfieldUI.UpdateHealthBar(ScoreManager.Health);
@@ -207,6 +217,7 @@ namespace Quaver.GameState.Gameplay
             Logger.Update("KeyCount", $"Game Mode: {GameBase.SelectedBeatmap.Qua.Mode}");
             Logger.Update("SongPos", "Current Track Position: " + NoteManager.TrackPosition);
             Logger.Update("Skippable", $"Intro Skippable: {IntroSkippable}");
+            Logger.Update("Paused", "Paused: " + Paused.ToString());
 
             //Todo: remove. below
             SvInfoTextBox.Update(dt);
@@ -289,19 +300,10 @@ namespace Quaver.GameState.Gameplay
             PlayfieldUI.Initialize(state);
 
             //todo: remove this. used for logging.
-            // Create loggers
             Logger.Add("KeyCount", "", Color.Pink);
             Logger.Add("SongPos", "", Color.White);
             Logger.Add("Skippable", "", GameColors.NameTagAdmin);
-            Logger.Add("JudgeDifficulty", "", GameColors.NameTagModerator);
-
-            // Update hit window logger
-            var loggertext = "Hitwindow: Judge: " + ScoreManager.JudgeDifficulty + "   Press: ";
-            foreach (var a in ScoreManager.HitWindowPress) loggertext += Math.Floor(a) + "ms, ";
-            loggertext += "   Release: ";
-            foreach (var a in ScoreManager.HitWindowRelease) loggertext += Math.Floor(a) + "ms, ";
-
-            // Logger.Update("JudgeDifficulty", loggertext);
+            Logger.Add("Paused", "", GameColors.NameTagModerator);
         }
 
         /// <summary>
@@ -321,6 +323,10 @@ namespace Quaver.GameState.Gameplay
         /// <param name="keyLane"></param>
         public void ManiaKeyDown(object sender, ManiaKeyEventArgs keyLane)
         {
+            // It will not read input if the game is paused
+            if (Paused)
+                return;
+
             // Play Audio
             GameBase.LoadedSkin.SoundHit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
 
@@ -389,6 +395,10 @@ namespace Quaver.GameState.Gameplay
         /// <param name="keyLane"></param>
         public void ManiaKeyUp(object sender, ManiaKeyEventArgs keyLane)
         {
+            // It will not read input if the game is paused
+            if (Paused)
+                return;
+
             //Reference Variables
             int noteIndex = -1;
             int i;
@@ -489,6 +499,22 @@ namespace Quaver.GameState.Gameplay
 
                 Timing.SongIsPlaying = true;
                 DiscordController.ChangeDiscordPresenceGameplay(true);
+            }
+        }
+
+        public void PauseSong(object sender, EventArgs e)
+        {
+            // If the game is paused, it will unpause.
+            if (Paused)
+            {
+                Paused = false;
+                SongManager.Resume();
+            }
+            // If the game is not paused, it will pause.
+            else
+            {
+                Paused = true;
+                SongManager.Pause();
             }
         }
     }
