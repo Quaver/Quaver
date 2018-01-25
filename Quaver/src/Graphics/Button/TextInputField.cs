@@ -11,6 +11,7 @@ using Quaver.Logging;
 using Quaver.Utility;
 using Quaver.Graphics.Text;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
+using Quaver.Input;
 
 namespace Quaver.Graphics.Button
 {
@@ -48,6 +49,11 @@ namespace Quaver.Graphics.Button
         ///     If the text is currently highlighted for a CTRL+A operation
         /// </summary>
         private bool TextHighlighted { get; set; }
+
+        /// <summary>
+        ///     This event gets called everytime player finishes inputting into the field.
+        /// </summary>
+        internal event EventHandler InputFinished;
 
         /// <summary>
         ///     Ctor - Creates the text box
@@ -176,7 +182,7 @@ namespace Quaver.Graphics.Button
                         case Keys.Enter:
                             TextSprite.Text = CurrentTextField.ToString();
 
-                            //todo: trigger chat/field entered event before clearing 
+                            InputFinished?.Invoke(this, new StringInputEventArgs(CurrentTextField.ToString()));
                             CurrentTextField.Clear();
                             TextSprite.Text = PlaceHolderText;
                             UnSelect();
