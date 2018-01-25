@@ -129,12 +129,9 @@
     <Compile Include="src\Audio\MenuAudioPlayer.cs" />
     <Compile Include="src\Audio\SongManager.cs" />
     <Compile Include="src\Commands\CalculateDifficulty.cs" />
-    <Compile Include="src\Commands\JoinChatChannel.cs" />
-    <Compile Include="src\Commands\LeaveChatChannel.cs" />
     <Compile Include="src\Commands\Logout.cs" />
     <Compile Include="src\Commands\OsuDbCommand.cs" />
     <Compile Include="src\Commands\ParseStepMania.cs" />
-    <Compile Include="src\Commands\SendMessage.cs" />
     <Compile Include="src\Database\Beatmaps\Mapset.cs" />
     <Compile Include="src\Commands\CommandHandler.cs" />
     <Compile Include="src\Commands\GetScores.cs" />
@@ -193,7 +190,6 @@
     <Compile Include="src\Modifiers\Mods\Chill.cs" />
     <Compile Include="src\Modifiers\Mods\Speed.cs" />
     <Compile Include="src\Modifiers\Mods\Strict.cs" />
-    <Compile Include="src\Online\Rattle.cs" />
     <Compile Include="src\GameState\Gameplay\GameplayManager.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\NoteManager.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\Timing.cs" />
