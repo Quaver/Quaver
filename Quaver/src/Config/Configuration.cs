@@ -117,6 +117,18 @@ namespace Quaver.Config
         internal static int WindowWidth { get => _windowWidth; set{ _windowWidth = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
+        ///     4k Hit Position offset from receptor
+        /// </summary>
+        private static int _hitPositionOffset4k = 0;
+        internal static int HitPositionOffset4k { get => _hitPositionOffset4k; set { _hitPositionOffset4k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
+        ///     7k Hit Position offset from receptor
+        /// </summary>
+        private static int _hitPositionOffset7k = 0;
+        internal static int HitPositionOffset7k { get => _hitPositionOffset7k; set { _hitPositionOffset7k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
         ///     Is the window fullscreen?
         /// </summary>
         private static bool _windowFullScreen;
@@ -141,10 +153,16 @@ namespace Quaver.Config
         internal static byte ScrollSpeed { get => _scrollSpeed; set { _scrollSpeed = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
-        ///     Should the game be played with DownScroll? If false, it's UpScroll
+        ///     Should 4k be played with DownScroll? If false, it's UpScroll
         /// </summary>
-        private static bool _downScroll = true;
-        internal static bool DownScroll { get => _downScroll; set { _downScroll = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        private static bool _downScroll4k = true;
+        internal static bool DownScroll4k { get => _downScroll4k; set { _downScroll4k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
+        ///     Should 7k be played with DownScroll? If false, it's UpScroll
+        /// </summary>
+        private static bool _downScroll7k = true;
+        internal static bool DownScroll7k { get => _downScroll7k; set { _downScroll7k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The offset of the notes compared to the song start.
@@ -173,43 +191,43 @@ namespace Quaver.Config
         /// <summary>
         ///     The key pressed for lane 1
         /// </summary>
-        private static Keys _keyMania1 = Keys.D;
-        internal static Keys KeyMania1 { get => _keyMania1; set { _keyMania1 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        private static Keys _keyMania4k1 = Keys.A;
+        internal static Keys KeyMania4k1 { get => _keyMania4k1; set { _keyMania4k1 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed for lane 2
         /// </summary>
-        private static Keys _keyMania2 = Keys.F;
-        internal static Keys KeyMania2 { get => _keyMania2; set { _keyMania2 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        private static Keys _keyMania4k2 = Keys.S;
+        internal static Keys KeyMania4k2 { get => _keyMania4k2; set { _keyMania4k2 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed for lane 3
         /// </summary>
-        private static Keys _keyMania3 = Keys.J;
-        internal static Keys KeyMania3 { get => _keyMania3; set { _keyMania3 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        private static Keys _keyMania4k3 = Keys.K;
+        internal static Keys KeyMania4k3 { get => _keyMania4k3; set { _keyMania4k3 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed for lane 4
         /// </summary>
-        private static Keys _keyMania4 = Keys.K;
-        internal static Keys KeyMania4 { get => _keyMania4; set { _keyMania4 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        private static Keys _keyMania4k4 = Keys.L;
+        internal static Keys KeyMania4k4 { get => _keyMania4k4; set { _keyMania4k4 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed for lane 1 - 7k
         /// </summary>
-        private static Keys _keyMania7k1 = Keys.S;
+        private static Keys _keyMania7k1 = Keys.A;
         internal static Keys KeyMania7k1 { get => _keyMania7k1; set { _keyMania7k1 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed for lane 2 - 7k
         /// </summary>
-        private static Keys _keyMania7k2 = Keys.D;
+        private static Keys _keyMania7k2 = Keys.S;
         internal static Keys KeyMania7k2 { get => _keyMania7k2; set { _keyMania7k2 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed for lane 3 - 7k
         /// </summary>
-        private static Keys _keyMania7k3 = Keys.F;
+        private static Keys _keyMania7k3 = Keys.D;
         internal static Keys KeyMania7k3 { get => _keyMania7k3; set { _keyMania7k3 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
@@ -275,7 +293,7 @@ namespace Quaver.Config
         /// <summary>
         ///     The key pressed to skip the song introduction
         /// </summary>
-        private static Keys _keySkipIntro = Keys.RightAlt;
+        private static Keys _keySkipIntro = Keys.Space;
         internal static Keys KeySkipIntro { get => _keySkipIntro; set { _keySkipIntro = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
@@ -369,21 +387,24 @@ namespace Quaver.Config
             _backgroundBrightness = ConfigHelper.ReadPercentage(BackgroundBrightness, data["BackgroundBrightness"]);
             _windowHeight = ConfigHelper.ReadInt32(WindowHeight, data["WindowHeight"]);
             _windowWidth = ConfigHelper.ReadInt32(WindowWidth, data["WindowWidth"]);
+            _hitPositionOffset4k = ConfigHelper.ReadInt32(HitPositionOffset4k, data["HitPositionOffset4k"]);
+            _hitPositionOffset7k = ConfigHelper.ReadInt32(HitPositionOffset7k, data["HitPositionOffset7k"]);
             _windowFullScreen = ConfigHelper.ReadBool(WindowFullScreen, data["WindowFullScreen"]);
             _windowLetterboxed = ConfigHelper.ReadBool(WindowLetterboxed, data["WindowLetterboxed"]);
             _fpsCounter = ConfigHelper.ReadBool(FpsCounter, data["FpsCounter"]);
             _scrollSpeed = ConfigHelper.ReadPercentage(ScrollSpeed, data["ScrollSpeed"]);
-            _downScroll = ConfigHelper.ReadBool(DownScroll, data["DownScroll"]);
+            _downScroll4k = ConfigHelper.ReadBool(DownScroll4k, data["DownScroll4k"]);
+            _downScroll7k = ConfigHelper.ReadBool(DownScroll7k, data["DownScroll7k"]);
             _globalOffset = ConfigHelper.ReadSignedByte(GlobalOffset, data["GlobalOffset"]);
             _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
             _defaultSkin = ConfigHelper.ReadDefaultSkin(DefaultSkin, data["DefaultSkin"]);
             _pitched = ConfigHelper.ReadBool(Pitched, data["Pitched"]);
             _showReleaseCounter = ConfigHelper.ReadBool(_showReleaseCounter, data["ShowReleaseCounter"]);
             _gradeBarRelative = ConfigHelper.ReadBool(_gradeBarRelative, data["GradeBarRelative"]);
-            _keyMania1 = ConfigHelper.ReadKeys(KeyMania1, data["KeyMania1"]);
-            _keyMania2 = ConfigHelper.ReadKeys(KeyMania2, data["KeyMania2"]);
-            _keyMania3 = ConfigHelper.ReadKeys(KeyMania3, data["KeyMania3"]);
-            _keyMania4 = ConfigHelper.ReadKeys(KeyMania4, data["KeyMania4"]);
+            _keyMania4k1 = ConfigHelper.ReadKeys(KeyMania4k1, data["KeyMania4k1"]);
+            _keyMania4k2 = ConfigHelper.ReadKeys(KeyMania4k2, data["KeyMania4k2"]);
+            _keyMania4k3 = ConfigHelper.ReadKeys(KeyMania4k3, data["KeyMania4k3"]);
+            _keyMania4k4 = ConfigHelper.ReadKeys(KeyMania4k4, data["KeyMania4k4"]);
             _keyMania7k1 = ConfigHelper.ReadKeys(KeyMania7k1, data["KeyMania7k1"]);
             _keyMania7k2 = ConfigHelper.ReadKeys(KeyMania7k2, data["KeyMania7k2"]);
             _keyMania7k3 = ConfigHelper.ReadKeys(KeyMania7k3, data["KeyMania7k3"]);

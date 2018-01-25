@@ -13,22 +13,11 @@ namespace Quaver.GameState.Gameplay
     /// </summary>
     internal static class GameplayReferences
     {
-        internal static string[] JudgeNames { get; } = new string[6] { "MARV", "PERF", "GREAT", "GOOD", "OKAY", "MISS" };
-        internal static Texture2D[] GradeImages { get; } = new Texture2D[9] {GameBase.LoadedSkin.GradeSmallF, GameBase.LoadedSkin.GradeSmallD, GameBase.LoadedSkin.GradeSmallC, GameBase.LoadedSkin.GradeSmallB,
-                                                                        GameBase.LoadedSkin.GradeSmallA, GameBase.LoadedSkin.GradeSmallS, GameBase.LoadedSkin.GradeSmallSS, GameBase.LoadedSkin.GradeSmallX, GameBase.LoadedSkin.GradeSmallXX};
-        //todo: temp note rendering reference variables
-        //internal static ulong[] SvCalc { get; set; }
+        internal static string[] JudgeNames { get; } = new string[6] { "Marvelous", "Perfect", "Great", "Good", "Okay", "Miss" };
 
         //todo: temp variables for scoremanager
         internal static float PressWindowLatest { get; set; } // HitWindowPress[4]
         internal static float ReleaseWindowLatest { get; set; } // HitWindowRelease[3]
-
-        //todo: temp Timing variables
-        //internal static List<TimingObject> SvQueue { get; set; }
-        internal static uint PlayStartDelayed { get; } = 3000;
-
-        //todo: temp GameplayUI variables
-        //internal static bool NoteHolding { get; set; }
 
         //todo: temp Playfield variables
         internal static float PlayfieldSize { get; set; } //todo: remove

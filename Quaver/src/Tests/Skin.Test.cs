@@ -27,16 +27,25 @@ namespace Quaver.Tests
                           $"Name: {skin.Name}\n" +
                           $"Author: {skin.Author}\n" +
                           $"Version: {skin.Version}\n" +
-                          $"BgMaskPadding: {skin.BgMaskPadding}\n" +
-                          $"NotePadding: {skin.NotePadding}\n" +
+                          $"BgMaskPadding: {skin.BgMaskPadding4K}\n" +
+                          $"BgMaskPadding: {skin.BgMaskPadding7K}\n" +
+                          $"NotePadding: {skin.NotePadding4K}\n" +
+                          $"NotePadding: {skin.NotePadding7K}\n" +
                           $"TimingBarPixelSize: {skin.TimingBarPixelSize}\n" +
                           $"HitLightingScale: {skin.HitLightingScale}\n" +
-                          $"ColumnSize: {skin.ColumnSize}\n" +
-                          $"ReceptorYOffset: {skin.ReceptorYOffset}\n" +
-                          $"ColourLight1: {skin.ColourLight1}\n" +
-                          $"ColourLight2: {skin.ColourLight2}\n" +
-                          $"ColourLight3: {skin.ColourLight3}\n" +
-                          $"ColourLight4: {skin.ColourLight4}\n" +
+                          $"ColumnSize4K: {skin.ColumnSize4K}\n" +
+                          $"ColumnSize4K: {skin.ColumnSize7K}\n" +
+                          $"ReceptorYOffset4K: {skin.ReceptorYOffset4K}\n" +
+                          $"ReceptorYOffset7K: {skin.ReceptorYOffset7K}\n" +
+                          $"ColourLight1: {skin.SnapColor1st}\n" +
+                          $"ColourLight2: {skin.SnapColor2nd}\n" +
+                          $"ColourLight3: {skin.SnapColor3rd}\n" +
+                          $"ColourLight4: {skin.SnapColor4th}\n" +
+                          $"ColourLight2: {skin.SnapColor6th}\n" +
+                          $"ColourLight3: {skin.SnapColor8th}\n" +
+                          $"ColourLight4: {skin.SnapColor12th}\n" +
+                          $"ColourLight4: {skin.SnapColor16th}\n" +
+                          $"ColourLight4: {skin.SnapColor48th}\n" +
                           $"Parsing Took : {watch.ElapsedMilliseconds}ms to execute.\n" +
                           $"----------------------------------------------------------\n");
         }

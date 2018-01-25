@@ -72,7 +72,6 @@ namespace Quaver.GameState.States
         public void UnloadContent()
         {
             UpdateReady = false;
-
             GameplayManager.UnloadContent();
 
             //Remove Loggers
