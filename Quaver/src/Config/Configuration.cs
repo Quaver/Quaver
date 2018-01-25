@@ -191,43 +191,43 @@ namespace Quaver.Config
         /// <summary>
         ///     The key pressed for lane 1
         /// </summary>
-        private static Keys _keyMania4k1 = Keys.D;
+        private static Keys _keyMania4k1 = Keys.A;
         internal static Keys KeyMania4k1 { get => _keyMania4k1; set { _keyMania4k1 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed for lane 2
         /// </summary>
-        private static Keys _keyMania4k2 = Keys.F;
+        private static Keys _keyMania4k2 = Keys.S;
         internal static Keys KeyMania4k2 { get => _keyMania4k2; set { _keyMania4k2 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed for lane 3
         /// </summary>
-        private static Keys _keyMania4k3 = Keys.J;
+        private static Keys _keyMania4k3 = Keys.K;
         internal static Keys KeyMania4k3 { get => _keyMania4k3; set { _keyMania4k3 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed for lane 4
         /// </summary>
-        private static Keys _keyMania4k4 = Keys.K;
+        private static Keys _keyMania4k4 = Keys.L;
         internal static Keys KeyMania4k4 { get => _keyMania4k4; set { _keyMania4k4 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed for lane 1 - 7k
         /// </summary>
-        private static Keys _keyMania7k1 = Keys.S;
+        private static Keys _keyMania7k1 = Keys.A;
         internal static Keys KeyMania7k1 { get => _keyMania7k1; set { _keyMania7k1 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed for lane 2 - 7k
         /// </summary>
-        private static Keys _keyMania7k2 = Keys.D;
+        private static Keys _keyMania7k2 = Keys.S;
         internal static Keys KeyMania7k2 { get => _keyMania7k2; set { _keyMania7k2 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed for lane 3 - 7k
         /// </summary>
-        private static Keys _keyMania7k3 = Keys.F;
+        private static Keys _keyMania7k3 = Keys.D;
         internal static Keys KeyMania7k3 { get => _keyMania7k3; set { _keyMania7k3 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace Quaver.Config
         /// <summary>
         ///     The key pressed to skip the song introduction
         /// </summary>
-        private static Keys _keySkipIntro = Keys.RightAlt;
+        private static Keys _keySkipIntro = Keys.Space;
         internal static Keys KeySkipIntro { get => _keySkipIntro; set { _keySkipIntro = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
@@ -401,10 +401,10 @@ namespace Quaver.Config
             _pitched = ConfigHelper.ReadBool(Pitched, data["Pitched"]);
             _showReleaseCounter = ConfigHelper.ReadBool(_showReleaseCounter, data["ShowReleaseCounter"]);
             _gradeBarRelative = ConfigHelper.ReadBool(_gradeBarRelative, data["GradeBarRelative"]);
-            _keyMania4k1 = ConfigHelper.ReadKeys(KeyMania4k1, data["KeyMania1"]);
-            _keyMania4k2 = ConfigHelper.ReadKeys(KeyMania4k2, data["KeyMania2"]);
-            _keyMania4k3 = ConfigHelper.ReadKeys(KeyMania4k3, data["KeyMania3"]);
-            _keyMania4k4 = ConfigHelper.ReadKeys(KeyMania4k4, data["KeyMania4"]);
+            _keyMania4k1 = ConfigHelper.ReadKeys(KeyMania4k1, data["KeyMania4k1"]);
+            _keyMania4k2 = ConfigHelper.ReadKeys(KeyMania4k2, data["KeyMania4k2"]);
+            _keyMania4k3 = ConfigHelper.ReadKeys(KeyMania4k3, data["KeyMania4k3"]);
+            _keyMania4k4 = ConfigHelper.ReadKeys(KeyMania4k4, data["KeyMania4k4"]);
             _keyMania7k1 = ConfigHelper.ReadKeys(KeyMania7k1, data["KeyMania7k1"]);
             _keyMania7k2 = ConfigHelper.ReadKeys(KeyMania7k2, data["KeyMania7k2"]);
             _keyMania7k3 = ConfigHelper.ReadKeys(KeyMania7k3, data["KeyMania7k3"]);
