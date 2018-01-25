@@ -22,9 +22,7 @@ using System.Windows.Forms;
 using Quaver.Commands;
 using Quaver.Discord;
 using Quaver.Graphics.Sprite;
-#if !PUBLIC
-using Quaver.Online;   
-#endif
+
 namespace Quaver
 {
     /// <summary>
@@ -67,10 +65,6 @@ namespace Quaver
         /// </summary>
         protected override void Initialize()
         {
-#if !PUBLIC
-            // Initialize OnlineEvents
-            Rattle.Initialize();
-#endif
             // Enable console commands (Only applicable if on debug release)
             CommandHandler.HandleConsoleCommand();
 
