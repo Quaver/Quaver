@@ -16,7 +16,7 @@ namespace Quaver.Utility
         /// <summary>
         ///     After this many frames, it will update the current FPS
         /// </summary>
-        private const int FrameCount = 100;
+        private const int FrameCount = 50;
 
         /// <summary>
         ///     Determines if fps graph should be displayed
@@ -118,13 +118,13 @@ namespace Quaver.Utility
                 else if (AverageFpsIntervals[i] < 240)
                     GameBase.SpriteBatch.Draw(GameBase.UI.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.Gold);
                 else if (AverageFpsIntervals[i] < 500)
-                    GameBase.SpriteBatch.Draw(GameBase.UI.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.LightGreen * 0.5f);
+                    GameBase.SpriteBatch.Draw(GameBase.UI.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.LightGreen);
                 else if (AverageFpsIntervals[i] < 1000)
                     GameBase.SpriteBatch.Draw(GameBase.UI.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.DeepSkyBlue * 0.5f);
                 else if (AverageFpsIntervals[i] < 1500)
-                    GameBase.SpriteBatch.Draw(GameBase.UI.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.LightBlue * 0.5f);
+                    GameBase.SpriteBatch.Draw(GameBase.UI.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.LightBlue * 0.25f);
                 else
-                    GameBase.SpriteBatch.Draw(GameBase.UI.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.Azure * 0.5f);
+                    GameBase.SpriteBatch.Draw(GameBase.UI.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.Azure * 0.15f);
             }
         }
     }
