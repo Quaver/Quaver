@@ -9,6 +9,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Utility;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
@@ -86,6 +87,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         ///     Current size of the grade progress bar
         /// </summary>
         private float ProgressBarScale { get; set; }
+
+        /// <summary>
+        ///     Small Grade Images used for grade bar
+        /// </summary>
+        private Texture2D[] GradeImages { get; } = new Texture2D[9] {GameBase.LoadedSkin.GradeSmallF, GameBase.LoadedSkin.GradeSmallD, GameBase.LoadedSkin.GradeSmallC, GameBase.LoadedSkin.GradeSmallB,
+                                                                        GameBase.LoadedSkin.GradeSmallA, GameBase.LoadedSkin.GradeSmallS, GameBase.LoadedSkin.GradeSmallSS, GameBase.LoadedSkin.GradeSmallX, GameBase.LoadedSkin.GradeSmallXX};
 
         public void Initialize(IGameState state)
         {
@@ -262,8 +269,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 //Upgrade Bar Images
                 CurrentGrade = index;
-                GradeLeft.Image = GameplayReferences.GradeImages[CurrentGrade + 1];
-                GradeRight.Image = GameplayReferences.GradeImages[CurrentGrade + 2];
+                GradeLeft.Image = GradeImages[CurrentGrade + 1];
+                GradeRight.Image = GradeImages[CurrentGrade + 2];
 
                 //Upgrade Bar Color and Size
                 GradeProgressBar.UpdateBar(0, scale,
