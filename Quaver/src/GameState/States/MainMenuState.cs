@@ -113,7 +113,7 @@ namespace Quaver.GameState.States
         public void Update(double dt)
         {
             // Play Random Maps during the main menu
-            MenuAudioPlayer.PlayRandomBeatmaps();
+            //MenuAudioPlayer.PlayRandomBeatmaps();
             //Console.WriteLine(SwitchSongSelectButton.GlobalRectangle.X + ", " + SwitchSongSelectButton.GlobalRectangle.Y + ", " + SwitchSongSelectButton.GlobalRectangle.Width + ", " + SwitchSongSelectButton.GlobalRectangle.Height);
 
             //Update Menu Screen Boundary
