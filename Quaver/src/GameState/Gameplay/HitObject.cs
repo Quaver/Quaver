@@ -123,35 +123,10 @@ namespace Quaver.GameState.Gameplay
         /// <summary>
         ///     This method initializes the HitObject sprites
         /// </summary>
-        internal void Initialize(bool downScroll, bool longNote, Drawable parent)
+        internal void Initialize(bool downScroll, bool longNote, Drawable parent, GameModes gamemode)
         {
             IsLongNote = longNote;
             var keyLaneIndex = KeyLane - 1;
-
-            //Create hold body if this object is an LN
-            if (longNote)
-            {
-                HoldBodySprite = new Sprite()
-                {
-                    Alignment = Alignment.TopLeft,
-                    Size = new UDim2(HitObjectSize, InitialLongNoteSize),
-                    Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
-                    Parent = parent
-                };
-
-                // Choose the correct image based on the specific key lane.
-                switch (GameBase.SelectedBeatmap.Qua.Mode)
-                {
-                    case GameModes.Keys4:
-                        HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies4K[keyLaneIndex];
-                        break;
-                    case GameModes.Keys7:
-                        HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies7K[keyLaneIndex];
-                        break;
-                    default:
-                        break;
-                }
-            }
 
             //Create hit body
             HitBodySprite = new Sprite()
@@ -161,45 +136,19 @@ namespace Quaver.GameState.Gameplay
                 Parent = parent
             };
 
-            // Choose the correct image based on the specific key lane.
-            switch (GameBase.SelectedBeatmap.Qua.Mode)
-            {
-                case GameModes.Keys4:
-                    for (var i = 0; i < 4; i++)
-                    {
-                        try
-                        {
-                            // If the user has ColourObjectsBySnapDistance enabled in their skin,
-                            // we'll try to load give the object the correct snap colour,
-                            // otherwise, we default it to the default or first (1/1) texture in the list.
-                            if (GameBase.LoadedSkin.ColourObjectsBySnapDistance && GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][SnapIndex] != null)
-                                HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][SnapIndex];
-                            else
-                                HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
-                        }
-                        catch (Exception e)
-                        {
-                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
-                        }
-                    }
-                    break;
-                case GameModes.Keys7:
-                    for (var i = 0; i < GameBase.LoadedSkin.NoteHitObjects7K.Length; i++)
-                        if (keyLaneIndex == i)
-                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects7K[i];
-                    break;
-                default:
-                    break;
-            }
-
-            // Scale hit object accordingly
-            HitBodySprite.SizeX = HitObjectSize;
-            HitBodySprite.SizeY = HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width;
-            HoldBodyOffset = HitBodySprite.SizeY / 2;
-            
-            // Create hold body (placed ontop of hold body) if this is a long note.
+            // Create hit/hold body (placed ontop of hold body) if this is a long note.
             if (longNote)
             {
+                // Create Hold Body
+                HoldBodySprite = new Sprite()
+                {
+                    Alignment = Alignment.TopLeft,
+                    Size = new UDim2(HitObjectSize, InitialLongNoteSize),
+                    Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
+                    Parent = parent
+                };
+
+                // Create Hold End
                 HoldEndSprite = new Sprite()
                 {
                     Alignment = Alignment.TopLeft,
@@ -209,23 +158,57 @@ namespace Quaver.GameState.Gameplay
                     SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
                 };
 
-                // Choose the correct image based on the specific key lane.
-                switch (GameBase.SelectedBeatmap.Qua.Mode)
+                // Choose the correct image based on the specific key lane for hold bodies.
+                switch (gamemode)
                 {
                     case GameModes.Keys4:
                         HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex];
+                        HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies4K[keyLaneIndex];
                         HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Height / GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Width;
                         break;
                     case GameModes.Keys7:
                         HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex];
+                        HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies7K[keyLaneIndex];
                         HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex].Height / GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex].Width;
                         break;
                     default:
                         break;
                 }
 
-                //Update Hold End Size
+                // Scale hold object accordingly and set hit body parent.
+                HoldBodyOffset = HitBodySprite.SizeY / 2;
                 HoldEndOffset = HoldEndSprite.SizeY / 2;
+            }
+
+            // Choose the correct image based on the specific key lane for hit body.
+            switch (gamemode)
+            {
+                case GameModes.Keys4:
+                    try
+                    {
+                        // If the user has ColourObjectsBySnapDistance enabled in their skin,
+                        // we'll try to load give the object the correct snap colour,
+                        // otherwise, we default it to the default or first (1/1) texture in the list.
+                        if (GameBase.LoadedSkin.ColourObjectsBySnapDistance && GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][SnapIndex] != null)
+                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][SnapIndex];
+                        else
+                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
+
+                        // Update hit body's size to match image ratio
+                        HitBodySprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width);
+                    }
+                    catch (Exception e)
+                    {
+                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
+                        HitBodySprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width);
+                        }
+                    break;
+                case GameModes.Keys7:
+                    HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects7K[keyLaneIndex];
+                    HitBodySprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width);
+                    break;
+                default:
+                    break;
             }
         }
 
