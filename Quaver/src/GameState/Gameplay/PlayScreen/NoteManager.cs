@@ -55,7 +55,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal event EventHandler ReleaseMissed;
 
         //CONFIG (temp)
-        private float ScrollSpeed { get; set; }
+        internal float ScrollSpeed { get; set; }
 
         /// <summary>
         ///     Constructor
@@ -80,31 +80,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             // Get Hit Position
             CurrentSvIndex = 0;
-            switch (GameBase.SelectedBeatmap.Qua.Mode) 
-                //the hit position is determined by the receptor and object of the first lane
-                //the math here is kinda ugly, i plan on cleaning this up later
-            {
-                case GameModes.Keys4:
-                    HitPositionOffset = Config.Configuration.DownScroll4k
-                        ? GameplayReferences.ReceptorYOffset
-                        : GameplayReferences.ReceptorYOffset
-                        + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
-                        * ((GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
-                        - (GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
-                    break;
-                case GameModes.Keys7:
-                    HitPositionOffset = Config.Configuration.DownScroll7k
-                        ? GameplayReferences.ReceptorYOffset
-                        : GameplayReferences.ReceptorYOffset
-                        + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
-                        * ((GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
-                        - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
-                    break;
-            }
-
-            // Do config stuff
-            ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed4k / (20f * GameBase.GameClock); //todo: balance curve
-
+            
             //Initialize Track
             TrackPosition = GetCurrentTrackPosition();
             //TrackPosition = (ulong)(-GameplayReferences.PlayStartDelayed + 10000); //10000ms added since curSVPos is a ulong. -2000 offset is the wait time before song starts
