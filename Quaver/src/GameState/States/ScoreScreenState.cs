@@ -287,7 +287,7 @@ namespace Quaver.GameState.States
                 Misses = ScoreData.JudgePressSpread[5] + ScoreData.JudgeReleaseSpread[5],
                 Rating = 0.0f,
                 Mods = GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier),
-                ScrollSpeed = Configuration.ScrollSpeed4k,
+                ScrollSpeed = ScoreData.ScrollSpeed,
                 ReplayData = ReplayPath += ".qr"
             };
         }
@@ -304,7 +304,7 @@ namespace Quaver.GameState.States
                 ReplayMd5 = "Not Implemented",
                 Name = Configuration.Username,
                 Date = DateTime.UtcNow,
-                ScrollSpeed = Configuration.ScrollSpeed4k,
+                ScrollSpeed = ScoreData.ScrollSpeed,
                 Score = ScoreData.ScoreTotal,
                 Accuracy = (float)Math.Round(ScoreData.Accuracy * 100, 2),
                 MaxCombo = ScoreData.Combo,
@@ -339,7 +339,7 @@ namespace Quaver.GameState.States
             Logger.Log($"Player: {Configuration.Username}", LogColors.GameInfo);
             Logger.Log($"Date: {Replay.Date.ToString(CultureInfo.InvariantCulture)}", LogColors.GameInfo);
             Logger.Log($"Mods: {GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier)}", LogColors.GameInfo);
-            Logger.Log($"Scroll Speed: {Configuration.ScrollSpeed4k}", LogColors.GameInfo);
+            Logger.Log($"Scroll Speed: {ScoreData.ScrollSpeed}", LogColors.GameInfo);
             Logger.Log($"Score: {Replay.Score}", LogColors.GameInfo);
             Logger.Log($"Accuracy: {Replay.Accuracy}%", LogColors.GameInfo);
             Logger.Log($"Max Combo: {Replay.MaxCombo}", LogColors.GameInfo);
