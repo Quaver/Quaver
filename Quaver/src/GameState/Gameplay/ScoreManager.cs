@@ -20,6 +20,9 @@ namespace Quaver.GameState.Gameplay
     internal class ScoreManager
     {
         //todo: document this crap
+        //Scroll speed
+        internal int ScrollSpeed { get; set; } = 0;
+
         //Pausing
         internal int TotalPauses = 0;
 

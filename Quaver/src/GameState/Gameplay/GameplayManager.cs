@@ -18,6 +18,7 @@ using Quaver.Replays;
 using Quaver.Config;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Discord;
+using Quaver.API.Enums;
 
 namespace Quaver.GameState.Gameplay
 {
@@ -298,6 +299,34 @@ namespace Quaver.GameState.Gameplay
             NoteManager.Initialize(state);
             AccuracyBoxUI.Initialize(state);
             PlayfieldUI.Initialize(state);
+
+            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            //the hit position is determined by the receptor and object of the first lane
+            //the math here is kinda ugly, i plan on cleaning this up later
+            {
+                case GameModes.Keys4:
+                    ScoreManager.ScrollSpeed = Configuration.ScrollSpeed4k;
+                    NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed4k / (20f * GameBase.GameClock);
+                    NoteManager.DownScroll = Configuration.DownScroll4k;
+                    NoteManager.HitPositionOffset = Config.Configuration.DownScroll4k
+                        ? GameplayReferences.ReceptorYOffset
+                        : GameplayReferences.ReceptorYOffset
+                        + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
+                        * ((GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
+                        - (GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
+                    break;
+                case GameModes.Keys7:
+                    ScoreManager.ScrollSpeed = Configuration.ScrollSpeed7k;
+                    NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed7k / (20f * GameBase.GameClock);
+                    NoteManager.DownScroll = Configuration.DownScroll7k;
+                    NoteManager.HitPositionOffset = Config.Configuration.DownScroll7k
+                        ? GameplayReferences.ReceptorYOffset
+                        : GameplayReferences.ReceptorYOffset
+                        + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
+                        * ((GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
+                        - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
+                    break;
+            }
 
             //todo: remove this. used for logging.
             Logger.Add("KeyCount", "", Color.Pink);

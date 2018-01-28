@@ -378,7 +378,7 @@ namespace Quaver.GameState.States
             };
 
             // scroll speed 
-            ScrollSpeedButton = new TextButton(new Vector2(200, 30), $@"ScrollSpeed: {Configuration.ScrollSpeed}")
+            ScrollSpeedButton = new TextButton(new Vector2(200, 30), $@"ScrollSpeed: {Configuration.ScrollSpeed4k}")
             {
                 PosY = 680,
                 PosX = (-2.5f) * 210f,
