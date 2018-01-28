@@ -307,6 +307,7 @@ namespace Quaver.GameState.Gameplay
                 case GameModes.Keys4:
                     ScoreManager.ScrollSpeed = Configuration.ScrollSpeed4k;
                     NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed4k / (20f * GameBase.GameClock);
+                    NoteManager.DownScroll = Configuration.DownScroll4k;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll4k
                         ? GameplayReferences.ReceptorYOffset
                         : GameplayReferences.ReceptorYOffset
@@ -317,6 +318,7 @@ namespace Quaver.GameState.Gameplay
                 case GameModes.Keys7:
                     ScoreManager.ScrollSpeed = Configuration.ScrollSpeed7k;
                     NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed7k / (20f * GameBase.GameClock);
+                    NoteManager.DownScroll = Configuration.DownScroll7k;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll7k
                         ? GameplayReferences.ReceptorYOffset
                         : GameplayReferences.ReceptorYOffset
