@@ -147,10 +147,16 @@ namespace Quaver.Config
         internal static bool FpsCounter { get => _fpsCounter; set { _fpsCounter = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
-        ///     The scroll speed during gameplay.
+        ///     The scroll speed for mania 4k
         /// </summary>
-        private static byte _scrollSpeed = 34;
-        internal static byte ScrollSpeed { get => _scrollSpeed; set { _scrollSpeed = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        private static byte _scrollSpeed4k = 20;
+        internal static byte ScrollSpeed4k { get => _scrollSpeed4k; set { _scrollSpeed4k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
+        ///     The scroll speed for mania 7k
+        /// </summary>
+        private static byte _scrollSpeed7k = 20;
+        internal static byte ScrollSpeed7k { get => _scrollSpeed7k; set { _scrollSpeed7k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     Should 4k be played with DownScroll? If false, it's UpScroll
@@ -392,7 +398,8 @@ namespace Quaver.Config
             _windowFullScreen = ConfigHelper.ReadBool(WindowFullScreen, data["WindowFullScreen"]);
             _windowLetterboxed = ConfigHelper.ReadBool(WindowLetterboxed, data["WindowLetterboxed"]);
             _fpsCounter = ConfigHelper.ReadBool(FpsCounter, data["FpsCounter"]);
-            _scrollSpeed = ConfigHelper.ReadPercentage(ScrollSpeed, data["ScrollSpeed"]);
+            _scrollSpeed4k = ConfigHelper.ReadPercentage(ScrollSpeed4k, data["ScrollSpeed4k"]);
+            _scrollSpeed7k = ConfigHelper.ReadPercentage(ScrollSpeed7k, data["ScrollSpeed7k"]);
             _downScroll4k = ConfigHelper.ReadBool(DownScroll4k, data["DownScroll4k"]);
             _downScroll7k = ConfigHelper.ReadBool(DownScroll7k, data["DownScroll7k"]);
             _globalOffset = ConfigHelper.ReadSignedByte(GlobalOffset, data["GlobalOffset"]);

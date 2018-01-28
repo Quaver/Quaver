@@ -103,7 +103,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
 
             // Do config stuff
-            ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed / (20f * GameBase.GameClock); //todo: balance curve
+            ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed4k / (20f * GameBase.GameClock); //todo: balance curve
 
             //Initialize Track
             TrackPosition = GetCurrentTrackPosition();
