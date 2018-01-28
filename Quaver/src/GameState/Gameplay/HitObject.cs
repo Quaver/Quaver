@@ -234,26 +234,27 @@ namespace Quaver.GameState.Gameplay
             // Only update note if it's inside the window
             if ((downScroll && _hitObjectPosition.Y + HitBodySprite.SizeY > 0) || (!downScroll && _hitObjectPosition.Y < GameBase.WindowRectangle.Height)) //todo: only update if object is inside boundary
             {
+                // Update HitBody
+                HitBodySprite.PosY = _hitObjectPosition.Y;
+
+                // Update Long Note Body/Cap
                 if (IsLongNote)
                 {
+                    // It will ignore the rest of the code after this statement if long note size is equal/less than 0
                     if (CurrentLongNoteSize <= 0)
                     {
                         HoldBodySprite.Visible = false;
                         HoldEndSprite.Visible = false;
+                        return;
                     }
-                    else
-                    {
-                        //Update HoldBody Position and Size
-                        HoldBodySprite.SizeY = CurrentLongNoteSize;
-                        HoldBodySprite.PosY = downScroll ? -(float)CurrentLongNoteSize + HoldBodyOffset + _hitObjectPosition.Y : _hitObjectPosition.Y + HoldBodyOffset;
 
-                        //Update Hold End Position
-                        HoldEndSprite.PosY = downScroll ? (_hitObjectPosition.Y - CurrentLongNoteSize - HoldEndOffset + HoldBodyOffset) : (_hitObjectPosition.Y + CurrentLongNoteSize - HoldEndOffset + HoldBodyOffset);
-                    }
+                    //Update HoldBody Position and Size
+                    HoldBodySprite.SizeY = CurrentLongNoteSize;
+                    HoldBodySprite.PosY = downScroll ? -(float)CurrentLongNoteSize + HoldBodyOffset + _hitObjectPosition.Y : _hitObjectPosition.Y + HoldBodyOffset;
+
+                    //Update Hold End Position
+                    HoldEndSprite.PosY = downScroll ? (_hitObjectPosition.Y - CurrentLongNoteSize - HoldEndOffset + HoldBodyOffset) : (_hitObjectPosition.Y + CurrentLongNoteSize - HoldEndOffset + HoldBodyOffset);
                 }
-
-                //Update HitBody
-                HitBodySprite.PosY = _hitObjectPosition.Y;
             }
         }
 
