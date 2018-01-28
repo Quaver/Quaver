@@ -57,6 +57,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         //CONFIG (temp)
         internal float ScrollSpeed { get; set; }
         internal bool DownScroll { get; set; }
+        internal float LaneSize { get; set; }
 
         /// <summary>
         ///     Constructor
@@ -135,7 +136,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     EndTime = qua.HitObjects[i].EndTime,
                     IsLongNote = qua.HitObjects[i].EndTime > 0,
                     KeyLane = qua.HitObjects[i].Lane,
-                    HitObjectSize = GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale, //column size 7k
+                    HitObjectSize = LaneSize, //column size 7k
                     HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1], 0),
                 };
 
