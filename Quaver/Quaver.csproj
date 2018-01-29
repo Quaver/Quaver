@@ -236,6 +236,7 @@
     <Compile Include="src\Replays\ReplayHelper.cs" />
     <Compile Include="src\Scores\LocalScore.cs" />
     <Compile Include="src\Skins\Skin.cs" />
+    <Compile Include="src\Steam\SteamAPIHelper.cs" />
     <Compile Include="src\Tests\Audio.Test.cs" />
     <Compile Include="src\Tests\Json.Test.cs" />
     <Compile Include="src\Tests\Qua.Test.cs" />
@@ -562,9 +563,6 @@
     <Content Include="Lib\steam_api.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Lib\steam_appid.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -616,7 +614,6 @@ echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\soft_oal.dll" "$(ProjectDir)$(outD
 echo f |  xcopy /y "$(ProjectDir)$(outDir)x86\e_sqlite3.dll" "$(ProjectDir)$(outDir)e_sqlite3.dll"
 
 echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\steam_api.dll" "$(ProjectDir)$(outDir)steam_api.dll"
-echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\steam_appid.txt" "$(ProjectDir)$(outDir)steam_appid.txt"
 echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\Steamworks.NET.dll" "$(ProjectDir)$(outDir)Steamworks.NET.dll"
 
 RD /S /Q "$(ProjectDir)$(outDir)x86\"
