@@ -87,7 +87,7 @@ namespace Quaver.Utility
             // Calculate Max FPS
             if (FpsCurrent > CurrentMaxFPS) TargetMaxFPS = FpsCurrent;
             TargetMaxFPS += 10;
-            CurrentMaxFPS += (TargetMaxFPS - CurrentMaxFPS) / 6;
+            CurrentMaxFPS += (TargetMaxFPS - CurrentMaxFPS) / 2;
 
             // Calculate Current bar sizes for graph
             for (var i = 0; i < 40; i++)

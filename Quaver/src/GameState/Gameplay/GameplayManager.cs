@@ -27,16 +27,12 @@ namespace Quaver.GameState.Gameplay
     /// </summary>
     class GameplayManager : IHelper
     {
+        //Helper classes
         private AccuracyBoxUI AccuracyBoxUI { get; set; }
-
         private NoteManager NoteManager { get; set; }
-
         private Playfield Playfield { get; set; }
-
         private Timing Timing { get; set; }
-
         private ScoreManager ScoreManager { get; set; }
-
         private PlayfieldUI PlayfieldUI { get; set; }
 
         //todo: initialize and implement these later
@@ -288,26 +284,30 @@ namespace Quaver.GameState.Gameplay
             ScoreManager.Initialize(total + count); //TODO: ADD RELEASE COUNTS AS WELL
 
             // Declare Gameplay References
-            GameplayReferences.PressWindowLatest = ScoreManager.HitWindowPress[4];
-            GameplayReferences.ReleaseWindowLatest = ScoreManager.HitWindowRelease[3];
+            NoteManager.PressWindowLatest = ScoreManager.HitWindowPress[4];
+            NoteManager.ReleaseWindowLatest = ScoreManager.HitWindowRelease[3];
 
-            // Initialize class components
-            Playfield.Initialize(state);
-            Timing.Initialize(state);
-            NoteManager.SvQueue = Timing.GetSVQueue(qua);
-            NoteManager.SvCalc = Timing.GetSVCalc(NoteManager.SvQueue);
-            NoteManager.Initialize(state);
-            AccuracyBoxUI.Initialize(state);
-            PlayfieldUI.Initialize(state);
-
+            // Initialize Note Manager and Playfield
+            float playfieldPadding = 0;
+            float receptorPadding = 0;
+            float laneSize = 0;
+            float playfieldSize = 0;
             switch (GameBase.SelectedBeatmap.Qua.Mode)
             //the hit position is determined by the receptor and object of the first lane
             //the math here is kinda ugly, i plan on cleaning this up later
             {
                 case GameModes.Keys4:
+                    GameplayReferences.ReceptorXPosition = new float[4];
+                    laneSize = (int)(GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale);
+                    playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding4K * GameBase.WindowUIScale);
+                    receptorPadding = (int)(GameBase.LoadedSkin.NotePadding4K * GameBase.WindowUIScale);
+                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll4k //todo: use list for scaling
+                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset4K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width))
+                        : GameBase.LoadedSkin.ReceptorYOffset4K * GameBase.WindowUIScale;
                     ScoreManager.ScrollSpeed = Configuration.ScrollSpeed4k;
                     NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed4k / (20f * GameBase.GameClock);
                     NoteManager.DownScroll = Configuration.DownScroll4k;
+                    NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll4k
                         ? GameplayReferences.ReceptorYOffset
                         : GameplayReferences.ReceptorYOffset
@@ -316,9 +316,17 @@ namespace Quaver.GameState.Gameplay
                         - (GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
                     break;
                 case GameModes.Keys7:
+                    GameplayReferences.ReceptorXPosition = new float[7];
+                    laneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);
+                    playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding7K * GameBase.WindowUIScale);
+                    receptorPadding = (int)(GameBase.LoadedSkin.NotePadding7K * GameBase.WindowUIScale);
+                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll7k //todo: use list for scaling
+                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset7K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
+                        : GameBase.LoadedSkin.ReceptorYOffset7K * GameBase.WindowUIScale;
                     ScoreManager.ScrollSpeed = Configuration.ScrollSpeed7k;
                     NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed7k / (20f * GameBase.GameClock);
                     NoteManager.DownScroll = Configuration.DownScroll7k;
+                    NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll7k
                         ? GameplayReferences.ReceptorYOffset
                         : GameplayReferences.ReceptorYOffset
@@ -327,6 +335,27 @@ namespace Quaver.GameState.Gameplay
                         - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
                     break;
             }
+
+            // Calculate Config + Skin stuff
+            playfieldSize = ((laneSize + receptorPadding) * GameplayReferences.ReceptorXPosition.Length) + (playfieldPadding * 2) - receptorPadding;
+            NoteManager.PlayfieldSize = playfieldSize;
+            PlayfieldUI.PlayfieldSize = playfieldSize;
+            Playfield.PlayfieldSize = playfieldSize;
+            Playfield.LaneSize = laneSize;
+            Playfield.PlayfieldPadding = playfieldPadding;
+            Playfield.ReceptorPadding = receptorPadding;
+            //MeasureBarManager.PlayfieldSize = playfieldSize;
+
+            // Get SV data
+            NoteManager.SvQueue = Timing.GetSVQueue(qua);
+            NoteManager.SvCalc = Timing.GetSVCalc(NoteManager.SvQueue);
+
+            // Initialize class components
+            Playfield.Initialize(state);
+            Timing.Initialize(state);
+            AccuracyBoxUI.Initialize(state);
+            PlayfieldUI.Initialize(state);
+            NoteManager.Initialize(state);
 
             //todo: remove this. used for logging.
             Logger.Add("KeyCount", "", Color.Pink);
