@@ -13,6 +13,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         private Boundary Boundary { get; set; }
         internal List<BarObject> BarObjectQueue { get; set; }
         internal List<BarObject> BarObjectActive { get; set; }
+        internal float PlayfieldSize { get; set; }
 
         public void Draw()
         {
@@ -21,7 +22,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         public void Initialize(IGameState state)
         {
-            Boundary = new Boundary(0, 0, GameplayReferences.PlayfieldSize, null)
+            Boundary = new Boundary(0, 0, PlayfieldSize, null)
             {
                 Alignment = Graphics.Alignment.MidCenter
             };
