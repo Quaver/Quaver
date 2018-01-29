@@ -36,7 +36,6 @@ namespace Quaver
 
 #if STEAM
             GameBase.SteamAPIHelper = new SteamAPIHelper();
-            GameBase.SteamAPIHelper.Initialize();
 #endif
 
             // Initialize Config
