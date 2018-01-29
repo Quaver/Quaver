@@ -58,6 +58,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal float ScrollSpeed { get; set; }
         internal bool DownScroll { get; set; }
         internal float LaneSize { get; set; }
+        internal float PressWindowLatest { get; set; }
+        internal float ReleaseWindowLatest { get; set; }
 
         /// <summary>
         ///     Constructor
@@ -197,7 +199,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             for (i=0; i < HitObjectPool.Count && i < HitObjectPoolSize; i++)
             {
                 //Note is missed
-                if (CurrentSongTime > HitObjectPool[i].StartTime + GameplayReferences.PressWindowLatest)
+                if (CurrentSongTime > HitObjectPool[i].StartTime + PressWindowLatest)
                 {
                     //Invoke Miss Event
                     PressMissed?.Invoke(this, null);
@@ -226,7 +228,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             for (i = 0; i < HitObjectHold.Count; i++)
             {
                 //LN is missed
-                if (CurrentSongTime > HitObjectHold[i].EndTime + GameplayReferences.ReleaseWindowLatest)
+                if (CurrentSongTime > HitObjectHold[i].EndTime + ReleaseWindowLatest)
                 {
                     //Invoke Miss Event
                     ReleaseMissed?.Invoke(this, null);

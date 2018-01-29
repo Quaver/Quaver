@@ -288,8 +288,8 @@ namespace Quaver.GameState.Gameplay
             ScoreManager.Initialize(total + count); //TODO: ADD RELEASE COUNTS AS WELL
 
             // Declare Gameplay References
-            GameplayReferences.PressWindowLatest = ScoreManager.HitWindowPress[4];
-            GameplayReferences.ReleaseWindowLatest = ScoreManager.HitWindowRelease[3];
+            NoteManager.PressWindowLatest = ScoreManager.HitWindowPress[4];
+            NoteManager.ReleaseWindowLatest = ScoreManager.HitWindowRelease[3];
 
             // Initialize class components
             Playfield.Initialize(state);
