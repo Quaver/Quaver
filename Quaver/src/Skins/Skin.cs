@@ -884,7 +884,7 @@ namespace Quaver.Skins
                     ReceptorYOffset4K = 50;
                     ReceptorYOffset7K = 0;
                     ColumnAlignment = 50;
-                    ColourObjectsBySnapDistance = false;
+                    ColourObjectsBySnapDistance = true;
                     LightFramesPerSecond = 240;
                     SnapColors = new Color[9]
                     {
