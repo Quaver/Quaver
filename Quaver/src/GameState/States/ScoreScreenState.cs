@@ -784,7 +784,7 @@ namespace Quaver.GameState.States
             // Drawing/looping variables
             int tint = 0;
             double position = 0;
-            double drawPause = 1;
+            //double drawPause = 0.5;
 
             // How much to rotate by in percentage
             double interval = 20 / (Math.PI * radius);
@@ -810,29 +810,29 @@ namespace Quaver.GameState.States
                 if (tint < 5 && position / 100 >= judgeSpreadRatio[tint])
                 {
                     tint = tint + 1;
-                    drawPause = 1;
+                    //drawPause = 0.5;
                 }
 
                 // If it's not "paused," it will keep on drawing
-                if (drawPause <= 0)
-                    for (int i =0; i< 10; i++)
+                //if (drawPause <= 0)
+                    for (int i =0; i< 14; i++)
                     {
                         var ob = new Sprite()
                         {
                             Position = new UDim2
                             (
-                                (float)(Math.Cos(position * circularRatio - Math.PI / 2) * (radius - (1 * i))) + offset.X,
-                                (float)(Math.Sin(position * circularRatio - Math.PI / 2) * (radius - (1 * i))) + offset.Y
+                                (float)(Math.Cos(position * circularRatio - Math.PI / 2) * (radius - (2.5 * i))) + offset.X,
+                                (float)(Math.Sin(position * circularRatio - Math.PI / 2) * (radius - (2.5 * i))) + offset.Y
                             ),
                             Tint = GameColors.JudgeColors[tint],
-                            Size = new UDim2(2, 2),
+                            Size = new UDim2(3, 3),
                             Parent = parent
                         };
                     }
 
                 // Update position and draw pausing
                 position += interval;
-                if (drawPause > 0) drawPause -= interval;
+                //if (drawPause > 0) drawPause -= interval;
             }
         }
     }
