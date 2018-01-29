@@ -60,6 +60,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal float LaneSize { get; set; }
         internal float PressWindowLatest { get; set; }
         internal float ReleaseWindowLatest { get; set; }
+        internal float PlayfieldSize { get; set; }
 
         /// <summary>
         ///     Constructor
@@ -92,7 +93,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Initialize Boundary
             Boundary = new Boundary()
             {
-                Size = new UDim2(GameplayReferences.PlayfieldSize, 0, 0, 1),
+                Size = new UDim2(PlayfieldSize, 0, 0, 1),
                 Alignment = Alignment.TopCenter
             };
 
