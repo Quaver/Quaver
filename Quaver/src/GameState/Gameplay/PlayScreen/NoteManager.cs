@@ -61,6 +61,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal float PressWindowLatest { get; set; }
         internal float ReleaseWindowLatest { get; set; }
         internal float PlayfieldSize { get; set; }
+        internal float BarOffset { get; set; } //todo: move this to bar manager
+
 
         /// <summary>
         ///     Constructor
@@ -121,6 +123,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
 
             //todo: remove this. temp
+            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            {
+                case GameModes.Keys4:
+                    BarOffset = LaneSize * GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width / 2; //GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / 2 * GameBase.WindowUIScale;
+                    break;
+                case GameModes.Keys7:
+                    BarOffset = LaneSize * GameBase.LoadedSkin.NoteHitObjects7K[0].Height * GameBase.LoadedSkin.NoteHitObjects7K[0].Width / 2;
+                    break;
+            }
             MeasureBarManager.BarObjectActive = MeasureBarManager.BarObjectQueue;
             for (var i = 0; i < MeasureBarManager.BarObjectActive.Count; i++)
             {
@@ -190,7 +201,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 MeasureBarManager.TrackPosition = TrackPosition;
                 for (i = 0; i < MeasureBarManager.BarObjectActive.Count; i++)
                 {
-                    MeasureBarManager.BarObjectActive[i].BarSprite.PosY = PosFromOffset(MeasureBarManager.BarObjectActive[i].OffsetFromReceptor);
+                    MeasureBarManager.BarObjectActive[i].BarSprite.PosY = PosFromOffset(MeasureBarManager.BarObjectActive[i].OffsetFromReceptor) + BarOffset;
                 }
                 MeasureBarManager.Update(dt);
                 //Console.WriteLine(MeasureBarManager.BarObjectActive[0].BarSprite.PositionY);

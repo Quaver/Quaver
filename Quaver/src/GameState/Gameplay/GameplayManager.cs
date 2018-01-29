@@ -27,16 +27,12 @@ namespace Quaver.GameState.Gameplay
     /// </summary>
     class GameplayManager : IHelper
     {
+        //Helper classes
         private AccuracyBoxUI AccuracyBoxUI { get; set; }
-
         private NoteManager NoteManager { get; set; }
-
         private Playfield Playfield { get; set; }
-
         private Timing Timing { get; set; }
-
         private ScoreManager ScoreManager { get; set; }
-
         private PlayfieldUI PlayfieldUI { get; set; }
 
         //todo: initialize and implement these later
@@ -340,7 +336,7 @@ namespace Quaver.GameState.Gameplay
                     break;
             }
 
-            // Calculate Config stuff
+            // Calculate Config + Skin stuff
             playfieldSize = ((laneSize + receptorPadding) * GameplayReferences.ReceptorXPosition.Length) + (playfieldPadding * 2) - receptorPadding;
             NoteManager.PlayfieldSize = playfieldSize;
             PlayfieldUI.PlayfieldSize = playfieldSize;
@@ -350,14 +346,15 @@ namespace Quaver.GameState.Gameplay
             Playfield.ReceptorPadding = receptorPadding;
             //MeasureBarManager.PlayfieldSize = playfieldSize;
 
+            // Get SV data
+            NoteManager.SvQueue = Timing.GetSVQueue(qua);
+            NoteManager.SvCalc = Timing.GetSVCalc(NoteManager.SvQueue);
+
             // Initialize class components
             Playfield.Initialize(state);
             Timing.Initialize(state);
             AccuracyBoxUI.Initialize(state);
             PlayfieldUI.Initialize(state);
-
-            NoteManager.SvQueue = Timing.GetSVQueue(qua);
-            NoteManager.SvCalc = Timing.GetSVCalc(NoteManager.SvQueue);
             NoteManager.Initialize(state);
 
             //todo: remove this. used for logging.
