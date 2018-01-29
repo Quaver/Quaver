@@ -20,7 +20,7 @@ namespace Quaver.GameState.Gameplay
         //internal static float ReleaseWindowLatest { get; set; } // HitWindowRelease[3]
 
         //todo: temp Playfield variables
-        internal static float PlayfieldSize { get; set; } //todo: remove
+        //internal static float PlayfieldSize { get; set; } //todo: remove
         //internal static float PlayfieldLaneSize { get; set; } //todo: remove
         internal static float[] ReceptorXPosition { get; set; } //used more than once
         internal static float ReceptorYOffset { get; set; } //used more than once
