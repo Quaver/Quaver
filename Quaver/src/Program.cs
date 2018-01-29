@@ -15,6 +15,7 @@ using Quaver.Database;
 using Quaver.Discord;
 using Quaver.Logging;
 using Quaver.Replays;
+using Quaver.Steam;
 using Quaver.Tests;
 
 namespace Quaver
@@ -32,6 +33,11 @@ namespace Quaver
         {
             // Set UTF-8 encoding for console outputs
             Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+#if STEAM
+            GameBase.SteamAPIHelper = new SteamAPIHelper();
+            GameBase.SteamAPIHelper.Initialize();
+#endif
 
             // Initialize Config
             Configuration.InitializeConfig();
