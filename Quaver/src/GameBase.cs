@@ -25,6 +25,7 @@ using Quaver.Modifiers;
 using Quaver.Utility;
 using Quaver.Input;
 using Quaver.Graphics.GameOverlay;
+using Quaver.Steam;
 
 namespace Quaver
 {
@@ -185,6 +186,13 @@ namespace Quaver
         ///     The build version of the game (The md5 hash of the exe)
         /// </summary>
         public static string BuildVersion { get; set; }
+
+#if STEAM
+        /// <summary>
+        ///     Class that handles everything to do with Steam API calls
+        /// </summary>
+        public static SteamAPIHelper SteamAPIHelper { get; set; }
+#endif
 
         /// <summary>
         ///     This method changes the window to match configuration settings
