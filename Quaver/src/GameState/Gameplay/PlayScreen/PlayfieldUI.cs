@@ -95,6 +95,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// </summary>
         private int ActiveMultiplierBars { get; set; }
 
+        internal float PlayfieldSize { get; set; }
+
         public void Draw()
         {
             Boundary.Draw();
@@ -129,7 +131,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create Boundary
             Boundary = new Boundary()
             {
-                Size = new UDim2(GameplayReferences.PlayfieldSize, 0, 0, 1),
+                Size = new UDim2(PlayfieldSize, 0, 0, 1),
                 Alignment = Alignment.MidCenter
             };
 
@@ -167,7 +169,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             };
 
             //todo: offsetGaugeBoundary.SizeX with a new size. Right now the offset gauge is the same size as the hitwindow
-            OffsetGaugeSize = offsetGaugeBoundary.SizeX / (GameplayReferences.PressWindowLatest * 2 * GameBase.WindowUIScale);
+            //OffsetGaugeSize = offsetGaugeBoundary.SizeX / (GameplayReferences.PressWindowLatest * 2 * GameBase.WindowUIScale);
+            OffsetGaugeSize = offsetGaugeBoundary.SizeX / (200 * GameBase.WindowUIScale);
 
             OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)
@@ -191,7 +194,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create Health Bar
             var healthMultiplierBoundary = new Boundary()
             {
-                Size = new UDim2(GameplayReferences.PlayfieldSize - 4, 20 * GameBase.WindowUIScale),
+                Size = new UDim2(PlayfieldSize - 4, 20 * GameBase.WindowUIScale),
                 PosY = Config.Configuration.DownScroll4k ? -2 : 2,
                 Alignment = Config.Configuration.DownScroll4k ? Alignment.BotCenter : Alignment.TopCenter,
                 Parent = Boundary

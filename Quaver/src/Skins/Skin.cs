@@ -110,19 +110,21 @@ namespace Quaver.Skins
         internal Texture2D ColumnBgMask4K { get; set; }
         internal Texture2D ColumnBgMask7K { get; set; }
 
-        internal Texture2D ColumnHitLighting4K1 { get; set; }
-        internal Texture2D ColumnHitLighting4K2 { get; set; }
-        internal Texture2D ColumnHitLighting4K3 { get; set; }
-        internal Texture2D ColumnHitLighting4K4 { get; set; }
+        internal Texture2D[] ColumnHitLighting4K { get; set; } = new Texture2D[4];
+        internal Texture2D[] ColumnHitLighting7K { get; set; } = new Texture2D[7];
 
-        internal Texture2D ColumnHitLighting7K1 { get; set; }
-        internal Texture2D ColumnHitLighting7K2 { get; set; }
-        internal Texture2D ColumnHitLighting7K3 { get; set; }
-        internal Texture2D ColumnHitLighting7K4 { get; set; }
-        internal Texture2D ColumnHitLighting7K5 { get; set; }
-        internal Texture2D ColumnHitLighting7K6 { get; set; }
-        internal Texture2D ColumnHitLighting7K7 { get; set; }
+        internal Texture2D NoteHitBurst4K1 { get; set; }
+        internal Texture2D NoteHitBurst4K2 { get; set; }
+        internal Texture2D NoteHitBurst4K3 { get; set; }
+        internal Texture2D NoteHitBurst4K4 { get; set; }
 
+        internal Texture2D NoteHitBurst7K1 { get; set; }
+        internal Texture2D NoteHitBurst7K2 { get; set; }
+        internal Texture2D NoteHitBurst7K3 { get; set; }
+        internal Texture2D NoteHitBurst7K4 { get; set; }
+        internal Texture2D NoteHitBurst7K5 { get; set; }
+        internal Texture2D NoteHitBurst7K6 { get; set; }
+        internal Texture2D NoteHitBurst7K7 { get; set; }
 
         internal Texture2D ColumnTimingBar { get; set; }
 
@@ -133,7 +135,6 @@ namespace Quaver.Skins
         internal Texture2D[] NoteHoldEnds4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsUp4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsDown4K { get; set; } = new Texture2D[4];
-
 
         // 7k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
@@ -198,21 +199,23 @@ namespace Quaver.Skins
         {
                 @"column-bgmask",
                 @"column-timingbar",
+                @"4k-column-hitlighting",
+                @"7k-column-hitlighting",
 
-                // 4k HitLighting
-                @"4k-column-hitlighting-1",
-                @"4k-column-hitlighting-2",
-                @"4k-column-hitlighting-3",
-                @"4k-column-hitlighting-4",
+                // 4k HitBurst
+                @"4k-note-hitburst-1",
+                @"4k-note-hitburst-2",
+                @"4k-note-hitburst-3",
+                @"4k-note-hitburst-4",
 
-                // 7k HitLighting
-                @"7k-column-hitlighting-1",
-                @"7k-column-hitlighting-2",
-                @"7k-column-hitlighting-3",
-                @"7k-column-hitlighting-4",
-                @"7k-column-hitlighting-5",
-                @"7k-column-hitlighting-6",
-                @"7k-column-hitlighting-7",
+                // 7k HitBurst
+                @"7k-note-hitburst-1",
+                @"7k-note-hitburst-2",
+                @"7k-note-hitburst-3",
+                @"7k-note-hitburst-4",
+                @"7k-note-hitburst-5",
+                @"7k-note-hitburst-6",
+                @"7k-note-hitburst-7",
 
                 // 4k HitObjects
                 @"4k-note-hitobject-1",
@@ -370,28 +373,61 @@ namespace Quaver.Skins
                         ColumnTimingBar = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-column-hitlighting-1":
-                        ColumnHitLighting4K1 = LoadIndividualElement(element, skinElementPath);
+                        ColumnHitLighting4K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-column-hitlighting-2":
-                        ColumnHitLighting4K2 = LoadIndividualElement(element, skinElementPath);
+                        ColumnHitLighting4K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-column-hitlighting-3":
-                        ColumnHitLighting4K3 = LoadIndividualElement(element, skinElementPath);
+                        ColumnHitLighting4K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-column-hitlighting-4":
-                        ColumnHitLighting4K4 = LoadIndividualElement(element, skinElementPath);
+                        ColumnHitLighting4K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"7k-column-hitlighting-1":
-                        ColumnHitLighting7K1 = LoadIndividualElement(element, skinElementPath);
+                        ColumnHitLighting7K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"7k-column-hitlighting-2":
-                        ColumnHitLighting7K2 = LoadIndividualElement(element, skinElementPath);
+                        ColumnHitLighting7K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"7k-column-hitlighting-3":
-                        ColumnHitLighting7K3 = LoadIndividualElement(element, skinElementPath);
+                        ColumnHitLighting7K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"7k-column-hitlighting-4":
-                        ColumnHitLighting7K4 = LoadIndividualElement(element, skinElementPath);
+                        ColumnHitLighting7K[3] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-column-hitlighting-5":
+                        ColumnHitLighting7K[4] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-column-hitlighting-6":
+                        ColumnHitLighting7K[5] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-column-hitlighting-7":
+                        ColumnHitLighting7K[6] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"4k-note-hitburst-1":
+                        NoteHitBurst4K1 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"4k-note-hitburst-2":
+                        NoteHitBurst4K2 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"4k-note-hitburst-3":
+                        NoteHitBurst4K3 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"4k-note-hitburst-4":
+                        NoteHitBurst4K4 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-note-hitburst-1":
+                        NoteHitBurst7K1 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-note-hitburst-2":
+                        NoteHitBurst7K2 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-note-hitburst-3":
+                        NoteHitBurst7K3 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-note-hitburst-4":
+                        NoteHitBurst7K4 = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-hitobject-1":
                         LoadHitObjects(NoteHitObjects4K, skinDir, element, 0);
