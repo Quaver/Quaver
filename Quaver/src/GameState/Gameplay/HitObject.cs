@@ -133,7 +133,6 @@ namespace Quaver.GameState.Gameplay
             {
                 Alignment = Alignment.TopLeft,
                 Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
-                Parent = parent
             };
 
             // Create hit/hold body (placed ontop of hold body) if this is a long note.
@@ -165,19 +164,17 @@ namespace Quaver.GameState.Gameplay
                         HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex];
                         HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies4K[keyLaneIndex];
                         HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Height / GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Width;
+                        HoldEndOffset = HoldEndSprite.SizeY / 2;
                         break;
                     case GameModes.Keys7:
                         HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex];
                         HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies7K[keyLaneIndex];
                         HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex].Height / GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex].Width;
+                        HoldEndOffset = HoldEndSprite.SizeY / 2;
                         break;
                     default:
                         break;
                 }
-
-                // Scale hold object accordingly and set hit body parent.
-                HoldBodyOffset = HitBodySprite.SizeY / 2;
-                HoldEndOffset = HoldEndSprite.SizeY / 2;
             }
 
             // Choose the correct image based on the specific key lane for hit body.
@@ -196,16 +193,22 @@ namespace Quaver.GameState.Gameplay
 
                         // Update hit body's size to match image ratio
                         HitBodySprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width);
+                        HitBodySprite.Parent = parent;
+                        HoldBodyOffset = HitBodySprite.SizeY / 2;
                     }
                     catch (Exception e)
                     {
                         HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
                         HitBodySprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width);
-                        }
+                        HitBodySprite.Parent = parent;
+                        HoldBodyOffset = HitBodySprite.SizeY / 2;
+                    }
                     break;
                 case GameModes.Keys7:
                     HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects7K[keyLaneIndex];
                     HitBodySprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width);
+                    HitBodySprite.Parent = parent;
+                    HoldBodyOffset = HitBodySprite.SizeY / 2;
                     break;
                 default:
                     break;
