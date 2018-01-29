@@ -16,12 +16,17 @@ namespace Quaver.Steam
         /// <summary>
         ///     The application Id for steam
         /// </summary>
-        private uint ApplicationId { get; } = 480;
+        internal uint ApplicationId { get; } = 480;
 
         /// <summary>
-        ///     Initializes the Steam API and checks for errors
+        ///     Returns if the  SteamAPI is currently intitialized
         /// </summary>
-        internal void Initialize()
+        internal bool IsInitialized { get; }
+
+        /// <summary>
+        ///     Initializes our Steam API Helper
+        /// </summary>
+        internal SteamAPIHelper()
         {
             try
             {
@@ -47,7 +52,9 @@ namespace Quaver.Steam
             }
 
             // Attempt to initialize the Steam API
-            if (!SteamAPI.Init())
+            IsInitialized = SteamAPI.Init();
+
+            if (!IsInitialized)
             {
 #if DEBUG
                 var log = "SteamAPI.Init() call has failed! Steam has to be loaded in order for this to work!";
@@ -66,7 +73,7 @@ namespace Quaver.Steam
 
 
                 Logger.Log(log, LogColors.GameError);
-                throw new Exception(log);                
+                throw new Exception(log);
             }
 
             // Check if the correct dlls were loaded for this platform, since we're running the game under mono, we can
@@ -79,7 +86,10 @@ namespace Quaver.Steam
                 throw new Exception(log);
             }
 
-            // SteamAPI.InitializeCallBacks();
+#if DEBUG
+            Console.WriteLine($"[STEAM API HELPER] Logged into Steam as: {SteamFriends.GetPersonaName()} <{SteamUser.GetSteamID()}>");
+#endif
+
         }
     }
 }

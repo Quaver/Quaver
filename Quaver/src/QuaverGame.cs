@@ -22,6 +22,7 @@ using System.Windows.Forms;
 using Quaver.Commands;
 using Quaver.Discord;
 using Quaver.Graphics.Sprite;
+using Steamworks;
 
 namespace Quaver
 {
@@ -130,6 +131,11 @@ namespace Quaver
             {
                 Bass.Free();
                 DiscordRPC.Shutdown();
+
+#if STEAM
+                if (GameBase.SteamAPIHelper.IsInitialized)
+                    SteamAPI.Shutdown();
+#endif
             }
             catch (Exception e)
             {
@@ -165,6 +171,11 @@ namespace Quaver
 
             // Update Mouse Cursor
             GameBase.Cursor.Update(dt);
+
+#if STEAM
+            // Run Steam callbacks every frame to frequently stay updated with the API
+            SteamAPI.RunCallbacks();
+#endif
 
             base.Update(gameTime);
         }
