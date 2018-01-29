@@ -57,6 +57,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         //CONFIG (temp)
         internal float ScrollSpeed { get; set; }
         internal bool DownScroll { get; set; }
+        internal float LaneSize { get; set; }
+        internal float PressWindowLatest { get; set; }
+        internal float ReleaseWindowLatest { get; set; }
+        internal float PlayfieldSize { get; set; }
+        internal float BarOffset { get; set; } //todo: move this to bar manager
+
 
         /// <summary>
         ///     Constructor
@@ -89,7 +95,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Initialize Boundary
             Boundary = new Boundary()
             {
-                Size = new UDim2(GameplayReferences.PlayfieldSize, 0, 0, 1),
+                Size = new UDim2(PlayfieldSize, 0, 0, 1),
                 Alignment = Alignment.TopCenter
             };
 
@@ -117,6 +123,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
 
             //todo: remove this. temp
+            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            {
+                case GameModes.Keys4:
+                    BarOffset = LaneSize * GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width / 2; //GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / 2 * GameBase.WindowUIScale;
+                    break;
+                case GameModes.Keys7:
+                    BarOffset = LaneSize * GameBase.LoadedSkin.NoteHitObjects7K[0].Height * GameBase.LoadedSkin.NoteHitObjects7K[0].Width / 2;
+                    break;
+            }
             MeasureBarManager.BarObjectActive = MeasureBarManager.BarObjectQueue;
             for (var i = 0; i < MeasureBarManager.BarObjectActive.Count; i++)
             {
@@ -135,7 +150,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     EndTime = qua.HitObjects[i].EndTime,
                     IsLongNote = qua.HitObjects[i].EndTime > 0,
                     KeyLane = qua.HitObjects[i].Lane,
-                    HitObjectSize = GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale, //column size 7k
+                    HitObjectSize = LaneSize, //column size 7k
                     HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1], 0),
                 };
 
@@ -161,8 +176,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 }
 
                 // Initialize Object and add it to HitObjectPool
-                if (i < HitObjectPoolSize) newObject.Initialize(DownScroll, qua.HitObjects[i].EndTime > 0, Boundary);
-                HitObjectPool.Add(newObject);
+                if (i < HitObjectPoolSize) newObject.Initialize(DownScroll, qua.HitObjects[i].EndTime > 0, Boundary, GameBase.SelectedBeatmap.Qua.Mode);
+                    HitObjectPool.Add(newObject);
             }
 
             Logger.Log("Done loading HitObjects", LogColors.GameInfo);
@@ -186,7 +201,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 MeasureBarManager.TrackPosition = TrackPosition;
                 for (i = 0; i < MeasureBarManager.BarObjectActive.Count; i++)
                 {
-                    MeasureBarManager.BarObjectActive[i].BarSprite.PosY = PosFromOffset(MeasureBarManager.BarObjectActive[i].OffsetFromReceptor);
+                    MeasureBarManager.BarObjectActive[i].BarSprite.PosY = PosFromOffset(MeasureBarManager.BarObjectActive[i].OffsetFromReceptor) + BarOffset;
                 }
                 MeasureBarManager.Update(dt);
                 //Console.WriteLine(MeasureBarManager.BarObjectActive[0].BarSprite.PositionY);
@@ -196,7 +211,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             for (i=0; i < HitObjectPool.Count && i < HitObjectPoolSize; i++)
             {
                 //Note is missed
-                if (CurrentSongTime > HitObjectPool[i].StartTime + GameplayReferences.PressWindowLatest)
+                if (CurrentSongTime > HitObjectPool[i].StartTime + PressWindowLatest)
                 {
                     //Invoke Miss Event
                     PressMissed?.Invoke(this, null);
@@ -225,7 +240,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             for (i = 0; i < HitObjectHold.Count; i++)
             {
                 //LN is missed
-                if (CurrentSongTime > HitObjectHold[i].EndTime + GameplayReferences.ReleaseWindowLatest)
+                if (CurrentSongTime > HitObjectHold[i].EndTime + ReleaseWindowLatest)
                 {
                     //Invoke Miss Event
                     ReleaseMissed?.Invoke(this, null);
@@ -493,7 +508,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         internal void CreateNote()
         {
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(DownScroll, HitObjectPool[HitObjectPoolSize - 1].EndTime > 0, Boundary);
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(DownScroll, HitObjectPool[HitObjectPoolSize - 1].EndTime > 0, Boundary, GameBase.SelectedBeatmap.Qua.Mode);
         }
     }
 }
