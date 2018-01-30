@@ -177,6 +177,10 @@ namespace Quaver.Skins
         ///     Sound Effect elements in skin7k-note-hitobject-
         /// </summary>
         internal SoundEffect SoundHit { get; set; }
+        internal SoundEffect SoundHitClap { get; set; }
+        internal SoundEffect SoundHitWhistle { get; set; }
+        internal SoundEffect SoundHitFinish { get; set; }
+
         internal SoundEffect SoundComboBreak { get; set; }
         internal SoundEffect SoundApplause { get; set; }
         internal SoundEffect SoundScreenshot { get; set; }
@@ -318,6 +322,10 @@ namespace Quaver.Skins
 
                 // Sound Effects
                 @"sound-hit",
+                @"sound-hitclap",
+                @"sound-hitwhistle",
+                @"sound-hitfinish",
+
                 @"sound-combobreak",
                 @"sound-applause",
                 @"sound-screenshot",
@@ -644,6 +652,15 @@ namespace Quaver.Skins
                         break;
                     case @"sound-hit":
                         SoundHit = LoadSoundEffectElement(element, skinElementPath);
+                        break;
+                    case @"sound-hitclap":
+                        SoundHitClap = LoadSoundEffectElement(element, skinElementPath);
+                        break;
+                    case @"sound-hitwhistle":
+                        SoundHitWhistle = LoadSoundEffectElement(element, skinElementPath);
+                        break;
+                    case @"sound-hitfinish":
+                        SoundHitFinish = LoadSoundEffectElement(element, skinElementPath);
                         break;
                     case @"sound-combobreak":
                         SoundComboBreak = LoadSoundEffectElement(element, skinElementPath);
