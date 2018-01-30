@@ -349,7 +349,9 @@
     </None>
     <None Include="app.manifest" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resource1.resx" />
+    <EmbeddedResource Include="Resource1.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\UI\diff-select-mask.xnb" />
     <EmbeddedResource Include="Resources\UI\set-select-mask.xnb" />
     <EmbeddedResource Include="Resources\UI\blank-box.xnb" />
@@ -533,6 +535,12 @@
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-combobreak.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hit.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-screenshot.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hitclap.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hitfinish.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hitwhistle.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hitclap.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hitfinish.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hitwhistle.xnb" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\discord-rpc.dll">

@@ -385,9 +385,6 @@ namespace Quaver.GameState.Gameplay
             if (Paused)
                 return;
 
-            // Play Audio
-            GameBase.LoadedSkin.SoundHit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
-
             //Check for Note press/LN press
             //Reference Variables
             int noteIndex = -1;
@@ -409,6 +406,9 @@ namespace Quaver.GameState.Gameplay
             // If such HitObject exists, it will do key-press stuff to it
             if (noteIndex > -1)
             {
+                // Play the correct hitsound on key press
+                PlayHitsound(noteIndex);
+
                 // Check which HitWindow this object's timing is in
                 for (i = 0; i < 5; i++)
                 {
@@ -574,6 +574,30 @@ namespace Quaver.GameState.Gameplay
                 Paused = true;
                 SongManager.Pause();
             }
+        }
+
+        /// <summary>
+        ///     Plays the correct hitsounds based on the note index of the HitObject pool
+        /// </summary>
+        private void PlayHitsound(int noteIndex)
+        {
+            var hitObject = NoteManager.HitObjectPool[noteIndex];
+
+            // Normal
+            if (hitObject.HitSounds == 0 || (HitSounds.Normal & hitObject.HitSounds) != 0)
+                GameBase.LoadedSkin.SoundHit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+
+            // Clap
+            if ((HitSounds.Clap & hitObject.HitSounds) != 0)
+                GameBase.LoadedSkin.SoundHitClap.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+
+            // Whistle
+            if ((HitSounds.Whistle & hitObject.HitSounds) != 0)
+                GameBase.LoadedSkin.SoundHitWhistle.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+
+            // Finish
+            if ((HitSounds.Finish & hitObject.HitSounds) != 0)
+                GameBase.LoadedSkin.SoundHitFinish.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
         }
     }
 }
