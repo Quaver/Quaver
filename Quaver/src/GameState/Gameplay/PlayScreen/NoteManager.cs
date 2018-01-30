@@ -152,6 +152,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     KeyLane = qua.HitObjects[i].Lane,
                     HitObjectSize = LaneSize, //column size 7k
                     HitObjectPosition = new Vector2(GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1], 0),
+                    HitSounds = qua.HitObjects[i].HitSound
                 };
 
                 // Calculate Y-Offset From Receptor
