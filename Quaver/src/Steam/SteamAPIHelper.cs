@@ -71,7 +71,6 @@ namespace Quaver.Steam
             {
                 var log = "The incorrect Steamworks.NET assembly was loaded for this platform!";
 
-
                 Logger.Log(log, LogColors.GameError);
                 throw new Exception(log);
             }
@@ -89,7 +88,6 @@ namespace Quaver.Steam
 #if DEBUG
             Console.WriteLine($"[STEAM API HELPER] Logged into Steam as: {SteamFriends.GetPersonaName()} <{SteamUser.GetSteamID()}>");
 #endif
-
         }
     }
 }
