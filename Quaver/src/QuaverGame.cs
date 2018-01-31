@@ -22,6 +22,7 @@ using System.Windows.Forms;
 using Quaver.Commands;
 using Quaver.Discord;
 using Quaver.Graphics.Sprite;
+using Quaver.Steam;
 using Steamworks;
 
 namespace Quaver
@@ -66,9 +67,6 @@ namespace Quaver
         /// </summary>
         protected override void Initialize()
         {
-            // Enable console commands (Only applicable if on debug release)
-            CommandHandler.HandleConsoleCommand();
-
             // Handle Text Input
             //GameBase.GameWindow.TextInput += TextEndered;
 
@@ -112,6 +110,9 @@ namespace Quaver
 
             // Set up overlay
             GameBase.GameOverlay.Initialize();
+
+            // Attempt to intialize the Steam API
+            SteamAPIHelper.Initialize();
 
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
