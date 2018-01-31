@@ -119,14 +119,14 @@ namespace Quaver.Config
         /// <summary>
         ///     4k Hit Position offset from receptor
         /// </summary>
-        private static int _hitPositionOffset4k = 0;
-        internal static int HitPositionOffset4k { get => _hitPositionOffset4k; set { _hitPositionOffset4k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        private static int _userHitPositionOffset4k = 0;
+        internal static int UserHitPositionOffset4k { get => _userHitPositionOffset4k; set { _userHitPositionOffset4k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     7k Hit Position offset from receptor
         /// </summary>
-        private static int _hitPositionOffset7k = 0;
-        internal static int HitPositionOffset7k { get => _hitPositionOffset7k; set { _hitPositionOffset7k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        private static int _userHitPositionOffset7k = 0;
+        internal static int UserHitPositionOffset7k { get => _userHitPositionOffset7k; set { _userHitPositionOffset7k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     Is the window fullscreen?
@@ -400,8 +400,8 @@ namespace Quaver.Config
             _windowHeight = ConfigHelper.ReadInt32(WindowHeight, data["WindowHeight"]);
             _windowWidth = ConfigHelper.ReadInt32(WindowWidth, data["WindowWidth"]);
             _healthBarPositionTop = ConfigHelper.ReadBool(HealthBarPositionTop, data["HealthBarPositionTop"]);
-            _hitPositionOffset4k = ConfigHelper.ReadInt32(HitPositionOffset4k, data["HitPositionOffset4k"]);
-            _hitPositionOffset7k = ConfigHelper.ReadInt32(HitPositionOffset7k, data["HitPositionOffset7k"]);
+            _userHitPositionOffset4k = ConfigHelper.ReadInt32(UserHitPositionOffset4k, data["HitPositionOffset4k"]);
+            _userHitPositionOffset7k = ConfigHelper.ReadInt32(UserHitPositionOffset7k, data["HitPositionOffset7k"]);
             _windowFullScreen = ConfigHelper.ReadBool(WindowFullScreen, data["WindowFullScreen"]);
             _windowLetterboxed = ConfigHelper.ReadBool(WindowLetterboxed, data["WindowLetterboxed"]);
             _fpsCounter = ConfigHelper.ReadBool(FpsCounter, data["FpsCounter"]);
