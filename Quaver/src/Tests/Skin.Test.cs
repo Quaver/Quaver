@@ -37,15 +37,6 @@ namespace Quaver.Tests
                           $"ColumnSize4K: {skin.ColumnSize7K}\n" +
                           $"ReceptorYOffset4K: {skin.ReceptorYOffset4K}\n" +
                           $"ReceptorYOffset7K: {skin.ReceptorYOffset7K}\n" +
-                          $"ColourLight1: {skin.SnapColor1st}\n" +
-                          $"ColourLight2: {skin.SnapColor2nd}\n" +
-                          $"ColourLight3: {skin.SnapColor3rd}\n" +
-                          $"ColourLight4: {skin.SnapColor4th}\n" +
-                          $"ColourLight2: {skin.SnapColor6th}\n" +
-                          $"ColourLight3: {skin.SnapColor8th}\n" +
-                          $"ColourLight4: {skin.SnapColor12th}\n" +
-                          $"ColourLight4: {skin.SnapColor16th}\n" +
-                          $"ColourLight4: {skin.SnapColor48th}\n" +
                           $"Parsing Took : {watch.ElapsedMilliseconds}ms to execute.\n" +
                           $"----------------------------------------------------------\n");
         }
