@@ -208,7 +208,7 @@ namespace Quaver.Config
             try
             {
                 string[] colorSplit = newVal.Split(',');
-                return new Color(byte.Parse(colorSplit[0]), byte.Parse(colorSplit[1]), byte.Parse(colorSplit[2]), byte.Parse(colorSplit[3]));
+                return new Color(byte.Parse(colorSplit[0]), byte.Parse(colorSplit[1]), byte.Parse(colorSplit[2]));
             }
             catch (Exception e)
             {
