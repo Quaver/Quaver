@@ -862,30 +862,17 @@ namespace Quaver.Skins
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = false;
                     LightFramesPerSecond = 240;
-                    SnapColors = new Color[9]
-                    {
-                        SnapColor1st = new Color(255, 0, 0),
-                        SnapColor2nd = new Color(0, 0, 255),
-                        SnapColor3rd = new Color(125, 0, 255),
-                        SnapColor4th = new Color(255, 255, 0),
-                        SnapColor6th = new Color(255, 0, 255),
-                        SnapColor8th = new Color(255, 125, 0),
-                        SnapColor12th = new Color(0, 255, 255),
-                        SnapColor16th = new Color(0, 255, 0),
-                        SnapColor48th = new Color(255, 255, 255)
-                    };
-                    /*
-                    SnapColor1st = new Color(255, 0, 0);
-                    SnapColor2nd = new Color(0, 0, 255);
-                    SnapColor3rd = new Color(125, 0, 255);
-                    SnapColor4th = new Color(255, 255, 0);
-                    SnapColor6th = new Color(255, 0, 255);
-                    SnapColor8th = new Color(255, 125, 0);
-                    SnapColor12th = new Color(0, 255, 255);
-                    SnapColor16th = new Color(0, 255, 0);
-                    SnapColor48th = new Color(255, 255, 255);
-                    */
-                        break;
+                    //todo: read JudgeColors
+                    JudgeColors = new Color[6]
+                            {
+                        JudgeColorMarv = new Color(255, 255, 200),
+                        JudgeColorPerf = new Color(255, 255, 0),
+                        JudgeColorGreat = new Color(0, 255, 0),
+                        JudgeColorGood = new Color(0, 168, 255),
+                        JudgeColorOkay = new Color(255, 0, 255),
+                        JudgeColorMiss = new Color(255, 0, 0),
+                            };
+                    break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
                     Author = "Quaver Team";
@@ -952,12 +939,6 @@ namespace Quaver.Skins
                         JudgeColorOkay = new Color(255, 0, 255),
                         JudgeColorMiss = new Color(255, 0, 0),
                     };
-
-            /*
-            ColourLight1 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight1"]);
-            ColourLight2 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight2"]);
-            ColourLight3 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight3"]);
-            ColourLight4 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight4"]);*/
 
             Logger.Log($@"Skin loaded: {skinDir}", LogColors.GameImportant);
         }
