@@ -12,6 +12,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Remoting.Channels;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Audio;
+using Quaver.API.Enums;
 using Quaver.Audio;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
@@ -962,18 +963,5 @@ namespace Quaver.Skins
         {
             return JudgeColors.Count == 0 ? new Color(0, 0, 0) : JudgeColors[(int) judge];
         }
-    }
-
-    /// <summary>
-    ///     An enum containing all of our judges
-    /// </summary>
-    public enum Judge
-    {
-        Marv,
-        Perf,
-        Great,
-        Good,
-        Okay,
-        Miss
     }
 }
