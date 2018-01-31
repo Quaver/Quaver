@@ -83,6 +83,12 @@ namespace Quaver.Skins
         internal bool ColourObjectsBySnapDistance { get; set; }
 
         /// <summary>
+        ///     Determines whether or not receptors are over hit objects
+        /// </summary>
+        internal bool ReceptorsOverHitObjects4K { get; set; }
+        internal bool ReceptorsOverHitObjects7K { get; set; }
+
+        /// <summary>
         ///     Determines the FPS of the animations
         ///     Max - 255fps.
         /// </summary>
@@ -862,6 +868,9 @@ namespace Quaver.Skins
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = false;
                     LightFramesPerSecond = 240;
+                    ReceptorsOverHitObjects4K = true;
+                    ReceptorsOverHitObjects7K = true;
+
                     //todo: read JudgeColors
                     JudgeColors = new Color[6]
                             {
@@ -893,6 +902,8 @@ namespace Quaver.Skins
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = true;
                     LightFramesPerSecond = 240;
+                    ReceptorsOverHitObjects4K = false;
+                    ReceptorsOverHitObjects7K = true;
 
                     //todo: read JudgeColors
                     JudgeColors = new Color[6]
@@ -928,6 +939,8 @@ namespace Quaver.Skins
             ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, data["Gameplay"]["ColumnAlignment"]);
             ColourObjectsBySnapDistance = ConfigHelper.ReadBool(ColourObjectsBySnapDistance, data["Gameplay"]["ColourObjectsBySnapDistance"]);
             LightFramesPerSecond = ConfigHelper.ReadByte(LightFramesPerSecond, data["Gameplay"]["LightsFramesPerSecond"]);
+            ReceptorsOverHitObjects4K = ConfigHelper.ReadBool(ReceptorsOverHitObjects4K, data["Gameplay"]["ReceptorsOverHitObjects4K"]);
+            ReceptorsOverHitObjects7K = ConfigHelper.ReadBool(ReceptorsOverHitObjects7K, data["Gameplay"]["ReceptorsOverHitObjects7K"]);
 
             //todo: read JudgeColors
             JudgeColors = new Color[6]

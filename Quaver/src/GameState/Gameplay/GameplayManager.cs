@@ -81,6 +81,8 @@ namespace Quaver.GameState.Gameplay
         /// </summary>
         internal bool Paused { get; private set; }
 
+        private bool DrawPlayfieldFirst { get; set; }
+
         //todo: remove. TEST.
         private Sprite SvInfoTextBox { get; set; }
         private TextBoxSprite SVText { get; set; }
@@ -245,9 +247,19 @@ namespace Quaver.GameState.Gameplay
             GameBase.GraphicsDevice.SetRenderTarget(RenderedPlayfield);
             GameBase.GraphicsDevice.Clear(Color.White * 0);
             GameBase.SpriteBatch.Begin();
-            Playfield.Draw();
-            for (int i = RenderedHitObjects.Length - 1; i >= 0; i--)
-                GameBase.SpriteBatch.Draw(RenderedHitObjects[i], Vector2.Zero, RenderedAlphas[i]);
+            Playfield.DrawBgMask();
+            if (DrawPlayfieldFirst)
+            {
+                Playfield.Draw();
+                for (int i = RenderedHitObjects.Length - 1; i >= 0; i--)
+                    GameBase.SpriteBatch.Draw(RenderedHitObjects[i], Vector2.Zero, RenderedAlphas[i]);
+            }
+            else
+            {
+                for (int i = RenderedHitObjects.Length - 1; i >= 0; i--)
+                    GameBase.SpriteBatch.Draw(RenderedHitObjects[i], Vector2.Zero, RenderedAlphas[i]);
+                Playfield.Draw();
+            }
             GameBase.SpriteBatch.End();
 
             // Render everything in order
@@ -303,6 +315,7 @@ namespace Quaver.GameState.Gameplay
                     laneSize = (int)(GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale);
                     playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding4K * GameBase.WindowUIScale);
                     receptorPadding = (int)(GameBase.LoadedSkin.NotePadding4K * GameBase.WindowUIScale);
+                    DrawPlayfieldFirst = !GameBase.LoadedSkin.ReceptorsOverHitObjects4K;
 
                     // Get Receptor Y Offset
                     Playfield.ReceptorYOffset = Config.Configuration.DownScroll4k //todo: use list for scaling
@@ -329,6 +342,7 @@ namespace Quaver.GameState.Gameplay
                     laneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);
                     playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding7K * GameBase.WindowUIScale);
                     receptorPadding = (int)(GameBase.LoadedSkin.NotePadding7K * GameBase.WindowUIScale);
+                    DrawPlayfieldFirst = !GameBase.LoadedSkin.ReceptorsOverHitObjects7K;
 
                     // Get Receptor Y Offset
                     Playfield.ReceptorYOffset = Config.Configuration.DownScroll7k  //todo: use list for scaling
