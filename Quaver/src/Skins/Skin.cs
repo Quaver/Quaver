@@ -57,6 +57,9 @@ namespace Quaver.Skins
         internal int ColumnSize4K { get; set; }
         internal int ColumnSize7K { get; set; }
 
+        internal int SkinHitPositionOffset4K { get; set; }
+        internal int SkinHitPositionOffset7K { get; set; }
+
         /// <summary>
         /// The offset of the hit receptor
         /// </summary>
@@ -862,6 +865,8 @@ namespace Quaver.Skins
                     Version = "1.0";
                     BgMaskPadding4K = 5;
                     BgMaskPadding7K = 5;
+                    SkinHitPositionOffset4K = 0;
+                    SkinHitPositionOffset7K = 0;
                     NotePadding4K = 2;
                     NotePadding7K = 0;
                     TimingBarPixelSize = 2;
@@ -888,6 +893,8 @@ namespace Quaver.Skins
                     Version = "1.0";
                     BgMaskPadding4K = 5;
                     BgMaskPadding7K = 5;
+                    SkinHitPositionOffset4K = 0;
+                    SkinHitPositionOffset7K = 0;
                     NotePadding4K = 2;
                     NotePadding7K = 0;
                     TimingBarPixelSize = 2;
@@ -921,6 +928,8 @@ namespace Quaver.Skins
             Version = ConfigHelper.ReadString(Version, data["General"]["Version"]);
             BgMaskPadding4K = ConfigHelper.ReadInt32(BgMaskPadding4K, data["Gameplay"]["BgMaskPadding4K"]);
             BgMaskPadding7K = ConfigHelper.ReadInt32(BgMaskPadding7K, data["Gameplay"]["BgMaskPadding7K"]);
+            SkinHitPositionOffset4K = ConfigHelper.ReadInt32(SkinHitPositionOffset4K, data["Gameplay"]["SkinHitPositionOffset4K"]);
+            SkinHitPositionOffset7K = ConfigHelper.ReadInt32(SkinHitPositionOffset7K, data["Gameplay"]["SkinHitPositionOffset7K"]);
             NotePadding4K = ConfigHelper.ReadInt32(NotePadding4K, data["Gameplay"]["NotePadding4K"]);
             NotePadding7K = ConfigHelper.ReadInt32(NotePadding7K, data["Gameplay"]["NotePadding7K"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, data["Gameplay"]["TimingBarPixelSize"]);
