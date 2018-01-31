@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using System.IO;
+using System.Linq;
 using System.Net.Mime;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -95,15 +96,19 @@ namespace Quaver.Skins
         internal byte LightFramesPerSecond { get; set; }
 
         /// <summary>
-        /// The colour that is used for the column's lighting.
+        ///     The colour that is used for the column's lighting.
+        ///     [0] Marv
+        ///     [1] Perf
+        ///     [2] Great
+        ///     [3] Good
+        ///     [4] Okay
+        ///     [5] Miss
+        /// 
+        ///     You can access an individual one by calling
+        ///     Skin.GetJudgeColor(Judge color);
+        ///     See: The Judge enum below.
         /// </summary>
-        internal Color JudgeColorMarv { get; set; }
-        internal Color JudgeColorPerf { get; set; }
-        internal Color JudgeColorGreat { get; set; }
-        internal Color JudgeColorGood { get; set; }
-        internal Color JudgeColorOkay { get; set; }
-        internal Color JudgeColorMiss { get; set; }
-        internal Color[] JudgeColors { get; set; }
+        internal List<Color> JudgeColors { get; set; } = new List<Color>();
 
         /// <summary>
         ///     All of the textures for the loaded skin elements. 
@@ -870,22 +875,15 @@ namespace Quaver.Skins
                     LightFramesPerSecond = 240;
                     ReceptorsOverHitObjects4K = true;
                     ReceptorsOverHitObjects7K = true;
-
-                    JudgeColors = new Color[6]
-                            {
-                        JudgeColorMarv = new Color(255, 255, 200),
-                        JudgeColorPerf = new Color(255, 255, 0),
-                        JudgeColorGreat = new Color(0, 255, 0),
-                        JudgeColorGood = new Color(0, 168, 255),
-                        JudgeColorOkay = new Color(255, 0, 255),
-                        JudgeColorMiss = new Color(255, 0, 0),
-                            };
+                    JudgeColors.Insert(0, new Color(255, 255, 200));
+                    JudgeColors.Insert(1, new Color(255, 255, 0));
+                    JudgeColors.Insert(2, new Color(0, 255, 0));
+                    JudgeColors.Insert(3, new Color(0, 168, 255));
+                    JudgeColors.Insert(4, new Color(255, 0, 255));
+                    JudgeColors.Insert(5, new Color(255, 0, 0));
                     break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
-                    Author = "Quaver Team";
-                    Version = "1.0";
-                    Name = "Default Bar Skin";
                     Author = "Quaver Team";
                     Version = "1.0";
                     BgMaskPadding4K = 5;
@@ -903,16 +901,12 @@ namespace Quaver.Skins
                     LightFramesPerSecond = 240;
                     ReceptorsOverHitObjects4K = false;
                     ReceptorsOverHitObjects7K = true;
-
-                    JudgeColors = new Color[6]
-                            {
-                        JudgeColorMarv = new Color(255, 255, 200),
-                        JudgeColorPerf = new Color(255, 255, 0),
-                        JudgeColorGreat = new Color(0, 255, 0),
-                        JudgeColorGood = new Color(0, 168, 255),
-                        JudgeColorOkay = new Color(255, 0, 255),
-                        JudgeColorMiss = new Color(255, 0, 0),
-                            };
+                    JudgeColors.Insert(0, new Color(255, 255, 200));
+                    JudgeColors.Insert(1, new Color(255, 255, 0));
+                    JudgeColors.Insert(2, new Color(0, 255, 0));
+                    JudgeColors.Insert(3, new Color(0, 168, 255));
+                    JudgeColors.Insert(4, new Color(255, 0, 255));
+                    JudgeColors.Insert(5, new Color(255, 0, 0));
                     break;
             }
 
@@ -940,19 +934,37 @@ namespace Quaver.Skins
             LightFramesPerSecond = ConfigHelper.ReadByte(LightFramesPerSecond, data["Gameplay"]["LightsFramesPerSecond"]);
             ReceptorsOverHitObjects4K = ConfigHelper.ReadBool(ReceptorsOverHitObjects4K, data["Gameplay"]["ReceptorsOverHitObjects4K"]);
             ReceptorsOverHitObjects7K = ConfigHelper.ReadBool(ReceptorsOverHitObjects7K, data["Gameplay"]["ReceptorsOverHitObjects7K"]);
-
-            //todo: read JudgeColors. Not working
-            JudgeColors = new Color[6]
-                    {
-                        JudgeColorMarv = ConfigHelper.ReadColor(JudgeColorMarv, data["Gameplay"]["JudgeColorMarv"]),
-                        JudgeColorPerf = ConfigHelper.ReadColor(JudgeColorPerf, data["Gameplay"]["JudgeColorPerf"]),
-                        JudgeColorGreat = ConfigHelper.ReadColor(JudgeColorGreat, data["Gameplay"]["JudgeColorGreat"]),
-                        JudgeColorGood = ConfigHelper.ReadColor(JudgeColorGood, data["Gameplay"]["JudgeColorGood"]),
-                        JudgeColorOkay = ConfigHelper.ReadColor(JudgeColorOkay, data["Gameplay"]["JudgeColorOkay"]),
-                        JudgeColorMiss = ConfigHelper.ReadColor(JudgeColorMiss, data["Gameplay"]["JudgeColorMiss"])
-                    };
-
+            JudgeColors[0] = ConfigHelper.ReadColor(JudgeColors[0], data["Gameplay"]["JudgeColorMarv"]);
+            JudgeColors[1] = ConfigHelper.ReadColor(JudgeColors[1], data["Gameplay"]["JudgeColorPerf"]);
+            JudgeColors[2] = ConfigHelper.ReadColor(JudgeColors[2], data["Gameplay"]["JudgeColorGreat"]);
+            JudgeColors[3] = ConfigHelper.ReadColor(JudgeColors[3], data["Gameplay"]["JudgeColorGood"]);
+            JudgeColors[4] = ConfigHelper.ReadColor(JudgeColors[4], data["Gameplay"]["JudgeColorOkay"]);
+            JudgeColors[5] = ConfigHelper.ReadColor(JudgeColors[5], data["Gameplay"]["JudgeColorMiss"]);            
             Logger.Log($@"Skin loaded: {skinDir}", LogColors.GameImportant);
         }
+
+        /// <summary>
+        ///     Gets an individual judge color from the list of Judge colors
+        ///     Returns black if its unable to be found.
+        /// </summary>
+        /// <param name="judge"></param>
+        /// <returns></returns>
+        public Color GetJudgeColor(Judge judge)
+        {
+            return JudgeColors.Count == 0 ? new Color(0, 0, 0) : JudgeColors[(int) judge];
+        }
+    }
+
+    /// <summary>
+    ///     An enum containing all of our judges
+    /// </summary>
+    public enum Judge
+    {
+        Marv,
+        Perf,
+        Great,
+        Good,
+        Okay,
+        Miss
     }
 }
