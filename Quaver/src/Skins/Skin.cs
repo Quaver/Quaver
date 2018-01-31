@@ -91,16 +91,13 @@ namespace Quaver.Skins
         /// <summary>
         /// The colour that is used for the column's lighting.
         /// </summary>
-        internal Color SnapColor1st { get; set; }
-        internal Color SnapColor2nd { get; set; }
-        internal Color SnapColor3rd { get; set; }
-        internal Color SnapColor4th { get; set; }
-        internal Color SnapColor6th { get; set; }
-        internal Color SnapColor8th { get; set; }
-        internal Color SnapColor12th { get; set; }
-        internal Color SnapColor16th { get; set; }
-        internal Color SnapColor48th { get; set; }
-        internal Color[] SnapColors { get; set; }
+        internal Color JudgeColorMarv { get; set; }
+        internal Color JudgeColorPerf { get; set; }
+        internal Color JudgeColorGreat { get; set; }
+        internal Color JudgeColorGood { get; set; }
+        internal Color JudgeColorOkay { get; set; }
+        internal Color JudgeColorMiss { get; set; }
+        internal Color[] JudgeColors { get; set; }
 
         /// <summary>
         ///     All of the textures for the loaded skin elements. 
@@ -127,6 +124,11 @@ namespace Quaver.Skins
         internal Texture2D NoteHitBurst7K7 { get; set; }
 
         internal Texture2D ColumnTimingBar { get; set; }
+
+        internal Texture2D StageLeftBorder { get; set; }
+        internal Texture2D StageRightBorder { get; set; }
+        internal Texture2D StageReceptorOverlay { get; set; }
+        internal Texture2D StageDistantOverlay { get; set; }
 
         // 4k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
@@ -201,6 +203,12 @@ namespace Quaver.Skins
                 @"column-timingbar",
                 @"4k-column-hitlighting",
                 @"7k-column-hitlighting",
+
+                // Stage
+                @"stage-left-border",
+                @"stage-right-border",
+                @"stage-receptor-overlay",
+                @"stage-distant-overlay",
 
                 // 4k HitBurst
                 @"4k-note-hitburst-1",
@@ -371,6 +379,18 @@ namespace Quaver.Skins
                         break;
                     case @"column-timingbar":
                         ColumnTimingBar = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"stage-left-border":
+                        StageLeftBorder = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"stage-right-border":
+                        StageRightBorder = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"stage-receptor-overlay":
+                        StageReceptorOverlay = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"stage-distant-overlay":
+                        StageDistantOverlay = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-column-hitlighting-1":
                         ColumnHitLighting4K[0] = LoadIndividualElement(element, skinElementPath);
@@ -865,7 +885,7 @@ namespace Quaver.Skins
                     SnapColor16th = new Color(0, 255, 0);
                     SnapColor48th = new Color(255, 255, 255);
                     */
-                    break;
+                        break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
                     Author = "Quaver Team";
@@ -886,18 +906,17 @@ namespace Quaver.Skins
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = true;
                     LightFramesPerSecond = 240;
-                    SnapColors = new Color[9]
-                    {
-                        SnapColor1st = new Color(255, 0, 0),
-                        SnapColor2nd = new Color(0, 0, 255),
-                        SnapColor3rd = new Color(125, 0, 255),
-                        SnapColor4th = new Color(255, 255, 0),
-                        SnapColor6th = new Color(255, 0, 255),
-                        SnapColor8th = new Color(255, 125, 0),
-                        SnapColor12th = new Color(0, 255, 255),
-                        SnapColor16th = new Color(0, 255, 0),
-                        SnapColor48th = new Color(255, 255, 255)
-                    };
+
+                    //todo: read JudgeColors
+                    JudgeColors = new Color[6]
+                            {
+                        JudgeColorMarv = new Color(255, 255, 200),
+                        JudgeColorPerf = new Color(255, 255, 0),
+                        JudgeColorGreat = new Color(0, 255, 0),
+                        JudgeColorGood = new Color(0, 168, 255),
+                        JudgeColorOkay = new Color(255, 0, 255),
+                        JudgeColorMiss = new Color(255, 0, 0),
+                            };
                     break;
             }
 
@@ -923,18 +942,15 @@ namespace Quaver.Skins
             ColourObjectsBySnapDistance = ConfigHelper.ReadBool(ColourObjectsBySnapDistance, data["Gameplay"]["ColourObjectsBySnapDistance"]);
             LightFramesPerSecond = ConfigHelper.ReadByte(LightFramesPerSecond, data["Gameplay"]["LightsFramesPerSecond"]);
 
-            //todo: read snap colors successfully
-            SnapColors = new Color[9]
+            //todo: read JudgeColors
+            JudgeColors = new Color[6]
                     {
-                        SnapColor1st = new Color(255, 0, 0),
-                        SnapColor2nd = new Color(0, 0, 255),
-                        SnapColor3rd = new Color(125, 0, 255),
-                        SnapColor4th = new Color(255, 255, 0),
-                        SnapColor6th = new Color(255, 0, 255),
-                        SnapColor8th = new Color(255, 125, 0),
-                        SnapColor12th = new Color(0, 255, 255),
-                        SnapColor16th = new Color(0, 255, 0),
-                        SnapColor48th = new Color(255, 255, 255)
+                        JudgeColorMarv = new Color(255, 255, 200),
+                        JudgeColorPerf = new Color(255, 255, 0),
+                        JudgeColorGreat = new Color(0, 255, 0),
+                        JudgeColorGood = new Color(0, 168, 255),
+                        JudgeColorOkay = new Color(255, 0, 255),
+                        JudgeColorMiss = new Color(255, 0, 0),
                     };
 
             /*
