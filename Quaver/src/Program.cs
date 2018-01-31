@@ -34,10 +34,6 @@ namespace Quaver
             // Set UTF-8 encoding for console outputs
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-#if STEAM
-            GameBase.SteamAPIHelper = new SteamAPIHelper();
-#endif
-
             // Initialize Config
             Configuration.InitializeConfig();
 
