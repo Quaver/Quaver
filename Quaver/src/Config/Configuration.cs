@@ -179,8 +179,8 @@ namespace Quaver.Config
         /// <summary>
         ///     The offset of the notes compared to the song start.
         /// </summary>
-        private static sbyte _globalOffset;
-        internal static sbyte GlobalOffset { get => _globalOffset; set { _globalOffset = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        private static sbyte _globalAudioOffset;
+        internal static sbyte GlobalAudioOffset { get => _globalAudioOffset; set { _globalAudioOffset = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     Dictates whether or not the song audio is pitched while using the Speed mod.
@@ -409,7 +409,7 @@ namespace Quaver.Config
             _scrollSpeed7k = ConfigHelper.ReadPercentage(ScrollSpeed7k, data["ScrollSpeed7k"]);
             _downScroll4k = ConfigHelper.ReadBool(DownScroll4k, data["DownScroll4k"]);
             _downScroll7k = ConfigHelper.ReadBool(DownScroll7k, data["DownScroll7k"]);
-            _globalOffset = ConfigHelper.ReadSignedByte(GlobalOffset, data["GlobalOffset"]);
+            _globalAudioOffset = ConfigHelper.ReadSignedByte(GlobalAudioOffset, data["GlobalAudioOffset"]);
             _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
             _defaultSkin = ConfigHelper.ReadDefaultSkin(DefaultSkin, data["DefaultSkin"]);
             _pitched = ConfigHelper.ReadBool(Pitched, data["Pitched"]);
