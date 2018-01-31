@@ -152,6 +152,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     Parent = accuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
+                    TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                     TextAlignment = Alignment.MidLeft,
                     Size = new UDim2(0, 0, 1, 1),
                     Position = new UDim2(5, 0),
@@ -170,6 +171,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     Parent = accuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
+                    TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                     TextAlignment = Alignment.MidRight,
                     Size = new UDim2(0, 0, 1, 1),
                     Position = new UDim2(-5, 0),

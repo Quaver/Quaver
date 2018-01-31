@@ -81,6 +81,8 @@ namespace Quaver.GameState.Gameplay
         /// </summary>
         internal bool Paused { get; private set; }
 
+        private float ReceptorYOffset { get; set; }
+
         //todo: remove. TEST.
         private Sprite SvInfoTextBox { get; set; }
         private TextBoxSprite SVText { get; set; }
@@ -295,22 +297,24 @@ namespace Quaver.GameState.Gameplay
             switch (GameBase.SelectedBeatmap.Qua.Mode)
             //the hit position is determined by the receptor and object of the first lane
             //the math here is kinda ugly, i plan on cleaning this up later
+            //todo: clean up this code a bit
             {
                 case GameModes.Keys4:
                     GameplayReferences.ReceptorXPosition = new float[4];
                     laneSize = (int)(GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale);
                     playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding4K * GameBase.WindowUIScale);
                     receptorPadding = (int)(GameBase.LoadedSkin.NotePadding4K * GameBase.WindowUIScale);
-                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll4k //todo: use list for scaling
+                    ReceptorYOffset = Config.Configuration.DownScroll4k //todo: use list for scaling
                         ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset4K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width))
                         : GameBase.LoadedSkin.ReceptorYOffset4K * GameBase.WindowUIScale;
+                    Playfield.ReceptorYOffset = ReceptorYOffset;
                     ScoreManager.ScrollSpeed = Configuration.ScrollSpeed4k;
                     NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed4k / (20f * GameBase.GameClock);
                     NoteManager.DownScroll = Configuration.DownScroll4k;
                     NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll4k
-                        ? GameplayReferences.ReceptorYOffset
-                        : GameplayReferences.ReceptorYOffset
+                        ? ReceptorYOffset - (Configuration.HitPositionOffset4k * GameBase.WindowUIScale)
+                        : ReceptorYOffset + (Configuration.HitPositionOffset4k * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
                         * ((GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
                         - (GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
@@ -320,16 +324,17 @@ namespace Quaver.GameState.Gameplay
                     laneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);
                     playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding7K * GameBase.WindowUIScale);
                     receptorPadding = (int)(GameBase.LoadedSkin.NotePadding7K * GameBase.WindowUIScale);
-                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll7k //todo: use list for scaling
+                    ReceptorYOffset = Config.Configuration.DownScroll7k  //todo: use list for scaling
                         ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset7K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
                         : GameBase.LoadedSkin.ReceptorYOffset7K * GameBase.WindowUIScale;
+                    Playfield.ReceptorYOffset = ReceptorYOffset;
                     ScoreManager.ScrollSpeed = Configuration.ScrollSpeed7k;
                     NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed7k / (20f * GameBase.GameClock);
                     NoteManager.DownScroll = Configuration.DownScroll7k;
                     NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll7k
-                        ? GameplayReferences.ReceptorYOffset
-                        : GameplayReferences.ReceptorYOffset
+                        ? ReceptorYOffset - (Configuration.HitPositionOffset7k * GameBase.WindowUIScale)
+                        : ReceptorYOffset + (Configuration.HitPositionOffset7k * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
                         * ((GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
                         - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
