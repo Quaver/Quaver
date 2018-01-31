@@ -29,6 +29,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// </summary>
         private Boundary Boundary { get; set; }
 
+        private Sprite BgMask { get; set; }
+
         internal float PlayfieldSize { get; set; }
 
         internal float LaneSize { get; set; }
@@ -55,13 +57,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             };
 
             // Create BG Mask
-            var bgMask = new Sprite()
+            BgMask = new Sprite()
             {
                 //Image = GameBase.LoadedSkin.ColumnBgMask,
                 Tint = Color.Black, //todo: remove
                 Alpha = 0.8f, //todo: remove
-                Parent = Boundary,
-                Size = new UDim2(0, 0, 1, 1)
+                Size = new UDim2(PlayfieldSize, GameBase.WindowRectangle.Height),
+                Alignment = Alignment.TopCenter
             };
 
             // Create Receptors
@@ -104,6 +106,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
         }
 
+        public void DrawBgMask()
+        {
+            BgMask.Draw();
+        }
+
         public void Draw()
         {
             Boundary.Draw();
@@ -116,6 +123,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         public void Update(double dt)
         {
             Boundary.Update(dt);
+            BgMask.Update(dt);
         }
 
         /// <summary>
@@ -124,6 +132,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         public  void UnloadContent()
         {
             Boundary.Destroy();
+            BgMask.Destroy();
         }
 
         /// <summary>
