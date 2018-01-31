@@ -871,7 +871,6 @@ namespace Quaver.Skins
                     ReceptorsOverHitObjects4K = true;
                     ReceptorsOverHitObjects7K = true;
 
-                    //todo: read JudgeColors
                     JudgeColors = new Color[6]
                             {
                         JudgeColorMarv = new Color(255, 255, 200),
@@ -905,7 +904,6 @@ namespace Quaver.Skins
                     ReceptorsOverHitObjects4K = false;
                     ReceptorsOverHitObjects7K = true;
 
-                    //todo: read JudgeColors
                     JudgeColors = new Color[6]
                             {
                         JudgeColorMarv = new Color(255, 255, 200),
@@ -943,15 +941,15 @@ namespace Quaver.Skins
             ReceptorsOverHitObjects4K = ConfigHelper.ReadBool(ReceptorsOverHitObjects4K, data["Gameplay"]["ReceptorsOverHitObjects4K"]);
             ReceptorsOverHitObjects7K = ConfigHelper.ReadBool(ReceptorsOverHitObjects7K, data["Gameplay"]["ReceptorsOverHitObjects7K"]);
 
-            //todo: read JudgeColors
+            //todo: read JudgeColors. Not working
             JudgeColors = new Color[6]
                     {
-                        JudgeColorMarv = new Color(255, 255, 200),
-                        JudgeColorPerf = new Color(255, 255, 0),
-                        JudgeColorGreat = new Color(0, 255, 0),
-                        JudgeColorGood = new Color(0, 168, 255),
-                        JudgeColorOkay = new Color(255, 0, 255),
-                        JudgeColorMiss = new Color(255, 0, 0),
+                        JudgeColorMarv = ConfigHelper.ReadColor(JudgeColorMarv, data["Gameplay"]["JudgeColorMarv"]),
+                        JudgeColorPerf = ConfigHelper.ReadColor(JudgeColorPerf, data["Gameplay"]["JudgeColorPerf"]),
+                        JudgeColorGreat = ConfigHelper.ReadColor(JudgeColorGreat, data["Gameplay"]["JudgeColorGreat"]),
+                        JudgeColorGood = ConfigHelper.ReadColor(JudgeColorGood, data["Gameplay"]["JudgeColorGood"]),
+                        JudgeColorOkay = ConfigHelper.ReadColor(JudgeColorOkay, data["Gameplay"]["JudgeColorOkay"]),
+                        JudgeColorMiss = ConfigHelper.ReadColor(JudgeColorMiss, data["Gameplay"]["JudgeColorMiss"])
                     };
 
             Logger.Log($@"Skin loaded: {skinDir}", LogColors.GameImportant);

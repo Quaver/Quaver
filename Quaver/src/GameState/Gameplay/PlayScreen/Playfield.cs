@@ -27,9 +27,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     The first layer of the playfield. Used to render receptors/FX
         /// </summary>
-        private Boundary Boundary { get; set; }
+        private Boundary ReceptorBoundary { get; set; }
 
-        private Sprite BgMask { get; set; }
+        private Boundary BackgroundBoundary { get; set; }
 
         internal float PlayfieldSize { get; set; }
 
@@ -50,21 +50,33 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //PlayScreen = playScreen;
 
             // Create playfield boundary
-            Boundary = new Boundary()
+            ReceptorBoundary = new Boundary()
+            {
+                Size = new UDim2(PlayfieldSize, GameBase.WindowRectangle.Height),
+                Alignment = Alignment.TopCenter
+            };
+
+            BackgroundBoundary = new Boundary()
             {
                 Size = new UDim2(PlayfieldSize, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.TopCenter
             };
 
             // Create BG Mask
-            BgMask = new Sprite()
+            var bgMask = new Sprite()
             {
                 //Image = GameBase.LoadedSkin.ColumnBgMask,
                 Tint = Color.Black, //todo: remove
                 Alpha = 0.8f, //todo: remove
                 Size = new UDim2(PlayfieldSize, GameBase.WindowRectangle.Height),
-                Alignment = Alignment.TopCenter
+                Alignment = Alignment.TopCenter,
+                Parent = BackgroundBoundary
             };
+            /*
+            var stageLeft = new Sprite()
+            {
+
+            }*/
 
             // Create Receptors
             switch (GameBase.SelectedBeatmap.Qua.Mode)
@@ -88,7 +100,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Size = new UDim2(LaneSize, 0),
                     Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYOffset),
                     Alignment = Alignment.TopLeft,
-                    Parent = Boundary
+                    Parent = ReceptorBoundary
                 };
 
                 // Set current receptor's image based on the current key count.
@@ -108,12 +120,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         public void DrawBgMask()
         {
-            BgMask.Draw();
+            BackgroundBoundary.Draw();
         }
 
         public void Draw()
         {
-            Boundary.Draw();
+            ReceptorBoundary.Draw();
         }
 
         /// <summary>
@@ -122,8 +134,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <param name="dt"></param>
         public void Update(double dt)
         {
-            Boundary.Update(dt);
-            BgMask.Update(dt);
+            ReceptorBoundary.Update(dt);
+            BackgroundBoundary.Update(dt);
         }
 
         /// <summary>
@@ -131,8 +143,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// </summary>
         public  void UnloadContent()
         {
-            Boundary.Destroy();
-            BgMask.Destroy();
+            ReceptorBoundary.Destroy();
+            BackgroundBoundary.Destroy();
         }
 
         /// <summary>
