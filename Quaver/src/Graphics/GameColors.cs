@@ -32,16 +32,6 @@ namespace Quaver.Graphics
         public static readonly Color DeadNote = new Color(50, 50, 50);
 
         //todo: documentation.
-        //Judge Colors
-        public static readonly Color JudgeMarv = new Color(255, 255, 200);
-        public static readonly Color JudgePerf = new Color(255, 255, 0);
-        public static readonly Color JudgeGreat = new Color(0, 255, 0);
-        public static readonly Color JudgeGood = new Color(0, 168, 255);
-        public static readonly Color JudgeOkay = new Color(255, 0, 255);
-        public static readonly Color JudgeMiss = new Color(255, 0, 0);
-        public static readonly Color[] JudgeColors = new Color[6] { JudgeMarv, JudgePerf, JudgeGreat, JudgeGood, JudgeOkay, JudgeMiss };
-
-        //todo: documentation.
         //Grade Colors
         public static readonly Color GradeSSSS = new Color(255, 255, 255);
         public static readonly Color GradeSSS = new Color(255, 255, 255);

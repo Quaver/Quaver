@@ -134,7 +134,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Parent = accuracyDisplaySet[i+1],
                     Alignment = Alignment.MidLeft,
                     Size = new UDim2(0, -2, 0, 1),
-                    Tint = GameColors.JudgeColors[i],
+                    Tint = GameBase.LoadedSkin.JudgeColors[i],
                     Alpha = 0.12f
                 };
             }
@@ -151,7 +151,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Size = new UDim2(0, 0, 1, 1),
                     Position = new UDim2(5, 0),
                     Font = Fonts.Medium16,
-                    TextColor = i == 0 ? Color.White : GameColors.JudgeColors[i-1],
+                    TextColor = i == 0 ? Color.White : GameBase.LoadedSkin.JudgeColors[i-1],
                     Text = i == 0 ? "Accuracy" : GameplayReferences.JudgeNames[i-1],
                     TextScale = GameBase.WindowUIScale,
                     Alpha = 0.3f
@@ -170,7 +170,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Size = new UDim2(0, 0, 1, 1),
                     Position = new UDim2(-5, 0),
                     Font = Fonts.Medium16,
-                    TextColor = i == 0 ? Color.White : GameColors.JudgeColors[i - 1],
+                    TextColor = i == 0 ? Color.White : GameBase.LoadedSkin.JudgeColors[i - 1],
                     Text = i == 0 ? "00.00%" : "0 | 0",
                     TextScale = GameBase.WindowUIScale,
                 };
