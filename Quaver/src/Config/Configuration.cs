@@ -147,6 +147,12 @@ namespace Quaver.Config
         internal static bool FpsCounter { get => _fpsCounter; set { _fpsCounter = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
+        ///     Determines if the health bar + multiplier is at top or bottom of the playfield
+        /// </summary>
+        private static bool _healthBarPositionTop = false;
+        internal static bool HealthBarPositionTop { get => _healthBarPositionTop; set { _healthBarPositionTop = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
         ///     The scroll speed for mania 4k
         /// </summary>
         private static byte _scrollSpeed4k = 20;
@@ -393,6 +399,7 @@ namespace Quaver.Config
             _backgroundBrightness = ConfigHelper.ReadPercentage(BackgroundBrightness, data["BackgroundBrightness"]);
             _windowHeight = ConfigHelper.ReadInt32(WindowHeight, data["WindowHeight"]);
             _windowWidth = ConfigHelper.ReadInt32(WindowWidth, data["WindowWidth"]);
+            _healthBarPositionTop = ConfigHelper.ReadBool(HealthBarPositionTop, data["HealthBarPositionTop"]);
             _hitPositionOffset4k = ConfigHelper.ReadInt32(HitPositionOffset4k, data["HitPositionOffset4k"]);
             _hitPositionOffset7k = ConfigHelper.ReadInt32(HitPositionOffset7k, data["HitPositionOffset7k"]);
             _windowFullScreen = ConfigHelper.ReadBool(WindowFullScreen, data["WindowFullScreen"]);
