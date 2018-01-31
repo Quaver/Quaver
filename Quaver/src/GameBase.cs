@@ -187,13 +187,6 @@ namespace Quaver
         /// </summary>
         public static string BuildVersion { get; set; }
 
-#if STEAM
-        /// <summary>
-        ///     Class that handles everything to do with Steam API calls
-        /// </summary>
-        public static SteamAPIHelper SteamAPIHelper { get; set; }
-#endif
-
         /// <summary>
         ///     This method changes the window to match configuration settings
         /// </summary>
