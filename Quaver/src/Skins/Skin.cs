@@ -933,9 +933,10 @@ namespace Quaver.Skins
             NotePadding7K = ConfigHelper.ReadInt32(NotePadding7K, data["Gameplay"]["NotePadding7K"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, data["Gameplay"]["TimingBarPixelSize"]);
             HitLightingScale = ConfigHelper.ReadFloat(HitLightingScale, data["Gameplay"]["HitLightingScale"]);
-            ColumnSize4K = ConfigHelper.ReadInt32(ColumnSize4K, data["Gameplay"]["ColumnSize"]);
-            ColumnSize7K = ConfigHelper.ReadInt32(ColumnSize7K, data["Gameplay"]["ColumnSize7k"]);
-            ReceptorYOffset4K = ConfigHelper.ReadInt32(ReceptorYOffset4K, data["Gameplay"]["ReceptorYOffset"]);
+            ColumnSize4K = ConfigHelper.ReadInt32(ColumnSize4K, data["Gameplay"]["ColumnSize4K"]);
+            ColumnSize7K = ConfigHelper.ReadInt32(ColumnSize7K, data["Gameplay"]["ColumnSize7K"]);
+            ReceptorYOffset4K = ConfigHelper.ReadInt32(ReceptorYOffset4K, data["Gameplay"]["ReceptorYOffset4K"]);
+            ReceptorYOffset7K = ConfigHelper.ReadInt32(ReceptorYOffset7K, data["Gameplay"]["ReceptorYOffset7K"]);
             ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, data["Gameplay"]["ColumnAlignment"]);
             ColourObjectsBySnapDistance = ConfigHelper.ReadBool(ColourObjectsBySnapDistance, data["Gameplay"]["ColourObjectsBySnapDistance"]);
             LightFramesPerSecond = ConfigHelper.ReadByte(LightFramesPerSecond, data["Gameplay"]["LightsFramesPerSecond"]);
