@@ -72,11 +72,24 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Alignment = Alignment.TopCenter,
                 Parent = BackgroundBoundary
             };
-            /*
+
+            // todo: this is placeholder until we have an asset for this
             var stageLeft = new Sprite()
             {
+                Size = new UDim2(10, GameBase.WindowRectangle.Height),
+                Position = new UDim2(-10, 0),
+                Alignment = Alignment.TopLeft,
+                Parent = BackgroundBoundary
+            };
 
-            }*/
+            // todo: this is placeholder until we have an asset for this
+            var stageRight = new Sprite()
+            {
+                Size = new UDim2(10, GameBase.WindowRectangle.Height),
+                Position = new UDim2(10, 0),
+                Alignment = Alignment.TopRight,
+                Parent = BackgroundBoundary
+            };
 
             // Create Receptors
             switch (GameBase.SelectedBeatmap.Qua.Mode)
