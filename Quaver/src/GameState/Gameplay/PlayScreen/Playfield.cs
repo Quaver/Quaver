@@ -37,6 +37,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         internal float PlayfieldPadding { get; set; }
 
+        internal float ReceptorYOffset { get; set; }
+
 
         /// <summary>
         ///     Initializes necessary playfield variables for gameplay.
@@ -82,7 +84,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Receptors[i] = new Sprite
                 {
                     Size = new UDim2(LaneSize, 0),
-                    Position = new UDim2(GameplayReferences.ReceptorXPosition[i], GameplayReferences.ReceptorYOffset),
+                    Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYOffset),
                     Alignment = Alignment.TopLeft,
                     Parent = Boundary
                 };
