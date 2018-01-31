@@ -21,6 +21,7 @@ using Quaver.Graphics.Text;
 using Quaver.GameState.Gameplay;
 using Quaver.Utility;
 using Quaver.Audio;
+using Quaver.Skins;
 
 namespace Quaver.GameState.States
 {
@@ -423,7 +424,7 @@ namespace Quaver.GameState.States
                     {
                         Position = new UDim2(((float)(ms.Position / ScoreData.PlayTimeTotal) * boundary.Size.X.Offset) - 1f, 0),
                         Size = new UDim2(2, 0, 0, 1),
-                        Tint = GameBase.LoadedSkin.JudgeColorMiss,
+                        Tint = GameBase.LoadedSkin.GetJudgeColor(Judge.Miss),
                         Alpha = 0.25f,
                         Parent = boundary
                     };
