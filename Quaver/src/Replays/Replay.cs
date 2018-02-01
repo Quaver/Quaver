@@ -161,8 +161,7 @@ namespace Quaver.Replays
                 path = Configuration.ReplayDirectory + "/" + Util.FileNameSafeString(fileName) + ".qr";
 
             using (var replayDataStream = new MemoryStream(Encoding.ASCII.GetBytes(ReplayHelper.ReplayFramesToString(ReplayFrames))))
-            using (var fs = new FileStream(path, FileMode.Create))
-            using (var bw = new BinaryWriter(fs))
+            using (var bw = new BinaryWriter(File.Open(path, FileMode.Create)))
             {
                 bw.Write(QuaverVersion);
                 bw.Write(BeatmapMd5);
@@ -185,7 +184,7 @@ namespace Quaver.Replays
                 bw.Write(OkayPressCount);
                 bw.Write(OkayReleaseCount);
                 bw.Write(Misses);
-                LZMACoder.Compress(replayDataStream);
+                bw.Write(Util.ConvertStreamToByteArray(LZMACoder.Compress(replayDataStream)));
             }
 
             return path;
@@ -203,7 +202,6 @@ namespace Quaver.Replays
             // Read the replay data
             using (var fs = new FileStream(path, FileMode.Open))
             using (var br = new BinaryReader(fs))
-            using (var outStream = new MemoryStream())
             {
                 QuaverVersion = br.ReadString();
                 BeatmapMd5 = br.ReadString();
@@ -230,15 +228,13 @@ namespace Quaver.Replays
                 // Create the new list of replay frames.
                 ReplayFrames = new List<ReplayFrame>();
 
-                // Decompress & Deserialize replay frames
-                LZMACoder.Decompress(br.BaseStream);
-
                 // Split the frames up by commas
-                var frames = Encoding.ASCII.GetString(outStream.ToArray()).Split(',');
+                var frames = Encoding.ASCII.GetString(LZMACoder.Decompress(br.BaseStream).ToArray()).Split(',');
 
                 // Add all the replay frames to the object
                 foreach (var frame in frames)
                 {
+                    Console.WriteLine(frame);
                     try
                     {
                         // Split up the frame string by SongTime|KeyPressState
