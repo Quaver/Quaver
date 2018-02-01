@@ -42,16 +42,6 @@
     <Prefer32Bit>false</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;LINUX</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>false</Prefer32Bit>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
@@ -68,15 +58,6 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;LINUX</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
@@ -86,57 +67,16 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;LINUX</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Public|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Public\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Public|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Public\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Public|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Public\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;PUBLIC</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Resource1.Designer.cs" />
     <Compile Include="src\Audio\MenuAudioPlayer.cs" />
     <Compile Include="src\Audio\SongManager.cs" />
     <Compile Include="src\Commands\CalculateDifficulty.cs" />
-    <Compile Include="src\Commands\Logout.cs" />
     <Compile Include="src\Commands\OsuDbCommand.cs" />
     <Compile Include="src\Commands\ParseStepMania.cs" />
     <Compile Include="src\Database\Beatmaps\Mapset.cs" />
     <Compile Include="src\Commands\CommandHandler.cs" />
     <Compile Include="src\Commands\GetScores.cs" />
-    <Compile Include="src\Commands\LoginDev.cs" />
-    <Compile Include="src\Commands\Login.cs" />
     <Compile Include="src\Commands\SearchMaps.cs" />
     <Compile Include="src\Commands\Clear.cs" />
     <Compile Include="src\Commands\Help.cs" />
@@ -235,6 +175,7 @@
     <Compile Include="src\Replays\ReplayHelper.cs" />
     <Compile Include="src\Scores\LocalScore.cs" />
     <Compile Include="src\Skins\Skin.cs" />
+    <Compile Include="src\Steam\SteamAPIHelper.cs" />
     <Compile Include="src\Tests\Audio.Test.cs" />
     <Compile Include="src\Tests\Json.Test.cs" />
     <Compile Include="src\Tests\Qua.Test.cs" />
@@ -319,6 +260,10 @@
     </Reference>
     <Reference Include="SQLitePCLRaw.provider.e_sqlite3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9c301db686d0bd12, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCLRaw.provider.e_sqlite3.net45.1.1.5\lib\net45\SQLitePCLRaw.provider.e_sqlite3.dll</HintPath>
+    </Reference>
+    <Reference Include="Steamworks.NET, Version=11.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Steamworks.NET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System" />
@@ -559,6 +504,12 @@
     <Content Include="Lib\bass.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Lib\Steamworks.NET.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\steam_api.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -571,10 +522,6 @@
     <ProjectReference Include="..\Quaver-API\Quaver-API\Quaver-API.csproj">
       <Project>{0c6869bd-4e34-4c92-a853-e09f2b320601}</Project>
       <Name>Quaver-API</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Quaver-Framework\Quaver-Framework\Quaver-Framework.csproj">
-      <Project>{e8afe82b-4dda-4b46-bee7-75748e957ef3}</Project>
-      <Name>Quaver-Framework</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
@@ -608,6 +555,9 @@ echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libSDL2-2.0.so.0" "$(ProjectDir)$(
 echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\SDL2.dll" "$(ProjectDir)$(outDir)SDL2.dll"
 echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\soft_oal.dll" "$(ProjectDir)$(outDir)soft_oal.dll"
 echo f |  xcopy /y "$(ProjectDir)$(outDir)x86\e_sqlite3.dll" "$(ProjectDir)$(outDir)e_sqlite3.dll"
+
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\steam_api.dll" "$(ProjectDir)$(outDir)steam_api.dll"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\Steamworks.NET.dll" "$(ProjectDir)$(outDir)Steamworks.NET.dll"
 
 RD /S /Q "$(ProjectDir)$(outDir)x86\"
 RD /S /Q "$(ProjectDir)$(outDir)Lib\"

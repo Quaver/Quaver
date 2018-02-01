@@ -15,6 +15,7 @@ using Quaver.Database;
 using Quaver.Discord;
 using Quaver.Logging;
 using Quaver.Replays;
+using Quaver.Steam;
 using Quaver.Tests;
 
 namespace Quaver
