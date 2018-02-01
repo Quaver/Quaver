@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Logging;
 
 namespace Quaver.Graphics.GameOverlay.Multiplayer
 {
@@ -41,7 +42,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
             };
 
             // Create input box
-            ChatInputField = new TextInputField(new Vector2(400, 30), "Type something")
+            ChatInputField = new TextInputField(new Vector2(400, 30), "Type something", OnChatSubmit)
             {
                 PosY = -200,
                 Alignment = Alignment.BotLeft,
@@ -94,6 +95,14 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
             }
             ChatValues[0] = e.ToString(); //todo: chat event args
             ChatTextBoxes[0].Text = ChatValues[0];
+        }
+
+        /// <summary>
+        ///     The callback function that will be called when the input has been submitted
+        /// </summary>
+        private void OnChatSubmit(string text)
+        {
+            Logger.Log(text, LogColors.GameInfo);
         }
     }
 }
