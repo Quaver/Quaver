@@ -194,7 +194,6 @@ namespace Quaver.GameState.States
             ImportPeppyButton.Clicked += OnImportOsuButtonClick;
         }
 
-
         /// <summary>
         ///     Responsible for creating the import .qp button
         /// </summary>
