@@ -216,10 +216,6 @@ namespace Quaver.Database.Beatmaps
                     {
                         // Switch map and load audio for song and play it.
                         Beatmap.ChangeBeatmap(beatmap);
-
-                        // Load and change background after import
-                        BackgroundManager.LoadBackground();
-                        BackgroundManager.Change(GameBase.CurrentBackground);
                         break;
                     }
 

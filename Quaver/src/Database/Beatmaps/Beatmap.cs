@@ -139,6 +139,11 @@ namespace Quaver.Database.Beatmaps
         public int LocalOffset { get; set; }
 
         /// <summary>
+        ///     Determines if this map is an osu! beatmap.
+        /// </summary>
+        public bool IsOsuMap { get; set; }
+
+        /// <summary>
         ///     The actual parsed qua file for the beatmap.
         /// </summary>
         [Ignore]
