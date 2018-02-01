@@ -210,12 +210,12 @@ namespace Quaver.Audio
         }
 
         /// <summary>
-        ///     Stops the current song, reloads it, and plays at a given preview time.
+        ///     Stops the current song, reloads it asynchronously, and plays at a given preview time.
         /// </summary>
         internal static void ReloadSong(bool loadAtPreview = false)
-        {
+        { 
             Stop();
-            Load();
+            Task.Run(() => Load()).Wait();
             Play(loadAtPreview);
         }
     }
