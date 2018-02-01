@@ -11,6 +11,7 @@ using Quaver.Database.Beatmaps;
 using Quaver.Logging;
 using Quaver.Replays;
 using Quaver.API.Maps;
+using Quaver.API.Osu;
 using Quaver.Config;
 
 namespace Quaver.GameState.States
@@ -69,18 +70,24 @@ namespace Quaver.GameState.States
                 if (GameBase.SelectedBeatmap == null)
                     throw new Exception("No selected beatmap, we should not be on this screen!!!");
 
-                // Try and parse the .qua and check if it is valid.
-                var quaPath = $"{Config.Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
+                // Reference to the parsed .qua file
+                var qua = new Qua();
 
-                var qua = Qua.Parse(quaPath);
-                //qua.HitObjects = DifficultyCalculator.RemoveArtificialDensity(qua);
+                // Handle osu! beatmaps as well
+                if (GameBase.SelectedBeatmap.IsOsuMap)
+                {
+                    var osu = new PeppyBeatmap(GameBase.OsuSongsFolder + GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.Path);
+                    qua = Qua.ConvertOsuBeatmap(osu);
+                }
+                else
+                {
+                    var quaPath = $"{Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
+                    qua = Qua.Parse(quaPath);
+                }
 
+                // Check if the map is actually valid
                 if (!qua.IsValidQua)
                     throw new Exception("[SONG LOADING STATE] The .qua file could NOT be loaded!");
-
-                // TODO: This is the list of perfect 0ms replay frames for auto play. 
-                // TODO: If we are loading the play state in replay mode, we should pass these frames to the next state.
-                //var autoReplay = ReplayHelper.GeneratePerfectReplay(qua.HitObjects);
 
                 // Set the beatmap's Qua. 
                 // We parse it and set it each time the player is going to play to kmake sure they are
@@ -91,9 +98,7 @@ namespace Quaver.GameState.States
                 Task.Run(async () =>
                 {
                     using (var writer = File.CreateText(Configuration.DataDirectory + "/temp/Now Playing/difficulty.txt"))
-                    {
                         await writer.WriteAsync($"{Math.Round(GameBase.SelectedBeatmap.Qua.CalculateFakeDifficulty(), 2)}");
-                    }
                 });
 
                 Logger.Log("Finished loading Beatmap", LogColors.GameSuccess);
@@ -121,9 +126,15 @@ namespace Quaver.GameState.States
                     throw new Exception("[SONG LOADING STATE] Audio file could not be loaded.");
 
                 // Get the MD5 Hash of the played map and change the state.
-                var quaPath = $"{Config.Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
-                GameBase.GameStateManager.ChangeState(new PlayScreenState(GameBase.SelectedBeatmap.Qua, BeatmapUtils.GetMd5Checksum(quaPath)));
+                var quaPath = $"{Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
 
+                // Get the MD5 of the map even if it's an osu! file.
+                var md5 = (GameBase.SelectedBeatmap.IsOsuMap) ? 
+                        BeatmapUtils.GetMd5Checksum($"{GameBase.OsuSongsFolder}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}")
+                        : BeatmapUtils.GetMd5Checksum(quaPath);
+   
+
+                GameBase.GameStateManager.ChangeState(new PlayScreenState(GameBase.SelectedBeatmap.Qua, md5));
                 Logger.Log("Successfully changed to the gameplay state.", LogColors.GameSuccess);
             }
             catch (Exception ex)
