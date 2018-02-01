@@ -141,6 +141,7 @@ namespace Quaver.Database.Beatmaps
         /// <summary>
         ///     Determines if this map is an osu! beatmap.
         /// </summary>
+        [Ignore]
         public bool IsOsuMap { get; set; }
 
         /// <summary>
