@@ -44,13 +44,6 @@ namespace Quaver.Audio
                     if (SongManager.Length > 1)
                         SongManager.Play();
                 }
-
-                DiscordController.ChangeDiscordPresence($"{GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}", "Listening");
-            }
-            else
-            {
-                // Set Rich Presence
-                DiscordController.ChangeDiscordPresence("Idle", "In the menus");
             }
         }
 
@@ -88,9 +81,6 @@ namespace Quaver.Audio
             // Begin to play
             if (SongManager.Length > 1 && SongManager.AudioStream != 0)
                 SongManager.Play();
-
-            // Set new Discord Rich Presence
-            DiscordController.ChangeDiscordPresence($"{GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}", "Listening");
         }
     }
 }

@@ -85,8 +85,11 @@ namespace Quaver.GameState.States
             // Initialize the main menu's audio player.
             MenuAudioPlayer.Initialize();
 
-            // Enable console commands (Only applicable if on debug release)
+            // Set Discord RP
+            DiscordController.ChangeDiscordPresence("Main Menu", "In the menus");
+
 #if DEBUG
+            // Enable console commands (Only applicable if on debug release)
             CommandHandler.HandleConsoleCommand();
 #endif
 
@@ -190,7 +193,6 @@ namespace Quaver.GameState.States
 
             ImportPeppyButton.Clicked += OnImportOsuButtonClick;
         }
-
 
         /// <summary>
         ///     Responsible for creating the import .qp button
