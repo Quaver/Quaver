@@ -37,9 +37,6 @@ namespace Quaver
             // Initialize Config
             Configuration.InitializeConfig();
 
-            // Initialize Discord RichPresence
-            InitializeDiscordPresence();
-
             // Delete Temp Files
             DeleteTemporaryFiles();
  
@@ -50,36 +47,6 @@ namespace Quaver
             using (var game = new QuaverGame())
             {
                 game.Run();
-            }
-        }
-
-        /// <summary>
-        ///     Responsible for initializing the Discord Presence
-        /// </summary>
-        private static void InitializeDiscordPresence()
-        {
-            if (GameBase.DiscordController != null)
-                return;
-
-            try
-            {
-                GameBase.DiscordController = new DiscordController();
-                GameBase.DiscordController.Initialize();
-
-                // Create a new RichPresence
-                GameBase.DiscordController.presence = new DiscordRPC.RichPresence()
-                {
-                    details = "Idle",
-                    largeImageKey = "quaver",
-                    largeImageText = Configuration.Username
-                };
-                DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
-
-                GameBase.DiscordRichPresencedInited = true;
-            }
-            catch (Exception e)
-            {
-                Logger.Log(e.Message, LogColors.GameError);
             }
         }
 
