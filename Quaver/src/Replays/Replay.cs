@@ -11,6 +11,7 @@ using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.Utility;
+using osu_database_reader;
 
 namespace Quaver.Replays
 {
@@ -184,7 +185,7 @@ namespace Quaver.Replays
                 bw.Write(OkayPressCount);
                 bw.Write(OkayReleaseCount);
                 bw.Write(Misses);
-                SevenZip.Helper.Compress(replayDataStream, fs);
+                LZMACoder.Compress(replayDataStream);
             }
 
             return path;
@@ -230,7 +231,7 @@ namespace Quaver.Replays
                 ReplayFrames = new List<ReplayFrame>();
 
                 // Decompress & Deserialize replay frames
-                SevenZip.Helper.Decompress(br.BaseStream, outStream);
+                LZMACoder.Decompress(br.BaseStream);
 
                 // Split the frames up by commas
                 var frames = Encoding.ASCII.GetString(outStream.ToArray()).Split(',');
