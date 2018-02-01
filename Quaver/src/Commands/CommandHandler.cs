@@ -21,7 +21,6 @@ namespace Quaver.Commands
             new SearchMaps(),
             new GetScores(),
             new CalculateDifficulty(),
-            new OsuDbCommand(),
             new ParseStepMania()
         };
 
