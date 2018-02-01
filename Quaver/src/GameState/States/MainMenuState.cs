@@ -23,6 +23,8 @@ using Quaver.Logging;
 using Quaver.Modifiers;
 using Button = Quaver.Graphics.Button.Button;
 using Quaver.API.Maps;
+using Quaver.Commands;
+using Quaver.Steam;
 using Quaver.Utility;
 
 namespace Quaver.GameState.States
@@ -82,6 +84,11 @@ namespace Quaver.GameState.States
 
             // Initialize the main menu's audio player.
             MenuAudioPlayer.Initialize();
+
+            // Enable console commands (Only applicable if on debug release)
+#if DEBUG
+            CommandHandler.HandleConsoleCommand();
+#endif
 
             //Initialize Menu Screen
             Boundary = new Boundary();

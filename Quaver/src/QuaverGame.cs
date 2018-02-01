@@ -22,6 +22,8 @@ using System.Windows.Forms;
 using Quaver.Commands;
 using Quaver.Discord;
 using Quaver.Graphics.Sprite;
+using Quaver.Steam;
+using Steamworks;
 
 namespace Quaver
 {
@@ -30,8 +32,15 @@ namespace Quaver
     /// </summary>
     public class QuaverGame : Game
     {
+        /// <summary>
+        ///     Static reference to the current game
+        /// </summary>
+        public static QuaverGame Game;
+
         public QuaverGame()
         {
+            Game = this;
+
             // Set the global graphics device manager & set Window width & height.
             GameBase.GraphicsManager = new GraphicsDeviceManager(this)
             {
@@ -65,9 +74,6 @@ namespace Quaver
         /// </summary>
         protected override void Initialize()
         {
-            // Enable console commands (Only applicable if on debug release)
-            CommandHandler.HandleConsoleCommand();
-
             // Handle Text Input
             //GameBase.GameWindow.TextInput += TextEndered;
 
@@ -112,6 +118,9 @@ namespace Quaver
             // Set up overlay
             GameBase.GameOverlay.Initialize();
 
+            // Attempt to intialize the Steam API
+            SteamAPIHelper.Initialize();
+
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
             GameBase.GameStateManager.ChangeState(new MainMenuState());             
@@ -126,14 +135,7 @@ namespace Quaver
             BackgroundManager.UnloadContent();
             GameBase.GameOverlay.UnloadContent();
             GameBase.GameStateManager.ClearStates();
-            try
-            {
-                Bass.Free();
-                DiscordRPC.Shutdown();
-            }
-            catch (Exception e)
-            {
-            }
+            UnloadLibraries();
         }
 
         /// <summary>
@@ -143,7 +145,7 @@ namespace Quaver
         /// <param name="gameTime">Provides a snapshot of delta time values.</param>
         protected override void Update(GameTime gameTime)
         {
-            double dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Check Global Input
             GameBase.GlobalInputManager.CheckInput();
@@ -165,6 +167,10 @@ namespace Quaver
 
             // Update Mouse Cursor
             GameBase.Cursor.Update(dt);
+
+            // Run Steam callbacks every frame to frequently stay updated with the API
+            if (SteamAPIHelper.IsInitialized)
+                SteamAPI.RunCallbacks();
 
             base.Update(gameTime);
         }
@@ -189,17 +195,42 @@ namespace Quaver
             GameBase.Cursor.Draw();
 
             Logger.Draw(dt);
-            if (Config.Configuration.FpsCounter) FpsCounter.Draw();
+
+            if (Config.Configuration.FpsCounter)
+                FpsCounter.Draw();
+
             GameBase.SpriteBatch.End();
 
             // Draw Base
             // base.Draw(gameTime);
         }
 
-        /*
-        private void TextEndered(object sender, TextInputEventArgs e)
+        /// <summary>
+        ///     Quits the game
+        /// </summary>
+        internal static void Quit()
         {
-            Logger.Log("User Pressed: " + e.Key.ToString() + " which maps to character: " + e.Character.ToString(), LogColors.GameImportant);
-        }*/
+            UnloadLibraries();
+            Game.Exit();
+            Environment.Exit(0);
+        }
+
+        /// <summary>
+        ///     Unloads all third-party libraries such as BASS, Discord RPC, and Steam    
+        /// </summary>
+        internal static void UnloadLibraries()
+        {
+            try
+            {
+                Bass.Free();
+                DiscordRPC.Shutdown();
+
+                if (SteamAPIHelper.IsInitialized)
+                    SteamAPI.Shutdown();
+            }
+            catch (Exception e)
+            {
+            }
+        }
     }
 }
