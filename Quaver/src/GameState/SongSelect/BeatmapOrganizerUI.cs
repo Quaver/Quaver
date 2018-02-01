@@ -148,7 +148,7 @@ namespace Quaver.GameState.SongSelect
                 SongManager.ReloadSong(true);
 
             // Load background asynchronously if the backgrounds actually do differ
-            if (oldMapBgPath != map.Directory + "/" + map.BackgroundPath)
+            if (oldMapBgPath != map.Directory + "/" + map.BackgroundPath || map.IsOsuMap)
             {
                 Task.Run(() =>
                 {
