@@ -63,7 +63,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal float PlayfieldSize { get; set; }
         internal float BarOffset { get; set; } //todo: move this to bar manager
 
-
         /// <summary>
         ///     Constructor
         /// </summary>
