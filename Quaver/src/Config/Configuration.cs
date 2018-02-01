@@ -63,6 +63,12 @@ namespace Quaver.Config
         internal static string SongDirectory { get => _songDirectory; set { _songDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
+        ///     The path of the osu!.db file
+        /// </summary>
+        private static string _osuDbPath;
+        internal static string OsuDbPath { get => _osuDbPath; set { _osuDbPath = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
         ///     The username of the user.
         /// </summary>
         private static string _username = "";
@@ -386,6 +392,7 @@ namespace Quaver.Config
             _logsDirectory = ConfigHelper.ReadDirectory(LogsDirectory, data["LogsDirectory"]);
             _dataDirectory = ConfigHelper.ReadDirectory(DataDirectory, data["DataDirectory"]);
             _songDirectory = ConfigHelper.ReadDirectory(SongDirectory, data["SongDirectory"]);
+            _osuDbPath = ConfigHelper.ReadPath(OsuDbPath, data["OsuDbPath"]);
             _username = ConfigHelper.ReadString(Username, data["Username"]);
             _volumeGlobal = ConfigHelper.ReadPercentage(VolumeGlobal, data["VolumeGlobal"]);
             _volumeEffect = ConfigHelper.ReadPercentage(VolumeEffect, data["VolumeEffect"]);
