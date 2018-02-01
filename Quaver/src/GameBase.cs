@@ -25,6 +25,7 @@ using Quaver.Modifiers;
 using Quaver.Utility;
 using Quaver.Input;
 using Quaver.Graphics.GameOverlay;
+using Quaver.Steam;
 
 namespace Quaver
 {
