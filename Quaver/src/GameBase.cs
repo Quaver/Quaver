@@ -111,6 +111,11 @@ namespace Quaver
         /// </summary>
         public static Point ReferenceResolution { get; } = new Point(1280, 720);
 
+        /// <summary>
+        ///     The osu! Songs folder path
+        /// </summary>
+        public static string OsuSongsFolder { get; set; }
+
         /*
         /// <summary>
         ///     The rectangle this game will be rendered onto

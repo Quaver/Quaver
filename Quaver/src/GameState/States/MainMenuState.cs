@@ -102,6 +102,10 @@ namespace Quaver.GameState.States
             CreateMenuButtons();
             CreateQpExportButton();
 
+            // Load and change background after import
+            BackgroundManager.LoadBackground();
+            BackgroundManager.Change(GameBase.CurrentBackground);
+
             UpdateReady = true;
         }
 

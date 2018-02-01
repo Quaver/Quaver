@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using osu.Shared;
+using osu_database_reader.BinaryFiles;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Commands;
 using Quaver.Database.Beatmaps;
@@ -50,6 +53,9 @@ namespace Quaver.Database
                 // Fetch all the new beatmaps after syncing and return them.
                 var beatmaps = await FetchAllBeatmaps();
                 Logger.Log($"{beatmaps.Count} beatmaps have been successfully loaded.", Color.Cyan);
+
+                if (Configuration.AutoLoadOsuBeatmaps)
+                    beatmaps = beatmaps.Concat(LoadBeatmapsFromOsuDb()).ToList();
 
                 var maps = BeatmapUtils.GroupBeatmapsByDirectory(beatmaps);
                 Logger.Log($"Successfully loaded {beatmaps.Count} in {maps.Count} directories.", Color.Cyan);
@@ -377,6 +383,59 @@ namespace Quaver.Database
             {
                 Logger.Log(e.Message, LogColors.GameError);
                 throw;
+            }
+        }
+
+        /// <summary>
+        ///     Loads all osu! beatmaps from the osu!.db file
+        /// </summary>
+        private static List<Beatmap> LoadBeatmapsFromOsuDb()
+        {
+            try
+            {
+                var db = OsuDb.Read(Configuration.OsuDbPath);
+                GameBase.OsuSongsFolder = Path.GetDirectoryName(Configuration.OsuDbPath) + "/Songs/";
+
+                var beatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && (x.CircleSize == 4 || x.CircleSize == 7)).ToList();
+
+                var maps = new List<Beatmap>();
+
+                foreach (var beatmap in beatmaps)
+                {
+                    var newMap = new Beatmap
+                    {
+                        Md5Checksum = beatmap.BeatmapChecksum,
+                        Directory = beatmap.FolderName,
+                        Path = beatmap.BeatmapFileName,
+                        Artist = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.Artist)),
+                        Title = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.Title)),
+                        MapSetId = -1,
+                        MapId = -1,
+                        DifficultyName = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.Version)),
+                        RankedStatus = 0,
+                        DifficultyRating = 0,
+                        Creator = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.Creator)),
+                        AudioPath = beatmap.AudioFileName,
+                        AudioPreviewTime = beatmap.AudioPreviewTime,
+                        Description = $"This map is a Quaver converted version of {Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.Creator))}'s map",
+                        Source = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.SongSource)),
+                        Tags = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.SongTags)),
+                        Mode = (beatmap.CircleSize == 4) ? GameModes.Keys4 : GameModes.Keys7,
+                        SongLength = beatmap.TotalTime,
+                        IsOsuMap = true,
+                        BackgroundPath = ""
+                    };
+
+                    maps.Add(newMap);
+                }
+
+                Logger.Log($"Finished loading: {beatmaps.Count} osu!mania beatmaps", LogColors.GameSuccess);
+                return maps;
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message, LogColors.GameError);
+                return new List<Beatmap>();
             }
         }
     }

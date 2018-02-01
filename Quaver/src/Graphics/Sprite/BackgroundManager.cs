@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Osu;
 using Quaver.Config;
 using Quaver.Graphics;
 
@@ -161,6 +162,13 @@ namespace Quaver.Graphics.Sprite
                 GameBase.CurrentBackground.Dispose();
 
             var bgPath = Configuration.SongDirectory + "/" + GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.BackgroundPath;
+
+            if (GameBase.SelectedBeatmap.IsOsuMap)
+            {
+                // Parse the map and get the background
+                var osu = new PeppyBeatmap(GameBase.OsuSongsFolder + GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.Path);
+                bgPath = $@"{GameBase.OsuSongsFolder}/{GameBase.SelectedBeatmap.Directory}/{osu.Background}";
+            }
 
             if (!File.Exists(bgPath))
                 return;
