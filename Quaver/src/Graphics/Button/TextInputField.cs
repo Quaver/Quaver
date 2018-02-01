@@ -27,6 +27,7 @@ namespace Quaver.Graphics.Button
 
         /// <summary>
         ///     The place holder text for the input field
+        ///     TODO: This should NOT be the actual text that is in the box. Currently it is treated as the actual text.
         /// </summary>
         internal string PlaceHolderText { get; private set; }
 
@@ -51,26 +52,37 @@ namespace Quaver.Graphics.Button
         private bool TextHighlighted { get; set; }
 
         /// <summary>
-        ///     This event gets called everytime player finishes inputting into the field.
+        ///     A function must be passed into TextInputField upon creation to determine what happens when it 
+        ///     is submitted
         /// </summary>
-        internal event EventHandler InputFinished;
+        internal delegate void TextBoxSubmittedDelegate(string text);
+
+        /// <summary>
+        ///     Reference to the method that will be called on submission.
+        /// </summary>
+        internal TextBoxSubmittedDelegate OnTextInputSubmit;
 
         /// <summary>
         ///     Ctor - Creates the text box
         /// </summary>
         /// <param name="ButtonSize"></param>
         /// <param name="placeHolderText"></param>
-        internal TextInputField(Vector2 ButtonSize, string placeHolderText)
+        /// <param name="onTextInputSubmit"></param>
+        internal TextInputField(Vector2 ButtonSize, string placeHolderText, TextBoxSubmittedDelegate onTextInputSubmit)
         {
+            // Set the reference to the method that will be called on submit
+            OnTextInputSubmit = onTextInputSubmit;
+
             TextSprite = new TextBoxSprite()
             {
-                Text = placeHolderText,
+                Text = string.Empty,
                 Size = new UDim2(ButtonSize.X - 8, ButtonSize.Y - 4),
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.BotLeft,
                 TextBoxStyle = TextBoxStyle.WordwrapSingleLine,
                 Parent = this
             };
+
             Size.X.Offset = ButtonSize.X;
             Size.Y.Offset = ButtonSize.Y;
             Image = GameBase.UI.BlankBox;
@@ -181,14 +193,17 @@ namespace Quaver.Graphics.Button
                             CurrentTextField.Length--;
                             TextSprite.Text = CurrentTextField.ToString();
                             break;
-
-                        // Trigger Event if Input Finished (enter key)
+                        
+                        // On Submit
                         case Keys.Enter:
-                            // Trigger Input Finished Event
-                            InputFinished?.Invoke(this, new StringInputEventArgs(CurrentTextField.ToString()));
+                            if (string.IsNullOrEmpty(TextSprite.Text))
+                                return;
+
+                            // Run the callback function that was passed in.
+                            OnTextInputSubmit(TextSprite.Text);
 
                             // Reset textfield and reset text to placeholder
-                            TextSprite.Text = PlaceHolderText;
+                            TextSprite.Text = string.Empty;
                             CurrentTextField.Clear();
                             UnSelect();
                             break;
