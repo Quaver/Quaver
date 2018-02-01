@@ -97,8 +97,8 @@ namespace Quaver.Steam
                 "In order to test Steam features in debug mode, you'll need to have a steam_appid.txt file. " +
                 "One has already been created for you, and the program will now restart");
 #endif
-
-            Environment.Exit(0);
+            // Quit game
+            QuaverGame.Quit();
         }
     }
 }
