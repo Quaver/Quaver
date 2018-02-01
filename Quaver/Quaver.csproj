@@ -184,46 +184,6 @@
     <Compile Include="src\Utility\FpsCounter.cs" />
     <Compile Include="src\Utility\ImageLoader.cs" />
     <Compile Include="src\Utility\JsonResourceReader.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\BinaryFiles\CollectionDb.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\BinaryFiles\OsuDb.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\BinaryFiles\PresenceDb.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\BinaryFiles\ScoresDb.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\Beatmaps\BeatmapEntry.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\Beatmaps\Collection.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\Beatmaps\TimingPoint.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\HitObjects\HitObject.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\HitObjects\HitObjectCircle.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\HitObjects\HitObjectSlider.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\HitObjects\HitObjectSpinner.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\Player\PlayerPresence.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\Player\Replay.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\Vector2.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Constants.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Enums_Beatmaps.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Extensions.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\TextFiles\BeatmapFile.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu.Shared\Enums_Beatmaps.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu.Shared\Enums_Common.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu.Shared\Serialization\ISerializable.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu.Shared\Serialization\SerializationReader.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu.Shared\Serialization\SerializationWriter.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu.Shared\Serialization\TypeBytes.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Common\CommandLineParser.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Common\CRC.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Common\InBuffer.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Common\OutBuffer.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZMA\LzmaBase.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZMA\LzmaDecoder.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZMA\LzmaEncoder.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZ\IMatchFinder.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZ\LzBinTree.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZ\LzInWindow.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZ\LzOutWindow.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\RangeCoder\RangeCoder.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\RangeCoder\RangeCoderBit.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\RangeCoder\RangeCoderBitTree.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\ICoder.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\SevenZipHelper.cs" />
     <Compile Include="src\Utility\Util.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +205,12 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="osu-database-reader, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HoLLy.osu.DatabaseReader.2.1.0\lib\net40\osu-database-reader.dll</HintPath>
+    </Reference>
+    <Reference Include="osu.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\osu.Shared.1.0.2\lib\net20\osu.Shared.dll</HintPath>
     </Reference>
     <Reference Include="SQLite-net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\sqlite-net-pcl.1.4.118\lib\netstandard1.1\SQLite-net.dll</HintPath>
@@ -524,7 +490,9 @@
       <Name>Quaver-API</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="src\Utility\Libs\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.5\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.5\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" />
