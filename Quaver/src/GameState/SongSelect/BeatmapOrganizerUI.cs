@@ -138,8 +138,6 @@ namespace Quaver.GameState.SongSelect
             SelectedMapIndex = index;
             TargetPosition = (GameBase.WindowRectangle.Height / 2f) - ((float)index / SongSelectButtons.Count) * OrganizerSize;
 
-            // Get the background path from the previous map
-            var oldMapBgPath = GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.BackgroundPath;
             var oldMapAudioPath = GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.AudioPath;
             Beatmap.ChangeBeatmap(map);
 
@@ -148,12 +146,10 @@ namespace Quaver.GameState.SongSelect
                 SongManager.ReloadSong(true);
 
             // Load background asynchronously if the backgrounds actually do differ
-            if (oldMapBgPath != map.Directory + "/" + map.BackgroundPath || map.IsOsuMap)
+            if (GameBase.LastBackgroundPath != map.Directory + "/" + map.BackgroundPath)
             {
                 Task.Run(() =>
                 {
-                    // Fade effect and make the current bg go black while we load the next bg.
-                    BackgroundManager.Blacken();
                     BackgroundManager.LoadBackground();
                 }).ContinueWith(t =>
                 {
