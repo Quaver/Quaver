@@ -210,7 +210,7 @@ namespace Quaver.Commands
             argsList.RemoveAt(0);
             var path = string.Join(" ", argsList);
 
-            var extractPath = $@"{Config.Configuration.DataDirectory}/Temp/{Path.GetFileNameWithoutExtension(path)}/";
+            var extractPath = $@"{Configuration.DataDirectory}/Temp/{Path.GetFileNameWithoutExtension(path)}/";
             Directory.CreateDirectory(extractPath);
           
             try
@@ -229,16 +229,20 @@ namespace Quaver.Commands
 
                 foreach (var map in QuaverOsuSkinMap)
                 {
+                    // The extension for the file we'll look for based on the element type
+                    var extension = (map.Type == ElementType.Image || map.Type == ElementType.AnimatableImage) ? ".png" : ".wav";
+
+                    // The full path of the osu! skin file
+                    var fullPath = extractPath + map.OsuElement.ToLower() + extension;
+
+                    // The base path of the new Quaver skin file.
+                    var newPath = newSkinDirPath + "/" + map.QuaverElement + extension;
+
                     switch (map.Type)
                     {
+                        // .wav audio files
                         case ElementType.Sound:
-                        case ElementType.Image:
-                            var extension = map.Type == ElementType.Image ? ".png" : ".wav";
-
-                            var fullPath = extractPath + map.OsuElement.ToLower() + extension;
                             if (!File.Exists(fullPath)) continue;
-
-                            var newPath = newSkinDirPath + "/" + map.QuaverElement + extension;
 
                             // Convert .wav files to 16-bit
                             try
@@ -255,32 +259,34 @@ namespace Quaver.Commands
                                     }
                                 }
                             }
-                            catch (Exception e) { continue; }
-
+                            catch (Exception e) { Logger.Log(e.Message, LogColors.GameError); }
+                            break;
+                        // .png image files
+                        case ElementType.Image:
+                            if (!File.Exists(fullPath)) continue;
                             File.Copy(fullPath, newPath, true);
                             break;
+                        // .png animation element image files
                         case ElementType.AnimatableImage:
-                            const string extensionAnim = ".png";
-
                             // Copy animation elements over until the sequence is broken
-                            for (var i = 0; File.Exists(extractPath + map.OsuElement.ToLower() + "-" + i + extensionAnim); i++)
+                            for (var i = 0; File.Exists(extractPath + map.OsuElement.ToLower() + "-" + i + extension); i++)
                             {
-                                var quaverPath = "";
-
                                 if (i == 0)
                                     // element (It's just the element name if it's the first animation frame.)
-                                    quaverPath = newSkinDirPath + "/" + map.QuaverElement + extensionAnim;
+                                    newPath = newSkinDirPath + "/" + map.QuaverElement + extension;
                                 else
                                     // element@1 (It contains @i if the element frame isn't the first one.)
-                                    quaverPath = newSkinDirPath + "/" + map.QuaverElement + "@" + i + extensionAnim;
+                                    newPath = newSkinDirPath + "/" + map.QuaverElement + "@" + i + extension;
 
-                                File.Copy(extractPath + map.OsuElement.ToLower() + "-" + i + extensionAnim, quaverPath, true);
+                                File.Copy(extractPath + map.OsuElement.ToLower() + "-" + i + extension, newPath, true);
                             }
                             break;
                         default:
                             continue;
                     }
                 }
+
+                Logger.Log("Finished copying over default skin elements. Now proceeding to read skin.ini...", LogColors.GameInfo);
             }
             catch (Exception e)
             {
