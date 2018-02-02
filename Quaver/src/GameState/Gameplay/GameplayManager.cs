@@ -333,9 +333,10 @@ namespace Quaver.GameState.Gameplay
                     Playfield.ColumnLightingPosition = Config.Configuration.DownScroll4k
                         ? Playfield.ReceptorYPosition
                         : Playfield.ReceptorYPosition
-                        - GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
+                        + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
                         * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
                         - ((double)GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
+                    Console.WriteLine(Playfield.ColumnLightingPosition);
 
                     // Update Note Manager
                     NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed4k / (20f * GameBase.GameClock);
@@ -366,7 +367,7 @@ namespace Quaver.GameState.Gameplay
                     Playfield.ColumnLightingPosition = Config.Configuration.DownScroll7k
                         ? Playfield.ReceptorYPosition
                         : Playfield.ReceptorYPosition 
-                        - GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
+                        + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
                         * ((GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
                         - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
 
