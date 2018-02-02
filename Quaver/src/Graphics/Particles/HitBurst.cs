@@ -101,7 +101,7 @@ namespace Quaver.Graphics.Particles
             }
 
             // Update Objects
-            HitBurstSprite.ScaleX = 1 + (timeRatio * MaxScale);
+            HitBurstSprite.ScaleX = (float)(1 + Math.Pow(timeRatio * MaxScale, 0.5));
             HitBurstSprite.ScaleY = HitBurstSprite.ScaleX;
             HitBurstSprite.Alpha = 1 - timeRatio;
 
