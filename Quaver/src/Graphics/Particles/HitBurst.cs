@@ -96,7 +96,7 @@ namespace Quaver.Graphics.Particles
             // Destroy itself if time elapsed over DISPLAY_TIME duration.
             if (TimeElapsed > DisplayTime)
             {
-                HitBurstSprite.Destroy();
+                DestroyReady = true;
                 return;
             }
 
