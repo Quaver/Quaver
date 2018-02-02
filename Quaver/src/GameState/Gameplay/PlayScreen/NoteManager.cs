@@ -176,7 +176,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 }
 
                 // Initialize Object and add it to HitObjectPool
-                if (i < HitObjectPoolSize) newObject.Initialize(DownScroll, qua.HitObjects[i].EndTime > 0, Boundary, GameBase.SelectedBeatmap.Qua.Mode);
+                if (i < HitObjectPoolSize) newObject.Initialize(DownScroll, qua.HitObjects[i].EndTime > 0, Boundary);
                     HitObjectPool.Add(newObject);
             }
 
@@ -508,7 +508,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         internal void CreateNote()
         {
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(DownScroll, HitObjectPool[HitObjectPoolSize - 1].EndTime > 0, Boundary, GameBase.SelectedBeatmap.Qua.Mode);
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(DownScroll, HitObjectPool[HitObjectPoolSize - 1].EndTime > 0, Boundary);
         }
     }
 }
