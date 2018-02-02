@@ -19,6 +19,7 @@ using Quaver.Config;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Discord;
 using Quaver.API.Enums;
+using Quaver.Graphics.Particles;
 
 namespace Quaver.GameState.Gameplay
 {

@@ -150,7 +150,7 @@
     <Compile Include="src\GameState\Gameplay\GameplayReferences.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\AccuracyBoxUI.cs" />
     <Compile Include="src\GameState\Gameplay\GameplayData.cs" />
-    <Compile Include="src\GameState\Gameplay\PlayScreen\HitBurst.cs" />
+    <Compile Include="src\Graphics\Particles\HitBurst.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\MeasureBarManager.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\ParticleManager.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\PlayfieldUI.cs" />
@@ -172,6 +172,7 @@
     <Compile Include="src\Graphics\GameOverlay\GameOverlay.cs" />
     <Compile Include="src\Graphics\GameOverlay\IGameOverlayComponent.cs" />
     <Compile Include="src\Graphics\GameOverlay\MenuOverlay.cs" />
+    <Compile Include="src\Graphics\Particles\Particle.cs" />
     <Compile Include="src\Graphics\Sprite\BarDisplay.cs" />
     <Compile Include="src\Graphics\Sprite\BakeableSprite.cs" />
     <Compile Include="src\Graphics\Sprite\Boundary.cs" />
