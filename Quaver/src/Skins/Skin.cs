@@ -185,7 +185,6 @@ namespace Quaver.Skins
         internal Texture2D GradeSmallSS { get; set; }
         internal Texture2D GradeSmallX { get; set; }
         internal Texture2D GradeSmallXX { get; set; }
-        internal Texture2D GradeSmallXXX { get; set; }
 
         /// <summary>
         ///     Judge
@@ -273,7 +272,6 @@ namespace Quaver.Skins
                 @"grade-small-ss",
                 @"grade-small-x",
                 @"grade-small-xx",
-                @"grade-small-xxx",
 
                 // 4k Hit Object Hold Ends
                 @"4k-note-holdend-1",
@@ -516,9 +514,6 @@ namespace Quaver.Skins
                         break;
                     case @"grade-small-xx":
                         GradeSmallXX = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"grade-small-xxx":
-                        GradeSmallXXX = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-holdend-1":
                         NoteHoldEnds4K[0] = LoadIndividualElement(element, skinElementPath);
