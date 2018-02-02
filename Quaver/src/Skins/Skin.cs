@@ -53,16 +53,19 @@ namespace Quaver.Skins
         internal int NotePadding7K { get; set; }
 
         /// <summary>
-        /// Size of each lane in pixels.
+        ///     Size of each lane in pixels.
         /// </summary>
         internal int ColumnSize4K { get; set; }
         internal int ColumnSize7K { get; set; }
 
+        /// <summary>
+        ///     Hit Position for hit objects.
+        /// </summary>
         internal int SkinHitPositionOffset4K { get; set; }
         internal int SkinHitPositionOffset7K { get; set; }
 
         /// <summary>
-        /// The offset of the hit receptor
+        ///     The offset of the hit receptor
         /// </summary>
         internal int ReceptorYOffset4K { get; set; }
         internal int ReceptorYOffset7K { get; set; }
@@ -122,11 +125,20 @@ namespace Quaver.Skins
         internal Texture2D ColumnBgMask4K { get; set; }
         internal Texture2D ColumnBgMask7K { get; set; }
 
+        /// <summary>
+        ///     Hit Lighting Sprites
+        /// </summary>
         internal Texture2D[] ColumnHitLighting4K { get; set; } = new Texture2D[4];
         internal Texture2D[] ColumnHitLighting7K { get; set; } = new Texture2D[7];
 
+        /// <summary>
+        ///     Timing bar Sprite
+        /// </summary>
         internal Texture2D ColumnTimingBar { get; set; }
 
+        /// <summary>
+        ///     Stage Sprite. Is displayed on the left side of the stage.
+        /// </summary>
         internal Texture2D StageLeftBorder { get; set; }
         internal Texture2D StageRightBorder { get; set; }
         internal Texture2D StageHitPositionOverlay { get; set; }
@@ -205,14 +217,29 @@ namespace Quaver.Skins
         {
                 @"column-bgmask",
                 @"column-timingbar",
-                @"4k-column-hitlighting",
-                @"7k-column-hitlighting",
+                //@"4k-column-hitlighting",
+                //@"7k-column-hitlighting",
 
                 // Stage
                 @"stage-left-border",
                 @"stage-right-border",
                 @"stage-hitposition-overlay",
                 @"stage-distant-overlay",
+
+                // 4k Hit Lighting
+                @"4k-column-hitlighting-1",
+                @"4k-column-hitlighting-2",
+                @"4k-column-hitlighting-3",
+                @"4k-column-hitlighting-4",
+
+                // 7k Hit Lighting
+                @"7k-column-hitlighting-1",
+                @"7k-column-hitlighting-2",
+                @"7k-column-hitlighting-3",
+                @"7k-column-hitlighting-4",
+                @"7k-column-hitlighting-5",
+                @"7k-column-hitlighting-6",
+                @"7k-column-hitlighting-7",
 
                 // 4k HitBurst
                 @"4k-note-hitburst-1",

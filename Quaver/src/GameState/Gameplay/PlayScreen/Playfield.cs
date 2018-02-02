@@ -25,6 +25,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal Sprite[] Receptors { get; set; }
 
         /// <summary>
+        ///     The Hit Lighting Sprites. Will be visible when designated key is held down.
+        /// </summary>
+        internal Sprite[] HitLightingObjects { get; set; }
+
+        /// <summary>
         ///     The first layer of the playfield. Used to render receptors/FX
         /// </summary>
         private Boundary ReceptorBoundary { get; set; }
@@ -40,6 +45,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal float PlayfieldPadding { get; set; }
 
         internal float ReceptorYOffset { get; set; }
+
+        private bool[] HitLightingActive { get; set; }
+
+        private float[] HitLightingAnimation { get; set; }
 
 
         /// <summary>
@@ -100,38 +109,74 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 case GameModes.Keys4:
                     Receptors = new Sprite[4];
+                    HitLightingObjects = new Sprite[4];
+                    HitLightingActive = new bool[4];
+                    HitLightingAnimation = new float[4];
+                    for (var i = 0; i < Receptors.Length; i++)
+                    {
+                        // Set ReceptorXPos 
+                        GameplayReferences.ReceptorXPosition[i] = ((LaneSize + ReceptorPadding) * i) + PlayfieldPadding;
+
+                        // Create receptor Sprite
+                        Receptors[i] = new Sprite
+                        {
+                            Size = new UDim2(LaneSize, LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width),
+                            Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYOffset),
+                            Alignment = Alignment.TopLeft,
+                            Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i],
+                            Parent = ReceptorBoundary
+                        };
+
+                        // Create hit lighting sprite
+                        var hitLightingSize = LaneSize * GameBase.LoadedSkin.ColumnHitLighting4K[i].Height / GameBase.LoadedSkin.ColumnHitLighting4K[i].Width;
+                        HitLightingObjects[i] = new Sprite
+                        {
+                            Image = GameBase.LoadedSkin.ColumnHitLighting4K[i],
+                            Size = new UDim2(LaneSize, hitLightingSize * GameBase.LoadedSkin.HitLightingScale),
+                            Alpha = 0.25f,
+                            PosX = GameplayReferences.ReceptorXPosition[i],
+                            PosY = Config.Configuration.DownScroll4k ? ReceptorYOffset - hitLightingSize : ReceptorYOffset + hitLightingSize,
+                            SpriteEffect = Config.Configuration.DownScroll4k ? SpriteEffects.None : SpriteEffects.FlipVertically,
+                            Alignment = Config.Configuration.DownScroll4k ? Alignment.TopLeft : Alignment.BotLeft,
+                            Parent = BackgroundBoundary
+                        };
+                    }
                     break;
                 case GameModes.Keys7:
                     Receptors = new Sprite[7];
+                    HitLightingObjects = new Sprite[7];
+                    HitLightingActive = new bool[7];
+                    HitLightingAnimation = new float[7];
+                    for (var i = 0; i < Receptors.Length; i++)
+                    {
+                        // Set ReceptorXPos 
+                        GameplayReferences.ReceptorXPosition[i] = ((LaneSize + ReceptorPadding) * i) + PlayfieldPadding;
+
+                        // Create receptor Sprite
+                        Receptors[i] = new Sprite
+                        {
+                            Size = new UDim2(LaneSize, LaneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width),
+                            Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYOffset),
+                            Alignment = Alignment.TopLeft,
+                            Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i],
+                            Parent = ReceptorBoundary
+                        };
+
+                        // Create hit lighting sprite
+                        var hitLightingSize = LaneSize * GameBase.LoadedSkin.ColumnHitLighting7K[i].Height / GameBase.LoadedSkin.ColumnHitLighting7K[i].Width;
+                        HitLightingObjects[i] = new Sprite
+                        {
+                            Image = GameBase.LoadedSkin.ColumnHitLighting7K[i],
+                            Size = new UDim2(LaneSize, hitLightingSize * GameBase.LoadedSkin.HitLightingScale),
+                            Alpha = 0.25f,
+                            PosX = GameplayReferences.ReceptorXPosition[i],
+                            PosY = Config.Configuration.DownScroll7k ? ReceptorYOffset - hitLightingSize : ReceptorYOffset + hitLightingSize,
+                            SpriteEffect = Config.Configuration.DownScroll7k ? SpriteEffects.None : SpriteEffects.FlipVertically,
+                            Alignment = Config.Configuration.DownScroll7k ? Alignment.TopLeft : Alignment.BotLeft,
+                            Parent = BackgroundBoundary
+                        };
+                    }
                     break;
-            }
-
-            for (var i = 0; i < Receptors.Length; i++)
-            {
-                // Set ReceptorXPos 
-                GameplayReferences.ReceptorXPosition[i] = ((LaneSize + ReceptorPadding) * i) + PlayfieldPadding;
-
-                // Create new Receptor Sprite
-                Receptors[i] = new Sprite
-                {
-                    Size = new UDim2(LaneSize, 0),
-                    Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYOffset),
-                    Alignment = Alignment.TopLeft,
-                    Parent = ReceptorBoundary
-                };
-
-                // Set current receptor's image based on the current key count.
-                switch (GameBase.SelectedBeatmap.Qua.Mode)
-                {
-                    case GameModes.Keys4:
-                        Receptors[i].Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i];
-                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width;
-                        break;
-                    case GameModes.Keys7:
-                        Receptors[i].Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i];
-                        Receptors[i].SizeY = LaneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width;
-                        break;
-                }
             }
         }
 
@@ -151,6 +196,18 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <param name="dt"></param>
         public void Update(double dt)
         {
+            for (var i = 0; i < HitLightingActive.Length; i++)
+            {
+                // Update HitLighting Animation
+                if (HitLightingActive[i])
+                    HitLightingAnimation[i] = Util.Tween(1, HitLightingAnimation[i], Math.Min(dt / 2, 1));
+                else
+                    HitLightingAnimation[i] = Util.Tween(0, HitLightingAnimation[i], Math.Min(dt / 60, 1));
+
+                // Update Hit Lighting Object
+                HitLightingObjects[i].Alpha = HitLightingAnimation[i];
+            }
+
             ReceptorBoundary.Update(dt);
             BackgroundBoundary.Update(dt);
         }
@@ -167,38 +224,38 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         /// Gets called whenever a key gets pressed. This method updates the receptor state.
         /// </summary>
-        /// <param name="curReceptor"></param>
-        public bool UpdateReceptor(int curReceptor, bool keyDown)
+        /// <param name="keyIndex"></param>
+        public void UpdateReceptor(int keyIndex, bool keyDown)
         {
-            if (keyDown)
+            switch (GameBase.SelectedBeatmap.Qua.Mode)
             {
-                //TODO: CHANGE TO RECEPTOR_DOWN SKIN LATER WHEN RECEPTOR IS PRESSED
-                //Receptors[curReceptor].Image = GameBase.LoadedSkin.ColumnHitLighting;
-                switch (GameBase.SelectedBeatmap.Qua.Mode)
-                {
-                    case GameModes.Keys4:
-                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptorsDown4K[curReceptor];
-                        break;
-                    case GameModes.Keys7:
-                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptorsDown7K[curReceptor];
-                        break;
-                }
+                case GameModes.Keys4:
+                    if (keyDown)
+                    {
+                        Receptors[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsDown4K[keyIndex];
+                        HitLightingActive[keyIndex] = true;
+                        HitLightingAnimation[keyIndex] = 1;
+                    }
+                    else
+                    {
+                        Receptors[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsUp4K[keyIndex];
+                        HitLightingActive[keyIndex] = false;
+                    }
+                    break;
+                case GameModes.Keys7:
+                    if (keyDown)
+                    {
+                        Receptors[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsDown7K[keyIndex];
+                        HitLightingActive[keyIndex] = true;
+                        HitLightingAnimation[keyIndex] = 1;
+                    }
+                    else
+                    {
+                        Receptors[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsUp7K[keyIndex];
+                        HitLightingActive[keyIndex] = false;
+                    }
+                    break;
             }
-            else
-            {
-                // Set current receptor's image based on the current key count.
-                switch (GameBase.SelectedBeatmap.Qua.Mode)
-                {
-                    case GameModes.Keys4:
-                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptorsUp4K[curReceptor];
-                        break;
-                    case GameModes.Keys7:
-                        Receptors[curReceptor].Image = GameBase.LoadedSkin.NoteReceptorsUp7K[curReceptor];
-                        break;
-                }
-            }
-
-            return true;
         }
     }
 }
