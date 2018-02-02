@@ -95,17 +95,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Alignment = Alignment.TopCenter
             };
 
-            // Create BG Mask
-            var bgMask = new Sprite()
-            {
-                //Image = GameBase.LoadedSkin.ColumnBgMask,
-                Tint = Color.Black, //todo: remove
-                Alpha = 0.8f, //todo: remove
-                Size = new UDim2(PlayfieldSize, GameBase.WindowRectangle.Height),
-                Alignment = Alignment.TopCenter,
-                Parent = BackgroundBoundary
-            };
-
             // Create Stage Left
             var borderSize = GameBase.LoadedSkin.StageLeftBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageLeftBorder.Height;
             var stage = new Sprite()
@@ -158,11 +147,24 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Image = GameBase.LoadedSkin.ColumnLighting4K,
                             Size = new UDim2(LaneSize, columnLightingSize * GameBase.LoadedSkin.ColumnLightingScale),
                             Tint = GameBase.LoadedSkin.ColumnColors4K[i],
-                            Alpha = 0.25f,
                             PosX = GameplayReferences.ReceptorXPosition[i],
                             PosY = Config.Configuration.DownScroll4k ? ReceptorYOffset - columnLightingSize : ReceptorYOffset + columnLightingSize,
                             SpriteEffect = Config.Configuration.DownScroll4k ? SpriteEffects.None : SpriteEffects.FlipVertically,
                             Alignment = Config.Configuration.DownScroll4k ? Alignment.TopLeft : Alignment.BotLeft,
+                            Parent = BackgroundBoundary
+                        };
+
+                        // Create BG Mask
+                        double imageRatio = (double)GameBase.LoadedSkin.StageBgMask4K.Width / GameBase.LoadedSkin.StageBgMask4K.Height;
+                        double columnRatio = PlayfieldSize / GameBase.WindowRectangle.Height;
+                        float bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
+
+                        var bgMask = new Sprite()
+                        {
+                            Image = GameBase.LoadedSkin.StageBgMask4K,
+                            Alpha = GameBase.LoadedSkin.BgMaskAlpha,
+                            Size = new UDim2(PlayfieldSize, bgMaskSize),
+                            Alignment = Alignment.MidCenter,
                             Parent = BackgroundBoundary
                         };
                     }
@@ -194,11 +196,24 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Image = GameBase.LoadedSkin.ColumnLighting7K,
                             Size = new UDim2(LaneSize, columnLightingSize * GameBase.LoadedSkin.ColumnLightingScale),
                             Tint = GameBase.LoadedSkin.ColumnColors7K[i],
-                            Alpha = 0.25f,
                             PosX = GameplayReferences.ReceptorXPosition[i],
                             PosY = Config.Configuration.DownScroll7k ? ReceptorYOffset - columnLightingSize : ReceptorYOffset + columnLightingSize,
                             SpriteEffect = Config.Configuration.DownScroll7k ? SpriteEffects.None : SpriteEffects.FlipVertically,
                             Alignment = Config.Configuration.DownScroll7k ? Alignment.TopLeft : Alignment.BotLeft,
+                            Parent = BackgroundBoundary
+                        };
+
+                        // Create BG Mask
+                        double imageRatio = (double)GameBase.LoadedSkin.StageBgMask7K.Width / GameBase.LoadedSkin.StageBgMask7K.Height;
+                        double columnRatio = PlayfieldSize / GameBase.WindowRectangle.Height;
+                        float bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
+
+                        var bgMask = new Sprite()
+                        {
+                            Image = GameBase.LoadedSkin.StageBgMask7K,
+                            Alpha = GameBase.LoadedSkin.BgMaskAlpha,
+                            Size = new UDim2(PlayfieldSize, bgMaskSize),
+                            Alignment = Alignment.MidCenter,
                             Parent = BackgroundBoundary
                         };
                     }
