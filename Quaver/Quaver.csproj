@@ -152,7 +152,7 @@
     <Compile Include="src\GameState\Gameplay\GameplayData.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\HitBurst.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\MeasureBarManager.cs" />
-    <Compile Include="src\GameState\Gameplay\PlayScreen\ParticleEffects.cs" />
+    <Compile Include="src\GameState\Gameplay\PlayScreen\ParticleManager.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\PlayfieldUI.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\SongProgressUI.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\ScoreProgressUI.cs" />

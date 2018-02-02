@@ -10,17 +10,12 @@ using System.Threading.Tasks;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
-    class HitBurst
+    class HitBurst : Boundary
     {
         /// <summary>
         ///     Determines how long the sprite will be visible for in miliseconds
         /// </summary>
         private const double DISPLAY_TIME = 500;
-
-        /// <summary>
-        ///     Hit Burst Sprite's parent. Used for alignment
-        /// </summary>
-        private Boundary Boundary { get; set; }
 
         /// <summary>
         ///     The Hit Burst Sprite. Will be animated.
@@ -40,19 +35,16 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <param name="keyLane"></param>
         public HitBurst(DrawRectangle rect, Drawable parent, int keyLane)
         {
-            // Create boundary and hit burst sprite
-            Boundary = new Boundary()
-            {
-                Size = new UDim2(rect.Width, rect.Height),
-                Position = new UDim2(rect.X, rect.Y),
-                Parent = parent
-            };
+            // Update Size + Position
+            Position = new UDim2(rect.X, rect.Y);
+            Size = new UDim2(rect.Width, rect.Height);
+            Parent = parent;
 
             HitBurstSprite = new Sprite()
             {
                 Alignment = Alignment.MidCenter,
-                Size = new UDim2(rect.Width, rect.Height, 0, 0),
-                Parent = parent
+                Size = new UDim2(0, 0, 1, 1),
+                Parent = this
             };
 
             // Choose the correct image based on the specific key lane.
@@ -65,28 +57,28 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     HitBurstSprite.Image = GameBase.LoadedSkin.NoteHitBursts7K[keyLane];
                     break;
             }
-        }
 
-        /// <summary>
-        ///     Destroys this class
-        /// </summary>
-        public void UnloadContent()
-        {
-            Boundary.Destroy();
+            // Update Hit Burst Size
+            HitBurstSprite.Size = new UDim2(rect.Width, rect.Height);
         }
 
         /// <summary>
         ///     Updates Hit Burst Sprite.
         /// </summary>
         /// <param name="dt"></param>
-        public void Update(double dt)
+        internal override void Update(double dt)
         {
             // Update Time Elapsed + Hit Burst Sprite
             timeElapsed += dt;
-            HitBurstSprite.Update(dt);
+
+            // Update Objects
+            base.Update(dt);
 
             // Destroy itself if time elapsed over DISPLAY_TIME duration.
-            if (timeElapsed > DISPLAY_TIME) UnloadContent();
+            if (timeElapsed > DISPLAY_TIME)
+            {
+                HitBurstSprite.Destroy();
+            }
         }
     }
 }

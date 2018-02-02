@@ -34,7 +34,7 @@ namespace Quaver.GameState.Gameplay
         private Timing Timing { get; set; }
         private ScoreManager ScoreManager { get; set; }
         private PlayfieldUI PlayfieldUI { get; set; }
-        private ParticleEffects ParticleEffects { get; set; }
+        private ParticleManager ParticleManager { get; set; }
 
         //todo: initialize and implement these later
         private ScoreProgressUI ScoreProgressUI { get; set; }
@@ -110,7 +110,7 @@ namespace Quaver.GameState.Gameplay
             Playfield = new Playfield();
             PlayfieldUI = new PlayfieldUI();
             Timing = new Timing(qua);
-            ParticleEffects = new ParticleEffects();
+            ParticleManager = new ParticleManager();
             ScoreManager = new ScoreManager();
             InputManager = new GameplayInputManager();
             ReplayFrames = new List<ReplayFrame>();
@@ -206,7 +206,7 @@ namespace Quaver.GameState.Gameplay
                 NoteManager.Update(dt);
                 AccuracyBoxUI.Update(dt);
                 PlayfieldUI.Update(dt);
-                ParticleEffects.Update(dt);
+                ParticleManager.Update(dt);
             }
 
             PlayfieldUI.UpdateMultiplierBars(ScoreManager.MultiplierIndex);
@@ -267,7 +267,7 @@ namespace Quaver.GameState.Gameplay
                 alphaIndex++;
             }
             if (!DrawPlayfieldFirst) Playfield.Draw();
-            ParticleEffects.Draw();
+            ParticleManager.Draw();
             GameBase.SpriteBatch.End();
 
             // Render everything in order
@@ -393,7 +393,7 @@ namespace Quaver.GameState.Gameplay
             AccuracyBoxUI.Initialize(state);
             PlayfieldUI.Initialize(state);
             NoteManager.Initialize(state);
-            ParticleEffects.Initialize(state);
+            ParticleManager.Initialize(state);
 
             //todo: remove this. used for logging.
             Logger.Add("KeyCount", "", Color.Pink);
@@ -472,7 +472,9 @@ namespace Quaver.GameState.Gameplay
                         else
                         {
                             // Create a Hit Burst instance
-                            var hitBurst = new HitBurst(Playfield.Receptors[keyLane.GetKey()].GlobalRectangle, ParticleEffects.Boundary, keyLane.GetKey());
+                            var hitBurst = new HitBurst(NoteManager.NoteBurstRectangle[keyLane.GetKey()], ParticleManager.Boundary, keyLane.GetKey());
+                            //Console.WriteLine(Playfield.Receptors[keyLane.GetKey()].GlobalRectangle.X + ", " + Playfield.Receptors[keyLane.GetKey()].GlobalRectangle.Y + ", " + Playfield.Receptors[keyLane.GetKey()].GlobalRectangle.Width
+                            //     + ", " + Playfield.Receptors[keyLane.GetKey()].GlobalRectangle.Height);
 
                             // If the object is an LN, hold it at the receptors
                             if (NoteManager.HitObjectPool[noteIndex].IsLongNote) NoteManager.HoldNote(noteIndex);
