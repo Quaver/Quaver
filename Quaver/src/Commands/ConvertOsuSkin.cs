@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ionic.Zip;
+using NAudio.Wave;
 using Quaver.Config;
 using Quaver.Logging;
 
@@ -223,8 +224,6 @@ namespace Quaver.Commands
                     
                 Logger.Log(".osk extraction has completed!", LogColors.GameSuccess);
 
-                var extractedFiles = Directory.GetFiles(extractPath);
-
                 var newSkinDirPath = Configuration.SkinDirectory + "/" + Path.GetFileNameWithoutExtension(path);
                 Directory.CreateDirectory(newSkinDirPath);
 
@@ -239,7 +238,26 @@ namespace Quaver.Commands
                             var fullPath = extractPath + map.OsuElement.ToLower() + extension;
                             if (!File.Exists(fullPath)) continue;
 
-                            File.Copy(fullPath, newSkinDirPath + "/" + map.QuaverElement + extension, true);
+                            var newPath = newSkinDirPath + "/" + map.QuaverElement + extension;
+
+                            // Convert .wav files to 16-bit
+                            try
+                            {
+                                if (map.Type == ElementType.Sound)
+                                {
+                                    using (var reader = new WaveFileReader(fullPath))
+                                    {
+                                        var newFormat = new WaveFormat(8000, 16, 1);
+                                        using (var conversionStream = new WaveFormatConversionStream(newFormat, reader))
+                                        {
+                                            WaveFileWriter.CreateWaveFile(newPath, conversionStream);
+                                        }
+                                    }
+                                }
+                            }
+                            catch (Exception e) { continue; }
+
+                            File.Copy(fullPath, newPath, true);
                             break;
                         case ElementType.AnimatableImage:
                             const string extensionAnim = ".png";
