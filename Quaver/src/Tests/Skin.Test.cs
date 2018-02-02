@@ -32,7 +32,7 @@ namespace Quaver.Tests
                           $"NotePadding: {skin.NotePadding4K}\n" +
                           $"NotePadding: {skin.NotePadding7K}\n" +
                           $"TimingBarPixelSize: {skin.TimingBarPixelSize}\n" +
-                          $"HitLightingScale: {skin.HitLightingScale}\n" +
+                          $"HitLightingScale: {skin.ColumnLightingScale}\n" +
                           $"ColumnSize4K: {skin.ColumnSize4K}\n" +
                           $"ColumnSize4K: {skin.ColumnSize7K}\n" +
                           $"ReceptorYOffset4K: {skin.ReceptorYOffset4K}\n" +
