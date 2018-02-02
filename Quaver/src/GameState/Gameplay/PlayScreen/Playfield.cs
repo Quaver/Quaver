@@ -22,7 +22,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     The receptor sprites.
         /// </summary>
-        internal Sprite[] Receptors { get; set; }
+        internal Sprite[] ReceptorObjects { get; set; }
 
         /// <summary>
         ///     The Hit Lighting Sprites. Will be visible when designated key is held down.
@@ -30,24 +30,48 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal Sprite[] HitLightingObjects { get; set; }
 
         /// <summary>
-        ///     The first layer of the playfield. Used to render receptors/FX
+        ///     The first layer of the playfield. Used to render playfield mask + hitlighting (+ receptors if set in skin.ini)
         /// </summary>
         private Boundary ReceptorBoundary { get; set; }
 
+        /// <summary>
+        ///     The second layer of the playfield. Used to render receptors
+        /// </summary>
         private Boundary BackgroundBoundary { get; set; }
 
+        /// <summary>
+        ///     Size of the playfield
+        /// </summary>
         internal float PlayfieldSize { get; set; }
 
+        /// <summary>
+        ///     Size of each lane
+        /// </summary>
         internal float LaneSize { get; set; }
 
+        /// <summary>
+        ///     Gap size between each note
+        /// </summary>
         internal float ReceptorPadding { get; set; }
 
+        /// <summary>
+        ///     Gap size between note and edge of playfield
+        /// </summary>
         internal float PlayfieldPadding { get; set; }
 
+        /// <summary>
+        ///     Receptor Y-Offset from screen
+        /// </summary>
         internal float ReceptorYOffset { get; set; }
 
+        /// <summary>
+        ///     Is determined if hit lighting object should be active
+        /// </summary>
         private bool[] HitLightingActive { get; set; }
 
+        /// <summary>
+        ///     Determines hit lighting object animation from scale of 0 -> 1.
+        /// </summary>
         private float[] HitLightingAnimation { get; set; }
 
 
@@ -108,17 +132,17 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             switch (GameBase.SelectedBeatmap.Qua.Mode)
             {
                 case GameModes.Keys4:
-                    Receptors = new Sprite[4];
+                    ReceptorObjects = new Sprite[4];
                     HitLightingObjects = new Sprite[4];
                     HitLightingActive = new bool[4];
                     HitLightingAnimation = new float[4];
-                    for (var i = 0; i < Receptors.Length; i++)
+                    for (var i = 0; i < ReceptorObjects.Length; i++)
                     {
                         // Set ReceptorXPos 
                         GameplayReferences.ReceptorXPosition[i] = ((LaneSize + ReceptorPadding) * i) + PlayfieldPadding;
 
                         // Create receptor Sprite
-                        Receptors[i] = new Sprite
+                        ReceptorObjects[i] = new Sprite
                         {
                             Size = new UDim2(LaneSize, LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width),
                             Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYOffset),
@@ -143,17 +167,17 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     }
                     break;
                 case GameModes.Keys7:
-                    Receptors = new Sprite[7];
+                    ReceptorObjects = new Sprite[7];
                     HitLightingObjects = new Sprite[7];
                     HitLightingActive = new bool[7];
                     HitLightingAnimation = new float[7];
-                    for (var i = 0; i < Receptors.Length; i++)
+                    for (var i = 0; i < ReceptorObjects.Length; i++)
                     {
                         // Set ReceptorXPos 
                         GameplayReferences.ReceptorXPosition[i] = ((LaneSize + ReceptorPadding) * i) + PlayfieldPadding;
 
                         // Create receptor Sprite
-                        Receptors[i] = new Sprite
+                        ReceptorObjects[i] = new Sprite
                         {
                             Size = new UDim2(LaneSize, LaneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width),
                             Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYOffset),
@@ -232,26 +256,26 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 case GameModes.Keys4:
                     if (keyDown)
                     {
-                        Receptors[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsDown4K[keyIndex];
+                        ReceptorObjects[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsDown4K[keyIndex];
                         HitLightingActive[keyIndex] = true;
                         HitLightingAnimation[keyIndex] = 1;
                     }
                     else
                     {
-                        Receptors[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsUp4K[keyIndex];
+                        ReceptorObjects[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsUp4K[keyIndex];
                         HitLightingActive[keyIndex] = false;
                     }
                     break;
                 case GameModes.Keys7:
                     if (keyDown)
                     {
-                        Receptors[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsDown7K[keyIndex];
+                        ReceptorObjects[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsDown7K[keyIndex];
                         HitLightingActive[keyIndex] = true;
                         HitLightingAnimation[keyIndex] = 1;
                     }
                     else
                     {
-                        Receptors[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsUp7K[keyIndex];
+                        ReceptorObjects[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsUp7K[keyIndex];
                         HitLightingActive[keyIndex] = false;
                     }
                     break;
