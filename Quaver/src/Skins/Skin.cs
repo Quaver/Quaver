@@ -168,7 +168,7 @@ namespace Quaver.Skins
         internal Texture2D[] NoteHoldEnds4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsUp4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsDown4K { get; set; } = new Texture2D[4];
-        internal Texture2D[] NoteHitBursts4K { get; set; } = new Texture2D[4];
+        internal Texture2D[] NoteHitEffects4K { get; set; } = new Texture2D[4];
 
         // 7k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
@@ -177,7 +177,7 @@ namespace Quaver.Skins
         internal Texture2D[] NoteHoldEnds7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteReceptorsUp7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteReceptorsDown7K { get; set; } = new Texture2D[7];
-        internal Texture2D[] NoteHitBursts7K { get; set; } = new Texture2D[7];
+        internal Texture2D[] NoteHitEffects7K { get; set; } = new Texture2D[7];
 
         /// <summary>
         ///     Grades
@@ -239,19 +239,19 @@ namespace Quaver.Skins
                 @"stage-distant-overlay",
 
                 // 4k HitBurst
-                @"4k-note-hitburst-1",
-                @"4k-note-hitburst-2",
-                @"4k-note-hitburst-3",
-                @"4k-note-hitburst-4",
+                @"4k-note-hiteffect-1",
+                @"4k-note-hiteffect-2",
+                @"4k-note-hiteffect-3",
+                @"4k-note-hiteffect-4",
 
                 // 7k HitBurst
-                @"7k-note-hitburst-1",
-                @"7k-note-hitburst-2",
-                @"7k-note-hitburst-3",
-                @"7k-note-hitburst-4",
-                @"7k-note-hitburst-5",
-                @"7k-note-hitburst-6",
-                @"7k-note-hitburst-7",
+                @"7k-note-hiteffect-1",
+                @"7k-note-hiteffect-2",
+                @"7k-note-hiteffect-3",
+                @"7k-note-hiteffect-4",
+                @"7k-note-hiteffect-5",
+                @"7k-note-hiteffect-6",
+                @"7k-note-hiteffect-7",
 
                 // 4k HitObjects
                 @"4k-note-hitobject-1",
@@ -428,38 +428,38 @@ namespace Quaver.Skins
                     case @"7k-column-lighting":
                         ColumnLighting7K = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-hitburst-1":
-                        NoteHitBursts4K[0] = LoadIndividualElement(element, skinElementPath);
+                    case @"4k-note-hiteffect-1":
+                        NoteHitEffects4K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-hitburst-2":
-                        NoteHitBursts4K[1] = LoadIndividualElement(element, skinElementPath);
+                    case @"4k-note-hiteffect-2":
+                        NoteHitEffects4K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-hitburst-3":
-                        NoteHitBursts4K[2] = LoadIndividualElement(element, skinElementPath);
+                    case @"4k-note-hiteffect-3":
+                        NoteHitEffects4K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-hitburst-4":
-                        NoteHitBursts4K[3] = LoadIndividualElement(element, skinElementPath);
+                    case @"4k-note-hiteffect-4":
+                        NoteHitEffects4K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-hitburst-1":
-                        NoteHitBursts7K[0] = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-1":
+                        NoteHitEffects7K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-hitburst-2":
-                        NoteHitBursts7K[1] = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-2":
+                        NoteHitEffects7K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-hitburst-3":
-                        NoteHitBursts7K[2] = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-3":
+                        NoteHitEffects7K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-hitburst-4":
-                        NoteHitBursts7K[3] = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-4":
+                        NoteHitEffects7K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-hitburst-5":
-                        NoteHitBursts7K[4] = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-5":
+                        NoteHitEffects7K[4] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-hitburst-6":
-                        NoteHitBursts7K[5] = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-6":
+                        NoteHitEffects7K[5] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-hitburst-7":
-                        NoteHitBursts7K[6] = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-7":
+                        NoteHitEffects7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-hitobject-1":
                         LoadHitObjects(NoteHitObjects4K, skinDir, element, 0);
@@ -790,9 +790,9 @@ namespace Quaver.Skins
         /// <summary>
         ///     Loads a list of elements to be used in an animation.
         ///     Example:
-        ///         - 4k-note-hitburst-0@0
-        ///         - 4k-note-hitburst-1@1
-        ///         - 4k-note-hitburst-2@2
+        ///         - 4k-note-hiteffect-0@0
+        ///         - 4k-note-hiteffect-1@1
+        ///         - 4k-note-hiteffect-2@2
         ///         //
         ///         - 4k-note-holdbody-active-1@0
         ///         - 4k-note-holdbody-active-1@1

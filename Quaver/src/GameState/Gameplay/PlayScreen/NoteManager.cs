@@ -150,8 +150,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             LaneSize * GameBase.LoadedSkin.NoteHitObjects4K[i][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width);
 
                         NoteBurstRectangle[i] = new DrawRectangle();
-                        NoteBurstRectangle[i].Width = NoteHitRectangle[i].Width * GameBase.LoadedSkin.NoteHitBursts4K[i].Width / GameBase.LoadedSkin.NoteHitObjects4K[i][0].Width;
-                        NoteBurstRectangle[i].Height = NoteHitRectangle[i].Height * GameBase.LoadedSkin.NoteHitBursts4K[i].Height / GameBase.LoadedSkin.NoteHitObjects4K[i][0].Height;
+                        NoteBurstRectangle[i].Width = NoteHitRectangle[i].Width * GameBase.LoadedSkin.NoteHitEffects4K[i].Width / GameBase.LoadedSkin.NoteHitObjects4K[i][0].Width;
+                        NoteBurstRectangle[i].Height = NoteHitRectangle[i].Height * GameBase.LoadedSkin.NoteHitEffects4K[i].Height / GameBase.LoadedSkin.NoteHitObjects4K[i][0].Height;
                         NoteBurstRectangle[i].X = NoteHitRectangle[i].X - (NoteBurstRectangle[i].Width - NoteHitRectangle[i].Width) / 2;
                         NoteBurstRectangle[i].Y = NoteHitRectangle[i].Y - (NoteBurstRectangle[i].Height - NoteHitRectangle[i].Height) / 2;
                     }
@@ -169,8 +169,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             LaneSize * GameBase.LoadedSkin.NoteHitObjects7K[i].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width);
 
                         NoteBurstRectangle[i] = new DrawRectangle();
-                        NoteBurstRectangle[i].Width = NoteHitRectangle[i].Width * GameBase.LoadedSkin.NoteHitBursts7K[i].Width / GameBase.LoadedSkin.NoteHitObjects7K[i].Width;
-                        NoteBurstRectangle[i].Height = NoteHitRectangle[i].Height * GameBase.LoadedSkin.NoteHitBursts7K[i].Height / GameBase.LoadedSkin.NoteHitObjects7K[i].Height;
+                        NoteBurstRectangle[i].Width = NoteHitRectangle[i].Width * GameBase.LoadedSkin.NoteHitEffects7K[i].Width / GameBase.LoadedSkin.NoteHitObjects7K[i].Width;
+                        NoteBurstRectangle[i].Height = NoteHitRectangle[i].Height * GameBase.LoadedSkin.NoteHitEffects7K[i].Height / GameBase.LoadedSkin.NoteHitObjects7K[i].Height;
                         NoteBurstRectangle[i].X = NoteHitRectangle[i].X - (NoteBurstRectangle[i].Width - NoteHitRectangle[i].Width) / 2;
                         NoteBurstRectangle[i].Y = NoteHitRectangle[i].Y - (NoteBurstRectangle[i].Height - NoteHitRectangle[i].Height) / 2;
                     }
