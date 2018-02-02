@@ -34,10 +34,9 @@ namespace Quaver.GameState.Gameplay
         private Timing Timing { get; set; }
         private ScoreManager ScoreManager { get; set; }
         private PlayfieldUI PlayfieldUI { get; set; }
+        private ParticleEffects ParticleEffects { get; set; }
 
         //todo: initialize and implement these later
-        private HitBurst HitBurst { get; set; }
-        private Particles Particles { get; set; }
         private ScoreProgressUI ScoreProgressUI { get; set; }
         private SongProgressUI SongProgressUI { get; set; }
 
@@ -89,7 +88,7 @@ namespace Quaver.GameState.Gameplay
         private TextButton TestButton { get; set; }
 
         //Rendering
-        private const int RenderSamples = 8;
+        private const int RENDER_SAMPLES = 8;
         private int CurrentRenderIndex { get; set; }
         private RenderTarget2D[] RenderedHitObjects { get; set; }
         private RenderTarget2D RenderedPlayfield { get; set; }
@@ -111,6 +110,7 @@ namespace Quaver.GameState.Gameplay
             Playfield = new Playfield();
             PlayfieldUI = new PlayfieldUI();
             Timing = new Timing(qua);
+            ParticleEffects = new ParticleEffects();
             ScoreManager = new ScoreManager();
             InputManager = new GameplayInputManager();
             ReplayFrames = new List<ReplayFrame>();
@@ -132,8 +132,8 @@ namespace Quaver.GameState.Gameplay
             // Initialize Rendering
             CurrentRenderIndex = 0;
             RenderedPlayfield = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
-            RenderedAlphas = new Color[RenderSamples];
-            RenderedHitObjects = new RenderTarget2D[RenderSamples];
+            RenderedAlphas = new Color[RENDER_SAMPLES];
+            RenderedHitObjects = new RenderTarget2D[RENDER_SAMPLES];
             for (var i = 0; i < RenderedHitObjects.Length; i++)
             {
                 RenderedHitObjects[i] = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
@@ -206,6 +206,7 @@ namespace Quaver.GameState.Gameplay
                 NoteManager.Update(dt);
                 AccuracyBoxUI.Update(dt);
                 PlayfieldUI.Update(dt);
+                ParticleEffects.Update(dt);
             }
 
             PlayfieldUI.UpdateMultiplierBars(ScoreManager.MultiplierIndex);
@@ -266,6 +267,7 @@ namespace Quaver.GameState.Gameplay
                 alphaIndex++;
             }
             if (!DrawPlayfieldFirst) Playfield.Draw();
+            ParticleEffects.Draw();
             GameBase.SpriteBatch.End();
 
             // Render everything in order
@@ -391,6 +393,7 @@ namespace Quaver.GameState.Gameplay
             AccuracyBoxUI.Initialize(state);
             PlayfieldUI.Initialize(state);
             NoteManager.Initialize(state);
+            ParticleEffects.Initialize(state);
 
             //todo: remove this. used for logging.
             Logger.Add("KeyCount", "", Color.Pink);
@@ -468,6 +471,9 @@ namespace Quaver.GameState.Gameplay
                         }
                         else
                         {
+                            // Create a Hit Burst instance
+                            var hitBurst = new HitBurst(Playfield.Receptors[keyLane.GetKey()].GlobalRectangle, ParticleEffects.Boundary, keyLane.GetKey());
+
                             // If the object is an LN, hold it at the receptors
                             if (NoteManager.HitObjectPool[noteIndex].IsLongNote) NoteManager.HoldNote(noteIndex);
 

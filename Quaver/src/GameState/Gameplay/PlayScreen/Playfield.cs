@@ -22,7 +22,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     The receptor sprites.
         /// </summary>
-        private Sprite[] Receptors { get; set; }
+        internal Sprite[] Receptors { get; set; }
 
         /// <summary>
         ///     The first layer of the playfield. Used to render receptors/FX

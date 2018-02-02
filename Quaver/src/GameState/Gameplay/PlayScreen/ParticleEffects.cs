@@ -1,4 +1,5 @@
 ﻿using Quaver.GameState;
+using Quaver.Graphics.Sprite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,26 +8,31 @@ using System.Threading.Tasks;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
-    class Particles : IHelper
+    class ParticleEffects : IHelper
     {
+        /// <summary>
+        ///     Particle Container
+        /// </summary>
+        internal Boundary Boundary { get; set; }
+
         public void Draw()
         {
-            throw new NotImplementedException();
+            Boundary.Draw();
         }
 
         public void Initialize(IGameState state)
         {
-            throw new NotImplementedException();
+            Boundary = new Boundary();
         }
 
         public void UnloadContent()
         {
-            throw new NotImplementedException();
+            Boundary.Destroy();
         }
 
         public void Update(double dt)
         {
-            throw new NotImplementedException();
+            Boundary.Update(dt);
         }
     }
 }
