@@ -175,7 +175,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             PosX = GameplayReferences.ReceptorXPosition[i],
                             PosY = Config.Configuration.DownScroll4k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
                             SpriteEffect = Config.Configuration.DownScroll4k ? SpriteEffects.None : SpriteEffects.FlipVertically,
-                            Alignment = Config.Configuration.DownScroll4k ? Alignment.TopLeft : Alignment.BotLeft,
+                            Alignment = Alignment.TopLeft,
                             Parent = BackgroundBoundary
                         };
                     }
@@ -226,7 +226,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             PosX = GameplayReferences.ReceptorXPosition[i],
                             PosY = Config.Configuration.DownScroll7k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
                             SpriteEffect = Config.Configuration.DownScroll7k ? SpriteEffects.None : SpriteEffects.FlipVertically,
-                            Alignment = Config.Configuration.DownScroll7k ? Alignment.TopLeft : Alignment.BotLeft,
+                            Alignment = Alignment.TopLeft,
                             Parent = BackgroundBoundary
                         };
                     }
