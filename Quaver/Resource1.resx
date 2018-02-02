@@ -313,13 +313,13 @@
   <data name="arrow-4k-receptor-up-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Arrow Skin\arrow-4k-receptor-up-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="arrow-column-bgmask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="arrow-4k-stage-bgmask" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Arrow Skin\arrow-column-bgmask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="arrow-column-hitlighting" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Arrow Skin\arrow-column-hitlighting.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="arrow-column-timingbar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="arrow-stage-timingbar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Arrow Skin\arrow-column-timingbar.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="arrow-grade-small-a" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -535,13 +535,13 @@
   <data name="bar-7k-receptor-up-7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-7k-receptor-up-7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="bar-column-bgmask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="bar-4k-stage-bgmask" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-column-bgmask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="bar-column-hitlighting" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-column-hitlighting.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="bar-column-timingbar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="bar-stagetimingbar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-column-timingbar.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="bar-grade-small-a" type="System.Resources.ResXFileRef, System.Windows.Forms">
