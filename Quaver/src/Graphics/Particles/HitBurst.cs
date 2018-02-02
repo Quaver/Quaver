@@ -8,26 +8,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Quaver.GameState.Gameplay.PlayScreen
+namespace Quaver.Graphics.Particles
 {
-    class HitBurst : Boundary
+    class HitBurst : Particle
     {
         /// <summary>
         ///     Determines how long the sprite will be visible for in miliseconds
         /// </summary>
-        private const double DISPLAY_TIME = 500;
-
-        private const float MAX_SCALE = 0.1f;
+        public override double DisplayTime { get; set; } = 500;
 
         /// <summary>
-        ///     The Hit Burst Sprite. Will be animated.
+        ///     Determines if the particle is ready to be destroyed
         /// </summary>
-        private Sprite HitBurstSprite { get; set; }
+        public override bool DestroyReady { get; set; }
 
         /// <summary>
         ///     Total time elapsed since this object has been created.
         /// </summary>
-        private double timeElapsed { get; set; }
+        public override double TimeElapsed { get; set; }
+
+        /// <summary>
+        ///     Max Scale of sprite when it is resized.
+        /// </summary>
+        private float MaxScale { get; } = 0.1f;
+
+        /// <summary>
+        ///     The Hit Burst Sprite. Will be animated.
+        /// </summary>
+        private Sprite.Sprite HitBurstSprite { get; set; }
+
+        /// <summary>
+        ///     Hit Burst Sprite's Parent. Used for object alignment.
+        /// </summary>
+        private Boundary Boundary { get; set; }
 
         /// <summary>
         ///     Create a new hit burst. Used after a note has been hit.
@@ -37,16 +50,17 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <param name="keyLane"></param>
         public HitBurst(DrawRectangle rect, Drawable parent, int keyLane)
         {
-            // Update Size + Position
-            Position = new UDim2(rect.X, rect.Y);
-            Size = new UDim2(rect.Width, rect.Height);
-            Parent = parent;
+            // Create Boundary and Particle
+            Boundary = new Boundary(rect.X, rect.Y, rect.Width, rect.Height)
+            {
+                Parent = parent
+            };
 
-            HitBurstSprite = new Sprite()
+            HitBurstSprite = new Sprite.Sprite()
             {
                 Alignment = Alignment.MidCenter,
                 Size = new UDim2(0, 0, 1, 1),
-                Parent = this
+                Parent = Boundary
             };
 
             // Choose the correct image based on the specific key lane.
@@ -62,29 +76,37 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         }
 
         /// <summary>
+        ///     Destroys this object.
+        /// </summary>
+        public override void Destroy()
+        {
+            Boundary.Destroy();
+        }
+
+        /// <summary>
         ///     Updates Hit Burst Sprite.
         /// </summary>
         /// <param name="dt"></param>
-        internal override void Update(double dt)
+        public override void Update(double dt)
         {
             // Update Time Elapsed + Hit Burst Sprite
-            timeElapsed += dt;
-            var timeRatio = (float)(timeElapsed / DISPLAY_TIME);
+            TimeElapsed += dt;
+            var timeRatio = (float)(TimeElapsed / DisplayTime);
 
             // Destroy itself if time elapsed over DISPLAY_TIME duration.
-            if (timeElapsed > DISPLAY_TIME)
+            if (TimeElapsed > DisplayTime)
             {
                 HitBurstSprite.Destroy();
                 return;
             }
 
             // Update Objects
-            HitBurstSprite.ScaleX = 1 + (timeRatio * MAX_SCALE);
+            HitBurstSprite.ScaleX = 1 + (timeRatio * MaxScale);
             HitBurstSprite.ScaleY = HitBurstSprite.ScaleX;
             HitBurstSprite.Alpha = 1 - timeRatio;
 
-            // Update Base
-            base.Update(dt);
+            // Update Boundary
+            Boundary.Update(dt);
         }
     }
 }
