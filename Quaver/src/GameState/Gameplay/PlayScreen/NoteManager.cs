@@ -28,7 +28,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     internal class NoteManager : IHelper
     {
         //SV
-        private const long SV_POSITIVE_CONST = 10000;
+        private const ulong SV_POSITIVE_CONST = 10000;
         internal ulong[] SvCalc { get; set; }
         internal List<TimingObject> SvQueue { get; set; }
 
