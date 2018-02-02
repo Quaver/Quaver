@@ -89,9 +89,11 @@ namespace Quaver.GameState.Gameplay
         private TextButton TestButton { get; set; }
 
         //Rendering
-        private RenderTarget2D[] RenderedHitObjects { get; set; } = new RenderTarget2D[8];
+        private const int RenderSamples = 8;
+        private int CurrentRenderIndex { get; set; }
+        private RenderTarget2D[] RenderedHitObjects { get; set; }
         private RenderTarget2D RenderedPlayfield { get; set; }
-        private Color[] RenderedAlphas { get; set; } = new Color[8];
+        private Color[] RenderedAlphas { get; set; }
 
         /// <summary>
         ///     Constructor
@@ -128,11 +130,14 @@ namespace Quaver.GameState.Gameplay
             NoteManager.ReleaseMissed += ReleaseMissed;
 
             // Initialize Rendering
+            CurrentRenderIndex = 0;
             RenderedPlayfield = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
+            RenderedAlphas = new Color[RenderSamples];
+            RenderedHitObjects = new RenderTarget2D[RenderSamples];
             for (var i = 0; i < RenderedHitObjects.Length; i++)
             {
                 RenderedHitObjects[i] = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
-                RenderedAlphas[i] = Color.White * (1f / (1 + i));
+                RenderedAlphas[i] = Color.White * (1f / (float)Math.Pow(1 + i, 1.5));
             }
         }
 
@@ -232,39 +237,40 @@ namespace Quaver.GameState.Gameplay
 
         public void Draw()
         {
-            // Move Rendered Frames from front to end of array by 1 step
-            for (int i = RenderedHitObjects.Length - 1; i > 0; i--)
-                RenderedHitObjects[i] = RenderedHitObjects[i - 1];
+            // Update Render Index
+            CurrentRenderIndex ++;
+            if (CurrentRenderIndex >= RenderedHitObjects.Length) CurrentRenderIndex = 0;
 
             // Render Current NoteManager Frame
-            GameBase.GraphicsDevice.SetRenderTarget(RenderedHitObjects[0]);
-            GameBase.GraphicsDevice.Clear(Color.White * 0);
+            GameBase.GraphicsDevice.SetRenderTarget(RenderedHitObjects[CurrentRenderIndex]);
+            GameBase.GraphicsDevice.Clear(Color.Transparent);
             GameBase.SpriteBatch.Begin();
             NoteManager.Draw();
             GameBase.SpriteBatch.End();
 
             // Render Entire Playfield with NoteManagers blurred
+            int alphaIndex = 0;
             GameBase.GraphicsDevice.SetRenderTarget(RenderedPlayfield);
-            GameBase.GraphicsDevice.Clear(Color.White * 0);
+            GameBase.GraphicsDevice.Clear(Color.Transparent);
             GameBase.SpriteBatch.Begin();
             Playfield.DrawBgMask();
-            if (DrawPlayfieldFirst)
+            if (DrawPlayfieldFirst) Playfield.Draw();
+            for (int i = CurrentRenderIndex - 1; i >= 0; i--)
             {
-                Playfield.Draw();
-                for (int i = RenderedHitObjects.Length - 1; i >= 0; i--)
-                    GameBase.SpriteBatch.Draw(RenderedHitObjects[i], Vector2.Zero, RenderedAlphas[i]);
+                GameBase.SpriteBatch.Draw(RenderedHitObjects[i], Vector2.Zero, RenderedAlphas[alphaIndex]);
+                alphaIndex++;
             }
-            else
+            for (int i = RenderedHitObjects.Length - 1; i >= CurrentRenderIndex; i--)
             {
-                for (int i = RenderedHitObjects.Length - 1; i >= 0; i--)
-                    GameBase.SpriteBatch.Draw(RenderedHitObjects[i], Vector2.Zero, RenderedAlphas[i]);
-                Playfield.Draw();
+                GameBase.SpriteBatch.Draw(RenderedHitObjects[i], Vector2.Zero, RenderedAlphas[alphaIndex]);
+                alphaIndex++;
             }
+            if (!DrawPlayfieldFirst) Playfield.Draw();
             GameBase.SpriteBatch.End();
 
             // Render everything in order
             GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
-            GameBase.GraphicsDevice.Clear(Color.White * 0);
+            GameBase.GraphicsDevice.Clear(Color.Transparent);
             GameBase.SpriteBatch.Begin();
             BackgroundManager.Draw();
             GameBase.SpriteBatch.Draw(RenderedPlayfield, Vector2.Zero, Color.White);
