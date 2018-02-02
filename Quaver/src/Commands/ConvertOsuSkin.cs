@@ -48,6 +48,11 @@ namespace Quaver.Commands
             public ElementType Type { get; }
 
             /// <summary>
+            ///     The value in skin.ini that pertains to this element
+            /// </summary>
+            public string SkinIniValue { get; }
+
+            /// <summary>
             ///     Constructor
             /// </summary>
             /// <param name="quaverElement"></param>
@@ -58,6 +63,21 @@ namespace Quaver.Commands
                 QuaverElement = quaverElement;
                 OsuElement = osuElement;
                 Type = type;
+                SkinIniValue = "";
+            }
+
+            /// <summary>
+            ///     Constructor
+            /// </summary>
+            /// <param name="quaverElement"></param>
+            /// <param name="osuElement"></param>
+            /// <param name="type"></param>
+            public QuaverOsuElementMap(string quaverElement, string osuElement, ElementType type, string iniVal)
+            {
+                QuaverElement = quaverElement;
+                OsuElement = osuElement;
+                Type = type;
+                SkinIniValue = iniVal;
             }
         }
 
@@ -80,43 +100,43 @@ namespace Quaver.Commands
             //new QuaverOsuElementMap("grade-small-xxx", "", ElementType.Image), // Not applicable
 
             // 4k HitObjects
-            new QuaverOsuElementMap("4k-note-hitobject-1", "mania-note1", ElementType.Image),
-            new QuaverOsuElementMap("4k-note-hitobject-2", "mania-note2", ElementType.Image),
-            new QuaverOsuElementMap("4k-note-hitobject-3", "mania-note2", ElementType.Image),
-            new QuaverOsuElementMap("4k-note-hitobject-4", "mania-note1", ElementType.Image),
+            new QuaverOsuElementMap("4k-note-hitobject-1", "mania-note1", ElementType.Image, "NoteImage0"),
+            new QuaverOsuElementMap("4k-note-hitobject-2", "mania-note2", ElementType.Image, "NoteImage1"),
+            new QuaverOsuElementMap("4k-note-hitobject-3", "mania-note2", ElementType.Image, "NoteImage2"),
+            new QuaverOsuElementMap("4k-note-hitobject-4", "mania-note1", ElementType.Image, "NoteImage3"),
 
             // 7k HitObjects
-            new QuaverOsuElementMap("7k-note-hitobject-1", "mania-note1", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-hitobject-2", "mania-note2", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-hitobject-3", "mania-note1", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-hitobject-4", "mania-noteS", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-hitobject-5", "mania-note1", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-hitobject-6", "mania-note2", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-hitobject-7", "mania-note1", ElementType.Image),
+            new QuaverOsuElementMap("7k-note-hitobject-1", "mania-note1", ElementType.Image, "NoteImage0"),
+            new QuaverOsuElementMap("7k-note-hitobject-2", "mania-note2", ElementType.Image, "NoteImage1"),
+            new QuaverOsuElementMap("7k-note-hitobject-3", "mania-note1", ElementType.Image, "NoteImage2"),
+            new QuaverOsuElementMap("7k-note-hitobject-4", "mania-noteS", ElementType.Image, "NoteImage3"),
+            new QuaverOsuElementMap("7k-note-hitobject-5", "mania-note1", ElementType.Image, "NoteImage4"),
+            new QuaverOsuElementMap("7k-note-hitobject-6", "mania-note2", ElementType.Image, "NoteImage5"),
+            new QuaverOsuElementMap("7k-note-hitobject-7", "mania-note1", ElementType.Image, "NoteImage6"),
 
             // 4k Hit Object Hold Ends
-            new QuaverOsuElementMap("4k-note-holdend-1", "mania-note1T", ElementType.Image), 
-            new QuaverOsuElementMap("4k-note-holdend-2", "mania-note2T", ElementType.Image), 
-            new QuaverOsuElementMap("4k-note-holdend-3", "mania-note2T", ElementType.Image),
-            new QuaverOsuElementMap("4k-note-holdend-4", "mania-note1T", ElementType.Image),
+            new QuaverOsuElementMap("4k-note-holdend-1", "mania-note1T", ElementType.Image, "NoteImage0T"), 
+            new QuaverOsuElementMap("4k-note-holdend-2", "mania-note2T", ElementType.Image, "NoteImage1T"), 
+            new QuaverOsuElementMap("4k-note-holdend-3", "mania-note2T", ElementType.Image, "NoteImage2T"),
+            new QuaverOsuElementMap("4k-note-holdend-4", "mania-note1T", ElementType.Image, "NoteImage3T"),
 
             // 7k Hit Object Hold Ends
-            new QuaverOsuElementMap("7k-note-holdend-1", "mania-note1T", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-holdend-2", "mania-note2T", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-holdend-3", "mania-note1T", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-holdend-4", "mania-noteST", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-holdend-5", "mania-note1T", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-holdend-6", "mania-note2T", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-holdend-7", "mania-note1T", ElementType.Image),
+            new QuaverOsuElementMap("7k-note-holdend-1", "mania-note1T", ElementType.Image, "NoteImage0T"),
+            new QuaverOsuElementMap("7k-note-holdend-2", "mania-note2T", ElementType.Image, "NoteImage1T"),
+            new QuaverOsuElementMap("7k-note-holdend-3", "mania-note1T", ElementType.Image, "NoteImage2T"),
+            new QuaverOsuElementMap("7k-note-holdend-4", "mania-noteST", ElementType.Image, "NoteImage3T"),
+            new QuaverOsuElementMap("7k-note-holdend-5", "mania-note1T", ElementType.Image, "NoteImage4T"),
+            new QuaverOsuElementMap("7k-note-holdend-6", "mania-note2T", ElementType.Image, "NoteImage5T"),
+            new QuaverOsuElementMap("7k-note-holdend-7", "mania-note1T", ElementType.Image, "NoteImage6T"),
 
             // 4k Hit Object Hold Bodies
             // The reason why there are two, is because osu takes either:
             //  - mania-note1L (Non Animated)
             //  - mania-note1L-0 (Animated)
-            new QuaverOsuElementMap("4k-note-holdbody-1", "mania-note1L", ElementType.Image),
-            new QuaverOsuElementMap("4k-note-holdbody-2", "mania-note2L", ElementType.Image),
-            new QuaverOsuElementMap("4k-note-holdbody-3", "mania-note2L", ElementType.Image),
-            new QuaverOsuElementMap("4k-note-holdbody-4", "mania-note1L", ElementType.Image),
+            new QuaverOsuElementMap("4k-note-holdbody-1", "mania-note1L", ElementType.Image, "NoteImage0L"),
+            new QuaverOsuElementMap("4k-note-holdbody-2", "mania-note2L", ElementType.Image, "NoteImage1L"),
+            new QuaverOsuElementMap("4k-note-holdbody-3", "mania-note2L", ElementType.Image, "NoteImage2L"),
+            new QuaverOsuElementMap("4k-note-holdbody-4", "mania-note1L", ElementType.Image, "NoteImage3L"),
 
             new QuaverOsuElementMap("4k-note-holdbody-1", "mania-note1L", ElementType.AnimatableImage),
             new QuaverOsuElementMap("4k-note-holdbody-2", "mania-note2L", ElementType.AnimatableImage),
@@ -127,13 +147,13 @@ namespace Quaver.Commands
             // The reason why there are two, is because osu takes either:
             //  - mania-note1L (Non Animated)
             //  - mania-note1L-0 (Animated)
-            new QuaverOsuElementMap("7k-note-holdbody-1", "mania-note1L", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-holdbody-2", "mania-note2L", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-holdbody-3", "mania-note1L", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-holdbody-4", "mania-noteSL", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-holdbody-5", "mania-note1L", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-holdbody-6", "mania-note2L", ElementType.Image),
-            new QuaverOsuElementMap("7k-note-holdbody-7", "mania-note1L", ElementType.Image),
+            new QuaverOsuElementMap("7k-note-holdbody-1", "mania-note1L", ElementType.Image, "NoteImage0L"),
+            new QuaverOsuElementMap("7k-note-holdbody-2", "mania-note2L", ElementType.Image, "NoteImage1L"),
+            new QuaverOsuElementMap("7k-note-holdbody-3", "mania-note1L", ElementType.Image, "NoteImage2L"),
+            new QuaverOsuElementMap("7k-note-holdbody-4", "mania-noteSL", ElementType.Image, "NoteImage3L"),
+            new QuaverOsuElementMap("7k-note-holdbody-5", "mania-note1L", ElementType.Image, "NoteImage4L"),
+            new QuaverOsuElementMap("7k-note-holdbody-6", "mania-note2L", ElementType.Image, "NoteImage5L"),
+            new QuaverOsuElementMap("7k-note-holdbody-7", "mania-note1L", ElementType.Image, "NoteImage6L"),
 
             new QuaverOsuElementMap("7k-note-holdbody-1", "mania-note1L", ElementType.AnimatableImage),
             new QuaverOsuElementMap("7k-note-holdbody-2", "mania-note2L", ElementType.AnimatableImage),
@@ -144,34 +164,34 @@ namespace Quaver.Commands
             new QuaverOsuElementMap("7k-note-holdbody-7", "mania-note1L", ElementType.AnimatableImage),
 
             // 4k Note Receptors
-            new QuaverOsuElementMap("4k-receptor-up-1", "mania-key1", ElementType.Image),
-            new QuaverOsuElementMap("4k-receptor-up-2", "mania-key2", ElementType.Image),
-            new QuaverOsuElementMap("4k-receptor-up-3", "mania-key2", ElementType.Image),
-            new QuaverOsuElementMap("4k-receptor-up-4", "mania-key1", ElementType.Image),
+            new QuaverOsuElementMap("4k-receptor-up-1", "mania-key1", ElementType.Image, "KeyImage0"),
+            new QuaverOsuElementMap("4k-receptor-up-2", "mania-key2", ElementType.Image, "KeyImage1"),
+            new QuaverOsuElementMap("4k-receptor-up-3", "mania-key2", ElementType.Image, "KeyImage2"),
+            new QuaverOsuElementMap("4k-receptor-up-4", "mania-key1", ElementType.Image, "KeyImage3"),
 
             // 4k Note Receptors Down
-            new QuaverOsuElementMap("4k-receptor-down-1", "mania-key1D", ElementType.Image),
-            new QuaverOsuElementMap("4k-receptor-down-2", "mania-key2D", ElementType.Image),
-            new QuaverOsuElementMap("4k-receptor-down-3", "mania-key2D", ElementType.Image),
-            new QuaverOsuElementMap("4k-receptor-down-4", "mania-key1D", ElementType.Image),
+            new QuaverOsuElementMap("4k-receptor-down-1", "mania-key1D", ElementType.Image, "KeyImage0D"),
+            new QuaverOsuElementMap("4k-receptor-down-2", "mania-key2D", ElementType.Image, "KeyImage1D"),
+            new QuaverOsuElementMap("4k-receptor-down-3", "mania-key2D", ElementType.Image, "KeyImage2D"),
+            new QuaverOsuElementMap("4k-receptor-down-4", "mania-key1D", ElementType.Image, "KeyImage3D"),
 
             // 7k Note Receptors
-            new QuaverOsuElementMap("7k-receptor-up-1", "mania-key1", ElementType.Image),
-            new QuaverOsuElementMap("7k-receptor-up-2", "mania-key2", ElementType.Image),
-            new QuaverOsuElementMap("7k-receptor-up-3", "mania-key1", ElementType.Image),
-            new QuaverOsuElementMap("7k-receptor-up-4", "mania-keyS", ElementType.Image),
-            new QuaverOsuElementMap("7k-receptor-up-5", "mania-key1", ElementType.Image),
-            new QuaverOsuElementMap("7k-receptor-up-6", "mania-key2", ElementType.Image),
-            new QuaverOsuElementMap("7k-receptor-up-7", "mania-key1", ElementType.Image),
+            new QuaverOsuElementMap("7k-receptor-up-1", "mania-key1", ElementType.Image, "KeyImage0"),
+            new QuaverOsuElementMap("7k-receptor-up-2", "mania-key2", ElementType.Image, "KeyImage1"),
+            new QuaverOsuElementMap("7k-receptor-up-3", "mania-key1", ElementType.Image, "KeyImage2"),
+            new QuaverOsuElementMap("7k-receptor-up-4", "mania-keyS", ElementType.Image, "KeyImage3"),
+            new QuaverOsuElementMap("7k-receptor-up-5", "mania-key1", ElementType.Image, "KeyImage4"),
+            new QuaverOsuElementMap("7k-receptor-up-6", "mania-key2", ElementType.Image, "KeyImage5"),
+            new QuaverOsuElementMap("7k-receptor-up-7", "mania-key1", ElementType.Image, "KeyImage6"),
 
             // 7k Note Receptors Down
-            new QuaverOsuElementMap("7k-receptor-down-1", "mania-key1D", ElementType.Image),
-            new QuaverOsuElementMap("7k-receptor-down-2", "mania-key2D", ElementType.Image),
-            new QuaverOsuElementMap("7k-receptor-down-3", "mania-key1D", ElementType.Image),
-            new QuaverOsuElementMap("7k-receptor-down-4", "mania-keySD", ElementType.Image),
-            new QuaverOsuElementMap("7k-receptor-down-5", "mania-key1D", ElementType.Image),
-            new QuaverOsuElementMap("7k-receptor-down-6", "mania-key2D", ElementType.Image),
-            new QuaverOsuElementMap("7k-receptor-down-7", "mania-key1D", ElementType.Image),
+            new QuaverOsuElementMap("7k-receptor-down-1", "mania-key1D", ElementType.Image, "KeyImage0D"),
+            new QuaverOsuElementMap("7k-receptor-down-2", "mania-key2D", ElementType.Image, "KeyImage1D"),
+            new QuaverOsuElementMap("7k-receptor-down-3", "mania-key1D", ElementType.Image, "KeyImage2D"),
+            new QuaverOsuElementMap("7k-receptor-down-4", "mania-keySD", ElementType.Image, "KeyImage3D"),
+            new QuaverOsuElementMap("7k-receptor-down-5", "mania-key1D", ElementType.Image, "KeyImage4D"),
+            new QuaverOsuElementMap("7k-receptor-down-6", "mania-key2D", ElementType.Image, "KeyImage5D"),
+            new QuaverOsuElementMap("7k-receptor-down-7", "mania-key1D", ElementType.Image, "KeyImage6D"),
 
             // Judge
             // The reason why there are two, is because osu takes either:
@@ -291,17 +311,32 @@ namespace Quaver.Commands
                 Logger.Log("Finished copying over default skin elements. Now proceeding to read skin.ini...", LogColors.GameInfo);
                 var osuIni = new OsuSkinConfig(extractPath + "/skin.ini");
 
-                foreach (var field in osuIni.Keys4Config.GetType().GetFields())
+                // Copy the 4k/7k values based on skin.ini
+                foreach (var map in QuaverOsuSkinMap)
                 {
-                    Console.WriteLine(field.Name + ": " + field.GetValue(osuIni.Keys4Config));
+                    if (!string.IsNullOrWhiteSpace(map.SkinIniValue))
+                    {
+                        if (map.QuaverElement.Contains("4k"))
+                        {
+                            var val = osuIni.Keys4Config.GetType().GetField(map.SkinIniValue).GetValue(osuIni.Keys4Config).ToString();
+                            val = val.Replace(".png", "");
+
+                            var elementPath = $"{extractPath}/{val}.png";
+                            File.Copy(elementPath, newSkinDirPath + "/" + map.QuaverElement + ".png", true);
+                        }
+                        else if (map.QuaverElement.Contains("7k"))
+                        {
+                            var val = osuIni.Keys7Config.GetType().GetField(map.SkinIniValue).GetValue(osuIni.Keys7Config).ToString();
+                            val = val.Replace(".png", "");
+
+                            var elementPath = $"{extractPath}/{val}.png";
+                            File.Copy(elementPath, newSkinDirPath + "/" + map.QuaverElement + ".png", true);
+                        }
+
+                    }
                 }
 
-                Console.WriteLine("------");
-
-                foreach (var field in osuIni.Keys7Config.GetType().GetFields())
-                {
-                    Console.WriteLine(field.Name + ": " + field.GetValue(osuIni.Keys7Config));
-                }
+                Logger.Log("Skin conversion has completed!", LogColors.GameSuccess);
             }
             catch (Exception e)
             {
@@ -389,6 +424,7 @@ namespace Quaver.Commands
                                 {
                                     case "Keys":
                                         currentKeyCount = Convert.ToInt32(value);
+                                        if (currentKeyCount == 4) Keys4Config.Keys = currentKeyCount; else if (currentKeyCount == 7) Keys7Config.Keys = currentKeyCount;
                                         break;
                                     case "ColumnStart":
                                         var cs = Convert.ToInt32(value);
