@@ -117,10 +117,29 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Parent = BackgroundBoundary
             };
 
-            // Create Receptors
+            // Create Receptors + Hit Lighting + Bg Mask
+            double imageRatio;
+            double columnRatio;
+            float bgMaskSize;
+            Sprite bgMask;
             switch (GameBase.SelectedBeatmap.Qua.Mode)
             {
                 case GameModes.Keys4:
+                    // Create BG Mask
+                    imageRatio = (double)GameBase.LoadedSkin.StageBgMask4K.Width / GameBase.LoadedSkin.StageBgMask4K.Height;
+                    columnRatio = PlayfieldSize / GameBase.WindowRectangle.Height;
+                    bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
+
+                    bgMask = new Sprite()
+                    {
+                        Image = GameBase.LoadedSkin.StageBgMask4K,
+                        Alpha = GameBase.LoadedSkin.BgMaskAlpha,
+                        Size = new UDim2(PlayfieldSize, bgMaskSize),
+                        Alignment = Alignment.MidCenter,
+                        Parent = BackgroundBoundary
+                    };
+
+                    // Create Receptors + Hit Lighting
                     ReceptorObjects = new Sprite[4];
                     ColumnLightingObjects = new Sprite[4];
                     ColumnLightingActive = new bool[4];
@@ -141,11 +160,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         };
 
                         // Create hit lighting sprite
-                        var columnLightingSize = LaneSize * GameBase.LoadedSkin.ColumnLighting4K.Height / GameBase.LoadedSkin.ColumnLighting4K.Width;
+                        var columnLightingSize = GameBase.LoadedSkin.ColumnLightingScale * LaneSize * ((float)GameBase.LoadedSkin.ColumnLighting4K.Height / GameBase.LoadedSkin.ColumnLighting4K.Width);
                         ColumnLightingObjects[i] = new Sprite
                         {
                             Image = GameBase.LoadedSkin.ColumnLighting4K,
-                            Size = new UDim2(LaneSize, columnLightingSize * GameBase.LoadedSkin.ColumnLightingScale),
+                            Size = new UDim2(LaneSize, columnLightingSize),
                             Tint = GameBase.LoadedSkin.ColumnColors4K[i],
                             PosX = GameplayReferences.ReceptorXPosition[i],
                             PosY = Config.Configuration.DownScroll4k ? ReceptorYOffset - columnLightingSize : ReceptorYOffset + columnLightingSize,
@@ -153,23 +172,24 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Alignment = Config.Configuration.DownScroll4k ? Alignment.TopLeft : Alignment.BotLeft,
                             Parent = BackgroundBoundary
                         };
-
-                        // Create BG Mask
-                        double imageRatio = (double)GameBase.LoadedSkin.StageBgMask4K.Width / GameBase.LoadedSkin.StageBgMask4K.Height;
-                        double columnRatio = PlayfieldSize / GameBase.WindowRectangle.Height;
-                        float bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
-
-                        var bgMask = new Sprite()
-                        {
-                            Image = GameBase.LoadedSkin.StageBgMask4K,
-                            Alpha = GameBase.LoadedSkin.BgMaskAlpha,
-                            Size = new UDim2(PlayfieldSize, bgMaskSize),
-                            Alignment = Alignment.MidCenter,
-                            Parent = BackgroundBoundary
-                        };
                     }
                     break;
                 case GameModes.Keys7:
+                    // Create BG Mask
+                    imageRatio = (double)GameBase.LoadedSkin.StageBgMask7K.Width / GameBase.LoadedSkin.StageBgMask7K.Height;
+                    columnRatio = PlayfieldSize / GameBase.WindowRectangle.Height;
+                    bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
+
+                    bgMask = new Sprite()
+                    {
+                        Image = GameBase.LoadedSkin.StageBgMask7K,
+                        Alpha = GameBase.LoadedSkin.BgMaskAlpha,
+                        Size = new UDim2(PlayfieldSize, bgMaskSize),
+                        Alignment = Alignment.MidCenter,
+                        Parent = BackgroundBoundary
+                    };
+
+                    // Create Receptors + HitLighting
                     ReceptorObjects = new Sprite[7];
                     ColumnLightingObjects = new Sprite[7];
                     ColumnLightingActive = new bool[7];
@@ -182,7 +202,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         // Create receptor Sprite
                         ReceptorObjects[i] = new Sprite
                         {
-                            Size = new UDim2(LaneSize, LaneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width),
+                            Size = new UDim2(LaneSize, LaneSize * ((float)GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width)),
                             Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYOffset),
                             Alignment = Alignment.TopLeft,
                             Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i],
@@ -190,30 +210,16 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         };
 
                         // Create hit lighting sprite
-                        var columnLightingSize = LaneSize * GameBase.LoadedSkin.ColumnLighting7K.Height / GameBase.LoadedSkin.ColumnLighting7K.Width;
+                        var columnLightingSize = LaneSize * GameBase.LoadedSkin.ColumnLightingScale * GameBase.LoadedSkin.ColumnLighting7K.Height / GameBase.LoadedSkin.ColumnLighting7K.Width;
                         ColumnLightingObjects[i] = new Sprite
                         {
                             Image = GameBase.LoadedSkin.ColumnLighting7K,
-                            Size = new UDim2(LaneSize, columnLightingSize * GameBase.LoadedSkin.ColumnLightingScale),
+                            Size = new UDim2(LaneSize, columnLightingSize),
                             Tint = GameBase.LoadedSkin.ColumnColors7K[i],
                             PosX = GameplayReferences.ReceptorXPosition[i],
                             PosY = Config.Configuration.DownScroll7k ? ReceptorYOffset - columnLightingSize : ReceptorYOffset + columnLightingSize,
                             SpriteEffect = Config.Configuration.DownScroll7k ? SpriteEffects.None : SpriteEffects.FlipVertically,
                             Alignment = Config.Configuration.DownScroll7k ? Alignment.TopLeft : Alignment.BotLeft,
-                            Parent = BackgroundBoundary
-                        };
-
-                        // Create BG Mask
-                        double imageRatio = (double)GameBase.LoadedSkin.StageBgMask7K.Width / GameBase.LoadedSkin.StageBgMask7K.Height;
-                        double columnRatio = PlayfieldSize / GameBase.WindowRectangle.Height;
-                        float bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
-
-                        var bgMask = new Sprite()
-                        {
-                            Image = GameBase.LoadedSkin.StageBgMask7K,
-                            Alpha = GameBase.LoadedSkin.BgMaskAlpha,
-                            Size = new UDim2(PlayfieldSize, bgMaskSize),
-                            Alignment = Alignment.MidCenter,
                             Parent = BackgroundBoundary
                         };
                     }
