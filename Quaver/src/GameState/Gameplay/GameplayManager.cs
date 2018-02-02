@@ -473,7 +473,7 @@ namespace Quaver.GameState.Gameplay
                         else
                         {
                             // Create a Hit Burst instance
-                            var hitBurst = new HitBurst(NoteManager.NoteBurstRectangle[keyLane.GetKey()], ParticleManager.Boundary, keyLane.GetKey());
+                            ParticleManager.Particles.Add(new HitBurst(NoteManager.NoteBurstRectangle[keyLane.GetKey()], ParticleManager.Boundary, keyLane.GetKey()));
 
                             // If the object is an LN, hold it at the receptors
                             if (NoteManager.HitObjectPool[noteIndex].IsLongNote) NoteManager.HoldNote(noteIndex);

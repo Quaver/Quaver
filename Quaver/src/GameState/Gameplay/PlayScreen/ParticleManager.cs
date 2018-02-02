@@ -36,6 +36,26 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         public void Update(double dt)
         {
+            // Update Every Particle
+            foreach(var ob in Particles)
+            {
+                ob.Update(dt);
+            }
+
+            // Check if any particles are ready to be destroyed. Will loop through it 8 times max per frame.
+            for (var i = 0; i < 8; i++)
+            {
+                if (Particles.Count <= 0)
+                    break;
+
+                if (Particles[0].DestroyReady)
+                {
+                    Particles[0].Destroy();
+                    Particles.RemoveAt(0);
+                }
+            }
+
+            // Update Boundary
             Boundary.Update(dt);
         }
     }
