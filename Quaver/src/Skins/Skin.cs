@@ -102,6 +102,12 @@ namespace Quaver.Skins
         internal bool ReceptorsOverHitObjects7K { get; set; }
 
         /// <summary>
+        ///     Determines whether notes will be flipped or not when using up scroll for this skin.
+        /// </summary>
+        internal bool FlipNoteImagesOnUpScroll4K { get; set; }
+        internal bool FlipNoteImagesOnUpScroll7K { get; set; }
+
+        /// <summary>
         ///     Column Colors. Used for hit lighting and other stuff that depends on column colors.
         /// </summary>
         internal Color[] ColumnColors4K { get; set; } = new Color[4];
@@ -884,6 +890,8 @@ namespace Quaver.Skins
                     ColumnColors7K[5] = new Color(255, 255, 255);
                     ColumnColors7K[6] = new Color(255, 255, 255);
                     BgMaskAlpha = 0.9f;
+                    FlipNoteImagesOnUpScroll4K = false;
+                    FlipNoteImagesOnUpScroll7K = false;
                     break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
@@ -924,6 +932,8 @@ namespace Quaver.Skins
                     ColumnColors7K[5] = new Color(255, 255, 255);
                     ColumnColors7K[6] = new Color(255, 255, 255);
                     BgMaskAlpha = 0.9f;
+                    FlipNoteImagesOnUpScroll4K = false;
+                    FlipNoteImagesOnUpScroll7K = false;
                     break;
             }
 
@@ -971,6 +981,8 @@ namespace Quaver.Skins
             ColumnColors7K[5] = ConfigHelper.ReadColor(ColumnColors7K[5], data["Gameplay"]["ColumnColor7K6"]);
             ColumnColors7K[6] = ConfigHelper.ReadColor(ColumnColors7K[6], data["Gameplay"]["ColumnColor7K7"]);
             BgMaskAlpha = ConfigHelper.ReadFloat(BgMaskAlpha, data["Gameplay"]["BgMaskAlpha"]);
+            FlipNoteImagesOnUpScroll4K = ConfigHelper.ReadBool(FlipNoteImagesOnUpScroll4K, data["Gameplay"]["FlipNoteImagesOnUpScroll4K"]);
+            FlipNoteImagesOnUpScroll7K = ConfigHelper.ReadBool(FlipNoteImagesOnUpScroll7K, data["Gameplay"]["FlipNoteImagesOnUpScroll7K"]);
             Logger.Log($@"Skin loaded: {skinDir}", LogColors.GameImportant);
         }
 
