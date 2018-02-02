@@ -142,7 +142,7 @@ namespace Quaver.Skins
 
         internal Texture2D StageLeftBorder { get; set; }
         internal Texture2D StageRightBorder { get; set; }
-        internal Texture2D StageReceptorOverlay { get; set; }
+        internal Texture2D StageHitPositionOverlay { get; set; }
         internal Texture2D StageDistantOverlay { get; set; }
 
         // 4k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
@@ -222,7 +222,7 @@ namespace Quaver.Skins
                 // Stage
                 @"stage-left-border",
                 @"stage-right-border",
-                @"stage-receptor-overlay",
+                @"stage-hitposition-overlay",
                 @"stage-distant-overlay",
 
                 // 4k HitBurst
@@ -401,8 +401,8 @@ namespace Quaver.Skins
                     case @"stage-right-border":
                         StageRightBorder = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"stage-receptor-overlay":
-                        StageReceptorOverlay = LoadIndividualElement(element, skinElementPath);
+                    case @"stage-hitposition-overlay":
+                        StageHitPositionOverlay = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"stage-distant-overlay":
                         StageDistantOverlay = LoadIndividualElement(element, skinElementPath);
@@ -463,6 +463,15 @@ namespace Quaver.Skins
                         break;
                     case @"7k-note-hitburst-4":
                         NoteHitBurst7K4 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-note-hitburst-5":
+                        NoteHitBurst7K5 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-note-hitburst-6":
+                        NoteHitBurst7K6 = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"7k-note-hitburst-7":
+                        NoteHitBurst7K7 = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-hitobject-1":
                         LoadHitObjects(NoteHitObjects4K, skinDir, element, 0);
