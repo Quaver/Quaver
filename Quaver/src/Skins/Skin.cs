@@ -67,8 +67,8 @@ namespace Quaver.Skins
         /// <summary>
         ///     The offset of the hit receptor
         /// </summary>
-        internal int ReceptorYOffset4K { get; set; }
-        internal int ReceptorYOffset7K { get; set; }
+        internal int ReceptorPositionOffset4K { get; set; }
+        internal int ReceptorPositionOffset7K { get; set; }
 
         /// <summary>
         ///     The size of the timing pars (in pixels).
@@ -855,8 +855,8 @@ namespace Quaver.Skins
                     ColumnLightingScale = 1.0f;
                     ColumnSize4K = 95;
                     ColumnSize7K = 65;
-                    ReceptorYOffset4K = 50;
-                    ReceptorYOffset7K = 0;
+                    ReceptorPositionOffset4K = 50;
+                    ReceptorPositionOffset7K = 0;
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = false;
                     LightFramesPerSecond = 240;
@@ -894,8 +894,8 @@ namespace Quaver.Skins
                     ColumnLightingScale = 1.0f;
                     ColumnSize4K = 95;
                     ColumnSize7K = 65;
-                    ReceptorYOffset4K = 50;
-                    ReceptorYOffset7K = 0;
+                    ReceptorPositionOffset4K = 50;
+                    ReceptorPositionOffset7K = 0;
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = true;
                     LightFramesPerSecond = 240;
@@ -940,8 +940,8 @@ namespace Quaver.Skins
             ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, data["Gameplay"]["ColumnLightingScale"]);
             ColumnSize4K = ConfigHelper.ReadInt32(ColumnSize4K, data["Gameplay"]["ColumnSize4K"]);
             ColumnSize7K = ConfigHelper.ReadInt32(ColumnSize7K, data["Gameplay"]["ColumnSize7K"]);
-            ReceptorYOffset4K = ConfigHelper.ReadInt32(ReceptorYOffset4K, data["Gameplay"]["ReceptorYOffset4K"]);
-            ReceptorYOffset7K = ConfigHelper.ReadInt32(ReceptorYOffset7K, data["Gameplay"]["ReceptorYOffset7K"]);
+            ReceptorPositionOffset4K = ConfigHelper.ReadInt32(ReceptorPositionOffset4K, data["Gameplay"]["ReceptorPositionOffset4K"]);
+            ReceptorPositionOffset7K = ConfigHelper.ReadInt32(ReceptorPositionOffset7K, data["Gameplay"]["ReceptorPositionOffset7K"]);
             ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, data["Gameplay"]["ColumnAlignment"]);
             ColourObjectsBySnapDistance = ConfigHelper.ReadBool(ColourObjectsBySnapDistance, data["Gameplay"]["ColourObjectsBySnapDistance"]);
             LightFramesPerSecond = ConfigHelper.ReadByte(LightFramesPerSecond, data["Gameplay"]["LightsFramesPerSecond"]);
