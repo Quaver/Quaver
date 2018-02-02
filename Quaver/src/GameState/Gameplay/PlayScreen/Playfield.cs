@@ -73,20 +73,24 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Parent = BackgroundBoundary
             };
 
-            // todo: this is placeholder until we have an asset for this
-            var stageLeft = new Sprite()
+            // Create Stage Left
+            var borderSize = GameBase.LoadedSkin.StageLeftBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageLeftBorder.Height;
+            var stage = new Sprite()
             {
-                Size = new UDim2(10, GameBase.WindowRectangle.Height),
-                Position = new UDim2(-10, 0),
+                Image = GameBase.LoadedSkin.StageLeftBorder,
+                Size = new UDim2(borderSize, GameBase.WindowRectangle.Height),
+                Position = new UDim2(-borderSize + 1, 0),
                 Alignment = Alignment.TopLeft,
                 Parent = BackgroundBoundary
             };
 
-            // todo: this is placeholder until we have an asset for this
-            var stageRight = new Sprite()
+            // Create Stage Right
+            borderSize = GameBase.LoadedSkin.StageRightBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageRightBorder.Height;
+            stage = new Sprite()
             {
-                Size = new UDim2(10, GameBase.WindowRectangle.Height),
-                Position = new UDim2(10, 0),
+                Image = GameBase.LoadedSkin.StageRightBorder,
+                Size = new UDim2(borderSize, GameBase.WindowRectangle.Height),
+                Position = new UDim2(borderSize - 1, 0),
                 Alignment = Alignment.TopRight,
                 Parent = BackgroundBoundary
             };
