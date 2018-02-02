@@ -1,4 +1,5 @@
 ﻿using Quaver.GameState;
+using Quaver.Graphics;
 using Quaver.Graphics.Particles;
 using Quaver.Graphics.Sprite;
 using System;
@@ -14,7 +15,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     Particle Container
         /// </summary>
-        internal Boundary Boundary { get; set; }
+        private Boundary Boundary { get; set; }
 
         internal List<Particle> Particles { get; set; }
 
@@ -57,6 +58,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             // Update Boundary
             Boundary.Update(dt);
+        }
+
+        internal void CreateHitBurst(DrawRectangle rect, int keyIndex)
+        {
+            Particles.Add(new HitBurst(rect, Boundary, keyIndex));
         }
     }
 }
