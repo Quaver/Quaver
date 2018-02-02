@@ -157,7 +157,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     }
                     break;
                 case GameModes.Keys7:
-                    BarOffset = LaneSize * GameBase.LoadedSkin.NoteHitObjects7K[0].Height * GameBase.LoadedSkin.NoteHitObjects7K[0].Width / 2;
+                    BarOffset = LaneSize * GameBase.LoadedSkin.NoteHitObjects7K[0].Height * GameBase.LoadedSkin.NoteHitObjects7K[0].Width / 2 + (float)GameBase.LoadedSkin.TimingBarPixelSize/2f;
                     NoteHitRectangle = new DrawRectangle[7];
                     NoteBurstRectangle = new DrawRectangle[7];
                     for (var i = 0; i < 7; i++)
@@ -179,7 +179,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             MeasureBarManager.BarObjectActive = MeasureBarManager.BarObjectQueue;
             for (var i = 0; i < MeasureBarManager.BarObjectActive.Count; i++)
             {
-                MeasureBarManager.BarObjectActive[i].Initialize(Boundary, 1, 0);
+                MeasureBarManager.BarObjectActive[i].Initialize(Boundary, GameBase.LoadedSkin.TimingBarPixelSize, 0);
             }
 
             // Initialize HitObjects
