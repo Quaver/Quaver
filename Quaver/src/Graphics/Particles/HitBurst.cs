@@ -30,7 +30,7 @@ namespace Quaver.Graphics.Particles
         /// <summary>
         ///     Max Scale of sprite when it is resized.
         /// </summary>
-        private float MaxScale { get; } = 0.1f;
+        private float MaxScale { get; } = 0.4f;
 
         /// <summary>
         ///     The Hit Burst Sprite. Will be animated.
