@@ -154,7 +154,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         NoteBurstRectangle[i].Height = NoteHitRectangle[i].Height * GameBase.LoadedSkin.NoteHitBursts4K[i].Height / GameBase.LoadedSkin.NoteHitObjects4K[i][0].Height;
                         NoteBurstRectangle[i].X = NoteHitRectangle[i].X - (NoteBurstRectangle[i].Width - NoteHitRectangle[i].Width) / 2;
                         NoteBurstRectangle[i].Y = NoteHitRectangle[i].Y - (NoteBurstRectangle[i].Height - NoteHitRectangle[i].Height) / 2;
-                        Console.WriteLine(i + ", " + NoteBurstRectangle[i].X);
                     }
                     break;
                 case GameModes.Keys7:
@@ -174,7 +173,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         NoteBurstRectangle[i].Height = NoteHitRectangle[i].Height * GameBase.LoadedSkin.NoteHitBursts7K[i].Height / GameBase.LoadedSkin.NoteHitObjects7K[i].Height;
                         NoteBurstRectangle[i].X = NoteHitRectangle[i].X - (NoteBurstRectangle[i].Width - NoteHitRectangle[i].Width) / 2;
                         NoteBurstRectangle[i].Y = NoteHitRectangle[i].Y - (NoteBurstRectangle[i].Height - NoteHitRectangle[i].Height) / 2;
-                        Console.WriteLine(i + ", " + NoteBurstRectangle[i].X);
                     }
                     break;
             }
