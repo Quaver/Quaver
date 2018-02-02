@@ -68,11 +68,11 @@ namespace Quaver.Graphics.Particles
             switch (GameBase.SelectedBeatmap.Qua.Mode)
             {
                 case GameModes.Keys4:
-                    HitBurstSprite.Image = GameBase.LoadedSkin.NoteHitBursts4K[keyLane];
+                    HitBurstSprite.Image = GameBase.LoadedSkin.NoteHitEffects4K[keyLane];
                     HitBurstSprite.SpriteEffect = !Config.Configuration.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None;
                     break;
                 case GameModes.Keys7:
-                    HitBurstSprite.Image = GameBase.LoadedSkin.NoteHitBursts7K[keyLane];
+                    HitBurstSprite.Image = GameBase.LoadedSkin.NoteHitEffects7K[keyLane];
                     HitBurstSprite.SpriteEffect = !Config.Configuration.DownScroll7k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None;
                     break;
             }
