@@ -123,7 +123,7 @@ namespace Quaver.GameState.Gameplay
         /// <summary>
         ///     This method initializes the HitObject sprites
         /// </summary>
-        internal void Initialize(bool downScroll, bool longNote, Drawable parent, GameModes gamemode)
+        internal void Initialize(bool downScroll, bool longNote, Drawable parent )
         {
             IsLongNote = longNote;
             var keyLaneIndex = KeyLane - 1;
@@ -158,7 +158,7 @@ namespace Quaver.GameState.Gameplay
                 };
 
                 // Choose the correct image based on the specific key lane for hold bodies.
-                switch (gamemode)
+                switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
                     case GameModes.Keys4:
                         HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex];
@@ -178,7 +178,7 @@ namespace Quaver.GameState.Gameplay
             }
 
             // Choose the correct image based on the specific key lane for hit body.
-            switch (gamemode)
+            switch (GameBase.SelectedBeatmap.Qua.Mode)
             {
                 case GameModes.Keys4:
                     try
