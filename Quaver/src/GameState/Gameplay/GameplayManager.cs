@@ -197,7 +197,7 @@ namespace Quaver.GameState.Gameplay
             CurrentSongTime = Timing.GetCurrentSongTime();
 
             // Check if the song is currently skippable.
-            IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - CurrentSongTime >= 5000);
+            IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - CurrentSongTime >= Timing.SONG_SKIP_OFFSET + 2000);
 
             // Update Helper Classes
             if (!Paused)
@@ -605,11 +605,12 @@ namespace Quaver.GameState.Gameplay
                 Logger.Log("Song has been successfully skipped to 3 seconds before the first HitObject.", LogColors.GameSuccess);
 
                 // Skip to 3 seconds before the notes start
-                SongManager.Load();
-                SongManager.SkipTo(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - 3000 + SongManager.BassDelayOffset);
+                SongManager.Pause();
+                SongManager.SkipTo(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + SongManager.BassDelayOffset);
                 SongManager.Play();
 
                 Timing.SongIsPlaying = true;
+                Timing.ActualSongTime = SongManager.Position;
                 DiscordController.ChangeDiscordPresenceGameplay(true);
             }
         }
