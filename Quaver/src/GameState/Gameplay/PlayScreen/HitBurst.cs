@@ -17,6 +17,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// </summary>
         private const double DISPLAY_TIME = 500;
 
+        private const float MAX_SCALE = 0.1f;
+
         /// <summary>
         ///     The Hit Burst Sprite. Will be animated.
         /// </summary>
@@ -57,9 +59,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     HitBurstSprite.Image = GameBase.LoadedSkin.NoteHitBursts7K[keyLane];
                     break;
             }
-
-            // Update Hit Burst Size
-            HitBurstSprite.Size = new UDim2(rect.Width, rect.Height);
         }
 
         /// <summary>
@@ -70,15 +69,22 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         {
             // Update Time Elapsed + Hit Burst Sprite
             timeElapsed += dt;
-
-            // Update Objects
-            base.Update(dt);
+            var timeRatio = (float)(timeElapsed / DISPLAY_TIME);
 
             // Destroy itself if time elapsed over DISPLAY_TIME duration.
             if (timeElapsed > DISPLAY_TIME)
             {
                 HitBurstSprite.Destroy();
+                return;
             }
+
+            // Update Objects
+            HitBurstSprite.ScaleX = 1 + (timeRatio * MAX_SCALE);
+            HitBurstSprite.ScaleY = HitBurstSprite.ScaleX;
+            HitBurstSprite.Alpha = 1 - timeRatio;
+
+            // Update Base
+            base.Update(dt);
         }
     }
 }
