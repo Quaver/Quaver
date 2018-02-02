@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ionic.Zip;
+using Quaver.Config;
 using Quaver.Logging;
 
 namespace Quaver.Commands
@@ -106,12 +107,31 @@ namespace Quaver.Commands
             new QuaverOsuElementMap("7k-note-holdend-7", "mania-note1T", ElementType.Image),
 
             // 4k Hit Object Hold Bodies
+            // The reason why there are two, is because osu takes either:
+            //  - mania-note1L (Non Animated)
+            //  - mania-note1L-0 (Animated)
+            new QuaverOsuElementMap("4k-note-holdbody-1", "mania-note1L", ElementType.Image),
+            new QuaverOsuElementMap("4k-note-holdbody-2", "mania-note2L", ElementType.Image),
+            new QuaverOsuElementMap("4k-note-holdbody-3", "mania-note2L", ElementType.Image),
+            new QuaverOsuElementMap("4k-note-holdbody-4", "mania-note1L", ElementType.Image),
+
             new QuaverOsuElementMap("4k-note-holdbody-1", "mania-note1L", ElementType.AnimatableImage),
             new QuaverOsuElementMap("4k-note-holdbody-2", "mania-note2L", ElementType.AnimatableImage),
             new QuaverOsuElementMap("4k-note-holdbody-3", "mania-note2L", ElementType.AnimatableImage),
             new QuaverOsuElementMap("4k-note-holdbody-4", "mania-note1L", ElementType.AnimatableImage),
 
             // 7k Hit Object Hold Bodies
+            // The reason why there are two, is because osu takes either:
+            //  - mania-note1L (Non Animated)
+            //  - mania-note1L-0 (Animated)
+            new QuaverOsuElementMap("7k-note-holdbody-1", "mania-note1L", ElementType.Image),
+            new QuaverOsuElementMap("7k-note-holdbody-2", "mania-note2L", ElementType.Image),
+            new QuaverOsuElementMap("7k-note-holdbody-3", "mania-note1L", ElementType.Image),
+            new QuaverOsuElementMap("7k-note-holdbody-4", "mania-noteSL", ElementType.Image),
+            new QuaverOsuElementMap("7k-note-holdbody-5", "mania-note1L", ElementType.Image),
+            new QuaverOsuElementMap("7k-note-holdbody-6", "mania-note2L", ElementType.Image),
+            new QuaverOsuElementMap("7k-note-holdbody-7", "mania-note1L", ElementType.Image),
+
             new QuaverOsuElementMap("7k-note-holdbody-1", "mania-note1L", ElementType.AnimatableImage),
             new QuaverOsuElementMap("7k-note-holdbody-2", "mania-note2L", ElementType.AnimatableImage),
             new QuaverOsuElementMap("7k-note-holdbody-3", "mania-note1L", ElementType.AnimatableImage),
@@ -151,6 +171,16 @@ namespace Quaver.Commands
             new QuaverOsuElementMap("7k-receptor-down-7", "mania-key1D", ElementType.Image),
 
             // Judge
+            // The reason why there are two, is because osu takes either:
+            //  - mania-hit0 (Non Animated)
+            //  - mania-hit0-0 (Animated)
+            new QuaverOsuElementMap("judge-miss", "mania-hit0", ElementType.Image),
+            new QuaverOsuElementMap("judge-bad", "mania-hit50", ElementType.Image),
+            new QuaverOsuElementMap("judge-good", "mania-hit100", ElementType.Image),
+            new QuaverOsuElementMap("judge-great", "mania-hit200", ElementType.Image),
+            new QuaverOsuElementMap("judge-perfect", "mania-hit300", ElementType.Image),
+            new QuaverOsuElementMap("judge-marv", "mania-hit300g", ElementType.Image),
+
             new QuaverOsuElementMap("judge-miss", "mania-hit0", ElementType.AnimatableImage),
             new QuaverOsuElementMap("judge-bad", "mania-hit50", ElementType.AnimatableImage),
             new QuaverOsuElementMap("judge-good", "mania-hit100", ElementType.AnimatableImage),
@@ -187,15 +217,51 @@ namespace Quaver.Commands
                 Logger.Log("Commencing .osk extraction...", LogColors.GameInfo);
 
                 using (var archive = new ZipFile(path))
+                {
                     archive.ExtractAll(extractPath, ExtractExistingFileAction.OverwriteSilently);
-
+                }
+                    
                 Logger.Log(".osk extraction has completed!", LogColors.GameSuccess);
 
                 var extractedFiles = Directory.GetFiles(extractPath);
 
+                var newSkinDirPath = Configuration.SkinDirectory + "/" + Path.GetFileNameWithoutExtension(path);
+                Directory.CreateDirectory(newSkinDirPath);
+
                 foreach (var map in QuaverOsuSkinMap)
                 {
-                    Console.WriteLine(map.QuaverElement + " = " + map.OsuElement + " | " + map.Type);
+                    switch (map.Type)
+                    {
+                        case ElementType.Sound:
+                        case ElementType.Image:
+                            var extension = map.Type == ElementType.Image ? ".png" : ".wav";
+
+                            var fullPath = extractPath + map.OsuElement.ToLower() + extension;
+                            if (!File.Exists(fullPath)) continue;
+
+                            File.Copy(fullPath, newSkinDirPath + "/" + map.QuaverElement + extension, true);
+                            break;
+                        case ElementType.AnimatableImage:
+                            const string extensionAnim = ".png";
+
+                            // Copy animation elements over until the sequence is broken
+                            for (var i = 0; File.Exists(extractPath + map.OsuElement.ToLower() + "-" + i + extensionAnim); i++)
+                            {
+                                var quaverPath = "";
+
+                                if (i == 0)
+                                    // element (It's just the element name if it's the first animation frame.)
+                                    quaverPath = newSkinDirPath + "/" + map.QuaverElement + extensionAnim;
+                                else
+                                    // element@1 (It contains @i if the element frame isn't the first one.)
+                                    quaverPath = newSkinDirPath + "/" + map.QuaverElement + "@" + i + extensionAnim;
+
+                                File.Copy(extractPath + map.OsuElement.ToLower() + "-" + i + extensionAnim, quaverPath, true);
+                            }
+                            break;
+                        default:
+                            continue;
+                    }
                 }
             }
             catch (Exception e)
