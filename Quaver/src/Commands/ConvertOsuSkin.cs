@@ -251,7 +251,7 @@ namespace Quaver.Commands
                                 {
                                     using (var reader = new WaveFileReader(fullPath))
                                     {
-                                        var newFormat = new WaveFormat(8000, 16, 1);
+                                        var newFormat = new WaveFormat();
                                         using (var conversionStream = new WaveFormatConversionStream(newFormat, reader))
                                         {
                                             WaveFileWriter.CreateWaveFile(newPath, conversionStream);
