@@ -35,8 +35,8 @@ namespace Quaver.Tests
                           $"HitLightingScale: {skin.ColumnLightingScale}\n" +
                           $"ColumnSize4K: {skin.ColumnSize4K}\n" +
                           $"ColumnSize4K: {skin.ColumnSize7K}\n" +
-                          $"ReceptorYOffset4K: {skin.ReceptorYOffset4K}\n" +
-                          $"ReceptorYOffset7K: {skin.ReceptorYOffset7K}\n" +
+                          $"ReceptorYOffset4K: {skin.ReceptorPositionOffset4K}\n" +
+                          $"ReceptorYOffset7K: {skin.ReceptorPositionOffset7K}\n" +
                           $"Parsing Took : {watch.ElapsedMilliseconds}ms to execute.\n" +
                           $"----------------------------------------------------------\n");
         }

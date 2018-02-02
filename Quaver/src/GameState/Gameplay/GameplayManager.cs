@@ -138,7 +138,7 @@ namespace Quaver.GameState.Gameplay
             for (var i = 0; i < RenderedHitObjects.Length; i++)
             {
                 RenderedHitObjects[i] = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
-                RenderedAlphas[i] = Color.White * (1f / (float)Math.Pow(1 + i, 1.5));
+                RenderedAlphas[i] = i == RenderedHitObjects.Length - 1 ? Color.White : Color.White * (1f / (1 + i));
             }
         }
 
@@ -246,7 +246,7 @@ namespace Quaver.GameState.Gameplay
             // Render Current NoteManager Frame
             GameBase.GraphicsDevice.SetRenderTarget(RenderedHitObjects[CurrentRenderIndex]);
             GameBase.GraphicsDevice.Clear(Color.Transparent);
-            GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            GameBase.SpriteBatch.Begin();
             NoteManager.Draw();
             GameBase.SpriteBatch.End();
 
@@ -328,8 +328,8 @@ namespace Quaver.GameState.Gameplay
 
                     // Get Receptor Y Offset
                     Playfield.ReceptorYOffset = Config.Configuration.DownScroll4k //todo: use list for scaling
-                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset4K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width))
-                        : GameBase.LoadedSkin.ReceptorYOffset4K * GameBase.WindowUIScale;
+                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width))
+                        : GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale;
 
                     // Update Note Manager
                     NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed4k / (20f * GameBase.GameClock);
@@ -355,8 +355,8 @@ namespace Quaver.GameState.Gameplay
 
                     // Get Receptor Y Offset
                     Playfield.ReceptorYOffset = Config.Configuration.DownScroll7k  //todo: use list for scaling
-                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset7K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
-                        : GameBase.LoadedSkin.ReceptorYOffset7K * GameBase.WindowUIScale; ;
+                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset7K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
+                        : GameBase.LoadedSkin.ReceptorPositionOffset7K * GameBase.WindowUIScale; ;
 
                     // Update Note Manager
                     NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed7k / (20f * GameBase.GameClock);
