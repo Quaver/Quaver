@@ -72,6 +72,7 @@
     <Compile Include="src\Audio\MenuAudioPlayer.cs" />
     <Compile Include="src\Audio\SongManager.cs" />
     <Compile Include="src\Commands\CalculateDifficulty.cs" />
+    <Compile Include="src\Commands\ConvertOsuSkin.cs" />
     <Compile Include="src\Commands\ParseStepMania.cs" />
     <Compile Include="src\Database\Beatmaps\Mapset.cs" />
     <Compile Include="src\Commands\CommandHandler.cs" />
