@@ -62,7 +62,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     Receptor Y-Offset from screen
         /// </summary>
-        internal float ReceptorYOffset { get; set; }
+        internal float ReceptorYPosition { get; set; }
+
+        /// <summary>
+        ///     Determines Position of Column Lighting Objects
+        /// </summary>
+        internal float ColumnLightingPosition { get; set; }
 
         /// <summary>
         ///     Is determined if hit lighting object should be active
@@ -153,9 +158,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         ReceptorObjects[i] = new Sprite
                         {
                             Size = new UDim2(LaneSize, LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width),
-                            Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYOffset),
+                            Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYPosition),
                             Alignment = Alignment.TopLeft,
                             Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i],
+                            SpriteEffect = Config.Configuration.DownScroll4k ? SpriteEffects.None : SpriteEffects.FlipVertically,
                             Parent = ReceptorBoundary
                         };
 
@@ -167,7 +173,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Size = new UDim2(LaneSize, columnLightingSize),
                             Tint = GameBase.LoadedSkin.ColumnColors4K[i],
                             PosX = GameplayReferences.ReceptorXPosition[i],
-                            PosY = Config.Configuration.DownScroll4k ? ReceptorYOffset - columnLightingSize : ReceptorYOffset + columnLightingSize,
+                            PosY = Config.Configuration.DownScroll4k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
                             SpriteEffect = Config.Configuration.DownScroll4k ? SpriteEffects.None : SpriteEffects.FlipVertically,
                             Alignment = Config.Configuration.DownScroll4k ? Alignment.TopLeft : Alignment.BotLeft,
                             Parent = BackgroundBoundary
@@ -203,9 +209,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         ReceptorObjects[i] = new Sprite
                         {
                             Size = new UDim2(LaneSize, LaneSize * ((float)GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width)),
-                            Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYOffset),
+                            Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYPosition),
                             Alignment = Alignment.TopLeft,
                             Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i],
+                            SpriteEffect = Config.Configuration.DownScroll7k ? SpriteEffects.None : SpriteEffects.FlipVertically,
                             Parent = ReceptorBoundary
                         };
 
@@ -217,7 +224,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Size = new UDim2(LaneSize, columnLightingSize),
                             Tint = GameBase.LoadedSkin.ColumnColors7K[i],
                             PosX = GameplayReferences.ReceptorXPosition[i],
-                            PosY = Config.Configuration.DownScroll7k ? ReceptorYOffset - columnLightingSize : ReceptorYOffset + columnLightingSize,
+                            PosY = Config.Configuration.DownScroll7k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
                             SpriteEffect = Config.Configuration.DownScroll7k ? SpriteEffects.None : SpriteEffects.FlipVertically,
                             Alignment = Config.Configuration.DownScroll7k ? Alignment.TopLeft : Alignment.BotLeft,
                             Parent = BackgroundBoundary
