@@ -161,7 +161,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYPosition),
                             Alignment = Alignment.TopLeft,
                             Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i],
-                            SpriteEffect = Config.Configuration.DownScroll4k ? SpriteEffects.None : SpriteEffects.FlipVertically,
+                            SpriteEffect = !Config.Configuration.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Parent = ReceptorBoundary
                         };
 
@@ -174,7 +174,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Tint = GameBase.LoadedSkin.ColumnColors4K[i],
                             PosX = GameplayReferences.ReceptorXPosition[i],
                             PosY = Config.Configuration.DownScroll4k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
-                            SpriteEffect = Config.Configuration.DownScroll4k ? SpriteEffects.None : SpriteEffects.FlipVertically,
+                            SpriteEffect = !Config.Configuration.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Alignment = Alignment.TopLeft,
                             Parent = BackgroundBoundary
                         };
@@ -212,7 +212,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYPosition),
                             Alignment = Alignment.TopLeft,
                             Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i],
-                            SpriteEffect = Config.Configuration.DownScroll7k ? SpriteEffects.None : SpriteEffects.FlipVertically,
+                            SpriteEffect = !Config.Configuration.DownScroll7k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Parent = ReceptorBoundary
                         };
 
@@ -225,7 +225,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Tint = GameBase.LoadedSkin.ColumnColors7K[i],
                             PosX = GameplayReferences.ReceptorXPosition[i],
                             PosY = Config.Configuration.DownScroll7k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
-                            SpriteEffect = Config.Configuration.DownScroll7k ? SpriteEffects.None : SpriteEffects.FlipVertically,
+                            SpriteEffect = !Config.Configuration.DownScroll7k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Alignment = Alignment.TopLeft,
                             Parent = BackgroundBoundary
                         };
