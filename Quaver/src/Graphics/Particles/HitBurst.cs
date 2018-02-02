@@ -1,4 +1,5 @@
-﻿using Quaver.API.Enums;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Enums;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
@@ -30,7 +31,7 @@ namespace Quaver.Graphics.Particles
         /// <summary>
         ///     Max Scale of sprite when it is resized.
         /// </summary>
-        private float MaxScale { get; } = 0.4f;
+        private float MaxScale { get; } = 0.2f;
 
         /// <summary>
         ///     The Hit Burst Sprite. Will be animated.
@@ -68,9 +69,11 @@ namespace Quaver.Graphics.Particles
             {
                 case GameModes.Keys4:
                     HitBurstSprite.Image = GameBase.LoadedSkin.NoteHitBursts4K[keyLane];
+                    HitBurstSprite.SpriteEffect = !Config.Configuration.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None;
                     break;
                 case GameModes.Keys7:
                     HitBurstSprite.Image = GameBase.LoadedSkin.NoteHitBursts7K[keyLane];
+                    HitBurstSprite.SpriteEffect = !Config.Configuration.DownScroll7k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None;
                     break;
             }
         }
@@ -101,7 +104,7 @@ namespace Quaver.Graphics.Particles
             }
 
             // Update Objects
-            HitBurstSprite.ScaleX = (float)(1 + Math.Pow(timeRatio * MaxScale, 0.5));
+            HitBurstSprite.ScaleX = (float)(1 + (Math.Pow(timeRatio, 0.5) * MaxScale));
             HitBurstSprite.ScaleY = HitBurstSprite.ScaleX;
             HitBurstSprite.Alpha = 1 - timeRatio;
 
