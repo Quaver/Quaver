@@ -462,7 +462,6 @@ namespace Quaver.GameState.Gameplay
                         // If the player is spamming
                         if (i >= 3)
                         {
-                            //todo: (Swan: This is why the game looks so weird)
                             //If the object is an LN, don't forget to count it
                             if (NoteManager.HitObjectPool[noteIndex].IsLongNote)
                                 ReleaseSkipped(null, null);
@@ -473,7 +472,7 @@ namespace Quaver.GameState.Gameplay
                         else
                         {
                             // Create a Hit Burst instance
-                            ParticleManager.Particles.Add(new HitBurst(NoteManager.NoteBurstRectangle[keyLane.GetKey()], ParticleManager.Boundary, keyLane.GetKey()));
+                            ParticleManager.CreateHitBurst(NoteManager.NoteBurstRectangle[keyLane.GetKey()], keyLane.GetKey());
 
                             // If the object is an LN, hold it at the receptors
                             if (NoteManager.HitObjectPool[noteIndex].IsLongNote) NoteManager.HoldNote(noteIndex);
