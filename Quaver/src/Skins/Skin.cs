@@ -41,6 +41,11 @@ namespace Quaver.Skins
         internal string Version { get; set; }
 
         /// <summary>
+        ///     Determines the transparency of the bg masks
+        /// </summary>
+        internal float BgMaskAlpha { get; set; } = 0.95f;
+
+        /// <summary>
         ///     The padding (Positional offset) of the notes relative from the bg mask.
         /// </summary>
         internal int BgMaskPadding4K { get; set; }
@@ -61,8 +66,8 @@ namespace Quaver.Skins
         /// <summary>
         ///     Hit Position for hit objects.
         /// </summary>
-        internal int SkinHitPositionOffset4K { get; set; }
-        internal int SkinHitPositionOffset7K { get; set; }
+        internal int HitPositionOffset4K { get; set; }
+        internal int HitPositionOffset7K { get; set; }
 
         /// <summary>
         ///     The offset of the hit receptor
@@ -128,8 +133,8 @@ namespace Quaver.Skins
         ///     We first attempt to load the selected skin's elements, however if we can't,
         ///     it'll result it to the default.
         /// </summary>
-        internal Texture2D ColumnBgMask4K { get; set; }
-        internal Texture2D ColumnBgMask7K { get; set; }
+        internal Texture2D StageBgMask4K { get; set; }
+        internal Texture2D StageBgMask7K { get; set; }
 
         /// <summary>
         ///     Lane Lighting Sprites
@@ -140,7 +145,7 @@ namespace Quaver.Skins
         /// <summary>
         ///     Timing bar Sprite
         /// </summary>
-        internal Texture2D ColumnTimingBar { get; set; }
+        internal Texture2D StageTimingBar { get; set; }
 
         /// <summary>
         ///     Stage Sprite. Is displayed on the left side of the stage.
@@ -216,10 +221,11 @@ namespace Quaver.Skins
         // Contains the file names of all skin elements
         private readonly string[] skinElements = new[]
         {
-                @"column-bgmask",
-                @"column-timingbar",
+                @"4k-stage-bgmask",
+                @"7k-stage-bgmask",
                 @"4k-column-lighting",
                 @"7k-column-lighting",
+                @"stage-timingbar",
 
                 // Stage
                 @"stage-left-border",
@@ -391,11 +397,14 @@ namespace Quaver.Skins
                 // Load up all the skin elements.
                 switch (element)
                 {
-                    case @"4k-column-bgmask":
-                        ColumnBgMask4K = LoadIndividualElement(element, skinElementPath);
+                    case @"4k-stage-bgmask":
+                        StageBgMask4K = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"column-timingbar":
-                        ColumnTimingBar = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-stage-bgmask":
+                        StageBgMask7K = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"stage-timingbar":
+                        StageTimingBar = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"stage-left-border":
                         StageLeftBorder = LoadIndividualElement(element, skinElementPath);
@@ -847,8 +856,8 @@ namespace Quaver.Skins
                     Version = "1.0";
                     BgMaskPadding4K = 5;
                     BgMaskPadding7K = 5;
-                    SkinHitPositionOffset4K = 0;
-                    SkinHitPositionOffset7K = 0;
+                    HitPositionOffset4K = 0;
+                    HitPositionOffset7K = 0;
                     NotePadding4K = 2;
                     NotePadding7K = 0;
                     TimingBarPixelSize = 2;
@@ -879,6 +888,7 @@ namespace Quaver.Skins
                     ColumnColors7K[4] = new Color(255, 255, 255);
                     ColumnColors7K[5] = new Color(255, 255, 255);
                     ColumnColors7K[6] = new Color(255, 255, 255);
+                    BgMaskAlpha = 0.9f;
                     break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
@@ -886,8 +896,8 @@ namespace Quaver.Skins
                     Version = "1.0";
                     BgMaskPadding4K = 5;
                     BgMaskPadding7K = 5;
-                    SkinHitPositionOffset4K = 0;
-                    SkinHitPositionOffset7K = 0;
+                    HitPositionOffset4K = 0;
+                    HitPositionOffset7K = 0;
                     NotePadding4K = 2;
                     NotePadding7K = 0;
                     TimingBarPixelSize = 2;
@@ -918,6 +928,7 @@ namespace Quaver.Skins
                     ColumnColors7K[4] = new Color(255, 255, 255);
                     ColumnColors7K[5] = new Color(255, 255, 255);
                     ColumnColors7K[6] = new Color(255, 255, 255);
+                    BgMaskAlpha = 0.9f;
                     break;
             }
 
@@ -932,8 +943,8 @@ namespace Quaver.Skins
             Version = ConfigHelper.ReadString(Version, data["General"]["Version"]);
             BgMaskPadding4K = ConfigHelper.ReadInt32(BgMaskPadding4K, data["Gameplay"]["BgMaskPadding4K"]);
             BgMaskPadding7K = ConfigHelper.ReadInt32(BgMaskPadding7K, data["Gameplay"]["BgMaskPadding7K"]);
-            SkinHitPositionOffset4K = ConfigHelper.ReadInt32(SkinHitPositionOffset4K, data["Gameplay"]["SkinHitPositionOffset4K"]);
-            SkinHitPositionOffset7K = ConfigHelper.ReadInt32(SkinHitPositionOffset7K, data["Gameplay"]["SkinHitPositionOffset7K"]);
+            HitPositionOffset4K = ConfigHelper.ReadInt32(HitPositionOffset4K, data["Gameplay"]["HitPositionOffset4K"]);
+            HitPositionOffset7K = ConfigHelper.ReadInt32(HitPositionOffset7K, data["Gameplay"]["HitPositionOffset7K"]);
             NotePadding4K = ConfigHelper.ReadInt32(NotePadding4K, data["Gameplay"]["NotePadding4K"]);
             NotePadding7K = ConfigHelper.ReadInt32(NotePadding7K, data["Gameplay"]["NotePadding7K"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, data["Gameplay"]["TimingBarPixelSize"]);
@@ -964,6 +975,7 @@ namespace Quaver.Skins
             ColumnColors7K[4] = ConfigHelper.ReadColor(ColumnColors7K[4], data["Gameplay"]["ColumnColor7K5"]);
             ColumnColors7K[5] = ConfigHelper.ReadColor(ColumnColors7K[5], data["Gameplay"]["ColumnColor7K6"]);
             ColumnColors7K[6] = ConfigHelper.ReadColor(ColumnColors7K[6], data["Gameplay"]["ColumnColor7K7"]);
+            BgMaskAlpha = ConfigHelper.ReadFloat(BgMaskAlpha, data["Gameplay"]["BgMaskAlpha"]);
             Logger.Log($@"Skin loaded: {skinDir}", LogColors.GameImportant);
         }
 
