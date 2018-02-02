@@ -326,21 +326,27 @@ namespace Quaver.GameState.Gameplay
                     receptorPadding = (int)(GameBase.LoadedSkin.NotePadding4K * GameBase.WindowUIScale);
                     DrawPlayfieldFirst = !GameBase.LoadedSkin.ReceptorsOverHitObjects4K;
 
-                    // Get Receptor Y Offset
-                    Playfield.ReceptorYOffset = Config.Configuration.DownScroll4k //todo: use list for scaling
-                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width))
+                    // Update Playfield
+                    Playfield.ReceptorYPosition = Config.Configuration.DownScroll4k  //todo: use list for scaling
+                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
                         : GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale;
+                    Playfield.ColumnLightingPosition = Config.Configuration.DownScroll4k
+                        ? Playfield.ReceptorYPosition
+                        : Playfield.ReceptorYPosition
+                        - GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
+                        * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
+                        - ((double)GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
 
                     // Update Note Manager
                     NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed4k / (20f * GameBase.GameClock);
                     NoteManager.DownScroll = Configuration.DownScroll4k;
                     NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll4k
-                        ? Playfield.ReceptorYOffset + ((Configuration.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
-                        : Playfield.ReceptorYOffset - ((Configuration.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
+                        ? Playfield.ReceptorYPosition + ((Configuration.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
+                        : Playfield.ReceptorYPosition - ((Configuration.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
-                        * ((GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
-                        - (GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
+                        * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
+                        - ((double)GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
 
                     // Update Score Manager
                     ScoreManager.ScrollSpeed = Configuration.ScrollSpeed4k;
@@ -353,21 +359,27 @@ namespace Quaver.GameState.Gameplay
                     receptorPadding = (int)(GameBase.LoadedSkin.NotePadding7K * GameBase.WindowUIScale);
                     DrawPlayfieldFirst = !GameBase.LoadedSkin.ReceptorsOverHitObjects7K;
 
-                    // Get Receptor Y Offset
-                    Playfield.ReceptorYOffset = Config.Configuration.DownScroll7k  //todo: use list for scaling
+                    // Update Playfield
+                    Playfield.ReceptorYPosition = Config.Configuration.DownScroll7k  //todo: use list for scaling
                         ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset7K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
-                        : GameBase.LoadedSkin.ReceptorPositionOffset7K * GameBase.WindowUIScale; ;
+                        : GameBase.LoadedSkin.ReceptorPositionOffset7K * GameBase.WindowUIScale;
+                    Playfield.ColumnLightingPosition = Config.Configuration.DownScroll7k
+                        ? Playfield.ReceptorYPosition
+                        : Playfield.ReceptorYPosition 
+                        - GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
+                        * ((GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
+                        - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
 
                     // Update Note Manager
                     NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed7k / (20f * GameBase.GameClock);
                     NoteManager.DownScroll = Configuration.DownScroll7k;
                     NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll7k
-                        ? Playfield.ReceptorYOffset + ((Configuration.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
-                        : Playfield.ReceptorYOffset - ((Configuration.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
+                        ? Playfield.ReceptorYPosition + ((Configuration.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
+                        : Playfield.ReceptorYPosition - ((Configuration.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
-                        * ((GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
-                        - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
+                        * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
+                        - ((double)GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
 
                     // Update Score Manager
                     ScoreManager.ScrollSpeed = Configuration.ScrollSpeed7k;
