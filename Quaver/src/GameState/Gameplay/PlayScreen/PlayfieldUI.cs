@@ -113,10 +113,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             JudgeImages = new Texture2D[6]
             {
                 GameBase.LoadedSkin.JudgeMarv,
-                GameBase.LoadedSkin.JudgePerfect,
+                GameBase.LoadedSkin.JudgePerf,
                 GameBase.LoadedSkin.JudgeGreat,
                 GameBase.LoadedSkin.JudgeGood,
-                GameBase.LoadedSkin.JudgeBad,
+                GameBase.LoadedSkin.JudgeOkay,
                 GameBase.LoadedSkin.JudgeMiss
             };
 

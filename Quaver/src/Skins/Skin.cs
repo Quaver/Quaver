@@ -179,10 +179,10 @@ namespace Quaver.Skins
         ///     Judge
         /// </summary>
         internal Texture2D JudgeMiss { get; set; }
-        internal Texture2D JudgeBad { get; set; }
+        internal Texture2D JudgeOkay { get; set; }
         internal Texture2D JudgeGood { get; set; }
         internal Texture2D JudgeGreat { get; set; }
-        internal Texture2D JudgePerfect { get; set; }
+        internal Texture2D JudgePerf { get; set; }
         internal Texture2D JudgeMarv { get; set; }
 
         /// <summary>
@@ -330,10 +330,10 @@ namespace Quaver.Skins
 
                 // Judge
                 @"judge-miss",
-                @"judge-bad",
+                @"judge-okay",
                 @"judge-good",
                 @"judge-great",
-                @"judge-perfect",
+                @"judge-perf",
                 @"judge-marv",
 
                 //  Cursor
@@ -662,8 +662,8 @@ namespace Quaver.Skins
                     case @"judge-miss":
                         JudgeMiss = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"judge-bad":
-                        JudgeBad = LoadIndividualElement(element, skinElementPath);
+                    case @"judge-okay":
+                        JudgeOkay = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-good":
                         JudgeGood = LoadIndividualElement(element, skinElementPath);
@@ -671,8 +671,8 @@ namespace Quaver.Skins
                     case @"judge-great":
                         JudgeGreat = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"judge-perfect":
-                        JudgePerfect = LoadIndividualElement(element, skinElementPath);
+                    case @"judge-perf":
+                        JudgePerf = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-marv":
                         JudgeMarv = LoadIndividualElement(element, skinElementPath);
