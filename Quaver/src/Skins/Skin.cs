@@ -125,19 +125,6 @@ namespace Quaver.Skins
         internal Texture2D[] ColumnHitLighting4K { get; set; } = new Texture2D[4];
         internal Texture2D[] ColumnHitLighting7K { get; set; } = new Texture2D[7];
 
-        internal Texture2D NoteHitBurst4K1 { get; set; }
-        internal Texture2D NoteHitBurst4K2 { get; set; }
-        internal Texture2D NoteHitBurst4K3 { get; set; }
-        internal Texture2D NoteHitBurst4K4 { get; set; }
-
-        internal Texture2D NoteHitBurst7K1 { get; set; }
-        internal Texture2D NoteHitBurst7K2 { get; set; }
-        internal Texture2D NoteHitBurst7K3 { get; set; }
-        internal Texture2D NoteHitBurst7K4 { get; set; }
-        internal Texture2D NoteHitBurst7K5 { get; set; }
-        internal Texture2D NoteHitBurst7K6 { get; set; }
-        internal Texture2D NoteHitBurst7K7 { get; set; }
-
         internal Texture2D ColumnTimingBar { get; set; }
 
         internal Texture2D StageLeftBorder { get; set; }
@@ -152,6 +139,7 @@ namespace Quaver.Skins
         internal Texture2D[] NoteHoldEnds4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsUp4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsDown4K { get; set; } = new Texture2D[4];
+        internal Texture2D[] NoteHitBursts4K { get; set; } = new Texture2D[4];
 
         // 7k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
@@ -160,6 +148,7 @@ namespace Quaver.Skins
         internal Texture2D[] NoteHoldEnds7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteReceptorsUp7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteReceptorsDown7K { get; set; } = new Texture2D[7];
+        internal Texture2D[] NoteHitBursts7K { get; set; } = new Texture2D[7];
 
         /// <summary>
         ///     Grades
@@ -441,37 +430,37 @@ namespace Quaver.Skins
                         ColumnHitLighting7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-hitburst-1":
-                        NoteHitBurst4K1 = LoadIndividualElement(element, skinElementPath);
+                        NoteHitBursts4K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-hitburst-2":
-                        NoteHitBurst4K2 = LoadIndividualElement(element, skinElementPath);
+                        NoteHitBursts4K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-hitburst-3":
-                        NoteHitBurst4K3 = LoadIndividualElement(element, skinElementPath);
+                        NoteHitBursts4K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-hitburst-4":
-                        NoteHitBurst4K4 = LoadIndividualElement(element, skinElementPath);
+                        NoteHitBursts4K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"7k-note-hitburst-1":
-                        NoteHitBurst7K1 = LoadIndividualElement(element, skinElementPath);
+                        NoteHitBursts7K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"7k-note-hitburst-2":
-                        NoteHitBurst7K2 = LoadIndividualElement(element, skinElementPath);
+                        NoteHitBursts7K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"7k-note-hitburst-3":
-                        NoteHitBurst7K3 = LoadIndividualElement(element, skinElementPath);
+                        NoteHitBursts7K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"7k-note-hitburst-4":
-                        NoteHitBurst7K4 = LoadIndividualElement(element, skinElementPath);
+                        NoteHitBursts7K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"7k-note-hitburst-5":
-                        NoteHitBurst7K5 = LoadIndividualElement(element, skinElementPath);
+                        NoteHitBursts7K[4] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"7k-note-hitburst-6":
-                        NoteHitBurst7K6 = LoadIndividualElement(element, skinElementPath);
+                        NoteHitBursts7K[5] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"7k-note-hitburst-7":
-                        NoteHitBurst7K7 = LoadIndividualElement(element, skinElementPath);
+                        NoteHitBursts7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-hitobject-1":
                         LoadHitObjects(NoteHitObjects4K, skinDir, element, 0);
