@@ -194,6 +194,19 @@ namespace Quaver.Config
         private static bool _gradeBarRelative = true;
         internal static bool GradeBarRelative { get => _gradeBarRelative; set { _gradeBarRelative = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
+
+        /// <summary>
+        ///     The path of the osu!.db file
+        /// </summary>
+        private static string _osuDbPath;
+        internal static string OsuDbPath { get => _osuDbPath; set { _osuDbPath = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
+        ///     Dictates where or not we should load osu! beatmaps from osu!.db on game start
+        /// </summary>
+        private static bool _autoLoadOsuBeatmaps;
+        internal static bool AutoLoadOsuBeatmaps { get => _autoLoadOsuBeatmaps; set { _autoLoadOsuBeatmaps = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
         /// <summary>
         ///     The key pressed for lane 1
         /// </summary>
@@ -386,6 +399,8 @@ namespace Quaver.Config
             _logsDirectory = ConfigHelper.ReadDirectory(LogsDirectory, data["LogsDirectory"]);
             _dataDirectory = ConfigHelper.ReadDirectory(DataDirectory, data["DataDirectory"]);
             _songDirectory = ConfigHelper.ReadDirectory(SongDirectory, data["SongDirectory"]);
+            _osuDbPath = ConfigHelper.ReadPath(OsuDbPath, data["OsuDbPath"]);
+            _autoLoadOsuBeatmaps = ConfigHelper.ReadBool(AutoLoadOsuBeatmaps, data["AutoLoadOsuBeatmaps"]);
             _username = ConfigHelper.ReadString(Username, data["Username"]);
             _volumeGlobal = ConfigHelper.ReadPercentage(VolumeGlobal, data["VolumeGlobal"]);
             _volumeEffect = ConfigHelper.ReadPercentage(VolumeEffect, data["VolumeEffect"]);
