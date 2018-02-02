@@ -28,6 +28,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     internal class NoteManager : IHelper
     {
         //SV
+        private const long SV_POSITIVE_CONST = 10000;
         internal ulong[] SvCalc { get; set; }
         internal List<TimingObject> SvQueue { get; set; }
 
@@ -43,6 +44,16 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal int HitObjectPoolSize { get; } = 255;
         internal uint RemoveTimeAfterMiss;
         internal Boundary Boundary;
+
+        /// <summary>
+        ///     Baked rectangle for each lane. Determines size + position of where note is supposed to be hit.
+        /// </summary>
+        internal DrawRectangle[] NoteHitRectangle { get; set; }
+
+        /// <summary>
+        ///     Baked rectangle for each hit burst sprite.
+        /// </summary>
+        internal DrawRectangle[] NoteBurstRectangle { get; set; }
 
         //Track
         internal int CurrentSvIndex { get; set; }
@@ -90,7 +101,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             
             //Initialize Track
             TrackPosition = GetCurrentTrackPosition();
-            //TrackPosition = (ulong)(-GameplayReferences.PlayStartDelayed + 10000); //10000ms added since curSVPos is a ulong. -2000 offset is the wait time before song starts
+            //TrackPosition = (ulong)(-GameplayReferences.PlayStartDelayed + SV_POSITIVE_CONST); //SV_POSITIVE_CONSTms added since curSVPos is a ulong. -2000 offset is the wait time before song starts
 
             // Initialize Boundary
             Boundary = new Boundary()
@@ -98,6 +109,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Size = new UDim2(PlayfieldSize, 0, 0, 1),
                 Alignment = Alignment.TopCenter
             };
+            Boundary.Update(0);
 
             // Initialize Timing Bars
             // todo: Initialize from MeasureBarManager
@@ -127,9 +139,43 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 case GameModes.Keys4:
                     BarOffset = LaneSize * GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width / 2; //GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / 2 * GameBase.WindowUIScale;
+                    NoteHitRectangle = new DrawRectangle[4];
+                    NoteBurstRectangle = new DrawRectangle[4];
+                    for (var i = 0; i < 4; i++)
+                    {
+                        NoteHitRectangle[i] = new DrawRectangle(
+                            Boundary.GlobalRectangle.X + GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1],
+                            Boundary.GlobalRectangle.Y + PosFromOffset(SV_POSITIVE_CONST),
+                            LaneSize,
+                            LaneSize * GameBase.LoadedSkin.NoteHitObjects4K[i][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width);
+
+                        NoteBurstRectangle[i] = new DrawRectangle();
+                        NoteBurstRectangle[i].Width = NoteHitRectangle[i].Width * GameBase.LoadedSkin.NoteHitBursts4K[i].Width / GameBase.LoadedSkin.NoteHitObjects4K[i][0].Width;
+                        NoteBurstRectangle[i].Height = NoteHitRectangle[i].Height * GameBase.LoadedSkin.NoteHitBursts4K[i].Height / GameBase.LoadedSkin.NoteHitObjects4K[i][0].Height;
+                        NoteBurstRectangle[i].X = NoteHitRectangle[i].X - (NoteBurstRectangle[i].Width - NoteHitRectangle[i].Width) / 2;
+                        NoteBurstRectangle[i].Y = NoteHitRectangle[i].Y - (NoteBurstRectangle[i].Height - NoteHitRectangle[i].Height) / 2;
+
+                        Console.WriteLine(NoteBurstRectangle[i].X +", "+ NoteBurstRectangle[i].Y +", " + NoteBurstRectangle[i].Width +", " + NoteBurstRectangle[i].Height);
+                    }
                     break;
                 case GameModes.Keys7:
                     BarOffset = LaneSize * GameBase.LoadedSkin.NoteHitObjects7K[0].Height * GameBase.LoadedSkin.NoteHitObjects7K[0].Width / 2;
+                    NoteHitRectangle = new DrawRectangle[7];
+                    NoteBurstRectangle = new DrawRectangle[7];
+                    for (var i = 0; i < 7; i++)
+                    {
+                        NoteHitRectangle[i] = new DrawRectangle(
+                            Boundary.GlobalRectangle.X + GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1],
+                            Boundary.GlobalRectangle.Y + PosFromOffset(SV_POSITIVE_CONST),
+                            LaneSize,
+                            LaneSize * GameBase.LoadedSkin.NoteHitObjects7K[i].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width);
+
+                        NoteBurstRectangle[i] = new DrawRectangle();
+                        NoteBurstRectangle[i].Width = NoteHitRectangle[i].Width * GameBase.LoadedSkin.NoteHitBursts7K[i].Width / GameBase.LoadedSkin.NoteHitObjects7K[i].Width;
+                        NoteBurstRectangle[i].Height = NoteHitRectangle[i].Height * GameBase.LoadedSkin.NoteHitBursts7K[i].Height / GameBase.LoadedSkin.NoteHitObjects7K[i].Height;
+                        NoteBurstRectangle[i].X = NoteHitRectangle[i].X - (NoteBurstRectangle[i].Width - NoteHitRectangle[i].Width) / 2;
+                        NoteBurstRectangle[i].Y = NoteHitRectangle[i].Y - (NoteBurstRectangle[i].Height - NoteHitRectangle[i].Height) / 2;
+                    }
                     break;
             }
             MeasureBarManager.BarObjectActive = MeasureBarManager.BarObjectQueue;
@@ -364,8 +410,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         {
             //if (_mod_pull) return (float)((2f * Math.Max(Math.Pow(posFromTime, 0.6f), 0)) + (Math.Min(offsetToPos - CurrentSongTime, 0f) * _ScrollSpeed));
             return DownScroll
-                ? HitPositionOffset + (((10000 + offsetToPos - TrackPosition) - 10000f) * -ScrollSpeed)
-                : HitPositionOffset + (((10000 + offsetToPos - TrackPosition) - 10000f) * ScrollSpeed);
+                ? HitPositionOffset + (((SV_POSITIVE_CONST + offsetToPos - TrackPosition) - (float)SV_POSITIVE_CONST) * -ScrollSpeed)
+                : HitPositionOffset + (((SV_POSITIVE_CONST + offsetToPos - TrackPosition) - (float)SV_POSITIVE_CONST) * ScrollSpeed);
         }
 
         /// <summary>
@@ -385,7 +431,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     else break;
                 }
             }
-            return SvCalc[CurrentSvIndex] + (ulong)(((float)(CurrentSongTime - (SvQueue[CurrentSvIndex].TargetTime)) * SvQueue[CurrentSvIndex].SvMultiplier) + 10000);
+            return SvCalc[CurrentSvIndex] + (ulong)(((float)(CurrentSongTime - (SvQueue[CurrentSvIndex].TargetTime)) * SvQueue[CurrentSvIndex].SvMultiplier) + SV_POSITIVE_CONST);
         }
 
         /// <summary>

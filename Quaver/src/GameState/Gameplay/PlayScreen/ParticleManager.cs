@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
-    class ParticleEffects : IHelper
+    class ParticleManager : IHelper
     {
         /// <summary>
         ///     Particle Container
