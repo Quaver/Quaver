@@ -144,7 +144,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     for (var i = 0; i < 4; i++)
                     {
                         NoteHitRectangle[i] = new DrawRectangle(
-                            Boundary.GlobalRectangle.X + GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1],
+                            Boundary.GlobalRectangle.X + GameplayReferences.ReceptorXPosition[i],
                             Boundary.GlobalRectangle.Y + PosFromOffset(SV_POSITIVE_CONST),
                             LaneSize,
                             LaneSize * GameBase.LoadedSkin.NoteHitObjects4K[i][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width);
@@ -154,8 +154,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         NoteBurstRectangle[i].Height = NoteHitRectangle[i].Height * GameBase.LoadedSkin.NoteHitBursts4K[i].Height / GameBase.LoadedSkin.NoteHitObjects4K[i][0].Height;
                         NoteBurstRectangle[i].X = NoteHitRectangle[i].X - (NoteBurstRectangle[i].Width - NoteHitRectangle[i].Width) / 2;
                         NoteBurstRectangle[i].Y = NoteHitRectangle[i].Y - (NoteBurstRectangle[i].Height - NoteHitRectangle[i].Height) / 2;
-
-                        Console.WriteLine(NoteBurstRectangle[i].X +", "+ NoteBurstRectangle[i].Y +", " + NoteBurstRectangle[i].Width +", " + NoteBurstRectangle[i].Height);
+                        Console.WriteLine(i + ", " + NoteBurstRectangle[i].X);
                     }
                     break;
                 case GameModes.Keys7:
@@ -165,7 +164,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     for (var i = 0; i < 7; i++)
                     {
                         NoteHitRectangle[i] = new DrawRectangle(
-                            Boundary.GlobalRectangle.X + GameplayReferences.ReceptorXPosition[qua.HitObjects[i].Lane - 1],
+                            Boundary.GlobalRectangle.X + GameplayReferences.ReceptorXPosition[i],
                             Boundary.GlobalRectangle.Y + PosFromOffset(SV_POSITIVE_CONST),
                             LaneSize,
                             LaneSize * GameBase.LoadedSkin.NoteHitObjects7K[i].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width);
@@ -175,6 +174,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         NoteBurstRectangle[i].Height = NoteHitRectangle[i].Height * GameBase.LoadedSkin.NoteHitBursts7K[i].Height / GameBase.LoadedSkin.NoteHitObjects7K[i].Height;
                         NoteBurstRectangle[i].X = NoteHitRectangle[i].X - (NoteBurstRectangle[i].Width - NoteHitRectangle[i].Width) / 2;
                         NoteBurstRectangle[i].Y = NoteHitRectangle[i].Y - (NoteBurstRectangle[i].Height - NoteHitRectangle[i].Height) / 2;
+                        Console.WriteLine(i + ", " + NoteBurstRectangle[i].X);
                     }
                     break;
             }
