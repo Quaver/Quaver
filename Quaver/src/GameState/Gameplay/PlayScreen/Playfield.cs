@@ -27,10 +27,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     The Hit Lighting Sprites. Will be visible when designated key is held down.
         /// </summary>
-        internal Sprite[] HitLightingObjects { get; set; }
+        internal Sprite[] ColumnLightingObjects { get; set; }
 
         /// <summary>
-        ///     The first layer of the playfield. Used to render playfield mask + hitlighting (+ receptors if set in skin.ini)
+        ///     The first layer of the playfield. Used to render playfield mask + ColumnLighting (+ receptors if set in skin.ini)
         /// </summary>
         private Boundary ReceptorBoundary { get; set; }
 
@@ -67,12 +67,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     Is determined if hit lighting object should be active
         /// </summary>
-        private bool[] HitLightingActive { get; set; }
+        private bool[] ColumnLightingActive { get; set; }
 
         /// <summary>
         ///     Determines hit lighting object animation from scale of 0 -> 1.
         /// </summary>
-        private float[] HitLightingAnimation { get; set; }
+        private float[] ColumnLightingAnimation { get; set; }
 
 
         /// <summary>
@@ -133,9 +133,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 case GameModes.Keys4:
                     ReceptorObjects = new Sprite[4];
-                    HitLightingObjects = new Sprite[4];
-                    HitLightingActive = new bool[4];
-                    HitLightingAnimation = new float[4];
+                    ColumnLightingObjects = new Sprite[4];
+                    ColumnLightingActive = new bool[4];
+                    ColumnLightingAnimation = new float[4];
                     for (var i = 0; i < ReceptorObjects.Length; i++)
                     {
                         // Set ReceptorXPos 
@@ -152,14 +152,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         };
 
                         // Create hit lighting sprite
-                        var hitLightingSize = LaneSize * GameBase.LoadedSkin.ColumnHitLighting4K[i].Height / GameBase.LoadedSkin.ColumnHitLighting4K[i].Width;
-                        HitLightingObjects[i] = new Sprite
+                        var columnLightingSize = LaneSize * GameBase.LoadedSkin.ColumnLighting4K.Height / GameBase.LoadedSkin.ColumnLighting4K.Width;
+                        ColumnLightingObjects[i] = new Sprite
                         {
-                            Image = GameBase.LoadedSkin.ColumnHitLighting4K[i],
-                            Size = new UDim2(LaneSize, hitLightingSize * GameBase.LoadedSkin.HitLightingScale),
+                            Image = GameBase.LoadedSkin.ColumnLighting4K,
+                            Size = new UDim2(LaneSize, columnLightingSize * GameBase.LoadedSkin.ColumnLightingScale),
+                            Tint = GameBase.LoadedSkin.ColumnColors4K[i],
                             Alpha = 0.25f,
                             PosX = GameplayReferences.ReceptorXPosition[i],
-                            PosY = Config.Configuration.DownScroll4k ? ReceptorYOffset - hitLightingSize : ReceptorYOffset + hitLightingSize,
+                            PosY = Config.Configuration.DownScroll4k ? ReceptorYOffset - columnLightingSize : ReceptorYOffset + columnLightingSize,
                             SpriteEffect = Config.Configuration.DownScroll4k ? SpriteEffects.None : SpriteEffects.FlipVertically,
                             Alignment = Config.Configuration.DownScroll4k ? Alignment.TopLeft : Alignment.BotLeft,
                             Parent = BackgroundBoundary
@@ -168,9 +169,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     break;
                 case GameModes.Keys7:
                     ReceptorObjects = new Sprite[7];
-                    HitLightingObjects = new Sprite[7];
-                    HitLightingActive = new bool[7];
-                    HitLightingAnimation = new float[7];
+                    ColumnLightingObjects = new Sprite[7];
+                    ColumnLightingActive = new bool[7];
+                    ColumnLightingAnimation = new float[7];
                     for (var i = 0; i < ReceptorObjects.Length; i++)
                     {
                         // Set ReceptorXPos 
@@ -187,14 +188,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         };
 
                         // Create hit lighting sprite
-                        var hitLightingSize = LaneSize * GameBase.LoadedSkin.ColumnHitLighting7K[i].Height / GameBase.LoadedSkin.ColumnHitLighting7K[i].Width;
-                        HitLightingObjects[i] = new Sprite
+                        var columnLightingSize = LaneSize * GameBase.LoadedSkin.ColumnLighting7K.Height / GameBase.LoadedSkin.ColumnLighting7K.Width;
+                        ColumnLightingObjects[i] = new Sprite
                         {
-                            Image = GameBase.LoadedSkin.ColumnHitLighting7K[i],
-                            Size = new UDim2(LaneSize, hitLightingSize * GameBase.LoadedSkin.HitLightingScale),
+                            Image = GameBase.LoadedSkin.ColumnLighting7K,
+                            Size = new UDim2(LaneSize, columnLightingSize * GameBase.LoadedSkin.ColumnLightingScale),
+                            Tint = GameBase.LoadedSkin.ColumnColors7K[i],
                             Alpha = 0.25f,
                             PosX = GameplayReferences.ReceptorXPosition[i],
-                            PosY = Config.Configuration.DownScroll7k ? ReceptorYOffset - hitLightingSize : ReceptorYOffset + hitLightingSize,
+                            PosY = Config.Configuration.DownScroll7k ? ReceptorYOffset - columnLightingSize : ReceptorYOffset + columnLightingSize,
                             SpriteEffect = Config.Configuration.DownScroll7k ? SpriteEffects.None : SpriteEffects.FlipVertically,
                             Alignment = Config.Configuration.DownScroll7k ? Alignment.TopLeft : Alignment.BotLeft,
                             Parent = BackgroundBoundary
@@ -220,16 +222,16 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <param name="dt"></param>
         public void Update(double dt)
         {
-            for (var i = 0; i < HitLightingActive.Length; i++)
+            for (var i = 0; i < ColumnLightingActive.Length; i++)
             {
-                // Update HitLighting Animation
-                if (HitLightingActive[i])
-                    HitLightingAnimation[i] = Util.Tween(1, HitLightingAnimation[i], Math.Min(dt / 2, 1));
+                // Update ColumnLighting Animation
+                if (ColumnLightingActive[i])
+                    ColumnLightingAnimation[i] = Util.Tween(1, ColumnLightingAnimation[i], Math.Min(dt / 2, 1));
                 else
-                    HitLightingAnimation[i] = Util.Tween(0, HitLightingAnimation[i], Math.Min(dt / 60, 1));
+                    ColumnLightingAnimation[i] = Util.Tween(0, ColumnLightingAnimation[i], Math.Min(dt / 60, 1));
 
                 // Update Hit Lighting Object
-                HitLightingObjects[i].Alpha = HitLightingAnimation[i];
+                ColumnLightingObjects[i].Alpha = ColumnLightingAnimation[i];
             }
 
             ReceptorBoundary.Update(dt);
@@ -257,26 +259,26 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     if (keyDown)
                     {
                         ReceptorObjects[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsDown4K[keyIndex];
-                        HitLightingActive[keyIndex] = true;
-                        HitLightingAnimation[keyIndex] = 1;
+                        ColumnLightingActive[keyIndex] = true;
+                        ColumnLightingAnimation[keyIndex] = 1;
                     }
                     else
                     {
                         ReceptorObjects[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsUp4K[keyIndex];
-                        HitLightingActive[keyIndex] = false;
+                        ColumnLightingActive[keyIndex] = false;
                     }
                     break;
                 case GameModes.Keys7:
                     if (keyDown)
                     {
                         ReceptorObjects[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsDown7K[keyIndex];
-                        HitLightingActive[keyIndex] = true;
-                        HitLightingAnimation[keyIndex] = 1;
+                        ColumnLightingActive[keyIndex] = true;
+                        ColumnLightingAnimation[keyIndex] = 1;
                     }
                     else
                     {
                         ReceptorObjects[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsUp7K[keyIndex];
-                        HitLightingActive[keyIndex] = false;
+                        ColumnLightingActive[keyIndex] = false;
                     }
                     break;
             }

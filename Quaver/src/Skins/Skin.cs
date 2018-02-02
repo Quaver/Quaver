@@ -76,9 +76,9 @@ namespace Quaver.Skins
         internal int TimingBarPixelSize { get; set; }
 
         /// <summary>
-        ///     The scale of the hitlighting objects.
+        ///     The scale of the column lighting objects.
         /// </summary>
-        internal float HitLightingScale { get; set; }
+        internal float ColumnLightingScale { get; set; }
 
         /// <summary>
         /// The alignment of the playfield as a percentage. 
@@ -95,6 +95,12 @@ namespace Quaver.Skins
         /// </summary>
         internal bool ReceptorsOverHitObjects4K { get; set; }
         internal bool ReceptorsOverHitObjects7K { get; set; }
+
+        /// <summary>
+        ///     Column Colors. Used for hit lighting and other stuff that depends on column colors.
+        /// </summary>
+        internal Color[] ColumnColors4K { get; set; } = new Color[4];
+        internal Color[] ColumnColors7K { get; set; } = new Color[7];
 
         /// <summary>
         ///     Determines the FPS of the animations
@@ -126,10 +132,10 @@ namespace Quaver.Skins
         internal Texture2D ColumnBgMask7K { get; set; }
 
         /// <summary>
-        ///     Hit Lighting Sprites
+        ///     Lane Lighting Sprites
         /// </summary>
-        internal Texture2D[] ColumnHitLighting4K { get; set; } = new Texture2D[4];
-        internal Texture2D[] ColumnHitLighting7K { get; set; } = new Texture2D[7];
+        internal Texture2D ColumnLighting4K { get; set; }
+        internal Texture2D ColumnLighting7K { get; set; }
 
         /// <summary>
         ///     Timing bar Sprite
@@ -202,44 +208,24 @@ namespace Quaver.Skins
         internal SoundEffect SoundBack { get; set; }
 
         /// <summary>
-        ///  Animation Elements
-        /// </summary>
-        internal List<Texture2D> HitLighting { get; set; }
-
-        /// <summary>
         ///     The number of files that will be loaded in the default skin
-        ///     for hitlighting animations.
+        ///     for hit burst animations.
         /// </summary>
-        private int HitLightingAnimDefault { get; } = 5;
+        private int HitBurstAnimDefault { get; } = 5;
 
         // Contains the file names of all skin elements
         private readonly string[] skinElements = new[]
         {
                 @"column-bgmask",
                 @"column-timingbar",
-                //@"4k-column-hitlighting",
-                //@"7k-column-hitlighting",
+                @"4k-column-lighting",
+                @"7k-column-lighting",
 
                 // Stage
                 @"stage-left-border",
                 @"stage-right-border",
                 @"stage-hitposition-overlay",
                 @"stage-distant-overlay",
-
-                // 4k Hit Lighting
-                @"4k-column-hitlighting-1",
-                @"4k-column-hitlighting-2",
-                @"4k-column-hitlighting-3",
-                @"4k-column-hitlighting-4",
-
-                // 7k Hit Lighting
-                @"7k-column-hitlighting-1",
-                @"7k-column-hitlighting-2",
-                @"7k-column-hitlighting-3",
-                @"7k-column-hitlighting-4",
-                @"7k-column-hitlighting-5",
-                @"7k-column-hitlighting-6",
-                @"7k-column-hitlighting-7",
 
                 // 4k HitBurst
                 @"4k-note-hitburst-1",
@@ -364,7 +350,7 @@ namespace Quaver.Skins
                 @"sound-back",
 
                 // Animation Frames
-                @"hitlighting"
+                //@"hitlighting"
         };
 
         /// <summary>
@@ -423,38 +409,11 @@ namespace Quaver.Skins
                     case @"stage-distant-overlay":
                         StageDistantOverlay = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-column-hitlighting-1":
-                        ColumnHitLighting4K[0] = LoadIndividualElement(element, skinElementPath);
+                    case @"4k-column-lighting":
+                        ColumnLighting4K = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-column-hitlighting-2":
-                        ColumnHitLighting4K[1] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"4k-column-hitlighting-3":
-                        ColumnHitLighting4K[2] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"4k-column-hitlighting-4":
-                        ColumnHitLighting4K[3] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-column-hitlighting-1":
-                        ColumnHitLighting7K[0] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-column-hitlighting-2":
-                        ColumnHitLighting7K[1] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-column-hitlighting-3":
-                        ColumnHitLighting7K[2] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-column-hitlighting-4":
-                        ColumnHitLighting7K[3] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-column-hitlighting-5":
-                        ColumnHitLighting7K[4] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-column-hitlighting-6":
-                        ColumnHitLighting7K[5] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-column-hitlighting-7":
-                        ColumnHitLighting7K[6] = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-column-lighting":
+                        ColumnLighting7K = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-hitburst-1":
                         NoteHitBursts4K[0] = LoadIndividualElement(element, skinElementPath);
@@ -723,9 +682,6 @@ namespace Quaver.Skins
                     case @"main-cursor":
                         Cursor = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"hitlighting":
-                        HitLighting = LoadAnimationElements(skinDir, element, HitLightingAnimDefault);
-                        break;
                     default:
                         break;
                 }
@@ -824,13 +780,13 @@ namespace Quaver.Skins
         /// <summary>
         ///     Loads a list of elements to be used in an animation.
         ///     Example:
-        ///         - hitlighting@0
-        ///         - hitlighting@1
-        ///         - hitlighting@2
+        ///         - 4k-note-hitburst-0@0
+        ///         - 4k-note-hitburst-1@1
+        ///         - 4k-note-hitburst-2@2
         ///         //
-        ///         - holdlighting@0
-        ///         - holdlighting@1
-        ///         - holdlighting@2
+        ///         - 4k-note-holdbody-active-1@0
+        ///         - 4k-note-holdbody-active-1@1
+        ///         - 4k-note-holdbody-active-1@2
         /// </summary>
         /// <param name="skinDir"></param>
         /// <param name="element"></param>
@@ -896,7 +852,7 @@ namespace Quaver.Skins
                     NotePadding4K = 2;
                     NotePadding7K = 0;
                     TimingBarPixelSize = 2;
-                    HitLightingScale = 4.0f;
+                    ColumnLightingScale = 1.0f;
                     ColumnSize4K = 95;
                     ColumnSize7K = 65;
                     ReceptorYOffset4K = 50;
@@ -912,6 +868,17 @@ namespace Quaver.Skins
                     JudgeColors.Insert(3, new Color(0, 168, 255));
                     JudgeColors.Insert(4, new Color(255, 0, 255));
                     JudgeColors.Insert(5, new Color(255, 0, 0));
+                    ColumnColors4K[0] = new Color(255, 255, 255);
+                    ColumnColors4K[1] = new Color(255, 255, 255);
+                    ColumnColors4K[2] = new Color(255, 255, 255);
+                    ColumnColors4K[3] = new Color(255, 255, 255);
+                    ColumnColors7K[0] = new Color(255, 255, 255);
+                    ColumnColors7K[1] = new Color(255, 255, 255);
+                    ColumnColors7K[2] = new Color(255, 255, 255);
+                    ColumnColors7K[3] = new Color(255, 255, 255);
+                    ColumnColors7K[4] = new Color(255, 255, 255);
+                    ColumnColors7K[5] = new Color(255, 255, 255);
+                    ColumnColors7K[6] = new Color(255, 255, 255);
                     break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
@@ -924,7 +891,7 @@ namespace Quaver.Skins
                     NotePadding4K = 2;
                     NotePadding7K = 0;
                     TimingBarPixelSize = 2;
-                    HitLightingScale = 4.0f;
+                    ColumnLightingScale = 1.0f;
                     ColumnSize4K = 95;
                     ColumnSize7K = 65;
                     ReceptorYOffset4K = 50;
@@ -940,6 +907,17 @@ namespace Quaver.Skins
                     JudgeColors.Insert(3, new Color(0, 168, 255));
                     JudgeColors.Insert(4, new Color(255, 0, 255));
                     JudgeColors.Insert(5, new Color(255, 0, 0));
+                    ColumnColors4K[0] = new Color(255, 255, 255);
+                    ColumnColors4K[1] = new Color(255, 255, 255);
+                    ColumnColors4K[2] = new Color(255, 255, 255);
+                    ColumnColors4K[3] = new Color(255, 255, 255);
+                    ColumnColors7K[0] = new Color(255, 255, 255);
+                    ColumnColors7K[1] = new Color(255, 255, 255);
+                    ColumnColors7K[2] = new Color(255, 255, 255);
+                    ColumnColors7K[3] = new Color(255, 255, 255);
+                    ColumnColors7K[4] = new Color(255, 255, 255);
+                    ColumnColors7K[5] = new Color(255, 255, 255);
+                    ColumnColors7K[6] = new Color(255, 255, 255);
                     break;
             }
 
@@ -959,7 +937,7 @@ namespace Quaver.Skins
             NotePadding4K = ConfigHelper.ReadInt32(NotePadding4K, data["Gameplay"]["NotePadding4K"]);
             NotePadding7K = ConfigHelper.ReadInt32(NotePadding7K, data["Gameplay"]["NotePadding7K"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, data["Gameplay"]["TimingBarPixelSize"]);
-            HitLightingScale = ConfigHelper.ReadFloat(HitLightingScale, data["Gameplay"]["HitLightingScale"]);
+            ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, data["Gameplay"]["ColumnLightingScale"]);
             ColumnSize4K = ConfigHelper.ReadInt32(ColumnSize4K, data["Gameplay"]["ColumnSize4K"]);
             ColumnSize7K = ConfigHelper.ReadInt32(ColumnSize7K, data["Gameplay"]["ColumnSize7K"]);
             ReceptorYOffset4K = ConfigHelper.ReadInt32(ReceptorYOffset4K, data["Gameplay"]["ReceptorYOffset4K"]);
@@ -974,7 +952,18 @@ namespace Quaver.Skins
             JudgeColors[2] = ConfigHelper.ReadColor(JudgeColors[2], data["Gameplay"]["JudgeColorGreat"]);
             JudgeColors[3] = ConfigHelper.ReadColor(JudgeColors[3], data["Gameplay"]["JudgeColorGood"]);
             JudgeColors[4] = ConfigHelper.ReadColor(JudgeColors[4], data["Gameplay"]["JudgeColorOkay"]);
-            JudgeColors[5] = ConfigHelper.ReadColor(JudgeColors[5], data["Gameplay"]["JudgeColorMiss"]);            
+            JudgeColors[5] = ConfigHelper.ReadColor(JudgeColors[5], data["Gameplay"]["JudgeColorMiss"]);
+            ColumnColors4K[0] = ConfigHelper.ReadColor(ColumnColors4K[0], data["Gameplay"]["ColumnColor4K1"]);
+            ColumnColors4K[1] = ConfigHelper.ReadColor(ColumnColors4K[1], data["Gameplay"]["ColumnColor4K2"]);
+            ColumnColors4K[2] = ConfigHelper.ReadColor(ColumnColors4K[2], data["Gameplay"]["ColumnColor4K3"]);
+            ColumnColors4K[3] = ConfigHelper.ReadColor(ColumnColors4K[3], data["Gameplay"]["ColumnColor4K4"]);
+            ColumnColors7K[0] = ConfigHelper.ReadColor(ColumnColors7K[0], data["Gameplay"]["ColumnColor7K1"]);
+            ColumnColors7K[1] = ConfigHelper.ReadColor(ColumnColors7K[1], data["Gameplay"]["ColumnColor7K2"]);
+            ColumnColors7K[2] = ConfigHelper.ReadColor(ColumnColors7K[2], data["Gameplay"]["ColumnColor7K3"]);
+            ColumnColors7K[3] = ConfigHelper.ReadColor(ColumnColors7K[3], data["Gameplay"]["ColumnColor7K4"]);
+            ColumnColors7K[4] = ConfigHelper.ReadColor(ColumnColors7K[4], data["Gameplay"]["ColumnColor7K5"]);
+            ColumnColors7K[5] = ConfigHelper.ReadColor(ColumnColors7K[5], data["Gameplay"]["ColumnColor7K6"]);
+            ColumnColors7K[6] = ConfigHelper.ReadColor(ColumnColors7K[6], data["Gameplay"]["ColumnColor7K7"]);
             Logger.Log($@"Skin loaded: {skinDir}", LogColors.GameImportant);
         }
 

@@ -246,7 +246,7 @@ namespace Quaver.GameState.Gameplay
             // Render Current NoteManager Frame
             GameBase.GraphicsDevice.SetRenderTarget(RenderedHitObjects[CurrentRenderIndex]);
             GameBase.GraphicsDevice.Clear(Color.Transparent);
-            GameBase.SpriteBatch.Begin();
+            GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             NoteManager.Draw();
             GameBase.SpriteBatch.End();
 
@@ -254,7 +254,7 @@ namespace Quaver.GameState.Gameplay
             int alphaIndex = 0;
             GameBase.GraphicsDevice.SetRenderTarget(RenderedPlayfield);
             GameBase.GraphicsDevice.Clear(Color.Transparent);
-            GameBase.SpriteBatch.Begin();
+            GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             Playfield.DrawBgMask();
             if (DrawPlayfieldFirst) Playfield.Draw();
             for (int i = CurrentRenderIndex - 1; i >= 0; i--)
