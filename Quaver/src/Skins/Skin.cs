@@ -815,8 +815,15 @@ namespace Quaver.Skins
             path = path.Replace(".png", ".wav");
 
             // Load the actual file stream if it exists.
-            if (File.Exists(path))
-                return SoundEffect.FromStream(new FileStream(path, FileMode.Open));
+            try
+            {
+                if (File.Exists(path))
+                    return SoundEffect.FromStream(new FileStream(path, FileMode.Open));
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message, LogColors.GameError);
+            }
 
             // Load the default if the path doesn't exist
             switch (Configuration.DefaultSkin)
