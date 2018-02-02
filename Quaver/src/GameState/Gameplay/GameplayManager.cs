@@ -336,8 +336,8 @@ namespace Quaver.GameState.Gameplay
                     NoteManager.DownScroll = Configuration.DownScroll4k;
                     NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll4k
-                        ? Playfield.ReceptorYOffset + ((Configuration.UserHitPositionOffset4k + GameBase.LoadedSkin.SkinHitPositionOffset4K) * GameBase.WindowUIScale)
-                        : Playfield.ReceptorYOffset - ((Configuration.UserHitPositionOffset4k + GameBase.LoadedSkin.SkinHitPositionOffset4K) * GameBase.WindowUIScale)
+                        ? Playfield.ReceptorYOffset + ((Configuration.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
+                        : Playfield.ReceptorYOffset - ((Configuration.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
                         * ((GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
                         - (GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
@@ -363,8 +363,8 @@ namespace Quaver.GameState.Gameplay
                     NoteManager.DownScroll = Configuration.DownScroll7k;
                     NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll7k
-                        ? Playfield.ReceptorYOffset + ((Configuration.UserHitPositionOffset7k + GameBase.LoadedSkin.SkinHitPositionOffset7K) * GameBase.WindowUIScale)
-                        : Playfield.ReceptorYOffset - ((Configuration.UserHitPositionOffset7k + GameBase.LoadedSkin.SkinHitPositionOffset7K) * GameBase.WindowUIScale)
+                        ? Playfield.ReceptorYOffset + ((Configuration.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
+                        : Playfield.ReceptorYOffset - ((Configuration.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
                         * ((GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
                         - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
