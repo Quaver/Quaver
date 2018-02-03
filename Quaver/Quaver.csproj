@@ -433,12 +433,12 @@
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-grade-small-x.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-grade-small-xx.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-grade-small-xxx.xnb" />
-    <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-bad.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-okay.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-good.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-great.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-marv.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-miss.xnb" />
-    <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-perfect.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-perf.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-main-cursor.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-applause.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-back.xnb" />
