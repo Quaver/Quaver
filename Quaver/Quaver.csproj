@@ -452,6 +452,35 @@
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hitclap.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hitfinish.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hitwhistle.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-column-lighting.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-hiteffect-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-hiteffect-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-hiteffect-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-hiteffect-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-stage-bgmask.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-column-lighting.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-5.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-6.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-7.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-5.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-6.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-7.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-stage-bgmask.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-grade-small-s-.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-mania-stage-light.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-stage-distant-overlay.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-stage-hitposition-overlay.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-stage-left-border.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-stage-right-border.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-stage-timingbar.xnb" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\discord-rpc.dll">
