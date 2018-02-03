@@ -15,7 +15,7 @@ using Quaver.Utility;
 
 namespace Quaver.GameState.SongSelect
 {
-    class BeatmapOrganizerUI : IHelper
+    class MapOrganizer : IHelper
     {
         /// <summary>
         ///     Reference to the list of song select buttons
@@ -87,7 +87,7 @@ namespace Quaver.GameState.SongSelect
         public void CreateSongSelectButtons()
         {
             OrganizerSize = 50f;
-            //Create buttons for every beatmap set TODO: Use beatmap set instead of beatmaps
+            //Create buttons for every Map set TODO: Use Map set instead of Maps
             foreach (var mapset in GameBase.VisibleMapsets)
             {
                 //Create Song Buttons
@@ -169,17 +169,17 @@ namespace Quaver.GameState.SongSelect
             ScrollingDisabled = false;
         }
 
-        public void SetBeatmapOrganizerPosition(float scale)
+        public void SetMapOrganizerPosition(float scale)
         {
             TargetPosition = scale * OrganizerSize;
         }
 
-        public void OffsetBeatmapOrganizerPosition(float offset)
+        public void OffsetMapOrganizerPosition(float offset)
         {
             TargetPosition += offset * 2;
         }
 
-        public void OffsetBeatmapOrganizerIndex(int offset)
+        public void OffsetMapOrganizerIndex(int offset)
         {
             var newIndex = SelectedMapIndex + offset;
             if (newIndex >= 0 && newIndex < SongSelectButtons.Count)

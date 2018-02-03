@@ -39,7 +39,7 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     The UI that controls and displays beatmap selection
         /// </summary>
-        private BeatmapOrganizerUI BeatmapOrganizerUI { get; set; }
+        private MapOrganizer MapOrganizer { get; set; }
 
         /// <summary>
         ///     Boundary
@@ -66,7 +66,7 @@ namespace Quaver.GameState.States
         /// </summary>
         private TextButton TogglePitch { get; set; }
 
-        /// <summary>
+        /// <summary>MapOrganizer
         ///     Position of mouse from previous frame
         /// </summary>
         private float PreviousMouseYPosition { get; set; }
@@ -94,8 +94,8 @@ namespace Quaver.GameState.States
             GameBase.GameWindow.Title = "Quaver";
 
             //Initialize Helpers
-            BeatmapOrganizerUI = new BeatmapOrganizerUI();
-            BeatmapOrganizerUI.Initialize(this);
+            MapOrganizer = new MapOrganizer();
+            MapOrganizer.Initialize(this);
             SongSelectInputManager = new SongSelectInputManager();
 
             // Update Discord Presence
@@ -128,7 +128,7 @@ namespace Quaver.GameState.States
             SpeedModButton.Clicked -= OnSpeedModButtonClick;
             TogglePitch.Clicked -= OnTogglePitchButtonClick;
 
-            BeatmapOrganizerUI.UnloadContent();
+            MapOrganizer.UnloadContent();
             Boundary.Destroy();
         }
 
@@ -142,17 +142,17 @@ namespace Quaver.GameState.States
             KeyboardScrollBuffer += (float)dt;
 
             // It will ignore input until 250ms go by
-            if (!BeatmapOrganizerUI.ScrollingDisabled && TimeElapsedSinceStartup > 250)
+            if (!MapOrganizer.ScrollingDisabled && TimeElapsedSinceStartup > 250)
             {
                 SongSelectInputManager.CheckInput();
 
                 // Check and update any mouse input
                 if (SongSelectInputManager.RightMouseIsDown)
-                    BeatmapOrganizerUI.SetBeatmapOrganizerPosition(-SongSelectInputManager.MouseYPos / GameBase.WindowRectangle.Height);
+                    MapOrganizer.SetMapOrganizerPosition(-SongSelectInputManager.MouseYPos / GameBase.WindowRectangle.Height);
                 else if (SongSelectInputManager.LeftMouseIsDown)
-                    BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
+                    MapOrganizer.OffsetMapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
                 else if (SongSelectInputManager.CurrentScrollAmount != 0)
-                    BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);
+                    MapOrganizer.OffsetMapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);
 
                 // Check and update any keyboard input
                 int scroll = 0;
@@ -172,7 +172,7 @@ namespace Quaver.GameState.States
 
             //Update Objects
             Boundary.Update(dt);
-            BeatmapOrganizerUI.Update(dt);
+            MapOrganizer.Update(dt);
 
             // Repeat the song preview if necessary
             RepeatSongPreview();
@@ -186,7 +186,7 @@ namespace Quaver.GameState.States
             GameBase.SpriteBatch.Begin();
             BackgroundManager.Draw();
             Boundary.Draw();
-            BeatmapOrganizerUI.Draw();
+            MapOrganizer.Draw();
             GameBase.SpriteBatch.End();
         }
 
@@ -217,12 +217,12 @@ namespace Quaver.GameState.States
 
         private void ScrollUpMapIndex()
         {
-            BeatmapOrganizerUI.OffsetBeatmapOrganizerIndex(-1);
+            MapOrganizer.OffsetMapOrganizerIndex(-1);
         }
 
         private void ScrollDownMapIndex()
         {
-            BeatmapOrganizerUI.OffsetBeatmapOrganizerIndex(1);
+            MapOrganizer.OffsetMapOrganizerIndex(1);
         }
 
         /// <summary>
