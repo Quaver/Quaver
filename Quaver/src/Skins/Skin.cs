@@ -214,7 +214,6 @@ namespace Quaver.Skins
         internal SoundEffect SoundHitClap { get; set; }
         internal SoundEffect SoundHitWhistle { get; set; }
         internal SoundEffect SoundHitFinish { get; set; }
-
         internal SoundEffect SoundComboBreak { get; set; }
         internal SoundEffect SoundApplause { get; set; }
         internal SoundEffect SoundScreenshot { get; set; }
@@ -230,19 +229,21 @@ namespace Quaver.Skins
         // Contains the file names of all skin elements
         private readonly string[] skinElements = new[]
         {
-                @"4k-stage-bgmask",
-                @"7k-stage-bgmask",
+
                 @"4k-column-lighting",
                 @"7k-column-lighting",
-                @"stage-timingbar",
+                
 
                 // Stage
+                @"4k-stage-bgmask",
+                @"7k-stage-bgmask",
                 @"stage-left-border",
                 @"stage-right-border",
                 @"stage-hitposition-overlay",
                 @"stage-distant-overlay",
+                @"stage-timingbar",
 
-                // 4k HitBurst
+                // 4k Hit effect
                 @"4k-note-hiteffect-1",
                 @"4k-note-hiteffect-2",
                 @"4k-note-hiteffect-3",
@@ -366,9 +367,6 @@ namespace Quaver.Skins
                 @"sound-screenshot",
                 @"sound-click",
                 @"sound-back",
-
-                // Animation Frames
-                //@"hitlighting"
         };
 
         /// <summary>
