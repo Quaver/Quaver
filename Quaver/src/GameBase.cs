@@ -25,6 +25,7 @@ using Quaver.Modifiers;
 using Quaver.Utility;
 using Quaver.Input;
 using Quaver.Graphics.GameOverlay;
+using Quaver.Steam;
 
 namespace Quaver
 {
@@ -109,6 +110,16 @@ namespace Quaver
         ///     The reference resolution for UI and game elements
         /// </summary>
         public static Point ReferenceResolution { get; } = new Point(1280, 720);
+
+        /// <summary>
+        ///     Contains the path of the previously loaded background.
+        /// </summary>
+        public static string LastBackgroundPath { get; set; }
+
+        /// <summary>
+        ///     The osu! Songs folder path
+        /// </summary>
+        public static string OsuSongsFolder { get; set; }
 
         /*
         /// <summary>

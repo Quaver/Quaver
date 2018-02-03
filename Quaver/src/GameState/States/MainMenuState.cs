@@ -23,6 +23,8 @@ using Quaver.Logging;
 using Quaver.Modifiers;
 using Button = Quaver.Graphics.Button.Button;
 using Quaver.API.Maps;
+using Quaver.Commands;
+using Quaver.Steam;
 using Quaver.Utility;
 
 namespace Quaver.GameState.States
@@ -83,6 +85,14 @@ namespace Quaver.GameState.States
             // Initialize the main menu's audio player.
             MenuAudioPlayer.Initialize();
 
+            // Set Discord RP
+            DiscordController.ChangeDiscordPresence("Main Menu", "In the menus");
+
+#if DEBUG
+            // Enable console commands (Only applicable if on debug release)
+            CommandHandler.HandleConsoleCommand();
+#endif
+
             //Initialize Menu Screen
             Boundary = new Boundary();
 
@@ -91,6 +101,10 @@ namespace Quaver.GameState.States
             CreateQpImportButton();
             CreateMenuButtons();
             CreateQpExportButton();
+
+            // Load and change background after import
+            BackgroundManager.LoadBackground();
+            BackgroundManager.Change(GameBase.CurrentBackground);
 
             UpdateReady = true;
         }
@@ -183,7 +197,6 @@ namespace Quaver.GameState.States
 
             ImportPeppyButton.Clicked += OnImportOsuButtonClick;
         }
-
 
         /// <summary>
         ///     Responsible for creating the import .qp button

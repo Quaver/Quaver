@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Audio;
+using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Modifiers;
 
@@ -51,8 +52,21 @@ namespace Quaver.Discord
         /// <param name="details"></param>
         public static void ChangeDiscordPresence(string details, string state, double timeLeft = 0)
         {
+            // Initialize Discord RPC if it isn't already
             if (!GameBase.DiscordRichPresencedInited)
-                return;
+            {
+                InitializeDiscordPresence();
+
+                // Create a new Rich Presence
+                GameBase.DiscordController.presence = new DiscordRPC.RichPresence()
+                {
+                    details = "Idle",
+                    largeImageKey = "quaver",
+                    largeImageText = Configuration.Username
+                };
+
+                GameBase.DiscordRichPresencedInited = true;
+            }
 
             try
             {
@@ -80,10 +94,10 @@ namespace Quaver.Discord
                     switch (GameBase.SelectedBeatmap.Mode)
                     {
                         case GameModes.Keys4:
-                            GameBase.DiscordController.presence.smallImageText = "Mania 4K";
+                            GameBase.DiscordController.presence.smallImageText = "Mania: 4 Keys";
                             break;
                         case GameModes.Keys7:
-                            GameBase.DiscordController.presence.smallImageText = "Mania 7K";
+                            GameBase.DiscordController.presence.smallImageText = "Mania: 7 Keys";
                             break;
                         default:
                             break;
@@ -132,6 +146,25 @@ namespace Quaver.Discord
                 }
 
                 ChangeDiscordPresence(mapString, sb.ToString(), mapLength);
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.Message, LogColors.GameError);
+            }
+        }
+
+        /// <summary>
+        ///     Responsible for initializing the Discord Presence
+        /// </summary>
+        private static void InitializeDiscordPresence()
+        {
+            if (GameBase.DiscordController != null)
+                return;
+
+            try
+            {
+                GameBase.DiscordController = new DiscordController();
+                GameBase.DiscordController.Initialize();
             }
             catch (Exception e)
             {

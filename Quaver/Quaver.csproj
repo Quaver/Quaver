@@ -42,16 +42,6 @@
     <Prefer32Bit>false</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;LINUX</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>false</Prefer32Bit>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
@@ -68,15 +58,6 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;LINUX</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
@@ -86,57 +67,15 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;LINUX</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Public|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Public\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Public|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Public\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Public|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Public\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;PUBLIC</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Resource1.Designer.cs" />
     <Compile Include="src\Audio\MenuAudioPlayer.cs" />
     <Compile Include="src\Audio\SongManager.cs" />
     <Compile Include="src\Commands\CalculateDifficulty.cs" />
-    <Compile Include="src\Commands\Logout.cs" />
-    <Compile Include="src\Commands\OsuDbCommand.cs" />
     <Compile Include="src\Commands\ParseStepMania.cs" />
     <Compile Include="src\Database\Beatmaps\Mapset.cs" />
     <Compile Include="src\Commands\CommandHandler.cs" />
     <Compile Include="src\Commands\GetScores.cs" />
-    <Compile Include="src\Commands\LoginDev.cs" />
-    <Compile Include="src\Commands\Login.cs" />
     <Compile Include="src\Commands\SearchMaps.cs" />
     <Compile Include="src\Commands\Clear.cs" />
     <Compile Include="src\Commands\Help.cs" />
@@ -236,6 +175,7 @@
     <Compile Include="src\Replays\ReplayHelper.cs" />
     <Compile Include="src\Scores\LocalScore.cs" />
     <Compile Include="src\Skins\Skin.cs" />
+    <Compile Include="src\Steam\SteamAPIHelper.cs" />
     <Compile Include="src\Tests\Audio.Test.cs" />
     <Compile Include="src\Tests\Json.Test.cs" />
     <Compile Include="src\Tests\Qua.Test.cs" />
@@ -244,46 +184,6 @@
     <Compile Include="src\Utility\FpsCounter.cs" />
     <Compile Include="src\Utility\ImageLoader.cs" />
     <Compile Include="src\Utility\JsonResourceReader.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\BinaryFiles\CollectionDb.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\BinaryFiles\OsuDb.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\BinaryFiles\PresenceDb.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\BinaryFiles\ScoresDb.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\Beatmaps\BeatmapEntry.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\Beatmaps\Collection.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\Beatmaps\TimingPoint.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\HitObjects\HitObject.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\HitObjects\HitObjectCircle.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\HitObjects\HitObjectSlider.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\HitObjects\HitObjectSpinner.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\Player\PlayerPresence.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\Player\Replay.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Components\Vector2.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Constants.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Enums_Beatmaps.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\Extensions.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu-database-reader\TextFiles\BeatmapFile.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu.Shared\Enums_Beatmaps.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu.Shared\Enums_Common.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu.Shared\Serialization\ISerializable.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu.Shared\Serialization\SerializationReader.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu.Shared\Serialization\SerializationWriter.cs" />
-    <Compile Include="src\Utility\Libs\osu-database-reader\osu.Shared\Serialization\TypeBytes.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Common\CommandLineParser.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Common\CRC.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Common\InBuffer.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Common\OutBuffer.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZMA\LzmaBase.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZMA\LzmaDecoder.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZMA\LzmaEncoder.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZ\IMatchFinder.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZ\LzBinTree.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZ\LzInWindow.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\LZ\LzOutWindow.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\RangeCoder\RangeCoder.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\RangeCoder\RangeCoderBit.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\Compress\RangeCoder\RangeCoderBitTree.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\7zip\ICoder.cs" />
-    <Compile Include="src\Utility\Libs\SevenZip\SevenZipHelper.cs" />
     <Compile Include="src\Utility\Util.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -306,6 +206,12 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="osu-database-reader, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HoLLy.osu.DatabaseReader.2.1.0\lib\net40\osu-database-reader.dll</HintPath>
+    </Reference>
+    <Reference Include="osu.Shared, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\osu.Shared.1.0.2\lib\net20\osu.Shared.dll</HintPath>
+    </Reference>
     <Reference Include="SQLite-net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\sqlite-net-pcl.1.4.118\lib\netstandard1.1\SQLite-net.dll</HintPath>
     </Reference>
@@ -320,6 +226,10 @@
     </Reference>
     <Reference Include="SQLitePCLRaw.provider.e_sqlite3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9c301db686d0bd12, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCLRaw.provider.e_sqlite3.net45.1.1.5\lib\net45\SQLitePCLRaw.provider.e_sqlite3.dll</HintPath>
+    </Reference>
+    <Reference Include="Steamworks.NET, Version=11.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Steamworks.NET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System" />
@@ -350,7 +260,9 @@
     </None>
     <None Include="app.manifest" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Resource1.resx" />
+    <EmbeddedResource Include="Resource1.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\UI\diff-select-mask.xnb" />
     <EmbeddedResource Include="Resources\UI\set-select-mask.xnb" />
     <EmbeddedResource Include="Resources\UI\blank-box.xnb" />
@@ -534,6 +446,12 @@
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-combobreak.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hit.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-screenshot.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hitclap.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hitfinish.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hitwhistle.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hitclap.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hitfinish.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hitwhistle.xnb" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\discord-rpc.dll">
@@ -552,6 +470,12 @@
     <Content Include="Lib\bass.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Lib\Steamworks.NET.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lib\steam_api.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -565,12 +489,10 @@
       <Project>{0c6869bd-4e34-4c92-a853-e09f2b320601}</Project>
       <Name>Quaver-API</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Quaver-Framework\Quaver-Framework\Quaver-Framework.csproj">
-      <Project>{e8afe82b-4dda-4b46-bee7-75748e957ef3}</Project>
-      <Name>Quaver-Framework</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="src\Utility\Libs\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.5\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.5\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" />
@@ -601,6 +523,9 @@ echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libSDL2-2.0.so.0" "$(ProjectDir)$(
 echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\SDL2.dll" "$(ProjectDir)$(outDir)SDL2.dll"
 echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\soft_oal.dll" "$(ProjectDir)$(outDir)soft_oal.dll"
 echo f |  xcopy /y "$(ProjectDir)$(outDir)x86\e_sqlite3.dll" "$(ProjectDir)$(outDir)e_sqlite3.dll"
+
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\steam_api.dll" "$(ProjectDir)$(outDir)steam_api.dll"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\Steamworks.NET.dll" "$(ProjectDir)$(outDir)Steamworks.NET.dll"
 
 RD /S /Q "$(ProjectDir)$(outDir)x86\"
 RD /S /Q "$(ProjectDir)$(outDir)Lib\"
