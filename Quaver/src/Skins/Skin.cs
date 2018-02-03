@@ -912,23 +912,23 @@ namespace Quaver.Skins
                     Name = "Default Arrow Skin";
                     Author = "Quaver Team";
                     Version = "1.0";
-                    BgMaskPadding4K = 5;
-                    BgMaskPadding7K = 5;
+                    BgMaskPadding4K = 10;
+                    BgMaskPadding7K = 10;
                     HitPositionOffset4K = 0;
                     HitPositionOffset7K = 0;
-                    NotePadding4K = 2;
-                    NotePadding7K = 0;
+                    NotePadding4K = 4;
+                    NotePadding7K = 4;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
                     ColumnSize4K = 95;
                     ColumnSize7K = 65;
-                    ReceptorPositionOffset4K = 50;
-                    ReceptorPositionOffset7K = 0;
+                    ReceptorPositionOffset4K = -75;
+                    ReceptorPositionOffset7K = -75;
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = true;
                     LightFramesPerSecond = 240;
                     ReceptorsOverHitObjects4K = false;
-                    ReceptorsOverHitObjects7K = true;
+                    ReceptorsOverHitObjects7K = false;
                     JudgeColors.Insert(0, new Color(255, 255, 200));
                     JudgeColors.Insert(1, new Color(255, 255, 0));
                     JudgeColors.Insert(2, new Color(0, 255, 0));
@@ -947,8 +947,8 @@ namespace Quaver.Skins
                     ColumnColors7K[5] = new Color(255, 255, 255);
                     ColumnColors7K[6] = new Color(255, 255, 255);
                     BgMaskAlpha = 0.9f;
-                    FlipNoteImagesOnUpScroll4K = false;
-                    FlipNoteImagesOnUpScroll7K = false;
+                    FlipNoteImagesOnUpScroll4K = true;
+                    FlipNoteImagesOnUpScroll7K = true;
                     break;
             }
 
