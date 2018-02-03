@@ -96,7 +96,7 @@
     <Compile Include="src\GameState\Gameplay\PlayScreen\SongProgressUI.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\ScoreProgressUI.cs" />
     <Compile Include="src\GameState\IHelper.cs" />
-    <Compile Include="src\GameState\SongSelect\BeatmapOrganizerUI.cs" />
+    <Compile Include="src\GameState\SongSelect\MapOrganizer.cs" />
     <Compile Include="src\GameState\States\OptionsMenuState.cs" />
     <Compile Include="src\GameState\States\ScoreScreenState.cs" />
     <Compile Include="src\GameState\States\SongSelectState.cs" />
