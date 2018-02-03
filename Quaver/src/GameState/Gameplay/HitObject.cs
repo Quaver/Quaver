@@ -67,6 +67,11 @@ namespace Quaver.GameState.Gameplay
         public int SnapIndex { get; set; } = 1;
 
         /// <summary>
+        ///     The HitSounds this object should play
+        /// </summary>
+        public HitSounds HitSounds { get; set; } 
+
+        /// <summary>
         /// The position of the HitObject Sprites
         /// </summary>
         public Vector2 HitObjectPosition

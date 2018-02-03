@@ -187,6 +187,17 @@ namespace Quaver.Config
         }
 
         /// <summary>
+        ///     Responsible for reading a path from config
+        /// </summary>
+        /// <param name="defaultPath"></param>
+        /// <param name="newVal"></param>
+        /// <returns></returns>
+        internal static string ReadPath(string defaultPath, string newVal)
+        {
+            return File.Exists(newVal) ? newVal : defaultPath;
+        }
+
+        /// <summary>
         ///     Reads an XNA Key value from a string.
         /// </summary>
         /// <param name="defaultKey"></param>

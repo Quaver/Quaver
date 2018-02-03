@@ -60,6 +60,9 @@ namespace Quaver.Audio
             // Find the path of the current beatmap.
             var path = $"{Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.AudioPath}";
 
+            if (GameBase.SelectedBeatmap.IsOsuMap)
+                path = path.Replace(Configuration.SongDirectory, GameBase.OsuSongsFolder);
+
             // Don't bother loading the stream if the audio file doesn't exist.
             if (!File.Exists(path))
             {
@@ -210,12 +213,12 @@ namespace Quaver.Audio
         }
 
         /// <summary>
-        ///     Stops the current song, reloads it, and plays at a given preview time.
+        ///     Stops the current song, reloads it asynchronously, and plays at a given preview time.
         /// </summary>
         internal static void ReloadSong(bool loadAtPreview = false)
-        {
+        { 
             Stop();
-            Load();
+            Task.Run(() => Load()).Wait();
             Play(loadAtPreview);
         }
     }
