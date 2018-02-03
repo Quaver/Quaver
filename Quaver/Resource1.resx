@@ -352,9 +352,6 @@
   <data name="arrow-grade-small-xxx" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Arrow Skin\arrow-grade-small-xxx.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="arrow-judge-okay" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-judge-bad.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="arrow-judge-good" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Arrow Skin\arrow-judge-good.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -366,9 +363,6 @@
   </data>
   <data name="arrow-judge-miss" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Arrow Skin\arrow-judge-miss.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-judge-perf" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-judge-perfect.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="arrow-main-cursor" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Arrow Skin\arrow-main-cursor.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -630,5 +624,11 @@
   </data>
   <data name="bar-sound-hitwhistle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-sound-hitwhistle.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-judge-okay" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-judge-okay.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-judge-perf" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-judge-perf.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

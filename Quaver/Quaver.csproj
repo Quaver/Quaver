@@ -341,12 +341,12 @@
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-column-bgmask.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-column-hitlighting.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-column-timingbar.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-bad.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-okay.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-good.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-great.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-marv.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-miss.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-perfect.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-perf.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-applause.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-back.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-click.xnb" />
