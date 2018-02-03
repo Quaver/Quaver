@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Osu;
 using Quaver.Config;
 using Quaver.Graphics;
 
@@ -157,14 +158,29 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         public static void LoadBackground()
         {
-            if (GameBase.CurrentBackground != null)
-                GameBase.CurrentBackground.Dispose();
-
             var bgPath = Configuration.SongDirectory + "/" + GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.BackgroundPath;
+
+            if (GameBase.SelectedBeatmap.IsOsuMap)
+            {
+                // Parse the map and get the background
+                var osu = new PeppyBeatmap(GameBase.OsuSongsFolder + GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.Path);
+                bgPath = $@"{GameBase.OsuSongsFolder}/{GameBase.SelectedBeatmap.Directory}/{osu.Background}";
+
+                // Don't reload the map's background if the last map is the same.
+                if (bgPath == GameBase.LastBackgroundPath)
+                    return;
+            }
+
+            GameBase.LastBackgroundPath = bgPath;
 
             if (!File.Exists(bgPath))
                 return;
 
+            if (GameBase.CurrentBackground != null)
+                GameBase.CurrentBackground.Dispose();
+
+            // Fade effect and make the current bg go black while we load the next bg.
+            Blacken();
             GameBase.CurrentBackground = ImageLoader.Load(bgPath);
         }
     }

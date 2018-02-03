@@ -15,6 +15,7 @@ using Quaver.Database;
 using Quaver.Discord;
 using Quaver.Logging;
 using Quaver.Replays;
+using Quaver.Steam;
 using Quaver.Tests;
 
 namespace Quaver
@@ -36,9 +37,6 @@ namespace Quaver
             // Initialize Config
             Configuration.InitializeConfig();
 
-            // Initialize Discord RichPresence
-            InitializeDiscordPresence();
-
             // Delete Temp Files
             DeleteTemporaryFiles();
  
@@ -49,36 +47,6 @@ namespace Quaver
             using (var game = new QuaverGame())
             {
                 game.Run();
-            }
-        }
-
-        /// <summary>
-        ///     Responsible for initializing the Discord Presence
-        /// </summary>
-        private static void InitializeDiscordPresence()
-        {
-            if (GameBase.DiscordController != null)
-                return;
-
-            try
-            {
-                GameBase.DiscordController = new DiscordController();
-                GameBase.DiscordController.Initialize();
-
-                // Create a new RichPresence
-                GameBase.DiscordController.presence = new DiscordRPC.RichPresence()
-                {
-                    details = "Idle",
-                    largeImageKey = "quaver",
-                    largeImageText = Configuration.Username
-                };
-                DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
-
-                GameBase.DiscordRichPresencedInited = true;
-            }
-            catch (Exception e)
-            {
-                Logger.Log(e.Message, LogColors.GameError);
             }
         }
 
@@ -119,9 +87,6 @@ namespace Quaver
 
                 // Create the local scores database if it doesn't already exist
                 await LocalScoreCache.CreateScoresDatabase();
-
-                // The visible beatmaps in song select should be every single mapset at the start of the game.
-                GameBase.VisibleMapsets = GameBase.Mapsets;
             });
             Task.WaitAll(loadGame);
         }
