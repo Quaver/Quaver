@@ -568,9 +568,6 @@
   <data name="bar-grade-small-xxx" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-grade-small-xxx.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="bar-judge-okay" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Bar Skin\bar-judge-bad.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="bar-judge-good" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-judge-good.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -582,9 +579,6 @@
   </data>
   <data name="bar-judge-miss" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-judge-miss.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="bar-judge-perf" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Bar Skin\bar-judge-perfect.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="bar-main-cursor" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-main-cursor.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -630,5 +624,11 @@
   </data>
   <data name="arrow-judge-perf" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\default arrow skin\arrow-judge-perf.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-judge-okay" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default bar skin\bar-judge-okay.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-judge-perf" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default bar skin\bar-judge-perf.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
