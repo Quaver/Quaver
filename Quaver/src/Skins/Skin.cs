@@ -878,7 +878,7 @@ namespace Quaver.Skins
                     NotePadding7K = 0;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.5f;
-                    ColumnSize4K = 95;
+                    ColumnSize4K = 100;
                     ColumnSize7K = 75;
                     ReceptorPositionOffset4K = -110;
                     ReceptorPositionOffset7K = -110;
