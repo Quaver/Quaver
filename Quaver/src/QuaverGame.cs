@@ -184,7 +184,7 @@ namespace Quaver
             double dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Clear Background so it doesnt render everything from previous frame
-            GameBase.GraphicsDevice.Clear(Color.White * 0);
+            GameBase.GraphicsDevice.Clear(Color.Transparent);
 
             // Draw from Game State Manager
             GameBase.GameStateManager.Draw();

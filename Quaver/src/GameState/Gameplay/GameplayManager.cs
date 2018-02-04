@@ -19,6 +19,7 @@ using Quaver.Config;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Discord;
 using Quaver.API.Enums;
+using Quaver.Graphics.Particles;
 
 namespace Quaver.GameState.Gameplay
 {
@@ -34,10 +35,9 @@ namespace Quaver.GameState.Gameplay
         private Timing Timing { get; set; }
         private ScoreManager ScoreManager { get; set; }
         private PlayfieldUI PlayfieldUI { get; set; }
+        private ParticleManager ParticleManager { get; set; }
 
         //todo: initialize and implement these later
-        private HitBurst HitBurst { get; set; }
-        private Particles Particles { get; set; }
         private ScoreProgressUI ScoreProgressUI { get; set; }
         private SongProgressUI SongProgressUI { get; set; }
 
@@ -81,15 +81,19 @@ namespace Quaver.GameState.Gameplay
         /// </summary>
         internal bool Paused { get; private set; }
 
+        private bool DrawPlayfieldFirst { get; set; }
+
         //todo: remove. TEST.
         private Sprite SvInfoTextBox { get; set; }
         private TextBoxSprite SVText { get; set; }
         private TextButton TestButton { get; set; }
 
         //Rendering
-        private RenderTarget2D[] RenderedHitObjects { get; set; } = new RenderTarget2D[8];
+        private const int RENDER_SAMPLES = 8;
+        private int CurrentRenderIndex { get; set; }
+        private RenderTarget2D[] RenderedHitObjects { get; set; }
         private RenderTarget2D RenderedPlayfield { get; set; }
-        private Color[] RenderedAlphas { get; set; } = new Color[8];
+        private Color[] RenderedAlphas { get; set; }
 
         /// <summary>
         ///     Constructor
@@ -107,6 +111,7 @@ namespace Quaver.GameState.Gameplay
             Playfield = new Playfield();
             PlayfieldUI = new PlayfieldUI();
             Timing = new Timing(qua);
+            ParticleManager = new ParticleManager();
             ScoreManager = new ScoreManager();
             InputManager = new GameplayInputManager();
             ReplayFrames = new List<ReplayFrame>();
@@ -126,11 +131,14 @@ namespace Quaver.GameState.Gameplay
             NoteManager.ReleaseMissed += ReleaseMissed;
 
             // Initialize Rendering
+            CurrentRenderIndex = 0;
             RenderedPlayfield = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
+            RenderedAlphas = new Color[RENDER_SAMPLES];
+            RenderedHitObjects = new RenderTarget2D[RENDER_SAMPLES];
             for (var i = 0; i < RenderedHitObjects.Length; i++)
             {
                 RenderedHitObjects[i] = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
-                RenderedAlphas[i] = Color.White * (1f / (1 + i));
+                RenderedAlphas[i] = i == RenderedHitObjects.Length - 1 ? Color.White : Color.White * (1f / (1 + i));
             }
         }
 
@@ -189,7 +197,7 @@ namespace Quaver.GameState.Gameplay
             CurrentSongTime = Timing.GetCurrentSongTime();
 
             // Check if the song is currently skippable.
-            IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - CurrentSongTime >= 5000);
+            IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - CurrentSongTime >= Timing.SONG_SKIP_OFFSET + 2000);
 
             // Update Helper Classes
             if (!Paused)
@@ -199,6 +207,7 @@ namespace Quaver.GameState.Gameplay
                 NoteManager.Update(dt);
                 AccuracyBoxUI.Update(dt);
                 PlayfieldUI.Update(dt);
+                ParticleManager.Update(dt);
             }
 
             PlayfieldUI.UpdateMultiplierBars(ScoreManager.MultiplierIndex);
@@ -230,29 +239,41 @@ namespace Quaver.GameState.Gameplay
 
         public void Draw()
         {
-            // Move Rendered Frames from front to end of array by 1 step
-            for (int i = RenderedHitObjects.Length - 1; i > 0; i--)
-                RenderedHitObjects[i] = RenderedHitObjects[i - 1];
+            // Update Render Index
+            CurrentRenderIndex ++;
+            if (CurrentRenderIndex >= RenderedHitObjects.Length) CurrentRenderIndex = 0;
 
             // Render Current NoteManager Frame
-            GameBase.GraphicsDevice.SetRenderTarget(RenderedHitObjects[0]);
-            GameBase.GraphicsDevice.Clear(Color.White * 0);
+            GameBase.GraphicsDevice.SetRenderTarget(RenderedHitObjects[CurrentRenderIndex]);
+            GameBase.GraphicsDevice.Clear(Color.Transparent);
             GameBase.SpriteBatch.Begin();
             NoteManager.Draw();
             GameBase.SpriteBatch.End();
 
             // Render Entire Playfield with NoteManagers blurred
+            int alphaIndex = 0;
             GameBase.GraphicsDevice.SetRenderTarget(RenderedPlayfield);
-            GameBase.GraphicsDevice.Clear(Color.White * 0);
-            GameBase.SpriteBatch.Begin();
-            Playfield.Draw();
-            for (int i = RenderedHitObjects.Length - 1; i >= 0; i--)
-                GameBase.SpriteBatch.Draw(RenderedHitObjects[i], Vector2.Zero, RenderedAlphas[i]);
+            GameBase.GraphicsDevice.Clear(Color.Transparent);
+            GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            Playfield.DrawBgMask();
+            if (DrawPlayfieldFirst) Playfield.Draw();
+            for (int i = CurrentRenderIndex - 1; i >= 0; i--)
+            {
+                GameBase.SpriteBatch.Draw(RenderedHitObjects[i], Vector2.Zero, RenderedAlphas[alphaIndex]);
+                alphaIndex++;
+            }
+            for (int i = RenderedHitObjects.Length - 1; i >= CurrentRenderIndex; i--)
+            {
+                GameBase.SpriteBatch.Draw(RenderedHitObjects[i], Vector2.Zero, RenderedAlphas[alphaIndex]);
+                alphaIndex++;
+            }
+            if (!DrawPlayfieldFirst) Playfield.Draw();
+            ParticleManager.Draw();
             GameBase.SpriteBatch.End();
 
             // Render everything in order
             GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
-            GameBase.GraphicsDevice.Clear(Color.White * 0);
+            GameBase.GraphicsDevice.Clear(Color.Transparent);
             GameBase.SpriteBatch.Begin();
             BackgroundManager.Draw();
             GameBase.SpriteBatch.Draw(RenderedPlayfield, Vector2.Zero, Color.White);
@@ -295,44 +316,74 @@ namespace Quaver.GameState.Gameplay
             switch (GameBase.SelectedBeatmap.Qua.Mode)
             //the hit position is determined by the receptor and object of the first lane
             //the math here is kinda ugly, i plan on cleaning this up later
+            //todo: clean up this code a bit
             {
                 case GameModes.Keys4:
+                    // Calculate References
                     GameplayReferences.ReceptorXPosition = new float[4];
                     laneSize = (int)(GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale);
                     playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding4K * GameBase.WindowUIScale);
                     receptorPadding = (int)(GameBase.LoadedSkin.NotePadding4K * GameBase.WindowUIScale);
-                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll4k //todo: use list for scaling
-                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset4K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width))
-                        : GameBase.LoadedSkin.ReceptorYOffset4K * GameBase.WindowUIScale;
-                    ScoreManager.ScrollSpeed = Configuration.ScrollSpeed4k;
+                    DrawPlayfieldFirst = !GameBase.LoadedSkin.ReceptorsOverHitObjects4K;
+
+                    // Update Playfield
+                    Playfield.ReceptorYPosition = Config.Configuration.DownScroll4k  //todo: use list for scaling
+                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
+                        : GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale;
+                    Playfield.ColumnLightingPosition = Config.Configuration.DownScroll4k
+                        ? Playfield.ReceptorYPosition
+                        : Playfield.ReceptorYPosition
+                        + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
+                        * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
+                        - ((double)GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
+                    Console.WriteLine(Playfield.ColumnLightingPosition);
+
+                    // Update Note Manager
                     NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed4k / (20f * GameBase.GameClock);
                     NoteManager.DownScroll = Configuration.DownScroll4k;
                     NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll4k
-                        ? GameplayReferences.ReceptorYOffset
-                        : GameplayReferences.ReceptorYOffset
+                        ? Playfield.ReceptorYPosition + ((Configuration.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
+                        : Playfield.ReceptorYPosition - ((Configuration.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
-                        * ((GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
-                        - (GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
+                        * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
+                        - ((double)GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
+
+                    // Update Score Manager
+                    ScoreManager.ScrollSpeed = Configuration.ScrollSpeed4k;
                     break;
                 case GameModes.Keys7:
+                    // Calculate References
                     GameplayReferences.ReceptorXPosition = new float[7];
                     laneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);
                     playfieldPadding = (int)(GameBase.LoadedSkin.BgMaskPadding7K * GameBase.WindowUIScale);
                     receptorPadding = (int)(GameBase.LoadedSkin.NotePadding7K * GameBase.WindowUIScale);
-                    GameplayReferences.ReceptorYOffset = Config.Configuration.DownScroll7k //todo: use list for scaling
-                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorYOffset7K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
-                        : GameBase.LoadedSkin.ReceptorYOffset7K * GameBase.WindowUIScale;
-                    ScoreManager.ScrollSpeed = Configuration.ScrollSpeed7k;
+                    DrawPlayfieldFirst = !GameBase.LoadedSkin.ReceptorsOverHitObjects7K;
+
+                    // Update Playfield
+                    Playfield.ReceptorYPosition = Config.Configuration.DownScroll7k  //todo: use list for scaling
+                        ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset7K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
+                        : GameBase.LoadedSkin.ReceptorPositionOffset7K * GameBase.WindowUIScale;
+                    Playfield.ColumnLightingPosition = Config.Configuration.DownScroll7k
+                        ? Playfield.ReceptorYPosition
+                        : Playfield.ReceptorYPosition 
+                        + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
+                        * ((GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
+                        - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
+
+                    // Update Note Manager
                     NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed7k / (20f * GameBase.GameClock);
                     NoteManager.DownScroll = Configuration.DownScroll7k;
                     NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll7k
-                        ? GameplayReferences.ReceptorYOffset
-                        : GameplayReferences.ReceptorYOffset
+                        ? Playfield.ReceptorYPosition + ((Configuration.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
+                        : Playfield.ReceptorYPosition - ((Configuration.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
-                        * ((GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
-                        - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
+                        * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
+                        - ((double)GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
+
+                    // Update Score Manager
+                    ScoreManager.ScrollSpeed = Configuration.ScrollSpeed7k;
                     break;
             }
 
@@ -356,6 +407,7 @@ namespace Quaver.GameState.Gameplay
             AccuracyBoxUI.Initialize(state);
             PlayfieldUI.Initialize(state);
             NoteManager.Initialize(state);
+            ParticleManager.Initialize(state);
 
             //todo: remove this. used for logging.
             Logger.Add("KeyCount", "", Color.Pink);
@@ -423,7 +475,6 @@ namespace Quaver.GameState.Gameplay
                         // If the player is spamming
                         if (i >= 3)
                         {
-                            //todo: (Swan: This is why the game looks so weird)
                             //If the object is an LN, don't forget to count it
                             if (NoteManager.HitObjectPool[noteIndex].IsLongNote)
                                 ReleaseSkipped(null, null);
@@ -433,6 +484,9 @@ namespace Quaver.GameState.Gameplay
                         }
                         else
                         {
+                            // Create a Hit Burst instance
+                            ParticleManager.CreateHitBurst(NoteManager.NoteBurstRectangle[keyLane.GetKey()], keyLane.GetKey());
+
                             // If the object is an LN, hold it at the receptors
                             if (NoteManager.HitObjectPool[noteIndex].IsLongNote) NoteManager.HoldNote(noteIndex);
 
@@ -551,11 +605,12 @@ namespace Quaver.GameState.Gameplay
                 Logger.Log("Song has been successfully skipped to 3 seconds before the first HitObject.", LogColors.GameSuccess);
 
                 // Skip to 3 seconds before the notes start
-                SongManager.Load();
-                SongManager.SkipTo(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - 3000 + SongManager.BassDelayOffset);
+                //SongManager.Pause();
+                SongManager.SkipTo(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + SongManager.BassDelayOffset);
                 SongManager.Play();
 
                 Timing.SongIsPlaying = true;
+                Timing.ActualSongTime = SongManager.Position;
                 DiscordController.ChangeDiscordPresenceGameplay(true);
             }
         }

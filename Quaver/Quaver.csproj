@@ -90,9 +90,9 @@
     <Compile Include="src\GameState\Gameplay\GameplayReferences.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\AccuracyBoxUI.cs" />
     <Compile Include="src\GameState\Gameplay\GameplayData.cs" />
-    <Compile Include="src\GameState\Gameplay\PlayScreen\HitBurst.cs" />
+    <Compile Include="src\Graphics\Particles\HitBurst.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\MeasureBarManager.cs" />
-    <Compile Include="src\GameState\Gameplay\PlayScreen\Particles.cs" />
+    <Compile Include="src\GameState\Gameplay\PlayScreen\ParticleManager.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\PlayfieldUI.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\SongProgressUI.cs" />
     <Compile Include="src\GameState\Gameplay\PlayScreen\ScoreProgressUI.cs" />
@@ -112,6 +112,7 @@
     <Compile Include="src\Graphics\GameOverlay\GameOverlay.cs" />
     <Compile Include="src\Graphics\GameOverlay\IGameOverlayComponent.cs" />
     <Compile Include="src\Graphics\GameOverlay\MenuOverlay.cs" />
+    <Compile Include="src\Graphics\Particles\Particle.cs" />
     <Compile Include="src\Graphics\Sprite\BarDisplay.cs" />
     <Compile Include="src\Graphics\Sprite\BakeableSprite.cs" />
     <Compile Include="src\Graphics\Sprite\Boundary.cs" />
@@ -269,37 +270,6 @@
     <EmbeddedResource Include="Resource1.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\UI\diff-select-mask.xnb" />
-    <EmbeddedResource Include="Resources\UI\set-select-mask.xnb" />
-    <EmbeddedResource Include="Resources\UI\blank-box.xnb" />
-    <EmbeddedResource Include="Resources\UI\hollow-box.xnb" />
-    <EmbeddedResource Include="Resources\Fonts\Bold12.xnb" />
-    <EmbeddedResource Include="Resources\Fonts\Medium12.xnb" />
-    <EmbeddedResource Include="Resources\Fonts\Medium16.xnb" />
-    <EmbeddedResource Include="Resources\Fonts\Medium24.xnb" />
-    <EmbeddedResource Include="Resources\Fonts\Medium48.xnb" />
-    <EmbeddedResource Include="Resources\UI\bar-cap.xnb" />
-    <EmbeddedResource Include="Resources\UI\bar-corner.xnb" />
-    <EmbeddedResource Include="Resources\UI\graph-axis-long.xnb" />
-    <EmbeddedResource Include="Resources\UI\graph-axis-short.xnb" />
-    <None Include="Lib\libopenal.so.1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Lib\libSDL2-2.0.so.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Lib\libbass.dylib">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Lib\libbass_fx.dylib">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Lib\libbass.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Lib\libbass_fx.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-note-hitobject-1-12th.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-note-hitobject-1-16th.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-note-hitobject-1-2nd.xnb" />
@@ -344,22 +314,6 @@
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-note-holdend-2.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-note-holdend-3.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-note-holdend-4.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-column-bgmask.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-column-hitlighting.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-column-timingbar.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-bad.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-good.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-great.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-marv.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-miss.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-perfect.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-applause.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-back.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-click.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-combobreak.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hit.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-screenshot.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-main-cursor.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-receptor-down-1.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-receptor-down-2.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-receptor-down-3.xnb" />
@@ -368,6 +322,9 @@
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-receptor-up-2.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-receptor-up-3.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-receptor-up-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-column-bgmask.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-column-hitlighting.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-column-timingbar.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-grade-small-a.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-grade-small-b.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-grade-small-c.xnb" />
@@ -378,6 +335,47 @@
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-grade-small-x.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-grade-small-xx.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-grade-small-xxx.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-main-cursor.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-applause.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-back.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-click.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-combobreak.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hit.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hitclap.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hitfinish.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hitwhistle.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-screenshot.xnb" />
+    <EmbeddedResource Include="Resources\UI\diff-select-mask.xnb" />
+    <EmbeddedResource Include="Resources\UI\set-select-mask.xnb" />
+    <EmbeddedResource Include="Resources\UI\blank-box.xnb" />
+    <EmbeddedResource Include="Resources\UI\hollow-box.xnb" />
+    <EmbeddedResource Include="Resources\Fonts\Bold12.xnb" />
+    <EmbeddedResource Include="Resources\Fonts\Medium12.xnb" />
+    <EmbeddedResource Include="Resources\Fonts\Medium16.xnb" />
+    <EmbeddedResource Include="Resources\Fonts\Medium24.xnb" />
+    <EmbeddedResource Include="Resources\Fonts\Medium48.xnb" />
+    <EmbeddedResource Include="Resources\UI\bar-cap.xnb" />
+    <EmbeddedResource Include="Resources\UI\bar-corner.xnb" />
+    <EmbeddedResource Include="Resources\UI\graph-axis-long.xnb" />
+    <EmbeddedResource Include="Resources\UI\graph-axis-short.xnb" />
+    <None Include="Lib\libopenal.so.1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Lib\libSDL2-2.0.so.0">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Lib\libbass.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Lib\libbass_fx.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Lib\libbass.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Lib\libbass_fx.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-hitobject-1.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-hitobject-2.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-hitobject-3.xnb" />
@@ -439,12 +437,12 @@
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-grade-small-x.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-grade-small-xx.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-grade-small-xxx.xnb" />
-    <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-bad.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-okay.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-good.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-great.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-marv.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-miss.xnb" />
-    <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-perfect.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-judge-perf.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-main-cursor.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-applause.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-back.xnb" />
@@ -452,12 +450,101 @@
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-combobreak.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hit.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-screenshot.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hitclap.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hitfinish.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-hitwhistle.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hitclap.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hitfinish.xnb" />
     <EmbeddedResource Include="Resources\Default Bar Skin\bar-sound-hitwhistle.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-column-lighting.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-hiteffect-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-hiteffect-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-hiteffect-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-hiteffect-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-stage-bgmask.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-column-lighting.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-5.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-6.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-note-hiteffect-7.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-5.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-6.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-receptor-down-7.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-7k-stage-bgmask.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-grade-small-s-.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-mania-stage-light.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-stage-distant-overlay.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-stage-hitposition-overlay.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-stage-left-border.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-stage-right-border.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-stage-timingbar.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-column-lighting.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-note-hiteffect-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-note-hiteffect-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-note-hiteffect-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-note-hiteffect-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-4k-stage-bgmask.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-column-lighting.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hiteffect-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hiteffect-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hiteffect-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hiteffect-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hiteffect-5.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hiteffect-6.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hiteffect-7.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hitobject-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hitobject-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hitobject-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hitobject-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hitobject-5.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hitobject-6.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-hitobject-7.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdbody-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdbody-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdbody-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdbody-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdbody-5.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdbody-6.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdbody-7.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdend-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdend-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdend-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdend-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdend-5.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdend-6.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-note-holdend-7.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-down-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-down-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-down-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-down-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-down-5.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-down-6.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-down-7.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-up-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-up-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-up-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-up-4.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-up-5.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-up-6.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-receptor-up-7.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-7k-stage-bgmask.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-grade-small-s-.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-mania-stage-light.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-stage-distant-overlay.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-stage-hitposition-overlay.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-stage-left-border.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-stage-right-border.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-stage-timingbar.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-good.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-great.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-marv.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-miss.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-okay.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-perf.xnb" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\discord-rpc.dll">

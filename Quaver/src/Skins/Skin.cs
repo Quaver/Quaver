@@ -5,12 +5,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using System.IO;
+using System.Linq;
 using System.Net.Mime;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Remoting.Channels;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Audio;
+using Quaver.API.Enums;
 using Quaver.Audio;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
@@ -39,6 +41,11 @@ namespace Quaver.Skins
         internal string Version { get; set; }
 
         /// <summary>
+        ///     Determines the transparency of the bg masks
+        /// </summary>
+        internal float BgMaskAlpha { get; set; } = 0.95f;
+
+        /// <summary>
         ///     The padding (Positional offset) of the notes relative from the bg mask.
         /// </summary>
         internal int BgMaskPadding4K { get; set; }
@@ -51,16 +58,22 @@ namespace Quaver.Skins
         internal int NotePadding7K { get; set; }
 
         /// <summary>
-        /// Size of each lane in pixels.
+        ///     Size of each lane in pixels.
         /// </summary>
         internal int ColumnSize4K { get; set; }
         internal int ColumnSize7K { get; set; }
 
         /// <summary>
-        /// The offset of the hit receptor
+        ///     Hit Position for hit objects.
         /// </summary>
-        internal int ReceptorYOffset4K { get; set; }
-        internal int ReceptorYOffset7K { get; set; }
+        internal int HitPositionOffset4K { get; set; }
+        internal int HitPositionOffset7K { get; set; }
+
+        /// <summary>
+        ///     The offset of the hit receptor
+        /// </summary>
+        internal int ReceptorPositionOffset4K { get; set; }
+        internal int ReceptorPositionOffset7K { get; set; }
 
         /// <summary>
         ///     The size of the timing pars (in pixels).
@@ -68,9 +81,9 @@ namespace Quaver.Skins
         internal int TimingBarPixelSize { get; set; }
 
         /// <summary>
-        ///     The scale of the hitlighting objects.
+        ///     The scale of the column lighting objects.
         /// </summary>
-        internal float HitLightingScale { get; set; }
+        internal float ColumnLightingScale { get; set; }
 
         /// <summary>
         /// The alignment of the playfield as a percentage. 
@@ -83,50 +96,70 @@ namespace Quaver.Skins
         internal bool ColourObjectsBySnapDistance { get; set; }
 
         /// <summary>
+        ///     Determines whether or not receptors are over hit objects
+        /// </summary>
+        internal bool ReceptorsOverHitObjects4K { get; set; }
+        internal bool ReceptorsOverHitObjects7K { get; set; }
+
+        /// <summary>
+        ///     Determines whether notes will be flipped or not when using up scroll for this skin.
+        /// </summary>
+        internal bool FlipNoteImagesOnUpScroll4K { get; set; }
+        internal bool FlipNoteImagesOnUpScroll7K { get; set; }
+
+        /// <summary>
+        ///     Column Colors. Used for hit lighting and other stuff that depends on column colors.
+        /// </summary>
+        internal Color[] ColumnColors4K { get; set; } = new Color[4];
+        internal Color[] ColumnColors7K { get; set; } = new Color[7];
+
+        /// <summary>
         ///     Determines the FPS of the animations
         ///     Max - 255fps.
         /// </summary>
         internal byte LightFramesPerSecond { get; set; }
 
         /// <summary>
-        /// The colour that is used for the column's lighting.
+        ///     The colour that is used for the column's lighting.
+        ///     [0] Marv
+        ///     [1] Perf
+        ///     [2] Great
+        ///     [3] Good
+        ///     [4] Okay
+        ///     [5] Miss
+        /// 
+        ///     You can access an individual one by calling
+        ///     Skin.GetJudgeColor(Judge color);
+        ///     See: The Judge enum below.
         /// </summary>
-        internal Color SnapColor1st { get; set; }
-        internal Color SnapColor2nd { get; set; }
-        internal Color SnapColor3rd { get; set; }
-        internal Color SnapColor4th { get; set; }
-        internal Color SnapColor6th { get; set; }
-        internal Color SnapColor8th { get; set; }
-        internal Color SnapColor12th { get; set; }
-        internal Color SnapColor16th { get; set; }
-        internal Color SnapColor48th { get; set; }
-        internal Color[] SnapColors { get; set; }
+        internal List<Color> JudgeColors { get; set; } = new List<Color>();
 
         /// <summary>
         ///     All of the textures for the loaded skin elements. 
         ///     We first attempt to load the selected skin's elements, however if we can't,
         ///     it'll result it to the default.
         /// </summary>
-        internal Texture2D ColumnBgMask4K { get; set; }
-        internal Texture2D ColumnBgMask7K { get; set; }
+        internal Texture2D StageBgMask4K { get; set; }
+        internal Texture2D StageBgMask7K { get; set; }
 
-        internal Texture2D[] ColumnHitLighting4K { get; set; } = new Texture2D[4];
-        internal Texture2D[] ColumnHitLighting7K { get; set; } = new Texture2D[7];
+        /// <summary>
+        ///     Lane Lighting Sprites
+        /// </summary>
+        internal Texture2D ColumnLighting4K { get; set; }
+        internal Texture2D ColumnLighting7K { get; set; }
 
-        internal Texture2D NoteHitBurst4K1 { get; set; }
-        internal Texture2D NoteHitBurst4K2 { get; set; }
-        internal Texture2D NoteHitBurst4K3 { get; set; }
-        internal Texture2D NoteHitBurst4K4 { get; set; }
+        /// <summary>
+        ///     Timing bar Sprite
+        /// </summary>
+        internal Texture2D StageTimingBar { get; set; }
 
-        internal Texture2D NoteHitBurst7K1 { get; set; }
-        internal Texture2D NoteHitBurst7K2 { get; set; }
-        internal Texture2D NoteHitBurst7K3 { get; set; }
-        internal Texture2D NoteHitBurst7K4 { get; set; }
-        internal Texture2D NoteHitBurst7K5 { get; set; }
-        internal Texture2D NoteHitBurst7K6 { get; set; }
-        internal Texture2D NoteHitBurst7K7 { get; set; }
-
-        internal Texture2D ColumnTimingBar { get; set; }
+        /// <summary>
+        ///     Stage Sprite. Is displayed on the left side of the stage.
+        /// </summary>
+        internal Texture2D StageLeftBorder { get; set; }
+        internal Texture2D StageRightBorder { get; set; }
+        internal Texture2D StageHitPositionOverlay { get; set; }
+        internal Texture2D StageDistantOverlay { get; set; }
 
         // 4k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
@@ -135,6 +168,7 @@ namespace Quaver.Skins
         internal Texture2D[] NoteHoldEnds4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsUp4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsDown4K { get; set; } = new Texture2D[4];
+        internal Texture2D[] NoteHitEffects4K { get; set; } = new Texture2D[4];
 
         // 7k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
@@ -143,6 +177,7 @@ namespace Quaver.Skins
         internal Texture2D[] NoteHoldEnds7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteReceptorsUp7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteReceptorsDown7K { get; set; } = new Texture2D[7];
+        internal Texture2D[] NoteHitEffects7K { get; set; } = new Texture2D[7];
 
         /// <summary>
         ///     Grades
@@ -156,16 +191,15 @@ namespace Quaver.Skins
         internal Texture2D GradeSmallSS { get; set; }
         internal Texture2D GradeSmallX { get; set; }
         internal Texture2D GradeSmallXX { get; set; }
-        internal Texture2D GradeSmallXXX { get; set; }
 
         /// <summary>
         ///     Judge
         /// </summary>
         internal Texture2D JudgeMiss { get; set; }
-        internal Texture2D JudgeBad { get; set; }
+        internal Texture2D JudgeOkay { get; set; }
         internal Texture2D JudgeGood { get; set; }
         internal Texture2D JudgeGreat { get; set; }
-        internal Texture2D JudgePerfect { get; set; }
+        internal Texture2D JudgePerf { get; set; }
         internal Texture2D JudgeMarv { get; set; }
 
         /// <summary>
@@ -180,7 +214,6 @@ namespace Quaver.Skins
         internal SoundEffect SoundHitClap { get; set; }
         internal SoundEffect SoundHitWhistle { get; set; }
         internal SoundEffect SoundHitFinish { get; set; }
-
         internal SoundEffect SoundComboBreak { get; set; }
         internal SoundEffect SoundApplause { get; set; }
         internal SoundEffect SoundScreenshot { get; set; }
@@ -188,38 +221,42 @@ namespace Quaver.Skins
         internal SoundEffect SoundBack { get; set; }
 
         /// <summary>
-        ///  Animation Elements
-        /// </summary>
-        internal List<Texture2D> HitLighting { get; set; }
-
-        /// <summary>
         ///     The number of files that will be loaded in the default skin
-        ///     for hitlighting animations.
+        ///     for hit burst animations.
         /// </summary>
-        private int HitLightingAnimDefault { get; } = 5;
+        private int HitBurstAnimDefault { get; } = 5;
 
         // Contains the file names of all skin elements
         private readonly string[] skinElements = new[]
         {
-                @"column-bgmask",
-                @"column-timingbar",
-                @"4k-column-hitlighting",
-                @"7k-column-hitlighting",
 
-                // 4k HitBurst
-                @"4k-note-hitburst-1",
-                @"4k-note-hitburst-2",
-                @"4k-note-hitburst-3",
-                @"4k-note-hitburst-4",
+                @"4k-column-lighting",
+                @"7k-column-lighting",
+                
+
+                // Stage
+                @"4k-stage-bgmask",
+                @"7k-stage-bgmask",
+                @"stage-left-border",
+                @"stage-right-border",
+                @"stage-hitposition-overlay",
+                @"stage-distant-overlay",
+                @"stage-timingbar",
+
+                // 4k Hit effect
+                @"4k-note-hiteffect-1",
+                @"4k-note-hiteffect-2",
+                @"4k-note-hiteffect-3",
+                @"4k-note-hiteffect-4",
 
                 // 7k HitBurst
-                @"7k-note-hitburst-1",
-                @"7k-note-hitburst-2",
-                @"7k-note-hitburst-3",
-                @"7k-note-hitburst-4",
-                @"7k-note-hitburst-5",
-                @"7k-note-hitburst-6",
-                @"7k-note-hitburst-7",
+                @"7k-note-hiteffect-1",
+                @"7k-note-hiteffect-2",
+                @"7k-note-hiteffect-3",
+                @"7k-note-hiteffect-4",
+                @"7k-note-hiteffect-5",
+                @"7k-note-hiteffect-6",
+                @"7k-note-hiteffect-7",
 
                 // 4k HitObjects
                 @"4k-note-hitobject-1",
@@ -246,7 +283,6 @@ namespace Quaver.Skins
                 @"grade-small-ss",
                 @"grade-small-x",
                 @"grade-small-xx",
-                @"grade-small-xxx",
 
                 // 4k Hit Object Hold Ends
                 @"4k-note-holdend-1",
@@ -311,10 +347,10 @@ namespace Quaver.Skins
 
                 // Judge
                 @"judge-miss",
-                @"judge-bad",
+                @"judge-okay",
                 @"judge-good",
                 @"judge-great",
-                @"judge-perfect",
+                @"judge-perf",
                 @"judge-marv",
 
                 //  Cursor
@@ -331,9 +367,6 @@ namespace Quaver.Skins
                 @"sound-screenshot",
                 @"sound-click",
                 @"sound-back",
-
-                // Animation Frames
-                @"hitlighting"
         };
 
         /// <summary>
@@ -374,68 +407,65 @@ namespace Quaver.Skins
                 // Load up all the skin elements.
                 switch (element)
                 {
-                    case @"4k-column-bgmask":
-                        ColumnBgMask4K = LoadIndividualElement(element, skinElementPath);
+                    case @"4k-stage-bgmask":
+                        StageBgMask4K = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"column-timingbar":
-                        ColumnTimingBar = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-stage-bgmask":
+                        StageBgMask7K = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-column-hitlighting-1":
-                        ColumnHitLighting4K[0] = LoadIndividualElement(element, skinElementPath);
+                    case @"stage-timingbar":
+                        StageTimingBar = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-column-hitlighting-2":
-                        ColumnHitLighting4K[1] = LoadIndividualElement(element, skinElementPath);
+                    case @"stage-left-border":
+                        StageLeftBorder = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-column-hitlighting-3":
-                        ColumnHitLighting4K[2] = LoadIndividualElement(element, skinElementPath);
+                    case @"stage-right-border":
+                        StageRightBorder = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-column-hitlighting-4":
-                        ColumnHitLighting4K[3] = LoadIndividualElement(element, skinElementPath);
+                    case @"stage-hitposition-overlay":
+                        StageHitPositionOverlay = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-column-hitlighting-1":
-                        ColumnHitLighting7K[0] = LoadIndividualElement(element, skinElementPath);
+                    case @"stage-distant-overlay":
+                        StageDistantOverlay = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-column-hitlighting-2":
-                        ColumnHitLighting7K[1] = LoadIndividualElement(element, skinElementPath);
+                    case @"4k-column-lighting":
+                        ColumnLighting4K = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-column-hitlighting-3":
-                        ColumnHitLighting7K[2] = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-column-lighting":
+                        ColumnLighting7K = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-column-hitlighting-4":
-                        ColumnHitLighting7K[3] = LoadIndividualElement(element, skinElementPath);
+                    case @"4k-note-hiteffect-1":
+                        NoteHitEffects4K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-column-hitlighting-5":
-                        ColumnHitLighting7K[4] = LoadIndividualElement(element, skinElementPath);
+                    case @"4k-note-hiteffect-2":
+                        NoteHitEffects4K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-column-hitlighting-6":
-                        ColumnHitLighting7K[5] = LoadIndividualElement(element, skinElementPath);
+                    case @"4k-note-hiteffect-3":
+                        NoteHitEffects4K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-column-hitlighting-7":
-                        ColumnHitLighting7K[6] = LoadIndividualElement(element, skinElementPath);
+                    case @"4k-note-hiteffect-4":
+                        NoteHitEffects4K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-hitburst-1":
-                        NoteHitBurst4K1 = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-1":
+                        NoteHitEffects7K[0] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-hitburst-2":
-                        NoteHitBurst4K2 = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-2":
+                        NoteHitEffects7K[1] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-hitburst-3":
-                        NoteHitBurst4K3 = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-3":
+                        NoteHitEffects7K[2] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"4k-note-hitburst-4":
-                        NoteHitBurst4K4 = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-4":
+                        NoteHitEffects7K[3] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-hitburst-1":
-                        NoteHitBurst7K1 = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-5":
+                        NoteHitEffects7K[4] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-hitburst-2":
-                        NoteHitBurst7K2 = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-6":
+                        NoteHitEffects7K[5] = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"7k-note-hitburst-3":
-                        NoteHitBurst7K3 = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-note-hitburst-4":
-                        NoteHitBurst7K4 = LoadIndividualElement(element, skinElementPath);
+                    case @"7k-note-hiteffect-7":
+                        NoteHitEffects7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-hitobject-1":
                         LoadHitObjects(NoteHitObjects4K, skinDir, element, 0);
@@ -496,9 +526,6 @@ namespace Quaver.Skins
                         break;
                     case @"grade-small-xx":
                         GradeSmallXX = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"grade-small-xxx":
-                        GradeSmallXXX = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-holdend-1":
                         NoteHoldEnds4K[0] = LoadIndividualElement(element, skinElementPath);
@@ -635,8 +662,8 @@ namespace Quaver.Skins
                     case @"judge-miss":
                         JudgeMiss = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"judge-bad":
-                        JudgeBad = LoadIndividualElement(element, skinElementPath);
+                    case @"judge-okay":
+                        JudgeOkay = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-good":
                         JudgeGood = LoadIndividualElement(element, skinElementPath);
@@ -644,8 +671,8 @@ namespace Quaver.Skins
                     case @"judge-great":
                         JudgeGreat = LoadIndividualElement(element, skinElementPath);
                         break;
-                    case @"judge-perfect":
-                        JudgePerfect = LoadIndividualElement(element, skinElementPath);
+                    case @"judge-perf":
+                        JudgePerf = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-marv":
                         JudgeMarv = LoadIndividualElement(element, skinElementPath);
@@ -679,9 +706,6 @@ namespace Quaver.Skins
                         break;
                     case @"main-cursor":
                         Cursor = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"hitlighting":
-                        HitLighting = LoadAnimationElements(skinDir, element, HitLightingAnimDefault);
                         break;
                     default:
                         break;
@@ -781,13 +805,13 @@ namespace Quaver.Skins
         /// <summary>
         ///     Loads a list of elements to be used in an animation.
         ///     Example:
-        ///         - hitlighting@0
-        ///         - hitlighting@1
-        ///         - hitlighting@2
+        ///         - 4k-note-hiteffect-0@0
+        ///         - 4k-note-hiteffect-1@1
+        ///         - 4k-note-hiteffect-2@2
         ///         //
-        ///         - holdlighting@0
-        ///         - holdlighting@1
-        ///         - holdlighting@2
+        ///         - 4k-note-holdbody-active-1@0
+        ///         - 4k-note-holdbody-active-1@1
+        ///         - 4k-note-holdbody-active-1@2
         /// </summary>
         /// <param name="skinDir"></param>
         /// <param name="element"></param>
@@ -853,75 +877,85 @@ namespace Quaver.Skins
                     Name = "Default Bar Skin";
                     Author = "Quaver Team";
                     Version = "1.0";
-                    BgMaskPadding4K = 5;
-                    BgMaskPadding7K = 5;
-                    NotePadding4K = 2;
+                    BgMaskPadding4K = 0;
+                    BgMaskPadding7K = 0;
+                    HitPositionOffset4K = -28;
+                    HitPositionOffset7K = -28;
+                    NotePadding4K = 0;
                     NotePadding7K = 0;
                     TimingBarPixelSize = 2;
-                    HitLightingScale = 4.0f;
-                    ColumnSize4K = 95;
-                    ColumnSize7K = 65;
-                    ReceptorYOffset4K = 50;
-                    ReceptorYOffset7K = 0;
+                    ColumnLightingScale = 1.5f;
+                    ColumnSize4K = 100;
+                    ColumnSize7K = 75;
+                    ReceptorPositionOffset4K = -110;
+                    ReceptorPositionOffset7K = -110;
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = false;
                     LightFramesPerSecond = 240;
-                    SnapColors = new Color[9]
-                    {
-                        SnapColor1st = new Color(255, 0, 0),
-                        SnapColor2nd = new Color(0, 0, 255),
-                        SnapColor3rd = new Color(125, 0, 255),
-                        SnapColor4th = new Color(255, 255, 0),
-                        SnapColor6th = new Color(255, 0, 255),
-                        SnapColor8th = new Color(255, 125, 0),
-                        SnapColor12th = new Color(0, 255, 255),
-                        SnapColor16th = new Color(0, 255, 0),
-                        SnapColor48th = new Color(255, 255, 255)
-                    };
-                    /*
-                    SnapColor1st = new Color(255, 0, 0);
-                    SnapColor2nd = new Color(0, 0, 255);
-                    SnapColor3rd = new Color(125, 0, 255);
-                    SnapColor4th = new Color(255, 255, 0);
-                    SnapColor6th = new Color(255, 0, 255);
-                    SnapColor8th = new Color(255, 125, 0);
-                    SnapColor12th = new Color(0, 255, 255);
-                    SnapColor16th = new Color(0, 255, 0);
-                    SnapColor48th = new Color(255, 255, 255);
-                    */
+                    ReceptorsOverHitObjects4K = true;
+                    ReceptorsOverHitObjects7K = true;
+                    JudgeColors.Insert(0, new Color(255, 255, 200));
+                    JudgeColors.Insert(1, new Color(255, 255, 0));
+                    JudgeColors.Insert(2, new Color(0, 255, 0));
+                    JudgeColors.Insert(3, new Color(0, 168, 255));
+                    JudgeColors.Insert(4, new Color(255, 0, 255));
+                    JudgeColors.Insert(5, new Color(255, 0, 0));
+                    ColumnColors4K[0] = new Color(255, 138, 234);
+                    ColumnColors4K[1] = new Color(126, 233, 129);
+                    ColumnColors4K[2] = new Color(126, 233, 129);
+                    ColumnColors4K[3] = new Color(255, 138, 234);
+                    ColumnColors7K[0] = new Color(255, 138, 234);
+                    ColumnColors7K[1] = new Color(126, 233, 129);
+                    ColumnColors7K[2] = new Color(255, 138, 234);
+                    ColumnColors7K[3] = new Color(255, 251, 138);
+                    ColumnColors7K[4] = new Color(255, 138, 234);
+                    ColumnColors7K[5] = new Color(126, 233, 129);
+                    ColumnColors7K[6] = new Color(255, 138, 234);
+                    BgMaskAlpha = 1f;
+                    FlipNoteImagesOnUpScroll4K = true;
+                    FlipNoteImagesOnUpScroll7K = true;
                     break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
                     Author = "Quaver Team";
                     Version = "1.0";
-                    Name = "Default Bar Skin";
-                    Author = "Quaver Team";
-                    Version = "1.0";
-                    BgMaskPadding4K = 5;
-                    BgMaskPadding7K = 5;
-                    NotePadding4K = 2;
-                    NotePadding7K = 0;
+                    BgMaskPadding4K = 10;
+                    BgMaskPadding7K = 10;
+                    HitPositionOffset4K = 0;
+                    HitPositionOffset7K = 0;
+                    NotePadding4K = 4;
+                    NotePadding7K = 4;
                     TimingBarPixelSize = 2;
-                    HitLightingScale = 4.0f;
+                    ColumnLightingScale = 1.0f;
                     ColumnSize4K = 95;
                     ColumnSize7K = 65;
-                    ReceptorYOffset4K = 50;
-                    ReceptorYOffset7K = 0;
+                    ReceptorPositionOffset4K = -75;
+                    ReceptorPositionOffset7K = -75;
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = true;
                     LightFramesPerSecond = 240;
-                    SnapColors = new Color[9]
-                    {
-                        SnapColor1st = new Color(255, 0, 0),
-                        SnapColor2nd = new Color(0, 0, 255),
-                        SnapColor3rd = new Color(125, 0, 255),
-                        SnapColor4th = new Color(255, 255, 0),
-                        SnapColor6th = new Color(255, 0, 255),
-                        SnapColor8th = new Color(255, 125, 0),
-                        SnapColor12th = new Color(0, 255, 255),
-                        SnapColor16th = new Color(0, 255, 0),
-                        SnapColor48th = new Color(255, 255, 255)
-                    };
+                    ReceptorsOverHitObjects4K = false;
+                    ReceptorsOverHitObjects7K = false;
+                    JudgeColors.Insert(0, new Color(255, 255, 200));
+                    JudgeColors.Insert(1, new Color(255, 255, 0));
+                    JudgeColors.Insert(2, new Color(0, 255, 0));
+                    JudgeColors.Insert(3, new Color(0, 168, 255));
+                    JudgeColors.Insert(4, new Color(255, 0, 255));
+                    JudgeColors.Insert(5, new Color(255, 0, 0));
+                    ColumnColors4K[0] = new Color(255, 255, 255);
+                    ColumnColors4K[1] = new Color(255, 255, 255);
+                    ColumnColors4K[2] = new Color(255, 255, 255);
+                    ColumnColors4K[3] = new Color(255, 255, 255);
+                    ColumnColors7K[0] = new Color(255, 255, 255);
+                    ColumnColors7K[1] = new Color(255, 255, 255);
+                    ColumnColors7K[2] = new Color(255, 255, 255);
+                    ColumnColors7K[3] = new Color(255, 255, 255);
+                    ColumnColors7K[4] = new Color(255, 255, 255);
+                    ColumnColors7K[5] = new Color(255, 255, 255);
+                    ColumnColors7K[6] = new Color(255, 255, 255);
+                    BgMaskAlpha = 0.9f;
+                    FlipNoteImagesOnUpScroll4K = true;
+                    FlipNoteImagesOnUpScroll7K = true;
                     break;
             }
 
@@ -936,38 +970,53 @@ namespace Quaver.Skins
             Version = ConfigHelper.ReadString(Version, data["General"]["Version"]);
             BgMaskPadding4K = ConfigHelper.ReadInt32(BgMaskPadding4K, data["Gameplay"]["BgMaskPadding4K"]);
             BgMaskPadding7K = ConfigHelper.ReadInt32(BgMaskPadding7K, data["Gameplay"]["BgMaskPadding7K"]);
+            HitPositionOffset4K = ConfigHelper.ReadInt32(HitPositionOffset4K, data["Gameplay"]["HitPositionOffset4K"]);
+            HitPositionOffset7K = ConfigHelper.ReadInt32(HitPositionOffset7K, data["Gameplay"]["HitPositionOffset7K"]);
             NotePadding4K = ConfigHelper.ReadInt32(NotePadding4K, data["Gameplay"]["NotePadding4K"]);
             NotePadding7K = ConfigHelper.ReadInt32(NotePadding7K, data["Gameplay"]["NotePadding7K"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, data["Gameplay"]["TimingBarPixelSize"]);
-            HitLightingScale = ConfigHelper.ReadFloat(HitLightingScale, data["Gameplay"]["HitLightingScale"]);
-            ColumnSize4K = ConfigHelper.ReadInt32(ColumnSize4K, data["Gameplay"]["ColumnSize"]);
-            ColumnSize7K = ConfigHelper.ReadInt32(ColumnSize7K, data["Gameplay"]["ColumnSize7k"]);
-            ReceptorYOffset4K = ConfigHelper.ReadInt32(ReceptorYOffset4K, data["Gameplay"]["ReceptorYOffset"]);
+            ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, data["Gameplay"]["ColumnLightingScale"]);
+            ColumnSize4K = ConfigHelper.ReadInt32(ColumnSize4K, data["Gameplay"]["ColumnSize4K"]);
+            ColumnSize7K = ConfigHelper.ReadInt32(ColumnSize7K, data["Gameplay"]["ColumnSize7K"]);
+            ReceptorPositionOffset4K = ConfigHelper.ReadInt32(ReceptorPositionOffset4K, data["Gameplay"]["ReceptorPositionOffset4K"]);
+            ReceptorPositionOffset7K = ConfigHelper.ReadInt32(ReceptorPositionOffset7K, data["Gameplay"]["ReceptorPositionOffset7K"]);
             ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, data["Gameplay"]["ColumnAlignment"]);
             ColourObjectsBySnapDistance = ConfigHelper.ReadBool(ColourObjectsBySnapDistance, data["Gameplay"]["ColourObjectsBySnapDistance"]);
             LightFramesPerSecond = ConfigHelper.ReadByte(LightFramesPerSecond, data["Gameplay"]["LightsFramesPerSecond"]);
-
-            //todo: read snap colors successfully
-            SnapColors = new Color[9]
-                    {
-                        SnapColor1st = new Color(255, 0, 0),
-                        SnapColor2nd = new Color(0, 0, 255),
-                        SnapColor3rd = new Color(125, 0, 255),
-                        SnapColor4th = new Color(255, 255, 0),
-                        SnapColor6th = new Color(255, 0, 255),
-                        SnapColor8th = new Color(255, 125, 0),
-                        SnapColor12th = new Color(0, 255, 255),
-                        SnapColor16th = new Color(0, 255, 0),
-                        SnapColor48th = new Color(255, 255, 255)
-                    };
-
-            /*
-            ColourLight1 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight1"]);
-            ColourLight2 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight2"]);
-            ColourLight3 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight3"]);
-            ColourLight4 = ConfigHelper.ReadColor(ColourLight1, data["Colours"]["ColourLight4"]);*/
-
+            ReceptorsOverHitObjects4K = ConfigHelper.ReadBool(ReceptorsOverHitObjects4K, data["Gameplay"]["ReceptorsOverHitObjects4K"]);
+            ReceptorsOverHitObjects7K = ConfigHelper.ReadBool(ReceptorsOverHitObjects7K, data["Gameplay"]["ReceptorsOverHitObjects7K"]);
+            JudgeColors[0] = ConfigHelper.ReadColor(JudgeColors[0], data["Gameplay"]["JudgeColorMarv"]);
+            JudgeColors[1] = ConfigHelper.ReadColor(JudgeColors[1], data["Gameplay"]["JudgeColorPerf"]);
+            JudgeColors[2] = ConfigHelper.ReadColor(JudgeColors[2], data["Gameplay"]["JudgeColorGreat"]);
+            JudgeColors[3] = ConfigHelper.ReadColor(JudgeColors[3], data["Gameplay"]["JudgeColorGood"]);
+            JudgeColors[4] = ConfigHelper.ReadColor(JudgeColors[4], data["Gameplay"]["JudgeColorOkay"]);
+            JudgeColors[5] = ConfigHelper.ReadColor(JudgeColors[5], data["Gameplay"]["JudgeColorMiss"]);
+            ColumnColors4K[0] = ConfigHelper.ReadColor(ColumnColors4K[0], data["Gameplay"]["ColumnColor4K1"]);
+            ColumnColors4K[1] = ConfigHelper.ReadColor(ColumnColors4K[1], data["Gameplay"]["ColumnColor4K2"]);
+            ColumnColors4K[2] = ConfigHelper.ReadColor(ColumnColors4K[2], data["Gameplay"]["ColumnColor4K3"]);
+            ColumnColors4K[3] = ConfigHelper.ReadColor(ColumnColors4K[3], data["Gameplay"]["ColumnColor4K4"]);
+            ColumnColors7K[0] = ConfigHelper.ReadColor(ColumnColors7K[0], data["Gameplay"]["ColumnColor7K1"]);
+            ColumnColors7K[1] = ConfigHelper.ReadColor(ColumnColors7K[1], data["Gameplay"]["ColumnColor7K2"]);
+            ColumnColors7K[2] = ConfigHelper.ReadColor(ColumnColors7K[2], data["Gameplay"]["ColumnColor7K3"]);
+            ColumnColors7K[3] = ConfigHelper.ReadColor(ColumnColors7K[3], data["Gameplay"]["ColumnColor7K4"]);
+            ColumnColors7K[4] = ConfigHelper.ReadColor(ColumnColors7K[4], data["Gameplay"]["ColumnColor7K5"]);
+            ColumnColors7K[5] = ConfigHelper.ReadColor(ColumnColors7K[5], data["Gameplay"]["ColumnColor7K6"]);
+            ColumnColors7K[6] = ConfigHelper.ReadColor(ColumnColors7K[6], data["Gameplay"]["ColumnColor7K7"]);
+            BgMaskAlpha = ConfigHelper.ReadFloat(BgMaskAlpha, data["Gameplay"]["BgMaskAlpha"]);
+            FlipNoteImagesOnUpScroll4K = ConfigHelper.ReadBool(FlipNoteImagesOnUpScroll4K, data["Gameplay"]["FlipNoteImagesOnUpScroll4K"]);
+            FlipNoteImagesOnUpScroll7K = ConfigHelper.ReadBool(FlipNoteImagesOnUpScroll7K, data["Gameplay"]["FlipNoteImagesOnUpScroll7K"]);
             Logger.Log($@"Skin loaded: {skinDir}", LogColors.GameImportant);
+        }
+
+        /// <summary>
+        ///     Gets an individual judge color from the list of Judge colors
+        ///     Returns black if its unable to be found.
+        /// </summary>
+        /// <param name="judge"></param>
+        /// <returns></returns>
+        public Color GetJudgeColor(Judge judge)
+        {
+            return JudgeColors.Count == 0 ? new Color(0, 0, 0) : JudgeColors[(int) judge];
         }
     }
 }
