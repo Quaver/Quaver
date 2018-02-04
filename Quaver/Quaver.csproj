@@ -155,6 +155,9 @@
     <Compile Include="src\Config\Configuration.cs" />
     <Compile Include="src\Database\BeatmapCache.cs" />
     <Compile Include="src\Database\BeatmapImporter.cs" />
+    <Compile Include="src\Peppy\Osu.cs" />
+    <Compile Include="src\Peppy\OsuSkinConfig.cs" />
+    <Compile Include="src\Peppy\QuaverOsuElementMap.cs" />
     <Compile Include="src\QuaverGame.cs" />
     <Compile Include="src\GameState\GameStateManager.cs" />
     <Compile Include="src\GameState\State.cs" />
