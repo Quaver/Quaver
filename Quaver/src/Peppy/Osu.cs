@@ -11,6 +11,7 @@ using Quaver.API.Maps;
 using Quaver.API.Osu;
 using Quaver.Config;
 using Quaver.Logging;
+using Quaver.Utility;
 
 namespace Quaver.Peppy
 {
@@ -350,29 +351,61 @@ namespace Quaver.Peppy
                         continue;
 
 
-                    if (map.QuaverElement.Contains("4k"))
+                    try
                     {
-                        var val = osuIni.Keys4Config.GetType().GetField(map.SkinIniValue).GetValue(osuIni.Keys4Config).ToString();
-                        val = val.Replace(".png", "");
+                        if (map.QuaverElement.Contains("4k"))
+                        {
+                            var val = osuIni.Keys4Config.GetType().GetField(map.SkinIniValue).GetValue(osuIni.Keys4Config).ToString();
+                            val = val.Replace(".png", "");
 
-                        var elementPath = $"{extractPath}/{val}.png";
-                        File.Copy(elementPath, newSkinDirPath + "/" + map.QuaverElement + ".png", true);
-                    }
-                    else if (map.QuaverElement.Contains("7k"))
-                    {
-                        var val = osuIni.Keys7Config.GetType().GetField(map.SkinIniValue).GetValue(osuIni.Keys7Config).ToString();
-                        val = val.Replace(".png", "");
+                            var elementPath = $"{extractPath}/{val}.png";
+                            File.Copy(elementPath, newSkinDirPath + "/" + map.QuaverElement + ".png", true);
+                        }
+                        else if (map.QuaverElement.Contains("7k"))
+                        {
+                            var val = osuIni.Keys7Config.GetType().GetField(map.SkinIniValue).GetValue(osuIni.Keys7Config).ToString();
+                            val = val.Replace(".png", "");
 
-                        var elementPath = $"{extractPath}/{val}.png";
-                        File.Copy(elementPath, newSkinDirPath + "/" + map.QuaverElement + ".png", true);
+                            var elementPath = $"{extractPath}/{val}.png";
+                            File.Copy(elementPath, newSkinDirPath + "/" + map.QuaverElement + ".png", true);
+                        }
                     }
+                    catch (Exception e) { }
                 }
 
+                // Create the skin.ini file
+                CreateSkinIniFile(osuIni, newSkinDirPath + "/skin.ini");
                 Logger.Log("Skin conversion has completed!", LogColors.GameSuccess);
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 Logger.Log(e.Message, LogColors.GameError);
+            }
+        }
+
+        /// <summary>
+        ///     Creates a skin.ini file based on an osu! config
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="path"></param>
+        private static void CreateSkinIniFile(OsuSkinConfig config, string path)
+        {
+            using (var file = new StreamWriter(path))
+            {
+                // [General]
+                file.WriteLine("[General]");
+                file.WriteLine($"Name = {config.Name}");
+                file.WriteLine($"Author = {config.Author}");
+
+                file.WriteLine("");
+
+                file.WriteLine("[Gameplay]");
+                file.WriteLine($"ReceptorsOverObjects4K = {!config.Keys4Config.KeysUnderNotes}");
+                file.WriteLine($"ReceptorsOverObjects7K = {!config.Keys7Config.KeysUnderNotes}");
+                file.WriteLine($"ColourObjectsBySnapDistance = false");
+                //for (var i = 0; i < 4; i++) file.WriteLine($"ColumnColor4K{i} = {Util.ColorToString(config.Keys4Config.Colours[i])}");
+                //for (var i = 0; i < 7; i++) file.WriteLine($"ColumnColor7K{i} = {Util.ColorToString(config.Keys7Config.Colours[i])}");
             }
         }
     }
