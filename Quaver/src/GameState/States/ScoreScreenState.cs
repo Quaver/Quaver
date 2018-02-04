@@ -21,6 +21,7 @@ using Quaver.Graphics.Text;
 using Quaver.GameState.Gameplay;
 using Quaver.Utility;
 using Quaver.Audio;
+using Quaver.Skins;
 
 namespace Quaver.GameState.States
 {
@@ -392,7 +393,7 @@ namespace Quaver.GameState.States
                 {
                     Position = new UDim2(0, boundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
                     Size = new UDim2(0, 1, 1, 0),
-                    Tint = GameColors.JudgeColors[i],
+                    Tint = GameBase.LoadedSkin.JudgeColors[i],
                     Alpha = 0.2f,
                     Alignment = Alignment.MidLeft,
                     Parent = boundary
@@ -403,7 +404,7 @@ namespace Quaver.GameState.States
                 {
                     Position = new UDim2(0, -boundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
                     Size = new UDim2(0, 1, 1, 0),
-                    Tint = GameColors.JudgeColors[i],
+                    Tint = GameBase.LoadedSkin.JudgeColors[i],
                     Alpha = 0.2f,
                     Alignment = Alignment.MidLeft,
                     Parent = boundary
@@ -423,7 +424,7 @@ namespace Quaver.GameState.States
                     {
                         Position = new UDim2(((float)(ms.Position / ScoreData.PlayTimeTotal) * boundary.Size.X.Offset) - 1f, 0),
                         Size = new UDim2(2, 0, 0, 1),
-                        Tint = GameColors.JudgeMiss,
+                        Tint = GameBase.LoadedSkin.GetJudgeColor(Judge.Miss),
                         Alpha = 0.25f,
                         Parent = boundary
                     };
@@ -445,7 +446,7 @@ namespace Quaver.GameState.States
                     {
                         Position = new UDim2((float)(ms.Position / ScoreData.PlayTimeTotal * boundary.Size.X.Offset) - 1.5f, (float)(ms.Value * (boundary.Size.Y.Offset / 2) / ScoreData.HitWindowPress[4]) - 1.5f),
                         Size = new UDim2(3, 3),
-                        Tint = GameColors.JudgeColors[tint],
+                        Tint = GameBase.LoadedSkin.JudgeColors[tint],
                         Alignment = Alignment.MidLeft,
                         Parent = boundary
                     };
@@ -596,7 +597,7 @@ namespace Quaver.GameState.States
                 ob = new TextBoxSprite()
                 {
                     Text = "[" + GameplayReferences.JudgeNames[i] + "]: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i] + " Total: " + (ScoreData.JudgePressSpread[i] + ScoreData.JudgeReleaseSpread[i]),
-                    TextColor = GameColors.JudgeColors[i],
+                    TextColor = GameBase.LoadedSkin.JudgeColors[i],
                     Font = Fonts.Medium16,
                     Position = new UDim2(0, 200 * i / 6 + 100),
                     Size = new UDim2(0, 0, 1, 0),
@@ -824,7 +825,7 @@ namespace Quaver.GameState.States
                                 (float)(Math.Cos(position * circularRatio - Math.PI / 2) * (radius - (2.5 * i))) + offset.X,
                                 (float)(Math.Sin(position * circularRatio - Math.PI / 2) * (radius - (2.5 * i))) + offset.Y
                             ),
-                            Tint = GameColors.JudgeColors[tint],
+                            Tint = GameBase.LoadedSkin.JudgeColors[tint],
                             Size = new UDim2(3, 3),
                             Parent = parent
                         };
