@@ -15,9 +15,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     {
         //Audio Variables
         internal bool SongIsPlaying { get; set; }
+        internal const int SONG_SKIP_OFFSET = 3000;
+        internal const int SONG_END_OFFSET = 1500;
 
         //Gameplay Variables
-        private double ActualSongTime { get; set; }
+        internal double ActualSongTime { get; set; }
         internal float PlayingEndOffset { get; set; }
         private List<TimingObject> TimingQueue { get; set; }
 
@@ -61,11 +63,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             //Declare Other Values. 
             // Game starts 3 seconds before song
-            ActualSongTime = -3000 * GameBase.GameClock;
+            ActualSongTime = -SONG_SKIP_OFFSET * GameBase.GameClock;
             //_activeBarObjects = new GameObject[maxNoteCount];
 
             //Add offset after the last note
-            PlayingEndOffset = GameBase.SelectedBeatmap.SongLength + (SongManager.BassDelayOffset - Configuration.GlobalOffset + 1500) * GameBase.GameClock;
+            PlayingEndOffset = GameBase.SelectedBeatmap.SongLength + (SongManager.BassDelayOffset - Configuration.GlobalAudioOffset + SONG_END_OFFSET) * GameBase.GameClock;
 
             //Create Timing bars
             //_barQueue = new List<TimingObject>();
@@ -117,13 +119,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
 
             //Calculate song pos from audio
-            ActualSongTime = (SongManager.Position + (ActualSongTime + (dt * GameBase.GameClock))) / 2f;
+            ActualSongTime = (SongManager.Position + (ActualSongTime + (dt * GameBase.GameClock))) / 2;
         }
 
         internal double GetCurrentSongTime()
         {
             //Add global offset to actual song time
-            return ActualSongTime + (SongManager.BassDelayOffset - Configuration.GlobalOffset) * GameBase.GameClock;
+            return ActualSongTime + (SongManager.BassDelayOffset - Configuration.GlobalAudioOffset) * GameBase.GameClock;
         }
 
         internal ulong[] GetSVCalc(List<TimingObject> svQueue)

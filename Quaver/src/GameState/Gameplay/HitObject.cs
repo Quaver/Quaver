@@ -128,7 +128,7 @@ namespace Quaver.GameState.Gameplay
         /// <summary>
         ///     This method initializes the HitObject sprites
         /// </summary>
-        internal void Initialize(bool downScroll, bool longNote, Drawable parent, GameModes gamemode)
+        internal void Initialize(bool downScroll, bool longNote, Drawable parent )
         {
             IsLongNote = longNote;
             var keyLaneIndex = KeyLane - 1;
@@ -137,6 +137,7 @@ namespace Quaver.GameState.Gameplay
             HitBodySprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
+                SpriteEffect = !Config.Configuration.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                 Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
             };
 
@@ -159,11 +160,11 @@ namespace Quaver.GameState.Gameplay
                     Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
                     Size = new UDim2(HitObjectSize, 0),
                     Parent = parent,
-                    SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
+                    SpriteEffect = !Config.Configuration.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None
                 };
 
                 // Choose the correct image based on the specific key lane for hold bodies.
-                switch (gamemode)
+                switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
                     case GameModes.Keys4:
                         HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex];
@@ -183,7 +184,7 @@ namespace Quaver.GameState.Gameplay
             }
 
             // Choose the correct image based on the specific key lane for hit body.
-            switch (gamemode)
+            switch (GameBase.SelectedBeatmap.Qua.Mode)
             {
                 case GameModes.Keys4:
                     try
