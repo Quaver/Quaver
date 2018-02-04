@@ -142,6 +142,16 @@ namespace Quaver.Peppy
             new QuaverOsuElementMap("judge-perfect", "mania-hit300", ElementType.AnimatableImage),
             new QuaverOsuElementMap("judge-marv", "mania-hit300g", ElementType.AnimatableImage),
 
+            // Mania Stage
+            new QuaverOsuElementMap("stage-left-border", "mania-stage-left", ElementType.Image),
+            new QuaverOsuElementMap("stage-right-border", "mania-stage-right", ElementType.Image),
+            new QuaverOsuElementMap("stage-hitposition-overlay", "mania-stage-hint", ElementType.Image),
+            
+            // Lighting
+            // TODO: This should be animatable and have an unlimited amount of elements
+            //  new QuaverOsuElementMap("4k-note-hiteffect-1", "lightingN-0", ElementType.AnimatableImage), 
+            //  new QuaverOsuElementMap("4k-column-lighting", "mania-stage-light-0", ElementType.AnimatableImage)
+
             //  Cursor
             new QuaverOsuElementMap("main-cursor", "cursor", ElementType.Image),
 
