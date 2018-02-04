@@ -157,239 +157,20 @@
   <data name="graph-axis-short" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UI\graph-axis-short.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="arrow-4k-note-hitobject-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="bar-4k-column-lighting" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-4k-column-lighting.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="arrow-4k-note-hitobject-1-12th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-1-12th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="bar-4k-note-hiteffect-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-4k-note-hiteffect-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="arrow-4k-note-hitobject-1-16th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-1-16th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="bar-4k-note-hiteffect-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-4k-note-hiteffect-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="arrow-4k-note-hitobject-1-2nd" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-1-2nd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="bar-4k-note-hiteffect-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-4k-note-hiteffect-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="arrow-4k-note-hitobject-1-3rd" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-1-3rd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-1-48th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-1-48th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-1-4th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-1-4th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-1-6th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-1-6th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-1-8th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-1-8th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-2-12th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-2-12th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-2-16th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-2-16th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-2-2nd" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-2-2nd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-2-3rd" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-2-3rd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-2-48th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-2-48th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-2-4th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-2-4th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-2-6th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-2-6th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-2-8th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-2-8th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-3-12th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-3-12th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-3-16th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-3-16th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-3-2nd" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-3-2nd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-3-3rd" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-3-3rd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-3-48th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-3-48th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-3-4th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-3-4th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-3-6th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-3-6th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-3-8th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-3-8th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-4-12th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-4-12th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-4-16th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-4-16th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-4-2nd" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-4-2nd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-4-3rd" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-4-3rd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-4-48th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-4-48th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-4-4th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-4-4th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-4-6th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-4-6th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-hitobject-4-8th" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-hitobject-4-8th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-holdbody-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-holdbody-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-holdbody-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-holdbody-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-holdbody-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-holdbody-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-holdbody-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-holdbody-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-holdend-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-holdend-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-holdend-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-holdend-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-holdend-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-holdend-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-note-holdend-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-note-holdend-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-receptor-down-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-receptor-down-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-receptor-down-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-receptor-down-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-receptor-down-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-receptor-down-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-receptor-down-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-receptor-down-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-receptor-up-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-receptor-up-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-receptor-up-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-receptor-up-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-receptor-up-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-receptor-up-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-4k-receptor-up-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-4k-receptor-up-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-column-bgmask" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-column-bgmask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-column-hitlighting" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-column-hitlighting.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-column-timingbar" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-column-timingbar.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-grade-small-a" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-grade-small-a.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-grade-small-b" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-grade-small-b.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-grade-small-c" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-grade-small-c.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-grade-small-d" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-grade-small-d.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-grade-small-f" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-grade-small-f.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-grade-small-s" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-grade-small-s.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-grade-small-ss" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-grade-small-ss.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-grade-small-x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-grade-small-x.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-grade-small-xx" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-grade-small-xx.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-grade-small-xxx" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-grade-small-xxx.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-judge-bad" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-judge-bad.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-judge-good" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-judge-good.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-judge-great" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-judge-great.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-judge-marv" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-judge-marv.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-judge-miss" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-judge-miss.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-judge-perfect" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-judge-perfect.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-main-cursor" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-main-cursor.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-sound-applause" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-sound-applause.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-sound-back" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-sound-back.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-sound-click" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-sound-click.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-sound-combobreak" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-sound-combobreak.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-sound-hit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-sound-hit.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-sound-screenshot" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-sound-screenshot.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="bar-4k-note-hiteffect-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-4k-note-hiteffect-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="bar-4k-note-hitobject-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-4k-note-hitobject-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -450,6 +231,33 @@
   </data>
   <data name="bar-4k-receptor-up-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-4k-receptor-up-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-4k-stage-bgmask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-4k-stage-bgmask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-column-lighting" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-column-lighting.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-note-hiteffect-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-note-hiteffect-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-note-hiteffect-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-note-hiteffect-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-note-hiteffect-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-note-hiteffect-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-note-hiteffect-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-note-hiteffect-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-note-hiteffect-5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-note-hiteffect-5.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-note-hiteffect-6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-note-hiteffect-6.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-note-hiteffect-7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-note-hiteffect-7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="bar-7k-note-hitobject-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-7k-note-hitobject-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -514,6 +322,27 @@
   <data name="bar-7k-note-holdend-7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-7k-note-holdend-7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="bar-7k-receptor-down-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-receptor-down-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-receptor-down-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-receptor-down-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-receptor-down-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-receptor-down-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-receptor-down-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-receptor-down-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-receptor-down-5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-receptor-down-5.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-receptor-down-6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-receptor-down-6.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-receptor-down-7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-receptor-down-7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="bar-7k-receptor-up-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-7k-receptor-up-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -534,6 +363,9 @@
   </data>
   <data name="bar-7k-receptor-up-7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-7k-receptor-up-7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-7k-stage-bgmask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-7k-stage-bgmask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="bar-column-bgmask" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-column-bgmask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -562,6 +394,9 @@
   <data name="bar-grade-small-s" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-grade-small-s.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="bar-grade-small-s-" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-grade-small-s-.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="bar-grade-small-ss" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-grade-small-ss.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -573,9 +408,6 @@
   </data>
   <data name="bar-grade-small-xxx" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-grade-small-xxx.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="bar-judge-bad" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Bar Skin\bar-judge-bad.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="bar-judge-good" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-judge-good.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -589,11 +421,17 @@
   <data name="bar-judge-miss" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-judge-miss.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="bar-judge-perfect" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Bar Skin\bar-judge-perfect.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="bar-judge-okay" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-judge-okay.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-judge-perf" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-judge-perf.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="bar-main-cursor" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-main-cursor.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-mania-stage-light" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-mania-stage-light.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="bar-sound-applause" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-sound-applause.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -610,18 +448,6 @@
   <data name="bar-sound-hit" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-sound-hit.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="bar-sound-screenshot" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Bar Skin\bar-sound-screenshot.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-sound-hitclap" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-sound-hitclap.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-sound-hitfinish" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-sound-hitfinish.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="arrow-sound-hitwhistle" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Default Arrow Skin\arrow-sound-hitwhistle.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="bar-sound-hitclap" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-sound-hitclap.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -630,5 +456,437 @@
   </data>
   <data name="bar-sound-hitwhistle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Default Bar Skin\bar-sound-hitwhistle.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-sound-screenshot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-sound-screenshot.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-stage-distant-overlay" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-stage-distant-overlay.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-stage-hitposition-overlay" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-stage-hitposition-overlay.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-stage-left-border" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-stage-left-border.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-stage-right-border" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-stage-right-border.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-stage-timingbar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Default Bar Skin\bar-stage-timingbar.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-column-lighting" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-column-lighting.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hiteffect-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hiteffect-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hiteffect-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hiteffect-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hiteffect-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hiteffect-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hiteffect-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hiteffect-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-1-12th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-1-12th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-1-16th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-1-16th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-1-2nd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-1-2nd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-1-3rd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-1-3rd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-1-48th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-1-48th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-1-4th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-1-4th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-1-6th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-1-6th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-1-8th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-1-8th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-2-12th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-2-12th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-2-16th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-2-16th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-2-2nd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-2-2nd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-2-3rd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-2-3rd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-2-48th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-2-48th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-2-4th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-2-4th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-2-6th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-2-6th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-2-8th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-2-8th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-3-12th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-3-12th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-3-16th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-3-16th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-3-2nd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-3-2nd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-3-3rd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-3-3rd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-3-48th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-3-48th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-3-4th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-3-4th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-3-6th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-3-6th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-3-8th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-3-8th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-4-12th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-4-12th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-4-16th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-4-16th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-4-2nd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-4-2nd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-4-3rd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-4-3rd.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-4-48th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-4-48th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-4-4th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-4-4th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-4-6th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-4-6th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-hitobject-4-8th" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-hitobject-4-8th.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-holdbody-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-holdbody-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-holdbody-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-holdbody-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-holdbody-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-holdbody-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-holdbody-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-holdbody-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-holdend-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-holdend-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-holdend-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-holdend-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-holdend-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-holdend-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-note-holdend-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-note-holdend-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-receptor-down-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-receptor-down-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-receptor-down-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-receptor-down-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-receptor-down-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-receptor-down-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-receptor-down-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-receptor-down-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-receptor-up-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-receptor-up-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-receptor-up-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-receptor-up-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-receptor-up-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-receptor-up-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-receptor-up-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-receptor-up-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-4k-stage-bgmask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-4k-stage-bgmask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-column-lighting" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-column-lighting.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hiteffect-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hiteffect-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hiteffect-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hiteffect-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hiteffect-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hiteffect-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hiteffect-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hiteffect-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hiteffect-5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hiteffect-5.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hiteffect-6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hiteffect-6.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hiteffect-7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hiteffect-7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hitobject-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hitobject-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hitobject-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hitobject-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hitobject-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hitobject-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hitobject-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hitobject-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hitobject-5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hitobject-5.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hitobject-6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hitobject-6.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-hitobject-7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-hitobject-7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdbody-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdbody-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdbody-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdbody-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdbody-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdbody-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdbody-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdbody-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdbody-5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdbody-5.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdbody-6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdbody-6.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdbody-7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdbody-7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdend-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdend-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdend-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdend-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdend-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdend-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdend-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdend-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdend-5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdend-5.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdend-6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdend-6.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-note-holdend-7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-note-holdend-7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-down-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-down-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-down-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-down-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-down-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-down-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-down-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-down-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-down-5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-down-5.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-down-6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-down-6.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-down-7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-down-7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-up-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-up-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-up-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-up-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-up-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-up-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-up-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-up-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-up-5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-up-5.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-up-6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-up-6.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-receptor-up-7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-receptor-up-7.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-7k-stage-bgmask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-7k-stage-bgmask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-column-bgmask" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-column-bgmask.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-column-hitlighting" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-column-hitlighting.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-column-timingbar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-column-timingbar.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-grade-small-a" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-grade-small-a.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-grade-small-b" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-grade-small-b.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-grade-small-c" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-grade-small-c.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-grade-small-d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-grade-small-d.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-grade-small-f" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-grade-small-f.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-grade-small-s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-grade-small-s.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-grade-small-s-" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-grade-small-s-.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-grade-small-ss" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-grade-small-ss.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-grade-small-x" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-grade-small-x.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-grade-small-xx" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-grade-small-xx.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-grade-small-xxx" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-grade-small-xxx.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-main-cursor" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-main-cursor.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-mania-stage-light" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-mania-stage-light.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-sound-applause" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-sound-applause.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-sound-back" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-sound-back.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-sound-click" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-sound-click.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-sound-combobreak" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-sound-combobreak.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-sound-hit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-sound-hit.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-sound-hitclap" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-sound-hitclap.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-sound-hitfinish" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-sound-hitfinish.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-sound-hitwhistle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-sound-hitwhistle.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-sound-screenshot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-sound-screenshot.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-stage-distant-overlay" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-stage-distant-overlay.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-stage-hitposition-overlay" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-stage-hitposition-overlay.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-stage-left-border" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-stage-left-border.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-stage-right-border" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-stage-right-border.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-stage-timingbar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-stage-timingbar.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-judge-good" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-judge-good.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-judge-great" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-judge-great.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-judge-marv" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-judge-marv.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-judge-miss" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-judge-miss.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-judge-okay" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-judge-okay.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="arrow-judge-perf" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default arrow skin\arrow-judge-perf.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
