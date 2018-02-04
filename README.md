@@ -22,7 +22,6 @@ Quaver is still under development and should not be used for gameplay, and is on
 The entire Quaver client is built from a series of class libaries. As such, we have included them as submodules. Please note that some submodules may not be open-source. Aside from that, the following submodules are as such:
 
 * [Quaver-API](https://github.com/Swan/Quaver-API) - Library containing code revolving around map/replay parsing and difficulty calculation.
-* [Quaver-Framework](https://github.com/Swan/Quaver-Framework) - Library containing miscellanous code that make up the game including server interaction.
 
 You can install these submodules by simply running `git submodule update --init --recursive`
 
@@ -34,6 +33,6 @@ To start contributing, we have made it very easy to begin developing. Given that
 Also, please note that our code is not perfect, but we do have certain standards in place for how we organize our code. It is best to follow those same practices unless you find something completely wrong with it - which in that case we are open for suggestions.
 
 # LICENSE
-The code in this repository is licensed under the [CC BY-NC 4.0](https://tldrlegal.com/license/creative-commons-attribution-noncommercial-4.0-international-(cc-by-nc-4.0)#summary). 
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
 
-In short, you can use the code in this repository as long as it is not in a commercial manner.
+This work is licensed under a **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License**. Read more about the license [here](https://creativecommons.org/licenses/by-nc-nd/4.0/).
