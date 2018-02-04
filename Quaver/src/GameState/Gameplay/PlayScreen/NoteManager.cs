@@ -72,8 +72,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal float PressWindowLatest { get; set; }
         internal float ReleaseWindowLatest { get; set; }
         internal float PlayfieldSize { get; set; }
-        internal float BarOffset { get; set; } //todo: move this to bar manager
-
+        internal float BarOffset { get; set; } 
+   
         /// <summary>
         ///     Constructor
         /// </summary>
