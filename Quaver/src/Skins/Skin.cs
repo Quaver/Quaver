@@ -229,11 +229,6 @@ namespace Quaver.Skins
         // Contains the file names of all skin elements
         private readonly string[] skinElements = new[]
         {
-
-                @"4k-column-lighting",
-                @"7k-column-lighting",
-                
-
                 // Stage
                 @"4k-stage-bgmask",
                 @"7k-stage-bgmask",
@@ -242,6 +237,8 @@ namespace Quaver.Skins
                 @"stage-hitposition-overlay",
                 @"stage-distant-overlay",
                 @"stage-timingbar",
+                @"4k-column-lighting",
+                @"7k-column-lighting",
 
                 // 4k Hit effect
                 @"4k-note-hiteffect-1",
@@ -249,7 +246,7 @@ namespace Quaver.Skins
                 @"4k-note-hiteffect-3",
                 @"4k-note-hiteffect-4",
 
-                // 7k HitBurst
+                // 7k Hit Effect
                 @"7k-note-hiteffect-1",
                 @"7k-note-hiteffect-2",
                 @"7k-note-hiteffect-3",
