@@ -328,12 +328,6 @@
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-grade-small-x.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-grade-small-xx.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-grade-small-xxx.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-good.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-great.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-marv.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-miss.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-okay.xnb" />
-    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-perf.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-main-cursor.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-applause.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-sound-back.xnb" />
@@ -538,6 +532,12 @@
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-stage-left-border.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-stage-right-border.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-stage-timingbar.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-good.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-great.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-marv.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-miss.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-okay.xnb" />
+    <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-perf.xnb" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\discord-rpc.dll">
