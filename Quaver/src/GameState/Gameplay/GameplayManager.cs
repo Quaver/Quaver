@@ -208,6 +208,9 @@ namespace Quaver.GameState.Gameplay
                 AccuracyBoxUI.Update(dt);
                 PlayfieldUI.Update(dt);
                 ParticleManager.Update(dt);
+
+                // Record session with Replay Helper
+                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua);
             }
 
             PlayfieldUI.UpdateMultiplierBars(ScoreManager.MultiplierIndex);
@@ -215,9 +218,6 @@ namespace Quaver.GameState.Gameplay
 
             // Check the input for this particular game state.
             InputManager.CheckInput(IntroSkippable, ReplayFrames);
-
-            // Record session with Replay Helper
-            ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua);
 
             // Update Loggers. todo: remove
             Logger.Update("KeyCount", $"Game Mode: {GameBase.SelectedBeatmap.Qua.Mode}");
