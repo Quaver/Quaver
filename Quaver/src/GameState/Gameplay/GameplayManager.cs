@@ -217,7 +217,7 @@ namespace Quaver.GameState.Gameplay
             PlayfieldUI.UpdateHealthBar(ScoreManager.Health);
 
             // Check the input for this particular game state.
-            InputManager.CheckInput(IntroSkippable, ReplayFrames);
+            InputManager.CheckInput(IntroSkippable);
 
             // Update Loggers. todo: remove
             Logger.Update("KeyCount", $"Game Mode: {GameBase.SelectedBeatmap.Qua.Mode}");
