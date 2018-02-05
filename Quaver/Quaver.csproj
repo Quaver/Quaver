@@ -538,6 +538,10 @@
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-miss.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-okay.xnb" />
     <EmbeddedResource Include="Resources\Default Arrow Skin\arrow-judge-perf.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-holdhitobject-1.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-holdhitobject-2.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-holdhitobject-3.xnb" />
+    <EmbeddedResource Include="Resources\Default Bar Skin\bar-4k-note-holdhitobject-4.xnb" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\discord-rpc.dll">
