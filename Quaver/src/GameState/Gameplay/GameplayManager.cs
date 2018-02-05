@@ -571,7 +571,7 @@ namespace Quaver.GameState.Gameplay
         {
             // Play Combo-Break Sound
             if (ScoreManager.Combo >= 20)
-                GameBase.LoadedSkin.SoundComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+                GameBase.LoadedSkin.SoundComboBreak.Play(GameBase.SoundEffectVolume, 0, 0);
 
             // Manage UI Helpers + Update Score Manager
             ScoreManager.Count(5, false, 0, CurrentSongTime * GameBase.GameClock);
@@ -640,19 +640,19 @@ namespace Quaver.GameState.Gameplay
 
             // Normal
             if (hitObject.HitSounds == 0 || (HitSounds.Normal & hitObject.HitSounds) != 0)
-                GameBase.LoadedSkin.SoundHit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+                GameBase.LoadedSkin.SoundHit.Play(0.4f, 0, 0);
 
             // Clap
             if ((HitSounds.Clap & hitObject.HitSounds) != 0)
-                GameBase.LoadedSkin.SoundHitClap.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+                GameBase.LoadedSkin.SoundHitClap.Play(GameBase.SoundEffectVolume, 0, 0);
 
             // Whistle
             if ((HitSounds.Whistle & hitObject.HitSounds) != 0)
-                GameBase.LoadedSkin.SoundHitWhistle.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+                GameBase.LoadedSkin.SoundHitWhistle.Play(GameBase.SoundEffectVolume, 0, 0);
 
             // Finish
             if ((HitSounds.Finish & hitObject.HitSounds) != 0)
-                GameBase.LoadedSkin.SoundHitFinish.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+                GameBase.LoadedSkin.SoundHitFinish.Play(GameBase.SoundEffectVolume, 0, 0);
         }
     }
 }
