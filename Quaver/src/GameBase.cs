@@ -198,6 +198,11 @@ namespace Quaver
         public static string BuildVersion { get; set; }
 
         /// <summary>
+        ///     The volume of sound effects
+        /// </summary>
+        public static float SoundEffectVolume { get; set; }
+
+        /// <summary>
         ///     This method changes the window to match configuration settings
         /// </summary>
         /// <param name="resolution"></param>
