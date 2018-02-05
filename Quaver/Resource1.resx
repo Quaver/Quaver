@@ -889,4 +889,16 @@
   <data name="arrow-judge-perf" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\default arrow skin\arrow-judge-perf.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="bar-4k-note-holdhitobject-1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default bar skin\bar-4k-note-holdhitobject-1.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-4k-note-holdhitobject-2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default bar skin\bar-4k-note-holdhitobject-2.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-4k-note-holdhitobject-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default bar skin\bar-4k-note-holdhitobject-3.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="bar-4k-note-holdhitobject-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\default bar skin\bar-4k-note-holdhitobject-4.xnb;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>
