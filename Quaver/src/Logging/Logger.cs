@@ -127,6 +127,72 @@ namespace Quaver.Logging
         }
 
         /// <summary>
+        ///     Logs a success message of a give type
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <param name="duration"></param>
+        internal static void LogSuccess(string value, LogType type, float duration)
+        {
+            Log(value, LogLevel.Success, type, duration);
+        }
+
+        /// <summary>
+        ///     Logs an info message of a give type
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <param name="duration"></param>
+        internal static void LogInfo(string value, LogType type, float duration)
+        {
+            Log(value, LogLevel.Info, type, duration);
+        }
+
+        /// <summary>
+        ///     Logs an important message of a give type
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <param name="duration"></param>
+        internal static void LogImportant(string value, LogType type, float duration)
+        {
+            Log(value, LogLevel.Important, type, duration);
+        }
+
+        /// <summary>
+        ///     Logs a success message of a give type
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <param name="duration"></param>
+        internal static void LogWarning(string value, LogType type, float duration)
+        {
+            Log(value, LogLevel.Warning, type, duration);
+        }
+
+        /// <summary>
+        ///     Logs an error message of a give type
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <param name="duration"></param>
+        internal static void LogError(string value, LogType type, float duration)
+        {
+            Log(value, LogLevel.Error, type, duration);
+        }
+
+        /// <summary>
+        ///     Logs an exception error.
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <param name="type"></param>
+        /// <param name="duration"></param>
+        internal static void LogError(Exception exception, LogType type, float duration)
+        {
+            Log(exception.ToString(), LogLevel.Error, type, duration);
+        }
+
+        /// <summary>
         ///     Logs a message to the screen, console, and runtime log
         /// </summary>
         internal static void Log(string value, LogLevel level, LogType type, float duration)
