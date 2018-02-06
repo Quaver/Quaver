@@ -383,7 +383,7 @@ namespace Quaver.Config
 
             // If we already have a config file, we'll just want to read that.
             ReadConfigFile();
-            Logger.Log("Config file has successfully been read.", LogColors.GameImportant);
+            Logger.LogSuccess("Config file has successfully been read.", LogType.Runtime);
         }
 
         /// <summary>
@@ -517,7 +517,7 @@ namespace Quaver.Config
 
                 // If too many attempts were made.
                 if (attempts == 2)
-                    Logger.Log("Too many attempts in a short time to write the config file have been made.", Color.Aqua);
+                    Logger.LogError("Too many attempts in a short time to write the config file have been made.", LogType.Runtime);
             }
         }
 
