@@ -367,7 +367,6 @@ namespace Quaver.Config
             _songDirectory = GameDirectory + "/Songs";
             Directory.CreateDirectory(SongDirectory);
 
-            // Create the rintime log file.
             Logger.CreateLogFile();
 
             // We'll want to write a quaver.cfg file if it doesn't already exist.
