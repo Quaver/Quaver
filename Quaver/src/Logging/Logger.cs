@@ -252,7 +252,7 @@ namespace Quaver.Logging
             // Write to the log file
             try
             {
-                using (var sw = new StreamWriter(logPath))
+                using (var sw = new StreamWriter(logPath, true))
                 {
                     sw.AutoFlush = true;
                     sw.WriteLine(log);
@@ -276,7 +276,7 @@ namespace Quaver.Logging
                     Color = logColor,
                     Duration = duration,
                     NoDuration = false,
-                    Value = value
+                    Value = log
                 });
             }
             catch (Exception e)
