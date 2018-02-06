@@ -132,7 +132,7 @@ namespace Quaver.Logging
         /// <param name="value"></param>
         /// <param name="type"></param>
         /// <param name="duration"></param>
-        internal static void LogSuccess(string value, LogType type, float duration)
+        internal static void LogSuccess(string value, LogType type, float duration = 1.5f)
         {
             Log(value, LogLevel.Success, type, duration);
         }
@@ -143,7 +143,7 @@ namespace Quaver.Logging
         /// <param name="value"></param>
         /// <param name="type"></param>
         /// <param name="duration"></param>
-        internal static void LogInfo(string value, LogType type, float duration)
+        internal static void LogInfo(string value, LogType type, float duration = 1.5f)
         {
             Log(value, LogLevel.Info, type, duration);
         }
@@ -154,7 +154,7 @@ namespace Quaver.Logging
         /// <param name="value"></param>
         /// <param name="type"></param>
         /// <param name="duration"></param>
-        internal static void LogImportant(string value, LogType type, float duration)
+        internal static void LogImportant(string value, LogType type, float duration = 1.5f)
         {
             Log(value, LogLevel.Important, type, duration);
         }
@@ -165,7 +165,7 @@ namespace Quaver.Logging
         /// <param name="value"></param>
         /// <param name="type"></param>
         /// <param name="duration"></param>
-        internal static void LogWarning(string value, LogType type, float duration)
+        internal static void LogWarning(string value, LogType type, float duration = 1.5f)
         {
             Log(value, LogLevel.Warning, type, duration);
         }
@@ -176,7 +176,7 @@ namespace Quaver.Logging
         /// <param name="value"></param>
         /// <param name="type"></param>
         /// <param name="duration"></param>
-        internal static void LogError(string value, LogType type, float duration)
+        internal static void LogError(string value, LogType type, float duration = 1.5f)
         {
             Log(value, LogLevel.Error, type, duration);
         }
@@ -187,7 +187,7 @@ namespace Quaver.Logging
         /// <param name="exception"></param>
         /// <param name="type"></param>
         /// <param name="duration"></param>
-        internal static void LogError(Exception exception, LogType type, float duration)
+        internal static void LogError(Exception exception, LogType type, float duration = 1.5f)
         {
             Log(exception.ToString(), LogLevel.Error, type, duration);
         }
@@ -195,7 +195,7 @@ namespace Quaver.Logging
         /// <summary>
         ///     Logs a message to the screen, console, and runtime log
         /// </summary>
-        internal static void Log(string value, LogLevel level, LogType type, float duration)
+        internal static void Log(string value, LogLevel level, LogType type, float duration = 1.5f)
         {
             // Get a stringified version of the log type, and set the path that will be used
             var logTypeStr = "";
