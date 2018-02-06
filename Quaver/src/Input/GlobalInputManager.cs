@@ -128,21 +128,21 @@ namespace Quaver.Input
 
                 // Change the master volume based on the new config value.
                 SongManager.ChangeMasterVolume();
-                Logger.Log($"VolumeGlobal Changed To: {Config.Configuration.VolumeGlobal}", LogColors.GameInfo);
+                Logger.LogInfo($"VolumeGlobal Changed To: {Configuration.VolumeGlobal}", LogType.Runtime);
             }
             // Lower volume if the user scrolls down
             else if (GameBase.MouseState.ScrollWheelValue < LastScrollWheelValue 
                 && (GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) || GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt)) 
-                && Config.Configuration.VolumeGlobal > 0)
+                && Configuration.VolumeGlobal > 0)
             {
-                Config.Configuration.VolumeGlobal -= 5;
+                Configuration.VolumeGlobal -= 5;
 
                 // Set the last scroll wheel value
                 LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
 
                 // Change the master volume based on the new config value.
                 SongManager.ChangeMasterVolume();
-                Logger.Log($"VolumeGlobal Changed To: {Config.Configuration.VolumeGlobal}", LogColors.GameInfo);
+                Logger.LogInfo($"VolumeGlobal Changed To: {Configuration.VolumeGlobal}", LogType.Runtime);
             }
         }
 
@@ -201,7 +201,7 @@ namespace Quaver.Input
 
                 // Save the screenshot
                 bitmap.Save(path, ImageFormat.Jpeg);
-                Logger.Log($"Screenshot taken. Saved at: {path}", Color.Pink);
+                Logger.LogSuccess($"Screenshot taken. Saved at: {path}", LogType.Runtime);
             }
         }
     }

@@ -315,5 +315,10 @@ namespace Quaver.Logging
                 i--;
             }
         }
+
+        public static void LogInfo(string value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

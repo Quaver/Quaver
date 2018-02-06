@@ -284,7 +284,7 @@ namespace Quaver.GameState.States
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
 
@@ -309,7 +309,7 @@ namespace Quaver.GameState.States
             var outputPath = $"{Configuration.DataDirectory}/Maps/{GameBase.GameTime.ElapsedMilliseconds} {Util.FileNameSafeString(GameBase.SelectedBeatmap.Artist)} - {Util.FileNameSafeString(GameBase.SelectedBeatmap.Title)}.qp";
             zip.Save(outputPath);
 
-            Logger.Log($"Successfully exported {outputPath}", LogColors.GameSuccess);
+            Logger.LogSuccess($"Successfully exported {outputPath}", LogType.Runtime);
 
             // Open the folder where the file is contained.
             if (!File.Exists(outputPath))
@@ -444,13 +444,11 @@ namespace Quaver.GameState.States
                     }
                 }
 
-                Logger.Log($".osz has been successfully converted.", LogColors.GameSuccess, 2f);
+                Logger.LogSuccess($"The .osz file was successfully converted.", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                Logger.Log($"Error: There was an issue converting the .osz", LogColors.GameError, 2f);
-                Logger.Log(e.Message, Color.Red);
+                Logger.LogError(e, LogType.Runtime);
             }
             // Delete the entire temp directory regardless of the outcome.
             finally
