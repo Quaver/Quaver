@@ -612,6 +612,11 @@ namespace Quaver.GameState.Gameplay
             }
         }
 
+        /// <summary>
+        ///     Toggles the pausing of the song and sets Discord Rich Presence
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void PauseSong(object sender, EventArgs e)
         {
             // If the game is paused, it will unpause.
@@ -619,12 +624,19 @@ namespace Quaver.GameState.Gameplay
             {
                 Paused = false;
                 SongManager.Resume();
+
+                // Set Discord Rich Presence back to the correct state
+                DiscordController.ChangeDiscordPresenceGameplay(true);
             }
             // If the game is not paused, it will pause.
             else
             {
                 Paused = true;
                 SongManager.Pause();
+
+                // Set Discord Rich Presence to a paused state
+                var rpc = $"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]";
+                DiscordController.ChangeDiscordPresence(rpc, "Paused");
             }
         }
 
