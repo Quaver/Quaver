@@ -126,7 +126,6 @@
     <Compile Include="src\Input\SongSelectInputManager.cs" />
     <Compile Include="src\Input\StringInputEventArgs.cs" />
     <Compile Include="src\Logging\Log.cs" />
-    <Compile Include="src\Logging\LogColors.cs" />
     <Compile Include="src\Logging\Logger.cs" />
     <Compile Include="src\Modifiers\Mods\Chill.cs" />
     <Compile Include="src\Modifiers\Mods\Speed.cs" />

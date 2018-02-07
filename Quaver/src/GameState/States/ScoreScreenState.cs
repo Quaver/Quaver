@@ -151,7 +151,7 @@ namespace Quaver.GameState.States
                 }
                 catch (Exception e)
                 {
-                    Logger.Log(e.Message, LogColors.GameError);
+                    Logger.LogError(e, LogType.Runtime);
                 }
             });
 
@@ -334,23 +334,23 @@ namespace Quaver.GameState.States
         /// </summary>
         private void LogScore()
         {
-            Logger.Log($"Quaver Version: {Replay.QuaverVersion}", LogColors.GameInfo);
-            Logger.Log($"Beatmap MD5: {Replay.BeatmapMd5}", LogColors.GameInfo);
-            Logger.Log($"Replay MD5: {Replay.ReplayMd5}", LogColors.GameInfo);
-            Logger.Log($"Player: {Configuration.Username}", LogColors.GameInfo);
-            Logger.Log($"Date: {Replay.Date.ToString(CultureInfo.InvariantCulture)}", LogColors.GameInfo);
-            Logger.Log($"Mods: {GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier)}", LogColors.GameInfo);
-            Logger.Log($"Scroll Speed: {ScoreData.ScrollSpeed}", LogColors.GameInfo);
-            Logger.Log($"Score: {Replay.Score}", LogColors.GameInfo);
-            Logger.Log($"Accuracy: {Replay.Accuracy}%", LogColors.GameInfo);
-            Logger.Log($"Max Combo: {Replay.MaxCombo}", LogColors.GameInfo);
-            Logger.Log($"Marv Count: {Replay.MarvPressCount + Replay.MarvReleaseCount}", LogColors.GameInfo);
-            Logger.Log($"Perf Count: {Replay.PerfPressCount + Replay.PerfReleaseCount}", LogColors.GameInfo);
-            Logger.Log($"Great Count: {Replay.GreatPressCount + Replay.GreatReleaseCount}", LogColors.GameInfo);
-            Logger.Log($"Good Count: {Replay.GoodPressCount + Replay.GoodReleaseCount}", LogColors.GameInfo);
-            Logger.Log($"Okay Count: {Replay.OkayPressCount + Replay.OkayReleaseCount}", LogColors.GameInfo);
-            Logger.Log($"Miss Count: {Replay.Misses}", LogColors.GameInfo);
-            Logger.Log($"Replay Frame Count: {Replay.ReplayFrames.Count}", LogColors.GameInfo);
+            Logger.LogImportant($"Quaver Version: {Replay.QuaverVersion}", LogType.Runtime);
+            Logger.LogImportant($"Beatmap MD5: {Replay.BeatmapMd5}", LogType.Runtime);
+            Logger.LogImportant($"Replay MD5: {Replay.ReplayMd5}", LogType.Runtime);
+            Logger.LogImportant($"Player: {Configuration.Username}", LogType.Runtime);
+            Logger.LogImportant($"Date: {Replay.Date.ToString(CultureInfo.InvariantCulture)}", LogType.Runtime);
+            Logger.LogImportant($"Mods: {GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier)}", LogType.Runtime);
+            Logger.LogImportant($"Scroll Speed: {ScoreData.ScrollSpeed}", LogType.Runtime);
+            Logger.LogImportant($"Score: {Replay.Score}", LogType.Runtime);
+            Logger.LogImportant($"Accuracy: {Replay.Accuracy}%", LogType.Runtime);
+            Logger.LogImportant($"Max Combo: {Replay.MaxCombo}", LogType.Runtime);
+            Logger.LogImportant($"Marv Count: {Replay.MarvPressCount + Replay.MarvReleaseCount}", LogType.Runtime);
+            Logger.LogImportant($"Perf Count: {Replay.PerfPressCount + Replay.PerfReleaseCount}", LogType.Runtime);
+            Logger.LogImportant($"Great Count: {Replay.GreatPressCount + Replay.GreatReleaseCount}", LogType.Runtime);
+            Logger.LogImportant($"Good Count: {Replay.GoodPressCount + Replay.GoodReleaseCount}", LogType.Runtime);
+            Logger.LogImportant($"Okay Count: {Replay.OkayPressCount + Replay.OkayReleaseCount}", LogType.Runtime);
+            Logger.LogImportant($"Miss Count: {Replay.Misses}", LogType.Runtime);
+            Logger.LogImportant($"Replay Frame Count: {Replay.ReplayFrames.Count}", LogType.Runtime);
         }
 
         /// <summary>

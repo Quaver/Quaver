@@ -37,8 +37,7 @@ namespace Quaver.Steam
             // If the Steam initalization has failed, we'll need to prompt the user to restart the game with Steam.
             if (!IsInitialized)
             {
-                var log = "SteamAPI.Init() call has failed! Steam is not initialized!";
-                Logger.Log(log, LogColors.GameError);
+                Logger.LogError("SteamAPI.Init() call has failed! Steam is not initialized!", LogType.Runtime);
 
                 // Display a dialog to users to restart the game with steam
                 PromptToOpenSteam();
@@ -56,7 +55,7 @@ namespace Quaver.Steam
                 throw new Exception("The wrong .dlls were loaded for this platform!");
 
 #if DEBUG
-            Logger.Log($"[STEAM API HELPER] Logged into Steam as: {SteamFriends.GetPersonaName()} <{SteamUser.GetSteamID()}>", LogColors.GameInfo);
+            Logger.LogSuccess($"[STEAM API HELPER] Logged into Steam as: {SteamFriends.GetPersonaName()} <{SteamUser.GetSteamID()}>", LogType.Runtime);
 #endif
         }
 
