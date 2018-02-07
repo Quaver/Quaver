@@ -198,6 +198,11 @@ namespace Quaver
         public static string BuildVersion { get; set; }
 
         /// <summary>
+        ///     The volume of sound effects
+        /// </summary>
+        public static float SoundEffectVolume { get; set; }
+
+        /// <summary>
         ///     This method changes the window to match configuration settings
         /// </summary>
         /// <param name="resolution"></param>
@@ -226,14 +231,14 @@ namespace Quaver
                 //do stuff
             }
 
-            // Log this event
-            Logger.Log("Window settings changed:", LogColors.GameImportant);
-            Logger.Log("Window Resolution: "+ GraphicsManager.PreferredBackBufferWidth + "x" + GraphicsManager.PreferredBackBufferHeight, LogColors.GameInfo);
-            Logger.Log("Window Letterboxing: " + letterbox, LogColors.GameInfo);
-            Logger.Log("Window Fullscreen: "+ GraphicsManager.IsFullScreen, LogColors.GameInfo);
-
             // Apply changes to graphics manager
             GraphicsManager.ApplyChanges();
+
+            // Log this event
+            Logger.LogImportant("Window Settings Changed!", LogType.Runtime);
+            Logger.LogImportant($"Res: {GraphicsManager.PreferredBackBufferWidth}x {GraphicsManager.PreferredBackBufferHeight}", LogType.Runtime);
+            Logger.LogImportant($"Letterboxing: {letterbox}", LogType.Runtime);
+            Logger.LogImportant($"FullScreen: {GraphicsManager.IsFullScreen}", LogType.Runtime);
         }
     }
 }

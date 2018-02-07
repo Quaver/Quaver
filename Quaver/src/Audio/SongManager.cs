@@ -107,7 +107,7 @@ namespace Quaver.Audio
                 return;
 
             Bass.ChannelPause(AudioStream);
-            Logger.Log($"Audio Stream {AudioStream} has been paused.", LogColors.GameInfo);
+            Logger.LogInfo($"Audio Stream {AudioStream} has been paused.", LogType.Runtime);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Quaver.Audio
                 return;
 
             Bass.ChannelPlay(AudioStream);
-            Logger.Log($"Audio Stream {AudioStream} has been resumed.", LogColors.GameInfo);
+            Logger.LogInfo($"Audio Stream {AudioStream} has been resumed.", LogType.Runtime);
         }
 
         /// <summary>
@@ -133,6 +133,8 @@ namespace Quaver.Audio
             // Completely stop the stream and free its resources
             Bass.ChannelStop(AudioStream);
             Bass.StreamFree(AudioStream);
+
+            Logger.LogInfo($"Audio Stream {AudioStream} has been stopped.", LogType.Runtime);
         }
 
         /// <summary>
@@ -180,6 +182,8 @@ namespace Quaver.Audio
                 return;
 
             Bass.ChannelSetPosition(AudioStream, Bass.ChannelSeconds2Bytes(AudioStream, position / 1000));
+
+            Logger.LogInfo($"Audio Stream {AudioStream} has been skipped to {position / 1000}.", LogType.Runtime);
         }
 
         /// <summary>

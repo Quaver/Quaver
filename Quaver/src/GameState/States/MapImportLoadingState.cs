@@ -100,7 +100,7 @@ namespace Quaver.GameState.States
                 DiscordController.ChangeDiscordPresence($"{GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}", "Listening");
             }
 
-            Logger.Log("Successfully completed the conversion task. Stopping loader.", LogColors.GameImportant);
+            Logger.LogSuccess("Successfully completed the conversion task. Stopping loader.", LogType.Runtime);
             GameBase.GameStateManager.RemoveState();
         }
     }
