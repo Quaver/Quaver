@@ -107,9 +107,6 @@ namespace Quaver.Audio
             // Set the song position 
             ChangeSongPosition(pos);
 
-            // Check to see if there are any inconsistencies with the current mods and the current GameClock.
-            ModManager.CheckModInconsistencies();
-
             // Set the playback rate AND THEN toggle the pitch.
             SetPlaybackRate();
             TogglePitch(pitched);
