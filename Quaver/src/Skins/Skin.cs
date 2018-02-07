@@ -230,11 +230,6 @@ namespace Quaver.Skins
         // Contains the file names of all skin elements
         private readonly string[] skinElements = new[]
         {
-
-                @"4k-column-lighting",
-                @"7k-column-lighting",
-                
-
                 // Stage
                 @"4k-stage-bgmask",
                 @"7k-stage-bgmask",
@@ -243,6 +238,8 @@ namespace Quaver.Skins
                 @"stage-hitposition-overlay",
                 @"stage-distant-overlay",
                 @"stage-timingbar",
+                @"4k-column-lighting",
+                @"7k-column-lighting",
 
                 // 4k Hit effect
                 @"4k-note-hiteffect-1",
@@ -250,7 +247,7 @@ namespace Quaver.Skins
                 @"4k-note-hiteffect-3",
                 @"4k-note-hiteffect-4",
 
-                // 7k HitBurst
+                // 7k Hit Effect
                 @"7k-note-hiteffect-1",
                 @"7k-note-hiteffect-2",
                 @"7k-note-hiteffect-3",
@@ -857,8 +854,15 @@ namespace Quaver.Skins
             path = path.Replace(".png", ".wav");
 
             // Load the actual file stream if it exists.
-            if (File.Exists(path))
-                return SoundEffect.FromStream(new FileStream(path, FileMode.Open));
+            try
+            {
+                if (File.Exists(path))
+                    return SoundEffect.FromStream(new FileStream(path, FileMode.Open));
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, LogType.Runtime);
+            }
 
             // Load the default if the path doesn't exist
             switch (Configuration.DefaultSkin)
