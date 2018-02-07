@@ -100,9 +100,9 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
         /// <summary>
         ///     The callback function that will be called when the input has been submitted
         /// </summary>
-        private void OnChatSubmit(string text)
+        private static void OnChatSubmit(string text)
         {
-            Logger.Log(text, LogColors.GameInfo);
+            Logger.LogInfo($"Chat Message Sent: {text}", LogType.Runtime);
         }
     }
 }
