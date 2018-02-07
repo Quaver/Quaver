@@ -164,6 +164,7 @@ namespace Quaver.Skins
         // 4k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
         internal List<List<Texture2D>> NoteHitObjects4K { get; set; } = new List<List<Texture2D>>();
+        internal List<List<Texture2D>> NoteHoldHitObjects4K { get; set; } = new List<List<Texture2D>>();
         internal Texture2D[] NoteHoldBodies4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteHoldEnds4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsUp4K { get; set; } = new Texture2D[4];
@@ -264,6 +265,12 @@ namespace Quaver.Skins
                 @"4k-note-hitobject-3",
                 @"4k-note-hitobject-4",
 
+                // 4k LN Hit Objects
+                @"4k-note-holdhitobject-1",
+                @"4k-note-holdhitobject-2",
+                @"4k-note-holdhitobject-3",
+                @"4k-note-holdhitobject-4",
+
                 // 7k HitObjects
                 @"7k-note-hitobject-1",
                 @"7k-note-hitobject-2",
@@ -325,7 +332,6 @@ namespace Quaver.Skins
                 @"4k-receptor-down-2",
                 @"4k-receptor-down-3",
                 @"4k-receptor-down-4",
-
 
                 // 7k Note Receptors
                 @"7k-receptor-up-1",
@@ -478,6 +484,18 @@ namespace Quaver.Skins
                         break;
                     case @"4k-note-hitobject-4":
                         LoadHitObjects(NoteHitObjects4K, skinDir, element, 3);
+                        break;
+                    case @"4k-note-holdhitobject-1":
+                        LoadHitObjects(NoteHoldHitObjects4K, skinDir, element, 0);
+                        break;
+                    case @"4k-note-holdhitobject-2":
+                        LoadHitObjects(NoteHoldHitObjects4K, skinDir, element, 1);
+                        break;
+                    case @"4k-note-holdhitobject-3":
+                        LoadHitObjects(NoteHoldHitObjects4K, skinDir, element, 2);
+                        break;
+                    case @"4k-note-holdhitobject-4":
+                        LoadHitObjects(NoteHoldHitObjects4K, skinDir, element, 3);
                         break;
                     case @"7k-note-hitobject-1":
                         NoteHitObjects7K[0] = LoadIndividualElement(element, skinElementPath);
