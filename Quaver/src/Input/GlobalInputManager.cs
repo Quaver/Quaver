@@ -177,13 +177,13 @@ namespace Quaver.Input
             if (CurrentlyTakingScreenshot)
                 return;
 
-            if (!GameBase.KeyboardState.IsKeyDown(Config.Configuration.KeyTakeScreenshot))
+            if (!GameBase.KeyboardState.IsKeyDown(Configuration.KeyTakeScreenshot))
                 return;
 
             CurrentlyTakingScreenshot = true;
 
             // Play screenshot sound effect
-            GameBase.LoadedSkin.SoundScreenshot.Play((float) Config.Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+            GameBase.LoadedSkin.SoundScreenshot.Play(GameBase.SoundEffectVolume, 0, 0);
 
             // Create path for file
             var path = Config.Configuration.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyy-MM-dd HHmmssfff") + ".jpg";
