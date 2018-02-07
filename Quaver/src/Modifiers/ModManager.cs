@@ -67,8 +67,8 @@ namespace Quaver.Modifiers
             GameBase.ScoreMultiplier += mod.ScoreMultiplierAddition;
             mod.InitializeMod();  
             
-            Logger.Log($"Added Mod: {mod.ModIdentifier} and removed all incompatible mods.", LogColors.GameInfo);
-            Logger.Log($"Current Mods: {String.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ToString()))}", LogColors.GameInfo);
+            Logger.LogSuccess($"Added Mod: {mod.ModIdentifier} and removed all incompatible mods.", LogType.Runtime);
+            Logger.LogInfo($"Current Mods: {string.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ToString()))}", LogType.Runtime);
         }
 
         /// <summary>
@@ -86,11 +86,11 @@ namespace Quaver.Modifiers
    
                 // Remove the Mod
                 GameBase.CurrentGameModifiers.Remove(removedMod);
-                Logger.Log($"Removed {modIdentifier} from the current game modifiers.", LogColors.GameInfo);
+                Logger.LogSuccess($"Removed {modIdentifier} from the current game modifiers.", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, Color.Red, 5.0f);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
 
@@ -126,11 +126,13 @@ namespace Quaver.Modifiers
                 GameBase.CurrentGameModifiers.RemoveAll(x => x.Type == ModType.Speed);
                 GameBase.GameClock = 1.0f;
                 SongManager.ChangeSongSpeed();
-                Logger.Log($"Removed Speed Mods from the current game modifiers.", Color.Cyan);
-                Logger.Log($"Current Mods: {String.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ToString()))}", Color.Cyan);
+
+                Logger.LogSuccess($"Removed Speed Mods from the current game modifiers.", LogType.Runtime);
+                Logger.LogInfo($"Current Mods: {string.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ToString()))}", LogType.Runtime);
             }
             catch (Exception e)
             {
+                Logger.LogError(e, LogType.Runtime);
             }
         }
     }
