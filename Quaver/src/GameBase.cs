@@ -203,6 +203,11 @@ namespace Quaver
         public static float SoundEffectVolume { get; set; }
 
         /// <summary>
+        ///     Reference to the game's audio engine
+        /// </summary>
+        public static AudioEngine AudioEngine { get; set; }
+
+        /// <summary>
         ///     This method changes the window to match configuration settings
         /// </summary>
         /// <param name="resolution"></param>
