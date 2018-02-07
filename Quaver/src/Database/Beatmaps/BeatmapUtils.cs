@@ -226,7 +226,8 @@ namespace Quaver.Database.Beatmaps
                     break;
             }
 
-            Logger.Log($"Random Beatmap Selected: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]", LogColors.GameInfo);
+            var log = $"RND MAP: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]";
+            Logger.LogInfo(log, LogType.Runtime);
         }
     }
 }
