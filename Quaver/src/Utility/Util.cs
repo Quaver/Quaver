@@ -269,5 +269,15 @@ namespace Quaver.Utility
             
            return Grades.F;
         }
+
+        /// <summary>
+        ///     Returns a color to a string
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        internal static string ColorToString(Color color)
+        {
+            return $"{color.R},{color.G},{color.G},{color.A}";
+        }
     }
 }
