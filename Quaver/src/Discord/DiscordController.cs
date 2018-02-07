@@ -109,7 +109,7 @@ namespace Quaver.Discord
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
                 throw;
             }
         }
@@ -149,7 +149,7 @@ namespace Quaver.Discord
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
 
@@ -168,7 +168,7 @@ namespace Quaver.Discord
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
     }

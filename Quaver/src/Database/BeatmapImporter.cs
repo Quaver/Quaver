@@ -40,7 +40,7 @@ namespace Quaver.Database
         /// <param name="e"></param>
         internal static void OnDirectoryChange(object source, FileSystemEventArgs e)
         {
-            Logger.Log($"Detected directory change at: {e.FullPath}", LogColors.GameImportant);
+            Logger.LogInfo($"Detected directory change at: {e.FullPath}", LogType.Runtime);
             GameBase.ImportQueueReady = true;
         }
     }

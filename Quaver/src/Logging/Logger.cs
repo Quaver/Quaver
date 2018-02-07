@@ -31,16 +31,25 @@ namespace Quaver.Logging
         private static string RuntimeLogPath { get; set; }
 
         /// <summary>
+        ///     The path of the network log
+        /// </summary>
+        private static string NetworkLogPath { get; set; }
+
+        /// <summary>
         ///     Creates the log file
         /// </summary>
         internal static void CreateLogFile()
         {
-            RuntimeLogPath = Configuration.LogsDirectory + "/" + "runtime.log";
+            RuntimeLogPath = Configuration.LogsDirectory + "/runtime.log";
+            NetworkLogPath = Configuration.LogsDirectory + "/network.log";
 
             try
             {
-                var file = File.Create(RuntimeLogPath);
-                file.Close();
+                if (!File.Exists(RuntimeLogPath))
+                    using (File.Create(RuntimeLogPath)) { }
+
+                if (!File.Exists(NetworkLogPath))
+                    using (File.Create(NetworkLogPath)) { }
             }
             catch (Exception e)
             {
@@ -118,32 +127,141 @@ namespace Quaver.Logging
         }
 
         /// <summary>
+        ///     Logs a success message of a give type
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <param name="duration"></param>
+        internal static void LogSuccess(string value, LogType type, float duration = 1.5f)
+        {
+            Log(value, LogLevel.Success, type, duration);
+        }
+
+        /// <summary>
+        ///     Logs an info message of a give type
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <param name="duration"></param>
+        internal static void LogInfo(string value, LogType type, float duration = 1.5f)
+        {
+            Log(value, LogLevel.Info, type, duration);
+        }
+
+        /// <summary>
+        ///     Logs an important message of a give type
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <param name="duration"></param>
+        internal static void LogImportant(string value, LogType type, float duration = 1.5f)
+        {
+            Log(value, LogLevel.Important, type, duration);
+        }
+
+        /// <summary>
+        ///     Logs a success message of a give type
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <param name="duration"></param>
+        internal static void LogWarning(string value, LogType type, float duration = 1.5f)
+        {
+            Log(value, LogLevel.Warning, type, duration);
+        }
+
+        /// <summary>
+        ///     Logs an error message of a give type
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
+        /// <param name="duration"></param>
+        internal static void LogError(string value, LogType type, float duration = 1.5f)
+        {
+            Log(value, LogLevel.Error, type, duration);
+        }
+
+        /// <summary>
+        ///     Logs an exception error.
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <param name="type"></param>
+        /// <param name="duration"></param>
+        internal static void LogError(Exception exception, LogType type, float duration = 1.5f)
+        {
+            Log(exception.ToString(), LogLevel.Error, type, duration);
+        }
+
+        /// <summary>
         ///     Logs a message to the screen, console, and runtime log
         /// </summary>
-        internal static void Log(string value, Color color, float duration = 2.5f)
+        internal static void Log(string value, LogLevel level, LogType type, float duration = 1.5f)
         {
-            if (RuntimeLogPath == null)
-                return;
+            // Get a stringified version of the log type, and set the path that will be used
+            var logTypeStr = "";
+            var logPath = "";
+            switch (type)
+            {
+                case LogType.Runtime:
+                    if (RuntimeLogPath == "")
+                        return;
 
-            // Put the time in front of the incoming log 
-            var val = Encoding.UTF8.GetBytes("[" +DateTime.Now.ToString("h:mm:ss") + "] " + value);
-            
-            Console.WriteLine(Encoding.UTF8.GetString(val));
+                    logTypeStr = "RUNTIME";
+                    logPath = RuntimeLogPath;
+                    break;
+                case LogType.Network:
+                    if (NetworkLogPath == "")
+                        return;
+
+                    logTypeStr = "NETWORK";
+                    logPath = NetworkLogPath;
+                    break;
+            }
+
+            // Get a stringified version of the log level, and also set the color.
+            var logLevelStr = "";
+            var logColor = Color.Beige;
+            switch (level)
+            {
+                case LogLevel.Info:
+                    logLevelStr = "INFO";
+                    logColor = Color.LightBlue;
+                    break;
+                case LogLevel.Error:
+                    logLevelStr = "ERROR";
+                    logColor = Color.Red;
+                    break;
+                case LogLevel.Important:
+                    logLevelStr = "IMPORTANT";
+                    logColor = Color.HotPink;
+                    break;
+                case LogLevel.Success:
+                    logLevelStr = "SUCCESS";
+                    logColor = Color.Green;
+                    break;
+                case LogLevel.Warning:
+                    logLevelStr = "WARNING";
+                    logColor = Color.Yellow;
+                    break;
+            }
+
+            // Format the log
+            var log = $"[{DateTime.Now:h:mm:ss}] - {logTypeStr} - {logLevelStr}: {value}";         
+            Console.WriteLine(log);
 
             // Write to the log file
             try
             {
-                var sw = new StreamWriter(RuntimeLogPath, true)
+                using (var sw = new StreamWriter(logPath, true))
                 {
-                    AutoFlush = true
-                };
-
-                sw.WriteLine(value);
-                sw.Close();
+                    sw.AutoFlush = true;
+                    sw.WriteLine(log);
+                }
             }
             catch (Exception e)
             {
-                //todo: do stuff
+                // If it fails, we can't really handle the error here. This shouldn't happen though.
+                Console.WriteLine(e);
             }
 
 #if DEBUG
@@ -155,14 +273,16 @@ namespace Quaver.Logging
                 Logs.Add(new Log()
                 {
                     Name = "LogMethod",
-                    Color = color,
+                    Color = logColor,
                     Duration = duration,
                     NoDuration = false,
-                    Value = value
+                    Value = log
                 });
             }
             catch (Exception e)
             {
+                // If it fails, we can't really handle the error here. This shouldn't happen though.
+                Console.WriteLine(e);
             }
 #endif
         }
@@ -194,6 +314,11 @@ namespace Quaver.Logging
                 Logs.RemoveAt(i);
                 i--;
             }
+        }
+
+        public static void LogInfo(string value)
+        {
+            throw new NotImplementedException();
         }
     }
 }
