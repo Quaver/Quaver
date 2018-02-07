@@ -69,8 +69,6 @@ namespace Quaver.GameState.States
 
         public void Initialize()
         {
-            Logger.Log("Options Menu Button Clicked", LogColors.GameImportant, 5);
-
             Boundary = new Boundary();
             ButtonsContainer = new Boundary()
             {
