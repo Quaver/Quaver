@@ -173,13 +173,13 @@ namespace Quaver.GameState.States
         public void OnSongSelectButtonClick(object sender, EventArgs e)
         {
             //Change to SongSelectState
-            GameBase.LoadedSkin.SoundClick.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+            GameBase.LoadedSkin.SoundClick.Play(GameBase.SoundEffectVolume, 0, 0);
             GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 
         public void OnOptionsSelectButtonClick(object sender, EventArgs e)
         {
-            GameBase.LoadedSkin.SoundClick.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+            GameBase.LoadedSkin.SoundClick.Play(GameBase.SoundEffectVolume, 0, 0);
             GameBase.GameStateManager.ChangeState(new OptionsMenuState());
         }
 

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using IniParser;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Logging;
 
@@ -383,6 +384,7 @@ namespace Quaver.Config
 
             // If we already have a config file, we'll just want to read that.
             ReadConfigFile();
+
             Logger.LogSuccess("Config file has successfully been read.", LogType.Runtime);
         }
 
@@ -446,7 +448,11 @@ namespace Quaver.Config
             _keySkipIntro = ConfigHelper.ReadKeys(KeySkipIntro, data["KeySkipIntro"]);
             _keyTakeScreenshot = ConfigHelper.ReadKeys(KeyTakeScreenshot, data["KeyTakeScreenshot"]);
             _keyToggleOverlay = ConfigHelper.ReadKeys(KeyToggleOverlay, data["KeyToggleOverlay"]);
-                
+
+            // Set Master and Sound Effect Volume
+            SoundEffect.MasterVolume = VolumeGlobal / 100f;
+            GameBase.SoundEffectVolume = VolumeEffect / 100f;
+
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync());
         }
