@@ -843,7 +843,7 @@ namespace Quaver.Skins
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
             }
 
             // Load the default if the path doesn't exist
