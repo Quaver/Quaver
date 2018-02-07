@@ -30,11 +30,12 @@ namespace Quaver.Database
             {
                 var conn = new SQLiteAsyncConnection(DatabasePath);
                 await conn.CreateTableAsync<LocalScore>();
-                Logger.Log($"Local Scores Database has been created.", LogColors.GameImportant);
+
+                Logger.LogSuccess($"Local Scores Database has been created.", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, Color.Red);
+                Logger.LogError(e, LogType.Runtime);
                 throw;
             }
         }
@@ -53,7 +54,7 @@ namespace Quaver.Database
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, Color.Red);
+                Logger.LogError(e, LogType.Runtime);
                 return new List<LocalScore>();
             }
         }
@@ -72,7 +73,7 @@ namespace Quaver.Database
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, Color.Red);
+                Logger.LogError(e, LogType.Runtime);
                 throw;
             }
         }
@@ -87,11 +88,11 @@ namespace Quaver.Database
             try
             {
                 await new SQLiteAsyncConnection(DatabasePath).DeleteAsync(score);
-                Logger.Log($"Successfully deleted score from beatmap: {score.BeatmapMd5} from the database.", Color.Cyan);
+                Logger.LogSuccess($"Successfully deleted score from beatmap: {score.BeatmapMd5} from the database.", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, Color.Red);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
     }

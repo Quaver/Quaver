@@ -52,19 +52,19 @@ namespace Quaver.Database
 
                 // Fetch all the new beatmaps after syncing and return them.
                 var beatmaps = await FetchAllBeatmaps();
-                Logger.Log($"{beatmaps.Count} beatmaps have been successfully loaded.", Color.Cyan);
+                Logger.LogSuccess($"{beatmaps.Count} beatmaps have been successfully loaded.", LogType.Runtime);
 
                 if (Configuration.AutoLoadOsuBeatmaps)
                     beatmaps = beatmaps.Concat(LoadBeatmapsFromOsuDb()).ToList();
 
                 var maps = BeatmapUtils.GroupBeatmapsByDirectory(beatmaps);
-                Logger.Log($"Successfully loaded {beatmaps.Count} in {maps.Count} directories.", Color.Cyan);
+                Logger.LogSuccess($"Successfully loaded {beatmaps.Count} in {maps.Count} directories.", LogType.Runtime);
 
                 return maps;
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, Color.Cyan);
+                Logger.LogError(e, LogType.Runtime);
                 File.Delete(DatabasePath);
                 return await LoadBeatmapDatabaseAsync();
             }            
@@ -79,11 +79,11 @@ namespace Quaver.Database
             {
                 var conn = new SQLiteAsyncConnection(DatabasePath);
                 await conn.CreateTableAsync<Beatmap>();
-                Logger.Log($"Beatmap Database has been created.", Color.Cyan);
+                Logger.LogSuccess($"Beatmap Database has been created.", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, Color.Cyan);
+                Logger.LogError(e, LogType.Runtime);
                 throw;
             }
         }
@@ -97,7 +97,7 @@ namespace Quaver.Database
         {
             // Find all the.qua files in the directory.
             var Mapss = Directory.GetFiles(Configuration.SongDirectory, "*.qua", SearchOption.AllDirectories);
-            Logger.Log($"Found: {Mapss.Length} .qua files in the /songs/ directory.", Color.Cyan);
+            Logger.LogInfo($"Found: {Mapss.Length} .qua files in the /songs/ directory.", LogType.Runtime);
 
             await CacheByFileCount(Mapss);
 
@@ -105,7 +105,8 @@ namespace Quaver.Database
             var MapsList = Mapss.ToList();
             MapsList.RemoveAll(x => !File.Exists(x));
             Mapss = MapsList.ToArray();
-            Logger.Log($"After removing missing .qua files, there are now {Mapss.Length}", Color.Cyan);
+
+            Logger.LogImportant($"After removing missing .qua files, there are now {Mapss.Length}", LogType.Runtime);
 
             await CacheByMd5ChecksumAsync(Mapss);
             await RemoveMissingBeatmaps();
@@ -125,7 +126,7 @@ namespace Quaver.Database
             if (beatmapsInDb.Count == Mapss.Length)
                 return;
 
-            Logger.Log($"Incorrect # of .qua files vs maps detected. {Mapss.Length} vs {beatmapsInDb.Count}", Color.Red);
+            Logger.LogImportant($"Incorrect # of .qua files vs maps detected. {Mapss.Length} vs {beatmapsInDb.Count}", LogType.Runtime);
 
             // This'll store all the beatmaps we'll be adding into the database.
             var beatmapsToCache = new List<Beatmap>();
@@ -140,7 +141,7 @@ namespace Quaver.Database
                 var qua = Qua.Parse(file);
                 if (!qua.IsValidQua)
                 {
-                    Logger.Log($"Error: Qua File {file} could not be parsed.", Color.Red);
+                    Logger.LogError($"Qua File {file} could not be parsed.", LogType.Runtime);
                     File.Delete(file);
                     continue;
                 }
@@ -177,7 +178,8 @@ namespace Quaver.Database
             var mismatchedBeatmaps = beatmapsInDb
                 .Except(beatmapsInDb.Where(map => fileChecksums.Any(md5 => md5 == map.Md5Checksum)).ToList()).ToList();
 
-            Logger.Log($"Found: {mismatchedBeatmaps.Count} beatmaps with unmatched checksums", Color.Cyan);
+            Logger.LogImportant($"Found: {mismatchedBeatmaps.Count} beatmaps with unmatched checksums", LogType.Runtime);
+
             if (mismatchedBeatmaps.Count > 0)
                 await DeleteBeatmapsFromDatabase(mismatchedBeatmaps);
 
@@ -224,7 +226,7 @@ namespace Quaver.Database
                 }
                 catch (Exception e)
                 {
-                    Logger.Log(e.Message, Color.Red);
+                    Logger.LogError(e, LogType.Runtime);
                 }
             }
             await DeleteBeatmapsFromDatabase(mapsToDelete);
@@ -253,7 +255,7 @@ namespace Quaver.Database
 
                 if (beatmaps.Count > 0)
                     await new SQLiteAsyncConnection(DatabasePath).InsertAllAsync(beatmaps)
-                        .ContinueWith(t => Logger.Log($"Successfully added {beatmaps.Count} beatmaps to the database", Color.Cyan));
+                        .ContinueWith(t => Logger.LogSuccess($"Successfully added {beatmaps.Count} beatmaps to the database", LogType.Runtime));
             }
             catch (Exception e)
             {
@@ -272,15 +274,13 @@ namespace Quaver.Database
             try
             {
                 foreach (var map in beatmaps)
-                {
                     await new SQLiteAsyncConnection(DatabasePath).DeleteAsync(map);
-                }
 
-                Logger.Log($"Successfully deleted {beatmaps.Count} beatmaps from the database.", Color.Cyan);
+                Logger.LogSuccess($"Successfully deleted {beatmaps.Count} beatmaps from the database.", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, Color.Red);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
 
@@ -338,11 +338,11 @@ namespace Quaver.Database
 
                     // Delete the file if its actually a duplicate.
                     File.Delete($"{Configuration.SongDirectory}/{map.Directory}/{map.Path}");
-                    Logger.Log($"Removed duplicate map: {Configuration.SongDirectory}/{map.Directory}/{map.Path}", Color.Pink);
+                    Logger.LogImportant($"Removed duplicate map: {Configuration.SongDirectory}/{map.Directory}/{map.Path}", LogType.Runtime);
                 }
                 catch (Exception e)
                 {
-                    Logger.Log(e.Message, Color.Cyan);
+                    Logger.LogError(e, LogType.Runtime);
                 }
             }
         }
@@ -361,7 +361,7 @@ namespace Quaver.Database
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
                 throw;
             }
         }
@@ -381,7 +381,7 @@ namespace Quaver.Database
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
                 throw;
             }
         }
@@ -429,12 +429,12 @@ namespace Quaver.Database
                     maps.Add(newMap);
                 }
 
-                Logger.Log($"Finished loading: {beatmaps.Count} osu!mania beatmaps", LogColors.GameSuccess);
+                Logger.LogSuccess($"Finished loading: {beatmaps.Count} osu!mania beatmaps", LogType.Runtime);
                 return maps;
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
                 return new List<Beatmap>();
             }
         }

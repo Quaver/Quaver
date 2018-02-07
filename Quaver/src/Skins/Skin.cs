@@ -746,7 +746,7 @@ namespace Quaver.Skins
             }
             catch
             {
-                Logger.Log("Default skin element not found: " + path, LogColors.GameError, 1.5f);
+                Logger.LogError($"Default skin element not found {path}", LogType.Runtime);
                 return GameBase.Content.Load<Texture2D>("main-blank-box");
             }    
         }
@@ -998,7 +998,8 @@ namespace Quaver.Skins
             BgMaskAlpha = ConfigHelper.ReadFloat(BgMaskAlpha, data["Gameplay"]["BgMaskAlpha"]);
             FlipNoteImagesOnUpScroll4K = ConfigHelper.ReadBool(FlipNoteImagesOnUpScroll4K, data["Gameplay"]["FlipNoteImagesOnUpScroll4K"]);
             FlipNoteImagesOnUpScroll7K = ConfigHelper.ReadBool(FlipNoteImagesOnUpScroll7K, data["Gameplay"]["FlipNoteImagesOnUpScroll7K"]);
-            Logger.Log($@"Skin loaded: {skinDir}", LogColors.GameImportant);
+
+            Logger.LogSuccess($"skin.ini file has successfully been read.", LogType.Runtime);
         }
 
         /// <summary>
