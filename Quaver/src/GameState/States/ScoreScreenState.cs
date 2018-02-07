@@ -174,6 +174,7 @@ namespace Quaver.GameState.States
             ScoreData.UnloadData();
 
             // Play Applause
+            ApplauseInstance.Volume = GameBase.SoundEffectVolume;
             ApplauseInstance.Play();
 
             // Update overlay
@@ -253,7 +254,7 @@ namespace Quaver.GameState.States
         private void OnBackButtonClick(object sender, EventArgs e)
         {
             ApplauseInstance.Stop(true);
-            GameBase.LoadedSkin.SoundBack.Play((float) Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+            GameBase.LoadedSkin.SoundBack.Play(GameBase.SoundEffectVolume, 0, 0);
             GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 
