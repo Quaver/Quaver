@@ -185,7 +185,7 @@ namespace Quaver.Audio
         internal void SetPlaybackRate()
         {
             ModManager.CheckModInconsistencies();
-            Bass.ChannelSetAttribute(Stream, ChannelAttribute.Tempo, GameBase.GameClock * 100 - 100);
+            Bass.ChannelSetAttribute(Stream, ChannelAttribute.Tempo, PlaybackRate * 100 - 100);
         }
 
         /// <summary>
