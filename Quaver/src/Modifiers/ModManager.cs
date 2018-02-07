@@ -135,5 +135,21 @@ namespace Quaver.Modifiers
                 Logger.LogError(e, LogType.Runtime);
             }
         }
+
+        /// <summary>
+        ///     Makes sure that the speed mod selected matches up with the game clock and sets the correct one.
+        /// </summary>
+        public static void CheckModInconsistencies()
+        {
+            var mod = GameBase.CurrentGameModifiers.Find(x => x.Type == ModType.Speed);
+
+            // Re-intialize the correct mod.
+            var index = GameBase.CurrentGameModifiers.IndexOf(mod);
+
+            if (index != -1)
+                GameBase.CurrentGameModifiers[index] = new Speed(mod.ModIdentifier);
+            else
+                GameBase.GameClock = 1.0f;
+        }
     }
 }
