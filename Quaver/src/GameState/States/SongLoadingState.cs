@@ -101,12 +101,12 @@ namespace Quaver.GameState.States
                         await writer.WriteAsync($"{Math.Round(GameBase.SelectedBeatmap.Qua.CalculateFakeDifficulty(), 2)}");
                 });
 
-                Logger.Log("Finished loading Beatmap", LogColors.GameSuccess);
+                Logger.LogSuccess("Finished loading Beatmap", LogType.Runtime);
                 GameBase.SelectedBeatmap.Qua.CalculateDifficulty(GameBase.GameClock);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Logger.Log(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n", LogColors.GameError, 5.0f);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
 
@@ -135,11 +135,10 @@ namespace Quaver.GameState.States
    
 
                 GameBase.GameStateManager.ChangeState(new PlayScreenState(GameBase.SelectedBeatmap.Qua, md5));
-                Logger.Log("Successfully changed to the gameplay state.", LogColors.GameSuccess);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Logger.Log(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n", LogColors.GameError, 5.0f);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
     }
