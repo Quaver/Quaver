@@ -269,6 +269,9 @@ namespace Quaver.Peppy
             {
                 Logger.LogImportant("Commencing .osk conversion. Please standby...", LogType.Runtime);
 
+                if (!File.Exists(path))
+                    throw new FileNotFoundException();
+
                 // Set and create the temporary extraction path
                 var extractPath = $@"{Configuration.DataDirectory}/Temp/{Path.GetFileNameWithoutExtension(path)}/";
                 Directory.CreateDirectory(extractPath);
