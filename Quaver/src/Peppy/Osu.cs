@@ -46,6 +46,21 @@ namespace Quaver.Peppy
             new QuaverOsuElementMap("7k-note-hitobject-6", "mania-note2", ElementType.Image, "NoteImage5"),
             new QuaverOsuElementMap("7k-note-hitobject-7", "mania-note1", ElementType.Image, "NoteImage6"),
 
+            // 4k HitObject Hold Heads
+            new QuaverOsuElementMap("4k-note-holdhitobject-1", "mania-note1H", ElementType.Image, "NoteImage0H"),
+            new QuaverOsuElementMap("4k-note-holdhitobject-2", "mania-note2H", ElementType.Image, "NoteImage1H"),
+            new QuaverOsuElementMap("4k-note-holdhitobject-3", "mania-note2H", ElementType.Image, "NoteImage2H"),
+            new QuaverOsuElementMap("4k-note-holdhitobject-4", "mania-note1H", ElementType.Image, "NoteImage3H"),
+
+            // 7k HitObject Hold Heads
+            new QuaverOsuElementMap("7k-note-holdhitobject-1", "mania-note1H", ElementType.Image, "NoteImage0H"),
+            new QuaverOsuElementMap("7k-note-holdhitobject-2", "mania-note2H", ElementType.Image, "NoteImage1H"),
+            new QuaverOsuElementMap("7k-note-holdhitobject-3", "mania-note1H", ElementType.Image, "NoteImage2H"),
+            new QuaverOsuElementMap("7k-note-holdhitobject-4", "mania-noteSH", ElementType.Image, "NoteImage3H"),
+            new QuaverOsuElementMap("7k-note-holdhitobject-5", "mania-note1H", ElementType.Image, "NoteImage4H"),
+            new QuaverOsuElementMap("7k-note-holdhitobject-6", "mania-note2H", ElementType.Image, "NoteImage5H"),
+            new QuaverOsuElementMap("7k-note-holdhitobject-7", "mania-note1H", ElementType.Image, "NoteImage6H"),
+
             // 4k Hit Object Hold Ends
             new QuaverOsuElementMap("4k-note-holdend-1", "mania-note1T", ElementType.Image, "NoteImage0T"),
             new QuaverOsuElementMap("4k-note-holdend-2", "mania-note2T", ElementType.Image, "NoteImage1T"),

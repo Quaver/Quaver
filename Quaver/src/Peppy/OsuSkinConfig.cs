@@ -225,6 +225,27 @@ namespace Quaver.Peppy
                                 case "NoteImage6T":
                                     if (currentKeyCount == 4) Keys4Config.NoteImage6T = value; else if (currentKeyCount == 7) Keys7Config.NoteImage6T = value;
                                     break;
+                                case "NoteImage0H":
+                                    if (currentKeyCount == 4) Keys4Config.NoteImage0H = value; else if (currentKeyCount == 7) Keys7Config.NoteImage0H = value;
+                                    break;
+                                case "NoteImage1H":
+                                    if (currentKeyCount == 4) Keys4Config.NoteImage1H = value; else if (currentKeyCount == 7) Keys7Config.NoteImage1H = value;
+                                    break;
+                                case "NoteImage2H":
+                                    if (currentKeyCount == 4) Keys4Config.NoteImage2H = value; else if (currentKeyCount == 7) Keys7Config.NoteImage2H = value;
+                                    break;
+                                case "NoteImage3H":
+                                    if (currentKeyCount == 4) Keys4Config.NoteImage3H = value; else if (currentKeyCount == 7) Keys7Config.NoteImage3H = value;
+                                    break;
+                                case "NoteImage4H":
+                                    if (currentKeyCount == 4) Keys4Config.NoteImage4H = value; else if (currentKeyCount == 7) Keys7Config.NoteImage4H = value;
+                                    break;
+                                case "NoteImage5H":
+                                    if (currentKeyCount == 4) Keys4Config.NoteImage5H = value; else if (currentKeyCount == 7) Keys7Config.NoteImage5H = value;
+                                    break;
+                                case "NoteImage6H":
+                                    if (currentKeyCount == 4) Keys4Config.NoteImage6H = value; else if (currentKeyCount == 7) Keys7Config.NoteImage6H = value;
+                                    break;
                             }
                             break;
                     }
@@ -285,5 +306,12 @@ namespace Quaver.Peppy
         public string NoteImage4T;
         public string NoteImage5T;
         public string NoteImage6T;
+        public string NoteImage0H;
+        public string NoteImage1H;
+        public string NoteImage2H;
+        public string NoteImage3H;
+        public string NoteImage4H;
+        public string NoteImage5H;
+        public string NoteImage6H;
     }
 }
