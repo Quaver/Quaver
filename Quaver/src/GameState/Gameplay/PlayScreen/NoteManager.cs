@@ -224,7 +224,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     HitObjectPool.Add(newObject);
             }
 
-            Logger.Log("Done loading HitObjects", LogColors.GameInfo);
+            Logger.LogSuccess("Finished loading HitObjects", LogType.Runtime);
         }
 
         /// <summary>

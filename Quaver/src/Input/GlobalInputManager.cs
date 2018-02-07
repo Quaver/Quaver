@@ -128,21 +128,21 @@ namespace Quaver.Input
 
                 // Change the master volume based on the new config value.
                 SongManager.ChangeMasterVolume();
-                Logger.Log($"VolumeGlobal Changed To: {Config.Configuration.VolumeGlobal}", LogColors.GameInfo);
+                Logger.LogInfo($"VolumeGlobal Changed To: {Configuration.VolumeGlobal}", LogType.Runtime);
             }
             // Lower volume if the user scrolls down
             else if (GameBase.MouseState.ScrollWheelValue < LastScrollWheelValue 
                 && (GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) || GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt)) 
-                && Config.Configuration.VolumeGlobal > 0)
+                && Configuration.VolumeGlobal > 0)
             {
-                Config.Configuration.VolumeGlobal -= 5;
+                Configuration.VolumeGlobal -= 5;
 
                 // Set the last scroll wheel value
                 LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
 
                 // Change the master volume based on the new config value.
                 SongManager.ChangeMasterVolume();
-                Logger.Log($"VolumeGlobal Changed To: {Config.Configuration.VolumeGlobal}", LogColors.GameInfo);
+                Logger.LogInfo($"VolumeGlobal Changed To: {Configuration.VolumeGlobal}", LogType.Runtime);
             }
         }
 
@@ -177,13 +177,13 @@ namespace Quaver.Input
             if (CurrentlyTakingScreenshot)
                 return;
 
-            if (!GameBase.KeyboardState.IsKeyDown(Config.Configuration.KeyTakeScreenshot))
+            if (!GameBase.KeyboardState.IsKeyDown(Configuration.KeyTakeScreenshot))
                 return;
 
             CurrentlyTakingScreenshot = true;
 
             // Play screenshot sound effect
-            GameBase.LoadedSkin.SoundScreenshot.Play((float) Config.Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+            GameBase.LoadedSkin.SoundScreenshot.Play(GameBase.SoundEffectVolume, 0, 0);
 
             // Create path for file
             var path = Config.Configuration.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyy-MM-dd HHmmssfff") + ".jpg";
@@ -201,7 +201,7 @@ namespace Quaver.Input
 
                 // Save the screenshot
                 bitmap.Save(path, ImageFormat.Jpeg);
-                Logger.Log($"Screenshot taken. Saved at: {path}", Color.Pink);
+                Logger.LogSuccess($"Screenshot taken. Saved at: {path}", LogType.Runtime);
             }
         }
     }
