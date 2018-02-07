@@ -232,7 +232,7 @@ namespace Quaver.Peppy
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
     }

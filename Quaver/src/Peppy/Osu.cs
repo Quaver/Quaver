@@ -246,13 +246,12 @@ namespace Quaver.Peppy
                     }
                 }
 
-                Logger.Log($".osz has been successfully converted.", LogColors.GameSuccess, 2f);
+                Logger.LogSuccess($".osz has been successfully converted.", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                Logger.Log($"Error: There was an issue converting the .osz", LogColors.GameError, 2f);
-                Logger.Log(e.Message, Color.Red);
+                Logger.LogError($"Error: There was an issue converting the .osz", LogType.Runtime);
+                Logger.LogError(e, LogType.Runtime);
             }
             // Delete the entire temp directory regardless of the outcome.
             finally
@@ -268,7 +267,7 @@ namespace Quaver.Peppy
         {
             try
             {
-                Logger.Log("Commencing .osk conversion. Please standby...", LogColors.GameInfo);
+                Logger.LogImportant("Commencing .osk conversion. Please standby...", LogType.Runtime);
 
                 // Set and create the temporary extraction path
                 var extractPath = $@"{Configuration.DataDirectory}/Temp/{Path.GetFileNameWithoutExtension(path)}/";
@@ -315,7 +314,7 @@ namespace Quaver.Peppy
                                     }
                                 }
                             }
-                            catch (Exception e) { Logger.Log(e.Message, LogColors.GameError); }
+                            catch (Exception e) { Logger.LogError(e, LogType.Runtime); }
                             break;
                         case ElementType.Image:
                             if (!File.Exists(fullPath)) continue;
@@ -375,12 +374,11 @@ namespace Quaver.Peppy
 
                 // Create the skin.ini file
                 CreateSkinIniFile(osuIni, newSkinDirPath + "/skin.ini");
-                Logger.Log("Skin conversion has completed!", LogColors.GameSuccess);
+                Logger.LogSuccess("Skin conversion has completed!", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
 
