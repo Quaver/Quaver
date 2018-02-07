@@ -571,7 +571,7 @@ namespace Quaver.GameState.Gameplay
         {
             // Play Combo-Break Sound
             if (ScoreManager.Combo >= 20)
-                GameBase.LoadedSkin.SoundComboBreak.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+                GameBase.LoadedSkin.SoundComboBreak.Play(GameBase.SoundEffectVolume, 0, 0);
 
             // Manage UI Helpers + Update Score Manager
             ScoreManager.Count(5, false, 0, CurrentSongTime * GameBase.GameClock);
@@ -602,10 +602,7 @@ namespace Quaver.GameState.Gameplay
             {
                 IntroSkipped = true;
 
-                Logger.Log("Song has been successfully skipped to 3 seconds before the first HitObject.", LogColors.GameSuccess);
-
                 // Skip to 3 seconds before the notes start
-                //SongManager.Pause();
                 SongManager.SkipTo(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + SongManager.BassDelayOffset);
                 SongManager.Play();
 
@@ -615,6 +612,11 @@ namespace Quaver.GameState.Gameplay
             }
         }
 
+        /// <summary>
+        ///     Toggles the pausing of the song and sets Discord Rich Presence
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void PauseSong(object sender, EventArgs e)
         {
             // If the game is paused, it will unpause.
@@ -622,12 +624,19 @@ namespace Quaver.GameState.Gameplay
             {
                 Paused = false;
                 SongManager.Resume();
+
+                // Set Discord Rich Presence back to the correct state
+                DiscordController.ChangeDiscordPresenceGameplay(true);
             }
             // If the game is not paused, it will pause.
             else
             {
                 Paused = true;
                 SongManager.Pause();
+
+                // Set Discord Rich Presence to a paused state
+                var rpc = $"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]";
+                DiscordController.ChangeDiscordPresence(rpc, "Paused");
             }
         }
 
@@ -640,19 +649,19 @@ namespace Quaver.GameState.Gameplay
 
             // Normal
             if (hitObject.HitSounds == 0 || (HitSounds.Normal & hitObject.HitSounds) != 0)
-                GameBase.LoadedSkin.SoundHit.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+                GameBase.LoadedSkin.SoundHit.Play(0.4f, 0, 0);
 
             // Clap
             if ((HitSounds.Clap & hitObject.HitSounds) != 0)
-                GameBase.LoadedSkin.SoundHitClap.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+                GameBase.LoadedSkin.SoundHitClap.Play(GameBase.SoundEffectVolume, 0, 0);
 
             // Whistle
             if ((HitSounds.Whistle & hitObject.HitSounds) != 0)
-                GameBase.LoadedSkin.SoundHitWhistle.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+                GameBase.LoadedSkin.SoundHitWhistle.Play(GameBase.SoundEffectVolume, 0, 0);
 
             // Finish
             if ((HitSounds.Finish & hitObject.HitSounds) != 0)
-                GameBase.LoadedSkin.SoundHitFinish.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+                GameBase.LoadedSkin.SoundHitFinish.Play(GameBase.SoundEffectVolume, 0, 0);
         }
     }
 }
