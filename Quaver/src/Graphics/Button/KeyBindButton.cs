@@ -121,9 +121,10 @@ namespace Quaver.Graphics.Button
                     }
                     UnSelect();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logger.Log("could not select key: " + e.Character, LogColors.GameWarning);
+                    Logger.LogWarning("Could not select key: " + e.Character, LogType.Runtime);
+                    Logger.LogError(ex, LogType.Runtime);
                 }
             }
         }
@@ -138,7 +139,7 @@ namespace Quaver.Graphics.Button
 
         internal override void OnClicked()
         {
-            Selected = Selected ? false : true;
+            Selected = !Selected;
             if (Selected)
             {
                 Tint = Color.LightYellow;
