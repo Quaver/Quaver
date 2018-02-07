@@ -218,8 +218,11 @@ namespace Quaver.Audio
         internal void Free()
         {
             if (Stream != 0)
+            {
                 Bass.StreamFree(Stream);
-
+                Stream = 0;
+            }
+                
             Bass.Free();
         }
     }
