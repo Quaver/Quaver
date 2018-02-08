@@ -111,6 +111,9 @@ namespace Quaver.Audio
             SetPlaybackRate();
             TogglePitch();
 
+            MasterVolume = Config.Configuration.VolumeGlobal;
+            Volume = Config.Configuration.VolumeMusic;
+
             Bass.ChannelPlay(Stream);
             HasPlayed = true;
         }
