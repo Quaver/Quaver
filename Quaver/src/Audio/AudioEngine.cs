@@ -96,7 +96,7 @@ namespace Quaver.Audio
         /// <param name="pos">The position in the audio to play at.</param>
         /// <param name="playbackRate">The rate at which to play the audio</param>
         /// <param name="pitched">Determines if the audio played is pitched relative to its playback rate</param>
-        internal void Play(int pos = 0, float playbackRate = 1.0f, bool pitched = false)
+        internal void Play(int pos = 0, bool pitched = false)
         {
             if (Stream == 0)
                 throw new AudioEngineException("You cannot play an audio stream when one is not loaded.");
@@ -127,6 +127,20 @@ namespace Quaver.Audio
                 throw new AudioEngineException("You cannot pause an audio stream if one is currently not playing.");
 
             Bass.ChannelPause(Stream);
+        }
+
+        /// <summary>
+        ///     Resumes the audio stream
+        /// </summary>
+        internal void Resume()
+        {
+           if (Stream == 0)
+                throw new AudioEngineException("You cannot resume an audio stream if one is not loaded.");
+
+           if (Bass.ChannelIsActive(Stream) != PlaybackState.Paused)
+                throw new AudioEngineException("You cannot resume an audio stream if one is currently not paused.");
+
+            Bass.ChannelPlay(Stream);
         }
 
         /// <summary>
