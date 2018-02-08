@@ -222,7 +222,7 @@ namespace Quaver
         {
             try
             {
-                Bass.Free();
+                GameBase.AudioEngine.Free();
                 DiscordRPC.Shutdown();
 
                 if (SteamAPIHelper.IsInitialized)
