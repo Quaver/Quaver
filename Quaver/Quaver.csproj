@@ -70,7 +70,6 @@
   <ItemGroup>
     <Compile Include="Resource1.Designer.cs" />
     <Compile Include="src\Audio\AudioEngine.cs" />
-    <Compile Include="src\Audio\MenuAudioPlayer.cs" />
     <Compile Include="src\Audio\SongManager.cs" />
     <Compile Include="src\Commands\CalculateDifficulty.cs" />
     <Compile Include="src\Commands\ConvertOsuSkin.cs" />
