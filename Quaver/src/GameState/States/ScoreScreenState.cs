@@ -117,7 +117,7 @@ namespace Quaver.GameState.States
             ReplayPath = $"{Configuration.Username} - {Artist} - {Title} [{DifficultyName}] ({DateTime.UtcNow})";
 
             // TODO: Add an audio fade out effect here instead of abruptly stopping it. If failed, it should abruptly stop in the play state. Not here.
-            SongManager.Stop();
+            GameBase.AudioEngine.Stop();
 
             // TODO: The failed sound should play in the play state before switching to this one, however this is ok for now.
             ApplauseInstance = (ScoreData.Failed) ? GameBase.LoadedSkin.SoundComboBreak.CreateInstance() : GameBase.LoadedSkin.SoundApplause.CreateInstance();

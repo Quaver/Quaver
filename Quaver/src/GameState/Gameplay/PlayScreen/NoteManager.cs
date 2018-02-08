@@ -93,7 +93,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             MeasureBarManager.Initialize(state);
 
             // Modifiers
-            RemoveTimeAfterMiss = (uint)(1000 * GameBase.GameClock);
+            RemoveTimeAfterMiss = (uint)(1000 * GameBase.AudioEngine.PlaybackRate);
 
             // Get Hit Position
             CurrentSvIndex = 0;
