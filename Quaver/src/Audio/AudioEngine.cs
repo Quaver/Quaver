@@ -200,6 +200,7 @@ namespace Quaver.Audio
         {
             ModManager.CheckModInconsistencies();
             Bass.ChannelSetAttribute(Stream, ChannelAttribute.Tempo, PlaybackRate * 100 - 100);
+            SetPitch();
         }
 
         /// <summary>
