@@ -43,6 +43,7 @@ namespace Quaver.GameState.Gameplay
 
         //Score tracking
         internal int Combo { get; set; }
+        internal int MaxCombo { get; set; }
         internal int ScoreTotal { get; set; }
         private int ScoreCount { get; set; }
         private int ScoreMax { get; set; }
@@ -123,6 +124,9 @@ namespace Quaver.GameState.Gameplay
 
                 //Update Combo
                 Combo++;
+
+                if (Combo > MaxCombo)
+                    MaxCombo = Combo;
             }
             //If player combo breaks, reset combo and punish multiplier
             else
@@ -188,6 +192,7 @@ namespace Quaver.GameState.Gameplay
             Accuracy = 0;
             RelativeAcc = -200;
             Combo = 0;
+            MaxCombo = 0;
             MultiplierCount = 0;
             MultiplierIndex = 0;
             ScoreTotal = 0;
