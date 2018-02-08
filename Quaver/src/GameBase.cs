@@ -136,11 +136,6 @@ namespace Quaver
         public static float WindowUIScale { get; set; } = WindowRectangle.Height / ReferenceResolution.Y; //TODO: Automatically set this rectangle as windoow size through method
 
         /// <summary>
-        ///     The game's clock. Essentially it controls which speed songs are played at.
-        /// </summary>
-        public static float GameClock { get; set; } = 1.0f;
-
-        /// <summary>
         ///     The score multiplier for the game. Controls how many points the game score will be 
         ///     multiplied by.
         /// </summary>
