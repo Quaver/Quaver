@@ -83,9 +83,6 @@ namespace Quaver.GameState.States
             if (GameBase.CurrentGameModifiers.Count > 0)
                 ModManager.RemoveSpeedMods();
 
-            // Initialize the main menu's audio player.
-            MenuAudioPlayer.Initialize();
-
             // Set Discord RP
             DiscordController.ChangeDiscordPresence("Main Menu", "In the menus");
 
@@ -102,10 +99,6 @@ namespace Quaver.GameState.States
             CreateQpImportButton();
             CreateMenuButtons();
             CreateQpExportButton();
-
-            // Load and change background after import
-            BackgroundManager.LoadBackground();
-            BackgroundManager.Change(GameBase.CurrentBackground);
 
             UpdateReady = true;
         }
