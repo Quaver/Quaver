@@ -63,7 +63,7 @@ namespace Quaver.Audio
         /// <summary>
         ///     The rate at which the audio stream will play at.
         /// </summary>
-        internal float PlaybackRate => GameBase.GameClock;
+        internal float PlaybackRate = 1.0f;
 
         /// <summary>
         ///     Constructor - Intitializes BASS.
@@ -77,15 +77,15 @@ namespace Quaver.Audio
         /// <summary>
         ///     Loads an AudioStream
         /// </summary>
-        internal void Load(string path)
+        internal void Load()
         {
             if (Stream != 0)
                 Dispose();
 
-            if (!File.Exists(path))
-                throw new AudioEngineException($"The audio file: {path} could not be found.");
+            if (!File.Exists(GameBase.CurrentAudioPath))
+                throw new AudioEngineException($"The audio file: {GameBase.CurrentAudioPath} could not be found.");
 
-            Stream = Bass.CreateStream(path, Flags: BassFlags.Decode);
+            Stream = Bass.CreateStream(GameBase.CurrentAudioPath, Flags: BassFlags.Decode);
             Stream = BassFx.TempoCreate(Stream, BassFlags.FxFreeSource);
             Bass.ChannelAddFlag(Stream, BassFlags.AutoFree);
         }
@@ -96,7 +96,7 @@ namespace Quaver.Audio
         /// <param name="pos">The position in the audio to play at.</param>
         /// <param name="playbackRate">The rate at which to play the audio</param>
         /// <param name="pitched">Determines if the audio played is pitched relative to its playback rate</param>
-        internal void Play(int pos = 0, bool pitched = false)
+        internal void Play(int pos = 0)
         {
             if (Stream == 0)
                 throw new AudioEngineException("You cannot play an audio stream when one is not loaded.");
@@ -109,7 +109,7 @@ namespace Quaver.Audio
 
             // Set the playback rate AND THEN toggle the pitch.
             SetPlaybackRate();
-            TogglePitch(pitched);
+            TogglePitch();
 
             Bass.ChannelPlay(Stream);
             HasPlayed = true;
@@ -160,18 +160,21 @@ namespace Quaver.Audio
         /// <summary>
         ///     Toggles the pitching for the audio stream
         /// </summary>
-        internal void TogglePitch(bool pitched)
+        internal void SetPitch()
         {
-            if (pitched)
-            {
+            if (Config.Configuration.Pitched)
                 Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, Math.Log(Math.Pow(PlaybackRate, 12), 2));
-                IsPitched = true;
-            }
             else
-            {
                 Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, 0);
-                IsPitched = false;
-            }
+        }
+
+        /// <summary>
+        ///     Toggles the pitch of the audio stream on/off.
+        /// </summary>
+        internal void TogglePitch()
+        {
+            Config.Configuration.Pitched = !Config.Configuration.Pitched;
+            SetPitch();
         }
 
         /// <summary>
@@ -202,12 +205,12 @@ namespace Quaver.Audio
         /// <summary>
         ///     Reloads the audio stream
         /// </summary>
-        internal void ReloadStream(string path)
+        internal void ReloadStream()
         {
             if (Stream != 0)
                 Dispose();
 
-            Load(path);
+            Load();
         }
 
         /// <summary>
