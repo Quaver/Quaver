@@ -102,7 +102,7 @@ namespace Quaver.GameState.States
                 });
 
                 Logger.LogSuccess("Finished loading Beatmap", LogType.Runtime);
-                GameBase.SelectedBeatmap.Qua.CalculateDifficulty(GameBase.GameClock);
+                GameBase.SelectedBeatmap.Qua.CalculateDifficulty(GameBase.AudioEngine.PlaybackRate);
             }
             catch (Exception e)
             {
@@ -118,11 +118,11 @@ namespace Quaver.GameState.States
             try
             {
                 // Stop the current audio and load it again before moving onto the next state.
-                SongManager.Stop();
-                SongManager.Load();
+                GameBase.AudioEngine.Stop();
+                GameBase.AudioEngine.Load();
 
                 // Detect if the audio can't be played.
-                if (SongManager.Length < 1)
+                if (GameBase.AudioEngine.Length < 1)
                     throw new Exception("[SONG LOADING STATE] Audio file could not be loaded.");
 
                 // Get the MD5 Hash of the played map and change the state.
