@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.API.Osu;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Discord;
@@ -135,11 +136,6 @@ namespace Quaver
         public static float WindowUIScale { get; set; } = WindowRectangle.Height / ReferenceResolution.Y; //TODO: Automatically set this rectangle as windoow size through method
 
         /// <summary>
-        ///     The game's clock. Essentially it controls which speed songs are played at.
-        /// </summary>
-        public static float GameClock { get; set; } = 1.0f;
-
-        /// <summary>
         ///     The score multiplier for the game. Controls how many points the game score will be 
         ///     multiplied by.
         /// </summary>
@@ -201,6 +197,40 @@ namespace Quaver
         ///     The volume of sound effects
         /// </summary>
         public static float SoundEffectVolume { get; set; }
+
+        /// <summary>
+        ///     Reference to the game's audio engine
+        /// </summary>
+        public static AudioEngine AudioEngine { get; set; } = new AudioEngine();
+
+        /// <summary>
+        ///     The current path of the selected map's audio file
+        /// </summary>
+        public static string CurrentAudioPath {
+            get
+            {
+                if (SelectedBeatmap.IsOsuMap)
+                    return OsuSongsFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
+
+                return Configuration.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
+            }
+        }
+
+        /// <summary>
+        ///     The current path of the selected map's background path.
+        /// </summary>
+        public static string CurrentBackgroundPath
+        {
+            get
+            {
+                if (!SelectedBeatmap.IsOsuMap)
+                    return Configuration.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.BackgroundPath;
+
+                // Parse the map and get the background
+                var osu = new PeppyBeatmap(OsuSongsFolder + SelectedBeatmap.Directory + "/" + SelectedBeatmap.Path);
+                return $@"{OsuSongsFolder}/{SelectedBeatmap.Directory}/{osu.Background}";
+            }
+        }
 
         /// <summary>
         ///     This method changes the window to match configuration settings

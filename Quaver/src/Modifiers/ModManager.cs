@@ -113,7 +113,7 @@ namespace Quaver.Modifiers
 
             // Reset all GameBase variables to its defaults
             GameBase.ScoreMultiplier = 1.0f;
-            GameBase.GameClock = 1.0f;
+            GameBase.AudioEngine.PlaybackRate= 1.0f;
         }
 
         /// <summary>
@@ -124,8 +124,7 @@ namespace Quaver.Modifiers
             try
             {
                 GameBase.CurrentGameModifiers.RemoveAll(x => x.Type == ModType.Speed);
-                GameBase.GameClock = 1.0f;
-                SongManager.ChangeSongSpeed();
+                GameBase.AudioEngine.SetPlaybackRate();
 
                 Logger.LogSuccess($"Removed Speed Mods from the current game modifiers.", LogType.Runtime);
                 Logger.LogInfo($"Current Mods: {string.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ToString()))}", LogType.Runtime);
@@ -134,6 +133,22 @@ namespace Quaver.Modifiers
             {
                 Logger.LogError(e, LogType.Runtime);
             }
+        }
+
+        /// <summary>
+        ///     Makes sure that the speed mod selected matches up with the game clock and sets the correct one.
+        /// </summary>
+        public static void CheckModInconsistencies()
+        {
+            var mod = GameBase.CurrentGameModifiers.Find(x => x.Type == ModType.Speed);
+
+            // Re-intialize the correct mod.
+            var index = GameBase.CurrentGameModifiers.IndexOf(mod);
+
+            if (index != -1)
+                GameBase.CurrentGameModifiers[index] = new Speed(mod.ModIdentifier);
+            else
+                GameBase.AudioEngine.PlaybackRate = 1.0f;
         }
     }
 }

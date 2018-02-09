@@ -52,7 +52,7 @@ namespace Quaver.Replays
                     var frame = new ReplayFrame
                     {
                         GameTime = elapsed,
-                        SongTime = (int)SongManager.Position,
+                        SongTime = (int)GameBase.AudioEngine.Position,
                     };
 
                     // Don't capture frames if the song hasn't started yet
@@ -171,7 +171,7 @@ namespace Quaver.Replays
             {
                 var frame = new ReplayFrame
                 {
-                    SongTime = (int)(objectGroup.Key / GameBase.GameClock)
+                    SongTime = (int)(objectGroup.Key / GameBase.AudioEngine.PlaybackRate)
                 };
 
                 // Get the key press state of the current object group
@@ -204,7 +204,7 @@ namespace Quaver.Replays
                 // Add a new key up frame.
                 var frame = new ReplayFrame
                 {
-                    SongTime = (int) (objectGroup.Key / GameBase.GameClock),
+                    SongTime = (int) (objectGroup.Key / GameBase.AudioEngine.PlaybackRate),
                     KeyPressState = 0
                 };
 
