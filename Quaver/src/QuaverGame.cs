@@ -109,8 +109,8 @@ namespace Quaver
             BackgroundManager.Initialize();
 
             // Select a random beatmap if we do in fact have beatmaps.
-            if (GameBase.Mapsets.Count != 0)
-                BeatmapUtils.SelectRandomBeatmap();
+            //if (GameBase.Mapsets.Count != 0)
+            //    BeatmapUtils.SelectRandomBeatmap();
 
             // Set Render Target
             GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
