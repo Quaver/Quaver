@@ -5,6 +5,7 @@ using Quaver.Config;
 using Quaver.GameState.States;
 using Quaver.Modifiers;
 using Quaver.API.Maps;
+using Quaver.Logging;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
@@ -109,7 +110,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             if (!SongIsPlaying)
             {
                 SongIsPlaying = true;
-                GameBase.AudioEngine.Play();
+
+                try
+                {
+                    GameBase.AudioEngine.Play();
+                }
+                catch (AudioEngineException e)
+                {
+                    Logger.LogWarning("Audio file could not be played, as it probably doesn't exist!", LogType.Runtime);
+                }
             }
 
             //If song time  > song end, song is done.
