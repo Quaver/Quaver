@@ -13,7 +13,7 @@ namespace Quaver.Audio
         /// <summary>
         ///     The currently loaded audio stream
         /// </summary>
-        private static int Stream { get; set; }
+        internal static int Stream { get; private set; }
 
         /// <summary>
         ///     It's assumed that BASS has a delay when streams are being played. 
