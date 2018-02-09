@@ -238,12 +238,18 @@ namespace Quaver.GameState.States
         /// </summary>
         private void RepeatSongPreview()
         {
-            if (GameBase.AudioEngine.Position < GameBase.AudioEngine.Length)
+            if (GameBase.AudioEngine.Position < GameBase.AudioEngine.Length || AudioEngine.Stream == 0)
                 return;
 
             // Reload the audio and play at the song preview
-            GameBase.AudioEngine.ReloadStream();
-            GameBase.AudioEngine.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+            try
+            {
+                GameBase.AudioEngine.ReloadStream();
+                GameBase.AudioEngine.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+            } catch (Exception e)
+            {
+                Logger.LogError(e, LogType.Runtime);
+            }
         }
 
         /// <summary>
