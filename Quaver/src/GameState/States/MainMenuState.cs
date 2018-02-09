@@ -168,6 +168,14 @@ namespace Quaver.GameState.States
         {
             //Change to SongSelectState
             GameBase.LoadedSkin.SoundClick.Play(GameBase.SoundEffectVolume, 0, 0);
+
+            // Don't proceed to song select if the user doesn't have any mapsets.
+            if (GameBase.Mapsets.Count == 0)
+            {
+                Logger.LogImportant("Cannot go to song select with 0 loaded mapsets.", LogType.Runtime);
+                return;
+            }
+
             GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 
