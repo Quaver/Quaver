@@ -47,7 +47,12 @@ namespace Quaver.GameState.SongSelect
         {
             Boundary = new Boundary();
             CreateSongSelectButtons();
-            SelectMap((int)Math.Floor(Util.Random(0, SongSelectButtons.Count)));
+
+            if (GameBase.SelectedBeatmap == null)
+                BeatmapUtils.SelectRandomBeatmap();
+
+            // Select the currently selected map.
+            SelectMap(SongSelectButtons.FindIndex(x => x.Map == GameBase.SelectedBeatmap));
         }
 
         public void UnloadContent()
@@ -88,7 +93,7 @@ namespace Quaver.GameState.SongSelect
         {
             OrganizerSize = 50f;
             //Create buttons for every beatmap set TODO: Use beatmap set instead of beatmaps
-            foreach (var mapset in GameBase.VisibleMapsets)
+            foreach (var mapset in GameBase.Mapsets)
             {
                 //Create Song Buttons
                 foreach (var map in mapset.Beatmaps)

@@ -111,7 +111,15 @@ namespace Quaver.GameState.States
             GameBase.GameOverlay.OverlayActive = true;
 
             //Add map selected text TODO: remove later
-            Logger.Add("MapSelected", "Map Selected: " + GameBase.SelectedBeatmap.Artist + " - " + GameBase.SelectedBeatmap.Title + " [" + GameBase.SelectedBeatmap.DifficultyName + "]", Color.Yellow);
+            try
+            {
+                Logger.Add("MapSelected", "Map Selected: " + GameBase.SelectedBeatmap.Artist + " - " + GameBase.SelectedBeatmap.Title + " [" + GameBase.SelectedBeatmap.DifficultyName + "]", Color.Yellow);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, LogType.Runtime);
+            }
+
             UpdateReady = true;
         }
 
