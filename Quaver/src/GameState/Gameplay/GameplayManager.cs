@@ -232,7 +232,7 @@ namespace Quaver.GameState.Gameplay
             if (Timing.PlayingIsDone || ScoreManager.Failed)
             {
                 //Logger.Log("DONE", LogColors.GameImportant);
-                ScoreManager.PlayTimeTotal = CurrentSongTime * GameBase.GameClock;
+                ScoreManager.PlayTimeTotal = CurrentSongTime * GameBase.AudioEngine.PlaybackRate;
                 GameBase.GameStateManager.ChangeState(new ScoreScreenState(BeatmapMd5, ScoreManager, GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title, GameBase.SelectedBeatmap.DifficultyName, ReplayFrames));
             }
         }
@@ -339,7 +339,7 @@ namespace Quaver.GameState.Gameplay
                     Console.WriteLine(Playfield.ColumnLightingPosition);
 
                     // Update Note Manager
-                    NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed4k / (20f * GameBase.GameClock);
+                    NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed4k / (20f * GameBase.AudioEngine.PlaybackRate);
                     NoteManager.DownScroll = Configuration.DownScroll4k;
                     NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll4k
@@ -372,7 +372,7 @@ namespace Quaver.GameState.Gameplay
                         - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
 
                     // Update Note Manager
-                    NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed7k / (20f * GameBase.GameClock);
+                    NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed7k / (20f * GameBase.AudioEngine.PlaybackRate);
                     NoteManager.DownScroll = Configuration.DownScroll7k;
                     NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale;
                     NoteManager.HitPositionOffset = Config.Configuration.DownScroll7k
@@ -467,7 +467,7 @@ namespace Quaver.GameState.Gameplay
                     if (Math.Abs(NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime) <= ScoreManager.HitWindowPress[i])
                     {
                         // Update ScoreManager and UI if note was pressed on time
-                        ScoreManager.Count(i, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime, CurrentSongTime * GameBase.GameClock);
+                        ScoreManager.Count(i, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime, CurrentSongTime * GameBase.AudioEngine.PlaybackRate);
                         AccuracyBoxUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
                         AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
                         PlayfieldUI.UpdateJudge(i, ScoreManager.Combo, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime);
@@ -574,7 +574,7 @@ namespace Quaver.GameState.Gameplay
                 GameBase.LoadedSkin.SoundComboBreak.Play(GameBase.SoundEffectVolume, 0, 0);
 
             // Manage UI Helpers + Update Score Manager
-            ScoreManager.Count(5, false, 0, CurrentSongTime * GameBase.GameClock);
+            ScoreManager.Count(5, false, 0, CurrentSongTime * GameBase.AudioEngine.PlaybackRate);
             AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
             AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
             PlayfieldUI.UpdateJudge(5, ScoreManager.Combo);
@@ -603,11 +603,11 @@ namespace Quaver.GameState.Gameplay
                 IntroSkipped = true;
 
                 // Skip to 3 seconds before the notes start
-                SongManager.SkipTo(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + SongManager.BassDelayOffset);
-                SongManager.Play();
+                GameBase.AudioEngine.ChangeSongPosition(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset);
+                GameBase.AudioEngine.Play();
 
                 Timing.SongIsPlaying = true;
-                Timing.ActualSongTime = SongManager.Position;
+                Timing.ActualSongTime = GameBase.AudioEngine.Position;
                 DiscordController.ChangeDiscordPresenceGameplay(true);
             }
         }
@@ -623,7 +623,7 @@ namespace Quaver.GameState.Gameplay
             if (Paused)
             {
                 Paused = false;
-                SongManager.Resume();
+                GameBase.AudioEngine.Resume();
 
                 // Set Discord Rich Presence back to the correct state
                 DiscordController.ChangeDiscordPresenceGameplay(true);
@@ -632,7 +632,7 @@ namespace Quaver.GameState.Gameplay
             else
             {
                 Paused = true;
-                SongManager.Pause();
+                GameBase.AudioEngine.Pause();
 
                 // Set Discord Rich Presence to a paused state
                 var rpc = $"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]";

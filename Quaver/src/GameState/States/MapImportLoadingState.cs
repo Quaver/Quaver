@@ -80,8 +80,8 @@ namespace Quaver.GameState.States
                 BeatmapUtils.SelectRandomBeatmap();
                 BackgroundManager.LoadBackground();
                 BackgroundManager.Change(GameBase.CurrentBackground);
-                SongManager.Load();
-                SongManager.Play();
+                GameBase.AudioEngine.Load();
+                GameBase.AudioEngine.Play();
             }
             else if (newMapsets.Count > 0)
             {
@@ -95,7 +95,8 @@ namespace Quaver.GameState.States
                 BackgroundManager.LoadBackground();
                 BackgroundManager.Change(GameBase.CurrentBackground);
 
-                SongManager.ReloadSong();
+                GameBase.AudioEngine.ReloadStream();
+                GameBase.AudioEngine.Play();
 
                 DiscordController.ChangeDiscordPresence($"{GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}", "Listening");
             }

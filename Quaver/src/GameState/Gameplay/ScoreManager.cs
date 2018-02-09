@@ -219,9 +219,9 @@ namespace Quaver.GameState.Gameplay
             HealthData.Add(healthData);
 
             //Create Difficulty Curve for od
-            //var curve = (float)Math.Pow(od+1, -0.325) * GameBase.GameClock;
-            //HitWindowPress = new float[5] { 20 * GameBase.GameClock, 88 * curve, 122 * curve, 148 * curve, 214 * curve };
-            //HitWindowRelease = new float[4] { 30 * GameBase.GameClock, HitWindowPress[1]*1.35f, HitWindowPress[2] * 1.35f, HitWindowPress[3] * 1.35f };
+            //var curve = (float)Math.Pow(od+1, -0.325) * GameBase.AudioEngine.PlaybackRate;
+            //HitWindowPress = new float[5] { 20 * GameBase.AudioEngine.PlaybackRate, 88 * curve, 122 * curve, 148 * curve, 214 * curve };
+            //HitWindowRelease = new float[4] { 30 * GameBase.AudioEngine.PlaybackRate, HitWindowPress[1]*1.35f, HitWindowPress[2] * 1.35f, HitWindowPress[3] * 1.35f };
 
             //Update Hit Window
             //This is similar to stepmania J4
@@ -230,10 +230,10 @@ namespace Quaver.GameState.Gameplay
 
             for (int i = 0; i < 4; i++)
             {
-                HitWindowPress[i] = HitWindowPress[i] * GameBase.GameClock;
-                HitWindowRelease[i] = HitWindowRelease[i] * GameBase.GameClock;
+                HitWindowPress[i] = HitWindowPress[i] * GameBase.AudioEngine.PlaybackRate;
+                HitWindowRelease[i] = HitWindowRelease[i] * GameBase.AudioEngine.PlaybackRate;
             }
-            HitWindowPress[4] = HitWindowPress[4] * GameBase.GameClock;
+            HitWindowPress[4] = HitWindowPress[4] * GameBase.AudioEngine.PlaybackRate;
 
             // Calculate max score
             if (count < 150)
