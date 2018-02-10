@@ -24,6 +24,11 @@ namespace Quaver.Replays
         internal double TimeSinceLastFrame { get; set; }
 
         /// <summary>
+        ///     Keeps track of if this frame is a skip frame.
+        /// </summary>
+        internal bool IsSkipFrame { get; set; }
+
+        /// <summary>
         ///     The state of the keys during this frame.
         /// </summary>
         internal KeyPressState KeyPressState { get; set; }
