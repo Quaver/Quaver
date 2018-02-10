@@ -84,6 +84,7 @@ namespace Quaver.Replays
                     {
                         frame.IsSkipFrame = true;
                         replayFrames.Add(frame);
+                        Console.WriteLine(frame.TimeSinceLastFrame + "|" + frame.KeyPressState + "|" + combo + "|" + frame.IsSkipFrame);
                         return;
                     }
 
