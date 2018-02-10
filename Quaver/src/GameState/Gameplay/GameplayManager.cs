@@ -602,40 +602,46 @@ namespace Quaver.GameState.Gameplay
             PlayfieldUI.UpdateJudge(4, ScoreManager.Combo);
         }
 
+        /// <summary>
+        ///     Skips to 3 seconds before the first HitObject.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void SkipSong(object sender, EventArgs e)
         {
-            if (IntroSkippable && GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !IntroSkipped)
+            if (!IntroSkippable || !GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro) || IntroSkipped)
+                return;
+
+            var skipTime = GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset;
+
+            try
             {
-                IntroSkipped = true;
-                var skipTime = GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset;
+                // Add the skip frame here.
+                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ScoreManager.Combo, Timing.ActualSongTime, true);
 
+                // Skip to the time if the audio already played once. If it hasn't, then play it.
+                if (GameBase.AudioEngine.HasPlayed)
+                    GameBase.AudioEngine.ChangeSongPosition(skipTime);
+                else
+                    GameBase.AudioEngine.Play(skipTime);
+
+                // Set the actual song time to the position in the audio if it was successful.
+                Timing.ActualSongTime = GameBase.AudioEngine.Position;
+            }
+            catch (AudioEngineException ex)
+            {
+                Logger.LogWarning("Trying to skip with no audio file loaded. Still continuing..", LogType.Runtime);
+
+                // If there is no audio file, make sure the actual song time is set to the skip time.
+                var actualSongTimeOffset = 10000; // The offset between the actual song time and audio position (?)
+                Timing.ActualSongTime = skipTime + actualSongTimeOffset;
+            }
+            finally
+            {
                 // Skip to 3 seconds before the notes start
-                try
-                {
-                    // Add the skip frame here.
-                    ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ScoreManager.Combo, Timing.ActualSongTime, true);
-
-                    // Skip to the time if the audio already played once. If it hasn't, then play it.
-                    if (GameBase.AudioEngine.HasPlayed)
-                        GameBase.AudioEngine.ChangeSongPosition(skipTime);
-                    else
-                        GameBase.AudioEngine.Play(skipTime);
-
-                    // Set the actual song time to the position in the audio if it was successful.
-                    Timing.ActualSongTime = GameBase.AudioEngine.Position;
-                }
-                catch (AudioEngineException ex)
-                {
-                    Logger.LogWarning("Trying to skip with no audio file loaded. Still continuing..", LogType.Runtime);
-
-                    // If there is no audio file, make sure the actual song time is set to the skip time.
-                    Timing.ActualSongTime = skipTime;
-                }
-                finally
-                {
-                    Timing.SongIsPlaying = true;
-                    DiscordController.ChangeDiscordPresenceGameplay(true);
-                }
+                IntroSkipped = true;
+                Timing.SongIsPlaying = true;
+                DiscordController.ChangeDiscordPresenceGameplay(true);
             }
         }
 
