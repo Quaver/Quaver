@@ -38,6 +38,11 @@ namespace Quaver.GameState.SongSelect
 
         private float SelectedMapTween { get; set; } = 0;
 
+        /// <summary>
+        ///     Keeps track if this state has already been loaded. (Used for audio loading.)
+        /// </summary>
+        private bool FirstLoad { get; set; }
+
         public void Draw()
         {
             Boundary.Draw();
@@ -47,7 +52,12 @@ namespace Quaver.GameState.SongSelect
         {
             Boundary = new Boundary();
             CreateSongSelectButtons();
-            SelectMap((int)Math.Floor(Util.Random(0, SongSelectButtons.Count)));
+
+            if (GameBase.SelectedBeatmap == null)
+                BeatmapUtils.SelectRandomBeatmap();
+
+            // Select the currently selected map.
+            SelectMap(SongSelectButtons.FindIndex(x => x.Map == GameBase.SelectedBeatmap));
         }
 
         public void UnloadContent()
@@ -88,7 +98,7 @@ namespace Quaver.GameState.SongSelect
         {
             OrganizerSize = 50f;
             //Create buttons for every beatmap set TODO: Use beatmap set instead of beatmaps
-            foreach (var mapset in GameBase.VisibleMapsets)
+            foreach (var mapset in GameBase.Mapsets)
             {
                 //Create Song Buttons
                 foreach (var map in mapset.Beatmaps)
@@ -142,10 +152,17 @@ namespace Quaver.GameState.SongSelect
             Beatmap.ChangeBeatmap(map);
 
             // Only load the audio again if the new map's audio isn't the same as the old ones.
-            if (oldMapAudioPath != map.Directory + "/" + map.AudioPath)
+            if (oldMapAudioPath != map.Directory + "/" + map.AudioPath || !FirstLoad)
             {
-                GameBase.AudioEngine.ReloadStream();
-                GameBase.AudioEngine.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+                try
+                {
+                    GameBase.AudioEngine.ReloadStream();
+                    GameBase.AudioEngine.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+                    FirstLoad = true;
+                } catch (Exception e)
+                {
+                    Logger.LogWarning("User selected a map with audio that could not be loaded", LogType.Runtime);
+                }
             }
                 
             // Load background asynchronously if the backgrounds actually do differ
