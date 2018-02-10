@@ -603,8 +603,16 @@ namespace Quaver.GameState.Gameplay
                 IntroSkipped = true;
 
                 // Skip to 3 seconds before the notes start
-                GameBase.AudioEngine.ChangeSongPosition(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset);
-                GameBase.AudioEngine.Play();
+                try
+                {
+                    GameBase.AudioEngine.ChangeSongPosition(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset);
+                }
+                catch (AudioEngineException ex)
+                {
+                    // TODO: Dangerous Error, exit the map!
+                    Logger.LogError(ex, LogType.Runtime);
+                }
+                
 
                 Timing.SongIsPlaying = true;
                 Timing.ActualSongTime = GameBase.AudioEngine.Position;

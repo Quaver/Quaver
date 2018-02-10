@@ -13,7 +13,7 @@ namespace Quaver.Audio
         /// <summary>
         ///     The currently loaded audio stream
         /// </summary>
-        private static int Stream { get; set; }
+        internal static int Stream { get; private set; }
 
         /// <summary>
         ///     It's assumed that BASS has a delay when streams are being played. 
@@ -94,7 +94,7 @@ namespace Quaver.Audio
         ///     Plays the loaded audio stream.
         /// </summary>
         /// <param name="pos">The position in the audio to play at.</param>
-        /// <param name="playbackRate">The rate at which to play the audio</param>
+        /// <param name="playbackRate">The rate at which to C:\Users\DJF\Desktop\Quaver\Quaver\src\Audio\play the audio</param>
         /// <param name="pitched">Determines if the audio played is pitched relative to its playback rate</param>
         internal void Play(int pos = 0)
         {
