@@ -57,6 +57,11 @@ namespace Quaver.GameState.Gameplay
         private GameplayInputManager InputManager { get; set; }
 
         /// <summary>
+        ///     The replay helper for this instance.
+        /// </summary>
+        private ReplayHelper ReplayHelper { get; set; }
+
+        /// <summary>
         ///     Holds the list of replay frames for this state.
         /// </summary>xzx
         private List<ReplayFrame> ReplayFrames { get; set; }
@@ -114,6 +119,7 @@ namespace Quaver.GameState.Gameplay
             ParticleManager = new ParticleManager();
             ScoreManager = new ScoreManager();
             InputManager = new GameplayInputManager();
+            ReplayHelper = new ReplayHelper();
             ReplayFrames = new List<ReplayFrame>();
 
             // Initialize Gameplay
@@ -210,7 +216,7 @@ namespace Quaver.GameState.Gameplay
                 ParticleManager.Update(dt);
 
                 // Record session with Replay Helper
-                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua);
+                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ScoreManager.Combo, Timing.ActualSongTime);
             }
 
             PlayfieldUI.UpdateMultiplierBars(ScoreManager.MultiplierIndex);
