@@ -611,8 +611,16 @@ namespace Quaver.GameState.Gameplay
                 // Skip to 3 seconds before the notes start
                 try
                 {
+                    // Add the skip frame here.
                     ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ScoreManager.Combo, Timing.ActualSongTime, true);
-                    GameBase.AudioEngine.ChangeSongPosition(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset);
+
+                    var skipTime = GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset;
+
+                    // Skip to the time if the audio already played once. If it hasn't, then play it.
+                    if (GameBase.AudioEngine.HasPlayed)
+                        GameBase.AudioEngine.ChangeSongPosition(skipTime);
+                    else
+                        GameBase.AudioEngine.Play(skipTime);
                 }
                 catch (AudioEngineException ex)
                 {
