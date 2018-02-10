@@ -40,7 +40,7 @@ namespace Quaver.Replays
         /// <summary>
         ///     This adds the correct frames to replays, called every frame during gameplay
         /// </summary>
-        internal void AddReplayFrames(List<ReplayFrame> replayFrames, Qua qua, int combo, double time)
+        internal void AddReplayFrames(List<ReplayFrame> replayFrames, Qua qua, int combo, double time, bool skipFrame = false)
         {
             if (LastTask != null && !LastTask.IsCompleted)
             {
@@ -78,6 +78,14 @@ namespace Quaver.Replays
 
                     // Get the current keyboard state
                     CheckKeyboardstate(qua, frame);
+
+                    // Record frames that have skips
+                    if (skipFrame)
+                    {
+                        frame.IsSkipFrame = true;
+                        replayFrames.Add(frame);
+                        return;
+                    }
 
                     // If the last recorded combo in the replay isn't the same.
                     if (combo != LastRecordedCombo)
@@ -269,7 +277,7 @@ namespace Quaver.Replays
             //      SongTime|KeysPressed,
             var frameStr = "";
 
-            replayFrames.ForEach(x => frameStr += $"{x.SongTime}|{(int)x.KeyPressState},");
+            replayFrames.ForEach(x => frameStr += $"{x.TimeSinceLastFrame}|{(int)x.KeyPressState}|{Convert.ToInt32(x.IsSkipFrame)},");
 
             return frameStr;
         }

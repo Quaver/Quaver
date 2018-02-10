@@ -611,6 +611,7 @@ namespace Quaver.GameState.Gameplay
                 // Skip to 3 seconds before the notes start
                 try
                 {
+                    ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ScoreManager.Combo, Timing.ActualSongTime, true);
                     GameBase.AudioEngine.ChangeSongPosition(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset);
                 }
                 catch (AudioEngineException ex)
