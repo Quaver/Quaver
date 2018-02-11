@@ -158,6 +158,7 @@ namespace Quaver.Audio
             Bass.StreamFree(Stream);
 
             Stream = 0;
+            HasPlayed = false;
         }
 
         /// <summary>

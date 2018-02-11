@@ -16,12 +16,17 @@ namespace Quaver.Replays
         /// <summary>
         ///     The time in the song this replay occurred at.
         /// </summary>
-        internal int SongTime { get; set; }
+        internal double SongTime { get; set; }
 
         /// <summary>
         ///     The difference in song time of the current and last frames taken in milliseconds
         /// </summary>
-        internal int TimeSinceLastFrame { get; set; }
+        internal double TimeSinceLastFrame { get; set; }
+
+        /// <summary>
+        ///     Keeps track of if this frame is a skip frame.
+        /// </summary>
+        internal bool IsSkipFrame { get; set; }
 
         /// <summary>
         ///     The state of the keys during this frame.
