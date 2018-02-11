@@ -77,14 +77,13 @@ namespace Quaver.Replays
                     var lastKeyPressState = replayFrames.Last().KeyPressState;
 
                     // Get the current keyboard state
-                    CheckKeyboardstate(qua, frame);
+                    CheckKeyboardstate(qua, frame, skipFrame);
 
                     // Record frames that have skips
                     if (skipFrame)
                     {
                         frame.IsSkipFrame = true;
                         replayFrames.Add(frame);
-                        Console.WriteLine(frame.TimeSinceLastFrame + "|" + frame.KeyPressState + "|" + combo + "|" + frame.IsSkipFrame);
                         return;
                     }
 
@@ -112,7 +111,7 @@ namespace Quaver.Replays
         /// <summary>
         ///     Checks the keyboard state and adds it to the frame
         /// </summary>
-        private static void CheckKeyboardstate(Qua qua, ReplayFrame frame)
+        private static void CheckKeyboardstate(Qua qua, ReplayFrame frame, bool skipFrame = false)
         {
             switch (qua.Mode)
             {
@@ -159,6 +158,10 @@ namespace Quaver.Replays
                 default:
                     break;
             }
+
+            // Add the Skip key if this is a skip frame
+            if (skipFrame)
+                frame.KeyPressState = frame.KeyPressState | KeyPressState.Skip;
         }
 
         /// <summary>
@@ -278,7 +281,7 @@ namespace Quaver.Replays
             //      SongTime|KeysPressed,
             var frameStr = "";
 
-            replayFrames.ForEach(x => frameStr += $"{x.TimeSinceLastFrame}|{(int)x.KeyPressState}|{Convert.ToInt32(x.IsSkipFrame)},");
+            replayFrames.ForEach(x => frameStr += $"{x.TimeSinceLastFrame}|{(int)x.KeyPressState},");
 
             return frameStr;
         }
