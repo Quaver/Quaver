@@ -57,6 +57,11 @@ namespace Quaver.GameState.Gameplay
         private GameplayInputManager InputManager { get; set; }
 
         /// <summary>
+        ///     The replay helper for this instance.
+        /// </summary>
+        private ReplayHelper ReplayHelper { get; set; }
+
+        /// <summary>
         ///     Holds the list of replay frames for this state.
         /// </summary>xzx
         private List<ReplayFrame> ReplayFrames { get; set; }
@@ -114,6 +119,7 @@ namespace Quaver.GameState.Gameplay
             ParticleManager = new ParticleManager();
             ScoreManager = new ScoreManager();
             InputManager = new GameplayInputManager();
+            ReplayHelper = new ReplayHelper();
             ReplayFrames = new List<ReplayFrame>();
 
             // Initialize Gameplay
@@ -210,7 +216,7 @@ namespace Quaver.GameState.Gameplay
                 ParticleManager.Update(dt);
 
                 // Record session with Replay Helper
-                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua);
+                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ScoreManager.Combo, Timing.ActualSongTime);
             }
 
             PlayfieldUI.UpdateMultiplierBars(ScoreManager.MultiplierIndex);
@@ -596,26 +602,45 @@ namespace Quaver.GameState.Gameplay
             PlayfieldUI.UpdateJudge(4, ScoreManager.Combo);
         }
 
+        /// <summary>
+        ///     Skips to 3 seconds before the first HitObject.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void SkipSong(object sender, EventArgs e)
         {
-            if (IntroSkippable && GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro) && !IntroSkipped)
+            if (!IntroSkippable || !GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro) || IntroSkipped)
+                return;
+
+            var skipTime = GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset;
+
+            try
             {
-                IntroSkipped = true;
+                // Add the skip frame here.
+                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ScoreManager.Combo, Timing.ActualSongTime, true);
 
-                // Skip to 3 seconds before the notes start
-                try
-                {
-                    GameBase.AudioEngine.ChangeSongPosition(GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset);
-                }
-                catch (AudioEngineException ex)
-                {
-                    // TODO: Dangerous Error, exit the map!
-                    Logger.LogError(ex, LogType.Runtime);
-                }
-                
+                // Skip to the time if the audio already played once. If it hasn't, then play it.
+                if (GameBase.AudioEngine.HasPlayed)
+                    GameBase.AudioEngine.ChangeSongPosition(skipTime);
+                else
+                    GameBase.AudioEngine.Play(skipTime);
 
-                Timing.SongIsPlaying = true;
+                // Set the actual song time to the position in the audio if it was successful.
                 Timing.ActualSongTime = GameBase.AudioEngine.Position;
+            }
+            catch (AudioEngineException ex)
+            {
+                Logger.LogWarning("Trying to skip with no audio file loaded. Still continuing..", LogType.Runtime);
+
+                // If there is no audio file, make sure the actual song time is set to the skip time.
+                var actualSongTimeOffset = 10000; // The offset between the actual song time and audio position (?)
+                Timing.ActualSongTime = skipTime + actualSongTimeOffset;
+            }
+            finally
+            {
+                // Skip to 3 seconds before the notes start
+                IntroSkipped = true;
+                Timing.SongIsPlaying = true;
                 DiscordController.ChangeDiscordPresenceGameplay(true);
             }
         }

@@ -25,17 +25,22 @@ namespace Quaver.Replays
         //      In this case, we're going to be capturing replays at a frame rate of 60 fps.
         //      So we'll want to capture frames every 16.67ms or so.
         /// </summary>
-        internal static float ReplayFpsInterval { get; set; } = 1000 / 60;
+        internal float ReplayFpsInterval { get; set; } = 1000f / 60f;
 
         /// <summary>
         ///     The previous task.
         /// </summary>
-        internal static Task LastTask { get; set; }
+        internal Task LastTask { get; set; }
+
+        /// <summary>
+        ///     The last recorded combo 
+        /// </summary>
+        private int LastRecordedCombo { get; set; }
 
         /// <summary>
         ///     This adds the correct frames to replays, called every frame during gameplay
         /// </summary>
-        internal static void AddReplayFrames(List<ReplayFrame> ReplayFrames, Qua qua)
+        internal void AddReplayFrames(List<ReplayFrame> replayFrames, Qua qua, int combo, double time, bool skipFrame = false)
         {
             if (LastTask != null && !LastTask.IsCompleted)
             {
@@ -52,50 +57,61 @@ namespace Quaver.Replays
                     var frame = new ReplayFrame
                     {
                         GameTime = elapsed,
-                        SongTime = (int)GameBase.AudioEngine.Position,
+                        SongTime = time,
                     };
 
-                    // Don't capture frames if the song hasn't started yet
-                    if (frame.SongTime == 0)
-                        return;
-
                     // Add the first frame to the list of replay frames.
-                    if (ReplayFrames.Count == 0)
+                    if (replayFrames.Count == 0)
                     {
                         // Check keyboard state
                         CheckKeyboardstate(qua, frame);
 
-                        ReplayFrames.Add(frame);
+                        replayFrames.Add(frame);
                         return;
                     }
 
                     // Add the song time since the last frame
-                    frame.TimeSinceLastFrame = frame.SongTime - ReplayFrames.Last().SongTime;
+                    frame.TimeSinceLastFrame = frame.SongTime - replayFrames.Last().SongTime;
                     
                     // Grab the key press state of the last frame
-                    var lastKeyPressState = ReplayFrames.Last().KeyPressState;
+                    var lastKeyPressState = replayFrames.Last().KeyPressState;
 
                     // Get the current keyboard state
-                    CheckKeyboardstate(qua, frame);
+                    CheckKeyboardstate(qua, frame, skipFrame);
+
+                    // Record frames that have skips
+                    if (skipFrame)
+                    {
+                        frame.IsSkipFrame = true;
+                        replayFrames.Add(frame);
+                        return;
+                    }
+
+                    // If the last recorded combo in the replay isn't the same.
+                    if (combo != LastRecordedCombo)
+                    {
+                        LastRecordedCombo = combo;
+                        return;
+                    }
 
                     // If the press state of the current frame isn't the same as the last
                     // then this frame must be very important.
                     if (lastKeyPressState != frame.KeyPressState)
                     {
-                        ReplayFrames.Add(frame);
+                        replayFrames.Add(frame);
                         return;
                     }
 
                     // Start capturing frames at 60fps
-                    if (ReplayFrames.Count != 0 && elapsed - ReplayFrames.Last().GameTime >= ReplayFpsInterval)
-                        ReplayFrames.Add(frame);
+                    if (replayFrames.Count != 0 && elapsed - replayFrames.Last().GameTime >= ReplayFpsInterval)
+                        replayFrames.Add(frame);
                 });
         }
 
         /// <summary>
         ///     Checks the keyboard state and adds it to the frame
         /// </summary>
-        private static void CheckKeyboardstate(Qua qua, ReplayFrame frame)
+        private static void CheckKeyboardstate(Qua qua, ReplayFrame frame, bool skipFrame = false)
         {
             switch (qua.Mode)
             {
@@ -142,6 +158,10 @@ namespace Quaver.Replays
                 default:
                     break;
             }
+
+            // Add the Skip key if this is a skip frame
+            if (skipFrame)
+                frame.KeyPressState = frame.KeyPressState | KeyPressState.Skip;
         }
 
         /// <summary>
@@ -261,7 +281,7 @@ namespace Quaver.Replays
             //      SongTime|KeysPressed,
             var frameStr = "";
 
-            replayFrames.ForEach(x => frameStr += $"{x.SongTime}|{(int)x.KeyPressState},");
+            replayFrames.ForEach(x => frameStr += $"{x.TimeSinceLastFrame}|{(int)x.KeyPressState},");
 
             return frameStr;
         }
