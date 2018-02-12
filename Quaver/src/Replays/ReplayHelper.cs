@@ -60,18 +60,17 @@ namespace Quaver.Replays
                         SongTime = time,
                     };
 
-                    // Add the first frame to the list of replay frames.
+                    // Add the first frame
                     if (replayFrames.Count == 0)
                     {
-                        // Check keyboard state
-                        CheckKeyboardstate(qua, frame);
+                        frame.TimeSinceLastFrame = frame.SongTime;
+                        CheckKeyboardstate(qua, frame, skipFrame);
 
                         replayFrames.Add(frame);
-                        return;
                     }
 
-                    // Add the song time since the last frame
-                    frame.TimeSinceLastFrame = frame.SongTime - replayFrames.Last().SongTime;
+                    // Get the time since the last occurred frame.
+                    frame.TimeSinceLastFrame = frame.SongTime - replayFrames.Last().SongTime;    
                     
                     // Grab the key press state of the last frame
                     var lastKeyPressState = replayFrames.Last().KeyPressState;
@@ -281,7 +280,7 @@ namespace Quaver.Replays
             //      SongTime|KeysPressed,
             var frameStr = "";
 
-            replayFrames.ForEach(x => frameStr += $"{x.TimeSinceLastFrame}|{(int)x.KeyPressState},");
+            replayFrames.ForEach(x => frameStr += $"{x.SongTime}|{(int)x.KeyPressState},");
 
             return frameStr;
         }
