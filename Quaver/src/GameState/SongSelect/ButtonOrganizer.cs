@@ -50,7 +50,20 @@ namespace Quaver.GameState.SongSelect
         /// </summary>
         public void GenerateButtonPool()
         {
+            int targetPoolSize = (int)(40 * GameBase.WindowUIScale / GameBase.WindowRectangle.Height) + 10;
+            SongSelectButton newButton = null;
 
+            for (var i = 0; i < targetPoolSize || i < GameBase.Mapsets.Count; i++)
+            {
+                newButton = new SongSelectButton(null, GameBase.WindowUIScale)
+                {
+                    Image = GameBase.UI.BlankBox,
+                    //Alignment = Alignment.TopRight,
+                    //Position = new UDim2(-5, OrganizerSize),
+                    //Parent = Boundary
+                };
+                //todo: use index for song select button
+            }
         }
 
         /// <summary>
