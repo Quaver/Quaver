@@ -98,7 +98,6 @@ namespace Quaver.GameState.SongSelect
                     // Create the new button
                     var newButton = new SongSelectButton(map, GameBase.WindowUIScale)
                     {
-                        Map = map,
                         Image = GameBase.UI.BlankBox,
                         Alignment = Alignment.TopRight,
                         Position = new UDim2(-5, OrganizerSize),
