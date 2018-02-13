@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Quaver.GameState.SongSelect
 {
+    /// <summary>
+    ///     This class organizes the Song+Difficulty Selection Buttons
+    /// </summary>
     class ButtonOrganizer : IHelper
     {
         /// <summary>
