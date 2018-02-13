@@ -105,7 +105,7 @@
     <Compile Include="src\GameState\States\MapImportLoadingState.cs" />
     <Compile Include="src\Graphics\Button\TextInputField.cs" />
     <Compile Include="src\Graphics\Button\KeyBindButton.cs" />
-    <Compile Include="src\Graphics\Button\SongSelectButton.cs" />
+    <Compile Include="src\Graphics\Button\MapsetSelectButton.cs" />
     <Compile Include="src\Graphics\Button\TextButton.cs" />
     <Compile Include="src\Graphics\Button\BasicButton.cs" />
     <Compile Include="src\Graphics\DrawRectangle.cs" />

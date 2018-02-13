@@ -1,4 +1,6 @@
-﻿using Quaver.Graphics.Button;
+﻿using Quaver.Graphics;
+using Quaver.Graphics.Button;
+using Quaver.Graphics.Sprite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +14,16 @@ namespace Quaver.GameState.SongSelect
         /// <summary>
         ///     Reference to the list of song select buttons
         /// </summary>
-        private List<SongSelectButton> SongSelectButtons { get; set; } = new List<SongSelectButton>();
+        private List<MapsetSelectButton> SongSelectButtons { get; set; } = new List<MapsetSelectButton>();
 
         private List<EventHandler> SongSelectEvents { get; set; } = new List<EventHandler>();
+
+        private Boundary Boundary { get; set; }
+
+        /// <summary>
+        ///     Size of the button sorter. It is determined by how much buttons will be displayed on screen.
+        /// </summary>
+        private float OrganizerSize { get; set; }
 
         // Indexing
         private int SongButtonPoolSize { get; set; }
@@ -27,22 +36,23 @@ namespace Quaver.GameState.SongSelect
 
         public void Initialize(IGameState state)
         {
-            throw new NotImplementedException();
+            Boundary = new Boundary();
+            GenerateButtonPool();
         }
 
         public void UnloadContent()
         {
-            throw new NotImplementedException();
+            Boundary.Destroy();
         }
 
         public void Update(double dt)
         {
-            throw new NotImplementedException();
+            Boundary.Update(dt);
         }
 
         public void Draw()
         {
-            throw new NotImplementedException();
+            Boundary.Draw();
         }
 
         /// <summary>
@@ -51,17 +61,20 @@ namespace Quaver.GameState.SongSelect
         public void GenerateButtonPool()
         {
             int targetPoolSize = (int)(40 * GameBase.WindowUIScale / GameBase.WindowRectangle.Height) + 10;
-            SongSelectButton newButton = null;
+            MapsetSelectButton newButton = null;
 
-            for (var i = 0; i < targetPoolSize || i < GameBase.Mapsets.Count; i++)
+            for (var i = 0; i < targetPoolSize && i < GameBase.Mapsets.Count; i++)
             {
-                newButton = new SongSelectButton(null, GameBase.WindowUIScale)
+                Console.WriteLine(i + ", " + targetPoolSize + ", " + GameBase.Mapsets.Count);
+                newButton = new MapsetSelectButton(GameBase.WindowUIScale, i, GameBase.Mapsets[i])
                 {
                     Image = GameBase.UI.BlankBox,
-                    //Alignment = Alignment.TopRight,
-                    //Position = new UDim2(-5, OrganizerSize),
-                    //Parent = Boundary
+                    Alignment = Alignment.TopRight,
+                    Position = new UDim2(-5, OrganizerSize + 50 ), // todo: +50 is temp, add buffer spacing later for boundary/songselectUI overlap
+                    Parent = Boundary
                 };
+
+                OrganizerSize += newButton.SizeY;
                 //todo: use index for song select button
             }
         }
