@@ -49,7 +49,6 @@ namespace Quaver.GameState.SongSelect
         public void Initialize(IGameState state)
         {
             Boundary = new Boundary();
-            CreateSongSelectButtons();
             ButtonOrganizer.Initialize(state);
             //SelectMap((int)Math.Floor(Util.Random(0, SongSelectButtons.Count)));
         }
@@ -85,45 +84,6 @@ namespace Quaver.GameState.SongSelect
 
             ButtonOrganizer.Update(dt);
             Boundary.Update(dt);
-        }
-
-        /// <summary>
-        ///     Creates the song select buttons
-        /// </summary>
-        public void CreateSongSelectButtons()
-        {
-            /*
-            OrganizerSize = 50f;
-            //Create buttons for every Map set TODO: Use Map set instead of Maps
-            foreach (var mapset in GameBase.VisibleMapsets)
-            {
-                //Create Song Buttons
-                foreach (var map in mapset.Beatmaps)
-                {
-                    var index = SongSelectButtons.Count;
-
-                    // Create the new button
-                    var newButton = new SongSelectButton(map, GameBase.WindowUIScale)
-                    {
-                        Image = GameBase.UI.BlankBox,
-                        Alignment = Alignment.TopRight,
-                        Position = new UDim2(-5, OrganizerSize),
-                        Parent = Boundary
-                    };
-
-                    // Define event handler for the button
-                    EventHandler newEvent = (sender, e) => OnSongSelectButtonClick(sender, e, index);
-                    newButton.Clicked += newEvent;
-
-                    // Add the4 button the current list
-                    SongSelectButtons.Add(newButton);
-                    SongSelectEvents.Add(newEvent);
-
-                    // Change the Y value
-                    OrganizerSize += newButton.SizeY + 2;
-                }
-            }
-            */
         }
 
         /// <summary>

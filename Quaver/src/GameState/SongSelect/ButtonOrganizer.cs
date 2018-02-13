@@ -65,7 +65,6 @@ namespace Quaver.GameState.SongSelect
 
             for (var i = 0; i < targetPoolSize && i < GameBase.Mapsets.Count; i++)
             {
-                Console.WriteLine(i + ", " + targetPoolSize + ", " + GameBase.Mapsets.Count);
                 newButton = new MapsetSelectButton(GameBase.WindowUIScale, i, GameBase.Mapsets[i])
                 {
                     Image = GameBase.UI.BlankBox,
@@ -84,6 +83,11 @@ namespace Quaver.GameState.SongSelect
         /// </summary>
         /// <param name="amount"></param>
         public void ShiftButtonPool(int amount)
+        {
+
+        }
+
+        private void ButtonClicked(int index)
         {
 
         }
