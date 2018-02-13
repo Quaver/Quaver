@@ -103,6 +103,7 @@
     <Compile Include="src\GameState\States\ScoreScreenState.cs" />
     <Compile Include="src\GameState\States\SongSelectState.cs" />
     <Compile Include="src\GameState\States\MapImportLoadingState.cs" />
+    <Compile Include="src\Graphics\Button\MapDifficultySelectButton.cs" />
     <Compile Include="src\Graphics\Button\TextInputField.cs" />
     <Compile Include="src\Graphics\Button\KeyBindButton.cs" />
     <Compile Include="src\Graphics\Button\MapsetSelectButton.cs" />

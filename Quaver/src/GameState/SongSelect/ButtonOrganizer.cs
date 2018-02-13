@@ -16,9 +16,14 @@ namespace Quaver.GameState.SongSelect
         /// </summary>
         private List<MapsetSelectButton> SongSelectButtons { get; set; } = new List<MapsetSelectButton>();
 
+        private List<MapDifficultySelectButton> DiffSelectButtons { get; set; } = new List<MapDifficultySelectButton>();
+
         private List<EventHandler> SongSelectEvents { get; set; } = new List<EventHandler>();
 
         private Boundary Boundary { get; set; }
+
+        private int SelectedSongIndex { get; set; }
+        private int SelectedDiffIndex { get; set; }
 
         /// <summary>
         ///     Size of the button sorter. It is determined by how much buttons will be displayed on screen.
@@ -87,9 +92,16 @@ namespace Quaver.GameState.SongSelect
 
         }
 
-        private void ButtonClicked(int index)
+        private void SongSelectButtonClicked(int index)
         {
+            // if index == SelectedSongIndex, remove diff select buttons + set selected song index to null
+            SelectedSongIndex = index;
+        }
 
+        private void DiffSelectButtonClicked(int index)
+        {
+            // if index == SelectedDiffIndex, play map
+            SelectedDiffIndex = index;
         }
     }
 }
