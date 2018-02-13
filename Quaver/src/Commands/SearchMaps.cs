@@ -19,26 +19,19 @@ namespace Quaver.Commands
 
         public void Execute(string[] args)
         {
-            /*var query = string.Join(" ", args.Skip(1).ToArray());
+            var query = string.Join(" ", args.Skip(1).ToArray());
 
-            var foundMapsets = BeatmapUtils.SearchBeatmaps(GameBase.Beatmaps, query);
+            var foundMapsets = BeatmapUtils.SearchMapsets(GameBase.Mapsets, query);
 
-            var cmdString = new StringBuilder();
-            cmdString.AppendLine();
-            cmdString.AppendLine($"Found {foundMapsets.Count} mapsets for search: {query}");
-            cmdString.AppendLine();
+            Console.WriteLine($"Found {foundMapsets.Count} mapsets");
 
-            var i = 0;
-            foreach (var mapset in foundMapsets)
+            for (var i = 0; i < foundMapsets.Count; i++)
             {
-                foreach (var map in mapset.Value)
-                {
-                    cmdString.AppendLine($"[{i}] {map.Artist} - {map.Title} [{map.DifficultyName}]");
-                    i++;
-                }
-            }
+                Console.WriteLine($"[Mapset: {i}] {foundMapsets[i].Directory}");
 
-            Console.WriteLine(cmdString);*/
+                for (var j = 0; j < foundMapsets[i].Beatmaps.Count; j++)
+                    Console.WriteLine($"\t[Map: {j}] {foundMapsets[i].Beatmaps[j].Artist} - {foundMapsets[i].Beatmaps[j].Title} [{foundMapsets[i].Beatmaps[j].DifficultyName}]");
+            }
         }
     }
 }
