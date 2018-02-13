@@ -423,8 +423,21 @@ namespace Quaver.Database
                         Mode = (beatmap.CircleSize == 4) ? GameModes.Keys4 : GameModes.Keys7,
                         SongLength = beatmap.TotalTime,
                         IsOsuMap = true,
-                        BackgroundPath = ""
+                        BackgroundPath = "",      
                     };
+
+                    // Get the BPM of the osu! maps
+                    if (beatmap.TimingPoints != null)
+                    {
+                        try
+                        {
+                            newMap.Bpm = Math.Round(60000 / beatmap.TimingPoints.Find(x => x.MsPerQuarter > 0).MsPerQuarter, 0);
+                        }
+                        catch (Exception e)
+                        {
+                            newMap.Bpm = 0;
+                        }
+                    }
 
                     maps.Add(newMap);
                 }
