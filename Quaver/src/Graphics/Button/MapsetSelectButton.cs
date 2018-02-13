@@ -18,11 +18,11 @@ namespace Quaver.Graphics.Button
     /// <summary>
     ///     This type of button is used for simple buttons that only require a single image + text, but also includes a tint animation.
     /// </summary>
-    internal class SongSelectButton : Button
+    internal class MapsetSelectButton : Button
     {
         internal bool Selected { get; set; }
 
-        internal Beatmap Map { get; set; }
+        internal int Index { get; set; }
 
         private TextBoxSprite TitleText { get; set; }
 
@@ -52,13 +52,10 @@ namespace Quaver.Graphics.Button
         private Color CurrentTint = Color.White;
 
         //Constructor
-        internal SongSelectButton(Beatmap map, float ButtonScale)
+        internal MapsetSelectButton(float ButtonScale, int index, Mapset mapset)
         {
-            var ButtonSizeY = 40 * ButtonScale;
-            var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";
-
-            Size.Y.Offset = ButtonSizeY;
-            Size.X.Offset = ButtonSizeY * 8;
+            Size.Y.Offset = 40 * ButtonScale;
+            Size.X.Offset = 40 * ButtonScale * 8;
 
             //Load and set BG Image
             /*
@@ -75,7 +72,7 @@ namespace Quaver.Graphics.Button
 
             TitleText = new TextBoxSprite()
             {
-                Text = map.Title,
+                Text = "Song Title", //map.Title,
                 Font = Fonts.Medium48,
                 Size = new UDim2(-5 * ButtonScale, -2 * ButtonScale, 0.825f, 0.5f),
                 Position = new UDim2(-5 * ButtonScale, 2 * ButtonScale),
@@ -88,7 +85,7 @@ namespace Quaver.Graphics.Button
 
             ArtistText = new TextBoxSprite()
             {
-                Text = map.Artist + " | "+ map.Creator,
+                Text = "Song Artist | Charter", //map.Artist + " | "+ map.Creator,
                 Font = Fonts.Medium48,
                 Position = new UDim2(-5 * ButtonScale, -5 * ButtonScale),
                 Size = new UDim2(-5 * ButtonScale, -5 * ButtonScale, 0.825f, 0.5f),
@@ -101,7 +98,7 @@ namespace Quaver.Graphics.Button
 
             DiffText = new TextBoxSprite()
             {
-                Text = string.Format("{0:f2}", map.DifficultyRating),
+                Text = "00.00",//string.Format("{0:f2}", map.DifficultyRating),
                 Font = Fonts.Bold12,
                 Position = new UDim2(2 * ButtonScale, 5 * ButtonScale),
                 Size = new UDim2(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
@@ -148,6 +145,8 @@ namespace Quaver.Graphics.Button
                 Alignment = Alignment.MidRight,
                 Parent = UnderlayImage
             };
+
+            UpdateButtonMapIndex(index, mapset);
         }
 
         /// <summary>
@@ -186,6 +185,17 @@ namespace Quaver.Graphics.Button
             
             //TextSprite.Update(dt);
             base.Update(dt);
+        }
+
+        internal void UpdateButtonMapIndex(int newIndex, Mapset newMapset)
+        {
+            Index = newIndex;
+            if (newMapset.Beatmaps.Count > 0)
+            {
+                TitleText.Text = newMapset.Beatmaps[0].Title;
+                ArtistText.Text = newMapset.Beatmaps[0].Artist + " | " + newMapset.Beatmaps[0].Creator;
+            }
+            //TitleText = newMapset.
         }
     }
 }
