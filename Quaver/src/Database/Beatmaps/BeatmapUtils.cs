@@ -73,116 +73,18 @@ namespace Quaver.Database.Beatmaps
         }
 
         /// <summary>
-        ///     Searches and returns beatmaps 
+        ///     Searches and returns mapsets given a term
         /// </summary>
-        /// <param name="beatmaps"></param>
+        /// <param name="mapsets"></param>
         /// <param name="term"></param>
         /// <returns></returns>
-        internal static Dictionary<string, List<Beatmap>> SearchBeatmaps(Dictionary<string, List<Beatmap>> beatmaps, string term)
+        internal static List<Mapset> SearchMapsets(List<Mapset> mapsets, string term)
         {
-            // Lowercase which ever term comes in.
             term = term.ToLower();
 
-            // Stores the new dictionary of found maps.
-            var foundMaps = new Dictionary<string, List<Beatmap>>();
-
-            // All the possible relational operators for our search terms
-            var relationalOperators = new[] {">", "<", "=", "=="};
-            var searchOptions = new[] { "bpm", "stars", "status", "length" };
-
-            // TODO: Break apart the search term if it has any relational operators, and add advanced beatmap searching
-            foreach (var relationalOperator in relationalOperators)
-            {
-                // If the search query does in deed have a relational operator, get the word string before it and after.
-                if (term.Contains(relationalOperator))
-                {
-                    // Get the search option alone.
-                    var searchOption = term.Substring(0, term.IndexOf(relationalOperator));
-                    searchOption = searchOption.Split(' ').Last().ToLower();
-
-                    // Get the search query alone.
-                    var query = term.Substring(term.IndexOf(relationalOperator) + 1);
-                    query = query.Split(' ').First().ToLower();
-
-                    // Try to parse the query number.
-                    var queryNum = 0;
-                    try
-                    {
-                        queryNum = Int32.Parse(query);
-                    }
-                    catch (Exception e)
-                    {
-                        continue;
-                    }
-
-                    // Go through each relational operator 
-                    switch (relationalOperator)
-                    {
-                        case ">":
-                            switch (searchOption)
-                            {
-                                case "bpm":
-                                    foreach (var set in beatmaps)
-                                    {
-                                        var maps = set.Value.FindAll(x => x.Bpm > queryNum);
-
-                                        if (maps.Count > 0)
-                                            foundMaps.Add(Path.GetDirectoryName(maps[0].Path), maps);
-                                    }
-                                    break;
-                            }
-                            break;
-                        case "<":
-                            switch (searchOption)
-                            {
-                                case "bpm":
-                                    foreach (var set in beatmaps)
-                                    {
-                                        var maps = set.Value.FindAll(x => x.Bpm < queryNum);
-
-                                        if (maps.Count > 0)
-                                            foundMaps.Add(Path.GetDirectoryName(maps[0].Path), maps);
-                                    }
-                                    break;
-                            }
-                            break;
-                        case "=":
-                            switch (searchOption)
-                            {
-                                case "bpm":
-                                    foreach (var set in beatmaps)
-                                    {
-                                        var maps = set.Value.FindAll(x => Convert.ToInt32(x.Bpm) == queryNum);
-
-                                        if (maps.Count > 0)
-                                            foundMaps.Add(Path.GetDirectoryName(maps[0].Path), maps);
-                                    }
-                                    break;
-                            }
-                            break;
-                    }
-                    break;
-                }
-            }
-
-            // If we've already found maps from the search query, just return without caring about the results afterward.
-            if (foundMaps.Values.Count > 0)
-                return foundMaps;
-
-            // Find beatmaps by search term if the search query doesn't have relational operators.
-            foreach (var beatmapSet in beatmaps)
-            {
-                var maps = beatmapSet.Value.FindAll(x => x.Artist.ToLower().Contains(term) || x.Title.ToLower().Contains(term) ||
-                                                        x.Creator.ToLower().Contains(term) || x.DifficultyName.ToLower().Contains(term) ||
-                                                        x.Tags.ToLower().Contains(term) || x.Description.Contains(term) ||
-                                                        x.Source.ToLower().Contains(term));
-
-                // Add add the beatmaps to the dictionary.
-                if (maps.Count > 0)
-                    foundMaps.Add(Path.GetDirectoryName(maps[0].Path), maps);
-            }
-
-            return foundMaps;
+            return mapsets.Where(x => x.Beatmaps.Any(y => y.Artist.ToLower().Contains(term) || y.Title.ToLower().Contains(term)
+                                                          || y.Creator.ToLower().Contains(term) || y.Description.ToLower().Contains(term) ||
+                                                          y.Source.ToLower().Contains(term) || y.Tags.ToLower().Contains(term))).ToList();
         }
 
         /// <summary>
