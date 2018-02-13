@@ -143,7 +143,15 @@ namespace Quaver.Database.Beatmaps
                         continue;
 
                     // Find the parts of the original query that aren't operators
-                    // Add the set if all the comparisons are correct
+                    term = foundSearchQueries.Aggregate(term, (current, query) => current.Replace(query.Option + query.Operator + query.Value, "")).Trim();
+
+                    // Check if the term exist in any of the following properties
+                    if (!map.Artist.ToLower().Contains(term) && !map.Title.ToLower().Contains(term) &&
+                        !map.Creator.ToLower().Contains(term) && !map.Source.ToLower().Contains(term) && 
+                        !map.Description.ToLower().Contains(term) && !map.Tags.ToLower().Contains(term))
+                        continue;
+
+                    // Add the set if all the comparisons and queries are correct
                     if (sets.All(x => x.Directory != map.Directory))
                         sets.Add(new Mapset() { Directory = map.Directory, Beatmaps = new List<Beatmap> { map } });
                     else
