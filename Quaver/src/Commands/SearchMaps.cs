@@ -27,7 +27,10 @@ namespace Quaver.Commands
 
             for (var i = 0; i < foundMapsets.Count; i++)
             {
-                Console.WriteLine($"[{i}] {foundMapsets[i].Beatmaps[0].Artist} - {foundMapsets[i].Beatmaps[0].Title}");
+                Console.WriteLine($"[Mapset: {i}] {foundMapsets[i].Directory}");
+
+                for (var j = 0; j < foundMapsets[i].Beatmaps.Count; j++)
+                    Console.WriteLine($"\t[Map: {j}] {foundMapsets[i].Beatmaps[j].Artist} - {foundMapsets[i].Beatmaps[j].Title} [{foundMapsets[i].Beatmaps[j].DifficultyName}]");
             }
         }
     }
