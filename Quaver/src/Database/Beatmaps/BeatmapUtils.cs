@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ManagedBass;
 using Microsoft.Xna.Framework;
@@ -85,7 +86,7 @@ namespace Quaver.Database.Beatmaps
             term = term.ToLower();
 
             // All the possible relational operators for the search query
-            var operators = new List<string> {"<", ">", "=", "==", "<=", ">=", "!="};
+            var operators = new List<string> {">=", "<=", "==", "!=", "<", ">", "=",};
             var options = new List<string> {"bpm", "diff", "length"};
 
             // Stores a dictionary of the found pairs in the search query
@@ -95,16 +96,15 @@ namespace Quaver.Database.Beatmaps
             // Get a list of all the matching search queries
             foreach (var op in operators)
             {
-                if (!term.Contains(op))
+                if (!Regex.Match(term, $@"\b{op}\b", RegexOptions.IgnoreCase).Success)
                     continue;
 
                 // Get the search option alone.
-                var searchOption = term.Substring(0, term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase)).Split(' ').Last().ToLower();
-                float.TryParse(term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + 1).Split(' ').First().ToLower(), out var val);
+                var searchOption = term.Substring(0, term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase)).Split(' ').Last();
+                float.TryParse(term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + op.Length).Split(' ').First(), out var val);
 
                 if (options.Contains(searchOption))
-                    foundSearchQueries.Add(new SearchQuery() { Operator = op, Option = searchOption, Value = val });
-                    
+                   foundSearchQueries.Add(new SearchQuery() { Operator = op, Option = searchOption, Value = val });             
             }
 
             // Create a list of mapsets with the matched beatmaps
@@ -142,6 +142,7 @@ namespace Quaver.Database.Beatmaps
                     if (exitLoop)
                         continue;
 
+                    // Find the parts of the original query that aren't operators
                     // Add the set if all the comparisons are correct
                     if (sets.All(x => x.Directory != map.Directory))
                         sets.Add(new Mapset() { Directory = map.Directory, Beatmaps = new List<Beatmap> { map } });
