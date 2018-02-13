@@ -80,11 +80,109 @@ namespace Quaver.Database.Beatmaps
         /// <returns></returns>
         internal static List<Mapset> SearchMapsets(List<Mapset> mapsets, string term)
         {
+            var sets = new List<Mapset>();
+
             term = term.ToLower();
 
-            return mapsets.Where(x => x.Beatmaps.Any(y => y.Artist.ToLower().Contains(term) || y.Title.ToLower().Contains(term)
-                                                          || y.Creator.ToLower().Contains(term) || y.Description.ToLower().Contains(term) ||
-                                                          y.Source.ToLower().Contains(term) || y.Tags.ToLower().Contains(term))).ToList();
+            // All the possible relational operators for the search query
+            var operators = new List<string> {"<", ">", "=", "==", "<=", ">=", "!="};
+            var options = new List<string> {"bpm", "diff", "length"};
+
+            // Stores a dictionary of the found pairs in the search query
+            // <option, value, operator>
+            var foundSearchQueries = new List<SearchQuery>();
+
+            // Get a list of all the matching search queries
+            foreach (var op in operators)
+            {
+                if (!term.Contains(op))
+                    continue;
+
+                // Get the search option alone.
+                var searchOption = term.Substring(0, term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase)).Split(' ').Last().ToLower();
+                float.TryParse(term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + 1).Split(' ').First().ToLower(), out var val);
+
+                if (options.Contains(searchOption))
+                    foundSearchQueries.Add(new SearchQuery() { Operator = op, Option = searchOption, Value = val });
+                    
+            }
+
+            // Create a list of mapsets with the matched beatmaps
+            foreach (var mapset in mapsets)
+            {
+                foreach (var map in mapset.Beatmaps)
+                {
+                    var exitLoop = false;
+
+                    foreach (var searchQuery in foundSearchQueries)
+                    {
+
+                        switch (searchQuery.Option)
+                        {
+                            case "bpm":
+                                if (!CompareValues(map.Bpm, searchQuery.Value, searchQuery.Operator))
+                                    exitLoop = true;
+                                break;
+                            case "diff":
+                                if (!CompareValues(map.DifficultyRating, searchQuery.Value, searchQuery.Operator))
+                                    exitLoop = true;
+                                break;
+                            case "length":
+                                if (!CompareValues(map.SongLength, searchQuery.Value, searchQuery.Operator))
+                                    exitLoop = true;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        if (exitLoop)
+                            break;
+                    }
+
+                    if (exitLoop)
+                        continue;
+
+                    // Add the set if all the comparisons are correct
+                    if (sets.All(x => x.Directory != map.Directory))
+                        sets.Add(new Mapset() { Directory = map.Directory, Beatmaps = new List<Beatmap> { map } });
+                    else
+                        sets.Find(x => x.Directory == map.Directory).Beatmaps.Add(map);
+                }
+            }
+
+            return sets;
+        }
+
+        /// <summary>
+        ///     Compares two values and determines 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="val1"></param>
+        /// <param name="val2"></param>
+        /// <param name="operation"></param>
+        /// <returns></returns>
+        private static bool CompareValues<T>(T val1, T val2, string operation) where T : IComparable<T>
+        {
+            var compared = val1.CompareTo(val2);
+
+            switch (operation)
+            {
+                case "<":
+                    return compared < 0;
+                case ">":
+                    return compared > 0;
+                case "=":
+                case "==":
+                    return compared == 0;
+                case "<=":
+                    return compared <= 0;
+                case ">=":
+                    return compared >= 0;
+                case "!=":
+                    return compared != 0;
+                default:
+                    return false;
+            }
         }
 
         /// <summary>
@@ -131,5 +229,26 @@ namespace Quaver.Database.Beatmaps
             var log = $"RND MAP: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]";
             Logger.LogInfo(log, LogType.Runtime);
         }
+    }
+
+    /// <summary>
+    ///     A struct for the map searching method.
+    /// </summary>
+    public struct SearchQuery
+    {
+        /// <summary>
+        ///     The search option - bpm, length, etc,
+        /// </summary>
+        internal string Option;
+
+        /// <summary>
+        ///     The value the user is searching
+        /// </summary>
+        internal float Value;
+
+        /// <summary>
+        ///     The operator the user gave
+        /// </summary>
+        internal string Operator;
     }
 }
