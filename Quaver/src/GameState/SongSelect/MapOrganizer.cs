@@ -15,30 +15,18 @@ using Quaver.Utility;
 
 namespace Quaver.GameState.SongSelect
 {
+    /// <summary>
+    ///     Insert song sorting + other map organizing tools here
+    /// </summary>
     class MapOrganizer : IHelper
     {
         private ButtonOrganizer ButtonOrganizer = new ButtonOrganizer();
-
-        /// <summary>
-        ///     Reference to the list of song select buttons
-        /// </summary>
-        private List<MapsetSelectButton> SongSelectButtons { get; set; } = new List<MapsetSelectButton>();
-
-        private List<EventHandler> SongSelectEvents { get; set; } = new List<EventHandler>();
 
         private Boundary Boundary { get; set; }
 
         public bool ScrollingDisabled { get; set; }
 
         public object TogglePitch { get; private set; }
-
-        private float OrganizerSize { get; set; }
-
-        private float TargetPosition { get; set; }
-
-        private int SelectedMapIndex { get; set; } = 0;
-
-        private float SelectedMapTween { get; set; } = 0;
 
         public void Draw()
         {
@@ -57,10 +45,10 @@ namespace Quaver.GameState.SongSelect
         {
             //Logger.Log("UNLOADED", LogColors.GameError);
             ButtonOrganizer.UnloadContent();
-            for (var i=0; i<SongSelectButtons.Count; i++)
+            /*for (var i=0; i<SongSelectButtons.Count; i++)
                 SongSelectButtons[i].Clicked -= SongSelectEvents[i];
             SongSelectButtons.Clear();
-            SongSelectEvents.Clear();
+            SongSelectEvents.Clear();*/
             Boundary.Destroy();
         }
 
@@ -69,8 +57,8 @@ namespace Quaver.GameState.SongSelect
             var tween = Math.Min(dt / 70, 1);
 
             // Update Position of Boundary
-            var posDifference = Util.Tween(TargetPosition, Boundary.PosY, tween) - Boundary.PosY;
-            if (Math.Abs(posDifference) > 0.5f) Boundary.PosY += posDifference;
+            //var posDifference = Util.Tween(TargetPosition, Boundary.PosY, tween) - Boundary.PosY;
+            //if (Math.Abs(posDifference) > 0.5f) Boundary.PosY += posDifference;
 
             /* SelectedMapTween = Util.Tween(SelectedMapIndex, SelectedMapTween, tween);
             for (var i=0; i<SongSelectButtons.Count; i++)
@@ -139,21 +127,21 @@ namespace Quaver.GameState.SongSelect
 
         public void SetMapOrganizerPosition(float scale)
         {
-            TargetPosition = scale * OrganizerSize;
+            //TargetPosition = scale * OrganizerSize;
         }
 
         public void OffsetMapOrganizerPosition(float offset)
         {
-            TargetPosition += offset * 2;
+            //TargetPosition += offset * 2;
         }
 
         public void OffsetMapOrganizerIndex(int offset)
         {
-            var newIndex = SelectedMapIndex + offset;
+            /*var newIndex = SelectedMapIndex + offset;
             if (newIndex >= 0 && newIndex < SongSelectButtons.Count)
             {
                 SelectMap(newIndex);
-            }
+            }*/
         }
     }
 }
