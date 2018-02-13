@@ -17,10 +17,12 @@ namespace Quaver.GameState.SongSelect
 {
     class MapOrganizer : IHelper
     {
+        private ButtonOrganizer ButtonOrganizer = new ButtonOrganizer();
+
         /// <summary>
         ///     Reference to the list of song select buttons
         /// </summary>
-        private List<SongSelectButton> SongSelectButtons { get; set; } = new List<SongSelectButton>();
+        private List<MapsetSelectButton> SongSelectButtons { get; set; } = new List<MapsetSelectButton>();
 
         private List<EventHandler> SongSelectEvents { get; set; } = new List<EventHandler>();
 
@@ -40,6 +42,7 @@ namespace Quaver.GameState.SongSelect
 
         public void Draw()
         {
+            ButtonOrganizer.Draw();
             Boundary.Draw();
         }
 
@@ -47,12 +50,14 @@ namespace Quaver.GameState.SongSelect
         {
             Boundary = new Boundary();
             CreateSongSelectButtons();
-            SelectMap((int)Math.Floor(Util.Random(0, SongSelectButtons.Count)));
+            ButtonOrganizer.Initialize(state);
+            //SelectMap((int)Math.Floor(Util.Random(0, SongSelectButtons.Count)));
         }
 
         public void UnloadContent()
         {
             //Logger.Log("UNLOADED", LogColors.GameError);
+            ButtonOrganizer.UnloadContent();
             for (var i=0; i<SongSelectButtons.Count; i++)
                 SongSelectButtons[i].Clicked -= SongSelectEvents[i];
             SongSelectButtons.Clear();
@@ -78,6 +83,7 @@ namespace Quaver.GameState.SongSelect
 
             }*/
 
+            ButtonOrganizer.Update(dt);
             Boundary.Update(dt);
         }
 
@@ -86,6 +92,7 @@ namespace Quaver.GameState.SongSelect
         /// </summary>
         public void CreateSongSelectButtons()
         {
+            /*
             OrganizerSize = 50f;
             //Create buttons for every Map set TODO: Use Map set instead of Maps
             foreach (var mapset in GameBase.VisibleMapsets)
@@ -116,6 +123,7 @@ namespace Quaver.GameState.SongSelect
                     OrganizerSize += newButton.SizeY + 2;
                 }
             }
+            */
         }
 
         /// <summary>
@@ -128,6 +136,7 @@ namespace Quaver.GameState.SongSelect
 
         private void SelectMap(int index)
         {
+            /*
             ScrollingDisabled = true;
             var map = SongSelectButtons[index].Map;
             Logger.Update("MapSelected", "Map Selected: " + map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]");
@@ -165,7 +174,7 @@ namespace Quaver.GameState.SongSelect
                 .ContinueWith(t => Logger.Log($"Successfully loaded {t.Result.Count} local scores for this map.", LogColors.GameInfo,0.2f));
 
             //TODO: make it so scrolling is disabled until background has been loaded
-            ScrollingDisabled = false;
+            ScrollingDisabled = false;*/
         }
 
         public void SetMapOrganizerPosition(float scale)
