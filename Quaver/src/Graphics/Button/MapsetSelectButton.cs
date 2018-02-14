@@ -20,9 +20,9 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class MapsetSelectButton : Button
     {
-        internal static float BUTTON_Y_SIZE = 40.0f;
+        internal static float BUTTON_Y_SIZE = 60.0f;
 
-        internal static float BUTTON_X_RATIO = 8.0f;
+        internal static float BUTTON_X_SIZE = 460.0f;
 
         internal bool Selected { get; set; }
 
@@ -59,7 +59,7 @@ namespace Quaver.Graphics.Button
         internal MapsetSelectButton(float ButtonScale, int index, Mapset mapset)
         {
             Size.Y.Offset = BUTTON_Y_SIZE * ButtonScale;
-            Size.X.Offset = BUTTON_Y_SIZE * ButtonScale * BUTTON_X_RATIO;
+            Size.X.Offset = BUTTON_X_SIZE * ButtonScale;
 
             //Load and set BG Image
             /*
