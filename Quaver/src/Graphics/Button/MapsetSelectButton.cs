@@ -20,6 +20,10 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class MapsetSelectButton : Button
     {
+        internal static float BUTTON_Y_SIZE = 40.0f;
+
+        internal static float BUTTON_X_RATIO = 8.0f;
+
         internal bool Selected { get; set; }
 
         internal int Index { get; set; }
@@ -54,8 +58,8 @@ namespace Quaver.Graphics.Button
         //Constructor
         internal MapsetSelectButton(float ButtonScale, int index, Mapset mapset)
         {
-            Size.Y.Offset = 40 * ButtonScale;
-            Size.X.Offset = 40 * ButtonScale * 8;
+            Size.Y.Offset = BUTTON_Y_SIZE * ButtonScale;
+            Size.X.Offset = BUTTON_Y_SIZE * ButtonScale * BUTTON_X_RATIO;
 
             //Load and set BG Image
             /*
@@ -176,8 +180,8 @@ namespace Quaver.Graphics.Button
                 HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
 
             CurrentTint.R = (byte)(HoverCurrentTween * 255);
-            CurrentTint.G = (byte)(HoverCurrentTween * 255);
-            CurrentTint.B = (byte)(HoverCurrentTween * 255);
+            CurrentTint.G = (byte)(HoverCurrentTween * 155);
+            CurrentTint.B = (byte)(HoverCurrentTween * 155);
 
             Tint = CurrentTint;
             GradeImage.Tint = Tint;
