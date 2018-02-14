@@ -20,6 +20,10 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class MapDifficultySelectButton : Button
     {
+        internal static float BUTTON_Y_SIZE = 40.0f;
+
+        internal static float BUTTON_X_RATIO = 8.0f;
+
         internal bool Selected { get; set; }
 
         internal int Index { get; set; }
@@ -54,8 +58,8 @@ namespace Quaver.Graphics.Button
         //Constructor
         internal MapDifficultySelectButton(float ButtonScale, int index, Beatmap map)
         {
-            Size.Y.Offset = 40 * ButtonScale;
-            Size.X.Offset = 40 * ButtonScale * 8;
+            Size.Y.Offset = BUTTON_Y_SIZE * ButtonScale;
+            Size.X.Offset = BUTTON_Y_SIZE * ButtonScale * BUTTON_X_RATIO;
 
             //Load and set BG Image
             /*
@@ -171,11 +175,11 @@ namespace Quaver.Graphics.Button
         internal override void Update(double dt)
         {
             if (Selected)
-                HoverCurrentTween = Util.Tween(1, HoverCurrentTween, Math.Min(dt / 40, 1));
+                HoverCurrentTween = Util.Tween(1, HoverCurrentTween, Math.Min(dt / BUTTON_Y_SIZE, 1));
             else
-                HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
+                HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / BUTTON_Y_SIZE, 1));
 
-            CurrentTint.R = (byte)(HoverCurrentTween * 255);
+            CurrentTint.R = (byte)(HoverCurrentTween * 155);
             CurrentTint.G = (byte)(HoverCurrentTween * 255);
             CurrentTint.B = (byte)(HoverCurrentTween * 255);
 
