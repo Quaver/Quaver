@@ -73,7 +73,7 @@ namespace Quaver.GameState.SongSelect
         /// </summary>
         public void GenerateButtonPool()
         {
-            int targetPoolSize = (int)(GameBase.WindowRectangle.Height / (40 * GameBase.WindowUIScale)) + 10;
+            int targetPoolSize = (int)(GameBase.WindowRectangle.Height / (MapsetSelectButton.BUTTON_Y_SIZE * GameBase.WindowUIScale)) + 10;
             Console.WriteLine("Button Pool Size: "+targetPoolSize);
 
             for (var i = 0; i < targetPoolSize && i < GameBase.Mapsets.Count; i++)
@@ -131,7 +131,7 @@ namespace Quaver.GameState.SongSelect
                 {
                     Image = GameBase.UI.BlankBox,
                     Alignment = Alignment.TopRight,
-                    Position = new UDim2(-5, OrganizerSize + (GameBase.WindowUIScale * 40 * i) + 50), // todo: +50 is temp, add buffer spacing later for boundary/songselectUI overlap
+                    Position = new UDim2(-5, OrganizerSize + (GameBase.WindowUIScale * MapDifficultySelectButton.BUTTON_Y_SIZE * i) + 50), // todo: +50 is temp, add buffer spacing later for boundary/songselectUI overlap
                     Parent = Boundary
                 };
 
