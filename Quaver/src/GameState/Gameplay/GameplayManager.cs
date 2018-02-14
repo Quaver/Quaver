@@ -216,7 +216,7 @@ namespace Quaver.GameState.Gameplay
                 ParticleManager.Update(dt);
 
                 // Record session with Replay Helper
-                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ScoreManager.Combo, Timing.ActualSongTime);
+                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ScoreManager.Combo, CurrentSongTime);
             }
 
             PlayfieldUI.UpdateMultiplierBars(ScoreManager.MultiplierIndex);
@@ -443,6 +443,9 @@ namespace Quaver.GameState.Gameplay
             if (Paused)
                 return;
 
+            // Add a special replay frame for this event.
+            ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ScoreManager.Combo, CurrentSongTime);
+
             //Check for Note press/LN press
             //Reference Variables
             int noteIndex = -1;
@@ -516,6 +519,9 @@ namespace Quaver.GameState.Gameplay
             // It will not read input if the game is paused
             if (Paused)
                 return;
+
+            // Add replay frame for the key up event
+            ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ScoreManager.Combo, CurrentSongTime);
 
             //Reference Variables
             int noteIndex = -1;
@@ -617,7 +623,7 @@ namespace Quaver.GameState.Gameplay
             try
             {
                 // Add the skip frame here.
-                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ScoreManager.Combo, Timing.ActualSongTime, true);
+                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ScoreManager.Combo, CurrentSongTime, true);
 
                 // Skip to the time if the audio already played once. If it hasn't, then play it.
                 if (GameBase.AudioEngine.HasPlayed)
