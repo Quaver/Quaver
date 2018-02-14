@@ -74,6 +74,16 @@ namespace Quaver.Database.Beatmaps
         }
 
         /// <summary>
+        ///     Orders the map's beatmaps by difficulty.
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        internal static List<Mapset> OrderMapsByDifficulty(List<Mapset> mapsets)
+        {
+            mapsets.ForEach(x => x.Beatmaps = x.Beatmaps.OrderBy(y => y.DifficultyRating).ToList());
+            return mapsets;
+        }
+
         ///     Searches and returns mapsets given a term
         /// </summary>
         /// <param name="mapsets"></param>

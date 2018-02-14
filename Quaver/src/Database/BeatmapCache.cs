@@ -34,7 +34,7 @@ namespace Quaver.Database
         /// </summary>
         public static async Task LoadAndSetBeatmaps()
         {
-            GameBase.Mapsets = BeatmapUtils.OrderBeatmapsByArtist(await LoadBeatmapDatabaseAsync());
+            GameBase.Mapsets = BeatmapUtils.OrderMapsByDifficulty(BeatmapUtils.OrderBeatmapsByArtist(await LoadBeatmapDatabaseAsync()));
             GameBase.VisibleMapsets = GameBase.Mapsets;
         }
 
