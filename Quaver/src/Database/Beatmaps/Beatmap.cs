@@ -121,7 +121,7 @@ namespace Quaver.Database.Beatmaps
         /// <summary>
         ///     The most common bpm for the beatmap
         /// </summary>
-        public decimal Bpm { get; set; }
+        public double Bpm { get; set; }
 
         /// <summary>
         ///     The beatmap's length (Time of the last hit object)
