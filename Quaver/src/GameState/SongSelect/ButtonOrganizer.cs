@@ -87,7 +87,7 @@ namespace Quaver.GameState.SongSelect
                 };
 
                 var pos = i;
-                OrganizerSize += newButton.SizeY;
+                OrganizerSize += newButton.SizeY + 2; // 2 is buffer space
                 EventHandler newEvent = (sender, e) => OnSongSelectButtonClicked(sender, e, pos);
                 newButton.Clicked += newEvent;
                 SongSelectButtons.Add(newButton);
@@ -131,7 +131,7 @@ namespace Quaver.GameState.SongSelect
                 {
                     Image = GameBase.UI.BlankBox,
                     Alignment = Alignment.TopRight,
-                    Position = new UDim2(-5, OrganizerSize + (GameBase.WindowUIScale * MapDifficultySelectButton.BUTTON_Y_SIZE * i) + 50), // todo: +50 is temp, add buffer spacing later for boundary/songselectUI overlap
+                    Position = new UDim2(-5, OrganizerSize + (GameBase.WindowUIScale * (MapDifficultySelectButton.BUTTON_Y_SIZE+2) * i) + 50), // todo: +50 is temp, add buffer spacing later for boundary/songselectUI overlap
                     Parent = Boundary
                 };
 
