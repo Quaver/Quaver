@@ -8,60 +8,206 @@ using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Logging;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Enums;
+using Quaver.API.Gameplay;
 using Quaver.Config;
 using Quaver.Audio;
 
 namespace Quaver.GameState.Gameplay
 {
     /// <summary>
-    /// THIS CLASS IS IMPORTANT. This is where all the scoring will be calculated.
-    /// This class will be updated in the future in such a way that it is near impossible to be manipulated with.
+    ///     THIS CLASS IS IMPORTANT. This is where all the scoring will be calculated.  
     /// </summary>
     internal class ScoreManager
     {
-        //todo: document this crap
-        //Scroll speed
+        /// <summary>
+        ///     TODO: Document this. Not sure why scroll speed is here?
+        /// </summary>
         internal int ScrollSpeed { get; set; } = 0;
 
-        //Pausing
-        internal int TotalPauses = 0;
+        /// <summary>
+        ///     The total amount of pauses for this score
+        /// </summary>
+        internal int TotalPauses;
 
-        //Hit Timing Variables
-        internal float JudgeDifficulty { get; set; } = 10;
-
-        //Hit Tracking (Judging/Scoring)
+        /// <summary>
+        ///     The number of presses for each judge
+        /// </summary>
         internal int[] JudgePressSpread { get; private set; }
+
+        /// <summary>
+        ///     The number of releases for each judge
+        /// </summary>
         internal int[] JudgeReleaseSpread { get; private set; }
+
+        /// <summary>
+        ///     TODO: Document this.
+        /// </summary>
         internal int JudgeCount { get; set; }
 
-        //Hit Tracking (ms deviance) and other data
+        /// <summary>
+        ///     TODO: Document this.
+        /// </summary>
         internal int TotalJudgeCount { get; set; }
+
+        /// <summary>
+        ///     TODO: Document this.
+        /// </summary>
         internal double PlayTimeTotal { get; set; }
+
+        /// <summary>
+        ///     TODO: Document this.
+        /// </summary>
         internal List<GameplayData> NoteDevianceData { get; private set; }
+
+        /// <summary>
+        ///     TODO: Document this.
+        /// </summary>
         internal List<GameplayData> AccuracyData { get; private set; }
+
+        /// <summary>
+        ///     TODO: Document this.
+        /// </summary>
         internal List<GameplayData> HealthData { get; private set; }
 
-        //Score tracking
+        /// <summary>
+        ///     The current combo during gameplay
+        /// </summary>
         internal int Combo { get; set; }
+
+        /// <summary>
+        ///     The max combo the player has gotten
+        /// </summary>
         internal int MaxCombo { get; set; }
+        
+        /// <summary>
+        ///     TODO: Document this.
+        /// </summary>
         internal int ScoreTotal { get; set; }
+
+        /// <summary>
+        ///     TODO: Document this.
+        /// </summary>
         private int ScoreCount { get; set; }
+
+        /// <summary>
+        ///     TODO: Document this.
+        /// </summary>
         private int ScoreMax { get; set; }
+
+        /// <summary>
+        ///     TODO: Document this.
+        /// </summary>
         internal int MultiplierCount { get; set; }
+
+        /// <summary>
+        ///     TODO Document this.
+        /// </summary>
         internal int MultiplierIndex { get; set; }
-        internal int[] ScoreWeighting { get; } = new int[6] { 100, 50, 25, 10, 5, 0 };
 
-        //Health tracking
+        /// <summary>
+        ///     Keeps track of if this is a currently failed score
+        /// </summary>
         internal bool Failed { get; private set; }
-        internal double Health { get; private set; }
-        internal double[] HealthWeighting { get; } = new double[6] { 0.5, 0.4, 0.1, -2, -2.5, -3 };
 
-        //Accuracy Reference Variables
-        internal int[] HitWeighting { get; } = new int[6] { 100, 100, 50, -50, -100, 0 };
-        internal float[] HitWindowPress { get; private set; }
-        internal float[] HitWindowRelease { get; private set; }
-        internal int[] GradePercentage { get; } = new int[8] { 60, 70, 80, 90, 95, 99, 100, 100 };
-        internal Texture2D[] GradeImage { get; } = new Texture2D [9]{
+        /// <summary>
+        ///     The current user's health
+        /// </summary>
+        internal double Health { get; private set; }
+
+        /// <summary>
+        ///     The current accuracy the user has.
+        /// </summary>
+        internal double Accuracy { get; set; }
+
+        /// <summary>
+        ///     TODO: Document this.
+        /// </summary>
+        internal double RelativeAcc { get; set; }
+
+        /// <summary>
+        ///     The weighting in accuracy each judge gives.
+        ///     Note: The order in which they are defined is important, and it is from best to worst
+        /// </summary>
+        internal int[] HitWeighting { get; } = new int[6]
+        {
+            JudgeAccuracyWeighting.Marv,
+            JudgeAccuracyWeighting.Perf,
+            JudgeAccuracyWeighting.Great,
+            JudgeAccuracyWeighting.Good,
+            JudgeAccuracyWeighting.Okay,
+            JudgeAccuracyWeighting.Miss
+        };
+
+
+        /// <summary>
+        ///     The weighting in score each judge gives
+        ///     Note: The order in which they are defined is important, and it is from best to worst
+        /// </summary>
+        internal int[] ScoreWeighting { get; } = new int[6]
+        {
+            JudgeScoreWeighting.Marv,
+            JudgeScoreWeighting.Perf,
+            JudgeScoreWeighting.Great,
+            JudgeScoreWeighting.Good,
+            JudgeScoreWeighting.Okay,
+            JudgeScoreWeighting.Miss
+        };
+
+        /// <summary>
+        ///     The weighting in health each judge gives
+        ///     Note: The order in which they are defined is important, and it is from best to worst
+        /// </summary>
+        internal double[] HealthWeighting { get; } = new double[6]
+        {
+            JudgeHealthWeighting.Marv,
+            JudgeHealthWeighting.Perf,
+            JudgeHealthWeighting.Great,
+            JudgeHealthWeighting.Good,
+            JudgeHealthWeighting.Okay,
+            JudgeHealthWeighting.Miss
+        };
+
+        /// <summary>
+        ///     The HitWindows for Gameplay when pressing
+        ///     Note: The order in which they are defined is important, and it is from best to worst
+        /// </summary>
+        internal float[] HitWindowPress { get; } = { JudgeWindow.Marv, JudgeWindow.Perf, JudgeWindow.Great, JudgeWindow.Good, JudgeWindow.Okay };
+
+        /// <summary>
+        ///     The HinWindows for gameplay when release keys for LNs
+        ///     Note: The order in which they are defined is important, and it is from best to worst
+        /// </summary>
+        internal float[] HitWindowRelease { get; } =
+        {
+            JudgeWindow.Marv * 1.5f,
+            JudgeWindow.Perf * 1.5f,
+            JudgeWindow.Great * 1.5f,
+            JudgeWindow.Good * 1.5f,
+            JudgeWindow.Okay * 1.5f
+        };
+
+        /// <summary>
+        ///     The percentages for grades
+        ///     Note: The order in which they are defined is important, and it is from best to worst
+        /// </summary>
+        internal int[] GradePercentage { get; } = new int[]
+        {
+            GradePercentages.D,
+            GradePercentages.C,
+            GradePercentages.B,
+            GradePercentages.A,
+            GradePercentages.S,
+            GradePercentages.SS,
+            GradePercentages.X, 
+            GradePercentages.XX
+        };
+
+        /// <summary>
+        ///     Textures for the grades
+        /// </summary>
+        internal Texture2D[] GradeImage { get; } = new Texture2D []
+        {
             GameBase.LoadedSkin.GradeSmallF,
             GameBase.LoadedSkin.GradeSmallD,
             GameBase.LoadedSkin.GradeSmallC,
@@ -70,14 +216,11 @@ namespace Quaver.GameState.Gameplay
             GameBase.LoadedSkin.GradeSmallS,
             GameBase.LoadedSkin.GradeSmallSS,
             GameBase.LoadedSkin.GradeSmallX,
-            GameBase.LoadedSkin.GradeSmallXX};
-
-        //Accuracy Scoring
-        internal double Accuracy { get; set; }
-        internal double RelativeAcc { get; set; }
+            GameBase.LoadedSkin.GradeSmallXX          
+        };
 
         /// <summary>
-        /// This method is used to track and count scoring.
+        ///     This method is used to track and count scoring.
         /// </summary>
         /// <param name="index"></param>
         /// <param name="offset"></param>
@@ -187,18 +330,11 @@ namespace Quaver.GameState.Gameplay
         ///     Clear and Initialize Scoring related variables
         /// </summary>
         /// <param name="Count"> Total amount of hitobjects + releases</param>
+        /// <param name="count"></param>
         internal void Initialize(int count)
         {
-            Accuracy = 0;
             RelativeAcc = -200;
-            Combo = 0;
-            MaxCombo = 0;
-            MultiplierCount = 0;
-            MultiplierIndex = 0;
-            ScoreTotal = 0;
-            JudgeCount = 0;
             Health = 100;
-            TotalPauses = 0;
             JudgeReleaseSpread = new int[6];
             JudgePressSpread = new int[6];
             NoteDevianceData = new List<GameplayData>();
@@ -223,15 +359,6 @@ namespace Quaver.GameState.Gameplay
             };
             HealthData.Add(healthData);
 
-            //Create Difficulty Curve for od
-            //var curve = (float)Math.Pow(od+1, -0.325) * GameBase.AudioEngine.PlaybackRate;
-            //HitWindowPress = new float[5] { 20 * GameBase.AudioEngine.PlaybackRate, 88 * curve, 122 * curve, 148 * curve, 214 * curve };
-            //HitWindowRelease = new float[4] { 30 * GameBase.AudioEngine.PlaybackRate, HitWindowPress[1]*1.35f, HitWindowPress[2] * 1.35f, HitWindowPress[3] * 1.35f };
-
-            //Update Hit Window
-            //This is similar to stepmania J4
-            HitWindowPress = new float[5] { 18, 45, 80, 100, 200 };
-            HitWindowRelease = new float[4] { HitWindowPress[0] * 1.5f, HitWindowPress[1] * 1.5f, HitWindowPress[2] * 1.5f, HitWindowPress[3] * 1.5f };
 
             for (int i = 0; i < 4; i++)
             {
