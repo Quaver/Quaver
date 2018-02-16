@@ -20,9 +20,9 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class MapsetSelectButton : Button
     {
-        internal static float BUTTON_Y_SIZE = 50.0f;
+        internal static float BUTTON_Y_SIZE = 56.0f;
 
-        internal static float BUTTON_X_SIZE = 460.0f;
+        internal static float BUTTON_X_SIZE = 400.0f;
 
         internal bool Selected { get; set; }
 
@@ -31,14 +31,6 @@ namespace Quaver.Graphics.Button
         private TextBoxSprite TitleText { get; set; }
 
         private TextBoxSprite ArtistText { get; set; }
-
-        private TextBoxSprite DiffText { get; set; }
-
-        private Sprite.Sprite UnderlayImage { get; set; }
-
-        private Sprite.Sprite GameModeImage { get; set; }
-
-        private Sprite.Sprite GradeImage { get; set; }
 
         /// <summary>
         ///     Current tween value of the object. Used for animation.
@@ -78,9 +70,9 @@ namespace Quaver.Graphics.Button
             {
                 Text = "Song Title", //map.Title,
                 Font = Fonts.Medium48,
-                Size = new UDim2(-5 * ButtonScale, -2 * ButtonScale, 0.825f, 0.5f),
-                Position = new UDim2(-5 * ButtonScale, 2 * ButtonScale),
-                Alignment = Alignment.TopRight,
+                Size = new UDim2(-2 * ButtonScale, 22 * ButtonScale, 1, 0),
+                Position = new UDim2(ButtonScale, ButtonScale),
+                Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.BotLeft,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                 TextColor = Color.Black,
@@ -91,63 +83,13 @@ namespace Quaver.Graphics.Button
             {
                 Text = "Song Artist | Charter", //map.Artist + " | "+ map.Creator,
                 Font = Fonts.Medium48,
-                Position = new UDim2(-5 * ButtonScale, -5 * ButtonScale),
-                Size = new UDim2(-5 * ButtonScale, -5 * ButtonScale, 0.825f, 0.5f),
-                Alignment = Alignment.BotRight,
+                Size = new UDim2(-2 * ButtonScale, 14 * ButtonScale, 1, 0),
+                Position = new UDim2(ButtonScale, 22 * ButtonScale, 0, 0),
+                Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                 TextColor = Color.Black,
                 Parent = this
-            };
-
-            DiffText = new TextBoxSprite()
-            {
-                Text = "00.00",//string.Format("{0:f2}", map.DifficultyRating),
-                Font = Fonts.Bold12,
-                Position = new UDim2(2 * ButtonScale, 5 * ButtonScale),
-                Size = new UDim2(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
-                Alignment = Alignment.TopLeft,
-                TextAlignment = Alignment.BotRight,
-                TextBoxStyle = TextBoxStyle.ScaledSingleLine,
-                TextColor = Color.Red,
-                Parent = this
-            };
-
-            /*
-            ModeAndGradeBoundaryInner = new Boundary()
-            {
-                SizeX = 35 * ButtonScale,
-                ScaleY = 1,
-                Alignment = Alignment.MidCenter,
-                Parent = ModeAndGradeBoundaryOutter
-            };*/
-
-            UnderlayImage = new Sprite.Sprite
-            {
-                Position = new UDim2(2 * ButtonScale, -5 * ButtonScale),
-                Size = new UDim2(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
-                Alignment = Alignment.BotLeft,
-                Alpha = 0,
-                Parent = this
-            };
-            
-            GradeImage = new Sprite.Sprite()
-            {
-                Position = new UDim2(-16 * ButtonScale, 0),
-                Size = new UDim2(14 * ButtonScale, 14 * ButtonScale),
-                Alpha = 1f,
-                Image = GameBase.LoadedSkin.GradeSmallA,
-                Alignment = Alignment.MidRight,
-                Parent = UnderlayImage
-            };
-
-            GameModeImage = new Sprite.Sprite()
-            {
-                Size = new UDim2(14 * ButtonScale, 14 * ButtonScale),
-                Image = GameBase.LoadedSkin.Cursor,
-                Alpha = 0.5f,
-                Alignment = Alignment.MidRight,
-                Parent = UnderlayImage
             };
 
             UpdateButtonMapIndex(index, mapset);
@@ -184,8 +126,6 @@ namespace Quaver.Graphics.Button
             CurrentTint.B = (byte)(HoverCurrentTween * 155);
 
             Tint = CurrentTint;
-            GradeImage.Tint = Tint;
-            GameModeImage.Tint = Tint;
             
             //TextSprite.Update(dt);
             base.Update(dt);
