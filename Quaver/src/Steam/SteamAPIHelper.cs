@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Quaver.Config;
 using Quaver.Logging;
+using Quaver.Net;
 using Steamworks;
 
 namespace Quaver.Steam
@@ -26,6 +27,35 @@ namespace Quaver.Steam
         internal static bool IsInitialized { get; private set; }
 
         /// <summary>
+        ///     The Steam auth session ticket handle
+        /// </summary>
+        internal static HAuthTicket AuthSessionTicket { get; private set; }
+
+        /// <summary>
+        ///     The buffer that contains the actual session ticket
+        /// </summary>
+        internal static byte[] PTicket { get; set; }
+
+        /// <summary>
+        ///     PCB Ticket
+        /// </summary>
+        internal static uint PcbTicket;
+
+        /// <summary>
+        ///     Determines if we are connecting to the development server
+        /// </summary>
+        internal static bool ConnectingToDevServer { get; private set;  }
+
+        #region Callbacks 
+
+        /// <summary>
+        ///     The callback that will be ran when the client requests for an auth session ticket
+        /// </summary>
+        private static Callback<GetAuthSessionTicketResponse_t> GetAuthSessionTickResponse { get; set; }
+
+#endregion
+
+        /// <summary>
         ///     Initializes our Steam API Helper
         ///     This should only be initalized once at the start of the game, and 
         ///     when attempting to access online features
@@ -42,7 +72,6 @@ namespace Quaver.Steam
 
                 // Display a dialog to users to restart the game with steam
                 PromptToOpenSteam();
-
                 return;
             }
 
@@ -56,8 +85,23 @@ namespace Quaver.Steam
                 throw new Exception("The wrong .dlls were loaded for this platform!");
 
 #if DEBUG
-            Logger.LogSuccess($"[STEAM API HELPER] Logged into Steam as: {SteamFriends.GetPersonaName()} <{SteamUser.GetSteamID()}>", LogType.Runtime);
+            Logger.LogSuccess(
+                $"[STEAM API HELPER] Logged into Steam as: {SteamFriends.GetPersonaName()} <{SteamUser.GetSteamID()}>",
+                LogType.Runtime);
 #endif
+            // Initialize all Steam callbacks
+            InitializeCallbacks();
+            
+            // Auto-connect to Flamingo
+            ConnectToFlamingo();
+        }
+
+        /// <summary>
+        ///     Initializes all of the required Steam callbacks for Quaver.
+        /// </summary>
+        private static void InitializeCallbacks()
+        {
+            GetAuthSessionTickResponse = Callback<GetAuthSessionTicketResponse_t>.Create(OnValidateAuthSessionTicketResponse);
         }
 
         /// <summary>
@@ -86,7 +130,7 @@ namespace Quaver.Steam
             // Makes the game start with steam. 
             // NOTE: During development, if the steam_appid.txt file is present, then it will return false,
             // meaning that we don't need to continuously launch with steam during development.
-            if (!SteamAPI.RestartAppIfNecessary((AppId_t)ApplicationId))
+            if (!SteamAPI.RestartAppIfNecessary((AppId_t) ApplicationId))
                 return;
 
 #if DEBUG
@@ -99,6 +143,54 @@ namespace Quaver.Steam
 #endif
             // Quit game
             QuaverGame.Quit();
+        }
+
+        /// <summary>
+        ///     Connects to the Flamingo server
+        /// </summary>
+        private static void ConnectToFlamingo(bool devServer = false)
+        {
+            // Set if we're connecting to the development server
+            if (devServer)
+                ConnectingToDevServer = true;
+
+            // Make sure steam is actually open and initialized
+            PromptToOpenSteam();
+
+            // If we're still not initialized at this point, we shouldn't continue
+            if (!IsInitialized)
+                return;
+
+            // Generate an auth session token and wait for a response from Steam
+            // After calling this, it should call OnValidateAuthSessionTicketResponse(GetAuthSessionTicketResponse_t pCallback);
+            // where we will then continue to authenticate the user
+            PTicket = new byte[1024];
+            AuthSessionTicket = SteamUser.GetAuthSessionTicket(PTicket, PTicket.Length, out PcbTicket);
+        }
+
+        /// <summary>
+        ///     Called after attempting to generate an auth session ticket.
+        ///     This further connects the user to the server
+        /// </summary>
+        /// <param name="pCallback"></param>
+        private static void OnValidateAuthSessionTicketResponse(GetAuthSessionTicketResponse_t pCallback)
+        {
+            Logger.LogImportant($"Result: {pCallback.m_eResult}|{pCallback.m_hAuthTicket.m_HAuthTicket}", LogType.Runtime);
+            Logger.LogImportant($"{AuthSessionTicket.m_HAuthTicket}", LogType.Runtime);
+
+            // Make the server login request if we've received confirmation that the auth session ticket
+            // was successfully created
+            switch (pCallback.m_eResult)
+            {
+                // Send the login request to Flamingo.
+                case EResult.k_EResultOK:
+                    FlamingoClient.Connect(SteamUser.GetSteamID().ToString(), SteamFriends.GetPersonaName(), PTicket, ConnectingToDevServer);
+                    break;
+                // All error cases returned from Steam
+                default:
+                    Logger.LogError("Could not generate an auth session ticket!", LogType.Runtime);
+                    return;
+            }
         }
     }
 #endif
