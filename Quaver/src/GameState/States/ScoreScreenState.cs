@@ -376,9 +376,9 @@ namespace Quaver.GameState.States
             var mapData = $"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]";
             var accuracy = (float)Math.Round(ScoreData.Accuracy * 100, 2);
             var grade = (ScoreData.Failed) ? Grades.F : Util.GetGradeFromAccuracy(accuracy);
-            var status = (ScoreData.Failed) ? "Failed" : "Finished";
+            var status = (ScoreData.Failed) ? "Failed - " : "Finished -";
 
-            DiscordController.ChangeDiscordPresence(mapData, $"{status} - {accuracy}% - {grade.ToString()}");
+            DiscordController.ChangeDiscordPresence(mapData, $"{status} {accuracy}% {grade.ToString()} {ScoreData.MaxCombo}x");
         }
 
         /// <summary>
