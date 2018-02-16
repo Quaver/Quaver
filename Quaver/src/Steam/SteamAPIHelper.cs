@@ -67,7 +67,7 @@ namespace Quaver.Steam
         {
             if (IsInitialized)
                 return;
-            
+
             // TODO: Add an actual prompt for this.
             Console.WriteLine("Open the game with steam?");
             var choice = Console.ReadLine();

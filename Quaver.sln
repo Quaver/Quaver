@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver", "Quaver\Quaver.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver-API", "Quaver-API\Quaver-API\Quaver-API.csproj", "{0C6869BD-4E34-4C92-A853-E09F2B320601}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver-Net", "Quaver-Net\Quaver-Net\Quaver-Net.csproj", "{3BC4E002-7329-4CCB-BBC9-595167569B4C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{0C6869BD-4E34-4C92-A853-E09F2B320601}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0C6869BD-4E34-4C92-A853-E09F2B320601}.Release|x86.ActiveCfg = Release|Any CPU
 		{0C6869BD-4E34-4C92-A853-E09F2B320601}.Release|x86.Build.0 = Release|Any CPU
+		{3BC4E002-7329-4CCB-BBC9-595167569B4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BC4E002-7329-4CCB-BBC9-595167569B4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BC4E002-7329-4CCB-BBC9-595167569B4C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3BC4E002-7329-4CCB-BBC9-595167569B4C}.Debug|x86.Build.0 = Debug|Any CPU
+		{3BC4E002-7329-4CCB-BBC9-595167569B4C}.Public|Any CPU.ActiveCfg = Release|Any CPU
+		{3BC4E002-7329-4CCB-BBC9-595167569B4C}.Public|Any CPU.Build.0 = Release|Any CPU
+		{3BC4E002-7329-4CCB-BBC9-595167569B4C}.Public|x86.ActiveCfg = Release|Any CPU
+		{3BC4E002-7329-4CCB-BBC9-595167569B4C}.Public|x86.Build.0 = Release|Any CPU
+		{3BC4E002-7329-4CCB-BBC9-595167569B4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BC4E002-7329-4CCB-BBC9-595167569B4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BC4E002-7329-4CCB-BBC9-595167569B4C}.Release|x86.ActiveCfg = Release|Any CPU
+		{3BC4E002-7329-4CCB-BBC9-595167569B4C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
