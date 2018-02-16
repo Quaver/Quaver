@@ -55,6 +55,8 @@ namespace Quaver.GameState.SongSelect
 
         public void UnloadContent()
         {
+            DeleteMapDiffButtons();
+            DeleteMapsetButtons();
             Boundary.Destroy();
         }
 
@@ -118,13 +120,22 @@ namespace Quaver.GameState.SongSelect
             }
         }
 
-        private void OnSongSelectButtonClicked(object sender, EventArgs e, int index)
+        private void DeleteMapsetButtons()
         {
-            // if index == SelectedSongIndex, remove diff select buttons + set selected song index to null
-            SelectedSongIndex = index;
-            SelectedDiffIndex = 0;
-            
-            // Delete Diff Select Buttons
+            if (SongSelectButtons.Count > 0)
+            {
+                for (var i = 0; i < SongSelectButtons.Count; i++)
+                {
+                    SongSelectButtons[i].Clicked -= SongSelectEvents[i];
+                    SongSelectButtons[i].Destroy();
+                }
+                SongSelectEvents.Clear();
+                SongSelectButtons.Clear();
+            }
+        }
+
+        private void DeleteMapDiffButtons()
+        {
             if (DiffSelectButtons.Count > 0)
             {
                 for (var i = 0; i < DiffSelectButtons.Count; i++)
@@ -135,6 +146,16 @@ namespace Quaver.GameState.SongSelect
                 DiffSelectEvents.Clear();
                 DiffSelectButtons.Clear();
             }
+        }
+
+        private void OnSongSelectButtonClicked(object sender, EventArgs e, int index)
+        {
+            // if index == SelectedSongIndex, remove diff select buttons + set selected song index to null
+            SelectedSongIndex = index;
+            SelectedDiffIndex = 0;
+
+            // Delete Diff Select Buttons
+            DeleteMapDiffButtons();
 
             // Create Diff Select Buttons
             var mapset = GameBase.Mapsets[SelectedSongIndex];
