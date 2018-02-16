@@ -22,7 +22,7 @@ namespace Quaver.Graphics.Button
     {
         internal static float BUTTON_Y_SIZE = 40.0f;
 
-        internal static float BUTTON_X_SIZE = 460.0f;
+        internal static float BUTTON_X_SIZE = 400.0f;
 
         internal bool Selected { get; set; }
 
