@@ -12,6 +12,7 @@ using Steamworks;
 
 namespace Quaver.Steam
 {
+#if STEAM
     internal static class SteamAPIHelper
     {
         /// <summary>
@@ -100,4 +101,5 @@ namespace Quaver.Steam
             QuaverGame.Quit();
         }
     }
+#endif
 }
