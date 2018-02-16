@@ -20,7 +20,7 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class MapDifficultySelectButton : Button
     {
-        internal static float BUTTON_Y_SIZE = 50.0f;
+        internal static float BUTTON_Y_SIZE = 40.0f;
 
         internal static float BUTTON_X_SIZE = 460.0f;
 
@@ -28,17 +28,11 @@ namespace Quaver.Graphics.Button
 
         internal int Index { get; set; }
 
-        private TextBoxSprite TitleText { get; set; }
-
-        private TextBoxSprite ArtistText { get; set; }
-
-        private TextBoxSprite DiffText { get; set; }
-
-        private Sprite.Sprite UnderlayImage { get; set; }
-
-        private Sprite.Sprite GameModeImage { get; set; }
+        private TextBoxSprite DifficultyNameText { get; set; }
 
         private Sprite.Sprite GradeImage { get; set; }
+
+        private Sprite.Sprite DifficultyScaleImage { get; set; }
 
         /// <summary>
         ///     Current tween value of the object. Used for animation.
@@ -61,25 +55,11 @@ namespace Quaver.Graphics.Button
             Size.Y.Offset = BUTTON_Y_SIZE * ButtonScale;
             Size.X.Offset = BUTTON_X_SIZE * ButtonScale;
 
-            //Load and set BG Image
-            /*
-            Task.Run(() => {
-                try
-                {
-                    Image = ImageLoader.Load(Configuration.SongDirectory + "/" + map.Directory + "/" + map.BackgroundPath);
-                }
-                catch
-                {
-                    Exception ex;
-                }
-            });*/
-
-            TitleText = new TextBoxSprite()
+            DifficultyNameText = new TextBoxSprite()
             {
-                Text = "Song Title", //map.Title,
                 Font = Fonts.Medium48,
-                Size = new UDim2(-5 * ButtonScale, -2 * ButtonScale, 0.825f, 0.5f),
-                Position = new UDim2(-5 * ButtonScale, 2 * ButtonScale),
+                Size = new UDim2(-40 * ButtonScale, -ButtonScale, 1, 0.6f),
+                Position = new UDim2(-ButtonScale, ButtonScale),
                 Alignment = Alignment.TopRight,
                 TextAlignment = Alignment.BotLeft,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
@@ -87,67 +67,22 @@ namespace Quaver.Graphics.Button
                 Parent = this
             };
 
-            ArtistText = new TextBoxSprite()
+            DifficultyScaleImage = new Sprite.Sprite()
             {
-                Text = "Song Artist | Charter", //map.Artist + " | "+ map.Creator,
-                Font = Fonts.Medium48,
-                Position = new UDim2(-5 * ButtonScale, -5 * ButtonScale),
-                Size = new UDim2(-5 * ButtonScale, -5 * ButtonScale, 0.825f, 0.5f),
-                Alignment = Alignment.BotRight,
-                TextAlignment = Alignment.TopLeft,
-                TextBoxStyle = TextBoxStyle.ScaledSingleLine,
-                TextColor = Color.Black,
-                Parent = this
-            };
-
-            DiffText = new TextBoxSprite()
-            {
-                Text = "00.00",//string.Format("{0:f2}", map.DifficultyRating),
-                Font = Fonts.Bold12,
-                Position = new UDim2(2 * ButtonScale, 5 * ButtonScale),
-                Size = new UDim2(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
-                Alignment = Alignment.TopLeft,
-                TextAlignment = Alignment.BotRight,
-                TextBoxStyle = TextBoxStyle.ScaledSingleLine,
-                TextColor = Color.Red,
-                Parent = this
-            };
-
-            /*
-            ModeAndGradeBoundaryInner = new Boundary()
-            {
-                SizeX = 35 * ButtonScale,
-                ScaleY = 1,
-                Alignment = Alignment.MidCenter,
-                Parent = ModeAndGradeBoundaryOutter
-            };*/
-
-            UnderlayImage = new Sprite.Sprite
-            {
-                Position = new UDim2(2 * ButtonScale, -5 * ButtonScale),
-                Size = new UDim2(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
+                Size = new UDim2(-40 * ButtonScale, -ButtonScale * 2, 1, 0.4f),
+                Position = new UDim2(40 * ButtonScale, -ButtonScale * 2),
                 Alignment = Alignment.BotLeft,
-                Alpha = 0,
                 Parent = this
             };
 
             GradeImage = new Sprite.Sprite()
             {
-                Position = new UDim2(-16 * ButtonScale, 0),
-                Size = new UDim2(14 * ButtonScale, 14 * ButtonScale),
+                Position = new UDim2(ButtonScale, 0),
+                Size = new UDim2(38 * ButtonScale, 38 * ButtonScale),
                 Alpha = 1f,
                 Image = GameBase.LoadedSkin.GradeSmallA,
-                Alignment = Alignment.MidRight,
-                Parent = UnderlayImage
-            };
-
-            GameModeImage = new Sprite.Sprite()
-            {
-                Size = new UDim2(14 * ButtonScale, 14 * ButtonScale),
-                Image = GameBase.LoadedSkin.Cursor,
-                Alpha = 0.5f,
-                Alignment = Alignment.MidRight,
-                Parent = UnderlayImage
+                Alignment = Alignment.MidLeft,
+                Parent = this
             };
 
             UpdateButtonMapIndex(index, map);
@@ -184,19 +119,21 @@ namespace Quaver.Graphics.Button
             CurrentTint.B = (byte)(HoverCurrentTween * 255);
 
             Tint = CurrentTint;
-            GradeImage.Tint = Tint;
-            GameModeImage.Tint = Tint;
 
-            //TextSprite.Update(dt);
+            // temp
+            CurrentTint.R = (byte)(HoverCurrentTween * 255);
+            GradeImage.Tint = CurrentTint;
+            DifficultyScaleImage.Tint = CurrentTint;
+
             base.Update(dt);
         }
 
         internal void UpdateButtonMapIndex(int newIndex, Beatmap newMap)
         {
             Index = newIndex;
-            TitleText.Text = newMap.DifficultyName;
-            ArtistText.Text = newMap.Artist + " | " + newMap.Creator;
-            DiffText.Text = string.Format("{0:f2}", newMap.DifficultyRating);
+            DifficultyNameText.Text = newMap.DifficultyName;
+            DifficultyScaleImage.ScaleX = newMap.DifficultyRating / 30f;
+            //DiffText.Text = string.Format("{0:f2}", newMap.DifficultyRating);
         }
     }
 }

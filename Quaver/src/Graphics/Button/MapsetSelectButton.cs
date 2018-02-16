@@ -20,7 +20,7 @@ namespace Quaver.Graphics.Button
     /// </summary>
     internal class MapsetSelectButton : Button
     {
-        internal static float BUTTON_Y_SIZE = 60.0f;
+        internal static float BUTTON_Y_SIZE = 50.0f;
 
         internal static float BUTTON_X_SIZE = 460.0f;
 
