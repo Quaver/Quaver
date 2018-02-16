@@ -150,7 +150,9 @@ namespace Quaver.GameState.SongSelect
 
         private void OnSongSelectButtonClicked(object sender, EventArgs e, int index)
         {
-            // if index == SelectedSongIndex, remove diff select buttons + set selected song index to null
+            SongSelectButtons[SelectedSongIndex].Selected = false;
+            SongSelectButtons[index].Selected = true;
+
             SelectedSongIndex = index;
             SelectedDiffIndex = 0;
 
@@ -185,7 +187,8 @@ namespace Quaver.GameState.SongSelect
 
         private void OnDiffSelectButtonClicked(object sender, EventArgs e, int index)
         {
-            // if index == SelectedDiffIndex, play map
+            DiffSelectButtons[SelectedDiffIndex].Selected = false;
+            DiffSelectButtons[index].Selected = true;
             SelectedDiffIndex = index;
 
             // Select map
