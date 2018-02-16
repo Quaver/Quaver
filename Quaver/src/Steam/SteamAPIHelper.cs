@@ -46,7 +46,7 @@ namespace Quaver.Steam
         /// </summary>
         internal static bool ConnectingToDevServer { get; private set;  }
 
-        #region Callbacks 
+#region Callbacks 
 
         /// <summary>
         ///     The callback that will be ran when the client requests for an auth session ticket
@@ -184,7 +184,8 @@ namespace Quaver.Steam
             {
                 // Send the login request to Flamingo.
                 case EResult.k_EResultOK:
-                    FlamingoClient.Connect(SteamUser.GetSteamID().ToString(), SteamFriends.GetPersonaName(), PTicket, ConnectingToDevServer);
+                    Console.WriteLine("Actual Length: " + PcbTicket);
+                    FlamingoClient.Connect(SteamUser.GetSteamID().ToString(), SteamFriends.GetPersonaName(), PTicket, PcbTicket, ConnectingToDevServer);
                     break;
                 // All error cases returned from Steam
                 default:
