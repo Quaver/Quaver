@@ -24,6 +24,8 @@ namespace Quaver.Graphics.Button
 
         internal static float BUTTON_X_SIZE = 400.0f;
 
+        internal static float BUTTON_OFFSET_PADDING = BUTTON_Y_SIZE + 2.0f;
+
         internal bool Selected { get; set; }
 
         internal int Index { get; set; }
@@ -122,8 +124,8 @@ namespace Quaver.Graphics.Button
                 HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
 
             CurrentTint.R = (byte)(HoverCurrentTween * 255);
-            CurrentTint.G = (byte)(HoverCurrentTween * 155);
-            CurrentTint.B = (byte)(HoverCurrentTween * 155);
+            CurrentTint.G = (byte)(HoverCurrentTween * 255);
+            CurrentTint.B = (byte)(HoverCurrentTween * 255);
 
             Tint = CurrentTint;
             
