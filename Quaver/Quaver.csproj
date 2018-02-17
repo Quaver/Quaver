@@ -178,6 +178,7 @@
     <Compile Include="src\Scores\LocalScore.cs" />
     <Compile Include="src\Skins\Skin.cs" />
     <Compile Include="src\Steam\SteamAPIHelper.cs" />
+    <Compile Include="src\StepMania\StepManiaConverter.cs" />
     <Compile Include="src\Tests\Audio.Test.cs" />
     <Compile Include="src\Tests\Json.Test.cs" />
     <Compile Include="src\Tests\Qua.Test.cs" />
