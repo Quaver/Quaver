@@ -70,8 +70,6 @@ namespace Quaver.StepMania
                 }
             }
 
-            Console.WriteLine(ec.SongFileName);
-            Console.WriteLine(ec.Artist);
             return ec;
         }
     }
