@@ -506,8 +506,6 @@ namespace Quaver.Database
                                 Game = BeatmapGame.Etterna,
                                 BackgroundPath = etternaFile.Background,
                             });
-
-                            Console.WriteLine(chart.ChartKey);
                         }
                     }
                     catch (Exception e)
