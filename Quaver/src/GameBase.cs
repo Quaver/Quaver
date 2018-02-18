@@ -122,6 +122,13 @@ namespace Quaver
         /// </summary>
         public static string OsuSongsFolder { get; set; }
 
+        /// <summary>
+        ///     The Etterna parent folder. 
+        ///     NOTE: The Beatmap directory themselves have /songs/ already on it.
+        ///     Thank you SM guys!
+        /// </summary>
+        public static string EtternaFolder { get; set; }
+
         /*
         /// <summary>
         ///     The rectangle this game will be rendered onto
@@ -209,10 +216,17 @@ namespace Quaver
         public static string CurrentAudioPath {
             get
             {
-                if (SelectedBeatmap.IsOsuMap)
-                    return OsuSongsFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
-
-                return Configuration.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
+                switch (SelectedBeatmap.Game)
+                {
+                    case BeatmapGame.Osu:
+                        return OsuSongsFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
+                    case BeatmapGame.Quaver:
+                        return Configuration.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
+                    case BeatmapGame.Etterna:
+                        return EtternaFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
+                    default:
+                        return "";
+                }                
             }
         }
 
@@ -223,12 +237,19 @@ namespace Quaver
         {
             get
             {
-                if (!SelectedBeatmap.IsOsuMap)
-                    return Configuration.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.BackgroundPath;
-
-                // Parse the map and get the background
-                var osu = new PeppyBeatmap(OsuSongsFolder + SelectedBeatmap.Directory + "/" + SelectedBeatmap.Path);
-                return $@"{OsuSongsFolder}/{SelectedBeatmap.Directory}/{osu.Background}";
+                switch (SelectedBeatmap.Game)
+                {
+                    case BeatmapGame.Osu:
+                        // Parse the map and get the background
+                        var osu = new PeppyBeatmap(OsuSongsFolder + SelectedBeatmap.Directory + "/" + SelectedBeatmap.Path);
+                        return $@"{OsuSongsFolder}/{SelectedBeatmap.Directory}/{osu.Background}";
+                    case BeatmapGame.Quaver:
+                        return Configuration.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.BackgroundPath;
+                    case BeatmapGame.Etterna:
+                        return EtternaFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.BackgroundPath;
+                    default:
+                        return "";
+                }
             }
         }
 
