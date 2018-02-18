@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.API.StepMania;
 
 namespace Quaver.StepMania
 {
@@ -15,12 +16,17 @@ namespace Quaver.StepMania
         /// </summary>
         internal static EtternaCache ReadCacheFile(string path)
         {
-            var ec = new EtternaCache();
+            var ec = new EtternaCache() {ChartData = new List<Chart>()};
 
             var file = File.ReadAllLines(path);
 
+
             foreach (var line in file)
             {
+                // For chart data. It always starts with //----
+                if (line.StartsWith("//-----"))
+                    ec.ChartData.Add(new Chart());
+
                 if (!line.Contains("#"))
                     continue;
 
@@ -64,6 +70,18 @@ namespace Quaver.StepMania
                         break;
                     case "#STEPFILENAME":
                         ec.StepFileName = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(value));
+                        break;
+                    case "#STEPSTYPE":
+                        if (value != "dance-single")
+                            continue;
+
+                        ec.ChartData.Last().ChartType = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(value));
+                        break;
+                    case "#DIFFICULTY":
+                        ec.ChartData.Last().Difficulty = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(value));
+                        break;
+                    case "#CHARTKEY":
+                        ec.ChartData.Last().ChartKey = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(value));
                         break;
                     default:
                         break;
