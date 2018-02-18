@@ -68,7 +68,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //_activeBarObjects = new GameObject[maxNoteCount];
 
             //Add offset after the last note
-            PlayingEndOffset = GameBase.SelectedBeatmap.SongLength + (AudioEngine.BassDelayOffset - Configuration.GlobalAudioOffset + SONG_END_OFFSET) * GameBase.AudioEngine.PlaybackRate;
+            PlayingEndOffset = (float)GameBase.AudioEngine.Length + (AudioEngine.BassDelayOffset - Configuration.GlobalAudioOffset + SONG_END_OFFSET) * GameBase.AudioEngine.PlaybackRate;
 
             //Create Timing bars
             //_barQueue = new List<TimingObject>();
