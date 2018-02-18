@@ -215,6 +215,19 @@ namespace Quaver.Config
         internal static bool AutoLoadOsuBeatmaps { get => _autoLoadOsuBeatmaps; set { _autoLoadOsuBeatmaps = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
+        ///     The path of the Etterna cache folder
+        ///     NOTE: Usually located at C:\Games\Etterna\Cache\Songs
+        /// </summary>
+        private static string _etternaCacheFolderPath;
+        internal static string EtternaCacheFolderPath { get => _etternaCacheFolderPath; set { _etternaCacheFolderPath = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
+        ///     Dictates whether or not the game will be loaded with all of the Etterna maps
+        /// </summary>
+        private static bool _autoLoadEtternaCharts;
+        internal static bool AutoLoadEtternaCharts { get => _autoLoadEtternaCharts; set { _autoLoadEtternaCharts = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
         ///     The key pressed for lane 1
         /// </summary>
         private static Keys _keyMania4k1 = Keys.A;
@@ -408,6 +421,8 @@ namespace Quaver.Config
             _songDirectory = ConfigHelper.ReadDirectory(SongDirectory, data["SongDirectory"]);
             _osuDbPath = ConfigHelper.ReadPath(OsuDbPath, data["OsuDbPath"]);
             _autoLoadOsuBeatmaps = ConfigHelper.ReadBool(AutoLoadOsuBeatmaps, data["AutoLoadOsuBeatmaps"]);
+            _etternaCacheFolderPath = ConfigHelper.ReadDirectory(EtternaCacheFolderPath, data["EtternaCacheFolderPath"]);
+            _autoLoadEtternaCharts = ConfigHelper.ReadBool(AutoLoadEtternaCharts, data["AutoLoadEtternaCharts"]);
             _username = ConfigHelper.ReadString(Username, data["Username"]);
             _volumeGlobal = ConfigHelper.ReadPercentage(VolumeGlobal, data["VolumeGlobal"]);
             _volumeEffect = ConfigHelper.ReadPercentage(VolumeEffect, data["VolumeEffect"]);
