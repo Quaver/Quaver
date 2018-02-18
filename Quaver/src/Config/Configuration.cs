@@ -218,7 +218,7 @@ namespace Quaver.Config
         ///     The path of the Etterna cache folder
         ///     NOTE: Usually located at C:\Games\Etterna\Cache\Songs
         /// </summary>
-        private static string _etternaCacheFolderPath;
+        private static string _etternaCacheFolderPath = @"C:\Games\Etterna\Cache\Songs\";
         internal static string EtternaCacheFolderPath { get => _etternaCacheFolderPath; set { _etternaCacheFolderPath = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
