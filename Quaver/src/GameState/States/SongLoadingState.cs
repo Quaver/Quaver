@@ -96,10 +96,13 @@ namespace Quaver.GameState.States
                 }
 
                 // Check if the map is actually valid
-                qua.IsValidQua = Qua.CheckQuaValidity(qua);
-                if (!qua.IsValidQua)
+                if (qua != null)
+                    qua.IsValidQua = Qua.CheckQuaValidity(qua);
+
+                if (qua == null || !qua.IsValidQua)
                 {
                     Logger.LogError("Beatmap could not be loaded!", LogType.Runtime);
+                    GameBase.GameStateManager.ChangeState(new SongSelectState());
                     return;
                 }
                     
