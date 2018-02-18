@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.API.StepMania;
 
 namespace Quaver.StepMania
 {
@@ -70,5 +71,10 @@ namespace Quaver.StepMania
         ///     Another value that determines where the file is located
         /// </summary>
         internal string StepFileName { get; set; }
+
+        /// <summary>
+        ///     The data for each chart in this .sm file
+        /// </summary>
+        internal List<Chart> ChartData { get; set; }
     }
 }
