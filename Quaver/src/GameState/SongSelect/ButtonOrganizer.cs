@@ -34,6 +34,8 @@ namespace Quaver.GameState.SongSelect
         private int SelectedDiffIndex { get; set; }
         private int CurrentPoolIndex { get; set; }
 
+        private const int INDEX_OFFSET_AMOUNT = 2;
+
         /// <summary>
         ///     Size of the button sorter. It is determined by how much buttons will be displayed on screen.
         /// </summary>
@@ -47,6 +49,7 @@ namespace Quaver.GameState.SongSelect
 
         public void Initialize(IGameState state)
         {
+            Console.WriteLine(GameBase.VisibleMapsets.Count + ", " + GameBase.Mapsets.Count);
             Boundary = new Boundary();
             GenerateButtonPool();
         }
@@ -58,11 +61,18 @@ namespace Quaver.GameState.SongSelect
             Boundary.Destroy();
         }
 
-        private int prevMousePos = 0;
+        //todo: temp
+        private int prevScrollPos = 0;
+        private int curScrollPos = 0;
         public void Update(double dt)
         {
-            MoveButtonPool(GameBase.MouseState.ScrollWheelValue/4 - prevMousePos);
-            prevMousePos = GameBase.MouseState.ScrollWheelValue/4;
+            curScrollPos = GameBase.MouseState.ScrollWheelValue;
+
+            if (Math.Abs(curScrollPos - prevScrollPos) > 0)
+            {
+                MoveButtonPool(curScrollPos - prevScrollPos);
+            }
+            prevScrollPos = curScrollPos;
 
             Boundary.Update(dt);
         }
@@ -77,7 +87,7 @@ namespace Quaver.GameState.SongSelect
         /// </summary>
         public void GenerateButtonPool()
         {
-            int targetPoolSize = (int)(GameBase.WindowRectangle.Height / (MapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale)) + 10;
+            int targetPoolSize = (int)(GameBase.WindowRectangle.Height / (MapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale)) + INDEX_OFFSET_AMOUNT * 2;
             Console.WriteLine("Button Pool Size: "+targetPoolSize);
 
             for (var i = 0; i < targetPoolSize && i < GameBase.VisibleMapsets.Count; i++)
@@ -86,7 +96,7 @@ namespace Quaver.GameState.SongSelect
                 {
                     Image = GameBase.UI.BlankBox,
                     Alignment = Alignment.TopRight,
-                    Position = new UDim2(-5, i * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING),
+                    Position = new UDim2(-5, (i - INDEX_OFFSET_AMOUNT) * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING),
                     Parent = Boundary
                 };
 
@@ -111,12 +121,14 @@ namespace Quaver.GameState.SongSelect
             if (CurrentPoolIndex >= GameBase.VisibleMapsets.Count) CurrentPoolIndex = GameBase.VisibleMapsets.Count - 1;
             //Console.WriteLine(amount + ", " + CurrentPoolIndex);
 
+            int index;
             for (var i=0; i<SongSelectButtons.Count; i++)
             {
-                if (i + CurrentPoolIndex < GameBase.VisibleMapsets.Count)
+                index = i + CurrentPoolIndex - INDEX_OFFSET_AMOUNT;
+                if (index >= 0 && index < GameBase.VisibleMapsets.Count)
                 {
                     SongSelectButtons[i].Visible = true;
-                    SongSelectButtons[i].UpdateButtonMapIndex(i + CurrentPoolIndex, GameBase.VisibleMapsets[i + CurrentPoolIndex]);
+                    SongSelectButtons[i].UpdateButtonMapIndex(index, GameBase.VisibleMapsets[index]);
                 }
                 else
                 {
@@ -147,12 +159,12 @@ namespace Quaver.GameState.SongSelect
             int index = 0;
             for (var i = 0; i < SongSelectButtons.Count; i++)
             {
-                index = i + CurrentPoolIndex;
-                if (index < GameBase.VisibleMapsets.Count)
+                index = i + CurrentPoolIndex - INDEX_OFFSET_AMOUNT;
+                if (index >= 0 && index < GameBase.VisibleMapsets.Count)
                 {
                     SongSelectButtons[i].PosY = index <= SelectedSongIndex
-                    ? i * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING
-                    : GameBase.WindowUIScale * ((i * MapsetSelectButton.BUTTON_OFFSET_PADDING) + (DiffSelectButtons.Count * MapDifficultySelectButton.BUTTON_OFFSET_PADDING));
+                    ? (i - INDEX_OFFSET_AMOUNT) * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING
+                    : GameBase.WindowUIScale * (((i - INDEX_OFFSET_AMOUNT) * MapsetSelectButton.BUTTON_OFFSET_PADDING) + (DiffSelectButtons.Count * MapDifficultySelectButton.BUTTON_OFFSET_PADDING));
                 }
             }
 
@@ -194,40 +206,43 @@ namespace Quaver.GameState.SongSelect
 
         private void OnSongSelectButtonClicked(object sender, EventArgs e, int index)
         {
-            SongSelectButtons[SelectedSongIndex].Selected = false;
-            SongSelectButtons[index].Selected = true;
-
-            SelectedSongIndex = index;
-            SelectedDiffIndex = 0;
-
-            // Delete Diff Select Buttons
-            DeleteMapDiffButtons();
-
-            // Create Diff Select Buttons
-            var mapset = GameBase.Mapsets[SelectedSongIndex];
-            var posOffset = ((SelectedSongIndex + 1) * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING);
-            for (var i = 0; i < mapset.Beatmaps.Count; i++)
+            if (SongSelectButtons[index].Visible) //todo: implement click visibility check in button
             {
-                var newButton = new MapDifficultySelectButton(GameBase.WindowUIScale, i, mapset.Beatmaps[i])
+                //SongSelectButtons[SelectedSongIndex].Selected = false;
+                //SongSelectButtons[index].Selected = true;
+
+                SelectedSongIndex = index + CurrentPoolIndex - INDEX_OFFSET_AMOUNT;
+                SelectedDiffIndex = 0;
+
+                // Delete Diff Select Buttons
+                DeleteMapDiffButtons();
+
+                // Create Diff Select Buttons
+                var mapset = GameBase.Mapsets[SelectedSongIndex];
+                var posOffset = ((SelectedSongIndex + 1) * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING);
+                for (var i = 0; i < mapset.Beatmaps.Count; i++)
                 {
-                    Image = GameBase.UI.BlankBox,
-                    Alignment = Alignment.TopRight,
-                    Position = new UDim2(-5, posOffset + (GameBase.WindowUIScale * MapDifficultySelectButton.BUTTON_OFFSET_PADDING * i)),
-                    Parent = Boundary
-                };
+                    var newButton = new MapDifficultySelectButton(GameBase.WindowUIScale, i, mapset.Beatmaps[i])
+                    {
+                        Image = GameBase.UI.BlankBox,
+                        Alignment = Alignment.TopRight,
+                        Position = new UDim2(-5, posOffset + (GameBase.WindowUIScale * MapDifficultySelectButton.BUTTON_OFFSET_PADDING * i)),
+                        Parent = Boundary
+                    };
 
-                var pos = i;
-                //OrganizerSize += newButton.SizeY;
-                EventHandler newEvent = (newSender, newE) => OnSongSelectButtonClicked(newSender, newE, pos);
-                newButton.Clicked += (newSender, newE) => OnDiffSelectButtonClicked(newSender, newE, pos);
-                DiffSelectButtons.Add(newButton);
-                DiffSelectEvents.Add(newEvent);
-                //todo: use index for song select button
+                    var pos = i;
+                    //OrganizerSize += newButton.SizeY;
+                    EventHandler newEvent = (newSender, newE) => OnSongSelectButtonClicked(newSender, newE, pos);
+                    newButton.Clicked += (newSender, newE) => OnDiffSelectButtonClicked(newSender, newE, pos);
+                    DiffSelectButtons.Add(newButton);
+                    DiffSelectEvents.Add(newEvent);
+                    //todo: use index for song select button
+                }
+
+                // Update Button Offsets
+                UpdateMapsetButtonOffsets();
+                //MoveButtonPool(10);
             }
-
-            // Update Button Offsets
-            UpdateMapsetButtonOffsets();
-            //MoveButtonPool(10);
         }
 
         private void OnDiffSelectButtonClicked(object sender, EventArgs e, int index)
