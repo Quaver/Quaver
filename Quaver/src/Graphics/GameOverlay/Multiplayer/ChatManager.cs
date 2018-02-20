@@ -8,6 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.Logging;
+using Quaver.Net;
+using Quaver.Net.Packets;
+using Quaver.Net.Packets.Types;
 
 namespace Quaver.Graphics.GameOverlay.Multiplayer
 {
@@ -103,6 +106,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
         private static void OnChatSubmit(string text)
         {
             Logger.LogInfo($"Chat Message Sent: {text}", LogType.Runtime);
+            new ChatMessagePacket(PacketId.ClientSendChatMessage, "#quaver", text).Send();
         }
     }
 }
