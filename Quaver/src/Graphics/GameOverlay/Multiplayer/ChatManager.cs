@@ -11,6 +11,7 @@ using Quaver.Logging;
 using Quaver.Net;
 using Quaver.Net.Packets;
 using Quaver.Net.Packets.Types;
+using Quaver.Net.Structures;
 
 namespace Quaver.Graphics.GameOverlay.Multiplayer
 {
@@ -106,7 +107,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
         private static void OnChatSubmit(string text)
         {
             Logger.LogInfo($"Chat Message Sent: {text}", LogType.Runtime);
-            new ChatMessagePacket(PacketId.ClientSendChatMessage, "#quaver", text).Send();
+            new ChatMessagePacket(true, new ChatMessage {Channel = "#quaver", Text = text, Sender = FlamingoClient.Self.Username}).Send();
         }
     }
 }
