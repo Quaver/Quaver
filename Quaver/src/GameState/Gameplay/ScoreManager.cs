@@ -248,7 +248,7 @@ namespace Quaver.GameState.Gameplay
             RelativeAcc = Math.Max(RelativeAcc / (TotalJudgeCount * 100), -100);
 
             //If note is not pressed properly, update combo and multplier
-            if (index < 4)
+            if (index < 5)
             {
                 //Update Multiplier
                 if (index == 3)
