@@ -26,6 +26,7 @@ using Quaver.API.Maps;
 using Quaver.Commands;
 using Quaver.Peppy;
 using Quaver.Steam;
+using Quaver.StepMania;
 using Quaver.Utility;
 
 namespace Quaver.GameState.States
@@ -73,6 +74,11 @@ namespace Quaver.GameState.States
         public Button ImportPeppyButton { get; set; }
 
         /// <summary>
+        ///     Button to convert .sm files
+        /// </summary>
+        public Button ConvertStepManiaButton { get; set; }
+
+        /// <summary>
         ///     Initialize
         /// </summary>
         public void Initialize()
@@ -99,6 +105,7 @@ namespace Quaver.GameState.States
             CreateQpImportButton();
             CreateMenuButtons();
             CreateQpExportButton();
+            CreateConvertSmButton();
 
             UpdateReady = true;
         }
@@ -201,6 +208,20 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
+        ///     Responsible for creating the button to convert .sm files
+        /// </summary>
+        private void CreateConvertSmButton()
+        {
+            ConvertStepManiaButton = new TextButton(new Vector2(200, 400), "Convert StepMania file")
+            {
+                Alignment = Alignment.MidLeft,
+                Parent = Boundary
+            };
+
+            ConvertStepManiaButton.Clicked += OnConvertSmButtonClick;
+        }
+
+        /// <summary>
         ///     Responsible for creating the import .qp button
         /// </summary>
         private void CreateQpImportButton()
@@ -214,6 +235,7 @@ namespace Quaver.GameState.States
 
             ImportQpButton.Clicked += OnImportQpButtonClick;
         }
+
 
         /// <summary>
         ///     Responsible for creating the import .qp button
@@ -360,6 +382,43 @@ namespace Quaver.GameState.States
             {
                 for (var i = 0; i < openFileDialog.FileNames.Length; i++)
                     Osu.ConvertOsz(openFileDialog.FileNames[i], i);
+
+                // When all the maps have been converted, select the last imported map and make that the selected one.
+            }).ContinueWith(async t =>
+            {
+                await MapImportLoadingState.AfterImport();
+            });
+        }
+
+        /// <summary>
+        ///     Called when the user clicks to convert a StepMania (.sm) file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnConvertSmButtonClick(object sender, EventArgs e)
+        {
+            // Create the openFileDialog object.
+            var openFileDialog = new OpenFileDialog()
+            {
+                InitialDirectory = "c:\\",
+                Filter = "StepMania File (*.sm)|*.sm",
+                FilterIndex = 0,
+                RestoreDirectory = true,
+                Multiselect = true
+            };
+
+            // If the dialog couldn't be shown, that's an issue, so we'll return for now.
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            // Proceed to extract and convert the map, show loading screen.
+            GameBase.GameStateManager.AddState(new MapImportLoadingState());
+
+            // Run the converter for all file names
+            Task.Run(() =>
+            {
+                foreach (var t in openFileDialog.FileNames)
+                    StepManiaConverter.ConvertSm(t);
 
                 // When all the maps have been converted, select the last imported map and make that the selected one.
             }).ContinueWith(async t =>
