@@ -80,9 +80,8 @@ namespace Quaver.GameState.SongSelect
         /// </summary>
         public void GenerateButtonPool()
         {
-            MaxButtonsOnScreen = (int)(GameBase.WindowRectangle.Height / (MapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale)) + INDEX_OFFSET_AMOUNT;
+            MaxButtonsOnScreen = (int)Math.Ceiling(GameBase.WindowRectangle.Height / (MapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale)) + INDEX_OFFSET_AMOUNT;
             int targetPoolSize = MaxButtonsOnScreen * 2;
-            Console.WriteLine("Button Pool Size: "+targetPoolSize);
 
             for (var i = 0; i < targetPoolSize && i < GameBase.VisibleMapsets.Count; i++)
             {
@@ -99,10 +98,9 @@ namespace Quaver.GameState.SongSelect
                 newButton.Clicked += newEvent;
                 SongSelectButtons.Add(newButton);
                 SongSelectEvents.Add(newEvent);
-                //todo: use index for song select button
-
-                UpdateMapsetButtonOffsets();
             }
+
+            ShiftButtonPool(0);
         }
 
         /// <summary>
@@ -119,7 +117,7 @@ namespace Quaver.GameState.SongSelect
             int index;
             for (var i=0; i<SongSelectButtons.Count; i++)
             {
-                index = i + CurrentPoolIndex - INDEX_OFFSET_AMOUNT;
+                index = i + CurrentPoolIndex - MaxButtonsOnScreen;
                 if (index >= 0 && index < GameBase.VisibleMapsets.Count)
                 {
                     SongSelectButtons[i].Visible = true;
@@ -136,6 +134,18 @@ namespace Quaver.GameState.SongSelect
         public void MoveButtonPool(int amount)
         {
             Boundary.PosY += amount;
+
+            if (CurrentPoolIndex == 0 && Boundary.PosY > 0)
+            {
+                //todo: set max position
+                return;
+            }
+
+            if (CurrentPoolIndex == GameBase.VisibleMapsets.Count - 1 && Boundary.PosY < 0)
+            {
+                //todo: set max position
+                return;
+            }
 
             if (Math.Abs(Boundary.PosY) > MapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale)
             {
