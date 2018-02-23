@@ -214,7 +214,16 @@ namespace Quaver.GameState.SongSelect
         /// <param name="amount"></param>
         private void SelectNextMapset(int amount)
         {
+            SelectedSongIndex += amount;
 
+            while (SelectedSongIndex > GameBase.VisibleMapsets.Count)
+            {
+                SelectedSongIndex -= GameBase.VisibleMapsets.Count;
+            }
+
+            SelectMapset(SelectedSongIndex);
+
+            GetFocusOffsetOfCurrentMap();
         }
 
         /// <summary>
@@ -223,7 +232,14 @@ namespace Quaver.GameState.SongSelect
         /// <param name="amount"></param>
         private void SelectNextDifficulty(int amount)
         {
+            SelectedDiffIndex += amount;
 
+            while (SelectedDiffIndex > DiffSelectButtons.Count)
+            {
+                SelectedDiffIndex -= DiffSelectButtons.Count;
+            }
+
+            GetFocusOffsetOfCurrentMap();
         }
 
         /// <summary>
@@ -231,6 +247,10 @@ namespace Quaver.GameState.SongSelect
         /// </summary>
         private float GetFocusOffsetOfCurrentMap()
         {
+            // If difficulty is not selected, focus on mapset button
+
+            // If difficulty is selected, focus on difficulty button
+
             return 0;
         }
 
@@ -269,72 +289,53 @@ namespace Quaver.GameState.SongSelect
         }
 
         /// <summary>
-        ///     Triggered whenever a mapset mapset button gets pressed
+        ///     Selects a mapset by index
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         /// <param name="index"></param>
-        private void OnSongSelectButtonClicked(object sender, EventArgs e, int index)
+        private void SelectMapset(int index)
         {
-            if (SongSelectButtons[index].Visible) //todo: implement click visibility check in button
+            SelectedSongIndex = index;
+            SelectedDiffIndex = 0;
+
+            // Delete Diff Select Buttons
+            DeleteMapDiffButtons();
+
+            // Create Diff Select Buttons
+            var mapset = GameBase.Mapsets[SelectedSongIndex];
+            var posOffset = ((SelectedSongIndex + 1) * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING);
+            for (var i = 0; i < mapset.Beatmaps.Count; i++)
             {
-                //SongSelectButtons[SelectedSongIndex].Selected = false;
-                //SongSelectButtons[index].Selected = true;
-
-                SelectedSongIndex = index + CurrentPoolIndex - MaxButtonsOnScreen;
-                SelectedDiffIndex = 0;
-
-                // Delete Diff Select Buttons
-                DeleteMapDiffButtons();
-
-                // Create Diff Select Buttons
-                var mapset = GameBase.Mapsets[SelectedSongIndex];
-                var posOffset = ((SelectedSongIndex + 1) * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING);
-                for (var i = 0; i < mapset.Beatmaps.Count; i++)
+                var newButton = new MapDifficultySelectButton(GameBase.WindowUIScale, i, mapset.Beatmaps[i])
                 {
-                    var newButton = new MapDifficultySelectButton(GameBase.WindowUIScale, i, mapset.Beatmaps[i])
-                    {
-                        Image = GameBase.UI.BlankBox,
-                        Alignment = Alignment.TopRight,
-                        Position = new UDim2(-5, posOffset + (GameBase.WindowUIScale * MapDifficultySelectButton.BUTTON_OFFSET_PADDING * i)),
-                        Parent = Boundary
-                    };
+                    Image = GameBase.UI.BlankBox,
+                    Alignment = Alignment.TopRight,
+                    Position = new UDim2(-5, posOffset + (GameBase.WindowUIScale * MapDifficultySelectButton.BUTTON_OFFSET_PADDING * i)),
+                    Parent = Boundary
+                };
 
-                    var pos = i;
-                    //OrganizerSize += newButton.SizeY;
-                    EventHandler newEvent = (newSender, newE) => OnSongSelectButtonClicked(newSender, newE, pos);
-                    newButton.Clicked += (newSender, newE) => OnDiffSelectButtonClicked(newSender, newE, pos);
-                    DiffSelectButtons.Add(newButton);
-                    DiffSelectEvents.Add(newEvent);
-                    //todo: use index for song select button
-                }
-
-                // Update Button Offsets
-                UpdateMapsetButtonOffsets();
-                //MoveButtonPool(10);
+                var pos = i;
+                EventHandler newEvent = (newSender, newE) => OnSongSelectButtonClicked(newSender, newE, pos);
+                newButton.Clicked += (newSender, newE) => OnDiffSelectButtonClicked(newSender, newE, pos);
+                DiffSelectButtons.Add(newButton);
+                DiffSelectEvents.Add(newEvent);
             }
+
+            // Update Button Offsets
+            UpdateMapsetButtonOffsets();
         }
 
         /// <summary>
-        ///     Triggered whenever a difficulty button gets pressed.
+        ///     Selects a map difficulty by index
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         /// <param name="index"></param>
-        private void OnDiffSelectButtonClicked(object sender, EventArgs e, int index)
+        private void SelectDifficulty(int index)
         {
-            DiffSelectButtons[SelectedDiffIndex].Selected = false;
-            DiffSelectButtons[index].Selected = true;
+            // Update selected difficulty index
             SelectedDiffIndex = index;
 
             // Select map
             var map = GameBase.Mapsets[SelectedSongIndex].Beatmaps[SelectedDiffIndex];
             Logger.Update("MapSelected", "Map Selected: " + map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]");
-
-            //SongSelectButtons[SelectedMapIndex].Selected = false;
-            //SongSelectButtons[index].Selected = true;
-            //SelectedMapIndex = index;
-            //TargetPosition = (GameBase.WindowRectangle.Height / 2f) - ((float)index / SongSelectButtons.Count) * OrganizerSize;
 
             var oldMapAudioPath = GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.AudioPath;
             Beatmap.ChangeBeatmap(map);
@@ -365,6 +366,35 @@ namespace Quaver.GameState.SongSelect
 
             //TODO: make it so scrolling is disabled until background has been loaded
             //ScrollingDisabled = false;
+        }
+
+        /// <summary>
+        ///     Triggered whenever a mapset mapset button gets pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="index"></param>
+        private void OnSongSelectButtonClicked(object sender, EventArgs e, int index)
+        {
+            if (SongSelectButtons[index].Visible) //todo: implement click visibility check in button
+            {
+                //SongSelectButtons[SelectedSongIndex].Selected = false;
+                //SongSelectButtons[index].Selected = true;
+                SelectMapset(index + CurrentPoolIndex - MaxButtonsOnScreen);
+            }
+        }
+
+        /// <summary>
+        ///     Triggered whenever a difficulty button gets pressed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="index"></param>
+        private void OnDiffSelectButtonClicked(object sender, EventArgs e, int index)
+        {
+            DiffSelectButtons[SelectedDiffIndex].Selected = false;
+            DiffSelectButtons[index].Selected = true;
+            SelectDifficulty(index);
         }
     }
 }
