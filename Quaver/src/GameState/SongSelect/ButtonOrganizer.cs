@@ -78,16 +78,19 @@ namespace Quaver.GameState.SongSelect
         }
 
         //todo: temp
-        private int prevScrollPos = 0;
-        private int curScrollPos = 0;
+        private float prevScrollPos = 0;
+        private float curScrollPos = 0;
         public void Update(double dt)
         {
-            curScrollPos = GameBase.MouseState.ScrollWheelValue;
+            var tween = Math.Min(dt / 30, 1);
 
-            if (Math.Abs(curScrollPos - prevScrollPos) > 0)
-            {
-                MoveButtonContainer(curScrollPos - prevScrollPos);
-            }
+            curScrollPos = GameBase.MouseState.ScrollWheelValue;
+            TargetContainerOffset += (float)((curScrollPos - prevScrollPos - TargetContainerOffset) * tween);
+
+            Console.WriteLine(TargetContainerOffset);
+
+            MoveButtonContainer(TargetContainerOffset);
+
             prevScrollPos = curScrollPos;
 
             Boundary.Update(dt);
@@ -222,8 +225,6 @@ namespace Quaver.GameState.SongSelect
             }
 
             SelectMapset(SelectedSongIndex);
-
-            GetFocusOffsetOfCurrentMap();
         }
 
         /// <summary>
@@ -239,7 +240,7 @@ namespace Quaver.GameState.SongSelect
                 SelectedDiffIndex -= DiffSelectButtons.Count;
             }
 
-            GetFocusOffsetOfCurrentMap();
+            SelectDifficulty(SelectedDiffIndex);
         }
 
         /// <summary>
@@ -247,11 +248,12 @@ namespace Quaver.GameState.SongSelect
         /// </summary>
         private float GetFocusOffsetOfCurrentMap()
         {
+            // todo:temp
+            return ((SelectedSongIndex - CurrentPoolIndex) * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING) - DiffSelectButtons[0].PosY; // + (GameBase.WindowRectangle.Height/2);
+
             // If difficulty is not selected, focus on mapset button
 
             // If difficulty is selected, focus on difficulty button
-
-            return 0;
         }
 
         /// <summary>
@@ -322,6 +324,9 @@ namespace Quaver.GameState.SongSelect
 
             // Update Button Offsets
             UpdateMapsetButtonOffsets();
+
+            // Focus on button
+            TargetContainerOffset = GetFocusOffsetOfCurrentMap();
         }
 
         /// <summary>
@@ -332,6 +337,9 @@ namespace Quaver.GameState.SongSelect
         {
             // Update selected difficulty index
             SelectedDiffIndex = index;
+
+            // Focus on button
+            TargetContainerOffset = GetFocusOffsetOfCurrentMap();
 
             // Select map
             var map = GameBase.Mapsets[SelectedSongIndex].Beatmaps[SelectedDiffIndex];
