@@ -17,6 +17,7 @@ namespace Quaver.GameState.SongSelect
     /// </summary>
     class ButtonOrganizer : IHelper
     {
+        private const int INDEX_OFFSET_AMOUNT = 2;
         /// <summary>
         ///     Reference to the list of song select buttons
         /// </summary>
@@ -28,18 +29,40 @@ namespace Quaver.GameState.SongSelect
 
         private List<EventHandler> DiffSelectEvents { get; set; } = new List<EventHandler>();
 
+        /// <summary>
+        ///     The Button Container
+        /// </summary>
         private Boundary Boundary { get; set; }
 
-        private int MaxButtonsOnScreen { get; set; }
-
-        // Indexing
+        /// <summary>
+        ///     Selected beatmap's index
+        /// </summary>
         private int SelectedSongIndex { get; set; }
+
+        /// <summary>
+        ///     Selected map's index
+        /// </summary>
         private int SelectedDiffIndex { get; set; }
+
+        /// <summary>
+        ///     Current index used for object pooling
+        /// </summary>
         private int CurrentPoolIndex { get; set; }
 
-        private const int INDEX_OFFSET_AMOUNT = 2;
+        /// <summary>
+        ///     Total amount of buttons visible on screen
+        /// </summary>
+        private int MaxButtonsOnScreen { get; set; }
 
+        /// <summary>
+        ///     Value to move the container by to reach its target spot
+        /// </summary>
+        private float TargetContainerOffset { get; set; }
 
+        /// <summary>
+        ///     Initialize
+        /// </summary>
+        /// <param name="state"></param>
         public void Initialize(IGameState state)
         {
             Console.WriteLine(GameBase.VisibleMapsets.Count + ", " + GameBase.Mapsets.Count);
@@ -63,7 +86,7 @@ namespace Quaver.GameState.SongSelect
 
             if (Math.Abs(curScrollPos - prevScrollPos) > 0)
             {
-                MoveButtonPool(curScrollPos - prevScrollPos);
+                MoveButtonContainer(curScrollPos - prevScrollPos);
             }
             prevScrollPos = curScrollPos;
 
@@ -131,17 +154,23 @@ namespace Quaver.GameState.SongSelect
             UpdateMapsetButtonOffsets();
         }
 
-        public void MoveButtonPool(int amount)
+        /// <summary>
+        ///     Move every button on the screen by moving the boundary
+        /// </summary>
+        /// <param name="amount"></param>
+        public void MoveButtonContainer(float amount)
         {
+            if (Math.Abs(amount) < 0.5) return;
+
             Boundary.PosY += amount;
 
-            if (CurrentPoolIndex == 0 && Boundary.PosY > 0)
+            if (CurrentPoolIndex == 0 && amount > 0)
             {
                 //todo: set max position
                 return;
             }
 
-            if (CurrentPoolIndex == GameBase.VisibleMapsets.Count - 1 && Boundary.PosY < 0)
+            if (CurrentPoolIndex == GameBase.VisibleMapsets.Count - 1 && amount < 0)
             {
                 //todo: set max position
                 return;
@@ -179,6 +208,35 @@ namespace Quaver.GameState.SongSelect
             }
         }
 
+        /// <summary>
+        ///     Select the next mapset in according to ammount
+        /// </summary>
+        /// <param name="amount"></param>
+        private void SelectNextMapset(int amount)
+        {
+
+        }
+
+        /// <summary>
+        ///     Select the next difficulty in according to ammount
+        /// </summary>
+        /// <param name="amount"></param>
+        private void SelectNextDifficulty(int amount)
+        {
+
+        }
+
+        /// <summary>
+        ///     Get the offset amount needed in order to focus on the current map
+        /// </summary>
+        private float GetFocusOffsetOfCurrentMap()
+        {
+            return 0;
+        }
+
+        /// <summary>
+        ///     Delete and unhook current mapset buttons event listeners
+        /// </summary>
         private void DeleteMapsetButtons()
         {
             if (SongSelectButtons.Count > 0)
@@ -193,6 +251,9 @@ namespace Quaver.GameState.SongSelect
             }
         }
 
+        /// <summary>
+        ///     Delete and unhook current difficulty buttons listeners
+        /// </summary>
         private void DeleteMapDiffButtons()
         {
             if (DiffSelectButtons.Count > 0)
@@ -207,6 +268,12 @@ namespace Quaver.GameState.SongSelect
             }
         }
 
+        /// <summary>
+        ///     Triggered whenever a mapset mapset button gets pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="index"></param>
         private void OnSongSelectButtonClicked(object sender, EventArgs e, int index)
         {
             if (SongSelectButtons[index].Visible) //todo: implement click visibility check in button
@@ -229,7 +296,7 @@ namespace Quaver.GameState.SongSelect
                     {
                         Image = GameBase.UI.BlankBox,
                         Alignment = Alignment.TopRight,
-                        Position = new UDim2(-5 - 400, posOffset + (GameBase.WindowUIScale * MapDifficultySelectButton.BUTTON_OFFSET_PADDING * i)),
+                        Position = new UDim2(-5, posOffset + (GameBase.WindowUIScale * MapDifficultySelectButton.BUTTON_OFFSET_PADDING * i)),
                         Parent = Boundary
                     };
 
@@ -248,6 +315,12 @@ namespace Quaver.GameState.SongSelect
             }
         }
 
+        /// <summary>
+        ///     Triggered whenever a difficulty button gets pressed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="index"></param>
         private void OnDiffSelectButtonClicked(object sender, EventArgs e, int index)
         {
             DiffSelectButtons[SelectedDiffIndex].Selected = false;
