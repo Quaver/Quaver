@@ -109,7 +109,18 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
         {
             var msg = text.Split(' ');
             Logger.LogInfo($"Chat Message Sent: {text}", LogType.Runtime);
-            new ChatMessagePacket(new ChatMessage(){ Channel = msg[0], Text = msg[1], Sender = FlamingoClient.Self.Username }).Send();
+
+            // Create message object
+            var message = new ChatMessage
+            {
+                Channel = msg[0],
+                Text = msg[1],
+                Sender = FlamingoClient.Self.Username,
+                DateTime = DateTime.Now
+            };
+
+            // Send message packet
+            new ChatMessagePacket(message).Send();
         }
     }
 }
