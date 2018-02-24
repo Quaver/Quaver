@@ -11,6 +11,7 @@ using Quaver.Logging;
 using Quaver.Net;
 using Quaver.Net.Packets;
 using Quaver.Net.Packets.Types;
+using Quaver.Net.Packets.Types.Client;
 using Quaver.Net.Structures;
 
 namespace Quaver.Graphics.GameOverlay.Multiplayer
@@ -108,7 +109,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
         {
             var msg = text.Split(' ');
             Logger.LogInfo($"Chat Message Sent: {text}", LogType.Runtime);
-            // new ChatMessagePacket(true, new ChatMessage {Channel = msg[0], Text = msg[1], Sender = FlamingoClient.Self.Username}).Send();
+            new ChatMessagePacket(new ChatMessage(){ Channel = msg[0], Text = msg[1], Sender = FlamingoClient.Self.Username }).Send();
         }
     }
 }
