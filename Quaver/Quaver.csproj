@@ -97,6 +97,7 @@
     <Compile Include="src\GameState\Gameplay\PlayScreen\ScoreProgressUI.cs" />
     <Compile Include="src\GameState\IHelper.cs" />
     <Compile Include="src\GameState\SongSelect\ButtonOrganizer.cs" />
+    <Compile Include="src\GameState\SongSelect\MapInfoWindow.cs" />
     <Compile Include="src\GameState\SongSelect\MapOrganizer.cs" />
     <Compile Include="src\GameState\SongSelect\ModSelector.cs" />
     <Compile Include="src\GameState\States\OptionsMenuState.cs" />
