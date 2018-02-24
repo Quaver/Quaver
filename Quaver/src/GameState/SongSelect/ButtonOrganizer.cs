@@ -17,6 +17,8 @@ namespace Quaver.GameState.SongSelect
     /// </summary>
     class ButtonOrganizer : IHelper
     {
+        private MapInfoWindow MapInfoWindow = new MapInfoWindow();
+
         private const int INDEX_OFFSET_AMOUNT = 2;
         /// <summary>
         ///     Reference to the list of song select buttons
@@ -82,14 +84,13 @@ namespace Quaver.GameState.SongSelect
         private float curScrollPos = 0;
         public void Update(double dt)
         {
-            var tween = Math.Min(dt / 30, 1);
+            var tween = Math.Min(dt / 50, 1);
 
             curScrollPos = GameBase.MouseState.ScrollWheelValue;
             TargetContainerOffset += (float)((curScrollPos - prevScrollPos - TargetContainerOffset) * tween);
 
-            Console.WriteLine(TargetContainerOffset);
-
             MoveButtonContainer(TargetContainerOffset);
+            //TargetContainerOffset = 0;
 
             prevScrollPos = curScrollPos;
 
@@ -167,13 +168,13 @@ namespace Quaver.GameState.SongSelect
 
             Boundary.PosY += amount;
 
-            if (CurrentPoolIndex == 0 && amount > 0)
+            if (CurrentPoolIndex == 0 && Boundary.PosY > 0)
             {
-                //todo: set max position
+                //todo: set min position
                 return;
             }
 
-            if (CurrentPoolIndex == GameBase.VisibleMapsets.Count - 1 && amount < 0)
+            if (CurrentPoolIndex == GameBase.VisibleMapsets.Count - 1 && Boundary.PosY < 0)
             {
                 //todo: set max position
                 return;
@@ -249,7 +250,9 @@ namespace Quaver.GameState.SongSelect
         private float GetFocusOffsetOfCurrentMap()
         {
             // todo:temp
-            return ((SelectedSongIndex - CurrentPoolIndex) * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING) - DiffSelectButtons[0].PosY; // + (GameBase.WindowRectangle.Height/2);
+            float total = ((SelectedSongIndex - CurrentPoolIndex) * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING) - DiffSelectButtons[0].PosY; //+ (GameBase.WindowRectangle.Height/2);
+            Console.WriteLine(total);
+            return 0; //total;
 
             // If difficulty is not selected, focus on mapset button
 
