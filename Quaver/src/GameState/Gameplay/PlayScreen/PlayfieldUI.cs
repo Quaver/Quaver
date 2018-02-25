@@ -113,10 +113,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             JudgeImages = new Texture2D[6]
             {
                 GameBase.LoadedSkin.JudgeMarv,
-                GameBase.LoadedSkin.JudgePerfect,
+                GameBase.LoadedSkin.JudgePerf,
                 GameBase.LoadedSkin.JudgeGreat,
                 GameBase.LoadedSkin.JudgeGood,
-                GameBase.LoadedSkin.JudgeBad,
+                GameBase.LoadedSkin.JudgeOkay,
                 GameBase.LoadedSkin.JudgeMiss
             };
 
@@ -195,15 +195,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             var healthMultiplierBoundary = new Boundary()
             {
                 Size = new UDim2(PlayfieldSize - 4, 20 * GameBase.WindowUIScale),
-                PosY = Config.Configuration.DownScroll4k ? -2 : 2,
-                Alignment = Config.Configuration.DownScroll4k ? Alignment.BotCenter : Alignment.TopCenter,
+                PosY = Config.Configuration.HealthBarPositionTop ? 2 : -2,
+                Alignment = Config.Configuration.HealthBarPositionTop ? Alignment.TopCenter : Alignment.BotCenter,
                 Parent = Boundary
             };
 
             var healthBarUnder = new Sprite()
             {
                 Size = new UDim2(0, 10 * GameBase.WindowUIScale -1, 1, 0),
-                Alignment = Config.Configuration.DownScroll4k ? Alignment.BotCenter : Alignment.TopCenter,
+                Alignment = Config.Configuration.HealthBarPositionTop ? Alignment.TopCenter : Alignment.BotCenter,
                 Parent = healthMultiplierBoundary
             };
 
@@ -224,7 +224,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     Size = new UDim2(14 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale -1),
                     PosX = (i-7.5f) * 16 * GameBase.WindowUIScale,
-                    PosY = Config.Configuration.DownScroll4k ? 0 : 10 * GameBase.WindowUIScale + 1,
+                    PosY = Config.Configuration.HealthBarPositionTop ? 10 * GameBase.WindowUIScale + 1 : 0,
                     Alignment = Alignment.TopCenter,
                     Image = GameBase.UI.HollowBox,
                     Parent = healthMultiplierBoundary
@@ -303,7 +303,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 CurrentOffsetObjectIndex++;
                 if (CurrentOffsetObjectIndex >= OffsetIndicatorSize) CurrentOffsetObjectIndex = 0;
-                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Tint = GameColors.JudgeColors[index];
+                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Tint = GameBase.LoadedSkin.JudgeColors[index];
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].PosX = -(float)offset * OffsetGaugeSize;
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Alpha = 0.5f;
                 OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Update(0);

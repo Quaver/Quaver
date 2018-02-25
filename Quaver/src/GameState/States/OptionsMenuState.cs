@@ -62,15 +62,13 @@ namespace Quaver.GameState.States
         public void Draw()
         {
             GameBase.SpriteBatch.Begin();
-            BackgroundManager.Draw();
+            //BackgroundManager.Draw();
             Boundary.Draw();
             GameBase.SpriteBatch.End();
         }
 
         public void Initialize()
         {
-            Logger.Log("Options Menu Button Clicked", LogColors.GameImportant, 5);
-
             Boundary = new Boundary();
             ButtonsContainer = new Boundary()
             {

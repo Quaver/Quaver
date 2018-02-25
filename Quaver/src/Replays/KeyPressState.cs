@@ -20,6 +20,7 @@ namespace Quaver.Replays
         K4 = 1 << 3,
         K5 = 1 << 4,
         K6 = 1 << 5,
-        K7 = 1 << 6
+        K7 = 1 << 6,
+        Skip = 1 << 7
     }
 }

@@ -5,6 +5,7 @@ using Quaver.Config;
 using Quaver.GameState.States;
 using Quaver.Modifiers;
 using Quaver.API.Maps;
+using Quaver.Logging;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
@@ -15,9 +16,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     {
         //Audio Variables
         internal bool SongIsPlaying { get; set; }
+        internal const int SONG_SKIP_OFFSET = 3000;
+        internal const int SONG_END_OFFSET = 1500;
 
         //Gameplay Variables
-        private double ActualSongTime { get; set; }
+        internal double ActualSongTime { get; set; }
         internal float PlayingEndOffset { get; set; }
         private List<TimingObject> TimingQueue { get; set; }
 
@@ -61,11 +64,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             //Declare Other Values. 
             // Game starts 3 seconds before song
-            ActualSongTime = -3000 * GameBase.GameClock;
+            ActualSongTime = -SONG_SKIP_OFFSET * GameBase.AudioEngine.PlaybackRate;
             //_activeBarObjects = new GameObject[maxNoteCount];
 
             //Add offset after the last note
-            PlayingEndOffset = GameBase.SelectedBeatmap.SongLength + (SongManager.BassDelayOffset - Configuration.GlobalOffset + 1500) * GameBase.GameClock;
+            PlayingEndOffset = Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) + (AudioEngine.BassDelayOffset - Configuration.GlobalAudioOffset + SONG_END_OFFSET) * GameBase.AudioEngine.PlaybackRate;
 
             //Create Timing bars
             //_barQueue = new List<TimingObject>();
@@ -89,7 +92,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //Calculate Time after Song Done
             if (SongIsDone)
             {
-                ActualSongTime += dt * GameBase.GameClock;
+                ActualSongTime += dt * GameBase.AudioEngine.PlaybackRate;
 
                 //If song is done and song time is over playingEndOffset, the play session is done
                 if (ActualSongTime >= PlayingEndOffset) PlayingIsDone = true;
@@ -99,7 +102,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //If the audio didn't even start yet, it will calculate actual song time with delta time.
             if (ActualSongTime < 0)
             {
-                ActualSongTime += dt * GameBase.GameClock;
+                ActualSongTime += dt * GameBase.AudioEngine.PlaybackRate;
                 return;
             }
 
@@ -107,23 +110,31 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             if (!SongIsPlaying)
             {
                 SongIsPlaying = true;
-                SongManager.Play();
+
+                try
+                {
+                    GameBase.AudioEngine.Play();
+                }
+                catch (AudioEngineException e)
+                {
+                    Logger.LogWarning("Audio file could not be played, as it probably doesn't exist!", LogType.Runtime);
+                }
             }
 
             //If song time  > song end, song is done.
-            if (SongManager.Position + 1 > SongManager.Length || ActualSongTime >= PlayingEndOffset)
+            if (GameBase.AudioEngine.Position + 1 > GameBase.AudioEngine.Length || ActualSongTime >= PlayingEndOffset)
             {
                 SongIsDone = true;
             }
 
             //Calculate song pos from audio
-            ActualSongTime = (SongManager.Position + (ActualSongTime + (dt * GameBase.GameClock))) / 2f;
+            ActualSongTime = (GameBase.AudioEngine.Position + (ActualSongTime + (dt * GameBase.AudioEngine.PlaybackRate))) / 2;
         }
 
         internal double GetCurrentSongTime()
         {
             //Add global offset to actual song time
-            return ActualSongTime + (SongManager.BassDelayOffset - Configuration.GlobalOffset) * GameBase.GameClock;
+            return ActualSongTime + (AudioEngine.BassDelayOffset - Configuration.GlobalAudioOffset) * GameBase.AudioEngine.PlaybackRate;
         }
 
         internal ulong[] GetSVCalc(List<TimingObject> svQueue)

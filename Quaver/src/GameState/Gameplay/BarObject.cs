@@ -26,6 +26,7 @@ namespace Quaver.GameState.Gameplay
             BarSprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
+                Image = GameBase.LoadedSkin.StageTimingBar,
                 Position = new UDim2(0, posY),
                 Size = new UDim2(0, sizeY, 1, 0),
                 Parent = parent

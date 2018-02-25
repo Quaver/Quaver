@@ -111,7 +111,15 @@ namespace Quaver.GameState.States
             GameBase.GameOverlay.OverlayActive = true;
 
             //Add map selected text TODO: remove later
-            Logger.Add("MapSelected", "Map Selected: " + GameBase.SelectedBeatmap.Artist + " - " + GameBase.SelectedBeatmap.Title + " [" + GameBase.SelectedBeatmap.DifficultyName + "]", Color.Yellow);
+            try
+            {
+                Logger.Add("MapSelected", "Map Selected: " + GameBase.SelectedBeatmap.Artist + " - " + GameBase.SelectedBeatmap.Title + " [" + GameBase.SelectedBeatmap.DifficultyName + "]", Color.Yellow);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, LogType.Runtime);
+            }
+
             UpdateReady = true;
         }
 
@@ -211,7 +219,7 @@ namespace Quaver.GameState.States
         /// </summary>
         private void OnPlayMapButtonClick(object sender, EventArgs e)
         {
-            GameBase.LoadedSkin.SoundClick.Play((float) Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100,0, 0);
+            GameBase.LoadedSkin.SoundClick.Play(GameBase.SoundEffectVolume, 0, 0);
             GameBase.GameStateManager.ChangeState(new SongLoadingState());
         }
 
@@ -230,11 +238,18 @@ namespace Quaver.GameState.States
         /// </summary>
         private void RepeatSongPreview()
         {
-            if (SongManager.Position < SongManager.Length)
+            if (GameBase.AudioEngine.Position < GameBase.AudioEngine.Length || AudioEngine.Stream == 0)
                 return;
 
             // Reload the audio and play at the song preview
-            SongManager.ReloadSong(true);
+            try
+            {
+                GameBase.AudioEngine.ReloadStream();
+                GameBase.AudioEngine.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+            } catch (Exception e)
+            {
+                Logger.LogError(e, LogType.Runtime);
+            }
         }
 
         /// <summary>
@@ -259,7 +274,7 @@ namespace Quaver.GameState.States
         /// <param name="e"></param>
         private void OnBackButtonClick(object sender, EventArgs e)
         {
-            GameBase.LoadedSkin.SoundBack.Play((float) Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100,0, 0);
+            GameBase.LoadedSkin.SoundBack.Play(GameBase.SoundEffectVolume, 0, 0);
             GameBase.GameStateManager.ChangeState(new MainMenuState());
         }
 
@@ -269,7 +284,7 @@ namespace Quaver.GameState.States
         private void CreateSpeedModButton()
         {
             // Create Speed Mod Button
-            SpeedModButton = new TextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.GameClock}x")
+            SpeedModButton = new TextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x")
             {
                 PosY = - 120,
                 Alignment = Alignment.BotLeft,
@@ -288,7 +303,7 @@ namespace Quaver.GameState.States
             try
             {
                 // Activate the current speed mod depending on the (current game clock + 0.1)
-                switch ((float)Math.Round(GameBase.GameClock + 0.1f, 1))
+                switch ((float)Math.Round(GameBase.AudioEngine.PlaybackRate + 0.1f, 1))
                 {
                     // In this case, 2.1 really means 0.5x, given that we're checking
                     // for the current GameClock + 0.1. If it's 2.1, we reset it back to 0.5x
@@ -349,7 +364,7 @@ namespace Quaver.GameState.States
             }
 
             // Change the song speed directly.
-            SpeedModButton.TextSprite.Text = $"Add Speed Mod {GameBase.GameClock}x";
+            SpeedModButton.TextSprite.Text = $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x";
         }
 
         /// <summary>
@@ -372,7 +387,7 @@ namespace Quaver.GameState.States
         /// <param name="e"></param>
         private void OnTogglePitchButtonClick(object sender, EventArgs e)
         {
-            SongManager.ToggleSongPitch();
+            GameBase.AudioEngine.TogglePitch();
             TogglePitch.TextSprite.Text = $"Toggle Pitch: {Configuration.Pitched}";
         }
     }

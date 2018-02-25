@@ -121,7 +121,7 @@ namespace Quaver.Database.Beatmaps
         /// <summary>
         ///     The most common bpm for the beatmap
         /// </summary>
-        public decimal Bpm { get; set; }
+        public double Bpm { get; set; }
 
         /// <summary>
         ///     The beatmap's length (Time of the last hit object)
@@ -142,7 +142,7 @@ namespace Quaver.Database.Beatmaps
         ///     Determines if this map is an osu! beatmap.
         /// </summary>
         [Ignore]
-        public bool IsOsuMap { get; set; }
+        public BeatmapGame Game { get; set; } = BeatmapGame.Quaver;
 
         /// <summary>
         ///     The actual parsed qua file for the beatmap.
@@ -180,7 +180,7 @@ namespace Quaver.Database.Beatmaps
                 Tags = qua.Tags,
                 SongLength = Qua.FindSongLength(qua),
                 Mode = qua.Mode,
-                DifficultyRating = qua.CalculateFakeDifficulty()
+                DifficultyRating = qua.CalculateFakeDifficulty(),
             };
         }
 
@@ -199,5 +199,15 @@ namespace Quaver.Database.Beatmaps
                 }
             });
         }
+    }
+
+    /// <summary>
+    ///     The game in which the beatmap belongs to
+    /// </summary>
+    public enum BeatmapGame
+    {
+        Quaver,
+        Osu,
+        Etterna
     }
 }

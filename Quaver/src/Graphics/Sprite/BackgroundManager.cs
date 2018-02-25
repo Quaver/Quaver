@@ -158,18 +158,10 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         public static void LoadBackground()
         {
-            var bgPath = Configuration.SongDirectory + "/" + GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.BackgroundPath;
+            var bgPath = GameBase.CurrentBackgroundPath;
 
-            if (GameBase.SelectedBeatmap.IsOsuMap)
-            {
-                // Parse the map and get the background
-                var osu = new PeppyBeatmap(GameBase.OsuSongsFolder + GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.Path);
-                bgPath = $@"{GameBase.OsuSongsFolder}/{GameBase.SelectedBeatmap.Directory}/{osu.Background}";
-
-                // Don't reload the map's background if the last map is the same.
-                if (bgPath == GameBase.LastBackgroundPath)
-                    return;
-            }
+            if (bgPath == GameBase.LastBackgroundPath)
+                return;
 
             GameBase.LastBackgroundPath = bgPath;
 

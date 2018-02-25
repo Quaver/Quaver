@@ -64,11 +64,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         private TextBoxSprite ScoreText { get; set; }
 
         /// <summary>
-        ///     Current score the player has. Used for animation/UI.
-        /// </summary>
-        private double CurrentScore { get; set; }
-
-        /// <summary>
         ///     Current accuracy the player has. Used for animation
         /// </summary>
         private float CurrentAccuracy { get; set; }
@@ -97,7 +92,6 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         public void Initialize(IGameState state)
         {
             // Reference Variables
-            CurrentScore = 0;
             CurrentAccuracy = 0;
             CurrentGrade = 0;
             JudgementCount = new int[6];
@@ -140,7 +134,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Parent = accuracyDisplaySet[i+1],
                     Alignment = Alignment.MidLeft,
                     Size = new UDim2(0, -2, 0, 1),
-                    Tint = GameColors.JudgeColors[i],
+                    Tint = GameBase.LoadedSkin.JudgeColors[i],
                     Alpha = 0.12f
                 };
             }
@@ -152,11 +146,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     Parent = accuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
+                    TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                     TextAlignment = Alignment.MidLeft,
                     Size = new UDim2(0, 0, 1, 1),
                     Position = new UDim2(5, 0),
                     Font = Fonts.Medium16,
-                    TextColor = i == 0 ? Color.White : GameColors.JudgeColors[i-1],
+                    TextColor = i == 0 ? Color.White : GameBase.LoadedSkin.JudgeColors[i-1],
                     Text = i == 0 ? "Accuracy" : GameplayReferences.JudgeNames[i-1],
                     TextScale = GameBase.WindowUIScale,
                     Alpha = 0.3f
@@ -170,11 +165,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     Parent = accuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
+                    TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                     TextAlignment = Alignment.MidRight,
                     Size = new UDim2(0, 0, 1, 1),
                     Position = new UDim2(-5, 0),
                     Font = Fonts.Medium16,
-                    TextColor = i == 0 ? Color.White : GameColors.JudgeColors[i - 1],
+                    TextColor = i == 0 ? Color.White : GameBase.LoadedSkin.JudgeColors[i - 1],
                     Text = i == 0 ? "00.00%" : "0 | 0",
                     TextScale = GameBase.WindowUIScale,
                 };
@@ -247,16 +243,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal void UpdateAccuracyBox(int index, int pressSpread, int releaseSpread, int judgeCount, int totalScore, double tarAcc)
         {
             // Update Variables and Text
-            CurrentScore = totalScore;
+            //CurrentScore = totalScore;
+            ScoreText.Text = Util.ScoreToString(totalScore);
             TargetAccuracy = (float)tarAcc;
             JudgementCount[index] = pressSpread + releaseSpread;
             AccuracyCountText[index+1].Text = pressSpread + " | " + releaseSpread;
 
             //Calculate graph bars
-            for (var i = 0; i < 6; i++)
-            {
-                AccuracyGraphTargetScale[i] = (float)Math.Sqrt((double)(JudgementCount[i]) / judgeCount);
-            }
+            AccuracyGraphTargetScale[index] = (float)Math.Sqrt((double)(JudgementCount[index]) / judgeCount);
         }
 
         internal void UpdateGradeBar(int index, float scale)
@@ -281,27 +275,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         public void Update(double dt)
         {
             // Update Accuracy Graph Bars
-            double tween = Math.Min(dt / 50, 1);
+            double tween = Math.Min(dt / 30, 1);
             for (var i = 0; i < 6; i++)
             {
                 AccuracyGraphBar[i].ScaleX = Util.Tween(AccuracyGraphTargetScale[i], AccuracyGraphBar[i].ScaleX, tween);
             }
 
-            // If there's an active long note, the score will have a "slider" effect (+1 point every 25ms), otherwise it will tween normally
-            /*
-            if (NoteHolding)
-            {
-                CurrentScore += tween*2;
-                if (CurrentScore > GameplayReferences.ScoreTotal) CurrentScore = GameplayReferences.ScoreTotal;
-            }
-            else
-            {
-                CurrentScore = GameplayReferences.ScoreTotal; // Util.Tween(Score, (float)CurrentScore, tween);
-                //if (CurrentScore > Score) CurrentScore = Score;
-            }*/
-
             // Update Score Text
-            ScoreText.Text = Util.ScoreToString((int)CurrentScore);
+            //ScoreText.Text = Util.ScoreToString((int)CurrentScore);
 
             // Update Accuracy Text
             CurrentAccuracy = Util.Tween(TargetAccuracy, CurrentAccuracy, tween);
