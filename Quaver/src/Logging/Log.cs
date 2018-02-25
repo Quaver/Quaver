@@ -34,4 +34,19 @@ namespace Quaver.Logging
         /// </summary>
         public bool NoDuration { get; set; } = true;
     }
+
+    public enum LogLevel
+    {
+        Success,
+        Info,
+        Important,
+        Warning,
+        Error
+    }
+
+    public enum LogType
+    {
+        Runtime,
+        Network
+    }
 }

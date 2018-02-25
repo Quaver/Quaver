@@ -109,7 +109,7 @@ namespace Quaver.Discord
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
                 throw;
             }
         }
@@ -127,11 +127,11 @@ namespace Quaver.Discord
                 var mapString = $"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]";
 
                 // Get the original map length. 
-                double mapLength = Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) / GameBase.GameClock;
+                double mapLength = Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) / GameBase.AudioEngine.PlaybackRate;
 
                 // Get the new map length if it was skipped.
                 if (skippedSong)
-                    mapLength = (Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) - SongManager.Position) / GameBase.GameClock;
+                    mapLength = (Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) - GameBase.AudioEngine.Position) / GameBase.AudioEngine.PlaybackRate;
 
                 var sb = new StringBuilder();
                 sb.Append("Playing");
@@ -142,14 +142,14 @@ namespace Quaver.Discord
                     sb.Append(" + ");
 
                     if (GameBase.CurrentGameModifiers.Exists(x => x.Type == ModType.Speed))
-                        sb.Append($"Speed {GameBase.GameClock}x");
+                        sb.Append($"Speed {GameBase.AudioEngine.PlaybackRate}x");
                 }
 
                 ChangeDiscordPresence(mapString, sb.ToString(), mapLength);
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
 
@@ -168,7 +168,7 @@ namespace Quaver.Discord
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
     }

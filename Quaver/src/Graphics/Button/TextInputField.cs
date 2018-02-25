@@ -215,9 +215,10 @@ namespace Quaver.Graphics.Button
                             break;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logger.Log("could not write character: " + e.Character, LogColors.GameWarning);
+                    Logger.LogWarning("Could not write character: " + e.Character, LogType.Runtime);
+                    Logger.LogError(ex, LogType.Runtime);
                 }
             }
         }

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using IniParser;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Logging;
 
@@ -119,14 +120,14 @@ namespace Quaver.Config
         /// <summary>
         ///     4k Hit Position offset from receptor
         /// </summary>
-        private static int _hitPositionOffset4k = 0;
-        internal static int HitPositionOffset4k { get => _hitPositionOffset4k; set { _hitPositionOffset4k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        private static int _userHitPositionOffset4k = 0;
+        internal static int UserHitPositionOffset4k { get => _userHitPositionOffset4k; set { _userHitPositionOffset4k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     7k Hit Position offset from receptor
         /// </summary>
-        private static int _hitPositionOffset7k = 0;
-        internal static int HitPositionOffset7k { get => _hitPositionOffset7k; set { _hitPositionOffset7k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        private static int _userHitPositionOffset7k = 0;
+        internal static int UserHitPositionOffset7k { get => _userHitPositionOffset7k; set { _userHitPositionOffset7k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     Is the window fullscreen?
@@ -145,6 +146,12 @@ namespace Quaver.Config
         /// </summary>
         private static bool _fpsCounter = true;
         internal static bool FpsCounter { get => _fpsCounter; set { _fpsCounter = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
+        ///     Determines if the health bar + multiplier is at top or bottom of the playfield
+        /// </summary>
+        private static bool _healthBarPositionTop = false;
+        internal static bool HealthBarPositionTop { get => _healthBarPositionTop; set { _healthBarPositionTop = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The scroll speed for mania 4k
@@ -173,8 +180,8 @@ namespace Quaver.Config
         /// <summary>
         ///     The offset of the notes compared to the song start.
         /// </summary>
-        private static sbyte _globalOffset;
-        internal static sbyte GlobalOffset { get => _globalOffset; set { _globalOffset = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        private static sbyte _globalAudioOffset;
+        internal static sbyte GlobalAudioOffset { get => _globalAudioOffset; set { _globalAudioOffset = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     Dictates whether or not the song audio is pitched while using the Speed mod.
@@ -206,6 +213,19 @@ namespace Quaver.Config
         /// </summary>
         private static bool _autoLoadOsuBeatmaps;
         internal static bool AutoLoadOsuBeatmaps { get => _autoLoadOsuBeatmaps; set { _autoLoadOsuBeatmaps = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
+        ///     The path of the Etterna cache folder
+        ///     NOTE: Usually located at C:\Games\Etterna\Cache\Songs
+        /// </summary>
+        private static string _etternaCacheFolderPath = @"C:\Games\Etterna\Cache\Songs\";
+        internal static string EtternaCacheFolderPath { get => _etternaCacheFolderPath; set { _etternaCacheFolderPath = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+
+        /// <summary>
+        ///     Dictates whether or not the game will be loaded with all of the Etterna maps
+        /// </summary>
+        private static bool _autoLoadEtternaCharts;
+        internal static bool AutoLoadEtternaCharts { get => _autoLoadEtternaCharts; set { _autoLoadEtternaCharts = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed for lane 1
@@ -361,7 +381,6 @@ namespace Quaver.Config
             _songDirectory = GameDirectory + "/Songs";
             Directory.CreateDirectory(SongDirectory);
 
-            // Create the rintime log file.
             Logger.CreateLogFile();
 
             // We'll want to write a quaver.cfg file if it doesn't already exist.
@@ -378,7 +397,8 @@ namespace Quaver.Config
 
             // If we already have a config file, we'll just want to read that.
             ReadConfigFile();
-            Logger.Log("Config file has successfully been read.", LogColors.GameImportant);
+
+            Logger.LogSuccess("Config file has successfully been read.", LogType.Runtime);
         }
 
         /// <summary>
@@ -401,6 +421,8 @@ namespace Quaver.Config
             _songDirectory = ConfigHelper.ReadDirectory(SongDirectory, data["SongDirectory"]);
             _osuDbPath = ConfigHelper.ReadPath(OsuDbPath, data["OsuDbPath"]);
             _autoLoadOsuBeatmaps = ConfigHelper.ReadBool(AutoLoadOsuBeatmaps, data["AutoLoadOsuBeatmaps"]);
+            _etternaCacheFolderPath = ConfigHelper.ReadDirectory(EtternaCacheFolderPath, data["EtternaCacheFolderPath"]);
+            _autoLoadEtternaCharts = ConfigHelper.ReadBool(AutoLoadEtternaCharts, data["AutoLoadEtternaCharts"]);
             _username = ConfigHelper.ReadString(Username, data["Username"]);
             _volumeGlobal = ConfigHelper.ReadPercentage(VolumeGlobal, data["VolumeGlobal"]);
             _volumeEffect = ConfigHelper.ReadPercentage(VolumeEffect, data["VolumeEffect"]);
@@ -408,8 +430,9 @@ namespace Quaver.Config
             _backgroundBrightness = ConfigHelper.ReadPercentage(BackgroundBrightness, data["BackgroundBrightness"]);
             _windowHeight = ConfigHelper.ReadInt32(WindowHeight, data["WindowHeight"]);
             _windowWidth = ConfigHelper.ReadInt32(WindowWidth, data["WindowWidth"]);
-            _hitPositionOffset4k = ConfigHelper.ReadInt32(HitPositionOffset4k, data["HitPositionOffset4k"]);
-            _hitPositionOffset7k = ConfigHelper.ReadInt32(HitPositionOffset7k, data["HitPositionOffset7k"]);
+            _healthBarPositionTop = ConfigHelper.ReadBool(HealthBarPositionTop, data["HealthBarPositionTop"]);
+            _userHitPositionOffset4k = ConfigHelper.ReadInt32(UserHitPositionOffset4k, data["HitPositionOffset4k"]);
+            _userHitPositionOffset7k = ConfigHelper.ReadInt32(UserHitPositionOffset7k, data["HitPositionOffset7k"]);
             _windowFullScreen = ConfigHelper.ReadBool(WindowFullScreen, data["WindowFullScreen"]);
             _windowLetterboxed = ConfigHelper.ReadBool(WindowLetterboxed, data["WindowLetterboxed"]);
             _fpsCounter = ConfigHelper.ReadBool(FpsCounter, data["FpsCounter"]);
@@ -417,7 +440,7 @@ namespace Quaver.Config
             _scrollSpeed7k = ConfigHelper.ReadPercentage(ScrollSpeed7k, data["ScrollSpeed7k"]);
             _downScroll4k = ConfigHelper.ReadBool(DownScroll4k, data["DownScroll4k"]);
             _downScroll7k = ConfigHelper.ReadBool(DownScroll7k, data["DownScroll7k"]);
-            _globalOffset = ConfigHelper.ReadSignedByte(GlobalOffset, data["GlobalOffset"]);
+            _globalAudioOffset = ConfigHelper.ReadSignedByte(GlobalAudioOffset, data["GlobalAudioOffset"]);
             _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
             _defaultSkin = ConfigHelper.ReadDefaultSkin(DefaultSkin, data["DefaultSkin"]);
             _pitched = ConfigHelper.ReadBool(Pitched, data["Pitched"]);
@@ -440,7 +463,11 @@ namespace Quaver.Config
             _keySkipIntro = ConfigHelper.ReadKeys(KeySkipIntro, data["KeySkipIntro"]);
             _keyTakeScreenshot = ConfigHelper.ReadKeys(KeyTakeScreenshot, data["KeyTakeScreenshot"]);
             _keyToggleOverlay = ConfigHelper.ReadKeys(KeyToggleOverlay, data["KeyToggleOverlay"]);
-                
+
+            // Set Master and Sound Effect Volume
+            SoundEffect.MasterVolume = VolumeGlobal / 100f;
+            GameBase.SoundEffectVolume = VolumeEffect / 100f;
+
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync());
         }
@@ -511,7 +538,7 @@ namespace Quaver.Config
 
                 // If too many attempts were made.
                 if (attempts == 2)
-                    Logger.Log("Too many attempts in a short time to write the config file have been made.", Color.Aqua);
+                    Logger.LogError("Too many attempts in a short time to write the config file have been made.", LogType.Runtime);
             }
         }
 

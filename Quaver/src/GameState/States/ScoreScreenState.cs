@@ -21,6 +21,7 @@ using Quaver.Graphics.Text;
 using Quaver.GameState.Gameplay;
 using Quaver.Utility;
 using Quaver.Audio;
+using Quaver.Skins;
 
 namespace Quaver.GameState.States
 {
@@ -116,8 +117,16 @@ namespace Quaver.GameState.States
             ReplayPath = $"{Configuration.Username} - {Artist} - {Title} [{DifficultyName}] ({DateTime.UtcNow})";
 
             // TODO: Add an audio fade out effect here instead of abruptly stopping it. If failed, it should abruptly stop in the play state. Not here.
-            SongManager.Stop();
-
+            try
+            {
+                GameBase.AudioEngine.Stop();
+            }
+            catch (AudioEngineException e)
+            {
+                // No need to handle this. This will only be thrown if the audio stream isn't actually loaded.
+                // so it's fine.
+            }
+            
             // TODO: The failed sound should play in the play state before switching to this one, however this is ok for now.
             ApplauseInstance = (ScoreData.Failed) ? GameBase.LoadedSkin.SoundComboBreak.CreateInstance() : GameBase.LoadedSkin.SoundApplause.CreateInstance();
 
@@ -150,12 +159,17 @@ namespace Quaver.GameState.States
                 }
                 catch (Exception e)
                 {
-                    Logger.Log(e.Message, LogColors.GameError);
+                    Logger.LogError(e, LogType.Runtime);
                 }
             });
 
             // Set Rich Presence for this state
             SetDiscordRichPresence();
+
+#if DEBUG
+            for (var i = 0; i < ScoreData.NoteDevianceData.Count; i++)
+                Console.WriteLine($"[{i}] {ScoreData.NoteDevianceData[i].Position} | {ScoreData.NoteDevianceData[i].Value}");
+#endif
         }
 
         /// <summary>
@@ -173,6 +187,7 @@ namespace Quaver.GameState.States
             ScoreData.UnloadData();
 
             // Play Applause
+            ApplauseInstance.Volume = GameBase.SoundEffectVolume;
             ApplauseInstance.Play();
 
             // Update overlay
@@ -252,7 +267,7 @@ namespace Quaver.GameState.States
         private void OnBackButtonClick(object sender, EventArgs e)
         {
             ApplauseInstance.Stop(true);
-            GameBase.LoadedSkin.SoundBack.Play((float) Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+            GameBase.LoadedSkin.SoundBack.Play(GameBase.SoundEffectVolume, 0, 0);
             GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 
@@ -273,7 +288,7 @@ namespace Quaver.GameState.States
                 Score = ScoreData.ScoreTotal,
                 Accuracy = Math.Round(ScoreData.Accuracy * 100, 2),
                 Grade = grade,
-                MaxCombo = ScoreData.Combo,
+                MaxCombo = ScoreData.MaxCombo,
                 MarvPressCount = ScoreData.JudgePressSpread[0],
                 MarvReleaseCount = ScoreData.JudgeReleaseSpread[0],
                 PerfPressCount = ScoreData.JudgePressSpread[1],
@@ -307,7 +322,7 @@ namespace Quaver.GameState.States
                 ScrollSpeed = ScoreData.ScrollSpeed,
                 Score = ScoreData.ScoreTotal,
                 Accuracy = (float)Math.Round(ScoreData.Accuracy * 100, 2),
-                MaxCombo = ScoreData.Combo,
+                MaxCombo = ScoreData.MaxCombo,
                 MarvPressCount = ScoreData.JudgePressSpread[0],
                 MarvReleaseCount = ScoreData.JudgeReleaseSpread[0],
                 PerfPressCount = ScoreData.JudgePressSpread[1],
@@ -333,23 +348,23 @@ namespace Quaver.GameState.States
         /// </summary>
         private void LogScore()
         {
-            Logger.Log($"Quaver Version: {Replay.QuaverVersion}", LogColors.GameInfo);
-            Logger.Log($"Beatmap MD5: {Replay.BeatmapMd5}", LogColors.GameInfo);
-            Logger.Log($"Replay MD5: {Replay.ReplayMd5}", LogColors.GameInfo);
-            Logger.Log($"Player: {Configuration.Username}", LogColors.GameInfo);
-            Logger.Log($"Date: {Replay.Date.ToString(CultureInfo.InvariantCulture)}", LogColors.GameInfo);
-            Logger.Log($"Mods: {GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier)}", LogColors.GameInfo);
-            Logger.Log($"Scroll Speed: {ScoreData.ScrollSpeed}", LogColors.GameInfo);
-            Logger.Log($"Score: {Replay.Score}", LogColors.GameInfo);
-            Logger.Log($"Accuracy: {Replay.Accuracy}%", LogColors.GameInfo);
-            Logger.Log($"Max Combo: {Replay.MaxCombo}", LogColors.GameInfo);
-            Logger.Log($"Marv Count: {Replay.MarvPressCount + Replay.MarvReleaseCount}", LogColors.GameInfo);
-            Logger.Log($"Perf Count: {Replay.PerfPressCount + Replay.PerfReleaseCount}", LogColors.GameInfo);
-            Logger.Log($"Great Count: {Replay.GreatPressCount + Replay.GreatReleaseCount}", LogColors.GameInfo);
-            Logger.Log($"Good Count: {Replay.GoodPressCount + Replay.GoodReleaseCount}", LogColors.GameInfo);
-            Logger.Log($"Okay Count: {Replay.OkayPressCount + Replay.OkayReleaseCount}", LogColors.GameInfo);
-            Logger.Log($"Miss Count: {Replay.Misses}", LogColors.GameInfo);
-            Logger.Log($"Replay Frame Count: {Replay.ReplayFrames.Count}", LogColors.GameInfo);
+            Logger.LogImportant($"Quaver Version: {Replay.QuaverVersion}", LogType.Runtime);
+            Logger.LogImportant($"Beatmap MD5: {Replay.BeatmapMd5}", LogType.Runtime);
+            Logger.LogImportant($"Replay MD5: {Replay.ReplayMd5}", LogType.Runtime);
+            Logger.LogImportant($"Player: {Configuration.Username}", LogType.Runtime);
+            Logger.LogImportant($"Date: {Replay.Date.ToString(CultureInfo.InvariantCulture)}", LogType.Runtime);
+            Logger.LogImportant($"Mods: {GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier)}", LogType.Runtime);
+            Logger.LogImportant($"Scroll Speed: {ScoreData.ScrollSpeed}", LogType.Runtime);
+            Logger.LogImportant($"Score: {Replay.Score}", LogType.Runtime);
+            Logger.LogImportant($"Accuracy: {Replay.Accuracy}%", LogType.Runtime);
+            Logger.LogImportant($"Max Combo: {Replay.MaxCombo}", LogType.Runtime);
+            Logger.LogImportant($"Marv Count: {Replay.MarvPressCount + Replay.MarvReleaseCount}", LogType.Runtime);
+            Logger.LogImportant($"Perf Count: {Replay.PerfPressCount + Replay.PerfReleaseCount}", LogType.Runtime);
+            Logger.LogImportant($"Great Count: {Replay.GreatPressCount + Replay.GreatReleaseCount}", LogType.Runtime);
+            Logger.LogImportant($"Good Count: {Replay.GoodPressCount + Replay.GoodReleaseCount}", LogType.Runtime);
+            Logger.LogImportant($"Okay Count: {Replay.OkayPressCount + Replay.OkayReleaseCount}", LogType.Runtime);
+            Logger.LogImportant($"Miss Count: {Replay.Misses}", LogType.Runtime);
+            Logger.LogImportant($"Replay Frame Count: {Replay.ReplayFrames.Count}", LogType.Runtime);
         }
 
         /// <summary>
@@ -361,9 +376,9 @@ namespace Quaver.GameState.States
             var mapData = $"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]";
             var accuracy = (float)Math.Round(ScoreData.Accuracy * 100, 2);
             var grade = (ScoreData.Failed) ? Grades.F : Util.GetGradeFromAccuracy(accuracy);
-            var status = (ScoreData.Failed) ? "Failed" : "Finished";
+            var status = (ScoreData.Failed) ? "Failed - " : "Finished -";
 
-            DiscordController.ChangeDiscordPresence(mapData, $"{status} - {accuracy}% - {grade.ToString()}");
+            DiscordController.ChangeDiscordPresence(mapData, $"{status} {accuracy}% {grade.ToString()} {ScoreData.MaxCombo}x");
         }
 
         /// <summary>
@@ -392,7 +407,7 @@ namespace Quaver.GameState.States
                 {
                     Position = new UDim2(0, boundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
                     Size = new UDim2(0, 1, 1, 0),
-                    Tint = GameColors.JudgeColors[i],
+                    Tint = GameBase.LoadedSkin.JudgeColors[i],
                     Alpha = 0.2f,
                     Alignment = Alignment.MidLeft,
                     Parent = boundary
@@ -403,7 +418,7 @@ namespace Quaver.GameState.States
                 {
                     Position = new UDim2(0, -boundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
                     Size = new UDim2(0, 1, 1, 0),
-                    Tint = GameColors.JudgeColors[i],
+                    Tint = GameBase.LoadedSkin.JudgeColors[i],
                     Alpha = 0.2f,
                     Alignment = Alignment.MidLeft,
                     Parent = boundary
@@ -423,7 +438,7 @@ namespace Quaver.GameState.States
                     {
                         Position = new UDim2(((float)(ms.Position / ScoreData.PlayTimeTotal) * boundary.Size.X.Offset) - 1f, 0),
                         Size = new UDim2(2, 0, 0, 1),
-                        Tint = GameColors.JudgeMiss,
+                        Tint = GameBase.LoadedSkin.GetJudgeColor(Judge.Miss),
                         Alpha = 0.25f,
                         Parent = boundary
                     };
@@ -445,7 +460,7 @@ namespace Quaver.GameState.States
                     {
                         Position = new UDim2((float)(ms.Position / ScoreData.PlayTimeTotal * boundary.Size.X.Offset) - 1.5f, (float)(ms.Value * (boundary.Size.Y.Offset / 2) / ScoreData.HitWindowPress[4]) - 1.5f),
                         Size = new UDim2(3, 3),
-                        Tint = GameColors.JudgeColors[tint],
+                        Tint = GameBase.LoadedSkin.JudgeColors[tint],
                         Alignment = Alignment.MidLeft,
                         Parent = boundary
                     };
@@ -596,7 +611,7 @@ namespace Quaver.GameState.States
                 ob = new TextBoxSprite()
                 {
                     Text = "[" + GameplayReferences.JudgeNames[i] + "]: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i] + " Total: " + (ScoreData.JudgePressSpread[i] + ScoreData.JudgeReleaseSpread[i]),
-                    TextColor = GameColors.JudgeColors[i],
+                    TextColor = GameBase.LoadedSkin.JudgeColors[i],
                     Font = Fonts.Medium16,
                     Position = new UDim2(0, 200 * i / 6 + 100),
                     Size = new UDim2(0, 0, 1, 0),
@@ -824,7 +839,7 @@ namespace Quaver.GameState.States
                                 (float)(Math.Cos(position * circularRatio - Math.PI / 2) * (radius - (2.5 * i))) + offset.X,
                                 (float)(Math.Sin(position * circularRatio - Math.PI / 2) * (radius - (2.5 * i))) + offset.Y
                             ),
-                            Tint = GameColors.JudgeColors[tint],
+                            Tint = GameBase.LoadedSkin.JudgeColors[tint],
                             Size = new UDim2(3, 3),
                             Parent = parent
                         };
