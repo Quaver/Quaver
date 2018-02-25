@@ -224,8 +224,17 @@ namespace Quaver.Audio
         private void Dispose()
         {
             if (Stream != 0)
-                Stop();
-
+            {
+                try
+                {
+                    Stop();
+                }
+                catch (Exception e)
+                {
+                    
+                }
+            }
+                
             Bass.StreamFree(Stream);
             Stream = 0;
             HasPlayed = false;
