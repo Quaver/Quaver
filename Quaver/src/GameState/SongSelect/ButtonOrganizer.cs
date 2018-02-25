@@ -62,6 +62,11 @@ namespace Quaver.GameState.SongSelect
         private float TargetContainerOffset { get; set; }
 
         /// <summary>
+        ///     Keeps track if this state has already been loaded. (Used for audio loading.)
+        /// </summary>
+        private bool FirstLoad { get; set; }
+
+        /// <summary>
         ///     Initialize
         /// </summary>
         /// <param name="state"></param>
@@ -352,10 +357,18 @@ namespace Quaver.GameState.SongSelect
             Beatmap.ChangeBeatmap(map);
 
             // Only load the audio again if the new map's audio isn't the same as the old ones.
-            if (oldMapAudioPath != map.Directory + "/" + map.AudioPath)
+            if (oldMapAudioPath != map.Directory + "/" + map.AudioPath || !FirstLoad)
             {
-                GameBase.AudioEngine.ReloadStream();
-                GameBase.AudioEngine.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+                try
+                {
+                    GameBase.AudioEngine.ReloadStream();
+                    GameBase.AudioEngine.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+                    FirstLoad = true;
+                }
+                catch (Exception e)
+                {
+                    Logger.LogWarning("User selected a map with audio that could not be loaded", LogType.Runtime);
+                }
             }
 
             // Load background asynchronously if the backgrounds actually do differ
