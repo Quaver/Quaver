@@ -13,6 +13,7 @@ using Quaver.Commands;
 using Quaver.Database.Beatmaps;
 using Quaver.Config;
 using Quaver.Logging;
+using Quaver.StepMania;
 using SQLite;
 
 namespace Quaver.Database
@@ -56,6 +57,9 @@ namespace Quaver.Database
 
                 if (Configuration.AutoLoadOsuBeatmaps)
                     beatmaps = beatmaps.Concat(LoadBeatmapsFromOsuDb()).ToList();
+
+                if (Configuration.AutoLoadEtternaCharts)
+                    beatmaps = beatmaps.Concat(LoadBeatmapsFromEtternaCache()).ToList();
 
                 var maps = BeatmapUtils.GroupBeatmapsByDirectory(beatmaps);
                 Logger.LogSuccess($"Successfully loaded {beatmaps.Count} in {maps.Count} directories.", LogType.Runtime);
@@ -422,7 +426,7 @@ namespace Quaver.Database
                         Tags = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.SongTags)),
                         Mode = (beatmap.CircleSize == 4) ? GameModes.Keys4 : GameModes.Keys7,
                         SongLength = beatmap.TotalTime,
-                        IsOsuMap = true,
+                        Game = BeatmapGame.Osu,
                         BackgroundPath = "",      
                     };
 
@@ -450,6 +454,73 @@ namespace Quaver.Database
                 Logger.LogError(e, LogType.Runtime);
                 return new List<Beatmap>();
             }
+        }
+
+        /// <summary>
+        ///     Loads charts from Etterna and places them on the cache.
+        /// </summary>
+        /// <returns></returns>
+        private static List<Beatmap> LoadBeatmapsFromEtternaCache()
+        {
+            var maps = new List<Beatmap>();
+
+            try
+            {
+                var files = Directory.GetFiles(Configuration.EtternaCacheFolderPath);
+
+                if (files.Length == 0)
+                    return maps;
+
+                // Should give us the etterna base folder
+                GameBase.EtternaFolder = Path.GetFullPath(Path.Combine(Configuration.EtternaCacheFolderPath, @"..\..\"));
+
+                // Read all the files in them
+                foreach (var cacheFile in files)
+                {
+                    try
+                    {
+                        var etternaFile = Etterna.ReadCacheFile(cacheFile);
+
+                        foreach (var chart in etternaFile.ChartData)
+                        {
+                            maps.Add(new Beatmap()
+                            {
+                                Md5Checksum = chart.ChartKey,
+                                Directory = Path.GetDirectoryName(etternaFile.SongFileName),
+                                Path = Path.GetFileName(etternaFile.SongFileName),
+                                Artist = etternaFile.Artist,
+                                Title = etternaFile.Title,
+                                MapSetId = -1,
+                                MapId = -1,
+                                DifficultyName = chart.Difficulty,
+                                RankedStatus = 0,
+                                DifficultyRating = 0,
+                                Creator = etternaFile.Credit,
+                                AudioPath = etternaFile.Music,
+                                AudioPreviewTime = (int)etternaFile.SampleStart,
+                                Description = $"This map is a StepMania converted version of {etternaFile.Credit}'s chart",
+                                Source = "StepMania",
+                                Tags = "StepMania",
+                                Mode = GameModes.Keys4,
+                                SongLength = 0,
+                                Game = BeatmapGame.Etterna,
+                                BackgroundPath = etternaFile.Background,
+                            });
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        // Couldn't parse, so just continue
+                        continue;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, LogType.Runtime);
+            }
+
+            return maps;
         }
     }
 }
