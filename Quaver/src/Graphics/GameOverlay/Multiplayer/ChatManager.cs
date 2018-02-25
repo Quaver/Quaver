@@ -16,7 +16,7 @@ using Quaver.Net.Structures;
 
 namespace Quaver.Graphics.GameOverlay.Multiplayer
 {
-    class ChatManager : IGameOverlayComponent
+    internal class ChatManager : IGameOverlayComponent
     {
         private Boundary Boundary { get; set; }
 
@@ -115,7 +115,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
             {
                 Channel = msg[0],
                 Text = msg[1],
-                Sender = FlamingoClient.Self.Username,
+                Sender = Flamingo.Self.Username,
                 DateTime = DateTime.Now
             };
 
