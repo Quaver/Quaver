@@ -14,7 +14,7 @@ using Steamworks;
 namespace Quaver.Steam
 {
 #if STEAM
-    internal static class SteamAPIHelper
+    internal static class SteamworksHelper
     {
         /// <summary>
         ///     The application Id for steam

@@ -120,7 +120,7 @@ namespace Quaver
 
             // Attempt to intialize the Steam API
 #if STEAM
-            SteamAPIHelper.Initialize();
+            SteamworksHelper.Initialize();
 #endif
 
             // Change to the loading screen state, where we detect if the song
@@ -172,7 +172,7 @@ namespace Quaver
 
             // Run Steam callbacks every frame to frequently stay updated with the API
 #if STEAM
-            if (SteamAPIHelper.IsInitialized)
+            if (SteamworksHelper.IsInitialized)
                 SteamAPI.RunCallbacks();
 #endif
 
@@ -230,7 +230,7 @@ namespace Quaver
                 DiscordRPC.Shutdown();
 
 #if STEAM
-                if (SteamAPIHelper.IsInitialized)
+                if (SteamworksHelper.IsInitialized)
                     SteamAPI.Shutdown();
 #endif
             }
