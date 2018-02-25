@@ -139,15 +139,16 @@ namespace Quaver.GameState.States
                 return;
             }
 
+            Console.WriteLine(GameBase.CurrentAudioPath);
             try
             {
                 // Stop the current audio and load it again before moving onto the next state.
                 try
                 {
-                    GameBase.AudioEngine.Stop();
                     GameBase.AudioEngine.Load();
                 } catch (AudioEngineException e)
                 {
+                    Console.WriteLine(e);
                     Logger.LogWarning("Audio file could not be loaded, but proceeding anyway!", LogType.Runtime);
                 }
 
