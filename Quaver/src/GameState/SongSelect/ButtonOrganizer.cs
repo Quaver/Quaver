@@ -353,7 +353,10 @@ namespace Quaver.GameState.SongSelect
 
             // Only load the audio again if the new map's audio isn't the same as the old ones.
             if (oldMapAudioPath != map.Directory + "/" + map.AudioPath)
-                SongManager.ReloadSong(true);
+            {
+                GameBase.AudioEngine.ReloadStream();
+                GameBase.AudioEngine.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+            }
 
             // Load background asynchronously if the backgrounds actually do differ
             if (GameBase.LastBackgroundPath != map.Directory + "/" + map.BackgroundPath)
