@@ -21,7 +21,9 @@ namespace Quaver.Commands
             new SearchMaps(),
             new GetScores(),
             new CalculateDifficulty(),
-            new ParseStepMania()
+            new ParseStepMania(),
+            new ConvertOsuSkin(),
+            new StepManiaCache()
         };
 
         /// <summary>

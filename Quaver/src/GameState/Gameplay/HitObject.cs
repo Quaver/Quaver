@@ -128,7 +128,7 @@ namespace Quaver.GameState.Gameplay
         /// <summary>
         ///     This method initializes the HitObject sprites
         /// </summary>
-        internal void Initialize(bool downScroll, bool longNote, Drawable parent, GameModes gamemode)
+        internal void Initialize(bool downScroll, bool longNote, Drawable parent)
         {
             IsLongNote = longNote;
             var keyLaneIndex = KeyLane - 1;
@@ -137,6 +137,7 @@ namespace Quaver.GameState.Gameplay
             HitBodySprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
+                SpriteEffect = !Config.Configuration.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                 Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
             };
 
@@ -159,11 +160,11 @@ namespace Quaver.GameState.Gameplay
                     Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
                     Size = new UDim2(HitObjectSize, 0),
                     Parent = parent,
-                    SpriteEffect = downScroll ? SpriteEffects.FlipVertically : SpriteEffects.None
+                    SpriteEffect = !Config.Configuration.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None
                 };
 
                 // Choose the correct image based on the specific key lane for hold bodies.
-                switch (gamemode)
+                switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
                     case GameModes.Keys4:
                         HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex];
@@ -183,7 +184,7 @@ namespace Quaver.GameState.Gameplay
             }
 
             // Choose the correct image based on the specific key lane for hit body.
-            switch (gamemode)
+            switch (GameBase.SelectedBeatmap.Qua.Mode)
             {
                 case GameModes.Keys4:
                     try
@@ -192,9 +193,11 @@ namespace Quaver.GameState.Gameplay
                         // we'll try to load give the object the correct snap colour,
                         // otherwise, we default it to the default or first (1/1) texture in the list.
                         if (GameBase.LoadedSkin.ColourObjectsBySnapDistance && GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][SnapIndex] != null)
-                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][SnapIndex];
+                            HitBodySprite.Image = (IsLongNote) ? GameBase.LoadedSkin.NoteHoldHitObjects4K[keyLaneIndex][SnapIndex]  
+                                                                : GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][SnapIndex];
                         else
-                            HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
+                            HitBodySprite.Image = (IsLongNote) ? GameBase.LoadedSkin.NoteHoldHitObjects4K[keyLaneIndex][0] 
+                                                                : GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
 
                         // Update hit body's size to match image ratio
                         HitBodySprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width);

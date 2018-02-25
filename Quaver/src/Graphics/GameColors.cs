@@ -32,19 +32,9 @@ namespace Quaver.Graphics
         public static readonly Color DeadNote = new Color(50, 50, 50);
 
         //todo: documentation.
-        //Judge Colors
-        public static readonly Color JudgeMarv = new Color(255, 255, 200);
-        public static readonly Color JudgePerf = new Color(255, 255, 0);
-        public static readonly Color JudgeGreat = new Color(0, 255, 0);
-        public static readonly Color JudgeGood = new Color(0, 168, 255);
-        public static readonly Color JudgeOkay = new Color(255, 0, 255);
-        public static readonly Color JudgeMiss = new Color(255, 0, 0);
-        public static readonly Color[] JudgeColors = new Color[6] { JudgeMarv, JudgePerf, JudgeGreat, JudgeGood, JudgeOkay, JudgeMiss };
-
-        //todo: documentation.
         //Grade Colors
-        public static readonly Color GradeSSSS = new Color(255, 255, 255);
-        public static readonly Color GradeSSS = new Color(255, 255, 255);
+        public static readonly Color GradeXX = new Color(255, 255, 255);
+        public static readonly Color GradeX = new Color(255, 255, 255);
         public static readonly Color GradeSS = new Color(255, 255, 125);
         public static readonly Color GradeS = new Color(255, 255, 0);
         public static readonly Color GradeA = new Color(0, 255, 0);
@@ -52,7 +42,7 @@ namespace Quaver.Graphics
         public static readonly Color GradeC = new Color(255, 0, 255);
         public static readonly Color GradeD = new Color(255, 70, 0);
         public static readonly Color GradeF = new Color(255, 0, 0);
-        public static readonly Color[] GradeColors = new Color[9] { GradeF, GradeD, GradeC, GradeB, GradeA, GradeS, GradeSS, GradeSSS, GradeSSSS };
+        public static readonly Color[] GradeColors = new Color[9] { GradeF, GradeD, GradeC, GradeB, GradeA, GradeS, GradeSS, GradeX, GradeXX };
 
         //todo: documentation.
         //Snap Colors

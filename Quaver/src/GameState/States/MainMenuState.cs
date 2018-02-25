@@ -24,7 +24,9 @@ using Quaver.Modifiers;
 using Button = Quaver.Graphics.Button.Button;
 using Quaver.API.Maps;
 using Quaver.Commands;
+using Quaver.Peppy;
 using Quaver.Steam;
+using Quaver.StepMania;
 using Quaver.Utility;
 
 namespace Quaver.GameState.States
@@ -72,6 +74,11 @@ namespace Quaver.GameState.States
         public Button ImportPeppyButton { get; set; }
 
         /// <summary>
+        ///     Button to convert .sm files
+        /// </summary>
+        public Button ConvertStepManiaButton { get; set; }
+
+        /// <summary>
         ///     Initialize
         /// </summary>
         public void Initialize()
@@ -81,9 +88,6 @@ namespace Quaver.GameState.States
             // Remove speed mods upon going to the main menu so songs can be played at normal speed.
             if (GameBase.CurrentGameModifiers.Count > 0)
                 ModManager.RemoveSpeedMods();
-
-            // Initialize the main menu's audio player.
-            MenuAudioPlayer.Initialize();
 
             // Set Discord RP
             DiscordController.ChangeDiscordPresence("Main Menu", "In the menus");
@@ -101,10 +105,7 @@ namespace Quaver.GameState.States
             CreateQpImportButton();
             CreateMenuButtons();
             CreateQpExportButton();
-
-            // Load and change background after import
-            BackgroundManager.LoadBackground();
-            BackgroundManager.Change(GameBase.CurrentBackground);
+            CreateConvertSmButton();
 
             UpdateReady = true;
         }
@@ -140,7 +141,7 @@ namespace Quaver.GameState.States
         public void Draw()
         {
             GameBase.SpriteBatch.Begin();
-            BackgroundManager.Draw();
+            //BackgroundManager.Draw();
             Boundary.Draw();
             GameBase.SpriteBatch.End();
         }
@@ -173,13 +174,21 @@ namespace Quaver.GameState.States
         public void OnSongSelectButtonClick(object sender, EventArgs e)
         {
             //Change to SongSelectState
-            GameBase.LoadedSkin.SoundClick.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+            GameBase.LoadedSkin.SoundClick.Play(GameBase.SoundEffectVolume, 0, 0);
+
+            // Don't proceed to song select if the user doesn't have any mapsets.
+            if (GameBase.Mapsets.Count == 0)
+            {
+                Logger.LogImportant("Cannot go to song select with 0 loaded mapsets.", LogType.Runtime);
+                return;
+            }
+
             GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 
         public void OnOptionsSelectButtonClick(object sender, EventArgs e)
         {
-            GameBase.LoadedSkin.SoundClick.Play((float)Configuration.VolumeGlobal / 100 * Configuration.VolumeEffect / 100, 0, 0);
+            GameBase.LoadedSkin.SoundClick.Play(GameBase.SoundEffectVolume, 0, 0);
             GameBase.GameStateManager.ChangeState(new OptionsMenuState());
         }
 
@@ -199,6 +208,20 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
+        ///     Responsible for creating the button to convert .sm files
+        /// </summary>
+        private void CreateConvertSmButton()
+        {
+            ConvertStepManiaButton = new TextButton(new Vector2(200, 400), "Convert StepMania file")
+            {
+                Alignment = Alignment.MidLeft,
+                Parent = Boundary
+            };
+
+            ConvertStepManiaButton.Clicked += OnConvertSmButtonClick;
+        }
+
+        /// <summary>
         ///     Responsible for creating the import .qp button
         /// </summary>
         private void CreateQpImportButton()
@@ -212,6 +235,7 @@ namespace Quaver.GameState.States
 
             ImportQpButton.Clicked += OnImportQpButtonClick;
         }
+
 
         /// <summary>
         ///     Responsible for creating the import .qp button
@@ -284,7 +308,7 @@ namespace Quaver.GameState.States
             }
             catch (Exception e)
             {
-                Logger.Log(e.Message, LogColors.GameError);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
 
@@ -309,7 +333,7 @@ namespace Quaver.GameState.States
             var outputPath = $"{Configuration.DataDirectory}/Maps/{GameBase.GameTime.ElapsedMilliseconds} {Util.FileNameSafeString(GameBase.SelectedBeatmap.Artist)} - {Util.FileNameSafeString(GameBase.SelectedBeatmap.Title)}.qp";
             zip.Save(outputPath);
 
-            Logger.Log($"Successfully exported {outputPath}", LogColors.GameSuccess);
+            Logger.LogSuccess($"Successfully exported {outputPath}", LogType.Runtime);
 
             // Open the folder where the file is contained.
             if (!File.Exists(outputPath))
@@ -357,7 +381,7 @@ namespace Quaver.GameState.States
             Task.Run(() =>
             {
                 for (var i = 0; i < openFileDialog.FileNames.Length; i++)
-                    ConvertOsz(openFileDialog.FileNames[i], i);
+                    Osu.ConvertOsz(openFileDialog.FileNames[i], i);
 
                 // When all the maps have been converted, select the last imported map and make that the selected one.
             }).ContinueWith(async t =>
@@ -367,96 +391,40 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Responsible for converting a .osz file to a new song directory full of .qua
+        ///     Called when the user clicks to convert a StepMania (.sm) file
         /// </summary>
-        /// <param name="fileName"></param>
-        private static void ConvertOsz(string fileName, int num)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnConvertSmButtonClick(object sender, EventArgs e)
         {
-            // Extract the .osu & relevant audio files, and attempt to convert them.
-            // Once fully converted, create a new directory in the songs folder and 
-            // tell GameBase that the import queue is ready. Depending on the current state,
-            // we may import them automatically.
-            var extractPath = $@"{Config.Configuration.DataDirectory}/Temp/{num}";
-
-            try
+            // Create the openFileDialog object.
+            var openFileDialog = new OpenFileDialog()
             {
-                using (var archive = new ZipFile(fileName))
-                {
-                    archive.ExtractAll(extractPath, ExtractExistingFileAction.OverwriteSilently);
-                }
+                InitialDirectory = "c:\\",
+                Filter = "StepMania File (*.sm)|*.sm",
+                FilterIndex = 0,
+                RestoreDirectory = true,
+                Multiselect = true
+            };
 
-                // Now that we have them, proceed to convert them.
-                foreach (var file in Directory.GetFiles(extractPath, "*.osu", SearchOption.AllDirectories))
-                {
-                    var map = new PeppyBeatmap(file);
+            // If the dialog couldn't be shown, that's an issue, so we'll return for now.
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+                return;
 
-                    if (!map.IsValid)
-                        continue;
+            // Proceed to extract and convert the map, show loading screen.
+            GameBase.GameStateManager.AddState(new MapImportLoadingState());
 
-                    // Convert the map to .qua
-                    var qua = Qua.ConvertOsuBeatmap(map);
-                    qua.Save(map.OriginalFileName.Replace(".osu", ".qua"));
-                }
-
-                // Now that all of them are converted, we'll create a new directory with all of the files except for .osu
-
-                var newSongDir = $"{Config.Configuration.SongDirectory}/{new DirectoryInfo(fileName).Name}";
-
-                if (newSongDir.Length > 200)
-                    newSongDir =
-                        $"{Config.Configuration.SongDirectory}/{new DirectoryInfo(fileName).Name.Substring(0, 20)}";
-
-                Directory.CreateDirectory(newSongDir);
-
-                // Get the files that are currently in the extract path
-                var filesInDir = Directory.GetFiles(extractPath);
-
-                for (var i = 0; i < filesInDir.Length; i++)
-                {
-                    switch (Path.GetExtension(filesInDir[i]))
-                    {
-                        case ".osu":
-                            // Ignore .osu files
-                            continue;
-                        case ".qua":
-                            // Try to create a similar path to the original. 
-                            // The reason we generate all these new file names is because
-                            // the path may end up being too long, and that throws an error.
-                            var newFile = $"{newSongDir}/{Path.GetFileName(filesInDir[i])}";
-
-                            if (newFile.Length > 200)
-                                newFile = $"{newSongDir}/{Path.GetFileName(filesInDir[i]).Substring(0, 60)}.qua";
-
-                            if (newFile.Length > 200 || File.Exists(newFile))
-                                newFile = $"{newSongDir}/{i}.qua";
-
-                            File.Move(filesInDir[i], newFile);
-                            break;
-                        // We only allow certain file to be moved over, no .wav files, as those are usually
-                        // hitsounds from osu!
-                        case ".mp3":
-                        case ".jpg":
-                        case ".png":
-                        case ".jpeg":
-                        case ".ogg":
-                            File.Move(filesInDir[i], $"{newSongDir}/{Path.GetFileName(filesInDir[i])}");
-                            break;
-                    }
-                }
-
-                Logger.Log($".osz has been successfully converted.", LogColors.GameSuccess, 2f);
-            }
-            catch (Exception e)
+            // Run the converter for all file names
+            Task.Run(() =>
             {
-                Console.WriteLine(e.Message);
-                Logger.Log($"Error: There was an issue converting the .osz", LogColors.GameError, 2f);
-                Logger.Log(e.Message, Color.Red);
-            }
-            // Delete the entire temp directory regardless of the outcome.
-            finally
+                foreach (var t in openFileDialog.FileNames)
+                    StepManiaConverter.ConvertSm(t);
+
+                // When all the maps have been converted, select the last imported map and make that the selected one.
+            }).ContinueWith(async t =>
             {
-                Directory.Delete(extractPath, true);
-            }
+                await MapImportLoadingState.AfterImport();
+            });
         }
     }
 }

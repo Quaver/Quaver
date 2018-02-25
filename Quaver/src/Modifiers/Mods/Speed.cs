@@ -32,49 +32,49 @@ namespace Quaver.Modifiers.Mods
             switch (modIdentifier)
             {
                 case ModIdentifier.Speed05X:
-                    GameBase.GameClock = 0.5f;
+                    GameBase.AudioEngine.PlaybackRate = 0.5f;
                     break;
                 case ModIdentifier.Speed06X:
-                    GameBase.GameClock = 0.6f;
+                    GameBase.AudioEngine.PlaybackRate = 0.6f;
                     break;
                 case ModIdentifier.Speed07X:
-                    GameBase.GameClock = 0.7f;
+                    GameBase.AudioEngine.PlaybackRate = 0.7f;
                     break;
                 case ModIdentifier.Speed08X:
-                    GameBase.GameClock = 0.8f;
+                    GameBase.AudioEngine.PlaybackRate = 0.8f;
                     break;
                 case ModIdentifier.Speed09X:
-                    GameBase.GameClock = 0.9f;
+                    GameBase.AudioEngine.PlaybackRate = 0.9f;
                     break;
                 case ModIdentifier.Speed11X:
-                    GameBase.GameClock = 1.1f;
+                    GameBase.AudioEngine.PlaybackRate = 1.1f;
                     break;
                 case ModIdentifier.Speed12X:
-                    GameBase.GameClock = 1.2f;
+                    GameBase.AudioEngine.PlaybackRate = 1.2f;
                     break;
                 case ModIdentifier.Speed13X:
-                    GameBase.GameClock = 1.3f;
+                    GameBase.AudioEngine.PlaybackRate = 1.3f;
                     break;
                 case ModIdentifier.Speed14X:
-                    GameBase.GameClock = 1.4f;
+                    GameBase.AudioEngine.PlaybackRate = 1.4f;
                     break;
                 case ModIdentifier.Speed15X:
-                    GameBase.GameClock = 1.5f;
+                    GameBase.AudioEngine.PlaybackRate = 1.5f;
                     break;
                 case ModIdentifier.Speed16X:
-                    GameBase.GameClock = 1.6f;
+                    GameBase.AudioEngine.PlaybackRate = 1.6f;
                     break;
                 case ModIdentifier.Speed17X:
-                    GameBase.GameClock = 1.7f;
+                    GameBase.AudioEngine.PlaybackRate = 1.7f;
                     break;
                 case ModIdentifier.Speed18X:
-                    GameBase.GameClock = 1.8f;
+                    GameBase.AudioEngine.PlaybackRate = 1.8f;
                     break;
                 case ModIdentifier.Speed19X:
-                    GameBase.GameClock = 1.9f;
+                    GameBase.AudioEngine.PlaybackRate = 1.9f;
                     break;
                 case ModIdentifier.Speed20X:
-                    GameBase.GameClock = 2.0f;
+                    GameBase.AudioEngine.PlaybackRate = 2.0f;
                     break;
             }
 
@@ -87,9 +87,8 @@ namespace Quaver.Modifiers.Mods
 
         public void InitializeMod()
         {
-            Logger.Log($"Speed is now set to {GameBase.GameClock}x", LogColors.GameInfo);
-
-            SongManager.ChangeSongSpeed();
+            GameBase.AudioEngine.SetPlaybackRate();
+            Logger.LogImportant($"Speed is now set to {GameBase.AudioEngine.PlaybackRate}x", LogType.Runtime);
         }
     }
 }

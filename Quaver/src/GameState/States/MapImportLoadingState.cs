@@ -77,11 +77,6 @@ namespace Quaver.GameState.States
             // In the event that the user imports maps when there weren't any maps previously.
             if (oldMaps.Count == 0)
             {
-                BeatmapUtils.SelectRandomBeatmap();
-                BackgroundManager.LoadBackground();
-                BackgroundManager.Change(GameBase.CurrentBackground);
-                SongManager.Load();
-                SongManager.Play();
             }
             else if (newMapsets.Count > 0)
             {
@@ -90,17 +85,9 @@ namespace Quaver.GameState.States
 
                 // Switch map and load audio for song and play it.
                 Beatmap.ChangeBeatmap(map);
-
-                // Load and change background after import
-                BackgroundManager.LoadBackground();
-                BackgroundManager.Change(GameBase.CurrentBackground);
-
-                SongManager.ReloadSong();
-
-                DiscordController.ChangeDiscordPresence($"{GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title}", "Listening");
             }
 
-            Logger.Log("Successfully completed the conversion task. Stopping loader.", LogColors.GameImportant);
+            Logger.LogSuccess("Successfully completed the conversion task. Stopping loader.", LogType.Runtime);
             GameBase.GameStateManager.RemoveState();
         }
     }

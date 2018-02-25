@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.API.Osu;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Discord;
@@ -121,6 +122,13 @@ namespace Quaver
         /// </summary>
         public static string OsuSongsFolder { get; set; }
 
+        /// <summary>
+        ///     The Etterna parent folder. 
+        ///     NOTE: The Beatmap directory themselves have /songs/ already on it.
+        ///     Thank you SM guys!
+        /// </summary>
+        public static string EtternaFolder { get; set; }
+
         /*
         /// <summary>
         ///     The rectangle this game will be rendered onto
@@ -133,11 +141,6 @@ namespace Quaver
         ///     WindowHeight / WindowWidth ratio
         /// </summary>
         public static float WindowUIScale { get; set; } = WindowRectangle.Height / ReferenceResolution.Y; //TODO: Automatically set this rectangle as windoow size through method
-
-        /// <summary>
-        ///     The game's clock. Essentially it controls which speed songs are played at.
-        /// </summary>
-        public static float GameClock { get; set; } = 1.0f;
 
         /// <summary>
         ///     The score multiplier for the game. Controls how many points the game score will be 
@@ -198,6 +201,59 @@ namespace Quaver
         public static string BuildVersion { get; set; }
 
         /// <summary>
+        ///     The volume of sound effects
+        /// </summary>
+        public static float SoundEffectVolume { get; set; }
+
+        /// <summary>
+        ///     Reference to the game's audio engine
+        /// </summary>
+        public static AudioEngine AudioEngine { get; set; } = new AudioEngine();
+
+        /// <summary>
+        ///     The current path of the selected map's audio file
+        /// </summary>
+        public static string CurrentAudioPath {
+            get
+            {
+                switch (SelectedBeatmap.Game)
+                {
+                    case BeatmapGame.Osu:
+                        return OsuSongsFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
+                    case BeatmapGame.Quaver:
+                        return Configuration.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
+                    case BeatmapGame.Etterna:
+                        return EtternaFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
+                    default:
+                        return "";
+                }                
+            }
+        }
+
+        /// <summary>
+        ///     The current path of the selected map's background path.
+        /// </summary>
+        public static string CurrentBackgroundPath
+        {
+            get
+            {
+                switch (SelectedBeatmap.Game)
+                {
+                    case BeatmapGame.Osu:
+                        // Parse the map and get the background
+                        var osu = new PeppyBeatmap(OsuSongsFolder + SelectedBeatmap.Directory + "/" + SelectedBeatmap.Path);
+                        return $@"{OsuSongsFolder}/{SelectedBeatmap.Directory}/{osu.Background}";
+                    case BeatmapGame.Quaver:
+                        return Configuration.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.BackgroundPath;
+                    case BeatmapGame.Etterna:
+                        return EtternaFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.BackgroundPath;
+                    default:
+                        return "";
+                }
+            }
+        }
+
+        /// <summary>
         ///     This method changes the window to match configuration settings
         /// </summary>
         /// <param name="resolution"></param>
@@ -226,14 +282,14 @@ namespace Quaver
                 //do stuff
             }
 
-            // Log this event
-            Logger.Log("Window settings changed:", LogColors.GameImportant);
-            Logger.Log("Window Resolution: "+ GraphicsManager.PreferredBackBufferWidth + "x" + GraphicsManager.PreferredBackBufferHeight, LogColors.GameInfo);
-            Logger.Log("Window Letterboxing: " + letterbox, LogColors.GameInfo);
-            Logger.Log("Window Fullscreen: "+ GraphicsManager.IsFullScreen, LogColors.GameInfo);
-
             // Apply changes to graphics manager
             GraphicsManager.ApplyChanges();
+
+            // Log this event
+            Logger.LogImportant("Window Settings Changed!", LogType.Runtime);
+            Logger.LogImportant($"Res: {GraphicsManager.PreferredBackBufferWidth}x {GraphicsManager.PreferredBackBufferHeight}", LogType.Runtime);
+            Logger.LogImportant($"Letterboxing: {letterbox}", LogType.Runtime);
+            Logger.LogImportant($"FullScreen: {GraphicsManager.IsFullScreen}", LogType.Runtime);
         }
     }
 }

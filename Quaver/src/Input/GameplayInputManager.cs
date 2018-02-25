@@ -118,11 +118,8 @@ namespace Quaver.Input
         /// <summary>
         ///     Checks if the given input was given
         /// </summary>
-        public void CheckInput(bool skippable, List<ReplayFrame> ReplayFrames)
+        public void CheckInput(bool skippable)
         {
-            // Pause game
-            //HandlePause();
-
             // Check Mania Key Presses
             HandleManiaKeyPresses();
 

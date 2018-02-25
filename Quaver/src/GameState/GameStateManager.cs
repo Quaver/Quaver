@@ -32,10 +32,9 @@ namespace Quaver.GameState
                 // Initialize the screen
                 newState.Initialize();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                // Log the exception
-                Debug(ex);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
 
@@ -52,10 +51,9 @@ namespace Quaver.GameState
                 States.Peek().UnloadContent();
                 States.Pop();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                // Log the exception
-                Debug(ex);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
 
@@ -82,10 +80,9 @@ namespace Quaver.GameState
                 ClearStates();
                 AddState(screen);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                // Log the exception
-                Debug(ex);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
     
@@ -103,10 +100,9 @@ namespace Quaver.GameState
                 if (States.Peek().UpdateReady)
                     States.Peek().Update(dt);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                // Log the exception
-                Debug(ex);
+                Logger.LogError(e, LogType.Runtime);
             }
         }
 
@@ -123,15 +119,10 @@ namespace Quaver.GameState
                 if (States.Peek().UpdateReady)
                     States.Peek().Draw();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Debug(ex);
+                Logger.LogError(e, LogType.Runtime);
             }
-        }
-
-        private void Debug(Exception ex)
-        {
-            Logger.Log(ex.TargetSite + "\n" + ex.StackTrace + "\n" + ex.Message + "\n", LogColors.GameError, 5.0f);
         }
     }
 }
