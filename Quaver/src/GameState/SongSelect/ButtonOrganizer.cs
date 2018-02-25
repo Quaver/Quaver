@@ -117,6 +117,7 @@ namespace Quaver.GameState.SongSelect
 
             for (var i = 0; i < targetPoolSize && i < GameBase.VisibleMapsets.Count; i++)
             {
+                Console.WriteLine(GameBase.VisibleMapsets.Count);
                 var newButton = new MapsetSelectButton(GameBase.WindowUIScale, i, GameBase.Mapsets[i])
                 {
                     Image = GameBase.UI.BlankBox,
@@ -355,6 +356,7 @@ namespace Quaver.GameState.SongSelect
 
             var oldMapAudioPath = GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.AudioPath;
             Beatmap.ChangeBeatmap(map);
+            Console.WriteLine(GameBase.CurrentAudioPath);
 
             // Only load the audio again if the new map's audio isn't the same as the old ones.
             if (oldMapAudioPath != map.Directory + "/" + map.AudioPath || !FirstLoad)
