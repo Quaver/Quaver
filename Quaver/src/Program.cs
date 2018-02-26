@@ -80,6 +80,9 @@ namespace Quaver
             // Set the build version
             GameBase.BuildVersion = BeatmapUtils.GetMd5Checksum(Configuration.GameDirectory + "/" + "Quaver.exe");
 
+            // Initialize Flamingo Events
+            FlamingoHelper.InitializeFlamingoEventHandlers();
+
             // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
             var loadGame = Task.Run(async () =>
             {
