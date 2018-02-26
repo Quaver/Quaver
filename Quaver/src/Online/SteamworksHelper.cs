@@ -11,7 +11,7 @@ using Quaver.Logging;
 using Quaver.Net;
 using Steamworks;
 
-namespace Quaver.Steam
+namespace Quaver.Online
 {
 #if STEAM
     internal static class SteamworksHelper

@@ -8,7 +8,7 @@ using Quaver.Net;
 using Quaver.Net.Constants;
 using Quaver.Net.Handlers;
 
-namespace Quaver.Steam
+namespace Quaver.Online
 {
     public static class Login
     {

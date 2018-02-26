@@ -26,7 +26,7 @@ using Quaver.Modifiers;
 using Quaver.Utility;
 using Quaver.Input;
 using Quaver.Graphics.GameOverlay;
-using Quaver.Steam;
+using Quaver.Online;
 
 namespace Quaver
 {

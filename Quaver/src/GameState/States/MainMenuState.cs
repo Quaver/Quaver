@@ -25,7 +25,7 @@ using Button = Quaver.Graphics.Button.Button;
 using Quaver.API.Maps;
 using Quaver.Commands;
 using Quaver.Peppy;
-using Quaver.Steam;
+using Quaver.Online;
 using Quaver.StepMania;
 using Quaver.Utility;
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Quaver.Net.Handlers;
 
-namespace Quaver.Steam
+namespace Quaver.Online
 {
     public static class FlamingoHelper
     {

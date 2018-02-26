@@ -22,7 +22,7 @@ using System.Windows.Forms;
 using Quaver.Commands;
 using Quaver.Discord;
 using Quaver.Graphics.Sprite;
-using Quaver.Steam;
+using Quaver.Online;
 using Steamworks;
 
 namespace Quaver

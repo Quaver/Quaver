@@ -7,7 +7,7 @@ using Quaver.Logging;
 using Quaver.Net;
 using Quaver.Net.Handlers;
 
-namespace Quaver.Steam
+namespace Quaver.Online
 {
     internal static class UserDisconnected
     {
