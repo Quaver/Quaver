@@ -16,6 +16,11 @@ namespace Quaver.Steam
         public static void InitializeFlamingoEventHandlers()
         {
             LoginReplyHandler.LoginReplyEvent += Login.OnLoginReplyEvent;
+            UserConnectedHandler.UserConnectedEvent += UserConnected.OnUserConnectedEvent;
+            UserDisconnectedHandler.UserDisconnectedEvent += UserDisconnected.OnUserDisconnectedEvent;
+            JoinedChatChannelHandler.JoinedChatChannelEvent += JoinedChatChannel.OnChatChannelJoined;
+            LeftChatChannelHandler.LeftChatChannelEvent += LeftChatChannel.OnChatChannelLeft;
+            ChatMessageHandler.ChatMessageReceivedEvent += ChatMessageReceived.OnChatMessageReceived;
         }
     }
 }

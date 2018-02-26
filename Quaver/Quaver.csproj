@@ -207,9 +207,14 @@
     <Compile Include="src\Replays\ReplayHelper.cs" />
     <Compile Include="src\Scores\LocalScore.cs" />
     <Compile Include="src\Skins\Skin.cs" />
+    <Compile Include="src\Steam\ChatMessageReceived.cs" />
     <Compile Include="src\Steam\FlamingoHelper.cs" />
+    <Compile Include="src\Steam\LeftChatChannel.cs" />
+    <Compile Include="src\Steam\JoinedChatChannel.cs" />
     <Compile Include="src\Steam\Login.cs" />
     <Compile Include="src\Steam\SteamworksHelper.cs" />
+    <Compile Include="src\Steam\UserDisconnected.cs" />
+    <Compile Include="src\Steam\UserConnected.cs" />
     <Compile Include="src\StepMania\Etterna.cs" />
     <Compile Include="src\StepMania\EtternaCache.cs" />
     <Compile Include="src\StepMania\StepManiaConverter.cs" />
