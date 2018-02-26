@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Quaver.Database.Beatmaps;
+using Quaver.Graphics;
+using Quaver.Graphics.Sprite;
+using Quaver.Graphics.Text;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,24 +16,57 @@ namespace Quaver.GameState.SongSelect
     /// </summary>
     class MapInfoWindow : IHelper
     {
+        private Boundary Boundary { get; set; }
+
+        private TextBoxSprite MapInfo { get; set; }
+
         public void Draw()
         {
-            throw new NotImplementedException();
+            Boundary.Draw();
         }
 
         public void Initialize(IGameState state)
         {
-            //throw new NotImplementedException();
+            Boundary = new Boundary();
+
+            var window = new Sprite()
+            {
+                Size = new UDim2(600 * GameBase.WindowUIScale, 300 * GameBase.WindowUIScale),
+                Position = new UDim2(5, 40),
+                Tint = Color.Black,
+                Alpha = 0.8f,
+                Parent = Boundary
+            };
+
+            MapInfo = new TextBoxSprite()
+            {
+                Size = new UDim2(-10, -10, 1, 1),
+                Position = new UDim2(5, 5),
+                Font = Fonts.Medium16,
+                TextColor = Color.White,
+                TextBoxStyle = TextBoxStyle.WordwrapMultiLine,
+                TextAlignment = Alignment.TopLeft,
+                Text = "Map selected: asdasdasd asd",
+                Parent = window
+            };
+
+            //UpdateInfo(GameBase.SelectedBeatmap);
         }
 
         public void UnloadContent()
         {
-            throw new NotImplementedException();
+            Boundary.Destroy();
         }
 
         public void Update(double dt)
         {
-            throw new NotImplementedException();
+            Boundary.Update(dt);
+        }
+
+        public void UpdateInfo(Beatmap map)
+        {
+            MapInfo.Text = "Map selected: " + map.Artist + " - " + map.Title + "(" + map.DifficultyName + ")" + "\n"
+                + map.Creator;
         }
     }
 }

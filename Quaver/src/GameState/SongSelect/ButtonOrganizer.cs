@@ -72,13 +72,15 @@ namespace Quaver.GameState.SongSelect
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {
-            Console.WriteLine(GameBase.VisibleMapsets.Count + ", " + GameBase.Mapsets.Count);
+            //Console.WriteLine(GameBase.VisibleMapsets.Count + ", " + GameBase.Mapsets.Count);
             Boundary = new Boundary();
+            MapInfoWindow.Initialize(state);
             GenerateButtonPool();
         }
 
         public void UnloadContent()
         {
+            MapInfoWindow.UnloadContent();
             DeleteMapDiffButtons();
             DeleteMapsetButtons();
             Boundary.Destroy();
@@ -99,12 +101,14 @@ namespace Quaver.GameState.SongSelect
 
             prevScrollPos = curScrollPos;
 
+            MapInfoWindow.Update(dt);
             Boundary.Update(dt);
         }
 
         public void Draw()
         {
             Boundary.Draw();
+            MapInfoWindow.Draw();
         }
 
         /// <summary>
@@ -117,7 +121,6 @@ namespace Quaver.GameState.SongSelect
 
             for (var i = 0; i < targetPoolSize && i < GameBase.VisibleMapsets.Count; i++)
             {
-                Console.WriteLine(GameBase.VisibleMapsets.Count);
                 var newButton = new MapsetSelectButton(GameBase.WindowUIScale, i, GameBase.Mapsets[i])
                 {
                     Image = GameBase.UI.BlankBox,
@@ -352,11 +355,11 @@ namespace Quaver.GameState.SongSelect
 
             // Select map
             var map = GameBase.Mapsets[SelectedSongIndex].Beatmaps[SelectedDiffIndex];
-            Logger.Update("MapSelected", "Map Selected: " + map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]");
 
             var oldMapAudioPath = GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.AudioPath;
             Beatmap.ChangeBeatmap(map);
-            Console.WriteLine(GameBase.CurrentAudioPath);
+            MapInfoWindow.UpdateInfo(map);
+            //Console.WriteLine(GameBase.CurrentAudioPath);
 
             // Only load the audio again if the new map's audio isn't the same as the old ones.
             if (oldMapAudioPath != map.Directory + "/" + map.AudioPath || !FirstLoad)
