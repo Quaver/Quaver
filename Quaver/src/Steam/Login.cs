@@ -10,7 +10,7 @@ using Quaver.Net.Handlers;
 
 namespace Quaver.Steam
 {
-    public class Login
+    public static class Login
     {
         /// <summary>
         ///     After logging in, the following event handler will execute
