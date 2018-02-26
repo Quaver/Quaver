@@ -110,16 +110,6 @@ namespace Quaver.GameState.States
             // Update overlay
             GameBase.GameOverlay.OverlayActive = true;
 
-            //Add map selected text TODO: remove later
-            try
-            {
-                Logger.Add("MapSelected", "Map Selected: " + GameBase.SelectedBeatmap.Artist + " - " + GameBase.SelectedBeatmap.Title + " [" + GameBase.SelectedBeatmap.DifficultyName + "]", Color.Yellow);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e, LogType.Runtime);
-            }
-
             UpdateReady = true;
         }
 
@@ -206,7 +196,7 @@ namespace Quaver.GameState.States
             // Create play button
             PlayButton = new TextButton(new Vector2(200, 50), "Play Map")
             {
-                PosY = 140,
+                PosY = 370,
                 Alignment = Alignment.TopLeft,
                 Parent = Boundary
             };
@@ -374,7 +364,8 @@ namespace Quaver.GameState.States
         {
             TogglePitch = new TextButton(new Vector2(200, 50), $"Toggle Pitch: {Configuration.Pitched}")
             {
-                Alignment = Alignment.MidLeft,
+                Alignment = Alignment.TopLeft,
+                PosY = 430,
                 Parent = Boundary
             };
             TogglePitch.Clicked += OnTogglePitchButtonClick;
