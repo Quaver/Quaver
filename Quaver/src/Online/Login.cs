@@ -35,9 +35,52 @@ namespace Quaver.Online
                 case LoginErrorCodes.ServerError:
                     Logger.LogError($"An internal server error has occurred", LogType.Network);
                     break;
+                case LoginErrorCodes.CreateUsername:
+                    try
+                    {
+                        var createUsernameRespCode = ResponseCodes.None;
+
+                        while (createUsernameRespCode == ResponseCodes.None || createUsernameRespCode == ResponseCodes.BadRequest)
+                        {
+                            // If the response code is 400, we want to display an error that the username
+                            // is already taken, and that the user should choose a different one.
+                            if (createUsernameRespCode == ResponseCodes.BadRequest)
+                                Logger.LogError($"Username is invalid or already taken. Please choose a different one.", LogType.Network);
+
+                            // TODO: Prompt to choose username
+                            Logger.LogImportant($"Please choose a username to continue", LogType.Network);
+
+                            var username = Console.ReadLine();
+                            Logger.LogImportant($"Submitting username request for {username}...", LogType.Network);
+
+                            createUsernameRespCode = FlamingoRequests.CreateUsername(username);
+                            Logger.LogInfo(createUsernameRespCode.ToString(), LogType.Network);
+                        }
+
+                        // Handle unauthorized/success case.
+                        switch (createUsernameRespCode)
+                        {
+                            case ResponseCodes.Unauthorized:
+                            case ResponseCodes.ServerError:
+                                // This is seen as a very very bad error and should be reported to developers ASAP.
+                                Logger.LogError($"Error making create name request, please tell this to a developer ASAP!", LogType.Network);
+                                Flamingo.Disconnect();
+                                break;
+                            case ResponseCodes.Success:
+                                Logger.LogSuccess($"Successfully created username. Waiting for further server response...", LogType.Network);
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogError(ex, LogType.Network);
+                        Flamingo.Disconnect();
+                    }
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
+
     }
 }
