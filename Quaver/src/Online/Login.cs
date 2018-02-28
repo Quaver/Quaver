@@ -7,6 +7,7 @@ using Quaver.Logging;
 using Quaver.Net;
 using Quaver.Net.Constants;
 using Quaver.Net.Handlers;
+using Quaver.Net.Packets.Types.Client;
 
 namespace Quaver.Online
 {
@@ -36,6 +37,7 @@ namespace Quaver.Online
                     Logger.LogError($"An internal server error has occurred", LogType.Network);
                     break;
                 case LoginErrorCodes.CreateUsername:
+                    // TODO: Fix this so that it's not blocking - can be solved with a UI
                     try
                     {
                         var createUsernameRespCode = ResponseCodes.None;
