@@ -13,7 +13,6 @@ using Steamworks;
 
 namespace Quaver.Online
 {
-#if STEAM
     internal static class SteamworksHelper
     {
         /// <summary>
@@ -163,5 +162,4 @@ namespace Quaver.Online
             }
         }
     }
-#endif
 }

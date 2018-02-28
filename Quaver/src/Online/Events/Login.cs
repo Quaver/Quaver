@@ -9,7 +9,7 @@ using Quaver.Net.Constants;
 using Quaver.Net.Handlers;
 using Quaver.Net.Packets.Types.Client;
 
-namespace Quaver.Online
+namespace Quaver.Online.Events
 {
     public static class Login
     {

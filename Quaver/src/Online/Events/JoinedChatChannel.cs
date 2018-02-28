@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Quaver.Logging;
 using Quaver.Net.Handlers;
 
-namespace Quaver.Online
+namespace Quaver.Online.Events
 {
     internal static class JoinedChatChannel
     {

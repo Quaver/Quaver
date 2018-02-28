@@ -171,10 +171,8 @@ namespace Quaver
             GameBase.Cursor.Update(dt);
 
             // Run Steam callbacks every frame to frequently stay updated with the API
-#if STEAM
             if (SteamworksHelper.IsInitialized)
                 SteamAPI.RunCallbacks();
-#endif
 
             base.Update(gameTime);
         }
@@ -229,10 +227,8 @@ namespace Quaver
                 GameBase.AudioEngine.Free();
                 DiscordRPC.Shutdown();
 
-#if STEAM
                 if (SteamworksHelper.IsInitialized)
                     SteamAPI.Shutdown();
-#endif
             }
             catch (Exception e)
             {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.Net.Handlers;
+using Quaver.Online.Events;
 
 namespace Quaver.Online
 {
