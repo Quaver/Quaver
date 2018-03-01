@@ -105,6 +105,7 @@ namespace Quaver.Discord
                 }
 
                 GameBase.DiscordController.presence.state = state;
+                GameBase.DiscordController.presence.largeImageText = Configuration.Username;
                 DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
             }
             catch (Exception e)
