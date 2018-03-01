@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Net;
 using Quaver.Net.Constants;
@@ -26,6 +27,9 @@ namespace Quaver.Online.Events
                 case LoginErrorCodes.Success:
                     Logger.LogSuccess($"Successfully logged in as {Flamingo.Self.Username} <{Flamingo.Self.SteamId}", LogType.Network);
                     Logger.LogSuccess($"There are currently {Flamingo.Clients.Count + 1} users online.", LogType.Network);
+
+                    // Change the config's username to that of the currently logged in user.
+                    Configuration.Username = Flamingo.Self.Username;
                     break;
                 case LoginErrorCodes.Banned:
                     Logger.LogError($"You are banned.", LogType.Runtime);
