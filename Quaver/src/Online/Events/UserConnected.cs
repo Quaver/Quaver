@@ -18,7 +18,7 @@ namespace Quaver.Online.Events
         /// <param name="e"></param>
         internal static void OnUserConnectedEvent(object sender, UserConnectedEventArgs e)
         {
-            Logger.LogInfo($"{e.User.Username} <{e.User.SteamId}> has logged into the server.", LogType.Network);
+            Logger.LogInfo($"{e.User.Username} <{e.User.SteamId}> (#{e.User.UserId}) has logged into the server.", LogType.Network);
             Logger.LogInfo($"There are now {Flamingo.Clients.Count + 1} users online", LogType.Network);
         }
     }

@@ -25,7 +25,7 @@ namespace Quaver.Online.Events
             switch (e.LoginErrorCode)
             {
                 case LoginErrorCodes.Success:
-                    Logger.LogSuccess($"Successfully logged in as {Flamingo.Self.Username} <{Flamingo.Self.SteamId}", LogType.Network);
+                    Logger.LogSuccess($"Successfully logged in as {Flamingo.Self.Username} <{Flamingo.Self.SteamId}> ({Flamingo.Self.UserId})", LogType.Network);
                     Logger.LogSuccess($"There are currently {Flamingo.Clients.Count + 1} users online.", LogType.Network);
 
                     // Change the config's username to that of the currently logged in user.
