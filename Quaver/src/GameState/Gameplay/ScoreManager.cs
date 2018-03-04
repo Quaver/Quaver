@@ -181,10 +181,10 @@ namespace Quaver.GameState.Gameplay
         internal float[] HitWindowRelease { get; } =
         {
             JudgeWindow.Marv * 1.5f,
-            JudgeWindow.Perf * 1.5f,
-            JudgeWindow.Great * 1.5f,
-            JudgeWindow.Good * 1.5f,
-            JudgeWindow.Okay * 1.5f
+            JudgeWindow.Perf * 1.7f,
+            JudgeWindow.Great * 1.8f,
+            JudgeWindow.Good * 2.0f,
+            JudgeWindow.Okay 
         };
 
         /// <summary>
