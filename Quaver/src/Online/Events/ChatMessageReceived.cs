@@ -20,12 +20,12 @@ namespace Quaver.Online.Events
             // Chat channel message
             if (e.Message.Channel.StartsWith("#"))
             {
-                Logger.LogInfo($"[{e.Message.DateTime.Hour}:{e.Message.DateTime.Minute}:{e.Message.DateTime.Second}] Channel: {e.Message.Channel} - {e.Message.Sender}: {e.Message.Text}", LogType.Network);
+                Logger.LogInfo($"[{e.Message.DateTime.Hour}:{e.Message.DateTime.Minute}:{e.Message.DateTime.Second}] Channel: {e.Message.Channel} - {e.Message.Sender} (#{e.Message.SenderId}): {e.Message.Text}", LogType.Network);
                 return;
             }
             
             // Private Message
-            Logger.LogInfo($"[{e.Message.DateTime.Hour}:{e.Message.DateTime.Minute}:{e.Message.DateTime.Second}] From: {e.Message.Sender}: {e.Message.Text}", LogType.Network);
+            Logger.LogInfo($"[{e.Message.DateTime.Hour}:{e.Message.DateTime.Minute}:{e.Message.DateTime.Second}] From: {e.Message.Sender} (#{e.Message.SenderId}): {e.Message.Text}", LogType.Network);
         }
     }
 }
