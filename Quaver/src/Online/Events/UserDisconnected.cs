@@ -18,7 +18,7 @@ namespace Quaver.Online.Events
         /// <param name="e"></param>
         internal static void OnUserDisconnectedEvent(object sender, UserDisconnectedEventArgs e)
         {
-            Logger.LogInfo($"{e.User.Username} <{e.User.SteamId}> ({e.User.UserId}) has disconnected from the server.", LogType.Network);
+            Logger.LogInfo($"({e.User.UserId}) has disconnected from the server.", LogType.Network);
             Logger.LogInfo($"There are now {Flamingo.Clients.Count + 1} users online", LogType.Network);
         }
     }
