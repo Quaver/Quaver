@@ -184,6 +184,7 @@
     <Compile Include="src\Config\Configuration.cs" />
     <Compile Include="src\Database\BeatmapCache.cs" />
     <Compile Include="src\Database\BeatmapImporter.cs" />
+    <Compile Include="src\Online\Events\UserData.cs" />
     <Compile Include="src\Peppy\Osu.cs" />
     <Compile Include="src\Peppy\OsuSkinConfig.cs" />
     <Compile Include="src\Peppy\QuaverOsuElementMap.cs" />

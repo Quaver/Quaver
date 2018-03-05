@@ -22,6 +22,7 @@ namespace Quaver.Online
             JoinedChatChannelHandler.JoinedChatChannelEvent += JoinedChatChannel.OnChatChannelJoined;
             LeftChatChannelHandler.LeftChatChannelEvent += LeftChatChannel.OnChatChannelLeft;
             ChatMessageHandler.ChatMessageReceivedEvent += ChatMessageReceived.OnChatMessageReceived;
+            UserDataHandler.ResponseUserDataEvent += UserData.OnResponseUserDataHandler;
         }
     }
 }
