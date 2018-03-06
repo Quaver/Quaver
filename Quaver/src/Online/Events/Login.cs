@@ -30,6 +30,9 @@ namespace Quaver.Online.Events
 
                     // Change the config's username to that of the currently logged in user.
                     Configuration.Username = Flamingo.Self.Username;
+
+                    if (Flamingo.Clients.Count > 0)
+                        Logger.LogSuccess(Flamingo.Clients[0].Username + " " + Flamingo.Clients[0].UserId, LogType.Network);
                     break;
                 case LoginErrorCodes.Banned:
                     Logger.LogError($"You are banned.", LogType.Runtime);
