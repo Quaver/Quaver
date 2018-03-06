@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Quaver.Logging;
 using Quaver.Net.Handlers;
+using Quaver.Net.Requests.Events;
 
 namespace Quaver.Online.Events
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Net;
 using Quaver.Net.Handlers;
 using Quaver.Online.Events;
 
@@ -22,7 +23,7 @@ namespace Quaver.Online
             JoinedChatChannelHandler.JoinedChatChannelEvent += JoinedChatChannel.OnChatChannelJoined;
             LeftChatChannelHandler.LeftChatChannelEvent += LeftChatChannel.OnChatChannelLeft;
             ChatMessageHandler.ChatMessageReceivedEvent += ChatMessageReceived.OnChatMessageReceived;
-            UserDataHandler.ResponseUserDataEvent += UserData.OnResponseUserDataHandler;
+            FlamingoRequests.ResponseUserDataEvent += UserData.OnResponseUserDataHandler;
         }
     }
 }
