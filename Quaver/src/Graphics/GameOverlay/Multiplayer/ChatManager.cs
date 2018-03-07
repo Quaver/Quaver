@@ -108,13 +108,16 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
         private static void OnChatSubmit(string text)
         {
             var msg = text.Split(' ');
+            var msgList = msg.ToList();
+            msgList.RemoveAt(0);
+
             Logger.LogInfo($"Chat Message Sent: {text}", LogType.Runtime);
 
             // Create message object
             var message = new ChatMessage
             {
                 Channel = msg[0],
-                Text = msg[1],
+                Text = string.Join(" ", msgList),
                 Sender = Flamingo.Self.Username,
                 DateTime = DateTime.Now
             };
