@@ -24,6 +24,7 @@ namespace Quaver.Online
             LeftChatChannelHandler.LeftChatChannelEvent += LeftChatChannel.OnChatChannelLeft;
             ChatMessageHandler.ChatMessageReceivedEvent += ChatMessageReceived.OnChatMessageReceived;
             FlamingoRequests.ResponseUserDataEvent += UserData.OnResponseUserDataHandler;
+            AlertHandler.ServerAlertEvent += Alert.OnServerAlertReceived;
         }
     }
 }
