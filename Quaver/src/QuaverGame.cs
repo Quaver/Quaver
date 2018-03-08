@@ -119,9 +119,7 @@ namespace Quaver
             GameBase.GameOverlay.Initialize();
 
             // Attempt to intialize the Steam API
-#if STEAM
             SteamworksHelper.Initialize();
-#endif
 
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
