@@ -25,6 +25,7 @@ namespace Quaver.Online
             ChatMessageHandler.ChatMessageReceivedEvent += ChatMessageReceived.OnChatMessageReceived;
             FlamingoRequests.ResponseUserDataEvent += UserData.OnResponseUserDataHandler;
             AlertHandler.ServerAlertEvent += Alert.OnServerAlertReceived;
-        }
+            ChickenHandler.ChickenEvent += Chicken.OnChicken;
+;        }
     }
 }
