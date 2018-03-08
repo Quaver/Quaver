@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver", "Quaver\Quaver.csproj", "{9BA48B4E-6C2A-42CD-8739-9E4E4C6A083A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver-API", "Quaver-API\Quaver-API\Quaver-API.csproj", "{0C6869BD-4E34-4C92-A853-E09F2B320601}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver.API", "Quaver.API\Quaver.API\Quaver.API.csproj", "{0C6869BD-4E34-4C92-A853-E09F2B320601}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver.Net", "Quaver.Net\Quaver.Net\Quaver.Net.csproj", "{3BC4E002-7329-4CCB-BBC9-595167569B4C}"
 EndProject
