@@ -165,11 +165,6 @@ namespace Quaver.GameState.States
 
             // Set Rich Presence for this state
             SetDiscordRichPresence();
-
-#if DEBUG
-            for (var i = 0; i < ScoreData.NoteDevianceData.Count; i++)
-                Console.WriteLine($"[{i}] {ScoreData.NoteDevianceData[i].Position} | {ScoreData.NoteDevianceData[i].Value}");
-#endif
         }
 
         /// <summary>
