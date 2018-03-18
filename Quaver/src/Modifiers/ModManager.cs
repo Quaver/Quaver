@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.Audio;
 using Quaver.Logging;
 using Quaver.Modifiers.Mods;

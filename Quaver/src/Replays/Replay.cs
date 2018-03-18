@@ -12,6 +12,7 @@ using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.Utility;
 using osu_database_reader;
+using Quaver.API.Enums;
 
 namespace Quaver.Replays
 {
