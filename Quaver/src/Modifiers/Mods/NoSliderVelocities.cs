@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.API.Enums;
 using Quaver.Modifiers;
 
 namespace Quaver.Modifiers.Mods

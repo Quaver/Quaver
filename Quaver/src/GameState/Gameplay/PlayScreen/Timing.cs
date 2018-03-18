@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Quaver.API.Enums;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.GameState.States;
