@@ -172,11 +172,6 @@ namespace Quaver.GameState.States
 
             // Submit score
             SubmitScore();
-
-#if DEBUG
-            for (var i = 0; i < ScoreData.NoteDevianceData.Count; i++)
-                Console.WriteLine($"[{i}] {ScoreData.NoteDevianceData[i].Position} | {ScoreData.NoteDevianceData[i].Value}");
-#endif
         }
 
         /// <summary>
