@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using osu_database_reader;
 using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Database;
@@ -21,6 +22,9 @@ using Quaver.Graphics.Text;
 using Quaver.GameState.Gameplay;
 using Quaver.Utility;
 using Quaver.Audio;
+using Quaver.Net;
+using Quaver.Net.Structures;
+using Quaver.Online;
 using Quaver.Skins;
 
 namespace Quaver.GameState.States
@@ -165,6 +169,9 @@ namespace Quaver.GameState.States
 
             // Set Rich Presence for this state
             SetDiscordRichPresence();
+
+            // Submit score
+            SubmitScore();
 
 #if DEBUG
             for (var i = 0; i < ScoreData.NoteDevianceData.Count; i++)
@@ -849,6 +856,41 @@ namespace Quaver.GameState.States
                 position += interval;
                 //if (drawPause > 0) drawPause -= interval;
             }
+        }
+
+        /// <summary>
+        ///     Submits a score to the server.
+        /// </summary>
+        private void SubmitScore()
+        {
+            if (!Flamingo.Connected)
+                return;
+
+            // Get Replay
+            var replay = LZMACoder.Compress(Encoding.ASCII.GetBytes(ReplayHelper.ReplayFramesToString(Replay.ReplayFrames)));
+
+            // Get the current scroll speed the user used.
+            int scrollSpeed;
+            switch (GameBase.SelectedBeatmap.Mode)
+            {
+                case GameModes.Keys4:
+                    scrollSpeed = Configuration.ScrollSpeed4k;
+                    break;
+                case GameModes.Keys7:
+                    scrollSpeed = Configuration.ScrollSpeed7k;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException($"Invalid game mode for map selected!");
+            }
+
+            // Get current game mods
+            ModIdentifier mods = 0;
+            GameBase.CurrentGameModifiers.ForEach(x => mods |= x.ModIdentifier);
+
+            // Create OnlineScore object.
+            FlamingoRequests.SubmitScore(new OnlineScore(BeatmapMd5, ScoreData.Failed, replay, ScoreData.PlayTimeTotal, ScoreData.ScoreTotal, ScoreData.Accuracy,
+                ScoreData.MaxCombo, scrollSpeed, ScoreData.JudgePressSpread, ScoreData.JudgeReleaseSpread, GameBase.AudioEngine.PlaybackRate,
+                GameBase.GameTime.ElapsedMilliseconds, GameBase.BuildVersion, mods, Configuration.Username, SteamworksHelper.PTicket));
         }
     }
 }

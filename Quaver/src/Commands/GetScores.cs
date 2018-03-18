@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.API.Enums;
 using Quaver.Database;
 using Quaver.Modifiers;
 

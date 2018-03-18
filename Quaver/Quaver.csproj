@@ -165,7 +165,6 @@
     <Compile Include="src\GameState\GameStateManager.cs" />
     <Compile Include="src\GameState\State.cs" />
     <Compile Include="src\Modifiers\IMod.cs" />
-    <Compile Include="src\Modifiers\ModIdentifier.cs" />
     <Compile Include="src\Modifiers\ModManager.cs" />
     <Compile Include="src\Modifiers\ModType.cs" />
     <Compile Include="src\Modifiers\Mods\NoSliderVelocities.cs" />
@@ -637,13 +636,15 @@
       <Project>{3bc4e002-7329-4ccb-bbc9-595167569b4c}</Project>
       <Name>Quaver.Net</Name>
     </ProjectReference>
-    <Folder Include="src\Utility\Libs\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj">
       <Project>{0c6869bd-4e34-4c92-a853-e09f2b320601}</Project>
       <Name>Quaver.API</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\Utility\Libs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
