@@ -137,6 +137,9 @@ namespace Quaver.GameState.States
             // Insert the score into the database
             Task.Run(async () =>
             {
+                // Submit score
+                SubmitScore();
+
                 // Write replay to log file if debug is toggled
                 Replay.WriteToLogFile();
                 Replay.Write(ReplayPath, true);
@@ -169,9 +172,6 @@ namespace Quaver.GameState.States
 
             // Set Rich Presence for this state
             SetDiscordRichPresence();
-
-            // Submit score
-            SubmitScore();
         }
 
         /// <summary>
