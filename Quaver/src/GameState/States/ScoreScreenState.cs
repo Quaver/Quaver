@@ -885,7 +885,8 @@ namespace Quaver.GameState.States
             // Create OnlineScore object.
             FlamingoRequests.SubmitScore(new OnlineScore(BeatmapMd5, ScoreData.Failed, replay, ScoreData.PlayTimeTotal, ScoreData.ScoreTotal, ScoreData.Accuracy,
                 ScoreData.MaxCombo, scrollSpeed, ScoreData.JudgePressSpread, ScoreData.JudgeReleaseSpread, GameBase.AudioEngine.PlaybackRate,
-                GameBase.GameTime.ElapsedMilliseconds, GameBase.BuildVersion, mods, Configuration.Username, SteamworksHelper.PTicket));
+                GameBase.GameTime.ElapsedMilliseconds, GameBase.BuildVersion, mods, Configuration.Username, SteamworksHelper.PTicket, 
+                GameBase.SelectedBeatmap.Mode));
         }
     }
 }
