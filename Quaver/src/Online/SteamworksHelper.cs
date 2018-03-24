@@ -153,7 +153,7 @@ namespace Quaver.Online
             {
                 // Send the login request to Flamingo.
                 case EResult.k_EResultOK:
-                    Flamingo.Connect(SteamUser.GetSteamID().ToString(), SteamFriends.GetPersonaName(), PTicket, PcbTicket, ConnectingToDevServer);
+                    Task.Run(() => Flamingo.Connect(SteamUser.GetSteamID().ToString(), SteamFriends.GetPersonaName(), PTicket, PcbTicket, ConnectingToDevServer));                
                     break;
                 // All error cases returned from Steam
                 default:
