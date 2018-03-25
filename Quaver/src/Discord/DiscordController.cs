@@ -9,6 +9,7 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Modifiers;
+using Quaver.Net;
 
 namespace Quaver.Discord
 {
@@ -106,6 +107,14 @@ namespace Quaver.Discord
 
                 GameBase.DiscordController.presence.state = state;
                 GameBase.DiscordController.presence.largeImageText = Configuration.Username;
+
+                // Set username and rank if connected to Flamingo.
+                if (Flamingo.Connected)
+                {
+                    if (Flamingo.Self.Stats != null && Flamingo.Self.Stats.Rank != -1)
+                        GameBase.DiscordController.presence.largeImageText = $"{Flamingo.Self.Username} - Rank: #{Flamingo.Self.Stats.Rank}";
+                }
+
                 DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
             }
             catch (Exception e)
