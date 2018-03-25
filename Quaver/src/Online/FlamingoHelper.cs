@@ -26,6 +26,7 @@ namespace Quaver.Online
             FlamingoRequests.ResponseUserDataEvent += UserData.OnResponseUserDataHandler;
             AlertHandler.ServerAlertEvent += Alert.OnServerAlertReceived;
             ChickenHandler.ChickenEvent += Chicken.OnChicken;
+            FlamingoRequests.ScoreSubmissionResponseEvent += ScoreSubmitted.OnScoreSubmission;
 ;        }
     }
 }

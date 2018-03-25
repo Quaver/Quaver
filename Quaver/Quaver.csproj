@@ -157,6 +157,7 @@
     <Compile Include="src\Database\BeatmapImporter.cs" />
     <Compile Include="src\Online\Events\Alert.cs" />
     <Compile Include="src\Online\Events\Chicken.cs" />
+    <Compile Include="src\Online\Events\ScoreSubmitted.cs" />
     <Compile Include="src\Online\Events\UserData.cs" />
     <Compile Include="src\Peppy\Osu.cs" />
     <Compile Include="src\Peppy\OsuSkinConfig.cs" />
