@@ -109,10 +109,10 @@ namespace Quaver.Discord
                 GameBase.DiscordController.presence.largeImageText = Configuration.Username;
 
                 // Set username and rank if connected to Flamingo.
-                if (Flamingo.Connected)
+                if (Flamingo.Connected && Flamingo.Self != null && GameBase.SelectedBeatmap != null)
                 {
-                    if (Flamingo.Self.Stats != null && Flamingo.Self.Stats.Rank != -1)
-                        GameBase.DiscordController.presence.largeImageText = $"{Flamingo.Self.Username} - Rank: #{Flamingo.Self.Stats.Rank}";
+                    if (Flamingo.Self.UserStats[GameBase.SelectedBeatmap.Mode].Rank != 0)
+                        GameBase.DiscordController.presence.largeImageText = $"{Flamingo.Self.Username}: Rank #{Flamingo.Self.UserStats[GameBase.SelectedBeatmap.Mode].Rank}";
                 }
 
                 DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
