@@ -41,7 +41,7 @@ namespace Quaver.Online.Events
                     // Do score submission success stuff!
 
                     // Update user stats last if you're wanting to do animations with the old user stats & the newly updated ones.
-                    Flamingo.Self.Stats = e.Stats;
+                    Flamingo.Self.UserStats[e.OriginalScore.Mode] = e.Stats;
                     break;
                 default:
                     break;
