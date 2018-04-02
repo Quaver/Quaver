@@ -16,6 +16,7 @@ using Quaver.Graphics;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.API.Maps;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 
 namespace Quaver.GameState.Gameplay.PlayScreen

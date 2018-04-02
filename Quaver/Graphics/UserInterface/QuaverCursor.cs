@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Graphics.Enums;
 using Quaver.Helpers;
 
 namespace Quaver.Graphics.UserInterface

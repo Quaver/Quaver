@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 
 namespace Quaver.Graphics.UserInterface

@@ -8,6 +8,8 @@ using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Graphics.Text;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Graphics.Colors;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
@@ -269,7 +271,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
                 //Upgrade Bar Color and Size
                 GradeProgressQuaverBar.UpdateBar(0, scale,
-                GameColors.GradeColors[CurrentGrade + 1]);
+                QuaverColors.GradeColors[CurrentGrade + 1]);
             }
         }
 

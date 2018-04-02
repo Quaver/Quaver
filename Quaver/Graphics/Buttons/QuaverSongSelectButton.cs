@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Quaver.Database.Beatmaps;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 

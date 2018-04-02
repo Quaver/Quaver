@@ -17,6 +17,7 @@ using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.GameState.SongSelect;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
 using Quaver.Input;

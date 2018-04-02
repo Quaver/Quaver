@@ -22,6 +22,7 @@ using Quaver.Modifiers;
 using Quaver.API.Maps;
 using Quaver.Commands;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Peppy;

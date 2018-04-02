@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Graphics;
+using Quaver.Graphics.Colors;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 
 namespace Quaver.GameState.Gameplay
@@ -272,10 +274,10 @@ namespace Quaver.GameState.Gameplay
         {
             if (IsLongNote)
             {
-                HoldBodyQuaverSprite.Tint = GameColors.DeadNote;
-                HoldEndQuaverSprite.Tint = GameColors.DeadNote;
+                HoldBodyQuaverSprite.Tint = QuaverColors.DeadNote;
+                HoldEndQuaverSprite.Tint = QuaverColors.DeadNote;
             }
-            HitBodyQuaverSprite.Tint = GameColors.DeadNote;
+            HitBodyQuaverSprite.Tint = QuaverColors.DeadNote;
         }
     }
 }
