@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Text;
+using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Logging;
 
@@ -27,14 +28,14 @@ namespace Quaver.Graphics.Buttons
             QuaverTextSprite = new QuaverTextbox()
             {
                 Text = key.ToString(),
-                Size = new UDim2(ButtonSize.X, ButtonSize.Y),
+                Size = new UDim2D(ButtonSize.X, ButtonSize.Y),
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.MidCenter,
                 Parent = this
             };
             Size.X.Offset = ButtonSize.X;
             Size.Y.Offset = ButtonSize.Y;
-            Image = GameBase.UI.BlankBox;
+            Image = GameBase.QuaverUserInterface.BlankBox;
             QuaverTextSprite.TextColor = Color.Black;
             Tint = Color.LightPink;
             CurrentKey = key;

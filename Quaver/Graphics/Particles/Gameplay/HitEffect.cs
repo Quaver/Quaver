@@ -1,8 +1,10 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UniversalDim;
 
 namespace Quaver.Graphics.Particles.Gameplay
 {
@@ -55,7 +57,7 @@ namespace Quaver.Graphics.Particles.Gameplay
             HitBurstQuaverSprite = new Sprites.QuaverSprite()
             {
                 Alignment = Alignment.MidCenter,
-                Size = new UDim2(0, 0, 1, 1),
+                Size = new UDim2D(0, 0, 1, 1),
                 Parent = QuaverContainer
             };
 

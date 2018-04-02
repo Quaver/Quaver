@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UniversalDim;
 
 namespace Quaver.Graphics.UserInterface
 {
@@ -64,23 +65,23 @@ namespace Quaver.Graphics.UserInterface
             // Bar Axis Bot
             BarAxisBotCorner = new Sprites.QuaverSprite()
             {
-                Image = GameBase.UI.BarCorner,
-                Size = new UDim2(sscale,sscale),
+                Image = GameBase.QuaverUserInterface.BarCorner,
+                Size = new UDim2D(sscale,sscale),
                 Parent = this
             };
 
             BarAxisBotBox = new Sprites.QuaverSprite()
             {
-                Size = new UDim2(sscale, (((BarSpacing + BarDefaultSize) * bsize)) * sScale),
-                Position = new UDim2(0, sscale),
+                Size = new UDim2D(sscale, (((BarSpacing + BarDefaultSize) * bsize)) * sScale),
+                Position = new UDim2D(0, sscale),
                 Parent = this
             };
 
             BarAxisBotCap = new Sprites.QuaverSprite()
             {
-                Image = GameBase.UI.BarCap,
-                Size = new UDim2(sscale, sscale),
-                Position = new UDim2(0, BarAxisBotBox.Size.Y.Offset + sscale),
+                Image = GameBase.QuaverUserInterface.BarCap,
+                Size = new UDim2D(sscale, sscale),
+                Position = new UDim2D(0, BarAxisBotBox.Size.Y.Offset + sscale),
                 SpriteEffect = SpriteEffects.FlipVertically,
                 Parent = this
             };
@@ -88,33 +89,33 @@ namespace Quaver.Graphics.UserInterface
             // Bar Axis Mid
             BarAxisMidBox = new Sprites.QuaverSprite()
             {
-                Size = new UDim2(length - (2 * BarDefaultSize), sscale),
-                Position = new UDim2(BarAxisBotBox.Size.X.Offset, 0),
+                Size = new UDim2D(length - (2 * BarDefaultSize), sscale),
+                Position = new UDim2D(BarAxisBotBox.Size.X.Offset, 0),
                 Parent = this
             };
 
             //Bar Axis Topp
             BarAxisTopCorner = new Sprites.QuaverSprite()
             {
-                Image = GameBase.UI.BarCorner,
+                Image = GameBase.QuaverUserInterface.BarCorner,
                 Rotation = 90,
-                Size = new UDim2(sscale, sscale),
-                Position = new UDim2(BarAxisMidBox.Position.X.Offset + BarAxisMidBox.Size.X.Offset, 0),
+                Size = new UDim2D(sscale, sscale),
+                Position = new UDim2D(BarAxisMidBox.Position.X.Offset + BarAxisMidBox.Size.X.Offset, 0),
                 Parent = this
             };
 
             BarAxisTopBox = new Sprites.QuaverSprite()
             {
-                Size = new UDim2(sscale, (((BarSpacing + BarDefaultSize) * bsize)) * sScale),
-                Position = new UDim2(BarAxisTopCorner.Position.X.Offset, sscale),
+                Size = new UDim2D(sscale, (((BarSpacing + BarDefaultSize) * bsize)) * sScale),
+                Position = new UDim2D(BarAxisTopCorner.Position.X.Offset, sscale),
                 Parent = this
             };
 
             BarAxisTopCap = new Sprites.QuaverSprite()
             {
-                Image = GameBase.UI.BarCap,
-                Position = new UDim2(BarAxisTopBox.Position.X.Offset, BarAxisTopBox.Size.Y.Offset + sscale),
-                Size = new UDim2(sscale, sscale),
+                Image = GameBase.QuaverUserInterface.BarCap,
+                Position = new UDim2D(BarAxisTopBox.Position.X.Offset, BarAxisTopBox.Size.Y.Offset + sscale),
+                Size = new UDim2D(sscale, sscale),
                 SpriteEffect = SpriteEffects.FlipVertically,
                 Parent = this
             };
@@ -126,30 +127,30 @@ namespace Quaver.Graphics.UserInterface
 
                 BarQuaverSpriteBegin[i] = new Sprites.QuaverSprite()
                 {
-                    Image = GameBase.UI.BarCap,
+                    Image = GameBase.QuaverUserInterface.BarCap,
                     Rotation = -90,
                     Tint = BarColors[i],
-                    Position = new UDim2(sscale, ((((BarSpacing + BarDefaultSize) * i) + BarDefaultSize) * sScale) + BarSpacing),
-                    Size = new UDim2(sscale, sscale),
+                    Position = new UDim2D(sscale, ((((BarSpacing + BarDefaultSize) * i) + BarDefaultSize) * sScale) + BarSpacing),
+                    Size = new UDim2D(sscale, sscale),
                     Parent = this
                 };
 
                 BarQuaverSpriteMiddle[i] = new Sprites.QuaverSprite()
                 {
                     Tint = BarColors[i],
-                    Position = new UDim2(BarQuaverSpriteBegin[i].Position.X.Offset + BarQuaverSpriteBegin[i].Size.X.Offset, BarQuaverSpriteBegin[i].Position.Y.Offset),
-                    Size = new UDim2(sscale, sscale),
+                    Position = new UDim2D(BarQuaverSpriteBegin[i].Position.X.Offset + BarQuaverSpriteBegin[i].Size.X.Offset, BarQuaverSpriteBegin[i].Position.Y.Offset),
+                    Size = new UDim2D(sscale, sscale),
                     Parent = this
                 };
 
                 BarQuaverSpriteEnd[i] = new Sprites.QuaverSprite()
                 {
-                    Image = GameBase.UI.BarCap,
+                    Image = GameBase.QuaverUserInterface.BarCap,
                     Rotation = 90,
                     Alignment = Alignment.TopRight,
                     Tint = BarColors[i],
-                    Position = new UDim2(sscale, 0),
-                    Size = new UDim2(sscale, sscale),
+                    Position = new UDim2D(sscale, 0),
+                    Size = new UDim2D(sscale, sscale),
                     Parent = BarQuaverSpriteMiddle[i]
                 };
             }

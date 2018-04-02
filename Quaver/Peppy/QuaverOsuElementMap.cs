@@ -9,7 +9,7 @@ namespace Quaver.Peppy
     internal struct QuaverOsuElementMap
     {
         /// <summary>
-        ///     The Quaver skin element file name
+        ///     The QuaverGame skin element file name
         /// </summary>
         public string QuaverElement { get; }
 

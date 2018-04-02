@@ -83,7 +83,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
-            GameBase.GameWindow.Title = "Quaver";
+            GameBase.GameWindow.Title = "QuaverGame";
 
             // Remove speed mods upon going to the main menu so songs can be played at normal speed.
             if (GameBase.CurrentGameModifiers.Count > 0)
@@ -100,7 +100,7 @@ namespace Quaver.GameState.States
             //Initialize Menu Screen
             QuaverContainer = new QuaverContainer();
 
-            // Initialize the UI buttons
+            // Initialize the QuaverUserInterface buttons
             CreateOszImportButton();
             CreateQpImportButton();
             CreateMenuButtons();
@@ -227,7 +227,7 @@ namespace Quaver.GameState.States
         private void CreateQpImportButton()
         {
             // Import .osz QuaverButton
-            ImportQpQuaverButton = new QuaverTextButton(new Vector2(200, 40), "Import Quaver Mapset")
+            ImportQpQuaverButton = new QuaverTextButton(new Vector2(200, 40), "Import QuaverGame Mapset")
             {
                 Alignment = Alignment.BotCenter,
                 Parent = QuaverContainer
@@ -264,7 +264,7 @@ namespace Quaver.GameState.States
             var openFileDialog = new OpenFileDialog()
             {
                 InitialDirectory = "c:\\",
-                Filter = "Quaver Mapset (*.qp)|*.qp",
+                Filter = "QuaverGame Mapset (*.qp)|*.qp",
                 FilterIndex = 0,
                 RestoreDirectory = true,
                 Multiselect = true

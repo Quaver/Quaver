@@ -16,8 +16,10 @@ using Quaver.Graphics;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.API.Maps;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UniversalDim;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
@@ -104,7 +106,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Initialize QuaverContainer
             QuaverContainer = new QuaverContainer()
             {
-                Size = new UDim2(PlayfieldSize, 0, 0, 1),
+                Size = new UDim2D(PlayfieldSize, 0, 0, 1),
                 Alignment = Alignment.TopCenter
             };
             QuaverContainer.Update(0);

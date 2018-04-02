@@ -9,9 +9,11 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UniversalDim;
 
 namespace Quaver.GameState.Gameplay
 {
@@ -140,7 +142,7 @@ namespace Quaver.GameState.Gameplay
             {
                 Alignment = Alignment.TopLeft,
                 SpriteEffect = !Config.ConfigManager.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
-                Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
+                Position = new UDim2D(_hitObjectPosition.X, _hitObjectPosition.Y),
             };
 
             // Create hit/hold body (placed ontop of hold body) if this is a long note.
@@ -150,8 +152,8 @@ namespace Quaver.GameState.Gameplay
                 HoldBodyQuaverSprite = new QuaverSprite()
                 {
                     Alignment = Alignment.TopLeft,
-                    Size = new UDim2(HitObjectSize, InitialLongNoteSize),
-                    Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
+                    Size = new UDim2D(HitObjectSize, InitialLongNoteSize),
+                    Position = new UDim2D(_hitObjectPosition.X, _hitObjectPosition.Y),
                     Parent = parent
                 };
 
@@ -159,8 +161,8 @@ namespace Quaver.GameState.Gameplay
                 HoldEndQuaverSprite = new QuaverSprite()
                 {
                     Alignment = Alignment.TopLeft,
-                    Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
-                    Size = new UDim2(HitObjectSize, 0),
+                    Position = new UDim2D(_hitObjectPosition.X, _hitObjectPosition.Y),
+                    Size = new UDim2D(HitObjectSize, 0),
                     Parent = parent,
                     SpriteEffect = !Config.ConfigManager.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None
                 };
@@ -202,21 +204,21 @@ namespace Quaver.GameState.Gameplay
                                                                 : GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
 
                         // Update hit body's size to match image ratio
-                        HitBodyQuaverSprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodyQuaverSprite.Image.Height / HitBodyQuaverSprite.Image.Width);
+                        HitBodyQuaverSprite.Size = new UDim2D(HitObjectSize, HitObjectSize * HitBodyQuaverSprite.Image.Height / HitBodyQuaverSprite.Image.Width);
                         HitBodyQuaverSprite.Parent = parent;
                         HoldBodyOffset = HitBodyQuaverSprite.SizeY / 2;
                     }
                     catch (Exception e)
                     {
                         HitBodyQuaverSprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
-                        HitBodyQuaverSprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodyQuaverSprite.Image.Height / HitBodyQuaverSprite.Image.Width);
+                        HitBodyQuaverSprite.Size = new UDim2D(HitObjectSize, HitObjectSize * HitBodyQuaverSprite.Image.Height / HitBodyQuaverSprite.Image.Width);
                         HitBodyQuaverSprite.Parent = parent;
                         HoldBodyOffset = HitBodyQuaverSprite.SizeY / 2;
                     }
                     break;
                 case GameModes.Keys7:
                     HitBodyQuaverSprite.Image = GameBase.LoadedSkin.NoteHitObjects7K[keyLaneIndex];
-                    HitBodyQuaverSprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodyQuaverSprite.Image.Height / HitBodyQuaverSprite.Image.Width);
+                    HitBodyQuaverSprite.Size = new UDim2D(HitObjectSize, HitObjectSize * HitBodyQuaverSprite.Image.Height / HitBodyQuaverSprite.Image.Width);
                     HitBodyQuaverSprite.Parent = parent;
                     HoldBodyOffset = HitBodyQuaverSprite.SizeY / 2;
                     break;

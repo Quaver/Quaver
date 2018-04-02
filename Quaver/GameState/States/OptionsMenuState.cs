@@ -133,7 +133,7 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Creates UI relating to Mania Keybinding
+        ///     Creates QuaverUserInterface relating to Mania Keybinding
         /// </summary>
         private void CreateManiaKeyButtons()
         {
@@ -208,7 +208,7 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Creates UI relating to Skins Options
+        ///     Creates QuaverUserInterface relating to Skins Options
         /// </summary>
         private void CreateSkinSelectButtons()
         {
@@ -256,7 +256,7 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Create UI relating to Graphics Options
+        ///     Create QuaverUserInterface relating to Graphics Options
         /// </summary>
         private void CreateGraphicsOptionButtons()
         {

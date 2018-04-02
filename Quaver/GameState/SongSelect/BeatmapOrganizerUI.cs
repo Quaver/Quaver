@@ -13,6 +13,7 @@ using Quaver.Database.Scores;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 
@@ -104,9 +105,9 @@ namespace Quaver.GameState.SongSelect
                     var newButton = new QuaverSongSelectButton(map, GameBase.WindowUIScale)
                     {
                         Map = map,
-                        Image = GameBase.UI.BlankBox,
+                        Image = GameBase.QuaverUserInterface.BlankBox,
                         Alignment = Alignment.TopRight,
-                        Position = new UDim2(-5, OrganizerSize),
+                        Position = new UDim2D(-5, OrganizerSize),
                         Parent = QuaverContainer
                     };
 
@@ -174,7 +175,7 @@ namespace Quaver.GameState.SongSelect
             }
 
             // Load all the local scores from this map 
-            // TODO: Add filters, this should come after there's some sort of UI to do so
+            // TODO: Add filters, this should come after there's some sort of QuaverUserInterface to do so
             // TODO #2: Actually display these scores on-screen somewhere. Add loading animation before running task.
             // TODO #3: Move this somewhere so that it automatically loads the scores upon first load as well.
             Task.Run(async () => await LocalScoreCache.SelectBeatmapScores(GameBase.SelectedBeatmap.Md5Checksum))

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Database.Beatmaps;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Text;
+using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 
 namespace Quaver.Graphics.Buttons
@@ -70,8 +71,8 @@ namespace Quaver.Graphics.Buttons
             {
                 Text = map.Title,
                 Font = Fonts.Medium48,
-                Size = new UDim2(-5 * ButtonScale, -2 * ButtonScale, 0.825f, 0.5f),
-                Position = new UDim2(-5 * ButtonScale, 2 * ButtonScale),
+                Size = new UDim2D(-5 * ButtonScale, -2 * ButtonScale, 0.825f, 0.5f),
+                Position = new UDim2D(-5 * ButtonScale, 2 * ButtonScale),
                 Alignment = Alignment.TopRight,
                 TextAlignment = Alignment.BotLeft,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
@@ -83,8 +84,8 @@ namespace Quaver.Graphics.Buttons
             {
                 Text = map.Artist + " | "+ map.Creator,
                 Font = Fonts.Medium48,
-                Position = new UDim2(-5 * ButtonScale, -5 * ButtonScale),
-                Size = new UDim2(-5 * ButtonScale, -5 * ButtonScale, 0.825f, 0.5f),
+                Position = new UDim2D(-5 * ButtonScale, -5 * ButtonScale),
+                Size = new UDim2D(-5 * ButtonScale, -5 * ButtonScale, 0.825f, 0.5f),
                 Alignment = Alignment.BotRight,
                 TextAlignment = Alignment.TopLeft,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
@@ -96,8 +97,8 @@ namespace Quaver.Graphics.Buttons
             {
                 Text = string.Format("{0:f2}", map.DifficultyRating),
                 Font = Fonts.Bold12,
-                Position = new UDim2(2 * ButtonScale, 5 * ButtonScale),
-                Size = new UDim2(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
+                Position = new UDim2D(2 * ButtonScale, 5 * ButtonScale),
+                Size = new UDim2D(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.BotRight,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
@@ -116,8 +117,8 @@ namespace Quaver.Graphics.Buttons
 
             UnderlayImage = new Sprites.QuaverSprite
             {
-                Position = new UDim2(2 * ButtonScale, -5 * ButtonScale),
-                Size = new UDim2(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
+                Position = new UDim2D(2 * ButtonScale, -5 * ButtonScale),
+                Size = new UDim2D(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
                 Alignment = Alignment.BotLeft,
                 Alpha = 0,
                 Parent = this
@@ -125,8 +126,8 @@ namespace Quaver.Graphics.Buttons
             
             GradeImage = new Sprites.QuaverSprite()
             {
-                Position = new UDim2(-16 * ButtonScale, 0),
-                Size = new UDim2(14 * ButtonScale, 14 * ButtonScale),
+                Position = new UDim2D(-16 * ButtonScale, 0),
+                Size = new UDim2D(14 * ButtonScale, 14 * ButtonScale),
                 Alpha = 1f,
                 Image = GameBase.LoadedSkin.GradeSmallA,
                 Alignment = Alignment.MidRight,
@@ -135,7 +136,7 @@ namespace Quaver.Graphics.Buttons
 
             GameModeImage = new Sprites.QuaverSprite()
             {
-                Size = new UDim2(14 * ButtonScale, 14 * ButtonScale),
+                Size = new UDim2D(14 * ButtonScale, 14 * ButtonScale),
                 Image = GameBase.LoadedSkin.Cursor,
                 Alpha = 0.5f,
                 Alignment = Alignment.MidRight,

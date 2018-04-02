@@ -20,10 +20,12 @@ using Quaver.GameState.Gameplay;
 using Quaver.Audio;
 using Quaver.Database.Beatmaps;
 using Quaver.Database.Scores;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Skins;
@@ -177,7 +179,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
-            // Iniitalize UI Elements
+            // Iniitalize QuaverUserInterface Elements
             CreateUI();
 
             // Log the score
@@ -229,7 +231,7 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Creates the UI
+        ///     Creates the QuaverUserInterface
         /// </summary>
         private void CreateUI()
         {
@@ -348,7 +350,7 @@ namespace Quaver.GameState.States
         /// </summary>
         private void LogScore()
         {
-            Logger.LogImportant($"Quaver Version: {Replay.QuaverVersion}", LogType.Runtime);
+            Logger.LogImportant($"QuaverGame Version: {Replay.QuaverVersion}", LogType.Runtime);
             Logger.LogImportant($"Beatmap MD5: {Replay.BeatmapMd5}", LogType.Runtime);
             Logger.LogImportant($"Replay MD5: {Replay.ReplayMd5}", LogType.Runtime);
             Logger.LogImportant($"Player: {ConfigManager.Username}", LogType.Runtime);
@@ -382,15 +384,15 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Create UI set relating to note deviance
+        ///     Create QuaverUserInterface set relating to note deviance
         /// </summary>
         private void CreateMsDevianceUI()
         {
             // create ms deviance box
             var boundary = new QuaverSprite()
             {
-                Size = new UDim2(400, 150),
-                Position = new UDim2(10, -90),
+                Size = new UDim2D(400, 150),
+                Position = new UDim2D(10, -90),
                 Alignment = Alignment.BotLeft,
                 Tint = Color.Black,
                 Alpha = 0.5f,
@@ -405,8 +407,8 @@ namespace Quaver.GameState.States
                 //bottom
                 ob = new QuaverSprite()
                 {
-                    Position = new UDim2(0, boundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
-                    Size = new UDim2(0, 1, 1, 0),
+                    Position = new UDim2D(0, boundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
+                    Size = new UDim2D(0, 1, 1, 0),
                     Tint = GameBase.LoadedSkin.JudgeColors[i],
                     Alpha = 0.2f,
                     Alignment = Alignment.MidLeft,
@@ -416,8 +418,8 @@ namespace Quaver.GameState.States
                 //top
                 ob = new QuaverSprite()
                 {
-                    Position = new UDim2(0, -boundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
-                    Size = new UDim2(0, 1, 1, 0),
+                    Position = new UDim2D(0, -boundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
+                    Size = new UDim2D(0, 1, 1, 0),
                     Tint = GameBase.LoadedSkin.JudgeColors[i],
                     Alpha = 0.2f,
                     Alignment = Alignment.MidLeft,
@@ -436,8 +438,8 @@ namespace Quaver.GameState.States
                 {
                     var ob = new QuaverSprite()
                     {
-                        Position = new UDim2(((float)(ms.Position / ScoreData.PlayTimeTotal) * boundary.Size.X.Offset) - 1f, 0),
-                        Size = new UDim2(2, 0, 0, 1),
+                        Position = new UDim2D(((float)(ms.Position / ScoreData.PlayTimeTotal) * boundary.Size.X.Offset) - 1f, 0),
+                        Size = new UDim2D(2, 0, 0, 1),
                         Tint = GameBase.LoadedSkin.GetJudgeColor(Judge.Miss),
                         Alpha = 0.25f,
                         Parent = boundary
@@ -458,8 +460,8 @@ namespace Quaver.GameState.States
 
                     var ob = new QuaverSprite()
                     {
-                        Position = new UDim2((float)(ms.Position / ScoreData.PlayTimeTotal * boundary.Size.X.Offset) - 1.5f, (float)(ms.Value * (boundary.Size.Y.Offset / 2) / ScoreData.HitWindowPress[4]) - 1.5f),
-                        Size = new UDim2(3, 3),
+                        Position = new UDim2D((float)(ms.Position / ScoreData.PlayTimeTotal * boundary.Size.X.Offset) - 1.5f, (float)(ms.Value * (boundary.Size.Y.Offset / 2) / ScoreData.HitWindowPress[4]) - 1.5f),
+                        Size = new UDim2D(3, 3),
                         Tint = GameBase.LoadedSkin.JudgeColors[tint],
                         Alignment = Alignment.MidLeft,
                         Parent = boundary
@@ -471,15 +473,15 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Create UI set relating to Health
+        ///     Create QuaverUserInterface set relating to Health
         /// </summary>
         private void CreateHealthDataUI()
         {
             //Create QuaverContainer for Health Data Display
             var boundary = new QuaverSprite()
             {
-                Size = new UDim2(400, 150),
-                Position = new UDim2(-10, -160 - 90),
+                Size = new UDim2D(400, 150),
+                Position = new UDim2D(-10, -160 - 90),
                 Alignment = Alignment.BotRight,
                 Tint = Color.Black,
                 Alpha = 0.5f,
@@ -504,7 +506,7 @@ namespace Quaver.GameState.States
         }
         
         /// <summary>
-        ///     Create UI set relating to accuracy
+        ///     Create QuaverUserInterface set relating to accuracy
         /// </summary>
         private void CreateAccuracyDataUI()
         {
@@ -522,8 +524,8 @@ namespace Quaver.GameState.States
             //Create QuaverContainer for Accuracy Display
             var boundary = new QuaverSprite()
             {
-                Size = new UDim2(400, 150),
-                Position = new UDim2(-10, -90),
+                Size = new UDim2D(400, 150),
+                Position = new UDim2D(-10, -90),
                 Alignment = Alignment.BotRight,
                 Tint = Color.Black,
                 Alpha = 0.5f,
@@ -541,8 +543,8 @@ namespace Quaver.GameState.States
                 {
                     QuaverSprite ob = new QuaverSprite()
                     {
-                        Position = new UDim2(0, boundary.Size.Y.Offset * (float)(1 - ((ScoreData.GradePercentage[i] - lowestAcc) * lowAccRatio))),
-                        Size = new UDim2(0, 1, 1, 0),
+                        Position = new UDim2D(0, boundary.Size.Y.Offset * (float)(1 - ((ScoreData.GradePercentage[i] - lowestAcc) * lowAccRatio))),
+                        Size = new UDim2D(0, 1, 1, 0),
                         Tint = QuaverColors.GradeColors[i+1],
                         Alpha = 0.2f,
                         Parent = boundary
@@ -590,7 +592,7 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Create UI displaying judge count and score/acc
+        ///     Create QuaverUserInterface displaying judge count and score/acc
         /// </summary>
         private void CreateJudgeWindowUI()
         {
@@ -598,7 +600,7 @@ namespace Quaver.GameState.States
             QuaverTextbox ob;
             var boundary = new QuaverContainer()
             {
-                Size = new UDim2(350, 240),
+                Size = new UDim2D(350, 240),
                 PosX = 10,
                 PosY = 50,
                 Alignment = Alignment.TopCenter,
@@ -613,8 +615,8 @@ namespace Quaver.GameState.States
                     Text = "[" + GameplayReferences.JudgeNames[i] + "]: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i] + " Total: " + (ScoreData.JudgePressSpread[i] + ScoreData.JudgeReleaseSpread[i]),
                     TextColor = GameBase.LoadedSkin.JudgeColors[i],
                     Font = Fonts.Medium16,
-                    Position = new UDim2(0, 200 * i / 6 + 100),
-                    Size = new UDim2(0, 0, 1, 0),
+                    Position = new UDim2D(0, 200 * i / 6 + 100),
+                    Size = new UDim2D(0, 0, 1, 0),
                     TextAlignment = Alignment.MidRight,
                     Parent = boundary
                 };
@@ -627,8 +629,8 @@ namespace Quaver.GameState.States
                 Font = Fonts.Medium24,
                 TextAlignment = Alignment.MidLeft,
                 TextColor = Color.White,
-                Position = new UDim2(0, 30),
-                Size = new UDim2(0, 70, 1, 0),
+                Position = new UDim2D(0, 30),
+                Size = new UDim2D(0, 70, 1, 0),
                 Parent = boundary
             };
 
@@ -639,8 +641,8 @@ namespace Quaver.GameState.States
                 Font = Fonts.Medium24,
                 TextAlignment = Alignment.MidRight,
                 TextColor = Color.White,
-                Position = new UDim2(0, 30),
-                Size = new UDim2(0, 70, 1, 0),
+                Position = new UDim2D(0, 30),
+                Size = new UDim2D(0, 70, 1, 0),
                 Parent = boundary
             };
 
@@ -719,8 +721,8 @@ namespace Quaver.GameState.States
                 // Create graph element
                 var ob = new QuaverSprite()
                 {
-                    Position = new UDim2((float)currentXPos, (float)currentYpos),
-                    Size = new UDim2(3, 3)
+                    Position = new UDim2D((float)currentXPos, (float)currentYpos),
+                    Size = new UDim2D(3, 3)
                 };
                 graphElements.Add(ob);
             }
@@ -740,8 +742,8 @@ namespace Quaver.GameState.States
             {
                 Text = topLabel,
                 Font = Fonts.Medium12,
-                Position = new UDim2(2, 2),
-                Size = new UDim2(200, 50),
+                Position = new UDim2D(2, 2),
+                Size = new UDim2D(200, 50),
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
                 Parent = parent
@@ -752,8 +754,8 @@ namespace Quaver.GameState.States
             {
                 Text = botLabel,
                 Font = Fonts.Medium12,
-                Position = new UDim2(2, -2),
-                Size = new UDim2(200, 50),
+                Position = new UDim2D(2, -2),
+                Size = new UDim2D(200, 50),
                 Alignment = Alignment.BotLeft,
                 TextAlignment = Alignment.BotLeft,
                 Parent = parent
@@ -772,8 +774,8 @@ namespace Quaver.GameState.States
             {
                 var ob = new QuaverSprite()
                 {
-                    Position = new UDim2(parent.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.PlayTimeTotal), 0),
-                    Size = new UDim2(1, 0, 0, 1),
+                    Position = new UDim2D(parent.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.PlayTimeTotal), 0),
+                    Size = new UDim2D(1, 0, 0, 1),
                     Alpha = timeIndex % 4 == 0 ? 0.5f : 0.1f,
                     Parent = parent
                 };
@@ -834,13 +836,13 @@ namespace Quaver.GameState.States
                     {
                         var ob = new QuaverSprite()
                         {
-                            Position = new UDim2
+                            Position = new UDim2D
                             (
                                 (float)(Math.Cos(position * circularRatio - Math.PI / 2) * (radius - (2.5 * i))) + offset.X,
                                 (float)(Math.Sin(position * circularRatio - Math.PI / 2) * (radius - (2.5 * i))) + offset.Y
                             ),
                             Tint = GameBase.LoadedSkin.JudgeColors[tint],
-                            Size = new UDim2(3, 3),
+                            Size = new UDim2D(3, 3),
                             Parent = parent
                         };
                     }

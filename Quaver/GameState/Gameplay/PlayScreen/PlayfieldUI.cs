@@ -11,13 +11,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UniversalDim;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
     class PlayfieldUI : IHelper
     {
         /// <summary>
-        ///     The parent of every Playfield UI Component
+        ///     The parent of every Playfield QuaverUserInterface Component
         /// </summary>
         public QuaverContainer QuaverContainer { get; private set; }
 
@@ -87,7 +88,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         private int CurrentOffsetObjectIndex { get; set; }
 
         /// <summary>
-        ///     The alpha of the entire UI set. Will turn invisible if the set is not being updated.
+        ///     The alpha of the entire QuaverUserInterface set. Will turn invisible if the set is not being updated.
         /// </summary>
         private double SpriteAlphaHold { get; set; }
 
@@ -132,14 +133,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create QuaverContainer
             QuaverContainer = new QuaverContainer()
             {
-                Size = new UDim2(PlayfieldSize, 0, 0, 1),
+                Size = new UDim2D(PlayfieldSize, 0, 0, 1),
                 Alignment = Alignment.MidCenter
             };
 
             // TODO: add judge scale
             JudgeQuaverSprite = new QuaverSprite()
             {
-                Size = new UDim2(JudgeSizes[0].X, JudgeSizes[0].Y),
+                Size = new UDim2D(JudgeSizes[0].X, JudgeSizes[0].Y),
                 Alignment = Alignment.MidCenter,
                 Image = JudgeImages[0],
                 Parent = QuaverContainer,
@@ -149,8 +150,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create Combo Text
             ComboQuaverText = new QuaverTextbox()
             {
-                Size = new UDim2(100 * GameBase.WindowUIScale, 20 * GameBase.WindowUIScale),
-                Position = new UDim2(0, 45 * GameBase.WindowUIScale),
+                Size = new UDim2D(100 * GameBase.WindowUIScale, 20 * GameBase.WindowUIScale),
+                Position = new UDim2D(0, 45 * GameBase.WindowUIScale),
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.TopCenter,
                 Text = "0x",
@@ -163,8 +164,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create Offset Gauge
             var offsetGaugeBoundary = new QuaverContainer()
             {
-                Size = new UDim2(220 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale),
-                Position = new UDim2(0, 30 * GameBase.WindowUIScale),
+                Size = new UDim2D(220 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale),
+                Position = new UDim2D(0, 30 * GameBase.WindowUIScale),
                 Alignment = Alignment.MidCenter,
                 Parent = QuaverContainer
             };
@@ -179,7 +180,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 OffsetIndicatorsQuaverSprites[i] = new QuaverSprite()
                 {
                     Parent = offsetGaugeBoundary,
-                    Size = new UDim2(4, 0, 0, 1),
+                    Size = new UDim2D(4, 0, 0, 1),
                     Alignment = Alignment.MidCenter,
                     Alpha = 0
                 };
@@ -187,7 +188,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             var offsetGaugeMiddle = new QuaverSprite()
             {
-                Size = new UDim2(2, 0, 0, 1),
+                Size = new UDim2D(2, 0, 0, 1),
                 Alignment = Alignment.MidCenter,
                 Parent = offsetGaugeBoundary
             };
@@ -195,7 +196,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Create Health Bar
             var healthMultiplierBoundary = new QuaverContainer()
             {
-                Size = new UDim2(PlayfieldSize - 4, 20 * GameBase.WindowUIScale),
+                Size = new UDim2D(PlayfieldSize - 4, 20 * GameBase.WindowUIScale),
                 PosY = Config.ConfigManager.HealthBarPositionTop ? 2 : -2,
                 Alignment = Config.ConfigManager.HealthBarPositionTop ? Alignment.TopCenter : Alignment.BotCenter,
                 Parent = QuaverContainer
@@ -203,14 +204,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             var healthBarUnder = new QuaverSprite()
             {
-                Size = new UDim2(0, 10 * GameBase.WindowUIScale -1, 1, 0),
+                Size = new UDim2D(0, 10 * GameBase.WindowUIScale -1, 1, 0),
                 Alignment = Config.ConfigManager.HealthBarPositionTop ? Alignment.TopCenter : Alignment.BotCenter,
                 Parent = healthMultiplierBoundary
             };
 
             HealthBarOver = new QuaverSprite()
             {
-                Size = new UDim2(-2, -2, 1, 1),
+                Size = new UDim2D(-2, -2, 1, 1),
                 PosX = 1,
                 Parent = healthBarUnder,
                 Alignment = Alignment.MidLeft,
@@ -223,11 +224,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 MultiplierBars[i] = new QuaverSprite()
                 {
-                    Size = new UDim2(14 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale -1),
+                    Size = new UDim2D(14 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale -1),
                     PosX = (i-7.5f) * 16 * GameBase.WindowUIScale,
                     PosY = Config.ConfigManager.HealthBarPositionTop ? 10 * GameBase.WindowUIScale + 1 : 0,
                     Alignment = Alignment.TopCenter,
-                    Image = GameBase.UI.HollowBox,
+                    Image = GameBase.QuaverUserInterface.HollowBox,
                     Parent = healthMultiplierBoundary
                 };
             }
@@ -325,7 +326,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             if (total > ActiveMultiplierBars)
             {
                 ActiveMultiplierBars = total;
-                MultiplierBars[total-1].Image = GameBase.UI.BlankBox;
+                MultiplierBars[total-1].Image = GameBase.QuaverUserInterface.BlankBox;
             }
             // If a new bar turns inactive
             else if (total < ActiveMultiplierBars)
@@ -334,9 +335,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 for (var i = 1; i <= 15; i++)
                 {
                     if (i > total)
-                        MultiplierBars[i-1].Image = GameBase.UI.HollowBox;
+                        MultiplierBars[i-1].Image = GameBase.QuaverUserInterface.HollowBox;
                     else
-                        MultiplierBars[i-1].Image = GameBase.UI.BlankBox;
+                        MultiplierBars[i-1].Image = GameBase.QuaverUserInterface.BlankBox;
                 }
             }
         }
