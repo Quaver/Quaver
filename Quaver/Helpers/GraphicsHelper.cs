@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
 
 namespace Quaver.Helpers
@@ -138,6 +140,19 @@ namespace Quaver.Helpers
         internal static float Tween(float target, float current, double scale)
         {
             return (float)(current + ((target - current) * scale));
+        }
+
+        /// <summary>
+        ///     Loads an image into a Texture2D
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        internal static Texture2D LoadTexture2DFromFile(string path)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Open))
+            {
+                return Texture2D.FromStream(GameBase.GraphicsDevice, fileStream);
+            }
         }
     }
 }
