@@ -150,7 +150,6 @@
     <Compile Include="Input\GameplayInputManager.cs" />
     <Compile Include="Input\GlobalInputManager.cs" />
     <Compile Include="Input\IInputManager.cs" />
-    <Compile Include="Localization\Language.cs" />
     <Compile Include="Graphics\Sprite\Cursor.cs" />
     <Compile Include="GameBase.cs" />
     <Compile Include="Database\Beatmaps\Beatmap.cs" />
@@ -169,7 +168,6 @@
     <Compile Include="Modifiers\ModManager.cs" />
     <Compile Include="Modifiers\ModType.cs" />
     <Compile Include="Modifiers\Mods\NoSliderVelocities.cs" />
-    <Compile Include="Notifications\Notification.cs" />
     <Compile Include="Graphics\GameColors.cs" />
     <Compile Include="Graphics\Sprite\Sprite.cs" />
     <Compile Include="Graphics\Drawable.cs" />
@@ -185,13 +183,8 @@
     <Compile Include="StepMania\Etterna.cs" />
     <Compile Include="StepMania\EtternaCache.cs" />
     <Compile Include="StepMania\StepManiaConverter.cs" />
-    <Compile Include="Tests\Audio.Test.cs" />
-    <Compile Include="Tests\Json.Test.cs" />
-    <Compile Include="Tests\Qua.Test.cs" />
-    <Compile Include="Tests\Skin.Test.cs" />
     <Compile Include="Graphics\Alignment.cs" />
     <Compile Include="Utility\FpsCounter.cs" />
-    <Compile Include="Utility\JsonResourceReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
