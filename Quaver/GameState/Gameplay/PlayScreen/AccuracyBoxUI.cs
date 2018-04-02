@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 
@@ -22,7 +23,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     internal class AccuracyBoxUI : IHelper
     {
         /// <summary>
-        ///     QuaverContainer that holds all UI element for this object
+        ///     QuaverContainer that holds all QuaverUserInterface element for this object
         /// </summary>
         private QuaverContainer QuaverContainer { get; set; }
 
@@ -110,8 +111,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             var accuracyBox = new QuaverSprite()
             {
                 Alignment = Alignment.TopRight,
-                Size = new UDim2(200 * GameBase.WindowUIScale, 240 * GameBase.WindowUIScale),
-                Position = new UDim2(-10,10),
+                Size = new UDim2D(200 * GameBase.WindowUIScale, 240 * GameBase.WindowUIScale),
+                Position = new UDim2D(-10,10),
                 Parent = QuaverContainer,
                 Alpha = 0.7f,
                 Tint = Color.Black //todo: remove later and use skin image
@@ -124,8 +125,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     Parent = accuracyBox,
                     Alignment = Alignment.TopLeft,
-                    Size = new UDim2(accuracyBox.SizeX - 10, 26 * GameBase.WindowUIScale),
-                    Position = new UDim2(5, ((i * 25) + 55) * GameBase.WindowUIScale)
+                    Size = new UDim2D(accuracyBox.SizeX - 10, 26 * GameBase.WindowUIScale),
+                    Position = new UDim2D(5, ((i * 25) + 55) * GameBase.WindowUIScale)
                 };
             }
 
@@ -136,7 +137,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     Parent = accuracyDisplaySet[i+1],
                     Alignment = Alignment.MidLeft,
-                    Size = new UDim2(0, -2, 0, 1),
+                    Size = new UDim2D(0, -2, 0, 1),
                     Tint = GameBase.LoadedSkin.JudgeColors[i],
                     Alpha = 0.12f
                 };
@@ -151,8 +152,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Alignment = Alignment.TopLeft,
                     TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                     TextAlignment = Alignment.MidLeft,
-                    Size = new UDim2(0, 0, 1, 1),
-                    Position = new UDim2(5, 0),
+                    Size = new UDim2D(0, 0, 1, 1),
+                    Position = new UDim2D(5, 0),
                     Font = Fonts.Medium16,
                     TextColor = i == 0 ? Color.White : GameBase.LoadedSkin.JudgeColors[i-1],
                     Text = i == 0 ? "Accuracy" : GameplayReferences.JudgeNames[i-1],
@@ -170,8 +171,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     Alignment = Alignment.TopLeft,
                     TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                     TextAlignment = Alignment.MidRight,
-                    Size = new UDim2(0, 0, 1, 1),
-                    Position = new UDim2(-5, 0),
+                    Size = new UDim2D(0, 0, 1, 1),
+                    Position = new UDim2D(-5, 0),
                     Font = Fonts.Medium16,
                     TextColor = i == 0 ? Color.White : GameBase.LoadedSkin.JudgeColors[i - 1],
                     Text = i == 0 ? "00.00%" : "0 | 0",
@@ -184,8 +185,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Parent = accuracyBox,
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.MidCenter,
-                Size = new UDim2(accuracyBox.SizeX - 20, 55 * GameBase.WindowUIScale),
-                Position = new UDim2(10, 0),
+                Size = new UDim2D(accuracyBox.SizeX - 20, 55 * GameBase.WindowUIScale),
+                Position = new UDim2D(10, 0),
                 Font = Fonts.Medium24,
                 TextColor = Color.White,
                 Text = "0000000",
@@ -196,8 +197,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             var gradeBox = new QuaverContainer()
             {
                 Parent = accuracyBox,
-                Size = new UDim2(accuracyBox.SizeX, 26 * GameBase.WindowUIScale),
-                Position = new UDim2(0, 31 * GameBase.WindowUIScale),
+                Size = new UDim2D(accuracyBox.SizeX, 26 * GameBase.WindowUIScale),
+                Position = new UDim2D(0, 31 * GameBase.WindowUIScale),
                 Alignment = Alignment.BotLeft,
             };
 
@@ -210,7 +211,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             GradeLeft = new QuaverSprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallF,
-                Size = new UDim2(gradeBox.SizeY * GameBase.WindowUIScale, gradeBox.SizeY * GameBase.WindowUIScale),
+                Size = new UDim2D(gradeBox.SizeY * GameBase.WindowUIScale, gradeBox.SizeY * GameBase.WindowUIScale),
                 //PositionX = GradeProgressQuaverBar.PositionX - 32 * GameBase.WindowUIScale,
                 Parent = gradeBox
             };
@@ -218,7 +219,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             GradeRight = new QuaverSprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallD,
-                Size = new UDim2(gradeBox.SizeY * GameBase.WindowUIScale, gradeBox.SizeY * GameBase.WindowUIScale),
+                Size = new UDim2D(gradeBox.SizeY * GameBase.WindowUIScale, gradeBox.SizeY * GameBase.WindowUIScale),
                 Alignment = Alignment.TopRight,
                 //PositionX = GradeProgressQuaverBar.PositionX + GradeProgressQuaverBar.SizeX + 32 * GameBase.WindowUIScale,
                 Parent = gradeBox
@@ -228,7 +229,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             /*
             LeaderboardBox = new QuaverSprite()
             {
-                Size = new UDim2(230, 400),
+                Size = new UDim2D(230, 400),
                 Alignment = Alignment.MidLeft,
                 Parent = QuaverContainer,
                 Alpha = 0f,

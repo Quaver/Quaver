@@ -53,7 +53,7 @@ namespace Quaver.GameState.States
             GameplayManager.Initialize(this);
 
             // Update window title
-            GameBase.GameWindow.Title = $"Quaver - {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]";
+            GameBase.GameWindow.Title = $"QuaverGame - {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]";
 
             // Update Discord Presence
             DiscordController.ChangeDiscordPresenceGameplay(false);

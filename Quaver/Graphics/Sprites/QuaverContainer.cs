@@ -1,8 +1,10 @@
-﻿namespace Quaver.Graphics.Sprites
+﻿using Quaver.Graphics.Base;
+
+namespace Quaver.Graphics.Sprites
 {
     /// <inheritdoc />
     /// <summary>
-    ///     This is used for sprite/UI layout
+    ///     This is used for sprite/QuaverUserInterface layout
     /// </summary>
     internal class QuaverContainer : Drawable
     {

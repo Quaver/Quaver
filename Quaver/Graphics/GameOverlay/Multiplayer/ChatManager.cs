@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UniversalDim;
 using Quaver.Logging;
 
 namespace Quaver.Graphics.GameOverlay.Multiplayer
@@ -35,7 +36,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
             // Create background dimmer
             QuaverSprite = new Sprites.QuaverSprite()
             {
-                Size = new UDim2(0, 0, 1, 1),
+                Size = new UDim2D(0, 0, 1, 1),
                 Alignment = Alignment.MidCenter,
                 Alpha = 0.8f,
                 Tint = Color.Black,
@@ -57,8 +58,8 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
             {
                 ChatQuaverTextBoxs[i] = new QuaverTextbox()
                 {
-                    Size = new UDim2(400, 30),
-                    Position = new UDim2(10, -(230 + (i * 30))),
+                    Size = new UDim2D(400, 30),
+                    Position = new UDim2D(10, -(230 + (i * 30))),
                     Alignment = Alignment.BotLeft,
                     TextAlignment = Alignment.MidLeft,
                     TextColor = Color.LightGreen,
@@ -69,7 +70,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
 
         public void RecalculateWindow()
         {
-            QuaverContainer.Size = new UDim2(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height);
+            QuaverContainer.Size = new UDim2D(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height);
         }
 
         public void UnloadContent()

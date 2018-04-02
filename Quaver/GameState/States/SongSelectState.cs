@@ -37,7 +37,7 @@ namespace Quaver.GameState.States
         public bool UpdateReady { get; set; }
 
         /// <summary>
-        ///     The UI that controls and displays beatmap selection
+        ///     The QuaverUserInterface that controls and displays beatmap selection
         /// </summary>
         private BeatmapOrganizerUI BeatmapOrganizerUI { get; set; }
 
@@ -91,7 +91,7 @@ namespace Quaver.GameState.States
         /// </summary>
         public void Initialize()
         {
-            GameBase.GameWindow.Title = "Quaver";
+            GameBase.GameWindow.Title = "QuaverGame";
 
             //Initialize Helpers
             BeatmapOrganizerUI = new BeatmapOrganizerUI();

@@ -94,8 +94,8 @@ namespace Quaver
             //Create new GameStateManager Instance
             GameBase.Content = Content;
 
-            // Load UI .xnb elements
-            GameBase.UI.LoadElementsAsContent();
+            // Load QuaverUserInterface .xnb elements
+            GameBase.QuaverUserInterface.LoadElementsAsContent();
 
             // Load the Game Skin Before Starting
             Skin.LoadSkin();
@@ -103,7 +103,7 @@ namespace Quaver
             // Initialze the logger
             Logger.Initialize();
 
-            //Initialize Background Manager. Use after Load UI.
+            //Initialize Background Manager. Use after Load QuaverUserInterface.
             BackgroundManager.Initialize();
 
             // Select a random beatmap if we do in fact have beatmaps.

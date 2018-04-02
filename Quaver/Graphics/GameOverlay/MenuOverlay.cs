@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UniversalDim;
 
 namespace Quaver.Graphics.GameOverlay
 {
@@ -26,7 +27,7 @@ namespace Quaver.Graphics.GameOverlay
             // bottom bar
             var bot = new Sprites.QuaverSprite()
             {
-                Size = new UDim2(0, 80, 1, 0),
+                Size = new UDim2D(0, 80, 1, 0),
                 Alignment = Alignment.BotLeft,
                 Tint = new Color(0, 4, 16),
                 Parent = QuaverContainer
@@ -35,7 +36,7 @@ namespace Quaver.Graphics.GameOverlay
             // top bar
             var top = new Sprites.QuaverSprite()
             {
-                Size = new UDim2(0, 30, 1, 0),
+                Size = new UDim2D(0, 30, 1, 0),
                 Alignment = Alignment.TopLeft,
                 Tint = new Color(0, 4, 16),
                 Parent = QuaverContainer
@@ -45,7 +46,7 @@ namespace Quaver.Graphics.GameOverlay
             // temp
             var pixel = new Sprites.QuaverSprite()
             {
-                Size = new UDim2(0, 1, 1, 0),
+                Size = new UDim2D(0, 1, 1, 0),
                 Alignment = Alignment.BotLeft,
                 Tint = Color.DeepSkyBlue,
                 Parent = top
@@ -53,7 +54,7 @@ namespace Quaver.Graphics.GameOverlay
 
             pixel = new Sprites.QuaverSprite()
             {
-                Size = new UDim2(0, 1, 1, 0),
+                Size = new UDim2D(0, 1, 1, 0),
                 Alignment = Alignment.TopLeft,
                 Tint = Color.DeepSkyBlue,
                 Parent = bot
@@ -62,8 +63,8 @@ namespace Quaver.Graphics.GameOverlay
             // place holder bottom
             var placeholder = new QuaverTextbox()
             {
-                Position = new UDim2(5, 5),
-                Size = new UDim2(400, 40),
+                Position = new UDim2D(5, 5),
+                Size = new UDim2D(400, 40),
                 Text = "Put player info / player stats / game client related stuff here",
                 TextColor = Color.White,
                 TextBoxStyle = TextBoxStyle.OverflowSingleLine,
@@ -74,8 +75,8 @@ namespace Quaver.Graphics.GameOverlay
             // place holder top
             placeholder = new QuaverTextbox()
             {
-                Position = new UDim2(5, 5),
-                Size = new UDim2(400, 20),
+                Position = new UDim2D(5, 5),
+                Size = new UDim2D(400, 20),
                 Text = "Put menu title e.g: 'MAIN MENU' / overlay toggle / buttons / search and stuff here",
                 TextColor = Color.White,
                 TextBoxStyle = TextBoxStyle.OverflowSingleLine,
@@ -86,7 +87,7 @@ namespace Quaver.Graphics.GameOverlay
 
         public void RecalculateWindow()
         {
-            QuaverContainer.Size = new UDim2(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height);
+            QuaverContainer.Size = new UDim2D(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height);
         }
 
         public void UnloadContent()

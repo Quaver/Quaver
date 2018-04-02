@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Enums;
+using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 
-namespace Quaver.Graphics
+namespace Quaver.Graphics.Base
 {
     /// <summary>
     ///     This class is for any objects that will be drawn to the screen.
@@ -21,13 +16,13 @@ namespace Quaver.Graphics
         private DrawRectangle _localRectangle = new DrawRectangle();
         private DrawRectangle _globalRectangle = new DrawRectangle();
         private Drawable _parent = null;
-        internal UDim2 _position = new UDim2();
-        internal UDim2 _size = new UDim2();
+        internal UDim2D _position = new UDim2D();
+        internal UDim2D _size = new UDim2D();
 
         /// <summary>
         ///     Position of this Object
         /// </summary>
-        internal UDim2 Position
+        internal UDim2D Position
         {
             get => _position;
             set
@@ -66,7 +61,7 @@ namespace Quaver.Graphics
         /// <summary>
         ///     Size of this object
         /// </summary>
-        internal UDim2 Size
+        internal UDim2D Size
         {
             get => _size;
             set

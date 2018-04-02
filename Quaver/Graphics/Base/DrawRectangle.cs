@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Quaver.Graphics
+﻿namespace Quaver.Graphics.Base
 {
     /// <summary>
     ///     Similar to Xna.Framework.Rectangle, but uses float instead of int
