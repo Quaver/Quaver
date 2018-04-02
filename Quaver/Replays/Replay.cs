@@ -24,9 +24,9 @@ namespace Quaver.Replays
         internal string QuaverVersion { get; set; }
 
         /// <summary>
-        ///     The MD5 of the beatmap played 
+        ///     The MD5 of the map played 
         /// </summary>
-        internal string BeatmapMd5 { get; set; }
+        internal string MapMd5 { get; set; }
 
         /// <summary>
         ///     The MD5 hash of the actual replay
@@ -165,7 +165,7 @@ namespace Quaver.Replays
             using (var bw = new BinaryWriter(File.Open(path, FileMode.Create)))
             {
                 bw.Write(QuaverVersion);
-                bw.Write(BeatmapMd5);
+                bw.Write(MapMd5);
                 bw.Write(ReplayMd5);
                 bw.Write(Name);
                 bw.Write(Date.ToString(CultureInfo.InvariantCulture));
@@ -205,7 +205,7 @@ namespace Quaver.Replays
             using (var br = new BinaryReader(fs))
             {
                 QuaverVersion = br.ReadString();
-                BeatmapMd5 = br.ReadString();
+                MapMd5 = br.ReadString();
                 ReplayMd5 = br.ReadString();
                 Name = br.ReadString();
                 Date = Convert.ToDateTime(br.ReadString());

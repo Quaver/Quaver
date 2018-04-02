@@ -23,10 +23,10 @@ namespace Quaver.States.Gameplay.Mania
         /// <summary>
         ///     Constructor, data passed in from loading state
         /// </summary>
-        /// <param name="beatmapMd5"></param>
-        public ManiaGameplayState(Qua qua, string beatmapMd5)
+        /// <param name="mapMd5"></param>
+        public ManiaGameplayState(Qua qua, string mapMd5)
         {
-            ManiaGameplayManager = new ManiaGameplayManager(qua, beatmapMd5);
+            ManiaGameplayManager = new ManiaGameplayManager(qua, mapMd5);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Quaver.States.Gameplay.Mania
             ManiaGameplayManager.Initialize(this);
 
             // Update window title
-            GameBase.GameWindow.Title = $"Quaver - {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]";
+            GameBase.GameWindow.Title = $"Quaver - {GameBase.SelectedMap.Artist} - {GameBase.SelectedMap.Title} [{GameBase.SelectedMap.DifficultyName}]";
 
             // Update Discord Presence
             DiscordController.ChangeDiscordPresenceGameplay(false);

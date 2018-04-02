@@ -32,9 +32,9 @@ namespace Quaver.States.Select
         public bool UpdateReady { get; set; }
 
         /// <summary>
-        ///     The QuaverUserInterface that controls and displays beatmap selection
+        ///     The QuaverUserInterface that controls and displays map selection
         /// </summary>
-        private BeatmapOrganizerUI BeatmapOrganizerUI { get; set; }
+        private MapsetOrganizer MapsetOrganizer { get; set; }
 
         /// <summary>
         ///     QuaverContainer
@@ -77,7 +77,7 @@ namespace Quaver.States.Select
         private float TimeElapsedSinceStartup { get; set; }
 
         /// <summary>
-        ///     Stops the Beatmap Organizer from scrolling too fast on high framerate
+        ///     Stops the Map Organizer from scrolling too fast on high framerate
         /// </summary>
         private float KeyboardScrollBuffer { get; set; }
 
@@ -89,8 +89,8 @@ namespace Quaver.States.Select
             GameBase.GameWindow.Title = "Quaver";
 
             //Initialize Helpers
-            BeatmapOrganizerUI = new BeatmapOrganizerUI();
-            BeatmapOrganizerUI.Initialize(this);
+            MapsetOrganizer = new MapsetOrganizer();
+            MapsetOrganizer.Initialize(this);
             SongSelectInputManager = new SongSelectInputManager();
 
             // Update Discord Presence
@@ -108,7 +108,7 @@ namespace Quaver.States.Select
             //Add map selected text TODO: remove later
             try
             {
-                Logger.Add("MapSelected", "Map Selected: " + GameBase.SelectedBeatmap.Artist + " - " + GameBase.SelectedBeatmap.Title + " [" + GameBase.SelectedBeatmap.DifficultyName + "]", Color.Yellow);
+                Logger.Add("MapSelected", "Map Selected: " + GameBase.SelectedMap.Artist + " - " + GameBase.SelectedMap.Title + " [" + GameBase.SelectedMap.DifficultyName + "]", Color.Yellow);
             }
             catch (Exception e)
             {
@@ -131,7 +131,7 @@ namespace Quaver.States.Select
             SpeedModButton.Clicked -= OnSpeedModButtonClick;
             TogglePitch.Clicked -= OnTogglePitchButtonClick;
 
-            BeatmapOrganizerUI.UnloadContent();
+            MapsetOrganizer.UnloadContent();
             QuaverContainer.Destroy();
         }
 
@@ -145,17 +145,17 @@ namespace Quaver.States.Select
             KeyboardScrollBuffer += (float)dt;
 
             // It will ignore input until 250ms go by
-            if (!BeatmapOrganizerUI.ScrollingDisabled && TimeElapsedSinceStartup > 250)
+            if (!MapsetOrganizer.ScrollingDisabled && TimeElapsedSinceStartup > 250)
             {
                 SongSelectInputManager.CheckInput();
 
                 // Check and update any mouse input
                 if (SongSelectInputManager.RightMouseIsDown)
-                    BeatmapOrganizerUI.SetBeatmapOrganizerPosition(-SongSelectInputManager.MouseYPos / GameBase.WindowRectangle.Height);
+                    MapsetOrganizer.SetMapOrganizerPosition(-SongSelectInputManager.MouseYPos / GameBase.WindowRectangle.Height);
                 else if (SongSelectInputManager.LeftMouseIsDown)
-                    BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
+                    MapsetOrganizer.OffsetMapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
                 else if (SongSelectInputManager.CurrentScrollAmount != 0)
-                    BeatmapOrganizerUI.OffsetBeatmapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);
+                    MapsetOrganizer.OffsetMapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);
 
                 // Check and update any keyboard input
                 int scroll = 0;
@@ -175,7 +175,7 @@ namespace Quaver.States.Select
 
             //Update Objects
             QuaverContainer.Update(dt);
-            BeatmapOrganizerUI.Update(dt);
+            MapsetOrganizer.Update(dt);
 
             // Repeat the song preview if necessary
             RepeatSongPreview();
@@ -189,7 +189,7 @@ namespace Quaver.States.Select
             GameBase.SpriteBatch.Begin();
             BackgroundManager.Draw();
             QuaverContainer.Draw();
-            BeatmapOrganizerUI.Draw();
+            MapsetOrganizer.Draw();
             GameBase.SpriteBatch.End();
         }
 
@@ -220,12 +220,12 @@ namespace Quaver.States.Select
 
         private void ScrollUpMapIndex()
         {
-            BeatmapOrganizerUI.OffsetBeatmapOrganizerIndex(-1);
+            MapsetOrganizer.OffsetMapOrganizerIndex(-1);
         }
 
         private void ScrollDownMapIndex()
         {
-            BeatmapOrganizerUI.OffsetBeatmapOrganizerIndex(1);
+            MapsetOrganizer.OffsetMapOrganizerIndex(1);
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace Quaver.States.Select
             try
             {
                 GameBase.AudioEngine.ReloadStream();
-                GameBase.AudioEngine.Play(GameBase.SelectedBeatmap.AudioPreviewTime);
+                GameBase.AudioEngine.Play(GameBase.SelectedMap.AudioPreviewTime);
             } catch (Exception e)
             {
                 Logger.LogError(e, LogType.Runtime);

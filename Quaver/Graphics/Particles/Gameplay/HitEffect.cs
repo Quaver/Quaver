@@ -63,7 +63,7 @@ namespace Quaver.Graphics.Particles.Gameplay
             };
 
             // Choose the correct image based on the specific key lane.
-            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            switch (GameBase.SelectedMap.Qua.Mode)
             {
                 case GameModes.Keys4:
                     HitBurstQuaverSprite.Image = GameBase.LoadedSkin.NoteHitEffects4K[keyLane];

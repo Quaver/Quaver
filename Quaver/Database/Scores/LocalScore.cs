@@ -18,9 +18,9 @@ namespace Quaver.Database.Scores
         public int Id { get; set; }
 
         /// <summary>
-        ///     The MD5 Hash of the beatmap 
+        ///     The MD5 Hash of the map 
         /// </summary>
-        public string BeatmapMd5 { get; set; }
+        public string MapMd5 { get; set; }
 
         /// <summary>
         ///     The name of the player who set the score

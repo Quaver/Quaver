@@ -89,10 +89,10 @@ namespace Quaver.Discord
 
                 GameBase.DiscordController.presence.smallImageKey = "4k";
 
-                if (GameBase.SelectedBeatmap != null)
+                if (GameBase.SelectedMap != null)
                 {
                     // Set presence based Mode
-                    switch (GameBase.SelectedBeatmap.Mode)
+                    switch (GameBase.SelectedMap.Mode)
                     {
                         case GameModes.Keys4:
                             GameBase.DiscordController.presence.smallImageText = "Mania: 4 Keys";
@@ -120,19 +120,19 @@ namespace Quaver.Discord
         /// </summary>
         public static void ChangeDiscordPresenceGameplay(bool skippedSong)
         {
-            if (!GameBase.DiscordRichPresencedInited || GameBase.SelectedBeatmap == null)
+            if (!GameBase.DiscordRichPresencedInited || GameBase.SelectedMap == null)
                 return;
 
             try
             {
-                var mapString = $"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]";
+                var mapString = $"{GameBase.SelectedMap.Qua.Artist} - {GameBase.SelectedMap.Qua.Title} [{GameBase.SelectedMap.Qua.DifficultyName}]";
 
                 // Get the original map length. 
-                double mapLength = Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) / GameBase.AudioEngine.PlaybackRate;
+                double mapLength = Qua.FindSongLength(GameBase.SelectedMap.Qua) / GameBase.AudioEngine.PlaybackRate;
 
                 // Get the new map length if it was skipped.
                 if (skippedSong)
-                    mapLength = (Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) - GameBase.AudioEngine.Position) / GameBase.AudioEngine.PlaybackRate;
+                    mapLength = (Qua.FindSongLength(GameBase.SelectedMap.Qua) - GameBase.AudioEngine.Position) / GameBase.AudioEngine.PlaybackRate;
 
                 var sb = new StringBuilder();
                 sb.Append("Playing");

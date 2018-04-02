@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
-using Quaver.Database.Beatmaps;
+using Quaver.Database.Maps;
 using Quaver.Discord;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.UserInterface;
@@ -50,7 +50,7 @@ namespace Quaver.Main
             GameBase.GameWindow = Window;
 
             // Start watching for directory changes.
-            BeatmapImporter.WatchForChanges();
+            MapsetImporter.WatchForChanges();
         }
 
         /// <summary>
@@ -94,10 +94,6 @@ namespace Quaver.Main
 
             //Initialize Background Manager. Use after Load QuaverUserInterface.
             BackgroundManager.Initialize();
-
-            // Select a random beatmap if we do in fact have beatmaps.
-            //if (GameBase.Mapsets.Count != 0)
-            //    BeatmapHelper.SelectRandomBeatmap();
 
             // Set Render Target
             GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
