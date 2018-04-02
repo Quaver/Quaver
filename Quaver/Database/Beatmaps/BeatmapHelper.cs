@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using ManagedBass;
 using Microsoft.Xna.Framework;
 using Quaver.Logging;
+using Quaver.Main;
 
 namespace Quaver.Database.Beatmaps
 {

@@ -2,6 +2,7 @@
 using System.Linq;
 using Quaver.API.Enums;
 using Quaver.Logging;
+using Quaver.Main;
 
 namespace Quaver.Modifiers.Mods.Mania 
 {

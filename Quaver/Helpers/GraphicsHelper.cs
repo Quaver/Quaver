@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Enums;
+using Quaver.Main;
 
 namespace Quaver.Helpers
 {

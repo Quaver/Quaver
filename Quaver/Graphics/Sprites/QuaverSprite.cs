@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Helpers;
+using Quaver.Main;
 
 namespace Quaver.Graphics.Sprites
 {

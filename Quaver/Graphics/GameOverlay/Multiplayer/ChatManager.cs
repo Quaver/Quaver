@@ -10,6 +10,7 @@ using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Logging;
+using Quaver.Main;
 
 namespace Quaver.Graphics.GameOverlay.Multiplayer
 {

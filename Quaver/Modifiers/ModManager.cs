@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Audio;
 using Quaver.Logging;
+using Quaver.Main;
 using Quaver.Modifiers.Mods;
 using Quaver.Modifiers.Mods.Mania;
 

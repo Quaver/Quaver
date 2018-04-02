@@ -19,7 +19,7 @@ namespace Quaver.Replays
     internal class Replay
     {
         /// <summary>
-        ///     The version of QuaverGame the replay was created with (MD5 hash of the exe)
+        ///     The version of Quaver the replay was created with (MD5 hash of the exe)
         /// </summary>
         internal string QuaverVersion { get; set; }
 

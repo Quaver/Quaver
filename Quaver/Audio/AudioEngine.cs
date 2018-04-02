@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using ManagedBass;
 using ManagedBass.Fx;
+using Quaver.Main;
 using Quaver.Modifiers;
 using Quaver.Modifiers.Mods;
 
@@ -94,7 +95,7 @@ namespace Quaver.Audio
         ///     Plays the loaded audio stream.
         /// </summary>
         /// <param name="pos">The position in the audio to play at.</param>
-        /// <param name="playbackRate">The rate at which to C:\Users\DJF\Desktop\QuaverGame\QuaverGame\src\Audio\play the audio</param>
+        /// <param name="playbackRate">The rate at which to play the audio</param>
         /// <param name="pitched">Determines if the audio played is pitched relative to its playback rate</param>
         internal void Play(int pos = 0)
         {

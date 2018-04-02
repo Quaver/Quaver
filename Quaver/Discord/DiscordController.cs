@@ -8,6 +8,7 @@ using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Logging;
+using Quaver.Main;
 using Quaver.Modifiers;
 
 namespace Quaver.Discord

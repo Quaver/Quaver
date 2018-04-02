@@ -6,6 +6,7 @@ using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
+using Quaver.Main;
 
 namespace Quaver.States.Gameplay.Mania.UI.Playfield
 {

@@ -17,6 +17,7 @@ using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Input;
 using Quaver.Logging;
+using Quaver.Main;
 using Quaver.Replays;
 using Quaver.States.Gameplay.Mania.Components;
 using Quaver.States.Gameplay.Mania.Components.Scoring;

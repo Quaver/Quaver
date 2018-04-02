@@ -12,6 +12,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Config;
+using Quaver.Main;
 using SQLite;
 
 namespace Quaver.Database.Beatmaps
