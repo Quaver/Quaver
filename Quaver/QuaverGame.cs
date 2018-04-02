@@ -20,7 +20,6 @@ using Quaver.Commands;
 using Quaver.Discord;
 using Quaver.Graphics.UserInterface;
 using Quaver.Skinning;
-using Quaver.Steam;
 using Steamworks;
 
 namespace Quaver
@@ -116,9 +115,6 @@ namespace Quaver
             // Set up overlay
             GameBase.GameOverlay.Initialize();
 
-            // Attempt to intialize the Steam API
-            SteamAPIHelper.Initialize();
-
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
             GameBase.GameStateManager.ChangeState(new MainMenuState());             
@@ -165,10 +161,6 @@ namespace Quaver
 
             // Update Mouse QuaverCursor
             GameBase.QuaverCursor.Update(dt);
-
-            // Run Steam callbacks every frame to frequently stay updated with the API
-            if (SteamAPIHelper.IsInitialized)
-                SteamAPI.RunCallbacks();
 
             base.Update(gameTime);
         }
@@ -222,9 +214,6 @@ namespace Quaver
             {
                 GameBase.AudioEngine.Free();
                 DiscordRPC.Shutdown();
-
-                if (SteamAPIHelper.IsInitialized)
-                    SteamAPI.Shutdown();
             }
             catch (Exception e)
             {
