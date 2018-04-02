@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
+using Quaver.Helpers;
 using Quaver.Utility;
 
 namespace Quaver.Graphics.Sprite
@@ -101,7 +101,7 @@ namespace Quaver.Graphics.Sprite
         {
             //Draw itself if it is in the window
             //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
-            if (Util.RectangleIntercepts(GlobalRectangle, GameBase.WindowRectangle) && Visible)
+            if (GraphicsHelper.RectangleIntercepts(GlobalRectangle, GameBase.WindowRectangle) && Visible)
             {
                 GameBase.SpriteBatch.Draw(_image, _renderRectangle, null, _color, _rotation, _origin, SpriteEffect, 0f);
             }

@@ -420,8 +420,8 @@ namespace Quaver.Peppy
                 file.WriteLine($"ReceptorsOverObjects4K = {!config.Keys4Config.KeysUnderNotes}");
                 file.WriteLine($"ReceptorsOverObjects7K = {!config.Keys7Config.KeysUnderNotes}");
                 file.WriteLine($"ColourObjectsBySnapDistance = false");
-                //for (var i = 0; i < 4; i++) file.WriteLine($"ColumnColor4K{i} = {Util.ColorToString(config.Keys4Config.Colours[i])}");
-                //for (var i = 0; i < 7; i++) file.WriteLine($"ColumnColor7K{i} = {Util.ColorToString(config.Keys7Config.Colours[i])}");
+                //for (var i = 0; i < 4; i++) file.WriteLine($"ColumnColor4K{i} = {GraphicsHelper.ColorToString(config.Keys4Config.Colours[i])}");
+                //for (var i = 0; i < 7; i++) file.WriteLine($"ColumnColor7K{i} = {GraphicsHelper.ColorToString(config.Keys7Config.Colours[i])}");
             }
         }
     }
