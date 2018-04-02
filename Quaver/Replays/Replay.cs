@@ -13,6 +13,7 @@ using Quaver.Modifiers;
 using Quaver.Utility;
 using osu_database_reader;
 using Quaver.API.Enums;
+using Quaver.Helpers;
 
 namespace Quaver.Replays
 {
@@ -157,9 +158,9 @@ namespace Quaver.Replays
 
             // Create the full path depending on if we want to write it to the data directory or not
             if (toDataDir)
-                path = Configuration.DataDirectory + "/r/" + Util.FileNameSafeString(fileName) + ".qr";
+                path = Configuration.DataDirectory + "/r/" + StringHelper.FileNameSafeString(fileName) + ".qr";
             else
-                path = Configuration.ReplayDirectory + "/" + Util.FileNameSafeString(fileName) + ".qr";
+                path = Configuration.ReplayDirectory + "/" + StringHelper.FileNameSafeString(fileName) + ".qr";
 
             using (var replayDataStream = new MemoryStream(Encoding.ASCII.GetBytes(ReplayHelper.ReplayFramesToString(ReplayFrames))))
             using (var bw = new BinaryWriter(File.Open(path, FileMode.Create)))

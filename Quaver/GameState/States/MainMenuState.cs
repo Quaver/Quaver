@@ -24,6 +24,7 @@ using Quaver.Modifiers;
 using Button = Quaver.Graphics.Button.Button;
 using Quaver.API.Maps;
 using Quaver.Commands;
+using Quaver.Helpers;
 using Quaver.Peppy;
 using Quaver.Steam;
 using Quaver.StepMania;
@@ -330,7 +331,7 @@ namespace Quaver.GameState.States
             Directory.CreateDirectory($"{Configuration.DataDirectory}/Maps/");
 
             // Save the file
-            var outputPath = $"{Configuration.DataDirectory}/Maps/{GameBase.GameTime.ElapsedMilliseconds} {Util.FileNameSafeString(GameBase.SelectedBeatmap.Artist)} - {Util.FileNameSafeString(GameBase.SelectedBeatmap.Title)}.qp";
+            var outputPath = $"{Configuration.DataDirectory}/Maps/{GameBase.GameTime.ElapsedMilliseconds} {StringHelper.FileNameSafeString(GameBase.SelectedBeatmap.Artist)} - {StringHelper.FileNameSafeString(GameBase.SelectedBeatmap.Title)}.qp";
             zip.Save(outputPath);
 
             Logger.LogSuccess($"Successfully exported {outputPath}", LogType.Runtime);

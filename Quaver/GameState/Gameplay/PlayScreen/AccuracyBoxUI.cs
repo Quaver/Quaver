@@ -10,6 +10,7 @@ using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Utility;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Helpers;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
@@ -244,7 +245,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         {
             // Update Variables and Text
             //CurrentScore = totalScore;
-            ScoreText.Text = Util.ScoreToString(totalScore);
+            ScoreText.Text = StringHelper.ScoreToString(totalScore);
             TargetAccuracy = (float)tarAcc;
             JudgementCount[index] = pressSpread + releaseSpread;
             AccuracyCountText[index+1].Text = pressSpread + " | " + releaseSpread;

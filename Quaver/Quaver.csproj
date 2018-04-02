@@ -68,6 +68,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Resource1.Designer.cs" />
     <Compile Include="Audio\AudioEngine.cs" />
     <Compile Include="Commands\CalculateDifficulty.cs" />
@@ -618,9 +619,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utility\Libs\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj">
       <Project>{0c6869bd-4e34-4c92-a853-e09f2b320601}</Project>
