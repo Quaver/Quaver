@@ -393,7 +393,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <returns></returns>
         internal ulong SvOffsetFromTime(float timeToOffset, int svIndex)
         {
-            //If NoSV mod is enabled, return ms offset, else return sv offset calculation
+            //If NoSV gameplayModifier is enabled, return ms offset, else return sv offset calculation
             return (ModManager.Activated(ModIdentifier.NoSliderVelocity)) ? (ulong) timeToOffset : SvCalc[svIndex] + (ulong)(15000 + ((timeToOffset - SvQueue[svIndex].TargetTime) * SvQueue[svIndex].SvMultiplier)) - 5000;
         }
 

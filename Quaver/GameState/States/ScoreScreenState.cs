@@ -351,7 +351,7 @@ namespace Quaver.GameState.States
             Logger.LogImportant($"Player: {ConfigManager.Username}", LogType.Runtime);
             Logger.LogImportant($"Date: {Replay.Date.ToString(CultureInfo.InvariantCulture)}", LogType.Runtime);
             Logger.LogImportant($"Mods: {GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier)}", LogType.Runtime);
-            Logger.LogImportant($"Scroll Speed: {ScoreData.ScrollSpeed}", LogType.Runtime);
+            Logger.LogImportant($"Scroll ManiaModSpeed: {ScoreData.ScrollSpeed}", LogType.Runtime);
             Logger.LogImportant($"Score: {Replay.Score}", LogType.Runtime);
             Logger.LogImportant($"Accuracy: {Replay.Accuracy}%", LogType.Runtime);
             Logger.LogImportant($"Max Combo: {Replay.MaxCombo}", LogType.Runtime);

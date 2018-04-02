@@ -1,32 +1,59 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
-using Quaver.Audio;
 using Quaver.Logging;
 
-namespace Quaver.Modifiers.Mods 
+namespace Quaver.Modifiers.Mods.Mania 
 {
-    internal class Speed : IMod
+    internal class ManiaModSpeed : IGameplayModifier
     {
-        public string Name { get; set; } = "Speed";
+        /// <inheritdoc />
+        /// <summary>
+        ///     Name
+        /// </summary>
+        public string Name { get; set; } = "ManiaModSpeed";
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Identifier (None. Speed is a Type and doesn't have an identifier)
+        /// </summary>
         public ModIdentifier ModIdentifier { get; set; }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Type
+        /// </summary>
         public ModType Type { get; set; } = ModType.Speed;
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Desc
+        /// </summary>
         public string Description { get; set; } = "Change the speed of the song!";
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Ranked
+        /// </summary>
         public bool Ranked { get; set; } = true;
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Score x
+        /// </summary>
         public float ScoreMultiplierAddition { get; set; } = 0;
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Incompatible Mods
+        /// </summary>
         public ModIdentifier[] IncompatibleMods { get; set; }
 
-        public Speed(ModIdentifier modIdentifier)
+        /// <summary>
+        ///     Ctor - Set speed
+        /// </summary>
+        /// <param name="modIdentifier"></param>
+        public ManiaModSpeed(ModIdentifier modIdentifier)
         {
             ModIdentifier = modIdentifier;
 
@@ -86,10 +113,14 @@ namespace Quaver.Modifiers.Mods
                 .ToArray();
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Initialize
+        /// </summary>
         public void InitializeMod()
         {
             GameBase.AudioEngine.SetPlaybackRate();
-            Logger.LogImportant($"Speed is now set to {GameBase.AudioEngine.PlaybackRate}x", LogType.Runtime);
+            Logger.LogImportant($"ManiaModSpeed is now set to {GameBase.AudioEngine.PlaybackRate}x", LogType.Runtime);
         }
     }
 }
