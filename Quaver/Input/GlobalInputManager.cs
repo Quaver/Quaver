@@ -20,6 +20,8 @@ using Quaver.Database;
 using Quaver.Database.Beatmaps;
 using Quaver.GameState;
 using Quaver.Logging;
+using Quaver.States;
+using Quaver.States.Enums;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.Input
