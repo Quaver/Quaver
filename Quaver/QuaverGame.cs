@@ -16,7 +16,6 @@ using Quaver.Input;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.Skins;
-using Quaver.Tests;
 using Quaver.Utility;
 using System.Windows.Forms;
 using Quaver.Commands;
