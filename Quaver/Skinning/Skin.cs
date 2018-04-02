@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using IniParser;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Quaver.Config;
-using System.IO;
-using System.Linq;
-using System.Net.Mime;
-using System.Reflection;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Runtime.Remoting.Channels;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
-using Quaver.Audio;
+using Quaver.Config;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Logging;
 
-namespace Quaver.Skins
+namespace Quaver.Skinning
 {
     /// <summary>
     /// This class has everything to do with parsing skin.ini files

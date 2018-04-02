@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Quaver.Database.Beatmaps;
 using Quaver.Database;
-using Quaver.Skins;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -26,6 +25,7 @@ using Quaver.Modifiers;
 using Quaver.Input;
 using Quaver.Graphics.GameOverlay;
 using Quaver.Graphics.UserInterface;
+using Quaver.Skinning;
 using Quaver.Steam;
 
 namespace Quaver

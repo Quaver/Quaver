@@ -78,7 +78,7 @@ namespace Quaver
             Directory.CreateDirectory(ConfigManager.DataDirectory + "/temp/Now Playing/");
 
             // Set the build version
-            GameBase.BuildVersion = BeatmapHelper.GetMd5Checksum(ConfigManager.GameDirectory + "/" + "QuaverGame.exe");
+            GameBase.BuildVersion = BeatmapHelper.GetMd5Checksum(ConfigManager.GameDirectory + "/" + "Quaver.exe");
 
             // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
             var loadGame = Task.Run(async () =>
