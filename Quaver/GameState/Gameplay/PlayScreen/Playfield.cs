@@ -31,12 +31,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     The first layer of the playfield. Used to render playfield mask + ColumnLighting (+ receptors if set in skin.ini)
         /// </summary>
-        private Boundary ForegroundBoundary { get; set; }
+        private QuaverContainer ForegroundQuaverContainer { get; set; }
 
         /// <summary>
         ///     The second layer of the playfield. Used to render receptors
         /// </summary>
-        private Boundary BackgroundBoundary { get; set; }
+        private QuaverContainer BackgroundQuaverContainer { get; set; }
 
         /// <summary>
         ///     Size of the playfield
@@ -87,13 +87,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //PlayScreen = playScreen;
 
             // Create playfield boundary
-            ForegroundBoundary = new Boundary()
+            ForegroundQuaverContainer = new QuaverContainer()
             {
                 Size = new UDim2(PlayfieldSize, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.TopCenter
             };
 
-            BackgroundBoundary = new Boundary()
+            BackgroundQuaverContainer = new QuaverContainer()
             {
                 Size = new UDim2(PlayfieldSize, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.TopCenter
@@ -107,7 +107,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Size = new UDim2(borderSize, GameBase.WindowRectangle.Height),
                 Position = new UDim2(-borderSize + 1, 0),
                 Alignment = Alignment.TopLeft,
-                Parent = BackgroundBoundary
+                Parent = BackgroundQuaverContainer
             };
 
             // Create Stage Right
@@ -118,7 +118,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Size = new UDim2(borderSize, GameBase.WindowRectangle.Height),
                 Position = new UDim2(borderSize - 1, 0),
                 Alignment = Alignment.TopRight,
-                Parent = BackgroundBoundary
+                Parent = BackgroundQuaverContainer
             };
 
             // todo: code cleanup
@@ -143,7 +143,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         Alpha = GameBase.LoadedSkin.BgMaskAlpha,
                         Size = new UDim2(PlayfieldSize, bgMaskSize),
                         Alignment = Alignment.MidCenter,
-                        Parent = BackgroundBoundary
+                        Parent = BackgroundQuaverContainer
                     };
 
                     // Create Receptors + Hit Lighting
@@ -164,7 +164,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Alignment = Alignment.TopLeft,
                             Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i],
                             SpriteEffect = !Config.ConfigManager.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
-                            Parent = ForegroundBoundary
+                            Parent = ForegroundQuaverContainer
                         };
 
                         // Create hit lighting sprite
@@ -178,7 +178,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             PosY = Config.ConfigManager.DownScroll4k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
                             SpriteEffect = !Config.ConfigManager.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Alignment = Alignment.TopLeft,
-                            Parent = BackgroundBoundary
+                            Parent = BackgroundQuaverContainer
                         };
                     }
 
@@ -190,7 +190,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         Size = new UDim2(PlayfieldSize, overlaySize),
                         PosY = Config.ConfigManager.DownScroll4k ? -1 : 1,
                         Alignment = Config.ConfigManager.DownScroll4k ? Alignment.TopRight : Alignment.BotRight,
-                        Parent = ForegroundBoundary
+                        Parent = ForegroundQuaverContainer
                     };
 
                     // Create Stage HitPosition Overlay
@@ -201,7 +201,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         Image = GameBase.LoadedSkin.StageHitPositionOverlay,
                         Size = new UDim2(PlayfieldSize, overlaySize),
                         PosY = Config.ConfigManager.DownScroll4k ? ReceptorYPosition : ReceptorYPosition + posOffset + overlaySize,
-                        Parent = ForegroundBoundary
+                        Parent = ForegroundQuaverContainer
                     };
                     break;
                 case GameModes.Keys7:
@@ -216,7 +216,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         Alpha = GameBase.LoadedSkin.BgMaskAlpha,
                         Size = new UDim2(PlayfieldSize, bgMaskSize),
                         Alignment = Alignment.MidCenter,
-                        Parent = BackgroundBoundary
+                        Parent = BackgroundQuaverContainer
                     };
 
                     // Create Receptors + HitLighting
@@ -237,7 +237,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Alignment = Alignment.TopLeft,
                             Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i],
                             SpriteEffect = !Config.ConfigManager.DownScroll7k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
-                            Parent = ForegroundBoundary
+                            Parent = ForegroundQuaverContainer
                         };
 
                         // Create hit lighting sprite
@@ -251,7 +251,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             PosY = Config.ConfigManager.DownScroll7k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
                             SpriteEffect = !Config.ConfigManager.DownScroll7k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Alignment = Alignment.TopLeft,
-                            Parent = BackgroundBoundary
+                            Parent = BackgroundQuaverContainer
                         };
                     }
 
@@ -263,7 +263,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         Size = new UDim2(PlayfieldSize, overlaySize),
                         PosY = Config.ConfigManager.DownScroll7k ? -1 : 1,
                         Alignment = Config.ConfigManager.DownScroll7k ? Alignment.TopRight : Alignment.BotRight,
-                        Parent = ForegroundBoundary
+                        Parent = ForegroundQuaverContainer
                     };
 
                     // Create Stage HitPosition Overlay
@@ -274,7 +274,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         Image = GameBase.LoadedSkin.StageHitPositionOverlay,
                         Size = new UDim2(PlayfieldSize, overlaySize),
                         PosY = Config.ConfigManager.DownScroll7k ? ReceptorYPosition : ReceptorYPosition + posOffset + overlaySize,
-                        Parent = ForegroundBoundary
+                        Parent = ForegroundQuaverContainer
                     };
                     break;
             }
@@ -282,12 +282,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         public void DrawBgMask()
         {
-            BackgroundBoundary.Draw();
+            BackgroundQuaverContainer.Draw();
         }
 
         public void Draw()
         {
-            ForegroundBoundary.Draw();
+            ForegroundQuaverContainer.Draw();
         }
 
         /// <summary>
@@ -308,8 +308,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 ColumnLightingObjects[i].Alpha = ColumnLightingAnimation[i];
             }
 
-            ForegroundBoundary.Update(dt);
-            BackgroundBoundary.Update(dt);
+            ForegroundQuaverContainer.Update(dt);
+            BackgroundQuaverContainer.Update(dt);
         }
 
         /// <summary>
@@ -317,8 +317,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// </summary>
         public  void UnloadContent()
         {
-            ForegroundBoundary.Destroy();
-            BackgroundBoundary.Destroy();
+            ForegroundQuaverContainer.Destroy();
+            BackgroundQuaverContainer.Destroy();
         }
 
         /// <summary>

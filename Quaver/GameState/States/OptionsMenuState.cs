@@ -23,8 +23,8 @@ namespace Quaver.GameState.States
         public State CurrentState { get; set; }
         public bool UpdateReady { get; set; }
 
-        private Boundary Boundary { get; set; }
-        private Boundary ButtonsContainer { get; set; }
+        private QuaverContainer QuaverContainer { get; set; }
+        private QuaverContainer ButtonsContainer { get; set; }
 
         // Key Bindings
         private QuaverTextButton BackButton { get; set; }
@@ -64,18 +64,18 @@ namespace Quaver.GameState.States
         {
             GameBase.SpriteBatch.Begin();
             //BackgroundManager.Draw();
-            Boundary.Draw();
+            QuaverContainer.Draw();
             GameBase.SpriteBatch.End();
         }
 
         public void Initialize()
         {
-            Boundary = new Boundary();
-            ButtonsContainer = new Boundary()
+            QuaverContainer = new QuaverContainer();
+            ButtonsContainer = new QuaverContainer()
             {
                 SizeY = 850,
                 Alignment = Alignment.TopCenter,
-                Parent = Boundary
+                Parent = QuaverContainer
             };
 
             CreateManiaKeyButtons();
@@ -103,12 +103,12 @@ namespace Quaver.GameState.States
             for (var i = 0; i < 7; i++)
                 ManiaKeys7K[i].KeyChanged -= ManiaEvent7K[i];
 
-            Boundary.Destroy();
+            QuaverContainer.Destroy();
         }
 
         public void Update(double dt)
         {
-            Boundary.Update(dt);
+            QuaverContainer.Update(dt);
             ButtonsContainer.PosY = -(GameBase.MouseState.Position.Y / GameBase.WindowRectangle.Height) * Math.Max(ButtonsContainer.SizeY - GameBase.WindowRectangle.Height, 0);
         }
 
@@ -126,7 +126,7 @@ namespace Quaver.GameState.States
             BackButton = new QuaverTextButton(new Vector2(200, 50), "BACK")
             {
                 Alignment = Alignment.BotCenter,
-                Parent = Boundary
+                Parent = QuaverContainer
             };
             BackButton.Clicked += BackButtonClick;
         }
@@ -641,8 +641,8 @@ namespace Quaver.GameState.States
         {
             GameBase.ChangeWindow(ConfigManager.WindowFullScreen, ConfigManager.WindowLetterboxed, CommonResolutions[index]);
             BackgroundManager.Readjust();
-            Boundary.SizeX = GameBase.WindowRectangle.Width;
-            Boundary.SizeY = GameBase.WindowRectangle.Height;
+            QuaverContainer.SizeX = GameBase.WindowRectangle.Width;
+            QuaverContainer.SizeY = GameBase.WindowRectangle.Height;
             GameBase.GameOverlay.RecalculateWindow();
         }
 

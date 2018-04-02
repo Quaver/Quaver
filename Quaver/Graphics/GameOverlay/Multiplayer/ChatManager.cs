@@ -13,7 +13,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
 {
     class ChatManager : IGameOverlayComponent
     {
-        private Boundary Boundary { get; set; }
+        private QuaverContainer QuaverContainer { get; set; }
 
         private Sprites.QuaverSprite QuaverSprite { get; set; }
 
@@ -29,7 +29,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
         public void Initialize()
         {
             // Create main boundary
-            Boundary = new Boundary();
+            QuaverContainer = new QuaverContainer();
 
             // Create background dimmer
             QuaverSprite = new Sprites.QuaverSprite()
@@ -38,7 +38,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
                 Alignment = Alignment.MidCenter,
                 Alpha = 0.8f,
                 Tint = Color.Black,
-                Parent = Boundary
+                Parent = QuaverContainer
             };
 
             // Create input box
@@ -46,7 +46,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
             {
                 PosY = -200,
                 Alignment = Alignment.BotLeft,
-                Parent = Boundary
+                Parent = QuaverContainer
             };
 
             //create chat. todo: this is temporary
@@ -61,29 +61,29 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
                     Alignment = Alignment.BotLeft,
                     TextAlignment = Alignment.MidLeft,
                     TextColor = Color.LightGreen,
-                    Parent = Boundary
+                    Parent = QuaverContainer
                 };
             }
         }
 
         public void RecalculateWindow()
         {
-            Boundary.Size = new UDim2(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height);
+            QuaverContainer.Size = new UDim2(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height);
         }
 
         public void UnloadContent()
         {
-            Boundary.Destroy();
+            QuaverContainer.Destroy();
         }
 
         public void Update(double dt)
         {
-            Boundary.Update(dt);
+            QuaverContainer.Update(dt);
         }
 
         public void Draw()
         {
-            Boundary.Draw();
+            QuaverContainer.Draw();
         }
 
         private void NewChatLine(object sender, EventArgs e)

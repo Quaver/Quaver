@@ -105,7 +105,7 @@ namespace Quaver.Graphics.Buttons
             };
 
             /*
-            ModeAndGradeBoundaryInner = new Boundary()
+            ModeAndGradeBoundaryInner = new QuaverContainer()
             {
                 SizeX = 35 * ButtonScale,
                 ScaleY = 1,

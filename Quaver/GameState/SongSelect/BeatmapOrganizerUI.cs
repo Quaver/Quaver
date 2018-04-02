@@ -26,7 +26,7 @@ namespace Quaver.GameState.SongSelect
 
         private List<EventHandler> SongSelectEvents { get; set; } = new List<EventHandler>();
 
-        private Boundary Boundary { get; set; }
+        private QuaverContainer QuaverContainer { get; set; }
 
         public bool ScrollingDisabled { get; set; }
 
@@ -47,12 +47,12 @@ namespace Quaver.GameState.SongSelect
 
         public void Draw()
         {
-            Boundary.Draw();
+            QuaverContainer.Draw();
         }
 
         public void Initialize(IGameState state)
         {
-            Boundary = new Boundary();
+            QuaverContainer = new QuaverContainer();
             CreateSongSelectButtons();
 
             if (GameBase.SelectedBeatmap == null)
@@ -69,20 +69,20 @@ namespace Quaver.GameState.SongSelect
                 SongSelectButtons[i].Clicked -= SongSelectEvents[i];
             SongSelectButtons.Clear();
             SongSelectEvents.Clear();
-            Boundary.Destroy();
+            QuaverContainer.Destroy();
         }
 
         public void Update(double dt)
         {
             var tween = Math.Min(dt / 70, 1);
 
-            // Update Position of Boundary
-            var posDifference = GraphicsHelper.Tween(TargetPosition, Boundary.PosY, tween) - Boundary.PosY;
+            // Update Position of QuaverContainer
+            var posDifference = GraphicsHelper.Tween(TargetPosition, QuaverContainer.PosY, tween) - QuaverContainer.PosY;
 
             if (Math.Abs(posDifference) > 0.5f)
-                Boundary.PosY += posDifference;
+                QuaverContainer.PosY += posDifference;
 
-            Boundary.Update(dt);
+            QuaverContainer.Update(dt);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Quaver.GameState.SongSelect
                         Image = GameBase.UI.BlankBox,
                         Alignment = Alignment.TopRight,
                         Position = new UDim2(-5, OrganizerSize),
-                        Parent = Boundary
+                        Parent = QuaverContainer
                     };
 
                     // Define event handler for the button
