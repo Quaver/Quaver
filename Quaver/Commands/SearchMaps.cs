@@ -21,7 +21,7 @@ namespace Quaver.Commands
         {
             var query = string.Join(" ", args.Skip(1).ToArray());
 
-            var foundMapsets = BeatmapUtils.SearchMapsets(GameBase.Mapsets, query);
+            var foundMapsets = BeatmapHelper.SearchMapsets(GameBase.Mapsets, query);
 
             Console.WriteLine($"Found {foundMapsets.Count} mapsets");
 

@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.Database;
+using Quaver.Database.Scores;
 using Quaver.Modifiers;
 
 namespace Quaver.Commands

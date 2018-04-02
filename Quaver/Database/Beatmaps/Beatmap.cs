@@ -160,7 +160,7 @@ namespace Quaver.Database.Beatmaps
         {
             return new Beatmap
             {
-                Md5Checksum = BeatmapUtils.GetMd5Checksum(path),
+                Md5Checksum = BeatmapHelper.GetMd5Checksum(path),
                 Directory = new DirectoryInfo(System.IO.Path.GetDirectoryName(path)).Name.Replace("\\", "/"),
                 Path = System.IO.Path.GetFileName(path).Replace("\\", "/"),
                 Artist = qua.Artist,

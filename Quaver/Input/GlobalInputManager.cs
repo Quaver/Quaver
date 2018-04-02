@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Audio;
 using Quaver.Commands;
 using Quaver.Database;
+using Quaver.Database.Beatmaps;
 using Quaver.GameState;
 using Quaver.Logging;
 using Color = Microsoft.Xna.Framework.Color;

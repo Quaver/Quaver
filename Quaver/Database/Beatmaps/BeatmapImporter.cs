@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using System.IO;
 using Quaver.Config;
 using Quaver.Logging;
 
-
-namespace Quaver.Database
+namespace Quaver.Database.Beatmaps
 {
     internal class BeatmapImporter
     {

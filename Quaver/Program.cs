@@ -12,6 +12,7 @@ using Quaver.Database.Beatmaps;
 using Quaver.Commands;
 using Quaver.Config;
 using Quaver.Database;
+using Quaver.Database.Scores;
 using Quaver.Discord;
 using Quaver.Logging;
 using Quaver.Replays;
@@ -77,7 +78,7 @@ namespace Quaver
             Directory.CreateDirectory(Configuration.DataDirectory + "/temp/Now Playing/");
 
             // Set the build version
-            GameBase.BuildVersion = BeatmapUtils.GetMd5Checksum(Configuration.GameDirectory + "/" + "Quaver.exe");
+            GameBase.BuildVersion = BeatmapHelper.GetMd5Checksum(Configuration.GameDirectory + "/" + "Quaver.exe");
 
             // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
             var loadGame = Task.Run(async () =>

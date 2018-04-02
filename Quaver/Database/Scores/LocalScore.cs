@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Quaver.API.Enums;
+﻿using Quaver.API.Enums;
 using SQLite;
 
-namespace Quaver.Scores
+namespace Quaver.Database.Scores
 {
     /// <summary>
     ///     The following is all the schema of data that will be stored in the local scores database

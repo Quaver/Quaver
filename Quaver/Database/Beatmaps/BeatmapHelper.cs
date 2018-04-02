@@ -13,7 +13,7 @@ using Quaver.Logging;
 
 namespace Quaver.Database.Beatmaps
 {
-    internal static class BeatmapUtils
+    internal static class BeatmapHelper
     {
         /// <summary>
         ///     Gets the Md5 Checksum of a file, more specifically a .qua file.

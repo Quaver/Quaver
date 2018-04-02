@@ -4,19 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
 using osu.Shared;
 using osu_database_reader.BinaryFiles;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
-using Quaver.Commands;
-using Quaver.Database.Beatmaps;
 using Quaver.Config;
 using Quaver.Logging;
 using Quaver.StepMania;
 using SQLite;
 
-namespace Quaver.Database
+namespace Quaver.Database.Beatmaps
 {
     internal static class BeatmapCache
     {
@@ -35,7 +32,7 @@ namespace Quaver.Database
         /// </summary>
         public static async Task LoadAndSetBeatmaps()
         {
-            GameBase.Mapsets = BeatmapUtils.OrderMapsByDifficulty(BeatmapUtils.OrderBeatmapsByArtist(await LoadBeatmapDatabaseAsync()));
+            GameBase.Mapsets = BeatmapHelper.OrderMapsByDifficulty(BeatmapHelper.OrderBeatmapsByArtist(await LoadBeatmapDatabaseAsync()));
             GameBase.VisibleMapsets = GameBase.Mapsets;
         }
 
@@ -61,7 +58,7 @@ namespace Quaver.Database
                 if (Configuration.AutoLoadEtternaCharts)
                     beatmaps = beatmaps.Concat(LoadBeatmapsFromEtternaCache()).ToList();
 
-                var maps = BeatmapUtils.GroupBeatmapsByDirectory(beatmaps);
+                var maps = BeatmapHelper.GroupBeatmapsByDirectory(beatmaps);
                 Logger.LogSuccess($"Successfully loaded {beatmaps.Count} in {maps.Count} directories.", LogType.Runtime);
 
                 return maps;
@@ -173,7 +170,7 @@ namespace Quaver.Database
             // This'll hold all of the MD5 Checksums of the .qua files in the directory.
             // Since this is an updated list, we'll use these to check if they are in the database and unchanged.
             var fileChecksums = new List<string>();
-            Mapss.ToList().ForEach(qua => fileChecksums.Add(BeatmapUtils.GetMd5Checksum(qua)));
+            Mapss.ToList().ForEach(qua => fileChecksums.Add(BeatmapHelper.GetMd5Checksum(qua)));
 
             // Find all the beatmaps in the database
             var beatmapsInDb = await FetchAllBeatmaps();
