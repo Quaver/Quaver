@@ -1,31 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Graphics;
 using Quaver.Helpers;
 
-namespace Quaver.Graphics.Sprite
+namespace Quaver.Graphics.UserInterface
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Todo: move class somewhere else?
+    /// 
     /// </summary>
-    class Cursor : Sprite
+    internal class QuaverCursor : Sprites.QuaverSprite
     {
         //Mouse Click
         private bool MouseDown { get; set; }
 
-        //Cursor Size
+        //QuaverCursor Size
         private float CursorSize { get; set; } = 30;
 
         //Click Size
         private float ClickCurrentSize { get; set; }
         private float ClickTargetSize { get; set; }
 
-        internal Cursor()
+        internal QuaverCursor()
         {
             Size = new UDim2(CursorSize, CursorSize);
             Image = GameBase.LoadedSkin.Cursor;
@@ -56,12 +51,12 @@ namespace Quaver.Graphics.Sprite
                 ClickTargetSize = 0;
             }
 
-            //Resize Cursor
+            //Resize QuaverCursor
             ClickCurrentSize = GraphicsHelper.Tween(ClickTargetSize, ClickCurrentSize, Math.Min(dt / 40, 1));
             SizeX = CursorSize + ClickCurrentSize;
             SizeY = SizeX;
 
-            //Move Cursor
+            //Move QuaverCursor
             //Position = GraphicsHelper.PointToVector2(GameBase.MouseState.Position);
             PosX = GameBase.MouseState.Position.X - (CursorSize + ClickCurrentSize) / 2;
             PosY = GameBase.MouseState.Position.Y - (CursorSize + ClickCurrentSize) / 2;

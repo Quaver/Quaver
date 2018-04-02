@@ -20,11 +20,11 @@ using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics;
-using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.Input;
 using Quaver.Graphics.GameOverlay;
+using Quaver.Graphics.UserInterface;
 using Quaver.Steam;
 
 namespace Quaver
@@ -170,7 +170,7 @@ namespace Quaver
         /// <summary>
         /// The mouse cursor
         /// </summary>
-        public static Cursor Cursor { get; set; }
+        public static QuaverCursor QuaverCursor { get; set; }
 
         /// <summary>
         ///     The current Discord Controller for RichPresence.

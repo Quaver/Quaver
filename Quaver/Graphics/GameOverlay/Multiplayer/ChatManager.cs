@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using System;
 using System.Collections.Generic;
@@ -7,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Sprites;
 using Quaver.Logging;
 
 namespace Quaver.Graphics.GameOverlay.Multiplayer
@@ -15,7 +15,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
     {
         private Boundary Boundary { get; set; }
 
-        private Sprite.Sprite Sprite { get; set; }
+        private Sprites.QuaverSprite QuaverSprite { get; set; }
 
         private QuaverTextInputField ChatInputField { get; set; }
 
@@ -32,7 +32,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
             Boundary = new Boundary();
 
             // Create background dimmer
-            Sprite = new Graphics.Sprite.Sprite()
+            QuaverSprite = new Sprites.QuaverSprite()
             {
                 Size = new UDim2(0, 0, 1, 1),
                 Alignment = Alignment.MidCenter,

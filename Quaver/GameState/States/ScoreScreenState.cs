@@ -13,7 +13,6 @@ using Quaver.Config;
 using Quaver.Database;
 using Quaver.Discord;
 using Quaver.Graphics;
-using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Replays;
 using Quaver.Graphics.Text;
@@ -22,6 +21,8 @@ using Quaver.Audio;
 using Quaver.Database.Beatmaps;
 using Quaver.Database.Scores;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Skins;
 
@@ -92,7 +93,7 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     Static image of the players' play stats
         /// </summary>
-        private BakeableSprite PlayStatsSprite { get; set; }
+        private QuaverBakeableSprite PlayStatsSprite { get; set; }
 
         private Boundary Boundary { get; set; }
 
@@ -243,7 +244,7 @@ namespace Quaver.GameState.States
             BackButton.Clicked += OnBackButtonClick;
 
             //create note data graph todo: add text and stuff
-            PlayStatsSprite = new BakeableSprite()
+            PlayStatsSprite = new QuaverBakeableSprite()
             {
                 Parent = Boundary,
                 ScaleX = 1,
@@ -384,7 +385,7 @@ namespace Quaver.GameState.States
         private void CreateMsDevianceUI()
         {
             // create ms deviance box
-            var boundary = new Sprite()
+            var boundary = new QuaverSprite()
             {
                 Size = new UDim2(400, 150),
                 Position = new UDim2(10, -90),
@@ -397,10 +398,10 @@ namespace Quaver.GameState.States
             // create labels for hit windows
             for (var i = 0; i < 5; i++)
             {
-                Sprite ob;
+                QuaverSprite ob;
 
                 //bottom
-                ob = new Sprite()
+                ob = new QuaverSprite()
                 {
                     Position = new UDim2(0, boundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
                     Size = new UDim2(0, 1, 1, 0),
@@ -411,7 +412,7 @@ namespace Quaver.GameState.States
                 };
 
                 //top
-                ob = new Sprite()
+                ob = new QuaverSprite()
                 {
                     Position = new UDim2(0, -boundary.Size.Y.Offset * (ScoreData.HitWindowPress[i] / ScoreData.HitWindowPress[4]) / 2),
                     Size = new UDim2(0, 1, 1, 0),
@@ -431,7 +432,7 @@ namespace Quaver.GameState.States
             {
                 if (ms.Value > ScoreData.HitWindowPress[4])
                 {
-                    var ob = new Sprite()
+                    var ob = new QuaverSprite()
                     {
                         Position = new UDim2(((float)(ms.Position / ScoreData.PlayTimeTotal) * boundary.Size.X.Offset) - 1f, 0),
                         Size = new UDim2(2, 0, 0, 1),
@@ -453,7 +454,7 @@ namespace Quaver.GameState.States
                         if (Math.Abs(ms.Value) < ScoreData.HitWindowPress[tint]) break;
                     }
 
-                    var ob = new Sprite()
+                    var ob = new QuaverSprite()
                     {
                         Position = new UDim2((float)(ms.Position / ScoreData.PlayTimeTotal * boundary.Size.X.Offset) - 1.5f, (float)(ms.Value * (boundary.Size.Y.Offset / 2) / ScoreData.HitWindowPress[4]) - 1.5f),
                         Size = new UDim2(3, 3),
@@ -473,7 +474,7 @@ namespace Quaver.GameState.States
         private void CreateHealthDataUI()
         {
             //Create Boundary for Health Data Display
-            var boundary = new Sprite()
+            var boundary = new QuaverSprite()
             {
                 Size = new UDim2(400, 150),
                 Position = new UDim2(-10, -160 - 90),
@@ -517,7 +518,7 @@ namespace Quaver.GameState.States
             var lowAccRatio = (float)(1 / (100 - lowestAcc));
 
             //Create Boundary for Accuracy Display
-            var boundary = new Sprite()
+            var boundary = new QuaverSprite()
             {
                 Size = new UDim2(400, 150),
                 Position = new UDim2(-10, -90),
@@ -531,12 +532,12 @@ namespace Quaver.GameState.States
             CreateTimeMarkers(boundary);
 
             //Create labels for grade windows
-            List<Sprite> guides = new List<Sprite>();
+            List<QuaverSprite> guides = new List<QuaverSprite>();
             for (var i = 1; i < 7; i++)
             {
                 if (ScoreData.GradePercentage[i] > lowestAcc)
                 {
-                    Sprite ob = new Sprite()
+                    QuaverSprite ob = new QuaverSprite()
                     {
                         Position = new UDim2(0, boundary.Size.Y.Offset * (float)(1 - ((ScoreData.GradePercentage[i] - lowestAcc) * lowAccRatio))),
                         Size = new UDim2(0, 1, 1, 0),
@@ -653,10 +654,10 @@ namespace Quaver.GameState.States
         /// <param name="boundarySizeY">Size of boundary parent (y offset)</param>
         /// <param name="dataLowestY">Lowest point of the data set</param>
         /// <returns></returns>
-        private List<Sprite> InterpolateGraph(List<GameplayData> graph, float boundarySizeX, float boundarySizeY, double dataLowestY)
+        private List<QuaverSprite> InterpolateGraph(List<GameplayData> graph, float boundarySizeX, float boundarySizeY, double dataLowestY)
         {
             // Create graph elements and any references to object
-            List<Sprite> graphElements = new List<Sprite>();
+            List<QuaverSprite> graphElements = new List<QuaverSprite>();
             double lowestRatio = (1 / (1 - dataLowestY));
             int currentIndex = 0;
 
@@ -714,7 +715,7 @@ namespace Quaver.GameState.States
                 }
 
                 // Create graph element
-                var ob = new Sprite()
+                var ob = new QuaverSprite()
                 {
                     Position = new UDim2((float)currentXPos, (float)currentYpos),
                     Size = new UDim2(3, 3)
@@ -767,7 +768,7 @@ namespace Quaver.GameState.States
             int timeIndex = 1;
             while (timeIndex * 15000 < ScoreData.PlayTimeTotal)
             {
-                var ob = new Sprite()
+                var ob = new QuaverSprite()
                 {
                     Position = new UDim2(parent.Size.X.Offset * (float)((timeIndex * 15000) / ScoreData.PlayTimeTotal), 0),
                     Size = new UDim2(1, 0, 0, 1),
@@ -829,7 +830,7 @@ namespace Quaver.GameState.States
                 //if (drawPause <= 0)
                     for (int i =0; i< 14; i++)
                     {
-                        var ob = new Sprite()
+                        var ob = new QuaverSprite()
                         {
                             Position = new UDim2
                             (

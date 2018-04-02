@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.GameState;
 using Quaver.Graphics;
-using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using System;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Graphics.Sprites;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
@@ -23,25 +23,25 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     This displays the judging (MARV/PERF/GREAT/ect)
         /// </summary>
-        private Sprite JudgeSprite { get; set; }
+        private QuaverSprite JudgeQuaverSprite { get; set; }
 
         /// <summary>
         ///     The sprite for every Offset Indicator bar
         /// </summary>
-        private Sprite[] OffsetIndicatorsSprites { get; set; }
+        private QuaverSprite[] OffsetIndicatorsQuaverSprites { get; set; }
 
         /// <summary>
         ///     Bar images which display the player's current multiplier
         /// </summary>
-        private Sprite[] MultiplierBars { get; set; }
+        private QuaverSprite[] MultiplierBars { get; set; }
 
         /// <summary>
         ///     The player's health bar
         /// </summary>
-        private Sprite HealthBarOver { get; set; }
+        private QuaverSprite HealthBarOver { get; set; }
 
         /// <summary>
-        ///     Used to reference the images for JudgeSprite
+        ///     Used to reference the images for JudgeQuaverSprite
         /// </summary>
         private Texture2D[] JudgeImages { get; set; }
 
@@ -56,7 +56,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         private TextBoxSprite ComboText { get; set; }
 
         /// <summary>
-        ///     When the JudgeSprite gets updated, it'll update JudgeSprite.PositionY to this variable.
+        ///     When the JudgeQuaverSprite gets updated, it'll update JudgeQuaverSprite.PositionY to this variable.
         /// </summary>
         private float JudgeHitOffset { get; set; }
 
@@ -109,7 +109,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             CurrentOffsetObjectIndex = 0;
             ActiveMultiplierBars = 0;
 
-            // Create Judge Sprite/References
+            // Create Judge QuaverSprite/References
             JudgeImages = new Texture2D[6]
             {
                 GameBase.LoadedSkin.JudgeMarv,
@@ -136,7 +136,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             };
 
             // TODO: add judge scale
-            JudgeSprite = new Sprite()
+            JudgeQuaverSprite = new QuaverSprite()
             {
                 Size = new UDim2(JudgeSizes[0].X, JudgeSizes[0].Y),
                 Alignment = Alignment.MidCenter,
@@ -172,10 +172,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //OffsetGaugeSize = offsetGaugeBoundary.SizeX / (GameplayReferences.PressWindowLatest * 2 * GameBase.WindowUIScale);
             OffsetGaugeSize = offsetGaugeBoundary.SizeX / (200 * GameBase.WindowUIScale);
 
-            OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
+            OffsetIndicatorsQuaverSprites = new QuaverSprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)
             {
-                OffsetIndicatorsSprites[i] = new Sprite()
+                OffsetIndicatorsQuaverSprites[i] = new QuaverSprite()
                 {
                     Parent = offsetGaugeBoundary,
                     Size = new UDim2(4, 0, 0, 1),
@@ -184,7 +184,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 };
             }
 
-            var offsetGaugeMiddle = new Sprite()
+            var offsetGaugeMiddle = new QuaverSprite()
             {
                 Size = new UDim2(2, 0, 0, 1),
                 Alignment = Alignment.MidCenter,
@@ -200,14 +200,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Parent = Boundary
             };
 
-            var healthBarUnder = new Sprite()
+            var healthBarUnder = new QuaverSprite()
             {
                 Size = new UDim2(0, 10 * GameBase.WindowUIScale -1, 1, 0),
                 Alignment = Config.ConfigManager.HealthBarPositionTop ? Alignment.TopCenter : Alignment.BotCenter,
                 Parent = healthMultiplierBoundary
             };
 
-            HealthBarOver = new Sprite()
+            HealthBarOver = new QuaverSprite()
             {
                 Size = new UDim2(-2, -2, 1, 1),
                 PosX = 1,
@@ -217,10 +217,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             };
 
             // Create Multiplier Bars
-            MultiplierBars = new Sprite[15];
+            MultiplierBars = new QuaverSprite[15];
             for (var i = 0; i < 15; i++)
             {
-                MultiplierBars[i] = new Sprite()
+                MultiplierBars[i] = new QuaverSprite()
                 {
                     Size = new UDim2(14 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale -1),
                     PosX = (i-7.5f) * 16 * GameBase.WindowUIScale,
@@ -250,16 +250,16 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             var tween = Math.Min(dt / 30, 1);
 
             // Update Offset Indicators
-            foreach (var sprite in OffsetIndicatorsSprites)
+            foreach (var sprite in OffsetIndicatorsQuaverSprites)
             {
                 sprite.Alpha = GraphicsHelper.Tween(0, sprite.Alpha, tween / 30);
             }
 
             // Update Judge Alpha
-            JudgeSprite.PosY = GraphicsHelper.Tween(0, JudgeSprite.PosY, tween / 2);
+            JudgeQuaverSprite.PosY = GraphicsHelper.Tween(0, JudgeQuaverSprite.PosY, tween / 2);
             if (SpriteAlphaHold > 500 && PriorityJudgeLength <= 0)
             {
-                JudgeSprite.Alpha = GraphicsHelper.Tween(0, JudgeSprite.Alpha, tween / 10);
+                JudgeQuaverSprite.Alpha = GraphicsHelper.Tween(0, JudgeQuaverSprite.Alpha, tween / 10);
                 ComboText.Alpha = GraphicsHelper.Tween(0, ComboText.Alpha, tween / 10);
             }
 
@@ -279,7 +279,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //TODO: add judge scale
             ComboText.Text = combo + "x";
             ComboText.Alpha = 1;
-            JudgeSprite.Alpha = 1;
+            JudgeQuaverSprite.Alpha = 1;
             SpriteAlphaHold = 0;
 
             if (index >= PriorityJudgeImage || PriorityJudgeLength <= 0)
@@ -292,21 +292,21 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 PriorityJudgeImage = index;
 
                 // Update judge sprite
-                JudgeSprite.SizeX = JudgeSizes[index].X;
-                JudgeSprite.SizeY = JudgeSizes[index].Y;
-                JudgeSprite.Image = JudgeImages[index];
-                JudgeSprite.PosY = JudgeHitOffset;
-                JudgeSprite.Update(0);
+                JudgeQuaverSprite.SizeX = JudgeSizes[index].X;
+                JudgeQuaverSprite.SizeY = JudgeSizes[index].Y;
+                JudgeQuaverSprite.Image = JudgeImages[index];
+                JudgeQuaverSprite.PosY = JudgeHitOffset;
+                JudgeQuaverSprite.Update(0);
             }
 
             if (index != 5 && !release && offset != null)
             {
                 CurrentOffsetObjectIndex++;
                 if (CurrentOffsetObjectIndex >= OffsetIndicatorSize) CurrentOffsetObjectIndex = 0;
-                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Tint = GameBase.LoadedSkin.JudgeColors[index];
-                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].PosX = -(float)offset * OffsetGaugeSize;
-                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Alpha = 0.5f;
-                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Update(0);
+                OffsetIndicatorsQuaverSprites[CurrentOffsetObjectIndex].Tint = GameBase.LoadedSkin.JudgeColors[index];
+                OffsetIndicatorsQuaverSprites[CurrentOffsetObjectIndex].PosX = -(float)offset * OffsetGaugeSize;
+                OffsetIndicatorsQuaverSprites[CurrentOffsetObjectIndex].Alpha = 0.5f;
+                OffsetIndicatorsQuaverSprites[CurrentOffsetObjectIndex].Update(0);
             }
         }
 

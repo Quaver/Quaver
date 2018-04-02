@@ -167,7 +167,7 @@ namespace Quaver.Peppy
             //  new QuaverOsuElementMap("4k-note-hiteffect-1", "lightingN-0", ElementType.AnimatableImage), 
             //  new QuaverOsuElementMap("4k-column-lighting", "mania-stage-light-0", ElementType.AnimatableImage)
 
-            //  Cursor
+            //  QuaverCursor
             new QuaverOsuElementMap("main-cursor", "cursor", ElementType.Image),
 
             // Sound Effects

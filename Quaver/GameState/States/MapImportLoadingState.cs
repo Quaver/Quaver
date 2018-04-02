@@ -8,7 +8,6 @@ using Quaver.Audio;
 using Quaver.Database;
 using Quaver.Database.Beatmaps;
 using Quaver.Discord;
-using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 
 namespace Quaver.GameState.States

@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.GameState.States;
 using Quaver.Graphics;
-using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
@@ -31,22 +32,22 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     The graph which displays judgement count relative to total count of every judgement
         /// </summary>
-        private Sprite[] AccuracyGraphBar { get; set; }
+        private QuaverSprite[] AccuracyGraphBar { get; set; }
 
         /// <summary>
         ///     Grade image which sits at the left side of the grade progress bar
         /// </summary>
-        private Sprite GradeLeft { get; set; }
+        private QuaverSprite GradeLeft { get; set; }
 
         /// <summary>
         ///     Grade image which sits at the right side of the grade progress bar
         /// </summary>
-        private Sprite GradeRight { get; set; }
+        private QuaverSprite GradeRight { get; set; }
 
         /// <summary>
         ///     Bar which shows how far the player is from acheiving a certain grade
         /// </summary>
-        private BarDisplay GradeProgressBar { get; set; }
+        private QuaverBarDisplay GradeProgressQuaverBar { get; set; }
 
         /// <summary>
         ///     Counts the number of total judgement for each hit window to display
@@ -104,7 +105,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             AccuracyGraphTargetScale = new float[6];
 
             // Create new Accuracy Box
-            var accuracyBox = new Sprite()
+            var accuracyBox = new QuaverSprite()
             {
                 Alignment = Alignment.TopRight,
                 Size = new UDim2(200 * GameBase.WindowUIScale, 240 * GameBase.WindowUIScale),
@@ -126,10 +127,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 };
             }
 
-            AccuracyGraphBar = new Sprite[6];
+            AccuracyGraphBar = new QuaverSprite[6];
             for (var i = 0; i < 6; i++)
             {
-                AccuracyGraphBar[i] = new Sprite()
+                AccuracyGraphBar[i] = new QuaverSprite()
                 {
                     Parent = accuracyDisplaySet[i+1],
                     Alignment = Alignment.MidLeft,
@@ -198,32 +199,32 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Alignment = Alignment.BotLeft,
             };
 
-            GradeProgressBar = new BarDisplay(GameBase.WindowUIScale, accuracyBox.SizeX - (gradeBox.SizeY * 2) - 30 * GameBase.WindowUIScale, new Color[] { Color.Red })
+            GradeProgressQuaverBar = new QuaverBarDisplay(GameBase.WindowUIScale, accuracyBox.SizeX - (gradeBox.SizeY * 2) - 30 * GameBase.WindowUIScale, new Color[] { Color.Red })
             {
                 Parent = gradeBox,
                 Alignment = Alignment.MidCenter
             };
 
-            GradeLeft = new Sprite()
+            GradeLeft = new QuaverSprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallF,
                 Size = new UDim2(gradeBox.SizeY * GameBase.WindowUIScale, gradeBox.SizeY * GameBase.WindowUIScale),
-                //PositionX = GradeProgressBar.PositionX - 32 * GameBase.WindowUIScale,
+                //PositionX = GradeProgressQuaverBar.PositionX - 32 * GameBase.WindowUIScale,
                 Parent = gradeBox
             };
 
-            GradeRight = new Sprite()
+            GradeRight = new QuaverSprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallD,
                 Size = new UDim2(gradeBox.SizeY * GameBase.WindowUIScale, gradeBox.SizeY * GameBase.WindowUIScale),
                 Alignment = Alignment.TopRight,
-                //PositionX = GradeProgressBar.PositionX + GradeProgressBar.SizeX + 32 * GameBase.WindowUIScale,
+                //PositionX = GradeProgressQuaverBar.PositionX + GradeProgressQuaverBar.SizeX + 32 * GameBase.WindowUIScale,
                 Parent = gradeBox
             };
 
             // todo: Create new Leaderboard Box
             /*
-            LeaderboardBox = new Sprite()
+            LeaderboardBox = new QuaverSprite()
             {
                 Size = new UDim2(230, 400),
                 Alignment = Alignment.MidLeft,
@@ -267,7 +268,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 GradeRight.Image = GradeImages[CurrentGrade + 2];
 
                 //Upgrade Bar Color and Size
-                GradeProgressBar.UpdateBar(0, scale,
+                GradeProgressQuaverBar.UpdateBar(0, scale,
                 GameColors.GradeColors[CurrentGrade + 1]);
             }
         }
@@ -289,8 +290,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             AccuracyCountText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
 
             // Upgrade Grade Progress Bar
-            GradeProgressBar.UpdateBar(0,
-                GraphicsHelper.Tween(ProgressBarScale, GradeProgressBar.GetBarScale(0), tween));
+            GradeProgressQuaverBar.UpdateBar(0,
+                GraphicsHelper.Tween(ProgressBarScale, GradeProgressQuaverBar.GetBarScale(0), tween));
 
             // Update Boundary
             Boundary.Update(dt);   

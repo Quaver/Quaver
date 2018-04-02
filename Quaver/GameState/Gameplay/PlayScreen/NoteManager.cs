@@ -13,10 +13,10 @@ using Quaver.Config;
 using Quaver.GameState;
 using Quaver.GameState.States;
 using Quaver.Graphics;
-using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.API.Maps;
+using Quaver.Graphics.Sprites;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
@@ -243,10 +243,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 MeasureBarManager.TrackPosition = TrackPosition;
                 for (i = 0; i < MeasureBarManager.BarObjectActive.Count; i++)
                 {
-                    MeasureBarManager.BarObjectActive[i].BarSprite.PosY = PosFromOffset(MeasureBarManager.BarObjectActive[i].OffsetFromReceptor) + BarOffset;
+                    MeasureBarManager.BarObjectActive[i].BarQuaverSprite.PosY = PosFromOffset(MeasureBarManager.BarObjectActive[i].OffsetFromReceptor) + BarOffset;
                 }
                 MeasureBarManager.Update(dt);
-                //Console.WriteLine(MeasureBarManager.BarObjectActive[0].BarSprite.PositionY);
+                //Console.WriteLine(MeasureBarManager.BarObjectActive[0].BarQuaverSprite.PositionY);
             }
 
             //Update Active HitObjects

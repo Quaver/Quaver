@@ -9,7 +9,6 @@ using Quaver.GameState.States;
 using Quaver.Logging;
 using Quaver.Audio;
 using Quaver.GameState.Gameplay.PlayScreen;
-using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Graphics;
 using Quaver.Input;
@@ -20,6 +19,8 @@ using Quaver.Discord;
 using Quaver.API.Enums;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Particles;
+using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UserInterface;
 
 namespace Quaver.GameState.Gameplay
 {
@@ -89,7 +90,7 @@ namespace Quaver.GameState.Gameplay
         private bool DrawPlayfieldFirst { get; set; }
 
         //todo: remove. TEST.
-        private Sprite SvInfoTextBox { get; set; }
+        private QuaverSprite SvInfoTextBox { get; set; }
         private TextBoxSprite SVText { get; set; }
         private QuaverTextButton TestButton { get; set; }
 
@@ -157,7 +158,7 @@ namespace Quaver.GameState.Gameplay
             };
             TestButton.Clicked += BackButtonClick;
 
-            SvInfoTextBox = new Sprite()
+            SvInfoTextBox = new QuaverSprite()
             {
                 Image = GameBase.UI.HollowBox,
                 Tint = Color.Blue,

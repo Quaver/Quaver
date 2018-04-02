@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Helpers;
 
-namespace Quaver.Graphics.Sprite
+namespace Quaver.Graphics.Sprites
 {
+    /// <inheritdoc />
     /// <summary>
     ///     Any drawable object that uses 
     /// </summary>
-    internal class Sprite : Drawable
+    internal class QuaverSprite : Drawable
     {
         /// <summary>
         ///     Image Texture of the sprite.
@@ -61,7 +56,7 @@ namespace Quaver.Graphics.Sprite
         private DrawRectangle _originRectangle = new DrawRectangle();
 
         /// <summary>
-        ///     The tint this Sprite will inherit.
+        ///     The tint this QuaverSprite will inherit.
         /// </summary>
         internal Color Tint
         {
@@ -75,7 +70,7 @@ namespace Quaver.Graphics.Sprite
         private Color _tint = Color.White;
 
         /// <summary>
-        ///     The transparency of this Sprite.
+        ///     The transparency of this QuaverSprite.
         /// </summary>
         internal float Alpha {
             get => _alpha;
@@ -88,7 +83,7 @@ namespace Quaver.Graphics.Sprite
         private float _alpha = 1f;
 
         /// <summary>
-        ///     The color of this Sprite.
+        ///     The color of this QuaverSprite.
         /// </summary>
         private Color _color = Color.White;
 
