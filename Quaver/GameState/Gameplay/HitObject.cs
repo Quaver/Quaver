@@ -9,14 +9,14 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Graphics;
-using Quaver.Graphics.Sprite;
+using Quaver.Graphics.Sprites;
 
 namespace Quaver.GameState.Gameplay
 {
     public class HitObject
     {
         /// <summary>
-        /// Private field for HitObject Sprite Position
+        /// Private field for HitObject QuaverSprite Position
         /// </summary>
         private Vector2 _hitObjectPosition;
 
@@ -103,17 +103,17 @@ namespace Quaver.GameState.Gameplay
         /// <summary>
         ///     The main body of the hit object.
         /// </summary>
-        private Sprite HitBodySprite { get; set; }
+        private QuaverSprite HitBodyQuaverSprite { get; set; }
 
         /// <summary>
         ///     The hold body of the hit object.
         /// </summary>
-        private Sprite HoldBodySprite { get; set; }
+        private QuaverSprite HoldBodyQuaverSprite { get; set; }
 
         /// <summary>
         ///     The cap/end of the hit object's LN.
         /// </summary>
-        private Sprite HoldEndSprite { get; set; }
+        private QuaverSprite HoldEndQuaverSprite { get; set; }
 
         /// <summary>
         ///     The offset of the hold body from hit body.
@@ -134,7 +134,7 @@ namespace Quaver.GameState.Gameplay
             var keyLaneIndex = KeyLane - 1;
 
             //Create hit body
-            HitBodySprite = new Sprite()
+            HitBodyQuaverSprite = new QuaverSprite()
             {
                 Alignment = Alignment.TopLeft,
                 SpriteEffect = !Config.ConfigManager.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
@@ -145,7 +145,7 @@ namespace Quaver.GameState.Gameplay
             if (longNote)
             {
                 // Create Hold Body
-                HoldBodySprite = new Sprite()
+                HoldBodyQuaverSprite = new QuaverSprite()
                 {
                     Alignment = Alignment.TopLeft,
                     Size = new UDim2(HitObjectSize, InitialLongNoteSize),
@@ -154,7 +154,7 @@ namespace Quaver.GameState.Gameplay
                 };
 
                 // Create Hold End
-                HoldEndSprite = new Sprite()
+                HoldEndQuaverSprite = new QuaverSprite()
                 {
                     Alignment = Alignment.TopLeft,
                     Position = new UDim2(_hitObjectPosition.X, _hitObjectPosition.Y),
@@ -167,16 +167,16 @@ namespace Quaver.GameState.Gameplay
                 switch (GameBase.SelectedBeatmap.Qua.Mode)
                 {
                     case GameModes.Keys4:
-                        HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex];
-                        HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies4K[keyLaneIndex];
-                        HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Height / GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Width;
-                        HoldEndOffset = HoldEndSprite.SizeY / 2;
+                        HoldEndQuaverSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex];
+                        HoldBodyQuaverSprite.Image = GameBase.LoadedSkin.NoteHoldBodies4K[keyLaneIndex];
+                        HoldEndQuaverSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Height / GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Width;
+                        HoldEndOffset = HoldEndQuaverSprite.SizeY / 2;
                         break;
                     case GameModes.Keys7:
-                        HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex];
-                        HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies7K[keyLaneIndex];
-                        HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex].Height / GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex].Width;
-                        HoldEndOffset = HoldEndSprite.SizeY / 2;
+                        HoldEndQuaverSprite.Image = GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex];
+                        HoldBodyQuaverSprite.Image = GameBase.LoadedSkin.NoteHoldBodies7K[keyLaneIndex];
+                        HoldEndQuaverSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex].Height / GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex].Width;
+                        HoldEndOffset = HoldEndQuaverSprite.SizeY / 2;
                         break;
                     default:
                         break;
@@ -193,30 +193,30 @@ namespace Quaver.GameState.Gameplay
                         // we'll try to load give the object the correct snap colour,
                         // otherwise, we default it to the default or first (1/1) texture in the list.
                         if (GameBase.LoadedSkin.ColourObjectsBySnapDistance && GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][SnapIndex] != null)
-                            HitBodySprite.Image = (IsLongNote) ? GameBase.LoadedSkin.NoteHoldHitObjects4K[keyLaneIndex][SnapIndex]  
+                            HitBodyQuaverSprite.Image = (IsLongNote) ? GameBase.LoadedSkin.NoteHoldHitObjects4K[keyLaneIndex][SnapIndex]  
                                                                 : GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][SnapIndex];
                         else
-                            HitBodySprite.Image = (IsLongNote) ? GameBase.LoadedSkin.NoteHoldHitObjects4K[keyLaneIndex][0] 
+                            HitBodyQuaverSprite.Image = (IsLongNote) ? GameBase.LoadedSkin.NoteHoldHitObjects4K[keyLaneIndex][0] 
                                                                 : GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
 
                         // Update hit body's size to match image ratio
-                        HitBodySprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width);
-                        HitBodySprite.Parent = parent;
-                        HoldBodyOffset = HitBodySprite.SizeY / 2;
+                        HitBodyQuaverSprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodyQuaverSprite.Image.Height / HitBodyQuaverSprite.Image.Width);
+                        HitBodyQuaverSprite.Parent = parent;
+                        HoldBodyOffset = HitBodyQuaverSprite.SizeY / 2;
                     }
                     catch (Exception e)
                     {
-                        HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
-                        HitBodySprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width);
-                        HitBodySprite.Parent = parent;
-                        HoldBodyOffset = HitBodySprite.SizeY / 2;
+                        HitBodyQuaverSprite.Image = GameBase.LoadedSkin.NoteHitObjects4K[keyLaneIndex][0];
+                        HitBodyQuaverSprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodyQuaverSprite.Image.Height / HitBodyQuaverSprite.Image.Width);
+                        HitBodyQuaverSprite.Parent = parent;
+                        HoldBodyOffset = HitBodyQuaverSprite.SizeY / 2;
                     }
                     break;
                 case GameModes.Keys7:
-                    HitBodySprite.Image = GameBase.LoadedSkin.NoteHitObjects7K[keyLaneIndex];
-                    HitBodySprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodySprite.Image.Height / HitBodySprite.Image.Width);
-                    HitBodySprite.Parent = parent;
-                    HoldBodyOffset = HitBodySprite.SizeY / 2;
+                    HitBodyQuaverSprite.Image = GameBase.LoadedSkin.NoteHitObjects7K[keyLaneIndex];
+                    HitBodyQuaverSprite.Size = new UDim2(HitObjectSize, HitObjectSize * HitBodyQuaverSprite.Image.Height / HitBodyQuaverSprite.Image.Width);
+                    HitBodyQuaverSprite.Parent = parent;
+                    HoldBodyOffset = HitBodyQuaverSprite.SizeY / 2;
                     break;
                 default:
                     break;
@@ -226,10 +226,10 @@ namespace Quaver.GameState.Gameplay
         public void Update(bool downScroll)
         {
             // Only update note if it's inside the window
-            if ((downScroll && _hitObjectPosition.Y + HitBodySprite.SizeY > 0) || (!downScroll && _hitObjectPosition.Y < GameBase.WindowRectangle.Height)) //todo: only update if object is inside boundary
+            if ((downScroll && _hitObjectPosition.Y + HitBodyQuaverSprite.SizeY > 0) || (!downScroll && _hitObjectPosition.Y < GameBase.WindowRectangle.Height)) //todo: only update if object is inside boundary
             {
                 // Update HitBody
-                HitBodySprite.PosY = _hitObjectPosition.Y;
+                HitBodyQuaverSprite.PosY = _hitObjectPosition.Y;
 
                 // Update Long Note Body/Cap
                 if (IsLongNote)
@@ -237,17 +237,17 @@ namespace Quaver.GameState.Gameplay
                     // It will ignore the rest of the code after this statement if long note size is equal/less than 0
                     if (CurrentLongNoteSize <= 0)
                     {
-                        HoldBodySprite.Visible = false;
-                        HoldEndSprite.Visible = false;
+                        HoldBodyQuaverSprite.Visible = false;
+                        HoldEndQuaverSprite.Visible = false;
                         return;
                     }
 
                     //Update HoldBody Position and Size
-                    HoldBodySprite.SizeY = CurrentLongNoteSize;
-                    HoldBodySprite.PosY = downScroll ? -(float)CurrentLongNoteSize + HoldBodyOffset + _hitObjectPosition.Y : _hitObjectPosition.Y + HoldBodyOffset;
+                    HoldBodyQuaverSprite.SizeY = CurrentLongNoteSize;
+                    HoldBodyQuaverSprite.PosY = downScroll ? -(float)CurrentLongNoteSize + HoldBodyOffset + _hitObjectPosition.Y : _hitObjectPosition.Y + HoldBodyOffset;
 
                     //Update Hold End Position
-                    HoldEndSprite.PosY = downScroll ? (_hitObjectPosition.Y - CurrentLongNoteSize - HoldEndOffset + HoldBodyOffset) : (_hitObjectPosition.Y + CurrentLongNoteSize - HoldEndOffset + HoldBodyOffset);
+                    HoldEndQuaverSprite.PosY = downScroll ? (_hitObjectPosition.Y - CurrentLongNoteSize - HoldEndOffset + HoldBodyOffset) : (_hitObjectPosition.Y + CurrentLongNoteSize - HoldEndOffset + HoldBodyOffset);
                 }
             }
         }
@@ -259,10 +259,10 @@ namespace Quaver.GameState.Gameplay
         {
             if (IsLongNote)
             {
-                HoldBodySprite.Destroy();
-                HoldEndSprite.Destroy();
+                HoldBodyQuaverSprite.Destroy();
+                HoldEndQuaverSprite.Destroy();
             }
-            HitBodySprite.Destroy();
+            HitBodyQuaverSprite.Destroy();
         }
 
         /// <summary>
@@ -272,10 +272,10 @@ namespace Quaver.GameState.Gameplay
         {
             if (IsLongNote)
             {
-                HoldBodySprite.Tint = GameColors.DeadNote;
-                HoldEndSprite.Tint = GameColors.DeadNote;
+                HoldBodyQuaverSprite.Tint = GameColors.DeadNote;
+                HoldEndQuaverSprite.Tint = GameColors.DeadNote;
             }
-            HitBodySprite.Tint = GameColors.DeadNote;
+            HitBodyQuaverSprite.Tint = GameColors.DeadNote;
         }
     }
 }

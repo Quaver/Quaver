@@ -13,11 +13,12 @@ using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState.States;
 using Quaver.Graphics;
-using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.GameState.SongSelect;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UserInterface;
 using Quaver.Input;
 
 namespace Quaver.GameState.States

@@ -19,7 +19,6 @@ using Quaver.Skins;
 using System.Windows.Forms;
 using Quaver.Commands;
 using Quaver.Discord;
-using Quaver.Graphics.Sprite;
 using Quaver.Graphics.UserInterface;
 using Quaver.Steam;
 using Steamworks;
@@ -164,8 +163,8 @@ namespace Quaver
             // Update all game states.
             GameBase.GameStateManager.Update(dt);
 
-            // Update Mouse Cursor
-            GameBase.Cursor.Update(dt);
+            // Update Mouse QuaverCursor
+            GameBase.QuaverCursor.Update(dt);
 
             // Run Steam callbacks every frame to frequently stay updated with the API
             if (SteamAPIHelper.IsInitialized)
@@ -188,10 +187,10 @@ namespace Quaver
             // Draw from Game State Manager
             GameBase.GameStateManager.Draw();
 
-            // Draw Cursor, Logging, and FPS Counter
+            // Draw QuaverCursor, Logging, and FPS Counter
             GameBase.SpriteBatch.Begin();
             GameBase.GameOverlay.Draw();
-            GameBase.Cursor.Draw();
+            GameBase.QuaverCursor.Draw();
 
             Logger.Draw(dt);
 

@@ -1,10 +1,10 @@
 ﻿using Quaver.Graphics;
-using Quaver.Graphics.Sprite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Graphics.Sprites;
 
 namespace Quaver.GameState.Gameplay
 {
@@ -16,14 +16,14 @@ namespace Quaver.GameState.Gameplay
         internal ulong OffsetFromReceptor { get; set; }
 
         /// <summary>
-        ///     The Sprite of the bar
+        ///     The QuaverSprite of the bar
         /// </summary>
-        internal Sprite BarSprite { get; set; }
+        internal QuaverSprite BarQuaverSprite { get; set; }
 
         internal void Initialize(Drawable parent, float sizeY, float posY)
         {
             //Create bar
-            BarSprite = new Sprite()
+            BarQuaverSprite = new QuaverSprite()
             {
                 Alignment = Alignment.TopLeft,
                 Image = GameBase.LoadedSkin.StageTimingBar,
@@ -35,7 +35,7 @@ namespace Quaver.GameState.Gameplay
 
         internal void Destroy()
         {
-            BarSprite.Destroy();
+            BarQuaverSprite.Destroy();
         }
     }
 }

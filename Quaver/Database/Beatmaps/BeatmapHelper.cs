@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ManagedBass;
 using Microsoft.Xna.Framework;
-using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 
 namespace Quaver.Database.Beatmaps

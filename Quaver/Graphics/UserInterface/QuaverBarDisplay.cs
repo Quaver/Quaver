@@ -1,44 +1,40 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Quaver.Graphics.Sprites;
 
-namespace Quaver.Graphics.Sprite
+namespace Quaver.Graphics.UserInterface
 {
-    internal class BarDisplay : Boundary
+    internal class QuaverBarDisplay : Boundary
     {
         /// <summary>
         ///     The sprite-middle of every bar
         /// </summary>
-        private Sprite[] BarSpriteMiddle { get; set; }
+        private Sprites.QuaverSprite[] BarQuaverSpriteMiddle { get; set; }
 
         /// <summary>
         ///     The sprite-end of every bar
         /// </summary>
-        private Sprite[] BarSpriteEnd { get; set; }
+        private Sprites.QuaverSprite[] BarQuaverSpriteEnd { get; set; }
 
         /// <summary>
         ///     The sprite-begin of every bar
         /// </summary>
-        private Sprite[] BarSpriteBegin { get; set; }
+        private Sprites.QuaverSprite[] BarQuaverSpriteBegin { get; set; }
 
         /// <summary>
         ///     The scale for every bar sprite
         /// </summary>
         private float[] BarScale { get; set; }
 
-        private Sprite BarAxisMidBox { get; set; }
+        private Sprites.QuaverSprite BarAxisMidBox { get; set; }
 
-        private Sprite BarAxisTopCorner { get; set; }
-        private Sprite BarAxisTopBox { get; set; }
-        private Sprite BarAxisTopCap { get; set; }
+        private Sprites.QuaverSprite BarAxisTopCorner { get; set; }
+        private Sprites.QuaverSprite BarAxisTopBox { get; set; }
+        private Sprites.QuaverSprite BarAxisTopCap { get; set; }
 
-        private Sprite BarAxisBotCorner { get; set; }
-        private Sprite BarAxisBotBox { get; set; }
-        private Sprite BarAxisBotCap { get; set; }
+        private Sprites.QuaverSprite BarAxisBotCorner { get; set; }
+        private Sprites.QuaverSprite BarAxisBotBox { get; set; }
+        private Sprites.QuaverSprite BarAxisBotCap { get; set; }
 
         private float BarSpacing { get; } = 2;
         private float BarDefaultSize { get; } = 4;
@@ -47,7 +43,7 @@ namespace Quaver.Graphics.Sprite
         private float SpriteScale { get; set; }
 
         // Constructor
-        public BarDisplay(float sScale, float length, Color[] BarColors, bool Vertical = false)
+        public QuaverBarDisplay(float sScale, float length, Color[] BarColors, bool Vertical = false)
         {
             var bsize = BarColors.Length;
             var sscale = BarDefaultSize * sScale;
@@ -58,28 +54,28 @@ namespace Quaver.Graphics.Sprite
             Size.Y.Offset = (((BarSpacing + BarDefaultSize) * bsize) + BarDefaultSize) * sScale;
 
             BarScale = new float[bsize];
-            BarSpriteMiddle = new Sprite[bsize];
-            BarSpriteBegin = new Sprite[bsize];
-            BarSpriteEnd = new Sprite[bsize];
+            BarQuaverSpriteMiddle = new Sprites.QuaverSprite[bsize];
+            BarQuaverSpriteBegin = new Sprites.QuaverSprite[bsize];
+            BarQuaverSpriteEnd = new Sprites.QuaverSprite[bsize];
 
             // Create Bar Axis
 
             // Bar Axis Bot
-            BarAxisBotCorner = new Sprite()
+            BarAxisBotCorner = new Sprites.QuaverSprite()
             {
                 Image = GameBase.UI.BarCorner,
                 Size = new UDim2(sscale,sscale),
                 Parent = this
             };
 
-            BarAxisBotBox = new Sprite()
+            BarAxisBotBox = new Sprites.QuaverSprite()
             {
                 Size = new UDim2(sscale, (((BarSpacing + BarDefaultSize) * bsize)) * sScale),
                 Position = new UDim2(0, sscale),
                 Parent = this
             };
 
-            BarAxisBotCap = new Sprite()
+            BarAxisBotCap = new Sprites.QuaverSprite()
             {
                 Image = GameBase.UI.BarCap,
                 Size = new UDim2(sscale, sscale),
@@ -89,7 +85,7 @@ namespace Quaver.Graphics.Sprite
             };
 
             // Bar Axis Mid
-            BarAxisMidBox = new Sprite()
+            BarAxisMidBox = new Sprites.QuaverSprite()
             {
                 Size = new UDim2(length - (2 * BarDefaultSize), sscale),
                 Position = new UDim2(BarAxisBotBox.Size.X.Offset, 0),
@@ -97,7 +93,7 @@ namespace Quaver.Graphics.Sprite
             };
 
             //Bar Axis Topp
-            BarAxisTopCorner = new Sprite()
+            BarAxisTopCorner = new Sprites.QuaverSprite()
             {
                 Image = GameBase.UI.BarCorner,
                 Rotation = 90,
@@ -106,14 +102,14 @@ namespace Quaver.Graphics.Sprite
                 Parent = this
             };
 
-            BarAxisTopBox = new Sprite()
+            BarAxisTopBox = new Sprites.QuaverSprite()
             {
                 Size = new UDim2(sscale, (((BarSpacing + BarDefaultSize) * bsize)) * sScale),
                 Position = new UDim2(BarAxisTopCorner.Position.X.Offset, sscale),
                 Parent = this
             };
 
-            BarAxisTopCap = new Sprite()
+            BarAxisTopCap = new Sprites.QuaverSprite()
             {
                 Image = GameBase.UI.BarCap,
                 Position = new UDim2(BarAxisTopBox.Position.X.Offset, BarAxisTopBox.Size.Y.Offset + sscale),
@@ -127,7 +123,7 @@ namespace Quaver.Graphics.Sprite
             {
                 BarScale[i] = 0;
 
-                BarSpriteBegin[i] = new Sprite()
+                BarQuaverSpriteBegin[i] = new Sprites.QuaverSprite()
                 {
                     Image = GameBase.UI.BarCap,
                     Rotation = -90,
@@ -137,15 +133,15 @@ namespace Quaver.Graphics.Sprite
                     Parent = this
                 };
 
-                BarSpriteMiddle[i] = new Sprite()
+                BarQuaverSpriteMiddle[i] = new Sprites.QuaverSprite()
                 {
                     Tint = BarColors[i],
-                    Position = new UDim2(BarSpriteBegin[i].Position.X.Offset + BarSpriteBegin[i].Size.X.Offset, BarSpriteBegin[i].Position.Y.Offset),
+                    Position = new UDim2(BarQuaverSpriteBegin[i].Position.X.Offset + BarQuaverSpriteBegin[i].Size.X.Offset, BarQuaverSpriteBegin[i].Position.Y.Offset),
                     Size = new UDim2(sscale, sscale),
                     Parent = this
                 };
 
-                BarSpriteEnd[i] = new Sprite()
+                BarQuaverSpriteEnd[i] = new Sprites.QuaverSprite()
                 {
                     Image = GameBase.UI.BarCap,
                     Rotation = 90,
@@ -153,30 +149,30 @@ namespace Quaver.Graphics.Sprite
                     Tint = BarColors[i],
                     Position = new UDim2(sscale, 0),
                     Size = new UDim2(sscale, sscale),
-                    Parent = BarSpriteMiddle[i]
+                    Parent = BarQuaverSpriteMiddle[i]
                 };
             }
         }
 
         public void UpdateBar(int index, float value, Color? color = null)
         {
-            if (index < BarSpriteMiddle.Length)
+            if (index < BarQuaverSpriteMiddle.Length)
             {
                 BarScale[index] = value;
-                BarSpriteMiddle[index].Size.X.Offset = (Length - (BarDefaultSize * SpriteScale * 4)) * BarScale[index];
-                BarSpriteEnd[index].RecalculateRect();
+                BarQuaverSpriteMiddle[index].Size.X.Offset = (Length - (BarDefaultSize * SpriteScale * 4)) * BarScale[index];
+                BarQuaverSpriteEnd[index].RecalculateRect();
                 if (color != null)
                 {
-                    BarSpriteMiddle[index].Tint = (Color)color;
-                    BarSpriteEnd[index].Tint = (Color)color;
-                    BarSpriteBegin[index].Tint = (Color)color;
+                    BarQuaverSpriteMiddle[index].Tint = (Color)color;
+                    BarQuaverSpriteEnd[index].Tint = (Color)color;
+                    BarQuaverSpriteBegin[index].Tint = (Color)color;
                 }
             }
         }
 
         public float GetBarScale(int index)
         {
-            if (index < BarSpriteMiddle.Length) return BarScale[index];
+            if (index < BarQuaverSpriteMiddle.Length) return BarScale[index];
             else return 0;
         }
     }

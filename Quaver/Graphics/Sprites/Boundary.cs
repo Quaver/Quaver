@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace Quaver.Graphics.Sprite
+﻿namespace Quaver.Graphics.Sprites
 {
+    /// <inheritdoc />
     /// <summary>
     ///     This is used for sprite/UI layout
     /// </summary>

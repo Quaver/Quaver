@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.Graphics;
-using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Logging;
 using Quaver.Skins;
@@ -13,6 +12,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UserInterface;
 
 namespace Quaver.GameState.States
 {

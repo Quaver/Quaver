@@ -1,13 +1,13 @@
 ﻿using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Particles;
-using Quaver.Graphics.Sprite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.Graphics.Particles.Gameplay;
+using Quaver.Graphics.Sprites;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {

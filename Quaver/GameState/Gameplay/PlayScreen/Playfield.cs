@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.GameState.States;
 using Quaver.Graphics;
-using Quaver.Graphics.Sprite;
+using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Skins;
@@ -21,12 +21,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     The receptor sprites.
         /// </summary>
-        internal Sprite[] ReceptorObjects { get; set; }
+        internal QuaverSprite[] ReceptorObjects { get; set; }
 
         /// <summary>
         ///     The Hit Lighting Sprites. Will be visible when designated key is held down.
         /// </summary>
-        internal Sprite[] ColumnLightingObjects { get; set; }
+        internal QuaverSprite[] ColumnLightingObjects { get; set; }
 
         /// <summary>
         ///     The first layer of the playfield. Used to render playfield mask + ColumnLighting (+ receptors if set in skin.ini)
@@ -101,7 +101,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             // Create Stage Left
             var borderSize = GameBase.LoadedSkin.StageLeftBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageLeftBorder.Height;
-            var stage = new Sprite()
+            var stage = new QuaverSprite()
             {
                 Image = GameBase.LoadedSkin.StageLeftBorder,
                 Size = new UDim2(borderSize, GameBase.WindowRectangle.Height),
@@ -112,7 +112,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
             // Create Stage Right
             borderSize = GameBase.LoadedSkin.StageRightBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageRightBorder.Height;
-            stage = new Sprite()
+            stage = new QuaverSprite()
             {
                 Image = GameBase.LoadedSkin.StageRightBorder,
                 Size = new UDim2(borderSize, GameBase.WindowRectangle.Height),
@@ -128,7 +128,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             float bgMaskSize;
             float overlaySize;
             float posOffset;
-            Sprite bgMask;
+            QuaverSprite bgMask;
             switch (GameBase.SelectedBeatmap.Qua.Mode)
             {
                 case GameModes.Keys4:
@@ -137,7 +137,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     columnRatio = PlayfieldSize / GameBase.WindowRectangle.Height;
                     bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
 
-                    bgMask = new Sprite()
+                    bgMask = new QuaverSprite()
                     {
                         Image = GameBase.LoadedSkin.StageBgMask4K,
                         Alpha = GameBase.LoadedSkin.BgMaskAlpha,
@@ -147,8 +147,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     };
 
                     // Create Receptors + Hit Lighting
-                    ReceptorObjects = new Sprite[4];
-                    ColumnLightingObjects = new Sprite[4];
+                    ReceptorObjects = new QuaverSprite[4];
+                    ColumnLightingObjects = new QuaverSprite[4];
                     ColumnLightingActive = new bool[4];
                     ColumnLightingAnimation = new float[4];
                     for (var i = 0; i < ReceptorObjects.Length; i++)
@@ -156,8 +156,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         // Set ReceptorXPos 
                         GameplayReferences.ReceptorXPosition[i] = ((LaneSize + ReceptorPadding) * i) + PlayfieldPadding;
 
-                        // Create receptor Sprite
-                        ReceptorObjects[i] = new Sprite
+                        // Create receptor QuaverSprite
+                        ReceptorObjects[i] = new QuaverSprite
                         {
                             Size = new UDim2(LaneSize, LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width),
                             Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYPosition),
@@ -169,7 +169,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
                         // Create hit lighting sprite
                         var columnLightingSize = GameBase.LoadedSkin.ColumnLightingScale * LaneSize * ((float)GameBase.LoadedSkin.ColumnLighting4K.Height / GameBase.LoadedSkin.ColumnLighting4K.Width);
-                        ColumnLightingObjects[i] = new Sprite
+                        ColumnLightingObjects[i] = new QuaverSprite
                         {
                             Image = GameBase.LoadedSkin.ColumnLighting4K,
                             Size = new UDim2(LaneSize, columnLightingSize),
@@ -184,7 +184,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
                     // Create Stage Distant
                     overlaySize = GameBase.LoadedSkin.StageDistantOverlay.Height * PlayfieldSize / GameBase.LoadedSkin.StageDistantOverlay.Width;
-                    stage = new Sprite()
+                    stage = new QuaverSprite()
                     {
                         Image = GameBase.LoadedSkin.StageDistantOverlay,
                         Size = new UDim2(PlayfieldSize, overlaySize),
@@ -196,7 +196,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     // Create Stage HitPosition Overlay
                     overlaySize = GameBase.LoadedSkin.StageHitPositionOverlay.Height * PlayfieldSize / GameBase.LoadedSkin.StageHitPositionOverlay.Width;
                     posOffset = LaneSize * ((float)GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width);
-                    stage = new Sprite()
+                    stage = new QuaverSprite()
                     {
                         Image = GameBase.LoadedSkin.StageHitPositionOverlay,
                         Size = new UDim2(PlayfieldSize, overlaySize),
@@ -210,7 +210,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     columnRatio = PlayfieldSize / GameBase.WindowRectangle.Height;
                     bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
 
-                    bgMask = new Sprite()
+                    bgMask = new QuaverSprite()
                     {
                         Image = GameBase.LoadedSkin.StageBgMask7K,
                         Alpha = GameBase.LoadedSkin.BgMaskAlpha,
@@ -220,8 +220,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     };
 
                     // Create Receptors + HitLighting
-                    ReceptorObjects = new Sprite[7];
-                    ColumnLightingObjects = new Sprite[7];
+                    ReceptorObjects = new QuaverSprite[7];
+                    ColumnLightingObjects = new QuaverSprite[7];
                     ColumnLightingActive = new bool[7];
                     ColumnLightingAnimation = new float[7];
                     for (var i = 0; i < ReceptorObjects.Length; i++)
@@ -229,8 +229,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                         // Set ReceptorXPos 
                         GameplayReferences.ReceptorXPosition[i] = ((LaneSize + ReceptorPadding) * i) + PlayfieldPadding;
 
-                        // Create receptor Sprite
-                        ReceptorObjects[i] = new Sprite
+                        // Create receptor QuaverSprite
+                        ReceptorObjects[i] = new QuaverSprite
                         {
                             Size = new UDim2(LaneSize, LaneSize * ((float)GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width)),
                             Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYPosition),
@@ -242,7 +242,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
                         // Create hit lighting sprite
                         var columnLightingSize = LaneSize * GameBase.LoadedSkin.ColumnLightingScale * GameBase.LoadedSkin.ColumnLighting7K.Height / GameBase.LoadedSkin.ColumnLighting7K.Width;
-                        ColumnLightingObjects[i] = new Sprite
+                        ColumnLightingObjects[i] = new QuaverSprite
                         {
                             Image = GameBase.LoadedSkin.ColumnLighting7K,
                             Size = new UDim2(LaneSize, columnLightingSize),
@@ -257,7 +257,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
                     // Create StageDistant
                     overlaySize = GameBase.LoadedSkin.StageDistantOverlay.Height * PlayfieldSize / GameBase.LoadedSkin.StageDistantOverlay.Width;
-                    stage = new Sprite()
+                    stage = new QuaverSprite()
                     {
                         Image = GameBase.LoadedSkin.StageDistantOverlay,
                         Size = new UDim2(PlayfieldSize, overlaySize),
@@ -269,7 +269,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     // Create Stage HitPosition Overlay
                     overlaySize = GameBase.LoadedSkin.StageHitPositionOverlay.Height * PlayfieldSize / GameBase.LoadedSkin.StageHitPositionOverlay.Width;
                     posOffset = LaneSize * ((float)GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width);
-                    stage = new Sprite()
+                    stage = new QuaverSprite()
                     {
                         Image = GameBase.LoadedSkin.StageHitPositionOverlay,
                         Size = new UDim2(PlayfieldSize, overlaySize),

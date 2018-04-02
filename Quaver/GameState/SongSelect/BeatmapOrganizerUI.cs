@@ -7,11 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Database.Beatmaps;
-using Quaver.Graphics.Sprite;
 using Quaver.Audio;
 using Quaver.Database;
 using Quaver.Database.Scores;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 
 namespace Quaver.GameState.SongSelect

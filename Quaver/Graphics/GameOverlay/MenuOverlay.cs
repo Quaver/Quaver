@@ -1,11 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Graphics.Sprites;
 
 namespace Quaver.Graphics.GameOverlay
 {
@@ -23,7 +23,7 @@ namespace Quaver.Graphics.GameOverlay
             Boundary = new Boundary();
 
             // bottom bar
-            var bot = new Sprite.Sprite()
+            var bot = new Sprites.QuaverSprite()
             {
                 Size = new UDim2(0, 80, 1, 0),
                 Alignment = Alignment.BotLeft,
@@ -32,7 +32,7 @@ namespace Quaver.Graphics.GameOverlay
             };
 
             // top bar
-            var top = new Sprite.Sprite()
+            var top = new Sprites.QuaverSprite()
             {
                 Size = new UDim2(0, 30, 1, 0),
                 Alignment = Alignment.TopLeft,
@@ -42,7 +42,7 @@ namespace Quaver.Graphics.GameOverlay
 
             // todoL: add actual content later
             // temp
-            var pixel = new Sprite.Sprite()
+            var pixel = new Sprites.QuaverSprite()
             {
                 Size = new UDim2(0, 1, 1, 0),
                 Alignment = Alignment.BotLeft,
@@ -50,7 +50,7 @@ namespace Quaver.Graphics.GameOverlay
                 Parent = top
             };
 
-            pixel = new Sprite.Sprite()
+            pixel = new Sprites.QuaverSprite()
             {
                 Size = new UDim2(0, 1, 1, 0),
                 Alignment = Alignment.TopLeft,

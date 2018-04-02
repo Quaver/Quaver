@@ -1,24 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.API.Osu;
 using Quaver.Config;
-using Quaver.Graphics;
 using Quaver.Helpers;
 
-namespace Quaver.Graphics.Sprite
+namespace Quaver.Graphics.UserInterface
 {
-    class BackgroundManager
+    internal class BackgroundManager
     {
         /// <summary>
-        ///     The Background Sprite.
+        ///     The Background QuaverSprite.
         /// </summary>
-        public static Sprite Background;
+        public static Sprites.QuaverSprite Background;
 
         /// <summary>
         ///     The tint of the background
@@ -52,7 +46,7 @@ namespace Quaver.Graphics.Sprite
         /// </summary>
         public static void Initialize()
         {
-            Background = new Sprite()
+            Background = new Sprites.QuaverSprite()
             {
                 Size = new UDim2(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.MidCenter,
