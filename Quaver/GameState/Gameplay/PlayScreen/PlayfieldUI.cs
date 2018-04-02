@@ -18,7 +18,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     The parent of every Playfield UI Component
         /// </summary>
-        public Boundary Boundary { get; private set; }
+        public QuaverContainer QuaverContainer { get; private set; }
 
         /// <summary>
         ///     This displays the judging (MARV/PERF/GREAT/ect)
@@ -99,7 +99,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         public void Draw()
         {
-            Boundary.Draw();
+            QuaverContainer.Draw();
         }
 
         public void Initialize(IGameState state)
@@ -128,8 +128,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
             JudgeHitOffset = -5f * GameBase.WindowUIScale;
 
-            // Create Boundary
-            Boundary = new Boundary()
+            // Create QuaverContainer
+            QuaverContainer = new QuaverContainer()
             {
                 Size = new UDim2(PlayfieldSize, 0, 0, 1),
                 Alignment = Alignment.MidCenter
@@ -141,7 +141,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Size = new UDim2(JudgeSizes[0].X, JudgeSizes[0].Y),
                 Alignment = Alignment.MidCenter,
                 Image = JudgeImages[0],
-                Parent = Boundary,
+                Parent = QuaverContainer,
                 Alpha = 0
             };
 
@@ -155,17 +155,17 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Text = "0x",
                 TextScale = GameBase.WindowUIScale,
                 Font = Fonts.Medium16,
-                Parent = Boundary,
+                Parent = QuaverContainer,
                 Alpha = 0
             };
 
             // Create Offset Gauge
-            var offsetGaugeBoundary = new Boundary()
+            var offsetGaugeBoundary = new QuaverContainer()
             {
                 Size = new UDim2(220 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale),
                 Position = new UDim2(0, 30 * GameBase.WindowUIScale),
                 Alignment = Alignment.MidCenter,
-                Parent = Boundary
+                Parent = QuaverContainer
             };
 
             //todo: offsetGaugeBoundary.SizeX with a new size. Right now the offset gauge is the same size as the hitwindow
@@ -192,12 +192,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             };
 
             // Create Health Bar
-            var healthMultiplierBoundary = new Boundary()
+            var healthMultiplierBoundary = new QuaverContainer()
             {
                 Size = new UDim2(PlayfieldSize - 4, 20 * GameBase.WindowUIScale),
                 PosY = Config.ConfigManager.HealthBarPositionTop ? 2 : -2,
                 Alignment = Config.ConfigManager.HealthBarPositionTop ? Alignment.TopCenter : Alignment.BotCenter,
-                Parent = Boundary
+                Parent = QuaverContainer
             };
 
             var healthBarUnder = new QuaverSprite()
@@ -234,7 +234,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         public void UnloadContent()
         {
-            Boundary.Destroy();
+            QuaverContainer.Destroy();
         }
 
         public void Update(double dt)
@@ -263,8 +263,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 ComboText.Alpha = GraphicsHelper.Tween(0, ComboText.Alpha, tween / 10);
             }
 
-            //Update Boundary
-            Boundary.Update(dt);
+            //Update QuaverContainer
+            QuaverContainer.Update(dt);
         }
 
         /// <summary>

@@ -41,9 +41,9 @@ namespace Quaver.GameState.States
         private BeatmapOrganizerUI BeatmapOrganizerUI { get; set; }
 
         /// <summary>
-        ///     Boundary
+        ///     QuaverContainer
         /// </summary>
-        private Boundary Boundary { get; set; } = new Boundary();
+        private QuaverContainer QuaverContainer { get; set; } = new QuaverContainer();
 
         /// <summary>
         ///     Reference to the play button
@@ -136,7 +136,7 @@ namespace Quaver.GameState.States
             TogglePitch.Clicked -= OnTogglePitchButtonClick;
 
             BeatmapOrganizerUI.UnloadContent();
-            Boundary.Destroy();
+            QuaverContainer.Destroy();
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Quaver.GameState.States
             }
 
             //Update Objects
-            Boundary.Update(dt);
+            QuaverContainer.Update(dt);
             BeatmapOrganizerUI.Update(dt);
 
             // Repeat the song preview if necessary
@@ -192,7 +192,7 @@ namespace Quaver.GameState.States
         {
             GameBase.SpriteBatch.Begin();
             BackgroundManager.Draw();
-            Boundary.Draw();
+            QuaverContainer.Draw();
             BeatmapOrganizerUI.Draw();
             GameBase.SpriteBatch.End();
         }
@@ -207,7 +207,7 @@ namespace Quaver.GameState.States
             {
                 PosY = 140,
                 Alignment = Alignment.TopLeft,
-                Parent = Boundary
+                Parent = QuaverContainer
             };
 
             PlayButton.Clicked += OnPlayMapButtonClick;
@@ -261,7 +261,7 @@ namespace Quaver.GameState.States
             {
                 PosY = - 90,
                 Alignment = Alignment.BotCenter,
-                Parent = Boundary
+                Parent = QuaverContainer
             };
             BackButton.Clicked += OnBackButtonClick;
         }
@@ -287,7 +287,7 @@ namespace Quaver.GameState.States
             {
                 PosY = - 120,
                 Alignment = Alignment.BotLeft,
-                Parent = Boundary
+                Parent = QuaverContainer
             };
             SpeedModButton.Clicked += OnSpeedModButtonClick;
         }
@@ -374,7 +374,7 @@ namespace Quaver.GameState.States
             TogglePitch = new QuaverTextButton(new Vector2(200, 50), $"Toggle Pitch: {ConfigManager.Pitched}")
             {
                 Alignment = Alignment.MidLeft,
-                Parent = Boundary
+                Parent = QuaverContainer
             };
             TogglePitch.Clicked += OnTogglePitchButtonClick;
         }

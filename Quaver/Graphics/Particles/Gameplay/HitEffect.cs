@@ -35,7 +35,7 @@ namespace Quaver.Graphics.Particles.Gameplay
         /// <summary>
         ///     Hit Burst QuaverSprite's Parent. Used for object alignment.
         /// </summary>
-        private Boundary Boundary { get; set; }
+        private QuaverContainer QuaverContainer { get; set; }
 
         /// <summary>
         ///     Create a new hit burst. Used after a note has been hit.
@@ -45,8 +45,8 @@ namespace Quaver.Graphics.Particles.Gameplay
         /// <param name="keyLane"></param>
         public HitEffect(DrawRectangle rect, Drawable parent, int keyLane)
         {
-            // Create Boundary and Particle
-            Boundary = new Boundary(rect.X, rect.Y, rect.Width, rect.Height)
+            // Create QuaverContainer and Particle
+            QuaverContainer = new QuaverContainer(rect.X, rect.Y, rect.Width, rect.Height)
             {
                 Parent = parent
             };
@@ -55,7 +55,7 @@ namespace Quaver.Graphics.Particles.Gameplay
             {
                 Alignment = Alignment.MidCenter,
                 Size = new UDim2(0, 0, 1, 1),
-                Parent = Boundary
+                Parent = QuaverContainer
             };
 
             // Choose the correct image based on the specific key lane.
@@ -77,7 +77,7 @@ namespace Quaver.Graphics.Particles.Gameplay
         /// </summary>
         public override void Destroy()
         {
-            Boundary.Destroy();
+            QuaverContainer.Destroy();
         }
 
         /// <summary>
@@ -102,8 +102,8 @@ namespace Quaver.Graphics.Particles.Gameplay
             HitBurstQuaverSprite.ScaleY = HitBurstQuaverSprite.ScaleX;
             HitBurstQuaverSprite.Alpha = 1 - timeRatio;
 
-            // Update Boundary
-            Boundary.Update(dt);
+            // Update QuaverContainer
+            QuaverContainer.Update(dt);
         }
     }
 }

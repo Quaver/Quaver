@@ -10,19 +10,19 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     class MeasureBarManager : IHelper
     {
         internal ulong TrackPosition { get; set; }
-        private Boundary Boundary { get; set; }
+        private QuaverContainer QuaverContainer { get; set; }
         internal List<BarObject> BarObjectQueue { get; set; }
         internal List<BarObject> BarObjectActive { get; set; }
         internal float PlayfieldSize { get; set; }
 
         public void Draw()
         {
-            Boundary.Draw();
+            QuaverContainer.Draw();
         }
 
         public void Initialize(IGameState state)
         {
-            Boundary = new Boundary(0, 0, PlayfieldSize, null)
+            QuaverContainer = new QuaverContainer(0, 0, PlayfieldSize, null)
             {
                 Alignment = Graphics.Alignment.MidCenter
             };
@@ -32,12 +32,12 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         public void UnloadContent()
         {
-            Boundary.Destroy();
+            QuaverContainer.Destroy();
         }
 
         public void Update(double dt)
         {
-            Boundary.Update(dt);
+            QuaverContainer.Update(dt);
         }
 
         //Creates timing bars (used to measure 16 beats)
@@ -72,7 +72,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             BarObjectActive = BarObjectQueue;
             for (var i=0; i< BarObjectActive.Count; i++)
             {
-                BarObjectActive[i].Initialize(Boundary, 2, 0);
+                BarObjectActive[i].Initialize(QuaverContainer, 2, 0);
             }*/
         }
 

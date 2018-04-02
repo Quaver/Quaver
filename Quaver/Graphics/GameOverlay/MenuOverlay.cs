@@ -11,16 +11,16 @@ namespace Quaver.Graphics.GameOverlay
 {
     class MenuOverlay : IGameOverlayComponent
     {
-        private Boundary Boundary { get; set; }
+        private QuaverContainer QuaverContainer { get; set; }
 
         public void Draw()
         {
-            Boundary.Draw();
+            QuaverContainer.Draw();
         }
 
         public void Initialize()
         {
-            Boundary = new Boundary();
+            QuaverContainer = new QuaverContainer();
 
             // bottom bar
             var bot = new Sprites.QuaverSprite()
@@ -28,7 +28,7 @@ namespace Quaver.Graphics.GameOverlay
                 Size = new UDim2(0, 80, 1, 0),
                 Alignment = Alignment.BotLeft,
                 Tint = new Color(0, 4, 16),
-                Parent = Boundary
+                Parent = QuaverContainer
             };
 
             // top bar
@@ -37,7 +37,7 @@ namespace Quaver.Graphics.GameOverlay
                 Size = new UDim2(0, 30, 1, 0),
                 Alignment = Alignment.TopLeft,
                 Tint = new Color(0, 4, 16),
-                Parent = Boundary
+                Parent = QuaverContainer
             };
 
             // todoL: add actual content later
@@ -85,17 +85,17 @@ namespace Quaver.Graphics.GameOverlay
 
         public void RecalculateWindow()
         {
-            Boundary.Size = new UDim2(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height);
+            QuaverContainer.Size = new UDim2(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height);
         }
 
         public void UnloadContent()
         {
-            Boundary.Destroy();
+            QuaverContainer.Destroy();
         }
 
         public void Update(double dt)
         {
-            Boundary.Update(dt);
+            QuaverContainer.Update(dt);
         }
     }
 }

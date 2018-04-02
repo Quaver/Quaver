@@ -4,7 +4,7 @@ using Quaver.Graphics.Sprites;
 
 namespace Quaver.Graphics.UserInterface
 {
-    internal class QuaverBarDisplay : Boundary
+    internal class QuaverBarDisplay : QuaverContainer
     {
         /// <summary>
         ///     The sprite-middle of every bar
@@ -47,7 +47,7 @@ namespace Quaver.Graphics.UserInterface
         {
             var bsize = BarColors.Length;
             var sscale = BarDefaultSize * sScale;
-            // Create Boundary Size and variables
+            // Create QuaverContainer Size and variables
             Length = length;
             SpriteScale = sScale;
             Size.X.Offset = length;

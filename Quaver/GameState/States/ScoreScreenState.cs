@@ -95,7 +95,7 @@ namespace Quaver.GameState.States
         /// </summary>
         private QuaverBakeableSprite PlayStatsSprite { get; set; }
 
-        private Boundary Boundary { get; set; }
+        private QuaverContainer QuaverContainer { get; set; }
 
         /// <summary>
         ///     Constructor - In order to get to this state, it's essential that you pass in 
@@ -201,7 +201,7 @@ namespace Quaver.GameState.States
         {
             BackButton.Clicked -= OnBackButtonClick;
             BackButton.Destroy();
-            Boundary.Destroy();
+            QuaverContainer.Destroy();
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace Quaver.GameState.States
         public void Update(double dt)
         {
             BackButton.Update(dt);
-            Boundary.Update(dt);
+            QuaverContainer.Update(dt);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace Quaver.GameState.States
             GameBase.SpriteBatch.Begin();
             BackgroundManager.Draw();
             BackButton.Draw();
-            Boundary.Draw();
+            QuaverContainer.Draw();
             GameBase.SpriteBatch.End();
         }
 
@@ -231,8 +231,8 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateUI()
         {
-            // Create Base Boundary
-            Boundary = new Boundary();
+            // Create Base QuaverContainer
+            QuaverContainer = new QuaverContainer();
 
             // Create Back QuaverButton
             BackButton = new QuaverTextButton(new Vector2(150,40),"BACK" )
@@ -246,7 +246,7 @@ namespace Quaver.GameState.States
             //create note data graph todo: add text and stuff
             PlayStatsSprite = new QuaverBakeableSprite()
             {
-                Parent = Boundary,
+                Parent = QuaverContainer,
                 ScaleX = 1,
                 ScaleY = 1
             };
@@ -473,7 +473,7 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateHealthDataUI()
         {
-            //Create Boundary for Health Data Display
+            //Create QuaverContainer for Health Data Display
             var boundary = new QuaverSprite()
             {
                 Size = new UDim2(400, 150),
@@ -517,7 +517,7 @@ namespace Quaver.GameState.States
             lowestAcc = Math.Max(0, (Math.Floor(lowestAcc * 1000) / 10) - 2);
             var lowAccRatio = (float)(1 / (100 - lowestAcc));
 
-            //Create Boundary for Accuracy Display
+            //Create QuaverContainer for Accuracy Display
             var boundary = new QuaverSprite()
             {
                 Size = new UDim2(400, 150),
@@ -592,9 +592,9 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateJudgeWindowUI()
         {
-            //Create Judge Info Boundary
+            //Create Judge Info QuaverContainer
             TextBoxSprite ob;
-            var boundary = new Boundary()
+            var boundary = new QuaverContainer()
             {
                 Size = new UDim2(350, 240),
                 PosX = 10,
@@ -786,7 +786,7 @@ namespace Quaver.GameState.States
         /// <param name="parent"></param>
         /// <param name="radius"></param>
         /// <returns></returns>
-        private void CreateJudgeSpreadPiChart(Boundary parent, double radius, Vector2 offset)
+        private void CreateJudgeSpreadPiChart(QuaverContainer parent, double radius, Vector2 offset)
         {
             // Variables used for calculation
             int[] totalSpreadCount = new int[6];
