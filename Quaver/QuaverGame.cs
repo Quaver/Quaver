@@ -15,11 +15,11 @@ using Quaver.Graphics;
 using Quaver.Input;
 using Quaver.Logging;
 using Quaver.Modifiers;
-using Quaver.Skins;
 using System.Windows.Forms;
 using Quaver.Commands;
 using Quaver.Discord;
 using Quaver.Graphics.UserInterface;
+using Quaver.Skinning;
 using Quaver.Steam;
 using Steamworks;
 

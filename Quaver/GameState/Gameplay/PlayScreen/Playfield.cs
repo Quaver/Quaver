@@ -14,7 +14,6 @@ using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
-using Quaver.Skins;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {

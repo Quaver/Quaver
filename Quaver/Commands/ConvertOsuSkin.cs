@@ -10,7 +10,6 @@ using NAudio.Wave;
 using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Peppy;
-using Quaver.Skins;
 
 namespace Quaver.Commands
 {
