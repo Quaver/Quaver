@@ -279,7 +279,7 @@ namespace Quaver.States.Select
         private void CreateSpeedModButton()
         {
             // Create ManiaModSpeed Mod QuaverButton
-            SpeedModButton = new QuaverTextButton(new Vector2(200, 50), $"Add ManiaModSpeed Mod {GameBase.AudioEngine.PlaybackRate}x")
+            SpeedModButton = new QuaverTextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x")
             {
                 PosY = - 120,
                 Alignment = Alignment.BotLeft,
@@ -359,7 +359,7 @@ namespace Quaver.States.Select
             }
 
             // Change the song speed directly.
-            SpeedModButton.QuaverTextSprite.Text = $"Add ManiaModSpeed Mod {GameBase.AudioEngine.PlaybackRate}x";
+            SpeedModButton.QuaverTextSprite.Text = $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x";
         }
 
         /// <summary>
