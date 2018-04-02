@@ -10,7 +10,6 @@ using Quaver.Audio;
 using Quaver.Database.Beatmaps;
 using Quaver.Database;
 using Quaver.GameState;
-using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Input;
 using Quaver.Logging;
@@ -22,6 +21,7 @@ using Quaver.Discord;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.UserInterface;
 using Quaver.Skinning;
+using Quaver.States.Menu;
 using Steamworks;
 
 namespace Quaver
