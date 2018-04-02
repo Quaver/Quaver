@@ -98,39 +98,6 @@ namespace Quaver.Utility
             return new DrawRectangle(alignX, alignY, objectRect.Width, objectRect.Height);
         }
 
-        /*
-        /// <summary>
-        ///     Check if a Vector4 intercepts with another Vector4
-        /// </summary>
-        /// <param name="vect1"></param>
-        /// <param name="vect2"></param>
-        /// <returns></returns>
-        internal static bool Vector4BorderIntercepts(Vector4 vect1, Vector4 vect2)
-        {
-            if ((vect2.X > vect1.X && vect2.X < vect1.X + vect1.W) ||
-                (vect2.Y > vect1.Y && vect2.Y < vect1.Y + vect1.Z) ||
-                (vect2.X + vect2.W > vect1.X && vect2.X + vect2.W < vect1.X + vect1.W) ||
-                (vect2.Y + vect2.Z > vect1.Y && vect2.Y + vect2.Z < vect1.Y + vect1.Z)) return true;
-            else return false;
-            return true;
-        }*/
-
-            /*
-        /// <summary>
-        ///     Check if a Vector4 intercepts with another Vector4
-        /// </summary>
-        /// <param name="vect1"></param>
-        /// <param name="vect2"></param>
-        /// <returns></returns>
-        internal static bool Vector4Intercepts(Vector4 vect1, Vector4 vect2)
-        {
-            if (!(vect1.X + vect1.W < vect2.X ||
-                vect1.X > vect2.X + vect2.W ||
-                vect1.Y + vect1.Z < vect2.Y ||
-                vect1.Y > vect2.Y + vect2.Z)) return true;
-            else return false;
-        }*/
-
         /// <summary>
         ///     Convert Drawable.DrawRectangle to Xna.Framework.Rectangle
         /// </summary>
@@ -177,20 +144,6 @@ namespace Quaver.Utility
         internal static float Tween(float target, float current, double scale)
         {
             return (float)(current + ((target - current) * scale));
-        }
-
-        /// <summary>
-        ///     Turns a Stream object into a byte array
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public static byte[] ConvertStreamToByteArray(Stream input)
-        {
-            using (var ms = new MemoryStream())
-            {
-                input.CopyTo(ms);
-                return ms.ToArray();
-            }
         }
 
         /// <summary>

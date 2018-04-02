@@ -186,7 +186,7 @@ namespace Quaver.Replays
                 bw.Write(OkayPressCount);
                 bw.Write(OkayReleaseCount);
                 bw.Write(Misses);
-                bw.Write(Util.ConvertStreamToByteArray(LZMACoder.Compress(replayDataStream)));
+                bw.Write(StreamHelper.ConvertStreamToByteArray(LZMACoder.Compress(replayDataStream)));
             }
 
             return path;
