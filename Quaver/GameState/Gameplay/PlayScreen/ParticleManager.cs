@@ -62,7 +62,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         internal void CreateHitBurst(DrawRectangle rect, int keyIndex)
         {
-            Particles.Add(new HitBurst(rect, Boundary, keyIndex));
+            Particles.Add(new HitEffect(rect, Boundary, keyIndex));
         }
     }
 }
