@@ -191,7 +191,6 @@
     <Compile Include="Tests\Skin.Test.cs" />
     <Compile Include="Graphics\Alignment.cs" />
     <Compile Include="Utility\FpsCounter.cs" />
-    <Compile Include="Utility\ImageLoader.cs" />
     <Compile Include="Utility\JsonResourceReader.cs" />
   </ItemGroup>
   <ItemGroup>

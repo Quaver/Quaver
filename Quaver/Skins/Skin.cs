@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Audio;
 using Quaver.API.Enums;
 using Quaver.Audio;
 using Quaver.Graphics.Sprite;
+using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Utility;
 
@@ -737,7 +738,7 @@ namespace Quaver.Skins
         {
             // If the image file exists, go ahead and load it into a texture.
             if (File.Exists(path))
-                return ImageLoader.Load(path);
+                return GraphicsHelper.LoadTexture2DFromFile(path);
 
             // Otherwise, we'll have to change the path to that of the default element and load that instead.
             path = element;
@@ -837,7 +838,7 @@ namespace Quaver.Skins
 
             // Run a loop and check if each file in the animation exists,
             for (var i = 0; File.Exists($"{skinDir}/{element}@{i}.png"); i++)
-                animationList.Add(ImageLoader.Load($"{skinDir}/{element}@{i}.png"));
+                animationList.Add(GraphicsHelper.LoadTexture2DFromFile($"{skinDir}/{element}@{i}.png"));
 
             // TODO: Run a check to see if the animation list has any in it.
             // If it does, then return it. If not, then we want to load the default skin's 

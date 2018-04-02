@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Osu;
 using Quaver.Config;
 using Quaver.Graphics;
-
+using Quaver.Helpers;
 using Quaver.Utility;
 
 namespace Quaver.Graphics.Sprite
@@ -173,7 +173,7 @@ namespace Quaver.Graphics.Sprite
 
             // Fade effect and make the current bg go black while we load the next bg.
             Blacken();
-            GameBase.CurrentBackground = ImageLoader.Load(bgPath);
+            GameBase.CurrentBackground = GraphicsHelper.LoadTexture2DFromFile(bgPath);
         }
     }
 }
