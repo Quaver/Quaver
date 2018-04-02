@@ -150,7 +150,7 @@ namespace Quaver.Graphics.UserInterface
         }
 
         /// <summary>
-        ///     Loads a beatmap's background
+        ///     Loads a map's background
         /// </summary>
         public static void LoadBackground()
         {

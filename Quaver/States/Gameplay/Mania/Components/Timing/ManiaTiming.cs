@@ -70,7 +70,7 @@ namespace Quaver.States.Gameplay.Mania.Components.Timing
             //_activeBarObjects = new GameObject[maxNoteCount];
 
             //Add offset after the last note
-            PlayingEndOffset = Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) + (AudioEngine.BassDelayOffset - ConfigManager.GlobalAudioOffset + SONG_END_OFFSET) * GameBase.AudioEngine.PlaybackRate;
+            PlayingEndOffset = Qua.FindSongLength(GameBase.SelectedMap.Qua) + (AudioEngine.BassDelayOffset - ConfigManager.GlobalAudioOffset + SONG_END_OFFSET) * GameBase.AudioEngine.PlaybackRate;
 
             //Create ManiaTiming bars
             //_barQueue = new List<ManiaTimingObject>();
@@ -278,10 +278,10 @@ namespace Quaver.States.Gameplay.Mania.Components.Timing
                     }
                     else if (i + 1 == TimingQueue.Count)
                     {
-                        if (GameBase.SelectedBeatmap.SongLength - TimingQueue[i].TargetTime > longestBpmTime)
+                        if (GameBase.SelectedMap.SongLength - TimingQueue[i].TargetTime > longestBpmTime)
                         {
                             avergeBpmIndex = i;
-                            longestBpmTime = GameBase.SelectedBeatmap.SongLength - TimingQueue[i].TargetTime;
+                            longestBpmTime = GameBase.SelectedMap.SongLength - TimingQueue[i].TargetTime;
                         }
                     }
                 }

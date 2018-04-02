@@ -210,7 +210,7 @@ namespace Quaver.Config
         internal static string OsuDbPath { get => _osuDbPath; set { _osuDbPath = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
-        ///     Dictates where or not we should load osu! beatmaps from osu!.db on game start
+        ///     Dictates where or not we should load osu! maps from osu!.db on game start
         /// </summary>
         private static bool _autoLoadOsuBeatmaps;
         internal static bool AutoLoadOsuBeatmaps { get => _autoLoadOsuBeatmaps; set { _autoLoadOsuBeatmaps = value; Task.Run(async () => await WriteConfigFileAsync()); } }

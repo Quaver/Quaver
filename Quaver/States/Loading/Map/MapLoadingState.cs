@@ -6,7 +6,7 @@ using Quaver.API.Osu;
 using Quaver.API.StepMania;
 using Quaver.Audio;
 using Quaver.Config;
-using Quaver.Database.Beatmaps;
+using Quaver.Database.Maps;
 using Quaver.GameState;
 using Quaver.Logging;
 using Quaver.Main;
@@ -34,7 +34,7 @@ namespace Quaver.States.Loading.Map
         /// </summary>
         public void Initialize()
         {
-            Task.Run(() => LoadBeatmap()).ContinueWith(t => ChangeState());
+            Task.Run(() => LoadMap()).ContinueWith(t => ChangeState());
         }
 
         /// <summary>
@@ -60,38 +60,38 @@ namespace Quaver.States.Loading.Map
         }
 
         /// <summary>
-        ///     Responsible for loading the beatmap and switching the state.
+        ///     Responsible for loading the map and switching the state.
         /// </summary>
-        private void LoadBeatmap()
+        private void LoadMap()
         {
             try
             {
-                // Throw an exception if there is no selected beatmap.
-                if (GameBase.SelectedBeatmap == null)
-                    throw new Exception("No selected beatmap, we should not be on this screen!!!");
+                // Throw an exception if there is no selected map.
+                if (GameBase.SelectedMap == null)
+                    throw new Exception("No selected map, we should not be on this screen!!!");
 
                 // Reference to the parsed .qua file
                 var qua = new Qua();
 
-                // Handle osu! beatmaps as well
-                switch (GameBase.SelectedBeatmap.Game)
+                // Handle osu! maps as well
+                switch (GameBase.SelectedMap.Game)
                 {
-                    case BeatmapGame.Quaver:
-                        var quaPath = $"{ConfigManager.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
+                    case MapGame.Quaver:
+                        var quaPath = $"{ConfigManager.SongDirectory}/{GameBase.SelectedMap.Directory}/{GameBase.SelectedMap.Path}";
                         qua = Qua.Parse(quaPath);
                         break;
-                    case BeatmapGame.Osu:
-                        var osu = new PeppyBeatmap(GameBase.OsuSongsFolder + GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.Path);
+                    case MapGame.Osu:
+                        var osu = new PeppyBeatmap(GameBase.OsuSongsFolder + GameBase.SelectedMap.Directory + "/" + GameBase.SelectedMap.Path);
                         qua = Qua.ConvertOsuBeatmap(osu);
                         break;
-                    case BeatmapGame.Etterna:
+                    case MapGame.Etterna:
                         // In short, find the chart with the same DifficultyName. There's literally no other way for us to check
                         // other than through this means.
-                        var smCharts = Qua.ConvertStepManiaChart(StepManiaFile.Parse(GameBase.EtternaFolder + GameBase.SelectedBeatmap.Directory + "/" + GameBase.SelectedBeatmap.Path));
-                        qua = smCharts.Find(x => x.DifficultyName == GameBase.SelectedBeatmap.DifficultyName);
+                        var smCharts = Qua.ConvertStepManiaChart(StepManiaFile.Parse(GameBase.EtternaFolder + GameBase.SelectedMap.Directory + "/" + GameBase.SelectedMap.Path));
+                        qua = smCharts.Find(x => x.DifficultyName == GameBase.SelectedMap.DifficultyName);
                         break;
                     default:
-                        throw new ArgumentException("Could not load map because BeatmapGame is invalid");
+                        throw new ArgumentException("Could not load map because MapGame is invalid");
                 }
 
                 // Check if the map is actually valid
@@ -100,25 +100,25 @@ namespace Quaver.States.Loading.Map
 
                 if (qua == null || !qua.IsValidQua)
                 {
-                    Logger.LogError("Beatmap could not be loaded!", LogType.Runtime);
+                    Logger.LogError("Map could not be loaded!", LogType.Runtime);
                     GameBase.GameStateManager.ChangeState(new SongSelectState());
                     return;
                 }
                     
-                // Set the beatmap's Qua. 
+                // Set the map's Qua. 
                 // We parse it and set it each time the player is going to play to kmake sure they are
                 // actually playing the correct map.
-                GameBase.SelectedBeatmap.Qua = qua;
+                GameBase.SelectedMap.Qua = qua;
 
                 // Asynchronously write to a file for livestreamers the difficulty rating
                 Task.Run(async () =>
                 {
                     using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/difficulty.txt"))
-                        await writer.WriteAsync($"{Math.Round(GameBase.SelectedBeatmap.Qua.CalculateFakeDifficulty(), 2)}");
+                        await writer.WriteAsync($"{Math.Round(GameBase.SelectedMap.Qua.CalculateFakeDifficulty(), 2)}");
                 });
 
-                Logger.LogSuccess("Finished loading Beatmap", LogType.Runtime);
-                GameBase.SelectedBeatmap.Qua.CalculateDifficulty(GameBase.AudioEngine.PlaybackRate);
+                Logger.LogSuccess("Finished loading Map", LogType.Runtime);
+                GameBase.SelectedMap.Qua.CalculateDifficulty(GameBase.AudioEngine.PlaybackRate);
             }
             catch (Exception e)
             {
@@ -132,7 +132,7 @@ namespace Quaver.States.Loading.Map
         private void ChangeState()
         {
             // If the Qua isn't valid then return back to the song select state
-            if (!GameBase.SelectedBeatmap.Qua.IsValidQua)
+            if (!GameBase.SelectedMap.Qua.IsValidQua)
             {
                 GameBase.GameStateManager.ChangeState(new SongSelectState());
                 return;
@@ -151,25 +151,25 @@ namespace Quaver.States.Loading.Map
                 }
 
                 // Get the MD5 Hash of the played map and change the state.
-                var quaPath = $"{ConfigManager.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
+                var quaPath = $"{ConfigManager.SongDirectory}/{GameBase.SelectedMap.Directory}/{GameBase.SelectedMap.Path}";
 
                 // Get the Md5 of the played map
                 var md5 = "";
-                switch (GameBase.SelectedBeatmap.Game)
+                switch (GameBase.SelectedMap.Game)
                 {
-                    case BeatmapGame.Quaver:
-                        md5 = BeatmapHelper.GetMd5Checksum(quaPath);
+                    case MapGame.Quaver:
+                        md5 = MapsetHelper.GetMd5Checksum(quaPath);
                         break;
-                    case BeatmapGame.Osu:
-                        md5 = BeatmapHelper.GetMd5Checksum($"{GameBase.OsuSongsFolder}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}");
+                    case MapGame.Osu:
+                        md5 = MapsetHelper.GetMd5Checksum($"{GameBase.OsuSongsFolder}/{GameBase.SelectedMap.Directory}/{GameBase.SelectedMap.Path}");
                         break;
-                    case BeatmapGame.Etterna:
+                    case MapGame.Etterna:
                         // Etterna uses some weird ChartKey system, no point in implementing that here.
-                        md5 = GameBase.SelectedBeatmap.Md5Checksum;
+                        md5 = GameBase.SelectedMap.Md5Checksum;
                         break;
                 }
 
-                GameBase.GameStateManager.ChangeState(new ManiaGameplayState(GameBase.SelectedBeatmap.Qua, md5));
+                GameBase.GameStateManager.ChangeState(new ManiaGameplayState(GameBase.SelectedMap.Qua, md5));
             }
             catch (Exception e)
             {

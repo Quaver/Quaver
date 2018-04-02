@@ -103,7 +103,7 @@ namespace Quaver.Input
         {
             InputManiaKeys = new List<Keys>();
             // Determine which set of keys to use based on the .qua
-            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            switch (GameBase.SelectedMap.Qua.Mode)
             {
                 case GameModes.Keys4:
                     InputManiaKeys = LaneKeys;

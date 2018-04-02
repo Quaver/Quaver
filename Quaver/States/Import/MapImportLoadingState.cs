@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Quaver.Database.Beatmaps;
+using Quaver.Database.Maps;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Logging;
@@ -56,7 +56,7 @@ namespace Quaver.States.Import
 
 
         /// <summary>
-        ///     Handles the selection of new a new beatmap and 
+        ///     Handles the selection of new a new map and 
         ///     removes the loading state after importing
         /// </summary>
         /// <returns></returns>
@@ -65,9 +65,9 @@ namespace Quaver.States.Import
             var oldMaps = GameBase.Mapsets;
 
             // Import all the maps to the db
-            await BeatmapCache.LoadAndSetBeatmaps();
+            await MapCache.LoadAndSetMapsets();
 
-            // Update the selected beatmap with the new one.
+            // Update the selected map with the new one.
             // This button should only be on the song select state, so no need to check for states here.
             var newMapsets = GameBase.Mapsets.Where(x => !oldMaps.Any(y => y.Directory == x.Directory)).ToList();
 
@@ -77,11 +77,11 @@ namespace Quaver.States.Import
             }
             else if (newMapsets.Count > 0)
             {
-                var map = newMapsets.Last().Beatmaps.Last();
+                var map = newMapsets.Last().Maps.Last();
                 Console.WriteLine(map.Artist + " " + map.Title);
 
                 // Switch map and load audio for song and play it.
-                Beatmap.ChangeBeatmap(map);
+                Map.ChangeSelected(map);
             }
 
             Logger.LogSuccess("Successfully completed the conversion task. Stopping loader.", LogType.Runtime);

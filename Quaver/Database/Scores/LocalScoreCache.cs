@@ -35,16 +35,16 @@ namespace Quaver.Database.Scores
         }
 
         /// <summary>
-        ///     Grabs all the local scores from a particular beatmap by MD5 hash
+        ///     Grabs all the local scores from a particular map by MD5 hash
         /// </summary>
         /// <param name="md5"></param>
         /// <returns></returns>
-        internal static async Task<List<LocalScore>> SelectBeatmapScores(string md5)
+        internal static async Task<List<LocalScore>> FetchMapScores(string md5)
         {
             try
             {
                 var conn = new SQLiteAsyncConnection(DatabasePath);         
-                return await conn.Table<LocalScore>().Where(x => x.BeatmapMd5 == md5).ToListAsync();
+                return await conn.Table<LocalScore>().Where(x => x.MapMd5 == md5).ToListAsync();
             }
             catch (Exception e)
             {
@@ -56,7 +56,7 @@ namespace Quaver.Database.Scores
         /// <summary>
         ///     Responsible for inserting a score into the database
         /// </summary>
-        /// <param name="beatmaps"></param>
+        /// <param name="score"></param>
         /// <returns></returns>
         internal static async Task InsertScoreIntoDatabase(LocalScore score)
         {
@@ -75,14 +75,14 @@ namespace Quaver.Database.Scores
         /// <summary>
         ///     Responsible for removing a score from the database
         /// </summary>
-        /// <param name="beatmaps"></param>
+        /// <param name="score"></param>
         /// <returns></returns>
         internal static async Task DeleteScoreFromDatabase(LocalScore score)
         {
             try
             {
                 await new SQLiteAsyncConnection(DatabasePath).DeleteAsync(score);
-                Logger.LogSuccess($"Successfully deleted score from beatmap: {score.BeatmapMd5} from the database.", LogType.Runtime);
+                Logger.LogSuccess($"Successfully deleted score from map: {score.MapMd5} from the database.", LogType.Runtime);
             }
             catch (Exception e)
             {

@@ -9,7 +9,7 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Audio;
 using Quaver.Config;
-using Quaver.Database.Beatmaps;
+using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Discord;
 using Quaver.GameState;
@@ -44,9 +44,9 @@ namespace Quaver.States.Results
         public bool UpdateReady { get; set; }
 
         /// <summary>
-        ///     The MD5 Hash of the beatmap.
+        ///     The MD5 Hash of the map.
         /// </summary>
-        private string BeatmapMd5 { get; }
+        private string MapMd5 { get; }
 
         /// <summary>
         ///     The score data from the previous gameplay session.
@@ -54,17 +54,17 @@ namespace Quaver.States.Results
         private ManiaScoreManager ManiaScoreData { get; }
 
         /// <summary>
-        ///     The artist of the played beatmap.
+        ///     The artist of the played map.
         /// </summary>
         private string Artist { get; }
 
         /// <summary>
-        ///     The title of the played beatmap
+        ///     The title of the played map
         /// </summary>
         private string Title { get; }
 
         /// <summary>
-        ///     The difficulty name of the played beatmap
+        ///     The difficulty name of the played map
         /// </summary>
         private string DifficultyName { get; }
 
@@ -102,17 +102,17 @@ namespace Quaver.States.Results
 
         /// <summary>
         ///     Constructor - In order to get to this state, it's essential that you pass in 
-        ///     the beatmap md5 and the score data.
+        ///     the map md5 and the score data.
         /// </summary>
-        /// <param name="beatmapMd5"></param>
+        /// <param name="mapMd5"></param>
         /// <param name="maniaScoreData"></param>
         /// <param name="artist"></param>
         /// <param name="title"></param>
         /// <param name="difficultyName"></param>
-        public ResultsState(string beatmapMd5, ManiaScoreManager maniaScoreData, string artist, string title, string difficultyName, List<ReplayFrame> replayFrames)
+        public ResultsState(string mapMd5, ManiaScoreManager maniaScoreData, string artist, string title, string difficultyName, List<ReplayFrame> replayFrames)
         {
             // Initialize data
-            BeatmapMd5 = beatmapMd5;
+            MapMd5 = mapMd5;
             ManiaScoreData = maniaScoreData;
             Artist = artist;
             Title = title;
@@ -150,18 +150,18 @@ namespace Quaver.States.Results
                     // Insert the score in the DB.
                     await LocalScoreCache.InsertScoreIntoDatabase(newScore);
 
-                    var previousScores = await LocalScoreCache.SelectBeatmapScores(beatmapMd5);
+                    var previousScores = await LocalScoreCache.FetchMapScores(mapMd5);
 
                     if (previousScores.Count > 0)
                         previousScores = previousScores.OrderByDescending(x => x.Score).ToList();
 
                     // If this score is higher than the last or there are no scores, we want to update this 
-                    // beatmap's cache.
+                    // map's cache.
                     if (previousScores.Count > 0 && maniaScoreData.ScoreTotal >= previousScores[0].Score)
-                        GameBase.SelectedBeatmap.HighestRank = newScore.Grade;
+                        GameBase.SelectedMap.HighestRank = newScore.Grade;
 
-                    GameBase.SelectedBeatmap.LastPlayed = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                    await BeatmapCache.UpdateBeatmap(GameBase.SelectedBeatmap);
+                    GameBase.SelectedMap.LastPlayed = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    await MapCache.UpdateMap(GameBase.SelectedMap);
                 }
                 catch (Exception e)
                 {
@@ -283,7 +283,7 @@ namespace Quaver.States.Results
             // Store the score in the database
             return new LocalScore
             {
-                BeatmapMd5 = BeatmapMd5,
+                MapMd5 = MapMd5,
                 Name = ConfigManager.Username,
                 DateTime = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
                 Score = ManiaScoreData.ScoreTotal,
@@ -316,7 +316,7 @@ namespace Quaver.States.Results
             var rp = new Replay
             {
                 QuaverVersion = GameBase.BuildVersion,
-                BeatmapMd5 = BeatmapMd5,
+                MapMd5 = MapMd5,
                 ReplayMd5 = "Not Implemented",
                 Name = ConfigManager.Username,
                 Date = DateTime.UtcNow,
@@ -350,7 +350,7 @@ namespace Quaver.States.Results
         private void LogScore()
         {
             Logger.LogImportant($"Quaver Version: {Replay.QuaverVersion}", LogType.Runtime);
-            Logger.LogImportant($"Beatmap MD5: {Replay.BeatmapMd5}", LogType.Runtime);
+            Logger.LogImportant($"Map MD5: {Replay.MapMd5}", LogType.Runtime);
             Logger.LogImportant($"Replay MD5: {Replay.ReplayMd5}", LogType.Runtime);
             Logger.LogImportant($"Player: {ConfigManager.Username}", LogType.Runtime);
             Logger.LogImportant($"Date: {Replay.Date.ToString(CultureInfo.InvariantCulture)}", LogType.Runtime);
@@ -374,7 +374,7 @@ namespace Quaver.States.Results
         private void SetDiscordRichPresence()
         {
             // Set Discord Rich Presence w/ score data
-            var mapData = $"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]";
+            var mapData = $"{GameBase.SelectedMap.Qua.Artist} - {GameBase.SelectedMap.Qua.Title} [{GameBase.SelectedMap.Qua.DifficultyName}]";
             var accuracy = (float)Math.Round(ManiaScoreData.Accuracy * 100, 2);
             var grade = (ManiaScoreData.Failed) ? Grades.F : GradeHelper.GetGradeFromAccuracy(accuracy);
             var status = (ManiaScoreData.Failed) ? "Failed - " : "Finished -";

@@ -14,14 +14,14 @@ using Quaver.Main;
 using Quaver.StepMania;
 using SQLite;
 
-namespace Quaver.Database.Beatmaps
+namespace Quaver.Database.Maps
 {
-    internal static class BeatmapCache
+    internal static class MapCache
     {
         /// <summary>
         ///     The name of the module - for logging purposes.
         /// </summary>
-        private static readonly string Module = "[BEATMAP CACHE]";
+        private static readonly string Module = "[MAP CACHE]";
 
         /// <summary>
         ///     The path of the local database
@@ -29,59 +29,59 @@ namespace Quaver.Database.Beatmaps
         private static readonly string DatabasePath = ConfigManager.GameDirectory + "/quaver.db";
 
         /// <summary>
-        ///     Responsible for loading and setting our global beatmaps variable.
+        ///     Responsible for loading and setting our global maps variable.
         /// </summary>
-        public static async Task LoadAndSetBeatmaps()
+        public static async Task LoadAndSetMapsets()
         {
-            GameBase.Mapsets = BeatmapHelper.OrderMapsByDifficulty(BeatmapHelper.OrderBeatmapsByArtist(await LoadBeatmapDatabaseAsync()));
+            GameBase.Mapsets = MapsetHelper.OrderMapsetsByDifficulty(MapsetHelper.OrderMapsetsByArtist(await LoadMapDatabaseAsync()));
             GameBase.VisibleMapsets = GameBase.Mapsets;
         }
 
         /// <summary>
-        ///     Initializes and loads the beatmap database
+        ///     Initializes and loads the map database
         /// </summary>
         /// <returns></returns>
-        private static async Task<List<Mapset>> LoadBeatmapDatabaseAsync()
+        private static async Task<List<Mapset>> LoadMapDatabaseAsync()
         {
             try
             {
                 // Create and sync the database.
-                await CreateBeatmapTableAsync();
-                await SyncBeatmapDatabaseAsync();
+                await CreateMapTableAsync();
+                await SyncMapDatabaseAsync();
 
-                // Fetch all the new beatmaps after syncing and return them.
-                var beatmaps = await FetchAllBeatmaps();
-                Logger.LogSuccess($"{beatmaps.Count} beatmaps have been successfully loaded.", LogType.Runtime);
+                // Fetch all the new maps after syncing and return them.
+                var maps = await FetchAllMaps();
+                Logger.LogSuccess($"{maps.Count} maps have been successfully loaded.", LogType.Runtime);
 
                 if (ConfigManager.AutoLoadOsuBeatmaps)
-                    beatmaps = beatmaps.Concat(LoadBeatmapsFromOsuDb()).ToList();
+                    maps = maps.Concat(LoadMapsFromOsuDb()).ToList();
 
                 if (ConfigManager.AutoLoadEtternaCharts)
-                    beatmaps = beatmaps.Concat(LoadBeatmapsFromEtternaCache()).ToList();
+                    maps = maps.Concat(LoadMapsFromEtternaCache()).ToList();
 
-                var maps = BeatmapHelper.GroupBeatmapsByDirectory(beatmaps);
-                Logger.LogSuccess($"Successfully loaded {beatmaps.Count} in {maps.Count} directories.", LogType.Runtime);
+                var mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
+                Logger.LogSuccess($"Successfully loaded {maps.Count} in {mapsets.Count} directories.", LogType.Runtime);
 
-                return maps;
+                return mapsets;
             }
             catch (Exception e)
             {
                 Logger.LogError(e, LogType.Runtime);
                 File.Delete(DatabasePath);
-                return await LoadBeatmapDatabaseAsync();
+                return await LoadMapDatabaseAsync();
             }            
         }
 
         /// <summary>
-        ///     Create the beatmap table. If there is an issue, we'll delete the database fully, and create it again.
+        ///     Create the map table. If there is an issue, we'll delete the database fully, and create it again.
         /// </summary>
-        private static async Task CreateBeatmapTableAsync()
+        private static async Task CreateMapTableAsync()
         {
             try
             {
                 var conn = new SQLiteAsyncConnection(DatabasePath);
-                await conn.CreateTableAsync<Beatmap>();
-                Logger.LogSuccess($"Beatmap Database has been created.", LogType.Runtime);
+                await conn.CreateTableAsync<Map>();
+                Logger.LogSuccess($"Map Database has been created.", LogType.Runtime);
             }
             catch (Exception e)
             {
@@ -91,11 +91,11 @@ namespace Quaver.Database.Beatmaps
         }
         
         /// <summary>
-        ///     Completely syncs our beatmap database. It will call our other helper methods, and makes sure
+        ///     Completely syncs our map database. It will call our other helper methods, and makes sure
         ///     that maps are always up-to-date in the database.
         /// </summary>
         /// <returns></returns>
-        private static async Task SyncBeatmapDatabaseAsync()
+        private static async Task SyncMapDatabaseAsync()
         {
             // Find all the.qua files in the directory.
             var Mapss = Directory.GetFiles(ConfigManager.SongDirectory, "*.qua", SearchOption.AllDirectories);
@@ -111,7 +111,7 @@ namespace Quaver.Database.Beatmaps
             Logger.LogImportant($"After removing missing .qua files, there are now {Mapss.Length}", LogType.Runtime);
 
             await CacheByMd5ChecksumAsync(Mapss);
-            await RemoveMissingBeatmaps();
+            await RemoveMissingMaps();
         }
 
         /// <summary>
@@ -122,22 +122,22 @@ namespace Quaver.Database.Beatmaps
         /// <returns></returns>
         private static async Task CacheByFileCount(string[] Mapss)
         {
-            var beatmapsInDb = await FetchAllBeatmaps();
+            var mapInDb = await FetchAllMaps();
 
-            // We only want to add more beatmaps here if the counts don't add up.
-            if (beatmapsInDb.Count == Mapss.Length)
+            // We only want to add more maps here if the counts don't add up.
+            if (mapInDb.Count == Mapss.Length)
                 return;
 
-            Logger.LogImportant($"Incorrect # of .qua files vs maps detected. {Mapss.Length} vs {beatmapsInDb.Count}", LogType.Runtime);
+            Logger.LogImportant($"Incorrect # of .qua files vs maps detected. {Mapss.Length} vs {mapInDb.Count}", LogType.Runtime);
 
-            // This'll store all the beatmaps we'll be adding into the database.
-            var beatmapsToCache = new List<Beatmap>();
+            // This'll store all the maps we'll be adding into the database.
+            var mapsToCache = new List<Map>();
 
-            // Parse & add each beatmap to the list of maps to cache if they aren't already in the database.
+            // Parse & add each map to the list of maps to cache if they aren't already in the database.
             foreach (var file in Mapss)
             {
-                // Run a check to see if the beatmap path already exists in the database.
-                if (beatmapsInDb.Any(beatmap => ConfigManager.SongDirectory.Replace("\\", "/") + "/" + beatmap.Directory + "/" + beatmap.Path.Replace("\\", "/") == file.Replace("\\", "/"))) continue;
+                // Run a check to see if the map path already exists in the database.
+                if (mapInDb.Any(map => ConfigManager.SongDirectory.Replace("\\", "/") + "/" + map.Directory + "/" + map.Path.Replace("\\", "/") == file.Replace("\\", "/"))) continue;
 
                 // Try to parse the file and check if it is a legitimate .qua file.
                 var qua = Qua.Parse(file);
@@ -148,21 +148,21 @@ namespace Quaver.Database.Beatmaps
                     continue;
                 }
 
-                // Convert the Qua into a Beatmap object and add it to our list of maps we want to cache.
-                var newBeatmap = new Beatmap().ConvertQuaToBeatmap(qua, file);
-                newBeatmap.Path = Path.GetFileName(newBeatmap.Path.Replace("\\", "/"));
-                beatmapsToCache.Add(newBeatmap);
+                // Convert the Qua into a Map object and add it to our list of maps we want to cache.
+                var newMap = new Map().ConvertQuaToMap(qua, file);
+                newMap.Path = Path.GetFileName(newMap.Path.Replace("\\", "/"));
+                mapsToCache.Add(newMap);
             }
 
-            var finalList = await RemoveDuplicates(beatmapsToCache);
+            var finalList = await RemoveDuplicates(mapsToCache);
 
-            // Add new beatmaps to the database.
+            // Add new maps to the database.
             if (finalList.Count > 0)
-                await InsertBeatmapsIntoDatabase(finalList);
+                await InsertMapsIntoDatabase(finalList);
         }
 
         /// <summary>
-        ///     Compares the beatmaps MD5 checksums in that of the database and the file system, 
+        ///     Compares the maps MD5 checksums in that of the database and the file system, 
         ///     and updates/adds/removes them from the database.
         /// </summary>
         /// <returns></returns>
@@ -171,50 +171,50 @@ namespace Quaver.Database.Beatmaps
             // This'll hold all of the MD5 Checksums of the .qua files in the directory.
             // Since this is an updated list, we'll use these to check if they are in the database and unchanged.
             var fileChecksums = new List<string>();
-            Mapss.ToList().ForEach(qua => fileChecksums.Add(BeatmapHelper.GetMd5Checksum(qua)));
+            Mapss.ToList().ForEach(qua => fileChecksums.Add(MapsetHelper.GetMd5Checksum(qua)));
 
-            // Find all the beatmaps in the database
-            var beatmapsInDb = await FetchAllBeatmaps();
+            // Find all the maps in the database
+            var mapInDb = await FetchAllMaps();
 
-            // Find all the mismatched beatmaps.
-            var mismatchedBeatmaps = beatmapsInDb
-                .Except(beatmapsInDb.Where(map => fileChecksums.Any(md5 => md5 == map.Md5Checksum)).ToList()).ToList();
+            // Find all the mismatched maps.
+            var mismatchedMaps = mapInDb
+                .Except(mapInDb.Where(map => fileChecksums.Any(md5 => md5 == map.Md5Checksum)).ToList()).ToList();
 
-            Logger.LogImportant($"Found: {mismatchedBeatmaps.Count} beatmaps with unmatched checksums", LogType.Runtime);
+            Logger.LogImportant($"Found: {mismatchedMaps.Count} maps with unmatched checksums", LogType.Runtime);
 
-            if (mismatchedBeatmaps.Count > 0)
-                await DeleteBeatmapsFromDatabase(mismatchedBeatmaps);
+            if (mismatchedMaps.Count > 0)
+                await DeleteMapsFromDatabase(mismatchedMaps);
 
-            // Stores the list of beatmaps that were successfully reprocessed and are ready to add into the DB.
-            var reprocessedBeatmaps = new List<Beatmap>();
-            foreach (var map in mismatchedBeatmaps)
+            // Stores the list of maps that were successfully reprocessed and are ready to add into the DB.
+            var reprocessedMaps = new List<Map>();
+            foreach (var map in mismatchedMaps)
             {
                 if (!File.Exists(map.Path))
                     continue;
 
                 // Parse the map again and add it to the list of maps to be added to the database.
-                reprocessedBeatmaps.Add(new Beatmap().ConvertQuaToBeatmap(Qua.Parse(map.Path), map.Path));
+                reprocessedMaps.Add(new Map().ConvertQuaToMap(Qua.Parse(map.Path), map.Path));
             }
 
-            var finalList = await RemoveDuplicates(reprocessedBeatmaps);
+            var finalList = await RemoveDuplicates(reprocessedMaps);
 
-            // Add new beatmaps to the database.
+            // Add new maps to the database.
             if (finalList.Count > 0)
-                await InsertBeatmapsIntoDatabase(finalList);
+                await InsertMapsIntoDatabase(finalList);
         }
 
         /// <summary>
-        ///     Takes a look at all the beatmaps that are in the db and removes any of the missing ones.
+        ///     Takes a look at all the maps that are in the db and removes any of the missing ones.
         /// </summary>
         /// <returns></returns>
-        private static async Task RemoveMissingBeatmaps()
+        private static async Task RemoveMissingMaps()
         {
-            var beatmaps = await FetchAllBeatmaps();
+            var maps = await FetchAllMaps();
             
             // Stores the maps we need to delete
-            var mapsToDelete = new List<Beatmap>();
+            var mapsToDelete = new List<Map>();
             
-            foreach (var map in beatmaps)
+            foreach (var map in maps)
             {
                 var mapPath = $"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}".Replace("\\", "/");
 
@@ -231,33 +231,33 @@ namespace Quaver.Database.Beatmaps
                     Logger.LogError(e, LogType.Runtime);
                 }
             }
-            await DeleteBeatmapsFromDatabase(mapsToDelete);
+            await DeleteMapsFromDatabase(mapsToDelete);
         }
 
         /// <summary>
-        ///     Responsible for fetching all the beatmaps from the database and returning them.
+        ///     Responsible for fetching all the maps from the database and returning them.
         /// </summary>
         /// <returns></returns>
-        private static async Task<List<Beatmap>> FetchAllBeatmaps()
+        private static async Task<List<Map>> FetchAllMaps()
         {
-            return await new SQLiteAsyncConnection(DatabasePath).Table<Beatmap>().ToListAsync().ContinueWith(t => t.Result);
+            return await new SQLiteAsyncConnection(DatabasePath).Table<Map>().ToListAsync().ContinueWith(t => t.Result);
         }
 
         /// <summary>
-        ///     Responsible for taking a list of beatmaps from the database and adding them to it.
+        ///     Responsible for taking a list of maps from the database and adding them to it.
         /// </summary>
-        /// <param name="beatmaps"></param>
+        /// <param name="maps"></param>
         /// <returns></returns>
-        private static async Task InsertBeatmapsIntoDatabase(List<Beatmap> beatmaps)
+        private static async Task InsertMapsIntoDatabase(List<Map> maps)
         {
             try
             {
-                // Remove all the duplicate MD5 beatmaps in the list before inserting.
-                RemoveDuplicatesInList(beatmaps);
+                // Remove all the duplicate MD5 maps in the list before inserting.
+                RemoveDuplicatesInList(maps);
 
-                if (beatmaps.Count > 0)
-                    await new SQLiteAsyncConnection(DatabasePath).InsertAllAsync(beatmaps)
-                        .ContinueWith(t => Logger.LogSuccess($"Successfully added {beatmaps.Count} beatmaps to the database", LogType.Runtime));
+                if (maps.Count > 0)
+                    await new SQLiteAsyncConnection(DatabasePath).InsertAllAsync(maps)
+                        .ContinueWith(t => Logger.LogSuccess($"Successfully added {maps.Count} maps to the database", LogType.Runtime));
             }
             catch (Exception e)
             {
@@ -267,18 +267,18 @@ namespace Quaver.Database.Beatmaps
         }
 
         /// <summary>
-        ///     Responsible for removing a list of beatmaps from the database.
+        ///     Responsible for removing a list of maps from the database.
         /// </summary>
-        /// <param name="beatmaps"></param>
+        /// <param name="maps"></param>
         /// <returns></returns>
-        private static async Task DeleteBeatmapsFromDatabase(List<Beatmap> beatmaps)
+        private static async Task DeleteMapsFromDatabase(List<Map> maps)
         {
             try
             {
-                foreach (var map in beatmaps)
+                foreach (var map in maps)
                     await new SQLiteAsyncConnection(DatabasePath).DeleteAsync(map);
 
-                Logger.LogSuccess($"Successfully deleted {beatmaps.Count} beatmaps from the database.", LogType.Runtime);
+                Logger.LogSuccess($"Successfully deleted {maps.Count} maps from the database.", LogType.Runtime);
             }
             catch (Exception e)
             {
@@ -287,20 +287,20 @@ namespace Quaver.Database.Beatmaps
         }
 
         /// <summary>
-        ///     Removes duplicate maps from a list of beatmaps.
+        ///     Removes duplicate maps from a list of maps.
         /// </summary>
-        /// <param name="beatmaps"></param>
+        /// <param name="maps"></param>
         /// <returns></returns>
-        private static async Task<List<Beatmap>> RemoveDuplicates(List<Beatmap> beatmaps)
+        private static async Task<List<Map>> RemoveDuplicates(List<Map> maps)
         {
             // Add a check for duplicate maps being inserted into the database.
             // we do this by MD5 Checksum. Also delete them if that's the case.
-            var mapsInDb = await FetchAllBeatmaps();
+            var mapsInDb = await FetchAllMaps();
 
-            // Create the final list of beatmaps to be added.
-            var finalMaps = new List<Beatmap>();
+            // Create the final list of maps to be added.
+            var finalMaps = new List<Map>();
 
-            foreach (var map in beatmaps)
+            foreach (var map in maps)
             {
                 if (mapsInDb.Any(x => x.Md5Checksum == map.Md5Checksum))
                 {
@@ -315,14 +315,14 @@ namespace Quaver.Database.Beatmaps
         }
 
         /// <summary>
-        ///     Finds and removes duplicates in the list of beatmaps itself. This is usually called before inserting,
+        ///     Finds and removes duplicates in the list of maps itself. This is usually called before inserting,
         ///     to make sure we're not adding the same map twice.
         /// </summary>
-        /// <param name="beatmaps"></param>
+        /// <param name="maps"></param>
         /// <returns></returns>
-        private static void RemoveDuplicatesInList(List<Beatmap> beatmaps)
+        private static void RemoveDuplicatesInList(List<Map> maps)
         {
-            var duplicateInsertEntries = beatmaps
+            var duplicateInsertEntries = maps
                 .GroupBy(x => x.Md5Checksum)
                 .Select(g => g.Count() > 1 ? g.First() : null)
                 .ToList();
@@ -332,7 +332,7 @@ namespace Quaver.Database.Beatmaps
             {
                 try
                 {
-                    beatmaps.Remove(map);
+                    maps.Remove(map);
 
                     // Continue to the next map if the current one is indeed null.
                     if (map == null)
@@ -350,16 +350,16 @@ namespace Quaver.Database.Beatmaps
         }
 
         /// <summary>
-        ///     Updates a beatmap in the database
+        ///     Updates a map in the database
         /// </summary>
-        /// <param name="beatmap"></param>
+        /// <param name="map"></param>
         /// <returns></returns>
-        internal static async Task UpdateBeatmap(Beatmap beatmap)
+        internal static async Task UpdateMap(Map map)
         {
             try
             {
                 var conn = new SQLiteAsyncConnection(DatabasePath);
-                await conn.ExecuteAsync("UPDATE Beatmap SET HighestRank = ?, LastPlayed = ? Where Id = ?", beatmap.HighestRank, beatmap.LastPlayed, beatmap.Id);
+                await conn.ExecuteAsync("UPDATE Map SET HighestRank = ?, LastPlayed = ? Where Id = ?", map.HighestRank, map.LastPlayed, map.Id);
             }
             catch (Exception e)
             {
@@ -369,17 +369,17 @@ namespace Quaver.Database.Beatmaps
         }
 
         /// <summary>
-        ///     Method to update local offset in beatmap
+        ///     Method to update local offset in map
         /// </summary>
-        /// <param name="beatmap"></param>
+        /// <param name="map"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        internal static async Task UpdateLocalOffset(Beatmap beatmap, int offset)
+        internal static async Task UpdateLocalOffset(Map map, int offset)
         {
             try
             {
                 var conn = new SQLiteAsyncConnection(DatabasePath);
-                await conn.ExecuteAsync("UPDATE Beatmap SET LocalOffset = ? Where Id = ?", offset, beatmap.Id);
+                await conn.ExecuteAsync("UPDATE Map SET LocalOffset = ? Where Id = ?", offset, map.Id);
             }
             catch (Exception e)
             {
@@ -389,51 +389,51 @@ namespace Quaver.Database.Beatmaps
         }
 
         /// <summary>
-        ///     Loads all osu! beatmaps from the osu!.db file
+        ///     Loads all osu! maps from the osu!.db file
         /// </summary>
-        private static List<Beatmap> LoadBeatmapsFromOsuDb()
+        private static List<Map> LoadMapsFromOsuDb()
         {
             try
             {
                 var db = OsuDb.Read(ConfigManager.OsuDbPath);
                 GameBase.OsuSongsFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath) + "/Songs/";
 
-                var beatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && (x.CircleSize == 4 || x.CircleSize == 7)).ToList();
+                var mapsFound = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && (x.CircleSize == 4 || x.CircleSize == 7)).ToList();
 
-                var maps = new List<Beatmap>();
+                var maps = new List<Map>();
 
-                foreach (var beatmap in beatmaps)
+                foreach (var map in mapsFound)
                 {
-                    var newMap = new Beatmap
+                    var newMap = new Map
                     {
-                        Md5Checksum = beatmap.BeatmapChecksum,
-                        Directory = beatmap.FolderName,
-                        Path = beatmap.BeatmapFileName,
-                        Artist = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.Artist)),
-                        Title = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.Title)),
+                        Md5Checksum = map.BeatmapChecksum,
+                        Directory = map.FolderName,
+                        Path = map.BeatmapFileName,
+                        Artist = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(map.Artist)),
+                        Title = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(map.Title)),
                         MapSetId = -1,
                         MapId = -1,
-                        DifficultyName = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.Version)),
+                        DifficultyName = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(map.Version)),
                         RankedStatus = 0,
                         DifficultyRating = 0,
-                        Creator = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.Creator)),
-                        AudioPath = beatmap.AudioFileName,
-                        AudioPreviewTime = beatmap.AudioPreviewTime,
-                        Description = $"This map is a Quaver converted version of {Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.Creator))}'s map",
-                        Source = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.SongSource)),
-                        Tags = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.SongTags)),
-                        Mode = (beatmap.CircleSize == 4) ? GameModes.Keys4 : GameModes.Keys7,
-                        SongLength = beatmap.TotalTime,
-                        Game = BeatmapGame.Osu,
+                        Creator = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(map.Creator)),
+                        AudioPath = map.AudioFileName,
+                        AudioPreviewTime = map.AudioPreviewTime,
+                        Description = $"This map is a Quaver converted version of {Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(map.Creator))}'s map",
+                        Source = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(map.SongSource)),
+                        Tags = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(map.SongTags)),
+                        Mode = (map.CircleSize == 4) ? GameModes.Keys4 : GameModes.Keys7,
+                        SongLength = map.TotalTime,
+                        Game = MapGame.Osu,
                         BackgroundPath = "",      
                     };
 
                     // Get the BPM of the osu! maps
-                    if (beatmap.TimingPoints != null)
+                    if (map.TimingPoints != null)
                     {
                         try
                         {
-                            newMap.Bpm = Math.Round(60000 / beatmap.TimingPoints.Find(x => x.MsPerQuarter > 0).MsPerQuarter, 0);
+                            newMap.Bpm = Math.Round(60000 / map.TimingPoints.Find(x => x.MsPerQuarter > 0).MsPerQuarter, 0);
                         }
                         catch (Exception e)
                         {
@@ -444,13 +444,13 @@ namespace Quaver.Database.Beatmaps
                     maps.Add(newMap);
                 }
 
-                Logger.LogSuccess($"Finished loading: {beatmaps.Count} osu!mania beatmaps", LogType.Runtime);
+                Logger.LogSuccess($"Finished loading: {maps.Count} osu!mania maps", LogType.Runtime);
                 return maps;
             }
             catch (Exception e)
             {
                 Logger.LogError(e, LogType.Runtime);
-                return new List<Beatmap>();
+                return new List<Map>();
             }
         }
 
@@ -458,9 +458,9 @@ namespace Quaver.Database.Beatmaps
         ///     Loads charts from Etterna and places them on the cache.
         /// </summary>
         /// <returns></returns>
-        private static List<Beatmap> LoadBeatmapsFromEtternaCache()
+        private static List<Map> LoadMapsFromEtternaCache()
         {
-            var maps = new List<Beatmap>();
+            var maps = new List<Map>();
 
             try
             {
@@ -481,7 +481,7 @@ namespace Quaver.Database.Beatmaps
 
                         foreach (var chart in etternaFile.ChartData)
                         {
-                            maps.Add(new Beatmap()
+                            maps.Add(new Map()
                             {
                                 Md5Checksum = chart.ChartKey,
                                 Directory = Path.GetDirectoryName(etternaFile.SongFileName),
@@ -501,7 +501,7 @@ namespace Quaver.Database.Beatmaps
                                 Tags = "StepMania",
                                 Mode = GameModes.Keys4,
                                 SongLength = 0,
-                                Game = BeatmapGame.Etterna,
+                                Game = MapGame.Etterna,
                                 BackgroundPath = etternaFile.Background,
                             });
                         }

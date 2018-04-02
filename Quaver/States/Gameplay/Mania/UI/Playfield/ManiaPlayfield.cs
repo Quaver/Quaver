@@ -123,7 +123,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             float overlaySize;
             float posOffset;
             QuaverSprite bgMask;
-            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            switch (GameBase.SelectedMap.Qua.Mode)
             {
                 case GameModes.Keys4:
                     // Create BG Mask
@@ -321,7 +321,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
         /// <param name="keyIndex"></param>
         public void UpdateReceptor(int keyIndex, bool keyDown)
         {
-            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            switch (GameBase.SelectedMap.Qua.Mode)
             {
                 case GameModes.Keys4:
                     if (keyDown)

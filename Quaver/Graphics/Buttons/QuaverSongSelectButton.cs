@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Quaver.Database.Beatmaps;
+using Quaver.Database.Maps;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
@@ -17,7 +17,7 @@ namespace Quaver.Graphics.Buttons
     {
         internal bool Selected { get; set; }
 
-        internal Beatmap Map { get; set; }
+        internal Map Map { get; set; }
 
         private QuaverTextbox TitleQuaverText { get; set; }
 
@@ -47,7 +47,7 @@ namespace Quaver.Graphics.Buttons
         private Color CurrentTint = Color.White;
 
         //Constructor
-        internal QuaverSongSelectButton(Beatmap map, float ButtonScale)
+        internal QuaverSongSelectButton(Map map, float ButtonScale)
         {
             var ButtonSizeY = 40 * ButtonScale;
             var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";

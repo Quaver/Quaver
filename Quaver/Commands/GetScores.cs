@@ -22,7 +22,7 @@ namespace Quaver.Commands
         {
             Task.Run(async () =>
             {
-                var scores = await LocalScoreCache.SelectBeatmapScores(args[1]);
+                var scores = await LocalScoreCache.FetchMapScores(args[1]);
 
                 var sb = new StringBuilder();
 
