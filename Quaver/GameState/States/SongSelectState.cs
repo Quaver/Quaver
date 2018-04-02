@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,11 +16,9 @@ using Quaver.Graphics;
 using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
-
 using Quaver.Modifiers;
 using Quaver.GameState.SongSelect;
 using Quaver.Input;
-using Quaver.Utility;
 
 namespace Quaver.GameState.States
 {

@@ -9,7 +9,6 @@ using Quaver.API.StepMania;
 using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Logging;
-using Quaver.Utility;
 
 namespace Quaver.StepMania
 {

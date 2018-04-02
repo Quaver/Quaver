@@ -10,7 +10,6 @@ using Quaver.API.Osu;
 using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Helpers;
-using Quaver.Utility;
 
 namespace Quaver.Graphics.Sprite
 {

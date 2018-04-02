@@ -9,8 +9,6 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Helpers;
 using Quaver.Logging;
 
-using Quaver.Utility;
-
 namespace Quaver.Graphics.Button
 {
     /// <summary>

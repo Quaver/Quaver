@@ -23,7 +23,6 @@ using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Modifiers;
-using Quaver.Utility;
 using Quaver.Input;
 using Quaver.Graphics.GameOverlay;
 using Quaver.Steam;

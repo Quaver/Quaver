@@ -13,7 +13,6 @@ using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Skins;
-using Quaver.Utility;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {

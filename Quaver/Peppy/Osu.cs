@@ -11,7 +11,6 @@ using Quaver.API.Maps;
 using Quaver.API.Osu;
 using Quaver.Config;
 using Quaver.Logging;
-using Quaver.Utility;
 
 namespace Quaver.Peppy
 {

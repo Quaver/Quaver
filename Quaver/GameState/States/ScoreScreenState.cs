@@ -20,7 +20,6 @@ using Quaver.Replays;
 using Quaver.Scores;
 using Quaver.Graphics.Text;
 using Quaver.GameState.Gameplay;
-using Quaver.Utility;
 using Quaver.Audio;
 using Quaver.Helpers;
 using Quaver.Skins;
