@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Quaver.API.Maps;
 using Quaver.API.StepMania;
 using Quaver.Config;
+using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Utility;
 
@@ -28,7 +29,7 @@ namespace Quaver.StepMania
                 Directory.CreateDirectory(quaverDir);
 
                 foreach (var map in quaverMaps)
-                    map.Save($"{quaverDir}/{Util.FileNameSafeString(map.Artist)} - {Util.FileNameSafeString(map.Title)} [{Util.FileNameSafeString(map.DifficultyName)}].qua");
+                    map.Save($"{quaverDir}/{StringHelper.FileNameSafeString(map.Artist)} - {StringHelper.FileNameSafeString(map.Title)} [{StringHelper.FileNameSafeString(map.DifficultyName)}].qua");
 
                 // Now copy over the background + audio file
                 try

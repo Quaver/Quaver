@@ -13,16 +13,6 @@ namespace Quaver.Utility
     internal class Util
     {
         /// <summary>
-        /// Converts score to string (1234567) format
-        /// </summary>
-        /// <param name="score"></param>
-        /// <returns></returns>
-        internal static string ScoreToString(int score)
-        {
-            return score.ToString("0000000");
-        }
-
-        /// <summary>
         /// Converts Point to Vector2
         /// </summary>
         /// <param name="point"></param>
@@ -229,21 +219,6 @@ namespace Quaver.Utility
         }
 
         /// <summary>
-        ///     Makes a string safe to be written as a file name.
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        internal static string FileNameSafeString(string str)
-        {
-            var invalidPathChars = Path.GetInvalidFileNameChars();
-
-            foreach (var invalidChar in invalidPathChars)
-                str = str.Replace(invalidChar.ToString(), "");
-
-            return str;
-        }
-
-        /// <summary>
         ///     Gets the grade from an accuracy value
         /// </summary>
         /// <param name="accuracy"></param>
@@ -268,16 +243,6 @@ namespace Quaver.Utility
                 return Grades.D;
             
            return Grades.F;
-        }
-
-        /// <summary>
-        ///     Returns a color to a string
-        /// </summary>
-        /// <param name="color"></param>
-        /// <returns></returns>
-        internal static string ColorToString(Color color)
-        {
-            return $"{color.R},{color.G},{color.G},{color.A}";
         }
     }
 }
