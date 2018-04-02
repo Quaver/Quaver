@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
-namespace Quaver.Graphics
+namespace Quaver.Graphics.Colors
 {
-    public struct GameColors
+    public struct QuaverColors
     {
         /// <summary>
         /// Swan's favorite color; #db88c2. This color is used for the developers of the game.
@@ -29,10 +24,14 @@ namespace Quaver.Graphics
         /// </summary>
         public static readonly Color NameTagRegular = new Color(76, 146, 211);
 
+        /// <summary>
+        ///     Color for dead notes
+        /// </summary>
         public static readonly Color DeadNote = new Color(50, 50, 50);
 
-        //todo: documentation.
-        //Grade Colors
+        /// <summary>
+        ///     Colors for different grades
+        /// </summary>
         public static readonly Color GradeXX = new Color(255, 255, 255);
         public static readonly Color GradeX = new Color(255, 255, 255);
         public static readonly Color GradeSS = new Color(255, 255, 125);
@@ -44,8 +43,9 @@ namespace Quaver.Graphics
         public static readonly Color GradeF = new Color(255, 0, 0);
         public static readonly Color[] GradeColors = new Color[9] { GradeF, GradeD, GradeC, GradeB, GradeA, GradeS, GradeSS, GradeX, GradeXX };
 
-        //todo: documentation.
-        //Snap Colors
+        /// <summary>
+        ///     Colors for note snaps
+        /// </summary>
         public static readonly Color Snap1 = Color.Red;
         public static readonly Color Snap2 = Color.Blue;
         public static readonly Color Snap3 = Color.Purple;
@@ -56,15 +56,5 @@ namespace Quaver.Graphics
         public static readonly Color Snap16 = Color.Green;
         public static readonly Color Snap48 = Color.White;
         public static readonly Color[] SnapColors = new Color[9] { Snap1, Snap2, Snap3, Snap4, Snap6, Snap8, Snap12, Snap16, Snap48 };
-
-        //todo: documentation
-        //Logging and Other Game Colors
-        /*
-        public static readonly Color GameError = Color.Red;
-        public static readonly Color GameWarning = Color.Yellow;
-        public static readonly Color GameSuccess = Color.Green;
-        public static readonly Color GameInfo = Color.LightGreen;
-        public static readonly Color GameImportant = Color.LightCyan;
-        */
     }
 }

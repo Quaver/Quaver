@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.GameState.States;
 using Quaver.Graphics;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
@@ -24,7 +25,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         {
             QuaverContainer = new QuaverContainer(0, 0, PlayfieldSize, null)
             {
-                Alignment = Graphics.Alignment.MidCenter
+                Alignment = Alignment.MidCenter
             };
             BarObjectQueue = new List<BarObject>();
             CreateBarQueue();

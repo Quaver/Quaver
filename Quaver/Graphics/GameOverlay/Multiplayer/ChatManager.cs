@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Logging;
 

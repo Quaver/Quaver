@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
+using Quaver.Graphics.Enums;
 using Quaver.Helpers;
 
 namespace Quaver.Graphics.UserInterface

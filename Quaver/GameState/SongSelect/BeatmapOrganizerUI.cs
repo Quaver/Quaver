@@ -11,6 +11,7 @@ using Quaver.Audio;
 using Quaver.Database;
 using Quaver.Database.Scores;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
