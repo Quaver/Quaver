@@ -5,7 +5,6 @@ using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
-using Quaver.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;

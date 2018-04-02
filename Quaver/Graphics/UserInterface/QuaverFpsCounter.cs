@@ -4,14 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Text;
-using Quaver.Logging;
 
-namespace Quaver.Utility
+namespace Quaver.Graphics.UserInterface
 {
-    internal static class FpsCounter
+    internal static class QuaverFpsCounter
     {
         /// <summary>
         ///     After this many frames, it will update the current FPS

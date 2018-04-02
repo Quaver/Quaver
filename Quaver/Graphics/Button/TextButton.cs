@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
-using Quaver.Utility;
 
 namespace Quaver.Graphics.Button
 {

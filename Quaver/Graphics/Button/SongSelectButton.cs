@@ -7,8 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Text;
-
-using Quaver.Utility;
 using Quaver.Database.Beatmaps;
 using Quaver.Graphics.Sprite;
 using Quaver.Config;

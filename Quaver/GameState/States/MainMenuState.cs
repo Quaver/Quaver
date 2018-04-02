@@ -28,7 +28,6 @@ using Quaver.Helpers;
 using Quaver.Peppy;
 using Quaver.Steam;
 using Quaver.StepMania;
-using Quaver.Utility;
 
 namespace Quaver.GameState.States
 {
