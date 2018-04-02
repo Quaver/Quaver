@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Graphics.Particles.Gameplay;
 
 namespace Quaver.GameState.Gameplay.PlayScreen
 {
-    class ParticleManager : IHelper
+    internal class ParticleManager : IHelper
     {
         /// <summary>
         ///     Particle Container

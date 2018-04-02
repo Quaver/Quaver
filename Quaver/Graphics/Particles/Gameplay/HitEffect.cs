@@ -1,15 +1,9 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
-using Quaver.GameState;
-using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Quaver.Graphics.Particles
+namespace Quaver.Graphics.Particles.Gameplay
 {
     internal class HitEffect : Particle
     {
