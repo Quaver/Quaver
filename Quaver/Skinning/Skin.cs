@@ -142,7 +142,7 @@ namespace Quaver.Skinning
         internal Texture2D ColumnLighting7K { get; set; }
 
         /// <summary>
-        ///     Timing bar QuaverSprite
+        ///     ManiaTiming bar QuaverSprite
         /// </summary>
         internal Texture2D StageTimingBar { get; set; }
 
@@ -767,7 +767,7 @@ namespace Quaver.Skinning
         ///         In "note-hitobjectx-y", (x is denoted as the lane, and y is the snap)
         ///         That being said, note-hitobject3-16th, would be the object in lane 3, with 16th snap. 
         /// 
-        ///         NOTE: For 1/1, objects, there is no concept of y. So the HitObject in lane 4, with 1/1 snap
+        ///         NOTE: For 1/1, objects, there is no concept of y. So the ManiaHitObject in lane 4, with 1/1 snap
         ///         would have a file name of note-hitobject4. This is so that we don't require filename changes
         ///         even though the user may not use snapping.    
         /// 
@@ -788,7 +788,7 @@ namespace Quaver.Skinning
         {
             var objectsList = new List<Texture2D>();
 
-            // First load the beginning HitObject element, that doesn't require snapping.
+            // First load the beginning ManiaHitObject element, that doesn't require snapping.
             objectsList.Add(LoadIndividualElement(element, skinDir + $"/{element}.png"));
 
             // Don't bother looking for snap objects if the skin config doesn't permit it.
