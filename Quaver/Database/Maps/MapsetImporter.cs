@@ -3,9 +3,9 @@ using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Main;
 
-namespace Quaver.Database.Beatmaps
+namespace Quaver.Database.Maps
 {
-    internal class BeatmapImporter
+    internal class MapsetImporter
     {
         /// <summary>
         /// Watches the songs directory for any changes.

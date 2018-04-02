@@ -120,10 +120,6 @@ namespace Quaver.States.Menu
         /// <param name="gameTime"></param>
         public void Update(double dt)
         {
-            // Play Random Maps during the main menu
-            //MenuAudioPlayer.PlayRandomBeatmaps();
-            //Console.WriteLine(SwitchSongSelectQuaverButton.GlobalRectangle.X + ", " + SwitchSongSelectQuaverButton.GlobalRectangle.Y + ", " + SwitchSongSelectQuaverButton.GlobalRectangle.Width + ", " + SwitchSongSelectQuaverButton.GlobalRectangle.Height);
-
             //Update Menu Screen QuaverContainer
             QuaverContainer.Update(dt);
         }
@@ -313,17 +309,17 @@ namespace Quaver.States.Menu
             var zip = new ZipFile();
 
             // Get all the files in the current selected map's directory.
-            var dirInfo = new DirectoryInfo(ConfigManager.SongDirectory + "/" + GameBase.SelectedBeatmap.Directory + "/");
+            var dirInfo = new DirectoryInfo(ConfigManager.SongDirectory + "/" + GameBase.SelectedMap.Directory + "/");
             var files = dirInfo.GetFiles();
 
             foreach (var file in files)
-                zip.AddFile(ConfigManager.SongDirectory + "/" + GameBase.SelectedBeatmap.Directory + "/" + file, "");
+                zip.AddFile(ConfigManager.SongDirectory + "/" + GameBase.SelectedMap.Directory + "/" + file, "");
 
             // Create the Data/Maps directory if it doesn't exist already.
             Directory.CreateDirectory($"{ConfigManager.DataDirectory}/Maps/");
 
             // Save the file
-            var outputPath = $"{ConfigManager.DataDirectory}/Maps/{GameBase.GameTime.ElapsedMilliseconds} {StringHelper.FileNameSafeString(GameBase.SelectedBeatmap.Artist)} - {StringHelper.FileNameSafeString(GameBase.SelectedBeatmap.Title)}.qp";
+            var outputPath = $"{ConfigManager.DataDirectory}/Maps/{GameBase.GameTime.ElapsedMilliseconds} {StringHelper.FileNameSafeString(GameBase.SelectedMap.Artist)} - {StringHelper.FileNameSafeString(GameBase.SelectedMap.Title)}.qp";
             zip.Save(outputPath);
 
             Logger.LogSuccess($"Successfully exported {outputPath}", LogType.Runtime);
@@ -346,7 +342,7 @@ namespace Quaver.States.Menu
 
         /// <summary>
         ///     Upon clicking the import button, we'll want to display an open file dialog,
-        ///     then attempt to convert all 4k & 7k beatmaps and create a new song directory
+        ///     then attempt to convert all 4k & 7k maps and create a new song directory
         ///     for the import queue.
         /// </summary>
         /// <param name="sender"></param>
@@ -357,7 +353,7 @@ namespace Quaver.States.Menu
             var openFileDialog = new OpenFileDialog()
             {
                 InitialDirectory = "c:\\",
-                Filter = "Peppy Beatmap Set (*.osz)|*.osz",
+                Filter = "Peppy Map Set (*.osz)|*.osz",
                 FilterIndex = 0,
                 RestoreDirectory = true,
                 Multiselect = true

@@ -1,23 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
-using ManagedBass;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
-using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Main;
 using SQLite;
 
-namespace Quaver.Database.Beatmaps
+namespace Quaver.Database.Maps
 {
-    internal class Beatmap
+    internal class Map
     {
         [PrimaryKey]
         [AutoIncrement]
@@ -29,7 +21,7 @@ namespace Quaver.Database.Beatmaps
         public string Md5Checksum { get; set; }
 
         /// <summary>
-        ///     The directory of the beatmap
+        ///     The directory of the map
         /// </summary>
         public string Directory { get; set; }
 
@@ -39,7 +31,7 @@ namespace Quaver.Database.Beatmaps
         public string Path { get; set; }
 
         /// <summary>
-        ///     The beatmap set id of the map.
+        ///     The map set id of the map.
         /// </summary>
         public int MapSetId { get; set; }
 
@@ -59,7 +51,7 @@ namespace Quaver.Database.Beatmaps
         public string Title { get; set; }
 
         /// <summary>
-        ///     The difficulty name of the beatmap
+        ///     The difficulty name of the map
         /// </summary>
         public string DifficultyName { get; set; }
 
@@ -79,7 +71,7 @@ namespace Quaver.Database.Beatmaps
         public string LastPlayed { get; set; } = new DateTime(0001, 1, 1, 00, 00, 00).ToString("yyyy-MM-dd HH:mm:ss"); // 01/01/0001 00:00:00 - If never played
 
         /// <summary>
-        ///     The difficulty rating of the beatmap.
+        ///     The difficulty rating of the map.
         /// </summary>
         public float DifficultyRating { get; set; }
 
@@ -89,42 +81,42 @@ namespace Quaver.Database.Beatmaps
         public string Creator { get; set; }
 
         /// <summary>
-        ///     The absolute path of the beatmap's background.
+        ///     The absolute path of the map's background.
         /// </summary>
         public string BackgroundPath { get; set; }
 
         /// <summary>
-        ///     The absolute path of the beatmap's audio.
+        ///     The absolute path of the map's audio.
         /// </summary>
         public string AudioPath { get; set; }
 
         /// <summary>
-        ///     The audio preview time of the beatmap
+        ///     The audio preview time of the map
         /// </summary>
         public int AudioPreviewTime { get; set; }
 
         /// <summary>
-        ///     The description of the beatmap
+        ///     The description of the map
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        ///     The source (album/mixtape/etc) of the beatmap
+        ///     The source (album/mixtape/etc) of the map
         /// </summary>
         public string Source { get; set; }
 
         /// <summary>
-        ///     Tags for the beatmap
+        ///     Tags for the map
         /// </summary>
         public string Tags { get; set; }
 
         /// <summary>
-        ///     The most common bpm for the beatmap
+        ///     The most common bpm for the map
         /// </summary>
         public double Bpm { get; set; }
 
         /// <summary>
-        ///     The beatmap's length (Time of the last hit object)
+        ///     The map's length (Time of the last hit object)
         /// </summary>
         public int SongLength { get; set; }
 
@@ -139,29 +131,29 @@ namespace Quaver.Database.Beatmaps
         public int LocalOffset { get; set; }
 
         /// <summary>
-        ///     Determines if this map is an osu! beatmap.
+        ///     Determines if this map is an osu! map.
         /// </summary>
         [Ignore]
-        public BeatmapGame Game { get; set; } = BeatmapGame.Quaver;
+        public MapGame Game { get; set; } = MapGame.Quaver;
 
         /// <summary>
-        ///     The actual parsed qua file for the beatmap.
+        ///     The actual parsed qua file for the map.
         /// </summary>
         [Ignore]
         public Qua Qua { get; set; }
 
         /// <summary>
-        ///     Responsible for converting a Qua object, to a Beatmap object
-        ///     a Beatmap object is one that is stored in the db.
+        ///     Responsible for converting a Qua object, to a Map object
+        ///     a Map object is one that is stored in the db.
         /// </summary>
         /// <param name="qua"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        internal Beatmap ConvertQuaToBeatmap(Qua qua, string path)
+        internal Map ConvertQuaToMap(Qua qua, string path)
         {
-            return new Beatmap
+            return new Map
             {
-                Md5Checksum = BeatmapHelper.GetMd5Checksum(path),
+                Md5Checksum = MapsetHelper.GetMd5Checksum(path),
                 Directory = new DirectoryInfo(System.IO.Path.GetDirectoryName(path)).Name.Replace("\\", "/"),
                 Path = System.IO.Path.GetFileName(path).Replace("\\", "/"),
                 Artist = qua.Artist,
@@ -185,11 +177,11 @@ namespace Quaver.Database.Beatmaps
         }
 
         /// <summary>
-        ///     Changes selected beatmap
+        ///     Changes selected map
         /// </summary>
-        public static void ChangeBeatmap(Beatmap map)
+        public static void ChangeSelected(Map map)
         {
-            GameBase.SelectedBeatmap = map;
+            GameBase.SelectedMap = map;
 
             Task.Run(async () =>
             {
@@ -202,9 +194,9 @@ namespace Quaver.Database.Beatmaps
     }
 
     /// <summary>
-    ///     The game in which the beatmap belongs to
+    ///     The game in which the map belongs to
     /// </summary>
-    public enum BeatmapGame
+    public enum MapGame
     {
         Quaver,
         Osu,

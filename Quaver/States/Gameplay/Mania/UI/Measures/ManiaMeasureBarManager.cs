@@ -42,17 +42,17 @@ namespace Quaver.States.Gameplay.Mania.UI.Measures
         internal void CreateBarQueue()
         {
             /*
-            for (var i = 0; i < GameBase.SelectedBeatmap.Qua.TimingPoints.Count; i++)
+            for (var i = 0; i < GameBase.SelectedMap.Qua.TimingPoints.Count; i++)
             {
-                var startTime = GameBase.SelectedBeatmap.Qua.TimingPoints[i].StartTime;
+                var startTime = GameBase.SelectedMap.Qua.TimingPoints[i].StartTime;
                 var endTime = 0f;
                 var curTime = startTime;
-                var bpmInterval = GameBase.SelectedBeatmap.Qua.TimingPoints[i].Bpm * 1000 / 60;
+                var bpmInterval = GameBase.SelectedMap.Qua.TimingPoints[i].Bpm * 1000 / 60;
 
-                if (i + 1 < GameBase.SelectedBeatmap.Qua.TimingPoints.Count)
-                    endTime = GameBase.SelectedBeatmap.Qua.TimingPoints[i + 1].StartTime;
+                if (i + 1 < GameBase.SelectedMap.Qua.TimingPoints.Count)
+                    endTime = GameBase.SelectedMap.Qua.TimingPoints[i + 1].StartTime;
                 else
-                    endTime = GameBase.SelectedBeatmap.SongLength;
+                    endTime = GameBase.SelectedMap.SongLength;
 
                 while (curTime < endTime - 1)
                 {

@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using ManagedBass;
-using Microsoft.Xna.Framework;
 using Quaver.Logging;
 using Quaver.Main;
 
-namespace Quaver.Database.Beatmaps
+namespace Quaver.Database.Maps
 {
-    internal static class BeatmapHelper
+    internal static class MapsetHelper
     {
         /// <summary>
         ///     Gets the Md5 Checksum of a file, more specifically a .qua file.
@@ -32,14 +28,14 @@ namespace Quaver.Database.Beatmaps
         }
 
         /// <summary>
-        ///     Responsible for taking a list of beatmaps, and grouping each directory.
+        ///     Responsible for taking a list of maps, and grouping each directory.
         /// </summary>
-        /// <param name="beatmaps"></param>
+        /// <param name="maps"></param>
         /// <returns></returns>
-        internal static List<Mapset> GroupBeatmapsByDirectory(List<Beatmap> beatmaps)
+        internal static List<Mapset> ConvertMapsToMapsets(List<Map> maps)
         {
             // Group maps by directory.
-            var groupedMaps = beatmaps
+            var groupedMaps = maps
                 .GroupBy(u => u.Directory)
                 .Select(grp => grp.ToList())
                 .ToList();
@@ -48,43 +44,44 @@ namespace Quaver.Database.Beatmaps
             var mapsets = new List<Mapset>();
 
             foreach (var mapset in groupedMaps)
-                mapsets.Add(new Mapset() { Directory = mapset.First().Directory, Beatmaps = mapset });
+                mapsets.Add(new Mapset() { Directory = mapset.First().Directory, Maps = mapset });
 
             return mapsets;
         }
 
         /// <summary>
-        ///     Orders the beatmaps by title
-        /// </summary>
-        /// <param name="beatmaps"></param>
-        /// <returns></returns>
-        internal static List<Mapset> OrderBeatmapsByTitle(List<Mapset> beatmaps)
-        {
-            return beatmaps.OrderBy(x => x.Directory).ToList();
-        }
-
-        /// <summary>
-        ///     Orders the beatmaps by artist, and then by title.
-        /// </summary>
-        /// <param name="beatmaps"></param>
-        /// <returns></returns>
-        internal static List<Mapset> OrderBeatmapsByArtist(List<Mapset> beatmaps)
-        {
-            return beatmaps.OrderBy(x => x.Beatmaps[0].Artist).ThenBy(x => x.Beatmaps[0].Title).ToList();
-        }
-
-        /// <summary>
-        ///     Orders the map's beatmaps by difficulty.
+        ///     Orders the mapsets by title
         /// </summary>
         /// <param name="mapsets"></param>
         /// <returns></returns>
-        internal static List<Mapset> OrderMapsByDifficulty(List<Mapset> mapsets)
+        internal static List<Mapset> OrderMapsetsByTitle(List<Mapset> mapsets)
         {
-            mapsets.ForEach(x => x.Beatmaps = x.Beatmaps.OrderBy(y => y.DifficultyRating).ToList());
+            return mapsets.OrderBy(x => x.Directory).ToList();
+        }
+
+        /// <summary>
+        ///     Orders the mapsets by artist, and then by title.
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        internal static List<Mapset> OrderMapsetsByArtist(List<Mapset> mapsets)
+        {
+            return mapsets.OrderBy(x => x.Maps[0].Artist).ThenBy(x => x.Maps[0].Title).ToList();
+        }
+
+        /// <summary>
+        ///     Orders the map's mapsets by difficulty.
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        internal static List<Mapset> OrderMapsetsByDifficulty(List<Mapset> mapsets)
+        {
+            mapsets.ForEach(x => x.Maps = x.Maps.OrderBy(y => y.DifficultyRating).ToList());
             return mapsets;
         }
 
-        ///     Searches and returns mapsets given a term
+        /// <summary>
+        /// Searches and returns mapsets given a term
         /// </summary>
         /// <param name="mapsets"></param>
         /// <param name="term"></param>
@@ -117,10 +114,10 @@ namespace Quaver.Database.Beatmaps
                    foundSearchQueries.Add(new SearchQuery() { Operator = op, Option = searchOption, Value = val });             
             }
 
-            // Create a list of mapsets with the matched beatmaps
+            // Create a list of mapsets with the matched mapsets
             foreach (var mapset in mapsets)
             {
-                foreach (var map in mapset.Beatmaps)
+                foreach (var map in mapset.Maps)
                 {
                     var exitLoop = false;
 
@@ -163,9 +160,9 @@ namespace Quaver.Database.Beatmaps
 
                     // Add the set if all the comparisons and queries are correct
                     if (sets.All(x => x.Directory != map.Directory))
-                        sets.Add(new Mapset() { Directory = map.Directory, Beatmaps = new List<Beatmap> { map } });
+                        sets.Add(new Mapset() { Directory = map.Directory, Maps = new List<Map> { map } });
                     else
-                        sets.Find(x => x.Directory == map.Directory).Beatmaps.Add(map);
+                        sets.Find(x => x.Directory == map.Directory).Maps.Add(map);
                 }
             }
 
@@ -205,47 +202,47 @@ namespace Quaver.Database.Beatmaps
         }
 
         /// <summary>
-        ///     Used to select a random beatmap from our current list of visible beatmaps.
+        ///     Used to select a random map from our current list of visible maps.
         /// </summary>
-        public static void SelectRandomBeatmap()
+        public static void SelectRandomMap()
         {
             if (GameBase.Mapsets.Count == 0)
                 return;
 
-            // Find the number of total beatmaps
+            // Find the number of total maps
             var totalMaps = 0;
 
             foreach (var mapset in GameBase.Mapsets)
             {
-                totalMaps += mapset.Beatmaps.Count;
+                totalMaps += mapset.Maps.Count;
             }
 
             var rand = new Random();
-            var randomBeatmap = rand.Next(0, totalMaps);
+            var randomMap = rand.Next(0, totalMaps);
 
-            // Find the totalMaps'th beatmap
+            // Find the totalMaps'th map
             var onMap = 0;
             foreach (var mapset in GameBase.Mapsets)
             {
-                var foundBeatmap = false;
+                var foundMap = false;
 
-                foreach (var beatmap in mapset.Beatmaps)
+                foreach (var map in mapset.Maps)
                 {
-                    if (onMap == randomBeatmap)
+                    if (onMap == randomMap)
                     {
                         // Switch map and load audio for song and play it.
-                        Beatmap.ChangeBeatmap(beatmap);
+                        Map.ChangeSelected(map);
                         break;
                     }
 
                     onMap++;
                 }
 
-                if (foundBeatmap)
+                if (foundMap)
                     break;
             }
 
-            var log = $"RND MAP: {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]";
+            var log = $"RND MAP: {GameBase.SelectedMap.Artist} - {GameBase.SelectedMap.Title} [{GameBase.SelectedMap.DifficultyName}]";
             Logger.LogInfo(log, LogType.Runtime);
         }
     }

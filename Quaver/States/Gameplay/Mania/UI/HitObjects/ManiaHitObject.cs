@@ -162,7 +162,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
                 };
 
                 // Choose the correct image based on the specific key lane for hold bodies.
-                switch (GameBase.SelectedBeatmap.Qua.Mode)
+                switch (GameBase.SelectedMap.Qua.Mode)
                 {
                     case GameModes.Keys4:
                         HoldEndQuaverSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex];
@@ -182,7 +182,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
             }
 
             // Choose the correct image based on the specific key lane for hit body.
-            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            switch (GameBase.SelectedMap.Qua.Mode)
             {
                 case GameModes.Keys4:
                     try

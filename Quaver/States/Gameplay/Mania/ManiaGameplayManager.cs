@@ -51,9 +51,9 @@ namespace Quaver.States.Gameplay.Mania
         private ManiaSongProgress ManiaSongProgress { get; set; }
 
         /// <summary>
-        ///     The MD5 Hash of the played beatmap.
+        ///     The MD5 Hash of the played map.
         /// </summary>
-        private string BeatmapMd5 { get; set; }
+        private string MapMd5 { get; set; }
 
         /// <summary>
         ///     The current Qua file that's being red
@@ -113,10 +113,10 @@ namespace Quaver.States.Gameplay.Mania
         ///     Constructor
         /// </summary>
         /// <param name="qua"></param>
-        public ManiaGameplayManager(Qua qua, string beatmapMd5)
+        public ManiaGameplayManager(Qua qua, string mapMd5)
         {
             // Pass Parameters
-            BeatmapMd5 = beatmapMd5;
+            MapMd5 = mapMd5;
             CurrentQua = qua;
 
             // Create Class Components
@@ -212,7 +212,7 @@ namespace Quaver.States.Gameplay.Mania
             CurrentSongTime = ManiaTiming.GetCurrentSongTime();
 
             // Check if the song is currently skippable.
-            IntroSkippable = (GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - CurrentSongTime >= ManiaTiming.SONG_SKIP_OFFSET + 2000);
+            IntroSkippable = (GameBase.SelectedMap.Qua.HitObjects[0].StartTime - CurrentSongTime >= ManiaTiming.SONG_SKIP_OFFSET + 2000);
 
             // Update Helper Classes
             if (!Paused)
@@ -225,7 +225,7 @@ namespace Quaver.States.Gameplay.Mania
                 ManiaParticleManager.Update(dt);
 
                 // Record session with Replay Helper
-                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ManiaScoreManager.Combo, CurrentSongTime);
+                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedMap.Qua, ManiaScoreManager.Combo, CurrentSongTime);
             }
 
             ManiaPlayfieldUi.UpdateMultiplierBars(ManiaScoreManager.MultiplierIndex);
@@ -235,7 +235,7 @@ namespace Quaver.States.Gameplay.Mania
             InputManager.CheckInput(IntroSkippable);
 
             // Update Loggers. todo: remove
-            Logger.Update("KeyCount", $"Game Mode: {GameBase.SelectedBeatmap.Qua.Mode}");
+            Logger.Update("KeyCount", $"Game Mode: {GameBase.SelectedMap.Qua.Mode}");
             Logger.Update("SongPos", "Current Track Position: " + ManiaNoteManager.TrackPosition);
             Logger.Update("Skippable", $"Intro Skippable: {IntroSkippable}");
             Logger.Update("Paused", "Paused: " + Paused.ToString());
@@ -248,7 +248,7 @@ namespace Quaver.States.Gameplay.Mania
             {
                 //Logger.Log("DONE", LogColors.GameImportant);
                 ManiaScoreManager.PlayTimeTotal = CurrentSongTime * GameBase.AudioEngine.PlaybackRate;
-                GameBase.GameStateManager.ChangeState(new ResultsState(BeatmapMd5, ManiaScoreManager, GameBase.SelectedBeatmap.Artist, GameBase.SelectedBeatmap.Title, GameBase.SelectedBeatmap.DifficultyName, ReplayFrames));
+                GameBase.GameStateManager.ChangeState(new ResultsState(MapMd5, ManiaScoreManager, GameBase.SelectedMap.Artist, GameBase.SelectedMap.Title, GameBase.SelectedMap.DifficultyName, ReplayFrames));
             }
         }
 
@@ -309,9 +309,9 @@ namespace Quaver.States.Gameplay.Mania
             // Initialize Score Manager
             // Get total judge count (press + release)
             var count = 0;
-            var total = GameBase.SelectedBeatmap.Qua.HitObjects.Count;
+            var total = GameBase.SelectedMap.Qua.HitObjects.Count;
 
-            foreach (var ho in GameBase.SelectedBeatmap.Qua.HitObjects)
+            foreach (var ho in GameBase.SelectedMap.Qua.HitObjects)
             {
                 if (ho.EndTime > ho.StartTime) count++;
             }
@@ -328,7 +328,7 @@ namespace Quaver.States.Gameplay.Mania
             float receptorPadding = 0;
             float laneSize = 0;
             float playfieldSize = 0;
-            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            switch (GameBase.SelectedMap.Qua.Mode)
             //the hit position is determined by the receptor and object of the first lane
             //the math here is kinda ugly, i plan on cleaning this up later
             //todo: clean up this code a bit
@@ -453,7 +453,7 @@ namespace Quaver.States.Gameplay.Mania
                 return;
 
             // Add a special replay frame for this event.
-            ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ManiaScoreManager.Combo, CurrentSongTime);
+            ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedMap.Qua, ManiaScoreManager.Combo, CurrentSongTime);
 
             //Check for Note press/LN press
             //Reference Variables
@@ -530,7 +530,7 @@ namespace Quaver.States.Gameplay.Mania
                 return;
 
             // Add replay frame for the key up event
-            ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ManiaScoreManager.Combo, CurrentSongTime);
+            ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedMap.Qua, ManiaScoreManager.Combo, CurrentSongTime);
 
             //Reference Variables
             int noteIndex = -1;
@@ -627,12 +627,12 @@ namespace Quaver.States.Gameplay.Mania
             if (!IntroSkippable || !GameBase.KeyboardState.IsKeyDown(ConfigManager.KeySkipIntro) || IntroSkipped)
                 return;
 
-            var skipTime = GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - ManiaTiming.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset;
+            var skipTime = GameBase.SelectedMap.Qua.HitObjects[0].StartTime - ManiaTiming.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset;
 
             try
             {
                 // Add the skip frame here.
-                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedBeatmap.Qua, ManiaScoreManager.Combo, CurrentSongTime, true);
+                ReplayHelper.AddReplayFrames(ReplayFrames, GameBase.SelectedMap.Qua, ManiaScoreManager.Combo, CurrentSongTime, true);
 
                 // Skip to the time if the audio already played once. If it hasn't, then play it.
                 if (GameBase.AudioEngine.HasPlayed)
@@ -683,7 +683,7 @@ namespace Quaver.States.Gameplay.Mania
                 GameBase.AudioEngine.Pause();
 
                 // Set Discord Rich Presence to a paused state
-                var rpc = $"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]";
+                var rpc = $"{GameBase.SelectedMap.Qua.Artist} - {GameBase.SelectedMap.Qua.Title} [{GameBase.SelectedMap.Qua.DifficultyName}]";
                 DiscordController.ChangeDiscordPresence(rpc, "Paused");
             }
         }

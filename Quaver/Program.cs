@@ -8,10 +8,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
-using Quaver.Database.Beatmaps;
 using Quaver.Commands;
 using Quaver.Config;
 using Quaver.Database;
+using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Discord;
 using Quaver.Logging;
@@ -70,7 +70,7 @@ namespace Quaver
         }
 
         /// <summary>
-        ///     Responsible for initializing and setting the beatmap database and setting the loaded beatmaps
+        ///     Responsible for initializing and setting the map database and setting the loaded maps
         /// </summary>
         private static void SetupGame()
         {
@@ -78,12 +78,12 @@ namespace Quaver
             Directory.CreateDirectory(ConfigManager.DataDirectory + "/temp/Now Playing/");
 
             // Set the build version
-            GameBase.BuildVersion = BeatmapHelper.GetMd5Checksum(ConfigManager.GameDirectory + "/" + "Quaver.exe");
+            GameBase.BuildVersion = MapsetHelper.GetMd5Checksum(ConfigManager.GameDirectory + "/" + "Quaver.exe");
 
-            // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
+            // After initializing the configuration, we want to sync the map database, and load the dictionary of mapsets.
             var loadGame = Task.Run(async () =>
             {
-                await BeatmapCache.LoadAndSetBeatmaps();
+                await MapCache.LoadAndSetMapsets();
 
                 // Create the local scores database if it doesn't already exist
                 await LocalScoreCache.CreateScoresDatabase();

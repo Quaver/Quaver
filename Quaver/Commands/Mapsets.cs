@@ -14,7 +14,7 @@ namespace Quaver.Commands
 
         public int Args { get; set; } = 0;
 
-        public string Description { get; set; } = "Lists all of the loaded beatmap sets";
+        public string Description { get; set; } = "Lists all of the loaded map sets";
 
         public string Usage { get; set; } = "> mapsets";
 
@@ -26,7 +26,7 @@ namespace Quaver.Commands
             var i = 0;
             foreach (var mapset in GameBase.Mapsets)
             {
-                commandString.AppendLine($"[{i}] {mapset.Directory} - {mapset.Beatmaps.Count} maps");
+                commandString.AppendLine($"[{i}] {mapset.Directory} - {mapset.Maps.Count} maps");
                 i++;
             }
             

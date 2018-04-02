@@ -14,7 +14,7 @@ namespace Quaver.Commands
 
         public int Args { get; set; } = 0;
 
-        public string Description { get; set; } = "Lists all of the currently loaded beatmaps.";
+        public string Description { get; set; } = "Lists all of the currently loaded maps.";
 
         public string Usage { get; set; } = "> maps";
 
@@ -26,9 +26,9 @@ namespace Quaver.Commands
             var i = 0;
             foreach (var mapset in GameBase.Mapsets)
             {
-                foreach (var beatmap in mapset.Beatmaps)
+                foreach (var map in mapset.Maps)
                 {
-                    commandString.AppendLine($"[{i}] {beatmap.Artist} - {beatmap.Title} [{beatmap.DifficultyName}]");
+                    commandString.AppendLine($"[{i}] {map.Artist} - {map.Title} [{map.DifficultyName}]");
                     i++;
                 }
             }

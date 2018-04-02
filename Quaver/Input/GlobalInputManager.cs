@@ -17,7 +17,7 @@ using Quaver.Audio;
 using Quaver.Commands;
 using Quaver.Config;
 using Quaver.Database;
-using Quaver.Database.Beatmaps;
+using Quaver.Database.Maps;
 using Quaver.GameState;
 using Quaver.Logging;
 using Quaver.Main;
@@ -70,7 +70,7 @@ namespace Quaver.Input
         public void CheckInput()
         {
             HandleVolumeChanges();
-            ImportBeatmaps();
+            ImportMapsets();
             TakeScreenshot();
             HandleMouseInput();
             HandleKeyboardInput();
@@ -151,19 +151,19 @@ namespace Quaver.Input
         }
 
         /// <summary>
-        ///     Checks if the beatmap import queue is ready, and imports then if the user decides to.
+        ///     Checks if the map import queue is ready, and imports then if the user decides to.
         /// </summary>
-        private void ImportBeatmaps()
+        private void ImportMapsets()
         {
-            // TODO: This is a beatmap import and sync test, eventually add this to its own game state
+            // TODO: This is a map import and sync test, eventually add this to its own game state
             if (GameBase.KeyboardState.IsKeyDown(Keys.F5) && GameBase.ImportQueueReady)
             {
                 GameBase.ImportQueueReady = false;
 
-                // Asynchronously load and set the GameBase beatmaps and visible ones.
+                // Asynchronously load and set the GameBase mapsets and visible ones.
                 Task.Run(async () =>
                 {
-                    await BeatmapCache.LoadAndSetBeatmaps();
+                    await MapCache.LoadAndSetMapsets();
                     GameBase.VisibleMapsets = GameBase.Mapsets;
                 });
             }

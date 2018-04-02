@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.API.Osu;
 using Quaver.Audio;
 using Quaver.Config;
-using Quaver.Database.Beatmaps;
+using Quaver.Database.Maps;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Base;
@@ -40,19 +40,19 @@ namespace Quaver.Main
         public static GameStateManager GameStateManager { get; } = new GameStateManager();
 
         /// <summary>
-        ///     The current list of loaded beatmaps
+        ///     The current list of loaded mapsets
         /// </summary>
         public static List<Mapset> Mapsets { get; set; }
 
         /// <summary>
-        ///     The current list of ***visible*** beatmaps - Use these for song select!
+        ///     The current list of ***visible*** mapsets - Use these for song select!
         /// </summary>
         public static List<Mapset> VisibleMapsets { get; set; }
 
         /// <summary>
-        ///     The currently selected beatmap.
+        ///     The currently selected map.
         /// </summary>
-        public static Beatmap SelectedBeatmap { get; set; }
+        public static Map SelectedMap { get; set; }
 
         /// <summary>
         ///     The currently loaded Skin
@@ -113,7 +113,7 @@ namespace Quaver.Main
 
         /// <summary>
         ///     The Etterna parent folder. 
-        ///     NOTE: The Beatmap directory themselves have /songs/ already on it.
+        ///     NOTE: The Map directory themselves have /songs/ already on it.
         ///     Thank you SM guys!
         /// </summary>
         public static string EtternaFolder { get; set; }
@@ -202,14 +202,14 @@ namespace Quaver.Main
         public static string CurrentAudioPath {
             get
             {
-                switch (SelectedBeatmap.Game)
+                switch (SelectedMap.Game)
                 {
-                    case BeatmapGame.Osu:
-                        return OsuSongsFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
-                    case BeatmapGame.Quaver:
-                        return ConfigManager.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
-                    case BeatmapGame.Etterna:
-                        return EtternaFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
+                    case MapGame.Osu:
+                        return OsuSongsFolder + "/" + SelectedMap.Directory + "/" + SelectedMap.AudioPath;
+                    case MapGame.Quaver:
+                        return ConfigManager.SongDirectory + "/" + SelectedMap.Directory + "/" + SelectedMap.AudioPath;
+                    case MapGame.Etterna:
+                        return EtternaFolder + "/" + SelectedMap.Directory + "/" + SelectedMap.AudioPath;
                     default:
                         return "";
                 }                
@@ -223,16 +223,16 @@ namespace Quaver.Main
         {
             get
             {
-                switch (SelectedBeatmap.Game)
+                switch (SelectedMap.Game)
                 {
-                    case BeatmapGame.Osu:
+                    case MapGame.Osu:
                         // Parse the map and get the background
-                        var osu = new PeppyBeatmap(OsuSongsFolder + SelectedBeatmap.Directory + "/" + SelectedBeatmap.Path);
-                        return $@"{OsuSongsFolder}/{SelectedBeatmap.Directory}/{osu.Background}";
-                    case BeatmapGame.Quaver:
-                        return ConfigManager.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.BackgroundPath;
-                    case BeatmapGame.Etterna:
-                        return EtternaFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.BackgroundPath;
+                        var osu = new PeppyBeatmap(OsuSongsFolder + SelectedMap.Directory + "/" + SelectedMap.Path);
+                        return $@"{OsuSongsFolder}/{SelectedMap.Directory}/{osu.Background}";
+                    case MapGame.Quaver:
+                        return ConfigManager.SongDirectory + "/" + SelectedMap.Directory + "/" + SelectedMap.BackgroundPath;
+                    case MapGame.Etterna:
+                        return EtternaFolder + "/" + SelectedMap.Directory + "/" + SelectedMap.BackgroundPath;
                     default:
                         return "";
                 }

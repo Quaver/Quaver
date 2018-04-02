@@ -79,7 +79,7 @@
     <Compile Include="Commands\ConvertOsuSkin.cs" />
     <Compile Include="Commands\ParseStepMania.cs" />
     <Compile Include="Commands\StepManiaCache.cs" />
-    <Compile Include="Database\Beatmaps\Mapset.cs" />
+    <Compile Include="Database\Maps\Mapset.cs" />
     <Compile Include="Commands\CommandHandler.cs" />
     <Compile Include="Commands\GetScores.cs" />
     <Compile Include="Commands\SearchMaps.cs" />
@@ -102,7 +102,7 @@
     <Compile Include="States\Gameplay\Mania\UI\Progress\ManiaSongProgress.cs" />
     <Compile Include="States\Gameplay\Mania\UI\Progress\ManiaScoreProgress.cs" />
     <Compile Include="States\IGameStateComponent.cs" />
-    <Compile Include="States\Select\BeatmapOrganizerUI.cs" />
+    <Compile Include="States\Select\MapsetOrganizer.cs" />
     <Compile Include="States\Options\OptionsState.cs" />
     <Compile Include="States\Results\ResultsState.cs" />
     <Compile Include="States\Select\SongSelectState.cs" />
@@ -153,12 +153,12 @@
     <Compile Include="Input\IInputManager.cs" />
     <Compile Include="Graphics\UserInterface\QuaverCursor.cs" />
     <Compile Include="Main\GameBase.cs" />
-    <Compile Include="Database\Beatmaps\Beatmap.cs" />
-    <Compile Include="Database\Beatmaps\BeatmapHelper.cs" />
+    <Compile Include="Database\Maps\Map.cs" />
+    <Compile Include="Database\Maps\MapsetHelper.cs" />
     <Compile Include="Config\ConfigHelper.cs" />
     <Compile Include="Config\ConfigManager.cs" />
-    <Compile Include="Database\Beatmaps\BeatmapCache.cs" />
-    <Compile Include="Database\Beatmaps\BeatmapImporter.cs" />
+    <Compile Include="Database\Maps\MapCache.cs" />
+    <Compile Include="Database\Maps\MapsetImporter.cs" />
     <Compile Include="Peppy\Osu.cs" />
     <Compile Include="Peppy\OsuSkinConfig.cs" />
     <Compile Include="Peppy\QuaverOsuElementMap.cs" />

@@ -82,7 +82,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
         /// </summary>
         public void Initialize(IGameState state)
         {
-            var qua = GameBase.SelectedBeatmap.Qua; //todo: remove
+            var qua = GameBase.SelectedMap.Qua; //todo: remove
             ManiaMeasureBarManager = new ManiaMeasureBarManager();
             ManiaMeasureBarManager.Initialize(state);
 
@@ -106,17 +106,17 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
 
             // Initialize ManiaTiming Bars
             // todo: Initialize from ManiaMeasureBarManager
-            for (var i = 0; i < GameBase.SelectedBeatmap.Qua.TimingPoints.Count; i++)
+            for (var i = 0; i < GameBase.SelectedMap.Qua.TimingPoints.Count; i++)
             {
-                var startTime = GameBase.SelectedBeatmap.Qua.TimingPoints[i].StartTime;
+                var startTime = GameBase.SelectedMap.Qua.TimingPoints[i].StartTime;
                 var endTime = 0f;
                 var curTime = startTime;
-                var bpmInterval = 4000 * 60 / GameBase.SelectedBeatmap.Qua.TimingPoints[i].Bpm;
+                var bpmInterval = 4000 * 60 / GameBase.SelectedMap.Qua.TimingPoints[i].Bpm;
 
-                if (i + 1 < GameBase.SelectedBeatmap.Qua.TimingPoints.Count)
-                    endTime = GameBase.SelectedBeatmap.Qua.TimingPoints[i + 1].StartTime;
+                if (i + 1 < GameBase.SelectedMap.Qua.TimingPoints.Count)
+                    endTime = GameBase.SelectedMap.Qua.TimingPoints[i + 1].StartTime;
                 else
-                    endTime = GameBase.SelectedBeatmap.SongLength;
+                    endTime = GameBase.SelectedMap.SongLength;
 
                 while (curTime < endTime - 1)
                 {
@@ -128,7 +128,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
             }
 
             //todo: remove this. temp
-            switch (GameBase.SelectedBeatmap.Qua.Mode)
+            switch (GameBase.SelectedMap.Qua.Mode)
             {
                 case GameModes.Keys4:
                     BarOffset = LaneSize * GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width / 2; //GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / 2 * GameBase.WindowUIScale;
@@ -457,7 +457,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
         /// <returns></returns>
         internal int GetBpmIndex(float indexTime)
         {
-            var tp = GameBase.SelectedBeatmap.Qua.TimingPoints;
+            var tp = GameBase.SelectedMap.Qua.TimingPoints;
             int newIndex = 0;
             if (indexTime >= tp[tp.Count - 1].StartTime) newIndex = tp.Count - 1;
             else
