@@ -11,7 +11,6 @@ using Quaver.Audio;
 using Quaver.GameState.Gameplay.PlayScreen;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.Button;
 using Quaver.Graphics;
 using Quaver.Input;
 using Quaver.Replays;
@@ -19,6 +18,7 @@ using Quaver.Config;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Discord;
 using Quaver.API.Enums;
+using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Particles;
 
 namespace Quaver.GameState.Gameplay
@@ -26,7 +26,7 @@ namespace Quaver.GameState.Gameplay
     /// <summary>
     /// This class handles the interaction between note and input.
     /// </summary>
-    class GameplayManager : IHelper
+    internal class GameplayManager : IHelper
     {
         //Helper classes
         private AccuracyBoxUI AccuracyBoxUI { get; set; }
@@ -91,7 +91,7 @@ namespace Quaver.GameState.Gameplay
         //todo: remove. TEST.
         private Sprite SvInfoTextBox { get; set; }
         private TextBoxSprite SVText { get; set; }
-        private TextButton TestButton { get; set; }
+        private QuaverTextButton TestButton { get; set; }
 
         //Rendering
         private const int RENDER_SAMPLES = 8;
@@ -151,7 +151,7 @@ namespace Quaver.GameState.Gameplay
         public void Initialize(IGameState playScreen)
         {
             //Todo: Remove. TEST.
-            TestButton = new TextButton(new Vector2(200, 30), "BACK")
+            TestButton = new QuaverTextButton(new Vector2(200, 30), "BACK")
             {
                 Alignment = Alignment.MidLeft
             };

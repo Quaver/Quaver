@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Logging;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
+using Quaver.Logging;
 
-namespace Quaver.Graphics.Button
+namespace Quaver.Graphics.Buttons
 {
+    /// <inheritdoc />
     /// <summary>
     /// This class will be inherited from every button class.
     /// </summary>
-    internal class KeyBindButton : Button
+    internal class QuaverKeybindButton : QuaverButton
     {
         internal TextBoxSprite TextSprite { get; set; }
 
@@ -25,7 +21,7 @@ namespace Quaver.Graphics.Button
 
         internal event EventHandler KeyChanged;
 
-        internal KeyBindButton(Vector2 ButtonSize, Keys key)
+        internal QuaverKeybindButton(Vector2 ButtonSize, Keys key)
         {
             TextSprite = new TextBoxSprite()
             {

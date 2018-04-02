@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Quaver.Helpers;
 
-namespace Quaver.Graphics.Button
+namespace Quaver.Graphics.Buttons
 {
+    /// <inheritdoc />
     /// <summary>
     ///     This type of button is used for simple buttons that only require a single image + tint animation.
     /// </summary>
-    internal class BasicButton : Button
+    internal class QuaverBasicQuaverButton : QuaverButton
     {
         /// <summary>
         ///     Current tween value of the object. Used for animation.

@@ -133,9 +133,9 @@
     <Compile Include="Input\StringInputEventArgs.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Modifiers\Mods\Chill.cs" />
-    <Compile Include="Modifiers\Mods\Speed.cs" />
-    <Compile Include="Modifiers\Mods\Strict.cs" />
+    <Compile Include="Modifiers\Mods\Mania\ManiaGameplayModifierChill.cs" />
+    <Compile Include="Modifiers\Mods\Mania\ManiaModSpeed.cs" />
+    <Compile Include="Modifiers\Mods\Mania\ManiaModStrict.cs" />
     <Compile Include="GameState\Gameplay\GameplayManager.cs" />
     <Compile Include="GameState\Gameplay\PlayScreen\NoteManager.cs" />
     <Compile Include="GameState\Gameplay\PlayScreen\Timing.cs" />
@@ -165,10 +165,10 @@
     <Compile Include="QuaverGame.cs" />
     <Compile Include="GameState\GameStateManager.cs" />
     <Compile Include="GameState\State.cs" />
-    <Compile Include="Modifiers\IMod.cs" />
+    <Compile Include="Modifiers\IGameplayModifier.cs" />
     <Compile Include="Modifiers\ModManager.cs" />
     <Compile Include="Modifiers\ModType.cs" />
-    <Compile Include="Modifiers\Mods\NoSliderVelocities.cs" />
+    <Compile Include="Modifiers\Mods\Mania\ManiaGameplayModifierNoSliderVelocities.cs" />
     <Compile Include="Graphics\GameColors.cs" />
     <Compile Include="Graphics\Sprite\Sprite.cs" />
     <Compile Include="Graphics\Drawable.cs" />
@@ -613,9 +613,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scores\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj">
       <Project>{0c6869bd-4e34-4c92-a853-e09f2b320601}</Project>

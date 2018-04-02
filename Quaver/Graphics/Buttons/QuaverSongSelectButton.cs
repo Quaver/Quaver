@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Quaver.Graphics.Text;
 using Quaver.Database.Beatmaps;
-using Quaver.Graphics.Sprite;
-using Quaver.Config;
+using Quaver.Graphics.Text;
 using Quaver.Helpers;
 
-namespace Quaver.Graphics.Button
+namespace Quaver.Graphics.Buttons
 {
+    /// <inheritdoc />
     /// <summary>
     ///     This type of button is used for simple buttons that only require a single image + text, but also includes a tint animation.
     /// </summary>
-    internal class SongSelectButton : Button
+    internal class QuaverSongSelectButton : QuaverButton
     {
         internal bool Selected { get; set; }
 
@@ -51,7 +44,7 @@ namespace Quaver.Graphics.Button
         private Color CurrentTint = Color.White;
 
         //Constructor
-        internal SongSelectButton(Beatmap map, float ButtonScale)
+        internal QuaverSongSelectButton(Beatmap map, float ButtonScale)
         {
             var ButtonSizeY = 40 * ButtonScale;
             var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";

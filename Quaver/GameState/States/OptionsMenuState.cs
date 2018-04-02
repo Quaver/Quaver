@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.Graphics;
-using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Logging;
@@ -13,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Graphics.Buttons;
 
 namespace Quaver.GameState.States
 {
@@ -26,22 +26,22 @@ namespace Quaver.GameState.States
         private Boundary ButtonsContainer { get; set; }
 
         // Key Bindings
-        private TextButton BackButton { get; set; }
-        private KeyBindButton[] ManiaKeys4K { get; set; }
-        private KeyBindButton[] ManiaKeys7K { get; set; }
+        private QuaverTextButton BackButton { get; set; }
+        private QuaverKeybindButton[] ManiaKeys4K { get; set; }
+        private QuaverKeybindButton[] ManiaKeys7K { get; set; }
         private EventHandler[] ManiaEvent4K { get; set; }
         private EventHandler[] ManiaEvent7K { get; set; }
 
         // Skin Options
         private string[] AvailableSkins { get; set; }
-        private List<TextButton> SkinSelectButtons { get; set; }
+        private List<QuaverTextButton> SkinSelectButtons { get; set; }
         private List<EventHandler> SkinSelectEvents { get; set; }
 
         // Graphics Options
-        private TextButton BackgroundBrightnessButton { get; set; }
-        private TextButton FullscreenButton { get; set; }
-        private TextButton LetterBoxingButton { get; set; }
-        private List<TextButton> ResolutionButtons { get; set; }
+        private QuaverTextButton BackgroundBrightnessButton { get; set; }
+        private QuaverTextButton FullscreenButton { get; set; }
+        private QuaverTextButton LetterBoxingButton { get; set; }
+        private List<QuaverTextButton> ResolutionButtons { get; set; }
         private List<EventHandler> ResolutionEvents { get; set; }
         private Point[] CommonResolutions { get; } = 
         {
@@ -50,14 +50,14 @@ namespace Quaver.GameState.States
         };
 
         // Gameplay Options
-        private TextButton ScrollSpeedButton { get; set; }
-        private TextButton ScrollDirection4KButton { get; set; }
-        private TextButton ScrollDirection7KButton { get; set; }
-        private TextButton ShowAccuracyUIButton { get; set; }
-        private TextButton ShowPlayfieldUIButton { get; set; }
-        private TextButton ShowNoteColoringButton { get; set; }
-        private TextButton LaneSize4KButton { get; set; }
-        private TextButton LaneSize7KButton { get; set; }
+        private QuaverTextButton ScrollSpeedButton { get; set; }
+        private QuaverTextButton ScrollDirection4KButton { get; set; }
+        private QuaverTextButton ScrollDirection7KButton { get; set; }
+        private QuaverTextButton ShowAccuracyUiButton { get; set; }
+        private QuaverTextButton ShowPlayfieldUiButton { get; set; }
+        private QuaverTextButton ShowNoteColoringButton { get; set; }
+        private QuaverTextButton LaneSize4KButton { get; set; }
+        private QuaverTextButton LaneSize7KButton { get; set; }
 
         public void Draw()
         {
@@ -122,7 +122,7 @@ namespace Quaver.GameState.States
         private void CreateBackButton()
         {
             //Todo: Remove. TEST.
-            BackButton = new TextButton(new Vector2(200, 50), "BACK")
+            BackButton = new QuaverTextButton(new Vector2(200, 50), "BACK")
             {
                 Alignment = Alignment.BotCenter,
                 Parent = Boundary
@@ -168,14 +168,14 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
 
-            ManiaKeys4K = new KeyBindButton[4];
+            ManiaKeys4K = new QuaverKeybindButton[4];
             ManiaEvent4K = new EventHandler[4];
             var keys = new Keys[4] { ConfigManager.KeyMania4k1, ConfigManager.KeyMania4k2, ConfigManager.KeyMania4k3, ConfigManager.KeyMania4k4 };
             for (var i=0; i<4; i++)
             {
                 //todo: hook this to an event/method or something
                 var index = i;
-                ManiaKeys4K[i] = new KeyBindButton(new Vector2(100, 30), keys[i])
+                ManiaKeys4K[i] = new QuaverKeybindButton(new Vector2(100, 30), keys[i])
                 {
                     PosY = 110,
                     PosX = (i - 1.5f) * 110f,
@@ -186,14 +186,14 @@ namespace Quaver.GameState.States
                 ManiaKeys4K[i].KeyChanged += ManiaEvent4K[i];
             }
 
-            ManiaKeys7K = new KeyBindButton[7];
+            ManiaKeys7K = new QuaverKeybindButton[7];
             ManiaEvent7K = new EventHandler[7];
             keys = new Keys[7] { ConfigManager.KeyMania7k1, ConfigManager.KeyMania7k2, ConfigManager.KeyMania7k3, ConfigManager.KeyMania7k4, ConfigManager.KeyMania7k5, ConfigManager.KeyMania7k6, ConfigManager.KeyMania7k7 };
             for (var i = 0; i < 7; i++)
             {
                 //todo: hook this to an event/method or something
                 var index = i;
-                ManiaKeys7K[i] = new KeyBindButton(new Vector2(100, 30), keys[i])
+                ManiaKeys7K[i] = new QuaverKeybindButton(new Vector2(100, 30), keys[i])
                 {
                     PosY = 180,
                     PosX = (i - 3f) * 110f,
@@ -222,7 +222,7 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
 
-            SkinSelectButtons = new List<TextButton>();
+            SkinSelectButtons = new List<QuaverTextButton>();
             SkinSelectEvents = new List<EventHandler>();
 
             AvailableSkins = Directory.GetDirectories(ConfigManager.SkinDirectory);
@@ -239,7 +239,7 @@ namespace Quaver.GameState.States
                 else if (i == AvailableSkins.Length) skin = "default bars";
                 else skin = "default arrows";
 
-                var button = new TextButton(new Vector2(150, 30), skin)
+                var button = new QuaverTextButton(new Vector2(150, 30), skin)
                 {
                     PosY = 300,
                     PosX = (i - median) * 160f,
@@ -293,14 +293,14 @@ namespace Quaver.GameState.States
             };
 
             // Create Resolution Buttons
-            TextButton button;
-            ResolutionButtons = new List<TextButton>();
+            QuaverTextButton button;
+            ResolutionButtons = new List<QuaverTextButton>();
             ResolutionEvents = new List<EventHandler>();
             for (var i = 0; i < 5; i++)
             {
                 //todo: hook this to an event/method or something
                 var index = i;
-                button = new TextButton(new Vector2(150, 30), $@"{CommonResolutions[i].X}x{CommonResolutions[i].Y}")
+                button = new QuaverTextButton(new Vector2(150, 30), $@"{CommonResolutions[i].X}x{CommonResolutions[i].Y}")
                 {
                     PosY = 450,
                     PosX = (i - 2f) * 160f,
@@ -316,7 +316,7 @@ namespace Quaver.GameState.States
             {
                 //todo: hook this to an event/method or something
                 var index = i;
-                button = new TextButton(new Vector2(150, 30), $@"{CommonResolutions[i].X}x{CommonResolutions[i].Y}")
+                button = new QuaverTextButton(new Vector2(150, 30), $@"{CommonResolutions[i].X}x{CommonResolutions[i].Y}")
                 {
                     PosY = 490,
                     PosX = (i - 7f) * 160f,
@@ -329,8 +329,8 @@ namespace Quaver.GameState.States
                 ResolutionEvents.Add(newEvent);
             }
 
-            // Create Letterbox Option Button
-            LetterBoxingButton = new TextButton(new Vector2(200, 30), $@"Letterboxing: {ConfigManager.WindowLetterboxed}")
+            // Create Letterbox Option QuaverButton
+            LetterBoxingButton = new QuaverTextButton(new Vector2(200, 30), $@"Letterboxing: {ConfigManager.WindowLetterboxed}")
             {
                 PosY = 560,
                 PosX = (-1) * 210f,
@@ -339,8 +339,8 @@ namespace Quaver.GameState.States
             };
             LetterBoxingButton.Clicked += OnLetterboxButtonClicked;
 
-            // Create Fullscreen Option Button
-            FullscreenButton = new TextButton(new Vector2(200, 30), $@"FullScreen: {ConfigManager.WindowFullScreen}")
+            // Create Fullscreen Option QuaverButton
+            FullscreenButton = new QuaverTextButton(new Vector2(200, 30), $@"FullScreen: {ConfigManager.WindowFullScreen}")
             {
                 PosY = 560,
                 //PosX = (0.5f) * 210f,
@@ -349,8 +349,8 @@ namespace Quaver.GameState.States
             };
             FullscreenButton.Clicked += OnFullscreenButtonClicked;
 
-            // Create Background Brightness Button
-            BackgroundBrightnessButton = new TextButton(new Vector2(200, 30), $@"BG Brightness: {ConfigManager.BackgroundBrightness}%")
+            // Create Background Brightness QuaverButton
+            BackgroundBrightnessButton = new QuaverTextButton(new Vector2(200, 30), $@"BG Brightness: {ConfigManager.BackgroundBrightness}%")
             {
                 PosY = 560,
                 PosX = (1) * 210f,
@@ -376,7 +376,7 @@ namespace Quaver.GameState.States
             };
 
             // scroll speed 
-            ScrollSpeedButton = new TextButton(new Vector2(200, 30), $@"ScrollSpeed: {ConfigManager.ScrollSpeed4k}")
+            ScrollSpeedButton = new QuaverTextButton(new Vector2(200, 30), $@"ScrollSpeed: {ConfigManager.ScrollSpeed4k}")
             {
                 PosY = 680,
                 PosX = (-2.5f) * 210f,
@@ -385,7 +385,7 @@ namespace Quaver.GameState.States
             };
 
             // scroll direction
-            ScrollDirection4KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 4K: {ConfigManager.DownScroll4k}")
+            ScrollDirection4KButton = new QuaverTextButton(new Vector2(200, 30), $@"Downscroll 4K: {ConfigManager.DownScroll4k}")
             {
                 PosY = 680,
                 PosX = (-1.5f) * 210f,
@@ -393,7 +393,7 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
 
-            ScrollDirection7KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 7K: {ConfigManager.DownScroll7k}")
+            ScrollDirection7KButton = new QuaverTextButton(new Vector2(200, 30), $@"Downscroll 7K: {ConfigManager.DownScroll7k}")
             {
                 PosY = 680,
                 PosX = (-0.5f) * 210f,
@@ -402,7 +402,7 @@ namespace Quaver.GameState.States
             };
 
             // note coloring
-            ShowNoteColoringButton = new TextButton(new Vector2(200, 30), $@"Note snap coloring: {true}")
+            ShowNoteColoringButton = new QuaverTextButton(new Vector2(200, 30), $@"Note snap coloring: {true}")
             {
                 PosY = 680,
                 PosX = (0.5f) * 210f,
@@ -411,7 +411,7 @@ namespace Quaver.GameState.States
             };
 
             // receptor sizes
-            LaneSize4KButton = new TextButton(new Vector2(200, 30), $@"Lane Size 4K: {GameBase.LoadedSkin.ColumnSize4K}")
+            LaneSize4KButton = new QuaverTextButton(new Vector2(200, 30), $@"Lane Size 4K: {GameBase.LoadedSkin.ColumnSize4K}")
             {
                 PosY = 680,
                 PosX = (1.5f) * 210f,
@@ -419,7 +419,7 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
 
-            LaneSize7KButton = new TextButton(new Vector2(200, 30), $@"Lane Size 7K: {GameBase.LoadedSkin.ColumnSize7K}")
+            LaneSize7KButton = new QuaverTextButton(new Vector2(200, 30), $@"Lane Size 7K: {GameBase.LoadedSkin.ColumnSize7K}")
             {
                 PosY = 680,
                 PosX = (2.5f) * 210f,
@@ -428,7 +428,7 @@ namespace Quaver.GameState.States
             };
 
             // show accuracy box
-            ShowAccuracyUIButton = new TextButton(new Vector2(200, 30), $@"Show Accuracy Box: {true}")
+            ShowAccuracyUiButton = new QuaverTextButton(new Vector2(200, 30), $@"Show Accuracy Box: {true}")
             {
                 PosY = 720,
                 PosX = (-0.5f) * 210f,
@@ -437,7 +437,7 @@ namespace Quaver.GameState.States
             };
 
             // show playfield overlay
-            ShowPlayfieldUIButton = new TextButton(new Vector2(200, 30), $@"Show Playfield Overlay: {true}")
+            ShowPlayfieldUiButton = new QuaverTextButton(new Vector2(200, 30), $@"Show Playfield Overlay: {true}")
             {
                 PosY = 720,
                 PosX = (0.5f) * 210f,
