@@ -116,7 +116,7 @@ namespace Quaver.GameState.States
             ReplayFrames = replayFrames;
             Replay = CreateReplayFromScore();
 
-            ReplayPath = $"{Configuration.Username} - {Artist} - {Title} [{DifficultyName}] ({DateTime.UtcNow})";
+            ReplayPath = $"{ConfigManager.Username} - {Artist} - {Title} [{DifficultyName}] ({DateTime.UtcNow})";
 
             // TODO: Add an audio fade out effect here instead of abruptly stopping it. If failed, it should abruptly stop in the play state. Not here.
             try
@@ -280,7 +280,7 @@ namespace Quaver.GameState.States
             return new LocalScore
             {
                 BeatmapMd5 = BeatmapMd5,
-                Name = Configuration.Username,
+                Name = ConfigManager.Username,
                 DateTime = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
                 Score = ScoreData.ScoreTotal,
                 Accuracy = Math.Round(ScoreData.Accuracy * 100, 2),
@@ -314,7 +314,7 @@ namespace Quaver.GameState.States
                 QuaverVersion = GameBase.BuildVersion,
                 BeatmapMd5 = BeatmapMd5,
                 ReplayMd5 = "Not Implemented",
-                Name = Configuration.Username,
+                Name = ConfigManager.Username,
                 Date = DateTime.UtcNow,
                 ScrollSpeed = ScoreData.ScrollSpeed,
                 Score = ScoreData.ScoreTotal,
@@ -348,7 +348,7 @@ namespace Quaver.GameState.States
             Logger.LogImportant($"Quaver Version: {Replay.QuaverVersion}", LogType.Runtime);
             Logger.LogImportant($"Beatmap MD5: {Replay.BeatmapMd5}", LogType.Runtime);
             Logger.LogImportant($"Replay MD5: {Replay.ReplayMd5}", LogType.Runtime);
-            Logger.LogImportant($"Player: {Configuration.Username}", LogType.Runtime);
+            Logger.LogImportant($"Player: {ConfigManager.Username}", LogType.Runtime);
             Logger.LogImportant($"Date: {Replay.Date.ToString(CultureInfo.InvariantCulture)}", LogType.Runtime);
             Logger.LogImportant($"Mods: {GameBase.CurrentGameModifiers.Sum(x => (int)x.ModIdentifier)}", LogType.Runtime);
             Logger.LogImportant($"Scroll Speed: {ScoreData.ScrollSpeed}", LogType.Runtime);

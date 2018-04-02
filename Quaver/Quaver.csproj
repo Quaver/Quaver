@@ -156,7 +156,7 @@
     <Compile Include="Database\Beatmaps\Beatmap.cs" />
     <Compile Include="Database\Beatmaps\BeatmapHelper.cs" />
     <Compile Include="Config\ConfigHelper.cs" />
-    <Compile Include="Config\Configuration.cs" />
+    <Compile Include="Config\ConfigManager.cs" />
     <Compile Include="Database\Beatmaps\BeatmapCache.cs" />
     <Compile Include="Database\Beatmaps\BeatmapImporter.cs" />
     <Compile Include="Peppy\Osu.cs" />

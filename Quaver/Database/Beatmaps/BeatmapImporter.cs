@@ -12,7 +12,7 @@ namespace Quaver.Database.Beatmaps
         internal static void WatchForChanges()
         {
             // Watch the song's directory for changes.
-            var watcher = new FileSystemWatcher(Configuration.SongDirectory)
+            var watcher = new FileSystemWatcher(ConfigManager.SongDirectory)
             {
                 NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite |
                                NotifyFilters.FileName | NotifyFilters.DirectoryName,

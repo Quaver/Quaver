@@ -12,7 +12,7 @@ namespace Quaver.Database.Scores
         /// <summary>
         ///     The path of the local scores database
         /// </summary>
-        private static readonly string DatabasePath = $"{Configuration.GameDirectory}/scores.db";
+        private static readonly string DatabasePath = $"{ConfigManager.GameDirectory}/scores.db";
 
         /// <summary>
         ///     Asynchronously creates the scores database

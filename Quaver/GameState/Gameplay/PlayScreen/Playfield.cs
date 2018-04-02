@@ -163,7 +163,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYPosition),
                             Alignment = Alignment.TopLeft,
                             Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i],
-                            SpriteEffect = !Config.Configuration.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                            SpriteEffect = !Config.ConfigManager.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Parent = ForegroundBoundary
                         };
 
@@ -175,8 +175,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Size = new UDim2(LaneSize, columnLightingSize),
                             Tint = GameBase.LoadedSkin.ColumnColors4K[i],
                             PosX = GameplayReferences.ReceptorXPosition[i],
-                            PosY = Config.Configuration.DownScroll4k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
-                            SpriteEffect = !Config.Configuration.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                            PosY = Config.ConfigManager.DownScroll4k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
+                            SpriteEffect = !Config.ConfigManager.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Alignment = Alignment.TopLeft,
                             Parent = BackgroundBoundary
                         };
@@ -188,8 +188,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     {
                         Image = GameBase.LoadedSkin.StageDistantOverlay,
                         Size = new UDim2(PlayfieldSize, overlaySize),
-                        PosY = Config.Configuration.DownScroll4k ? -1 : 1,
-                        Alignment = Config.Configuration.DownScroll4k ? Alignment.TopRight : Alignment.BotRight,
+                        PosY = Config.ConfigManager.DownScroll4k ? -1 : 1,
+                        Alignment = Config.ConfigManager.DownScroll4k ? Alignment.TopRight : Alignment.BotRight,
                         Parent = ForegroundBoundary
                     };
 
@@ -200,7 +200,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     {
                         Image = GameBase.LoadedSkin.StageHitPositionOverlay,
                         Size = new UDim2(PlayfieldSize, overlaySize),
-                        PosY = Config.Configuration.DownScroll4k ? ReceptorYPosition : ReceptorYPosition + posOffset + overlaySize,
+                        PosY = Config.ConfigManager.DownScroll4k ? ReceptorYPosition : ReceptorYPosition + posOffset + overlaySize,
                         Parent = ForegroundBoundary
                     };
                     break;
@@ -236,7 +236,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Position = new UDim2(GameplayReferences.ReceptorXPosition[i], ReceptorYPosition),
                             Alignment = Alignment.TopLeft,
                             Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i],
-                            SpriteEffect = !Config.Configuration.DownScroll7k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                            SpriteEffect = !Config.ConfigManager.DownScroll7k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Parent = ForegroundBoundary
                         };
 
@@ -248,8 +248,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                             Size = new UDim2(LaneSize, columnLightingSize),
                             Tint = GameBase.LoadedSkin.ColumnColors7K[i],
                             PosX = GameplayReferences.ReceptorXPosition[i],
-                            PosY = Config.Configuration.DownScroll7k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
-                            SpriteEffect = !Config.Configuration.DownScroll7k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                            PosY = Config.ConfigManager.DownScroll7k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
+                            SpriteEffect = !Config.ConfigManager.DownScroll7k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Alignment = Alignment.TopLeft,
                             Parent = BackgroundBoundary
                         };
@@ -261,8 +261,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     {
                         Image = GameBase.LoadedSkin.StageDistantOverlay,
                         Size = new UDim2(PlayfieldSize, overlaySize),
-                        PosY = Config.Configuration.DownScroll7k ? -1 : 1,
-                        Alignment = Config.Configuration.DownScroll7k ? Alignment.TopRight : Alignment.BotRight,
+                        PosY = Config.ConfigManager.DownScroll7k ? -1 : 1,
+                        Alignment = Config.ConfigManager.DownScroll7k ? Alignment.TopRight : Alignment.BotRight,
                         Parent = ForegroundBoundary
                     };
 
@@ -273,7 +273,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     {
                         Image = GameBase.LoadedSkin.StageHitPositionOverlay,
                         Size = new UDim2(PlayfieldSize, overlaySize),
-                        PosY = Config.Configuration.DownScroll7k ? ReceptorYPosition : ReceptorYPosition + posOffset + overlaySize,
+                        PosY = Config.ConfigManager.DownScroll7k ? ReceptorYPosition : ReceptorYPosition + posOffset + overlaySize,
                         Parent = ForegroundBoundary
                     };
                     break;

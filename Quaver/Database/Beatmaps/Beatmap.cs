@@ -11,8 +11,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Audio;
+using Quaver.Config;
 using SQLite;
-using Configuration = Quaver.Config.Configuration;
 
 namespace Quaver.Database.Beatmaps
 {
@@ -192,7 +192,7 @@ namespace Quaver.Database.Beatmaps
 
             Task.Run(async () =>
             {
-                using (var writer = File.CreateText(Configuration.DataDirectory + "/temp/Now Playing/map.txt"))
+                using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/map.txt"))
                 {
                     await writer.WriteAsync($"{map.Artist} - {map.Title} [{map.DifficultyName}]");
                 }

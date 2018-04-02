@@ -379,7 +379,7 @@ namespace Quaver.Skins
         internal Skin(string directory)
         {
             // The skin dir
-            var skinDirectory = Configuration.SkinDirectory + "/" + directory;
+            var skinDirectory = ConfigManager.SkinDirectory + "/" + directory;
 
             // Read Skin.ini
             ReadSkinConfig(skinDirectory);
@@ -393,7 +393,7 @@ namespace Quaver.Skins
         /// </summary>
         public static void LoadSkin()
         {
-            GameBase.LoadedSkin = new Skin(Configuration.Skin);
+            GameBase.LoadedSkin = new Skin(ConfigManager.Skin);
             GameBase.Cursor = new Cursor();
         }
 
@@ -747,7 +747,7 @@ namespace Quaver.Skins
             {
                 // Load based on which default skin is loaded
                 // prepend with 'arrow' for the file name if the arrow skin is selected.
-                switch (Configuration.DefaultSkin)
+                switch (ConfigManager.DefaultSkin)
                 {
                     case DefaultSkins.Arrow:
                         path = "arrow-" + path;
@@ -865,7 +865,7 @@ namespace Quaver.Skins
             }
 
             // Load the default if the path doesn't exist
-            switch (Configuration.DefaultSkin)
+            switch (ConfigManager.DefaultSkin)
             {
                 case DefaultSkins.Arrow:
                     element = "arrow-" + element;
@@ -886,7 +886,7 @@ namespace Quaver.Skins
         {
             // Before trying to read the skin.ini file, set the defaults
             // based on the default skin loaded
-            switch (Configuration.DefaultSkin)
+            switch (ConfigManager.DefaultSkin)
             {
                 case DefaultSkins.Bar:
                     Name = "Default Bar Skin";

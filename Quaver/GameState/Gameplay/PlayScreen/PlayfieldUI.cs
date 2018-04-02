@@ -195,15 +195,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             var healthMultiplierBoundary = new Boundary()
             {
                 Size = new UDim2(PlayfieldSize - 4, 20 * GameBase.WindowUIScale),
-                PosY = Config.Configuration.HealthBarPositionTop ? 2 : -2,
-                Alignment = Config.Configuration.HealthBarPositionTop ? Alignment.TopCenter : Alignment.BotCenter,
+                PosY = Config.ConfigManager.HealthBarPositionTop ? 2 : -2,
+                Alignment = Config.ConfigManager.HealthBarPositionTop ? Alignment.TopCenter : Alignment.BotCenter,
                 Parent = Boundary
             };
 
             var healthBarUnder = new Sprite()
             {
                 Size = new UDim2(0, 10 * GameBase.WindowUIScale -1, 1, 0),
-                Alignment = Config.Configuration.HealthBarPositionTop ? Alignment.TopCenter : Alignment.BotCenter,
+                Alignment = Config.ConfigManager.HealthBarPositionTop ? Alignment.TopCenter : Alignment.BotCenter,
                 Parent = healthMultiplierBoundary
             };
 
@@ -224,7 +224,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 {
                     Size = new UDim2(14 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale -1),
                     PosX = (i-7.5f) * 16 * GameBase.WindowUIScale,
-                    PosY = Config.Configuration.HealthBarPositionTop ? 10 * GameBase.WindowUIScale + 1 : 0,
+                    PosY = Config.ConfigManager.HealthBarPositionTop ? 10 * GameBase.WindowUIScale + 1 : 0,
                     Alignment = Alignment.TopCenter,
                     Image = GameBase.UI.HollowBox,
                     Parent = healthMultiplierBoundary

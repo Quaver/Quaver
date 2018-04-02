@@ -15,12 +15,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Audio;
 using Quaver.Commands;
+using Quaver.Config;
 using Quaver.Database;
 using Quaver.Database.Beatmaps;
 using Quaver.GameState;
 using Quaver.Logging;
 using Color = Microsoft.Xna.Framework.Color;
-using Configuration = Quaver.Config.Configuration;
 
 namespace Quaver.Input
 {
@@ -96,14 +96,14 @@ namespace Quaver.Input
         {
             if (GameOverlayButtonIsDown)
             {
-                if (GameBase.KeyboardState.IsKeyUp(Configuration.KeyToggleOverlay))
+                if (GameBase.KeyboardState.IsKeyUp(ConfigManager.KeyToggleOverlay))
                 {
                     GameOverlayButtonIsDown = false;
                 }
             }
             else
             {
-                if (GameBase.KeyboardState.IsKeyDown(Configuration.KeyToggleOverlay))
+                if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyToggleOverlay))
                 {
                     GameOverlayButtonIsDown = true;
                     GameOverlayToggled?.Invoke(this, null);
@@ -120,30 +120,30 @@ namespace Quaver.Input
             //  Raise volume if the user scrolls up.
             if (GameBase.MouseState.ScrollWheelValue > LastScrollWheelValue 
                 && (GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) || GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt)) 
-                && Config.Configuration.VolumeGlobal < 100)
+                && Config.ConfigManager.VolumeGlobal < 100)
             {
-                Config.Configuration.VolumeGlobal += 5;
+                Config.ConfigManager.VolumeGlobal += 5;
 
                 // Set the last scroll wheel value
                 LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
 
                 // Change the master volume based on the new config value.
-                GameBase.AudioEngine.MasterVolume = Configuration.VolumeGlobal;
-                Logger.LogInfo($"VolumeGlobal Changed To: {Configuration.VolumeGlobal}", LogType.Runtime);
+                GameBase.AudioEngine.MasterVolume = ConfigManager.VolumeGlobal;
+                Logger.LogInfo($"VolumeGlobal Changed To: {ConfigManager.VolumeGlobal}", LogType.Runtime);
             }
             // Lower volume if the user scrolls down
             else if (GameBase.MouseState.ScrollWheelValue < LastScrollWheelValue 
                 && (GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) || GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt)) 
-                && Configuration.VolumeGlobal > 0)
+                && ConfigManager.VolumeGlobal > 0)
             {
-                Configuration.VolumeGlobal -= 5;
+                ConfigManager.VolumeGlobal -= 5;
 
                 // Set the last scroll wheel value
                 LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
 
                 // Change the master volume based on the new config value.
-                GameBase.AudioEngine.MasterVolume = Configuration.VolumeGlobal;
-                Logger.LogInfo($"VolumeGlobal Changed To: {Configuration.VolumeGlobal}", LogType.Runtime);
+                GameBase.AudioEngine.MasterVolume = ConfigManager.VolumeGlobal;
+                Logger.LogInfo($"VolumeGlobal Changed To: {ConfigManager.VolumeGlobal}", LogType.Runtime);
             }
         }
 
@@ -171,14 +171,14 @@ namespace Quaver.Input
         /// </summary>
         private void TakeScreenshot()
         {
-            if (GameBase.KeyboardState.IsKeyUp(Configuration.KeyTakeScreenshot))
+            if (GameBase.KeyboardState.IsKeyUp(ConfigManager.KeyTakeScreenshot))
                 CurrentlyTakingScreenshot = false;
 
             // Prevent spamming. Don't run if we're already taking a screenshot.
             if (CurrentlyTakingScreenshot)
                 return;
 
-            if (!GameBase.KeyboardState.IsKeyDown(Configuration.KeyTakeScreenshot))
+            if (!GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyTakeScreenshot))
                 return;
 
             CurrentlyTakingScreenshot = true;
@@ -187,7 +187,7 @@ namespace Quaver.Input
             GameBase.LoadedSkin.SoundScreenshot.Play(GameBase.SoundEffectVolume, 0, 0);
 
             // Create path for file
-            var path = Config.Configuration.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyy-MM-dd HHmmssfff") + ".jpg";
+            var path = Config.ConfigManager.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyy-MM-dd HHmmssfff") + ".jpg";
 
             // Get Window Bounds
             var bounds = GameBase.GraphicsDevice.PresentationParameters.Bounds;

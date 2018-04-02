@@ -297,7 +297,7 @@ namespace Quaver.GameState.States
         /// <param name="num"></param>
         private static void ImportQp(string fileName)
         {
-            var extractPath = $@"{Config.Configuration.SongDirectory}/{Path.GetFileNameWithoutExtension(fileName)}/";
+            var extractPath = $@"{Config.ConfigManager.SongDirectory}/{Path.GetFileNameWithoutExtension(fileName)}/";
 
             try
             {
@@ -320,17 +320,17 @@ namespace Quaver.GameState.States
             var zip = new ZipFile();
 
             // Get all the files in the current selected map's directory.
-            var dirInfo = new DirectoryInfo(Configuration.SongDirectory + "/" + GameBase.SelectedBeatmap.Directory + "/");
+            var dirInfo = new DirectoryInfo(ConfigManager.SongDirectory + "/" + GameBase.SelectedBeatmap.Directory + "/");
             var files = dirInfo.GetFiles();
 
             foreach (var file in files)
-                zip.AddFile(Configuration.SongDirectory + "/" + GameBase.SelectedBeatmap.Directory + "/" + file, "");
+                zip.AddFile(ConfigManager.SongDirectory + "/" + GameBase.SelectedBeatmap.Directory + "/" + file, "");
 
             // Create the Data/Maps directory if it doesn't exist already.
-            Directory.CreateDirectory($"{Configuration.DataDirectory}/Maps/");
+            Directory.CreateDirectory($"{ConfigManager.DataDirectory}/Maps/");
 
             // Save the file
-            var outputPath = $"{Configuration.DataDirectory}/Maps/{GameBase.GameTime.ElapsedMilliseconds} {StringHelper.FileNameSafeString(GameBase.SelectedBeatmap.Artist)} - {StringHelper.FileNameSafeString(GameBase.SelectedBeatmap.Title)}.qp";
+            var outputPath = $"{ConfigManager.DataDirectory}/Maps/{GameBase.GameTime.ElapsedMilliseconds} {StringHelper.FileNameSafeString(GameBase.SelectedBeatmap.Artist)} - {StringHelper.FileNameSafeString(GameBase.SelectedBeatmap.Title)}.qp";
             zip.Save(outputPath);
 
             Logger.LogSuccess($"Successfully exported {outputPath}", LogType.Runtime);

@@ -132,9 +132,9 @@ namespace Quaver
         /// <summary>
         ///     The rectangle this game will be rendered onto
         /// </summary>
-        public static DrawRectangle Window { get; private set; } = new DrawRectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight); //TODO: Automatically set this rectangle as windoow size through method*/
+        public static DrawRectangle Window { get; private set; } = new DrawRectangle(0, 0, ConfigManager.WindowWidth, ConfigManager.WindowHeight); //TODO: Automatically set this rectangle as windoow size through method*/
 
-        public static DrawRectangle WindowRectangle { get; set; } = new DrawRectangle(0, 0, Configuration.WindowWidth, Configuration.WindowHeight);
+        public static DrawRectangle WindowRectangle { get; set; } = new DrawRectangle(0, 0, ConfigManager.WindowWidth, ConfigManager.WindowHeight);
 
         /// <summary>
         ///     WindowHeight / WindowWidth ratio
@@ -220,7 +220,7 @@ namespace Quaver
                     case BeatmapGame.Osu:
                         return OsuSongsFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
                     case BeatmapGame.Quaver:
-                        return Configuration.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
+                        return ConfigManager.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
                     case BeatmapGame.Etterna:
                         return EtternaFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.AudioPath;
                     default:
@@ -243,7 +243,7 @@ namespace Quaver
                         var osu = new PeppyBeatmap(OsuSongsFolder + SelectedBeatmap.Directory + "/" + SelectedBeatmap.Path);
                         return $@"{OsuSongsFolder}/{SelectedBeatmap.Directory}/{osu.Background}";
                     case BeatmapGame.Quaver:
-                        return Configuration.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.BackgroundPath;
+                        return ConfigManager.SongDirectory + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.BackgroundPath;
                     case BeatmapGame.Etterna:
                         return EtternaFolder + "/" + SelectedBeatmap.Directory + "/" + SelectedBeatmap.BackgroundPath;
                     default:
@@ -263,8 +263,8 @@ namespace Quaver
             // Change Resolution
             if (resolution != null)
             {
-                Configuration.WindowWidth = resolution.Value.X;
-                Configuration.WindowHeight = resolution.Value.Y;
+                ConfigManager.WindowWidth = resolution.Value.X;
+                ConfigManager.WindowHeight = resolution.Value.Y;
                 GraphicsManager.PreferredBackBufferWidth = resolution.Value.X;
                 GraphicsManager.PreferredBackBufferHeight = resolution.Value.Y;
                 WindowRectangle = new DrawRectangle(0, 0, resolution.Value.X, resolution.Value.Y);
