@@ -168,31 +168,6 @@ namespace Quaver.Utility
         }
 
         /// <summary>
-        /// Generates A random float between 2 numbers.
-        /// </summary>
-        /// <param name="min"></param>
-        /// <param name="max"></param>
-        /// <returns></returns>
-        internal static float Random(float min, float max)
-        {
-            var  random = new Random();
-
-            // If min > max for some reason
-            if (min > max)
-            {
-                var temp = min;
-                max = min;
-                min = temp;
-            }
-
-            //Generate the random number
-            var randNum = random.Next(0, 1000) / 1000f;
-
-            //Return the random number in the given range
-            return (randNum * (max - min)) + min;
-        }
-
-        /// <summary>
         /// This method is used for animation/tweening.
         /// </summary>
         /// <param name="target">The target value.</param>
