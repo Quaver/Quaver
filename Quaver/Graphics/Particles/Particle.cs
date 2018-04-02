@@ -9,7 +9,7 @@ namespace Quaver.Graphics.Particles
     /// <summary>
     ///     Interface of Particle Object. Used for objects that will be manipulated by a Particle Manager
     /// </summary>
-    abstract class Particle
+    internal abstract class Particle
     {
         /// <summary>
         ///     Is determined by how long the particle is active since it was first created
