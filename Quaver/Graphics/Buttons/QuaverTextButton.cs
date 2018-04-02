@@ -12,12 +12,12 @@ namespace Quaver.Graphics.Buttons
     /// </summary>
     internal class QuaverTextButton : QuaverButton
     {
-        internal TextBoxSprite TextSprite { get; set; }
+        internal QuaverTextbox QuaverTextSprite { get; set; }
 
         //Constructor
         internal QuaverTextButton(Vector2 ButtonSize, string ButtonText)
         {
-            TextSprite = new TextBoxSprite()
+            QuaverTextSprite = new QuaverTextbox()
             {
                 Text = ButtonText,
                 Size = new UDim2(ButtonSize.X, ButtonSize.Y),
@@ -28,7 +28,7 @@ namespace Quaver.Graphics.Buttons
             Size.X.Offset = ButtonSize.X;
             Size.Y.Offset = ButtonSize.Y;
             Image = GameBase.UI.BlankBox;
-            TextSprite.TextColor = Color.Black;
+            QuaverTextSprite.TextColor = Color.Black;
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Quaver.Graphics.Buttons
             CurrentTint.B = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
             Tint = CurrentTint;
             
-            //TextSprite.Update(dt);
+            //QuaverTextSprite.Update(dt);
             base.Update(dt);
         }
     }

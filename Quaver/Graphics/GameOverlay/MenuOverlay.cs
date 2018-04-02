@@ -60,7 +60,7 @@ namespace Quaver.Graphics.GameOverlay
             };
 
             // place holder bottom
-            var placeholder = new TextBoxSprite()
+            var placeholder = new QuaverTextbox()
             {
                 Position = new UDim2(5, 5),
                 Size = new UDim2(400, 40),
@@ -72,7 +72,7 @@ namespace Quaver.Graphics.GameOverlay
             };
 
             // place holder top
-            placeholder = new TextBoxSprite()
+            placeholder = new QuaverTextbox()
             {
                 Position = new UDim2(5, 5),
                 Size = new UDim2(400, 20),

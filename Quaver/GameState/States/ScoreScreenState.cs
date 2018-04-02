@@ -595,7 +595,7 @@ namespace Quaver.GameState.States
         private void CreateJudgeWindowUI()
         {
             //Create Judge Info QuaverContainer
-            TextBoxSprite ob;
+            QuaverTextbox ob;
             var boundary = new QuaverContainer()
             {
                 Size = new UDim2(350, 240),
@@ -608,7 +608,7 @@ namespace Quaver.GameState.States
             //Create Judge Text
             for (var i = 0; i < 6; i++)
             {
-                ob = new TextBoxSprite()
+                ob = new QuaverTextbox()
                 {
                     Text = "[" + GameplayReferences.JudgeNames[i] + "]: " + ScoreData.JudgePressSpread[i] + " | " + ScoreData.JudgeReleaseSpread[i] + " Total: " + (ScoreData.JudgePressSpread[i] + ScoreData.JudgeReleaseSpread[i]),
                     TextColor = GameBase.LoadedSkin.JudgeColors[i],
@@ -621,7 +621,7 @@ namespace Quaver.GameState.States
             }
 
             //Create Score Text
-            ob = new TextBoxSprite()
+            ob = new QuaverTextbox()
             {
                 Text = ScoreData.ScoreTotal.ToString(),
                 Font = Fonts.Medium24,
@@ -633,7 +633,7 @@ namespace Quaver.GameState.States
             };
 
             //Create Accuracy Text
-            ob = new TextBoxSprite()
+            ob = new QuaverTextbox()
             {
                 Text = $"{ScoreData.Accuracy * 100:0.00}%",
                 Font = Fonts.Medium24,
@@ -736,7 +736,7 @@ namespace Quaver.GameState.States
         private void CreateAxisLabels(Drawable parent, string topLabel, string botLabel)
         {
             //top
-            var label = new TextBoxSprite()
+            var label = new QuaverTextbox()
             {
                 Text = topLabel,
                 Font = Fonts.Medium12,
@@ -748,7 +748,7 @@ namespace Quaver.GameState.States
             };
 
             //bottom
-            label = new TextBoxSprite()
+            label = new QuaverTextbox()
             {
                 Text = botLabel,
                 Font = Fonts.Medium12,
