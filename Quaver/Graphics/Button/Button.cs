@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Helpers;
 using Quaver.Logging;
 
 using Quaver.Utility;
@@ -53,7 +54,7 @@ namespace Quaver.Graphics.Button
         internal override void Update(double dt)
         {
             // Check if moouse is over
-            var over = Util.RectangleContains(GlobalRectangle, Util.PointToVector2(GameBase.MouseState.Position));
+            var over = GraphicsHelper.RectangleContains(GlobalRectangle, GraphicsHelper.PointToVector2(GameBase.MouseState.Position));
 
             //Animation
             if (over && !MouseHovered)

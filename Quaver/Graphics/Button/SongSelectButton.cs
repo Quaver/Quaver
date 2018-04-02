@@ -12,6 +12,7 @@ using Quaver.Utility;
 using Quaver.Database.Beatmaps;
 using Quaver.Graphics.Sprite;
 using Quaver.Config;
+using Quaver.Helpers;
 
 namespace Quaver.Graphics.Button
 {
@@ -172,9 +173,9 @@ namespace Quaver.Graphics.Button
         internal override void Update(double dt)
         {
             if (Selected)
-                HoverCurrentTween = Util.Tween(1, HoverCurrentTween, Math.Min(dt / 40, 1));
+                HoverCurrentTween = GraphicsHelper.Tween(1, HoverCurrentTween, Math.Min(dt / 40, 1));
             else
-                HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
+                HoverCurrentTween = GraphicsHelper.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
 
             CurrentTint.R = (byte)(HoverCurrentTween * 255);
             CurrentTint.G = (byte)(HoverCurrentTween * 255);

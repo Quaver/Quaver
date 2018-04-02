@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.API.Enums;
 using Quaver.Graphics;
 
-namespace Quaver.Utility
+namespace Quaver.Helpers
 {
-    internal class Util
+    internal static class GraphicsHelper
     {
         /// <summary>
         /// Converts Point to Vector2
@@ -105,7 +103,6 @@ namespace Quaver.Utility
         /// <returns></returns>
         internal static Rectangle DrawRectToRectangle(DrawRectangle rect)
         {
-            //return new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
             return new Rectangle((int)Math.Ceiling(rect.X), (int)Math.Ceiling(rect.Y), (int)Math.Ceiling(rect.Width), (int)Math.Ceiling(rect.Height));
         }
 
@@ -127,11 +124,8 @@ namespace Quaver.Utility
         /// <returns></returns>
         internal static bool RectangleIntercepts(DrawRectangle rect1, DrawRectangle rect2)
         {
-            if (!(rect1.X + rect1.Width < rect2.X ||
-                rect1.X > rect2.X + rect2.Width ||
-                rect1.Y + rect1.Height < rect2.Y ||
-                rect1.Y > rect2.Y + rect2.Height)) return true;
-            else return false;
+            return !(rect1.X + rect1.Width < rect2.X || rect1.X > rect2.X + rect2.Width || rect1.Y + rect1.Height < rect2.Y ||
+                    rect1.Y > rect2.Y + rect2.Height);
         }
 
         /// <summary>
@@ -144,33 +138,6 @@ namespace Quaver.Utility
         internal static float Tween(float target, float current, double scale)
         {
             return (float)(current + ((target - current) * scale));
-        }
-
-        /// <summary>
-        ///     Gets the grade from an accuracy value
-        /// </summary>
-        /// <param name="accuracy"></param>
-        /// <returns></returns>
-        internal static Grades GetGradeFromAccuracy(float accuracy, bool isPerfect = false)
-        {
-            if (accuracy == 100 && isPerfect)
-                return Grades.XX;
-            else if (accuracy == 100 && !isPerfect)
-                return Grades.X;
-            else if (accuracy >= 99)
-                return Grades.SS;
-            else if (accuracy >= 95)
-                return Grades.S;
-            else if (accuracy >= 90)
-                return Grades.A;
-            else if (accuracy >= 80)
-                return Grades.B;
-            else if (accuracy >= 70)
-                return Grades.C;
-            else if (accuracy >= 60)
-                return Grades.D;
-            
-           return Grades.F;
         }
     }
 }

@@ -4,6 +4,7 @@ using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
+using Quaver.Helpers;
 using Quaver.Utility;
 using System;
 using System.Collections.Generic;
@@ -252,15 +253,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             // Update Offset Indicators
             foreach (var sprite in OffsetIndicatorsSprites)
             {
-                sprite.Alpha = Util.Tween(0, sprite.Alpha, tween / 30);
+                sprite.Alpha = GraphicsHelper.Tween(0, sprite.Alpha, tween / 30);
             }
 
             // Update Judge Alpha
-            JudgeSprite.PosY = Util.Tween(0, JudgeSprite.PosY, tween / 2);
+            JudgeSprite.PosY = GraphicsHelper.Tween(0, JudgeSprite.PosY, tween / 2);
             if (SpriteAlphaHold > 500 && PriorityJudgeLength <= 0)
             {
-                JudgeSprite.Alpha = Util.Tween(0, JudgeSprite.Alpha, tween / 10);
-                ComboText.Alpha = Util.Tween(0, ComboText.Alpha, tween / 10);
+                JudgeSprite.Alpha = GraphicsHelper.Tween(0, JudgeSprite.Alpha, tween / 10);
+                ComboText.Alpha = GraphicsHelper.Tween(0, ComboText.Alpha, tween / 10);
             }
 
             //Update Boundary

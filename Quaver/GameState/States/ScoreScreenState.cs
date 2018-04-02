@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Discord;
@@ -21,6 +22,7 @@ using Quaver.Graphics.Text;
 using Quaver.GameState.Gameplay;
 using Quaver.Utility;
 using Quaver.Audio;
+using Quaver.Helpers;
 using Quaver.Skins;
 
 namespace Quaver.GameState.States
@@ -272,7 +274,7 @@ namespace Quaver.GameState.States
         /// <returns></returns>
         private LocalScore CreateLocalScore(Replay rp)
         {
-            var grade = (ScoreData.Failed) ? Grades.F : Util.GetGradeFromAccuracy((float) Math.Round(ScoreData.Accuracy * 100, 2));
+            var grade = (ScoreData.Failed) ? Grades.F : GradeHelper.GetGradeFromAccuracy((float) Math.Round(ScoreData.Accuracy * 100, 2));
 
             // Store the score in the database
             return new LocalScore
@@ -370,7 +372,7 @@ namespace Quaver.GameState.States
             // Set Discord Rich Presence w/ score data
             var mapData = $"{GameBase.SelectedBeatmap.Qua.Artist} - {GameBase.SelectedBeatmap.Qua.Title} [{GameBase.SelectedBeatmap.Qua.DifficultyName}]";
             var accuracy = (float)Math.Round(ScoreData.Accuracy * 100, 2);
-            var grade = (ScoreData.Failed) ? Grades.F : Util.GetGradeFromAccuracy(accuracy);
+            var grade = (ScoreData.Failed) ? Grades.F : GradeHelper.GetGradeFromAccuracy(accuracy);
             var status = (ScoreData.Failed) ? "Failed - " : "Finished -";
 
             DiscordController.ChangeDiscordPresence(mapData, $"{status} {accuracy}% {grade.ToString()} {ScoreData.MaxCombo}x");

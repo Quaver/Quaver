@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
+using Quaver.Helpers;
 using Quaver.Utility;
 
 namespace Quaver.Graphics
@@ -241,9 +241,9 @@ namespace Quaver.Graphics
 
             //Update Global Rect
             if (_parent != null)
-                _globalRectangle = Util.AlignRect(Alignment, _localRectangle, Parent.GlobalRectangle);
+                _globalRectangle = GraphicsHelper.AlignRect(Alignment, _localRectangle, Parent.GlobalRectangle);
             else
-                _globalRectangle = Util.AlignRect(Alignment, _localRectangle, GameBase.WindowRectangle);
+                _globalRectangle = GraphicsHelper.AlignRect(Alignment, _localRectangle, GameBase.WindowRectangle);
 
             //Console.WriteLine(_localRectangle.X + ", " + _localRectangle.Y + ", " + _localRectangle.Width + ", " + _localRectangle.Height);
             //Console.WriteLine(_globalRectangle.X + ", " + _globalRectangle.Y + ", " + _globalRectangle.Width + ", " + _globalRectangle.Height);

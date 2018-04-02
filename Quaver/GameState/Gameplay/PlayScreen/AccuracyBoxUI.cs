@@ -279,19 +279,19 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             double tween = Math.Min(dt / 30, 1);
             for (var i = 0; i < 6; i++)
             {
-                AccuracyGraphBar[i].ScaleX = Util.Tween(AccuracyGraphTargetScale[i], AccuracyGraphBar[i].ScaleX, tween);
+                AccuracyGraphBar[i].ScaleX = GraphicsHelper.Tween(AccuracyGraphTargetScale[i], AccuracyGraphBar[i].ScaleX, tween);
             }
 
             // Update Score Text
-            //ScoreText.Text = Util.ScoreToString((int)CurrentScore);
+            //ScoreText.Text = GraphicsHelper.ScoreToString((int)CurrentScore);
 
             // Update Accuracy Text
-            CurrentAccuracy = Util.Tween(TargetAccuracy, CurrentAccuracy, tween);
+            CurrentAccuracy = GraphicsHelper.Tween(TargetAccuracy, CurrentAccuracy, tween);
             AccuracyCountText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
 
             // Upgrade Grade Progress Bar
             GradeProgressBar.UpdateBar(0,
-                Util.Tween(ProgressBarScale, GradeProgressBar.GetBarScale(0), tween));
+                GraphicsHelper.Tween(ProgressBarScale, GradeProgressBar.GetBarScale(0), tween));
 
             // Update Boundary
             Boundary.Update(dt);   
