@@ -13,7 +13,6 @@ using Quaver.Config;
 using Quaver.Database;
 using Quaver.Discord;
 using Quaver.Graphics;
-using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Replays;
@@ -22,6 +21,7 @@ using Quaver.GameState.Gameplay;
 using Quaver.Audio;
 using Quaver.Database.Beatmaps;
 using Quaver.Database.Scores;
+using Quaver.Graphics.Buttons;
 using Quaver.Helpers;
 using Quaver.Skins;
 
@@ -67,7 +67,7 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     The button to get back to song select
         /// </summary>
-        private TextButton BackButton { get; set; }
+        private QuaverTextButton BackButton { get; set; }
 
         /// <summary>
         ///     The replay from the previous play state
@@ -233,8 +233,8 @@ namespace Quaver.GameState.States
             // Create Base Boundary
             Boundary = new Boundary();
 
-            // Create Back Button
-            BackButton = new TextButton(new Vector2(150,40),"BACK" )
+            // Create Back QuaverButton
+            BackButton = new QuaverTextButton(new Vector2(150,40),"BACK" )
             {
                 PosY = 70,
                 Alignment = Alignment.TopRight
@@ -257,7 +257,7 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Back Button Click Event Handler
+        ///     Back QuaverButton Click Event Handler
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

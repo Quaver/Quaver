@@ -13,11 +13,11 @@ using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState.States;
 using Quaver.Graphics;
-using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.GameState.SongSelect;
+using Quaver.Graphics.Buttons;
 using Quaver.Input;
 
 namespace Quaver.GameState.States
@@ -47,22 +47,22 @@ namespace Quaver.GameState.States
         /// <summary>
         ///     Reference to the play button
         /// </summary>        
-        private TextButton PlayButton { get; set; }
+        private QuaverTextButton PlayButton { get; set; }
 
         /// <summary>
         ///     Reference to the back button
         /// </summary>        
-        private TextButton BackButton { get; set; }
+        private QuaverTextButton BackButton { get; set; }
 
         /// <summary>
         ///     Reference to the speed gameplayModifier button
         /// </summary>
-        private TextButton SpeedModButton { get; set; }
+        private QuaverTextButton SpeedModButton { get; set; }
 
         /// <summary>
         ///     Reference to the toggle pitch button
         /// </summary>
-        private TextButton TogglePitch { get; set; }
+        private QuaverTextButton TogglePitch { get; set; }
 
         /// <summary>
         ///     Position of mouse from previous frame
@@ -202,7 +202,7 @@ namespace Quaver.GameState.States
         private void CreatePlayMapButton()
         {
             // Create play button
-            PlayButton = new TextButton(new Vector2(200, 50), "Play Map")
+            PlayButton = new QuaverTextButton(new Vector2(200, 50), "Play Map")
             {
                 PosY = 140,
                 Alignment = Alignment.TopLeft,
@@ -256,7 +256,7 @@ namespace Quaver.GameState.States
         private void CreateBackButton()
         {
             // Create back button
-            BackButton = new TextButton(new Vector2(200, 50), "Back")
+            BackButton = new QuaverTextButton(new Vector2(200, 50), "Back")
             {
                 PosY = - 90,
                 Alignment = Alignment.BotCenter,
@@ -281,8 +281,8 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateSpeedModButton()
         {
-            // Create ManiaModSpeed Mod Button
-            SpeedModButton = new TextButton(new Vector2(200, 50), $"Add ManiaModSpeed Mod {GameBase.AudioEngine.PlaybackRate}x")
+            // Create ManiaModSpeed Mod QuaverButton
+            SpeedModButton = new QuaverTextButton(new Vector2(200, 50), $"Add ManiaModSpeed Mod {GameBase.AudioEngine.PlaybackRate}x")
             {
                 PosY = - 120,
                 Alignment = Alignment.BotLeft,
@@ -370,7 +370,7 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateTogglePitchButton()
         {
-            TogglePitch = new TextButton(new Vector2(200, 50), $"Toggle Pitch: {ConfigManager.Pitched}")
+            TogglePitch = new QuaverTextButton(new Vector2(200, 50), $"Toggle Pitch: {ConfigManager.Pitched}")
             {
                 Alignment = Alignment.MidLeft,
                 Parent = Boundary

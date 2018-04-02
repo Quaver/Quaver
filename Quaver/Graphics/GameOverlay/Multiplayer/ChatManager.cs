@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using System;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Graphics.Buttons;
 using Quaver.Logging;
 
 namespace Quaver.Graphics.GameOverlay.Multiplayer
@@ -17,7 +17,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
 
         private Sprite.Sprite Sprite { get; set; }
 
-        private TextInputField ChatInputField { get; set; }
+        private QuaverTextInputField ChatInputField { get; set; }
 
         //chat lines todo: use proper class for chatting
         private int ChatSize { get; } = 10;
@@ -42,7 +42,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
             };
 
             // Create input box
-            ChatInputField = new TextInputField(new Vector2(400, 30), "Type something", OnChatSubmit)
+            ChatInputField = new QuaverTextInputField(new Vector2(400, 30), "Type something", OnChatSubmit)
             {
                 PosY = -200,
                 Alignment = Alignment.BotLeft,

@@ -1,5 +1,4 @@
 ﻿using Quaver.Graphics;
-using Quaver.Graphics.Button;
 using Quaver.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,7 @@ using Quaver.Graphics.Sprite;
 using Quaver.Audio;
 using Quaver.Database;
 using Quaver.Database.Scores;
+using Quaver.Graphics.Buttons;
 using Quaver.Helpers;
 
 namespace Quaver.GameState.SongSelect
@@ -21,7 +21,7 @@ namespace Quaver.GameState.SongSelect
         /// <summary>
         ///     Reference to the list of song select buttons
         /// </summary>
-        private List<SongSelectButton> SongSelectButtons { get; set; } = new List<SongSelectButton>();
+        private List<QuaverSongSelectButton> SongSelectButtons { get; set; } = new List<QuaverSongSelectButton>();
 
         private List<EventHandler> SongSelectEvents { get; set; } = new List<EventHandler>();
 
@@ -99,7 +99,7 @@ namespace Quaver.GameState.SongSelect
                     var index = SongSelectButtons.Count;
 
                     // Create the new button
-                    var newButton = new SongSelectButton(map, GameBase.WindowUIScale)
+                    var newButton = new QuaverSongSelectButton(map, GameBase.WindowUIScale)
                     {
                         Map = map,
                         Image = GameBase.UI.BlankBox,

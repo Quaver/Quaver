@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Quaver.Helpers;
-using Quaver.Logging;
 
-namespace Quaver.Graphics.Button
+namespace Quaver.Graphics.Buttons
 {
+    /// <inheritdoc />
     /// <summary>
     /// This class will be inherited from every button class.
     /// </summary>
-    internal abstract class Button : Sprite.Sprite
+    internal abstract class QuaverButton : Sprite.Sprite
     {
-        internal Button()
+        internal QuaverButton()
         {
             GameBase.GlobalInputManager.LeftClicked += MouseClicked;
         }

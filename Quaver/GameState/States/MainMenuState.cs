@@ -17,13 +17,12 @@ using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState.Gameplay;
 using Quaver.Graphics;
-using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Modifiers;
-using Button = Quaver.Graphics.Button.Button;
 using Quaver.API.Maps;
 using Quaver.Commands;
+using Quaver.Graphics.Buttons;
 using Quaver.Helpers;
 using Quaver.Peppy;
 using Quaver.Steam;
@@ -49,34 +48,34 @@ namespace Quaver.GameState.States
         public Boundary Boundary { get; set; }
 
         /// <summary>
-        ///     Button to switch to the song select state
+        ///     QuaverButton to switch to the song select state
         /// </summary>
-        public Button SwitchSongSelectButton { get; set; }
+        public QuaverButton SwitchSongSelectQuaverButton { get; set; }
 
         /// <summary>
-        ///     Button to switch to the options menu
+        ///     QuaverButton to switch to the options menu
         /// </summary>
-        public Button OptionsMenuButton { get; set; }
+        public QuaverButton OptionsMenuQuaverButton { get; set; }
 
         /// <summary>
-        ///     Button to import .qp
+        ///     QuaverButton to import .qp
         /// </summary>
-        public Button ImportQpButton { get; set; }
+        public QuaverButton ImportQpQuaverButton { get; set; }
 
         /// <summary>
-        ///     Button to export .qp
+        ///     QuaverButton to export .qp
         /// </summary>
-        public Button ExportQpButton { get; set; }
+        public QuaverButton ExportQpQuaverButton { get; set; }
 
         /// <summary>
-        ///     Button to import .osz
+        ///     QuaverButton to import .osz
         /// </summary>
-        public Button ImportPeppyButton { get; set; }
+        public QuaverButton ImportPeppyQuaverButton { get; set; }
 
         /// <summary>
-        ///     Button to convert .sm files
+        ///     QuaverButton to convert .sm files
         /// </summary>
-        public Button ConvertStepManiaButton { get; set; }
+        public QuaverButton ConvertStepManiaQuaverButton { get; set; }
 
         /// <summary>
         ///     Initialize
@@ -116,8 +115,8 @@ namespace Quaver.GameState.States
         public void UnloadContent()
         {
             UpdateReady = false;
-            SwitchSongSelectButton.Clicked -= OnSongSelectButtonClick;
-            OptionsMenuButton.Clicked -= OnOptionsSelectButtonClick;
+            SwitchSongSelectQuaverButton.Clicked -= OnSongSelectButtonClick;
+            OptionsMenuQuaverButton.Clicked -= OnOptionsSelectButtonClick;
             Boundary.Destroy();
         }
 
@@ -129,7 +128,7 @@ namespace Quaver.GameState.States
         {
             // Play Random Maps during the main menu
             //MenuAudioPlayer.PlayRandomBeatmaps();
-            //Console.WriteLine(SwitchSongSelectButton.GlobalRectangle.X + ", " + SwitchSongSelectButton.GlobalRectangle.Y + ", " + SwitchSongSelectButton.GlobalRectangle.Width + ", " + SwitchSongSelectButton.GlobalRectangle.Height);
+            //Console.WriteLine(SwitchSongSelectQuaverButton.GlobalRectangle.X + ", " + SwitchSongSelectQuaverButton.GlobalRectangle.Y + ", " + SwitchSongSelectQuaverButton.GlobalRectangle.Width + ", " + SwitchSongSelectQuaverButton.GlobalRectangle.Height);
 
             //Update Menu Screen Boundary
             Boundary.Update(dt);
@@ -151,21 +150,21 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateMenuButtons()
         {
-            // Switch Song Select Button
-            SwitchSongSelectButton = new TextButton(new Vector2(200, 40), "Song Select")
+            // Switch Song Select QuaverButton
+            SwitchSongSelectQuaverButton = new QuaverTextButton(new Vector2(200, 40), "Song Select")
             {
                 Alignment = Alignment.MidCenter,
                 Parent = Boundary
             };
-            SwitchSongSelectButton.Clicked += OnSongSelectButtonClick;
+            SwitchSongSelectQuaverButton.Clicked += OnSongSelectButtonClick;
 
-            OptionsMenuButton = new TextButton(new Vector2(200, 40), "Options")
+            OptionsMenuQuaverButton = new QuaverTextButton(new Vector2(200, 40), "Options")
             {
                 Alignment = Alignment.MidCenter,
                 PosY = 50,
                 Parent = Boundary
             };
-            OptionsMenuButton.Clicked += OnOptionsSelectButtonClick;
+            OptionsMenuQuaverButton.Clicked += OnOptionsSelectButtonClick;
         }
 
         /// <summary>
@@ -197,14 +196,14 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateOszImportButton()
         {
-            // Import .osz Button
-            ImportPeppyButton = new TextButton(new Vector2(200, 40), "Import .osz")
+            // Import .osz QuaverButton
+            ImportPeppyQuaverButton = new QuaverTextButton(new Vector2(200, 40), "Import .osz")
             {
                 Alignment = Alignment.TopCenter,
                 Parent = Boundary
             };
 
-            ImportPeppyButton.Clicked += OnImportOsuButtonClick;
+            ImportPeppyQuaverButton.Clicked += OnImportOsuButtonClick;
         }
 
         /// <summary>
@@ -212,13 +211,13 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateConvertSmButton()
         {
-            ConvertStepManiaButton = new TextButton(new Vector2(200, 400), "Convert StepMania file")
+            ConvertStepManiaQuaverButton = new QuaverTextButton(new Vector2(200, 400), "Convert StepMania file")
             {
                 Alignment = Alignment.MidLeft,
                 Parent = Boundary
             };
 
-            ConvertStepManiaButton.Clicked += OnConvertSmButtonClick;
+            ConvertStepManiaQuaverButton.Clicked += OnConvertSmButtonClick;
         }
 
         /// <summary>
@@ -226,14 +225,14 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateQpImportButton()
         {
-            // Import .osz Button
-            ImportQpButton = new TextButton(new Vector2(200, 40), "Import Quaver Mapset")
+            // Import .osz QuaverButton
+            ImportQpQuaverButton = new QuaverTextButton(new Vector2(200, 40), "Import Quaver Mapset")
             {
                 Alignment = Alignment.BotCenter,
                 Parent = Boundary
             };
 
-            ImportQpButton.Clicked += OnImportQpButtonClick;
+            ImportQpQuaverButton.Clicked += OnImportQpButtonClick;
         }
 
 
@@ -242,14 +241,14 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateQpExportButton()
         {
-            // Import .osz Button
-            ExportQpButton = new TextButton(new Vector2(200, 40), "Export Current Mapset")
+            // Import .osz QuaverButton
+            ExportQpQuaverButton = new QuaverTextButton(new Vector2(200, 40), "Export Current Mapset")
             {
                 Alignment = Alignment.BotRight,
                 Parent = Boundary
             };
 
-            ExportQpButton.Clicked += OnExportButtonClick;
+            ExportQpQuaverButton.Clicked += OnExportButtonClick;
         }
 
         /// <summary>
