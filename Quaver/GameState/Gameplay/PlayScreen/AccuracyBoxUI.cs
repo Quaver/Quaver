@@ -20,9 +20,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
     internal class AccuracyBoxUI : IHelper
     {
         /// <summary>
-        ///     Boundary that holds all UI element for this object
+        ///     QuaverContainer that holds all UI element for this object
         /// </summary>
-        private Boundary Boundary { get; set; }
+        private QuaverContainer QuaverContainer { get; set; }
 
         /// <summary>
         ///     Text box which displays a count of every judgement
@@ -98,8 +98,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             JudgementCount = new int[6];
             ProgressBarScale = 0;
 
-            // Create Boundary
-            Boundary = new Boundary();
+            // Create QuaverContainer
+            QuaverContainer = new QuaverContainer();
 
             // Create Accuracy Box Variables
             AccuracyGraphTargetScale = new float[6];
@@ -110,15 +110,15 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 Alignment = Alignment.TopRight,
                 Size = new UDim2(200 * GameBase.WindowUIScale, 240 * GameBase.WindowUIScale),
                 Position = new UDim2(-10,10),
-                Parent = Boundary,
+                Parent = QuaverContainer,
                 Alpha = 0.7f,
                 Tint = Color.Black //todo: remove later and use skin image
             };
 
-            var accuracyDisplaySet = new Boundary[7];
+            var accuracyDisplaySet = new QuaverContainer[7];
             for (var i = 0; i < 7; i++)
             {
-                accuracyDisplaySet[i] = new Boundary()
+                accuracyDisplaySet[i] = new QuaverContainer()
                 {
                     Parent = accuracyBox,
                     Alignment = Alignment.TopLeft,
@@ -191,7 +191,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             };
 
             // Create Grade box
-            var gradeBox = new Boundary()
+            var gradeBox = new QuaverContainer()
             {
                 Parent = accuracyBox,
                 Size = new UDim2(accuracyBox.SizeX, 26 * GameBase.WindowUIScale),
@@ -228,7 +228,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 Size = new UDim2(230, 400),
                 Alignment = Alignment.MidLeft,
-                Parent = Boundary,
+                Parent = QuaverContainer,
                 Alpha = 0f,
                 Tint = Color.Black //todo: remove later and use skin image
             };*/
@@ -293,18 +293,18 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             GradeProgressQuaverBar.UpdateBar(0,
                 GraphicsHelper.Tween(ProgressBarScale, GradeProgressQuaverBar.GetBarScale(0), tween));
 
-            // Update Boundary
-            Boundary.Update(dt);   
+            // Update QuaverContainer
+            QuaverContainer.Update(dt);   
         }
 
         public void Draw()
         {
-            Boundary.Draw();
+            QuaverContainer.Draw();
         }
 
         public void UnloadContent()
         {
-            Boundary.Destroy();
+            QuaverContainer.Destroy();
         }
     }
 }

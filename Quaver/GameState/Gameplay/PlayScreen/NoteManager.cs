@@ -41,7 +41,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal List<HitObject> HitObjectHold { get; set; }
         internal int HitObjectPoolSize { get; } = 255;
         internal uint RemoveTimeAfterMiss;
-        internal Boundary Boundary;
+        internal QuaverContainer QuaverContainer;
 
         /// <summary>
         ///     Baked rectangle for each lane. Determines size + position of where note is supposed to be hit.
@@ -100,13 +100,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             TrackPosition = GetCurrentTrackPosition();
             //TrackPosition = (ulong)(-GameplayReferences.PlayStartDelayed + SV_POSITIVE_CONST); //SV_POSITIVE_CONSTms added since curSVPos is a ulong. -2000 offset is the wait time before song starts
 
-            // Initialize Boundary
-            Boundary = new Boundary()
+            // Initialize QuaverContainer
+            QuaverContainer = new QuaverContainer()
             {
                 Size = new UDim2(PlayfieldSize, 0, 0, 1),
                 Alignment = Alignment.TopCenter
             };
-            Boundary.Update(0);
+            QuaverContainer.Update(0);
 
             // Initialize Timing Bars
             // todo: Initialize from MeasureBarManager
@@ -141,8 +141,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     for (var i = 0; i < 4; i++)
                     {
                         NoteHitRectangle[i] = new DrawRectangle(
-                            Boundary.GlobalRectangle.X + GameplayReferences.ReceptorXPosition[i],
-                            Boundary.GlobalRectangle.Y + PosFromOffset(SV_POSITIVE_CONST),
+                            QuaverContainer.GlobalRectangle.X + GameplayReferences.ReceptorXPosition[i],
+                            QuaverContainer.GlobalRectangle.Y + PosFromOffset(SV_POSITIVE_CONST),
                             LaneSize,
                             LaneSize * GameBase.LoadedSkin.NoteHitObjects4K[i][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width);
 
@@ -160,8 +160,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                     for (var i = 0; i < 7; i++)
                     {
                         NoteHitRectangle[i] = new DrawRectangle(
-                            Boundary.GlobalRectangle.X + GameplayReferences.ReceptorXPosition[i],
-                            Boundary.GlobalRectangle.Y + PosFromOffset(SV_POSITIVE_CONST),
+                            QuaverContainer.GlobalRectangle.X + GameplayReferences.ReceptorXPosition[i],
+                            QuaverContainer.GlobalRectangle.Y + PosFromOffset(SV_POSITIVE_CONST),
                             LaneSize,
                             LaneSize * GameBase.LoadedSkin.NoteHitObjects7K[i].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width);
 
@@ -176,7 +176,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             MeasureBarManager.BarObjectActive = MeasureBarManager.BarObjectQueue;
             for (var i = 0; i < MeasureBarManager.BarObjectActive.Count; i++)
             {
-                MeasureBarManager.BarObjectActive[i].Initialize(Boundary, GameBase.LoadedSkin.TimingBarPixelSize, 0);
+                MeasureBarManager.BarObjectActive[i].Initialize(QuaverContainer, GameBase.LoadedSkin.TimingBarPixelSize, 0);
             }
 
             // Initialize HitObjects
@@ -218,7 +218,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 }
 
                 // Initialize Object and add it to HitObjectPool
-                if (i < HitObjectPoolSize) newObject.Initialize(DownScroll, qua.HitObjects[i].EndTime > 0, Boundary);
+                if (i < HitObjectPoolSize) newObject.Initialize(DownScroll, qua.HitObjects[i].EndTime > 0, QuaverContainer);
                     HitObjectPool.Add(newObject);
             }
 
@@ -328,8 +328,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 }
             }
 
-            //Update Boundary
-            Boundary.Update(dt);
+            //Update QuaverContainer
+            QuaverContainer.Update(dt);
         }
 
         /// <summary>
@@ -338,14 +338,14 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         public void Draw()
         {
             if (true) MeasureBarManager.Draw();
-            Boundary.Draw();
+            QuaverContainer.Draw();
         }
         /// <summary>
         ///     Unloads content after the game is done.
         /// </summary>
         public void UnloadContent()
         {
-            Boundary.Destroy();
+            QuaverContainer.Destroy();
             HitObjectHold.Clear();
             HitObjectDead.Clear();
             HitObjectPool.Clear();
@@ -550,7 +550,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
 
         internal void CreateNote()
         {
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(DownScroll, HitObjectPool[HitObjectPoolSize - 1].EndTime > 0, Boundary);
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(DownScroll, HitObjectPool[HitObjectPoolSize - 1].EndTime > 0, QuaverContainer);
         }
     }
 }

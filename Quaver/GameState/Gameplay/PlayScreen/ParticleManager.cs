@@ -16,24 +16,24 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     Particle Container
         /// </summary>
-        private Boundary Boundary { get; set; }
+        private QuaverContainer QuaverContainer { get; set; }
 
         internal List<Particle> Particles { get; set; }
 
         public void Draw()
         {
-            Boundary.Draw();
+            QuaverContainer.Draw();
         }
 
         public void Initialize(IGameState state)
         {
-            Boundary = new Boundary();
+            QuaverContainer = new QuaverContainer();
             Particles = new List<Particle>();
         }
 
         public void UnloadContent()
         {
-            Boundary.Destroy();
+            QuaverContainer.Destroy();
         }
 
         public void Update(double dt)
@@ -57,13 +57,13 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 }
             }
 
-            // Update Boundary
-            Boundary.Update(dt);
+            // Update QuaverContainer
+            QuaverContainer.Update(dt);
         }
 
         internal void CreateHitBurst(DrawRectangle rect, int keyIndex)
         {
-            Particles.Add(new HitEffect(rect, Boundary, keyIndex));
+            Particles.Add(new HitEffect(rect, QuaverContainer, keyIndex));
         }
     }
 }
