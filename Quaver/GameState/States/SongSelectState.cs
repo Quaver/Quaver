@@ -55,7 +55,7 @@ namespace Quaver.GameState.States
         private TextButton BackButton { get; set; }
 
         /// <summary>
-        ///     Reference to the speed mod button
+        ///     Reference to the speed gameplayModifier button
         /// </summary>
         private TextButton SpeedModButton { get; set; }
 
@@ -277,12 +277,12 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Creates the speed mod button
+        ///     Creates the speed gameplayModifier button
         /// </summary>
         private void CreateSpeedModButton()
         {
-            // Create Speed Mod Button
-            SpeedModButton = new TextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x")
+            // Create ManiaModSpeed Mod Button
+            SpeedModButton = new TextButton(new Vector2(200, 50), $"Add ManiaModSpeed Mod {GameBase.AudioEngine.PlaybackRate}x")
             {
                 PosY = - 120,
                 Alignment = Alignment.BotLeft,
@@ -292,7 +292,7 @@ namespace Quaver.GameState.States
         }
 
         /// <summary>
-        ///     Adds speed mod to game
+        ///     Adds speed gameplayModifier to game
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -300,7 +300,7 @@ namespace Quaver.GameState.States
         {
             try
             {
-                // Activate the current speed mod depending on the (current game clock + 0.1)
+                // Activate the current speed gameplayModifier depending on the (current game clock + 0.1)
                 switch ((float)Math.Round(GameBase.AudioEngine.PlaybackRate + 0.1f, 1))
                 {
                     // In this case, 2.1 really means 0.5x, given that we're checking
@@ -362,7 +362,7 @@ namespace Quaver.GameState.States
             }
 
             // Change the song speed directly.
-            SpeedModButton.TextSprite.Text = $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x";
+            SpeedModButton.TextSprite.Text = $"Add ManiaModSpeed Mod {GameBase.AudioEngine.PlaybackRate}x";
         }
 
         /// <summary>

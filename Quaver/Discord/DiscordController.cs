@@ -142,7 +142,7 @@ namespace Quaver.Discord
                     sb.Append(" + ");
 
                     if (GameBase.CurrentGameModifiers.Exists(x => x.Type == ModType.Speed))
-                        sb.Append($"Speed {GameBase.AudioEngine.PlaybackRate}x");
+                        sb.Append($"ManiaModSpeed {GameBase.AudioEngine.PlaybackRate}x");
                 }
 
                 ChangeDiscordPresence(mapString, sb.ToString(), mapLength);

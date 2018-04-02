@@ -8,6 +8,7 @@ using Quaver.API.Enums;
 using Quaver.Audio;
 using Quaver.Logging;
 using Quaver.Modifiers.Mods;
+using Quaver.Modifiers.Mods.Mania;
 
 namespace Quaver.Modifiers
 {
@@ -17,12 +18,12 @@ namespace Quaver.Modifiers
     internal class ModManager
     {
         /// <summary>
-        ///     Adds a mod to our list, getting rid of any incompatible mods that are currently in there.
-        ///     Also, specifying a speed, if need-be. That is only "required" if passing in ModIdentifier.Speed
+        ///     Adds a gameplayModifier to our list, getting rid of any incompatible mods that are currently in there.
+        ///     Also, specifying a speed, if need-be. That is only "required" if passing in ModIdentifier.ManiaModSpeed
         /// </summary>
         public static void AddMod(ModIdentifier modIdentifier)
         {
-            IMod mod;
+            IGameplayModifier gameplayModifier;
 
             // Set the newMod based on the ModType that is coming in
             switch (modIdentifier)
@@ -42,44 +43,44 @@ namespace Quaver.Modifiers
                 case ModIdentifier.Speed18X:
                 case ModIdentifier.Speed19X:
                 case ModIdentifier.Speed20X:
-                    mod = new Speed(modIdentifier);
+                    gameplayModifier = new ManiaModSpeed(modIdentifier);
                     break;
                 case ModIdentifier.NoSliderVelocity:
-                    mod = new NoSliderVelocities();
+                    gameplayModifier = new ManiaGameplayModifierNoSliderVelocities();
                     break;
                 case ModIdentifier.Strict:
-                    mod = new Strict();
+                    gameplayModifier = new ManiaModStrict();
                     break;
                 case ModIdentifier.Chill:
-                    mod = new Chill();
+                    gameplayModifier = new ManiaGameplayModifierChill();
                     break;
                 default:
                     return;
             }
 
             // Check if any incompatible mods are already in our current game modifiers, and remove them if that is the case.
-            var incompatibleMods = GameBase.CurrentGameModifiers.FindAll(x => x.IncompatibleMods.Contains(mod.ModIdentifier));
+            var incompatibleMods = GameBase.CurrentGameModifiers.FindAll(x => x.IncompatibleMods.Contains(gameplayModifier.ModIdentifier));
             incompatibleMods.ForEach(x => RemoveMod(x.ModIdentifier));
 
             // Add The Mod
-            GameBase.CurrentGameModifiers.Add(mod);
+            GameBase.CurrentGameModifiers.Add(gameplayModifier);
 
-            // Initialize the mod and set its score multiplier.
-            GameBase.ScoreMultiplier += mod.ScoreMultiplierAddition;
-            mod.InitializeMod();  
+            // Initialize the gameplayModifier and set its score multiplier.
+            GameBase.ScoreMultiplier += gameplayModifier.ScoreMultiplierAddition;
+            gameplayModifier.InitializeMod();  
             
-            Logger.LogSuccess($"Added Mod: {mod.ModIdentifier} and removed all incompatible mods.", LogType.Runtime);
+            Logger.LogSuccess($"Added Mod: {gameplayModifier.ModIdentifier} and removed all incompatible mods.", LogType.Runtime);
             Logger.LogInfo($"Current Mods: {string.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ToString()))}", LogType.Runtime);
         }
 
         /// <summary>
-        ///     Removes a mod from our GameBase
+        ///     Removes a gameplayModifier from our GameBase
         /// </summary>
         public static void RemoveMod(ModIdentifier modIdentifier)
         {
             try
             {
-                // Try to find the removed mod in the list
+                // Try to find the removed gameplayModifier in the list
                 var removedMod = GameBase.CurrentGameModifiers.Find(x => x.ModIdentifier == modIdentifier);
 
                 // Remove The Mod's score multiplier
@@ -96,7 +97,7 @@ namespace Quaver.Modifiers
         }
 
         /// <summary>
-        ///     Checks if a mod is currently activated.
+        ///     Checks if a gameplayModifier is currently activated.
         /// </summary>
         /// <param name="modIdentifier"></param>
         /// <returns></returns>
@@ -127,7 +128,7 @@ namespace Quaver.Modifiers
                 GameBase.CurrentGameModifiers.RemoveAll(x => x.Type == ModType.Speed);
                 GameBase.AudioEngine.SetPlaybackRate();
 
-                Logger.LogSuccess($"Removed Speed Mods from the current game modifiers.", LogType.Runtime);
+                Logger.LogSuccess($"Removed ManiaModSpeed Mods from the current game modifiers.", LogType.Runtime);
                 Logger.LogInfo($"Current Mods: {string.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ToString()))}", LogType.Runtime);
             }
             catch (Exception e)
@@ -137,17 +138,17 @@ namespace Quaver.Modifiers
         }
 
         /// <summary>
-        ///     Makes sure that the speed mod selected matches up with the game clock and sets the correct one.
+        ///     Makes sure that the speed gameplayModifier selected matches up with the game clock and sets the correct one.
         /// </summary>
         public static void CheckModInconsistencies()
         {
             var mod = GameBase.CurrentGameModifiers.Find(x => x.Type == ModType.Speed);
 
-            // Re-intialize the correct mod.
+            // Re-intialize the correct gameplayModifier.
             var index = GameBase.CurrentGameModifiers.IndexOf(mod);
 
             if (index != -1)
-                GameBase.CurrentGameModifiers[index] = new Speed(mod.ModIdentifier);
+                GameBase.CurrentGameModifiers[index] = new ManiaModSpeed(mod.ModIdentifier);
             else
                 GameBase.AudioEngine.PlaybackRate = 1.0f;
         }
