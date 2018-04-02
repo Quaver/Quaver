@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Audio;
 using Quaver.API.Enums;
 using Quaver.Audio;
-using Quaver.Graphics.Sprite;
+using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Logging;
 
@@ -149,12 +149,12 @@ namespace Quaver.Skins
         internal Texture2D ColumnLighting7K { get; set; }
 
         /// <summary>
-        ///     Timing bar Sprite
+        ///     Timing bar QuaverSprite
         /// </summary>
         internal Texture2D StageTimingBar { get; set; }
 
         /// <summary>
-        ///     Stage Sprite. Is displayed on the left side of the stage.
+        ///     Stage QuaverSprite. Is displayed on the left side of the stage.
         /// </summary>
         internal Texture2D StageLeftBorder { get; set; }
         internal Texture2D StageRightBorder { get; set; }
@@ -204,7 +204,7 @@ namespace Quaver.Skins
         internal Texture2D JudgeMarv { get; set; }
 
         /// <summary>
-        ///     Cursor
+        ///     QuaverCursor
         /// </summary>
         internal Texture2D Cursor { get; set; }
 
@@ -356,7 +356,7 @@ namespace Quaver.Skins
                 @"judge-perf",
                 @"judge-marv",
 
-                //  Cursor
+                //  QuaverCursor
                 @"main-cursor",
 
                 // Sound Effects
@@ -394,7 +394,7 @@ namespace Quaver.Skins
         public static void LoadSkin()
         {
             GameBase.LoadedSkin = new Skin(ConfigManager.Skin);
-            GameBase.Cursor = new Cursor();
+            GameBase.QuaverCursor = new QuaverCursor();
         }
 
         /// <summary>

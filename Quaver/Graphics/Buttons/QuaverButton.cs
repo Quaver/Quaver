@@ -7,7 +7,7 @@ namespace Quaver.Graphics.Buttons
     /// <summary>
     /// This class will be inherited from every button class.
     /// </summary>
-    internal abstract class QuaverButton : Sprite.Sprite
+    internal abstract class QuaverButton : Sprites.QuaverSprite
     {
         internal QuaverButton()
         {

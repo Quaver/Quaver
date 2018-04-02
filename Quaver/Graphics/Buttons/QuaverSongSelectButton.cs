@@ -22,11 +22,11 @@ namespace Quaver.Graphics.Buttons
 
         private TextBoxSprite DiffText { get; set; }
 
-        private Sprite.Sprite UnderlayImage { get; set; }
+        private Sprites.QuaverSprite UnderlayImage { get; set; }
 
-        private Sprite.Sprite GameModeImage { get; set; }
+        private Sprites.QuaverSprite GameModeImage { get; set; }
 
-        private Sprite.Sprite GradeImage { get; set; }
+        private Sprites.QuaverSprite GradeImage { get; set; }
 
         /// <summary>
         ///     Current tween value of the object. Used for animation.
@@ -113,7 +113,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = ModeAndGradeBoundaryOutter
             };*/
 
-            UnderlayImage = new Sprite.Sprite
+            UnderlayImage = new Sprites.QuaverSprite
             {
                 Position = new UDim2(2 * ButtonScale, -5 * ButtonScale),
                 Size = new UDim2(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
@@ -122,7 +122,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = this
             };
             
-            GradeImage = new Sprite.Sprite()
+            GradeImage = new Sprites.QuaverSprite()
             {
                 Position = new UDim2(-16 * ButtonScale, 0),
                 Size = new UDim2(14 * ButtonScale, 14 * ButtonScale),
@@ -132,7 +132,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = UnderlayImage
             };
 
-            GameModeImage = new Sprite.Sprite()
+            GameModeImage = new Sprites.QuaverSprite()
             {
                 Size = new UDim2(14 * ButtonScale, 14 * ButtonScale),
                 Image = GameBase.LoadedSkin.Cursor,

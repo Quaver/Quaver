@@ -12,7 +12,6 @@ using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics;
-using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Input;
 using Quaver.Logging;
