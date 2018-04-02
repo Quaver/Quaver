@@ -18,6 +18,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Discord;
 using Quaver.API.Enums;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Colors;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Particles;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
@@ -419,8 +421,8 @@ namespace Quaver.GameState.Gameplay
             //todo: remove this. used for logging.
             Logger.Add("KeyCount", "", Color.Pink);
             Logger.Add("SongPos", "", Color.White);
-            Logger.Add("Skippable", "", GameColors.NameTagAdmin);
-            Logger.Add("Paused", "", GameColors.NameTagModerator);
+            Logger.Add("Skippable", "", QuaverColors.NameTagAdmin);
+            Logger.Add("Paused", "", QuaverColors.NameTagModerator);
         }
 
         /// <summary>

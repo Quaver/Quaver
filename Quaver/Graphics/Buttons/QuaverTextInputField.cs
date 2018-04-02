@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Logging;

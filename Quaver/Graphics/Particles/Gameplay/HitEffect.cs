@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 
 namespace Quaver.Graphics.Particles.Gameplay

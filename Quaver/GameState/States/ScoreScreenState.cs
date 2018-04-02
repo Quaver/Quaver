@@ -21,6 +21,8 @@ using Quaver.Audio;
 using Quaver.Database.Beatmaps;
 using Quaver.Database.Scores;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Colors;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
@@ -541,7 +543,7 @@ namespace Quaver.GameState.States
                     {
                         Position = new UDim2(0, boundary.Size.Y.Offset * (float)(1 - ((ScoreData.GradePercentage[i] - lowestAcc) * lowAccRatio))),
                         Size = new UDim2(0, 1, 1, 0),
-                        Tint = GameColors.GradeColors[i+1],
+                        Tint = QuaverColors.GradeColors[i+1],
                         Alpha = 0.2f,
                         Parent = boundary
                     };
@@ -558,11 +560,11 @@ namespace Quaver.GameState.States
                 Color tint = guides[0].Tint;
                 if (ob.PosY <= 0.01)
                 {
-                    tint = GameColors.GradeColors[7];
+                    tint = QuaverColors.GradeColors[7];
                 }
                 else if (ob.PosY > guides[0].PosY)
                 {
-                    tint = GameColors.GradeColors[7 - guides.Count];
+                    tint = QuaverColors.GradeColors[7 - guides.Count];
                 }
                 else
                 {

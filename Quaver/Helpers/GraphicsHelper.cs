@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
+using Quaver.Graphics.Enums;
 
 namespace Quaver.Helpers
 {
