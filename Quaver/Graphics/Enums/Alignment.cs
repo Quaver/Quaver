@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.Xna.Framework;
-
-namespace Quaver.Graphics
+﻿namespace Quaver.Graphics.Enums
 {
     /// <summary>
     ///     The alignment enumerators for a Rectangle Transform.
