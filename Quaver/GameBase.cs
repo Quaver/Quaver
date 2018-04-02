@@ -128,12 +128,9 @@ namespace Quaver
         /// </summary>
         public static string EtternaFolder { get; set; }
 
-        /*
         /// <summary>
         ///     The rectangle this game will be rendered onto
         /// </summary>
-        public static DrawRectangle Window { get; private set; } = new DrawRectangle(0, 0, ConfigManager.WindowWidth, ConfigManager.WindowHeight); //TODO: Automatically set this rectangle as windoow size through method*/
-
         public static DrawRectangle WindowRectangle { get; set; } = new DrawRectangle(0, 0, ConfigManager.WindowWidth, ConfigManager.WindowHeight);
 
         /// <summary>
@@ -250,45 +247,6 @@ namespace Quaver
                         return "";
                 }
             }
-        }
-
-        /// <summary>
-        ///     This method changes the window to match configuration settings
-        /// </summary>
-        /// <param name="resolution"></param>
-        /// <param name="fullscreen"></param>
-        /// <param name="letterbox"></param>
-        public static void ChangeWindow(bool fullscreen, bool letterbox, Point? resolution = null)
-        {
-            // Change Resolution
-            if (resolution != null)
-            {
-                ConfigManager.WindowWidth = resolution.Value.X;
-                ConfigManager.WindowHeight = resolution.Value.Y;
-                GraphicsManager.PreferredBackBufferWidth = resolution.Value.X;
-                GraphicsManager.PreferredBackBufferHeight = resolution.Value.Y;
-                WindowRectangle = new DrawRectangle(0, 0, resolution.Value.X, resolution.Value.Y);
-                WindowUIScale = WindowRectangle.Height / ReferenceResolution.Y;
-            }
-
-            // Update Fullscreen
-            if (fullscreen != GraphicsManager.IsFullScreen)
-                GraphicsManager.IsFullScreen = fullscreen;
-
-            // Update letter boxing
-            if (letterbox)
-            {
-                //do stuff
-            }
-
-            // Apply changes to graphics manager
-            GraphicsManager.ApplyChanges();
-
-            // Log this event
-            Logger.LogImportant("Window Settings Changed!", LogType.Runtime);
-            Logger.LogImportant($"Res: {GraphicsManager.PreferredBackBufferWidth}x {GraphicsManager.PreferredBackBufferHeight}", LogType.Runtime);
-            Logger.LogImportant($"Letterboxing: {letterbox}", LogType.Runtime);
-            Logger.LogImportant($"FullScreen: {GraphicsManager.IsFullScreen}", LogType.Runtime);
         }
     }
 }
