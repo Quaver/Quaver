@@ -10,6 +10,7 @@ using Quaver.Logging;
 
 using Quaver.Utility;
 using Quaver.Graphics.Text;
+using Quaver.Helpers;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 using Quaver.Input;
 
@@ -132,7 +133,7 @@ namespace Quaver.Graphics.Button
         /// </summary>
         internal override void Update(double dt)
         {
-            HoverCurrentTween = Util.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
+            HoverCurrentTween = GraphicsHelper.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
             CurrentTint.R = (byte)(((HoverCurrentTween * 0.25) + 0.15f) * 255);
             CurrentTint.G = (byte)(((HoverCurrentTween * 0.25) + 0.15f) * 255);
             CurrentTint.B = (byte)(((HoverCurrentTween * 0.25) + 0.15f) * 255);

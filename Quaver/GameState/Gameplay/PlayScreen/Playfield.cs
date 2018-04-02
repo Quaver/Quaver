@@ -11,7 +11,7 @@ using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
-
+using Quaver.Helpers;
 using Quaver.Skins;
 using Quaver.Utility;
 
@@ -301,9 +301,9 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             {
                 // Update ColumnLighting Animation
                 if (ColumnLightingActive[i])
-                    ColumnLightingAnimation[i] = Util.Tween(1, ColumnLightingAnimation[i], Math.Min(dt / 2, 1));
+                    ColumnLightingAnimation[i] = GraphicsHelper.Tween(1, ColumnLightingAnimation[i], Math.Min(dt / 2, 1));
                 else
-                    ColumnLightingAnimation[i] = Util.Tween(0, ColumnLightingAnimation[i], Math.Min(dt / 60, 1));
+                    ColumnLightingAnimation[i] = GraphicsHelper.Tween(0, ColumnLightingAnimation[i], Math.Min(dt / 60, 1));
 
                 // Update Hit Lighting Object
                 ColumnLightingObjects[i].Alpha = ColumnLightingAnimation[i];

@@ -11,11 +11,12 @@ using Quaver.Database.Beatmaps;
 using Quaver.Graphics.Sprite;
 using Quaver.Audio;
 using Quaver.Database;
+using Quaver.Helpers;
 using Quaver.Utility;
 
 namespace Quaver.GameState.SongSelect
 {
-    class BeatmapOrganizerUI : IHelper
+    internal class BeatmapOrganizerUI : IHelper
     {
         /// <summary>
         ///     Reference to the list of song select buttons
@@ -75,18 +76,10 @@ namespace Quaver.GameState.SongSelect
             var tween = Math.Min(dt / 70, 1);
 
             // Update Position of Boundary
-            var posDifference = Util.Tween(TargetPosition, Boundary.PosY, tween) - Boundary.PosY;
-            if (Math.Abs(posDifference) > 0.5f) Boundary.PosY += posDifference;
+            var posDifference = GraphicsHelper.Tween(TargetPosition, Boundary.PosY, tween) - Boundary.PosY;
 
-            /* SelectedMapTween = Util.Tween(SelectedMapIndex, SelectedMapTween, tween);
-            for (var i=0; i<SongSelectButtons.Count; i++)
-            {
-                var button = SongSelectButtons[i];
-                var selectedOffset = Math.Abs(SelectedMapTween - i)+1;
-
-                button.PosX = -(30 / selectedOffset) - 5;
-
-            }*/
+            if (Math.Abs(posDifference) > 0.5f)
+                Boundary.PosY += posDifference;
 
             Boundary.Update(dt);
         }

@@ -68,6 +68,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Helpers\GraphicsHelper.cs" />
     <Compile Include="Helpers\RngHelper.cs" />
     <Compile Include="Helpers\StreamHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
@@ -192,7 +193,6 @@
     <Compile Include="Utility\FpsCounter.cs" />
     <Compile Include="Utility\ImageLoader.cs" />
     <Compile Include="Utility\JsonResourceReader.cs" />
-    <Compile Include="Utility\Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">

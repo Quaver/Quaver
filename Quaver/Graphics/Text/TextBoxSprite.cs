@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Helpers;
 using Quaver.Utility;
 
 namespace Quaver.Graphics.Text
@@ -135,7 +136,7 @@ namespace Quaver.Graphics.Text
         {
             //TODO: SpriteFont.MeasureString()
             //Draw itself if it is in the window
-            if (Util.RectangleIntercepts(GameBase.WindowRectangle, GlobalRectangle) && Visible)
+            if (GraphicsHelper.RectangleIntercepts(GameBase.WindowRectangle, GlobalRectangle) && Visible)
             {
                 if (_textScale == 1 )
                     GameBase.SpriteBatch.DrawString(Font, _text, _textPos, _color);
@@ -178,7 +179,7 @@ namespace Quaver.Graphics.Text
             _textVect.Height = _textSize.Y * _textScale;
 
             //Update GlobalTextRect
-            _globalTextVect = Util.AlignRect(TextAlignment, _textVect, GlobalRectangle);
+            _globalTextVect = GraphicsHelper.AlignRect(TextAlignment, _textVect, GlobalRectangle);
             _textPos.X = _globalTextVect.X;
             _textPos.Y = _globalTextVect.Y;
         }

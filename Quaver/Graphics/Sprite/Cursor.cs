@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics;
-
+using Quaver.Helpers;
 using Quaver.Utility;
 
 namespace Quaver.Graphics.Sprite
@@ -58,12 +58,12 @@ namespace Quaver.Graphics.Sprite
             }
 
             //Resize Cursor
-            ClickCurrentSize = Util.Tween(ClickTargetSize, ClickCurrentSize, Math.Min(dt / 40, 1));
+            ClickCurrentSize = GraphicsHelper.Tween(ClickTargetSize, ClickCurrentSize, Math.Min(dt / 40, 1));
             SizeX = CursorSize + ClickCurrentSize;
             SizeY = SizeX;
 
             //Move Cursor
-            //Position = Util.PointToVector2(GameBase.MouseState.Position);
+            //Position = GraphicsHelper.PointToVector2(GameBase.MouseState.Position);
             PosX = GameBase.MouseState.Position.X - (CursorSize + ClickCurrentSize) / 2;
             PosY = GameBase.MouseState.Position.Y - (CursorSize + ClickCurrentSize) / 2;
 
