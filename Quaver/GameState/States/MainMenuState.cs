@@ -26,7 +26,6 @@ using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Peppy;
-using Quaver.Steam;
 using Quaver.StepMania;
 
 namespace Quaver.GameState.States
