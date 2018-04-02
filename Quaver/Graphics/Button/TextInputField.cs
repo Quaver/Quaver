@@ -7,8 +7,6 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Logging;
-
-using Quaver.Utility;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Keys = Microsoft.Xna.Framework.Input.Keys;

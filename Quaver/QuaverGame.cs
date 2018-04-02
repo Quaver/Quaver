@@ -16,11 +16,11 @@ using Quaver.Input;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.Skins;
-using Quaver.Utility;
 using System.Windows.Forms;
 using Quaver.Commands;
 using Quaver.Discord;
 using Quaver.Graphics.Sprite;
+using Quaver.Graphics.UserInterface;
 using Quaver.Steam;
 using Steamworks;
 
@@ -155,7 +155,7 @@ namespace Quaver
 
             // Update FpsCounter
             if (Config.Configuration.FpsCounter)
-                FpsCounter.Count(dt);
+                QuaverFpsCounter.Count(dt);
 
             // Update Background from Background Manager
             BackgroundManager.Update(dt);
@@ -196,7 +196,7 @@ namespace Quaver
             Logger.Draw(dt);
 
             if (Config.Configuration.FpsCounter)
-                FpsCounter.Draw();
+                QuaverFpsCounter.Draw();
 
             GameBase.SpriteBatch.End();
 

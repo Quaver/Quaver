@@ -17,7 +17,6 @@ using Quaver.Audio;
 using Quaver.Graphics.Sprite;
 using Quaver.Helpers;
 using Quaver.Logging;
-using Quaver.Utility;
 
 namespace Quaver.Skins
 {

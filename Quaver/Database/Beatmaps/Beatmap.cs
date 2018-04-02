@@ -11,7 +11,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Audio;
-using Quaver.Utility;
 using SQLite;
 using Configuration = Quaver.Config.Configuration;
 

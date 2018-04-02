@@ -8,7 +8,6 @@ using Quaver.GameState.States;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
-using Quaver.Utility;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Helpers;
 

@@ -12,7 +12,6 @@ using Quaver.Graphics.Sprite;
 using Quaver.Audio;
 using Quaver.Database;
 using Quaver.Helpers;
-using Quaver.Utility;
 
 namespace Quaver.GameState.SongSelect
 {
