@@ -17,7 +17,9 @@ using Quaver.Logging;
 using Quaver.Modifiers;
 using System.Windows.Forms;
 using Quaver.Commands;
+using Quaver.Config;
 using Quaver.Discord;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.UserInterface;
 using Quaver.Skinning;
 using Steamworks;
@@ -218,6 +220,45 @@ namespace Quaver
             catch (Exception e)
             {
             }
+        }
+
+        /// <summary>
+        ///     This method changes the window to match configuration settings
+        /// </summary>
+        /// <param name="resolution"></param>
+        /// <param name="fullscreen"></param>
+        /// <param name="letterbox"></param>
+        public static void ChangeWindow(bool fullscreen, bool letterbox, Point? resolution = null)
+        {
+            // Change Resolution
+            if (resolution != null)
+            {
+                ConfigManager.WindowWidth = resolution.Value.X;
+                ConfigManager.WindowHeight = resolution.Value.Y;
+                GameBase.GraphicsManager.PreferredBackBufferWidth = resolution.Value.X;
+                GameBase.GraphicsManager.PreferredBackBufferHeight = resolution.Value.Y;
+                GameBase.WindowRectangle = new DrawRectangle(0, 0, resolution.Value.X, resolution.Value.Y);
+                GameBase.WindowUIScale = GameBase.WindowRectangle.Height / GameBase.ReferenceResolution.Y;
+            }
+
+            // Update Fullscreen
+            if (fullscreen != GameBase.GraphicsManager.IsFullScreen)
+                GameBase.GraphicsManager.IsFullScreen = fullscreen;
+
+            // Update letter boxing
+            if (letterbox)
+            {
+                //do stuff
+            }
+
+            // Apply changes to graphics manager
+            GameBase.GraphicsManager.ApplyChanges();
+
+            // Log this event
+            Logger.LogImportant("Window Settings Changed!", LogType.Runtime);
+            Logger.LogImportant($"Res: {GameBase.GraphicsManager.PreferredBackBufferWidth}x {GameBase.GraphicsManager.PreferredBackBufferHeight}", LogType.Runtime);
+            Logger.LogImportant($"Letterboxing: {letterbox}", LogType.Runtime);
+            Logger.LogImportant($"FullScreen: {GameBase.GraphicsManager.IsFullScreen}", LogType.Runtime);
         }
     }
 }
