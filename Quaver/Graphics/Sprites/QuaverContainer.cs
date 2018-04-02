@@ -1,4 +1,5 @@
 ﻿using Quaver.Graphics.Base;
+using Quaver.Main;
 
 namespace Quaver.Graphics.Sprites
 {

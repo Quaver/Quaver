@@ -10,6 +10,7 @@ using Quaver.Config;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Logging;
+using Quaver.Main;
 
 namespace Quaver.Skinning
 {
@@ -883,7 +884,7 @@ namespace Quaver.Skinning
             {
                 case DefaultSkins.Bar:
                     Name = "Default Bar Skin";
-                    Author = "QuaverGame Team";
+                    Author = "Quaver Team";
                     Version = "1.0";
                     BgMaskPadding4K = 0;
                     BgMaskPadding7K = 0;
@@ -925,7 +926,7 @@ namespace Quaver.Skinning
                     break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
-                    Author = "QuaverGame Team";
+                    Author = "Quaver Team";
                     Version = "1.0";
                     BgMaskPadding4K = 10;
                     BgMaskPadding7K = 10;

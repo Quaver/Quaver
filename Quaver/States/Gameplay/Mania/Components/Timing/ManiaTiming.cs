@@ -6,6 +6,7 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Logging;
+using Quaver.Main;
 using Quaver.Modifiers;
 
 namespace Quaver.States.Gameplay.Mania.Components.Timing

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Base;
+using Quaver.Main;
 
 namespace Quaver.Graphics.Sprites
 {

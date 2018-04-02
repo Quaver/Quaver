@@ -1,30 +1,18 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Timers;
-using ManagedBass;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Audio;
-using Quaver.Database.Beatmaps;
-using Quaver.Database;
-using Quaver.GameState;
-using Quaver.Graphics;
-using Quaver.Input;
-using Quaver.Logging;
-using Quaver.Modifiers;
-using System.Windows.Forms;
-using Quaver.Commands;
 using Quaver.Config;
+using Quaver.Database.Beatmaps;
 using Quaver.Discord;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.UserInterface;
+using Quaver.Logging;
 using Quaver.Skinning;
 using Quaver.States.Menu;
-using Steamworks;
 
-namespace Quaver
+namespace Quaver.Main
 {
     /// <summary>
     /// This is the main type for your game.

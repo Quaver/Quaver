@@ -9,13 +9,14 @@ using Quaver.API.StepMania;
 using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Logging;
+using Quaver.Main;
 
 namespace Quaver.StepMania
 {
     internal class StepManiaConverter
     {
         /// <summary>
-        ///     Converts a .sm file to QuaverGame's format.
+        ///     Converts a .sm file to Quaver's format.
         /// </summary>
         internal static void ConvertSm(string path)
         {

@@ -9,6 +9,7 @@ using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Logging;
+using Quaver.Main;
 using Quaver.Modifiers;
 using Quaver.States.Gameplay.Mania.Components.Timing;
 using Quaver.States.Gameplay.Mania.UI.Measures;

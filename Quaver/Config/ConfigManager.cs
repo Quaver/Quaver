@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Logging;
+using Quaver.Main;
 
 namespace Quaver.Config
 {
@@ -388,7 +389,7 @@ namespace Quaver.Config
             // all of the default values.
             if (!File.Exists(GameDirectory + "/quaver.cfg"))
             {
-                File.WriteAllText(GameDirectory + "/quaver.cfg", "; QuaverGame ConfigManager File");
+                File.WriteAllText(GameDirectory + "/quaver.cfg", "; Quaver Configiration File");
                 FirstWrite = true;
 
                 Task.Run(async () => await WriteConfigFileAsync()).Wait();
@@ -487,11 +488,11 @@ namespace Quaver.Config
             var sb = new StringBuilder();
 
             // Top file information
-            sb.AppendLine("; QuaverGame ConfigManager File");
+            sb.AppendLine("; Quaver Configuration File");
             sb.AppendLine("; Last Updated On: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             sb.AppendLine();
             sb.AppendLine("[Config]");
-            sb.AppendLine("; QuaverGame ConfigManager Values");
+            sb.AppendLine("; Quaver Configuration Values");
 
             // For every line we want to append "PropName = PropValue" to the string
             foreach (var p in typeof(ConfigManager)

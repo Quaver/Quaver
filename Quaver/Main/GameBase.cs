@@ -1,33 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
-using Quaver.Database.Beatmaps;
-using Quaver.Database;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
-using Quaver.API.Enums;
-using Quaver.API.Maps;
 using Quaver.API.Osu;
 using Quaver.Audio;
 using Quaver.Config;
+using Quaver.Database.Beatmaps;
 using Quaver.Discord;
 using Quaver.GameState;
-using Quaver.Graphics;
 using Quaver.Graphics.Base;
-using Quaver.Logging;
-using Quaver.Modifiers;
-using Quaver.Input;
 using Quaver.Graphics.GameOverlay;
 using Quaver.Graphics.UserInterface;
+using Quaver.Input;
+using Quaver.Modifiers;
 using Quaver.Skinning;
 
-namespace Quaver
+namespace Quaver.Main
 {
     /// <summary>
     ///     Holds all the global variables and configuration for our game.

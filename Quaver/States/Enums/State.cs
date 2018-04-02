@@ -1,7 +1,7 @@
 ﻿namespace Quaver.States.Enums
 {
     /// <summary>
-    ///     Enum for all the different game states. (Can only be accessed within QuaverGame.GameState namespace.)
+    ///     Enum for all the different game states.
     /// </summary>
     internal enum State
     {

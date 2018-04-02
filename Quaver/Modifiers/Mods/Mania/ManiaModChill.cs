@@ -1,4 +1,5 @@
 ﻿using Quaver.API.Enums;
+using Quaver.Main;
 
 namespace Quaver.Modifiers.Mods.Mania
 {

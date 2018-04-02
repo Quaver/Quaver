@@ -13,6 +13,7 @@ using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Logging;
+using Quaver.Main;
 using Quaver.Modifiers;
 using Quaver.Peppy;
 using Quaver.States.Enums;
@@ -75,7 +76,7 @@ namespace Quaver.States.Menu
         /// </summary>
         public void Initialize()
         {
-            GameBase.GameWindow.Title = "QuaverGame";
+            GameBase.GameWindow.Title = "Quaver";
 
             // Remove speed mods upon going to the main menu so songs can be played at normal speed.
             if (GameBase.CurrentGameModifiers.Count > 0)
@@ -219,7 +220,7 @@ namespace Quaver.States.Menu
         private void CreateQpImportButton()
         {
             // Import .osz QuaverButton
-            ImportQpQuaverButton = new QuaverTextButton(new Vector2(200, 40), "Import QuaverGame Mapset")
+            ImportQpQuaverButton = new QuaverTextButton(new Vector2(200, 40), "Import Quaver Mapset")
             {
                 Alignment = Alignment.BotCenter,
                 Parent = QuaverContainer
@@ -256,7 +257,7 @@ namespace Quaver.States.Menu
             var openFileDialog = new OpenFileDialog()
             {
                 InitialDirectory = "c:\\",
-                Filter = "QuaverGame Mapset (*.qp)|*.qp",
+                Filter = "Quaver Mapset (*.qp)|*.qp",
                 FilterIndex = 0,
                 RestoreDirectory = true,
                 Multiselect = true
