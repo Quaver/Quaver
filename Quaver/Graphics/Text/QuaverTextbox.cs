@@ -11,10 +11,11 @@ using Quaver.Helpers;
 
 namespace Quaver.Graphics.Text
 {
+    /// <inheritdoc />
     /// <summary>
     ///     Any drawable object that uses 
     /// </summary>
-    internal class TextBoxSprite : Drawable
+    internal class QuaverTextbox : Drawable
     {
         /// <summary>
         ///     The Actual text of the text Box.
@@ -37,7 +38,7 @@ namespace Quaver.Graphics.Text
         internal TextBoxStyle TextBoxStyle { get; set; } = TextBoxStyle.OverflowSingleLine;
 
         /// <summary>
-        ///     The Rectangle of the rendered text inside the TextSprite.
+        ///     The Rectangle of the rendered text inside the QuaverTextSprite.
         /// </summary>
         private DrawRectangle _globalTextVect = new DrawRectangle();
 
@@ -47,7 +48,7 @@ namespace Quaver.Graphics.Text
         private Vector2 _textPos = Vector2.Zero;
 
         /// <summary>
-        ///     The Local Rectangle of the rendered text inside the TextSprite. Used to reference Text Size.
+        ///     The Local Rectangle of the rendered text inside the QuaverTextSprite. Used to reference Text Size.
         /// </summary>
         private DrawRectangle _textVect = new DrawRectangle();
 
@@ -67,7 +68,7 @@ namespace Quaver.Graphics.Text
         internal SpriteFont Font { get; set; } = Fonts.Medium12;
 
         /// <summary>
-        ///     The text of this TextSprite
+        ///     The text of this QuaverTextSprite
         /// </summary>
         internal string Text
         {

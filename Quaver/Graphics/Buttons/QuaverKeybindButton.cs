@@ -14,7 +14,7 @@ namespace Quaver.Graphics.Buttons
     /// </summary>
     internal class QuaverKeybindButton : QuaverButton
     {
-        internal TextBoxSprite TextSprite { get; set; }
+        internal QuaverTextbox QuaverTextSprite { get; set; }
 
         internal Keys CurrentKey { get; private set; }
 
@@ -24,7 +24,7 @@ namespace Quaver.Graphics.Buttons
 
         internal QuaverKeybindButton(Vector2 ButtonSize, Keys key)
         {
-            TextSprite = new TextBoxSprite()
+            QuaverTextSprite = new QuaverTextbox()
             {
                 Text = key.ToString(),
                 Size = new UDim2(ButtonSize.X, ButtonSize.Y),
@@ -35,7 +35,7 @@ namespace Quaver.Graphics.Buttons
             Size.X.Offset = ButtonSize.X;
             Size.Y.Offset = ButtonSize.Y;
             Image = GameBase.UI.BlankBox;
-            TextSprite.TextColor = Color.Black;
+            QuaverTextSprite.TextColor = Color.Black;
             Tint = Color.LightPink;
             CurrentKey = key;
 
@@ -84,7 +84,7 @@ namespace Quaver.Graphics.Buttons
             //CurrentTint.B = (byte)((HoverCurrentTween * Tint.B / 255f * 0.65f + 0.35f) * 255);
             //Tint = CurrentTint;
 
-            //TextSprite.Update(dt);
+            //QuaverTextSprite.Update(dt);
             base.Update(dt);
         }
 
@@ -130,7 +130,7 @@ namespace Quaver.Graphics.Buttons
             Tint = Color.LightPink;
             Selected = false;
             HoverTargetTween = 0;
-            TextSprite.Text = CurrentKey.ToString();
+            QuaverTextSprite.Text = CurrentKey.ToString();
         }
 
         internal override void OnClicked()
@@ -139,7 +139,7 @@ namespace Quaver.Graphics.Buttons
             if (Selected)
             {
                 Tint = Color.LightYellow;
-                TextSprite.Text = "Press Key";
+                QuaverTextSprite.Text = "Press Key";
                 HoverTargetTween = 1;
             }
             base.OnClicked();

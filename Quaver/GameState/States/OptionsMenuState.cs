@@ -137,7 +137,7 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateManiaKeyButtons()
         {
-            var ob = new TextBoxSprite()
+            var ob = new QuaverTextbox()
             {
                 SizeX = 400,
                 SizeY = 70,
@@ -148,7 +148,7 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
 
-            ob = new TextBoxSprite()
+            ob = new QuaverTextbox()
             {
                 SizeX = 400,
                 SizeY = 20,
@@ -159,7 +159,7 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
 
-            ob = new TextBoxSprite()
+            ob = new QuaverTextbox()
             {
                 SizeX = 400,
                 SizeY = 20,
@@ -212,7 +212,7 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateSkinSelectButtons()
         {
-            var ob = new TextBoxSprite()
+            var ob = new QuaverTextbox()
             {
                 SizeX = 400,
                 SizeY = 70,
@@ -260,7 +260,7 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateGraphicsOptionButtons()
         {
-            var ob = new TextBoxSprite()
+            var ob = new QuaverTextbox()
             {
                 SizeX = 400,
                 SizeY = 70,
@@ -272,7 +272,7 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
 
-            ob = new TextBoxSprite()
+            ob = new QuaverTextbox()
             {
                 SizeX = 400,
                 SizeY = 20,
@@ -283,7 +283,7 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
 
-            ob = new TextBoxSprite()
+            ob = new QuaverTextbox()
             {
                 SizeX = 400,
                 SizeY = 20,
@@ -365,7 +365,7 @@ namespace Quaver.GameState.States
         private void CreateGameplayOptionsButtons()
         {
             // text info
-            var ob = new TextBoxSprite()
+            var ob = new QuaverTextbox()
             {
                 SizeX = 400,
                 SizeY = 70,
@@ -583,7 +583,7 @@ namespace Quaver.GameState.States
                     ConfigManager.BackgroundBrightness = 0;
                     break;
             }
-            BackgroundBrightnessButton.TextSprite.Text = $@"BG Brightness: {ConfigManager.BackgroundBrightness}%";
+            BackgroundBrightnessButton.QuaverTextSprite.Text = $@"BG Brightness: {ConfigManager.BackgroundBrightness}%";
             BackgroundManager.Blacken();
             BackgroundManager.Readjust();
         }
@@ -605,7 +605,7 @@ namespace Quaver.GameState.States
                     ConfigManager.WindowFullScreen = true;
                     break;
             }
-            FullscreenButton.TextSprite.Text = $@"FullScreen: {ConfigManager.WindowFullScreen}";
+            FullscreenButton.QuaverTextSprite.Text = $@"FullScreen: {ConfigManager.WindowFullScreen}";
             GameBase.ChangeWindow(ConfigManager.WindowFullScreen, ConfigManager.WindowLetterboxed);
             BackgroundManager.Readjust();
         }
@@ -627,7 +627,7 @@ namespace Quaver.GameState.States
                     ConfigManager.WindowLetterboxed = true;
                     break;
             }
-            LetterBoxingButton.TextSprite.Text = $@"Letterboxing: {ConfigManager.WindowLetterboxed}";
+            LetterBoxingButton.QuaverTextSprite.Text = $@"Letterboxing: {ConfigManager.WindowLetterboxed}";
             GameBase.ChangeWindow(ConfigManager.WindowFullScreen, ConfigManager.WindowLetterboxed);
             BackgroundManager.Readjust();
         }

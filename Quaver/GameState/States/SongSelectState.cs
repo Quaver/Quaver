@@ -364,7 +364,7 @@ namespace Quaver.GameState.States
             }
 
             // Change the song speed directly.
-            SpeedModButton.TextSprite.Text = $"Add ManiaModSpeed Mod {GameBase.AudioEngine.PlaybackRate}x";
+            SpeedModButton.QuaverTextSprite.Text = $"Add ManiaModSpeed Mod {GameBase.AudioEngine.PlaybackRate}x";
         }
 
         /// <summary>
@@ -388,7 +388,7 @@ namespace Quaver.GameState.States
         private void OnTogglePitchButtonClick(object sender, EventArgs e)
         {
             GameBase.AudioEngine.TogglePitch();
-            TogglePitch.TextSprite.Text = $"Toggle Pitch: {ConfigManager.Pitched}";
+            TogglePitch.QuaverTextSprite.Text = $"Toggle Pitch: {ConfigManager.Pitched}";
         }
     }
 }
