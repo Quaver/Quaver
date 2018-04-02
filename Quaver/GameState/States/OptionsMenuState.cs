@@ -170,7 +170,7 @@ namespace Quaver.GameState.States
 
             ManiaKeys4K = new KeyBindButton[4];
             ManiaEvent4K = new EventHandler[4];
-            var keys = new Keys[4] { Configuration.KeyMania4k1, Configuration.KeyMania4k2, Configuration.KeyMania4k3, Configuration.KeyMania4k4 };
+            var keys = new Keys[4] { ConfigManager.KeyMania4k1, ConfigManager.KeyMania4k2, ConfigManager.KeyMania4k3, ConfigManager.KeyMania4k4 };
             for (var i=0; i<4; i++)
             {
                 //todo: hook this to an event/method or something
@@ -188,7 +188,7 @@ namespace Quaver.GameState.States
 
             ManiaKeys7K = new KeyBindButton[7];
             ManiaEvent7K = new EventHandler[7];
-            keys = new Keys[7] { Configuration.KeyMania7k1, Configuration.KeyMania7k2, Configuration.KeyMania7k3, Configuration.KeyMania7k4, Configuration.KeyMania7k5, Configuration.KeyMania7k6, Configuration.KeyMania7k7 };
+            keys = new Keys[7] { ConfigManager.KeyMania7k1, ConfigManager.KeyMania7k2, ConfigManager.KeyMania7k3, ConfigManager.KeyMania7k4, ConfigManager.KeyMania7k5, ConfigManager.KeyMania7k6, ConfigManager.KeyMania7k7 };
             for (var i = 0; i < 7; i++)
             {
                 //todo: hook this to an event/method or something
@@ -225,7 +225,7 @@ namespace Quaver.GameState.States
             SkinSelectButtons = new List<TextButton>();
             SkinSelectEvents = new List<EventHandler>();
 
-            AvailableSkins = Directory.GetDirectories(Configuration.SkinDirectory);
+            AvailableSkins = Directory.GetDirectories(ConfigManager.SkinDirectory);
             for (var i = 0; i < AvailableSkins.Length; i++)
                 AvailableSkins[i] = new DirectoryInfo(AvailableSkins[i]).Name;
 
@@ -330,7 +330,7 @@ namespace Quaver.GameState.States
             }
 
             // Create Letterbox Option Button
-            LetterBoxingButton = new TextButton(new Vector2(200, 30), $@"Letterboxing: {Configuration.WindowLetterboxed}")
+            LetterBoxingButton = new TextButton(new Vector2(200, 30), $@"Letterboxing: {ConfigManager.WindowLetterboxed}")
             {
                 PosY = 560,
                 PosX = (-1) * 210f,
@@ -340,7 +340,7 @@ namespace Quaver.GameState.States
             LetterBoxingButton.Clicked += OnLetterboxButtonClicked;
 
             // Create Fullscreen Option Button
-            FullscreenButton = new TextButton(new Vector2(200, 30), $@"FullScreen: {Configuration.WindowFullScreen}")
+            FullscreenButton = new TextButton(new Vector2(200, 30), $@"FullScreen: {ConfigManager.WindowFullScreen}")
             {
                 PosY = 560,
                 //PosX = (0.5f) * 210f,
@@ -350,7 +350,7 @@ namespace Quaver.GameState.States
             FullscreenButton.Clicked += OnFullscreenButtonClicked;
 
             // Create Background Brightness Button
-            BackgroundBrightnessButton = new TextButton(new Vector2(200, 30), $@"BG Brightness: {Configuration.BackgroundBrightness}%")
+            BackgroundBrightnessButton = new TextButton(new Vector2(200, 30), $@"BG Brightness: {ConfigManager.BackgroundBrightness}%")
             {
                 PosY = 560,
                 PosX = (1) * 210f,
@@ -376,7 +376,7 @@ namespace Quaver.GameState.States
             };
 
             // scroll speed 
-            ScrollSpeedButton = new TextButton(new Vector2(200, 30), $@"ScrollSpeed: {Configuration.ScrollSpeed4k}")
+            ScrollSpeedButton = new TextButton(new Vector2(200, 30), $@"ScrollSpeed: {ConfigManager.ScrollSpeed4k}")
             {
                 PosY = 680,
                 PosX = (-2.5f) * 210f,
@@ -385,7 +385,7 @@ namespace Quaver.GameState.States
             };
 
             // scroll direction
-            ScrollDirection4KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 4K: {Configuration.DownScroll4k}")
+            ScrollDirection4KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 4K: {ConfigManager.DownScroll4k}")
             {
                 PosY = 680,
                 PosX = (-1.5f) * 210f,
@@ -393,7 +393,7 @@ namespace Quaver.GameState.States
                 Parent = ButtonsContainer
             };
 
-            ScrollDirection7KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 7K: {Configuration.DownScroll7k}")
+            ScrollDirection7KButton = new TextButton(new Vector2(200, 30), $@"Downscroll 7K: {ConfigManager.DownScroll7k}")
             {
                 PosY = 680,
                 PosX = (-0.5f) * 210f,
@@ -498,16 +498,16 @@ namespace Quaver.GameState.States
             switch (index)
             {
                 case 0:
-                    Configuration.KeyMania4k1 = ManiaKeys4K[index].CurrentKey;
+                    ConfigManager.KeyMania4k1 = ManiaKeys4K[index].CurrentKey;
                     break;
                 case 1:
-                    Configuration.KeyMania4k2 = ManiaKeys4K[index].CurrentKey;
+                    ConfigManager.KeyMania4k2 = ManiaKeys4K[index].CurrentKey;
                     break;
                 case 2:
-                    Configuration.KeyMania4k3 = ManiaKeys4K[index].CurrentKey;
+                    ConfigManager.KeyMania4k3 = ManiaKeys4K[index].CurrentKey;
                     break;
                 case 3:
-                    Configuration.KeyMania4k4 = ManiaKeys4K[index].CurrentKey;
+                    ConfigManager.KeyMania4k4 = ManiaKeys4K[index].CurrentKey;
                     break;
             }
         }
@@ -523,25 +523,25 @@ namespace Quaver.GameState.States
             switch (index)
             {
                 case 0:
-                    Configuration.KeyMania7k1 = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7k1 = ManiaKeys7K[index].CurrentKey;
                     break;
                 case 1:
-                    Configuration.KeyMania7k2 = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7k2 = ManiaKeys7K[index].CurrentKey;
                     break;
                 case 2:
-                    Configuration.KeyMania7k3 = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7k3 = ManiaKeys7K[index].CurrentKey;
                     break;
                 case 3:
-                    Configuration.KeyMania7k4 = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7k4 = ManiaKeys7K[index].CurrentKey;
                     break;
                 case 4:
-                    Configuration.KeyMania7k5 = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7k5 = ManiaKeys7K[index].CurrentKey;
                     break;
                 case 5:
-                    Configuration.KeyMania7k6 = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7k6 = ManiaKeys7K[index].CurrentKey;
                     break;
                 case 6:
-                    Configuration.KeyMania7k7 = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7k7 = ManiaKeys7K[index].CurrentKey;
                     break;
             }
         }
@@ -553,35 +553,35 @@ namespace Quaver.GameState.States
         /// <param name="e"></param>
         private void OnBrightnessButtonClicked(object sender, EventArgs e)
         {
-            var brightness = Configuration.BackgroundBrightness;
+            var brightness = ConfigManager.BackgroundBrightness;
             switch (brightness)
             {
                 case 0:
-                    Configuration.BackgroundBrightness = 5;
+                    ConfigManager.BackgroundBrightness = 5;
                     break;
                 case 5:
-                    Configuration.BackgroundBrightness = 10;
+                    ConfigManager.BackgroundBrightness = 10;
                     break;
                 case 10:
-                    Configuration.BackgroundBrightness = 20;
+                    ConfigManager.BackgroundBrightness = 20;
                     break;
                 case 20:
-                    Configuration.BackgroundBrightness = 40;
+                    ConfigManager.BackgroundBrightness = 40;
                     break;
                 case 40:
-                    Configuration.BackgroundBrightness = 60;
+                    ConfigManager.BackgroundBrightness = 60;
                     break;
                 case 60:
-                    Configuration.BackgroundBrightness = 80;
+                    ConfigManager.BackgroundBrightness = 80;
                     break;
                 case 80:
-                    Configuration.BackgroundBrightness = 100;
+                    ConfigManager.BackgroundBrightness = 100;
                     break;
                 default:
-                    Configuration.BackgroundBrightness = 0;
+                    ConfigManager.BackgroundBrightness = 0;
                     break;
             }
-            BackgroundBrightnessButton.TextSprite.Text = $@"BG Brightness: {Configuration.BackgroundBrightness}%";
+            BackgroundBrightnessButton.TextSprite.Text = $@"BG Brightness: {ConfigManager.BackgroundBrightness}%";
             BackgroundManager.Blacken();
             BackgroundManager.Readjust();
         }
@@ -593,18 +593,18 @@ namespace Quaver.GameState.States
         /// <param name="e"></param>
         private void OnFullscreenButtonClicked(object sender, EventArgs e)
         {
-            var fullscreen = Configuration.WindowFullScreen;
+            var fullscreen = ConfigManager.WindowFullScreen;
             switch (fullscreen)
             {
                 case true:
-                    Configuration.WindowFullScreen = false;
+                    ConfigManager.WindowFullScreen = false;
                     break;
                 case false:
-                    Configuration.WindowFullScreen = true;
+                    ConfigManager.WindowFullScreen = true;
                     break;
             }
-            FullscreenButton.TextSprite.Text = $@"FullScreen: {Configuration.WindowFullScreen}";
-            GameBase.ChangeWindow(Configuration.WindowFullScreen, Configuration.WindowLetterboxed);
+            FullscreenButton.TextSprite.Text = $@"FullScreen: {ConfigManager.WindowFullScreen}";
+            GameBase.ChangeWindow(ConfigManager.WindowFullScreen, ConfigManager.WindowLetterboxed);
             BackgroundManager.Readjust();
         }
 
@@ -615,18 +615,18 @@ namespace Quaver.GameState.States
         /// <param name="e"></param>
         private void OnLetterboxButtonClicked(object sender, EventArgs e)
         {
-            var letterboxed = Configuration.WindowLetterboxed;
+            var letterboxed = ConfigManager.WindowLetterboxed;
             switch (letterboxed)
             {
                 case true:
-                    Configuration.WindowLetterboxed = false;
+                    ConfigManager.WindowLetterboxed = false;
                     break;
                 case false:
-                    Configuration.WindowLetterboxed = true;
+                    ConfigManager.WindowLetterboxed = true;
                     break;
             }
-            LetterBoxingButton.TextSprite.Text = $@"Letterboxing: {Configuration.WindowLetterboxed}";
-            GameBase.ChangeWindow(Configuration.WindowFullScreen, Configuration.WindowLetterboxed);
+            LetterBoxingButton.TextSprite.Text = $@"Letterboxing: {ConfigManager.WindowLetterboxed}";
+            GameBase.ChangeWindow(ConfigManager.WindowFullScreen, ConfigManager.WindowLetterboxed);
             BackgroundManager.Readjust();
         }
 
@@ -638,7 +638,7 @@ namespace Quaver.GameState.States
         /// <param name="index"></param>
         private void OnResolutionButtonClicked(object sender, EventArgs e, int index)
         {
-            GameBase.ChangeWindow(Configuration.WindowFullScreen, Configuration.WindowLetterboxed, CommonResolutions[index]);
+            GameBase.ChangeWindow(ConfigManager.WindowFullScreen, ConfigManager.WindowLetterboxed, CommonResolutions[index]);
             BackgroundManager.Readjust();
             Boundary.SizeX = GameBase.WindowRectangle.Width;
             Boundary.SizeY = GameBase.WindowRectangle.Height;
@@ -655,16 +655,16 @@ namespace Quaver.GameState.States
         {
             if (skin == "default arrows")
             {
-                Configuration.Skin = "";
-                Configuration.DefaultSkin = DefaultSkins.Arrow;
+                ConfigManager.Skin = "";
+                ConfigManager.DefaultSkin = DefaultSkins.Arrow;
             }
             else if (skin == "default bars")
             {
-                Configuration.Skin = "";
-                Configuration.DefaultSkin = DefaultSkins.Bar;
+                ConfigManager.Skin = "";
+                ConfigManager.DefaultSkin = DefaultSkins.Bar;
             }
             else
-                Configuration.Skin = skin;
+                ConfigManager.Skin = skin;
 
             Skin.LoadSkin();
         }

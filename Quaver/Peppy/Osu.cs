@@ -192,7 +192,7 @@ namespace Quaver.Peppy
             // Once fully converted, create a new directory in the songs folder and 
             // tell GameBase that the import queue is ready. Depending on the current state,
             // we may import them automatically.
-            var extractPath = $@"{Config.Configuration.DataDirectory}/Temp/{num}";
+            var extractPath = $@"{Config.ConfigManager.DataDirectory}/Temp/{num}";
 
             try
             {
@@ -216,11 +216,11 @@ namespace Quaver.Peppy
 
                 // Now that all of them are converted, we'll create a new directory with all of the files except for .osu
 
-                var newSongDir = $"{Config.Configuration.SongDirectory}/{new DirectoryInfo(fileName).Name}";
+                var newSongDir = $"{Config.ConfigManager.SongDirectory}/{new DirectoryInfo(fileName).Name}";
 
                 if (newSongDir.Length > 200)
                     newSongDir =
-                        $"{Config.Configuration.SongDirectory}/{new DirectoryInfo(fileName).Name.Substring(0, 20)}";
+                        $"{Config.ConfigManager.SongDirectory}/{new DirectoryInfo(fileName).Name.Substring(0, 20)}";
 
                 Directory.CreateDirectory(newSongDir);
 
@@ -287,14 +287,14 @@ namespace Quaver.Peppy
                     throw new FileNotFoundException();
 
                 // Set and create the temporary extraction path
-                var extractPath = $@"{Configuration.DataDirectory}/Temp/{Path.GetFileNameWithoutExtension(path)}/";
+                var extractPath = $@"{ConfigManager.DataDirectory}/Temp/{Path.GetFileNameWithoutExtension(path)}/";
                 Directory.CreateDirectory(extractPath);
 
                 using (var archive = new ZipFile(path))
                     archive.ExtractAll(extractPath, ExtractExistingFileAction.OverwriteSilently);
 
                 // Create the new directory for the Quaver skin.
-                var newSkinDirPath = Configuration.SkinDirectory + "/" + Path.GetFileNameWithoutExtension(path);
+                var newSkinDirPath = ConfigManager.SkinDirectory + "/" + Path.GetFileNameWithoutExtension(path);
                 Directory.CreateDirectory(newSkinDirPath);
 
                 // Begin copying skin elements over to the new directory.

@@ -69,7 +69,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             //_activeBarObjects = new GameObject[maxNoteCount];
 
             //Add offset after the last note
-            PlayingEndOffset = Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) + (AudioEngine.BassDelayOffset - Configuration.GlobalAudioOffset + SONG_END_OFFSET) * GameBase.AudioEngine.PlaybackRate;
+            PlayingEndOffset = Qua.FindSongLength(GameBase.SelectedBeatmap.Qua) + (AudioEngine.BassDelayOffset - ConfigManager.GlobalAudioOffset + SONG_END_OFFSET) * GameBase.AudioEngine.PlaybackRate;
 
             //Create Timing bars
             //_barQueue = new List<TimingObject>();
@@ -135,7 +135,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal double GetCurrentSongTime()
         {
             //Add global offset to actual song time
-            return ActualSongTime + (AudioEngine.BassDelayOffset - Configuration.GlobalAudioOffset) * GameBase.AudioEngine.PlaybackRate;
+            return ActualSongTime + (AudioEngine.BassDelayOffset - ConfigManager.GlobalAudioOffset) * GameBase.AudioEngine.PlaybackRate;
         }
 
         internal ulong[] GetSVCalc(List<TimingObject> svQueue)

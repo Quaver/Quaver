@@ -64,7 +64,7 @@ namespace Quaver.Graphics.Button
             Task.Run(() => {
                 try
                 {
-                    Image = ImageLoader.Load(Configuration.SongDirectory + "/" + map.Directory + "/" + map.BackgroundPath);
+                    Image = ImageLoader.Load(ConfigManager.SongDirectory + "/" + map.Directory + "/" + map.BackgroundPath);
                 }
                 catch
                 {

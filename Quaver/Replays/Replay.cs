@@ -131,7 +131,7 @@ namespace Quaver.Replays
         /// <summary>
         ///     Stores the path of the test replay file
         /// </summary>
-        internal static string DebugFilePath { get; } = Configuration.DataDirectory + "/" + "last_replay.txt";
+        internal static string DebugFilePath { get; } = ConfigManager.DataDirectory + "/" + "last_replay.txt";
 
         /// <summary>
         ///     Ctor - Create a blank replay object
@@ -157,9 +157,9 @@ namespace Quaver.Replays
 
             // Create the full path depending on if we want to write it to the data directory or not
             if (toDataDir)
-                path = Configuration.DataDirectory + "/r/" + StringHelper.FileNameSafeString(fileName) + ".qr";
+                path = ConfigManager.DataDirectory + "/r/" + StringHelper.FileNameSafeString(fileName) + ".qr";
             else
-                path = Configuration.ReplayDirectory + "/" + StringHelper.FileNameSafeString(fileName) + ".qr";
+                path = ConfigManager.ReplayDirectory + "/" + StringHelper.FileNameSafeString(fileName) + ".qr";
 
             using (var replayDataStream = new MemoryStream(Encoding.ASCII.GetBytes(ReplayHelper.ReplayFramesToString(ReplayFrames))))
             using (var bw = new BinaryWriter(File.Open(path, FileMode.Create)))

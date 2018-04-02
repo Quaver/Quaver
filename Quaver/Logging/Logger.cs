@@ -39,8 +39,8 @@ namespace Quaver.Logging
         /// </summary>
         internal static void CreateLogFile()
         {
-            RuntimeLogPath = Configuration.LogsDirectory + "/runtime.log";
-            NetworkLogPath = Configuration.LogsDirectory + "/network.log";
+            RuntimeLogPath = ConfigManager.LogsDirectory + "/runtime.log";
+            NetworkLogPath = ConfigManager.LogsDirectory + "/network.log";
 
             try
             {

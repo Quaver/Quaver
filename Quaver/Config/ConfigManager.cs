@@ -13,7 +13,7 @@ using Quaver.Logging;
 
 namespace Quaver.Config
 {
-    internal class Configuration
+    internal static class ConfigManager
     {
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
@@ -388,7 +388,7 @@ namespace Quaver.Config
             // all of the default values.
             if (!File.Exists(GameDirectory + "/quaver.cfg"))
             {
-                File.WriteAllText(GameDirectory + "/quaver.cfg", "; Quaver Configuration File");
+                File.WriteAllText(GameDirectory + "/quaver.cfg", "; Quaver ConfigManager File");
                 FirstWrite = true;
 
                 Task.Run(async () => await WriteConfigFileAsync()).Wait();
@@ -473,7 +473,7 @@ namespace Quaver.Config
         }
 
         /// <summary>
-        ///     Takes all of the current values from the Configuration class and creates a file with them.
+        ///     Takes all of the current values from the ConfigManager class and creates a file with them.
         ///     This will automatically be called whenever a configuration value is changed in the code.
         /// </summary>
         internal static async Task WriteConfigFileAsync()
@@ -487,14 +487,14 @@ namespace Quaver.Config
             var sb = new StringBuilder();
 
             // Top file information
-            sb.AppendLine("; Quaver Configuration File");
+            sb.AppendLine("; Quaver ConfigManager File");
             sb.AppendLine("; Last Updated On: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             sb.AppendLine();
             sb.AppendLine("[Config]");
-            sb.AppendLine("; Quaver Configuration Values");
+            sb.AppendLine("; Quaver ConfigManager Values");
 
             // For every line we want to append "PropName = PropValue" to the string
-            foreach (var p in typeof(Configuration)
+            foreach (var p in typeof(ConfigManager)
                 .GetProperties(BindingFlags.Static | BindingFlags.NonPublic))
             {
                 // Don't include the FirstWrite Property

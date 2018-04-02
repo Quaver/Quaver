@@ -35,7 +35,7 @@ namespace Quaver
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             // Initialize Config
-            Configuration.InitializeConfig();
+            ConfigManager.InitializeConfig();
 
             // Delete Temp Files
             DeleteTemporaryFiles();
@@ -57,10 +57,10 @@ namespace Quaver
         {
             try
             {
-                foreach (var file in new DirectoryInfo(Configuration.DataDirectory + "/temp/").GetFiles("*", SearchOption.AllDirectories))
+                foreach (var file in new DirectoryInfo(ConfigManager.DataDirectory + "/temp/").GetFiles("*", SearchOption.AllDirectories))
                     file.Delete();
 
-                foreach (var dir in new DirectoryInfo(Configuration.DataDirectory + "/temp/").GetDirectories("*", SearchOption.AllDirectories))
+                foreach (var dir in new DirectoryInfo(ConfigManager.DataDirectory + "/temp/").GetDirectories("*", SearchOption.AllDirectories))
                     dir.Delete(true);
             }
             catch (Exception e)
@@ -75,10 +75,10 @@ namespace Quaver
         private static void SetupGame()
         {
             // Create now playing folder
-            Directory.CreateDirectory(Configuration.DataDirectory + "/temp/Now Playing/");
+            Directory.CreateDirectory(ConfigManager.DataDirectory + "/temp/Now Playing/");
 
             // Set the build version
-            GameBase.BuildVersion = BeatmapHelper.GetMd5Checksum(Configuration.GameDirectory + "/" + "Quaver.exe");
+            GameBase.BuildVersion = BeatmapHelper.GetMd5Checksum(ConfigManager.GameDirectory + "/" + "Quaver.exe");
 
             // After initializing the configuration, we want to sync the beatmap database, and load the dictionary of beatmaps.
             var loadGame = Task.Run(async () =>

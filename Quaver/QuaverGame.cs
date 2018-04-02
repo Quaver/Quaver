@@ -43,9 +43,9 @@ namespace Quaver
             // Set the global graphics device manager & set Window width & height.
             GameBase.GraphicsManager = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = Config.Configuration.WindowWidth,
-                PreferredBackBufferHeight = Config.Configuration.WindowHeight,
-                IsFullScreen = Config.Configuration.WindowFullScreen,
+                PreferredBackBufferWidth = Config.ConfigManager.WindowWidth,
+                PreferredBackBufferHeight = Config.ConfigManager.WindowHeight,
+                IsFullScreen = Config.ConfigManager.WindowFullScreen,
                 SynchronizeWithVerticalRetrace = false // Turns off vsync
             };
 
@@ -154,7 +154,7 @@ namespace Quaver
             GameBase.MouseState = Mouse.GetState();
 
             // Update FpsCounter
-            if (Config.Configuration.FpsCounter)
+            if (Config.ConfigManager.FpsCounter)
                 QuaverFpsCounter.Count(dt);
 
             // Update Background from Background Manager
@@ -195,7 +195,7 @@ namespace Quaver
 
             Logger.Draw(dt);
 
-            if (Config.Configuration.FpsCounter)
+            if (Config.ConfigManager.FpsCounter)
                 QuaverFpsCounter.Draw();
 
             GameBase.SpriteBatch.End();

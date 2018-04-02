@@ -44,10 +44,10 @@ namespace Quaver.Input
         /// </summary>
         private List<Keys> LaneKeys { get; } = new List<Keys>()
         {
-            Configuration.KeyMania4k1,
-            Configuration.KeyMania4k2,
-            Configuration.KeyMania4k3,
-            Configuration.KeyMania4k4
+            ConfigManager.KeyMania4k1,
+            ConfigManager.KeyMania4k2,
+            ConfigManager.KeyMania4k3,
+            ConfigManager.KeyMania4k4
         };
 
         /// <summary>
@@ -55,13 +55,13 @@ namespace Quaver.Input
         /// </summary>
         private List<Keys> LaneKeys7K { get; } = new List<Keys>()
         {
-            Configuration.KeyMania7k1,
-            Configuration.KeyMania7k2,
-            Configuration.KeyMania7k3,
-            Configuration.KeyMania7k4,
-            Configuration.KeyMania7k5,
-            Configuration.KeyMania7k6,
-            Configuration.KeyMania7k7
+            ConfigManager.KeyMania7k1,
+            ConfigManager.KeyMania7k2,
+            ConfigManager.KeyMania7k3,
+            ConfigManager.KeyMania7k4,
+            ConfigManager.KeyMania7k5,
+            ConfigManager.KeyMania7k6,
+            ConfigManager.KeyMania7k7
         };
 
         /// <summary>
@@ -124,22 +124,22 @@ namespace Quaver.Input
             HandleManiaKeyPresses();
 
             // Check skip
-            if (SkipKeyDown && GameBase.KeyboardState.IsKeyUp(Configuration.KeySkipIntro))
+            if (SkipKeyDown && GameBase.KeyboardState.IsKeyUp(ConfigManager.KeySkipIntro))
             {
                 SkipKeyDown = false;
             }
-            else if (!SkipKeyDown && GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro))
+            else if (!SkipKeyDown && GameBase.KeyboardState.IsKeyDown(ConfigManager.KeySkipIntro))
             {
                 SkipKeyDown = true;
                 SkipSong?.Invoke(this, null);
             }
 
             // Check pause
-            if (PauseButtonDown && GameBase.KeyboardState.IsKeyUp(Configuration.KeyPause))
+            if (PauseButtonDown && GameBase.KeyboardState.IsKeyUp(ConfigManager.KeyPause))
             {
                 PauseButtonDown = false;
             }
-            else if (!PauseButtonDown && GameBase.KeyboardState.IsKeyDown(Configuration.KeyPause))
+            else if (!PauseButtonDown && GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyPause))
             {
                 PauseButtonDown = true;
                 PauseSong?.Invoke(this, null);
