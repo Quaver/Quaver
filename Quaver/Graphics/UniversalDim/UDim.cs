@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Quaver.Graphics
+﻿namespace Quaver.Graphics.UniversalDim
 {
     /// <summary>
-    ///     Universal Dimension Value used for UI and other scalars
+    ///     Universal Dimension Value used for QuaverUserInterface and other scalars
     /// </summary>
     internal class UDim
     {

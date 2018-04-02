@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Text;
+using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
@@ -72,7 +73,7 @@ namespace Quaver.Graphics.Buttons
             QuaverTextSprite = new QuaverTextbox()
             {
                 Text = string.Empty,
-                Size = new UDim2(ButtonSize.X - 8, ButtonSize.Y - 4),
+                Size = new UDim2D(ButtonSize.X - 8, ButtonSize.Y - 4),
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.BotLeft,
                 TextBoxStyle = TextBoxStyle.WordwrapSingleLine,
@@ -81,7 +82,7 @@ namespace Quaver.Graphics.Buttons
 
             Size.X.Offset = ButtonSize.X;
             Size.Y.Offset = ButtonSize.Y;
-            Image = GameBase.UI.BlankBox;
+            Image = GameBase.QuaverUserInterface.BlankBox;
             QuaverTextSprite.TextColor = Color.White;
 
             PlaceHolderText = placeHolderText;

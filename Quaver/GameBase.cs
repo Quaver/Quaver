@@ -20,6 +20,7 @@ using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Logging;
 using Quaver.Modifiers;
 using Quaver.Input;
@@ -107,7 +108,7 @@ namespace Quaver
         public static ContentManager Content { get; set; }
 
         /// <summary>
-        ///     The reference resolution for UI and game elements
+        ///     The reference resolution for QuaverUserInterface and game elements
         /// </summary>
         public static Point ReferenceResolution { get; } = new Point(1280, 720);
 
@@ -183,10 +184,10 @@ namespace Quaver
         public static bool DiscordRichPresencedInited { get; set; }
 
         /// <summary>
-        ///     Contains all of the loaded embedded UI .xnb resources that aren't apart of the
+        ///     Contains all of the loaded embedded QuaverUserInterface .xnb resources that aren't apart of the
         ///     default skin
         /// </summary>
-        public static UI UI { get; set; } = new UI();
+        public static QuaverUserInterface QuaverUserInterface { get; set; } = new QuaverUserInterface();
 
         /// <summary>
         ///     Create a Stopwatch object for the game, This'll hold the time since the application

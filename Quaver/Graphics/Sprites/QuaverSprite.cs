@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Helpers;
 
 namespace Quaver.Graphics.Sprites
@@ -24,7 +25,7 @@ namespace Quaver.Graphics.Sprites
                 Changed = true;
             }
         }
-        private Texture2D _image = GameBase.UI.BlankBox;
+        private Texture2D _image = GameBase.QuaverUserInterface.BlankBox;
 
         /// <summary>
         ///     Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
@@ -46,7 +47,7 @@ namespace Quaver.Graphics.Sprites
         /// <summary>
         ///     The origin of this object used for rotation.
         /// </summary>
-        private Vector2 _origin = new Vector2(GameBase.UI.BlankBox.Width/2f, GameBase.UI.BlankBox.Height/2f); //TODO: bake this value later
+        private Vector2 _origin = new Vector2(GameBase.QuaverUserInterface.BlankBox.Width/2f, GameBase.QuaverUserInterface.BlankBox.Height/2f); //TODO: bake this value later
 
         /// <summary>
         ///     The Rectangle used to render the sprite.

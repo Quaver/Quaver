@@ -22,6 +22,7 @@ using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Particles;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 
 namespace Quaver.GameState.Gameplay
@@ -162,9 +163,9 @@ namespace Quaver.GameState.Gameplay
 
             SvInfoTextBox = new QuaverSprite()
             {
-                Image = GameBase.UI.HollowBox,
+                Image = GameBase.QuaverUserInterface.HollowBox,
                 Tint = Color.Blue,
-                Size = new UDim2(250, 500),
+                Size = new UDim2D(250, 500),
                 Alignment = Alignment.TopRight
             };
         }
@@ -478,7 +479,7 @@ namespace Quaver.GameState.Gameplay
                 {
                     if (Math.Abs(NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime) <= ScoreManager.HitWindowPress[i])
                     {
-                        // Update ScoreManager and UI if note was pressed on time
+                        // Update ScoreManager and QuaverUserInterface if note was pressed on time
                         ScoreManager.Count(i, false, NoteManager.HitObjectPool[noteIndex].StartTime - CurrentSongTime, CurrentSongTime * GameBase.AudioEngine.PlaybackRate);
                         AccuracyBoxUI.UpdateAccuracyBox(i, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
                         AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
@@ -562,7 +563,7 @@ namespace Quaver.GameState.Gameplay
                 // If LN has been released during a HitWindow
                 if (rIndex > -1)
                 {
-                    // Update ScoreManager and UI if note was pressed on time
+                    // Update ScoreManager and QuaverUserInterface if note was pressed on time
                     ScoreManager.Count(rIndex, true);
                     AccuracyBoxUI.UpdateAccuracyBox(rIndex, ScoreManager.JudgePressSpread[rIndex], ScoreManager.JudgeReleaseSpread[rIndex], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
                     AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
@@ -572,7 +573,7 @@ namespace Quaver.GameState.Gameplay
                 // If LN has been released early
                 else
                 {
-                    // Update ScoreManager and UI if note was pressed on time
+                    // Update ScoreManager and QuaverUserInterface if note was pressed on time
                     ScoreManager.Count(5, true);
                     AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[i], ScoreManager.JudgeReleaseSpread[i], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
                     AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());
@@ -588,7 +589,7 @@ namespace Quaver.GameState.Gameplay
             if (ScoreManager.Combo >= 20)
                 GameBase.LoadedSkin.SoundComboBreak.Play(GameBase.SoundEffectVolume, 0, 0);
 
-            // Manage UI Helpers + Update Score Manager
+            // Manage QuaverUserInterface Helpers + Update Score Manager
             ScoreManager.Count(5, false, 0, CurrentSongTime * GameBase.AudioEngine.PlaybackRate);
             AccuracyBoxUI.UpdateAccuracyBox(5, ScoreManager.JudgePressSpread[5], ScoreManager.JudgeReleaseSpread[5], ScoreManager.JudgeCount, ScoreManager.ScoreTotal, ScoreManager.Accuracy);
             AccuracyBoxUI.UpdateGradeBar(ScoreManager.GetAccGradeIndex(), ScoreManager.GetRelativeAccScale());

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.Graphics.Enums;
+using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 
 namespace Quaver.Graphics.UserInterface
@@ -49,9 +50,9 @@ namespace Quaver.Graphics.UserInterface
         {
             Background = new Sprites.QuaverSprite()
             {
-                Size = new UDim2(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height),
+                Size = new UDim2D(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.MidCenter,
-                Image = GameBase.UI.DiffSelectMask,
+                Image = GameBase.QuaverUserInterface.DiffSelectMask,
                 Tint = Color.Gray
             };
         }

@@ -15,7 +15,7 @@ namespace Quaver.StepMania
     internal class StepManiaConverter
     {
         /// <summary>
-        ///     Converts a .sm file to Quaver's format.
+        ///     Converts a .sm file to QuaverGame's format.
         /// </summary>
         internal static void ConvertSm(string path)
         {

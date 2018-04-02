@@ -890,7 +890,7 @@ namespace Quaver.Skins
             {
                 case DefaultSkins.Bar:
                     Name = "Default Bar Skin";
-                    Author = "Quaver Team";
+                    Author = "QuaverGame Team";
                     Version = "1.0";
                     BgMaskPadding4K = 0;
                     BgMaskPadding7K = 0;
@@ -932,7 +932,7 @@ namespace Quaver.Skins
                     break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
-                    Author = "Quaver Team";
+                    Author = "QuaverGame Team";
                     Version = "1.0";
                     BgMaskPadding4K = 10;
                     BgMaskPadding7K = 10;

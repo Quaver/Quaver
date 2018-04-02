@@ -20,7 +20,7 @@ namespace Quaver.Commands
 
         public int Args { get; set; } = 2;
 
-        public string Description { get; set; } = "Converts an osu! skin (.osk) to Quaver.";
+        public string Description { get; set; } = "Converts an osu! skin (.osk) to QuaverGame.";
 
         public string Usage { get; set; } = "osk <file path>";
 

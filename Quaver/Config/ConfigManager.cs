@@ -388,7 +388,7 @@ namespace Quaver.Config
             // all of the default values.
             if (!File.Exists(GameDirectory + "/quaver.cfg"))
             {
-                File.WriteAllText(GameDirectory + "/quaver.cfg", "; Quaver ConfigManager File");
+                File.WriteAllText(GameDirectory + "/quaver.cfg", "; QuaverGame ConfigManager File");
                 FirstWrite = true;
 
                 Task.Run(async () => await WriteConfigFileAsync()).Wait();
@@ -487,11 +487,11 @@ namespace Quaver.Config
             var sb = new StringBuilder();
 
             // Top file information
-            sb.AppendLine("; Quaver ConfigManager File");
+            sb.AppendLine("; QuaverGame ConfigManager File");
             sb.AppendLine("; Last Updated On: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             sb.AppendLine();
             sb.AppendLine("[Config]");
-            sb.AppendLine("; Quaver ConfigManager Values");
+            sb.AppendLine("; QuaverGame ConfigManager Values");
 
             // For every line we want to append "PropName = PropValue" to the string
             foreach (var p in typeof(ConfigManager)

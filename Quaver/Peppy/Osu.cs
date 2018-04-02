@@ -16,7 +16,7 @@ namespace Quaver.Peppy
 {
     internal class Osu
     {
-        // Contains the list of osu! skin elements that match up to Quaver
+        // Contains the list of osu! skin elements that match up to QuaverGame
         private static readonly QuaverOsuElementMap[] QuaverOsuSkinMap = new QuaverOsuElementMap[]
         {
             // Grades
@@ -275,7 +275,7 @@ namespace Quaver.Peppy
         }
 
         /// <summary>
-        ///     Converts an osu! skin (.osk) file to Quaver
+        ///     Converts an osu! skin (.osk) file to QuaverGame
         /// </summary>
         internal static void ConvertOsk(string path)
         {
@@ -293,7 +293,7 @@ namespace Quaver.Peppy
                 using (var archive = new ZipFile(path))
                     archive.ExtractAll(extractPath, ExtractExistingFileAction.OverwriteSilently);
 
-                // Create the new directory for the Quaver skin.
+                // Create the new directory for the QuaverGame skin.
                 var newSkinDirPath = ConfigManager.SkinDirectory + "/" + Path.GetFileNameWithoutExtension(path);
                 Directory.CreateDirectory(newSkinDirPath);
 
@@ -306,7 +306,7 @@ namespace Quaver.Peppy
                     // The full path of the osu! skin file
                     var fullPath = extractPath + map.OsuElement.ToLower() + extension;
 
-                    // The base path of the new Quaver skin file.
+                    // The base path of the new QuaverGame skin file.
                     var newPath = newSkinDirPath + "/" + map.QuaverElement + extension;
 
                     // Copy skin elements over to the new directory

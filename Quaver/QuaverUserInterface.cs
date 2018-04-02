@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
+using Quaver.Graphics.Base;
 
-namespace Quaver.Graphics
+namespace Quaver
 {
-    internal class UI
+    /// <summary>
+    ///     All UI loaded into the game (Non-Skinnable)
+    /// </summary>
+    internal class QuaverUserInterface
     {
         /// <summary>
         ///     diff-select-mask 

@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Enums;
+using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 
 namespace Quaver.Graphics.UserInterface
@@ -23,7 +24,7 @@ namespace Quaver.Graphics.UserInterface
 
         internal QuaverCursor()
         {
-            Size = new UDim2(CursorSize, CursorSize);
+            Size = new UDim2D(CursorSize, CursorSize);
             Image = GameBase.LoadedSkin.Cursor;
             Alignment = Alignment.TopLeft;
         }
