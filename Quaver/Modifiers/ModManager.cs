@@ -46,13 +46,13 @@ namespace Quaver.Modifiers
                     gameplayModifier = new ManiaModSpeed(modIdentifier);
                     break;
                 case ModIdentifier.NoSliderVelocity:
-                    gameplayModifier = new ManiaGameplayModifierNoSliderVelocities();
+                    gameplayModifier = new ManiaModNoSliderVelocities();
                     break;
                 case ModIdentifier.Strict:
                     gameplayModifier = new ManiaModStrict();
                     break;
                 case ModIdentifier.Chill:
-                    gameplayModifier = new ManiaGameplayModifierChill();
+                    gameplayModifier = new ManiaModChill();
                     break;
                 default:
                     return;
