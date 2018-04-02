@@ -17,10 +17,11 @@ using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
 using Quaver.Logging;
 using Quaver.Replays;
-using Quaver.Scores;
 using Quaver.Graphics.Text;
 using Quaver.GameState.Gameplay;
 using Quaver.Audio;
+using Quaver.Database.Beatmaps;
+using Quaver.Database.Scores;
 using Quaver.Helpers;
 using Quaver.Skins;
 

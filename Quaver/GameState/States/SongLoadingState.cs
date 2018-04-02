@@ -159,10 +159,10 @@ namespace Quaver.GameState.States
                 switch (GameBase.SelectedBeatmap.Game)
                 {
                     case BeatmapGame.Quaver:
-                        md5 = BeatmapUtils.GetMd5Checksum(quaPath);
+                        md5 = BeatmapHelper.GetMd5Checksum(quaPath);
                         break;
                     case BeatmapGame.Osu:
-                        md5 = BeatmapUtils.GetMd5Checksum($"{GameBase.OsuSongsFolder}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}");
+                        md5 = BeatmapHelper.GetMd5Checksum($"{GameBase.OsuSongsFolder}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}");
                         break;
                     case BeatmapGame.Etterna:
                         // Etterna uses some weird ChartKey system, no point in implementing that here.

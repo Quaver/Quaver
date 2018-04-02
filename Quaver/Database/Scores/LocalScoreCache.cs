@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Quaver.Database.Beatmaps;
 using Quaver.Config;
 using Quaver.Logging;
-using Quaver.Scores;
 using SQLite;
 
-namespace Quaver.Database
+namespace Quaver.Database.Scores
 {
     internal static class LocalScoreCache
     {
