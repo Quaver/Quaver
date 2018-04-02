@@ -4,7 +4,6 @@ using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Graphics.Text;
 using Quaver.Logging;
-using Quaver.Skins;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +14,7 @@ using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
+using Quaver.Skinning;
 
 namespace Quaver.GameState.States
 {
