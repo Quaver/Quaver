@@ -150,7 +150,7 @@ namespace Quaver
         /// <summary>
         ///     A list of all the current game modifiers that are activated.
         /// </summary>
-        public static List<IMod> CurrentGameModifiers { get; set; } = new List<IMod>();
+        public static List<IGameplayModifier> CurrentGameModifiers { get; set; } = new List<IGameplayModifier>();
 
         /// <summary>
         ///     Keeps track of if the bass library is already initialized on the default output device

@@ -7,7 +7,7 @@ using Quaver.API.Enums;
 
 namespace Quaver.Modifiers
 {
-    internal interface IMod
+    internal interface IGameplayModifier
     {
         /// <summary>
         ///     The name of the Mod
@@ -15,12 +15,12 @@ namespace Quaver.Modifiers
         string Name { get; set; }
 
         /// <summary>
-        ///     The identifier of the the mod.
+        ///     The identifier of the the gameplayModifier.
         /// </summary>
         ModIdentifier ModIdentifier { get; set; }
 
         /// <summary>
-        ///     The type of mod as defined in the enum
+        ///     The type of gameplayModifier as defined in the enum
         /// </summary>
         ModType Type { get; set; }
 
@@ -30,12 +30,12 @@ namespace Quaver.Modifiers
         string Description { get; set; }
 
         /// <summary>
-        ///     Is the mod ranked?
+        ///     Is the gameplayModifier ranked?
         /// </summary>
         bool Ranked { get; set; }
 
         /// <summary>
-        ///     The addition to the score multiplier this mod will have
+        ///     The addition to the score multiplier this gameplayModifier will have
         /// </summary>
         float ScoreMultiplierAddition { get; set; }
 
@@ -45,7 +45,7 @@ namespace Quaver.Modifiers
         ModIdentifier[] IncompatibleMods { get; set; }
 
         /// <summary>
-        ///     All the mod logic should go here.
+        ///     All the gameplayModifier logic should go here.
         /// </summary>
         void InitializeMod();
     }

@@ -1,45 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Quaver.API.Enums;
-using Quaver.Modifiers;
+﻿using Quaver.API.Enums;
 
-namespace Quaver.Modifiers.Mods
+namespace Quaver.Modifiers.Mods.Mania
 {
-    internal class NoSliderVelocities: IMod
+    internal class ManiaGameplayModifierNoSliderVelocities: IGameplayModifier
     {
+        /// <inheritdoc />
         /// <summary>
-        ///     The name of the mod.
+        ///     The name of the gameplayModifier.
         /// </summary>
         public string Name { get; set; } = "No Slider Velocities";
 
+        /// <inheritdoc />
         /// <summary>
         ///     The identifier of the mod.
         /// </summary>
         public ModIdentifier ModIdentifier { get; set; } = ModIdentifier.NoSliderVelocity;
 
+        /// <inheritdoc />
         /// <summary>
-        ///     The type of mod as defined in the enum
+        ///     The type of gameplayModifier as defined in the enum
         /// </summary>
         public ModType Type { get; set; } = ModType.Special;
 
+        /// <inheritdoc />
         /// <summary>
         ///     The description of the Mod
         /// </summary>
         public string Description { get; set; } = "Hate scroll speed changes? Say no more.";
 
+        /// <inheritdoc />
         /// <summary>
-        ///     Is the mod ranked?
+        ///     Is the gameplayModifier ranked?
         /// </summary>
         public bool Ranked { get; set; } = false;
 
+        /// <inheritdoc />
         /// <summary>
-        ///     The addition to the score multiplier this mod will have
+        ///     The addition to the score multiplier this gameplayModifier will have
         /// </summary>
         public float ScoreMultiplierAddition { get; set; } = 0;
 
+        /// <inheritdoc />
         /// <summary>
         ///     The identifier of mods that are incompatible with this one.
         /// </summary>
@@ -50,8 +51,9 @@ namespace Quaver.Modifiers.Mods
         /// </summary>
         public float SpeedAlterationRate { get; set; } = 1.0f;
 
+        /// <inheritdoc />
         /// <summary>
-        ///     All the mod logic should go here, setting unique variables. NEVER call this directly. Always use
+        ///     All the gameplayModifier logic should go here, setting unique variables. NEVER call this directly. Always use
         ///     ModManager.AddMod();
         /// </summary>
         public void InitializeMod() {}

@@ -184,7 +184,7 @@ namespace Quaver.Config
         internal static sbyte GlobalAudioOffset { get => _globalAudioOffset; set { _globalAudioOffset = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
-        ///     Dictates whether or not the song audio is pitched while using the Speed mod.
+        ///     Dictates whether or not the song audio is pitched while using the ManiaModSpeed gameplayModifier.
         /// </summary>
         private static bool _pitched;
         internal static bool Pitched { get => _pitched; set { _pitched = value; Task.Run(async () => await WriteConfigFileAsync()); } }
