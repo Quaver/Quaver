@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace Quaver.Helpers
 {
-    internal class StringHelper
+    internal static class StringHelper
     {
         /// <summary>
         /// Converts score to string (1234567) format
