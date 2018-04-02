@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.Graphics.Particles
 {
-    class HitBurst : Particle
+    internal class HitEffect : Particle
     {
         /// <summary>
         ///     Determines how long the sprite will be visible for in miliseconds
@@ -49,7 +49,7 @@ namespace Quaver.Graphics.Particles
         /// <param name="rect"></param>
         /// <param name="parent"></param>
         /// <param name="keyLane"></param>
-        public HitBurst(DrawRectangle rect, Drawable parent, int keyLane)
+        public HitEffect(DrawRectangle rect, Drawable parent, int keyLane)
         {
             // Create Boundary and Particle
             Boundary = new Boundary(rect.X, rect.Y, rect.Width, rect.Height)
