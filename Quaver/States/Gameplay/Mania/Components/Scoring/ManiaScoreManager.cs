@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Gameplay;
+using Quaver.Main;
 
 namespace Quaver.States.Gameplay.Mania.Components.Scoring
 {

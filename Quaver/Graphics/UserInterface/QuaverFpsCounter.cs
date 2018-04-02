@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Graphics.Text;
+using Quaver.Main;
 
 namespace Quaver.Graphics.UserInterface
 {

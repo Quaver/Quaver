@@ -1,5 +1,6 @@
 ﻿using System;
 using Quaver.Helpers;
+using Quaver.Main;
 
 namespace Quaver.Graphics.Buttons
 {

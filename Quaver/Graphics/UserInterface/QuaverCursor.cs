@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
+using Quaver.Main;
 
 namespace Quaver.Graphics.UserInterface
 {

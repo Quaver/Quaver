@@ -9,6 +9,7 @@ using Quaver.Config;
 using Quaver.Database.Beatmaps;
 using Quaver.GameState;
 using Quaver.Logging;
+using Quaver.Main;
 using Quaver.States.Enums;
 using Quaver.States.Gameplay.Mania;
 using Quaver.States.Select;

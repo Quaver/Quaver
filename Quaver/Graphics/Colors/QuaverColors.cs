@@ -15,7 +15,7 @@ namespace Quaver.Graphics.Colors
         public static readonly Color NameTagModerator = new Color(59, 233, 106);
 
         /// <summary>
-        /// Nametag color for QuaverGame Supporters/Donators.
+        /// Nametag color for Quaver Supporters/Donators.
         /// </summary>
         public static readonly Color NameTagSupporter = new Color(76, 146, 211);
 

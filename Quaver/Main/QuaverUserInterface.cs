@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.Graphics.Base;
 
-namespace Quaver
+namespace Quaver.Main
 {
     /// <summary>
     ///     All UI loaded into the game (Non-Skinnable)

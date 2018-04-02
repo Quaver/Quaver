@@ -7,6 +7,7 @@ using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Logging;
+using Quaver.Main;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Graphics.Buttons

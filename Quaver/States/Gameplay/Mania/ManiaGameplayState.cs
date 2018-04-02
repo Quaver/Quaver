@@ -2,6 +2,7 @@
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Logging;
+using Quaver.Main;
 using Quaver.States.Enums;
 
 namespace Quaver.States.Gameplay.Mania
@@ -37,7 +38,7 @@ namespace Quaver.States.Gameplay.Mania
             ManiaGameplayManager.Initialize(this);
 
             // Update window title
-            GameBase.GameWindow.Title = $"QuaverGame - {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]";
+            GameBase.GameWindow.Title = $"Quaver - {GameBase.SelectedBeatmap.Artist} - {GameBase.SelectedBeatmap.Title} [{GameBase.SelectedBeatmap.DifficultyName}]";
 
             // Update Discord Presence
             DiscordController.ChangeDiscordPresenceGameplay(false);

@@ -9,6 +9,7 @@ using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
+using Quaver.Main;
 
 namespace Quaver.States.Gameplay.Mania.UI.Accuracy
 {

@@ -11,6 +11,7 @@ using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
 using Quaver.Input;
 using Quaver.Logging;
+using Quaver.Main;
 using Quaver.Modifiers;
 using Quaver.States.Enums;
 using Quaver.States.Loading.Map;
@@ -85,7 +86,7 @@ namespace Quaver.States.Select
         /// </summary>
         public void Initialize()
         {
-            GameBase.GameWindow.Title = "QuaverGame";
+            GameBase.GameWindow.Title = "Quaver";
 
             //Initialize Helpers
             BeatmapOrganizerUI = new BeatmapOrganizerUI();

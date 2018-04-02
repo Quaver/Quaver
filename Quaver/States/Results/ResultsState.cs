@@ -22,6 +22,7 @@ using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Logging;
+using Quaver.Main;
 using Quaver.Replays;
 using Quaver.States.Enums;
 using Quaver.States.Gameplay.Mania;
@@ -348,7 +349,7 @@ namespace Quaver.States.Results
         /// </summary>
         private void LogScore()
         {
-            Logger.LogImportant($"QuaverGame Version: {Replay.QuaverVersion}", LogType.Runtime);
+            Logger.LogImportant($"Quaver Version: {Replay.QuaverVersion}", LogType.Runtime);
             Logger.LogImportant($"Beatmap MD5: {Replay.BeatmapMd5}", LogType.Runtime);
             Logger.LogImportant($"Replay MD5: {Replay.ReplayMd5}", LogType.Runtime);
             Logger.LogImportant($"Player: {ConfigManager.Username}", LogType.Runtime);

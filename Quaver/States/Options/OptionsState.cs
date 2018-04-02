@@ -10,6 +10,7 @@ using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UserInterface;
+using Quaver.Main;
 using Quaver.Skinning;
 using Quaver.States.Enums;
 using Quaver.States.Menu;

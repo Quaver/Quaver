@@ -10,6 +10,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Config;
 using Quaver.Logging;
+using Quaver.Main;
 using Quaver.StepMania;
 using SQLite;
 
@@ -418,7 +419,7 @@ namespace Quaver.Database.Beatmaps
                         Creator = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.Creator)),
                         AudioPath = beatmap.AudioFileName,
                         AudioPreviewTime = beatmap.AudioPreviewTime,
-                        Description = $"This map is a QuaverGame converted version of {Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.Creator))}'s map",
+                        Description = $"This map is a Quaver converted version of {Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.Creator))}'s map",
                         Source = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.SongSource)),
                         Tags = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(beatmap.SongTags)),
                         Mode = (beatmap.CircleSize == 4) ? GameModes.Keys4 : GameModes.Keys7,

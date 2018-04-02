@@ -5,6 +5,7 @@ using Quaver.Database.Beatmaps;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Logging;
+using Quaver.Main;
 using Quaver.States.Enums;
 
 namespace Quaver.States.Import
