@@ -29,7 +29,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     Text box which displays a count of every judgement
         /// </summary>
-        private TextBoxSprite[] AccuracyCountText { get; set; }
+        private QuaverTextbox[] AccuracyCountQuaverText { get; set; }
 
         /// <summary>
         ///     The graph which displays judgement count relative to total count of every judgement
@@ -64,7 +64,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     Text which displays current score
         /// </summary>
-        private TextBoxSprite ScoreText { get; set; }
+        private QuaverTextbox ScoreQuaverText { get; set; }
 
         /// <summary>
         ///     Current accuracy the player has. Used for animation
@@ -142,10 +142,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 };
             }
 
-            var accuracyIndicatorText = new TextBoxSprite[7];
+            var accuracyIndicatorText = new QuaverTextbox[7];
             for (var i = 0; i < 7; i++)
             {
-                accuracyIndicatorText[i] = new TextBoxSprite()
+                accuracyIndicatorText[i] = new QuaverTextbox()
                 {
                     Parent = accuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
@@ -161,10 +161,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 };
             }
 
-            AccuracyCountText = new TextBoxSprite[7];
+            AccuracyCountQuaverText = new QuaverTextbox[7];
             for (var i = 0; i < 7; i++)
             {
-                AccuracyCountText[i] = new TextBoxSprite()
+                AccuracyCountQuaverText[i] = new QuaverTextbox()
                 {
                     Parent = accuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
@@ -179,7 +179,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
                 };
             }
 
-            ScoreText = new TextBoxSprite()
+            ScoreQuaverText = new QuaverTextbox()
             {
                 Parent = accuracyBox,
                 Alignment = Alignment.TopLeft,
@@ -247,10 +247,10 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         {
             // Update Variables and Text
             //CurrentScore = totalScore;
-            ScoreText.Text = StringHelper.ScoreToString(totalScore);
+            ScoreQuaverText.Text = StringHelper.ScoreToString(totalScore);
             TargetAccuracy = (float)tarAcc;
             JudgementCount[index] = pressSpread + releaseSpread;
-            AccuracyCountText[index+1].Text = pressSpread + " | " + releaseSpread;
+            AccuracyCountQuaverText[index+1].Text = pressSpread + " | " + releaseSpread;
 
             //Calculate graph bars
             AccuracyGraphTargetScale[index] = (float)Math.Sqrt((double)(JudgementCount[index]) / judgeCount);
@@ -285,11 +285,11 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             }
 
             // Update Score Text
-            //ScoreText.Text = GraphicsHelper.ScoreToString((int)CurrentScore);
+            //ScoreQuaverText.Text = GraphicsHelper.ScoreToString((int)CurrentScore);
 
             // Update Accuracy Text
             CurrentAccuracy = GraphicsHelper.Tween(TargetAccuracy, CurrentAccuracy, tween);
-            AccuracyCountText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
+            AccuracyCountQuaverText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
 
             // Upgrade Grade Progress Bar
             GradeProgressQuaverBar.UpdateBar(0,

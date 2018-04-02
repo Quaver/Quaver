@@ -54,7 +54,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         /// <summary>
         ///     The text displaying combo
         /// </summary>
-        private TextBoxSprite ComboText { get; set; }
+        private QuaverTextbox ComboQuaverText { get; set; }
 
         /// <summary>
         ///     When the JudgeQuaverSprite gets updated, it'll update JudgeQuaverSprite.PositionY to this variable.
@@ -147,7 +147,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             };
 
             // Create Combo Text
-            ComboText = new TextBoxSprite()
+            ComboQuaverText = new QuaverTextbox()
             {
                 Size = new UDim2(100 * GameBase.WindowUIScale, 20 * GameBase.WindowUIScale),
                 Position = new UDim2(0, 45 * GameBase.WindowUIScale),
@@ -261,7 +261,7 @@ namespace Quaver.GameState.Gameplay.PlayScreen
             if (SpriteAlphaHold > 500 && PriorityJudgeLength <= 0)
             {
                 JudgeQuaverSprite.Alpha = GraphicsHelper.Tween(0, JudgeQuaverSprite.Alpha, tween / 10);
-                ComboText.Alpha = GraphicsHelper.Tween(0, ComboText.Alpha, tween / 10);
+                ComboQuaverText.Alpha = GraphicsHelper.Tween(0, ComboQuaverText.Alpha, tween / 10);
             }
 
             //Update QuaverContainer
@@ -278,8 +278,8 @@ namespace Quaver.GameState.Gameplay.PlayScreen
         internal void UpdateJudge(int index, int combo, bool release = false, double? offset = null)
         {
             //TODO: add judge scale
-            ComboText.Text = combo + "x";
-            ComboText.Alpha = 1;
+            ComboQuaverText.Text = combo + "x";
+            ComboQuaverText.Alpha = 1;
             JudgeQuaverSprite.Alpha = 1;
             SpriteAlphaHold = 0;
 

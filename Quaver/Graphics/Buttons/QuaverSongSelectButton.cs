@@ -17,11 +17,11 @@ namespace Quaver.Graphics.Buttons
 
         internal Beatmap Map { get; set; }
 
-        private TextBoxSprite TitleText { get; set; }
+        private QuaverTextbox TitleQuaverText { get; set; }
 
-        private TextBoxSprite ArtistText { get; set; }
+        private QuaverTextbox ArtistQuaverText { get; set; }
 
-        private TextBoxSprite DiffText { get; set; }
+        private QuaverTextbox DiffQuaverText { get; set; }
 
         private Sprites.QuaverSprite UnderlayImage { get; set; }
 
@@ -66,7 +66,7 @@ namespace Quaver.Graphics.Buttons
                 }
             });*/
 
-            TitleText = new TextBoxSprite()
+            TitleQuaverText = new QuaverTextbox()
             {
                 Text = map.Title,
                 Font = Fonts.Medium48,
@@ -79,7 +79,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = this
             };
 
-            ArtistText = new TextBoxSprite()
+            ArtistQuaverText = new QuaverTextbox()
             {
                 Text = map.Artist + " | "+ map.Creator,
                 Font = Fonts.Medium48,
@@ -92,7 +92,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = this
             };
 
-            DiffText = new TextBoxSprite()
+            DiffQuaverText = new QuaverTextbox()
             {
                 Text = string.Format("{0:f2}", map.DifficultyRating),
                 Font = Fonts.Bold12,
@@ -177,7 +177,7 @@ namespace Quaver.Graphics.Buttons
             GradeImage.Tint = Tint;
             GameModeImage.Tint = Tint;
             
-            //TextSprite.Update(dt);
+            //QuaverTextSprite.Update(dt);
             base.Update(dt);
         }
     }
