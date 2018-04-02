@@ -25,7 +25,7 @@ namespace Quaver.Database.Beatmaps
         /// <summary>
         ///     The path of the local database
         /// </summary>
-        private static readonly string DatabasePath = Configuration.GameDirectory + "/quaver.db";
+        private static readonly string DatabasePath = ConfigManager.GameDirectory + "/quaver.db";
 
         /// <summary>
         ///     Responsible for loading and setting our global beatmaps variable.
@@ -52,10 +52,10 @@ namespace Quaver.Database.Beatmaps
                 var beatmaps = await FetchAllBeatmaps();
                 Logger.LogSuccess($"{beatmaps.Count} beatmaps have been successfully loaded.", LogType.Runtime);
 
-                if (Configuration.AutoLoadOsuBeatmaps)
+                if (ConfigManager.AutoLoadOsuBeatmaps)
                     beatmaps = beatmaps.Concat(LoadBeatmapsFromOsuDb()).ToList();
 
-                if (Configuration.AutoLoadEtternaCharts)
+                if (ConfigManager.AutoLoadEtternaCharts)
                     beatmaps = beatmaps.Concat(LoadBeatmapsFromEtternaCache()).ToList();
 
                 var maps = BeatmapHelper.GroupBeatmapsByDirectory(beatmaps);
@@ -97,7 +97,7 @@ namespace Quaver.Database.Beatmaps
         private static async Task SyncBeatmapDatabaseAsync()
         {
             // Find all the.qua files in the directory.
-            var Mapss = Directory.GetFiles(Configuration.SongDirectory, "*.qua", SearchOption.AllDirectories);
+            var Mapss = Directory.GetFiles(ConfigManager.SongDirectory, "*.qua", SearchOption.AllDirectories);
             Logger.LogInfo($"Found: {Mapss.Length} .qua files in the /songs/ directory.", LogType.Runtime);
 
             await CacheByFileCount(Mapss);
@@ -136,7 +136,7 @@ namespace Quaver.Database.Beatmaps
             foreach (var file in Mapss)
             {
                 // Run a check to see if the beatmap path already exists in the database.
-                if (beatmapsInDb.Any(beatmap => Configuration.SongDirectory.Replace("\\", "/") + "/" + beatmap.Directory + "/" + beatmap.Path.Replace("\\", "/") == file.Replace("\\", "/"))) continue;
+                if (beatmapsInDb.Any(beatmap => ConfigManager.SongDirectory.Replace("\\", "/") + "/" + beatmap.Directory + "/" + beatmap.Path.Replace("\\", "/") == file.Replace("\\", "/"))) continue;
 
                 // Try to parse the file and check if it is a legitimate .qua file.
                 var qua = Qua.Parse(file);
@@ -215,7 +215,7 @@ namespace Quaver.Database.Beatmaps
             
             foreach (var map in beatmaps)
             {
-                var mapPath = $"{Configuration.SongDirectory}/{map.Directory}/{map.Path}".Replace("\\", "/");
+                var mapPath = $"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}".Replace("\\", "/");
 
                 if (File.Exists(mapPath))
                     continue;
@@ -303,7 +303,7 @@ namespace Quaver.Database.Beatmaps
             {
                 if (mapsInDb.Any(x => x.Md5Checksum == map.Md5Checksum))
                 {
-                    File.Delete(Configuration.SongDirectory + "/" + map.Directory + "/" + map.Path);
+                    File.Delete(ConfigManager.SongDirectory + "/" + map.Directory + "/" + map.Path);
                     continue;
                 }
 
@@ -338,8 +338,8 @@ namespace Quaver.Database.Beatmaps
                         continue;
 
                     // Delete the file if its actually a duplicate.
-                    File.Delete($"{Configuration.SongDirectory}/{map.Directory}/{map.Path}");
-                    Logger.LogImportant($"Removed duplicate map: {Configuration.SongDirectory}/{map.Directory}/{map.Path}", LogType.Runtime);
+                    File.Delete($"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}");
+                    Logger.LogImportant($"Removed duplicate map: {ConfigManager.SongDirectory}/{map.Directory}/{map.Path}", LogType.Runtime);
                 }
                 catch (Exception e)
                 {
@@ -394,8 +394,8 @@ namespace Quaver.Database.Beatmaps
         {
             try
             {
-                var db = OsuDb.Read(Configuration.OsuDbPath);
-                GameBase.OsuSongsFolder = Path.GetDirectoryName(Configuration.OsuDbPath) + "/Songs/";
+                var db = OsuDb.Read(ConfigManager.OsuDbPath);
+                GameBase.OsuSongsFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath) + "/Songs/";
 
                 var beatmaps = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && (x.CircleSize == 4 || x.CircleSize == 7)).ToList();
 
@@ -463,13 +463,13 @@ namespace Quaver.Database.Beatmaps
 
             try
             {
-                var files = Directory.GetFiles(Configuration.EtternaCacheFolderPath);
+                var files = Directory.GetFiles(ConfigManager.EtternaCacheFolderPath);
 
                 if (files.Length == 0)
                     return maps;
 
                 // Should give us the etterna base folder
-                GameBase.EtternaFolder = Path.GetFullPath(Path.Combine(Configuration.EtternaCacheFolderPath, @"..\..\"));
+                GameBase.EtternaFolder = Path.GetFullPath(Path.Combine(ConfigManager.EtternaCacheFolderPath, @"..\..\"));
 
                 // Read all the files in them
                 foreach (var cacheFile in files)

@@ -183,7 +183,7 @@ namespace Quaver.Config
         /// <returns></returns>
         internal static string ReadSkin(string defaultSkin, string newVal)
         {
-            return Directory.Exists(Configuration.SkinDirectory + "/" + newVal) ? newVal : defaultSkin;
+            return Directory.Exists(ConfigManager.SkinDirectory + "/" + newVal) ? newVal : defaultSkin;
         }
 
         /// <summary>

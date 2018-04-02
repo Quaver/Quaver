@@ -333,10 +333,10 @@ namespace Quaver.GameState.Gameplay
                     DrawPlayfieldFirst = !GameBase.LoadedSkin.ReceptorsOverHitObjects4K;
 
                     // Update Playfield
-                    Playfield.ReceptorYPosition = Config.Configuration.DownScroll4k  //todo: use list for scaling
+                    Playfield.ReceptorYPosition = Config.ConfigManager.DownScroll4k  //todo: use list for scaling
                         ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
                         : GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale;
-                    Playfield.ColumnLightingPosition = Config.Configuration.DownScroll4k
+                    Playfield.ColumnLightingPosition = Config.ConfigManager.DownScroll4k
                         ? Playfield.ReceptorYPosition
                         : Playfield.ReceptorYPosition
                         + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
@@ -345,18 +345,18 @@ namespace Quaver.GameState.Gameplay
                     Console.WriteLine(Playfield.ColumnLightingPosition);
 
                     // Update Note Manager
-                    NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed4k / (20f * GameBase.AudioEngine.PlaybackRate);
-                    NoteManager.DownScroll = Configuration.DownScroll4k;
+                    NoteManager.ScrollSpeed = GameBase.WindowUIScale * ConfigManager.ScrollSpeed4k / (20f * GameBase.AudioEngine.PlaybackRate);
+                    NoteManager.DownScroll = ConfigManager.DownScroll4k;
                     NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale;
-                    NoteManager.HitPositionOffset = Config.Configuration.DownScroll4k
-                        ? Playfield.ReceptorYPosition + ((Configuration.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
-                        : Playfield.ReceptorYPosition - ((Configuration.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
+                    NoteManager.HitPositionOffset = Config.ConfigManager.DownScroll4k
+                        ? Playfield.ReceptorYPosition + ((ConfigManager.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
+                        : Playfield.ReceptorYPosition - ((ConfigManager.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
                         * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
                         - ((double)GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
 
                     // Update Score Manager
-                    ScoreManager.ScrollSpeed = Configuration.ScrollSpeed4k;
+                    ScoreManager.ScrollSpeed = ConfigManager.ScrollSpeed4k;
                     break;
                 case GameModes.Keys7:
                     // Calculate References
@@ -367,10 +367,10 @@ namespace Quaver.GameState.Gameplay
                     DrawPlayfieldFirst = !GameBase.LoadedSkin.ReceptorsOverHitObjects7K;
 
                     // Update Playfield
-                    Playfield.ReceptorYPosition = Config.Configuration.DownScroll7k  //todo: use list for scaling
+                    Playfield.ReceptorYPosition = Config.ConfigManager.DownScroll7k  //todo: use list for scaling
                         ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset7K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
                         : GameBase.LoadedSkin.ReceptorPositionOffset7K * GameBase.WindowUIScale;
-                    Playfield.ColumnLightingPosition = Config.Configuration.DownScroll7k
+                    Playfield.ColumnLightingPosition = Config.ConfigManager.DownScroll7k
                         ? Playfield.ReceptorYPosition
                         : Playfield.ReceptorYPosition 
                         + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
@@ -378,18 +378,18 @@ namespace Quaver.GameState.Gameplay
                         - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
 
                     // Update Note Manager
-                    NoteManager.ScrollSpeed = GameBase.WindowUIScale * Configuration.ScrollSpeed7k / (20f * GameBase.AudioEngine.PlaybackRate);
-                    NoteManager.DownScroll = Configuration.DownScroll7k;
+                    NoteManager.ScrollSpeed = GameBase.WindowUIScale * ConfigManager.ScrollSpeed7k / (20f * GameBase.AudioEngine.PlaybackRate);
+                    NoteManager.DownScroll = ConfigManager.DownScroll7k;
                     NoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale;
-                    NoteManager.HitPositionOffset = Config.Configuration.DownScroll7k
-                        ? Playfield.ReceptorYPosition + ((Configuration.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
-                        : Playfield.ReceptorYPosition - ((Configuration.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
+                    NoteManager.HitPositionOffset = Config.ConfigManager.DownScroll7k
+                        ? Playfield.ReceptorYPosition + ((ConfigManager.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
+                        : Playfield.ReceptorYPosition - ((ConfigManager.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
                         * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
                         - ((double)GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
 
                     // Update Score Manager
-                    ScoreManager.ScrollSpeed = Configuration.ScrollSpeed7k;
+                    ScoreManager.ScrollSpeed = ConfigManager.ScrollSpeed7k;
                     break;
             }
 
@@ -615,7 +615,7 @@ namespace Quaver.GameState.Gameplay
         /// <param name="e"></param>
         public void SkipSong(object sender, EventArgs e)
         {
-            if (!IntroSkippable || !GameBase.KeyboardState.IsKeyDown(Configuration.KeySkipIntro) || IntroSkipped)
+            if (!IntroSkippable || !GameBase.KeyboardState.IsKeyDown(ConfigManager.KeySkipIntro) || IntroSkipped)
                 return;
 
             var skipTime = GameBase.SelectedBeatmap.Qua.HitObjects[0].StartTime - Timing.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset;

@@ -78,7 +78,7 @@ namespace Quaver.GameState.States
                 switch (GameBase.SelectedBeatmap.Game)
                 {
                     case BeatmapGame.Quaver:
-                        var quaPath = $"{Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
+                        var quaPath = $"{ConfigManager.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
                         qua = Qua.Parse(quaPath);
                         break;
                     case BeatmapGame.Osu:
@@ -114,7 +114,7 @@ namespace Quaver.GameState.States
                 // Asynchronously write to a file for livestreamers the difficulty rating
                 Task.Run(async () =>
                 {
-                    using (var writer = File.CreateText(Configuration.DataDirectory + "/temp/Now Playing/difficulty.txt"))
+                    using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/difficulty.txt"))
                         await writer.WriteAsync($"{Math.Round(GameBase.SelectedBeatmap.Qua.CalculateFakeDifficulty(), 2)}");
                 });
 
@@ -152,7 +152,7 @@ namespace Quaver.GameState.States
                 }
 
                 // Get the MD5 Hash of the played map and change the state.
-                var quaPath = $"{Configuration.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
+                var quaPath = $"{ConfigManager.SongDirectory}/{GameBase.SelectedBeatmap.Directory}/{GameBase.SelectedBeatmap.Path}";
 
                 // Get the Md5 of the played map
                 var md5 = "";

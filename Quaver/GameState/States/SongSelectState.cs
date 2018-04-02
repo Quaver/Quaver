@@ -370,7 +370,7 @@ namespace Quaver.GameState.States
         /// </summary>
         private void CreateTogglePitchButton()
         {
-            TogglePitch = new TextButton(new Vector2(200, 50), $"Toggle Pitch: {Configuration.Pitched}")
+            TogglePitch = new TextButton(new Vector2(200, 50), $"Toggle Pitch: {ConfigManager.Pitched}")
             {
                 Alignment = Alignment.MidLeft,
                 Parent = Boundary
@@ -386,7 +386,7 @@ namespace Quaver.GameState.States
         private void OnTogglePitchButtonClick(object sender, EventArgs e)
         {
             GameBase.AudioEngine.TogglePitch();
-            TogglePitch.TextSprite.Text = $"Toggle Pitch: {Configuration.Pitched}";
+            TogglePitch.TextSprite.Text = $"Toggle Pitch: {ConfigManager.Pitched}";
         }
     }
 }
