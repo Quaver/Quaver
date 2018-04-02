@@ -2,7 +2,7 @@
 
 namespace Quaver.Modifiers.Mods.Mania
 {
-    internal class ManiaGameplayModifierNoSliderVelocities: IGameplayModifier
+    internal class ManiaModNoSliderVelocities: IGameplayModifier
     {
         /// <inheritdoc />
         /// <summary>
