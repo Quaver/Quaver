@@ -3,15 +3,15 @@
 namespace Quaver.Modifiers.Mods.Mania
 {
     /// <summary>
-    ///     ManiaGameplayModifierChill gameplayModifier. Makes the hit timing windows 
+    ///     ManiaModChill gameplayModifier. Makes the hit timing windows 
     /// </summary>
-    internal class ManiaGameplayModifierChill : IGameplayModifier
+    internal class ManiaModChill : IGameplayModifier
     {
         /// <inheritdoc />
         /// <summary>
         ///     Name
         /// </summary>
-        public string Name { get; set; } = "ManiaGameplayModifierChill";
+        public string Name { get; set; } = "ManiaModChill";
 
         /// <inheritdoc />
         /// <summary>
