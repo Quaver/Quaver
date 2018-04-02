@@ -1,25 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 
-namespace Quaver.Graphics.Button
+namespace Quaver.Graphics.Buttons
 {
+    /// <inheritdoc />
     /// <summary>
     ///     This type of button is used for simple buttons that only require a single image + text, but also includes a tint animation.
     /// </summary>
-    internal class TextButton : Button
+    internal class QuaverTextButton : QuaverButton
     {
         internal TextBoxSprite TextSprite { get; set; }
 
         //Constructor
-        internal TextButton(Vector2 ButtonSize, string ButtonText)
+        internal QuaverTextButton(Vector2 ButtonSize, string ButtonText)
         {
             TextSprite = new TextBoxSprite()
             {

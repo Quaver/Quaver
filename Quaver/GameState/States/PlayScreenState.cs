@@ -12,7 +12,6 @@ using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics;
-using Quaver.Graphics.Button;
 using Quaver.Graphics.Sprite;
 using Quaver.Graphics.Text;
 using Quaver.Input;
@@ -21,7 +20,6 @@ using Quaver.Replays;
 using Quaver.GameState.Gameplay;
 using Quaver.GameState.Gameplay.PlayScreen;
 using Quaver.Modifiers;
-using Button = Quaver.Graphics.Button.Button;
 
 namespace Quaver.GameState.States
 {

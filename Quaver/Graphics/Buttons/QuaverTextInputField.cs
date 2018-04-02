@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Quaver.Logging;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
+using Quaver.Logging;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
-using Quaver.Input;
 
-namespace Quaver.Graphics.Button
+namespace Quaver.Graphics.Buttons
 {
+    /// <inheritdoc />
     /// <summary>
     /// This class will be inherited from every button class.
     /// </summary>
-    internal class TextInputField : Button
+    internal class QuaverTextInputField : QuaverButton
     {
         /// <summary>
         ///     The Text box spprite
@@ -51,7 +47,7 @@ namespace Quaver.Graphics.Button
         private bool TextHighlighted { get; set; }
 
         /// <summary>
-        ///     A function must be passed into TextInputField upon creation to determine what happens when it 
+        ///     A function must be passed into QuaverTextInputField upon creation to determine what happens when it 
         ///     is submitted
         /// </summary>
         internal delegate void TextBoxSubmittedDelegate(string text);
@@ -67,7 +63,7 @@ namespace Quaver.Graphics.Button
         /// <param name="ButtonSize"></param>
         /// <param name="placeHolderText"></param>
         /// <param name="onTextInputSubmit"></param>
-        internal TextInputField(Vector2 ButtonSize, string placeHolderText, TextBoxSubmittedDelegate onTextInputSubmit)
+        internal QuaverTextInputField(Vector2 ButtonSize, string placeHolderText, TextBoxSubmittedDelegate onTextInputSubmit)
         {
             // Set the reference to the method that will be called on submit
             OnTextInputSubmit = onTextInputSubmit;
