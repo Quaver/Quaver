@@ -11,6 +11,7 @@ using Quaver.Database.Beatmaps;
 using Quaver.Graphics.Sprite;
 using Quaver.Audio;
 using Quaver.Database;
+using Quaver.Database.Scores;
 using Quaver.Helpers;
 
 namespace Quaver.GameState.SongSelect
@@ -54,7 +55,7 @@ namespace Quaver.GameState.SongSelect
             CreateSongSelectButtons();
 
             if (GameBase.SelectedBeatmap == null)
-                BeatmapUtils.SelectRandomBeatmap();
+                BeatmapHelper.SelectRandomBeatmap();
 
             // Select the currently selected map.
             SelectMap(SongSelectButtons.FindIndex(x => x.Map == GameBase.SelectedBeatmap));

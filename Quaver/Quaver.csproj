@@ -88,7 +88,7 @@
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\DisplayMaps.cs" />
     <Compile Include="Commands\Mapsets.cs" />
-    <Compile Include="Database\LocalScoreCache.cs" />
+    <Compile Include="Database\Scores\LocalScoreCache.cs" />
     <Compile Include="Discord\DiscordController.cs" />
     <Compile Include="Discord\DiscordRPC.cs" />
     <Compile Include="GameState\Gameplay\BarObject.cs" />
@@ -154,11 +154,11 @@
     <Compile Include="Graphics\Sprite\Cursor.cs" />
     <Compile Include="GameBase.cs" />
     <Compile Include="Database\Beatmaps\Beatmap.cs" />
-    <Compile Include="Database\Beatmaps\BeatmapUtils.cs" />
+    <Compile Include="Database\Beatmaps\BeatmapHelper.cs" />
     <Compile Include="Config\ConfigHelper.cs" />
     <Compile Include="Config\Configuration.cs" />
-    <Compile Include="Database\BeatmapCache.cs" />
-    <Compile Include="Database\BeatmapImporter.cs" />
+    <Compile Include="Database\Beatmaps\BeatmapCache.cs" />
+    <Compile Include="Database\Beatmaps\BeatmapImporter.cs" />
     <Compile Include="Peppy\Osu.cs" />
     <Compile Include="Peppy\OsuSkinConfig.cs" />
     <Compile Include="Peppy\QuaverOsuElementMap.cs" />
@@ -178,7 +178,7 @@
     <Compile Include="Replays\Replay.cs" />
     <Compile Include="Replays\ReplayFrame.cs" />
     <Compile Include="Replays\ReplayHelper.cs" />
-    <Compile Include="Scores\LocalScore.cs" />
+    <Compile Include="Database\Scores\LocalScore.cs" />
     <Compile Include="Skins\Skin.cs" />
     <Compile Include="Steam\SteamAPIHelper.cs" />
     <Compile Include="StepMania\Etterna.cs" />
@@ -613,7 +613,9 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Scores\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj">
       <Project>{0c6869bd-4e34-4c92-a853-e09f2b320601}</Project>
