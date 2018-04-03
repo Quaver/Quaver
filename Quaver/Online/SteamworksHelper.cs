@@ -121,7 +121,7 @@ namespace Quaver.Online
         /// <summary>
         ///     Connects to the Flamingo server
         /// </summary>
-        private static void ConnectToFlamingo(bool devServer = false)
+        internal static void ConnectToFlamingo(bool devServer = false)
         {
             // Set if we're connecting to the development server
             if (devServer)
