@@ -15,6 +15,8 @@ using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
+using Quaver.Net;
+using Quaver.Online;
 using Quaver.Peppy;
 using Quaver.States.Enums;
 using Quaver.States.Import;
@@ -70,6 +72,11 @@ namespace Quaver.States.Menu
         ///     QuaverButton to convert .sm files
         /// </summary>
         public QuaverButton ConvertStepManiaQuaverButton { get; set; }
+
+        /// <summary>
+        ///     A button for testing logging in/out of the server
+        /// </summary>
+        public QuaverButton LoginTestButton { get; set; }
 
         /// <summary>
         ///     Initialize
@@ -154,6 +161,22 @@ namespace Quaver.States.Menu
                 PosY = 50,
                 Parent = QuaverContainer
             };
+
+            LoginTestButton = new QuaverTextButton(new Vector2(200, 40), (Flamingo.Connected) ? "Logout" : "Login")
+            {
+                Alignment = Alignment.MidRight,
+                PosY = 100,
+                Parent = QuaverContainer,
+            };
+
+            LoginTestButton.Clicked += (sender, e) =>
+            {
+                if (Flamingo.Connected)
+                    Flamingo.Disconnect();
+                else
+                    SteamworksHelper.ConnectToFlamingo(SteamworksHelper.ConnectingToDevServer);
+            };
+
             OptionsMenuQuaverButton.Clicked += OnOptionsSelectButtonClick;
         }
 
