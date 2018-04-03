@@ -78,8 +78,8 @@
     <Compile Include="States\Select\MapInfoWindow.cs" />
     <Compile Include="States\Select\MapOrganizer.cs" />
     <Compile Include="States\Select\ModSelector.cs" />
-    <Compile Include="Graphics\Buttons\MapDifficultySelectButton.cs" />
-    <Compile Include="Graphics\Buttons\MapsetSelectButton.cs" />
+    <Compile Include="Graphics\Buttons\QuaverMapDifficultySelectButton.cs" />
+    <Compile Include="Graphics\Buttons\QuaverMapsetSelectButton.cs" />
     <Compile Include="Audio\AudioEngine.cs" />
     <Compile Include="Commands\CalculateDifficulty.cs" />
     <Compile Include="Commands\ConvertOsuSkin.cs" />
