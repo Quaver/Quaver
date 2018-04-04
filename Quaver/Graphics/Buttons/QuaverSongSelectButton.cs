@@ -71,7 +71,7 @@ namespace Quaver.Graphics.Buttons
             TitleQuaverText = new QuaverTextbox()
             {
                 Text = map.Title,
-                Font = Fonts.Medium48,
+                Font = QuaverFonts.Medium48,
                 Size = new UDim2D(-5 * ButtonScale, -2 * ButtonScale, 0.825f, 0.5f),
                 Position = new UDim2D(-5 * ButtonScale, 2 * ButtonScale),
                 Alignment = Alignment.TopRight,
@@ -84,7 +84,7 @@ namespace Quaver.Graphics.Buttons
             ArtistQuaverText = new QuaverTextbox()
             {
                 Text = map.Artist + " | "+ map.Creator,
-                Font = Fonts.Medium48,
+                Font = QuaverFonts.Medium48,
                 Position = new UDim2D(-5 * ButtonScale, -5 * ButtonScale),
                 Size = new UDim2D(-5 * ButtonScale, -5 * ButtonScale, 0.825f, 0.5f),
                 Alignment = Alignment.BotRight,
@@ -97,7 +97,7 @@ namespace Quaver.Graphics.Buttons
             DiffQuaverText = new QuaverTextbox()
             {
                 Text = string.Format("{0:f2}", map.DifficultyRating),
-                Font = Fonts.Bold12,
+                Font = QuaverFonts.Bold12,
                 Position = new UDim2D(2 * ButtonScale, 5 * ButtonScale),
                 Size = new UDim2D(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
                 Alignment = Alignment.TopLeft,

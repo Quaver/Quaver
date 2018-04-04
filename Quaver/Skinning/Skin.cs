@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Reflection;
 using IniParser;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -11,6 +12,8 @@ using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
+using Quaver.Resources;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.Skinning
 {
@@ -751,12 +754,13 @@ namespace Quaver.Skinning
                         break;
                 }
 
-                return GameBase.Content.Load<Texture2D>(path);
+                return ResourceHelper.LoadTexture2DFromPng((Bitmap)ResourceHelper.GetProperty(path));
             }
-            catch
+            catch (Exception e)
             {
+                // Logger.LogError(e, LogType.Runtime);
                 Logger.LogError($"Default skin element not found {path}", LogType.Runtime);
-                return GameBase.Content.Load<Texture2D>("main-blank-box");
+                return ResourceHelper.LoadTexture2DFromPng(QuaverResources.blank_box);
             }    
         }
 
@@ -869,7 +873,7 @@ namespace Quaver.Skinning
                     break;
             }
 
-            return GameBase.Content.Load<SoundEffect>(element);
+            return SoundEffect.FromStream((UnmanagedMemoryStream)ResourceHelper.GetProperty(element.Replace(".wav", "")));
         }
 
         /// <summary>
