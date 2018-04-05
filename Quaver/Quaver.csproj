@@ -69,6 +69,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Graphics\Overlays\Navbar\Navbar.cs" />
+    <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarButton.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
