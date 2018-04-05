@@ -74,15 +74,17 @@ namespace Quaver.Graphics.Overlays.Navbar
         ///     When the user's mouse goes over the button.
         /// </summary>
         internal override void MouseOver()
-        {
-        }
+         {
+             Tint = Color.Yellow;
+         }
 
          /// <inheritdoc />
          /// <summary>
          ///   When the user's mouse goes out of the button.  
          /// </summary>
         internal override void MouseOut()
-        {
-        }
+         {
+             Tint = Color.White;
+         }
     }
 }
