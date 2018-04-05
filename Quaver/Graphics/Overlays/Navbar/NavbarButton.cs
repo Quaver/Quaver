@@ -27,6 +27,11 @@ namespace Quaver.Graphics.Overlays.Navbar
         private Navbar Container { get; }
 
         /// <summary>
+        ///     The spacing between 
+        /// </summary>
+        private readonly int BUTTON_SPACING = 20;
+        
+        /// <summary>
         ///     Initializes the navbar button
         /// </summary>
         /// <param name="nav"></param>
@@ -40,7 +45,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             TooltipName = tooltipName;
             TooltipDescription = tooltipDesc;
             Image = tex;
-            Size = new UDim2D(tex.Width, tex.Height);
+            Size = new UDim2D(Image.Width, Image.Height);
          
             // Get the last button in the list of the current alignment.
             var lastButton = Container.Buttons[alignment].Count > 0 ? Container.Buttons[alignment].Last() : null;
@@ -51,17 +56,17 @@ namespace Quaver.Graphics.Overlays.Navbar
             {
                 case NavbarAlignment.Left:
                     Alignment = Alignment.TopLeft;
-                    buttonX = Container.Nav.SizeX + lastButton?.PosX + lastButton?.SizeX + 20 ?? 20;
+                    buttonX = Container.Nav.SizeX + lastButton?.PosX + lastButton?.SizeX + BUTTON_SPACING ?? BUTTON_SPACING;
                     break;
                 case NavbarAlignment.Right:
                     Alignment = Alignment.TopRight;
-                    buttonX = Container.Nav.SizeX + lastButton?.PosX - lastButton?.SizeX - 20 ?? -20;
+                    buttonX = Container.Nav.SizeX + lastButton?.PosX - lastButton?.SizeX - BUTTON_SPACING ?? -BUTTON_SPACING;
                     break;
                 default:
-                    throw new InvalidEnumArgumentException("Invalid NavbarAlignment given!");
+                    throw new InvalidEnumArgumentException("Invalid NavbarAlignment given.");
             }
             
-            Position = new UDim2D(buttonX, Container.Nav.SizeY / 2 - tex.Height / 2f);
+            Position = new UDim2D(buttonX, Container.Nav.SizeY / 2 - Image.Height / 2f);
         }
         
          /// <inheritdoc />
