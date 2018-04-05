@@ -7,6 +7,7 @@ using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Main;
 using Quaver.States;
@@ -28,7 +29,24 @@ namespace Quaver.Graphics.Overlays.Navbar
         ///     alignments to the navbar.
         /// </summary>
         internal Dictionary<NavbarAlignment, List<NavbarButton>> Buttons { get; set; }
-        
+  
+         /// <summary>
+        ///     The currently hovered button.
+        /// </summary>
+        internal NavbarButton HoveredButton { get; set; }
+
+         /// <summary>
+        ///     When the button is hovered, it'll display the tooltip's name.
+        ///     This text field holds that sprite.
+        /// </summary>
+         internal QuaverTextbox TooltipName { get; set; }
+
+         /// <summary>
+        ///     When the button is hovered, it'll display the tooltip's description.
+        ///     This text field holds that sprite.
+        /// </summary>
+        internal QuaverTextbox TooltipDescription { get; set; }
+
         /// <summary>
         ///     The container for the navbar
         /// </summary>
@@ -49,11 +67,40 @@ namespace Quaver.Graphics.Overlays.Navbar
                 { NavbarAlignment.Right, new List<NavbarButton>() }
             };
             
+            // Create navbar
             Nav = new QuaverSprite()
             {
                 Size = new UDim2D(0, 50, 1, 0),
                 Alignment = Alignment.TopLeft,
                 Tint = new Color(0f, 0f, 0f, 0.5f),
+                Parent = Container
+            };
+
+            // Create tool tip name
+            TooltipName = new QuaverTextbox()
+            {
+                Text = "",
+                Font = Fonts.Medium24,
+                Size = new UDim2D(25, 25, 1, 0),
+                Position = new UDim2D(20, 60),
+                Alignment = Alignment.TopLeft,
+                TextAlignment = Alignment.BotLeft,
+                TextBoxStyle = TextBoxStyle.ScaledSingleLine,
+                TextColor = Color.White,
+                Parent = Container
+            };
+            
+            // Create tool tip name
+            TooltipDescription = new QuaverTextbox()
+            {
+                Text = "",
+                Font = Fonts.Medium24,
+                Size = new UDim2D(15, 15, 1, 0),
+                Position = new UDim2D(20, 90),
+                Alignment = Alignment.TopLeft,
+                TextAlignment = Alignment.BotLeft,
+                TextBoxStyle = TextBoxStyle.ScaledSingleLine,
+                TextColor = Color.White,
                 Parent = Container
             };
             
