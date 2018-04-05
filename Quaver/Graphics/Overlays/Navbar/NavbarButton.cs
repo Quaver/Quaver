@@ -75,6 +75,9 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         internal override void MouseOver()
          {
+             Container.HoveredButton = this;
+             Container.TooltipName.Text = TooltipName;
+             Container.TooltipDescription.Text = TooltipDescription;
              Tint = Color.Yellow;
          }
 
@@ -84,6 +87,9 @@ namespace Quaver.Graphics.Overlays.Navbar
          /// </summary>
         internal override void MouseOut()
          {
+             Container.TooltipName.Text = string.Empty;
+             Container.TooltipDescription.Text = string.Empty;
+             Container.HoveredButton = null;
              Tint = Color.White;
          }
     }
