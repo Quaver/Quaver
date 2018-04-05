@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.GameState;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
@@ -21,18 +23,31 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         internal QuaverSprite Nav { get; set; }
 
+         /// <summary>
+        ///     The navbar buttons that are currently implemented on this navbar with their assigned
+        ///     alignments to the navbar.
+        /// </summary>
+        internal Dictionary<NavbarAlignment, List<NavbarButton>> Buttons { get; set; }
+        
         /// <summary>
         ///     The container for the navbar
         /// </summary>
         private QuaverContainer Container { get; set; }
 
          /// <summary>
-        ///     Init
+        ///     Initialize
         /// </summary>
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {
             Container = new QuaverContainer();
+            
+            // Setup the dictionary of navbar buttons.
+            Buttons = new Dictionary<NavbarAlignment, List<NavbarButton>>()
+            {
+                { NavbarAlignment.Left, new List<NavbarButton>() },
+                { NavbarAlignment.Right, new List<NavbarButton>() }
+            };
             
             Nav = new QuaverSprite()
             {
@@ -43,20 +58,13 @@ namespace Quaver.Graphics.Overlays.Navbar
             };
             
             // Replace with actual sprites
-            var home = new NavbarButton(this, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to the main menu")
-            {
-                Parent = Nav
-            };
-
-            var play = new NavbarButton(this, GameBase.QuaverUserInterface.BlankBox, "Play", "Play Quaver")
-            {
-                Parent = Nav
-            };
-
-            var test = new NavbarButton(this, GameBase.QuaverUserInterface.BlankBox, "Meme", "dd")
-            {
-                Parent = Nav
-            };
+            var home = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to main menu");
+            var play = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Play", "Play some games");
+            var toot = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Play", "Play some games");
+            
+            var meme = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to main menu");
+            var memes = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Play", "Play some games");
+            var memess = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Play", "Play some games");
         }
 
          /// <summary>
@@ -68,14 +76,41 @@ namespace Quaver.Graphics.Overlays.Navbar
             Container.Destroy();
         }
 
+        /// <summary>
+        ///     Update
+        /// </summary>
+        /// <param name="dt"></param>
         public void Update(double dt)
         {
             Container.Update(dt);
         }
 
+        /// <summary>
+        ///     Draw
+        /// </summary>
         public void Draw()
         {
             Container.Draw();
+        }
+
+        /// <summary>
+        ///     Adds a button to the navbar with the correct alignment.
+        ///     - USE THIS WHEN ADDING NAVBAR BUTTONS, as it does all the initialization for you.
+        /// </summary>
+        /// <param name="alignment"></param>
+        /// <param name="tex"></param>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        private NavbarButton CreateNavbarButton(NavbarAlignment alignment, Texture2D tex, string name, string description)
+        {
+            var button = new NavbarButton(this, tex, alignment, name, description)
+            {
+                Parent = Container
+            };
+            
+            Buttons[alignment].Add(button);
+
+            return button;
         }
     }
 }
