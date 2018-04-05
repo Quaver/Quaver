@@ -20,6 +20,7 @@ using Quaver.States.Enums;
 using Quaver.States.Import;
 using Quaver.States.Options;
 using Quaver.States.Select;
+using Quaver.States.Tests;
 using Quaver.StepMania;
 
 namespace Quaver.States.Menu
@@ -93,6 +94,15 @@ namespace Quaver.States.Menu
             //Initialize Menu Screen
             QuaverContainer = new QuaverContainer();
 
+            var test = new QuaverTextButton(new Vector2(200, 40), "Menu Nav Test")
+            {
+                Alignment = Alignment.MidCenter,
+                PosY = 100,
+                Parent = QuaverContainer
+            };
+
+            test.Clicked += (sender, args) => GameBase.GameStateManager.ChangeState(new NavbarTestState());
+            
             // Initialize the QuaverUserInterface buttons
             CreateOszImportButton();
             CreateQpImportButton();
