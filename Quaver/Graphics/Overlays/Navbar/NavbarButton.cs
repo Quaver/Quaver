@@ -27,10 +27,10 @@ namespace Quaver.Graphics.Overlays.Navbar
         private Navbar Container { get; }
 
         /// <summary>
-        ///     The spacing between 
+        ///     The x position spacing between each navbar button.
         /// </summary>
-        private readonly int BUTTON_SPACING = 20;
-        
+        private const int ButtonSpacing = 20;
+
         /// <summary>
         ///     Initializes the navbar button
         /// </summary>
@@ -56,11 +56,11 @@ namespace Quaver.Graphics.Overlays.Navbar
             {
                 case NavbarAlignment.Left:
                     Alignment = Alignment.TopLeft;
-                    buttonX = Container.Nav.SizeX + lastButton?.PosX + lastButton?.SizeX + BUTTON_SPACING ?? BUTTON_SPACING;
+                    buttonX = Container.Nav.SizeX + lastButton?.PosX + lastButton?.SizeX + ButtonSpacing ?? ButtonSpacing;
                     break;
                 case NavbarAlignment.Right:
                     Alignment = Alignment.TopRight;
-                    buttonX = Container.Nav.SizeX + lastButton?.PosX - lastButton?.SizeX - BUTTON_SPACING ?? -BUTTON_SPACING;
+                    buttonX = Container.Nav.SizeX + lastButton?.PosX - lastButton?.SizeX - ButtonSpacing ?? -ButtonSpacing;
                     break;
                 default:
                     throw new InvalidEnumArgumentException("Invalid NavbarAlignment given.");
