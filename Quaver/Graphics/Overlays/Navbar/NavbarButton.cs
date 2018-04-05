@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -30,22 +31,37 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         /// <param name="nav"></param>
         /// <param name="tex"></param>
+        /// <param name="alignment"></param>
         /// <param name="tooltipName"></param>
         /// <param name="tooltipDesc"></param>
-        internal NavbarButton(Navbar nav, Texture2D tex, string tooltipName, string tooltipDesc)
+        internal NavbarButton(Navbar nav, Texture2D tex, NavbarAlignment alignment, string tooltipName, string tooltipDesc)
         {
             Container = nav;
             TooltipName = tooltipName;
             TooltipDescription = tooltipDesc;
             Image = tex;
             Size = new UDim2D(tex.Width, tex.Height);
-            Alignment = Alignment.TopLeft;
-
-            // Set the button's offset based on the size/pos of the last button.
-            var lastButton = Container.Nav.Children.Count > 0 ? Container.Nav.Children.Last() : null;
-            var buttonOffset = lastButton?.PosX + lastButton?.SizeX + 20 ?? 20;
+         
+            // Get the last button in the list of the current alignment.
+            var lastButton = Container.Buttons[alignment].Count > 0 ? Container.Buttons[alignment].Last() : null;
+         
+            // Set the alignment and position of the navbar button.
+            float buttonX;
+            switch (alignment)
+            {
+                case NavbarAlignment.Left:
+                    Alignment = Alignment.TopLeft;
+                    buttonX = Container.Nav.SizeX + lastButton?.PosX + lastButton?.SizeX + 20 ?? 20;
+                    break;
+                case NavbarAlignment.Right:
+                    Alignment = Alignment.TopRight;
+                    buttonX = Container.Nav.SizeX + lastButton?.PosX - lastButton?.SizeX - 20 ?? -20;
+                    break;
+                default:
+                    throw new InvalidEnumArgumentException("Invalid NavbarAlignment given!");
+            }
             
-            Position = new UDim2D(Container.Nav.SizeX + buttonOffset, Container.Nav.SizeY / 2 - tex.Height / 2f);
+            Position = new UDim2D(buttonX, Container.Nav.SizeY / 2 - tex.Height / 2f);
         }
         
          /// <inheritdoc />
