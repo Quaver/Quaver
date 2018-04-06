@@ -142,7 +142,7 @@ namespace Quaver.States.Options
                 SizeY = 70,
                 TextAlignment = Alignment.BotCenter,
                 Alignment = Alignment.TopCenter,
-                Font = Fonts.Medium24,
+                Font = QuaverFonts.Medium24,
                 Text = "Key Bindings",
                 Parent = ButtonsContainer
             };
@@ -218,7 +218,7 @@ namespace Quaver.States.Options
                 PosY = 220,
                 TextAlignment = Alignment.BotCenter,
                 Alignment = Alignment.TopCenter,
-                Font = Fonts.Medium24,
+                Font = QuaverFonts.Medium24,
                 Text = "Select Skin",
                 Parent = ButtonsContainer
             };
@@ -266,7 +266,7 @@ namespace Quaver.States.Options
                 PosY = 340,
                 TextAlignment = Alignment.BotCenter,
                 Alignment = Alignment.TopCenter,
-                Font = Fonts.Medium24,
+                Font = QuaverFonts.Medium24,
                 Text = "Graphics",
                 Parent = ButtonsContainer
             };
@@ -371,7 +371,7 @@ namespace Quaver.States.Options
                 PosY = 600,
                 TextAlignment = Alignment.BotCenter,
                 Alignment = Alignment.TopCenter,
-                Font = Fonts.Medium24,
+                Font = QuaverFonts.Medium24,
                 Text = "Gameplay",
                 Parent = ButtonsContainer
             };
