@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,8 @@ using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Enums;
 using Quaver.Main;
+using Point = Microsoft.Xna.Framework.Point;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace Quaver.Helpers
 {
