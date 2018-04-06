@@ -34,6 +34,15 @@ namespace Quaver.Graphics.Buttons
         private bool IsHovered { get; set; }
 
         /// <summary>
+        ///     Ctor - Optionally pass in an action.
+        /// </summary>
+        /// <param name="action"></param>
+        protected QuaverButton(EventHandler action = null)
+        {
+            Clicked += action;
+        }
+        
+        /// <summary>
         ///     This method will be used for button logic and animation
         /// </summary>
         internal override void Update(double dt)
