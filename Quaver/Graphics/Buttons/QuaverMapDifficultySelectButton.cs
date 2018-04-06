@@ -55,7 +55,7 @@ namespace Quaver.Graphics.Buttons
 
             DifficultyNameText = new QuaverTextbox()
             {
-                Font = Fonts.Medium48,
+                Font = QuaverFonts.Medium48,
                 Size = new UDim2D(-40 * ButtonScale, -ButtonScale, 1, 0.6f),
                 Position = new UDim2D(-ButtonScale, ButtonScale),
                 Alignment = Alignment.TopRight,
