@@ -39,7 +39,8 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="alignment"></param>
         /// <param name="tooltipName"></param>
         /// <param name="tooltipDesc"></param>
-        internal NavbarButton(Navbar nav, Texture2D tex, NavbarAlignment alignment, string tooltipName, string tooltipDesc)
+        internal NavbarButton(Navbar nav, Texture2D tex, NavbarAlignment alignment, string tooltipName, string tooltipDesc, EventHandler action) 
+            : base(action)
         {
             Container = nav;
             TooltipName = tooltipName;
