@@ -152,7 +152,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                 TextAlignment = Alignment.TopCenter,
                 Text = "0x",
                 TextScale = GameBase.WindowUIScale,
-                Font = Fonts.Medium16,
+                Font = QuaverFonts.Medium16,
                 Parent = QuaverContainer,
                 Alpha = 0
             };

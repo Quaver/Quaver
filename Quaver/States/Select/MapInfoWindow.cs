@@ -40,7 +40,7 @@ namespace Quaver.States.Select
             {
                 Size = new UDim2D(-10, -10, 1, 1),
                 Position = new UDim2D(5, 5),
-                Font = Fonts.Medium16,
+                Font = QuaverFonts.Medium16,
                 TextColor = Color.White,
                 TextBoxStyle = TextBoxStyle.WordwrapMultiLine,
                 TextAlignment = Alignment.TopLeft,

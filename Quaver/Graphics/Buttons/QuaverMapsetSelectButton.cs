@@ -5,6 +5,7 @@ using Quaver.Graphics.Enums;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
+using Quaver.Main;
 
 namespace Quaver.Graphics.Buttons
 {
@@ -65,7 +66,7 @@ namespace Quaver.Graphics.Buttons
             TitleText = new QuaverTextbox()
             {
                 Text = "Song Title", //map.Title,
-                Font = Fonts.Medium48,
+                Font = QuaverFonts.Medium48,
                 Size = new UDim2D(-2 * ButtonScale, 22 * ButtonScale, 1, 0),
                 Position = new UDim2D(ButtonScale, ButtonScale),
                 Alignment = Alignment.TopLeft,
@@ -78,7 +79,7 @@ namespace Quaver.Graphics.Buttons
             ArtistText = new QuaverTextbox()
             {
                 Text = "Song Artist | Charter", //map.Artist + " | "+ map.Creator,
-                Font = Fonts.Medium48,
+                Font = QuaverFonts.Medium48,
                 Size = new UDim2D(-2 * ButtonScale, 14 * ButtonScale, 1, 0),
                 Position = new UDim2D(ButtonScale, 22 * ButtonScale, 0, 0),
                 Alignment = Alignment.TopLeft,

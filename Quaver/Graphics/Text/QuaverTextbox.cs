@@ -67,7 +67,7 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     The font of this object
         /// </summary>
-        internal SpriteFont Font { get; set; } = Fonts.Medium12;
+        internal SpriteFont Font { get; set; } = QuaverFonts.Medium12;
 
         /// <summary>
         ///     The text of this QuaverTextSprite
