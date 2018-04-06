@@ -73,7 +73,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     When the user's mouse goes over the button.
         /// </summary>
-        internal override void MouseOver()
+         protected override void MouseOver()
          {
              Container.HoveredButton = this;
              Container.TooltipName.Text = TooltipName;
@@ -85,7 +85,7 @@ namespace Quaver.Graphics.Overlays.Navbar
          /// <summary>
          ///   When the user's mouse goes out of the button.  
          /// </summary>
-        internal override void MouseOut()
+         protected override void MouseOut()
          {
              Container.TooltipName.Text = string.Empty;
              Container.TooltipDescription.Text = string.Empty;

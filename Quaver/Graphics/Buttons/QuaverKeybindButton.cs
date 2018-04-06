@@ -62,7 +62,7 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     This method is called when the mouse hovers over the button
         /// </summary>
-        internal override void MouseOver()
+        protected override void MouseOver()
         {
             HoverTargetTween = 1;
         }
@@ -70,7 +70,7 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     This method is called when the Mouse hovers out of the button
         /// </summary>
-        internal override void MouseOut()
+        protected override void MouseOut()
         {
             HoverTargetTween = 0;
         }
@@ -135,7 +135,7 @@ namespace Quaver.Graphics.Buttons
             QuaverTextSprite.Text = CurrentKey.ToString();
         }
 
-        internal override void OnClicked()
+        protected override void OnClicked()
         {
             Selected = !Selected;
             if (Selected)
@@ -144,10 +144,9 @@ namespace Quaver.Graphics.Buttons
                 QuaverTextSprite.Text = "Press Key";
                 HoverTargetTween = 1;
             }
-            base.OnClicked();
         }
 
-        internal override void OnClickedOutside()
+        protected override void OnClickedOutside()
         {
             if (Selected)
                 UnSelect();
