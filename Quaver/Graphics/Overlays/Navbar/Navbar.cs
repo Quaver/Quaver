@@ -105,14 +105,8 @@ namespace Quaver.Graphics.Overlays.Navbar
             };
             
             // Replace with actual sprites
-            var home = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to main menu");
-            home.Clicked += (sender, args) => Console.WriteLine("HOME BUTTON CLICKED");
-            
-            var home2 = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to main menu");
-            home2.Clicked += (sender, args) => Console.WriteLine("HOME BUTTON CLICKED");
-            
-            var play = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Play", "Play Quaver");
-            play.Clicked += (sender, args) => Console.WriteLine("PLAY BUTTON CLICKED");
+            var home = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to main menu", OnHomeButtonClicked);         
+            var play = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Play", "Play Quaver", OnPlayButtonClicked);
         }
 
          /// <summary>
@@ -149,9 +143,10 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="tex"></param>
         /// <param name="name"></param>
         /// <param name="description"></param>
-        private NavbarButton CreateNavbarButton(NavbarAlignment alignment, Texture2D tex, string name, string description)
+        /// <param name="clickAction"></param>
+        private NavbarButton CreateNavbarButton(NavbarAlignment alignment, Texture2D tex, string name, string description, EventHandler clickAction)
         {
-            var button = new NavbarButton(this, tex, alignment, name, description)
+            var button = new NavbarButton(this, tex, alignment, name, description, clickAction)
             {
                 Parent = Container
             };
@@ -159,6 +154,26 @@ namespace Quaver.Graphics.Overlays.Navbar
             Buttons[alignment].Add(button);
 
             return button;
+        }
+
+        /// <summary>
+        ///     Called when the home button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnHomeButtonClicked(object sender, EventArgs e)
+        {
+            Console.WriteLine("HOME BUTTON CLICKED");
+        }
+        
+        /// <summary>
+        ///     Called when the home button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPlayButtonClicked(object sender, EventArgs e)
+        {
+            Console.WriteLine("PLAY BUTTON CLICKED");
         }
     }
 }
