@@ -110,7 +110,7 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     This method is called when the mouse hovers over the button
         /// </summary>
-        internal override void MouseOver()
+        protected override void MouseOver()
         {
             if (!Selected)
                 HoverTargetTween = 1;
@@ -119,7 +119,7 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     This method is called when the Mouse hovers out of the button
         /// </summary>
-        internal override void MouseOut()
+        protected override void MouseOut()
         {
             if (!Selected)
                 HoverTargetTween = 0;
@@ -237,10 +237,11 @@ namespace Quaver.Graphics.Buttons
             }
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     When yoou click into the text box
         /// </summary>
-        internal override void OnClicked()
+        protected override void OnClicked()
         {
             Selected = !Selected;
 
@@ -258,7 +259,7 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     When you click outside of the text box
         /// </summary>
-        internal override void OnClickedOutside()
+        protected override void OnClickedOutside()
         {
             if (Selected)
                 UnSelect();
