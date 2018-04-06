@@ -624,7 +624,7 @@ namespace Quaver.States.Results
                 {
                     Text = "[" + ManiaGameplayReferences.JudgeNames[i] + "]: " + ManiaScoreData.JudgePressSpread[i] + " | " + ManiaScoreData.JudgeReleaseSpread[i] + " Total: " + (ManiaScoreData.JudgePressSpread[i] + ManiaScoreData.JudgeReleaseSpread[i]),
                     TextColor = GameBase.LoadedSkin.JudgeColors[i],
-                    Font = Fonts.Medium16,
+                    Font = QuaverFonts.Medium16,
                     Position = new UDim2D(0, 200 * i / 6 + 100),
                     Size = new UDim2D(0, 0, 1, 0),
                     TextAlignment = Alignment.MidRight,
@@ -636,7 +636,7 @@ namespace Quaver.States.Results
             ob = new QuaverTextbox()
             {
                 Text = ManiaScoreData.ScoreTotal.ToString(),
-                Font = Fonts.Medium24,
+                Font = QuaverFonts.Medium24,
                 TextAlignment = Alignment.MidLeft,
                 TextColor = Color.White,
                 Position = new UDim2D(0, 30),
@@ -648,7 +648,7 @@ namespace Quaver.States.Results
             ob = new QuaverTextbox()
             {
                 Text = $"{ManiaScoreData.Accuracy * 100:0.00}%",
-                Font = Fonts.Medium24,
+                Font = QuaverFonts.Medium24,
                 TextAlignment = Alignment.MidRight,
                 TextColor = Color.White,
                 Position = new UDim2D(0, 30),
@@ -751,7 +751,7 @@ namespace Quaver.States.Results
             var label = new QuaverTextbox()
             {
                 Text = topLabel,
-                Font = Fonts.Medium12,
+                Font = QuaverFonts.Medium12,
                 Position = new UDim2D(2, 2),
                 Size = new UDim2D(200, 50),
                 Alignment = Alignment.TopLeft,
@@ -763,7 +763,7 @@ namespace Quaver.States.Results
             label = new QuaverTextbox()
             {
                 Text = botLabel,
-                Font = Fonts.Medium12,
+                Font = QuaverFonts.Medium12,
                 Position = new UDim2D(2, -2),
                 Size = new UDim2D(200, 50),
                 Alignment = Alignment.BotLeft,

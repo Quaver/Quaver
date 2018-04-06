@@ -13,6 +13,7 @@ using Quaver.Logging;
 using Quaver.Online;
 using Quaver.Skinning;
 using Quaver.States.Menu;
+using Quaver.Resources;
 
 namespace Quaver.Main
 {
@@ -45,7 +46,7 @@ namespace Quaver.Main
             IsFixedTimeStep = false;
 
             // Use Content in Resources folder (Don't touch this please)
-            var resxContent = new ResourceContentManager(Services, Resource1.ResourceManager);
+            var resxContent = new ResourceContentManager(Services, QuaverResources.ResourceManager);
             Content = resxContent;
 
             // Make a reference to the Window on GameBase
@@ -87,6 +88,9 @@ namespace Quaver.Main
 
             // Load QuaverUserInterface .xnb elements
             GameBase.QuaverUserInterface.LoadElementsAsContent();
+
+            // Load all fonts
+            QuaverFonts.Load();
 
             // Load the Game Skin Before Starting
             Skin.LoadSkin();
