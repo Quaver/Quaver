@@ -105,13 +105,14 @@ namespace Quaver.Graphics.Overlays.Navbar
             };
             
             // Replace with actual sprites
-            var home = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to main menu");
-            var play = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Play", "Play some games");
-            var toot = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Play", "Play some games");
+            var home = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to main menu");
+            home.Clicked += (sender, args) => Console.WriteLine("HOME BUTTON CLICKED");
             
-            var meme = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to main menu");
-            var memes = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Play", "Play some games");
-            var memess = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Play", "Play some games");
+            var home2 = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to main menu");
+            home2.Clicked += (sender, args) => Console.WriteLine("HOME BUTTON CLICKED");
+            
+            var play = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Play", "Play Quaver");
+            play.Clicked += (sender, args) => Console.WriteLine("PLAY BUTTON CLICKED");
         }
 
          /// <summary>
