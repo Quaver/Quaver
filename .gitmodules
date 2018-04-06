@@ -1,3 +1,6 @@
 [submodule "Quaver.API"]
 	path = Quaver.API
 	url = https://github.com/Swan/Quaver.API
+[submodule "Quaver.Resources"]
+	path = Quaver.Resources
+	url = https://github.com/Swan/Quaver.Resources
