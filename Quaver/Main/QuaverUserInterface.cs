@@ -1,7 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Reflection;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.Graphics.Base;
+using Quaver.Helpers;
+using Quaver.Resources;
 
 namespace Quaver.Main
 {
@@ -45,12 +49,12 @@ namespace Quaver.Main
         /// </summary>
         public void LoadElementsAsContent()
         {
-            DiffSelectMask = GameBase.Content.Load<Texture2D>("main-diff-select-mask");
-            SetSelectMask = GameBase.Content.Load<Texture2D>("main-set-select-mask");
-            BlankBox = GameBase.Content.Load<Texture2D>("main-blank-box");
-            HollowBox = GameBase.Content.Load<Texture2D>("main-hollow-box");
-            BarCap = GameBase.Content.Load<Texture2D>("main-bar-cap");
-            BarCorner = GameBase.Content.Load<Texture2D>("main-bar-corner");
+            DiffSelectMask = ResourceHelper.LoadTexture2DFromPng(QuaverResources.diff_select_mask);
+            SetSelectMask = ResourceHelper.LoadTexture2DFromPng(QuaverResources.set_select_mask);
+            BlankBox = ResourceHelper.LoadTexture2DFromPng(QuaverResources.blank_box);
+            HollowBox = ResourceHelper.LoadTexture2DFromPng(QuaverResources.hollow_box);
+            BarCap = ResourceHelper.LoadTexture2DFromPng(QuaverResources.bar_cap);
+            BarCorner = ResourceHelper.LoadTexture2DFromPng(QuaverResources.bar_corner);
         }
 
         /// <summary>
