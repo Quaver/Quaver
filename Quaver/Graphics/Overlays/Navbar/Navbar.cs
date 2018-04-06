@@ -80,7 +80,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             TooltipName = new QuaverTextbox()
             {
                 Text = "",
-                Font = Fonts.Medium24,
+                Font = QuaverFonts.Medium24,
                 Size = new UDim2D(25, 25, 1, 0),
                 Position = new UDim2D(20, 60),
                 Alignment = Alignment.TopLeft,
@@ -94,7 +94,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             TooltipDescription = new QuaverTextbox()
             {
                 Text = "",
-                Font = Fonts.Medium24,
+                Font = QuaverFonts.Medium24,
                 Size = new UDim2D(15, 15, 1, 0),
                 Position = new UDim2D(20, 90),
                 Alignment = Alignment.TopLeft,
