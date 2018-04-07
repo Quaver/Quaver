@@ -16,6 +16,7 @@ using Quaver.Modifiers;
 using Quaver.States.Enums;
 using Quaver.States.Loading.Map;
 using Quaver.States.Menu;
+using Quaver.Database.Maps;
 
 namespace Quaver.States.Select
 {
@@ -34,7 +35,7 @@ namespace Quaver.States.Select
         /// <summary>
         ///     The QuaverUserInterface that controls and displays map selection
         /// </summary>
-        private MapsetOrganizer MapsetOrganizer { get; set; }
+        private MapSelectSystem MapSelectSystem { get; set; }
 
         /// <summary>
         ///     QuaverContainer
@@ -62,6 +63,11 @@ namespace Quaver.States.Select
         private QuaverTextButton TogglePitch { get; set; }
 
         /// <summary>
+        ///     Search bar for song searching
+        /// </summary>
+        private QuaverTextInputField SearchField { get; set; }
+
+        /// <summary>MapSelectSystem
         ///     Position of mouse from previous frame
         /// </summary>
         private float PreviousMouseYPosition { get; set; }
@@ -88,9 +94,12 @@ namespace Quaver.States.Select
         {
             GameBase.GameWindow.Title = "Quaver";
 
+            if (GameBase.SelectedMap == null)
+                MapsetHelper.SelectRandomMap();
+
             //Initialize Helpers
-            MapsetOrganizer = new MapsetOrganizer();
-            MapsetOrganizer.Initialize(this);
+            MapSelectSystem = new MapSelectSystem();
+            MapSelectSystem.Initialize(this);
             SongSelectInputManager = new SongSelectInputManager();
 
             // Update Discord Presence
@@ -101,6 +110,7 @@ namespace Quaver.States.Select
             CreateBackButton();
             CreateSpeedModButton();
             CreateTogglePitchButton();
+            CreateSearchField();
 
             // Update overlay
             GameBase.GameOverlay.OverlayActive = true;
@@ -130,8 +140,7 @@ namespace Quaver.States.Select
             BackButton.Clicked -= OnBackButtonClick;
             SpeedModButton.Clicked -= OnSpeedModButtonClick;
             TogglePitch.Clicked -= OnTogglePitchButtonClick;
-
-            MapsetOrganizer.UnloadContent();
+            MapSelectSystem.UnloadContent();
             QuaverContainer.Destroy();
         }
 
@@ -145,17 +154,19 @@ namespace Quaver.States.Select
             KeyboardScrollBuffer += (float)dt;
 
             // It will ignore input until 250ms go by
-            if (!MapsetOrganizer.ScrollingDisabled && TimeElapsedSinceStartup > 250)
+            /*
+            if (!MapSelectSystem.ScrollingDisabled && TimeElapsedSinceStartup > 250)
             {
                 SongSelectInputManager.CheckInput();
 
                 // Check and update any mouse input
+                
                 if (SongSelectInputManager.RightMouseIsDown)
-                    MapsetOrganizer.SetMapOrganizerPosition(-SongSelectInputManager.MouseYPos / GameBase.WindowRectangle.Height);
+                    MapSelectSystem.SetMapSelectSystemPosition(-SongSelectInputManager.MouseYPos / GameBase.WindowRectangle.Height);
                 else if (SongSelectInputManager.LeftMouseIsDown)
-                    MapsetOrganizer.OffsetMapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
+                    MapSelectSystem.OffsetMapSelectSystemPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
                 else if (SongSelectInputManager.CurrentScrollAmount != 0)
-                    MapsetOrganizer.OffsetMapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);
+                    MapSelectSystem.OffsetMapSelectSystemPosition(SongSelectInputManager.CurrentScrollAmount);
 
                 // Check and update any keyboard input
                 int scroll = 0;
@@ -171,11 +182,11 @@ namespace Quaver.States.Select
                     else if (scroll < 0) ScrollDownMapIndex();
                 }
                 PreviousMouseYPosition = SongSelectInputManager.MouseYPos;
-            }
+            }*/
 
             //Update Objects
             QuaverContainer.Update(dt);
-            MapsetOrganizer.Update(dt);
+            MapSelectSystem.Update(dt);
 
             // Repeat the song preview if necessary
             RepeatSongPreview();
@@ -189,7 +200,8 @@ namespace Quaver.States.Select
             GameBase.SpriteBatch.Begin();
             BackgroundManager.Draw();
             QuaverContainer.Draw();
-            MapsetOrganizer.Draw();
+            MapSelectSystem.Draw();
+
             GameBase.SpriteBatch.End();
         }
 
@@ -201,7 +213,7 @@ namespace Quaver.States.Select
             // Create play button
             PlayButton = new QuaverTextButton(new Vector2(200, 50), "Play Map")
             {
-                PosY = 140,
+                PosY = 300 * GameBase.WindowUIScale + 80,
                 Alignment = Alignment.TopLeft,
                 Parent = QuaverContainer
             };
@@ -220,12 +232,12 @@ namespace Quaver.States.Select
 
         private void ScrollUpMapIndex()
         {
-            MapsetOrganizer.OffsetMapOrganizerIndex(-1);
+            //MapSelectSystem.OffsetMapSelectSystemIndex(-1);
         }
 
         private void ScrollDownMapIndex()
         {
-            MapsetOrganizer.OffsetMapOrganizerIndex(1);
+            //MapSelectSystem.OffsetMapSelectSystemIndex(1);
         }
 
         /// <summary>
@@ -281,8 +293,8 @@ namespace Quaver.States.Select
             // Create ManiaModSpeed Mod QuaverButton
             SpeedModButton = new QuaverTextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x")
             {
-                PosY = - 120,
-                Alignment = Alignment.BotLeft,
+                PosY = 300 * GameBase.WindowUIScale + 200,
+                Alignment = Alignment.TopLeft,
                 Parent = QuaverContainer
             };
             SpeedModButton.Clicked += OnSpeedModButtonClick;
@@ -369,7 +381,8 @@ namespace Quaver.States.Select
         {
             TogglePitch = new QuaverTextButton(new Vector2(200, 50), $"Toggle Pitch: {ConfigManager.Pitched}")
             {
-                Alignment = Alignment.MidLeft,
+                Alignment = Alignment.TopLeft,
+                PosY = 300 * GameBase.WindowUIScale + 140,
                 Parent = QuaverContainer
             };
             TogglePitch.Clicked += OnTogglePitchButtonClick;
@@ -384,6 +397,17 @@ namespace Quaver.States.Select
         {
             GameBase.AudioEngine.TogglePitch();
             TogglePitch.QuaverTextSprite.Text = $"Toggle Pitch: {ConfigManager.Pitched}";
+        }
+
+        private void CreateSearchField()
+        {
+            SearchField = new QuaverTextInputField(new Vector2(300, 30), "Search Mapset", (search) => MapSelectSystem.OnSearchbarUpdated(search))
+            {
+                Alignment = Alignment.TopLeft,
+                PosX = 5,
+                PosY = 300 * GameBase.WindowUIScale + 45,
+                Parent = QuaverContainer
+            };
         }
     }
 }

@@ -86,6 +86,11 @@
     <Compile Include="Online\Events\UserDisconnected.cs" />
     <Compile Include="Online\FlamingoHelper.cs" />
     <Compile Include="Online\SteamworksHelper.cs" />
+    <Compile Include="States\Select\MapSelectSystem.cs" />
+    <Compile Include="States\Select\MapInfoWindow.cs" />
+    <Compile Include="States\Select\ModSelector.cs" />
+    <Compile Include="Graphics\Buttons\QuaverMapDifficultySelectButton.cs" />
+    <Compile Include="Graphics\Buttons\QuaverMapsetSelectButton.cs" />
     <Compile Include="Audio\AudioEngine.cs" />
     <Compile Include="Commands\CalculateDifficulty.cs" />
     <Compile Include="Commands\ConvertOsuSkin.cs" />
@@ -114,7 +119,6 @@
     <Compile Include="States\Gameplay\Mania\UI\Progress\ManiaSongProgress.cs" />
     <Compile Include="States\Gameplay\Mania\UI\Progress\ManiaScoreProgress.cs" />
     <Compile Include="States\IGameStateComponent.cs" />
-    <Compile Include="States\Select\MapsetOrganizer.cs" />
     <Compile Include="States\Options\OptionsState.cs" />
     <Compile Include="States\Results\ResultsState.cs" />
     <Compile Include="States\Select\SongSelectState.cs" />
