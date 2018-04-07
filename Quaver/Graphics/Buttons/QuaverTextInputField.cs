@@ -73,7 +73,7 @@ namespace Quaver.Graphics.Buttons
 
             QuaverTextSprite = new QuaverTextbox()
             {
-                Text = string.Empty,
+                Text = placeHolderText,
                 Size = new UDim2D(ButtonSize.X - 8, ButtonSize.Y - 4),
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.BotLeft,
@@ -87,7 +87,6 @@ namespace Quaver.Graphics.Buttons
             QuaverTextSprite.TextColor = Color.White;
 
             PlaceHolderText = placeHolderText;
-            QuaverTextSprite.Text = PlaceHolderText;
             CurrentTextField = new StringBuilder();
 
             GameBase.GameWindow.TextInput += OnTextEntered;
@@ -200,11 +199,9 @@ namespace Quaver.Graphics.Buttons
 
                             // Run the callback function that was passed in.
                             OnTextInputSubmit(QuaverTextSprite.Text);
-
-                            // Reset textfield and reset text to placeholder
-                            QuaverTextSprite.Text = PlaceHolderText;
                             CurrentTextField.Clear();
                             UnSelect();
+                            QuaverTextSprite.Text = PlaceHolderText;
                             break;
 
                         // Input text
@@ -243,16 +240,17 @@ namespace Quaver.Graphics.Buttons
         /// </summary>
         internal override void OnClicked()
         {
-            Selected = !Selected;
+            // Ignore if field is already selected
+            if (Selected) return;
+            Selected = true;
 
-            if (Selected)
-            {
-                // Clears text if ClearFieldWhenDeselected is true
-                if (ClearFieldWhenDeselected)
-                    QuaverTextSprite.Text = CurrentTextField.ToString();
+            // Clears text if ClearFieldWhenDeselected is true
+            if (ClearFieldWhenDeselected)
+                CurrentTextField.Clear();
 
-                HoverTargetTween = 1;
-            }
+            QuaverTextSprite.Text = CurrentTextField.ToString();
+            HoverTargetTween = 1;
+
             base.OnClicked();
         }
 
