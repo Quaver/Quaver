@@ -120,9 +120,11 @@ namespace Quaver.States.Select
             MaxButtonsOnScreen = (int)Math.Ceiling(GameBase.WindowRectangle.Height / (QuaverMapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale)) + INDEX_OFFSET_AMOUNT;
             int targetPoolSize = MaxButtonsOnScreen * 2;
 
-            for (var i = 0; i < targetPoolSize && i < GameBase.VisibleMapsets.Count; i++)
+            for (var i = 0; i < targetPoolSize; i++)
             {
-                var newButton = new QuaverMapsetSelectButton(GameBase.WindowUIScale, i, GameBase.Mapsets[i])
+                Mapset curmap = i < GameBase.VisibleMapsets.Count ? GameBase.Mapsets[i] : null;
+
+                var newButton = new QuaverMapsetSelectButton(GameBase.WindowUIScale, i, curmap)
                 {
                     Image = GameBase.QuaverUserInterface.BlankBox,
                     Alignment = Alignment.TopRight,
