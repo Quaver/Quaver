@@ -158,15 +158,17 @@ namespace Quaver.States.Select
             GameBase.VisibleMapsets = newMapsets;
 
             // Update buttons
-            ShiftButtonPool(0);
             if (newMapsets.Count > 0)
             {
+                CurrentPoolIndex = 0;
+                Boundary.PosY = 0;
                 SelectMapset(0);
             }
             else
             {
                 DeleteMapDiffButtons();
             }
+            ShiftButtonPool(0);
         }
 
         /// <summary>
