@@ -16,6 +16,7 @@ using Quaver.Modifiers;
 using Quaver.States.Enums;
 using Quaver.States.Loading.Map;
 using Quaver.States.Menu;
+using Quaver.Database.Maps;
 
 namespace Quaver.States.Select
 {
@@ -34,7 +35,7 @@ namespace Quaver.States.Select
         /// <summary>
         ///     The QuaverUserInterface that controls and displays map selection
         /// </summary>
-        private MapSelectSystem MapOrganizer { get; set; }
+        private MapSelectSystem MapSelectSystem { get; set; }
 
         /// <summary>
         ///     QuaverContainer
@@ -61,7 +62,7 @@ namespace Quaver.States.Select
         /// </summary>
         private QuaverTextButton TogglePitch { get; set; }
 
-        /// <summary>MapOrganizer
+        /// <summary>MapSelectSystem
         ///     Position of mouse from previous frame
         /// </summary>
         private float PreviousMouseYPosition { get; set; }
@@ -88,9 +89,12 @@ namespace Quaver.States.Select
         {
             GameBase.GameWindow.Title = "Quaver";
 
+            if (GameBase.SelectedMap == null)
+                MapsetHelper.SelectRandomMap();
+
             //Initialize Helpers
-            MapOrganizer = new MapSelectSystem();
-            MapOrganizer.Initialize(this);
+            MapSelectSystem = new MapSelectSystem();
+            MapSelectSystem.Initialize(this);
             SongSelectInputManager = new SongSelectInputManager();
 
             // Update Discord Presence
@@ -130,7 +134,7 @@ namespace Quaver.States.Select
             BackButton.Clicked -= OnBackButtonClick;
             SpeedModButton.Clicked -= OnSpeedModButtonClick;
             TogglePitch.Clicked -= OnTogglePitchButtonClick;
-            MapOrganizer.UnloadContent();
+            MapSelectSystem.UnloadContent();
             QuaverContainer.Destroy();
         }
 
@@ -144,18 +148,19 @@ namespace Quaver.States.Select
             KeyboardScrollBuffer += (float)dt;
 
             // It will ignore input until 250ms go by
-            if (!MapOrganizer.ScrollingDisabled && TimeElapsedSinceStartup > 250)
+            /*
+            if (!MapSelectSystem.ScrollingDisabled && TimeElapsedSinceStartup > 250)
             {
                 SongSelectInputManager.CheckInput();
 
                 // Check and update any mouse input
-                /*
+                
                 if (SongSelectInputManager.RightMouseIsDown)
-                    MapOrganizer.SetMapOrganizerPosition(-SongSelectInputManager.MouseYPos / GameBase.WindowRectangle.Height);
+                    MapSelectSystem.SetMapSelectSystemPosition(-SongSelectInputManager.MouseYPos / GameBase.WindowRectangle.Height);
                 else if (SongSelectInputManager.LeftMouseIsDown)
-                    MapOrganizer.OffsetMapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
+                    MapSelectSystem.OffsetMapSelectSystemPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
                 else if (SongSelectInputManager.CurrentScrollAmount != 0)
-                    MapOrganizer.OffsetMapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);*/
+                    MapSelectSystem.OffsetMapSelectSystemPosition(SongSelectInputManager.CurrentScrollAmount);
 
                 // Check and update any keyboard input
                 int scroll = 0;
@@ -171,11 +176,11 @@ namespace Quaver.States.Select
                     else if (scroll < 0) ScrollDownMapIndex();
                 }
                 PreviousMouseYPosition = SongSelectInputManager.MouseYPos;
-            }
+            }*/
 
             //Update Objects
             QuaverContainer.Update(dt);
-            MapOrganizer.Update(dt);
+            MapSelectSystem.Update(dt);
 
             // Repeat the song preview if necessary
             RepeatSongPreview();
@@ -189,7 +194,7 @@ namespace Quaver.States.Select
             GameBase.SpriteBatch.Begin();
             BackgroundManager.Draw();
             QuaverContainer.Draw();
-            MapOrganizer.Draw();
+            MapSelectSystem.Draw();
 
             GameBase.SpriteBatch.End();
         }
@@ -221,12 +226,12 @@ namespace Quaver.States.Select
 
         private void ScrollUpMapIndex()
         {
-            //MapOrganizer.OffsetMapOrganizerIndex(-1);
+            //MapSelectSystem.OffsetMapSelectSystemIndex(-1);
         }
 
         private void ScrollDownMapIndex()
         {
-            //MapOrganizer.OffsetMapOrganizerIndex(1);
+            //MapSelectSystem.OffsetMapSelectSystemIndex(1);
         }
 
         /// <summary>
