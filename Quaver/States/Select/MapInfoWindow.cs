@@ -14,14 +14,15 @@ namespace Quaver.States.Select
     /// </summary>
     internal class MapInfoWindow : IGameStateComponent
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private QuaverContainer Boundary { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private QuaverTextbox MapInfo { get; set; }
-
-        public void Draw()
-        {
-            Boundary.Draw();
-        }
 
         public void Initialize(IGameState state)
         {
@@ -51,16 +52,35 @@ namespace Quaver.States.Select
             //UpdateInfo(GameBase.SelectedBeatmap);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void UnloadContent()
         {
             Boundary.Destroy();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dt"></param>
         public void Update(double dt)
         {
             Boundary.Update(dt);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Draw()
+        {
+            Boundary.Draw();
+        }
+        
+        /// <summary>
+        ///     
+        /// </summary>
+        /// <param name="map"></param>
         public void UpdateInfo(Map map)
         {
             MapInfo.Text = "Map selected: " + map.Artist + " - " + map.Title + "(" + map.DifficultyName + ")" + "\n"
