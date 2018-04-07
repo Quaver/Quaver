@@ -32,6 +32,11 @@ namespace Quaver.Graphics.Overlays.Navbar
         private const int ButtonSpacing = 20;
 
         /// <summary>
+        ///     The current x position of the button.
+        /// </summary>
+        private float PositionX { get; set; }
+
+        /// <summary>
         ///     Initializes the navbar button
         /// </summary>
         /// <param name="nav"></param>
@@ -52,22 +57,21 @@ namespace Quaver.Graphics.Overlays.Navbar
             var lastButton = Container.Buttons[alignment].Count > 0 ? Container.Buttons[alignment].Last() : null;
          
             // Set the alignment and position of the navbar button.
-            float buttonX;
             switch (alignment)
             {
                 case NavbarAlignment.Left:
                     Alignment = Alignment.TopLeft;
-                    buttonX = Container.Nav.SizeX + lastButton?.PosX + lastButton?.SizeX + ButtonSpacing ?? ButtonSpacing;
+                    PositionX = Container.Nav.SizeX + lastButton?.PosX + lastButton?.SizeX + ButtonSpacing ?? ButtonSpacing;
                     break;
                 case NavbarAlignment.Right:
                     Alignment = Alignment.TopRight;
-                    buttonX = Container.Nav.SizeX + lastButton?.PosX - lastButton?.SizeX - ButtonSpacing ?? -ButtonSpacing;
+                    PositionX = Container.Nav.SizeX + lastButton?.PosX - lastButton?.SizeX - ButtonSpacing ?? -ButtonSpacing;
                     break;
                 default:
                     throw new InvalidEnumArgumentException("Invalid NavbarAlignment given.");
             }
             
-            Position = new UDim2D(buttonX, Container.Nav.SizeY / 2 - Image.Height / 2f);
+            Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - Image.Height / 2f);
         }
         
          /// <inheritdoc />
@@ -80,6 +84,13 @@ namespace Quaver.Graphics.Overlays.Navbar
              Container.TooltipName.Text = TooltipName;
              Container.TooltipDescription.Text = TooltipDescription;
              Tint = Color.Yellow;
+                      
+             // The scale at which the image increases when moused over.
+             const float scale = 1.15f;
+             
+             // Increase the size and normalize the position.
+             Size = new UDim2D(Image.Width * scale, Image.Height * scale);
+             Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - Image.Height * scale / 2f);
          }
 
          /// <inheritdoc />
@@ -92,6 +103,10 @@ namespace Quaver.Graphics.Overlays.Navbar
              Container.TooltipDescription.Text = string.Empty;
              Container.HoveredButton = null;
              Tint = Color.White;
+             
+             // Set the size and position back to normal.
+             Size = new UDim2D(Image.Width, Image.Height);
+             Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - Image.Height / 2f);
          }
     }
 }
