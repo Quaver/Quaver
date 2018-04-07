@@ -48,7 +48,7 @@ namespace Quaver.States.Tests
 
         public void Draw()
         {
-            GameBase.GraphicsDevice.Clear(Color.Teal);
+            GameBase.GraphicsDevice.Clear(Color.DarkOliveGreen);
             GameBase.SpriteBatch.Begin();
             
             Nav.Draw();
