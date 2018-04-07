@@ -188,6 +188,9 @@ namespace Quaver.Graphics.Buttons
 
                         // Back spacking
                         case Keys.Back:
+                            if (string.IsNullOrEmpty(QuaverTextSprite.Text))
+                                return;
+                            
                             CurrentTextField.Length--;
                             QuaverTextSprite.Text = CurrentTextField.ToString();
                             break;
