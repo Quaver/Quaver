@@ -180,7 +180,6 @@ namespace Quaver.States.Select
             CurrentPoolIndex += amount;
             if (CurrentPoolIndex < 0) CurrentPoolIndex = 0;
             if (CurrentPoolIndex >= GameBase.VisibleMapsets.Count) CurrentPoolIndex = GameBase.VisibleMapsets.Count - 1;
-            //Console.WriteLine(amount + ", " + CurrentPoolIndex);
 
             int index;
             for (var i=0; i<SongSelectButtons.Count; i++)
@@ -346,8 +345,11 @@ namespace Quaver.States.Select
             // Delete Diff Select Buttons
             DeleteMapDiffButtons();
 
+            // Get mapset index
+            //int mapsetIndex = GameBase.Mapsets.FindIndex(a => a.Prop == oProp);
+
             // Create Diff Select Buttons
-            var mapset = GameBase.Mapsets[SelectedSongIndex];
+            var mapset = GameBase.VisibleMapsets[SelectedSongIndex];
             var posOffset = ((SelectedSongIndex + 1) * GameBase.WindowUIScale * QuaverMapsetSelectButton.BUTTON_OFFSET_PADDING);
             for (var i = 0; i < mapset.Maps.Count; i++)
             {
@@ -386,7 +388,7 @@ namespace Quaver.States.Select
             TargetContainerOffset = GetFocusOffsetOfCurrentMap();
 
             // Select map
-            var map = GameBase.Mapsets[SelectedSongIndex].Maps[SelectedDiffIndex];
+            var map = GameBase.VisibleMapsets[SelectedSongIndex].Maps[SelectedDiffIndex];
 
             var oldMapAudioPath = GameBase.SelectedMap.Directory + "/" + GameBase.SelectedMap.AudioPath;
             Map.ChangeSelected(map);
