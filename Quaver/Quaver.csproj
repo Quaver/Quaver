@@ -108,7 +108,6 @@
     <Compile Include="States\Gameplay\Mania\UI\Progress\ManiaSongProgress.cs" />
     <Compile Include="States\Gameplay\Mania\UI\Progress\ManiaScoreProgress.cs" />
     <Compile Include="States\IGameStateComponent.cs" />
-    <Compile Include="States\Select\MapsetOrganizer.cs" />
     <Compile Include="States\Options\OptionsState.cs" />
     <Compile Include="States\Results\ResultsState.cs" />
     <Compile Include="States\Select\SongSelectState.cs" />
