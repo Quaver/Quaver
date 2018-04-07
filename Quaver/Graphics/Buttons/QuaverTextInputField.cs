@@ -87,6 +87,7 @@ namespace Quaver.Graphics.Buttons
             QuaverTextSprite.TextColor = Color.White;
 
             PlaceHolderText = placeHolderText;
+            QuaverTextSprite.Text = PlaceHolderText;
             CurrentTextField = new StringBuilder();
 
             GameBase.GameWindow.TextInput += OnTextEntered;
@@ -201,7 +202,7 @@ namespace Quaver.Graphics.Buttons
                             OnTextInputSubmit(QuaverTextSprite.Text);
 
                             // Reset textfield and reset text to placeholder
-                            QuaverTextSprite.Text = string.Empty;
+                            QuaverTextSprite.Text = PlaceHolderText;
                             CurrentTextField.Clear();
                             UnSelect();
                             break;
