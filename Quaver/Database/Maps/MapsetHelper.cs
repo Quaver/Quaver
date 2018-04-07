@@ -155,7 +155,8 @@ namespace Quaver.Database.Maps
                     // Check if the term exist in any of the following properties
                     if (!map.Artist.ToLower().Contains(term) && !map.Title.ToLower().Contains(term) &&
                         !map.Creator.ToLower().Contains(term) && !map.Source.ToLower().Contains(term) && 
-                        !map.Description.ToLower().Contains(term) && !map.Tags.ToLower().Contains(term))
+                        !map.Description.ToLower().Contains(term) && !map.Tags.ToLower().Contains(term) &&
+                        !map.DifficultyName.ToLower().Contains(term))
                         continue;
 
                     // Add the set if all the comparisons and queries are correct
