@@ -149,12 +149,13 @@ namespace Quaver.States.Select
                 SongSelectInputManager.CheckInput();
 
                 // Check and update any mouse input
+                /*
                 if (SongSelectInputManager.RightMouseIsDown)
                     MapOrganizer.SetMapOrganizerPosition(-SongSelectInputManager.MouseYPos / GameBase.WindowRectangle.Height);
                 else if (SongSelectInputManager.LeftMouseIsDown)
                     MapOrganizer.OffsetMapOrganizerPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
                 else if (SongSelectInputManager.CurrentScrollAmount != 0)
-                    MapOrganizer.OffsetMapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);
+                    MapOrganizer.OffsetMapOrganizerPosition(SongSelectInputManager.CurrentScrollAmount);*/
 
                 // Check and update any keyboard input
                 int scroll = 0;
@@ -220,12 +221,12 @@ namespace Quaver.States.Select
 
         private void ScrollUpMapIndex()
         {
-            MapOrganizer.OffsetMapOrganizerIndex(-1);
+            //MapOrganizer.OffsetMapOrganizerIndex(-1);
         }
 
         private void ScrollDownMapIndex()
         {
-            MapOrganizer.OffsetMapOrganizerIndex(1);
+            //MapOrganizer.OffsetMapOrganizerIndex(1);
         }
 
         /// <summary>
