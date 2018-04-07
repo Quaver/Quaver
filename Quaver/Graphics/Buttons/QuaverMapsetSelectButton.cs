@@ -130,6 +130,9 @@ namespace Quaver.Graphics.Buttons
 
         internal void UpdateButtonMapIndex(int newIndex, Mapset newMapset)
         {
+            // Ignore null mapsets
+            if (newMapset == null) return;
+
             Index = newIndex;
             if (newMapset.Maps.Count > 0)
             {
