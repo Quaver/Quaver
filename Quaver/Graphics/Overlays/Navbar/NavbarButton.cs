@@ -37,6 +37,11 @@ namespace Quaver.Graphics.Overlays.Navbar
         private float PositionX { get; set; }
 
         /// <summary>
+        ///     The alignment of the button in the navbar (left, right);
+        /// </summary>
+        private NavbarAlignment NavAlignment { get; }
+
+        /// <summary>
         ///     Initializes the navbar button
         /// </summary>
         /// <param name="nav"></param>
@@ -47,6 +52,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         internal NavbarButton(Navbar nav, Texture2D tex, NavbarAlignment alignment, string tooltipName, string tooltipDesc, EventHandler action) 
             : base(action)
         {
+            NavAlignment = alignment;
             Container = nav;
             TooltipName = tooltipName;
             TooltipDescription = tooltipDesc;
@@ -57,7 +63,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             var lastButton = Container.Buttons[alignment].Count > 0 ? Container.Buttons[alignment].Last() : null;
          
             // Set the alignment and position of the navbar button.
-            switch (alignment)
+            switch (NavAlignment)
             {
                 case NavbarAlignment.Left:
                     Alignment = Alignment.TopLeft;
@@ -91,6 +97,13 @@ namespace Quaver.Graphics.Overlays.Navbar
              // Increase the size and normalize the position.
              Size = new UDim2D(Image.Width * scale, Image.Height * scale);
              Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - Image.Height * scale / 2f);
+             
+             // Make tooltip box visible if it isn't already
+             if (!Container.TooltipBox.Visible)
+             {
+                 // TODO: Perform FadeIn animation
+                 Container.TooltipBox.Visible = true;
+             }
          }
 
          /// <inheritdoc />
@@ -107,6 +120,12 @@ namespace Quaver.Graphics.Overlays.Navbar
              // Set the size and position back to normal.
              Size = new UDim2D(Image.Width, Image.Height);
              Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - Image.Height / 2f);
+
+             if (Container.TooltipBox.Visible)
+             {
+                 // TODO: Perform FadeOut animation
+                 Container.TooltipBox.Visible = false;
+             }
          }
     }
 }
