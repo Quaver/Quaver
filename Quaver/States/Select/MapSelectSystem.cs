@@ -19,18 +19,34 @@ namespace Quaver.States.Select
     /// </summary>
     internal class MapSelectSystem : IGameStateComponent
     {
-        private MapInfoWindow MapInfoWindow = new MapInfoWindow();
+        /// <summary>
+        ///     
+        /// </summary>
+        private MapInfoWindow MapInfoWindow { get; set; }
 
+        /// <summary>
+        ///     
+        /// </summary>
         private const int INDEX_OFFSET_AMOUNT = 2;
+
         /// <summary>
         ///     Reference to the list of song select buttons
         /// </summary>
-        private List<QuaverMapsetSelectButton> SongSelectButtons { get; set; } = new List<QuaverMapsetSelectButton>();
+        private List<QuaverMapsetSelectButton> SongSelectButtons { get; set; }
 
-        private List<QuaverMapDifficultySelectButton> DiffSelectButtons { get; set; } = new List<QuaverMapDifficultySelectButton>();
+        /// <summary>
+        ///     Reference to the list of difficulty select buttons.
+        /// </summary>
+        private List<QuaverMapDifficultySelectButton> DiffSelectButtons { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private List<EventHandler> SongSelectEvents { get; set; } = new List<EventHandler>();
 
+        /// <summary>
+        ///     
+        /// </summary>
         private List<EventHandler> DiffSelectEvents { get; set; } = new List<EventHandler>();
 
         /// <summary>
@@ -74,12 +90,17 @@ namespace Quaver.States.Select
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {
-            //Console.WriteLine(GameBase.VisibleMapsets.Count + ", " + GameBase.Mapsets.Count);
+            MapInfoWindow = new MapInfoWindow();
+            SongSelectButtons = new List<QuaverMapsetSelectButton>();
+            DiffSelectButtons = new List<QuaverMapDifficultySelectButton>();
             Boundary = new QuaverContainer();
             MapInfoWindow.Initialize(state);
             GenerateButtonPool();
         }
 
+        /// <summary>
+        ///     Unload
+        /// </summary>
         public void UnloadContent()
         {
             MapInfoWindow.UnloadContent();
@@ -107,6 +128,9 @@ namespace Quaver.States.Select
             Boundary.Update(dt);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Draw()
         {
             Boundary.Draw();
@@ -143,6 +167,10 @@ namespace Quaver.States.Select
             ShiftButtonPool(0);
         }
 
+        /// <summary>
+        ///     
+        /// </summary>
+        /// <param name="search"></param>
         public void OnSearchbarUpdated(string search)
         {
             // todo: remove logging
