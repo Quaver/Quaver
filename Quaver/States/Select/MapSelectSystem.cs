@@ -145,7 +145,28 @@ namespace Quaver.States.Select
 
         public void OnSearchbarUpdated(string search)
         {
+            // todo: remove logging
+            Logger.Log("Search bar updated: " + search, LogLevel.Info, LogType.Runtime, 0.2f);
 
+            // Update mapsets list
+            List<Mapset> newMapsets;
+            if (search.Equals(string.Empty))
+                newMapsets = GameBase.Mapsets;
+            else
+                newMapsets = MapsetHelper.SearchMapsets(GameBase.Mapsets, search);
+
+            GameBase.VisibleMapsets = newMapsets;
+
+            // Update buttons
+            ShiftButtonPool(0);
+            if (newMapsets.Count > 0)
+            {
+                SelectMapset(0);
+            }
+            else
+            {
+                DeleteMapDiffButtons();
+            }
         }
 
         /// <summary>
