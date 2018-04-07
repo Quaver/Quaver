@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.GameState;
@@ -13,6 +13,7 @@ using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.Graphics.Overlays.Navbar
 {
@@ -26,6 +27,12 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         internal QuaverSprite Nav { get; set; }
 
+                
+        /// <summary>
+        ///     The container for the navbar
+        /// </summary>
+        internal QuaverContainer Container { get; set; }
+        
          /// <summary>
         ///     The navbar buttons that are currently implemented on this navbar with their assigned
         ///     alignments to the navbar.
@@ -37,7 +44,12 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         internal NavbarButton HoveredButton { get; set; }
 
-         /// <summary>
+        /// <summary>
+        ///     The box surrounding the tooltip.
+        /// </summary>
+        internal QuaverSprite TooltipBox { get; set; }
+
+        /// <summary>
         ///     When the button is hovered, it'll display the tooltip's name.
         ///     This text field holds that sprite.
         /// </summary>
@@ -50,9 +62,9 @@ namespace Quaver.Graphics.Overlays.Navbar
         internal QuaverTextbox TooltipDescription { get; set; }
 
         /// <summary>
-        ///     The container for the navbar
+        ///      The icon dislayed when hovering over a navbar button.
         /// </summary>
-        internal QuaverContainer Container { get; set; }
+        internal QuaverSprite TooltipIcon { get; set; }
 
         /// <summary>
         ///     If the navbar is shown
@@ -88,18 +100,45 @@ namespace Quaver.Graphics.Overlays.Navbar
                 Parent = Container
             };
 
+            #region tooltip
+
+            // The box for the tool tip
+            TooltipBox = new QuaverSprite()
+            {
+                PosY = Nav.SizeY,
+                Size = new UDim2D(0, 60, 0.30f, 0),
+                Alignment = Alignment.TopLeft,
+                Tint = new Color(0f, 0f, 0f, 0.1f),
+                Parent = Container,
+                Visible = false
+            };
+
+            // The x and y positions of the top line of the tooltip.
+            const int tooltipTopLineX = 10;
+            const int tooltipTopLineY = 5;
+            
+            // The icon for the tooltip.
+            TooltipIcon = new QuaverSprite()
+            {
+                Image = GameBase.QuaverUserInterface.BlankBox, // Set default blank box. Prevents exception.
+                Position = new UDim2D(tooltipTopLineX, tooltipTopLineY),
+                Parent = TooltipBox
+            };
+            
+            TooltipIcon.Size = new UDim2D(TooltipIcon.Image.Width, TooltipIcon.Image.Height);
+                
             // Create tool tip name
             TooltipName = new QuaverTextbox()
             {
                 Text = "",
                 Font = QuaverFonts.Medium24,
                 Size = new UDim2D(25, 25, 1, 0),
-                Position = new UDim2D(20, 60),
+                Position = new UDim2D(tooltipTopLineX + TooltipIcon.Image.Width + 10, TooltipIcon.Image.Height / 2f - 8),
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.BotLeft,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                 TextColor = Color.White,
-                Parent = Container
+                Parent = TooltipBox
             };
             
             // Create tool tip name
@@ -107,22 +146,28 @@ namespace Quaver.Graphics.Overlays.Navbar
             {
                 Text = "",
                 Font = QuaverFonts.Medium24,
-                Size = new UDim2D(15, 15, 1, 0),
-                Position = new UDim2D(20, 90),
+                Size = new UDim2D(15, 16, 1, 0),
+                Position = new UDim2D(TooltipName.PosX, TooltipName.PosY + TooltipName.SizeY + 2),
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.BotLeft,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                 TextColor = Color.White,
-                Parent = Container
-            };
+                Parent = TooltipBox
+            };            
+
+            #endregion
+
+            #region defaultNavButtons
             
             // Replace with actual sprites
-            var home = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to main menu", OnHomeButtonClicked);         
-            var play = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Play", "Play Quaver", OnPlayButtonClicked);
-            var keys4 = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Game Mode: 4 Keys", "Change your selected game mode to 4K", OnPlayButtonClicked);
-            var keys7 = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Game Mode: 7 Keys", "Change your selected game mode to 7K", OnPlayButtonClicked);
-            var quit = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Quit", "Bye Bye.", OnPlayButtonClicked);
-            var settings = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Settings", "Configure the game.", OnPlayButtonClicked);
+            var home = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to the main menu.", OnHomeButtonClicked);         
+            var play = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Play", "Smash some keys!", OnPlayButtonClicked);
+            var keys4 = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "4 Keys", "Set your game mode to 4K.", OnPlayButtonClicked);
+            var keys7 = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "7 Keys", "Set your game mode to 7K.", OnPlayButtonClicked);
+            var quit = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Exit", "Already? Come back soon! o/", OnPlayButtonClicked);
+            var settings = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Settings", "Configure Quaver.", OnPlayButtonClicked);
+            var discord = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Discord", "https://discord.gg/nJa8VFr", OnPlayButtonClicked);
+            #endregion
         }
 
          /// <summary>
