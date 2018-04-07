@@ -50,9 +50,9 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The container for the navbar
         /// </summary>
-        private QuaverContainer Container { get; set; }
+        internal QuaverContainer Container { get; set; }
 
-         /// <summary>
+        /// <summary>
         ///     Initialize
         /// </summary>
         /// <param name="state"></param>
@@ -105,7 +105,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             };
             
             // Replace with actual sprites
-            var home = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to main menu", OnHomeButtonClicked);         
+            var home = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to main menu", OnHomeButtonClicked);         
             var play = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Play", "Play Quaver", OnPlayButtonClicked);
         }
 
@@ -145,14 +145,9 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="description"></param>
         /// <param name="clickAction"></param>
         private NavbarButton CreateNavbarButton(NavbarAlignment alignment, Texture2D tex, string name, string description, EventHandler clickAction)
-        {
-            var button = new NavbarButton(this, tex, alignment, name, description, clickAction)
-            {
-                Parent = Container
-            };
-            
+        {       
+            var button = new NavbarButton(this, tex, alignment, name, description, clickAction) { Parent = Container };   
             Buttons[alignment].Add(button);
-
             return button;
         }
 
