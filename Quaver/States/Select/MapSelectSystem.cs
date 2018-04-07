@@ -9,7 +9,7 @@ namespace Quaver.States.Select
     /// <summary>
     ///     Insert song sorting + other map organizing tools here
     /// </summary>
-    internal class MapOrganizer : IGameStateComponent
+    internal class MapSelectSystem : IGameStateComponent
     {
         private ButtonOrganizer ButtonOrganizer = new ButtonOrganizer();
 
