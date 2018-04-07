@@ -62,6 +62,11 @@ namespace Quaver.States.Select
         /// </summary>
         private QuaverTextButton TogglePitch { get; set; }
 
+        /// <summary>
+        ///     Search bar for song searching
+        /// </summary>
+        private QuaverTextInputField SearchField { get; set; }
+
         /// <summary>MapSelectSystem
         ///     Position of mouse from previous frame
         /// </summary>
@@ -105,6 +110,7 @@ namespace Quaver.States.Select
             CreateBackButton();
             CreateSpeedModButton();
             CreateTogglePitchButton();
+            CreateSearchField();
 
             // Update overlay
             GameBase.GameOverlay.OverlayActive = true;
@@ -207,7 +213,7 @@ namespace Quaver.States.Select
             // Create play button
             PlayButton = new QuaverTextButton(new Vector2(200, 50), "Play Map")
             {
-                PosY = 370,
+                PosY = 300 * GameBase.WindowUIScale + 80,
                 Alignment = Alignment.TopLeft,
                 Parent = QuaverContainer
             };
@@ -287,8 +293,8 @@ namespace Quaver.States.Select
             // Create ManiaModSpeed Mod QuaverButton
             SpeedModButton = new QuaverTextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x")
             {
-                PosY = - 120,
-                Alignment = Alignment.BotLeft,
+                PosY = 300 * GameBase.WindowUIScale + 200,
+                Alignment = Alignment.TopLeft,
                 Parent = QuaverContainer
             };
             SpeedModButton.Clicked += OnSpeedModButtonClick;
@@ -376,7 +382,7 @@ namespace Quaver.States.Select
             TogglePitch = new QuaverTextButton(new Vector2(200, 50), $"Toggle Pitch: {ConfigManager.Pitched}")
             {
                 Alignment = Alignment.TopLeft,
-                PosY = 430,
+                PosY = 300 * GameBase.WindowUIScale + 140,
                 Parent = QuaverContainer
             };
             TogglePitch.Clicked += OnTogglePitchButtonClick;
@@ -391,6 +397,17 @@ namespace Quaver.States.Select
         {
             GameBase.AudioEngine.TogglePitch();
             TogglePitch.QuaverTextSprite.Text = $"Toggle Pitch: {ConfigManager.Pitched}";
+        }
+
+        private void CreateSearchField()
+        {
+            SearchField = new QuaverTextInputField(new Vector2(300, 30), "Search Mapset", (search) => MapSelectSystem.OnSearchbarUpdated(search))
+            {
+                Alignment = Alignment.TopLeft,
+                PosX = 5,
+                PosY = 300 * GameBase.WindowUIScale + 45,
+                Parent = QuaverContainer
+            };
         }
     }
 }

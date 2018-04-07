@@ -10,6 +10,7 @@ using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Logging;
 using Quaver.Main;
+using Microsoft.Xna.Framework;
 
 namespace Quaver.States.Select
 {
@@ -140,6 +141,11 @@ namespace Quaver.States.Select
             }
 
             ShiftButtonPool(0);
+        }
+
+        public void OnSearchbarUpdated(string search)
+        {
+
         }
 
         /// <summary>
