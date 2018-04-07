@@ -34,7 +34,7 @@ namespace Quaver.States.Select
         /// <summary>
         ///     The QuaverUserInterface that controls and displays map selection
         /// </summary>
-        private MapOrganizer MapOrganizer { get; set; }
+        private MapSelectSystem MapOrganizer { get; set; }
 
         /// <summary>
         ///     QuaverContainer
@@ -89,7 +89,7 @@ namespace Quaver.States.Select
             GameBase.GameWindow.Title = "Quaver";
 
             //Initialize Helpers
-            MapOrganizer = new MapOrganizer();
+            MapOrganizer = new MapSelectSystem();
             MapOrganizer.Initialize(this);
             SongSelectInputManager = new SongSelectInputManager();
 
