@@ -74,9 +74,8 @@
     <Compile Include="Helpers\RngHelper.cs" />
     <Compile Include="Helpers\StreamHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
-    <Compile Include="States\Select\ButtonOrganizer.cs" />
-    <Compile Include="States\Select\MapInfoWindow.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
+    <Compile Include="States\Select\MapInfoWindow.cs" />
     <Compile Include="States\Select\ModSelector.cs" />
     <Compile Include="Graphics\Buttons\QuaverMapDifficultySelectButton.cs" />
     <Compile Include="Graphics\Buttons\QuaverMapsetSelectButton.cs" />
