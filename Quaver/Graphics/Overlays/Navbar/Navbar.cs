@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Quaver.GameState;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
@@ -13,7 +13,11 @@ using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States;
+using Quaver.States.Menu;
+using Quaver.States.Options;
+using Quaver.States.Select;
 using Color = Microsoft.Xna.Framework.Color;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Graphics.Overlays.Navbar
 {
@@ -162,11 +166,11 @@ namespace Quaver.Graphics.Overlays.Navbar
             // Replace with actual sprites
             var home = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to the main menu.", OnHomeButtonClicked);         
             var play = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Play", "Smash some keys!", OnPlayButtonClicked);
-            var keys4 = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "4 Keys", "Set your game mode to 4K.", OnPlayButtonClicked);
-            var keys7 = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "7 Keys", "Set your game mode to 7K.", OnPlayButtonClicked);
-            var quit = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Exit", "Already? Come back soon! o/", OnPlayButtonClicked);
-            var settings = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Settings", "Configure Quaver.", OnPlayButtonClicked);
-            var discord = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Discord", "https://discord.gg/nJa8VFr", OnPlayButtonClicked);
+            var keys4 = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "4 Keys", "Set your game mode to 4K.", (sender, args) => {});
+            var keys7 = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "7 Keys", "Set your game mode to 7K.", (sender, args) => {});
+            var quit = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Exit", "Already? Come back soon! o/", OnExitButtonClicked);
+            var settings = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Settings", "Configure Quaver.", OnSettingsButtonClicked);
+            var discord = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
             #endregion
         }
 
@@ -269,7 +273,27 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="e"></param>
         private void OnHomeButtonClicked(object sender, EventArgs e)
         {
-            Console.WriteLine("HOME BUTTON CLICKED");
+            GameBase.GameStateManager.ChangeState(new MainMenuState());
+        }
+
+        /// <summary>
+        ///     Called when the settings button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSettingsButtonClicked(object sender, EventArgs e)
+        {
+            GameBase.GameStateManager.ChangeState(new OptionsState());
+        }
+
+        /// <summary>
+        ///     Called when the exit button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnExitButtonClicked(object sender, EventArgs e)
+        {
+            QuaverGame.Quit();
         }
         
         /// <summary>
@@ -279,7 +303,17 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="e"></param>
         private void OnPlayButtonClicked(object sender, EventArgs e)
         {
-            Console.WriteLine("PLAY BUTTON CLICKED");
+            GameBase.GameStateManager.ChangeState(new SongSelectState());
+        }
+
+        /// <summary>
+        ///     Called when the Discord button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDiscordButtonClicked(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://discord.gg/nJa8VFr");
         }
     }
 }
