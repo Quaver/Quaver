@@ -192,7 +192,6 @@ namespace Quaver.Main
         {
             UnloadLibraries();
             Game.Exit();
-            Environment.Exit(0);
         }
 
         /// <summary>
