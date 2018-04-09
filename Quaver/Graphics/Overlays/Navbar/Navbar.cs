@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Net.NetworkInformation;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.GameState;
@@ -71,6 +72,16 @@ namespace Quaver.Graphics.Overlays.Navbar
         internal QuaverSprite TooltipIcon { get; set; }
 
         /// <summary>
+        ///     Dictates if the tooltip box is currently in an animation.
+        /// </summary>
+        internal bool TooltipBoxInAnimation { get; set; }
+
+        /// <summary>
+        ///     Dictates if the tooltip box is entering.
+        /// </summary>
+        internal bool ToolTipBoxEntering { get; set; }
+
+        /// <summary>
         ///     If the navbar is shown
         /// </summary>
         private bool IsShown { get; set; }
@@ -98,9 +109,9 @@ namespace Quaver.Graphics.Overlays.Navbar
             // Create navbar
             Nav = new QuaverSprite()
             {
-                Size = new UDim2D(0, 50, 1, 0),
+                Size = new UDim2D(0, 40, 1, 0),
                 Alignment = Alignment.TopLeft,
-                Tint = new Color(0f, 0f, 0f, 0.35f),
+                Tint = new Color(0f, 0f, 0f, 0.40f),
                 Parent = Container
             };
 
@@ -109,8 +120,8 @@ namespace Quaver.Graphics.Overlays.Navbar
             // The box for the tool tip
             TooltipBox = new QuaverSprite()
             {
-                PosY = Nav.SizeY,
-                Size = new UDim2D(0, 60, 0.30f, 0),
+                Position = new UDim2D(-50, Nav.SizeY),
+                Size = new UDim2D(0, 60, 0.250f, 0),
                 Alignment = Alignment.TopLeft,
                 Tint = new Color(0f, 0f, 0f, 0.1f),
                 Parent = Container,
@@ -136,7 +147,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             {
                 Text = "",
                 Font = QuaverFonts.Medium24,
-                Size = new UDim2D(25, 25, 1, 0),
+                Size = new UDim2D(20, 20, 1, 0),
                 Position = new UDim2D(tooltipTopLineX + TooltipIcon.Image.Width + 10, TooltipIcon.Image.Height / 2f - 8),
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.BotLeft,
@@ -164,13 +175,14 @@ namespace Quaver.Graphics.Overlays.Navbar
             #region defaultNavButtons
             
             // Replace with actual sprites
-            var home = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Home", "Go to the main menu.", OnHomeButtonClicked);         
-            var play = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "Play", "Smash some keys!", OnPlayButtonClicked);
-            var keys4 = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "4 Keys", "Set your game mode to 4K.", (sender, args) => {});
-            var keys7 = CreateNavbarButton(NavbarAlignment.Left, GameBase.QuaverUserInterface.BlankBox, "7 Keys", "Set your game mode to 7K.", (sender, args) => {});
-            var quit = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Exit", "Already? Come back soon! o/", OnExitButtonClicked);
-            var settings = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Settings", "Configure Quaver.", OnSettingsButtonClicked);
-            var discord = CreateNavbarButton(NavbarAlignment.Right, GameBase.QuaverUserInterface.BlankBox, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
+            var home = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Home, "Home", "Go to the main menu.", OnHomeButtonClicked);         
+            var play = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.GamePad, "Play", "Smash some keys!", OnPlayButtonClicked);
+            var keys4 = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Coffee, "4 Keys", "Set your game mode to 4K.", (sender, args) => {});
+            var keys7 = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Cloud, "7 Keys", "Set your game mode to 7K.", (sender, args) => {});
+            var quit = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.PowerOff, "Exit", "Already? Come back soon! o/", OnExitButtonClicked);
+            var settings = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Cog, "Settings", "Configure Quaver.", OnSettingsButtonClicked);
+            var discord = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Discord, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
+            var github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnDiscordButtonClicked);
             #endregion
         }
 
