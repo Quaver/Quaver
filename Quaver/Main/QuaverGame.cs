@@ -87,6 +87,9 @@ namespace Quaver.Main
             // Load QuaverUserInterface .xnb elements
             GameBase.QuaverUserInterface.LoadElementsAsContent();
 
+            // Load all FontAwesome icons
+            FontAwesome.Load();
+            
             // Load all fonts
             QuaverFonts.Load();
 
