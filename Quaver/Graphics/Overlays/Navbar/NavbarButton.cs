@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.UniversalDim;
+using Quaver.Helpers;
 
 namespace Quaver.Graphics.Overlays.Navbar
 {
@@ -29,7 +30,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The x position spacing between each navbar button.
         /// </summary>
-        private const int ButtonSpacing = 20;
+        private const int ButtonSpacing = 25;
 
         /// <summary>
         ///     The current x position of the button.
@@ -41,6 +42,27 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         private NavbarAlignment NavAlignment { get; }
 
+        /// <summary>
+        ///     The width of the button icon
+        /// </summary>
+        private int IconWidth { get; } = 22;
+        
+        /// <summary>
+        ///     The height of the button icon.
+        /// </summary>
+        private int IconHeight { get; } = 22;
+
+        /// <summary>
+        ///     The color of the icon when hovering over it.
+        /// </summary>
+        internal static Color MouseOverColor { get; } = new Color(124, 224, 255);
+
+        /// <summary>
+        ///     The color of the icon when not hovering.
+        /// </summary>
+        internal static Color MouseOutColor { get; } = new Color(255, 255, 255);
+
+        /// <inheritdoc />
         /// <summary>
         ///     Initializes the navbar button
         /// </summary>
@@ -57,7 +79,8 @@ namespace Quaver.Graphics.Overlays.Navbar
             TooltipName = tooltipName;
             TooltipDescription = tooltipDesc;
             Image = tex;
-            Size = new UDim2D(Image.Width, Image.Height);
+            Size = new UDim2D(IconWidth, IconHeight);
+            Tint = MouseOutColor;
          
             // Get the last button in the list of the current alignment.
             var lastButton = Container.Buttons[alignment].Count > 0 ? Container.Buttons[alignment].Last() : null;
@@ -77,9 +100,27 @@ namespace Quaver.Graphics.Overlays.Navbar
                     throw new InvalidEnumArgumentException("Invalid NavbarAlignment given.");
             }
             
-            Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - Image.Height / 2f);
+            Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - IconHeight / 2f);
         }
-        
+
+        /// <summary>
+        ///     Update - Handles animations and stuff for the button/tooltipbox.
+        /// </summary>
+        /// <param name="dt"></param>
+        internal override void Update(double dt)
+        {
+            // Perform animations for tooltip box.
+            if (Container.TooltipBoxInAnimation)
+            {
+                if (Container.ToolTipBoxEntering)
+                    PerformTooltipEnterAnimation(dt);
+                else
+                    PerformTooltipExitAnimation(dt);
+            }
+          
+            base.Update(dt);
+        }
+
          /// <inheritdoc />
         /// <summary>
         ///     When the user's mouse goes over the button.
@@ -89,21 +130,20 @@ namespace Quaver.Graphics.Overlays.Navbar
              Container.HoveredButton = this;
              Container.TooltipName.Text = TooltipName;
              Container.TooltipDescription.Text = TooltipDescription;
-             Tint = Color.Yellow;
-                      
+             Container.TooltipIcon.Image = Image;
+             Tint = MouseOverColor;
+              
              // The scale at which the image increases when moused over.
              const float scale = 1.15f;
              
              // Increase the size and normalize the position.
-             Size = new UDim2D(Image.Width * scale, Image.Height * scale);
-             Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - Image.Height * scale / 2f);
+             Size = new UDim2D(IconWidth * scale, IconHeight * scale);
+             Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - IconHeight * scale / 2f);
              
              // Make tooltip box visible if it isn't already
-             if (!Container.TooltipBox.Visible)
-             {
-                 // TODO: Perform FadeIn animation
-                 Container.TooltipBox.Visible = true;
-             }
+             Container.TooltipBoxInAnimation = true;
+             Container.TooltipBox.Visible = true;
+             Container.ToolTipBoxEntering = true;
          }
 
          /// <inheritdoc />
@@ -115,17 +155,58 @@ namespace Quaver.Graphics.Overlays.Navbar
              Container.TooltipName.Text = string.Empty;
              Container.TooltipDescription.Text = string.Empty;
              Container.HoveredButton = null;
-             Tint = Color.White;
+             Tint = MouseOutColor;
              
              // Set the size and position back to normal.
-             Size = new UDim2D(Image.Width, Image.Height);
-             Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - Image.Height / 2f);
+             Size = new UDim2D(IconWidth, IconHeight);
+             Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - IconHeight / 2f);
 
+             Container.TooltipBox.PosX = -50;
+             
              if (Container.TooltipBox.Visible)
              {
                  // TODO: Perform FadeOut animation
-                 Container.TooltipBox.Visible = false;
+                 Container.TooltipBoxInAnimation = true;
+                 Container.ToolTipBoxEntering = false;
              }
          }
+
+        /// <summary>
+        ///     Performs an animation for the tooltip when the mouse hovers over the button.
+        /// </summary>
+        /// <param name="dt"></param>
+        private void PerformTooltipEnterAnimation(double dt)
+        {             
+            // The original position of the navbar
+            const int newPos = 0;
+          
+            // Don't perform the animation anymore after reaching a certain height.
+            if (Math.Abs(Container.TooltipBox.PosX - newPos) < 0.1)
+            {
+                Container.TooltipBoxInAnimation = false;
+                return;
+            }
+            
+            Container.TooltipBox.PosX = GraphicsHelper.Tween(newPos, Container.TooltipBox.PosX, Math.Min(dt / 120, 1));
+        }
+        
+        /// <summary>
+        ///     Performs an animation for the tooltip when the mouse exits the button.
+        /// </summary>
+        /// <param name="dt"></param>
+        private void PerformTooltipExitAnimation(double dt)
+        {             
+            // The original position of the 
+            const int origPos = -400;
+          
+            // Don't perform the animation anymore after reaching a certain height.
+            if (Math.Abs(Container.TooltipBox.PosX - origPos) < 0.1)
+            {
+                Container.TooltipBoxInAnimation = false;
+                return;
+            }
+            
+            Container.TooltipBox.PosX = GraphicsHelper.Tween(origPos, Container.TooltipBox.PosX, Math.Min(dt / 240, 1));
+        }
     }
 }
