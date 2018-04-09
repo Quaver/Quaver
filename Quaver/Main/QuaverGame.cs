@@ -38,6 +38,9 @@ namespace Quaver.Main
                 SynchronizeWithVerticalRetrace = false // Turns off vsync
             };
 
+            GameBase.GraphicsManager.GraphicsProfile = GraphicsProfile.HiDef;
+            GameBase.GraphicsManager.PreferMultiSampling = true;
+            
             // Set the global window size
             //GameBase.Window = new Vector4(0, 0, GameBase.GraphicsManager.PreferredBackBufferHeight, GameBase.GraphicsManager.PreferredBackBufferWidth);
 
@@ -80,6 +83,8 @@ namespace Quaver.Main
 
             // Set the global Graphics Device.
             GameBase.GraphicsDevice = GraphicsDevice;
+            GameBase.GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
+            GameBase.GraphicsManager.ApplyChanges();
            
             //Create new GameStateManager Instance
             GameBase.Content = Content;
