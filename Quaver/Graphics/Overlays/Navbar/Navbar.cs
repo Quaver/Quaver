@@ -182,7 +182,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             var quit = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.PowerOff, "Exit", "Already? Come back soon! o/", OnExitButtonClicked);
             var settings = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Cog, "Settings", "Configure Quaver.", OnSettingsButtonClicked);
             var discord = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Discord, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
-            var github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnDiscordButtonClicked);
+            var github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
             #endregion
         }
 
@@ -326,6 +326,16 @@ namespace Quaver.Graphics.Overlays.Navbar
         private void OnDiscordButtonClicked(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://discord.gg/nJa8VFr");
+        }
+
+        /// <summary>
+        ///     Called when the GitHub button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGithubButtonClicked(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/Swan/Quaver");
         }
     }
 }
