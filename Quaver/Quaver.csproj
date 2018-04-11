@@ -115,7 +115,6 @@
     <Compile Include="States\Options\OptionsState.cs" />
     <Compile Include="States\Results\ResultsState.cs" />
     <Compile Include="States\Select\SongSelectState.cs" />
-    <Compile Include="States\Import\MapImportLoadingState.cs" />
     <Compile Include="Graphics\Buttons\QuaverTextInputField.cs" />
     <Compile Include="Graphics\Buttons\QuaverKeybindButton.cs" />
     <Compile Include="Graphics\Buttons\QuaverSongSelectButton.cs" />
