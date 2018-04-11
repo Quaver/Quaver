@@ -293,7 +293,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             // Run the converter for all selected files
             Task.Run(() =>
             {
-                Logger.LogImportant($"Importing ${openFileDialog.FileName.Length} mapsets. This process runs in the background, so you can continue to play!", LogType.Runtime, 5f);
+                Logger.LogImportant($"Importing mapsets. This process runs in the background, so you can continue to play!", LogType.Runtime, 5f);
                 for (var i = 0; i < openFileDialog.FileNames.Length; i++)
                 {
                     if (openFileDialog.FileNames[i].EndsWith(".osz")) 
