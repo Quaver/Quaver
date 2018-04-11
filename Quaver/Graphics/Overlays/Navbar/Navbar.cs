@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Database.Maps;
 using Quaver.GameState;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
@@ -12,11 +14,14 @@ using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
+using Quaver.Logging;
 using Quaver.Main;
+using Quaver.Peppy;
 using Quaver.States;
 using Quaver.States.Menu;
 using Quaver.States.Options;
 using Quaver.States.Select;
+using Quaver.StepMania;
 using Color = Microsoft.Xna.Framework.Color;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
@@ -89,12 +94,12 @@ namespace Quaver.Graphics.Overlays.Navbar
             // Note: The order in which you create the buttons is important.
             // When aligning left, the buttons will be ordered from left to right in the order they 
             // were created, and vice versa.
+            var settings = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Cog, "Settings", "Configure Quaver.", OnSettingsButtonClicked);
             var home = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Home, "Home", "Go to the main menu.", OnHomeButtonClicked);         
             var play = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.GamePad, "Play", "Smash some keys!", OnPlayButtonClicked);
-            var keys4 = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Coffee, "4 Keys", "Set your game mode to 4K.", (sender, args) => {});
-            var keys7 = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Cloud, "7 Keys", "Set your game mode to 7K.", (sender, args) => {});
-            var quit = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.PowerOff, "Exit", "Already? Come back soon! o/", OnExitButtonClicked);
-            var settings = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Cog, "Settings", "Configure Quaver.", OnSettingsButtonClicked);
+            var import = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Copy, "Import Mapsets","Add new songs to play!", OnImportButtonClicked);
+            
+            var notifs = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => {});
             var discord = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Discord, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
             var github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
         }
@@ -210,16 +215,6 @@ namespace Quaver.Graphics.Overlays.Navbar
         {
             GameBase.GameStateManager.ChangeState(new OptionsState());
         }
-
-        /// <summary>
-        ///     Called when the exit button is clicked.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnExitButtonClicked(object sender, EventArgs e)
-        {
-            QuaverGame.Quit();
-        }
         
         /// <summary>
         ///     Called when the home button is clicked.
@@ -249,6 +244,45 @@ namespace Quaver.Graphics.Overlays.Navbar
         private void OnGithubButtonClicked(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/Swan/Quaver");
+        }
+        
+        /// <summary>
+        ///     Called when the Import button is clicked
+        ///     Imports mapsets to the game.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnImportButtonClicked(object sender, EventArgs e)
+        {
+            // Create the openFileDialog object.
+            var openFileDialog = new OpenFileDialog()
+            {
+                InitialDirectory = "c:\\",
+                Filter = "Mapset (*.qp, *.osz, *.sm)| *.qp; *.osz; *.sm;",
+                FilterIndex = 0,
+                RestoreDirectory = true,
+                Multiselect = true
+            };
+
+            // If the dialog couldn't be shown, that's an issue, so we'll return for now.
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            // Run the converter for all selected files
+            Task.Run(() =>
+            {
+                Logger.LogImportant($"Importing ${openFileDialog.FileName.Length} mapsets. This process runs in the background, so you can continue to play!", LogType.Runtime, 5f);
+                for (var i = 0; i < openFileDialog.FileNames.Length; i++)
+                {
+                    if (openFileDialog.FileNames[i].EndsWith(".osz")) 
+                        Osu.ConvertOsz(openFileDialog.FileNames[i], i);
+                    else if (openFileDialog.FileNames[i].EndsWith(".qp"))
+                        MapsetImporter.Import(openFileDialog.FileNames[i]);
+                    else if (openFileDialog.FileNames[i].EndsWith(".sm"))
+                        StepManiaConverter.ConvertSm(openFileDialog.FileNames[i]);
+                }
+                // When all the maps have been converted, select the last imported map and make that the selected one.
+            }).ContinueWith(async t => await MapsetImporter.AfterImport());    
         }
     }
 }
