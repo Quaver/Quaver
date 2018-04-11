@@ -31,56 +31,23 @@ namespace Quaver.Graphics.Overlays.Navbar
         ///     The actual navbar sprite
         /// </summary>
         internal QuaverSprite Nav { get; set; }
-
-                
+            
         /// <summary>
-        ///     The container for the navbar
+        ///     The tooltip box that appears when hovering over a button.
         /// </summary>
-        internal QuaverContainer Container { get; set; }
-        
-         /// <summary>
+        internal TooltipBox TooltipBox { get; set; }
+
+        /// <summary>
         ///     The navbar buttons that are currently implemented on this navbar with their assigned
         ///     alignments to the navbar.
         /// </summary>
-        internal Dictionary<NavbarAlignment, List<NavbarButton>> Buttons { get; set; }
-  
-         /// <summary>
-        ///     The currently hovered button.
-        /// </summary>
-        internal NavbarButton HoveredButton { get; set; }
-
+        internal Dictionary<NavbarAlignment, List<NavbarButton>> Buttons { get; private set; }
+        
         /// <summary>
-        ///     The box surrounding the tooltip.
+        ///     The container for the navbar
         /// </summary>
-        internal QuaverSprite TooltipBox { get; set; }
-
-        /// <summary>
-        ///     When the button is hovered, it'll display the tooltip's name.
-        ///     This text field holds that sprite.
-        /// </summary>
-         internal QuaverTextbox TooltipName { get; set; }
-
-         /// <summary>
-        ///     When the button is hovered, it'll display the tooltip's description.
-        ///     This text field holds that sprite.
-        /// </summary>
-        internal QuaverTextbox TooltipDescription { get; set; }
-
-        /// <summary>
-        ///      The icon dislayed when hovering over a navbar button.
-        /// </summary>
-        internal QuaverSprite TooltipIcon { get; set; }
-
-        /// <summary>
-        ///     Dictates if the tooltip box is currently in an animation.
-        /// </summary>
-        internal bool TooltipBoxInAnimation { get; set; }
-
-        /// <summary>
-        ///     Dictates if the tooltip box is entering.
-        /// </summary>
-        internal bool ToolTipBoxEntering { get; set; }
-
+        private QuaverContainer Container { get; set; }
+                
         /// <summary>
         ///     If the navbar is shown
         /// </summary>
@@ -115,66 +82,13 @@ namespace Quaver.Graphics.Overlays.Navbar
                 Parent = Container
             };
 
-            #region tooltip
+            // Create the tooltip box.
+            TooltipBox = new TooltipBox(Container, Nav);
 
-            // The box for the tool tip
-            TooltipBox = new QuaverSprite()
-            {
-                Position = new UDim2D(-50, Nav.SizeY),
-                Size = new UDim2D(0, 60, 0.250f, 0),
-                Alignment = Alignment.TopLeft,
-                Tint = new Color(0f, 0f, 0f, 0.1f),
-                Parent = Container,
-                Visible = false
-            };
-
-            // The x and y positions of the top line of the tooltip.
-            const int tooltipTopLineX = 10;
-            const int tooltipTopLineY = 5;
-            
-            // The icon for the tooltip.
-            TooltipIcon = new QuaverSprite()
-            {
-                Image = GameBase.QuaverUserInterface.BlankBox, // Set default blank box. Prevents exception.
-                Position = new UDim2D(tooltipTopLineX, tooltipTopLineY),
-                Parent = TooltipBox
-            };
-            
-            TooltipIcon.Size = new UDim2D(TooltipIcon.Image.Width, TooltipIcon.Image.Height);
-                
-            // Create tool tip name
-            TooltipName = new QuaverTextbox()
-            {
-                Text = "",
-                Font = QuaverFonts.Medium24,
-                Size = new UDim2D(20, 20, 1, 0),
-                Position = new UDim2D(tooltipTopLineX + TooltipIcon.Image.Width + 10, TooltipIcon.Image.Height / 2f - 8),
-                Alignment = Alignment.TopLeft,
-                TextAlignment = Alignment.BotLeft,
-                TextBoxStyle = TextBoxStyle.ScaledSingleLine,
-                TextColor = Color.White,
-                Parent = TooltipBox
-            };
-            
-            // Create tool tip name
-            TooltipDescription = new QuaverTextbox()
-            {
-                Text = "",
-                Font = QuaverFonts.Medium24,
-                Size = new UDim2D(15, 16, 1, 0),
-                Position = new UDim2D(TooltipName.PosX, TooltipName.PosY + TooltipName.SizeY + 2),
-                Alignment = Alignment.TopLeft,
-                TextAlignment = Alignment.BotLeft,
-                TextBoxStyle = TextBoxStyle.ScaledSingleLine,
-                TextColor = Color.White,
-                Parent = TooltipBox
-            };            
-
-            #endregion
-
-            #region defaultNavButtons
-            
-            // Replace with actual sprites
+            // Create the actual navbar buttons.
+            // Note: The order in which you create the buttons is important.
+            // When aligning left, the buttons will be ordered from left to right in the order they 
+            // were created, and vice versa.
             var home = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Home, "Home", "Go to the main menu.", OnHomeButtonClicked);         
             var play = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.GamePad, "Play", "Smash some keys!", OnPlayButtonClicked);
             var keys4 = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Coffee, "4 Keys", "Set your game mode to 4K.", (sender, args) => {});
@@ -183,7 +97,6 @@ namespace Quaver.Graphics.Overlays.Navbar
             var settings = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Cog, "Settings", "Configure Quaver.", OnSettingsButtonClicked);
             var discord = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Discord, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
             var github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
-            #endregion
         }
 
          /// <summary>
@@ -206,7 +119,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             
             if (GameBase.KeyboardState.IsKeyDown(Keys.X))
                 PerformShowAnimation(dt);
-            
+
             Container.Update(dt);
         }
 
