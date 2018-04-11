@@ -14,6 +14,8 @@ namespace Quaver.Main
         internal static Texture2D Coffee { get; set; }
         internal static Texture2D Cloud { get; set; }
         internal static Texture2D Github { get; set; }
+        internal static Texture2D Copy { get; set; }
+        internal static Texture2D Exclamation { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -28,6 +30,8 @@ namespace Quaver.Main
             Coffee = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_coffee_cup_on_a_plate_black_silhouettes);
             Cloud = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_cloud_storage_download);
             Github = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_github_logo);
+            Copy = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_copy_document);
+            Exclamation = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_exclamation);
         }
     }
 }
