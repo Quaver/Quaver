@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Ionic.Zip;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.GameState;
 using Quaver.Graphics.Base;
@@ -73,6 +76,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         private NavbarButton Notifications { get; set; }
         private NavbarButton Discord { get; set; }
         private NavbarButton Github { get; set; }
+        private NavbarButton Export { get; set; }
 
         /// <summary>
         ///     Initialize
@@ -113,9 +117,10 @@ namespace Quaver.Graphics.Overlays.Navbar
             Home = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Home, "Home", "Go to the main menu.", OnHomeButtonClicked);         
             Play = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.GamePad, "Play", "Smash some keys!", OnPlayButtonClicked);
             Import = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Copy, "Import Mapsets","Add new songs to play!", OnImportButtonClicked);
+            Export = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Cloud, "Export Mapset", "Export your current selected map!", OnExportButtonClicked);
             
             // Right Side
-            Notifications = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => {});
+            Notifications = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => { Logger.LogInfo("This button does nothing. Don't click it.");});
             Discord = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Discord, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
             Github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
 #endregion
@@ -300,6 +305,49 @@ namespace Quaver.Graphics.Overlays.Navbar
                 }
                 // When all the maps have been converted, select the last imported map and make that the selected one.
             }).ContinueWith(async t => await MapsetImporter.AfterImport());    
+        }
+
+        /// <summary>
+        ///     Exports the currently selected map to an archive
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnExportButtonClicked(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    var zip = new ZipFile();
+
+                    // Get all the files in the current selected map's directory.
+                    var dirInfo = new DirectoryInfo(ConfigManager.SongDirectory + "/" + GameBase.SelectedMap.Directory + "/");
+                    var files = dirInfo.GetFiles();
+
+                    foreach (var file in files)
+                        zip.AddFile(ConfigManager.SongDirectory + "/" + GameBase.SelectedMap.Directory + "/" + file, "");
+
+                    // Create the Data/Maps directory if it doesn't exist already.
+                    Directory.CreateDirectory($"{ConfigManager.DataDirectory}/Maps/");
+
+                    // Save the file
+                    var outputPath = $"{ConfigManager.DataDirectory}/Maps/{GameBase.GameTime.ElapsedMilliseconds} {StringHelper.FileNameSafeString(GameBase.SelectedMap.Artist)} - {StringHelper.FileNameSafeString(GameBase.SelectedMap.Title)}.qp";
+                    zip.Save(outputPath);
+
+                    Logger.LogSuccess($"Successfully exported {outputPath}", LogType.Runtime);
+
+                    // Open the folder where the file is contained.
+                    if (!File.Exists(outputPath))
+                        return;
+                
+                    Console.WriteLine(outputPath);
+                    System.Diagnostics.Process.Start("explorer.exe", "/select," + "\"" + $@"{outputPath.Replace("/", "\\")}" + "\"");
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("There was an issue exportng your mapset", LogType.Runtime);
+                }
+            });
         }
     }
 }
