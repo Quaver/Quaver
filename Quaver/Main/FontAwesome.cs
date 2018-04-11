@@ -16,6 +16,7 @@ namespace Quaver.Main
         internal static Texture2D Github { get; set; }
         internal static Texture2D Copy { get; set; }
         internal static Texture2D Exclamation { get; set; }
+        internal static Texture2D Archive { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -32,6 +33,7 @@ namespace Quaver.Main
             Github = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_github_logo);
             Copy = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_copy_document);
             Exclamation = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_exclamation);
+            Archive = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_archive_black_box);
         }
     }
 }
