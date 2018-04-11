@@ -30,7 +30,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The x position spacing between each navbar button.
         /// </summary>
-        private const int ButtonSpacing = 25;
+        private const int ButtonSpacing = 35;
 
         /// <summary>
         ///     The current x position of the button.
