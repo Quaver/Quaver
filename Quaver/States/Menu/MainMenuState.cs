@@ -48,11 +48,6 @@ namespace Quaver.States.Menu
         /// </summary>
         private Navbar Navbar { get; set; }
 
-        /// <summary>
-        ///     QuaverButton to export .qp
-        /// </summary>
-        private QuaverButton ExportQpQuaverButton { get; set; }
-
         /// <inheritdoc />
         /// <summary>
         ///     Initialize
@@ -115,7 +110,7 @@ namespace Quaver.States.Menu
             
             GameBase.SpriteBatch.End();
         }
-        
+
         /// <summary>
         ///     Initializes the UI for this state
         /// </summary>
@@ -124,63 +119,6 @@ namespace Quaver.States.Menu
             // Create navbar
             Navbar = new Navbar();
             Navbar.Initialize(this);
-            
-            // TODO: Button to export mapsets (put in navbar)
-             CreateQpExportButton();   
-        }
-        
-        /// <summary>
-        ///     Responsible for creating the import .qp button
-        /// </summary>
-        private void CreateQpExportButton()
-        {
-            // Import .osz QuaverButton
-            ExportQpQuaverButton = new QuaverTextButton(new Vector2(200, 40), "Export Current Mapset")
-            {
-                Alignment = Alignment.BotRight,
-                Parent = QuaverContainer
-            };
-
-            ExportQpQuaverButton.Clicked += OnExportButtonClick;
-        }
-
-        /// <summary>
-        ///     Responsible for zipping the selected mapset
-        /// </summary>
-        private static void OnExportButtonClick(object sender, EventArgs e)
-        {
-            var zip = new ZipFile();
-
-            // Get all the files in the current selected map's directory.
-            var dirInfo = new DirectoryInfo(ConfigManager.SongDirectory + "/" + GameBase.SelectedMap.Directory + "/");
-            var files = dirInfo.GetFiles();
-
-            foreach (var file in files)
-                zip.AddFile(ConfigManager.SongDirectory + "/" + GameBase.SelectedMap.Directory + "/" + file, "");
-
-            // Create the Data/Maps directory if it doesn't exist already.
-            Directory.CreateDirectory($"{ConfigManager.DataDirectory}/Maps/");
-
-            // Save the file
-            var outputPath = $"{ConfigManager.DataDirectory}/Maps/{GameBase.GameTime.ElapsedMilliseconds} {StringHelper.FileNameSafeString(GameBase.SelectedMap.Artist)} - {StringHelper.FileNameSafeString(GameBase.SelectedMap.Title)}.qp";
-            zip.Save(outputPath);
-
-            Logger.LogSuccess($"Successfully exported {outputPath}", LogType.Runtime);
-
-            // Open the folder where the file is contained.
-            if (!File.Exists(outputPath))
-                return;
-
-            // TODO: Fix for linux/mac.
-            try
-            {
-                Console.WriteLine(outputPath);
-                System.Diagnostics.Process.Start("explorer.exe", "/select," + "\"" + $@"{outputPath.Replace("/", "\\")}" + "\"");
-            }
-            catch (Exception ex) 
-            { 
-                //Logger.Error(ex);
-            }
         }
     }
 }
