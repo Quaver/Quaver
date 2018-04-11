@@ -64,6 +64,17 @@ namespace Quaver.Graphics.Overlays.Navbar
         private bool InAnimation { get; set; }
 
         /// <summary>
+        ///     Class reference to all our of navbar buttons.
+        /// </summary>
+        private NavbarButton Settings { get; set; }
+        private NavbarButton Home { get; set; }
+        private NavbarButton Play { get; set; }
+        private NavbarButton Import { get; set; }
+        private NavbarButton Notifications { get; set; }
+        private NavbarButton Discord { get; set; }
+        private NavbarButton Github { get; set; }
+
+        /// <summary>
         ///     Initialize
         /// </summary>
         /// <param name="state"></param>
@@ -90,18 +101,24 @@ namespace Quaver.Graphics.Overlays.Navbar
             // Create the tooltip box.
             TooltipBox = new TooltipBox(Container, Nav);
 
+#region nav_buttons 
             // Create the actual navbar buttons.
             // Note: The order in which you create the buttons is important.
             // When aligning left, the buttons will be ordered from left to right in the order they 
             // were created, and vice versa.
-            var settings = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Cog, "Settings", "Configure Quaver.", OnSettingsButtonClicked);
-            var home = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Home, "Home", "Go to the main menu.", OnHomeButtonClicked);         
-            var play = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.GamePad, "Play", "Smash some keys!", OnPlayButtonClicked);
-            var import = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Copy, "Import Mapsets","Add new songs to play!", OnImportButtonClicked);
+            // --------
             
-            var notifs = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => {});
-            var discord = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Discord, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
-            var github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
+            // Left Side 
+            Settings = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Cog, "Settings", "Configure Quaver.", OnSettingsButtonClicked);
+            Home = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Home, "Home", "Go to the main menu.", OnHomeButtonClicked);         
+            Play = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.GamePad, "Play", "Smash some keys!", OnPlayButtonClicked);
+            Import = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Copy, "Import Mapsets","Add new songs to play!", OnImportButtonClicked);
+            
+            // Right Side
+            Notifications = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => {});
+            Discord = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Discord, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
+            Github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
+#endregion
         }
 
          /// <summary>
