@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -10,6 +11,7 @@ using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Enums;
+using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Logging;
@@ -24,11 +26,13 @@ namespace Quaver.States.Menu
 {
     internal class MainMenuState : IGameState
     {
+        /// <inheritdoc />
         /// <summary>
         ///     State
         /// </summary>
         public State CurrentState { get; set; } = State.MainMenu;
 
+        /// <inheritdoc />
         /// <summary>
         ///     Update Ready
         /// </summary>
@@ -37,23 +41,19 @@ namespace Quaver.States.Menu
         /// <summary>
         ///     QuaverContainer
         /// </summary>
-        public QuaverContainer QuaverContainer { get; set; }
+        private QuaverContainer QuaverContainer { get; set; }
 
         /// <summary>
-        ///     QuaverButton to switch to the song select state
+        ///     The navbar at the top of the screen.
         /// </summary>
-        public QuaverButton SwitchSongSelectQuaverButton { get; set; }
-
-        /// <summary>
-        ///     QuaverButton to switch to the options menu
-        /// </summary>
-        public QuaverButton OptionsMenuQuaverButton { get; set; }
+        private Navbar Navbar { get; set; }
 
         /// <summary>
         ///     QuaverButton to export .qp
         /// </summary>
-        public QuaverButton ExportQpQuaverButton { get; set; }
+        private QuaverButton ExportQpQuaverButton { get; set; }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Initialize
         /// </summary>
@@ -75,97 +75,58 @@ namespace Quaver.States.Menu
 
             //Initialize Menu Screen
             QuaverContainer = new QuaverContainer();
-
-            var test = new QuaverTextButton(new Vector2(200, 40), "Menu Nav Test")
-            {
-                Alignment = Alignment.MidCenter,
-                PosY = 100,
-                Parent = QuaverContainer
-            };
-
-            test.Clicked += (sender, args) => GameBase.GameStateManager.ChangeState(new NavbarTestState());
-            
-            // Initialize the QuaverUserInterface buttons
-            CreateMenuButtons();
-            CreateQpExportButton();
+            CreateUI();
 
             UpdateReady = true;
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Unload
         /// </summary>
         public void UnloadContent()
         {
-            UpdateReady = false;
             QuaverContainer.Destroy();
+            Navbar.UnloadContent();
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Update
         /// </summary>
         /// <param name="gameTime"></param>
         public void Update(double dt)
         {
-            //Update Menu Screen QuaverContainer
             QuaverContainer.Update(dt);
+            Navbar.Update(dt);
         }
         
+        /// <inheritdoc />
         /// <summary>
         ///     Draw
         /// </summary>
         public void Draw()
         {
+            GameBase.GraphicsDevice.Clear(Color.DarkSlateBlue);
             GameBase.SpriteBatch.Begin();
-            //BackgroundManager.Draw();
+            
             QuaverContainer.Draw();
+            Navbar.Draw();
+            
             GameBase.SpriteBatch.End();
         }
-
+        
         /// <summary>
-        ///     Responsible for creating the button to move to the song select screen state
+        ///     Initializes the UI for this state
         /// </summary>
-        private void CreateMenuButtons()
+        private void CreateUI()
         {
-            // Switch Song Select QuaverButton
-            SwitchSongSelectQuaverButton = new QuaverTextButton(new Vector2(200, 40), "Song Select")
-            {
-                Alignment = Alignment.MidCenter,
-                Parent = QuaverContainer
-            };
-            SwitchSongSelectQuaverButton.Clicked += OnSongSelectButtonClick;
-
-            OptionsMenuQuaverButton = new QuaverTextButton(new Vector2(200, 40), "Options")
-            {
-                Alignment = Alignment.MidCenter,
-                PosY = 50,
-                Parent = QuaverContainer
-            };
-            OptionsMenuQuaverButton.Clicked += OnOptionsSelectButtonClick;
-        }
-
-        /// <summary>
-        ///     The event handler that switches to the song select screen
-        /// </summary>
-        public void OnSongSelectButtonClick(object sender, EventArgs e)
-        {
-            //Change to SongSelectState
-            GameBase.LoadedSkin.SoundClick.Play(GameBase.SoundEffectVolume, 0, 0);
-
-            // Don't proceed to song select if the user doesn't have any mapsets.
-            if (GameBase.Mapsets.Count == 0)
-            {
-                Logger.LogImportant("Cannot go to song select with 0 loaded mapsets.", LogType.Runtime);
-                return;
-            }
-
-            GameBase.GameStateManager.ChangeState(new SongSelectState());
-        }
-
-        public void OnOptionsSelectButtonClick(object sender, EventArgs e)
-        {
-            GameBase.LoadedSkin.SoundClick.Play(GameBase.SoundEffectVolume, 0, 0);
-            GameBase.GameStateManager.ChangeState(new OptionsState());
+            // Create navbar
+            Navbar = new Navbar();
+            Navbar.Initialize(this);
+            
+            // TODO: Button to export mapsets (put in navbar)
+             CreateQpExportButton();   
         }
         
         /// <summary>
