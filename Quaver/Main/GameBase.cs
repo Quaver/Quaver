@@ -187,11 +187,6 @@ namespace Quaver.Main
         public static string BuildVersion { get; set; }
 
         /// <summary>
-        ///     The volume of sound effects
-        /// </summary>
-        public static float SoundEffectVolume { get; set; }
-
-        /// <summary>
         ///     Reference to the game's audio engine
         /// </summary>
         public static AudioEngine AudioEngine { get; set; } = new AudioEngine();

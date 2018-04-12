@@ -465,10 +465,6 @@ namespace Quaver.Config
             _keyTakeScreenshot = ConfigHelper.ReadKeys(KeyTakeScreenshot, data["KeyTakeScreenshot"]);
             _keyToggleOverlay = ConfigHelper.ReadKeys(KeyToggleOverlay, data["KeyToggleOverlay"]);
 
-            // Set Master and Sound Effect Volume
-            SoundEffect.MasterVolume = VolumeGlobal / 100f;
-            GameBase.SoundEffectVolume = VolumeEffect / 100f;
-
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync());
         }
