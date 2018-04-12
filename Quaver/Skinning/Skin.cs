@@ -206,7 +206,8 @@ namespace Quaver.Skinning
         internal Texture2D Cursor { get; set; }
 
         /// <summary>
-        ///     Sound Effect elements in skin7k-note-hitobject-
+        ///     Sound Effect elements. 
+        ///     NOTE: SFX need to be 16-bit wav otherwise MonoGame doesn't play them correctly??
         /// </summary>
         internal SoundEffect SoundHit { get; set; }
         internal SoundEffect SoundHitClap { get; set; }
@@ -217,6 +218,7 @@ namespace Quaver.Skinning
         internal SoundEffect SoundScreenshot { get; set; }
         internal SoundEffect SoundClick { get; set; }
         internal SoundEffect SoundBack { get; set; }
+        internal SoundEffect SoundHover { get; set; }
 
         /// <summary>
         ///     The number of files that will be loaded in the default skin
@@ -367,6 +369,7 @@ namespace Quaver.Skinning
                 @"sound-screenshot",
                 @"sound-click",
                 @"sound-back",
+                @"sound-hover"
         };
 
         /// <summary>
@@ -715,6 +718,9 @@ namespace Quaver.Skinning
                         break;
                     case @"sound-back":
                         SoundBack = LoadSoundEffectElement(element, skinElementPath);
+                        break;
+                    case @"sound-hover":
+                        SoundHover = LoadSoundEffectElement(element, skinElementPath);
                         break;
                     case @"main-cursor":
                         Cursor = LoadIndividualElement(element, skinElementPath);
