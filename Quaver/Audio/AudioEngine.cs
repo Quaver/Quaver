@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using ManagedBass;
 using ManagedBass.Fx;
+using Microsoft.Xna.Framework.Audio;
 using Quaver.Main;
 using Quaver.Modifiers;
 using Quaver.Modifiers.Mods;
@@ -49,7 +50,11 @@ namespace Quaver.Audio
         internal int MasterVolume
         {
             get => Bass.GlobalStreamVolume;
-            set => Bass.GlobalStreamVolume = value * 100;
+            set
+            {
+                Bass.GlobalStreamVolume = value * 100;
+                SoundEffect.MasterVolume = value / 100f;
+            }
         }
 
         /// <summary>
