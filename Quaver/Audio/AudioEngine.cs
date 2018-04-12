@@ -121,10 +121,7 @@ namespace Quaver.Audio
 
             // Set the playback rate AND THEN toggle the pitch.
             SetPlaybackRate();
-            TogglePitch();
-
-            MasterVolume = Config.ConfigManager.VolumeGlobal;
-            MusicVolume = Config.ConfigManager.VolumeMusic;
+            SetPitch();
 
             Bass.ChannelPlay(Stream);
             HasPlayed = true;
@@ -186,7 +183,7 @@ namespace Quaver.Audio
         /// </summary>
         internal void SetPitch()
         {
-            if (Config.ConfigManager.Pitched)
+            if (ConfigManager.Pitched)
                 Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, Math.Log(Math.Pow(PlaybackRate, 12), 2));
             else
                 Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, 0);
@@ -197,7 +194,7 @@ namespace Quaver.Audio
         /// </summary>
         internal void TogglePitch()
         {
-            Config.ConfigManager.Pitched = !Config.ConfigManager.Pitched;
+            ConfigManager.Pitched = !ConfigManager.Pitched;
             SetPitch();
         }
 
