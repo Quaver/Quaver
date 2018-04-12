@@ -379,7 +379,7 @@ namespace Quaver.States.Select
         /// </summary>
         private void CreateTogglePitchButton()
         {
-            TogglePitch = new QuaverTextButton(new Vector2(200, 50), $"Toggle Pitch: {ConfigManager.Pitched}")
+            TogglePitch = new QuaverTextButton(new Vector2(200, 50), $"Toggle Pitch: {ConfigManager.Pitched.Value}")
             {
                 Alignment = Alignment.TopLeft,
                 PosY = 300 * GameBase.WindowUIScale + 140,
@@ -396,7 +396,7 @@ namespace Quaver.States.Select
         private void OnTogglePitchButtonClick(object sender, EventArgs e)
         {
             GameBase.AudioEngine.TogglePitch();
-            TogglePitch.QuaverTextSprite.Text = $"Toggle Pitch: {ConfigManager.Pitched}";
+            TogglePitch.QuaverTextSprite.Text = $"Toggle Pitch: {ConfigManager.Pitched.Value}";
         }
 
         private void CreateSearchField()

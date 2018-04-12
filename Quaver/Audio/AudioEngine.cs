@@ -191,7 +191,7 @@ namespace Quaver.Audio
         /// </summary>
         internal void SetPitch()
         {
-            if (ConfigManager.Pitched)
+            if (ConfigManager.Pitched.Value)
                 Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, Math.Log(Math.Pow(PlaybackRate, 12), 2));
             else
                 Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, 0);
@@ -202,7 +202,7 @@ namespace Quaver.Audio
         /// </summary>
         internal void TogglePitch()
         {
-            ConfigManager.Pitched = !ConfigManager.Pitched;
+            ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
             SetPitch();
         }
 
