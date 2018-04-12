@@ -44,6 +44,16 @@ namespace Quaver.Config.Bindings
             if (action != null)
                 OnValueChanged += action;
         }
+
+        /// <summary>
+        ///     Used as a failsafe. If trying to ToString() a BindedValue itself, it'll throw an exception.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public override string ToString()
+        {
+            throw new Exception("BindedValues cannot be written to a string!");
+        }
     }
     
     /// <summary>
