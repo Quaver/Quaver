@@ -4,6 +4,7 @@ using System.Linq;
 using ManagedBass;
 using ManagedBass.Fx;
 using Microsoft.Xna.Framework.Audio;
+using Quaver.Config;
 using Quaver.Main;
 using Quaver.Modifiers;
 using Quaver.Modifiers.Mods;
@@ -60,11 +61,16 @@ namespace Quaver.Audio
         /// <summary>
         ///     The volume of the current stream.
         /// </summary>
-        internal double Volume
+        internal double MusicVolume
         {
             get => Bass.ChannelGetAttribute(Stream, ChannelAttribute.Volume);
             set => Bass.ChannelSetAttribute(Stream, ChannelAttribute.Volume, value / 100f);
         }
+
+        /// <summary>
+        ///     The volume of all sound effects.
+        /// </summary>
+        internal float EffectVolume => ConfigManager.VolumeEffect / 100f;
 
         /// <summary>
         ///     The rate at which the audio stream will play at.
@@ -118,10 +124,18 @@ namespace Quaver.Audio
             TogglePitch();
 
             MasterVolume = Config.ConfigManager.VolumeGlobal;
-            Volume = Config.ConfigManager.VolumeMusic;
+            MusicVolume = Config.ConfigManager.VolumeMusic;
 
             Bass.ChannelPlay(Stream);
             HasPlayed = true;
+        }
+
+        /// <summary>
+        ///     Plays a sound effect.
+        /// </summary>
+        internal void PlaySoundEffect(SoundEffect sfx)
+        {
+            sfx.Play(EffectVolume, 0, 0);
         }
 
         /// <summary>
