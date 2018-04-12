@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -9,6 +10,7 @@ using IniParser;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Config.Bindings;
 using Quaver.Logging;
 using Quaver.Main;
 
@@ -16,6 +18,11 @@ namespace Quaver.Config
 {
     internal static class ConfigManager
     {
+        /// <summary>
+        ///     The list of BindedBools that we're storing for configuration.
+        /// </summary>
+        private static List<BindedValue<bool>> BindedBoolStore { get; set; } = new List<BindedValue<bool>>();
+        
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
@@ -187,8 +194,8 @@ namespace Quaver.Config
         /// <summary>
         ///     Dictates whether or not the song audio is pitched while using the ManiaModSpeed gameplayModifier.
         /// </summary>
-        private static bool _pitched;
-        internal static bool Pitched { get => _pitched; set { _pitched = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        private const bool PITCHED_DEFAULT = false;
+        internal static BindedValue<bool> Pitched { get; set; }
 
         /// <summary>
         ///     Toggle to show the LN release counter in-game.
@@ -444,7 +451,7 @@ namespace Quaver.Config
             _globalAudioOffset = ConfigHelper.ReadSignedByte(GlobalAudioOffset, data["GlobalAudioOffset"]);
             _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
             _defaultSkin = ConfigHelper.ReadDefaultSkin(DefaultSkin, data["DefaultSkin"]);
-            _pitched = ConfigHelper.ReadBool(Pitched, data["Pitched"]);
+            Pitched = BindableHelper.ReadBool(BindedValueString.Pitched, PITCHED_DEFAULT, data["Pitched"], AutoSaveConfiguration, true, BindedBoolStore);
             _showReleaseCounter = ConfigHelper.ReadBool(_showReleaseCounter, data["ShowReleaseCounter"]);
             _gradeBarRelative = ConfigHelper.ReadBool(_gradeBarRelative, data["GradeBarRelative"]);
             _keyMania4k1 = ConfigHelper.ReadKeys(KeyMania4k1, data["KeyMania4k1"]);
@@ -474,6 +481,16 @@ namespace Quaver.Config
         }
 
         /// <summary>
+        ///     Autosaves configuration for bindable bools.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="d"></param>
+        private static void AutoSaveConfiguration(object sender, BindedValueEventArgs<bool> d)
+        {
+            Task.Run(async () => await WriteConfigFileAsync());
+        }
+        
+        /// <summary>
         ///     Takes all of the current values from the ConfigManager class and creates a file with them.
         ///     This will automatically be called whenever a configuration value is changed in the code.
         /// </summary>
@@ -494,14 +511,20 @@ namespace Quaver.Config
             sb.AppendLine("[Config]");
             sb.AppendLine("; Quaver Configuration Values");
 
+            foreach (var bindedBool in BindedBoolStore)
+            {
+                sb.AppendLine(bindedBool.Name + " = " + bindedBool.Value);
+            }
+            
             // For every line we want to append "PropName = PropValue" to the string
             foreach (var p in typeof(ConfigManager)
                 .GetProperties(BindingFlags.Static | BindingFlags.NonPublic))
             {
                 // Don't include the FirstWrite Property
-                if (p.Name == "FirstWrite")
+                if (p.Name == "FirstWrite" || p.Name == "BindedBoolStore" || p.Name == "Pitched")
                     continue;
 
+                // Handle writing BindedValues
                 sb.AppendLine(p.Name + " = " + p.GetValue(null));
             }
                
