@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Drawing;
+using Microsoft.Xna.Framework.Input;
+using Quaver.Graphics.Base;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -10,91 +13,99 @@ namespace Quaver.Graphics.Buttons
     /// </summary>
     internal abstract class QuaverButton : Sprites.QuaverSprite
     {
-        internal QuaverButton()
+        /// <summary>
+        ///     Event that fires when the button is clicked.
+        /// </summary>
+        internal EventHandler Clicked;
+            
+        /// <summary>
+        ///     The mouse state of the previous frame
+        /// </summary>
+        private MouseState PreviousMouseState { get; set; }
+
+        /// <summary>
+        ///     The mouse state of the current frame.
+        /// </summary>
+        private MouseState CurrentMouseState { get; set; }
+
+        /// <summary>
+        ///     Determines if the button is currently hovered over.
+        /// </summary>
+        private bool IsHovered { get; set; }
+
+        /// <summary>
+        ///     Ctor - Optionally pass in an action.
+        /// </summary>
+        /// <param name="action"></param>
+        protected QuaverButton(EventHandler action = null)
         {
-            GameBase.GlobalInputManager.LeftClicked += MouseClicked;
+            Clicked += action;
         }
-
-        /// <summary>
-        ///     Used to detect when the user hovers over the button so the MouseOver() and MouseOut() methods get called only once.
-        /// </summary>
-        private bool MouseHovered { get; set; }
-
-        /// <summary>
-        ///     Determines if the Event Listener will be fired if the button is clicked.
-        /// </summary>
-        internal bool Clickable { get; set; } = true;
-
-        /// <summary>
-        ///     This event handler is used to detect when this object gets clicked. Used externally
-        /// </summary>
-        internal event EventHandler Clicked;
-
-        /// <summary>
-        ///     This method is called when the mouse hovers over the button
-        /// </summary>
-        internal abstract void MouseOver();
-
-        /// <summary>
-        ///     This method is called when the Mouse hovers out of the button
-        /// </summary>
-        internal abstract void MouseOut();
-
+        
         /// <summary>
         ///     This method will be used for button logic and animation
         /// </summary>
         internal override void Update(double dt)
         {
-            // Check if moouse is over
-            var over = GraphicsHelper.RectangleContains(GlobalRectangle, GraphicsHelper.PointToVector2(GameBase.MouseState.Position));
-
-            //Animation
-            if (over && !MouseHovered)
+            PreviousMouseState = CurrentMouseState;
+            CurrentMouseState = Mouse.GetState();
+            
+            if (GraphicsHelper.RectangleContains(GlobalRectangle, GraphicsHelper.PointToVector2(GameBase.MouseState.Position)))
             {
-                MouseHovered = true;
+                IsHovered = true;
                 MouseOver();
+
+                // If the user actually clicks the button, fire off the click event.
+                if (CurrentMouseState.LeftButton == ButtonState.Released && PreviousMouseState.LeftButton == ButtonState.Pressed)
+                    OnClicked();
             }
-            else if (!over && MouseHovered)
+            else
             {
-                MouseHovered = false;
-                MouseOut();
+                if (IsHovered)
+                {
+                    IsHovered = false;
+                    MouseOut();
+                }
+         
+                // If the user clicks the button outside of button area.
+                if (CurrentMouseState.LeftButton == ButtonState.Released && PreviousMouseState.LeftButton == ButtonState.Pressed)
+                    OnClickedOutside();
             }
 
             base.Update(dt);
         }
 
         /// <summary>
-        ///     This method checks if the mouse has clicked this button specifically
+        ///     When the user actually clicks the button.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MouseClicked(object sender, EventArgs e)
+        protected virtual void OnClicked()
         {
-            if (MouseHovered)
-                OnClicked();
-            else
-                OnClickedOutside();
+            Clicked?.Invoke(this, new EventArgs());
         }
-
+        
         /// <summary>
         ///     This method is called when the player has clicked outside the button
+        ///     Note: No default implementation. Not forced.
         /// </summary>
-        internal virtual void OnClickedOutside()
-        {
-            //todo: do stuff
-        }
+        protected virtual void OnClickedOutside() {  }
+
+         /// <summary>
+        ///     When the mouse cursor leaves the button
+        /// </summary>
+        protected abstract void MouseOut();
 
         /// <summary>
-        ///     This method is called when the button gets clicked
+        ///     When the mouse cursor enters the area of the button
         /// </summary>
-        internal virtual void OnClicked()
-        {
-            if (Clickable) Clicked?.Invoke(this, null);
-        }
-
+        protected abstract void MouseOver();
+        
+        /// <inheritdoc />
+        /// <summary>
+        ///     Destroys the button. Removes all event handlers.
+        /// </summary>
         internal override void Destroy()
         {
-            GameBase.GlobalInputManager.LeftClicked -= MouseClicked;
+            Clicked = null;
             base.Destroy();
         }
     }
