@@ -64,7 +64,7 @@ namespace Quaver.Audio
         internal double MusicVolume
         {
             get => Bass.ChannelGetAttribute(Stream, ChannelAttribute.Volume);
-            set => Bass.ChannelSetAttribute(Stream, ChannelAttribute.Volume, value / 100f);
+            set => Bass.ChannelSlideAttribute(Stream, ChannelAttribute.Volume, (float)value, 1000);
         }
 
         /// <summary>
@@ -83,7 +83,11 @@ namespace Quaver.Audio
         internal AudioEngine()
         {
             if (!Bass.Init())
-                throw new AudioEngineException("BASS has failed to intiailize");         
+                throw new AudioEngineException("BASS has failed to intiailize");
+
+            // Set volume curves to be logarithmic
+            Bass.LogarithmicVolumeCurve = true;
+            Bass.LogarithmicPanningCurve = true;
         }
 
         /// <summary>
@@ -122,6 +126,10 @@ namespace Quaver.Audio
             // Set the playback rate AND THEN toggle the pitch.
             SetPlaybackRate();
             SetPitch();
+
+            // Set volume
+            MasterVolume = ConfigManager.VolumeGlobal;
+            MusicVolume = ConfigManager.VolumeMusic;
 
             Bass.ChannelPlay(Stream);
             HasPlayed = true;
