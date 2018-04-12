@@ -46,12 +46,12 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The width of the button icon
         /// </summary>
-        private int IconWidth { get; } = 22;
+        private int IconWidth { get; } = 23;
         
         /// <summary>
         ///     The height of the button icon.
         /// </summary>
-        private int IconHeight { get; } = 22;
+        private int IconHeight { get; } = 23;
 
         /// <summary>
         ///     Dictates whether the MouseOver sound has already been played for this button.
@@ -61,7 +61,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The color of the icon when hovering over it.
         /// </summary>
-        private static Color MouseOverColor { get; } = new Color(124, 224, 255);
+        private static Color MouseOverColor { get; } = new Color(165, 223, 255);
 
         /// <summary>
         ///     The color of the icon when not hovering.
