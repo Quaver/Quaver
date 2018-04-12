@@ -125,7 +125,7 @@ namespace Quaver.Input
                 && (GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) || GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt)) 
                 && Config.ConfigManager.VolumeGlobal < 100)
             {
-                Config.ConfigManager.VolumeGlobal += 5;
+                ConfigManager.VolumeGlobal += 5;
 
                 // Set the last scroll wheel value
                 LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
