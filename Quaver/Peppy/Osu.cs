@@ -192,7 +192,7 @@ namespace Quaver.Peppy
             // Once fully converted, create a new directory in the songs folder and 
             // tell GameBase that the import queue is ready. Depending on the current state,
             // we may import them automatically.
-            var extractPath = $@"{Config.ConfigManager.DataDirectory}/Temp/{num}";
+            var extractPath = $@"{ConfigManager.DataDirectory}/Temp/{num}";
 
             try
             {
@@ -216,11 +216,11 @@ namespace Quaver.Peppy
 
                 // Now that all of them are converted, we'll create a new directory with all of the files except for .osu
 
-                var newSongDir = $"{Config.ConfigManager.SongDirectory}/{new DirectoryInfo(fileName).Name}";
+                var newSongDir = $"{ConfigManager.SongDirectory}/{new DirectoryInfo(fileName).Name}";
 
                 if (newSongDir.Length > 200)
                     newSongDir =
-                        $"{Config.ConfigManager.SongDirectory}/{new DirectoryInfo(fileName).Name.Substring(0, 20)}";
+                        $"{ConfigManager.SongDirectory}/{new DirectoryInfo(fileName).Name.Substring(0, 20)}";
 
                 Directory.CreateDirectory(newSongDir);
 
@@ -259,12 +259,10 @@ namespace Quaver.Peppy
                             break;
                     }
                 }
-
-                Logger.LogSuccess($".osz has been successfully converted.", LogType.Runtime);
             }
             catch (Exception e)
             {
-                Logger.LogError($"Error: There was an issue converting the .osz", LogType.Runtime);
+                Logger.LogError($"Error: There was an issue converting the .osz", LogType.Runtime, 3f);
                 Logger.LogError(e, LogType.Runtime);
             }
             // Delete the entire temp directory regardless of the outcome.
