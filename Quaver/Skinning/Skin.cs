@@ -863,16 +863,6 @@ namespace Quaver.Skinning
             }
 
             // Load the default if the path doesn't exist
-            switch (ConfigManager.DefaultSkin)
-            {
-                case DefaultSkins.Arrow:
-                    element = "arrow-" + element;
-                    break;
-                case DefaultSkins.Bar:
-                    element = "bar-" + element;
-                    break;
-            }
-
             return SoundEffect.FromStream((UnmanagedMemoryStream)ResourceHelper.GetProperty(element.Replace(".wav", "")));
         }
 
