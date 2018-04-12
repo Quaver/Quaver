@@ -68,12 +68,17 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Graphics\Overlays\Navbar\Navbar.cs" />
+    <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
+    <Compile Include="Graphics\Overlays\Navbar\NavbarButton.cs" />
+    <Compile Include="Graphics\Overlays\Navbar\TooltipBox.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Helpers\RngHelper.cs" />
     <Compile Include="Helpers\StreamHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Main\FontAwesome.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="States\Select\MapInfoWindow.cs" />
     <Compile Include="States\Select\ModSelector.cs" />
@@ -110,7 +115,6 @@
     <Compile Include="States\Options\OptionsState.cs" />
     <Compile Include="States\Results\ResultsState.cs" />
     <Compile Include="States\Select\SongSelectState.cs" />
-    <Compile Include="States\Import\MapImportLoadingState.cs" />
     <Compile Include="Graphics\Buttons\QuaverTextInputField.cs" />
     <Compile Include="Graphics\Buttons\QuaverKeybindButton.cs" />
     <Compile Include="Graphics\Buttons\QuaverSongSelectButton.cs" />
@@ -184,6 +188,7 @@
     <Compile Include="Replays\ReplayHelper.cs" />
     <Compile Include="Database\Scores\LocalScore.cs" />
     <Compile Include="Skinning\Skin.cs" />
+    <Compile Include="States\Tests\NavbarTestState.cs" />
     <Compile Include="StepMania\Etterna.cs" />
     <Compile Include="StepMania\EtternaCache.cs" />
     <Compile Include="StepMania\StepManiaConverter.cs" />
@@ -316,7 +321,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj">
       <Project>{0c6869bd-4e34-4c92-a853-e09f2b320601}</Project>

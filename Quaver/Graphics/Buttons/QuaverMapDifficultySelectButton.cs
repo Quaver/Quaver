@@ -86,21 +86,16 @@ namespace Quaver.Graphics.Buttons
             UpdateButtonMapIndex(index, map);
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     This method is called when the mouse hovers over the button
         /// </summary>
-        internal override void MouseOver()
-        {
-            HoverTargetTween = 0.85f;
-        }
+        protected override void MouseOver() => HoverTargetTween = 0.85f;
 
         /// <summary>
         ///     This method is called when the Mouse hovers out of the button
         /// </summary>
-        internal override void MouseOut()
-        {
-            HoverTargetTween = 0.6f;
-        }
+        protected override void MouseOut() => HoverTargetTween = 0.6f;
 
         /// <summary>
         ///     This method will be used for button logic and animation

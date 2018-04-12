@@ -51,7 +51,7 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     This method is called when the mouse hovers over the button
         /// </summary>
-        internal override void MouseOver()
+        protected override void MouseOver()
         {
             HoverTargetTween = 1;
         }
@@ -59,7 +59,7 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     This method is called when the Mouse hovers out of the button
         /// </summary>
-        internal override void MouseOut()
+        protected override void MouseOut()
         {
             HoverTargetTween = 0;
         }
