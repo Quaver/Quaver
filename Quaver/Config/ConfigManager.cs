@@ -454,7 +454,7 @@ namespace Quaver.Config
         /// <returns></returns>
         internal static BindedValue<T> ReadValue<T>(string name, T defaultVal, KeyDataCollection ini)
         {
-            var binded = new BindedValue<T>(name, AutoSaveConfiguration);
+            var binded = new BindedValue<T>(name, defaultVal, AutoSaveConfiguration);
             var converter = TypeDescriptor.GetConverter(typeof(T));
 
             // Attempt to parse the bool and default it if it can't.
