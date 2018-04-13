@@ -123,30 +123,30 @@ namespace Quaver.Input
             //  Raise volume if the user scrolls up.
             if (GameBase.MouseState.ScrollWheelValue > LastScrollWheelValue 
                 && (GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) || GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt)) 
-                && Config.ConfigManager.VolumeGlobal < 100)
+                && Config.ConfigManager.VolumeGlobal.Value < 100)
             {
-                ConfigManager.VolumeGlobal += 5;
+                ConfigManager.VolumeGlobal.Value += 5;
 
                 // Set the last scroll wheel value
                 LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
 
                 // Change the master volume based on the new config value.
-                GameBase.AudioEngine.MasterVolume = ConfigManager.VolumeGlobal;
-                Logger.LogInfo($"VolumeGlobal Changed To: {ConfigManager.VolumeGlobal}", LogType.Runtime);
+                GameBase.AudioEngine.MasterVolume = ConfigManager.VolumeGlobal.Value;
+                Logger.LogInfo($"VolumeGlobal Changed To: {ConfigManager.VolumeGlobal.Value}", LogType.Runtime);
             }
             // Lower volume if the user scrolls down
             else if (GameBase.MouseState.ScrollWheelValue < LastScrollWheelValue 
                 && (GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) || GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt)) 
-                && ConfigManager.VolumeGlobal > 0)
+                && ConfigManager.VolumeGlobal.Value > 0)
             {
-                ConfigManager.VolumeGlobal -= 5;
+                ConfigManager.VolumeGlobal.Value -= 5;
 
                 // Set the last scroll wheel value
                 LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
 
                 // Change the master volume based on the new config value.
-                GameBase.AudioEngine.MasterVolume = ConfigManager.VolumeGlobal;
-                Logger.LogInfo($"VolumeGlobal Changed To: {ConfigManager.VolumeGlobal}", LogType.Runtime);
+                GameBase.AudioEngine.MasterVolume = ConfigManager.VolumeGlobal.Value;
+                Logger.LogInfo($"VolumeGlobal Changed To: {ConfigManager.VolumeGlobal.Value}", LogType.Runtime);
             }
         }
 
