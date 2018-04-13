@@ -86,8 +86,12 @@ namespace Quaver.Audio
                 throw new AudioEngineException("BASS has failed to intiailize");
 
             // Set volume curves to be logarithmic
-            Bass.LogarithmicVolumeCurve = true;
+            Bass.LogarithmicVolumeCurve = false;
             Bass.LogarithmicPanningCurve = true;
+
+            // Initialize event handlers. This'll auto-change the music volume automatically when it changes.
+            ConfigManager.VolumeGlobal.OnValueChanged += (o, e) => MasterVolume = e.Value;
+            ConfigManager.VolumeMusic.OnValueChanged += (o, e) => MusicVolume = e.Value;
         }
 
         /// <summary>

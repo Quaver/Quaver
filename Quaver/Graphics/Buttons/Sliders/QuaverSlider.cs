@@ -1,19 +1,37 @@
 ﻿using System;
+using Quaver.Config;
+using Quaver.Graphics.Enums;
+using Quaver.Graphics.Sprites;
+using Quaver.Main;
 
 namespace Quaver.Graphics.Buttons
 {
     /// <summary>
     ///     Sliders, used to change 
     /// </summary>
-    internal class QuaverSlider : QuaverButton
+    internal class QuaverSlider: QuaverButton
     {
+        /// <summary>
+        ///     Reference to the value that's changing in the slider.
+        /// </summary>
+        internal BindedInt BindedValue { get; }
+
+        /// <summary>
+        ///     The containing object
+        /// </summary>
+        private QuaverContainer Container { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - Creates the slider object.
         /// </summary>
-        internal QuaverSlider()
+        internal QuaverSlider(BindedInt bindedValue)
         {
+            BindedValue = bindedValue;
             Held += OnHold;
+
+            Image = FontAwesome.Coffee;
+            Alignment = Alignment.MidCenter;
         }
         
         /// <summary>
