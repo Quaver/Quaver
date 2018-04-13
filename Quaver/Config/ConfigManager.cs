@@ -13,7 +13,7 @@ using IniParser.Model;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Config.Bindings;
+using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Main;
 using SQLitePCL;
