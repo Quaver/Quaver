@@ -22,7 +22,7 @@ namespace Quaver.Config.Bindings
         /// <summary>
         ///     The default value for this bindable.
         /// </summary>
-        internal T Default { get; }
+        internal T Default { get; set; }
 
         /// <summary>
         ///     The containing binded value.
@@ -38,17 +38,13 @@ namespace Quaver.Config.Bindings
             }
         }
 
-        internal BindedValue(string name, T defaultVal)
-        {
-            Name = name;
-            Default = defaultVal;
-        }
-        
         /// <summary>
         ///     Constructor that takes in an action to call upon changing the value Bindable.
         /// </summary>
+        /// <param name="name"></param>
+        /// <param name="defaultVal"></param>
         /// <param name="action"></param>
-        public BindedValue(string name, T defaultVal, EventHandler<BindedValueEventArgs<T>> action)
+        public BindedValue(string name, T defaultVal, EventHandler<BindedValueEventArgs<T>> action = null)
         {
             if (action != null)
                 OnValueChanged += action;

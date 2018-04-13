@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Config.Bindings;
 using Quaver.Logging;
 using Quaver.Main;
+using SQLitePCL;
 
 namespace Quaver.Config
 {
@@ -90,8 +91,7 @@ namespace Quaver.Config
         /// <summary>
         ///     The master volume of the game.
         /// </summary>
-        private static byte _volumeGlobal = 100;
-        internal static byte VolumeGlobal { get => _volumeGlobal; set { _volumeGlobal = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedInt VolumeGlobal { get; set; }
 
         /// <summary>
         ///     The SFX volume of the game.
@@ -402,7 +402,7 @@ namespace Quaver.Config
             _etternaCacheFolderPath = ConfigHelper.ReadDirectory(EtternaCacheFolderPath, data["EtternaCacheFolderPath"]);
             AutoLoadEtternaCharts = ReadValue(@"AutoLoadEtternaCharts", false, data);
             _username = ConfigHelper.ReadString(Username, data["Username"]);
-            _volumeGlobal = ConfigHelper.ReadPercentage(VolumeGlobal, data["VolumeGlobal"]);
+            VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
             _volumeEffect = ConfigHelper.ReadPercentage(VolumeEffect, data["VolumeEffect"]);
             _volumeMusic = ConfigHelper.ReadPercentage(VolumeMusic, data["VolumeMusic"]);
             _backgroundBrightness = ConfigHelper.ReadPercentage(BackgroundBrightness, data["BackgroundBrightness"]);
@@ -441,9 +441,10 @@ namespace Quaver.Config
             _keyToggleOverlay = ConfigHelper.ReadKeys(KeyToggleOverlay, data["KeyToggleOverlay"]);
 
             // Set Master and Sound Effect Volume
-            SoundEffect.MasterVolume = VolumeGlobal / 100f;
-            GameBase.AudioEngine.MasterVolume = VolumeGlobal;
-
+            SoundEffect.MasterVolume = VolumeGlobal.Value / 100f;
+            GameBase.AudioEngine.MasterVolume = VolumeGlobal.Value;
+            GameBase.AudioEngine.MusicVolume = VolumeMusic;
+            
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync());
         }
@@ -452,7 +453,7 @@ namespace Quaver.Config
         ///     Reads a BindedValue<T>. Works on all types.
         /// </summary>
         /// <returns></returns>
-        internal static BindedValue<T> ReadValue<T>(string name, T defaultVal, KeyDataCollection ini)
+        private static BindedValue<T> ReadValue<T>(string name, T defaultVal, KeyDataCollection ini)
         {
             var binded = new BindedValue<T>(name, defaultVal, AutoSaveConfiguration);
             var converter = TypeDescriptor.GetConverter(typeof(T));
@@ -461,13 +462,38 @@ namespace Quaver.Config
             try
             {
                 binded.Value = (T) converter.ConvertFromString(null, CultureInfo.InvariantCulture, ini[name]);
-
             }
             catch (Exception e)
             {
                 binded.Value = defaultVal;
             }
             
+            return binded;
+        }
+
+        /// <summary>
+        ///     Reads an Int32 to a BindedInt
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="defaultVal"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <param name="ini"></param>
+        /// <returns></returns>
+        private static BindedInt ReadInt(string name, int defaultVal, int min, int max, KeyDataCollection ini)
+        {
+            var binded = new BindedInt(name, defaultVal, min, max, AutoSaveConfiguration);
+
+            // Try to read the int.
+            try
+            {
+                binded.Value = int.Parse(ini[name]);
+            }
+            catch (Exception e)
+            {
+                binded.Value = defaultVal;
+            }
+
             return binded;
         }
         
@@ -509,6 +535,11 @@ namespace Quaver.Config
                 // Don't include the FirstWrite Property
                 if (p.Name == "FirstWrite" || p.Name == "BindedBoolStore")
                     continue;
+
+                if (p.GetType() == typeof(BindedInt))
+                {
+                    Console.WriteLine("BINDED INT!!! ");
+                }
 
                 sb.AppendLine(p.Name + " = " + p.GetValue(null));
             }

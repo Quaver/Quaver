@@ -128,7 +128,7 @@ namespace Quaver.Audio
             SetPitch();
 
             // Set volume
-            MasterVolume = ConfigManager.VolumeGlobal;
+            MasterVolume = ConfigManager.VolumeGlobal.Value;
             MusicVolume = ConfigManager.VolumeMusic;
 
             Bass.ChannelPlay(Stream);
