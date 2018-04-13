@@ -70,12 +70,12 @@
   <ItemGroup>
     <Compile Include="Config\BindedInt.cs" />
     <Compile Include="Config\BindedValue.cs" />
-    <Compile Include="Graphics\Buttons\QuaverSlider.cs" />
+    <Compile Include="Graphics\Buttons\Sliders\QuaverSlider.cs" />
+    <Compile Include="Graphics\Buttons\Sliders\SliderButton.cs" />
     <Compile Include="Graphics\Overlays\Navbar\Navbar.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarButton.cs" />
     <Compile Include="Graphics\Overlays\Navbar\TooltipBox.cs" />
-    <Compile Include="Graphics\Overlays\Volume\VolumeController.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
@@ -193,6 +193,7 @@
     <Compile Include="Database\Scores\LocalScore.cs" />
     <Compile Include="Skinning\Skin.cs" />
     <Compile Include="States\Tests\NavbarTestState.cs" />
+    <Compile Include="States\Tests\SliderTestState.cs" />
     <Compile Include="StepMania\Etterna.cs" />
     <Compile Include="StepMania\EtternaCache.cs" />
     <Compile Include="StepMania\StepManiaConverter.cs" />
