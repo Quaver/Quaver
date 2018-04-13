@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using IniParser;
+using IniParser.Model;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
@@ -19,9 +20,9 @@ namespace Quaver.Config
     internal static class ConfigManager
     {
         /// <summary>
-        ///     The list of BindedBools that we're storing for configuration.
+        ///     The list of stored binded config values
         /// </summary>
-        private static List<BindedValue<bool>> BindedBoolStore { get; set; } = new List<BindedValue<bool>>();
+        private static List<object> BindedStore { get; set; } = new List<object>();
         
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
@@ -194,7 +195,6 @@ namespace Quaver.Config
         /// <summary>
         ///     Dictates whether or not the song audio is pitched while using the ManiaModSpeed gameplayModifier.
         /// </summary>
-        private const bool PITCHED_DEFAULT = false;
         internal static BindedValue<bool> Pitched { get; set; }
 
         /// <summary>
@@ -451,7 +451,7 @@ namespace Quaver.Config
             _globalAudioOffset = ConfigHelper.ReadSignedByte(GlobalAudioOffset, data["GlobalAudioOffset"]);
             _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
             _defaultSkin = ConfigHelper.ReadDefaultSkin(DefaultSkin, data["DefaultSkin"]);
-            Pitched = BindableHelper.ReadBool(BindedValueString.Pitched, PITCHED_DEFAULT, data["Pitched"], AutoSaveConfiguration, true, BindedBoolStore);
+            Pitched = ReadBoolean(@"Pitched", false, data);
             _showReleaseCounter = ConfigHelper.ReadBool(_showReleaseCounter, data["ShowReleaseCounter"]);
             _gradeBarRelative = ConfigHelper.ReadBool(_gradeBarRelative, data["GradeBarRelative"]);
             _keyMania4k1 = ConfigHelper.ReadKeys(KeyMania4k1, data["KeyMania4k1"]);
@@ -480,6 +480,22 @@ namespace Quaver.Config
             Task.Run(async () => await WriteConfigFileAsync());
         }
 
+        /// <summary>
+        ///     Reads a Binded bool.
+        /// </summary>
+        /// <returns></returns>
+        internal static BindedValue<bool> ReadBoolean(string name, bool defaultVal, KeyDataCollection ini)
+        {
+            var binded = new BindedValue<bool>(name, AutoSaveConfiguration);
+
+            // Attempt to parse the bool and default it if it can't.
+            bool val;
+            binded.Value = bool.TryParse(ini[name], out val) ? val : defaultVal;
+
+            BindedStore.Add(binded);     
+            return binded;
+        }
+        
         /// <summary>
         ///     Autosaves configuration for bindable bools.
         /// </summary>
@@ -511,9 +527,13 @@ namespace Quaver.Config
             sb.AppendLine("[Config]");
             sb.AppendLine("; Quaver Configuration Values");
 
-            foreach (var bindedBool in BindedBoolStore)
+            foreach (var b in BindedStore)
             {
-                sb.AppendLine(bindedBool.Name + " = " + bindedBool.Value);
+                if (b.GetType() == typeof(BindedValue<bool>))
+                {
+                    var bindedBool = (BindedValue<bool>)b;
+                    sb.AppendLine(bindedBool.Name + " = " + bindedBool.Value);
+                }
             }
             
             // For every line we want to append "PropName = PropValue" to the string
@@ -521,7 +541,7 @@ namespace Quaver.Config
                 .GetProperties(BindingFlags.Static | BindingFlags.NonPublic))
             {
                 // Don't include the FirstWrite Property
-                if (p.Name == "FirstWrite" || p.Name == "BindedBoolStore" || p.Name == "Pitched")
+                if (p.Name == "FirstWrite" || p.Name == "BindedBoolStore")
                     continue;
 
                 // Handle writing BindedValues
