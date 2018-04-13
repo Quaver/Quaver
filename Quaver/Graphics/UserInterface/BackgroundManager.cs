@@ -56,6 +56,13 @@ namespace Quaver.Graphics.UserInterface
                 Image = GameBase.QuaverUserInterface.DiffSelectMask,
                 Tint = Color.Gray
             };
+
+            // Change the brightness of the 
+            ConfigManager.BackgroundBrightness.OnValueChanged += (o, e) =>
+            {
+                TargetColor = Vector3.One * e.Value / 100f;
+                CurrentColor = Vector3.One * e.Value / 100f;
+            };
         }
 
         /// <summary>
