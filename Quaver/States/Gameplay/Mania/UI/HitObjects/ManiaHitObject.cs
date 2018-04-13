@@ -135,7 +135,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
             HitBodyQuaverSprite = new QuaverSprite()
             {
                 Alignment = Alignment.TopLeft,
-                SpriteEffect = !Config.ConfigManager.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                SpriteEffect = !Config.ConfigManager.DownScroll4k.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                 Position = new UDim2D(_hitObjectPosition.X, _hitObjectPosition.Y),
             };
 
@@ -158,7 +158,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
                     Position = new UDim2D(_hitObjectPosition.X, _hitObjectPosition.Y),
                     Size = new UDim2D(HitObjectSize, 0),
                     Parent = parent,
-                    SpriteEffect = !Config.ConfigManager.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None
+                    SpriteEffect = !Config.ConfigManager.DownScroll4k.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None
                 };
 
                 // Choose the correct image based on the specific key lane for hold bodies.
