@@ -68,6 +68,7 @@ namespace Quaver.Graphics.Buttons.Sliders
             else if (percentage > 0 && percentage < 100 && LastPercentage != percentage)
                 BindedValue.Value = (int)(percentage / 100f * BindedValue.MaxValue);
             
+            Console.WriteLine(percentage);
             LastPercentage = percentage;
         }
         
