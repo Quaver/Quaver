@@ -240,6 +240,11 @@ namespace Quaver.Config
         private static bool FirstWrite { get; set; }
 
         /// <summary>
+        ///     The last time we've wrote config.
+        /// </summary>
+        private static long LastWrite { get; set; }
+
+        /// <summary>
         ///     Important!
         ///     Responsible for initializing directory properties,
         ///     writing a new config file if it doesn't exist and also reading config files.
@@ -511,6 +516,10 @@ namespace Quaver.Config
         /// <param name="d"></param>
         private static void AutoSaveConfiguration<T>(object sender, BindedValueEventArgs<T> d)
         {
+            // Don't bother writing again if the last write was less than x seconds ago.
+            if (GameBase.GameTime.ElapsedMilliseconds - LastWrite < 200)
+                return;
+            
             Task.Run(async () => await WriteConfigFileAsync());
         }
         
@@ -589,6 +598,8 @@ namespace Quaver.Config
                 if (attempts == 2)
                     Logger.LogError("Too many attempts in a short time to write the config file have been made.", LogType.Runtime);
             }
+
+            LastWrite = GameBase.GameTime.ElapsedMilliseconds;
         }
 
         /// <summary>
