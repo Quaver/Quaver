@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -18,12 +20,7 @@ using Quaver.Main;
 namespace Quaver.Config
 {
     internal static class ConfigManager
-    {
-        /// <summary>
-        ///     The list of stored binded config values
-        /// </summary>
-        private static List<object> BindedStore { get; set; } = new List<object>();
-        
+    {        
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
@@ -141,26 +138,22 @@ namespace Quaver.Config
         /// <summary>
         ///     Is the window fullscreen?
         /// </summary>
-        private static bool _windowFullScreen;
-        internal static bool WindowFullScreen { get => _windowFullScreen; set { _windowFullScreen = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<bool> WindowFullScreen { get; set; }
 
         /// <summary>
         ///     Is the window letterboxed?
         /// </summary>
-        private static bool _windowLetterboxed;
-        internal static bool WindowLetterboxed { get => _windowLetterboxed; set { _windowLetterboxed = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<bool> WindowLetterboxed { get; set; }
 
         /// <summary>
         ///     Should the game display the FPS Counter?
         /// </summary>
-        private static bool _fpsCounter = true;
-        internal static bool FpsCounter { get => _fpsCounter; set { _fpsCounter = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<bool> FpsCounter { get; set; }
 
         /// <summary>
         ///     Determines if the health bar + multiplier is at top or bottom of the playfield
         /// </summary>
-        private static bool _healthBarPositionTop = false;
-        internal static bool HealthBarPositionTop { get => _healthBarPositionTop; set { _healthBarPositionTop = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<bool> HealthBarPositionTop { get; set; }
 
         /// <summary>
         ///     The scroll speed for mania 4k
@@ -177,14 +170,12 @@ namespace Quaver.Config
         /// <summary>
         ///     Should 4k be played with DownScroll? If false, it's UpScroll
         /// </summary>
-        private static bool _downScroll4k = true;
-        internal static bool DownScroll4k { get => _downScroll4k; set { _downScroll4k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<bool> DownScroll4k { get; set; }
 
         /// <summary>
         ///     Should 7k be played with DownScroll? If false, it's UpScroll
         /// </summary>
-        private static bool _downScroll7k = true;
-        internal static bool DownScroll7k { get => _downScroll7k; set { _downScroll7k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<bool> DownScroll7k { get; set; }
 
         /// <summary>
         ///     The offset of the notes compared to the song start.
@@ -198,19 +189,6 @@ namespace Quaver.Config
         internal static BindedValue<bool> Pitched { get; set; }
 
         /// <summary>
-        ///     Toggle to show the LN release counter in-game.
-        /// </summary>
-        private static bool _showReleaseCounter;
-        internal static bool ShowReleaseCounter { get => _showReleaseCounter; set { _showReleaseCounter = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     Toggle for Grade Bar relative accuracy
-        /// </summary>
-        private static bool _gradeBarRelative = true;
-        internal static bool GradeBarRelative { get => _gradeBarRelative; set { _gradeBarRelative = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-
-        /// <summary>
         ///     The path of the osu!.db file
         /// </summary>
         private static string _osuDbPath;
@@ -219,8 +197,7 @@ namespace Quaver.Config
         /// <summary>
         ///     Dictates where or not we should load osu! maps from osu!.db on game start
         /// </summary>
-        private static bool _autoLoadOsuBeatmaps;
-        internal static bool AutoLoadOsuBeatmaps { get => _autoLoadOsuBeatmaps; set { _autoLoadOsuBeatmaps = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<bool> AutoLoadOsuBeatmaps { get; set; }
 
         /// <summary>
         ///     The path of the Etterna cache folder
@@ -232,8 +209,7 @@ namespace Quaver.Config
         /// <summary>
         ///     Dictates whether or not the game will be loaded with all of the Etterna maps
         /// </summary>
-        private static bool _autoLoadEtternaCharts;
-        internal static bool AutoLoadEtternaCharts { get => _autoLoadEtternaCharts; set { _autoLoadEtternaCharts = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<bool> AutoLoadEtternaCharts { get; set; }
 
         /// <summary>
         ///     The key pressed for lane 1
@@ -391,18 +367,6 @@ namespace Quaver.Config
 
             Logger.CreateLogFile();
 
-            // We'll want to write a quaver.cfg file if it doesn't already exist.
-            // There's no need to read the config file afterwards, since we already have 
-            // all of the default values.
-            if (!File.Exists(GameDirectory + "/quaver.cfg"))
-            {
-                File.WriteAllText(GameDirectory + "/quaver.cfg", "; Quaver Configiration File");
-                FirstWrite = true;
-
-                Task.Run(async () => await WriteConfigFileAsync()).Wait();
-                return;
-            }
-
             // If we already have a config file, we'll just want to read that.
             ReadConfigFile();
 
@@ -415,6 +379,12 @@ namespace Quaver.Config
         /// </summary>
         private static void ReadConfigFile()
         {
+            // We'll want to write a quaver.cfg file if it doesn't already exist.
+            // There's no need to read the config file afterwards, since we already have 
+            // all of the default values.
+            if (!File.Exists(GameDirectory + "/quaver.cfg"))
+                File.WriteAllText(GameDirectory + "/quaver.cfg", "; Quaver Configiration File");
+            
             var data = new FileIniDataParser().ReadFile(GameDirectory + "/quaver.cfg")["Config"];
 
             // Validate and set the parsed values.
@@ -428,9 +398,9 @@ namespace Quaver.Config
             _dataDirectory = ConfigHelper.ReadDirectory(DataDirectory, data["DataDirectory"]);
             _songDirectory = ConfigHelper.ReadDirectory(SongDirectory, data["SongDirectory"]);
             _osuDbPath = ConfigHelper.ReadPath(OsuDbPath, data["OsuDbPath"]);
-            _autoLoadOsuBeatmaps = ConfigHelper.ReadBool(AutoLoadOsuBeatmaps, data["AutoLoadOsuBeatmaps"]);
+            AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
             _etternaCacheFolderPath = ConfigHelper.ReadDirectory(EtternaCacheFolderPath, data["EtternaCacheFolderPath"]);
-            _autoLoadEtternaCharts = ConfigHelper.ReadBool(AutoLoadEtternaCharts, data["AutoLoadEtternaCharts"]);
+            AutoLoadEtternaCharts = ReadValue(@"AutoLoadEtternaCharts", false, data);
             _username = ConfigHelper.ReadString(Username, data["Username"]);
             _volumeGlobal = ConfigHelper.ReadPercentage(VolumeGlobal, data["VolumeGlobal"]);
             _volumeEffect = ConfigHelper.ReadPercentage(VolumeEffect, data["VolumeEffect"]);
@@ -438,22 +408,20 @@ namespace Quaver.Config
             _backgroundBrightness = ConfigHelper.ReadPercentage(BackgroundBrightness, data["BackgroundBrightness"]);
             _windowHeight = ConfigHelper.ReadInt32(WindowHeight, data["WindowHeight"]);
             _windowWidth = ConfigHelper.ReadInt32(WindowWidth, data["WindowWidth"]);
-            _healthBarPositionTop = ConfigHelper.ReadBool(HealthBarPositionTop, data["HealthBarPositionTop"]);
+            HealthBarPositionTop = ReadValue(@"HealthBarPositionTop", false, data);
             _userHitPositionOffset4k = ConfigHelper.ReadInt32(UserHitPositionOffset4k, data["HitPositionOffset4k"]);
             _userHitPositionOffset7k = ConfigHelper.ReadInt32(UserHitPositionOffset7k, data["HitPositionOffset7k"]);
-            _windowFullScreen = ConfigHelper.ReadBool(WindowFullScreen, data["WindowFullScreen"]);
-            _windowLetterboxed = ConfigHelper.ReadBool(WindowLetterboxed, data["WindowLetterboxed"]);
-            _fpsCounter = ConfigHelper.ReadBool(FpsCounter, data["FpsCounter"]);
+            WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
+            WindowLetterboxed = ReadValue(@"WindowLetterboxed", false, data);
+            FpsCounter = ReadValue(@"FpsCounter", true, data);
             _scrollSpeed4k = ConfigHelper.ReadPercentage(ScrollSpeed4k, data["ScrollSpeed4k"]);
             _scrollSpeed7k = ConfigHelper.ReadPercentage(ScrollSpeed7k, data["ScrollSpeed7k"]);
-            _downScroll4k = ConfigHelper.ReadBool(DownScroll4k, data["DownScroll4k"]);
-            _downScroll7k = ConfigHelper.ReadBool(DownScroll7k, data["DownScroll7k"]);
+            DownScroll4k = ReadValue(@"DownScroll4k", true, data);
+            DownScroll7k = ReadValue(@"DownScroll7k", true, data);
             _globalAudioOffset = ConfigHelper.ReadSignedByte(GlobalAudioOffset, data["GlobalAudioOffset"]);
             _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
             _defaultSkin = ConfigHelper.ReadDefaultSkin(DefaultSkin, data["DefaultSkin"]);
-            Pitched = ReadBoolean(@"Pitched", false, data);
-            _showReleaseCounter = ConfigHelper.ReadBool(_showReleaseCounter, data["ShowReleaseCounter"]);
-            _gradeBarRelative = ConfigHelper.ReadBool(_gradeBarRelative, data["GradeBarRelative"]);
+            Pitched = ReadValue(@"Pitched", false, data);
             _keyMania4k1 = ConfigHelper.ReadKeys(KeyMania4k1, data["KeyMania4k1"]);
             _keyMania4k2 = ConfigHelper.ReadKeys(KeyMania4k2, data["KeyMania4k2"]);
             _keyMania4k3 = ConfigHelper.ReadKeys(KeyMania4k3, data["KeyMania4k3"]);
@@ -481,18 +449,25 @@ namespace Quaver.Config
         }
 
         /// <summary>
-        ///     Reads a Binded bool.
+        ///     Reads a BindedValue<T>. Works on all types.
         /// </summary>
         /// <returns></returns>
-        internal static BindedValue<bool> ReadBoolean(string name, bool defaultVal, KeyDataCollection ini)
+        internal static BindedValue<T> ReadValue<T>(string name, T defaultVal, KeyDataCollection ini)
         {
-            var binded = new BindedValue<bool>(name, AutoSaveConfiguration);
+            var binded = new BindedValue<T>(name, AutoSaveConfiguration);
+            var converter = TypeDescriptor.GetConverter(typeof(T));
 
             // Attempt to parse the bool and default it if it can't.
-            bool val;
-            binded.Value = bool.TryParse(ini[name], out val) ? val : defaultVal;
+            try
+            {
+                binded.Value = (T) converter.ConvertFromString(null, CultureInfo.InvariantCulture, ini[name]);
 
-            BindedStore.Add(binded);     
+            }
+            catch (Exception e)
+            {
+                binded.Value = defaultVal;
+            }
+            
             return binded;
         }
         
@@ -501,7 +476,7 @@ namespace Quaver.Config
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="d"></param>
-        private static void AutoSaveConfiguration(object sender, BindedValueEventArgs<bool> d)
+        private static void AutoSaveConfiguration<T>(object sender, BindedValueEventArgs<T> d)
         {
             Task.Run(async () => await WriteConfigFileAsync());
         }
@@ -526,15 +501,6 @@ namespace Quaver.Config
             sb.AppendLine();
             sb.AppendLine("[Config]");
             sb.AppendLine("; Quaver Configuration Values");
-
-            foreach (var b in BindedStore)
-            {
-                if (b.GetType() == typeof(BindedValue<bool>))
-                {
-                    var bindedBool = (BindedValue<bool>)b;
-                    sb.AppendLine(bindedBool.Name + " = " + bindedBool.Value);
-                }
-            }
             
             // For every line we want to append "PropName = PropValue" to the string
             foreach (var p in typeof(ConfigManager)
@@ -544,7 +510,6 @@ namespace Quaver.Config
                 if (p.Name == "FirstWrite" || p.Name == "BindedBoolStore")
                     continue;
 
-                // Handle writing BindedValues
                 sb.AppendLine(p.Name + " = " + p.GetValue(null));
             }
                

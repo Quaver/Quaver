@@ -331,7 +331,7 @@ namespace Quaver.States.Options
             }
 
             // Create Letterbox Option QuaverButton
-            LetterBoxingButton = new QuaverTextButton(new Vector2(200, 30), $@"Letterboxing: {ConfigManager.WindowLetterboxed}")
+            LetterBoxingButton = new QuaverTextButton(new Vector2(200, 30), $@"Letterboxing: {ConfigManager.WindowLetterboxed.Value}")
             {
                 PosY = 560,
                 PosX = (-1) * 210f,
@@ -394,7 +394,7 @@ namespace Quaver.States.Options
                 Parent = ButtonsContainer
             };
 
-            ScrollDirection7KButton = new QuaverTextButton(new Vector2(200, 30), $@"Downscroll 7K: {ConfigManager.DownScroll7k}")
+            ScrollDirection7KButton = new QuaverTextButton(new Vector2(200, 30), $@"Downscroll 7K: {ConfigManager.DownScroll7k.Value}")
             {
                 PosY = 680,
                 PosX = (-0.5f) * 210f,
@@ -594,18 +594,18 @@ namespace Quaver.States.Options
         /// <param name="e"></param>
         private void OnFullscreenButtonClicked(object sender, EventArgs e)
         {
-            var fullscreen = ConfigManager.WindowFullScreen;
+            var fullscreen = ConfigManager.WindowFullScreen.Value;
             switch (fullscreen)
             {
                 case true:
-                    ConfigManager.WindowFullScreen = false;
+                    ConfigManager.WindowFullScreen.Value = false;
                     break;
                 case false:
-                    ConfigManager.WindowFullScreen = true;
+                    ConfigManager.WindowFullScreen.Value = true;
                     break;
             }
             FullscreenButton.QuaverTextSprite.Text = $@"FullScreen: {ConfigManager.WindowFullScreen}";
-            QuaverGame.ChangeWindow(ConfigManager.WindowFullScreen, ConfigManager.WindowLetterboxed);
+            QuaverGame.ChangeWindow(ConfigManager.WindowFullScreen.Value, ConfigManager.WindowLetterboxed.Value);
             BackgroundManager.Readjust();
         }
 
@@ -616,18 +616,18 @@ namespace Quaver.States.Options
         /// <param name="e"></param>
         private void OnLetterboxButtonClicked(object sender, EventArgs e)
         {
-            var letterboxed = ConfigManager.WindowLetterboxed;
+            var letterboxed = ConfigManager.WindowLetterboxed.Value;
             switch (letterboxed)
             {
                 case true:
-                    ConfigManager.WindowLetterboxed = false;
+                    ConfigManager.WindowLetterboxed.Value = false;
                     break;
                 case false:
-                    ConfigManager.WindowLetterboxed = true;
+                    ConfigManager.WindowLetterboxed.Value = true;
                     break;
             }
-            LetterBoxingButton.QuaverTextSprite.Text = $@"Letterboxing: {ConfigManager.WindowLetterboxed}";
-            QuaverGame.ChangeWindow(ConfigManager.WindowFullScreen, ConfigManager.WindowLetterboxed);
+            LetterBoxingButton.QuaverTextSprite.Text = $@"Letterboxing: {ConfigManager.WindowLetterboxed.Value}";
+            QuaverGame.ChangeWindow(ConfigManager.WindowFullScreen.Value, ConfigManager.WindowLetterboxed.Value);
             BackgroundManager.Readjust();
         }
 
@@ -639,7 +639,7 @@ namespace Quaver.States.Options
         /// <param name="index"></param>
         private void OnResolutionButtonClicked(object sender, EventArgs e, int index)
         {
-            QuaverGame.ChangeWindow(ConfigManager.WindowFullScreen, ConfigManager.WindowLetterboxed, CommonResolutions[index]);
+            QuaverGame.ChangeWindow(ConfigManager.WindowFullScreen.Value, ConfigManager.WindowLetterboxed.Value, CommonResolutions[index]);
             BackgroundManager.Readjust();
             QuaverContainer.SizeX = GameBase.WindowRectangle.Width;
             QuaverContainer.SizeY = GameBase.WindowRectangle.Height;
