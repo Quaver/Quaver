@@ -171,7 +171,7 @@ namespace Quaver.States.Options
 
             ManiaKeys4K = new QuaverKeybindButton[4];
             ManiaEvent4K = new EventHandler[4];
-            var keys = new Keys[4] { ConfigManager.KeyMania4k1.Value, ConfigManager.KeyMania4k2.Value, ConfigManager.KeyMania4k3.Value, ConfigManager.KeyMania4k4.Value };
+            var keys = new Keys[4] { ConfigManager.KeyMania4K1.Value, ConfigManager.KeyMania4K2.Value, ConfigManager.KeyMania4K3.Value, ConfigManager.KeyMania4K4.Value };
             for (var i=0; i<4; i++)
             {
                 //todo: hook this to an event/method or something
@@ -189,7 +189,7 @@ namespace Quaver.States.Options
 
             ManiaKeys7K = new QuaverKeybindButton[7];
             ManiaEvent7K = new EventHandler[7];
-            keys = new Keys[7] { ConfigManager.KeyMania7k1.Value, ConfigManager.KeyMania7k2.Value, ConfigManager.KeyMania7k3.Value, ConfigManager.KeyMania7k4.Value, ConfigManager.KeyMania7k5.Value, ConfigManager.KeyMania7k6.Value, ConfigManager.KeyMania7k7.Value };
+            keys = new Keys[7] { ConfigManager.KeyMania7K1.Value, ConfigManager.KeyMania7K2.Value, ConfigManager.KeyMania7K3.Value, ConfigManager.KeyMania7K4.Value, ConfigManager.KeyMania7K5.Value, ConfigManager.KeyMania7K6.Value, ConfigManager.KeyMania7K7.Value };
             for (var i = 0; i < 7; i++)
             {
                 //todo: hook this to an event/method or something
@@ -377,7 +377,7 @@ namespace Quaver.States.Options
             };
 
             // scroll speed 
-            ScrollSpeedButton = new QuaverTextButton(new Vector2(200, 30), $@"ScrollSpeed: {ConfigManager.ScrollSpeed4k}")
+            ScrollSpeedButton = new QuaverTextButton(new Vector2(200, 30), $@"ScrollSpeed: {ConfigManager.ScrollSpeed4K}")
             {
                 PosY = 680,
                 PosX = (-2.5f) * 210f,
@@ -386,7 +386,7 @@ namespace Quaver.States.Options
             };
 
             // scroll direction
-            ScrollDirection4KButton = new QuaverTextButton(new Vector2(200, 30), $@"Downscroll 4K: {ConfigManager.DownScroll4k}")
+            ScrollDirection4KButton = new QuaverTextButton(new Vector2(200, 30), $@"Downscroll 4K: {ConfigManager.DownScroll4K}")
             {
                 PosY = 680,
                 PosX = (-1.5f) * 210f,
@@ -394,7 +394,7 @@ namespace Quaver.States.Options
                 Parent = ButtonsContainer
             };
 
-            ScrollDirection7KButton = new QuaverTextButton(new Vector2(200, 30), $@"Downscroll 7K: {ConfigManager.DownScroll7k.Value}")
+            ScrollDirection7KButton = new QuaverTextButton(new Vector2(200, 30), $@"Downscroll 7K: {ConfigManager.DownScroll7K.Value}")
             {
                 PosY = 680,
                 PosX = (-0.5f) * 210f,
@@ -499,16 +499,16 @@ namespace Quaver.States.Options
             switch (index)
             {
                 case 0:
-                    ConfigManager.KeyMania4k1.Value = ManiaKeys4K[index].CurrentKey;
+                    ConfigManager.KeyMania4K1.Value = ManiaKeys4K[index].CurrentKey;
                     break;
                 case 1:
-                    ConfigManager.KeyMania4k2.Value = ManiaKeys4K[index].CurrentKey;
+                    ConfigManager.KeyMania4K2.Value = ManiaKeys4K[index].CurrentKey;
                     break;
                 case 2:
-                    ConfigManager.KeyMania4k3.Value = ManiaKeys4K[index].CurrentKey;
+                    ConfigManager.KeyMania4K3.Value = ManiaKeys4K[index].CurrentKey;
                     break;
                 case 3:
-                    ConfigManager.KeyMania4k4.Value = ManiaKeys4K[index].CurrentKey;
+                    ConfigManager.KeyMania4K4.Value = ManiaKeys4K[index].CurrentKey;
                     break;
             }
         }
@@ -524,25 +524,25 @@ namespace Quaver.States.Options
             switch (index)
             {
                 case 0:
-                    ConfigManager.KeyMania7k1.Value = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7K1.Value = ManiaKeys7K[index].CurrentKey;
                     break;
                 case 1:
-                    ConfigManager.KeyMania7k2.Value = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7K2.Value = ManiaKeys7K[index].CurrentKey;
                     break;
                 case 2:
-                    ConfigManager.KeyMania7k3.Value = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7K3.Value = ManiaKeys7K[index].CurrentKey;
                     break;
                 case 3:
-                    ConfigManager.KeyMania7k4.Value = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7K4.Value = ManiaKeys7K[index].CurrentKey;
                     break;
                 case 4:
-                    ConfigManager.KeyMania7k5.Value = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7K5.Value = ManiaKeys7K[index].CurrentKey;
                     break;
                 case 5:
-                    ConfigManager.KeyMania7k6.Value = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7K6.Value = ManiaKeys7K[index].CurrentKey;
                     break;
                 case 6:
-                    ConfigManager.KeyMania7k7.Value = ManiaKeys7K[index].CurrentKey;
+                    ConfigManager.KeyMania7K7.Value = ManiaKeys7K[index].CurrentKey;
                     break;
             }
         }
