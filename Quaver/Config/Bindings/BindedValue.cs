@@ -15,9 +15,9 @@ namespace Quaver.Config.Bindings
         internal EventHandler<BindedValueEventArgs<T>> OnValueChanged;
 
         /// <summary>
-        ///     The binded value string of this property.
+        ///     String'd name of the BindedValue
         /// </summary>
-        internal BindedValueString Name { get; }
+        internal string Name { get; }
 
         /// <summary>
         ///     The containing binded value.
@@ -33,16 +33,21 @@ namespace Quaver.Config.Bindings
             }
         }
 
+        internal BindedValue(string name)
+        {
+            Name = name;
+        }
+        
         /// <summary>
         ///     Constructor that takes in an action to call upon changing the value Bindable.
         /// </summary>
         /// <param name="action"></param>
-        public BindedValue(BindedValueString s, EventHandler<BindedValueEventArgs<T>> action = null)
+        public BindedValue(string name,  EventHandler<BindedValueEventArgs<T>> action)
         {
-            Name = s;
-            
             if (action != null)
                 OnValueChanged += action;
+
+            Name = name;
         }
 
         /// <summary>
@@ -52,7 +57,7 @@ namespace Quaver.Config.Bindings
         /// <exception cref="Exception"></exception>
         public override string ToString()
         {
-            throw new Exception("BindedValues cannot be written to a string!");
+            return Value.ToString();
         }
     }
     

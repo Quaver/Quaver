@@ -68,7 +68,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Config\Bindings\BindableHelper.cs" />
     <Compile Include="Config\Bindings\BindedValue.cs" />
     <Compile Include="Config\Bindings\BindedValueString.cs" />
     <Compile Include="Graphics\Buttons\QuaverSlider.cs" />
