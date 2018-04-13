@@ -28,210 +28,210 @@ namespace Quaver.Config
         ///     These are all values that should never ben
         /// </summary>
          private static string _gameDirectory;
-        internal static BindedValue<string> GameDirectory { get; set; }
+        internal static BindedValue<string> GameDirectory { get; private set; }
 
         /// <summary>
         ///     The skin directory
         /// </summary>
         private static string _skinDirectory;
-        internal static BindedValue<string> SkinDirectory { get; set; }
+        internal static BindedValue<string> SkinDirectory { get; private set; }
 
         /// <summary>
         ///     The screenshot directory
         /// </summary>
         private static string _screenshotDirectory;
-        internal static BindedValue<string> ScreenshotDirectory { get; set; }
+        internal static BindedValue<string> ScreenshotDirectory { get; private set; }
 
         /// <summary>
         ///     The replay directory
         /// </summary>
         private static string _replayDirectory;
-        internal static BindedValue<string> ReplayDirectory { get; set; }
+        internal static BindedValue<string> ReplayDirectory { get; private set; }
 
         /// <summary>
         ///     The Logs directory
         /// </summary>
         private static string _logsDirectory;
-        internal static BindedValue<string> LogsDirectory { get; set; }
+        internal static BindedValue<string> LogsDirectory { get; private set; }
 
         /// <summary>
         ///     The data directory
         /// </summary>
         private static string _dataDirectory;
-        internal static BindedValue<string> DataDirectory { get; set; }
+        internal static BindedValue<string> DataDirectory { get; private set; }
 
         /// <summary>
         ///     The song directory
         /// </summary>
         private static string _songDirectory;
-        internal static BindedValue<string> SongDirectory { get; set; }
+        internal static BindedValue<string> SongDirectory { get; private set; }
 
         /// <summary>
         ///     The username of the user.
         /// </summary>
-        internal static BindedValue<string> Username { get; set; }
+        internal static BindedValue<string> Username { get; private set; }
 
         /// <summary>
         ///     The skin in the Skins directory that is loaded. Default is the only exception, as it'll be overrided.
         /// </summary>
-        internal static BindedValue<string> Skin { get; set; }
+        internal static BindedValue<string> Skin { get; private set; }
 
         /// <summary>
         ///     The default skin that will be loaded if the skin property is blank
         /// </summary>
-        internal static BindedValue<DefaultSkins> DefaultSkin { get; set; }
+        internal static BindedValue<DefaultSkins> DefaultSkin { get; private set; }
 
         /// <summary>
         ///     The master volume of the game.
         /// </summary>
-        internal static BindedInt VolumeGlobal { get; set; }
+        internal static BindedInt VolumeGlobal { get; private set; }
 
         /// <summary>
         ///     The SFX volume of the game.
         /// </summary>
-        internal static BindedInt VolumeEffect { get; set; }
+        internal static BindedInt VolumeEffect { get; private set; }
 
         /// <summary>
         ///     The Music volume of the gamne.
         /// </summary>
-        internal static BindedInt VolumeMusic { get; set; }
+        internal static BindedInt VolumeMusic { get; private set; }
 
         /// <summary>
         ///     The dim for backgrounds during gameplay
         /// </summary>
-        internal static BindedInt BackgroundBrightness { get; set; }
+        internal static BindedInt BackgroundBrightness { get; private set; }
 
 
         /// <summary>
         ///     The height of the window.
         /// </summary>
-        internal static BindedInt WindowHeight { get; set; }
+        internal static BindedInt WindowHeight { get; private set; }
 
         /// <summary>
         ///     The width of the window.
         /// </summary>
-        internal static BindedInt WindowWidth { get; set; }
+        internal static BindedInt WindowWidth { get; private set; }
 
         /// <summary>
         ///     4k Hit Position offset from receptor
         /// </summary>
-        internal static BindedInt UserHitPositionOffset4k { get; set; }
+        internal static BindedInt UserHitPositionOffset4k { get; private set; }
 
         /// <summary>
         ///     7k Hit Position offset from receptor
         /// </summary>
-        internal static BindedInt UserHitPositionOffset7k { get; set; }
+        internal static BindedInt UserHitPositionOffset7k { get; private set; }
 
         /// <summary>
         ///     Is the window fullscreen?
         /// </summary>
-        internal static BindedValue<bool> WindowFullScreen { get; set; }
+        internal static BindedValue<bool> WindowFullScreen { get; private set; }
 
         /// <summary>
         ///     Is the window letterboxed?
         /// </summary>
-        internal static BindedValue<bool> WindowLetterboxed { get; set; }
+        internal static BindedValue<bool> WindowLetterboxed { get; private set; }
 
         /// <summary>
         ///     Should the game display the FPS Counter?
         /// </summary>
-        internal static BindedValue<bool> FpsCounter { get; set; }
+        internal static BindedValue<bool> FpsCounter { get; private set; }
 
         /// <summary>
         ///     Determines if the health bar + multiplier is at top or bottom of the playfield
         /// </summary>
-        internal static BindedValue<bool> HealthBarPositionTop { get; set; }
+        internal static BindedValue<bool> HealthBarPositionTop { get; private set; }
 
         /// <summary>
         ///     The scroll speed for mania 4k
         /// </summary>
-        internal static BindedInt ScrollSpeed4k { get; set; }
+        internal static BindedInt ScrollSpeed4k { get; private set; }
 
         /// <summary>
         ///     The scroll speed for mania 7k
         /// </summary>
-        internal static BindedInt ScrollSpeed7k { get; set; }
+        internal static BindedInt ScrollSpeed7k { get; private set; }
 
         /// <summary>
         ///     Should 4k be played with DownScroll? If false, it's UpScroll
         /// </summary>
-        internal static BindedValue<bool> DownScroll4k { get; set; }
+        internal static BindedValue<bool> DownScroll4k { get; private set; }
 
         /// <summary>
         ///     Should 7k be played with DownScroll? If false, it's UpScroll
         /// </summary>
-        internal static BindedValue<bool> DownScroll7k { get; set; }
+        internal static BindedValue<bool> DownScroll7k { get; private set; }
 
         /// <summary>
         ///     The offset of the notes compared to the song start.
         /// </summary>
-        internal static BindedInt GlobalAudioOffset { get; set; }
+        internal static BindedInt GlobalAudioOffset { get; private set; }
 
         /// <summary>
         ///     Dictates whether or not the song audio is pitched while using the ManiaModSpeed gameplayModifier.
         /// </summary>
-        internal static BindedValue<bool> Pitched { get; set; }
+        internal static BindedValue<bool> Pitched { get; private set; }
 
         /// <summary>
         ///     The path of the osu!.db file
         /// </summary>
-        internal static BindedValue<string> OsuDbPath { get; set; } 
+        internal static BindedValue<string> OsuDbPath { get; private set; } 
 
         /// <summary>
         ///     Dictates where or not we should load osu! maps from osu!.db on game start
         /// </summary>
-        internal static BindedValue<bool> AutoLoadOsuBeatmaps { get; set; }
+        internal static BindedValue<bool> AutoLoadOsuBeatmaps { get; private set; }
 
         /// <summary>
         ///     The path of the Etterna cache folder
         ///     NOTE: Usually located at C:\Games\Etterna\Cache\Songs
         /// </summary>
-        internal static BindedValue<string> EtternaCacheFolderPath { get; set; }
+        internal static BindedValue<string> EtternaCacheFolderPath { get; private set; }
 
         /// <summary>
         ///     Dictates whether or not the game will be loaded with all of the Etterna maps
         /// </summary>
-        internal static BindedValue<bool> AutoLoadEtternaCharts { get; set; }
+        internal static BindedValue<bool> AutoLoadEtternaCharts { get; private set; }
 
         /// <summary>
         ///     Keybindings for 4K
         /// </summary>
-        internal static BindedValue<Keys> KeyMania4k1 { get; set; }
-        internal static BindedValue<Keys> KeyMania4k2 { get; set; }
-        internal static BindedValue<Keys> KeyMania4k3 { get; set; }
-        internal static BindedValue<Keys> KeyMania4k4 { get; set; }
+        internal static BindedValue<Keys> KeyMania4k1 { get; private set; }
+        internal static BindedValue<Keys> KeyMania4k2 { get; private set; }
+        internal static BindedValue<Keys> KeyMania4k3 { get; private set; }
+        internal static BindedValue<Keys> KeyMania4k4 { get; private set; }
 
         /// <summary>
         ///     Keybindings for 7K
         /// </summary>
-        internal static BindedValue<Keys> KeyMania7k1 { get; set; }
-        internal static BindedValue<Keys> KeyMania7k2 { get; set; }
-        internal static BindedValue<Keys> KeyMania7k3 { get; set; }
-        internal static BindedValue<Keys> KeyMania7k4 { get; set; }
-        internal static BindedValue<Keys> KeyMania7k5 { get; set; }
-        internal static BindedValue<Keys> KeyMania7k6 { get; set; }
-        internal static BindedValue<Keys> KeyMania7k7 { get; set; }
+        internal static BindedValue<Keys> KeyMania7k1 { get; private set; }
+        internal static BindedValue<Keys> KeyMania7k2 { get; private set; }
+        internal static BindedValue<Keys> KeyMania7k3 { get; private set; }
+        internal static BindedValue<Keys> KeyMania7k4 { get; private set; }
+        internal static BindedValue<Keys> KeyMania7k5 { get; private set; }
+        internal static BindedValue<Keys> KeyMania7k6 { get; private set; }
+        internal static BindedValue<Keys> KeyMania7k7 { get; private set; }
 
 
         /// <summary>
         ///     The key pressed to pause and menu-back.
         /// </summary>
-        internal static BindedValue<Keys> KeyPause { get; set; }
+        internal static BindedValue<Keys> KeyPause { get; private set; }
 
         /// <summary>
         ///     The key pressed to skip the song introduction
         /// </summary>
-        internal static BindedValue<Keys> KeySkipIntro { get; set; }
+        internal static BindedValue<Keys> KeySkipIntro { get; private set; }
 
         /// <summary>
         ///     The key to take a screenshot of the game window.
         /// </summary>
-        internal static BindedValue<Keys> KeyTakeScreenshot { get; set; }
+        internal static BindedValue<Keys> KeyTakeScreenshot { get; private set; }
 
         /// <summary>
         ///     The key to toggle the overlay
         /// </summary>
-        internal static BindedValue<Keys> KeyToggleOverlay { get; set; }
+        internal static BindedValue<Keys> KeyToggleOverlay { get; private set; }
 
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
