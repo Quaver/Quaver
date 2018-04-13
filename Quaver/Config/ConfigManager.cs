@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
@@ -27,7 +28,7 @@ namespace Quaver.Config
         /// <summary>
         ///     These are all values that should never ben
         /// </summary>
-         private static string _gameDirectory;
+        private static string _gameDirectory;
         internal static BindedValue<string> GameDirectory { get; private set; }
 
         /// <summary>
@@ -100,7 +101,6 @@ namespace Quaver.Config
         ///     The dim for backgrounds during gameplay
         /// </summary>
         internal static BindedInt BackgroundBrightness { get; private set; }
-
 
         /// <summary>
         ///     The height of the window.
@@ -246,7 +246,7 @@ namespace Quaver.Config
         ///     This should be the one of the first things that is called upon game launch.
         /// </summary>
         internal static void InitializeConfig()
-        {
+        {            
             // When initializing, we manually set the directory fields rather than the props,
             // because we only want to write the config file one time at this stage.
             // Usually when a property is modified, it will automatically write the config file again,
@@ -289,13 +289,15 @@ namespace Quaver.Config
         {
             // We'll want to write a quaver.cfg file if it doesn't already exist.
             // There's no need to read the config file afterwards, since we already have 
-            // all of the default values.
+            // all of the default values.            
             if (!File.Exists(_gameDirectory + "/quaver.cfg"))
-                File.WriteAllText(_gameDirectory + "/quaver.cfg", "; Quaver Configiration File");
+                File.WriteAllText(_gameDirectory + "/quaver.cfg", "; Quaver Configuration File");
             
             var data = new FileIniDataParser().ReadFile(_gameDirectory + "/quaver.cfg")["Config"];
 
             // Read / Set Config Values
+            // NOTE: MAKE SURE TO SET THE VALUE TO AUTO-SAVE WHEN CHANGING! THIS ISN'T DONE AUTOMATICALLY.
+            // YOU CAN DO THIS DOWN BELOW, AFTER THE CONFIG HAS WRITTEN FOR THE FIRST TIME.
             GameDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"GameDirectory", _gameDirectory, data);
             SkinDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SkinDirectory", _skinDirectory, data);
             ScreenshotDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"ScreenshotDirectory", _screenshotDirectory, data);
@@ -315,30 +317,30 @@ namespace Quaver.Config
             WindowHeight = ReadInt(@"WindowHeight", 720, 600, short.MaxValue, data);
             WindowWidth = ReadInt(@"WindowWidth", 1280, 800, short.MaxValue, data);
             HealthBarPositionTop = ReadValue(@"HealthBarPositionTop", false, data);
-            UserHitPositionOffset4K = ReadInt(@"UserHitPositionOffset4k", 0, 0, byte.MaxValue, data);
-            UserHitPositionOffset7K = ReadInt(@"UserHitPositionOffset7k", 0, 0, byte.MaxValue, data);
+            UserHitPositionOffset4K = ReadInt(@"UserHitPositionOffset4K", 0, 0, byte.MaxValue, data);
+            UserHitPositionOffset7K = ReadInt(@"UserHitPositionOffset7K", 0, 0, byte.MaxValue, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             WindowLetterboxed = ReadValue(@"WindowLetterboxed", false, data);
             FpsCounter = ReadValue(@"FpsCounter", true, data);
-            ScrollSpeed4K = ReadInt(@"ScrollSpeed4k", 15, 1, 60, data);
-            ScrollSpeed7K = ReadInt(@"ScrollSpeed7k", 15, 1, 60, data);
-            DownScroll4K = ReadValue(@"DownScroll4k", true, data);
-            DownScroll7K = ReadValue(@"DownScroll7k", true, data);
+            ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 1, 60, data);
+            ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 1, 60, data);
+            DownScroll4K = ReadValue(@"DownScroll4K", true, data);
+            DownScroll7K = ReadValue(@"DownScroll7K", true, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, 0, byte.MaxValue, data);
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Arrow, data);
             Pitched = ReadValue(@"Pitched", false, data);
-            KeyMania4K1 = ReadValue(@"KeyMania4k1", Keys.A, data);
-            KeyMania4K2 = ReadValue(@"KeyMania4k2", Keys.S, data);
-            KeyMania4K3 = ReadValue(@"KeyMania4k3", Keys.K, data);
-            KeyMania4K4 = ReadValue(@"KeyMania4k4", Keys.L, data);
-            KeyMania7K1 = ReadValue(@"KeyMania7k1", Keys.A, data);
-            KeyMania7K2 = ReadValue(@"KeyMania7k2", Keys.S, data);
-            KeyMania7K3 = ReadValue(@"KeyMania7k3", Keys.D, data);
-            KeyMania7K4 = ReadValue(@"KeyMania7k4", Keys.Space, data);
-            KeyMania7K5 = ReadValue(@"KeyMania7k5", Keys.J, data);
-            KeyMania7K6 = ReadValue(@"KeyMania7k6", Keys.K, data);
-            KeyMania7K7 = ReadValue(@"KeyMania7k7", Keys.L, data);
+            KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
+            KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
+            KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
+            KeyMania4K4 = ReadValue(@"KeyMania4K4", Keys.L, data);
+            KeyMania7K1 = ReadValue(@"KeyMania7K1", Keys.A, data);
+            KeyMania7K2 = ReadValue(@"KeyMania7K2", Keys.S, data);
+            KeyMania7K3 = ReadValue(@"KeyMania7K3", Keys.D, data);
+            KeyMania7K4 = ReadValue(@"KeyMania7K4", Keys.Space, data);
+            KeyMania7K5 = ReadValue(@"KeyMania7K5", Keys.J, data);
+            KeyMania7K6 = ReadValue(@"KeyMania7K6", Keys.K, data);
+            KeyMania7K7 = ReadValue(@"KeyMania7K7", Keys.L, data);
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
             KeyTakeScreenshot = ReadValue(@"KeyTakeScreenshot", Keys.F12, data);
@@ -350,7 +352,58 @@ namespace Quaver.Config
             GameBase.AudioEngine.MusicVolume = VolumeMusic.Value;
             
             // Write the config file with all of the changed/invalidated data.
-            Task.Run(async () => await WriteConfigFileAsync());
+            Task.Run(async () => await WriteConfigFileAsync())
+                .ContinueWith(t =>
+                {
+                    // SET AUTO-SAVE FUNCTIONALITY FOR EACH BINDED VALUE.
+                    GameDirectory.OnValueChanged += AutoSaveConfiguration;
+                    SkinDirectory.OnValueChanged += AutoSaveConfiguration;
+                    ScreenshotDirectory.OnValueChanged += AutoSaveConfiguration;
+                    ReplayDirectory.OnValueChanged += AutoSaveConfiguration;
+                    LogsDirectory.OnValueChanged += AutoSaveConfiguration;
+                    DataDirectory.OnValueChanged += AutoSaveConfiguration;
+                    SongDirectory.OnValueChanged += AutoSaveConfiguration;
+                    OsuDbPath.OnValueChanged += AutoSaveConfiguration;
+                    AutoLoadOsuBeatmaps.OnValueChanged += AutoSaveConfiguration;
+                    EtternaCacheFolderPath.OnValueChanged += AutoSaveConfiguration;
+                    AutoLoadEtternaCharts.OnValueChanged += AutoSaveConfiguration;
+                    Username.OnValueChanged += AutoSaveConfiguration;
+                    VolumeGlobal.OnValueChanged += AutoSaveConfiguration;
+                    VolumeEffect.OnValueChanged += AutoSaveConfiguration;
+                    VolumeMusic.OnValueChanged += AutoSaveConfiguration;
+                    BackgroundBrightness.OnValueChanged += AutoSaveConfiguration;
+                    WindowHeight.OnValueChanged += AutoSaveConfiguration;
+                    WindowWidth.OnValueChanged += AutoSaveConfiguration;
+                    HealthBarPositionTop.OnValueChanged += AutoSaveConfiguration;
+                    UserHitPositionOffset4K.OnValueChanged += AutoSaveConfiguration;
+                    UserHitPositionOffset7K.OnValueChanged += AutoSaveConfiguration;
+                    WindowFullScreen.OnValueChanged += AutoSaveConfiguration;
+                    WindowLetterboxed.OnValueChanged += AutoSaveConfiguration;
+                    FpsCounter.OnValueChanged += AutoSaveConfiguration;
+                    ScrollSpeed4K.OnValueChanged += AutoSaveConfiguration;
+                    ScrollSpeed7K.OnValueChanged += AutoSaveConfiguration;
+                    DownScroll4K.OnValueChanged += AutoSaveConfiguration;
+                    DownScroll4K.OnValueChanged += AutoSaveConfiguration;
+                    GlobalAudioOffset.OnValueChanged += AutoSaveConfiguration;
+                    Skin.OnValueChanged += AutoSaveConfiguration;
+                    DefaultSkin.OnValueChanged += AutoSaveConfiguration;
+                    Pitched.OnValueChanged += AutoSaveConfiguration;
+                    KeyMania4K1.OnValueChanged += AutoSaveConfiguration;
+                    KeyMania4K2.OnValueChanged += AutoSaveConfiguration;
+                    KeyMania4K3.OnValueChanged += AutoSaveConfiguration;
+                    KeyMania4K4.OnValueChanged += AutoSaveConfiguration;
+                    KeyMania7K1.OnValueChanged += AutoSaveConfiguration;
+                    KeyMania7K2.OnValueChanged += AutoSaveConfiguration;
+                    KeyMania7K3.OnValueChanged += AutoSaveConfiguration;
+                    KeyMania7K4.OnValueChanged += AutoSaveConfiguration;
+                    KeyMania7K5.OnValueChanged += AutoSaveConfiguration;
+                    KeyMania7K6.OnValueChanged += AutoSaveConfiguration;
+                    KeyMania7K7.OnValueChanged += AutoSaveConfiguration;
+                    KeySkipIntro.OnValueChanged += AutoSaveConfiguration;
+                    KeyPause.OnValueChanged += AutoSaveConfiguration;
+                    KeyTakeScreenshot.OnValueChanged += AutoSaveConfiguration;
+                    KeyToggleOverlay.OnValueChanged += AutoSaveConfiguration;
+                });
         }
 
         /// <summary>
@@ -359,7 +412,7 @@ namespace Quaver.Config
         /// <returns></returns>
         private static BindedValue<T> ReadValue<T>(string name, T defaultVal, KeyDataCollection ini)
         {
-            var binded = new BindedValue<T>(name, defaultVal, AutoSaveConfiguration);
+            var binded = new BindedValue<T>(name, defaultVal);
             var converter = TypeDescriptor.GetConverter(typeof(T));
 
             // Attempt to parse the value and default it if it can't.
@@ -386,7 +439,7 @@ namespace Quaver.Config
         /// <returns></returns>
         private static BindedInt ReadInt(string name, int defaultVal, int min, int max, KeyDataCollection ini)
         {
-            var binded = new BindedInt(name, defaultVal, min, max, AutoSaveConfiguration);
+            var binded = new BindedInt(name, defaultVal, min, max);
 
             // Try to read the int.
             try
@@ -400,7 +453,7 @@ namespace Quaver.Config
 
             return binded;
         }
-        
+                
         /// <summary>
         ///     Reads a special configuration string type. These values need to be read and written in a
         ///     certain way.
@@ -408,7 +461,7 @@ namespace Quaver.Config
         /// <returns></returns>
         private static BindedValue<string> ReadSpecialConfigType(SpecialConfigType type, string name, string defaultVal, KeyDataCollection ini)
         {
-             var binded = new BindedValue<string>(name, defaultVal, AutoSaveConfiguration);
+             var binded = new BindedValue<string>(name, defaultVal);
 
             try
             {
@@ -452,7 +505,7 @@ namespace Quaver.Config
         }
         
         /// <summary>
-        ///     Autosaves configuration for bindable bools.
+        ///     Config Autosave functionality for BindedValue<T>
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="d"></param>
@@ -471,33 +524,35 @@ namespace Quaver.Config
             var attempts = 0;
 
             // Don't do anything if the file isn't ready.
-            while (!IsFileReady(GameDirectory + "/quaver.cfg") && !FirstWrite){}
+            while (!IsFileReady(GameDirectory + "/quaver.cfg") && !FirstWrite)
+            {
+            }
 
             var sb = new StringBuilder();
 
             // Top file information
-            sb.AppendLine("; Quaver Configuration File");
+            // sb.AppendLine("; Quaver Configuration File");
             sb.AppendLine("; Last Updated On: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             sb.AppendLine();
             sb.AppendLine("[Config]");
             sb.AppendLine("; Quaver Configuration Values");
             
             // For every line we want to append "PropName = PropValue" to the string
-            foreach (var p in typeof(ConfigManager)
-                .GetProperties(BindingFlags.Static | BindingFlags.NonPublic))
+            foreach (var prop in typeof(ConfigManager).GetProperties(BindingFlags.Static | BindingFlags.NonPublic))
             {
-                // Don't include the FirstWrite Property
-                if (p.Name == "FirstWrite" || p.Name == "BindedBoolStore")
+                if (prop.Name == "FirstWrite")
                     continue;
-
-                if (p.GetType() == typeof(BindedInt))
+                    
+                try
                 {
-                    Console.WriteLine("BINDED INT!!! ");
+                    sb.AppendLine(prop.Name + " = " + prop.GetValue(null));
                 }
-
-                sb.AppendLine(p.Name + " = " + p.GetValue(null));
+                catch (Exception e)
+                {
+                    sb.AppendLine(prop.Name + " = ");
+                }
             }
-               
+            
             try
             {
                 // Create a new stream 
@@ -506,7 +561,7 @@ namespace Quaver.Config
                     AutoFlush = true
                 };
 
-                // Write to file and close it.
+                // Write to file and close it.;
                 await sw.WriteLineAsync(sb.ToString());
                 sw.Close();
 
