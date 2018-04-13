@@ -63,7 +63,7 @@ namespace Quaver.Discord
                 {
                     details = "Idle",
                     largeImageKey = "quaver",
-                    largeImageText = ConfigManager.Username
+                    largeImageText = ConfigManager.Username.Value
                 };
 
                 GameBase.DiscordRichPresencedInited = true;

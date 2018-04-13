@@ -64,7 +64,7 @@ namespace Quaver.Main
         public static void UpdateWindow(Point newSize)
         {
             // NOTE: Unfinished
-            GameBase.WindowRectangle = new DrawRectangle(0, 0, ConfigManager.WindowWidth, ConfigManager.WindowHeight);
+            GameBase.WindowRectangle = new DrawRectangle(0, 0, ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
             GameBase.MainRenderTarget = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
             //Rectangle mainWindow = GraphicsDevice.PresentationParameters.Bounds;
 

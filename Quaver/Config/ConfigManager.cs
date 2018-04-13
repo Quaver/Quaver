@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -8,85 +9,77 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using IniParser;
 using IniParser.Model;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Main;
 using SQLitePCL;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Config
 {
     internal static class ConfigManager
     {        
         /// <summary>
-        ///     Dictates whether or not this is the first write of the file for the current game session.
-        ///     (Not saved in Config)
-        /// </summary>
-        private static bool FirstWrite { get; set; }
-
-        /// <summary>
         ///     These are all values that should never ben
         /// </summary>
-        private static string _gameDirectory;
-        internal static string GameDirectory { get => _gameDirectory; set { _gameDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+         private static string _gameDirectory;
+        internal static BindedValue<string> GameDirectory { get; set; }
 
         /// <summary>
         ///     The skin directory
         /// </summary>
         private static string _skinDirectory;
-        internal static string SkinDirectory { get => _skinDirectory; set { _skinDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<string> SkinDirectory { get; set; }
 
         /// <summary>
         ///     The screenshot directory
         /// </summary>
         private static string _screenshotDirectory;
-        internal static string ScreenshotDirectory { get => _screenshotDirectory; set { _screenshotDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<string> ScreenshotDirectory { get; set; }
 
         /// <summary>
         ///     The replay directory
         /// </summary>
         private static string _replayDirectory;
-        internal static string ReplayDirectory { get => _replayDirectory; set { _replayDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<string> ReplayDirectory { get; set; }
 
         /// <summary>
         ///     The Logs directory
         /// </summary>
         private static string _logsDirectory;
-        internal static string LogsDirectory { get => _logsDirectory; set { _logsDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<string> LogsDirectory { get; set; }
 
         /// <summary>
         ///     The data directory
         /// </summary>
         private static string _dataDirectory;
-        internal static string DataDirectory { get => _dataDirectory; set { _dataDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<string> DataDirectory { get; set; }
 
         /// <summary>
         ///     The song directory
         /// </summary>
         private static string _songDirectory;
-        internal static string SongDirectory { get => _songDirectory; set { _songDirectory = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<string> SongDirectory { get; set; }
 
         /// <summary>
         ///     The username of the user.
         /// </summary>
-        private static string _username = "";
-        internal static string Username { get => _username; set { _username = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<string> Username { get; set; }
 
         /// <summary>
         ///     The skin in the Skins directory that is loaded. Default is the only exception, as it'll be overrided.
         /// </summary>
-        private static string _skin = "";
-        internal static string Skin { get => _skin; set { _skin = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<string> Skin { get; set; }
 
         /// <summary>
         ///     The default skin that will be loaded if the skin property is blank
         /// </summary>
-        private static DefaultSkins _defaultSkin = DefaultSkins.Arrow;
-        internal static DefaultSkins DefaultSkin { get => _defaultSkin; set { _defaultSkin = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<DefaultSkins> DefaultSkin { get; set; }
 
         /// <summary>
         ///     The master volume of the game.
@@ -96,44 +89,38 @@ namespace Quaver.Config
         /// <summary>
         ///     The SFX volume of the game.
         /// </summary>
-        private static byte _volumeEffect = 100;
-        internal static byte VolumeEffect { get => _volumeEffect; set { _volumeEffect = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedInt VolumeEffect { get; set; }
 
         /// <summary>
         ///     The Music volume of the gamne.
         /// </summary>
-        private static byte _volumeMusic = 30;
-        internal static byte VolumeMusic{ get => _volumeMusic; set { _volumeMusic = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedInt VolumeMusic { get; set; }
 
         /// <summary>
         ///     The dim for backgrounds during gameplay
         /// </summary>
-        private static byte _backgroundBrightness = 20;
-        internal static byte BackgroundBrightness { get => _backgroundBrightness; set { _backgroundBrightness = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedInt BackgroundBrightness { get; set; }
+
 
         /// <summary>
         ///     The height of the window.
         /// </summary>
-        private static int _windowHeight = 900;
-        internal static int WindowHeight { get => _windowHeight; set { _windowHeight = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedInt WindowHeight { get; set; }
 
         /// <summary>
         ///     The width of the window.
         /// </summary>
-        private static int _windowWidth = 1600;
-        internal static int WindowWidth { get => _windowWidth; set{ _windowWidth = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedInt WindowWidth { get; set; }
 
         /// <summary>
         ///     4k Hit Position offset from receptor
         /// </summary>
-        private static int _userHitPositionOffset4k = 0;
-        internal static int UserHitPositionOffset4k { get => _userHitPositionOffset4k; set { _userHitPositionOffset4k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedInt UserHitPositionOffset4k { get; set; }
 
         /// <summary>
         ///     7k Hit Position offset from receptor
         /// </summary>
-        private static int _userHitPositionOffset7k = 0;
-        internal static int UserHitPositionOffset7k { get => _userHitPositionOffset7k; set { _userHitPositionOffset7k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedInt UserHitPositionOffset7k { get; set; }
 
         /// <summary>
         ///     Is the window fullscreen?
@@ -158,14 +145,12 @@ namespace Quaver.Config
         /// <summary>
         ///     The scroll speed for mania 4k
         /// </summary>
-        private static byte _scrollSpeed4k = 20;
-        internal static byte ScrollSpeed4k { get => _scrollSpeed4k; set { _scrollSpeed4k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedInt ScrollSpeed4k { get; set; }
 
         /// <summary>
         ///     The scroll speed for mania 7k
         /// </summary>
-        private static byte _scrollSpeed7k = 20;
-        internal static byte ScrollSpeed7k { get => _scrollSpeed7k; set { _scrollSpeed7k = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedInt ScrollSpeed7k { get; set; }
 
         /// <summary>
         ///     Should 4k be played with DownScroll? If false, it's UpScroll
@@ -180,8 +165,7 @@ namespace Quaver.Config
         /// <summary>
         ///     The offset of the notes compared to the song start.
         /// </summary>
-        private static sbyte _globalAudioOffset;
-        internal static sbyte GlobalAudioOffset { get => _globalAudioOffset; set { _globalAudioOffset = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedInt GlobalAudioOffset { get; set; }
 
         /// <summary>
         ///     Dictates whether or not the song audio is pitched while using the ManiaModSpeed gameplayModifier.
@@ -191,8 +175,7 @@ namespace Quaver.Config
         /// <summary>
         ///     The path of the osu!.db file
         /// </summary>
-        private static string _osuDbPath;
-        internal static string OsuDbPath { get => _osuDbPath; set { _osuDbPath = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<string> OsuDbPath { get; set; } 
 
         /// <summary>
         ///     Dictates where or not we should load osu! maps from osu!.db on game start
@@ -203,8 +186,7 @@ namespace Quaver.Config
         ///     The path of the Etterna cache folder
         ///     NOTE: Usually located at C:\Games\Etterna\Cache\Songs
         /// </summary>
-        private static string _etternaCacheFolderPath = @"C:\Games\Etterna\Cache\Songs\";
-        internal static string EtternaCacheFolderPath { get => _etternaCacheFolderPath; set { _etternaCacheFolderPath = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<string> EtternaCacheFolderPath { get; set; }
 
         /// <summary>
         ///     Dictates whether or not the game will be loaded with all of the Etterna maps
@@ -212,130 +194,56 @@ namespace Quaver.Config
         internal static BindedValue<bool> AutoLoadEtternaCharts { get; set; }
 
         /// <summary>
-        ///     The key pressed for lane 1
+        ///     Keybindings for 4K
         /// </summary>
-        private static Keys _keyMania4k1 = Keys.A;
-        internal static Keys KeyMania4k1 { get => _keyMania4k1; set { _keyMania4k1 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<Keys> KeyMania4k1 { get; set; }
+        internal static BindedValue<Keys> KeyMania4k2 { get; set; }
+        internal static BindedValue<Keys> KeyMania4k3 { get; set; }
+        internal static BindedValue<Keys> KeyMania4k4 { get; set; }
 
         /// <summary>
-        ///     The key pressed for lane 2
+        ///     Keybindings for 7K
         /// </summary>
-        private static Keys _keyMania4k2 = Keys.S;
-        internal static Keys KeyMania4k2 { get => _keyMania4k2; set { _keyMania4k2 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<Keys> KeyMania7k1 { get; set; }
+        internal static BindedValue<Keys> KeyMania7k2 { get; set; }
+        internal static BindedValue<Keys> KeyMania7k3 { get; set; }
+        internal static BindedValue<Keys> KeyMania7k4 { get; set; }
+        internal static BindedValue<Keys> KeyMania7k5 { get; set; }
+        internal static BindedValue<Keys> KeyMania7k6 { get; set; }
+        internal static BindedValue<Keys> KeyMania7k7 { get; set; }
 
-        /// <summary>
-        ///     The key pressed for lane 3
-        /// </summary>
-        private static Keys _keyMania4k3 = Keys.K;
-        internal static Keys KeyMania4k3 { get => _keyMania4k3; set { _keyMania4k3 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     The key pressed for lane 4
-        /// </summary>
-        private static Keys _keyMania4k4 = Keys.L;
-        internal static Keys KeyMania4k4 { get => _keyMania4k4; set { _keyMania4k4 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     The key pressed for lane 1 - 7k
-        /// </summary>
-        private static Keys _keyMania7k1 = Keys.A;
-        internal static Keys KeyMania7k1 { get => _keyMania7k1; set { _keyMania7k1 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     The key pressed for lane 2 - 7k
-        /// </summary>
-        private static Keys _keyMania7k2 = Keys.S;
-        internal static Keys KeyMania7k2 { get => _keyMania7k2; set { _keyMania7k2 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     The key pressed for lane 3 - 7k
-        /// </summary>
-        private static Keys _keyMania7k3 = Keys.D;
-        internal static Keys KeyMania7k3 { get => _keyMania7k3; set { _keyMania7k3 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     The key pressed for lane 4 - 7k
-        /// </summary>
-        private static Keys _keyMania7k4 = Keys.Space;
-        internal static Keys KeyMania7k4 { get => _keyMania7k4; set { _keyMania7k4 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     The key pressed for lane 5 - 7k
-        /// </summary>
-        private static Keys _keyMania7k5 = Keys.J;
-        internal static Keys KeyMania7k5 { get => _keyMania7k5; set { _keyMania7k5 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     The key pressed for lane 6 - 7k
-        /// </summary>
-        private static Keys _keyMania7k6 = Keys.K;
-        internal static Keys KeyMania7k6 { get => _keyMania7k6; set { _keyMania7k6 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     The key pressed for lane 7 - 7k
-        /// </summary>
-        private static Keys _keyMania7k7 = Keys.L;
-        internal static Keys KeyMania7k7 { get => _keyMania7k7; set { _keyMania7k7 = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     The key pressed to quickly retry the song during gameplay
-        /// </summary>
-        private static Keys _keyQuickRetry = Keys.OemTilde;
-        internal static Keys KeyQuickRetry { get => _keyQuickRetry; set { _keyQuickRetry = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     The key pressed to increase the scroll speed during gameplay.
-        /// </summary>
-        private static Keys _keyIncreaseScrollSpeed = Keys.F4;
-        internal static Keys KeyIncreaseScrollSpeed { get => _keyIncreaseScrollSpeed; set { _keyIncreaseScrollSpeed = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     The key pressed to decrease the scroll speed during gameplay.
-        /// </summary>
-        private static Keys _keyDecreaseScrollSpeed = Keys.F3;
-        internal static Keys KeyDecreaseScrollSpeed { get => _keyDecreaseScrollSpeed; set { _keyDecreaseScrollSpeed = value; Task.Run(async () => await WriteConfigFileAsync()); } }
 
         /// <summary>
         ///     The key pressed to pause and menu-back.
         /// </summary>
-        private static Keys _keyPause = Keys.Escape;
-        internal static Keys KeyPause { get => _keyPause; set { _keyPause = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     The key pressed to turn the volume up.
-        /// </summary>
-        private static Keys _keyVolumeUp = Keys.Up;
-        internal static Keys KeyVolumeUp { get => _keyVolumeUp; set { _keyVolumeUp = value; Task.Run(async () => await WriteConfigFileAsync()); } }
-
-        /// <summary>
-        ///     The key pressed to turn the volume down
-        /// </summary>
-        private static Keys _keyVolumeDown = Keys.Down;
-        internal static Keys KeyVolumeDown { get => _keyVolumeDown; set { _keyVolumeDown = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<Keys> KeyPause { get; set; }
 
         /// <summary>
         ///     The key pressed to skip the song introduction
         /// </summary>
-        private static Keys _keySkipIntro = Keys.Space;
-        internal static Keys KeySkipIntro { get => _keySkipIntro; set { _keySkipIntro = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<Keys> KeySkipIntro { get; set; }
 
         /// <summary>
         ///     The key to take a screenshot of the game window.
         /// </summary>
-        private static Keys _keyTakeScreenshot = Keys.F12;
-        internal static Keys KeyTakeScreenshot { get => _keyTakeScreenshot; set { _keyTakeScreenshot = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<Keys> KeyTakeScreenshot { get; set; }
 
         /// <summary>
         ///     The key to toggle the overlay
         /// </summary>
-        private static Keys _keyToggleOverlay = Keys.F8;
-        internal static Keys KeyToggleOverlay { get => _keyToggleOverlay; set { _keyToggleOverlay = value; Task.Run(async () => await WriteConfigFileAsync()); } }
+        internal static BindedValue<Keys> KeyToggleOverlay { get; set; }
+
+        /// <summary>
+        ///     Dictates whether or not this is the first write of the file for the current game session.
+        ///     (Not saved in Config)
+        /// </summary>
+        private static bool FirstWrite { get; set; }
 
         /// <summary>
         ///     Important!
         ///     Responsible for initializing directory properties,
         ///     writing a new config file if it doesn't exist and also reading config files.
-        ///     This should be the one of the first things that is called upon launch.
+        ///     This should be the one of the first things that is called upon game launch.
         /// </summary>
         internal static void InitializeConfig()
         {
@@ -345,31 +253,31 @@ namespace Quaver.Config
             // so that's what we're preventing here.
             _gameDirectory = Directory.GetCurrentDirectory();
 
-            _skinDirectory = GameDirectory + "/Skins";
-            Directory.CreateDirectory(SkinDirectory);
+            _skinDirectory = _gameDirectory + "/Skins";
+            Directory.CreateDirectory(_skinDirectory);
 
-            _screenshotDirectory = GameDirectory + "/Screenshots";
-            Directory.CreateDirectory(ScreenshotDirectory);
+            _screenshotDirectory = _gameDirectory + "/Screenshots";
+            Directory.CreateDirectory(_screenshotDirectory);
 
-            _logsDirectory = GameDirectory + "/Logs";
-            Directory.CreateDirectory(LogsDirectory);
+            _logsDirectory = _gameDirectory + "/Logs";
+            Directory.CreateDirectory(_logsDirectory);
 
-            _replayDirectory = GameDirectory + "/Replays";
-            Directory.CreateDirectory(ReplayDirectory);
+            _replayDirectory = _gameDirectory + "/Replays";
+            Directory.CreateDirectory(_replayDirectory);
 
-            _dataDirectory = GameDirectory + "/Data";
-            Directory.CreateDirectory(DataDirectory);
-            // Create data directory to store all of the game's replays.
-            Directory.CreateDirectory(DataDirectory + "/r/");
+            _dataDirectory = _gameDirectory + "/Data";
+            Directory.CreateDirectory(_dataDirectory);
+            Directory.CreateDirectory(_dataDirectory + "/r/");
 
-            _songDirectory = GameDirectory + "/Songs";
-            Directory.CreateDirectory(SongDirectory);
-
-            Logger.CreateLogFile();
+            _songDirectory = _gameDirectory + "/Songs";
+            Directory.CreateDirectory(_songDirectory);
 
             // If we already have a config file, we'll just want to read that.
             ReadConfigFile();
-
+    
+            // Create log files after reading config.
+            Logger.CreateLogFile();
+            
             Logger.LogSuccess("Config file has successfully been read.", LogType.Runtime);
         }
 
@@ -382,68 +290,64 @@ namespace Quaver.Config
             // We'll want to write a quaver.cfg file if it doesn't already exist.
             // There's no need to read the config file afterwards, since we already have 
             // all of the default values.
-            if (!File.Exists(GameDirectory + "/quaver.cfg"))
-                File.WriteAllText(GameDirectory + "/quaver.cfg", "; Quaver Configiration File");
+            if (!File.Exists(_gameDirectory + "/quaver.cfg"))
+                File.WriteAllText(_gameDirectory + "/quaver.cfg", "; Quaver Configiration File");
             
-            var data = new FileIniDataParser().ReadFile(GameDirectory + "/quaver.cfg")["Config"];
+            var data = new FileIniDataParser().ReadFile(_gameDirectory + "/quaver.cfg")["Config"];
 
-            // Validate and set the parsed values.
-            // We use the fields here because since we're reading multiple fields, 
-            // we don't want to save the config file more than once whereas if we were using the props.
-            _gameDirectory = ConfigHelper.ReadDirectory(GameDirectory, data["GameDirectory"]);
-            _skinDirectory = ConfigHelper.ReadDirectory(SkinDirectory, data["SkinDirectory"]);
-            _screenshotDirectory = ConfigHelper.ReadDirectory(ScreenshotDirectory, data["ScreenshotDirectory"]);
-            _replayDirectory = ConfigHelper.ReadDirectory(ReplayDirectory, data["ReplayDirectory"]);
-            _logsDirectory = ConfigHelper.ReadDirectory(LogsDirectory, data["LogsDirectory"]);
-            _dataDirectory = ConfigHelper.ReadDirectory(DataDirectory, data["DataDirectory"]);
-            _songDirectory = ConfigHelper.ReadDirectory(SongDirectory, data["SongDirectory"]);
-            _osuDbPath = ConfigHelper.ReadPath(OsuDbPath, data["OsuDbPath"]);
+            // Read / Set Config Values
+            GameDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"GameDirectory", _gameDirectory, data);
+            SkinDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SkinDirectory", _skinDirectory, data);
+            ScreenshotDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"ScreenshotDirectory", _screenshotDirectory, data);
+            ReplayDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"ReplayDirectory", _replayDirectory, data);
+            LogsDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"LogsDirectory", _logsDirectory, data);
+            DataDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"DataDirectory", _dataDirectory, data);
+            SongDirectory = ReadSpecialConfigType(SpecialConfigType.Directory, @"SongDirectory", _songDirectory, data);
+            OsuDbPath = ReadSpecialConfigType(SpecialConfigType.Path, @"OsuDbPath", "", data);
             AutoLoadOsuBeatmaps = ReadValue(@"AutoLoadOsuBeatmaps", false, data);
-            _etternaCacheFolderPath = ConfigHelper.ReadDirectory(EtternaCacheFolderPath, data["EtternaCacheFolderPath"]);
+            EtternaCacheFolderPath = ReadSpecialConfigType(SpecialConfigType.Path, @"EtternaCacheFolderPath", "", data);
             AutoLoadEtternaCharts = ReadValue(@"AutoLoadEtternaCharts", false, data);
-            _username = ConfigHelper.ReadString(Username, data["Username"]);
+            Username = ReadValue(@"Username", "", data);
             VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
-            _volumeEffect = ConfigHelper.ReadPercentage(VolumeEffect, data["VolumeEffect"]);
-            _volumeMusic = ConfigHelper.ReadPercentage(VolumeMusic, data["VolumeMusic"]);
-            _backgroundBrightness = ConfigHelper.ReadPercentage(BackgroundBrightness, data["BackgroundBrightness"]);
-            _windowHeight = ConfigHelper.ReadInt32(WindowHeight, data["WindowHeight"]);
-            _windowWidth = ConfigHelper.ReadInt32(WindowWidth, data["WindowWidth"]);
+            VolumeEffect = ReadInt(@"VolumeEffect", 80, 0, 100, data);
+            VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
+            BackgroundBrightness = ReadInt(@"BackgroundBrightness", 30, 0, 100, data);
+            WindowHeight = ReadInt(@"WindowHeight", 720, 600, short.MaxValue, data);
+            WindowWidth = ReadInt(@"WindowWidth", 1280, 800, short.MaxValue, data);
             HealthBarPositionTop = ReadValue(@"HealthBarPositionTop", false, data);
-            _userHitPositionOffset4k = ConfigHelper.ReadInt32(UserHitPositionOffset4k, data["HitPositionOffset4k"]);
-            _userHitPositionOffset7k = ConfigHelper.ReadInt32(UserHitPositionOffset7k, data["HitPositionOffset7k"]);
+            UserHitPositionOffset4k = ReadInt(@"UserHitPositionOffset4k", 0, 0, byte.MaxValue, data);
+            UserHitPositionOffset7k = ReadInt(@"UserHitPositionOffset7k", 0, 0, byte.MaxValue, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             WindowLetterboxed = ReadValue(@"WindowLetterboxed", false, data);
             FpsCounter = ReadValue(@"FpsCounter", true, data);
-            _scrollSpeed4k = ConfigHelper.ReadPercentage(ScrollSpeed4k, data["ScrollSpeed4k"]);
-            _scrollSpeed7k = ConfigHelper.ReadPercentage(ScrollSpeed7k, data["ScrollSpeed7k"]);
+            ScrollSpeed4k = ReadInt(@"ScrollSpeed4k", 15, 1, 60, data);
+            ScrollSpeed7k = ReadInt(@"ScrollSpeed7k", 15, 1, 60, data);
             DownScroll4k = ReadValue(@"DownScroll4k", true, data);
             DownScroll7k = ReadValue(@"DownScroll7k", true, data);
-            _globalAudioOffset = ConfigHelper.ReadSignedByte(GlobalAudioOffset, data["GlobalAudioOffset"]);
-            _skin = ConfigHelper.ReadSkin(Skin, data["Skin"]);
-            _defaultSkin = ConfigHelper.ReadDefaultSkin(DefaultSkin, data["DefaultSkin"]);
+            GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, 0, byte.MaxValue, data);
+            Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
+            DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Arrow, data);
             Pitched = ReadValue(@"Pitched", false, data);
-            _keyMania4k1 = ConfigHelper.ReadKeys(KeyMania4k1, data["KeyMania4k1"]);
-            _keyMania4k2 = ConfigHelper.ReadKeys(KeyMania4k2, data["KeyMania4k2"]);
-            _keyMania4k3 = ConfigHelper.ReadKeys(KeyMania4k3, data["KeyMania4k3"]);
-            _keyMania4k4 = ConfigHelper.ReadKeys(KeyMania4k4, data["KeyMania4k4"]);
-            _keyMania7k1 = ConfigHelper.ReadKeys(KeyMania7k1, data["KeyMania7k1"]);
-            _keyMania7k2 = ConfigHelper.ReadKeys(KeyMania7k2, data["KeyMania7k2"]);
-            _keyMania7k3 = ConfigHelper.ReadKeys(KeyMania7k3, data["KeyMania7k3"]);
-            _keyMania7k4 = ConfigHelper.ReadKeys(KeyMania7k4, data["KeyMania7k4"]);
-            _keyMania7k5 = ConfigHelper.ReadKeys(KeyMania7k5, data["KeyMania7k5"]);
-            _keyMania7k6 = ConfigHelper.ReadKeys(KeyMania7k6, data["KeyMania7k6"]);
-            _keyMania7k7 = ConfigHelper.ReadKeys(KeyMania7k7, data["KeyMania7k7"]);
-            _keyQuickRetry = ConfigHelper.ReadKeys(KeyQuickRetry, data["KeyQuickRetry"]);
-            _keyIncreaseScrollSpeed = ConfigHelper.ReadKeys(KeyIncreaseScrollSpeed, data["KeyIncreaseScrollSpeed"]);
-            _keyDecreaseScrollSpeed = ConfigHelper.ReadKeys(KeyDecreaseScrollSpeed, data["KeyDecreaseScrollSpeed"]);
-            _keySkipIntro = ConfigHelper.ReadKeys(KeySkipIntro, data["KeySkipIntro"]);
-            _keyTakeScreenshot = ConfigHelper.ReadKeys(KeyTakeScreenshot, data["KeyTakeScreenshot"]);
-            _keyToggleOverlay = ConfigHelper.ReadKeys(KeyToggleOverlay, data["KeyToggleOverlay"]);
+            KeyMania4k1 = ReadValue(@"KeyMania4k1", Keys.A, data);
+            KeyMania4k2 = ReadValue(@"KeyMania4k2", Keys.S, data);
+            KeyMania4k3 = ReadValue(@"KeyMania4k3", Keys.K, data);
+            KeyMania4k4 = ReadValue(@"KeyMania4k4", Keys.L, data);
+            KeyMania7k1 = ReadValue(@"KeyMania7k1", Keys.A, data);
+            KeyMania7k2 = ReadValue(@"KeyMania7k2", Keys.S, data);
+            KeyMania7k3 = ReadValue(@"KeyMania7k3", Keys.D, data);
+            KeyMania7k4 = ReadValue(@"KeyMania7k4", Keys.Space, data);
+            KeyMania7k5 = ReadValue(@"KeyMania7k5", Keys.J, data);
+            KeyMania7k6 = ReadValue(@"KeyMania7k6", Keys.K, data);
+            KeyMania7k7 = ReadValue(@"KeyMania7k7", Keys.L, data);
+            KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
+            KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
+            KeyTakeScreenshot = ReadValue(@"KeyTakeScreenshot", Keys.F12, data);
+            KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
 
             // Set Master and Sound Effect Volume
             SoundEffect.MasterVolume = VolumeGlobal.Value / 100f;
             GameBase.AudioEngine.MasterVolume = VolumeGlobal.Value;
-            GameBase.AudioEngine.MusicVolume = VolumeMusic;
+            GameBase.AudioEngine.MusicVolume = VolumeMusic.Value;
             
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync());
@@ -458,7 +362,7 @@ namespace Quaver.Config
             var binded = new BindedValue<T>(name, defaultVal, AutoSaveConfiguration);
             var converter = TypeDescriptor.GetConverter(typeof(T));
 
-            // Attempt to parse the bool and default it if it can't.
+            // Attempt to parse the value and default it if it can't.
             try
             {
                 binded.Value = (T) converter.ConvertFromString(null, CultureInfo.InvariantCulture, ini[name]);
@@ -498,6 +402,56 @@ namespace Quaver.Config
         }
         
         /// <summary>
+        ///     Reads a special configuration string type. These values need to be read and written in a
+        ///     certain way.
+        /// </summary>
+        /// <returns></returns>
+        private static BindedValue<string> ReadSpecialConfigType(SpecialConfigType type, string name, string defaultVal, KeyDataCollection ini)
+        {
+             var binded = new BindedValue<string>(name, defaultVal, AutoSaveConfiguration);
+
+            try
+            {
+                // Get parsed config value.
+                var parsedVal = ini[name];
+                
+                switch (type)
+                {
+                    case SpecialConfigType.Directory:
+                        if (Directory.Exists(parsedVal))
+                            binded.Value = parsedVal;
+                        else
+                        {
+                            // Make sure the default directory is created.
+                            Directory.CreateDirectory(defaultVal);
+                            throw new ArgumentException();
+                        }
+                        break;
+                    case SpecialConfigType.Path:
+                        if (File.Exists(parsedVal))
+                            binded.Value = parsedVal;
+                        else
+                            throw new ArgumentException();
+                        break;
+                    case SpecialConfigType.Skin:
+                        if (Directory.Exists(SkinDirectory + "/" + parsedVal))
+                            binded.Value = parsedVal;
+                        else
+                            throw new ArgumentException();
+                        break;
+                    default:
+                        throw new InvalidEnumArgumentException();
+                }
+            }
+            catch (Exception e)
+            {
+                binded.Value = defaultVal;
+            }
+
+            return binded;
+        }
+        
+        /// <summary>
         ///     Autosaves configuration for bindable bools.
         /// </summary>
         /// <param name="sender"></param>
@@ -511,7 +465,7 @@ namespace Quaver.Config
         ///     Takes all of the current values from the ConfigManager class and creates a file with them.
         ///     This will automatically be called whenever a configuration value is changed in the code.
         /// </summary>
-        internal static async Task WriteConfigFileAsync()
+        private static async Task WriteConfigFileAsync()
         {
             // Tracks the number of attempts to write the file it has made. 
             var attempts = 0;
@@ -587,7 +541,7 @@ namespace Quaver.Config
         /// </summary>
         /// <param name="sFilename"></param>
         /// <returns></returns>
-        public static bool IsFileReady(string sFilename)
+        private static bool IsFileReady(string sFilename)
         {
             // If the file can be opened for exclusive access it means that the file
             // is no longer locked by another process.
@@ -603,6 +557,17 @@ namespace Quaver.Config
         }
     }
 
+    /// <summary>
+    ///     Enum containing special config types. We want to read and default these in
+    ///     a very particular way.
+    /// </summary>
+    internal enum SpecialConfigType
+    {
+        Directory,
+        Path,
+        Skin
+    }
+    
     /// <summary>
     ///     Enum containing a number representation of the default skins we have available
     /// </summary>

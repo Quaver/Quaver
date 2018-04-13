@@ -121,7 +121,7 @@ namespace Quaver.Main
         /// <summary>
         ///     The rectangle this game will be rendered onto
         /// </summary>
-        public static DrawRectangle WindowRectangle { get; set; } = new DrawRectangle(0, 0, ConfigManager.WindowWidth, ConfigManager.WindowHeight);
+        public static DrawRectangle WindowRectangle { get; set; } = new DrawRectangle(0, 0, ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
 
         /// <summary>
         ///     WindowHeight / WindowWidth ratio

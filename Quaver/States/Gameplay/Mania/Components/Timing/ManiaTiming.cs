@@ -70,7 +70,7 @@ namespace Quaver.States.Gameplay.Mania.Components.Timing
             //_activeBarObjects = new GameObject[maxNoteCount];
 
             //Add offset after the last note
-            PlayingEndOffset = Qua.FindSongLength(GameBase.SelectedMap.Qua) + (AudioEngine.BassDelayOffset - ConfigManager.GlobalAudioOffset + SONG_END_OFFSET) * GameBase.AudioEngine.PlaybackRate;
+            PlayingEndOffset = Qua.FindSongLength(GameBase.SelectedMap.Qua) + (AudioEngine.BassDelayOffset - ConfigManager.GlobalAudioOffset.Value + SONG_END_OFFSET) * GameBase.AudioEngine.PlaybackRate;
 
             //Create ManiaTiming bars
             //_barQueue = new List<ManiaTimingObject>();
@@ -136,7 +136,7 @@ namespace Quaver.States.Gameplay.Mania.Components.Timing
         internal double GetCurrentSongTime()
         {
             //Add global offset to actual song time
-            return ActualSongTime + (AudioEngine.BassDelayOffset - ConfigManager.GlobalAudioOffset) * GameBase.AudioEngine.PlaybackRate;
+            return ActualSongTime + (AudioEngine.BassDelayOffset - ConfigManager.GlobalAudioOffset.Value) * GameBase.AudioEngine.PlaybackRate;
         }
 
         internal ulong[] GetSVCalc(List<ManiaTimingObject> svQueue)
