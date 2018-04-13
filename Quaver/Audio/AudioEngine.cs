@@ -70,7 +70,7 @@ namespace Quaver.Audio
         /// <summary>
         ///     The volume of all sound effects.
         /// </summary>
-        internal float EffectVolume => ConfigManager.VolumeEffect / 100f;
+        internal float EffectVolume => ConfigManager.VolumeEffect.Value / 100f;
 
         /// <summary>
         ///     The rate at which the audio stream will play at.
@@ -129,7 +129,7 @@ namespace Quaver.Audio
 
             // Set volume
             MasterVolume = ConfigManager.VolumeGlobal.Value;
-            MusicVolume = ConfigManager.VolumeMusic;
+            MusicVolume = ConfigManager.VolumeMusic.Value;
 
             Bass.ChannelPlay(Stream);
             HasPlayed = true;

@@ -29,11 +29,11 @@ namespace Quaver.Config
             {
                 if (value < MinValue)
                     _value = MinValue;
-
-                if (value > MaxValue)
+                else if (value > MaxValue)
                     _value = MaxValue;
-
-                _value = value;
+                else
+                    _value = value;
+                 
                 OnValueChanged?.Invoke(this, new BindedValueEventArgs<int>(value));
             }
         }
