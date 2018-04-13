@@ -67,11 +67,11 @@ namespace Quaver.Graphics.Particles.Gameplay
             {
                 case GameModes.Keys4:
                     HitBurstQuaverSprite.Image = GameBase.LoadedSkin.NoteHitEffects4K[keyLane];
-                    HitBurstQuaverSprite.SpriteEffect = !Config.ConfigManager.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None;
+                    HitBurstQuaverSprite.SpriteEffect = !Config.ConfigManager.DownScroll4k.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None;
                     break;
                 case GameModes.Keys7:
                     HitBurstQuaverSprite.Image = GameBase.LoadedSkin.NoteHitEffects7K[keyLane];
-                    HitBurstQuaverSprite.SpriteEffect = !Config.ConfigManager.DownScroll7k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None;
+                    HitBurstQuaverSprite.SpriteEffect = !Config.ConfigManager.DownScroll7k.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None;
                     break;
             }
         }

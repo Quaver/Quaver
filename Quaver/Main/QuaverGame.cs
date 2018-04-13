@@ -34,7 +34,7 @@ namespace Quaver.Main
             {
                 PreferredBackBufferWidth = Config.ConfigManager.WindowWidth,
                 PreferredBackBufferHeight = Config.ConfigManager.WindowHeight,
-                IsFullScreen = Config.ConfigManager.WindowFullScreen,
+                IsFullScreen = ConfigManager.WindowFullScreen.Value,
                 SynchronizeWithVerticalRetrace = false // Turns off vsync
             };
 
@@ -147,7 +147,7 @@ namespace Quaver.Main
             GameBase.MouseState = Mouse.GetState();
 
             // Update FpsCounter
-            if (Config.ConfigManager.FpsCounter)
+            if (ConfigManager.FpsCounter.Value)
                 QuaverFpsCounter.Count(dt);
 
             // Update Background from Background Manager
@@ -184,7 +184,7 @@ namespace Quaver.Main
 
             Logger.Draw(dt);
 
-            if (Config.ConfigManager.FpsCounter)
+            if (ConfigManager.FpsCounter.Value)
                 QuaverFpsCounter.Draw();
 
             GameBase.SpriteBatch.End();

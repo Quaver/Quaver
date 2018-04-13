@@ -53,10 +53,10 @@ namespace Quaver.Database.Maps
                 var maps = await FetchAllMaps();
                 Logger.LogSuccess($"{maps.Count} maps have been successfully loaded.", LogType.Runtime);
 
-                if (ConfigManager.AutoLoadOsuBeatmaps)
+                if (ConfigManager.AutoLoadOsuBeatmaps.Value)
                     maps = maps.Concat(LoadMapsFromOsuDb()).ToList();
 
-                if (ConfigManager.AutoLoadEtternaCharts)
+                if (ConfigManager.AutoLoadEtternaCharts.Value)
                     maps = maps.Concat(LoadMapsFromEtternaCache()).ToList();
 
                 var mapsets = MapsetHelper.ConvertMapsToMapsets(maps);
