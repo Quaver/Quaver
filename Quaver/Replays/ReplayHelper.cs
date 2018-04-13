@@ -117,42 +117,42 @@ namespace Quaver.Replays
             {
                 case GameModes.Keys4:
                     // Key 1
-                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania4k1))
+                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania4k1.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K1;
 
                     // Key 2
-                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania4k2))
+                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania4k2.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K2;
 
                     // Key 3
-                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania4k3))
+                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania4k3.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K3;
 
                     // Key 4
-                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania4k4))
+                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania4k4.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K4;
                     break;
                 case GameModes.Keys7:
                     // Key 1
-                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k1))
+                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k1.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K1;
                     // Key 2
-                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k2))
+                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k2.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K2;
                     // Key 3
-                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k3))
+                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k3.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K3;
                     // Key 4
-                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k4))
+                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k4.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K4;
                     // Key 5
-                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k5))
+                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k5.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K5;
                     // Key 6
-                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k6))
+                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k6.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K6;
                     // Key 7
-                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k7))
+                    if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7k7.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K7;
                     break;
                 default:

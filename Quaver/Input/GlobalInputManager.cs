@@ -99,14 +99,14 @@ namespace Quaver.Input
         {
             if (GameOverlayButtonIsDown)
             {
-                if (GameBase.KeyboardState.IsKeyUp(ConfigManager.KeyToggleOverlay))
+                if (GameBase.KeyboardState.IsKeyUp(ConfigManager.KeyToggleOverlay.Value))
                 {
                     GameOverlayButtonIsDown = false;
                 }
             }
             else
             {
-                if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyToggleOverlay))
+                if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyToggleOverlay.Value))
                 {
                     GameOverlayButtonIsDown = true;
                     GameOverlayToggled?.Invoke(this, null);
@@ -174,14 +174,14 @@ namespace Quaver.Input
         /// </summary>
         private void TakeScreenshot()
         {
-            if (GameBase.KeyboardState.IsKeyUp(ConfigManager.KeyTakeScreenshot))
+            if (GameBase.KeyboardState.IsKeyUp(ConfigManager.KeyTakeScreenshot.Value))
                 CurrentlyTakingScreenshot = false;
 
             // Prevent spamming. Don't run if we're already taking a screenshot.
             if (CurrentlyTakingScreenshot)
                 return;
 
-            if (!GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyTakeScreenshot))
+            if (!GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyTakeScreenshot.Value))
                 return;
 
             CurrentlyTakingScreenshot = true;
@@ -190,7 +190,7 @@ namespace Quaver.Input
             GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundScreenshot);
 
             // Create path for file
-            var path = Config.ConfigManager.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyy-MM-dd HHmmssfff") + ".jpg";
+            var path = ConfigManager.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyy-MM-dd HHmmssfff") + ".jpg";
 
             // Get Window Bounds
             var bounds = GameBase.GraphicsDevice.PresentationParameters.Bounds;

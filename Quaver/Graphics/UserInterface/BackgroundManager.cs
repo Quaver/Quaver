@@ -112,7 +112,7 @@ namespace Quaver.Graphics.UserInterface
         public static void Readjust()
         {
             TintReady = true;
-            Brightness = ConfigManager.BackgroundBrightness / 100f;
+            Brightness = ConfigManager.BackgroundBrightness.Value / 100f;
 
             var bgYRatio = ((float)Background.Image.Height / Background.Image.Width) / (GameBase.WindowRectangle.Height / GameBase.WindowRectangle.Width);
             if (bgYRatio > 1)
@@ -136,7 +136,7 @@ namespace Quaver.Graphics.UserInterface
             TintReady = false;
 
             // Update Background Color
-            Brightness = ConfigManager.BackgroundBrightness / 100f;
+            Brightness = ConfigManager.BackgroundBrightness.Value / 100f;
             TargetColor = Vector3.One * Brightness;
             CurrentColor = Vector3.Zero;
         }

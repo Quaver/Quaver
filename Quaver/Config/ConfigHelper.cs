@@ -14,7 +14,7 @@ namespace Quaver.Config
     /// <summary>
     /// Helper class for any methods that are used for reading config files.
     /// </summary>
-    public class ConfigHelper
+    internal static class ConfigHelper
     {
         /// <summary>
         ///     Reads a string and checks if it's a valid directory.
@@ -230,12 +230,12 @@ namespace Quaver.Config
         /// <summary>
         ///     Reads a DefaultSkin 
         /// </summary>
-        /// <param name="defaultSkin"></param>
+        /// <param name="defaultSkins"></param>
         /// <param name="s"></param>
         /// <returns></returns>
-        internal static DefaultSkins ReadDefaultSkin(DefaultSkins defaultSkin, string newVal)
+        internal static DefaultSkins ReadDefaultSkin(DefaultSkins defaultSkins, string newVal)
         {
-            return Enum.TryParse(newVal, out DefaultSkins newDefault) ? newDefault : defaultSkin;
+            return Enum.TryParse(newVal, out DefaultSkins newDefault) ? newDefault : defaultSkins;
         }
     }
 }

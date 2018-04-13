@@ -32,8 +32,8 @@ namespace Quaver.Main
             // Set the global graphics device manager & set Window width & height.
             GameBase.GraphicsManager = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = Config.ConfigManager.WindowWidth,
-                PreferredBackBufferHeight = Config.ConfigManager.WindowHeight,
+                PreferredBackBufferWidth = Config.ConfigManager.WindowWidth.Value,
+                PreferredBackBufferHeight = Config.ConfigManager.WindowHeight.Value,
                 IsFullScreen = ConfigManager.WindowFullScreen.Value,
                 SynchronizeWithVerticalRetrace = false // Turns off vsync
             };
@@ -228,8 +228,8 @@ namespace Quaver.Main
             // Change Resolution
             if (resolution != null)
             {
-                ConfigManager.WindowWidth = resolution.Value.X;
-                ConfigManager.WindowHeight = resolution.Value.Y;
+                ConfigManager.WindowWidth.Value = resolution.Value.X;
+                ConfigManager.WindowHeight.Value = resolution.Value.Y;
                 GameBase.GraphicsManager.PreferredBackBufferWidth = resolution.Value.X;
                 GameBase.GraphicsManager.PreferredBackBufferHeight = resolution.Value.Y;
                 GameBase.WindowRectangle = new DrawRectangle(0, 0, resolution.Value.X, resolution.Value.Y);

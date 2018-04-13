@@ -354,18 +354,18 @@ namespace Quaver.States.Gameplay.Mania
                     Console.WriteLine(ManiaPlayfield.ColumnLightingPosition);
 
                     // Update Note Manager
-                    ManiaNoteManager.ScrollSpeed = GameBase.WindowUIScale * ConfigManager.ScrollSpeed4k / (20f * GameBase.AudioEngine.PlaybackRate);
+                    ManiaNoteManager.ScrollSpeed = GameBase.WindowUIScale * ConfigManager.ScrollSpeed4k.Value / (20f * GameBase.AudioEngine.PlaybackRate);
                     ManiaNoteManager.DownScroll = ConfigManager.DownScroll4k.Value;
                     ManiaNoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale;
                     ManiaNoteManager.HitPositionOffset = Config.ConfigManager.DownScroll4k.Value
-                        ? ManiaPlayfield.ReceptorYPosition + ((ConfigManager.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
-                        : ManiaPlayfield.ReceptorYPosition - ((ConfigManager.UserHitPositionOffset4k + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
+                        ? ManiaPlayfield.ReceptorYPosition + ((ConfigManager.UserHitPositionOffset4k.Value + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
+                        : ManiaPlayfield.ReceptorYPosition - ((ConfigManager.UserHitPositionOffset4k.Value + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
                         * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
                         - ((double)GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
 
                     // Update Score Manager
-                    ManiaScoreManager.ScrollSpeed = ConfigManager.ScrollSpeed4k;
+                    ManiaScoreManager.ScrollSpeed = ConfigManager.ScrollSpeed4k.Value;
                     break;
                 case GameModes.Keys7:
                     // Calculate References
@@ -387,18 +387,18 @@ namespace Quaver.States.Gameplay.Mania
                         - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
 
                     // Update Note Manager
-                    ManiaNoteManager.ScrollSpeed = GameBase.WindowUIScale * ConfigManager.ScrollSpeed7k / (20f * GameBase.AudioEngine.PlaybackRate);
+                    ManiaNoteManager.ScrollSpeed = GameBase.WindowUIScale * ConfigManager.ScrollSpeed7k.Value / (20f * GameBase.AudioEngine.PlaybackRate);
                     ManiaNoteManager.DownScroll = ConfigManager.DownScroll7k.Value;
                     ManiaNoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale;
                     ManiaNoteManager.HitPositionOffset = Config.ConfigManager.DownScroll7k.Value
-                        ? ManiaPlayfield.ReceptorYPosition + ((ConfigManager.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
-                        : ManiaPlayfield.ReceptorYPosition - ((ConfigManager.UserHitPositionOffset7k + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
+                        ? ManiaPlayfield.ReceptorYPosition + ((ConfigManager.UserHitPositionOffset7k.Value + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
+                        : ManiaPlayfield.ReceptorYPosition - ((ConfigManager.UserHitPositionOffset7k.Value + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
                         * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
                         - ((double)GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
 
                     // Update Score Manager
-                    ManiaScoreManager.ScrollSpeed = ConfigManager.ScrollSpeed7k;
+                    ManiaScoreManager.ScrollSpeed = ConfigManager.ScrollSpeed7k.Value;
                     break;
             }
 
@@ -620,7 +620,7 @@ namespace Quaver.States.Gameplay.Mania
         /// <param name="e"></param>
         public void SkipSong(object sender, EventArgs e)
         {
-            if (!IntroSkippable || !GameBase.KeyboardState.IsKeyDown(ConfigManager.KeySkipIntro) || IntroSkipped)
+            if (!IntroSkippable || !GameBase.KeyboardState.IsKeyDown(ConfigManager.KeySkipIntro.Value) || IntroSkipped)
                 return;
 
             var skipTime = GameBase.SelectedMap.Qua.HitObjects[0].StartTime - ManiaTiming.SONG_SKIP_OFFSET + AudioEngine.BassDelayOffset;
