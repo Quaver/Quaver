@@ -1,7 +1,11 @@
 ﻿using System;
 
-namespace Quaver.Config.Bindings
+namespace Quaver.Config
 {
+    /// <inheritdoc />
+    /// <summary>
+    ///     Bindable Int32 value. Contains extra stuff such as Max/Min values.
+    /// </summary>
     internal class BindedInt : BindedValue<int>
     {
         /// <summary>
