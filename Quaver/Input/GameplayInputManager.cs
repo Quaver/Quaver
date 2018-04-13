@@ -45,10 +45,10 @@ namespace Quaver.Input
         /// </summary>
         private List<Keys> LaneKeys { get; } = new List<Keys>()
         {
-            ConfigManager.KeyMania4k1.Value,
-            ConfigManager.KeyMania4k2.Value,
-            ConfigManager.KeyMania4k3.Value,
-            ConfigManager.KeyMania4k4.Value
+            ConfigManager.KeyMania4K1.Value,
+            ConfigManager.KeyMania4K2.Value,
+            ConfigManager.KeyMania4K3.Value,
+            ConfigManager.KeyMania4K4.Value
         };
 
         /// <summary>
@@ -56,13 +56,13 @@ namespace Quaver.Input
         /// </summary>
         private List<Keys> LaneKeys7K { get; } = new List<Keys>()
         {
-            ConfigManager.KeyMania7k1.Value,
-            ConfigManager.KeyMania7k2.Value,
-            ConfigManager.KeyMania7k3.Value,
-            ConfigManager.KeyMania7k4.Value,
-            ConfigManager.KeyMania7k5.Value,
-            ConfigManager.KeyMania7k6.Value,
-            ConfigManager.KeyMania7k7.Value
+            ConfigManager.KeyMania7K1.Value,
+            ConfigManager.KeyMania7K2.Value,
+            ConfigManager.KeyMania7K3.Value,
+            ConfigManager.KeyMania7K4.Value,
+            ConfigManager.KeyMania7K5.Value,
+            ConfigManager.KeyMania7K6.Value,
+            ConfigManager.KeyMania7K7.Value
         };
 
         /// <summary>

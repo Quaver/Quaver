@@ -115,12 +115,12 @@ namespace Quaver.Config
         /// <summary>
         ///     4k Hit Position offset from receptor
         /// </summary>
-        internal static BindedInt UserHitPositionOffset4k { get; private set; }
+        internal static BindedInt UserHitPositionOffset4K { get; private set; }
 
         /// <summary>
         ///     7k Hit Position offset from receptor
         /// </summary>
-        internal static BindedInt UserHitPositionOffset7k { get; private set; }
+        internal static BindedInt UserHitPositionOffset7K { get; private set; }
 
         /// <summary>
         ///     Is the window fullscreen?
@@ -145,22 +145,22 @@ namespace Quaver.Config
         /// <summary>
         ///     The scroll speed for mania 4k
         /// </summary>
-        internal static BindedInt ScrollSpeed4k { get; private set; }
+        internal static BindedInt ScrollSpeed4K { get; private set; }
 
         /// <summary>
         ///     The scroll speed for mania 7k
         /// </summary>
-        internal static BindedInt ScrollSpeed7k { get; private set; }
+        internal static BindedInt ScrollSpeed7K { get; private set; }
 
         /// <summary>
         ///     Should 4k be played with DownScroll? If false, it's UpScroll
         /// </summary>
-        internal static BindedValue<bool> DownScroll4k { get; private set; }
+        internal static BindedValue<bool> DownScroll4K { get; private set; }
 
         /// <summary>
         ///     Should 7k be played with DownScroll? If false, it's UpScroll
         /// </summary>
-        internal static BindedValue<bool> DownScroll7k { get; private set; }
+        internal static BindedValue<bool> DownScroll7K { get; private set; }
 
         /// <summary>
         ///     The offset of the notes compared to the song start.
@@ -196,21 +196,21 @@ namespace Quaver.Config
         /// <summary>
         ///     Keybindings for 4K
         /// </summary>
-        internal static BindedValue<Keys> KeyMania4k1 { get; private set; }
-        internal static BindedValue<Keys> KeyMania4k2 { get; private set; }
-        internal static BindedValue<Keys> KeyMania4k3 { get; private set; }
-        internal static BindedValue<Keys> KeyMania4k4 { get; private set; }
+        internal static BindedValue<Keys> KeyMania4K1 { get; private set; }
+        internal static BindedValue<Keys> KeyMania4K2 { get; private set; }
+        internal static BindedValue<Keys> KeyMania4K3 { get; private set; }
+        internal static BindedValue<Keys> KeyMania4K4 { get; private set; }
 
         /// <summary>
         ///     Keybindings for 7K
         /// </summary>
-        internal static BindedValue<Keys> KeyMania7k1 { get; private set; }
-        internal static BindedValue<Keys> KeyMania7k2 { get; private set; }
-        internal static BindedValue<Keys> KeyMania7k3 { get; private set; }
-        internal static BindedValue<Keys> KeyMania7k4 { get; private set; }
-        internal static BindedValue<Keys> KeyMania7k5 { get; private set; }
-        internal static BindedValue<Keys> KeyMania7k6 { get; private set; }
-        internal static BindedValue<Keys> KeyMania7k7 { get; private set; }
+        internal static BindedValue<Keys> KeyMania7K1 { get; private set; }
+        internal static BindedValue<Keys> KeyMania7K2 { get; private set; }
+        internal static BindedValue<Keys> KeyMania7K3 { get; private set; }
+        internal static BindedValue<Keys> KeyMania7K4 { get; private set; }
+        internal static BindedValue<Keys> KeyMania7K5 { get; private set; }
+        internal static BindedValue<Keys> KeyMania7K6 { get; private set; }
+        internal static BindedValue<Keys> KeyMania7K7 { get; private set; }
 
 
         /// <summary>
@@ -315,30 +315,30 @@ namespace Quaver.Config
             WindowHeight = ReadInt(@"WindowHeight", 720, 600, short.MaxValue, data);
             WindowWidth = ReadInt(@"WindowWidth", 1280, 800, short.MaxValue, data);
             HealthBarPositionTop = ReadValue(@"HealthBarPositionTop", false, data);
-            UserHitPositionOffset4k = ReadInt(@"UserHitPositionOffset4k", 0, 0, byte.MaxValue, data);
-            UserHitPositionOffset7k = ReadInt(@"UserHitPositionOffset7k", 0, 0, byte.MaxValue, data);
+            UserHitPositionOffset4K = ReadInt(@"UserHitPositionOffset4k", 0, 0, byte.MaxValue, data);
+            UserHitPositionOffset7K = ReadInt(@"UserHitPositionOffset7k", 0, 0, byte.MaxValue, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             WindowLetterboxed = ReadValue(@"WindowLetterboxed", false, data);
             FpsCounter = ReadValue(@"FpsCounter", true, data);
-            ScrollSpeed4k = ReadInt(@"ScrollSpeed4k", 15, 1, 60, data);
-            ScrollSpeed7k = ReadInt(@"ScrollSpeed7k", 15, 1, 60, data);
-            DownScroll4k = ReadValue(@"DownScroll4k", true, data);
-            DownScroll7k = ReadValue(@"DownScroll7k", true, data);
+            ScrollSpeed4K = ReadInt(@"ScrollSpeed4k", 15, 1, 60, data);
+            ScrollSpeed7K = ReadInt(@"ScrollSpeed7k", 15, 1, 60, data);
+            DownScroll4K = ReadValue(@"DownScroll4k", true, data);
+            DownScroll7K = ReadValue(@"DownScroll7k", true, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, 0, byte.MaxValue, data);
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Arrow, data);
             Pitched = ReadValue(@"Pitched", false, data);
-            KeyMania4k1 = ReadValue(@"KeyMania4k1", Keys.A, data);
-            KeyMania4k2 = ReadValue(@"KeyMania4k2", Keys.S, data);
-            KeyMania4k3 = ReadValue(@"KeyMania4k3", Keys.K, data);
-            KeyMania4k4 = ReadValue(@"KeyMania4k4", Keys.L, data);
-            KeyMania7k1 = ReadValue(@"KeyMania7k1", Keys.A, data);
-            KeyMania7k2 = ReadValue(@"KeyMania7k2", Keys.S, data);
-            KeyMania7k3 = ReadValue(@"KeyMania7k3", Keys.D, data);
-            KeyMania7k4 = ReadValue(@"KeyMania7k4", Keys.Space, data);
-            KeyMania7k5 = ReadValue(@"KeyMania7k5", Keys.J, data);
-            KeyMania7k6 = ReadValue(@"KeyMania7k6", Keys.K, data);
-            KeyMania7k7 = ReadValue(@"KeyMania7k7", Keys.L, data);
+            KeyMania4K1 = ReadValue(@"KeyMania4k1", Keys.A, data);
+            KeyMania4K2 = ReadValue(@"KeyMania4k2", Keys.S, data);
+            KeyMania4K3 = ReadValue(@"KeyMania4k3", Keys.K, data);
+            KeyMania4K4 = ReadValue(@"KeyMania4k4", Keys.L, data);
+            KeyMania7K1 = ReadValue(@"KeyMania7k1", Keys.A, data);
+            KeyMania7K2 = ReadValue(@"KeyMania7k2", Keys.S, data);
+            KeyMania7K3 = ReadValue(@"KeyMania7k3", Keys.D, data);
+            KeyMania7K4 = ReadValue(@"KeyMania7k4", Keys.Space, data);
+            KeyMania7K5 = ReadValue(@"KeyMania7k5", Keys.J, data);
+            KeyMania7K6 = ReadValue(@"KeyMania7k6", Keys.K, data);
+            KeyMania7K7 = ReadValue(@"KeyMania7k7", Keys.L, data);
             KeySkipIntro = ReadValue(@"KeySkipIntro", Keys.RightAlt, data);
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
             KeyTakeScreenshot = ReadValue(@"KeyTakeScreenshot", Keys.F12, data);
