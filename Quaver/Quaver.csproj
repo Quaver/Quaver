@@ -68,8 +68,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Config\Bindings\BindedInt.cs" />
     <Compile Include="Config\Bindings\BindedValue.cs" />
-    <Compile Include="Config\Bindings\BindedValueString.cs" />
     <Compile Include="Graphics\Buttons\QuaverSlider.cs" />
     <Compile Include="Graphics\Overlays\Navbar\Navbar.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
