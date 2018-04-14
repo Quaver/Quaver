@@ -197,7 +197,7 @@ namespace Quaver.Graphics.Base
             }
 
             //Update Children
-            for (var i= Children.Count-1; i>=0; i--)
+            for (var i = Children.Count - 1; i >= 0; i--)
             {
                 Children[i].Update(dt);
             }
