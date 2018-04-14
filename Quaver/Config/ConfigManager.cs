@@ -467,7 +467,7 @@ namespace Quaver.Config
 
             // Set Master and Sound Effect Volume
             SoundEffect.MasterVolume = VolumeGlobal / 100f;
-            GameBase.SoundEffectVolume = VolumeEffect / 100f;
+            GameBase.AudioEngine.MasterVolume = VolumeGlobal;
 
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync());
