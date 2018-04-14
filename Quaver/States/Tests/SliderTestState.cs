@@ -4,8 +4,10 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.GameState;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Main;
 using Quaver.States.Enums;
@@ -26,10 +28,6 @@ namespace Quaver.States.Tests
 
         private QuaverContainer Container { get; set; }
 
-        /// <summary>
-        ///     Navbar sprite
-        /// </summary>
-        private QuaverSlider Slider { get; set; }
 
         private Navbar Nav { get; set; }
 
@@ -38,13 +36,22 @@ namespace Quaver.States.Tests
             Container = new QuaverContainer();
             Nav = new Navbar();
             Nav.Initialize(this);
-            Slider = new QuaverSlider(ConfigManager.BackgroundBrightness);
-            Slider.Initialize(this);
+            var sliderBg = new QuaverSlider(ConfigManager.BackgroundBrightness, new Vector2(600, 3), new Color(165, 223, 255), Color.White)
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                PosX = -10
+            };
+            
+            var sliderVol = new QuaverSlider(ConfigManager.VolumeGlobal, new Vector2(600, 3), new Color(165, 223, 255), Color.White, FontAwesome.Volume)
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                PosX = -10,
+                PosY = 50
+            };
             
             // Pick first map and select it
-            Map.ChangeSelected(GameBase.Mapsets[0].Maps[0]);
-            BackgroundManager.LoadBackground();
-            BackgroundManager.Change(GameBase.CurrentBackground);
             UpdateReady = true;
         }
 
@@ -55,7 +62,6 @@ namespace Quaver.States.Tests
         public void Update(double dt)
         {
             Nav.Update(dt);
-            Slider.Update(dt);
             Container.Update(dt);
         }
 
@@ -66,7 +72,7 @@ namespace Quaver.States.Tests
             
             BackgroundManager.Draw();
             Nav.Draw();
-            Slider.Draw();
+            Container.Draw();
             
             GameBase.SpriteBatch.End();
         }
