@@ -590,10 +590,6 @@ namespace Quaver.States.Gameplay.Mania
 
         public void PressMissed(object sender, EventArgs e)
         {
-            // Play Combo-Break Sound
-            if (ManiaScoreManager.Combo >= 20)
-                GameBase.LoadedSkin.SoundComboBreak.Play(GameBase.SoundEffectVolume, 0, 0);
-
             // Manage QuaverUserInterface Helpers + Update Score Manager
             ManiaScoreManager.Count(5, false, 0, CurrentSongTime * GameBase.AudioEngine.PlaybackRate);
             ManiaAccuracyBox.UpdateAccuracyBox(5, ManiaScoreManager.JudgePressSpread[5], ManiaScoreManager.JudgeReleaseSpread[5], ManiaScoreManager.JudgeCount, ManiaScoreManager.ScoreTotal, ManiaScoreManager.Accuracy);
@@ -697,19 +693,19 @@ namespace Quaver.States.Gameplay.Mania
 
             // Normal
             if (hitObject.HitSounds == 0 || (HitSounds.Normal & hitObject.HitSounds) != 0)
-                GameBase.LoadedSkin.SoundHit.Play(0.4f, 0, 0);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHit);
 
             // Clap
             if ((HitSounds.Clap & hitObject.HitSounds) != 0)
-                GameBase.LoadedSkin.SoundHitClap.Play(GameBase.SoundEffectVolume, 0, 0);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHitClap);
 
             // Whistle
             if ((HitSounds.Whistle & hitObject.HitSounds) != 0)
-                GameBase.LoadedSkin.SoundHitWhistle.Play(GameBase.SoundEffectVolume, 0, 0);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHitWhistle);
 
             // Finish
             if ((HitSounds.Finish & hitObject.HitSounds) != 0)
-                GameBase.LoadedSkin.SoundHitFinish.Play(GameBase.SoundEffectVolume, 0, 0);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHitFinish);
         }
     }
 }

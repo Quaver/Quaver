@@ -7,6 +7,7 @@ using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
+using Quaver.Main;
 
 namespace Quaver.Graphics.Overlays.Navbar
 {
@@ -45,17 +46,22 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The width of the button icon
         /// </summary>
-        private int IconWidth { get; } = 22;
+        private int IconWidth { get; } = 23;
         
         /// <summary>
         ///     The height of the button icon.
         /// </summary>
-        private int IconHeight { get; } = 22;
+        private int IconHeight { get; } = 23;
+
+        /// <summary>
+        ///     Dictates whether the MouseOver sound has already been played for this button.
+        /// </summary>
+        private bool MouseOverSoundPlayed { get; set; }
 
         /// <summary>
         ///     The color of the icon when hovering over it.
         /// </summary>
-        private static Color MouseOverColor { get; } = new Color(124, 224, 255);
+        private static Color MouseOverColor { get; } = new Color(165, 223, 255);
 
         /// <summary>
         ///     The color of the icon when not hovering.
@@ -125,7 +131,14 @@ namespace Quaver.Graphics.Overlays.Navbar
              Container.TooltipBox.InAnimation = true;
              Container.TooltipBox.ContainerBox.Visible = true;
              Container.TooltipBox.IsEnteringScreen = true;
-         }
+
+             // Play sound effect if necessary
+             if (!MouseOverSoundPlayed)
+             {
+                 GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover);
+                 MouseOverSoundPlayed = true;
+             }
+        }
 
          /// <inheritdoc />
          /// <summary>
@@ -146,6 +159,9 @@ namespace Quaver.Graphics.Overlays.Navbar
                  Container.TooltipBox.InAnimation = true;
                  Container.TooltipBox.IsEnteringScreen = false;
              }
+
+             // Reset MouseOverSoundPlayed for this particular button now that we've moused out.
+             MouseOverSoundPlayed = false;
          }
     }
 }

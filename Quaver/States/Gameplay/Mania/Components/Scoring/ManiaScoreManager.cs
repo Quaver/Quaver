@@ -269,6 +269,10 @@ namespace Quaver.States.Gameplay.Mania.Components.Scoring
                 MultiplierCount -= 20;
                 if (MultiplierCount < 0) MultiplierCount = 0;
 
+                // Play combo  break sound.
+                if (Combo >= 20)
+                    GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundComboBreak);
+
                 //Update Combo
                 Combo = 0;
             }
