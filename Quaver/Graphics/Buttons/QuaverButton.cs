@@ -56,7 +56,7 @@ namespace Quaver.Graphics.Buttons
             PreviousMouseState = CurrentMouseState;
             CurrentMouseState = Mouse.GetState();
             
-            if (GraphicsHelper.RectangleContains(GlobalRectangle, GraphicsHelper.PointToVector2(GameBase.MouseState.Position)))
+            if (GetClickArea())
             {
                 IsHovered = true;
                 MouseOver();
@@ -86,6 +86,14 @@ namespace Quaver.Graphics.Buttons
             base.Update(dt);
         }
 
+        /// <summary>
+        ///     Method for buttons to get the click area. of the button.
+        /// </summary>
+        protected virtual bool GetClickArea()
+        {
+            return GraphicsHelper.RectangleContains(GlobalRectangle, GraphicsHelper.PointToVector2(GameBase.MouseState.Position));
+        }
+        
         /// <summary>
         ///     When the user actually clicks the button.
         /// </summary>
