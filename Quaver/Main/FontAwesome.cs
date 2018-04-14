@@ -17,6 +17,8 @@ namespace Quaver.Main
         internal static Texture2D Copy { get; set; }
         internal static Texture2D Exclamation { get; set; }
         internal static Texture2D Archive { get; set; }
+        internal static Texture2D Circle { get; set; }
+        internal static Texture2D Volume { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -34,6 +36,8 @@ namespace Quaver.Main
             Copy = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_copy_document);
             Exclamation = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_exclamation);
             Archive = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_archive_black_box);
+            Circle = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_circle_shape_outline);
+            Volume = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_volume_up_interface_symbol);
         }
     }
 }
