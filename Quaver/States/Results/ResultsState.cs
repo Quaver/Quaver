@@ -188,7 +188,7 @@ namespace Quaver.States.Results
             ManiaScoreData.UnloadData();
 
             // Play Applause
-            ApplauseInstance.Volume = GameBase.SoundEffectVolume;
+            ApplauseInstance.Volume = GameBase.AudioEngine.EffectVolume;
             ApplauseInstance.Play();
 
             // Update overlay
@@ -268,7 +268,7 @@ namespace Quaver.States.Results
         private void OnBackButtonClick(object sender, EventArgs e)
         {
             ApplauseInstance.Stop(true);
-            GameBase.LoadedSkin.SoundBack.Play(GameBase.SoundEffectVolume, 0, 0);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundBack);
             GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 

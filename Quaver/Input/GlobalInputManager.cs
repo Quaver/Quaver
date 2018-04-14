@@ -125,7 +125,7 @@ namespace Quaver.Input
                 && (GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) || GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt)) 
                 && Config.ConfigManager.VolumeGlobal < 100)
             {
-                Config.ConfigManager.VolumeGlobal += 5;
+                ConfigManager.VolumeGlobal += 5;
 
                 // Set the last scroll wheel value
                 LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
@@ -187,7 +187,7 @@ namespace Quaver.Input
             CurrentlyTakingScreenshot = true;
 
             // Play screenshot sound effect
-            GameBase.LoadedSkin.SoundScreenshot.Play(GameBase.SoundEffectVolume, 0, 0);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundScreenshot);
 
             // Create path for file
             var path = Config.ConfigManager.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyy-MM-dd HHmmssfff") + ".jpg";

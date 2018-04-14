@@ -125,8 +125,9 @@ namespace Quaver.Main
 
         /// <summary>
         ///     WindowHeight / WindowWidth ratio
+        ///     //TODO: Automatically set this rectangle as windoow size through method
         /// </summary>
-        public static float WindowUIScale { get; set; } = WindowRectangle.Height / ReferenceResolution.Y; //TODO: Automatically set this rectangle as windoow size through method
+        public static float WindowUIScale { get; set; } = WindowRectangle.Height / ReferenceResolution.Y; 
 
         /// <summary>
         ///     The score multiplier for the game. Controls how many points the game score will be 
@@ -185,11 +186,6 @@ namespace Quaver.Main
         ///     The build version of the game (The md5 hash of the exe)
         /// </summary>
         public static string BuildVersion { get; set; }
-
-        /// <summary>
-        ///     The volume of sound effects
-        /// </summary>
-        public static float SoundEffectVolume { get; set; }
 
         /// <summary>
         ///     Reference to the game's audio engine
