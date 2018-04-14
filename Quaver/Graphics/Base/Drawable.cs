@@ -197,7 +197,10 @@ namespace Quaver.Graphics.Base
             }
 
             //Update Children
-            Children.ForEach(x => x.Update(dt));
+            for (var i = Children.Count - 1; i >= 0; i--)
+            {
+                Children[i].Update(dt);
+            }
         }
 
         /// <summary>
