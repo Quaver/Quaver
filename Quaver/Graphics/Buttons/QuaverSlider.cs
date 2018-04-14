@@ -3,9 +3,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
+using Quaver.Helpers;
 using Quaver.Main;
 
 namespace Quaver.Graphics.Buttons
@@ -122,7 +124,18 @@ namespace Quaver.Graphics.Buttons
             
             LastPercentage = percentage;
         }
-        
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Gets the click area of the slider.
+        /// </summary>
+        /// <returns></returns>
+        protected override bool GetClickArea()
+        {
+            var clickArea = new DrawRectangle(GlobalRectangle.X, GlobalRectangle.Y - 20, GlobalRectangle.Width, GlobalRectangle.Height + 40);
+            return GraphicsHelper.RectangleContains(clickArea, GraphicsHelper.PointToVector2(GameBase.MouseState.Position));
+        }
+
         /// <summary>
         ///     When the button is moused over and held down.
         /// </summary>
