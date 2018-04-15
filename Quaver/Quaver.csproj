@@ -70,7 +70,7 @@
   <ItemGroup>
     <Compile Include="Config\BindedInt.cs" />
     <Compile Include="Config\BindedValue.cs" />
-    <Compile Include="Graphics\Buttons\QuaverSlider.cs" />
+    <Compile Include="Graphics\Buttons\Sliders\QuaverSlider.cs" />
     <Compile Include="Graphics\Overlays\Navbar\Navbar.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarButton.cs" />
