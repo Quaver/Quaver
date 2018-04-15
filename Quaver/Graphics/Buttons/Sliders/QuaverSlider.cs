@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
@@ -9,6 +10,7 @@ using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
+using AudioEngine = Quaver.Audio.AudioEngine;
 
 namespace Quaver.Graphics.Buttons.Sliders
 {
@@ -100,12 +102,15 @@ namespace Quaver.Graphics.Buttons.Sliders
             base.Update(dt);
         }
 
+        /// <inheritdoc />
         /// <summary>
-        ///     Overrides the destroy method. Removes the event handler when the slider is destroyed.
+        ///     Destroy
         /// </summary>
         internal override void Destroy()
         {
+            // Remove the event handler for the binded value.
             BindedValue.OnValueChanged -= OnValueChanged;
+            
             base.Destroy();
         }
 
@@ -187,7 +192,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         }
 
         /// <summary>
-        ///     This method is an event handler specifically for handling the case of when the value of the slider
+        ///     This method is an event handler specifically for handling the case of when the value of the binded value
         ///     has changed. This will automatically set the progress position.
         /// 
         ///     This is mainly for cases such as volume, where it can be controlled through means other than the slider
