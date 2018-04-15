@@ -50,19 +50,19 @@ namespace Quaver.Graphics.Overlays.Volume
         /// <summary>
         ///     The spacing between each slider.
         /// </summary>
-        private int SliderYSpacing { get; } = 60;
+        private int SliderXSpacing { get; } = 60;
 
         /// <summary>
         ///     The slider's x position.
         /// </summary>
-        private int SliderPosX { get; } = -60;
+        private int SliderPosX { get; } = -200;
 
         /// <summary>
         ///     Ctor - 
         /// </summary>
         internal VolumeController()
         {
-            SliderSize = new Vector2(300, 3);
+            SliderSize = new Vector2(3, 300);
             SliderColor = Color.White;
             SliderProgressColor = new Color(165, 223, 255);
         }
@@ -76,7 +76,7 @@ namespace Quaver.Graphics.Overlays.Volume
             Container = new QuaverContainer();
 
             // Create master volume slider.
-            MasterVolumeSlider = new QuaverSlider(ConfigManager.VolumeGlobal, SliderSize, SliderColor, SliderProgressColor, false, FontAwesome.Volume)
+            MasterVolumeSlider = new QuaverSlider(ConfigManager.VolumeGlobal, SliderSize, SliderColor, SliderProgressColor, true, FontAwesome.Volume)
             {
                 Parent = Container,
                 Alignment = Alignment.BotRight,
@@ -85,21 +85,21 @@ namespace Quaver.Graphics.Overlays.Volume
             };
 
             // Create the music volume slider.
-            MusicVolumeSlider = new QuaverSlider(ConfigManager.VolumeMusic, SliderSize, SliderColor, SliderProgressColor, false, FontAwesome.Music)
+            MusicVolumeSlider = new QuaverSlider(ConfigManager.VolumeMusic, SliderSize, SliderColor, SliderProgressColor, true, FontAwesome.Music)
             {
                 Parent = Container,
                 Alignment = Alignment.BotRight,
-                PosY = MasterVolumeSlider.PosY + SliderYSpacing,
-                PosX = SliderPosX
+                PosY = MasterVolumeSlider.PosY,
+                PosX = SliderPosX + SliderXSpacing
             };
 
             // Create the effect volume slider.
-            EffectVolumeSlider = new QuaverSlider(ConfigManager.VolumeEffect, SliderSize, SliderColor, SliderProgressColor, false, FontAwesome.Headphones)
+            EffectVolumeSlider = new QuaverSlider(ConfigManager.VolumeEffect, SliderSize, SliderColor, SliderProgressColor, true, FontAwesome.Headphones)
             {
                 Parent = Container,
                 Alignment = Alignment.BotRight,
-                PosY = MasterVolumeSlider.PosY + SliderYSpacing * 2,
-                PosX = SliderPosX
+                PosY = MasterVolumeSlider.PosY,
+                PosX = SliderPosX + SliderXSpacing * 2
             };
         }
 
