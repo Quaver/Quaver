@@ -77,6 +77,9 @@ namespace Quaver.Graphics.Buttons.Sliders
             };
             
             SetProgressPosition();
+
+            // Whenever the value changes, we need to 
+            BindedValue.OnValueChanged += OnValueChanged;
         }
 
         /// <inheritdoc />
@@ -98,6 +101,15 @@ namespace Quaver.Graphics.Buttons.Sliders
         }
 
         /// <summary>
+        ///     Overrides the destroy method. Removes the event handler when the slider is destroyed.
+        /// </summary>
+        internal override void Destroy()
+        {
+            BindedValue.OnValueChanged -= OnValueChanged;
+            base.Destroy();
+        }
+
+        /// <summary>
         ///     Gets the new value of the slider and sets it to the binded value.
         /// </summary>
         private void HandleSliderValueChanges()
@@ -107,25 +119,14 @@ namespace Quaver.Graphics.Buttons.Sliders
 
             // If the percentage of the MouseX/SliderX is 0% or lower, set the binded value to the minimum.
             if (percentage <= 0 && LastPercentage > 0)
-            {
                 BindedValue.Value = BindedValue.MinValue;
-                SetProgressPosition();
-            }
-                
             // If the percentage of the MouseX/SliderX is 100% or higher set the binded value to the maximum.
             else if (percentage >= 100 && LastPercentage < 100)
-            {
-                BindedValue.Value = BindedValue.MaxValue;
-                SetProgressPosition();
-            }
-                
+                BindedValue.Value = BindedValue.MaxValue;             
             // If the percentage is anything else, set it accordingly.
             else if (percentage > 0 && percentage < 100 && LastPercentage != percentage)
-            {
                 BindedValue.Value = (int)(percentage / 100f * BindedValue.MaxValue);
-                SetProgressPosition();
-            }
-            
+         
             LastPercentage = percentage;
         }
 
@@ -183,6 +184,22 @@ namespace Quaver.Graphics.Buttons.Sliders
         {
             var percentage = BindedValue.Value - BindedValue.MinValue / BindedValue.MaxValue * 100;
             ProgressThing.Position = new UDim2D(percentage / 100f * Size.X.Offset, Size.Y.Offset / 2 - ProgressThing.SizeY / 2, 1, 0);
+        }
+
+        /// <summary>
+        ///     This method is an event handler specifically for handling the case of when the value of the slider
+        ///     has changed. This will automatically set the progress position.
+        /// 
+        ///     This is mainly for cases such as volume, where it can be controlled through means other than the slider
+        ///     (example: keybinds), and if the slider is displayed, it should update as well.
+        ///  
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnValueChanged(object sender, BindedValueEventArgs<int> e)
+        {
+            // Automatically set the progress once the value has changed.
+            SetProgressPosition();
         }
     }
 }
