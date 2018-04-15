@@ -19,6 +19,7 @@ using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Main;
 using SQLitePCL;
+using AudioEngine = Quaver.Audio.AudioEngine;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Config
@@ -353,8 +354,8 @@ namespace Quaver.Config
 
             // Set Master and Sound Effect Volume
             SoundEffect.MasterVolume = VolumeGlobal.Value / 100f;
-            GameBase.AudioEngine.MasterVolume = VolumeGlobal.Value;
-            GameBase.AudioEngine.MusicVolume = VolumeMusic.Value;
+            AudioEngine.MasterVolume = VolumeGlobal.Value;
+            AudioEngine.MusicVolume = VolumeMusic.Value;
             
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync())

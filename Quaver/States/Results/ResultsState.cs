@@ -28,6 +28,7 @@ using Quaver.States.Enums;
 using Quaver.States.Gameplay.Mania;
 using Quaver.States.Gameplay.Mania.Components.Scoring;
 using Quaver.States.Select;
+using AudioEngine = Quaver.Audio.AudioEngine;
 
 namespace Quaver.States.Results
 {
@@ -188,7 +189,7 @@ namespace Quaver.States.Results
             ManiaScoreData.UnloadData();
 
             // Play Applause
-            ApplauseInstance.Volume = GameBase.AudioEngine.EffectVolume;
+            ApplauseInstance.Volume = AudioEngine.EffectVolume;
             ApplauseInstance.Play();
 
             // Update overlay
