@@ -48,7 +48,7 @@ namespace Quaver.Audio
         /// <summary>
         ///     The master volume of all audio streams
         /// </summary>
-        internal int MasterVolume
+        internal static int MasterVolume
         {
             get => Bass.GlobalStreamVolume;
             set
@@ -61,16 +61,16 @@ namespace Quaver.Audio
         /// <summary>
         ///     The volume of the current stream.
         /// </summary>
-        internal double MusicVolume
+        internal static double MusicVolume
         {
             get => Bass.ChannelGetAttribute(Stream, ChannelAttribute.Volume);
-            set => Bass.ChannelSlideAttribute(Stream, ChannelAttribute.Volume, (float)value, 1000);
+            set => Bass.ChannelSetAttribute(Stream, ChannelAttribute.Volume, value / 100f);
         }
 
         /// <summary>
         ///     The volume of all sound effects.
         /// </summary>
-        internal float EffectVolume => ConfigManager.VolumeEffect.Value / 100f;
+        internal static float EffectVolume => ConfigManager.VolumeEffect.Value / 100f;
 
         /// <summary>
         ///     The rate at which the audio stream will play at.
