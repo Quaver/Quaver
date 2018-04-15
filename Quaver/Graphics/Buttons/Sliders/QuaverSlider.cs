@@ -22,6 +22,13 @@ namespace Quaver.Graphics.Buttons.Sliders
         private BindedInt BindedValue { get; }
 
         /// <summary>
+        ///     If the slider is vertical or not.
+        ///         True = Vertical
+        ///         False = Horizontal
+        /// </summary>
+        private bool IsVertical { get; }
+
+        /// <summary>
         ///     The progress slider image.
         /// </summary>
         private QuaverSprite ProgressImage { get; }
@@ -55,9 +62,10 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <param name="lineColor"></param>
         /// <param name="progressColor"></param>
         /// <param name="progressTexture"></param>
-        internal QuaverSlider(BindedInt binded, Vector2 size, Color lineColor, Color progressColor, Texture2D progressTexture = null)
+        internal QuaverSlider(BindedInt binded, Vector2 size, Color lineColor, Color progressColor, bool vertical = false, Texture2D progressTexture = null)
         {
             BindedValue = binded;
+            IsVertical = vertical;
             Held += MouseHeld;
             
             Size.X.Offset = size.X;
@@ -119,8 +127,12 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// </summary>
         private void HandleSliderValueChanges()
         {
-            // Get the percentage of the mouse position, to the size of the slider.
-            var percentage = (int)((GameBase.MouseState.X - AbsolutePosition.X) / AbsoluteSize.X * 100);
+            // Get the percentage of the mouse position, to the size of the slider. 
+            int percentage;
+            if (IsVertical)
+                percentage = 100 - (int)((GameBase.MouseState.Y - AbsolutePosition.Y) / AbsoluteSize.Y * 100);
+            else
+                percentage = (int)((GameBase.MouseState.X - AbsolutePosition.X) / AbsoluteSize.X * 100);
 
             // If the percentage of the MouseX/SliderX is 0% or lower, set the binded value to the minimum.
             if (percentage <= 0 && LastPercentage > 0)
@@ -144,8 +156,14 @@ namespace Quaver.Graphics.Buttons.Sliders
         {
             // The RectY increase of the click area.
             const int offset = 40;
-          
-            var clickArea = new DrawRectangle(GlobalRectangle.X, GlobalRectangle.Y - offset, GlobalRectangle.Width, GlobalRectangle.Height + offset);
+
+            DrawRectangle clickArea;
+            
+            if (IsVertical)
+                clickArea = new DrawRectangle(GlobalRectangle.X - offset, GlobalRectangle.Y, GlobalRectangle.Width + offset, GlobalRectangle.Height);
+            else
+                clickArea = new DrawRectangle(GlobalRectangle.X, GlobalRectangle.Y - offset, GlobalRectangle.Width, GlobalRectangle.Height + offset);
+            
             return GraphicsHelper.RectangleContains(clickArea, GraphicsHelper.PointToVector2(GameBase.MouseState.Position));
         }
 
@@ -188,7 +206,11 @@ namespace Quaver.Graphics.Buttons.Sliders
         private void SetProgressPosition()
         {
             var percentage = BindedValue.Value - BindedValue.MinValue / BindedValue.MaxValue * 100;
-            ProgressImage.Position = new UDim2D(percentage / 100f * Size.X.Offset, Size.Y.Offset / 2 - ProgressImage.SizeY / 2, 1, 0);
+            
+            if (IsVertical)
+                ProgressImage.Position = new UDim2D(Size.X.Offset / 2 - ProgressImage.SizeX / 2, (100 - percentage) / 100f * Size.Y.Offset, 1, 0);
+            else
+                ProgressImage.Position = new UDim2D(percentage / 100f * Size.X.Offset, Size.Y.Offset / 2 - ProgressImage.SizeY / 2, 1, 0);
         }
 
         /// <summary>
