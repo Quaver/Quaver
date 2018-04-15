@@ -22,9 +22,9 @@ namespace Quaver.Graphics.Buttons.Sliders
         private BindedInt BindedValue { get; }
 
         /// <summary>
-        ///     The progress sliding thing. (i don't have a good name for this)
+        ///     The progress slider image.
         /// </summary>
-        private QuaverSprite ProgressThing { get; }
+        private QuaverSprite ProgressImage { get; }
 
         /// <summary>
         ///     If the mouse is held down and hasn't let go yet.
@@ -42,9 +42,9 @@ namespace Quaver.Graphics.Buttons.Sliders
         private MouseState PreviousMouseState { get; set; }
 
         /// <summary>
-        ///     The original size of the progress thing.
+        ///     The original size of the progress image
         /// </summary>
-        private UDim2D ProgressThingSize { get; } = new UDim2D(28, 28);
+        private UDim2D ProgressImageSize { get; } = new UDim2D(28, 28);
 
         /// <inheritdoc />
         /// <summary>
@@ -69,11 +69,11 @@ namespace Quaver.Graphics.Buttons.Sliders
                 progressTexture = FontAwesome.Circle;
             
             // Create the progress sliding thing.
-            ProgressThing = new QuaverSprite()
+            ProgressImage = new QuaverSprite()
             {
                 Alignment = Alignment.TopLeft,
                 Image = progressTexture,
-                Size = ProgressThingSize,
+                Size = ProgressImageSize,
                 Tint = progressColor,
                 Parent = this
             };
@@ -167,7 +167,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         protected override void MouseOver()
         {
             // Increase progress thing's size
-            ProgressThing.Size = new UDim2D(ProgressThingSize.X.Offset + 5, ProgressThingSize.Y.Offset + 5);
+            ProgressImage.Size = new UDim2D(ProgressImageSize.X.Offset + 5, ProgressImageSize.Y.Offset + 5);
             SetProgressPosition();
         }
         
@@ -178,17 +178,17 @@ namespace Quaver.Graphics.Buttons.Sliders
         protected override void MouseOut()
         {
             // Set the progress thing's size back to the original.
-            ProgressThing.Size = ProgressThingSize;
+            ProgressImage.Size = ProgressImageSize;
             SetProgressPosition();
         }
 
         /// <summary>
-        ///     Sets the correct position of the progress thing. seriously, what the hell do you call that??
+        ///     Sets the correct position of the progress image
         /// </summary>
         private void SetProgressPosition()
         {
             var percentage = BindedValue.Value - BindedValue.MinValue / BindedValue.MaxValue * 100;
-            ProgressThing.Position = new UDim2D(percentage / 100f * Size.X.Offset, Size.Y.Offset / 2 - ProgressThing.SizeY / 2, 1, 0);
+            ProgressImage.Position = new UDim2D(percentage / 100f * Size.X.Offset, Size.Y.Offset / 2 - ProgressImage.SizeY / 2, 1, 0);
         }
 
         /// <summary>
