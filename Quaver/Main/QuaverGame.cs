@@ -37,9 +37,9 @@ namespace Quaver.Main
                 IsFullScreen = ConfigManager.WindowFullScreen.Value,
                 SynchronizeWithVerticalRetrace = false // Turns off vsync
             };
-
+            
             GameBase.GraphicsManager.GraphicsProfile = GraphicsProfile.HiDef;
-            GameBase.GraphicsManager.PreferMultiSampling = true;
+            GameBase.GraphicsManager.PreferMultiSampling = false;
             
             // Set the global window size
             //GameBase.Window = new Vector4(0, 0, GameBase.GraphicsManager.PreferredBackBufferHeight, GameBase.GraphicsManager.PreferredBackBufferWidth);
@@ -83,7 +83,8 @@ namespace Quaver.Main
 
             // Set the global Graphics Device.
             GameBase.GraphicsDevice = GraphicsDevice;
-            GameBase.GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
+            GameBase.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
+            GameBase.GraphicsDevice.RasterizerState = new RasterizerState {MultiSampleAntiAlias = true};
             GameBase.GraphicsManager.ApplyChanges();
            
             //Create new GameStateManager Instance
