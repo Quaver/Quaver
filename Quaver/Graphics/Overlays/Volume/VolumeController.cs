@@ -76,7 +76,7 @@ namespace Quaver.Graphics.Overlays.Volume
             Container = new QuaverContainer();
 
             // Create master volume slider.
-            MasterVolumeSlider = new QuaverSlider(ConfigManager.VolumeGlobal, SliderSize, SliderColor, SliderProgressColor, true, FontAwesome.Volume)
+            MasterVolumeSlider = new QuaverSlider(ConfigManager.VolumeGlobal, SliderSize, true)
             {
                 Parent = Container,
                 Alignment = Alignment.BotRight,
@@ -85,7 +85,7 @@ namespace Quaver.Graphics.Overlays.Volume
             };
 
             // Create the music volume slider.
-            MusicVolumeSlider = new QuaverSlider(ConfigManager.VolumeMusic, SliderSize, SliderColor, SliderProgressColor, true, FontAwesome.Music)
+            MusicVolumeSlider = new QuaverSlider(ConfigManager.VolumeMusic, SliderSize, true)
             {
                 Parent = Container,
                 Alignment = Alignment.BotRight,
@@ -94,7 +94,7 @@ namespace Quaver.Graphics.Overlays.Volume
             };
 
             // Create the effect volume slider.
-            EffectVolumeSlider = new QuaverSlider(ConfigManager.VolumeEffect, SliderSize, SliderColor, SliderProgressColor, true, FontAwesome.Headphones)
+            EffectVolumeSlider = new QuaverSlider(ConfigManager.VolumeEffect, SliderSize, true)
             {
                 Parent = Container,
                 Alignment = Alignment.BotRight,

@@ -31,7 +31,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <summary>
         ///     The progress slider image.
         /// </summary>
-        private QuaverSprite ProgressImage { get; }
+        private QuaverSprite ProgressBall { get; }
 
         /// <summary>
         ///     If the mouse is held down and hasn't let go yet.
@@ -51,7 +51,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <summary>
         ///     The original size of the progress image
         /// </summary>
-        private UDim2D ProgressImageSize { get; } = new UDim2D(28, 28);
+        private UDim2D ProgressBallSize { get; } = new UDim2D(20, 20);
 
         /// <inheritdoc />
         /// <summary>
@@ -62,7 +62,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <param name="lineColor"></param>
         /// <param name="progressColor"></param>
         /// <param name="progressTexture"></param>
-        internal QuaverSlider(BindedInt binded, Vector2 size, Color lineColor, Color progressColor, bool vertical = false, Texture2D progressTexture = null)
+        internal QuaverSlider(BindedInt binded, Vector2 size, bool vertical = false)
         {
             BindedValue = binded;
             IsVertical = vertical;
@@ -70,29 +70,25 @@ namespace Quaver.Graphics.Buttons.Sliders
             
             Size.X.Offset = size.X;
             Size.Y.Offset = size.Y;
-            Tint = lineColor;
-            
-            // Default the texture to just a simple circle if not specified.
-            if (progressTexture == null)
-                progressTexture = FontAwesome.Circle;
-            
+            Tint = Color.White;
+                      
             // Create the progress sliding thing.
-            ProgressImage = new QuaverSprite()
+            ProgressBall = new QuaverSprite()
             {
                 Alignment = Alignment.TopLeft,
-                Image = progressTexture,
-                Size = ProgressImageSize,
-                Tint = progressColor,
+                Image = FontAwesome.CircleClosed,
+                Size = ProgressBallSize,
+                Tint = Color.White,
                 Parent = this
             };
-            
+              
             SetProgressPosition();
 
             // Whenever the value changes, we need to 
             BindedValue.OnValueChanged += OnValueChanged;
         }
 
-        /// <inheritdoc />
+         /// <inheritdoc />
         /// <summary>
         ///     Update
         /// </summary>
@@ -185,7 +181,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         protected override void MouseOver()
         {
             // Increase progress thing's size
-            ProgressImage.Size = new UDim2D(ProgressImageSize.X.Offset + 5, ProgressImageSize.Y.Offset + 5);
+            ProgressBall.Size = new UDim2D(ProgressBallSize.X.Offset + 5, ProgressBallSize.Y.Offset + 5);
             SetProgressPosition();
         }
         
@@ -196,7 +192,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         protected override void MouseOut()
         {
             // Set the progress thing's size back to the original.
-            ProgressImage.Size = ProgressImageSize;
+            ProgressBall.Size = ProgressBallSize;
             SetProgressPosition();
         }
 
@@ -208,9 +204,9 @@ namespace Quaver.Graphics.Buttons.Sliders
             var percentage = BindedValue.Value - BindedValue.MinValue / BindedValue.MaxValue * 100;
             
             if (IsVertical)
-                ProgressImage.Position = new UDim2D(Size.X.Offset / 2 - ProgressImage.SizeX / 2, (100 - percentage) / 100f * Size.Y.Offset, 1, 0);
+                ProgressBall.Position = new UDim2D(Size.X.Offset / 2 - ProgressBall.SizeX / 2, (100 - percentage) / 100f * Size.Y.Offset, 1, 0);
             else
-                ProgressImage.Position = new UDim2D(percentage / 100f * Size.X.Offset, Size.Y.Offset / 2 - ProgressImage.SizeY / 2, 1, 0);
+                ProgressBall.Position = new UDim2D(percentage / 100f * Size.X.Offset, Size.Y.Offset / 2 - ProgressBall.SizeY / 2, 1, 0);
         }
 
         /// <summary>

@@ -44,7 +44,7 @@ namespace Quaver.States.Tests
             VolumeController = new VolumeController();
             VolumeController.Initialize(this);
             
-            var sliderBg = new QuaverSlider(ConfigManager.BackgroundBrightness, new Vector2(300, 3), new Color(165, 223, 255), Color.White)
+            var sliderBg = new QuaverSlider(ConfigManager.BackgroundBrightness, new Vector2(300, 3))
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
