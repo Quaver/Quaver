@@ -24,6 +24,11 @@ namespace Quaver.Graphics.Buttons
         internal EventHandler Held;
         
         /// <summary>
+        ///     Determines if the button is currently hovered over.
+        /// </summary>
+        internal bool IsHovered { get; set; }
+        
+        /// <summary>
         ///     The mouse state of the previous frame
         /// </summary>
         private MouseState PreviousMouseState { get; set; }
@@ -32,11 +37,6 @@ namespace Quaver.Graphics.Buttons
         ///     The mouse state of the current frame.
         /// </summary>
         private MouseState CurrentMouseState { get; set; }
-
-        /// <summary>
-        ///     Determines if the button is currently hovered over.
-        /// </summary>
-        private bool IsHovered { get; set; }
 
         /// <summary>
         ///     Ctor - Optionally pass in an action.
