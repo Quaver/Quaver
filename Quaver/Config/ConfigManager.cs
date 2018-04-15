@@ -550,7 +550,7 @@ namespace Quaver.Config
             // For every line we want to append "PropName = PropValue" to the string
             foreach (var prop in typeof(ConfigManager).GetProperties(BindingFlags.Static | BindingFlags.NonPublic))
             {
-                if (prop.Name == "FirstWrite")
+                if (prop.Name == "FirstWrite" || prop.Name == "LastWrite")
                     continue;
                     
                 try
