@@ -2,11 +2,13 @@
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.Database.Maps;
+using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Buttons.Sliders;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
+using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
@@ -29,14 +31,19 @@ namespace Quaver.States.Tests
 
         private QuaverContainer Container { get; set; }
 
-
         private Navbar Nav { get; set; }
 
+        private VolumeController VolumeController { get; set; }
+
         public void Initialize()
-        {
+        {            
             Container = new QuaverContainer();
             Nav = new Navbar();
             Nav.Initialize(this);
+            
+            VolumeController = new VolumeController();
+            VolumeController.Initialize(this);
+            
             var sliderBg = new QuaverSlider(ConfigManager.BackgroundBrightness, new Vector2(600, 3), new Color(165, 223, 255), Color.White)
             {
                 Parent = Container,
@@ -63,6 +70,7 @@ namespace Quaver.States.Tests
         public void Update(double dt)
         {
             Nav.Update(dt);
+            VolumeController.Update(dt);
             Container.Update(dt);
         }
 
@@ -73,8 +81,9 @@ namespace Quaver.States.Tests
             
             BackgroundManager.Draw();
             Nav.Draw();
+            VolumeController.Draw();
             Container.Draw();
-            
+         
             GameBase.SpriteBatch.End();
         }
     }
