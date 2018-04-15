@@ -4,6 +4,7 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.GameState;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Buttons.Sliders;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
