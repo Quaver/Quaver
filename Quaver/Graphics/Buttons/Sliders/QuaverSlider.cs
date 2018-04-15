@@ -53,6 +53,11 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// </summary>
         private UDim2D ProgressBallSize { get; } = new UDim2D(15, 15);
 
+        /// <summary>
+        ///     Dictates whether the MouseOver sound has already been played for this button.
+        /// </summary>
+        private bool MouseOverSoundPlayed { get; set; }
+        
         /// <inheritdoc />
         /// <summary>
         ///     Creates a new SliderButton. Takes in a BindedInt as an argument.
@@ -180,8 +185,13 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// </summary>
         protected override void MouseOver()
         {
-            // Increase progress thing's size
-            // ProgressBall.Size = new UDim2D(ProgressBallSize.X.Offset + 5, ProgressBallSize.Y.Offset + 5);
+            // Play sound effect if necessary
+            if (!MouseOverSoundPlayed)
+            {
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover);
+                MouseOverSoundPlayed = true;
+            }
+            
             SetProgressPosition();
         }
         
@@ -191,9 +201,10 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// </summary>
         protected override void MouseOut()
         {
-            // Set the progress thing's size back to the original.
-            // ProgressBall.Size = ProgressBallSize;
             SetProgressPosition();
+            
+            // Reset MouseOverSoundPlayed for this particular button now that we've moused out.
+            MouseOverSoundPlayed = false;
         }
 
         /// <summary>
@@ -217,6 +228,9 @@ namespace Quaver.Graphics.Buttons.Sliders
                 ProgressBall.Position = new UDim2D(Size.X.Offset / 2 - ProgressBall.SizeX / 2, (100 - percentage) / 100f * Size.Y.Offset, 1, 0);
             else
                 ProgressBall.Position = new UDim2D(percentage / 100f * Size.X.Offset, Size.Y.Offset / 2 - ProgressBall.SizeY / 2, 1, 0);
+            
+            // Play a song at a given frequency
+            
         }
 
         /// <summary>
