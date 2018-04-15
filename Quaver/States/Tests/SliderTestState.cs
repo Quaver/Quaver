@@ -44,21 +44,13 @@ namespace Quaver.States.Tests
             VolumeController = new VolumeController();
             VolumeController.Initialize(this);
             
-            var sliderBg = new QuaverSlider(ConfigManager.BackgroundBrightness, new Vector2(600, 3), new Color(165, 223, 255), Color.White)
+            var sliderBg = new QuaverSlider(ConfigManager.BackgroundBrightness, new Vector2(3, 600), new Color(165, 223, 255), Color.White, true)
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
                 PosX = -10
             };
-            
-            var sliderVol = new QuaverSlider(ConfigManager.VolumeGlobal, new Vector2(600, 3), new Color(165, 223, 255), Color.White, FontAwesome.Volume)
-            {
-                Parent = Container,
-                Alignment = Alignment.MidCenter,
-                PosX = -10,
-                PosY = 50
-            };
-            
+                        
             // Pick first map and select it
             UpdateReady = true;
         }
