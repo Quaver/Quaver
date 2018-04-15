@@ -36,7 +36,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <summary>
         ///     If the mouse is held down and hasn't let go yet.
         /// </summary>
-        private bool MouseInHoldSequence { get; set; }
+        internal bool MouseInHoldSequence { get; set; }
 
         /// <summary>
         ///     The last percentage that the slider has changed the BindedInt to.
@@ -51,7 +51,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <summary>
         ///     The original size of the progress image
         /// </summary>
-        private UDim2D ProgressBallSize { get; } = new UDim2D(20, 20);
+        private UDim2D ProgressBallSize { get; } = new UDim2D(15, 15);
 
         /// <inheritdoc />
         /// <summary>
@@ -181,7 +181,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         protected override void MouseOver()
         {
             // Increase progress thing's size
-            ProgressBall.Size = new UDim2D(ProgressBallSize.X.Offset + 5, ProgressBallSize.Y.Offset + 5);
+            // ProgressBall.Size = new UDim2D(ProgressBallSize.X.Offset + 5, ProgressBallSize.Y.Offset + 5);
             SetProgressPosition();
         }
         
@@ -192,10 +192,20 @@ namespace Quaver.Graphics.Buttons.Sliders
         protected override void MouseOut()
         {
             // Set the progress thing's size back to the original.
-            ProgressBall.Size = ProgressBallSize;
+            // ProgressBall.Size = ProgressBallSize;
             SetProgressPosition();
         }
 
+        /// <summary>
+        ///     Changes the color of both the slider line + progress ball.
+        /// </summary>
+        /// <param name="color"></param>
+        internal void ChangeColor(Color color)
+        {
+            Tint = color;
+            ProgressBall.Tint = color;
+        }
+        
         /// <summary>
         ///     Sets the correct position of the progress image
         /// </summary>
