@@ -48,6 +48,16 @@ namespace Quaver.Graphics.Overlays.Volume
         private Color SliderProgressColor { get; }
 
         /// <summary>
+        ///     The spacing between each slider.
+        /// </summary>
+        private int SliderYSpacing { get; } = 60;
+
+        /// <summary>
+        ///     The slider's x position.
+        /// </summary>
+        private int SliderPosX { get; } = -60;
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         internal VolumeController()
@@ -71,7 +81,25 @@ namespace Quaver.Graphics.Overlays.Volume
                 Parent = Container,
                 Alignment = Alignment.BotRight,
                 PosY = -180,
-                PosX = -60
+                PosX = SliderPosX
+            };
+
+            // Create the music volume slider.
+            MusicVolumeSlider = new QuaverSlider(ConfigManager.VolumeMusic, SliderSize, SliderColor, SliderProgressColor, FontAwesome.Cog)
+            {
+                Parent = Container,
+                Alignment = Alignment.BotRight,
+                PosY = MasterVolumeSlider.PosY + SliderYSpacing,
+                PosX = SliderPosX
+            };
+
+            // Create the effect volume slider.
+            EffectVolumeSlider = new QuaverSlider(ConfigManager.VolumeEffect, SliderSize, SliderColor, SliderProgressColor, FontAwesome.PowerOff)
+            {
+                Parent = Container,
+                Alignment = Alignment.BotRight,
+                PosY = MasterVolumeSlider.PosY + SliderYSpacing * 2,
+                PosX = SliderPosX
             };
         }
 
