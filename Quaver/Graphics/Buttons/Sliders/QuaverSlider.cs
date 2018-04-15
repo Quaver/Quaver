@@ -10,7 +10,7 @@ using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 
-namespace Quaver.Graphics.Buttons
+namespace Quaver.Graphics.Buttons.Sliders
 {
     internal class QuaverSlider : QuaverButton
     {
@@ -20,9 +20,9 @@ namespace Quaver.Graphics.Buttons
         private BindedInt BindedValue { get; }
 
         /// <summary>
-        ///     The circle sprite for the slider.
+        ///     The progress sliding thing. (i don't have a good name for this)
         /// </summary>
-        private QuaverSprite Circle { get; set; }
+        private QuaverSprite ProgressThing { get; }
 
         /// <summary>
         ///     If the mouse is held down and hasn't let go yet.
@@ -38,6 +38,11 @@ namespace Quaver.Graphics.Buttons
         ///     The mouse state of the previous frame.
         /// </summary>
         private MouseState PreviousMouseState { get; set; }
+
+        /// <summary>
+        ///     The original size of the progress thing.
+        /// </summary>
+        private UDim2D ProgressThingSize { get; } = new UDim2D(28, 28);
 
         /// <inheritdoc />
         /// <summary>
@@ -57,22 +62,21 @@ namespace Quaver.Graphics.Buttons
             Size.Y.Offset = size.Y;
             Tint = lineColor;
             
-            // Create the progress circle sprite.
+            // Default the texture to just a simple circle if not specified.
             if (progressTexture == null)
                 progressTexture = FontAwesome.Circle;
             
-            Circle = new QuaverSprite()
+            // Create the progress sliding thing.
+            ProgressThing = new QuaverSprite()
             {
                 Alignment = Alignment.TopLeft,
                 Image = progressTexture,
-                Size = new UDim2D(28, 28),
+                Size = ProgressThingSize,
                 Tint = progressColor,
                 Parent = this
             };
             
-            // Set initial position of the slider circle based on the percentage proportion.
-            var percentage = BindedValue.Value - BindedValue.MinValue / BindedValue.MaxValue * 100;
-            Circle.Position = new UDim2D(percentage / 100f * Size.X.Offset, Size.Y.Offset / 2 - Circle.SizeY / 2, 1, 0);
+            SetProgressPosition();
         }
 
         /// <inheritdoc />
@@ -105,21 +109,21 @@ namespace Quaver.Graphics.Buttons
             if (percentage <= 0 && LastPercentage > 0)
             {
                 BindedValue.Value = BindedValue.MinValue;
-                Circle.PosX = percentage / 100f * Size.X.Offset;
+                SetProgressPosition();
             }
                 
             // If the percentage of the MouseX/SliderX is 100% or higher set the binded value to the maximum.
             else if (percentage >= 100 && LastPercentage < 100)
             {
                 BindedValue.Value = BindedValue.MaxValue;
-                Circle.PosX = percentage / 100f * Size.X.Offset;
+                SetProgressPosition();
             }
                 
             // If the percentage is anything else, set it accordingly.
             else if (percentage > 0 && percentage < 100 && LastPercentage != percentage)
             {
                 BindedValue.Value = (int)(percentage / 100f * BindedValue.MaxValue);
-                Circle.PosX = percentage / 100f * Size.X.Offset;
+                SetProgressPosition();
             }
             
             LastPercentage = percentage;
@@ -132,7 +136,10 @@ namespace Quaver.Graphics.Buttons
         /// <returns></returns>
         protected override bool GetClickArea()
         {
-            var clickArea = new DrawRectangle(GlobalRectangle.X, GlobalRectangle.Y - 20, GlobalRectangle.Width, GlobalRectangle.Height + 40);
+            // The RectY increase of the click area.
+            const int offset = 40;
+          
+            var clickArea = new DrawRectangle(GlobalRectangle.X, GlobalRectangle.Y - offset, GlobalRectangle.Width, GlobalRectangle.Height + offset);
             return GraphicsHelper.RectangleContains(clickArea, GraphicsHelper.PointToVector2(GameBase.MouseState.Position));
         }
 
@@ -153,6 +160,9 @@ namespace Quaver.Graphics.Buttons
         /// </summary>
         protected override void MouseOver()
         {
+            // Increase progress thing's size
+            ProgressThing.Size = new UDim2D(ProgressThingSize.X.Offset + 5, ProgressThingSize.Y.Offset + 5);
+            SetProgressPosition();
         }
         
         /// <inheritdoc />
@@ -161,6 +171,18 @@ namespace Quaver.Graphics.Buttons
         /// </summary>
         protected override void MouseOut()
         {
+            // Set the progress thing's size back to the original.
+            ProgressThing.Size = ProgressThingSize;
+            SetProgressPosition();
+        }
+
+        /// <summary>
+        ///     Sets the correct position of the progress thing. seriously, what the hell do you call that??
+        /// </summary>
+        private void SetProgressPosition()
+        {
+            var percentage = BindedValue.Value - BindedValue.MinValue / BindedValue.MaxValue * 100;
+            ProgressThing.Position = new UDim2D(percentage / 100f * Size.X.Offset, Size.Y.Offset / 2 - ProgressThing.SizeY / 2, 1, 0);
         }
     }
 }
