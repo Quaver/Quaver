@@ -64,7 +64,7 @@ namespace Quaver.Audio
         internal static double MusicVolume
         {
             get => Bass.ChannelGetAttribute(Stream, ChannelAttribute.Volume);
-            set => Bass.ChannelSetAttribute(Stream, ChannelAttribute.Volume, value / 100f);
+            set => Bass.ChannelSlideAttribute(Stream, ChannelAttribute.Volume, (float)(value / 100f), 50);
         }
 
         /// <summary>
