@@ -19,7 +19,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <summary>
         ///     The value that this slider binds to.
         /// </summary>
-        private BindedInt BindedValue { get; }
+        internal BindedInt BindedValue { get; }
 
         /// <summary>
         ///     If the slider is vertical or not.
@@ -89,7 +89,8 @@ namespace Quaver.Graphics.Buttons.Sliders
               
             SetProgressPosition();
 
-            // Whenever the value changes, we need to 
+            // Whenever the value changes, we need to update the slider accordingly,
+            // so hook onto this event with a handler.
             BindedValue.OnValueChanged += OnValueChanged;
         }
 
@@ -229,8 +230,7 @@ namespace Quaver.Graphics.Buttons.Sliders
             else
                 ProgressBall.Position = new UDim2D(percentage / 100f * Size.X.Offset, Size.Y.Offset / 2 - ProgressBall.SizeY / 2, 1, 0);
             
-            // Play a song at a given frequency
-            
+            // TODO: Play a sound effect at a given frequency to give an effect of moving the slider up or down.
         }
 
         /// <summary>
