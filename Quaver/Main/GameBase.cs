@@ -141,19 +141,24 @@ namespace Quaver.Main
         public static List<IGameplayModifier> CurrentGameModifiers { get; set; } = new List<IGameplayModifier>();
 
         /// <summary>
-        ///     Keeps track of if the bass library is already initialized on the default output device
-        /// </summary>
-        public static bool BassInitialized { get; set; } 
-
-        /// <summary>
         ///     The current keyboard state.
         /// </summary>
         public static KeyboardState KeyboardState { get; set; }
 
         /// <summary>
+        ///     The keyboard state of the previous frame.
+        /// </summary>
+        public static KeyboardState PreviousKeyboardState { get; set; }
+
+        /// <summary>
         ///     The current Mouse State
         /// </summary>
         public static MouseState MouseState { get; set; }
+
+        /// <summary>
+        ///     The mouse state of the previous frame.
+        /// </summary>
+        public static MouseState PreviousMouseState { get; set; }
 
         /// <summary>
         /// The mouse cursor
