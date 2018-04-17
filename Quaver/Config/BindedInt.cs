@@ -27,6 +27,8 @@ namespace Quaver.Config
             get => _value;
             set
             {
+                var previousVal = _value;
+                
                 if (value < MinValue)
                     _value = MinValue;
                 else if (value > MaxValue)
@@ -34,7 +36,8 @@ namespace Quaver.Config
                 else
                     _value = value;
                  
-                OnValueChanged?.Invoke(this, new BindedValueEventArgs<int>(_value));
+                if (_value != previousVal)
+                    OnValueChanged?.Invoke(this, new BindedValueEventArgs<int>(_value));
             }
         }
 
