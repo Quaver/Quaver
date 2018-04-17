@@ -144,6 +144,8 @@ namespace Quaver.Main
             GameBase.GlobalInputManager.CheckInput();
 
             // Update Keyboard States
+            GameBase.PreviousKeyboardState = GameBase.KeyboardState;
+            GameBase.PreviousMouseState = GameBase.MouseState;
             GameBase.KeyboardState = Keyboard.GetState();
             GameBase.MouseState = Mouse.GetState();
 
