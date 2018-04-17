@@ -244,30 +244,43 @@ namespace Quaver.Graphics.Overlays.Volume
             // Dictate which slider is the one that is currently focused.
             SetFocusedSlider();
             ChangeFocusedSliderColor();
+
+            // Require either alt key to be pressed when changing volume.
+            if (!GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) && !GameBase.KeyboardState.IsKeyDown(Keys.RightAlt))
+                return;
             
+            // Activate the volume control box.
             if (InputHelper.IsUniqueKeyPress(Keys.Up)|| InputHelper.IsUniqueKeyPress(Keys.Down) || 
-                InputHelper.IsUniqueKeyPress(Keys.Left) || InputHelper.IsUniqueKeyPress(Keys.Right))
+                InputHelper.IsUniqueKeyPress(Keys.Left) || InputHelper.IsUniqueKeyPress(Keys.Right)
+                || GameBase.MouseState.ScrollWheelValue != GameBase.PreviousMouseState.ScrollWheelValue)
             {
                 // TODO: Do animation here.
                 if (!SurroundingBox.Visible)
                     SurroundingBox.Visible = true;
-                
-                Console.WriteLine(FocusedSlider.BindedValue.Name);
             }
-
-            // Handle the gradual increase of the slider.
-            if (SurroundingBox.Visible)
+            
+            // Mouse wheel input.
+            if (GameBase.MouseState.ScrollWheelValue > GameBase.PreviousMouseState.ScrollWheelValue)
             {
-                if (GameBase.KeyboardState.IsKeyDown(Keys.Right))
-                {
-                    if (TimeElapsedSinceLastVolumeChange >= 50)
-                        UpdateVolume(5);
-                }
-                else if (GameBase.KeyboardState.IsKeyDown(Keys.Left))
-                {
-                    if (TimeElapsedSinceLastVolumeChange >= 50)
-                        UpdateVolume(-5);
-                }
+                if (TimeElapsedSinceLastVolumeChange >= 50)
+                    UpdateVolume(10);
+            }
+            else if (GameBase.MouseState.ScrollWheelValue < GameBase.PreviousMouseState.ScrollWheelValue)
+            {
+                if (TimeElapsedSinceLastVolumeChange >= 50)
+                    UpdateVolume(-10);
+            }
+                
+            // Keyboard input.
+            if (GameBase.KeyboardState.IsKeyDown(Keys.Right))
+            {
+                if (TimeElapsedSinceLastVolumeChange >= 50)
+                    UpdateVolume(5);
+            }
+            else if (GameBase.KeyboardState.IsKeyDown(Keys.Left))
+            {
+                if (TimeElapsedSinceLastVolumeChange >= 50)
+                    UpdateVolume(-5);
             }
         }
 
@@ -327,7 +340,7 @@ namespace Quaver.Graphics.Overlays.Volume
         /// <summary>
         ///     Responsible for updating the sound of the focused slider.
         /// </summary>
-        /// <param name="dt"></param>
+        /// <param name="amount"></param>
         private void UpdateVolume(int amount)
         {
             FocusedSlider.BindedValue.Value += amount;
