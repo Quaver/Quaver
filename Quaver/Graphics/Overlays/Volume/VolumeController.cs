@@ -339,16 +339,12 @@ namespace Quaver.Graphics.Overlays.Volume
         /// </summary>
         private void ChangeFocusedSliderColor()
         {
-            var unfocusedSliders = Sliders.FindAll(x => x != FocusedSlider).ToList();
-
-            foreach (var slider in unfocusedSliders)
-            {
-                slider.Tint = Color.White;
-                slider.ProgressBall.Tint = Color.White;
-            }
-
-            FocusedSlider.Tint = Color.Yellow;
-            FocusedSlider.ProgressBall.Tint = Color.Yellow;
+            // Change unfocused sliders
+            foreach (var slider in Sliders.FindAll(x => x != FocusedSlider).ToList())
+                slider.ChangeColor(Color.White);
+            
+            // Change focused sliders.
+            FocusedSlider.ChangeColor(Color.Yellow);
         }
     }
 }
