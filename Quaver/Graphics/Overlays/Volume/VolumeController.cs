@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics.Buttons.Sliders;
@@ -7,6 +10,7 @@ using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Main;
 using Quaver.States;
+using SQLite;
 
 namespace Quaver.Graphics.Overlays.Volume
 {
@@ -53,6 +57,11 @@ namespace Quaver.Graphics.Overlays.Volume
         private QuaverSprite EffectVolumeSliderIcon { get; set; }
 
         /// <summary>
+        ///     Array containing all of the sliders, so we can iterate over them.
+        /// </summary>
+        private List<QuaverSlider> Sliders { get; set; }
+
+        /// <summary>
         ///     The size of each slider.
         /// </summary>
         private Vector2 SliderSize { get; }
@@ -68,6 +77,11 @@ namespace Quaver.Graphics.Overlays.Volume
         private Color SliderProgressColor { get; }
 
         /// <summary>
+        ///     The scroll wheel value of the previous frame.
+        /// </summary>
+        private int PreviousScrollWheelValue { get; set; }
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         internal VolumeController()
@@ -75,6 +89,7 @@ namespace Quaver.Graphics.Overlays.Volume
             SliderSize = new Vector2(300, 3);
             SliderColor = Color.White;
             SliderProgressColor = new Color(165, 223, 255);
+            Sliders = new List<QuaverSlider>();
         }
         
         /// <summary>
@@ -82,7 +97,7 @@ namespace Quaver.Graphics.Overlays.Volume
         /// </summary>
         /// <param name="state"></param>
         public void Initialize(IGameState state)
-        {
+        {            
             Container = new QuaverContainer();
 
             // Create the surrounding box that will house the sliders.
@@ -95,7 +110,7 @@ namespace Quaver.Graphics.Overlays.Volume
                 Tint = new Color(0f, 0f, 0f, 0.65f),
                 Parent = Container
             };
-
+    
             #region masterVolumeSlider
             
             // Create master volume slider.
@@ -117,6 +132,8 @@ namespace Quaver.Graphics.Overlays.Volume
                 PosY = MasterVolumeSlider.PosY - 10,
                 PosX = 10
             };
+            
+            Sliders.Add(MasterVolumeSlider);
             
             #endregion
 
@@ -142,6 +159,8 @@ namespace Quaver.Graphics.Overlays.Volume
                 PosX = 10
             };
             
+            Sliders.Add(MusicVolumeSlider);
+            
             #endregion
 
             #region effectVolumeSlider
@@ -166,7 +185,11 @@ namespace Quaver.Graphics.Overlays.Volume
                 PosX = 10
             };
             
+            Sliders.Add(EffectVolumeSlider);
+            
             #endregion
+
+            SurroundingBox.Visible = false;
         }
 
         /// <summary>
@@ -183,6 +206,75 @@ namespace Quaver.Graphics.Overlays.Volume
         /// <param name="dt"></param>
         public void Update(double dt)
         {
+            HandleInput(dt);
+            Container.Update(dt);
+        }
+
+        /// <summary>
+        ///     Draw
+        /// </summary>
+        public void Draw()
+        {
+            Container.Draw();
+        }
+
+        /// <summary>
+        ///     Handles the overall input of the volume controller. Called every frame.
+        /// </summary>
+        private void HandleInput(double dt)
+        {
+            // Only have the volume control be activated and usable when holding down either ALT key.
+            if (!GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) && !GameBase.KeyboardState.IsKeyDown(Keys.RightAlt))
+            {
+                PreviousScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
+                return;
+            }
+
+            // Handle when the mouse's scroll wheel 
+            if (GameBase.MouseState.ScrollWheelValue != PreviousScrollWheelValue)
+            {
+                // TODO: If not visible, do a fade in effect.
+                if (!SurroundingBox.Visible)
+                    SurroundingBox.Visible = true;
+
+                // Handle increase
+                if (GameBase.MouseState.ScrollWheelValue > PreviousScrollWheelValue)
+                {
+                    Console.WriteLine("increase");
+                    var focusedSlider = GetFocusedSlider();
+                    Console.WriteLine(focusedSlider.BindedValue.Name);
+                    focusedSlider.BindedValue.Value += 5;
+                }
+                // Handle decrease.
+                else
+                {
+                    Console.WriteLine("decrease");
+                    var focusedSlider = GetFocusedSlider();
+                    Console.WriteLine(focusedSlider.BindedValue.Name);
+                    focusedSlider.BindedValue.Value -= 5;
+                }
+            }
+            
+            PreviousScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
+        }
+
+        /// <summary>
+        ///     Get the currently focused slider from the list of sliders.
+        ///     If none are focused, the default that's returned is the master volume
+        ///     slider.
+        /// </summary>
+        /// <returns></returns>
+        private QuaverSlider GetFocusedSlider()
+        {
+            return Sliders.Find(x => x.IsHovered) ?? MasterVolumeSlider;
+        }
+        
+        /// <summary>
+        ///     Makes sure the slider colours highlighted/normal for each slider.
+        /// </summary>
+        private void ChangeSliderColorsOnHover()
+        {
+            // Master
             if (MasterVolumeSlider.IsHovered)
             {
                 MasterVolumeSlider.ChangeColor(Color.Yellow);
@@ -191,10 +283,10 @@ namespace Quaver.Graphics.Overlays.Volume
             else
             {
                 MasterVolumeSlider.ChangeColor(Color.White);
-                MasterVolumeSliderIcon.Tint = Color.White;;
+                MasterVolumeSliderIcon.Tint = Color.White;
             }
-
-
+            
+            // Music
             if (MusicVolumeSlider.IsHovered)
             {
                 MusicVolumeSlider.ChangeColor(Color.Yellow);
@@ -206,6 +298,7 @@ namespace Quaver.Graphics.Overlays.Volume
                 MusicVolumeSliderIcon.Tint = Color.White;
             }
 
+            // Effect
             if (EffectVolumeSlider.IsHovered)
             {
                 EffectVolumeSlider.ChangeColor(Color.Yellow);
@@ -216,17 +309,6 @@ namespace Quaver.Graphics.Overlays.Volume
                 EffectVolumeSlider.ChangeColor(Color.White);
                 EffectVolumeSliderIcon.Tint = Color.White;
             }
-
-            
-            Container.Update(dt);
-        }
-
-        /// <summary>
-        ///     Draw
-        /// </summary>
-        public void Draw()
-        {
-            Container.Draw();
         }
     }
 }
