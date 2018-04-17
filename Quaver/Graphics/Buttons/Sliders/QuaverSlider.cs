@@ -57,7 +57,12 @@ namespace Quaver.Graphics.Buttons.Sliders
         ///     Dictates whether the MouseOver sound has already been played for this button.
         /// </summary>
         private bool MouseOverSoundPlayed { get; set; }
-        
+
+        /// <summary>
+        ///     The previous value that we have stored.
+        /// </summary>
+        private int PreviousValue { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Creates a new SliderButton. Takes in a BindedInt as an argument.
@@ -229,8 +234,22 @@ namespace Quaver.Graphics.Buttons.Sliders
                 ProgressBall.Position = new UDim2D(Size.X.Offset / 2 - ProgressBall.SizeX / 2, (100 - percentage) / 100f * Size.Y.Offset, 1, 0);
             else
                 ProgressBall.Position = new UDim2D(percentage / 100f * Size.X.Offset, Size.Y.Offset / 2 - ProgressBall.SizeY / 2, 1, 0);
+        }
+
+        /// <summary>
+        ///     Plays a sound effect at a given value based on the previously captured binded val.
+        /// </summary>
+        /// <param name="val"></param>
+        private void PlaySoundEffectWhenChanged(int val)
+        {
+            // Find the percentage
+            var percent = BindedValue.Value - BindedValue.MinValue / BindedValue.MaxValue * 100;
             
-            // TODO: Play a sound effect at a given frequency to give an effect of moving the slider up or down.
+            // Set the min and max based on the direction we're going.
+            var max = val > PreviousValue ? 1f : 0;
+            var min = val > PreviousValue ? 0 : -1f;
+            
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover, percent * (max - min) / 100f + min);
         }
 
         /// <summary>
@@ -247,6 +266,12 @@ namespace Quaver.Graphics.Buttons.Sliders
         {
             // Automatically set the progress once the value has changed.
             SetProgressPosition();
+            
+            // Play a sound effect
+            // PlaySoundEffectWhenChanged(e.Value);
+
+            // Update the previous value.
+            PreviousValue = e.Value;
         }
     }
 }
