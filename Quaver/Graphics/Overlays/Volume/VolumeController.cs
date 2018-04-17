@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
@@ -77,9 +78,14 @@ namespace Quaver.Graphics.Overlays.Volume
         private Color SliderProgressColor { get; }
 
         /// <summary>
-        ///     The scroll wheel value of the previous frame.
+        ///     The keyboard state of the previous frame.
         /// </summary>
-        private int PreviousScrollWheelValue { get; set; }
+        private KeyboardState PreviousKeyboardState { get; set; }
+
+        /// <summary>
+        ///     The slider that is currently "focused"
+        /// </summary>
+        private QuaverSlider FocusedSlider { get; set; }
 
         /// <summary>
         ///     Ctor - 
@@ -208,6 +214,9 @@ namespace Quaver.Graphics.Overlays.Volume
         {
             HandleInput(dt);
             Container.Update(dt);
+
+            // Update previous keyboard state.
+            PreviousKeyboardState = GameBase.KeyboardState;
         }
 
         /// <summary>
@@ -223,39 +232,22 @@ namespace Quaver.Graphics.Overlays.Volume
         /// </summary>
         private void HandleInput(double dt)
         {
-            // Only have the volume control be activated and usable when holding down either ALT key.
-            if (!GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) && !GameBase.KeyboardState.IsKeyDown(Keys.RightAlt))
-            {
-                PreviousScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
-                return;
-            }
-
-            // Handle when the mouse's scroll wheel 
-            if (GameBase.MouseState.ScrollWheelValue != PreviousScrollWheelValue)
-            {
-                // TODO: If not visible, do a fade in effect.
-                if (!SurroundingBox.Visible)
-                    SurroundingBox.Visible = true;
-
-                // Handle increase
-                if (GameBase.MouseState.ScrollWheelValue > PreviousScrollWheelValue)
-                {
-                    Console.WriteLine("increase");
-                    var focusedSlider = GetFocusedSlider();
-                    Console.WriteLine(focusedSlider.BindedValue.Name);
-                    focusedSlider.BindedValue.Value += 5;
-                }
-                // Handle decrease.
-                else
-                {
-                    Console.WriteLine("decrease");
-                    var focusedSlider = GetFocusedSlider();
-                    Console.WriteLine(focusedSlider.BindedValue.Name);
-                    focusedSlider.BindedValue.Value -= 5;
-                }
-            }
+            // Dictate which slider is the one that is currently focused.
+            SetFocusedSlider();
             
-            PreviousScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
+            if (GameBase.KeyboardState.IsKeyDown(Keys.Up) || GameBase.KeyboardState.IsKeyDown(Keys.Down) || 
+                GameBase.KeyboardState.IsKeyDown(Keys.Left) || GameBase.KeyboardState.IsKeyDown(Keys.Right))
+            {
+                // TODO: Do animation here.
+                if (!SurroundingBox.Visible)
+                {
+                    SurroundingBox.Visible = true;
+                    FocusedSlider = MasterVolumeSlider;
+                }
+
+                
+                Console.WriteLine(FocusedSlider.BindedValue.Name);
+            }
         }
 
         /// <summary>
@@ -267,6 +259,54 @@ namespace Quaver.Graphics.Overlays.Volume
         private QuaverSlider GetFocusedSlider()
         {
             return Sliders.Find(x => x.IsHovered) ?? MasterVolumeSlider;
+        }
+
+        /// <summary>
+        ///     Sets the currently focused slider out of our list of sliders.
+        ///     The default focused slider is the master volume.
+        /// </summary>
+        private void SetFocusedSlider()
+        {
+            // A slider with the mouse currently hovered over it takes precedence over
+            // any other action. That is automatically the focused slider.
+            var focused = Sliders.Find(x => x.IsHovered);
+            if (focused != null)
+            {
+                FocusedSlider = focused;
+                return;
+            }
+
+            // If the user pressed the up key when determine the focused slider, 
+            // it becomes the one above. (If first in the list, it becomes the last.)
+            if (GameBase.KeyboardState.IsKeyDown(Keys.Up) && !PreviousKeyboardState.IsKeyDown(Keys.Up))
+            {
+                // If the focused slider is the first one in the list, we set it to the last.
+                if (FocusedSlider == Sliders.First())
+                {
+                    FocusedSlider = Sliders.Last();
+                    return;
+                }
+
+                // Otherwise, just set the focused to the previous in the list.
+                var index = Sliders.IndexOf(FocusedSlider);
+                FocusedSlider = Sliders[index - 1];
+                return;
+            }
+            
+            // If the user presses the down key, we switch the focused slider to the 
+            if (GameBase.KeyboardState.IsKeyDown(Keys.Down) && !PreviousKeyboardState.IsKeyDown(Keys.Down))
+            {
+                // If the focused slider is the last one in the list, we set it to the first.
+                if (FocusedSlider == Sliders.Last())
+                {
+                    FocusedSlider = Sliders.First();
+                    return;
+                }
+                
+                var index = Sliders.IndexOf(FocusedSlider);
+                FocusedSlider = Sliders[index + 1];
+                return;
+            }
         }
         
         /// <summary>
