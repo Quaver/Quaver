@@ -9,6 +9,7 @@ using Quaver.Graphics.Buttons.Sliders;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
+using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States;
 using SQLite;
@@ -235,8 +236,8 @@ namespace Quaver.Graphics.Overlays.Volume
             // Dictate which slider is the one that is currently focused.
             SetFocusedSlider();
             
-            if (GameBase.KeyboardState.IsKeyDown(Keys.Up) || GameBase.KeyboardState.IsKeyDown(Keys.Down) || 
-                GameBase.KeyboardState.IsKeyDown(Keys.Left) || GameBase.KeyboardState.IsKeyDown(Keys.Right))
+            if (InputHelper.IsUniqueKeyPress(Keys.Up)|| InputHelper.IsUniqueKeyPress(Keys.Down) || 
+                InputHelper.IsUniqueKeyPress(Keys.Left) || InputHelper.IsUniqueKeyPress(Keys.Right))
             {
                 // TODO: Do animation here.
                 if (!SurroundingBox.Visible)
@@ -278,7 +279,7 @@ namespace Quaver.Graphics.Overlays.Volume
 
             // If the user pressed the up key when determine the focused slider, 
             // it becomes the one above. (If first in the list, it becomes the last.)
-            if (GameBase.KeyboardState.IsKeyDown(Keys.Up) && !PreviousKeyboardState.IsKeyDown(Keys.Up))
+            if (InputHelper.IsUniqueKeyPress(Keys.Up))
             {
                 // If the focused slider is the first one in the list, we set it to the last.
                 if (FocusedSlider == Sliders.First())
@@ -294,7 +295,7 @@ namespace Quaver.Graphics.Overlays.Volume
             }
             
             // If the user presses the down key, we switch the focused slider to the 
-            if (GameBase.KeyboardState.IsKeyDown(Keys.Down) && !PreviousKeyboardState.IsKeyDown(Keys.Down))
+            if (InputHelper.IsUniqueKeyPress(Keys.Down))
             {
                 // If the focused slider is the last one in the list, we set it to the first.
                 if (FocusedSlider == Sliders.Last())
