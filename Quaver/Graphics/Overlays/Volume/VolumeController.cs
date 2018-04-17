@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.GameState;
@@ -242,6 +243,7 @@ namespace Quaver.Graphics.Overlays.Volume
         {
             // Dictate which slider is the one that is currently focused.
             SetFocusedSlider();
+            ChangeFocusedSliderColor();
             
             if (InputHelper.IsUniqueKeyPress(Keys.Up)|| InputHelper.IsUniqueKeyPress(Keys.Down) || 
                 InputHelper.IsUniqueKeyPress(Keys.Left) || InputHelper.IsUniqueKeyPress(Keys.Right))
@@ -288,6 +290,9 @@ namespace Quaver.Graphics.Overlays.Volume
             // it becomes the one above. (If first in the list, it becomes the last.)
             if (InputHelper.IsUniqueKeyPress(Keys.Up))
             {
+                // Play hvoer sound effect
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover);
+                
                 // If the focused slider is the first one in the list, we set it to the last.
                 if (FocusedSlider == Sliders.First())
                 {
@@ -304,6 +309,9 @@ namespace Quaver.Graphics.Overlays.Volume
             // If the user presses the down key, we switch the focused slider to the 
             if (InputHelper.IsUniqueKeyPress(Keys.Down))
             {
+                // Play hover sound effect
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover);
+                
                 // If the focused slider is the last one in the list, we set it to the first.
                 if (FocusedSlider == Sliders.Last())
                 {
@@ -329,43 +337,18 @@ namespace Quaver.Graphics.Overlays.Volume
         /// <summary>
         ///     Makes sure the slider colours highlighted/normal for each slider.
         /// </summary>
-        private void ChangeSliderColorsOnHover()
+        private void ChangeFocusedSliderColor()
         {
-            // Master
-            if (MasterVolumeSlider.IsHovered)
+            var unfocusedSliders = Sliders.FindAll(x => x != FocusedSlider).ToList();
+
+            foreach (var slider in unfocusedSliders)
             {
-                MasterVolumeSlider.ChangeColor(Color.Yellow);
-                MasterVolumeSliderIcon.Tint = Color.Yellow;
-            }
-            else
-            {
-                MasterVolumeSlider.ChangeColor(Color.White);
-                MasterVolumeSliderIcon.Tint = Color.White;
-            }
-            
-            // Music
-            if (MusicVolumeSlider.IsHovered)
-            {
-                MusicVolumeSlider.ChangeColor(Color.Yellow);
-                MusicVolumeSliderIcon.Tint = Color.Yellow;
-            }
-            else
-            {
-                MusicVolumeSlider.ChangeColor(Color.White);
-                MusicVolumeSliderIcon.Tint = Color.White;
+                slider.Tint = Color.White;
+                slider.ProgressBall.Tint = Color.White;
             }
 
-            // Effect
-            if (EffectVolumeSlider.IsHovered)
-            {
-                EffectVolumeSlider.ChangeColor(Color.Yellow);
-                EffectVolumeSliderIcon.Tint = Color.Yellow;
-            }
-            else
-            {
-                EffectVolumeSlider.ChangeColor(Color.White);
-                EffectVolumeSliderIcon.Tint = Color.White;
-            }
+            FocusedSlider.Tint = Color.Yellow;
+            FocusedSlider.ProgressBall.Tint = Color.Yellow;
         }
     }
 }
