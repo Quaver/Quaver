@@ -142,9 +142,9 @@ namespace Quaver.Audio
         /// <summary>
         ///     Plays a sound effect.
         /// </summary>
-        internal void PlaySoundEffect(SoundEffect sfx)
+        internal void PlaySoundEffect(SoundEffect sfx, float pitch = 0)
         {
-            sfx.Play(EffectVolume, 0, 0);
+            sfx.Play(EffectVolume, pitch, 0);
         }
 
         /// <summary>
