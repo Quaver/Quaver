@@ -89,6 +89,11 @@ namespace Quaver.Graphics.Overlays.Volume
         private QuaverSlider FocusedSlider { get; set; }
 
         /// <summary>
+        ///     The time elapsed since the last volume change.
+        /// </summary>
+        private double TimeElapsedSinceLastVolumeChange { get; set; } = 50;
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         internal VolumeController()
@@ -197,6 +202,7 @@ namespace Quaver.Graphics.Overlays.Volume
             #endregion
 
             SurroundingBox.Visible = false;
+            FocusedSlider = MasterVolumeSlider;
         }
 
         /// <summary>
@@ -218,6 +224,7 @@ namespace Quaver.Graphics.Overlays.Volume
 
             // Update previous keyboard state.
             PreviousKeyboardState = GameBase.KeyboardState;
+            TimeElapsedSinceLastVolumeChange += dt;
         }
 
         /// <summary>
@@ -241,25 +248,25 @@ namespace Quaver.Graphics.Overlays.Volume
             {
                 // TODO: Do animation here.
                 if (!SurroundingBox.Visible)
-                {
                     SurroundingBox.Visible = true;
-                    FocusedSlider = MasterVolumeSlider;
-                }
-
                 
                 Console.WriteLine(FocusedSlider.BindedValue.Name);
             }
-        }
 
-        /// <summary>
-        ///     Get the currently focused slider from the list of sliders.
-        ///     If none are focused, the default that's returned is the master volume
-        ///     slider.
-        /// </summary>
-        /// <returns></returns>
-        private QuaverSlider GetFocusedSlider()
-        {
-            return Sliders.Find(x => x.IsHovered) ?? MasterVolumeSlider;
+            // Handle the gradual increase of the slider.
+            if (SurroundingBox.Visible)
+            {
+                if (GameBase.KeyboardState.IsKeyDown(Keys.Right))
+                {
+                    if (TimeElapsedSinceLastVolumeChange >= 50)
+                        UpdateVolume(5);
+                }
+                else if (GameBase.KeyboardState.IsKeyDown(Keys.Left))
+                {
+                    if (TimeElapsedSinceLastVolumeChange >= 50)
+                        UpdateVolume(-5);
+                }
+            }
         }
 
         /// <summary>
@@ -306,8 +313,17 @@ namespace Quaver.Graphics.Overlays.Volume
                 
                 var index = Sliders.IndexOf(FocusedSlider);
                 FocusedSlider = Sliders[index + 1];
-                return;
             }
+        }
+
+        /// <summary>
+        ///     Responsible for updating the sound of the focused slider.
+        /// </summary>
+        /// <param name="dt"></param>
+        private void UpdateVolume(int amount)
+        {
+            FocusedSlider.BindedValue.Value += amount;
+            TimeElapsedSinceLastVolumeChange = 0;
         }
         
         /// <summary>
