@@ -31,7 +31,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <summary>
         ///     The progress slider image.
         /// </summary>
-        private QuaverSprite ProgressBall { get; }
+        internal QuaverSprite ProgressBall { get; }
 
         /// <summary>
         ///     If the mouse is held down and hasn't let go yet.
