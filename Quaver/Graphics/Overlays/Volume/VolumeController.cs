@@ -246,7 +246,7 @@ namespace Quaver.Graphics.Overlays.Volume
             ChangeFocusedSliderColor();
 
             // Require either alt key to be pressed when changing volume.
-            if (!GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) && !GameBase.KeyboardState.IsKeyDown(Keys.RightAlt))
+            if (!GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) && !GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) && !SurroundingBox.Visible)
                 return;
             
             // Activate the volume control box.
@@ -292,9 +292,9 @@ namespace Quaver.Graphics.Overlays.Volume
         {
             // A slider with the mouse currently hovered over it takes precedence over
             // any other action. That is automatically the focused slider.
-            var focused = Sliders.Find(x => x.IsHovered);
+            var focused = Sliders.Find(x => x.MouseInHoldSequence) ?? Sliders.Find(x => x.IsHovered);
             if (focused != null)
-            {
+            {              
                 FocusedSlider = focused;
                 return;
             }
