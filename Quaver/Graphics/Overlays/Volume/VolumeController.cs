@@ -119,7 +119,7 @@ namespace Quaver.Graphics.Overlays.Volume
                 Alignment = Alignment.TopRight,
                 PosY = 60,
                 PosX =  -25,
-                Tint = new Color(0f, 0f, 0f, 0.65f),
+                Tint = new Color(0f, 0f, 0f, 0f),
                 Parent = Container,
                 // Set alpha to 0 upon creation as it'll be faded in.
                 Alpha = 0 
@@ -385,8 +385,15 @@ namespace Quaver.Graphics.Overlays.Volume
         private void HandleInactiveFadeOut(double dt)
         {
             if (TimeInactive >= 1500)
-            {
+            {         
+                // Fade out all of the sliders
                 SurroundingBox.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
+                MasterVolumeSlider.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
+                MasterVolumeSliderIcon.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
+                MusicVolumeSlider.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
+                MusicVolumeSliderIcon.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
+                EffectVolumeSlider.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
+                EffectVolumeSliderIcon.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
     
                 if (SurroundingBox.Alpha >= 0.01f) 
                     return;
@@ -408,8 +415,14 @@ namespace Quaver.Graphics.Overlays.Volume
             // Set the box to be visible of course.
             SurroundingBox.Visible = true;
             
-            // Begin tweening to fade in the box.
+            // Begin tweening to fade in the box and all of the sliders.
             SurroundingBox.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
+            MasterVolumeSlider.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
+            MasterVolumeSliderIcon.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));;
+            MusicVolumeSlider.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
+            MusicVolumeSliderIcon.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
+            EffectVolumeSlider.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
+            EffectVolumeSliderIcon.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
 
             // When the box is fully apparent, then we can stop the fade effect.
             if (SurroundingBox.Alpha >= 0.98)
