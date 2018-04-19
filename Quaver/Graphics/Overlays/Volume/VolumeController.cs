@@ -68,27 +68,12 @@ namespace Quaver.Graphics.Overlays.Volume
         /// <summary>
         ///     Array containing all of the sliders, so we can iterate over them.
         /// </summary>
-        private List<QuaverSlider> Sliders { get; set; }
+        private List<QuaverSlider> Sliders { get; }
 
         /// <summary>
         ///     The size of each slider.
         /// </summary>
         private Vector2 SliderSize { get; }
-
-        /// <summary>
-        ///     The color of the slider line.
-        /// </summary>
-        private Color SliderColor { get;  }
-
-        /// <summary>
-        ///     The color of the slider progress thing.
-        /// </summary>
-        private Color SliderProgressColor { get; }
-
-        /// <summary>
-        ///     The keyboard state of the previous frame.
-        /// </summary>
-        private KeyboardState PreviousKeyboardState { get; set; }
 
         /// <summary>
         ///     The slider that is currently "focused"
@@ -116,8 +101,6 @@ namespace Quaver.Graphics.Overlays.Volume
         internal VolumeController()
         {
             SliderSize = new Vector2(300, 3);
-            SliderColor = Color.White;
-            SliderProgressColor = new Color(165, 223, 255);
             Sliders = new List<QuaverSlider>();
         }
         
@@ -241,8 +224,7 @@ namespace Quaver.Graphics.Overlays.Volume
             // Handle all needed input.
             HandleInput();
 
-            // Update previous keyboard state.
-            PreviousKeyboardState = GameBase.KeyboardState;
+            // Update last volume change timer.
             TimeElapsedSinceLastVolumeChange += dt;
             
             // As long as the box is visible, start 
