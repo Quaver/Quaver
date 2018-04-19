@@ -92,8 +92,6 @@ namespace Quaver.Graphics.Buttons.Sliders
                 Parent = this
             };
               
-            SetProgressPosition();
-
             // Whenever the value changes, we need to update the slider accordingly,
             // so hook onto this event with a handler.
             BindedValue.OnValueChanged += OnValueChanged;
@@ -114,6 +112,7 @@ namespace Quaver.Graphics.Buttons.Sliders
                 HandleSliderValueChanges();
 
             PreviousMouseState = GameBase.MouseState;
+            SetProgressPosition(dt);
             base.Update(dt);
         }
 
@@ -196,9 +195,7 @@ namespace Quaver.Graphics.Buttons.Sliders
             {
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover);
                 MouseOverSoundPlayed = true;
-            }
-            
-            SetProgressPosition();
+            }         
         }
         
         /// <inheritdoc />
@@ -206,9 +203,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         ///     MouseOut
         /// </summary>
         protected override void MouseOut()
-        {
-            SetProgressPosition();
-            
+        {           
             // Reset MouseOverSoundPlayed for this particular button now that we've moused out.
             MouseOverSoundPlayed = false;
         }
@@ -226,14 +221,20 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <summary>
         ///     Sets the correct position of the progress image
         /// </summary>
-        private void SetProgressPosition()
+        private void SetProgressPosition(double dt)
         {
             var percentage = BindedValue.Value - BindedValue.MinValue / BindedValue.MaxValue * 100;
-            
+
             if (IsVertical)
-                ProgressBall.Position = new UDim2D(Size.X.Offset / 2 - ProgressBall.SizeX / 2, (100 - percentage) / 100f * Size.Y.Offset, 1, 0);
+            {
+                ProgressBall.PosX = GraphicsHelper.Tween(Size.X.Offset / 2 - ProgressBall.SizeX / 2, ProgressBall.PosX, Math.Min(dt / 30, 1));
+                ProgressBall.PosY = GraphicsHelper.Tween((100 - percentage) / 100f * Size.Y.Offset, ProgressBall.PosY, Math.Min(dt / 30, 1));
+;            }
             else
-                ProgressBall.Position = new UDim2D(percentage / 100f * Size.X.Offset, Size.Y.Offset / 2 - ProgressBall.SizeY / 2, 1, 0);
+            {
+                ProgressBall.PosX = GraphicsHelper.Tween(percentage / 100f * Size.X.Offset, ProgressBall.PosX, Math.Min(dt / 30, 1));
+                ProgressBall.PosY = GraphicsHelper.Tween(Size.Y.Offset / 2 - ProgressBall.SizeY / 2, ProgressBall.PosY, Math.Min(dt / 30, 1));
+            }
         }
 
         /// <summary>
@@ -263,10 +264,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnValueChanged(object sender, BindedValueEventArgs<int> e)
-        {
-            // Automatically set the progress once the value has changed.
-            SetProgressPosition();
-            
+        {          
             // Play a sound effect
             // PlaySoundEffectWhenChanged(e.Value);
 
