@@ -117,12 +117,14 @@ namespace Quaver.States.Select
             var tween = Math.Min(dt / 50, 1);
 
             curScrollPos = GameBase.MouseState.ScrollWheelValue;
+            
             TargetContainerOffset += (float)((curScrollPos - prevScrollPos - TargetContainerOffset) * tween);
-
-            MoveButtonContainer(TargetContainerOffset);
-            //TargetContainerOffset = 0;
-
-            prevScrollPos = curScrollPos;
+            
+            // Don't take scrolling into account if the volume controller is active.
+            if (!GameBase.VolumeController.IsActive)    
+                MoveButtonContainer(TargetContainerOffset);
+            
+             prevScrollPos = curScrollPos;
 
             MapInfoWindow.Update(dt);
             Boundary.Update(dt);
