@@ -95,6 +95,16 @@ namespace Quaver.Graphics.Overlays.Volume
         private double TimeElapsedSinceLastVolumeChange { get; set; } = 50;
 
         /// <summary>
+        ///     The amount of time that the volume controller has been inactive.
+        /// </summary>
+        private double TimeInactive { get; set; }
+
+        /// <summary>
+        ///     Keeps track of if the volume control box is fading in.
+        /// </summary>
+        private bool IsFadingIn { get; set; }
+        
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         internal VolumeController()
@@ -121,7 +131,9 @@ namespace Quaver.Graphics.Overlays.Volume
                 PosY = 60,
                 PosX =  -25,
                 Tint = new Color(0f, 0f, 0f, 0.65f),
-                Parent = Container
+                Parent = Container,
+                // Set alpha to 0 upon creation as it'll be faded in.
+                Alpha = 0 
             };
     
             #region masterVolumeSlider
@@ -220,12 +232,23 @@ namespace Quaver.Graphics.Overlays.Volume
         /// <param name="dt"></param>
         public void Update(double dt)
         {
-            HandleInput(dt);
-            Container.Update(dt);
+            // Handle all needed input.
+            HandleInput();
 
             // Update previous keyboard state.
             PreviousKeyboardState = GameBase.KeyboardState;
             TimeElapsedSinceLastVolumeChange += dt;
+            
+            // As long as the box is visible, start 
+            if (SurroundingBox.Visible)
+                TimeInactive += dt;
+            
+            // Handle all fade effects when they need to happen.
+            HandleFadeIn(dt);
+            HandleInactiveFadeOut(dt);
+            
+            // Update the container as normla.
+            Container.Update(dt);
         }
 
         /// <summary>
@@ -239,14 +262,14 @@ namespace Quaver.Graphics.Overlays.Volume
         /// <summary>
         ///     Handles the overall input of the volume controller. Called every frame.
         /// </summary>
-        private void HandleInput(double dt)
+        private void HandleInput()
         {
             // Dictate which slider is the one that is currently focused.
             SetFocusedSlider();
             ChangeFocusedSliderColor();
 
             // Require either alt key to be pressed when changing volume.
-            if (!GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) && !GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) && !SurroundingBox.Visible)
+            if (!GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) && !GameBase.KeyboardState.IsKeyDown(Keys.RightAlt))
                 return;
             
             // Activate the volume control box.
@@ -254,9 +277,9 @@ namespace Quaver.Graphics.Overlays.Volume
                 InputHelper.IsUniqueKeyPress(Keys.Left) || InputHelper.IsUniqueKeyPress(Keys.Right)
                 || GameBase.MouseState.ScrollWheelValue != GameBase.PreviousMouseState.ScrollWheelValue)
             {
-                // TODO: Do animation here.
-                if (!SurroundingBox.Visible)
-                    SurroundingBox.Visible = true;
+                // Fade in the volume controller box when we want it to become active again.
+                IsFadingIn = true;
+                TimeInactive = 0;
             }
             
             // Mouse wheel input.
@@ -293,15 +316,21 @@ namespace Quaver.Graphics.Overlays.Volume
             // A slider with the mouse currently hovered over it takes precedence over
             // any other action. That is automatically the focused slider.
             var focused = Sliders.Find(x => x.MouseInHoldSequence) ?? Sliders.Find(x => x.IsHovered);
-            if (focused != null)            
+            if (focused != null)
+            {
                 FocusedSlider = focused;
+                TimeInactive = 0;
+            }
 
             // If the user pressed the up key when determine the focused slider, 
             // it becomes the one above. (If first in the list, it becomes the last.)
-            if (InputHelper.IsUniqueKeyPress(Keys.Up))
+            if (InputHelper.IsUniqueKeyPress(Keys.Up) && (GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) || GameBase.KeyboardState.IsKeyDown(Keys.RightAlt)))
             {
-                // Play hvoer sound effect
+                // Play hover sound effect
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover);
+                
+                // Reset inactive timer.
+                TimeInactive = 0;
                 
                 // If the focused slider is the first one in the list, we set it to the last.
                 if (FocusedSlider == Sliders.First())
@@ -317,10 +346,13 @@ namespace Quaver.Graphics.Overlays.Volume
             }
             
             // If the user presses the down key, we switch the focused slider to the 
-            if (InputHelper.IsUniqueKeyPress(Keys.Down))
+            if (InputHelper.IsUniqueKeyPress(Keys.Down) && (GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) || GameBase.KeyboardState.IsKeyDown(Keys.RightAlt)))
             {
                 // Play hover sound effect
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover);
+
+                // Reset inactive timer.
+                TimeInactive = 0;
                 
                 // If the focused slider is the last one in the list, we set it to the first.
                 if (FocusedSlider == Sliders.Last())
@@ -342,6 +374,7 @@ namespace Quaver.Graphics.Overlays.Volume
         {
             FocusedSlider.BindedValue.Value += amount;
             TimeElapsedSinceLastVolumeChange = 0;
+            TimeInactive = 0;
         }
         
         /// <summary>
@@ -355,6 +388,44 @@ namespace Quaver.Graphics.Overlays.Volume
             
             // Change focused sliders.
             FocusedSlider.ChangeColor(Color.Yellow);
+        }
+
+        /// <summary>
+        ///    Controls the fadeout of the volume controller after it has been inactive
+        ///     for a period of time. 
+        /// </summary>
+        private void HandleInactiveFadeOut(double dt)
+        {
+            if (TimeInactive >= 3000)
+            {
+                SurroundingBox.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
+    
+                if (SurroundingBox.Alpha >= 0.01f) 
+                    return;
+                
+                SurroundingBox.Visible = false;
+                TimeInactive = 0;
+            }
+        }
+
+        /// <summary>
+        ///     Controls the FadeIn effect of the volume controller.
+        /// </summary>
+        /// <param name="dt"></param>
+        private void HandleFadeIn(double dt)
+        {
+            if (!IsFadingIn)
+                return;
+            
+            // Set the box to be visible of course.
+            SurroundingBox.Visible = true;
+            
+            // Begin tweening to fade in the box.
+            SurroundingBox.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
+
+            // When the box is fully apparent, then we can stop the fade effect.
+            if (SurroundingBox.Alpha >= 0.98)
+                IsFadingIn = false;
         }
     }
 }
