@@ -26,10 +26,6 @@ namespace Quaver.Main
         /// </summary>
         public static QuaverGame Game;
 
-        /// <summary>
-        ///     Reference to the global volume controller
-        /// </summary>
-        private static VolumeController VolumeController { get; set; }
 
         /// <summary>
         ///     Ctor - 
@@ -121,8 +117,8 @@ namespace Quaver.Main
             GameBase.GameOverlay.Initialize();
 
             // Set up volume controller
-            VolumeController = new VolumeController();
-            VolumeController.Initialize(null);
+            GameBase.VolumeController = new VolumeController();
+            GameBase.VolumeController.Initialize(null);
             
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
@@ -135,7 +131,7 @@ namespace Quaver.Main
         /// </summary>
         protected override void UnloadContent()
         {
-            VolumeController.UnloadContent();
+            GameBase.VolumeController.UnloadContent();
             BackgroundManager.UnloadContent();
             GameBase.GameOverlay.UnloadContent();
             GameBase.GameStateManager.ClearStates();
@@ -175,7 +171,7 @@ namespace Quaver.Main
             GameBase.QuaverCursor.Update(dt);
 
             // Update volume controller
-            VolumeController.Update(dt);
+            GameBase.VolumeController.Update(dt);
             
             base.Update(gameTime);
         }
@@ -197,7 +193,7 @@ namespace Quaver.Main
             // Draw QuaverCursor, Logging, and FPS Counter
             GameBase.SpriteBatch.Begin();
             GameBase.GameOverlay.Draw();
-            VolumeController.Draw();
+            GameBase.VolumeController.Draw();
             GameBase.QuaverCursor.Draw();
             Logger.Draw(dt);
 
