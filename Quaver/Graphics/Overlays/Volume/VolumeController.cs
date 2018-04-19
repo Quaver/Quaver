@@ -19,7 +19,13 @@ namespace Quaver.Graphics.Overlays.Volume
 {
     internal class VolumeController : IGameStateComponent
     {
-         /// <summary>
+        /// <summary>
+        ///     If the volume controller is currently active.
+        ///     (It's considered active if the box is visible and the user is holding down either alt key.)
+        /// </summary>
+        internal bool IsActive => SurroundingBox.Visible && (GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) || GameBase.KeyboardState.IsKeyDown(Keys.RightAlt));
+
+        /// <summary>
         ///     The container for the volume controller.   
         /// </summary>
         private QuaverContainer Container { get; set; }
