@@ -384,7 +384,7 @@ namespace Quaver.Graphics.Overlays.Volume
         /// </summary>
         private void HandleInactiveFadeOut(double dt)
         {
-            if (TimeInactive >= 3000)
+            if (TimeInactive >= 1500)
             {
                 SurroundingBox.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
     
