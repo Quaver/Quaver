@@ -196,11 +196,11 @@ namespace Quaver.Main
 
             // Draw QuaverCursor, Logging, and FPS Counter
             GameBase.SpriteBatch.Begin();
-            
             GameBase.GameOverlay.Draw();
+            VolumeController.Draw();
             GameBase.QuaverCursor.Draw();
             Logger.Draw(dt);
-            VolumeController.Draw();
+
             
             if (ConfigManager.FpsCounter.Value)
                 QuaverFpsCounter.Draw();
