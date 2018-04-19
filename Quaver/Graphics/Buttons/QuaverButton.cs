@@ -56,7 +56,7 @@ namespace Quaver.Graphics.Buttons
             PreviousMouseState = CurrentMouseState;
             CurrentMouseState = Mouse.GetState();
             
-            if (GetClickArea())
+            if (GetClickArea() && QuaverGame.Game.IsActive && Visible && Parent != null && Parent.Visible)
             {
                 IsHovered = true;
                 MouseOver();
@@ -67,8 +67,7 @@ namespace Quaver.Graphics.Buttons
                 
                 // If the user actually clicks the button, fire off the click event.
                 if (CurrentMouseState.LeftButton == ButtonState.Released && PreviousMouseState.LeftButton == ButtonState.Pressed)
-                    OnClicked();
-                
+                    OnClicked();                
             }
             else
             {

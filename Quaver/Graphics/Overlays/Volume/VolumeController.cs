@@ -293,11 +293,8 @@ namespace Quaver.Graphics.Overlays.Volume
             // A slider with the mouse currently hovered over it takes precedence over
             // any other action. That is automatically the focused slider.
             var focused = Sliders.Find(x => x.MouseInHoldSequence) ?? Sliders.Find(x => x.IsHovered);
-            if (focused != null)
-            {              
+            if (focused != null)            
                 FocusedSlider = focused;
-                return;
-            }
 
             // If the user pressed the up key when determine the focused slider, 
             // it becomes the one above. (If first in the list, it becomes the last.)
