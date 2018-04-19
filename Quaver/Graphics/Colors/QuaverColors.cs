@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Windows.Forms.VisualStyles;
+using Microsoft.Xna.Framework;
 
 namespace Quaver.Graphics.Colors
 {
@@ -56,5 +57,11 @@ namespace Quaver.Graphics.Colors
         public static readonly Color Snap16 = Color.Green;
         public static readonly Color Snap48 = Color.White;
         public static readonly Color[] SnapColors = new Color[9] { Snap1, Snap2, Snap3, Snap4, Snap6, Snap8, Snap12, Snap16, Snap48 };
+        
+        /// <summary>
+        ///     
+        /// </summary>
+        public static readonly Color MainAccent = new Color(81,197,249);
+        public static readonly Color MainAccentInactive = new Color(6,71,122);
     }
 }
