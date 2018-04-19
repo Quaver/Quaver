@@ -72,6 +72,11 @@ namespace Quaver.Graphics.Overlays.Volume
         private List<QuaverSlider> Sliders { get; }
 
         /// <summary>
+        ///     List containing all of the slider icons, so we can iterate over them.
+        /// </summary>
+        private List<QuaverSprite> SliderIcons { get; }
+
+        /// <summary>
         ///     The size of each slider.
         /// </summary>
         private Vector2 SliderSize { get; }
@@ -103,6 +108,7 @@ namespace Quaver.Graphics.Overlays.Volume
         {
             SliderSize = new Vector2(300, 3);
             Sliders = new List<QuaverSlider>();
+            SliderIcons = new List<QuaverSprite>();
         }
         
         /// <summary>
@@ -149,6 +155,7 @@ namespace Quaver.Graphics.Overlays.Volume
             };
             
             Sliders.Add(MasterVolumeSlider);
+            SliderIcons.Add(MasterVolumeSliderIcon);
             
             #endregion
 
@@ -175,6 +182,7 @@ namespace Quaver.Graphics.Overlays.Volume
             };
             
             Sliders.Add(MusicVolumeSlider);
+            SliderIcons.Add(MusicVolumeSliderIcon);
             
             #endregion
 
@@ -201,6 +209,7 @@ namespace Quaver.Graphics.Overlays.Volume
             };
             
             Sliders.Add(EffectVolumeSlider);
+            SliderIcons.Add(EffectVolumeSliderIcon);
             
             #endregion
 
@@ -410,13 +419,18 @@ namespace Quaver.Graphics.Overlays.Volume
                 // Fade out all of the sliders
                 // TODO: We should only have to do this on the parent...
                 SurroundingBox.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
-                MasterVolumeSlider.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
-                MasterVolumeSliderIcon.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
-                MusicVolumeSlider.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
-                MusicVolumeSliderIcon.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
-                EffectVolumeSlider.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
-                EffectVolumeSliderIcon.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
-    
+
+                // Change slider alpha
+                foreach (var slider in Sliders)
+                {
+                    slider.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
+                    slider.ProgressBall.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
+                }
+                
+                // Change slider icon alpha.
+                foreach (var icon in SliderIcons)
+                    icon.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
+
                 if (SurroundingBox.Alpha >= 0.01f) 
                     return;
                 
@@ -440,12 +454,17 @@ namespace Quaver.Graphics.Overlays.Volume
             // Begin tweening to fade in the box and all of the sliders.
             // TODO: We should only have to do this on the parent...
             SurroundingBox.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
-            MasterVolumeSlider.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
-            MasterVolumeSliderIcon.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));;
-            MusicVolumeSlider.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
-            MusicVolumeSliderIcon.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
-            EffectVolumeSlider.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
-            EffectVolumeSliderIcon.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
+            
+            // Change slider alpha
+            foreach (var slider in Sliders)
+            {
+                slider.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
+                slider.ProgressBall.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
+            }
+                
+            // Change slider icon alpha.
+            foreach (var icon in SliderIcons)
+                icon.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
 
             // When the box is fully apparent, then we can stop the fade effect.
             if (SurroundingBox.Alpha >= 0.98)
