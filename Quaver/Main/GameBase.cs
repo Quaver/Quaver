@@ -12,6 +12,7 @@ using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.GameOverlay;
+using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.UserInterface;
 using Quaver.Input;
 using Quaver.Modifiers;
@@ -196,6 +197,11 @@ namespace Quaver.Main
         ///     Reference to the game's audio engine
         /// </summary>
         public static AudioEngine AudioEngine { get; set; } = new AudioEngine();
+
+        /// <summary>
+        ///     Reference to the global volume controller
+        /// </summary>
+        public static VolumeController VolumeController { get; set; }
 
         /// <summary>
         ///     The current path of the selected map's audio file
