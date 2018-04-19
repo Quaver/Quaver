@@ -7,6 +7,7 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.UserInterface;
 using Quaver.Logging;
 using Quaver.Skinning;
@@ -25,6 +26,14 @@ namespace Quaver.Main
         /// </summary>
         public static QuaverGame Game;
 
+        /// <summary>
+        ///     Reference to the global volume controller
+        /// </summary>
+        private static VolumeController VolumeController { get; set; }
+
+        /// <summary>
+        ///     Ctor - 
+        /// </summary>
         public QuaverGame()
         {
             Game = this;
@@ -65,9 +74,6 @@ namespace Quaver.Main
         /// </summary>
         protected override void Initialize()
         {
-            // Handle Text Input
-            //GameBase.GameWindow.TextInput += TextEndered;
-
             // TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -114,6 +120,10 @@ namespace Quaver.Main
             // Set up overlay
             GameBase.GameOverlay.Initialize();
 
+            // Set up volume controller
+            VolumeController = new VolumeController();
+            VolumeController.Initialize(null);
+            
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
             GameBase.GameStateManager.ChangeState(new MainMenuState());             
@@ -125,6 +135,7 @@ namespace Quaver.Main
         /// </summary>
         protected override void UnloadContent()
         {
+            VolumeController.UnloadContent();
             BackgroundManager.UnloadContent();
             GameBase.GameOverlay.UnloadContent();
             GameBase.GameStateManager.ClearStates();
@@ -163,6 +174,9 @@ namespace Quaver.Main
             // Update Mouse QuaverCursor
             GameBase.QuaverCursor.Update(dt);
 
+            // Update volume controller
+            VolumeController.Update(dt);
+            
             base.Update(gameTime);
         }
 
@@ -182,11 +196,12 @@ namespace Quaver.Main
 
             // Draw QuaverCursor, Logging, and FPS Counter
             GameBase.SpriteBatch.Begin();
+            
             GameBase.GameOverlay.Draw();
             GameBase.QuaverCursor.Draw();
-
             Logger.Draw(dt);
-
+            VolumeController.Draw();
+            
             if (ConfigManager.FpsCounter.Value)
                 QuaverFpsCounter.Draw();
 
