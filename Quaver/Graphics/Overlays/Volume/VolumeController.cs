@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics.Buttons.Sliders;
+using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
@@ -372,10 +373,30 @@ namespace Quaver.Graphics.Overlays.Volume
         {
             // Change unfocused sliders
             foreach (var slider in Sliders.FindAll(x => x != FocusedSlider).ToList())
-                slider.ChangeColor(Color.White);
+                slider.ChangeColor(QuaverColors.MainAccentInactive);
             
             // Change focused sliders.
-            FocusedSlider.ChangeColor(Color.Yellow);
+            FocusedSlider.ChangeColor(QuaverColors.MainAccent);
+
+            /*
+            // Change tint of master vol icon - Not sure how I like this.
+            if (FocusedSlider == MasterVolumeSlider)
+                MasterVolumeSliderIcon.Tint = QuaverColors.MainAccent;
+            else
+                MasterVolumeSliderIcon.Tint = QuaverColors.MainAccentInactive;
+            
+            // Change tint of music vol icon
+            if (FocusedSlider == MusicVolumeSlider)
+                MusicVolumeSliderIcon.Tint = QuaverColors.MainAccent;
+            else
+                MusicVolumeSliderIcon.Tint = QuaverColors.MainAccentInactive;
+            
+            // Change tint of effect vol icon
+            if (FocusedSlider == EffectVolumeSlider)
+                EffectVolumeSliderIcon.Tint = QuaverColors.MainAccent;
+            else
+                EffectVolumeSliderIcon.Tint = QuaverColors.MainAccentInactive;
+            */
         }
 
         /// <summary>
@@ -387,6 +408,7 @@ namespace Quaver.Graphics.Overlays.Volume
             if (TimeInactive >= 1500)
             {         
                 // Fade out all of the sliders
+                // TODO: We should only have to do this on the parent...
                 SurroundingBox.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
                 MasterVolumeSlider.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
                 MasterVolumeSliderIcon.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
@@ -416,6 +438,7 @@ namespace Quaver.Graphics.Overlays.Volume
             SurroundingBox.Visible = true;
             
             // Begin tweening to fade in the box and all of the sliders.
+            // TODO: We should only have to do this on the parent...
             SurroundingBox.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
             MasterVolumeSlider.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
             MasterVolumeSliderIcon.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));;
