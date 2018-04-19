@@ -125,7 +125,8 @@ namespace Quaver.Graphics.Overlays.Navbar
             Discord = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Discord, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
             Github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
             
-            CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Coffee, "Test State", "Go to testing", (sender, args) => GameBase.GameStateManager.ChangeState(new SliderTestState()));
+            // Test States.
+            // CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Coffee, "Test State", "Go to testing", (sender, args) => GameBase.GameStateManager.ChangeState(new SliderTestState()));
 #endregion
         }
 
