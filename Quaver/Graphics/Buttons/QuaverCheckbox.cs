@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Quaver.Config;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Colors;
+using Quaver.Helpers;
 using Quaver.Main;
 
 namespace Quaver.Graphics.Buttons
@@ -13,6 +15,11 @@ namespace Quaver.Graphics.Buttons
         /// </summary>
         internal BindedValue<bool> BindedValue { get; }
 
+        /// <summary>
+        ///     The size of the button
+        /// </summary>
+        internal Vector2 CheckboxSize { get; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
@@ -22,9 +29,10 @@ namespace Quaver.Graphics.Buttons
         internal QuaverCheckbox(BindedValue<bool> bindedValue, Vector2 size, DrawRectangle clickArea = null)
         {
             BindedValue = bindedValue;
+            CheckboxSize = size;
 
-            Size.X.Offset = size.X;
-            Size.Y.Offset = size.Y;
+            Size.X.Offset = CheckboxSize.X;
+            Size.Y.Offset = CheckboxSize.Y;
             
             // Hook onto this value.
             BindedValue.OnValueChanged += OnValueChanged;
@@ -39,7 +47,8 @@ namespace Quaver.Graphics.Buttons
         {
             // Always set the checkbox image.
             SetCheckboxImage();
-            
+
+            PerformHoverAnimation(dt);
             base.Update(dt);
         }
 
@@ -79,6 +88,8 @@ namespace Quaver.Graphics.Buttons
         protected override void MouseOut()
         {
             // TODO: Display a tooltip, perhaps?
+            
+
         }
 
         /// <inheritdoc />
@@ -88,6 +99,28 @@ namespace Quaver.Graphics.Buttons
         protected override void MouseOver()
         {
             // TODO: Display a tooltip, perhaps?
+        }
+
+        /// <summary>
+        ///     Performs a hover animation and increases/decreases the size of the checkbox slightly.)
+        /// </summary>
+        /// <param name="dt"></param>
+        private void PerformHoverAnimation(double dt)
+        {
+            if (IsHovered)
+            {
+                var scale = 1.2f;
+                
+                // Increase the size of the checkbox slightly.
+                Size.X.Offset = GraphicsHelper.Tween(CheckboxSize.X * scale, Size.X.Offset, Math.Min(dt / 30, 1));
+                Size.Y.Offset = GraphicsHelper.Tween(CheckboxSize.Y * scale, Size.Y.Offset, Math.Min(dt / 30, 1));
+            }
+            else
+            {
+                // Set checkbox size back to normal.
+                Size.X.Offset = GraphicsHelper.Tween(CheckboxSize.X, Size.X.Offset, Math.Min(dt / 30, 1));
+                Size.Y.Offset = GraphicsHelper.Tween(CheckboxSize.Y, Size.Y.Offset, Math.Min(dt/ 30, 1));
+            }         
         }
     }
 }
