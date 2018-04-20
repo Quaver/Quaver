@@ -6,6 +6,7 @@ using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.Text;
 using Quaver.Main;
 using Quaver.States.Enums;
 
@@ -36,10 +37,36 @@ namespace Quaver.States.Tests
             Nav = new Navbar();
             Nav.Initialize(this);
             
-            var mem = new QuaverCheckbox(ConfigManager.DownScroll4K, new Vector2(40, 40))
+            var ds4k = new QuaverCheckbox(ConfigManager.DownScroll4K, new Vector2(20, 20))
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter
+            };
+
+            var ds4ktext = new QuaverTextbox()
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                PosX = ds4k.PosX + 120,
+                Text = "Toggle DownScroll for 4K",
+                Font = QuaverFonts.Medium12
+            };
+            
+            var ds7k = new QuaverCheckbox(ConfigManager.DownScroll7K, new Vector2(20, 20))
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                PosY = ds4k.PosY + 50
+            };
+
+            var ds7ktext = new QuaverTextbox()
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                PosX = ds4k.PosX + 120,
+                PosY = ds7k.PosY,
+                Text = "Toggle DownScroll for 7K",
+                Font = QuaverFonts.Medium12
             };
             
             UpdateReady = true;
