@@ -83,6 +83,7 @@
     <Compile Include="Helpers\RngHelper.cs" />
     <Compile Include="Helpers\StreamHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Main\CommonTaskScheduler.cs" />
     <Compile Include="Main\FontAwesome.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="States\Select\MapInfoWindow.cs" />
