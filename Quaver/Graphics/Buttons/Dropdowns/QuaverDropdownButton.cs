@@ -100,6 +100,9 @@ namespace Quaver.Graphics.Buttons.Dropdowns
         /// </summary>
         protected override void OnClicked()
         {
+            // Play sound effect here.
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
+            
             // If this button is the one that's selected, we want to toggle the dropdown open/close
             if (IsSelected)
                 ToggleOpen();
@@ -169,7 +172,7 @@ namespace Quaver.Graphics.Buttons.Dropdowns
         /// <summary>
         ///     Properly sets the icons of this button.
         /// </summary>
-        internal void SetIcons()
+        internal void SetIconVisibility()
         {
             if (!IsSelected)
                 ChevronDownIcon.Visible = false;
