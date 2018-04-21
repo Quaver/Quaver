@@ -74,17 +74,20 @@ namespace Quaver.Graphics.Buttons.Dropdowns
         /// </summary>
         internal void SetupButtons()
         {
-            foreach (var option in Options)
+            for (var i = 0; i < Options.Count; i++)
             {
-                if (Options.IndexOf(option) == 0)
-                    option.PosY = 0;
-                else
+                // The position of the first index is always 0.
+                if (i == 0)
                 {
-                    var last = Options.Last();
-                    option.PosY = last.PosY + last.SizeY;
+                    Options[i].PosY = 0;
+                    continue;
                 }
+
+                // Add the correct y offset for all other dropdown buttons other than the first.
+                Options[i].PosY = Options[i - 1].PosY + Options[i - 1].SizeY;
                 
-                option.SetIcons();
+                // Set the correct icon visiblility
+                Options[i].SetIconVisibility();
             }
         }
     }
