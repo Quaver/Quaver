@@ -112,7 +112,7 @@ namespace Quaver.Graphics.Buttons.Dropdowns
             else
             {
                 // Emit the event.
-                Clicked?.Invoke(this, new DropdownButtonClickedEventArgs(QuaverTextSprite.Text));
+                Clicked?.Invoke(this, new DropdownButtonClickedEventArgs(QuaverTextSprite.Text, Dropdown.Options.IndexOf(this)));
                 
                 // Swap the indexes in the list.
                 ListHelper.Swap(Dropdown.Options, Dropdown.Options.IndexOf(this), Dropdown.Options.FindIndex(x => x.IsSelected));
@@ -195,12 +195,18 @@ namespace Quaver.Graphics.Buttons.Dropdowns
         internal string ButtonText { get; }
 
         /// <summary>
+        ///     The index of the button that was clicked.
+        /// </summary>
+        internal int Index { get; }
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         /// <param name="text"></param>
-        internal DropdownButtonClickedEventArgs(string text)
+        internal DropdownButtonClickedEventArgs(string text, int index)
         {
             ButtonText = text;
+            Index = index;
         }
     }
 }
