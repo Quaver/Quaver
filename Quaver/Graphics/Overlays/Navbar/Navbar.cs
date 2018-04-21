@@ -126,7 +126,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             Github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
             
             // Test States.
-            // CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Coffee, "Test State", "Go to testing", (sender, args) => GameBase.GameStateManager.ChangeState(new SliderTestState()));
+            CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Coffee, "Test State", "Go to testing", (sender, args) => GameBase.GameStateManager.ChangeState(new DropdownTestState()));
 #endregion
         }
 
