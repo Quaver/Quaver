@@ -66,13 +66,14 @@ namespace Quaver.Graphics.Buttons.Dropdowns
                 Options.Add(btn);
             }
             
-            SetupButtons();
+            // Set up the button positions.
+            SetButtonPositions();
         }
 
         /// <summary>
         ///     Set up all the buttons with the correct positioning and such.
         /// </summary>
-        internal void SetupButtons()
+        internal void SetButtonPositions()
         {
             for (var i = 0; i < Options.Count; i++)
             {
