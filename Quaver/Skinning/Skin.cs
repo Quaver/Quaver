@@ -393,7 +393,7 @@ namespace Quaver.Skinning
         /// </summary>
         public static void LoadSkin()
         {
-            GameBase.LoadedSkin = new Skin(ConfigManager.Skin);
+            GameBase.LoadedSkin = new Skin(ConfigManager.Skin.Value);
             GameBase.QuaverCursor = new QuaverCursor();
         }
 
@@ -750,7 +750,7 @@ namespace Quaver.Skinning
             {
                 // Load based on which default skin is loaded
                 // prepend with 'arrow' for the file name if the arrow skin is selected.
-                switch (ConfigManager.DefaultSkin)
+                switch (ConfigManager.DefaultSkin.Value)
                 {
                     case DefaultSkins.Arrow:
                         path = "arrow-" + path;
@@ -880,7 +880,7 @@ namespace Quaver.Skinning
         {
             // Before trying to read the skin.ini file, set the defaults
             // based on the default skin loaded
-            switch (ConfigManager.DefaultSkin)
+            switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Bar:
                     Name = "Default Bar Skin";

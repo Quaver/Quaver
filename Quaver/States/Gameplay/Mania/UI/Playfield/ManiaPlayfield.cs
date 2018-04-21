@@ -157,7 +157,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                             Position = new UDim2D(ManiaGameplayReferences.ReceptorXPosition[i], ReceptorYPosition),
                             Alignment = Alignment.TopLeft,
                             Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i],
-                            SpriteEffect = !Config.ConfigManager.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                            SpriteEffect = !Config.ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Parent = ForegroundQuaverContainer
                         };
 
@@ -169,8 +169,8 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                             Size = new UDim2D(LaneSize, columnLightingSize),
                             Tint = GameBase.LoadedSkin.ColumnColors4K[i],
                             PosX = ManiaGameplayReferences.ReceptorXPosition[i],
-                            PosY = Config.ConfigManager.DownScroll4k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
-                            SpriteEffect = !Config.ConfigManager.DownScroll4k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                            PosY = Config.ConfigManager.DownScroll4K.Value ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
+                            SpriteEffect = !Config.ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Alignment = Alignment.TopLeft,
                             Parent = BackgroundQuaverContainer
                         };
@@ -182,8 +182,8 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                     {
                         Image = GameBase.LoadedSkin.StageDistantOverlay,
                         Size = new UDim2D(PlayfieldSize, overlaySize),
-                        PosY = Config.ConfigManager.DownScroll4k ? -1 : 1,
-                        Alignment = Config.ConfigManager.DownScroll4k ? Alignment.TopRight : Alignment.BotRight,
+                        PosY = Config.ConfigManager.DownScroll4K.Value ? -1 : 1,
+                        Alignment = Config.ConfigManager.DownScroll4K.Value ? Alignment.TopRight : Alignment.BotRight,
                         Parent = ForegroundQuaverContainer
                     };
 
@@ -194,7 +194,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                     {
                         Image = GameBase.LoadedSkin.StageHitPositionOverlay,
                         Size = new UDim2D(PlayfieldSize, overlaySize),
-                        PosY = Config.ConfigManager.DownScroll4k ? ReceptorYPosition : ReceptorYPosition + posOffset + overlaySize,
+                        PosY = Config.ConfigManager.DownScroll4K.Value ? ReceptorYPosition : ReceptorYPosition + posOffset + overlaySize,
                         Parent = ForegroundQuaverContainer
                     };
                     break;
@@ -230,7 +230,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                             Position = new UDim2D(ManiaGameplayReferences.ReceptorXPosition[i], ReceptorYPosition),
                             Alignment = Alignment.TopLeft,
                             Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i],
-                            SpriteEffect = !Config.ConfigManager.DownScroll7k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                            SpriteEffect = !Config.ConfigManager.DownScroll7K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Parent = ForegroundQuaverContainer
                         };
 
@@ -242,8 +242,8 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                             Size = new UDim2D(LaneSize, columnLightingSize),
                             Tint = GameBase.LoadedSkin.ColumnColors7K[i],
                             PosX = ManiaGameplayReferences.ReceptorXPosition[i],
-                            PosY = Config.ConfigManager.DownScroll7k ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
-                            SpriteEffect = !Config.ConfigManager.DownScroll7k && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                            PosY = Config.ConfigManager.DownScroll7K.Value ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
+                            SpriteEffect = !Config.ConfigManager.DownScroll7K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Alignment = Alignment.TopLeft,
                             Parent = BackgroundQuaverContainer
                         };
@@ -255,8 +255,8 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                     {
                         Image = GameBase.LoadedSkin.StageDistantOverlay,
                         Size = new UDim2D(PlayfieldSize, overlaySize),
-                        PosY = Config.ConfigManager.DownScroll7k ? -1 : 1,
-                        Alignment = Config.ConfigManager.DownScroll7k ? Alignment.TopRight : Alignment.BotRight,
+                        PosY = Config.ConfigManager.DownScroll7K.Value ? -1 : 1,
+                        Alignment = Config.ConfigManager.DownScroll7K.Value ? Alignment.TopRight : Alignment.BotRight,
                         Parent = ForegroundQuaverContainer
                     };
 
@@ -267,7 +267,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                     {
                         Image = GameBase.LoadedSkin.StageHitPositionOverlay,
                         Size = new UDim2D(PlayfieldSize, overlaySize),
-                        PosY = Config.ConfigManager.DownScroll7k ? ReceptorYPosition : ReceptorYPosition + posOffset + overlaySize,
+                        PosY = Config.ConfigManager.DownScroll7K.Value ? ReceptorYPosition : ReceptorYPosition + posOffset + overlaySize,
                         Parent = ForegroundQuaverContainer
                     };
                     break;
