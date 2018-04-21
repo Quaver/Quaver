@@ -48,7 +48,7 @@ namespace Quaver.Audio
         /// <summary>
         ///     The master volume of all audio streams
         /// </summary>
-        internal int MasterVolume
+        internal static int MasterVolume
         {
             get => Bass.GlobalStreamVolume;
             set
@@ -61,16 +61,16 @@ namespace Quaver.Audio
         /// <summary>
         ///     The volume of the current stream.
         /// </summary>
-        internal double MusicVolume
+        internal static double MusicVolume
         {
             get => Bass.ChannelGetAttribute(Stream, ChannelAttribute.Volume);
-            set => Bass.ChannelSlideAttribute(Stream, ChannelAttribute.Volume, (float)value, 1000);
+            set => Bass.ChannelSlideAttribute(Stream, ChannelAttribute.Volume, (float)(value / 100f), 50);
         }
 
         /// <summary>
         ///     The volume of all sound effects.
         /// </summary>
-        internal float EffectVolume => ConfigManager.VolumeEffect / 100f;
+        internal static float EffectVolume => ConfigManager.VolumeEffect.Value / 100f;
 
         /// <summary>
         ///     The rate at which the audio stream will play at.
@@ -86,8 +86,12 @@ namespace Quaver.Audio
                 throw new AudioEngineException("BASS has failed to intiailize");
 
             // Set volume curves to be logarithmic
-            Bass.LogarithmicVolumeCurve = true;
+            Bass.LogarithmicVolumeCurve = false;
             Bass.LogarithmicPanningCurve = true;
+
+            // Initialize event handlers. This'll auto-change the music volume automatically when it changes.
+            ConfigManager.VolumeGlobal.OnValueChanged += (o, e) => MasterVolume = e.Value;
+            ConfigManager.VolumeMusic.OnValueChanged += (o, e) => MusicVolume = e.Value;
         }
 
         /// <summary>
@@ -128,8 +132,8 @@ namespace Quaver.Audio
             SetPitch();
 
             // Set volume
-            MasterVolume = ConfigManager.VolumeGlobal;
-            MusicVolume = ConfigManager.VolumeMusic;
+            MasterVolume = ConfigManager.VolumeGlobal.Value;
+            MusicVolume = ConfigManager.VolumeMusic.Value;
 
             Bass.ChannelPlay(Stream);
             HasPlayed = true;
@@ -138,9 +142,9 @@ namespace Quaver.Audio
         /// <summary>
         ///     Plays a sound effect.
         /// </summary>
-        internal void PlaySoundEffect(SoundEffect sfx)
+        internal void PlaySoundEffect(SoundEffect sfx, float pitch = 0)
         {
-            sfx.Play(EffectVolume, 0, 0);
+            sfx.Play(EffectVolume, pitch, 0);
         }
 
         /// <summary>
@@ -191,7 +195,7 @@ namespace Quaver.Audio
         /// </summary>
         internal void SetPitch()
         {
-            if (ConfigManager.Pitched)
+            if (ConfigManager.Pitched.Value)
                 Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, Math.Log(Math.Pow(PlaybackRate, 12), 2));
             else
                 Bass.ChannelSetAttribute(Stream, ChannelAttribute.Pitch, 0);
@@ -202,7 +206,7 @@ namespace Quaver.Audio
         /// </summary>
         internal void TogglePitch()
         {
-            ConfigManager.Pitched = !ConfigManager.Pitched;
+            ConfigManager.Pitched.Value = !ConfigManager.Pitched.Value;
             SetPitch();
         }
 

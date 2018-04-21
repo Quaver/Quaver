@@ -193,15 +193,15 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             var healthMultiplierBoundary = new QuaverContainer()
             {
                 Size = new UDim2D(PlayfieldSize - 4, 20 * GameBase.WindowUIScale),
-                PosY = Config.ConfigManager.HealthBarPositionTop ? 2 : -2,
-                Alignment = Config.ConfigManager.HealthBarPositionTop ? Alignment.TopCenter : Alignment.BotCenter,
+                PosY = Config.ConfigManager.HealthBarPositionTop.Value ? 2 : -2,
+                Alignment = Config.ConfigManager.HealthBarPositionTop.Value ? Alignment.TopCenter : Alignment.BotCenter,
                 Parent = QuaverContainer
             };
 
             var healthBarUnder = new QuaverSprite()
             {
                 Size = new UDim2D(0, 10 * GameBase.WindowUIScale -1, 1, 0),
-                Alignment = Config.ConfigManager.HealthBarPositionTop ? Alignment.TopCenter : Alignment.BotCenter,
+                Alignment = Config.ConfigManager.HealthBarPositionTop.Value ? Alignment.TopCenter : Alignment.BotCenter,
                 Parent = healthMultiplierBoundary
             };
 
@@ -222,7 +222,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                 {
                     Size = new UDim2D(14 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale -1),
                     PosX = (i-7.5f) * 16 * GameBase.WindowUIScale,
-                    PosY = Config.ConfigManager.HealthBarPositionTop ? 10 * GameBase.WindowUIScale + 1 : 0,
+                    PosY = Config.ConfigManager.HealthBarPositionTop.Value ? 10 * GameBase.WindowUIScale + 1 : 0,
                     Alignment = Alignment.TopCenter,
                     Image = GameBase.QuaverUserInterface.HollowBox,
                     Parent = healthMultiplierBoundary

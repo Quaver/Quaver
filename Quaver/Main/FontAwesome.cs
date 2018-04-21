@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Quaver.Helpers;
 using Quaver.Resources;
+using Steamworks;
 
 namespace Quaver.Main
 {
@@ -17,6 +18,11 @@ namespace Quaver.Main
         internal static Texture2D Copy { get; set; }
         internal static Texture2D Exclamation { get; set; }
         internal static Texture2D Archive { get; set; }
+        internal static Texture2D CircleOpen { get; set; }
+        internal static Texture2D Volume { get; set; }
+        internal static Texture2D Music { get; set; }
+        internal static Texture2D Headphones { get; set; }
+        internal static Texture2D CircleClosed { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -34,6 +40,11 @@ namespace Quaver.Main
             Copy = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_copy_document);
             Exclamation = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_exclamation);
             Archive = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_archive_black_box);
+            CircleOpen = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_circle_shape_outline);
+            Volume = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_volume_up_interface_symbol);
+            Music = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_music_note_black_symbol);
+            Headphones = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_music_headphones);
+            CircleClosed = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_circle);
         }
     }
 }

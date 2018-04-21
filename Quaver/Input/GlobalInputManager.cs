@@ -31,23 +31,14 @@ namespace Quaver.Input
     {
         /// <summary>
         ///     The current state for the specifc input manager
+        ///     Global State, so this isn't necessary.
         /// </summary>
-        public State CurrentState { get; set; } // Global State, so this isn't necessary.
-
-        /// <summary>
-        ///     Keeps track of the last scroll wheel value.
-        /// </summary>
-        private int LastScrollWheelValue { get; set; }
+        public State CurrentState { get; set; } 
 
         /// <summary>
         ///     Keeps track of if the user is currently taking a screenshot.
         /// </summary>
         private bool CurrentlyTakingScreenshot { get; set; }
-
-        /// <summary>
-        ///     Global click event
-        /// </summary>
-        public event EventHandler LeftClicked;
 
         /// <summary>
         ///     Gets triggered everytime GameOverlay key gets pressed
@@ -69,7 +60,6 @@ namespace Quaver.Input
         /// </summary>
         public void CheckInput()
         {
-            HandleVolumeChanges();
             ImportMapsets();
             TakeScreenshot();
             HandleMouseInput();
@@ -90,7 +80,6 @@ namespace Quaver.Input
                 if (GameBase.MouseState.LeftButton == ButtonState.Pressed)
                 {
                     LeftMouseButtonIsDown = true;
-                    LeftClicked?.Invoke(this, null);
                 }
             }
         }
@@ -99,54 +88,18 @@ namespace Quaver.Input
         {
             if (GameOverlayButtonIsDown)
             {
-                if (GameBase.KeyboardState.IsKeyUp(ConfigManager.KeyToggleOverlay))
+                if (GameBase.KeyboardState.IsKeyUp(ConfigManager.KeyToggleOverlay.Value))
                 {
                     GameOverlayButtonIsDown = false;
                 }
             }
             else
             {
-                if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyToggleOverlay))
+                if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyToggleOverlay.Value))
                 {
                     GameOverlayButtonIsDown = true;
                     GameOverlayToggled?.Invoke(this, null);
                 }
-            }
-        }
-
-        /// <summary>
-        ///     Handles all global volume changes.
-        ///     For this to be activated, the user must be holding down either ALT key while they are scrolling the mouse.
-        /// </summary>
-        private void HandleVolumeChanges()
-        {
-            //  Raise volume if the user scrolls up.
-            if (GameBase.MouseState.ScrollWheelValue > LastScrollWheelValue 
-                && (GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) || GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt)) 
-                && Config.ConfigManager.VolumeGlobal < 100)
-            {
-                ConfigManager.VolumeGlobal += 5;
-
-                // Set the last scroll wheel value
-                LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
-
-                // Change the master volume based on the new config value.
-                GameBase.AudioEngine.MasterVolume = ConfigManager.VolumeGlobal;
-                Logger.LogInfo($"VolumeGlobal Changed To: {ConfigManager.VolumeGlobal}", LogType.Runtime);
-            }
-            // Lower volume if the user scrolls down
-            else if (GameBase.MouseState.ScrollWheelValue < LastScrollWheelValue 
-                && (GameBase.KeyboardState.IsKeyDown(Keys.RightAlt) || GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt)) 
-                && ConfigManager.VolumeGlobal > 0)
-            {
-                ConfigManager.VolumeGlobal -= 5;
-
-                // Set the last scroll wheel value
-                LastScrollWheelValue = GameBase.MouseState.ScrollWheelValue;
-
-                // Change the master volume based on the new config value.
-                GameBase.AudioEngine.MasterVolume = ConfigManager.VolumeGlobal;
-                Logger.LogInfo($"VolumeGlobal Changed To: {ConfigManager.VolumeGlobal}", LogType.Runtime);
             }
         }
 
@@ -174,14 +127,14 @@ namespace Quaver.Input
         /// </summary>
         private void TakeScreenshot()
         {
-            if (GameBase.KeyboardState.IsKeyUp(ConfigManager.KeyTakeScreenshot))
+            if (GameBase.KeyboardState.IsKeyUp(ConfigManager.KeyTakeScreenshot.Value))
                 CurrentlyTakingScreenshot = false;
 
             // Prevent spamming. Don't run if we're already taking a screenshot.
             if (CurrentlyTakingScreenshot)
                 return;
 
-            if (!GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyTakeScreenshot))
+            if (!GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyTakeScreenshot.Value))
                 return;
 
             CurrentlyTakingScreenshot = true;
@@ -190,7 +143,7 @@ namespace Quaver.Input
             GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundScreenshot);
 
             // Create path for file
-            var path = Config.ConfigManager.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyy-MM-dd HHmmssfff") + ".jpg";
+            var path = ConfigManager.ScreenshotDirectory + "/" + DateTime.Now.ToString("yyyy-MM-dd HHmmssfff") + ".jpg";
 
             // Get Window Bounds
             var bounds = GameBase.GraphicsDevice.PresentationParameters.Bounds;

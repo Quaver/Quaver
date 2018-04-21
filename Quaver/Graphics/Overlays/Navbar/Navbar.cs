@@ -24,6 +24,7 @@ using Quaver.States;
 using Quaver.States.Menu;
 using Quaver.States.Options;
 using Quaver.States.Select;
+using Quaver.States.Tests;
 using Quaver.StepMania;
 using Color = Microsoft.Xna.Framework.Color;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
@@ -123,6 +124,9 @@ namespace Quaver.Graphics.Overlays.Navbar
             Notifications = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => { GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick); Logger.LogImportant("This button does nothing. Don't click it.", LogType.Runtime);});
             Discord = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Discord, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
             Github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
+            
+            // Test States.
+            // CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Coffee, "Test State", "Go to testing", (sender, args) => GameBase.GameStateManager.ChangeState(new SliderTestState()));
 #endregion
         }
 
