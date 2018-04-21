@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
+using Quaver.Helpers;
 using Quaver.Main;
 
 namespace Quaver.Graphics.Buttons.Dropdowns
@@ -103,8 +104,28 @@ namespace Quaver.Graphics.Buttons.Dropdowns
             if (IsSelected)
                 ToggleOpen();
             // Otherwise, emit the event as normal.
-            else    
+            else
+            {
+                // Emit the event.
                 Clicked?.Invoke(this, new DropdownButtonClickedEventArgs(QuaverTextSprite.Text));
+                
+                // Swap the indexes in the list.
+                ListHelper.Swap(Dropdown.Options, Dropdown.Options.IndexOf(this), Dropdown.Options.FindIndex(x => x.IsSelected));
+
+                // Change this current button to selected
+                IsSelected = true;
+
+                // Make the old button not selected anymore.
+                var oldBtn = Dropdown.Options.Find(x => x.IsSelected && x != this);
+                if (oldBtn != null)
+                    oldBtn.IsSelected = false;
+            
+                // Re-set up the buttons.
+                Dropdown.SetupButtons();
+                
+                // Make sure the dropdown is toggled back to close afterwards.
+                ToggleOpen();
+            }
         }
 
         /// <inheritdoc />
@@ -136,7 +157,6 @@ namespace Quaver.Graphics.Buttons.Dropdowns
         private void ToggleOpen()
         {
             Dropdown.IsOpen = !Dropdown.IsOpen;
-            Console.WriteLine("Dropdown button is now " + (Dropdown.IsOpen ? "Open" : "Closed"));
 
             // If the dropdown is open, display all of the non-selected onces.
             if (Dropdown.IsOpen)
@@ -144,6 +164,15 @@ namespace Quaver.Graphics.Buttons.Dropdowns
             // Otherwise, hide every button except for the selected one.
             else
                 Dropdown.Options.FindAll(x => !x.IsSelected).ToList().ForEach(x => x.Visible = false);            
+        }
+
+        /// <summary>
+        ///     Properly sets the icons of this button.
+        /// </summary>
+        internal void SetIcons()
+        {
+            if (!IsSelected)
+                ChevronDownIcon.Visible = false;
         }
     }
 
