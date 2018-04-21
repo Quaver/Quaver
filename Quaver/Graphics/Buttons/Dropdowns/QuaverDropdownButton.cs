@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Windows.Forms.VisualStyles;
 using Microsoft.Xna.Framework;
 using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
@@ -117,14 +119,17 @@ namespace Quaver.Graphics.Buttons.Dropdowns
 
                 // Change this current button to selected
                 IsSelected = true;
-
+                
                 // Make the old button not selected anymore.
                 var oldBtn = Dropdown.Options.Find(x => x.IsSelected && x != this);
                 if (oldBtn != null)
                     oldBtn.IsSelected = false;
+                
+                // Order the list, taking into account that the selected must be the first item.
+                Dropdown.Options = Dropdown.Options.OrderByDescending(x => x.IsSelected).ThenBy(x => x.QuaverTextSprite.Text).ToList();
             
-                // Re-set up the buttons.
-                Dropdown.SetupButtons();
+                // Re-set up the button positions now that it's reordered.
+                Dropdown.SetButtonPositions();
                 
                 // Make sure the dropdown is toggled back to close afterwards.
                 ToggleOpen();
