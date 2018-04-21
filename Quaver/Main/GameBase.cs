@@ -12,6 +12,7 @@ using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.GameOverlay;
+using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.UserInterface;
 using Quaver.Input;
 using Quaver.Modifiers;
@@ -121,7 +122,7 @@ namespace Quaver.Main
         /// <summary>
         ///     The rectangle this game will be rendered onto
         /// </summary>
-        public static DrawRectangle WindowRectangle { get; set; } = new DrawRectangle(0, 0, ConfigManager.WindowWidth, ConfigManager.WindowHeight);
+        public static DrawRectangle WindowRectangle { get; set; } = new DrawRectangle(0, 0, ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
 
         /// <summary>
         ///     WindowHeight / WindowWidth ratio
@@ -141,19 +142,24 @@ namespace Quaver.Main
         public static List<IGameplayModifier> CurrentGameModifiers { get; set; } = new List<IGameplayModifier>();
 
         /// <summary>
-        ///     Keeps track of if the bass library is already initialized on the default output device
-        /// </summary>
-        public static bool BassInitialized { get; set; } 
-
-        /// <summary>
         ///     The current keyboard state.
         /// </summary>
         public static KeyboardState KeyboardState { get; set; }
 
         /// <summary>
+        ///     The keyboard state of the previous frame.
+        /// </summary>
+        public static KeyboardState PreviousKeyboardState { get; set; }
+
+        /// <summary>
         ///     The current Mouse State
         /// </summary>
         public static MouseState MouseState { get; set; }
+
+        /// <summary>
+        ///     The mouse state of the previous frame.
+        /// </summary>
+        public static MouseState PreviousMouseState { get; set; }
 
         /// <summary>
         /// The mouse cursor
@@ -191,6 +197,11 @@ namespace Quaver.Main
         ///     Reference to the game's audio engine
         /// </summary>
         public static AudioEngine AudioEngine { get; set; } = new AudioEngine();
+
+        /// <summary>
+        ///     Reference to the global volume controller
+        /// </summary>
+        public static VolumeController VolumeController { get; set; }
 
         /// <summary>
         ///     The current path of the selected map's audio file

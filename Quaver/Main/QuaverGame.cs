@@ -7,6 +7,7 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.UserInterface;
 using Quaver.Logging;
 using Quaver.Skinning;
@@ -25,6 +26,10 @@ namespace Quaver.Main
         /// </summary>
         public static QuaverGame Game;
 
+
+        /// <summary>
+        ///     Ctor - 
+        /// </summary>
         public QuaverGame()
         {
             Game = this;
@@ -32,14 +37,14 @@ namespace Quaver.Main
             // Set the global graphics device manager & set Window width & height.
             GameBase.GraphicsManager = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = Config.ConfigManager.WindowWidth,
-                PreferredBackBufferHeight = Config.ConfigManager.WindowHeight,
-                IsFullScreen = Config.ConfigManager.WindowFullScreen,
+                PreferredBackBufferWidth = Config.ConfigManager.WindowWidth.Value,
+                PreferredBackBufferHeight = Config.ConfigManager.WindowHeight.Value,
+                IsFullScreen = ConfigManager.WindowFullScreen.Value,
                 SynchronizeWithVerticalRetrace = false // Turns off vsync
             };
-
+            
             GameBase.GraphicsManager.GraphicsProfile = GraphicsProfile.HiDef;
-            GameBase.GraphicsManager.PreferMultiSampling = true;
+            GameBase.GraphicsManager.PreferMultiSampling = false;
             
             // Set the global window size
             //GameBase.Window = new Vector4(0, 0, GameBase.GraphicsManager.PreferredBackBufferHeight, GameBase.GraphicsManager.PreferredBackBufferWidth);
@@ -65,9 +70,6 @@ namespace Quaver.Main
         /// </summary>
         protected override void Initialize()
         {
-            // Handle Text Input
-            //GameBase.GameWindow.TextInput += TextEndered;
-
             // TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -83,7 +85,8 @@ namespace Quaver.Main
 
             // Set the global Graphics Device.
             GameBase.GraphicsDevice = GraphicsDevice;
-            GameBase.GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
+            GameBase.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
+            GameBase.GraphicsDevice.RasterizerState = new RasterizerState {MultiSampleAntiAlias = true};
             GameBase.GraphicsManager.ApplyChanges();
            
             //Create new GameStateManager Instance
@@ -113,6 +116,10 @@ namespace Quaver.Main
             // Set up overlay
             GameBase.GameOverlay.Initialize();
 
+            // Set up volume controller
+            GameBase.VolumeController = new VolumeController();
+            GameBase.VolumeController.Initialize(null);
+            
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
             GameBase.GameStateManager.ChangeState(new MainMenuState());             
@@ -124,6 +131,7 @@ namespace Quaver.Main
         /// </summary>
         protected override void UnloadContent()
         {
+            GameBase.VolumeController.UnloadContent();
             BackgroundManager.UnloadContent();
             GameBase.GameOverlay.UnloadContent();
             GameBase.GameStateManager.ClearStates();
@@ -143,11 +151,13 @@ namespace Quaver.Main
             GameBase.GlobalInputManager.CheckInput();
 
             // Update Keyboard States
+            GameBase.PreviousKeyboardState = GameBase.KeyboardState;
+            GameBase.PreviousMouseState = GameBase.MouseState;
             GameBase.KeyboardState = Keyboard.GetState();
             GameBase.MouseState = Mouse.GetState();
 
             // Update FpsCounter
-            if (Config.ConfigManager.FpsCounter)
+            if (ConfigManager.FpsCounter.Value)
                 QuaverFpsCounter.Count(dt);
 
             // Update Background from Background Manager
@@ -160,6 +170,9 @@ namespace Quaver.Main
             // Update Mouse QuaverCursor
             GameBase.QuaverCursor.Update(dt);
 
+            // Update volume controller
+            GameBase.VolumeController.Update(dt);
+            
             base.Update(gameTime);
         }
 
@@ -180,11 +193,12 @@ namespace Quaver.Main
             // Draw QuaverCursor, Logging, and FPS Counter
             GameBase.SpriteBatch.Begin();
             GameBase.GameOverlay.Draw();
+            GameBase.VolumeController.Draw();
             GameBase.QuaverCursor.Draw();
-
             Logger.Draw(dt);
 
-            if (Config.ConfigManager.FpsCounter)
+            
+            if (ConfigManager.FpsCounter.Value)
                 QuaverFpsCounter.Draw();
 
             GameBase.SpriteBatch.End();
@@ -228,8 +242,8 @@ namespace Quaver.Main
             // Change Resolution
             if (resolution != null)
             {
-                ConfigManager.WindowWidth = resolution.Value.X;
-                ConfigManager.WindowHeight = resolution.Value.Y;
+                ConfigManager.WindowWidth.Value = resolution.Value.X;
+                ConfigManager.WindowHeight.Value = resolution.Value.Y;
                 GameBase.GraphicsManager.PreferredBackBufferWidth = resolution.Value.X;
                 GameBase.GraphicsManager.PreferredBackBufferHeight = resolution.Value.Y;
                 GameBase.WindowRectangle = new DrawRectangle(0, 0, resolution.Value.X, resolution.Value.Y);
