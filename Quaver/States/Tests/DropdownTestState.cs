@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics.Buttons.Dropdowns;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
+using Quaver.Skinning;
 using Quaver.States.Enums;
 
 namespace Quaver.States.Tests
@@ -31,15 +35,26 @@ namespace Quaver.States.Tests
         /// </summary>
         private Navbar Nav { get; set; }
 
-        private QuaverDropdown Dropdown { get; set; }
-
         public void Initialize()
         {
             Container = new QuaverContainer();
             Nav = new Navbar();
             Nav.Initialize(this);
 
-            Dropdown = new QuaverDropdown(new List<string>() {"hi", "bye", "meme", "chicken", "water", "bacon"}, (o ,e) => Console.WriteLine("MEMES! " + e.ButtonText + " " + e.Index))
+            // Get all skins.
+            var skins = Directory.GetDirectories(ConfigManager.SkinDirectory.Value).ToList();
+            for (var i = 0; i < skins.Count; i++)
+                skins[i] = new DirectoryInfo(skins[i]).Name;
+
+            var defaultSkinSelect = new QuaverDropdown(new List<string>() {"Default Arrow Skin", "Default Bar Skin"},
+                OnDefaultSkinDropdownButtonClicked)
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                PosY = -200
+            };
+            
+            var skinSelect = new QuaverDropdown(skins, OnSkinDropdownButtonClicked)
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter
@@ -67,6 +82,34 @@ namespace Quaver.States.Tests
             Container.Draw();
             
             GameBase.SpriteBatch.End();
+        }
+
+        private void OnDefaultSkinDropdownButtonClicked(object sender, DropdownButtonClickedEventArgs e)
+        {
+            switch (e.ButtonText)
+            {
+                case "Default Arrow Skin":
+                    ConfigManager.DefaultSkin.Value = DefaultSkins.Arrow;
+                    break;
+                case "Default Bar Skin":
+                    ConfigManager.DefaultSkin.Value = DefaultSkins.Bar;
+                    break;
+                default:
+                    break;
+            }
+            
+            Skin.LoadSkin();
+        }
+        
+        /// <summary>
+        ///     
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSkinDropdownButtonClicked(object sender, DropdownButtonClickedEventArgs e)
+        {
+            ConfigManager.Skin.Value = e.ButtonText;
+            Skin.LoadSkin();
         }
     }
 }
