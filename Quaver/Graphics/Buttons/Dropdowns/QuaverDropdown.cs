@@ -58,21 +58,33 @@ namespace Quaver.Graphics.Buttons.Dropdowns
                 };
 
                 btn.Visible = btn.IsSelected;
-                
-                // Set the position of the button accordingly.
-                if (Options.Count == 0)
-                    PosY = 0;
-                else
-                {
-                    var last = Options.Last();
-                    btn.PosY = last.PosY + last.SizeY;
-                }
-                
+                                
                 // Add click handler.
                 btn.Clicked += onClick;
                 
                 // Add button option to list.
                 Options.Add(btn);
+            }
+            
+            SetupButtons();
+        }
+
+        /// <summary>
+        ///     Set up all the buttons with the correct positioning and such.
+        /// </summary>
+        internal void SetupButtons()
+        {
+            foreach (var option in Options)
+            {
+                if (Options.IndexOf(option) == 0)
+                    option.PosY = 0;
+                else
+                {
+                    var last = Options.Last();
+                    option.PosY = last.PosY + last.SizeY;
+                }
+                
+                option.SetIcons();
             }
         }
     }
