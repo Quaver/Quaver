@@ -39,7 +39,7 @@ namespace Quaver.States.Tests
             Nav = new Navbar();
             Nav.Initialize(this);
 
-            Dropdown = new QuaverDropdown(new List<string>() {"hi", "bye", "meme", "chicken", "water", "bacon"}, (o ,e) => Console.WriteLine("MEMES! " + e.ButtonText))
+            Dropdown = new QuaverDropdown(new List<string>() {"hi", "bye", "meme", "chicken", "water", "bacon"}, (o ,e) => Console.WriteLine("MEMES! " + e.ButtonText + " " + e.Index))
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter
