@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Config\BindedInt.cs" />
     <Compile Include="Config\BindedValue.cs" />
+    <Compile Include="Graphics\Buttons\QuaverCheckbox.cs" />
     <Compile Include="Graphics\Buttons\Sliders\QuaverSlider.cs" />
     <Compile Include="Graphics\Overlays\Navbar\Navbar.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="Replays\ReplayHelper.cs" />
     <Compile Include="Database\Scores\LocalScore.cs" />
     <Compile Include="Skinning\Skin.cs" />
+    <Compile Include="States\Tests\CheckboxTestState.cs" />
     <Compile Include="States\Tests\NavbarTestState.cs" />
     <Compile Include="States\Tests\SliderTestState.cs" />
     <Compile Include="StepMania\Etterna.cs" />
