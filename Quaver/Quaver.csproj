@@ -72,6 +72,7 @@
     <Compile Include="Config\BindedValue.cs" />
     <Compile Include="Graphics\Buttons\Dropdowns\QuaverDropdown.cs" />
     <Compile Include="Graphics\Buttons\Dropdowns\QuaverDropdownButton.cs" />
+    <Compile Include="Graphics\Buttons\QuaverCheckbox.cs" />
     <Compile Include="Graphics\Buttons\Sliders\QuaverSlider.cs" />
     <Compile Include="Graphics\Overlays\Navbar\Navbar.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Helpers\RngHelper.cs" />
     <Compile Include="Helpers\StreamHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Main\CommonTaskScheduler.cs" />
     <Compile Include="Main\FontAwesome.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="States\Select\MapInfoWindow.cs" />
@@ -197,6 +199,7 @@
     <Compile Include="Database\Scores\LocalScore.cs" />
     <Compile Include="Skinning\Skin.cs" />
     <Compile Include="States\Tests\DropdownTestState.cs" />
+    <Compile Include="States\Tests\CheckboxTestState.cs" />
     <Compile Include="States\Tests\NavbarTestState.cs" />
     <Compile Include="States\Tests\SliderTestState.cs" />
     <Compile Include="StepMania\Etterna.cs" />

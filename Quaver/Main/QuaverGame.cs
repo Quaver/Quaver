@@ -173,6 +173,10 @@ namespace Quaver.Main
             // Update volume controller
             GameBase.VolumeController.Update(dt);
             
+            // Run scheduled background tasks
+            if (GameBase.GameTime.ElapsedMilliseconds - CommonTaskScheduler.LastRunTime >= 5000)
+                CommonTaskScheduler.Run();
+            
             base.Update(gameTime);
         }
 
