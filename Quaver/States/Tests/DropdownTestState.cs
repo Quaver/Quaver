@@ -45,6 +45,8 @@ namespace Quaver.States.Tests
             var skins = Directory.GetDirectories(ConfigManager.SkinDirectory.Value).ToList();
             for (var i = 0; i < skins.Count; i++)
                 skins[i] = new DirectoryInfo(skins[i]).Name;
+            
+            skins.Insert(0, "None");
 
             var defaultSkinSelect = new QuaverDropdown(new List<string>() {"Default Arrow Skin", "Default Bar Skin"},
                 OnDefaultSkinDropdownButtonClicked)
@@ -108,7 +110,7 @@ namespace Quaver.States.Tests
         /// <param name="e"></param>
         private void OnSkinDropdownButtonClicked(object sender, DropdownButtonClickedEventArgs e)
         {
-            ConfigManager.Skin.Value = e.ButtonText;
+            ConfigManager.Skin.Value = e.ButtonText == "None" ? "" : e.ButtonText;
             Skin.LoadSkin();
         }
     }
