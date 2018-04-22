@@ -87,6 +87,9 @@ namespace Quaver
 
                 // Create the local scores database if it doesn't already exist
                 await LocalScoreCache.CreateScoresDatabase();
+                
+                // Force garbage collection
+                GC.Collect();
             });
             Task.WaitAll(loadGame);
         }
