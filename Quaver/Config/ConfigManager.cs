@@ -517,18 +517,14 @@ namespace Quaver.Config
         /// <param name="d"></param>
         private static void AutoSaveConfiguration<T>(object sender, BindedValueEventArgs<T> d)
         {
-            // Don't bother writing again if the last write was less than x seconds ago.
-            if (GameBase.GameTime.ElapsedMilliseconds - LastWrite < 200)
-                return;
-            
-            Task.Run(async () => await WriteConfigFileAsync());
+            CommonTaskScheduler.Add(CommonTask.WriteConfig);
         }
         
         /// <summary>
         ///     Takes all of the current values from the ConfigManager class and creates a file with them.
         ///     This will automatically be called whenever a configuration value is changed in the code.
         /// </summary>
-        private static async Task WriteConfigFileAsync()
+        internal static async Task WriteConfigFileAsync()
         {
             // Tracks the number of attempts to write the file it has made. 
             var attempts = 0;
