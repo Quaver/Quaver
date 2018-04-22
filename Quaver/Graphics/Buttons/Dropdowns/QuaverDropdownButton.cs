@@ -36,7 +36,7 @@ namespace Quaver.Graphics.Buttons.Dropdowns
         private QuaverSprite ChevronRightIcon { get; }
 
         /// <summary>
-        ///     
+        ///     Overriden property for the clicked event. We pass in the actual button text here.
         /// </summary>
         internal new EventHandler<DropdownButtonClickedEventArgs> Clicked { get; set; }
 
