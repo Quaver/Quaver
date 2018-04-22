@@ -70,6 +70,8 @@
   <ItemGroup>
     <Compile Include="Config\BindedInt.cs" />
     <Compile Include="Config\BindedValue.cs" />
+    <Compile Include="Graphics\Buttons\Dropdowns\QuaverDropdown.cs" />
+    <Compile Include="Graphics\Buttons\Dropdowns\QuaverDropdownButton.cs" />
     <Compile Include="Graphics\Buttons\QuaverCheckbox.cs" />
     <Compile Include="Graphics\Buttons\Sliders\QuaverSlider.cs" />
     <Compile Include="Graphics\Overlays\Navbar\Navbar.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
     <Compile Include="Helpers\InputHelper.cs" />
+    <Compile Include="Helpers\ListHelper.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Helpers\RngHelper.cs" />
     <Compile Include="Helpers\StreamHelper.cs" />
@@ -195,6 +198,7 @@
     <Compile Include="Replays\ReplayHelper.cs" />
     <Compile Include="Database\Scores\LocalScore.cs" />
     <Compile Include="Skinning\Skin.cs" />
+    <Compile Include="States\Tests\DropdownTestState.cs" />
     <Compile Include="States\Tests\CheckboxTestState.cs" />
     <Compile Include="States\Tests\NavbarTestState.cs" />
     <Compile Include="States\Tests\SliderTestState.cs" />
