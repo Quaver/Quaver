@@ -23,6 +23,8 @@ namespace Quaver.Main
         internal static Texture2D Music { get; set; }
         internal static Texture2D Headphones { get; set; }
         internal static Texture2D CircleClosed { get; set; }
+        internal static Texture2D CaretDown { get; set; }
+        internal static Texture2D ChevronDown { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -45,6 +47,8 @@ namespace Quaver.Main
             Music = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_music_note_black_symbol);
             Headphones = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_music_headphones);
             CircleClosed = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_circle);
+            CaretDown = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_caret_down);
+            ChevronDown = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_chevron_arrow_down);
         }
     }
 }
