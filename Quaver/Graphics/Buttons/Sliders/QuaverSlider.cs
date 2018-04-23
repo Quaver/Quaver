@@ -223,7 +223,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// </summary>
         private void SetProgressPosition(double dt)
         {
-            var percentage = BindedValue.Value - BindedValue.MinValue / BindedValue.MaxValue * 100;
+            var percentage = ((BindedValue.Value - BindedValue.MinValue) * 100) / BindedValue.MaxValue - BindedValue.MinValue * 100;
 
             if (IsVertical)
             {
@@ -244,7 +244,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         private void PlaySoundEffectWhenChanged(int val)
         {
             // Find the percentage
-            var percent = BindedValue.Value - BindedValue.MinValue / BindedValue.MaxValue * 100;
+            var percent = ((BindedValue.Value - BindedValue.MinValue) * 100) / BindedValue.MaxValue - BindedValue.MinValue * 100;
             
             // Set the min and max based on the direction we're going.
             var max = val > PreviousValue ? 1f : 0;
