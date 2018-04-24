@@ -161,14 +161,14 @@ namespace Quaver.Graphics.Buttons.Sliders
         protected override bool GetClickArea()
         {
             // The RectY increase of the click area.
-            const int offset = 40;
+            const int offset = 45;
 
             DrawRectangle clickArea;
             
             if (IsVertical)
-                clickArea = new DrawRectangle(GlobalRectangle.X - offset, GlobalRectangle.Y, GlobalRectangle.Width + offset, GlobalRectangle.Height);
+                clickArea = new DrawRectangle(GlobalRectangle.X - offset / 2f, GlobalRectangle.Y, GlobalRectangle.Width + offset, GlobalRectangle.Height);
             else
-                clickArea = new DrawRectangle(GlobalRectangle.X, GlobalRectangle.Y - offset, GlobalRectangle.Width, GlobalRectangle.Height + offset);
+                clickArea = new DrawRectangle(GlobalRectangle.X, GlobalRectangle.Y - offset / 2f, GlobalRectangle.Width, GlobalRectangle.Height + offset);
             
             return GraphicsHelper.RectangleContains(clickArea, GraphicsHelper.PointToVector2(GameBase.MouseState.Position));
         }
@@ -223,7 +223,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// </summary>
         private void SetProgressPosition(double dt)
         {
-            var percentage = BindedValue.Value - BindedValue.MinValue / BindedValue.MaxValue * 100;
+            var percentage = ((BindedValue.Value - BindedValue.MinValue) * 100) / BindedValue.MaxValue - BindedValue.MinValue * 100;
 
             if (IsVertical)
             {
@@ -244,7 +244,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         private void PlaySoundEffectWhenChanged(int val)
         {
             // Find the percentage
-            var percent = BindedValue.Value - BindedValue.MinValue / BindedValue.MaxValue * 100;
+            var percent = ((BindedValue.Value - BindedValue.MinValue) * 100) / BindedValue.MaxValue - BindedValue.MinValue * 100;
             
             // Set the min and max based on the direction we're going.
             var max = val > PreviousValue ? 1f : 0;
