@@ -161,14 +161,14 @@ namespace Quaver.Graphics.Buttons.Sliders
         protected override bool GetClickArea()
         {
             // The RectY increase of the click area.
-            const int offset = 40;
+            const int offset = 45;
 
             DrawRectangle clickArea;
             
             if (IsVertical)
-                clickArea = new DrawRectangle(GlobalRectangle.X - offset, GlobalRectangle.Y, GlobalRectangle.Width + offset, GlobalRectangle.Height);
+                clickArea = new DrawRectangle(GlobalRectangle.X - offset / 2f, GlobalRectangle.Y, GlobalRectangle.Width + offset, GlobalRectangle.Height);
             else
-                clickArea = new DrawRectangle(GlobalRectangle.X, GlobalRectangle.Y - offset, GlobalRectangle.Width, GlobalRectangle.Height + offset);
+                clickArea = new DrawRectangle(GlobalRectangle.X, GlobalRectangle.Y - offset / 2f, GlobalRectangle.Width, GlobalRectangle.Height + offset);
             
             return GraphicsHelper.RectangleContains(clickArea, GraphicsHelper.PointToVector2(GameBase.MouseState.Position));
         }
