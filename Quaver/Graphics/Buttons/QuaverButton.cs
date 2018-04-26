@@ -42,7 +42,7 @@ namespace Quaver.Graphics.Buttons
         ///     Ctor - Optionally pass in an action.
         /// </summary>
         /// <param name="action"></param>
-        protected QuaverButton(EventHandler clickAction = null, EventHandler holdAction = null)
+        internal QuaverButton(EventHandler clickAction = null, EventHandler holdAction = null)
         {
             Clicked += clickAction;
             Held += holdAction;
