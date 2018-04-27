@@ -1,5 +1,14 @@
 # Quaver [![CodeFactor](https://www.codefactor.io/repository/github/swan/quaver/badge)](https://www.codefactor.io/repository/github/swan/quaver) [![Trello](https://img.shields.io/badge/Trello-Roadmap-blue.svg)](https://trello.com/b/QVbVwKN1/quaver-client) [![Discord](https://discordapp.com/api/guilds/354206121386573824/widget.png?style=shield)](https://discord.gg/nJa8VFr)
-🎶 A modern, community-driven, and cross-platform vertically scrolling rhythm game.
+🎶 A modern, community-driven, and cross-platform vertically scrolling rhythm game aimed to be released on Steam for Windows, Mac OSX, and Linux. [Quaver](https://github.com/Swan/Quaver) strives to provide a familiar gameplay experience, with much more to offer such as:
+
+* Global rankings
+* Competitive play & rankings
+* Realtime Multiplayer
+* Advanced skinning system
+* Accurate difficulty calculation
+* Support for playing maps from other popular rhythm games
+* Direct community to developer interaction
+* And tons more!
 
 ### Table of Contents ###
 * [Requirements](https://github.com/Swan/Quaver#requirements)
