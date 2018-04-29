@@ -25,6 +25,8 @@ namespace Quaver.Main
         internal static Texture2D CircleClosed { get; set; }
         internal static Texture2D CaretDown { get; set; }
         internal static Texture2D ChevronDown { get; set; }
+        internal static Texture2D Desktop { get; set; }
+        internal static Texture2D GiftBox { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -49,6 +51,8 @@ namespace Quaver.Main
             CircleClosed = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_circle);
             CaretDown = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_caret_down);
             ChevronDown = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_chevron_arrow_down);
+            Desktop = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_desktop_monitor);
+            GiftBox = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_gift_box);
         }
     }
 }
