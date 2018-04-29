@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Quaver.GameState;
@@ -72,6 +73,15 @@ namespace Quaver.Graphics.Overlays.Options
 
     #endregion
         
+    #region OPTIONS_SECTION
+
+        /// <summary>
+       ///    All of the defined options section that'll be displayed on-screen.    
+       /// </summary>
+        private Dictionary<OptionsType, OptionsSection> Sections { get; set; }
+
+    #endregion
+    
         /// <summary>
        ///     Ctor - 
        /// </summary>
@@ -81,6 +91,15 @@ namespace Quaver.Graphics.Overlays.Options
             Tint = new Color(0f, 0f, 0f, 0.6f);
             Size = new UDim2D(0, GameBase.WindowRectangle.Height, 1);
             PosY = GameBase.WindowRectangle.Height;
+            
+            // Create the options sections.
+            Sections = new Dictionary<OptionsType, OptionsSection>()
+            {
+                {OptionsType.Audio, new OptionsSection("Audio", FontAwesome.Volume)},
+                {OptionsType.Video, new OptionsSection("Video", FontAwesome.Desktop)},
+                {OptionsType.Gameplay, new OptionsSection("Gameplay", FontAwesome.GamePad)},
+                {OptionsType.Misc, new OptionsSection("Misc", FontAwesome.GiftBox)}
+            };
             
             // Create the entire header's UI.
             CreateHeader(); 
@@ -239,6 +258,18 @@ namespace Quaver.Graphics.Overlays.Options
                 PosX = -5,
                 Alignment = Alignment.MidRight
             }; 
+        }
+
+    #endregion
+
+    #region OPTIONS_SECTION_METHODS
+
+        /// <summary>
+        ///     Creates all of the options sections.
+        /// </summary>
+        private void CreateOptionsSections()
+        {
+ 
         }
 
     #endregion

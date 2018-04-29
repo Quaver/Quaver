@@ -79,6 +79,8 @@
     <Compile Include="Graphics\Overlays\Navbar\NavbarButton.cs" />
     <Compile Include="Graphics\Overlays\Navbar\TooltipBox.cs" />
     <Compile Include="Graphics\Overlays\Options\OptionsOverlay.cs" />
+    <Compile Include="Graphics\Overlays\Options\OptionsSection.cs" />
+    <Compile Include="Graphics\Overlays\Options\OptionsType.cs" />
     <Compile Include="Graphics\Overlays\Volume\VolumeController.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
