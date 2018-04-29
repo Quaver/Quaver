@@ -8,7 +8,6 @@ using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
-using Quaver.Graphics.Overlays.Options.Events;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
