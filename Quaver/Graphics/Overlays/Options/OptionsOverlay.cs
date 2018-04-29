@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Quaver.GameState;
@@ -7,6 +8,7 @@ using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
+using Quaver.Graphics.Overlays.Options.Events;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
@@ -78,7 +80,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
        ///    All of the defined options section that'll be displayed on-screen.    
        /// </summary>
-        private Dictionary<OptionsType, OptionsSection> Sections { get; set; }
+        private SortedDictionary<OptionsType, OptionsSection> Sections { get; set; }
 
     #endregion
     
@@ -93,7 +95,7 @@ namespace Quaver.Graphics.Overlays.Options
             PosY = GameBase.WindowRectangle.Height;
             
             // Create the options sections.
-            Sections = new Dictionary<OptionsType, OptionsSection>()
+            Sections = new SortedDictionary<OptionsType, OptionsSection>
             {
                 {OptionsType.Audio, new OptionsSection("Audio", FontAwesome.Volume)},
                 {OptionsType.Video, new OptionsSection("Video", FontAwesome.Desktop)},
@@ -232,7 +234,7 @@ namespace Quaver.Graphics.Overlays.Options
                 Position = new UDim2D(0, HeaderUnderline.PosY + 60),
                 Size = new UDim2D(800, 60),
                 Alignment = Alignment.TopCenter,
-                Tint = new Color(0f, 0f, 0f, 1f),
+                Tint = new Color(0f, 0f, 0f, 0f),
                 Parent = this,
                 Visible = true
             };
@@ -258,19 +260,63 @@ namespace Quaver.Graphics.Overlays.Options
                 PosX = -5,
                 Alignment = Alignment.MidRight
             }; 
+            
+            // Creates the section buttons in the menu bar.
+            CreateMenuBarSectionButtons();
         }
 
+        /// <summary>
+        ///     Creates the buttons for the menu bar. of each button.
+        /// </summary>
+        private void CreateMenuBarSectionButtons()
+        {
+            // Create a container that houses the buttons. 
+            var buttonContainer = new QuaverContainer()
+            {
+                Parent = MenuBarContainer,
+                Alignment = Alignment.MidCenter,
+                Size = new UDim2D(MenuBarContainer.SizeX - MenuBarLeftButton.PosX * 2 - MenuBarLeftButton.SizeX * 2 - 10, MenuBarContainer.SizeY)
+            };
+            
+            // Create each button.
+            for (var i = 0; i < Sections.Count; i++)
+            {
+                var type = (OptionsType) i;
+                         
+                // dont say anything when u see this. 
+                var buttonX = buttonContainer.SizeX / Sections.Count * i + buttonContainer.SizeX / (float) Math.Pow(Sections.Count, 2);
+                var size = new Vector2(400f / Sections.Count, buttonContainer.SizeY - 30);
+
+                Sections[type].MenuBarButton = new QuaverTextButton(size, Sections[type].Name)
+                {
+                    Parent = buttonContainer,
+                    Alignment = Alignment.MidLeft,
+                    Position = new UDim2D(buttonX, 0, 1),
+                    Tint = Color.White,
+                    QuaverTextSprite =
+                    {
+                        TextAlignment = Alignment.MidCenter,
+                        Font = QuaverFonts.Medium12,                  
+                    }
+                };
+                
+                // Set click handler.
+                Sections[type].MenuBarButton.Clicked += (o, e) => OnMenuBarButtonClicked(type);
+            }
+        }
+
+        /// <summary>
+        ///     Called when the user clicks on a menu option section.
+        /// </summary>
+        /// <param name="type"></param>
+        private void OnMenuBarButtonClicked(OptionsType type)
+        {
+            Console.WriteLine($"The {Sections[type].Name} button was clicked.");
+        }
+        
     #endregion
 
     #region OPTIONS_SECTION_METHODS
-
-        /// <summary>
-        ///     Creates all of the options sections.
-        /// </summary>
-        private void CreateOptionsSections()
-        {
- 
-        }
 
     #endregion
     }
