@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using Microsoft.Xna.Framework;
-using Quaver.GameState;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
@@ -13,9 +10,6 @@ using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
-using Quaver.States;
-using Quaver.States.Options;
-using Steamworks;
 
 namespace Quaver.Graphics.Overlays.Options
 {
@@ -72,6 +66,16 @@ namespace Quaver.Graphics.Overlays.Options
         /// </summary>
         private QuaverButton MenuBarRightButton { get; set; }
 
+        /// <summary>
+        ///     The text displaying the currently selected option.
+        /// </summary>
+        private QuaverTextbox MenuText { get; set; }
+
+        /// <summary>
+        ///     The icon of the menu text 
+        /// </summary>
+        private QuaverSprite MenuTextIcon { get; set; }
+
     #endregion
         
     #region OPTIONS_SECTION
@@ -80,6 +84,11 @@ namespace Quaver.Graphics.Overlays.Options
        ///    All of the defined options section that'll be displayed on-screen.    
        /// </summary>
         private SortedDictionary<OptionsType, OptionsSection> Sections { get; set; }
+
+        /// <summary>
+        ///     The currently selected options section.
+        /// </summary>
+        private OptionsSection SelectedSection { get; set; }
 
     #endregion
     
@@ -96,11 +105,14 @@ namespace Quaver.Graphics.Overlays.Options
             // Create the options sections.
             Sections = new SortedDictionary<OptionsType, OptionsSection>
             {
-                {OptionsType.Audio, new OptionsSection("Audio", FontAwesome.Volume)},
-                {OptionsType.Video, new OptionsSection("Video", FontAwesome.Desktop)},
                 {OptionsType.Gameplay, new OptionsSection("Gameplay", FontAwesome.GamePad)},
+                {OptionsType.Video, new OptionsSection("Video", FontAwesome.Desktop)},
+                {OptionsType.Audio, new OptionsSection("Audio", FontAwesome.Volume)},
                 {OptionsType.Misc, new OptionsSection("Misc", FontAwesome.GiftBox)}
             };
+
+            // Default the selected section to audio.
+            SelectedSection = Sections[OptionsType.Gameplay];
             
             // Create the entire header's UI.
             CreateHeader(); 
@@ -231,7 +243,7 @@ namespace Quaver.Graphics.Overlays.Options
             MenuBarContainer = new QuaverSprite()
             {
                 Position = new UDim2D(0, HeaderUnderline.PosY + 60),
-                Size = new UDim2D(800, 60),
+                Size = new UDim2D(500, 60),
                 Alignment = Alignment.TopCenter,
                 Tint = new Color(0f, 0f, 0f, 0f),
                 Parent = this,
@@ -258,65 +270,40 @@ namespace Quaver.Graphics.Overlays.Options
                 Size = new UDim2D(20, 20),
                 PosX = -5,
                 Alignment = Alignment.MidRight
-            }; 
-            
-            // Creates the section buttons in the menu bar.
-            CreateMenuBarSectionButtons();
-        }
+            };
 
-        /// <summary>
-        ///     Creates the buttons for the menu bar. of each button.
-        /// </summary>
-        private void CreateMenuBarSectionButtons()
-        {
-            // Create a container that houses the buttons. 
-            var buttonContainer = new QuaverContainer()
+            // Create text in menu bar.
+            MenuText = new QuaverTextbox()
+            {
+                Font = QuaverFonts.Medium12,
+                Size = new UDim2D(70, 70),
+                TextAlignment = Alignment.MidCenter,
+                Alignment = Alignment.MidCenter,
+                Parent = MenuBarContainer,
+                Text = SelectedSection.Name,
+                TextBoxStyle = TextBoxStyle.ScaledSingleLine,
+                TextColor = Color.Yellow
+            };
+
+            // Create icon next to selected option text.
+            MenuTextIcon = new QuaverSprite
             {
                 Parent = MenuBarContainer,
                 Alignment = Alignment.MidCenter,
-                Size = new UDim2D(MenuBarContainer.SizeX - MenuBarLeftButton.PosX * 2 - MenuBarLeftButton.SizeX * 2 - 10, MenuBarContainer.SizeY)
+                Image = SelectedSection.Icon,
+                SizeX = 25,
+                SizeY = 25,
+                PosY = MenuText.PosY,
+                PosX = MenuText.PosX - 80
             };
-            
-            // Create each button.
-            for (var i = 0; i < Sections.Count; i++)
-            {
-                var type = (OptionsType) i;
-                         
-                // dont say anything when u see this. 
-                var buttonX = buttonContainer.SizeX / Sections.Count * i + buttonContainer.SizeX / (float) Math.Pow(Sections.Count, 2);
-                var size = new Vector2(400f / Sections.Count, buttonContainer.SizeY - 30);
-
-                Sections[type].MenuBarButton = new QuaverTextButton(size, Sections[type].Name)
-                {
-                    Parent = buttonContainer,
-                    Alignment = Alignment.MidLeft,
-                    Position = new UDim2D(buttonX, 0, 1),
-                    Tint = Color.White,
-                    QuaverTextSprite =
-                    {
-                        TextAlignment = Alignment.MidCenter,
-                        Font = QuaverFonts.Medium12,                  
-                    }
-                };
-                
-                // Set click handler.
-                Sections[type].MenuBarButton.Clicked += (o, e) => OnMenuBarButtonClicked(type);
-            }
-        }
-
-        /// <summary>
-        ///     Called when the user clicks on a menu option section.
-        /// </summary>
-        /// <param name="type"></param>
-        private void OnMenuBarButtonClicked(OptionsType type)
-        {
-            Console.WriteLine($"The {Sections[type].Name} button was clicked.");
         }
         
     #endregion
 
     #region OPTIONS_SECTION_METHODS
-
+        
+        
+        
     #endregion
     }
 }
