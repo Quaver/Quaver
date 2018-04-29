@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using Quaver.Graphics.Buttons;
 
 namespace Quaver.Graphics.Overlays.Options
 {
@@ -13,6 +14,11 @@ namespace Quaver.Graphics.Overlays.Options
         ///     The icon displayed for this section.
         /// </summary>
         internal Texture2D Icon { get; }
+
+        /// <summary>
+        ///     The button displayed in the menu bar for this section.
+        /// </summary>
+        internal QuaverTextButton MenuBarButton { get; set; }
 
         /// <summary>
         ///     Ctor - 
