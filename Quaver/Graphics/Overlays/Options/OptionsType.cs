@@ -5,7 +5,6 @@
         Audio,
         Video,
         Gameplay,
-        Misc,
-        Debug
+        Misc
     }
 }
