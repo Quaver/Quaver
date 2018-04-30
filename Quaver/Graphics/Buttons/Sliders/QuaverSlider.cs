@@ -66,7 +66,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <summary>
         ///     Global property that dictates if **any** slider is actually held.
         /// </summary>
-        private static bool SliderAlreadyHeld { get; set; }
+        internal static bool SliderAlreadyHeld { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -277,7 +277,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         private void OnValueChanged(object sender, BindedValueEventArgs<int> e)
         {          
             // Play a sound effect
-            // PlaySoundEffectWhenChanged(e.Value);
+            //PlaySoundEffectWhenChanged(e.Value);
 
             // Update the previous value.
             PreviousValue = e.Value;
