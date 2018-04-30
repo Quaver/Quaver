@@ -63,6 +63,11 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// </summary>
         private int PreviousValue { get; set; }
 
+        /// <summary>
+        ///     Global property that dictates if **any** slider is actually held.
+        /// </summary>
+        private static bool SliderAlreadyHeld { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Creates a new SliderButton. Takes in a BindedInt as an argument.
@@ -105,7 +110,10 @@ namespace Quaver.Graphics.Buttons.Sliders
         internal override void Update(double dt)
         {
             if (GameBase.MouseState.LeftButton == ButtonState.Released)
+            {
                 MouseInHoldSequence = false;
+                SliderAlreadyHeld = false;
+            }
 
             // Handle the changing of the value for this button.
             if (MouseInHoldSequence)
@@ -161,7 +169,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         protected override bool GetClickArea()
         {
             // The RectY increase of the click area.
-            const int offset = 45;
+            const int offset = 40;
 
             DrawRectangle clickArea;
             
@@ -180,8 +188,11 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <param name="e"></param>
         private void MouseHeld(object sender, EventArgs e)
         {
-            if (PreviousMouseState.LeftButton == ButtonState.Released)
-                MouseInHoldSequence = true;   
+            if (SliderAlreadyHeld || PreviousMouseState.LeftButton != ButtonState.Pressed)
+                return;
+            
+            MouseInHoldSequence = true;
+            SliderAlreadyHeld = true;
         }
         
         /// <inheritdoc />
@@ -191,7 +202,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         protected override void MouseOver()
         {
             // Play sound effect if necessary
-            if (!MouseOverSoundPlayed)
+            if (!MouseOverSoundPlayed && !SliderAlreadyHeld)
             {
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover);
                 MouseOverSoundPlayed = true;
