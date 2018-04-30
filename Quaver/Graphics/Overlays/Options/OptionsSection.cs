@@ -11,6 +11,7 @@ using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
+using Quaver.Main;
 using Steamworks;
 
 namespace Quaver.Graphics.Overlays.Options
@@ -54,10 +55,10 @@ namespace Quaver.Graphics.Overlays.Options
             Container = new QuaverSprite()
             {
                 Parent = overlay,               
-                Size = new UDim2D(800, 450),
+                Size = new UDim2D(650, 450),
                 Alignment = Alignment.MidCenter,
-                PosY = 90,
-                Tint = new Color(0f, 0f, 0f, 1f),
+                PosY = 100,
+                Tint = new Color(0f, 0f, 0f, 0f),
                 Visible = false
             };     
             
@@ -69,22 +70,25 @@ namespace Quaver.Graphics.Overlays.Options
         /// </summary>
         internal void AddSliderOption(BindedInt value, string name)
         {
+            var posY = Interactables.Count * 50;
+            
             var text = new QuaverTextbox()
             {
                 TextAlignment = Alignment.TopLeft,
                 Alignment = Alignment.TopLeft,
-                Size = new UDim2D(20, 20),
                 Text = name,
-                Parent = Container
+                Font = QuaverFonts.Medium12,
+                Parent = Container,
+                TextBoxStyle = TextBoxStyle.OverflowSingleLine,
+                PosY = posY
             };
 
             // Create the slider.
-            var slider = new QuaverSlider(value, new Vector2(380, 4))
+            var slider = new QuaverSlider(value, new Vector2(380, 3))
             {
                 Parent = Container,
-                Alignment = Alignment.TopCenter,
-                PosX = 200,
-                PosY = text.PosY + text.SizeY / 2,
+                Alignment = Alignment.TopRight,
+                PosY = posY + 8,
                 Tint = QuaverColors.MainAccentInactive,
                 ProgressBall = { Tint = QuaverColors.MainAccentInactive }
             };
@@ -92,7 +96,7 @@ namespace Quaver.Graphics.Overlays.Options
             // Make sure the slider's colors get updated accordingly.
             slider.OnUpdate = dt =>
             {
-                if (slider.MouseInHoldSequence || slider.IsHovered)
+                if (slider.MouseInHoldSequence)
                 {
                     slider.Tint = QuaverColors.MainAccent;
                     slider.ProgressBall.Tint = QuaverColors.MainAccent;
