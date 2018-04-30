@@ -126,7 +126,7 @@ namespace Quaver.Graphics.Overlays.Options
                 return;
             
             // Rotate the gear icon, just for some extra oomph
-            Icon.Rotation = (float)(MathHelper.ToDegrees(Icon.Rotation) + 7 * dt / 30f);
+            Icon.Rotation = (float)(MathHelper.ToDegrees(Icon.Rotation) + 5 * dt / 30f);
         }
     }
 }
