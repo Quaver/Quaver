@@ -78,6 +78,8 @@
     <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarButton.cs" />
     <Compile Include="Graphics\Overlays\Navbar\TooltipBox.cs" />
+    <Compile Include="Graphics\Overlays\Options\OptionsHeader.cs" />
+    <Compile Include="Graphics\Overlays\Options\OptionsMenuBar.cs" />
     <Compile Include="Graphics\Overlays\Options\OptionsOverlay.cs" />
     <Compile Include="Graphics\Overlays\Options\OptionsSection.cs" />
     <Compile Include="Graphics\Overlays\Options\OptionsType.cs" />
