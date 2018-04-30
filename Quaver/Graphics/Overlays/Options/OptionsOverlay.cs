@@ -101,9 +101,13 @@ namespace Quaver.Graphics.Overlays.Options
         /// </summary>
         private void CreateAudioSection()
          {
+              
             var section = Sections[OptionsType.Audio];
              
-            section.AddSliderOption(ConfigManager.VolumeGlobal, "Master Volume");   
+            section.AddSliderOption(ConfigManager.VolumeGlobal, "Master Volume"); 
+            section.AddSliderOption(ConfigManager.VolumeMusic, "Music Volume");
+            section.AddSliderOption(ConfigManager.VolumeEffect, "Effect Volume");
+            section.AddSliderOption(ConfigManager.GlobalAudioOffset, "Offset");
         }
     }
 }
