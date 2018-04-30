@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
 using Microsoft.Xna.Framework;
-using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Colors;
+using Quaver.Config;
 using Quaver.Graphics.Enums;
-using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -39,7 +35,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     The currently selected options section.
         /// </summary>
-        internal OptionsSection SelectedSection { get; set; }
+        internal OptionsSection SelectedSection { get; }
     
         /// <summary>
        ///     Ctor - 
@@ -57,9 +53,9 @@ namespace Quaver.Graphics.Overlays.Options
             // Create the options sections.
             Sections = new SortedDictionary<OptionsType, OptionsSection>
             {
+                {OptionsType.Audio, new OptionsSection(this, "Audio", FontAwesome.Volume)},
                 {OptionsType.Gameplay, new OptionsSection(this, "Gameplay", FontAwesome.GamePad)},
                 {OptionsType.Video, new OptionsSection(this, "Video", FontAwesome.Desktop)},
-                {OptionsType.Audio, new OptionsSection(this, "Audio", FontAwesome.Volume)},
                 {OptionsType.Misc, new OptionsSection(this, "Misc", FontAwesome.GiftBox)}
             };
             
@@ -68,6 +64,9 @@ namespace Quaver.Graphics.Overlays.Options
             
             // Create menu bar.
             MenuBar = new OptionsMenuBar(this);
+            
+            // Create all of the options sections.
+            CreateAudioSection();
         }
 
         /// <inheritdoc />
@@ -81,7 +80,7 @@ namespace Quaver.Graphics.Overlays.Options
             Header.Update(dt);
 
             SelectedSection.Container.Visible = true;
-            
+       
             base.Update(dt);
         }
 
@@ -95,6 +94,16 @@ namespace Quaver.Graphics.Overlays.Options
                 PosY = GraphicsHelper.Tween(0, PosY, Math.Min(dt / 30, 1));
             else
                 PosY = GraphicsHelper.Tween(GameBase.WindowRectangle.Height, PosY, Math.Min(dt / 30, 1));
+        }
+
+         /// <summary>
+        ///     
+        /// </summary>
+        private void CreateAudioSection()
+         {
+            var section = Sections[OptionsType.Audio];
+             
+            section.AddSliderOption(ConfigManager.VolumeGlobal, "Master Volume");   
         }
     }
 }
