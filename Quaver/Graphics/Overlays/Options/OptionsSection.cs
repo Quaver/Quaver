@@ -31,18 +31,13 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     The container of the options section.
         /// </summary>
-        internal QuaverSprite Container { get; set; }
-
-        /// <summary>
-        ///     The y spacing for each section.
-        /// </summary>
-        internal int SpacingY { get; } = 40;
+        internal QuaverSprite Container { get; }
         
         /// <summary>
         ///     Probably a bad name, but all of the sprites that are interactable
         ///     (Sliders, Dropdowns, Checkboxes)
         /// </summary>
-        private List<Drawable> Interactables { get; set; } 
+        private List<Drawable> Interactables { get; } 
             
         /// <summary>
         ///     Ctor - 
@@ -72,6 +67,7 @@ namespace Quaver.Graphics.Overlays.Options
         {
             var posY = Interactables.Count * 50;
             
+            // Create the option text.
             var text = new QuaverTextbox()
             {
                 TextAlignment = Alignment.TopLeft,
@@ -109,6 +105,37 @@ namespace Quaver.Graphics.Overlays.Options
             };
             
             Interactables.Add(slider);
+        }
+
+        /// <summary>
+        ///     Adds a checkbox option 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="name"></param>
+        internal void AddCheckboxOption(BindedValue<bool> value, string name)
+        {
+            var posY = Interactables.Count * 50;
+            
+            // Create the option text.
+            var text = new QuaverTextbox()
+            {
+                TextAlignment = Alignment.TopLeft,
+                Alignment = Alignment.TopLeft,
+                Text = name,
+                Font = QuaverFonts.Medium12,
+                Parent = Container,
+                TextBoxStyle = TextBoxStyle.OverflowSingleLine,
+                PosY = posY
+            };
+
+            // Create the checkbox.
+            var checkbox = new QuaverCheckbox(value, new Vector2(20, 20))
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                PosY = posY,
+                Tint = QuaverColors.MainAccentInactive,
+            };
         }
     }
 }
