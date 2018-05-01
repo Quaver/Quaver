@@ -385,7 +385,7 @@ namespace Quaver.Helpers
     
                 // TOP ROW F# keyStrS ETC.
                 case Keys.Escape:
-                    keyStr = "ESCAPE";
+                    keyStr = "Esc";
                     return keyStr;
                 case Keys.F1:
                     keyStr = "F1";
@@ -474,7 +474,7 @@ namespace Quaver.Helpers
                     keyStr = "+";
                     return keyStr;
                 case Keys.Back:
-                    keyStr = "BACKSPACE";
+                    keyStr = "Back";
                     return keyStr;
                 case Keys.Insert:
                     keyStr = "INSERT";
@@ -531,7 +531,7 @@ namespace Quaver.Helpers
                     keyStr = "RCTRL";
                     return keyStr;
                 case Keys.Space:
-                    keyStr = "SPACE";
+                    keyStr = "Space";
                     return keyStr;
                 case Keys.NumPad0:
                     keyStr = "KP_INS";
