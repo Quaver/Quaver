@@ -45,7 +45,7 @@ namespace Quaver.Graphics.Overlays.Options
         internal OptionsOverlay()
         {
             Alignment = Alignment.TopLeft;
-            Tint = new Color(0f, 0f, 0f, 0.6f);
+            Tint = new Color(0f, 0f, 0f, 0.7f);
             Size = new UDim2D(0, GameBase.WindowRectangle.Height, 1);
             PosY = GameBase.WindowRectangle.Height;
                         
