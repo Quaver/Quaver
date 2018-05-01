@@ -97,7 +97,7 @@ namespace Quaver.Graphics.Overlays.Options
         }
 
          /// <summary>
-        ///     
+        ///     Adds interactable config options for the Audio section.
         /// </summary>
         private void CreateAudioSection()
          {
@@ -108,6 +108,7 @@ namespace Quaver.Graphics.Overlays.Options
             section.AddSliderOption(ConfigManager.VolumeMusic, "Music Volume");
             section.AddSliderOption(ConfigManager.VolumeEffect, "Effect Volume");
             section.AddSliderOption(ConfigManager.GlobalAudioOffset, "Offset");
+            section.AddCheckboxOption(ConfigManager.Pitched, "Toggle Music Pitch");
         }
     }
 }
