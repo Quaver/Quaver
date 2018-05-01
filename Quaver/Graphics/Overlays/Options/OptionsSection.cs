@@ -145,9 +145,25 @@ namespace Quaver.Graphics.Overlays.Options
         /// <param name="name"></param>
         internal void AddKeybindOption(BindedValue<Keys> value, string name)
         {
-            throw new NotImplementedException();
+            AddTextField(name);
+
+            // Create the keybind button.
+            var keybind = new QuaverKeybindButton(value, new Vector2(90, 25))
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                PosY = SpacingY
+            };
+            
+            Interactables.Add(keybind);
         }
 
+        /// <summary>
+        ///     Adds multiple keybind buttons on the same row.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="name"></param>
+        /// <exception cref="NotImplementedException"></exception>
         internal void AddKeybindOption(List<BindedValue<Keys>> values, string name)
         {
             throw new NotImplementedException();
