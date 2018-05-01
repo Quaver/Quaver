@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Buttons.Dropdowns;
 using Quaver.Graphics.Buttons.Sliders;
 using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
@@ -136,6 +137,35 @@ namespace Quaver.Graphics.Overlays.Options
                 PosY = posY,
                 Tint = QuaverColors.MainAccentInactive,
             };
+            
+            Interactables.Add(checkbox);
+        }
+
+        /// <summary>
+        ///     Adds a dropdown option 
+        /// </summary>
+        internal void AddDropdownOption(QuaverDropdown dropdown, string name)
+        {
+            var posY = Interactables.Count * 50;
+            
+            // Create the option text.
+            var text = new QuaverTextbox()
+            {
+                TextAlignment = Alignment.TopLeft,
+                Alignment = Alignment.TopLeft,
+                Text = name,
+                Font = QuaverFonts.Medium12,
+                Parent = Container,
+                TextBoxStyle = TextBoxStyle.OverflowSingleLine,
+                PosY = posY
+            };
+
+            dropdown.Parent = Container;
+            dropdown.Alignment = Alignment.TopRight;
+            dropdown.PosY = posY + 8;
+            dropdown.SizeX = 380;
+            
+            Interactables.Add(dropdown);
         }
     }
 }
