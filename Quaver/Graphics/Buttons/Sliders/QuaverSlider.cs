@@ -17,16 +17,14 @@ namespace Quaver.Graphics.Buttons.Sliders
     internal class QuaverSlider : QuaverButton
     {
         /// <summary>
+        ///     Global property that dictates if **any** slider is actually held.
+        /// </summary>
+        internal static bool SliderAlreadyHeld { get; set; }
+
+        /// <summary>
         ///     The value that this slider binds to.
         /// </summary>
         internal BindedInt BindedValue { get; }
-
-        /// <summary>
-        ///     If the slider is vertical or not.
-        ///         True = Vertical
-        ///         False = Horizontal
-        /// </summary>
-        private bool IsVertical { get; }
 
         /// <summary>
         ///     The progress slider image.
@@ -37,7 +35,14 @@ namespace Quaver.Graphics.Buttons.Sliders
         ///     If the mouse is held down and hasn't let go yet.
         /// </summary>
         internal bool MouseInHoldSequence { get; set; }
-
+       
+        /// <summary>
+        ///     If the slider is vertical or not.
+        ///         True = Vertical
+        ///         False = Horizontal
+        /// </summary>
+        private bool IsVertical { get; }
+        
         /// <summary>
         ///     The last percentage that the slider has changed the BindedInt to.
         /// </summary>
@@ -63,10 +68,10 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// </summary>
         private int PreviousValue { get; set; }
 
-        /// <summary>
-        ///     Global property that dictates if **any** slider is actually held.
+         /// <summary>
+        ///     The percentage of the current slider value.
         /// </summary>
-        internal static bool SliderAlreadyHeld { get; set; }
+        private int ProgressPercentage => (BindedValue.Value - BindedValue.MinValue) * 100 / BindedValue.MaxValue - BindedValue.MinValue * 100;
 
         /// <inheritdoc />
         /// <summary>
@@ -234,16 +239,14 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// </summary>
         private void SetProgressPosition(double dt)
         {
-            var percentage = ((BindedValue.Value - BindedValue.MinValue) * 100) / BindedValue.MaxValue - BindedValue.MinValue * 100;
-
             if (IsVertical)
             {
                 ProgressBall.PosX = GraphicsHelper.Tween(Size.X.Offset / 2 - ProgressBall.SizeX / 2, ProgressBall.PosX, Math.Min(dt / 30, 1));
-                ProgressBall.PosY = GraphicsHelper.Tween((100 - percentage) / 100f * Size.Y.Offset, ProgressBall.PosY, Math.Min(dt / 30, 1));
+                ProgressBall.PosY = GraphicsHelper.Tween((100 - ProgressPercentage) / 100f * Size.Y.Offset, ProgressBall.PosY, Math.Min(dt / 30, 1));
 ;            }
             else
             {
-                ProgressBall.PosX = GraphicsHelper.Tween(percentage / 100f * Size.X.Offset, ProgressBall.PosX, Math.Min(dt / 30, 1));
+                ProgressBall.PosX = GraphicsHelper.Tween(ProgressPercentage / 100f * Size.X.Offset, ProgressBall.PosX, Math.Min(dt / 30, 1));
                 ProgressBall.PosY = GraphicsHelper.Tween(Size.Y.Offset / 2 - ProgressBall.SizeY / 2, ProgressBall.PosY, Math.Min(dt / 30, 1));
             }
         }
@@ -253,15 +256,12 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// </summary>
         /// <param name="val"></param>
         private void PlaySoundEffectWhenChanged(int val)
-        {
-            // Find the percentage
-            var percent = ((BindedValue.Value - BindedValue.MinValue) * 100) / BindedValue.MaxValue - BindedValue.MinValue * 100;
-            
+        {            
             // Set the min and max based on the direction we're going.
             var max = val > PreviousValue ? 1f : 0;
             var min = val > PreviousValue ? 0 : -1f;
             
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover, percent * (max - min) / 100f + min);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover, ProgressPercentage* (max - min) / 100f + min);
         }
 
         /// <summary>
