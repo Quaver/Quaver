@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -141,7 +142,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     Adds a single keybind option
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="value"></param>
         /// <param name="name"></param>
         internal void AddKeybindOption(BindedValue<Keys> value, string name)
         {
@@ -166,7 +167,21 @@ namespace Quaver.Graphics.Overlays.Options
         /// <exception cref="NotImplementedException"></exception>
         internal void AddKeybindOption(List<BindedValue<Keys>> values, string name)
         {
-            throw new NotImplementedException();
+            AddTextField(name);
+
+            for (var i = 0; i < values.Count; i++)
+            {
+                // Create the keybind button.
+                new QuaverKeybindButton(values[i], new Vector2(60, 25))
+                {
+                    Parent = Container,
+                    Alignment = Alignment.TopRight,
+                    PosY = SpacingY,
+                    PosX = (i - values.Count) * 70 + 70
+                };
+            }
+            
+            Interactables.Add(Container.Children.Last());
         }
 
         /// <summary>

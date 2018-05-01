@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.Graphics.Buttons.Dropdowns;
 using Quaver.Graphics.Enums;
@@ -101,8 +102,7 @@ namespace Quaver.Graphics.Overlays.Options
         ///     Adds interactable config options for the Audio section.
         /// </summary>
         private void CreateAudioSection()
-         {
-              
+        {         
             var section = Sections[OptionsType.Audio];
              
             section.AddSliderOption(ConfigManager.VolumeGlobal, "Master Volume"); 
