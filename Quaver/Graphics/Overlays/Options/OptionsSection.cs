@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
@@ -38,8 +39,13 @@ namespace Quaver.Graphics.Overlays.Options
         ///     Probably a bad name, but all of the sprites that are interactable
         ///     (Sliders, Dropdowns, Checkboxes)
         /// </summary>
-        private List<Drawable> Interactables { get; } 
-            
+        private List<Drawable> Interactables { get; }
+
+        /// <summary>
+        ///     The y spacing for each options element.
+        /// </summary>
+        private int SpacingY => Interactables.Count * 50;
+        
         /// <summary>
         ///     Ctor - 
         /// </summary>
@@ -66,26 +72,14 @@ namespace Quaver.Graphics.Overlays.Options
         /// </summary>
         internal void AddSliderOption(BindedInt value, string name)
         {
-            var posY = Interactables.Count * 50;
+            AddTextField(name);
             
-            // Create the option text.
-            var text = new QuaverTextbox()
-            {
-                TextAlignment = Alignment.TopLeft,
-                Alignment = Alignment.TopLeft,
-                Text = name,
-                Font = QuaverFonts.Medium12,
-                Parent = Container,
-                TextBoxStyle = TextBoxStyle.OverflowSingleLine,
-                PosY = posY
-            };
-
             // Create the slider.
             var slider = new QuaverSlider(value, new Vector2(380, 3))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
-                PosY = posY + 8,
+                PosY = SpacingY + 8,
                 Tint = QuaverColors.MainAccentInactive,
                 ProgressBall = { Tint = QuaverColors.MainAccentInactive }
             };
@@ -115,26 +109,14 @@ namespace Quaver.Graphics.Overlays.Options
         /// <param name="name"></param>
         internal void AddCheckboxOption(BindedValue<bool> value, string name)
         {
-            var posY = Interactables.Count * 50;
-            
-            // Create the option text.
-            var text = new QuaverTextbox()
-            {
-                TextAlignment = Alignment.TopLeft,
-                Alignment = Alignment.TopLeft,
-                Text = name,
-                Font = QuaverFonts.Medium12,
-                Parent = Container,
-                TextBoxStyle = TextBoxStyle.OverflowSingleLine,
-                PosY = posY
-            };
+            AddTextField(name);
 
             // Create the checkbox.
             var checkbox = new QuaverCheckbox(value, new Vector2(20, 20))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
-                PosY = posY,
+                PosY = SpacingY,
                 Tint = QuaverColors.MainAccentInactive,
             };
             
@@ -145,27 +127,48 @@ namespace Quaver.Graphics.Overlays.Options
         ///     Adds a dropdown option 
         /// </summary>
         internal void AddDropdownOption(QuaverDropdown dropdown, string name)
-        {
-            var posY = Interactables.Count * 50;
-            
-            // Create the option text.
-            var text = new QuaverTextbox()
-            {
-                TextAlignment = Alignment.TopLeft,
-                Alignment = Alignment.TopLeft,
-                Text = name,
-                Font = QuaverFonts.Medium12,
-                Parent = Container,
-                TextBoxStyle = TextBoxStyle.OverflowSingleLine,
-                PosY = posY
-            };
+        {         
+            AddTextField(name);
 
             dropdown.Parent = Container;
             dropdown.Alignment = Alignment.TopRight;
-            dropdown.PosY = posY + 8;
+            dropdown.PosY = SpacingY  + 8;
             dropdown.SizeX = 380;
             
             Interactables.Add(dropdown);
+        }
+
+        /// <summary>
+        ///     Adds a single keybind option
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="name"></param>
+        internal void AddKeybindOption(BindedValue<Keys> value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void AddKeybindOption(List<BindedValue<Keys>> values, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        ///     Method that adds the text field to the left for each options element.
+        /// </summary>
+        /// <param name="text"></param>
+        private void AddTextField(string text)
+        {
+            new QuaverTextbox()
+            {
+                TextAlignment = Alignment.TopLeft,
+                Alignment = Alignment.TopLeft,
+                Text = text,
+                Font = QuaverFonts.Medium12,
+                Parent = Container,
+                TextBoxStyle = TextBoxStyle.OverflowSingleLine,
+                PosY = SpacingY
+            };
         }
     }
 }
