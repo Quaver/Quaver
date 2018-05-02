@@ -101,9 +101,15 @@ namespace Quaver.Graphics.Overlays.Options
         private void PerformShowAndHideAnimations(double dt)
         {
             if (Active)
-                PosY = GraphicsHelper.Tween(0, PosY, Math.Min(dt / 30, 1));
+            {
+                PosY = GraphicsHelper.Tween(0, PosY, Math.Min(dt / 180, 1));
+                Alpha = GraphicsHelper.Tween(0.7f, Alpha, Math.Min(dt / 30, 1));
+            }
             else
-                PosY = GraphicsHelper.Tween(GameBase.WindowRectangle.Height, PosY, Math.Min(dt / 30, 1));
+            {
+                PosY = GraphicsHelper.Tween(GameBase.WindowRectangle.Height, PosY, Math.Min(dt / 180, 1));
+                Alpha = GraphicsHelper.Tween(0, Alpha, Math.Min(dt / 30, 1));
+            }
         }
 
          /// <summary>
