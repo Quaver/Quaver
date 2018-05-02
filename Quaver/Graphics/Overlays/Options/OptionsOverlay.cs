@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
+using Quaver.Database.Maps;
+using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Buttons.Dropdowns;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
@@ -15,6 +18,7 @@ using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Skinning;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Graphics.Overlays.Options
 {
@@ -64,11 +68,12 @@ namespace Quaver.Graphics.Overlays.Options
                 {OptionsType.Audio, new OptionsSection(this, "Audio", FontAwesome.Volume)},
                 {OptionsType.Video, new OptionsSection(this, "Video", FontAwesome.Desktop)},
                 {OptionsType.Gameplay, new OptionsSection(this, "Gameplay", FontAwesome.GamePad)},
+                {OptionsType.Keybinds, new OptionsSection(this, "Keybinds", FontAwesome.GamePad)},
                 {OptionsType.Misc, new OptionsSection(this, "Misc", FontAwesome.GiftBox)}
             };
             
             // Default the selected section to audio.
-            SelectedSection = Sections[OptionsType.Gameplay];   
+            SelectedSection = Sections[OptionsType.Misc];   
             
             // Create menu bar.
             MenuBar = new OptionsMenuBar(this);
@@ -76,7 +81,9 @@ namespace Quaver.Graphics.Overlays.Options
             // Create all of the options sections.
             // CreateAudioSection();
             // CreateVideoSection();
-            CreateGameplaySection();
+            // CreateGameplaySection();
+            // CreateKeybindsSection();
+            CreateMiscSection();
         }
 
         /// <inheritdoc />
@@ -173,6 +180,91 @@ namespace Quaver.Graphics.Overlays.Options
             section.AddCheckboxOption(ConfigManager.HealthBarPositionTop, "Health Bar On Top");
             section.AddCheckboxOption(ConfigManager.DownScroll4K, "Down Scroll - 4 Keys");
             section.AddCheckboxOption(ConfigManager.DownScroll7K, "Down Scroll - 7 Keys");
+        }
+
+        /// <summary>
+        ///     Creates the keybinds section of the options menu.
+        /// </summary>
+        private void CreateKeybindsSection()
+        {
+            var section = Sections[OptionsType.Keybinds];
+            
+            section.AddKeybindOption(new List<BindedValue<Keys>>
+            {
+                ConfigManager.KeyMania4K1,
+                ConfigManager.KeyMania4K2,
+                ConfigManager.KeyMania4K3,
+                ConfigManager.KeyMania4K4
+            }, "Mania - 4 Keys");
+            
+            section.AddKeybindOption(new List<BindedValue<Keys>>
+            {
+                ConfigManager.KeyMania7K1,
+                ConfigManager.KeyMania7K2,
+                ConfigManager.KeyMania7K3,
+                ConfigManager.KeyMania7K4,
+                ConfigManager.KeyMania7K5,
+                ConfigManager.KeyMania7K6,
+                ConfigManager.KeyMania7K7
+            }, "Mania - 7 Keys");  
+            
+            section.AddKeybindOption(ConfigManager.KeyPause, "Pause");
+            section.AddKeybindOption(ConfigManager.KeySkipIntro, "Skip Song Intro");
+            section.AddKeybindOption(ConfigManager.KeyTakeScreenshot, "Take Screenshot");
+            section.AddKeybindOption(ConfigManager.KeyToggleOverlay, "Toggle Overlay");
+        }
+
+        /// <summary>
+        ///     Creates the Misc section of the options menu.
+        /// </summary>
+        private void CreateMiscSection()
+        {
+            var section = Sections[OptionsType.Misc];
+
+            // Create the peppy button.
+            var peppyButton = new QuaverTextButton(Vector2.One, "Select peppy!.db File");
+
+            // Add click handler for peppy button.
+            peppyButton.Clicked += (o, e) =>
+            {
+                // Create the openFileDialog object.
+                var openFileDialog = new OpenFileDialog()
+                {
+                    InitialDirectory = "c:\\",
+                    Filter = "Peppy Database File (*.db)| *.db",
+                    FilterIndex = 0,
+                    RestoreDirectory = true,
+                    Multiselect = false
+                };
+
+                // If the dialog couldn't be shown, that's an issue, so we'll return for now.
+                if (openFileDialog.ShowDialog() != DialogResult.OK)
+                    return;
+
+                ConfigManager.OsuDbPath.Value = openFileDialog.FileName;
+            };
+            
+            // Add peppy button.
+            section.AddButton(peppyButton, "Select peppy!.db File");
+            
+            // Add option to load peppy beatmaps.
+            section.AddCheckboxOption(ConfigManager.AutoLoadOsuBeatmaps, "Load \"peppy!\" Beatmaps", (o, e) =>
+            {
+                // After initializing the configuration, we want to sync the map database, and load the dictionary of mapsets.
+                Task.Run(async () =>
+                {
+                    await MapCache.LoadAndSetMapsets();
+
+                    // Force garbage collection
+                    GC.Collect();
+                }).Wait();
+            });
+            
+            // Add option to load Etterna charts.
+            section.AddCheckboxOption(ConfigManager.AutoLoadEtternaCharts, "Load Etterna Charts", (o, e) =>
+            {
+                
+            });
         }
         
         /// <summary>
