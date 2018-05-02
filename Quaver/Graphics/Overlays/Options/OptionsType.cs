@@ -5,6 +5,7 @@
         Audio,
         Video,
         Gameplay,
+        Keybinds,
         Misc
     }
 }
