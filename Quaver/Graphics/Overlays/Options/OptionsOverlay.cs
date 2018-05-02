@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -12,6 +14,7 @@ using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
+using Quaver.Skinning;
 
 namespace Quaver.Graphics.Overlays.Options
 {
@@ -59,20 +62,21 @@ namespace Quaver.Graphics.Overlays.Options
             Sections = new SortedDictionary<OptionsType, OptionsSection>
             {
                 {OptionsType.Audio, new OptionsSection(this, "Audio", FontAwesome.Volume)},
-                {OptionsType.Gameplay, new OptionsSection(this, "Gameplay", FontAwesome.GamePad)},
                 {OptionsType.Video, new OptionsSection(this, "Video", FontAwesome.Desktop)},
+                {OptionsType.Gameplay, new OptionsSection(this, "Gameplay", FontAwesome.GamePad)},
                 {OptionsType.Misc, new OptionsSection(this, "Misc", FontAwesome.GiftBox)}
             };
             
             // Default the selected section to audio.
-            SelectedSection = Sections[OptionsType.Video];   
+            SelectedSection = Sections[OptionsType.Gameplay];   
             
             // Create menu bar.
             MenuBar = new OptionsMenuBar(this);
             
             // Create all of the options sections.
             // CreateAudioSection();
-            CreateVideoSection();
+            // CreateVideoSection();
+            CreateGameplaySection();
         }
 
         /// <inheritdoc />
@@ -148,6 +152,24 @@ namespace Quaver.Graphics.Overlays.Options
         }
 
         /// <summary>
+       ///     Creates the gameplay section of the options menu.
+       /// </summary>
+        private void CreateGameplaySection()
+        {
+            var section = Sections[OptionsType.Gameplay];
+            
+            section.AddDropdownOption(CreateDefaultSkinDropdown(), "Default Skin");   
+            section.AddDropdownOption(CreateSkinDropdown(), "Custom Skin");
+            section.AddSliderOption(ConfigManager.ScrollSpeed4K, "Scroll Speed - 4 Keys");
+            section.AddSliderOption(ConfigManager.ScrollSpeed7K, "Scroll Speed - 7 Keys");
+            section.AddSliderOption(ConfigManager.UserHitPositionOffset4K, "Hit Position - 4 Keys");
+            section.AddSliderOption(ConfigManager.UserHitPositionOffset7K, "Hit Position - 7 Keys");
+            section.AddCheckboxOption(ConfigManager.HealthBarPositionTop, "Health Bar On Top");
+            section.AddCheckboxOption(ConfigManager.DownScroll4K, "Down Scroll - 4 Keys");
+            section.AddCheckboxOption(ConfigManager.DownScroll7K, "Down Scroll - 7 Keys");
+        }
+        
+        /// <summary>
         ///     Creates the dropdown to select the current resolution.
         /// </summary>
         private QuaverDropdown CreateResolutionDropdown()
@@ -202,6 +224,73 @@ namespace Quaver.Graphics.Overlays.Options
                 Size = new UDim2D(0, GameBase.WindowRectangle.Height, 1);          
                 GameBase.GameOverlay.RecalculateWindow();
                 BackgroundManager.Readjust();             
+            });
+        }
+
+        /// <summary>
+        ///     Creates the dropdown to select the default skin.
+        /// </summary>
+        /// <returns></returns>
+        private QuaverDropdown CreateDefaultSkinDropdown()
+        {
+            // Create constant variables for both default skin options.
+            const string arrowText = "Default Arrow Skin";
+            const string barText = "Default Bar Skin";
+            
+            var options = new List<string> { arrowText, barText };
+
+            switch (ConfigManager.DefaultSkin.Value)
+            {
+                case DefaultSkins.Arrow:
+                    break;
+                case DefaultSkins.Bar:
+                    ListHelper.Swap(options, 1, 0);
+                    break;
+                default:
+                    throw new InvalidEnumArgumentException();
+            }
+            
+            // Create the new dropdown button.
+            return new QuaverDropdown(options, (o, e) =>
+            {
+                switch (e.ButtonText)
+                {
+                    case arrowText:
+                        ConfigManager.DefaultSkin.Value = DefaultSkins.Arrow;
+                        Skin.LoadSkin();
+                        break;
+                    case barText:
+                        ConfigManager.DefaultSkin.Value = DefaultSkins.Bar;
+                        Skin.LoadSkin();
+                        break;
+                }
+            });
+        }
+
+        /// <summary>
+        ///     Creates the dropdown to select a skin.
+        /// </summary>
+        /// <returns></returns>
+        private QuaverDropdown CreateSkinDropdown()
+        {
+            // The text for the default option if the user doesn't have any skins.
+            const string defaultText = "Default - Import more skins!";
+
+            var skins = Directory.GetDirectories(ConfigManager.SkinDirectory.Value).ToList();
+            for (var i = 0; i < skins.Count; i++)
+                skins[i] = new DirectoryInfo(skins[i]).Name;
+            
+            if (skins.Count == 0)
+                skins.Add(defaultText);
+            
+            // Create the dropdown
+            return new QuaverDropdown(skins, (o, e) =>
+            {
+                if (e.ButtonText == defaultText) 
+                    return;
+                
+                ConfigManager.Skin.Value = e.ButtonText;
+                Skin.LoadSkin();
             });
         }
     }
