@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
+using NAudio.Wave;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Buttons;
@@ -221,6 +222,8 @@ namespace Quaver.Graphics.Overlays.Options
         {
             var section = Sections[OptionsType.Misc];
 
+            #region Peppy
+
             // Create the peppy button.
             var peppyButton = new QuaverTextButton(Vector2.One, "Select peppy!.db File");
 
@@ -241,6 +244,13 @@ namespace Quaver.Graphics.Overlays.Options
                 if (openFileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
+                // Ignore bad file names.
+                if (openFileDialog.FileName != "osu!.db")
+                {
+                    Logger.LogError("Invalid File", LogType.Runtime);
+                    return;
+                }
+                
                 ConfigManager.OsuDbPath.Value = openFileDialog.FileName;
             };
             
@@ -259,12 +269,42 @@ namespace Quaver.Graphics.Overlays.Options
                     GC.Collect();
                 }).Wait();
             });
+
+            #endregion
+            
+            #region Etterna
+
+            // Create the peppy button.
+            var etternaButton = new QuaverTextButton(Vector2.One, "Select Etterna Cache Folder");
+
+            // Add click handler for peppy button.
+            etternaButton.Clicked += (o, e) =>
+            {
+                using(var fbd = new FolderBrowserDialog())
+                {
+                    var result = fbd.ShowDialog();
+
+                    ConfigManager.EtternaCacheFolderPath.Value = fbd.SelectedPath;
+                }
+            };
+            
+            // Add etterna button.
+            section.AddButton(etternaButton, "Select Etterna Cache Folder");
             
             // Add option to load Etterna charts.
             section.AddCheckboxOption(ConfigManager.AutoLoadEtternaCharts, "Load Etterna Charts", (o, e) =>
             {
-                
+                // After initializing the configuration, we want to sync the map database, and load the dictionary of mapsets.
+                Task.Run(async () =>
+                {
+                    await MapCache.LoadAndSetMapsets();
+
+                    // Force garbage collection
+                    GC.Collect();
+                }).Wait();
             });
+
+            #endregion
         }
         
         /// <summary>
