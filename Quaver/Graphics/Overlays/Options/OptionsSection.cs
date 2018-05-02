@@ -108,7 +108,8 @@ namespace Quaver.Graphics.Overlays.Options
         /// </summary>
         /// <param name="value"></param>
         /// <param name="name"></param>
-        internal void AddCheckboxOption(BindedValue<bool> value, string name)
+        /// <param name="onClick"></param>
+        internal void AddCheckboxOption(BindedValue<bool> value, string name, EventHandler onClick = null)
         {
             AddTextField(name);
 
@@ -118,9 +119,10 @@ namespace Quaver.Graphics.Overlays.Options
                 Parent = Container,
                 Alignment = Alignment.TopRight,
                 PosY = SpacingY,
-                Tint = QuaverColors.MainAccentInactive,
+                Tint = QuaverColors.MainAccentInactive
             };
             
+            checkbox.Clicked += onClick;
             Interactables.Add(checkbox);
         }
 
