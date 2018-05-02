@@ -275,7 +275,7 @@ namespace Quaver.Graphics.Overlays.Options
             #region Etterna
 
             // Create the peppy button.
-            var etternaButton = new QuaverTextButton(Vector2.One, "Select Etterna Cache Folder");
+            var etternaButton = new QuaverTextButton(Vector2.One, "Etterna Cache Folder");
 
             // Add click handler for peppy button.
             etternaButton.Clicked += (o, e) =>
