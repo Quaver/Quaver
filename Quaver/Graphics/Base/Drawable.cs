@@ -181,7 +181,18 @@ namespace Quaver.Graphics.Base
         /// <summary>
         ///     Determines if the Object is going to get drawn.
         /// </summary>
-        internal bool Visible { get; set; } = true;
+        private bool _visible = true;
+        internal bool Visible
+        {
+            get => _visible;
+            set
+            {
+                _visible = value;
+                
+                // Set all children to be that value too.
+                Children.ForEach(x => x.Visible = value);
+            }
+        }
 
         /// <summary>
         ///     This method gets called every frame to update the object.
