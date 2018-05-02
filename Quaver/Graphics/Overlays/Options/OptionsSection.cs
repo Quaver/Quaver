@@ -187,6 +187,24 @@ namespace Quaver.Graphics.Overlays.Options
         }
 
         /// <summary>
+        ///     Adds a button to the list of interactable options menu elements.
+        /// </summary>
+        /// <param name="button"></param>
+        /// <param name="name"></param>
+        internal void AddButton(QuaverButton button, string name)
+        {
+            AddTextField(name);
+
+            button.Parent = Container;
+            button.Alignment = Alignment.TopRight;
+            button.PosY = SpacingY;
+            button.SizeX = 200;
+            button.SizeY = 30;
+            
+            Interactables.Add(button);
+        }
+        
+        /// <summary>
         ///     Method that adds the text field to the left for each options element.
         /// </summary>
         /// <param name="text"></param>
