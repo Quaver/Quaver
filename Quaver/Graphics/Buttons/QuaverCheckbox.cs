@@ -60,6 +60,8 @@ namespace Quaver.Graphics.Buttons
         {
             BindedValue.Value = !BindedValue.Value;
             GameBase.AudioEngine.PlaySoundEffect(BindedValue.Value ? GameBase.LoadedSkin.SoundClick : GameBase.LoadedSkin.SoundBack);
+            
+            base.OnClicked();
         }
 
         /// <summary>
