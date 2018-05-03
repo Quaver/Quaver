@@ -14,6 +14,7 @@ using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
@@ -106,6 +107,7 @@ namespace Quaver.States.Menu
             GameBase.GraphicsDevice.Clear(Color.DarkSlateBlue);
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GameBase.GraphicsDevice.RasterizerState);
             
+            BackgroundManager.Draw();
             QuaverContainer.Draw();
             Nav.Draw();
             
