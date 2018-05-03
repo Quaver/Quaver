@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using NAudio.Wave;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -48,7 +49,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     The currently selected options section.
         /// </summary>
-        internal OptionsSection SelectedSection { get; }
+        internal OptionsSection SelectedSection { get; set;  }
     
         /// <summary>
        ///     Ctor - 
@@ -63,28 +64,22 @@ namespace Quaver.Graphics.Overlays.Options
             // Create the entire header's UI.
             Header = new OptionsHeader(this);
             
-            // Create the options sections.
-            Sections = new SortedDictionary<OptionsType, OptionsSection>
-            {
-                {OptionsType.Audio, new OptionsSection(this, "Audio", FontAwesome.Volume)},
-                {OptionsType.Video, new OptionsSection(this, "Video", FontAwesome.Desktop)},
-                {OptionsType.Gameplay, new OptionsSection(this, "Gameplay", FontAwesome.GamePad)},
-                {OptionsType.Keybinds, new OptionsSection(this, "Keybinds", FontAwesome.GamePad)},
-                {OptionsType.Misc, new OptionsSection(this, "Misc", FontAwesome.GiftBox)}
-            };
-            
-            // Default the selected section to audio.
-            SelectedSection = Sections[OptionsType.Misc];   
-            
             // Create menu bar.
             MenuBar = new OptionsMenuBar(this);
             
-            // Create all of the options sections.
-            // CreateAudioSection();
-            // CreateVideoSection();
-            // CreateGameplaySection();
-            // CreateKeybindsSection();
-            CreateMiscSection();
+            // Create the options sections.
+            Sections = new SortedDictionary<OptionsType, OptionsSection>();
+            
+            // Add all of the options sections.
+            AddSection(OptionsType.Audio, "Audio", FontAwesome.Volume, CreateAudioSection);
+            AddSection(OptionsType.Video, "Video", FontAwesome.Desktop, CreateVideoSection);
+            AddSection(OptionsType.Gameplay, "Gameplay", FontAwesome.GamePad, CreateGameplaySection);
+            AddSection(OptionsType.Keybinds, "Keybinds", FontAwesome.GamePad, CreateKeybindsSection);
+            AddSection(OptionsType.Misc, "Misc", FontAwesome.GiftBox, CreateMiscSection);
+            
+            // Default the selected section
+            SelectedSection = Sections[OptionsType.Video];   
+            RefreshSections();
         }
 
         /// <inheritdoc />
@@ -120,6 +115,37 @@ namespace Quaver.Graphics.Overlays.Options
             }
         }
 
+        /// <summary>
+        ///     Creates a section for a given type.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="name"></param>
+        /// <param name="icon"></param>
+        /// <param name="createSection"></param>
+        private void AddSection(OptionsType type, string name, Texture2D icon, Action createSection)
+        {
+            Sections[type] = new OptionsSection(type, this, name, icon);
+            createSection();    
+            MenuBar.AddButton(type, name, icon);
+        }
+        
+        /// <summary>
+        ///     Refreshes the overlay (sets all inactives to invisible, and sets th)
+        /// </summary>
+        internal void RefreshSections()
+        {
+            foreach (var item in Sections)
+            {
+                if (item.Value == SelectedSection)
+                    continue;
+                
+                item.Value.Container.Visible = false;
+                item.Value.Container.PosX = -500;
+            }
+            
+            SelectedSection.Container.PosX = 0;
+        }
+      
          /// <summary>
         ///     Adds interactable config options for the Audio section.
         /// </summary>
