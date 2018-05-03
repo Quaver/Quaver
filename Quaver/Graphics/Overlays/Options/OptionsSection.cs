@@ -20,7 +20,12 @@ using Steamworks;
 namespace Quaver.Graphics.Overlays.Options
 {
     internal class OptionsSection
-    {        
+    {
+        /// <summary>
+        ///    The type of options section.
+        /// </summary>
+        internal OptionsType Type { get; }
+
         /// <summary>
         ///     The stringified name of the section.
         /// </summary>
@@ -50,8 +55,9 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     Ctor - 
         /// </summary>
-        internal OptionsSection(Drawable overlay, string name, Texture2D icon)
+        internal OptionsSection(OptionsType type, OptionsOverlay overlay, string name, Texture2D icon)
         {
+            Type = type;
             Name = name;
             Icon = icon;
             
