@@ -185,13 +185,7 @@ namespace Quaver.Graphics.Base
         internal bool Visible
         {
             get => _visible;
-            set
-            {
-                _visible = value;
-                
-                // Set all children to be that value too.
-                Children.ForEach(x => x.Visible = value);
-            }
+            set => _visible = value;
         }
 
         /// <summary>
