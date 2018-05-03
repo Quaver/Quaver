@@ -57,7 +57,7 @@ namespace Quaver.Graphics.Overlays.Options
         internal OptionsOverlay()
         {
             Alignment = Alignment.TopLeft;
-            Tint = new Color(0f, 0f, 0f, 0.7f);
+            Tint = new Color(0f, 0f, 0f, 0.9f);
             Size = new UDim2D(0, GameBase.WindowRectangle.Height, 1);
             PosY = GameBase.WindowRectangle.Height;
                         
@@ -78,7 +78,7 @@ namespace Quaver.Graphics.Overlays.Options
             AddSection(OptionsType.Misc, "Misc", FontAwesome.GiftBox, CreateMiscSection);
             
             // Default the selected section
-            SelectedSection = Sections[OptionsType.Video];   
+            SelectedSection = Sections[OptionsType.Audio];   
             RefreshSections();
         }
 
@@ -106,7 +106,7 @@ namespace Quaver.Graphics.Overlays.Options
             if (Active)
             {
                 PosY = GraphicsHelper.Tween(0, PosY, Math.Min(dt / 180, 1));
-                Alpha = GraphicsHelper.Tween(0.7f, Alpha, Math.Min(dt / 360, 1));
+                Alpha = GraphicsHelper.Tween(0.9f, Alpha, Math.Min(dt / 360, 1));
             }
             else
             {
@@ -270,12 +270,13 @@ namespace Quaver.Graphics.Overlays.Options
                 if (openFileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
-                // Ignore bad file names.
+                /* Ignore bad file names.
                 if (openFileDialog.FileName != "osu!.db")
                 {
                     Logger.LogError("Invalid File", LogType.Runtime);
                     return;
                 }
+               */
                 
                 ConfigManager.OsuDbPath.Value = openFileDialog.FileName;
             };
