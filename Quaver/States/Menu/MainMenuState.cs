@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Ionic.Zip;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Commands;
 using Quaver.Config;
 using Quaver.Discord;
@@ -103,7 +104,7 @@ namespace Quaver.States.Menu
         public void Draw()
         {
             GameBase.GraphicsDevice.Clear(Color.DarkSlateBlue);
-            GameBase.SpriteBatch.Begin();
+            GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GameBase.GraphicsDevice.RasterizerState);
             
             QuaverContainer.Draw();
             Nav.Draw();
