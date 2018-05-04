@@ -162,9 +162,7 @@ namespace Quaver.States.Gameplay
             if (e.Key == ConfigManager.KeyPause.Value)
                 Pause();
             else if (e.Key == ConfigManager.KeySkipIntro.Value)
-            {
                 SkipSongIntro();
-            }
         }   
         
         /// <summary>
