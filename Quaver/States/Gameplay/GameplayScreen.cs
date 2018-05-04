@@ -106,6 +106,7 @@ namespace Quaver.States.Gameplay
         public void UnloadContent()
         {
             AudioTiming.UnloadContent();
+            Logger.Clear();
         }
 
         /// <inheritdoc />
