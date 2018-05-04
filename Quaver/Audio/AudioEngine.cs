@@ -46,6 +46,11 @@ namespace Quaver.Audio
         internal bool IsPitched { get; set; }
 
         /// <summary>
+        ///     Returns if the audio stream is currently playing.
+        /// </summary>
+        internal bool IsPlaying => Bass.ChannelIsActive(Stream) == PlaybackState.Playing;
+
+        /// <summary>
         ///     The master volume of all audio streams
         /// </summary>
         internal static int MasterVolume
