@@ -147,7 +147,7 @@ namespace Quaver.States.Gameplay
 
 #region INPUT               
         /// <summary>
-        ///     Handles the input of the given game mode.
+        ///     Handles the input of the game + individual game modes.
         /// </summary>
         /// <param name="dt"></param>
         private void HandleInput(double dt)
