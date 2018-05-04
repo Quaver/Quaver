@@ -85,9 +85,6 @@ namespace Quaver.States.Gameplay
             MapHash = md5;
             
             AudioTiming = new GameplayAudio(this);
-        
-            // Hook onto the event of when a key is pressed so we can handle input.
-            GameBase.GameWindow.TextInput += OnKeyPressed;
         }
         
         /// <inheritdoc />
@@ -117,7 +114,6 @@ namespace Quaver.States.Gameplay
         public void UnloadContent()
         {
             AudioTiming.UnloadContent();
-            GameBase.GameWindow.TextInput -= OnKeyPressed;
         }
 
         /// <inheritdoc />
@@ -149,31 +145,24 @@ namespace Quaver.States.Gameplay
             GameBase.SpriteBatch.End();
         }
 
-#region INPUT       
-        /// <summary>
-        ///     Event handler when a key is pressed. 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnKeyPressed(object sender, TextInputEventArgs e)
-        {
-            Console.WriteLine(e.Key);
-            
-            if (e.Key == ConfigManager.KeyPause.Value)
-                Pause();
-            else if (e.Key == ConfigManager.KeySkipIntro.Value)
-                SkipSongIntro();
-        }   
-        
+#region INPUT               
         /// <summary>
         ///     Handles the input of the given game mode.
         /// </summary>
         /// <param name="dt"></param>
         private void HandleInput(double dt)
         {
+            if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyPause.Value))
+                Pause();
+            
+            if (InputHelper.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
+                SkipSongIntro();
+            
+            // Don't handle actually gameplay specific input if the game is paused.
             if (Paused)
                 return;
             
+            // Handle input per game mode.
             switch (Map.Mode)
             {
                 case GameModes.Keys4:
@@ -191,7 +180,7 @@ namespace Quaver.States.Gameplay
         private void Pause()
         {            
             // Handle pause.
-            if (!Paused)
+            if (!Paused || ResumeInProgress)
             {
                 Paused = true;
                 ResumeInProgress = false;
@@ -201,11 +190,7 @@ namespace Quaver.States.Gameplay
                     GameBase.AudioEngine.Pause();
                     Console.WriteLine("Paused the audio");
                 }
-                catch (AudioEngineException e)
-                {
-                    // Don't need to handle.
-                    Console.WriteLine(e);
-                }
+                catch (AudioEngineException e) {}
 
                 return;
             }
