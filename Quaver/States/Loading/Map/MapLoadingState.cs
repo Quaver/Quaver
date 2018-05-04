@@ -11,6 +11,7 @@ using Quaver.GameState;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.States.Enums;
+using Quaver.States.Gameplay;
 using Quaver.States.Gameplay.Mania;
 using Quaver.States.Select;
 
@@ -129,7 +130,7 @@ namespace Quaver.States.Loading.Map
         /// <summary>
         ///     Responsible for getting the state ready to be changed, and then actually changing it.
         /// </summary>
-        private void ChangeState()
+        private static void ChangeState()
         {
             // If the Qua isn't valid then return back to the song select state
             if (!GameBase.SelectedMap.Qua.IsValidQua)
@@ -138,7 +139,6 @@ namespace Quaver.States.Loading.Map
                 return;
             }
 
-            Console.WriteLine(GameBase.CurrentAudioPath);
             try
             {
                 // Stop the current audio and load it again before moving onto the next state.
@@ -170,7 +170,7 @@ namespace Quaver.States.Loading.Map
                         break;
                 }
 
-                GameBase.GameStateManager.ChangeState(new ManiaGameplayState(GameBase.SelectedMap.Qua, md5));
+                GameBase.GameStateManager.ChangeState(new GameplayScreen(GameBase.SelectedMap.Qua, md5));
             }
             catch (Exception e)
             {
