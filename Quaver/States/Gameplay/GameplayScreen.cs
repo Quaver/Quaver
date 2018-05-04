@@ -54,11 +54,6 @@ namespace Quaver.States.Gameplay
         private string MapHash { get; }
 
         /// <summary>
-        ///     Keeps track of the previous start time in the delay.
-        /// </summary>
-        private long InitializationTime { get; set;  }
-
-        /// <summary>
         ///     Dictates if we are currently resuming the game.
         /// </summary>
         private bool ResumeInProgress { get; set; }
@@ -94,9 +89,6 @@ namespace Quaver.States.Gameplay
         {           
             AudioTiming.Initialize(this);
             
-            // Set the delay time last, so that we can begin to start the audio track.
-            InitializationTime = GameBase.GameTime.ElapsedMilliseconds;
-
             // Change discord rich presence.
             DiscordController.ChangeDiscordPresenceGameplay(false);
             
@@ -188,7 +180,6 @@ namespace Quaver.States.Gameplay
                 try
                 {
                     GameBase.AudioEngine.Pause();
-                    Console.WriteLine("Paused the audio");
                 }
                 catch (AudioEngineException e) {}
 
