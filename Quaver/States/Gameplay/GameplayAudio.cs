@@ -6,7 +6,6 @@ using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Logging;
 using Quaver.Main;
-using Steamworks;
 
 namespace Quaver.States.Gameplay
 {
@@ -95,8 +94,11 @@ namespace Quaver.States.Gameplay
         /// </summary>
         /// <param name="dt"></param>
         private void UpdateSongTime(double dt)
-        {      
-            //Calculate Time after Song Done
+        {
+            if (GameplayScreen.Paused)
+                return;
+            
+            // Calculate Time after Song Done
             if (Done)
             {
                 CurrentTime += dt * GameBase.AudioEngine.PlaybackRate;
