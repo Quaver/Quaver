@@ -69,6 +69,14 @@ namespace Quaver.States.Gameplay
         private long ResumeTime { get; set; }
 
         /// <summary>
+        ///     Dictates if the intro of the song is currently skippable.
+        /// </summary>
+        private bool IntroSkippable
+        {
+            get => GameBase.SelectedMap.Qua.HitObjects[0].StartTime - AudioTiming.CurrentTime >= AudioTiming.StartDelay + 2000;            
+        }
+
+         /// <summary>
         ///     Ctor - 
         /// </summary>
         internal GameplayScreen(Qua map, string md5)
@@ -98,6 +106,7 @@ namespace Quaver.States.Gameplay
             // Add gameplay loggers
             Logger.Add("Paused", $"Paused: {Paused}", Color.White);
             Logger.Add("Resume In Progress", $"Resume In Progress {ResumeInProgress}", Color.White);
+            Logger.Add("Intro Skippable", $"Intro Skippable: {IntroSkippable}", Color.White);
             
             UpdateReady = true;
         }
@@ -135,16 +144,38 @@ namespace Quaver.States.Gameplay
             // Update loggers.
             Logger.Update("Paused", $"Paused: {Paused}");
             Logger.Update("Resume In Progress", $"Resume In Progress {ResumeInProgress}");
+            Logger.Update("Intro Skippable", $"Intro Skippable: {IntroSkippable}");
             
             GameBase.SpriteBatch.End();
         }
+
+#region INPUT       
+        /// <summary>
+        ///     Event handler when a key is pressed. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnKeyPressed(object sender, TextInputEventArgs e)
+        {
+            Console.WriteLine(e.Key);
+            
+            if (e.Key == ConfigManager.KeyPause.Value)
+                Pause();
+            else if (e.Key == ConfigManager.KeySkipIntro.Value)
+            {
+                SkipSongIntro();
+            }
+        }   
         
         /// <summary>
         ///     Handles the input of the given game mode.
         /// </summary>
         /// <param name="dt"></param>
-        internal void HandleInput(double dt)
+        private void HandleInput(double dt)
         {
+            if (Paused)
+                return;
+            
             switch (Map.Mode)
             {
                 case GameModes.Keys4:
@@ -159,7 +190,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Pauses the game.
         /// </summary>
-        private void HandlePausing()
+        private void Pause()
         {            
             // Handle pause.
             if (!Paused)
@@ -198,31 +229,56 @@ namespace Quaver.States.Gameplay
                 return;
 
             // We don't want to resume if the time difference isn't at least or greter than the start delay.
-            var timeDifference = GameBase.GameTime.ElapsedMilliseconds - ResumeTime;
-            if (timeDifference < AudioTiming.StartDelay && timeDifference != 0) 
+            if (GameBase.GameTime.ElapsedMilliseconds - ResumeTime > AudioTiming.StartDelay)
+            {
+                // Unpause the game and reset the resume in progress.
+                Paused = false;
+                ResumeInProgress = false;
+            
+                // Resume the game audio stream.
+                try
+                {
+                    GameBase.AudioEngine.Resume();
+                } 
+                catch (AudioEngineException e) {}
+            }
+        }
+
+        /// <summary>
+       ///     Skips the song intro to 3 seconds before the first note.
+       /// </summary>
+        private void SkipSongIntro()
+        {
+            if (!IntroSkippable || Paused || ResumeInProgress)
                 return;
-            
-            // Unpause the game and reset the resume in progress.
-            Paused = false;
-            ResumeInProgress = false;
-            
-            // Resume the game audio stream.
+
+            var skipTime = GameBase.SelectedMap.Qua.HitObjects[0].StartTime - AudioTiming.StartDelay + AudioEngine.BassDelayOffset;
+
             try
             {
-                GameBase.AudioEngine.Resume();
-            } 
-            catch (AudioEngineException e) {}
-        }
-        
-        /// <summary>
-        ///     Event handler when a key is pressed. 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnKeyPressed(object sender, TextInputEventArgs e)
-        {
-            if (e.Key == ConfigManager.KeyPause.Value)
-                HandlePausing();
-        }
+                // Skip to the time if the audio already played once. If it hasn't, then play it.
+                if (GameBase.AudioEngine.HasPlayed)
+                    GameBase.AudioEngine.ChangeSongPosition(skipTime);
+                else
+                    GameBase.AudioEngine.Play(skipTime);
+
+                // Set the actual song time to the position in the audio if it was successful.
+                AudioTiming.CurrentTime = GameBase.AudioEngine.Position;
+            }
+            catch (AudioEngineException ex)
+            {
+                Logger.LogWarning("Trying to skip with no audio file loaded. Still continuing..", LogType.Runtime);
+
+                // If there is no audio file, make sure the actual song time is set to the skip time.
+                const int actualSongTimeOffset = 10000; // The offset between the actual song time and audio position (?)
+                AudioTiming.CurrentTime = skipTime + actualSongTimeOffset;
+            }
+            finally
+            {
+                // Skip to 3 seconds before the notes start
+                DiscordController.ChangeDiscordPresenceGameplay(true);
+            }
+        }   
+ #endregion
     }
 }
