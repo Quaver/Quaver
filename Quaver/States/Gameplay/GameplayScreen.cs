@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.Config;
+using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
@@ -70,6 +71,9 @@ namespace Quaver.States.Gameplay
             // Set the delay time last, so that we can begin to start the audio track.
             InitializationTime = GameBase.GameTime.ElapsedMilliseconds;
 
+            // Change discord rich presence.
+            DiscordController.ChangeDiscordPresenceGameplay(false);
+            
             UpdateReady = true;
         }
 
