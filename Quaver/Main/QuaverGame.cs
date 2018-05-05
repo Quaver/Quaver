@@ -255,7 +255,6 @@ namespace Quaver.Main
                 GameBase.GraphicsManager.PreferredBackBufferWidth = resolution.Value.X;
                 GameBase.GraphicsManager.PreferredBackBufferHeight = resolution.Value.Y;
                 GameBase.WindowRectangle = new DrawRectangle(0, 0, resolution.Value.X, resolution.Value.Y);
-                GameBase.WindowUIScale = GameBase.WindowRectangle.Height / GameBase.ReferenceResolution.Y;
             }
 
             // Update Fullscreen

@@ -98,7 +98,7 @@ namespace Quaver.Main
         /// <summary>
         ///     The reference resolution for QuaverUserInterface and game elements
         /// </summary>
-        public static Point ReferenceResolution { get; } = new Point(1280, 720);
+        public static Point ReferenceResolution => new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
 
         /// <summary>
         ///     Contains the path of the previously loaded background.
@@ -126,7 +126,7 @@ namespace Quaver.Main
         ///     WindowHeight / WindowWidth ratio
         ///     //TODO: Automatically set this rectangle as windoow size through method
         /// </summary>
-        public static float WindowUIScale { get; set; } = WindowRectangle.Height / ReferenceResolution.Y; 
+        public static float WindowUIScale => WindowRectangle.Height / ReferenceResolution.Y; 
 
         /// <summary>
         ///     The score multiplier for the game. Controls how many points the game score will be 
