@@ -45,11 +45,6 @@ namespace Quaver.States.Menu
         /// </summary>
         private QuaverContainer QuaverContainer { get; set; }
 
-        /// <summary>
-        ///     The navbar at the top of the screen.
-        /// </summary>
-        private Nav Nav { get; set; }
-
         /// <inheritdoc />
         /// <summary>
         ///     Initialize
@@ -84,7 +79,6 @@ namespace Quaver.States.Menu
         public void UnloadContent()
         {
             QuaverContainer.Destroy();
-            Nav.UnloadContent();
         }
 
         /// <inheritdoc />
@@ -95,7 +89,6 @@ namespace Quaver.States.Menu
         public void Update(double dt)
         {
             QuaverContainer.Update(dt);
-            Nav.Update(dt);
         }
         
         /// <inheritdoc />
@@ -108,7 +101,6 @@ namespace Quaver.States.Menu
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GameBase.GraphicsDevice.RasterizerState);
             
             QuaverContainer.Draw();
-            Nav.Draw();
             
             GameBase.SpriteBatch.End();
         }
@@ -118,9 +110,6 @@ namespace Quaver.States.Menu
         /// </summary>
         private void CreateUI()
         {
-            // Create navbar
-            Nav = new Nav();
-            Nav.Initialize(this);
         }
     }
 }

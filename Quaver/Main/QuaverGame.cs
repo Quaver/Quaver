@@ -7,6 +7,7 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.UserInterface;
 using Quaver.Logging;
@@ -114,12 +115,13 @@ namespace Quaver.Main
             // Set Render Target
             GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
 
-            // Set up overlay
-            GameBase.GameOverlay.Initialize();
-
             // Set up volume controller
             GameBase.VolumeController = new VolumeController();
             GameBase.VolumeController.Initialize(null);
+            
+            // Set up the navbar
+            GameBase.Navbar = new Nav();
+            GameBase.Navbar.Initialize(null);
             
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
@@ -134,8 +136,8 @@ namespace Quaver.Main
         {
             GameBase.VolumeController.UnloadContent();
             BackgroundManager.UnloadContent();
-            GameBase.GameOverlay.UnloadContent();
             GameBase.GameStateManager.ClearStates();
+            GameBase.Navbar.UnloadContent();
             UnloadLibraries();
         }
 
@@ -163,7 +165,6 @@ namespace Quaver.Main
 
             // Update Background from Background Manager
             BackgroundManager.Update(dt);
-            GameBase.GameOverlay.Update(dt);
 
             // Update all game states.
             GameBase.GameStateManager.Update(dt);
@@ -173,6 +174,9 @@ namespace Quaver.Main
 
             // Update volume controller
             GameBase.VolumeController.Update(dt);
+            
+            // Update Navbar
+            GameBase.Navbar.Update(dt);
             
             // Run scheduled background tasks
             if (GameBase.GameTime.ElapsedMilliseconds - CommonTaskScheduler.LastRunTime >= 5000)
@@ -197,8 +201,8 @@ namespace Quaver.Main
 
             // Draw QuaverCursor, Logging, and FPS Counter
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GraphicsDevice.RasterizerState);
-            GameBase.GameOverlay.Draw();
             GameBase.VolumeController.Draw();
+            GameBase.Navbar.Draw();
             GameBase.QuaverCursor.Draw();
             Logger.Draw(dt);
      

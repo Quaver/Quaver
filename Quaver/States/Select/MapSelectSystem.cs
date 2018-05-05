@@ -22,11 +22,6 @@ namespace Quaver.States.Select
         /// <summary>
         ///     
         /// </summary>
-        private MapInfoWindow MapInfoWindow { get; set; }
-
-        /// <summary>
-        ///     
-        /// </summary>
         private const int INDEX_OFFSET_AMOUNT = 2;
 
         /// <summary>
@@ -90,11 +85,9 @@ namespace Quaver.States.Select
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {
-            MapInfoWindow = new MapInfoWindow();
             SongSelectButtons = new List<QuaverMapsetSelectButton>();
             DiffSelectButtons = new List<QuaverMapDifficultySelectButton>();
             Boundary = new QuaverContainer();
-            MapInfoWindow.Initialize(state);
             GenerateButtonPool();
         }
 
@@ -103,7 +96,6 @@ namespace Quaver.States.Select
         /// </summary>
         public void UnloadContent()
         {
-            MapInfoWindow.UnloadContent();
             DeleteMapDiffButtons();
             DeleteMapsetButtons();
             Boundary.Destroy();
@@ -124,9 +116,8 @@ namespace Quaver.States.Select
             if (!GameBase.VolumeController.IsActive)    
                 MoveButtonContainer(TargetContainerOffset);
             
-             prevScrollPos = curScrollPos;
-
-            MapInfoWindow.Update(dt);
+            prevScrollPos = curScrollPos;
+            
             Boundary.Update(dt);
         }
 
@@ -136,7 +127,6 @@ namespace Quaver.States.Select
         public void Draw()
         {
             Boundary.Draw();
-            MapInfoWindow.Draw();
         }
 
         /// <summary>
@@ -422,7 +412,6 @@ namespace Quaver.States.Select
 
             var oldMapAudioPath = GameBase.SelectedMap.Directory + "/" + GameBase.SelectedMap.AudioPath;
             Map.ChangeSelected(map);
-            MapInfoWindow.UpdateInfo(map);
             //Console.WriteLine(GameBase.CurrentAudioPath);
 
             // Only load the audio again if the new map's audio isn't the same as the old ones.

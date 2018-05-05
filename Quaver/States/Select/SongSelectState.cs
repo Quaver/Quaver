@@ -112,9 +112,6 @@ namespace Quaver.States.Select
             CreateTogglePitchButton();
             CreateSearchField();
 
-            // Update overlay
-            GameBase.GameOverlay.OverlayActive = true;
-
             //Add map selected text TODO: remove later
             try
             {

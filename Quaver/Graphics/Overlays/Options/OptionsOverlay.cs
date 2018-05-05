@@ -387,7 +387,6 @@ namespace Quaver.Graphics.Overlays.Options
        
                 // Recalculate the size of the overlay.
                 Size = new UDim2D(0, GameBase.WindowRectangle.Height, 1);          
-                GameBase.GameOverlay.RecalculateWindow();
                 BackgroundManager.Readjust();             
             });
         }

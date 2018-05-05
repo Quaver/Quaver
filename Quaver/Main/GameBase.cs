@@ -11,7 +11,7 @@ using Quaver.Database.Maps;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.GameOverlay;
+using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.UserInterface;
 using Quaver.Input;
@@ -59,8 +59,6 @@ namespace Quaver.Main
         ///     The currently loaded Skin
         /// </summary>
         public static Skin LoadedSkin { get; set; }
-
-        public static GameOverlay GameOverlay { get; set; } = new GameOverlay();
 
         /// <summary>
         ///     The current background
@@ -202,6 +200,11 @@ namespace Quaver.Main
         ///     Reference to the global volume controller
         /// </summary>
         public static VolumeController VolumeController { get; set; }
+
+        /// <summary>
+        ///     Reference to the global navbar.
+        /// </summary>
+        public static Nav Navbar { get; set; }
 
         /// <summary>
         ///     The current path of the selected map's audio file

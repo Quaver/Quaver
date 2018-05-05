@@ -191,10 +191,7 @@ namespace Quaver.States.Results
             // Play Applause
             ApplauseInstance.Volume = AudioEngine.EffectVolume;
             ApplauseInstance.Play();
-
-            // Update overlay
-            GameBase.GameOverlay.OverlayActive = true;
-
+            
             UpdateReady = true;
         }
         
