@@ -11,7 +11,7 @@ using Quaver.Database.Maps;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.GameOverlay;
+using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.UserInterface;
 using Quaver.Input;
@@ -60,8 +60,6 @@ namespace Quaver.Main
         /// </summary>
         public static Skin LoadedSkin { get; set; }
 
-        public static GameOverlay GameOverlay { get; set; } = new GameOverlay();
-
         /// <summary>
         ///     The current background
         /// </summary>
@@ -100,7 +98,7 @@ namespace Quaver.Main
         /// <summary>
         ///     The reference resolution for QuaverUserInterface and game elements
         /// </summary>
-        public static Point ReferenceResolution { get; } = new Point(1280, 720);
+        public static Point ReferenceResolution => new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
 
         /// <summary>
         ///     Contains the path of the previously loaded background.
@@ -128,7 +126,7 @@ namespace Quaver.Main
         ///     WindowHeight / WindowWidth ratio
         ///     //TODO: Automatically set this rectangle as windoow size through method
         /// </summary>
-        public static float WindowUIScale { get; set; } = WindowRectangle.Height / ReferenceResolution.Y; 
+        public static float WindowUIScale => WindowRectangle.Height / ReferenceResolution.Y; 
 
         /// <summary>
         ///     The score multiplier for the game. Controls how many points the game score will be 
@@ -202,6 +200,11 @@ namespace Quaver.Main
         ///     Reference to the global volume controller
         /// </summary>
         public static VolumeController VolumeController { get; set; }
+
+        /// <summary>
+        ///     Reference to the global navbar.
+        /// </summary>
+        public static Nav Navbar { get; set; }
 
         /// <summary>
         ///     The current path of the selected map's audio file

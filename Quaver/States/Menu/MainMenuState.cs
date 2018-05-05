@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Ionic.Zip;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Commands;
 using Quaver.Config;
 using Quaver.Discord;
@@ -13,6 +14,7 @@ using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
@@ -42,11 +44,6 @@ namespace Quaver.States.Menu
         ///     QuaverContainer
         /// </summary>
         private QuaverContainer QuaverContainer { get; set; }
-
-        /// <summary>
-        ///     The navbar at the top of the screen.
-        /// </summary>
-        private Navbar Navbar { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -82,7 +79,6 @@ namespace Quaver.States.Menu
         public void UnloadContent()
         {
             QuaverContainer.Destroy();
-            Navbar.UnloadContent();
         }
 
         /// <inheritdoc />
@@ -93,7 +89,6 @@ namespace Quaver.States.Menu
         public void Update(double dt)
         {
             QuaverContainer.Update(dt);
-            Navbar.Update(dt);
         }
         
         /// <inheritdoc />
@@ -103,10 +98,9 @@ namespace Quaver.States.Menu
         public void Draw()
         {
             GameBase.GraphicsDevice.Clear(Color.DarkSlateBlue);
-            GameBase.SpriteBatch.Begin();
+            GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GameBase.GraphicsDevice.RasterizerState);
             
             QuaverContainer.Draw();
-            Navbar.Draw();
             
             GameBase.SpriteBatch.End();
         }
@@ -116,9 +110,6 @@ namespace Quaver.States.Menu
         /// </summary>
         private void CreateUI()
         {
-            // Create navbar
-            Navbar = new Navbar();
-            Navbar.Initialize(this);
         }
     }
 }

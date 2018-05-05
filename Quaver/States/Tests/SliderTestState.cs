@@ -31,14 +31,14 @@ namespace Quaver.States.Tests
 
         private QuaverContainer Container { get; set; }
 
-        private Navbar Nav { get; set; }
+        private Nav Nav { get; set; }
 
         private VolumeController VolumeController { get; set; }
 
         public void Initialize()
         {            
             Container = new QuaverContainer();
-            Nav = new Navbar();
+            Nav = new Nav();
             Nav.Initialize(this);
             
             VolumeController = new VolumeController();

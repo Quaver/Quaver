@@ -69,8 +69,6 @@ namespace Quaver.Main
             //Rectangle mainWindow = GraphicsDevice.PresentationParameters.Bounds;
 
             //Align letterboxed window
-            //Window = GraphicsHelper.DrawRect(Alignment.MidCenter, Window, mainWindow);
-            GameBase.WindowUIScale = GameBase.WindowRectangle.Y / GameBase.ReferenceResolution.Y;
         }
     }
 }

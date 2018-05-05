@@ -26,7 +26,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The parent navbar for this button
         /// </summary>
-        private Navbar Container { get; }
+        private Nav Container { get; }
 
         /// <summary>
         ///     The x position spacing between each navbar button.
@@ -77,7 +77,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="alignment"></param>
         /// <param name="tooltipName"></param>
         /// <param name="tooltipDesc"></param>
-        internal NavbarButton(Navbar nav, Texture2D tex, NavbarAlignment alignment, string tooltipName, string tooltipDesc, EventHandler action) 
+        internal NavbarButton(Nav nav, Texture2D tex, NavbarAlignment alignment, string tooltipName, string tooltipDesc, EventHandler action) 
             : base(action)
         {
             NavAlignment = alignment;
@@ -96,17 +96,17 @@ namespace Quaver.Graphics.Overlays.Navbar
             {
                 case NavbarAlignment.Left:
                     Alignment = Alignment.TopLeft;
-                    PositionX = Container.Nav.SizeX + lastButton?.PosX + lastButton?.SizeX + ButtonSpacing ?? ButtonSpacing;
+                    PositionX = Container.NavbarSprite.SizeX + lastButton?.PosX + lastButton?.SizeX + ButtonSpacing ?? ButtonSpacing;
                     break;
                 case NavbarAlignment.Right:
                     Alignment = Alignment.TopRight;
-                    PositionX = Container.Nav.SizeX + lastButton?.PosX - lastButton?.SizeX - ButtonSpacing ?? -ButtonSpacing;
+                    PositionX = Container.NavbarSprite.SizeX + lastButton?.PosX - lastButton?.SizeX - ButtonSpacing ?? -ButtonSpacing;
                     break;
                 default:
                     throw new InvalidEnumArgumentException("Invalid NavbarAlignment given.");
             }
             
-            Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - IconHeight / 2f);
+            Position = new UDim2D(PositionX, Container.NavbarSprite.SizeY / 2 - IconHeight / 2f);
         }
 
          /// <inheritdoc />
@@ -125,7 +125,7 @@ namespace Quaver.Graphics.Overlays.Navbar
              
              // Increase the size and normalize the position.
              Size = new UDim2D(IconWidth * scale, IconHeight * scale);
-             Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - IconHeight * scale / 2f);
+             Position = new UDim2D(PositionX, Container.NavbarSprite.SizeY / 2 - IconHeight * scale / 2f);
              
              // Make tooltip box visible if it isn't already
              Container.TooltipBox.InAnimation = true;
@@ -152,7 +152,7 @@ namespace Quaver.Graphics.Overlays.Navbar
              
              // Set the size and position back to normal.
              Size = new UDim2D(IconWidth, IconHeight);
-             Position = new UDim2D(PositionX, Container.Nav.SizeY / 2 - IconHeight / 2f);
+             Position = new UDim2D(PositionX, Container.NavbarSprite.SizeY / 2 - IconHeight / 2f);
 
              if (Container.TooltipBox.ContainerBox.Visible)
              {

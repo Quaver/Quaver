@@ -7,6 +7,7 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.UserInterface;
 using Quaver.Logging;
@@ -44,7 +45,7 @@ namespace Quaver.Main
             };
             
             GameBase.GraphicsManager.GraphicsProfile = GraphicsProfile.HiDef;
-            GameBase.GraphicsManager.PreferMultiSampling = false;
+            GameBase.GraphicsManager.PreferMultiSampling = true;
             
             // Set the global window size
             //GameBase.Window = new Vector4(0, 0, GameBase.GraphicsManager.PreferredBackBufferHeight, GameBase.GraphicsManager.PreferredBackBufferWidth);
@@ -85,10 +86,11 @@ namespace Quaver.Main
 
             // Set the global Graphics Device.
             GameBase.GraphicsDevice = GraphicsDevice;
+            GameBase.GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
             GameBase.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
             GameBase.GraphicsDevice.RasterizerState = new RasterizerState {MultiSampleAntiAlias = true};
             GameBase.GraphicsManager.ApplyChanges();
-           
+                       
             //Create new GameStateManager Instance
             GameBase.Content = Content;
 
@@ -113,12 +115,13 @@ namespace Quaver.Main
             // Set Render Target
             GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
 
-            // Set up overlay
-            GameBase.GameOverlay.Initialize();
-
             // Set up volume controller
             GameBase.VolumeController = new VolumeController();
             GameBase.VolumeController.Initialize(null);
+            
+            // Set up the navbar
+            GameBase.Navbar = new Nav();
+            GameBase.Navbar.Initialize(null);
             
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
@@ -133,8 +136,8 @@ namespace Quaver.Main
         {
             GameBase.VolumeController.UnloadContent();
             BackgroundManager.UnloadContent();
-            GameBase.GameOverlay.UnloadContent();
             GameBase.GameStateManager.ClearStates();
+            GameBase.Navbar.UnloadContent();
             UnloadLibraries();
         }
 
@@ -162,7 +165,6 @@ namespace Quaver.Main
 
             // Update Background from Background Manager
             BackgroundManager.Update(dt);
-            GameBase.GameOverlay.Update(dt);
 
             // Update all game states.
             GameBase.GameStateManager.Update(dt);
@@ -172,6 +174,9 @@ namespace Quaver.Main
 
             // Update volume controller
             GameBase.VolumeController.Update(dt);
+            
+            // Update Navbar
+            GameBase.Navbar.Update(dt);
             
             // Run scheduled background tasks
             if (GameBase.GameTime.ElapsedMilliseconds - CommonTaskScheduler.LastRunTime >= 5000)
@@ -195,13 +200,12 @@ namespace Quaver.Main
             GameBase.GameStateManager.Draw();
 
             // Draw QuaverCursor, Logging, and FPS Counter
-            GameBase.SpriteBatch.Begin();
-            GameBase.GameOverlay.Draw();
+            GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GraphicsDevice.RasterizerState);
             GameBase.VolumeController.Draw();
+            GameBase.Navbar.Draw();
             GameBase.QuaverCursor.Draw();
             Logger.Draw(dt);
-
-            
+     
             if (ConfigManager.FpsCounter.Value)
                 QuaverFpsCounter.Draw();
 
@@ -251,7 +255,6 @@ namespace Quaver.Main
                 GameBase.GraphicsManager.PreferredBackBufferWidth = resolution.Value.X;
                 GameBase.GraphicsManager.PreferredBackBufferHeight = resolution.Value.Y;
                 GameBase.WindowRectangle = new DrawRectangle(0, 0, resolution.Value.X, resolution.Value.Y);
-                GameBase.WindowUIScale = GameBase.WindowRectangle.Height / GameBase.ReferenceResolution.Y;
             }
 
             // Update Fullscreen

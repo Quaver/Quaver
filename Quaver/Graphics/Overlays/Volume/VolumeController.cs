@@ -129,7 +129,8 @@ namespace Quaver.Graphics.Overlays.Volume
                 Tint = new Color(0f, 0f, 0f, 0f),
                 Parent = Container,
                 // Set alpha to 0 upon creation as it'll be faded in.
-                Alpha = 0 
+                Alpha = 0 ,
+                SetChildrenVisibility = true
             };
     
             #region masterVolumeSlider

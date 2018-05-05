@@ -22,7 +22,12 @@ namespace Quaver.Graphics.Buttons
         ///     Event that fires when the button is being held down
         /// </summary>
         internal EventHandler Held;
-        
+
+        /// <summary>
+        ///     Called every loop. Useful for custom update methods.
+        /// </summary>
+        internal Action<double> OnUpdate;
+
         /// <summary>
         ///     Determines if the button is currently hovered over.
         /// </summary>
@@ -42,7 +47,7 @@ namespace Quaver.Graphics.Buttons
         ///     Ctor - Optionally pass in an action.
         /// </summary>
         /// <param name="action"></param>
-        protected QuaverButton(EventHandler clickAction = null, EventHandler holdAction = null)
+        internal QuaverButton(EventHandler clickAction = null, EventHandler holdAction = null)
         {
             Clicked += clickAction;
             Held += holdAction;
@@ -60,7 +65,7 @@ namespace Quaver.Graphics.Buttons
             {
                 IsHovered = true;
                 MouseOver();
-
+                
                 // If the user is holding onto the button
                 if (CurrentMouseState.LeftButton == ButtonState.Pressed)
                     OnHeld();
@@ -83,6 +88,9 @@ namespace Quaver.Graphics.Buttons
             }
 
             base.Update(dt);
+            
+            // Call custom update method
+            OnUpdate?.Invoke(dt);
         }
 
         /// <summary>
