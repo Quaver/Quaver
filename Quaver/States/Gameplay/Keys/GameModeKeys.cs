@@ -8,6 +8,7 @@ using Quaver.Database.Maps;
 using Quaver.Graphics.Sprites;
 using Quaver.Logging;
 using Quaver.Main;
+using Quaver.States.Gameplay.Keys.Playfield;
 using Quaver.States.Gameplay.Mania.UI.Playfield;
 
 namespace Quaver.States.Gameplay.Keys
