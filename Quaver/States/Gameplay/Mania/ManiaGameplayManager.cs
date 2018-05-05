@@ -333,7 +333,7 @@ namespace Quaver.States.Gameplay.Mania
             //the math here is kinda ugly, i plan on cleaning this up later
             //todo: clean up this code a bit
             {
-                case GameModes.Keys4:
+                case GameMode.Keys4:
                     // Calculate References
                     ManiaGameplayReferences.ReceptorXPosition = new float[4];
                     laneSize = (int)(GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale);
@@ -367,7 +367,7 @@ namespace Quaver.States.Gameplay.Mania
                     // Update Score Manager
                     ManiaScoreManager.ScrollSpeed = ConfigManager.ScrollSpeed4K.Value;
                     break;
-                case GameModes.Keys7:
+                case GameMode.Keys7:
                     // Calculate References
                     ManiaGameplayReferences.ReceptorXPosition = new float[7];
                     laneSize = (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);

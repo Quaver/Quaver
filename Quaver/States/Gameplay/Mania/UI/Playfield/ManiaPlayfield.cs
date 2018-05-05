@@ -125,7 +125,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             QuaverSprite bgMask;
             switch (GameBase.SelectedMap.Qua.Mode)
             {
-                case GameModes.Keys4:
+                case GameMode.Keys4:
                     // Create BG Mask
                     imageRatio = (double)GameBase.LoadedSkin.StageBgMask4K.Width / GameBase.LoadedSkin.StageBgMask4K.Height;
                     columnRatio = PlayfieldSize / GameBase.WindowRectangle.Height;
@@ -198,7 +198,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                         Parent = ForegroundQuaverContainer
                     };
                     break;
-                case GameModes.Keys7:
+                case GameMode.Keys7:
                     // Create BG Mask
                     imageRatio = (double)GameBase.LoadedSkin.StageBgMask7K.Width / GameBase.LoadedSkin.StageBgMask7K.Height;
                     columnRatio = PlayfieldSize / GameBase.WindowRectangle.Height;
@@ -323,7 +323,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
         {
             switch (GameBase.SelectedMap.Qua.Mode)
             {
-                case GameModes.Keys4:
+                case GameMode.Keys4:
                     if (keyDown)
                     {
                         ReceptorObjects[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsDown4K[keyIndex];
@@ -336,7 +336,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                         ColumnLightingActive[keyIndex] = false;
                     }
                     break;
-                case GameModes.Keys7:
+                case GameMode.Keys7:
                     if (keyDown)
                     {
                         ReceptorObjects[keyIndex].Image = GameBase.LoadedSkin.NoteReceptorsDown7K[keyIndex];

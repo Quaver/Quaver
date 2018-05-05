@@ -130,7 +130,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
             //todo: remove this. temp
             switch (GameBase.SelectedMap.Qua.Mode)
             {
-                case GameModes.Keys4:
+                case GameMode.Keys4:
                     BarOffset = LaneSize * GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width / 2; //GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / 2 * GameBase.WindowUIScale;
                     NoteHitRectangle = new DrawRectangle[4];
                     NoteBurstRectangle = new DrawRectangle[4];
@@ -149,7 +149,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
                         NoteBurstRectangle[i].Y = NoteHitRectangle[i].Y - (NoteBurstRectangle[i].Height - NoteHitRectangle[i].Height) / 2;
                     }
                     break;
-                case GameModes.Keys7:
+                case GameMode.Keys7:
                     BarOffset = LaneSize * GameBase.LoadedSkin.NoteHitObjects7K[0].Height * GameBase.LoadedSkin.NoteHitObjects7K[0].Width / 2 + (float)GameBase.LoadedSkin.TimingBarPixelSize/2f;
                     NoteHitRectangle = new DrawRectangle[7];
                     NoteBurstRectangle = new DrawRectangle[7];

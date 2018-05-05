@@ -164,13 +164,13 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
                 // Choose the correct image based on the specific key lane for hold bodies.
                 switch (GameBase.SelectedMap.Qua.Mode)
                 {
-                    case GameModes.Keys4:
+                    case GameMode.Keys4:
                         HoldEndQuaverSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex];
                         HoldBodyQuaverSprite.Image = GameBase.LoadedSkin.NoteHoldBodies4K[keyLaneIndex];
                         HoldEndQuaverSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Height / GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Width;
                         HoldEndOffset = HoldEndQuaverSprite.SizeY / 2;
                         break;
-                    case GameModes.Keys7:
+                    case GameMode.Keys7:
                         HoldEndQuaverSprite.Image = GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex];
                         HoldBodyQuaverSprite.Image = GameBase.LoadedSkin.NoteHoldBodies7K[keyLaneIndex];
                         HoldEndQuaverSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex].Height / GameBase.LoadedSkin.NoteHoldEnds7K[keyLaneIndex].Width;
@@ -184,7 +184,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
             // Choose the correct image based on the specific key lane for hit body.
             switch (GameBase.SelectedMap.Qua.Mode)
             {
-                case GameModes.Keys4:
+                case GameMode.Keys4:
                     try
                     {
                         // If the user has ColourObjectsBySnapDistance enabled in their skin,
@@ -210,7 +210,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
                         HoldBodyOffset = HitBodyQuaverSprite.SizeY / 2;
                     }
                     break;
-                case GameModes.Keys7:
+                case GameMode.Keys7:
                     HitBodyQuaverSprite.Image = GameBase.LoadedSkin.NoteHitObjects7K[keyLaneIndex];
                     HitBodyQuaverSprite.Size = new UDim2D(HitObjectSize, HitObjectSize * HitBodyQuaverSprite.Image.Height / HitBodyQuaverSprite.Image.Width);
                     HitBodyQuaverSprite.Parent = parent;
