@@ -157,7 +157,7 @@ namespace Quaver.Graphics.Overlays.Options
             section.AddSliderOption(ConfigManager.VolumeMusic, "Music Volume");
             section.AddSliderOption(ConfigManager.VolumeEffect, "Effect Volume");
             section.AddSliderOption(ConfigManager.GlobalAudioOffset, "Audio Offset");
-            section.AddCheckboxOption(ConfigManager.Pitched, "Toggle Music Pitching");
+            section.AddCheckboxOption(ConfigManager.Pitched, "Toggle Music Pitching", (o ,e) => GameBase.AudioEngine.SetPitch());
         }
 
         /// <summary>
