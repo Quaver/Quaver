@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Config;
@@ -7,7 +6,7 @@ using Quaver.GameState;
 using Quaver.Logging;
 using Quaver.Main;
 
-namespace Quaver.States.Gameplay
+namespace Quaver.States.Gameplay.Timing
 {
     internal class GameplayAudio : IGameStateComponent
     {

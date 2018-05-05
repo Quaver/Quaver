@@ -1,7 +1,6 @@
 ﻿using Quaver.API.Maps;
-using Quaver.Graphics.Sprites;
 
-namespace Quaver.States.Gameplay
+namespace Quaver.States.Gameplay.HitObjects
 {
     internal abstract class HitObject
     {

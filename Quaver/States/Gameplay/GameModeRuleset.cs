@@ -2,6 +2,7 @@
 using Quaver.API.Maps;
 using Quaver.Graphics.Sprites;
 using Quaver.Logging;
+using Quaver.States.Gameplay.HitObjects;
 
 namespace Quaver.States.Gameplay
 {

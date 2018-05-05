@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
-using Quaver.Config;
-using Quaver.Database.Maps;
-using Quaver.Graphics.Sprites;
 using Quaver.Logging;
-using Quaver.Main;
-using Quaver.States.Gameplay.Keys.Playfield;
-using Quaver.States.Gameplay.Mania.UI.Playfield;
+using Quaver.States.Gameplay.GameModes.Keys.Playfield;
+using Quaver.States.Gameplay.HitObjects;
 
-namespace Quaver.States.Gameplay.Keys
+namespace Quaver.States.Gameplay.GameModes.Keys
 {
     internal class GameModeKeys : GameModeRuleset
     {       

@@ -1,6 +1,6 @@
-﻿using Quaver.Graphics.Sprites;
+﻿using Quaver.States.Gameplay.HitObjects;
 
-namespace Quaver.States.Gameplay.Keys
+namespace Quaver.States.Gameplay.GameModes.Keys
 {
     internal class KeysHitObject : HitObject
     {

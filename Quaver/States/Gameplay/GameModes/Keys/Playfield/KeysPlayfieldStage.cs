@@ -1,12 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
 using Quaver.API.Enums;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Main;
 
-namespace Quaver.States.Gameplay.Keys.Playfield
+namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
 {
     internal class KeysPlayfieldStage
     {
@@ -68,15 +67,15 @@ namespace Quaver.States.Gameplay.Keys.Playfield
             // Create the right side of the stage.
             // Create Stage Right
             var stageRightX = GameBase.LoadedSkin.StageRightBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageRightBorder.Height;
-            StageRight = new QuaverSprite()
+            StageRight = new QuaverSprite
             {
                 Image = GameBase.LoadedSkin.StageRightBorder,
                 Size = new UDim2D(stageRightX, GameBase.WindowRectangle.Height),
                 Position = new UDim2D(stageRightX - 1, 0),
-                Parent = Playfield.BackgroundContainer
+                Parent = Playfield.BackgroundContainer,
+                Alignment = Alignment.TopRight
             };
-            
-            StageRight.Alignment = Alignment.TopRight;
+
         }
 
         /// <summary>

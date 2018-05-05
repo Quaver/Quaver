@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Quaver.States.Gameplay
+namespace Quaver.States.Gameplay.HitObjects
 {
     internal class HitObjectPool
     {

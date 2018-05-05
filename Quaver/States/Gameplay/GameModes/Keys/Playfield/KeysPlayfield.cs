@@ -7,7 +7,7 @@ using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Main;
 
-namespace Quaver.States.Gameplay.Keys.Playfield
+namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
 {
     internal class KeysPlayfield : IGameplayPlayfield
     {
