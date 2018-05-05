@@ -103,14 +103,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         private void CreateBgMask4K()
         {
             var imageRatio = (double)GameBase.LoadedSkin.StageBgMask4K.Width / GameBase.LoadedSkin.StageBgMask4K.Height;
-            var columnRatio = Playfield.SizeX / GameBase.WindowRectangle.Height;
+            var columnRatio = Playfield.Width / GameBase.WindowRectangle.Height;
             var bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
             
             BgMask = new QuaverSprite()
             {
                 Image = GameBase.LoadedSkin.StageBgMask4K,
                 Alpha = GameBase.LoadedSkin.BgMaskAlpha,
-                Size = new UDim2D(Playfield.SizeX, bgMaskSize),
+                Size = new UDim2D(Playfield.Width, bgMaskSize),
                 Alignment = Alignment.MidCenter,
                 Parent = Playfield.BackgroundContainer
             };
@@ -123,14 +123,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         {
             // Create BG Mask
             var imageRatio = (double)GameBase.LoadedSkin.StageBgMask7K.Width / GameBase.LoadedSkin.StageBgMask7K.Height;
-            var columnRatio = Playfield.SizeX / GameBase.WindowRectangle.Height;
+            var columnRatio = Playfield.Width / GameBase.WindowRectangle.Height;
             var bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
 
             BgMask = new QuaverSprite()
             {
                 Image = GameBase.LoadedSkin.StageBgMask7K,
                 Alpha = GameBase.LoadedSkin.BgMaskAlpha,
-                Size = new UDim2D(Playfield.SizeX, bgMaskSize),
+                Size = new UDim2D(Playfield.Width, bgMaskSize),
                 Alignment = Alignment.MidCenter,
                 Parent = Playfield.BackgroundContainer
             };
