@@ -76,7 +76,6 @@ namespace Quaver.GameState
         {
             try
             {
-                GameBase.GameOverlay.OverlayActive = false;
                 ClearStates();
                 AddState(screen);
             }
@@ -118,6 +117,7 @@ namespace Quaver.GameState
 
                 if (States.Peek().UpdateReady)
                     States.Peek().Draw();
+                
             }
             catch (Exception e)
             {

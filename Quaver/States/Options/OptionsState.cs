@@ -17,8 +17,9 @@ using Quaver.States.Menu;
 
 namespace Quaver.States.Options
 {
-    internal class OptionsState : IGameState
+    /*internal class OptionsState : IGameState
     {
+        
         //todo: documentation
         public State CurrentState { get; set; }
         public bool UpdateReady { get; set; }
@@ -669,5 +670,5 @@ namespace Quaver.States.Options
 
             Skin.LoadSkin();
         }
-    }
+    }*/
 }

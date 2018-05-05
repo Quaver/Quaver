@@ -13,6 +13,7 @@ using Quaver.GameState;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Enums;
+using Quaver.Graphics.Overlays.Options;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
@@ -34,12 +35,12 @@ namespace Quaver.Graphics.Overlays.Navbar
     /// <summary>
     ///     A navbar overlay
     /// </summary>
-    internal class Navbar : IGameStateComponent
+    internal class Nav : IGameStateComponent
     {
         /// <summary>
         ///     The actual navbar sprite
         /// </summary>
-        internal QuaverSprite Nav { get; set; }
+        internal QuaverSprite NavbarSprite { get; set; }
             
         /// <summary>
         ///     The tooltip box that appears when hovering over a button.
@@ -51,7 +52,12 @@ namespace Quaver.Graphics.Overlays.Navbar
         ///     alignments to the navbar.
         /// </summary>
         internal Dictionary<NavbarAlignment, List<NavbarButton>> Buttons { get; private set; }
-        
+
+        /// <summary>
+        ///     The height of the navbar.
+        /// </summary>
+        internal static int Height { get; } = 40;
+
         /// <summary>
         ///     The container for the navbar
         /// </summary>
@@ -80,12 +86,20 @@ namespace Quaver.Graphics.Overlays.Navbar
         private NavbarButton Export { get; set; }
 
         /// <summary>
+        ///     The options menu attached to this navbar.
+        /// </summary>
+        private OptionsOverlay OptionsMenu { get; set; }
+
+        /// <summary>
         ///     Initialize
         /// </summary>
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {
             Container = new QuaverContainer();
+            
+            // Create the options menu.
+            OptionsMenu = new OptionsOverlay();
             
             // Setup the dictionary of navbar buttons.
             Buttons = new Dictionary<NavbarAlignment, List<NavbarButton>>()
@@ -95,16 +109,16 @@ namespace Quaver.Graphics.Overlays.Navbar
             };
             
             // Create navbar
-            Nav = new QuaverSprite()
+            NavbarSprite = new QuaverSprite()
             {
-                Size = new UDim2D(0, 40, 1, 0),
+                Size = new UDim2D(0, Height, 1, 0),
                 Alignment = Alignment.TopLeft,
                 Tint = new Color(0f, 0f, 0f, 0.40f),
                 Parent = Container
             };
 
             // Create the tooltip box.
-            TooltipBox = new TooltipBox(Container, Nav);
+            TooltipBox = new TooltipBox(Container, NavbarSprite);
 
 #region nav_buttons 
             // Create the actual navbar buttons.
@@ -136,6 +150,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <exception cref="NotImplementedException"></exception>
         public void UnloadContent()
         {
+            OptionsMenu.Destroy();
             Container.Destroy();
         }
 
@@ -151,6 +166,10 @@ namespace Quaver.Graphics.Overlays.Navbar
             if (GameBase.KeyboardState.IsKeyDown(Keys.X))
                 PerformShowAnimation(dt);
 
+            if (GameBase.KeyboardState.IsKeyDown(Keys.Escape))
+                OptionsMenu.Active = false;
+            
+            OptionsMenu.Update(dt);
             Container.Update(dt);
         }
 
@@ -159,6 +178,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         public void Draw()
         {
+            OptionsMenu.Draw();
             Container.Draw();
         }
 
@@ -182,7 +202,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         ///     Peforms an animation which hides the navbar.
         /// </summary>
         /// <param name="dt"></param>
-        private void PerformHideAnimation(double dt)
+        internal void PerformHideAnimation(double dt)
         {
             // The position in which the navbar is considered hidden.
             const float hiddenPos = -50f;
@@ -239,9 +259,14 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnSettingsButtonClicked(object sender, EventArgs e)
-        {
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
-            GameBase.GameStateManager.ChangeState(new OptionsState());
+        {            
+            // Open up the options overlay.
+            OptionsMenu.Active = !OptionsMenu.Active;
+            
+            if (OptionsMenu.Active)
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
+            else
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundBack);
         }
         
         /// <summary>

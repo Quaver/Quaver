@@ -179,9 +179,25 @@ namespace Quaver.Graphics.Base
         internal Vector2 AbsolutePosition { get => new Vector2(_globalRectangle.X, _globalRectangle.Y); }
 
         /// <summary>
+        ///     Dictates whether or not we will be setting the children's visibility as well.
+        /// </summary>
+        internal bool SetChildrenVisibility { get; set; }
+
+        /// <summary>
         ///     Determines if the Object is going to get drawn.
         /// </summary>
-        internal bool Visible { get; set; } = true;
+        private bool _visible = true;
+        internal bool Visible
+        {
+            get => _visible;
+            set
+            {
+                _visible = value;
+                
+                if (SetChildrenVisibility)
+                    Children.ForEach(x => x.Visible = value);
+            }
+        }
 
         /// <summary>
         ///     This method gets called every frame to update the object.

@@ -33,7 +33,7 @@ namespace Quaver.Graphics.Buttons.Dropdowns
         /// <summary>
         ///     Ctor - 
         /// </summary>
-        internal QuaverDropdown(List<string> options, EventHandler<DropdownButtonClickedEventArgs> onClick, int width = 300, uint selectedIndex = 0)
+        internal QuaverDropdown(List<string> options, EventHandler<DropdownButtonClickedEventArgs> onClick, int width = 380, uint selectedIndex = 0)
         {
             // Only allow correct selected button.
             if (selectedIndex > options.Count - 1)

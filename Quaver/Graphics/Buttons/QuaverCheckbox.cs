@@ -48,7 +48,7 @@ namespace Quaver.Graphics.Buttons
             // Always set the checkbox image.
             SetCheckboxImage();
 
-            PerformHoverAnimation(dt);
+            // PerformHoverAnimation(dt);
             base.Update(dt);
         }
 
@@ -59,7 +59,9 @@ namespace Quaver.Graphics.Buttons
         protected override void OnClicked()
         {
             BindedValue.Value = !BindedValue.Value;
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
+            GameBase.AudioEngine.PlaySoundEffect(BindedValue.Value ? GameBase.LoadedSkin.SoundClick : GameBase.LoadedSkin.SoundBack);
+            
+            base.OnClicked();
         }
 
         /// <summary>
@@ -88,8 +90,6 @@ namespace Quaver.Graphics.Buttons
         protected override void MouseOut()
         {
             // TODO: Display a tooltip, perhaps?
-            
-
         }
 
         /// <inheritdoc />

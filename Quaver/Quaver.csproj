@@ -74,10 +74,15 @@
     <Compile Include="Graphics\Buttons\Dropdowns\QuaverDropdownButton.cs" />
     <Compile Include="Graphics\Buttons\QuaverCheckbox.cs" />
     <Compile Include="Graphics\Buttons\Sliders\QuaverSlider.cs" />
-    <Compile Include="Graphics\Overlays\Navbar\Navbar.cs" />
+    <Compile Include="Graphics\Overlays\Navbar\Nav.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarButton.cs" />
     <Compile Include="Graphics\Overlays\Navbar\TooltipBox.cs" />
+    <Compile Include="Graphics\Overlays\Options\OptionsHeader.cs" />
+    <Compile Include="Graphics\Overlays\Options\OptionsMenuBar.cs" />
+    <Compile Include="Graphics\Overlays\Options\OptionsOverlay.cs" />
+    <Compile Include="Graphics\Overlays\Options\OptionsSection.cs" />
+    <Compile Include="Graphics\Overlays\Options\OptionsType.cs" />
     <Compile Include="Graphics\Overlays\Volume\VolumeController.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
@@ -87,6 +92,7 @@
     <Compile Include="Helpers\RngHelper.cs" />
     <Compile Include="Helpers\StreamHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Helpers\XNAKeyHelper.cs" />
     <Compile Include="Main\CommonTaskScheduler.cs" />
     <Compile Include="Main\FontAwesome.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />

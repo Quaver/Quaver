@@ -29,12 +29,12 @@ namespace Quaver.States.Tests
         /// <summary>
         ///     Navbar sprite
         /// </summary>
-        private Navbar Nav { get; set; }
+        private Nav Nav { get; set; }
 
         public void Initialize()
         {
             Container = new QuaverContainer();
-            Nav = new Navbar();
+            Nav = new Nav();
             Nav.Initialize(this);
             
             var ds4k = new QuaverCheckbox(ConfigManager.DownScroll4K, new Vector2(20, 20))
