@@ -17,29 +17,19 @@ namespace Quaver.States.Gameplay.Keys.Playfield
         public QuaverContainer Container { get; set; }
 
         /// <summary>
-        ///     Reference to the map.
-        /// </summary>
-        private Qua Map { get; }
-
-        /// <summary>
         ///     The background of this container.
         /// </summary>
-        private QuaverContainer BackgroundContainer { get; }
+        internal QuaverContainer BackgroundContainer { get; }
+        
+        /// <summary>
+        ///     Reference to the map.
+        /// </summary>
+        internal Qua Map { get; }
 
         /// <summary>
-        ///     The left side of the stage.
+        ///     The stage for this playfield.
         /// </summary>
-        private QuaverSprite StageLeft { get; set; }
-
-        /// <summary>
-        ///     The right side of the stage.
-        /// </summary>
-        private QuaverSprite StageRight { get; set; }
-
-        /// <summary>
-        ///     Bg Mask.
-        /// </summary>
-        private QuaverSprite BgMask { get; set; }
+        private KeysPlayfieldStage Stage { get; set; }
 
         /// <summary>
         ///     The size of the each ane.
@@ -64,7 +54,7 @@ namespace Quaver.States.Gameplay.Keys.Playfield
         /// <summary>
         ///     The X size of the playfield.
         /// </summary>
-        private float SizeX => (LaneSize + ReceptorPadding) * Map.FindKeyCountFromMode() + Padding * 2 - ReceptorPadding;
+        internal float SizeX => (LaneSize + ReceptorPadding) * Map.FindKeyCountFromMode() + Padding * 2 - ReceptorPadding;
 
         /// <summary>
         ///     Padding of the playfield.
@@ -165,88 +155,7 @@ namespace Quaver.States.Gameplay.Keys.Playfield
         /// </summary>
         private void CreateBackgroundContainer()
         {
-            CreateStage();     
-        }
-
-        /// <summary>
-        ///     Creates the keys stage.
-        /// </summary>
-        private void CreateStage()
-        {
-            // Create the left side of the stage.
-            var stageLeftX = GameBase.LoadedSkin.StageLeftBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageLeftBorder.Height;
-            StageLeft = new QuaverSprite()
-            {
-                Image = GameBase.LoadedSkin.StageLeftBorder,
-                Size = new UDim2D(stageLeftX, GameBase.WindowRectangle.Height),
-                Position = new UDim2D(-stageLeftX + 1, 0),
-                Alignment = Alignment.TopLeft,
-                Parent = BackgroundContainer
-            };   
-            
-            // Create the right side of the stage.
-            // Create Stage Right
-            var stageRightX = GameBase.LoadedSkin.StageRightBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageRightBorder.Height;
-            StageRight = new QuaverSprite()
-            {
-                Image = GameBase.LoadedSkin.StageRightBorder,
-                Size = new UDim2D(stageRightX, GameBase.WindowRectangle.Height),
-                Position = new UDim2D(stageRightX - 1, 0),
-                Alignment = Alignment.TopRight,
-                Parent = BackgroundContainer
-            };
-            
-            // Create BG Mask
-            switch (Map.Mode)
-            {
-                case GameMode.Keys4:
-                    CreateBgMask4K();
-                    break;
-                case GameMode.Keys7:
-                    CreateBgMask7K();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        /// <summary>
-       ///     Creates the BG Mask for 4K.
-       /// </summary>
-        private void CreateBgMask4K()
-        {
-            var imageRatio = (double)GameBase.LoadedSkin.StageBgMask4K.Width / GameBase.LoadedSkin.StageBgMask4K.Height;
-            var columnRatio = SizeX / GameBase.WindowRectangle.Height;
-            var bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
-            
-            BgMask = new QuaverSprite()
-            {
-                Image = GameBase.LoadedSkin.StageBgMask4K,
-                Alpha = GameBase.LoadedSkin.BgMaskAlpha,
-                Size = new UDim2D(SizeX, bgMaskSize),
-                Alignment = Alignment.MidCenter,
-                Parent = BackgroundContainer
-            };
-        }
-
-        /// <summary>
-        ///      Creates the BG Mask for 7K
-        /// </summary>
-        private void CreateBgMask7K()
-        {
-            // Create BG Mask
-            var imageRatio = (double)GameBase.LoadedSkin.StageBgMask7K.Width / GameBase.LoadedSkin.StageBgMask7K.Height;
-            var columnRatio = SizeX / GameBase.WindowRectangle.Height;
-            var bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
-
-            BgMask = new QuaverSprite()
-            {
-                Image = GameBase.LoadedSkin.StageBgMask7K,
-                Alpha = GameBase.LoadedSkin.BgMaskAlpha,
-                Size = new UDim2D(SizeX, bgMaskSize),
-                Alignment = Alignment.MidCenter,
-                Parent = BackgroundContainer
-            };
+            Stage = new KeysPlayfieldStage(this);   
         }
     }
 }

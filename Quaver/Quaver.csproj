@@ -104,6 +104,7 @@
     <Compile Include="States\Gameplay\Keys\GameModeKeys.cs" />
     <Compile Include="States\Gameplay\Keys\KeysHitObject.cs" />
     <Compile Include="States\Gameplay\Keys\Playfield\KeysPlayfield.cs" />
+    <Compile Include="States\Gameplay\Keys\Playfield\KeysPlayfieldStage.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="States\Select\MapInfoWindow.cs" />
     <Compile Include="States\Select\ModSelector.cs" />
