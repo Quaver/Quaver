@@ -107,7 +107,6 @@ namespace Quaver.States.Menu
             GameBase.GraphicsDevice.Clear(Color.DarkSlateBlue);
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GameBase.GraphicsDevice.RasterizerState);
             
-            BackgroundManager.Draw();
             QuaverContainer.Draw();
             Nav.Draw();
             
