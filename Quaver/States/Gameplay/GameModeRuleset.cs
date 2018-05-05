@@ -13,11 +13,6 @@ namespace Quaver.States.Gameplay
         internal GameMode Mode { get; set; }
 
         /// <summary>
-        ///     The playfield that this game mode will be drawn to.
-        /// </summary>
-        internal QuaverContainer Playfield { get; set; }
-
-        /// <summary>
         ///     The objects in the pool.
         /// </summary>
         private HitObjectPool HitObjectPool { get; }
@@ -25,7 +20,12 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Reference to the map.
         /// </summary>
-        private Qua Map { get; }
+        protected Qua Map { get; }
+
+        /// <summary>
+        ///     The playfield for this ruleset.
+        /// </summary>
+        protected IGameplayPlayfield Playfield { get; set; }
 
         /// <summary>
         ///     Ctor - 
@@ -40,10 +40,13 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Initializes the game mode ruleset.
         /// </summary>
-        internal virtual void Initialize()
+        internal void Initialize()
         {
-            Playfield = new QuaverContainer();
+            // Create and initalize the playfield.
             CreatePlayfield();
+            Playfield.Initialize(null);
+            
+            // Initialize all HitObjects.
             InitializeHitObjects();
         }
 
@@ -51,15 +54,15 @@ namespace Quaver.States.Gameplay
         ///     Updates the game mode ruleset.
         /// </summary>
         /// <param name="dt"></param>
-        internal virtual void Update(double dt)
+        internal void Update(double dt)
         {
-            Playfield.Update(dt);    
+            Playfield.Update(dt);
         }
 
         /// <summary>
         ///     Draws the game mode.
         /// </summary>
-        internal virtual void Draw()
+        internal void Draw()
         {
             Playfield.Draw();
         }
@@ -67,27 +70,11 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Destroys the game mode.
         /// </summary>
-        internal virtual void Destroy()
+        internal void Destroy()
         {
-            Playfield.Destroy();
+            Playfield.UnloadContent();
         }
         
-         /// <summary>
-        ///     Creates the actual playfield.
-        /// </summary>
-        protected abstract void CreatePlayfield();
-        
-        /// <summary>
-        ///     Handles the input of the game mode.
-        /// </summary>
-        /// <param name="dt"></param>
-        internal abstract void HandleInput(double dt);
-
-        /// <summary>
-        ///     Initializes all the HitObjects in the game.
-        /// </summary>
-        protected abstract HitObject CreateHitObject(HitObjectInfo info);
-
         /// <summary>
         ///     Initializes all the HitObjects
         /// </summary>
@@ -107,5 +94,21 @@ namespace Quaver.States.Gameplay
             
             Logger.LogInfo($"Initialized HitObjects", LogType.Runtime);
         }
+        
+        /// <summary>
+        ///     Creates the actual playfield.
+        /// </summary>
+        protected abstract void CreatePlayfield();
+        
+        /// <summary>
+        ///     Handles the input of the game mode.
+        /// </summary>
+        /// <param name="dt"></param>
+        internal abstract void HandleInput(double dt);
+
+        /// <summary>
+        ///     Initializes all the HitObjects in the game.
+        /// </summary>
+        protected abstract HitObject CreateHitObject(HitObjectInfo info);
     }
 }

@@ -1,15 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Sprites;
+using Quaver.Logging;
+using Quaver.Main;
+using Quaver.States.Gameplay.Mania.UI.Playfield;
 
 namespace Quaver.States.Gameplay.Keys
 {
     internal class GameModeKeys : GameModeRuleset
-    {
-        /// <inheritdoc />
+    {       
+         /// <inheritdoc />
         /// <summary>
         ///     Ctor - Sets the correct mode, either 4 or 7k.
         /// </summary>
@@ -40,7 +45,7 @@ namespace Quaver.States.Gameplay.Keys
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <param name="objectInfo"></param>
+        /// <param name="info"></param>
         /// <returns></returns>
         protected override HitObject CreateHitObject(HitObjectInfo info)
         {
@@ -56,6 +61,8 @@ namespace Quaver.States.Gameplay.Keys
         /// </summary>
         protected override void CreatePlayfield()
         {
+            Playfield = new KeysPlayfield(Map);
+            Logger.LogSuccess("Playfield Initialized", LogType.Runtime);
         }
     }
 }

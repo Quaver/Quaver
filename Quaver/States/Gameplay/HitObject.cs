@@ -3,7 +3,7 @@ using Quaver.Graphics.Sprites;
 
 namespace Quaver.States.Gameplay
 {
-    internal class HitObject
+    internal abstract class HitObject
     {
         /// <summary>
         ///     The info of this particular HitObject from the map file.
@@ -14,9 +14,6 @@ namespace Quaver.States.Gameplay
         ///     Initializes the HitObject.
         /// </summary>
         /// <param name="playfield"></param>
-        internal void Initialize(QuaverContainer playfield)
-        {
-            
-        }
+        internal abstract void Initialize(IGameplayPlayfield playfield);
     }
 }
