@@ -235,6 +235,11 @@ namespace Quaver.Config
         internal static BindedValue<Keys> KeyToggleOverlay { get; private set; }
 
         /// <summary>
+        ///     The key pressed to restart the map.
+        /// </summary>
+        internal static BindedValue<Keys> KeyRestartMap { get; private set; }
+
+        /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
@@ -351,6 +356,7 @@ namespace Quaver.Config
             KeyPause = ReadValue(@"KeyPause", Keys.Escape, data);
             KeyTakeScreenshot = ReadValue(@"KeyTakeScreenshot", Keys.F12, data);
             KeyToggleOverlay = ReadValue(@"KeyToggleOverlay", Keys.F8, data);
+            KeyRestartMap = ReadValue(@"KeyRestartMap", Keys.OemTilde, data);
 
             // Set Master and Sound Effect Volume
             SoundEffect.MasterVolume = VolumeGlobal.Value / 100f;
@@ -409,6 +415,7 @@ namespace Quaver.Config
                     KeyPause.OnValueChanged += AutoSaveConfiguration;
                     KeyTakeScreenshot.OnValueChanged += AutoSaveConfiguration;
                     KeyToggleOverlay.OnValueChanged += AutoSaveConfiguration;
+                    KeyRestartMap.OnValueChanged += AutoSaveConfiguration;
                 });
         }
 

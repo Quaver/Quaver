@@ -151,6 +151,10 @@ namespace Quaver.States.Gameplay
             if (InputHelper.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
                 SkipSongIntro();
             
+            // Restart map.
+            if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyRestartMap.Value))
+                GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash));
+            
             // Don't handle actually gameplay specific input if the game is paused.
             if (Paused)
                 return;
