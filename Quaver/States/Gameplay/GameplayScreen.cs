@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
@@ -13,6 +14,7 @@ using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.States.Enums;
+using Quaver.States.Gameplay.Keys;
 
 namespace Quaver.States.Gameplay
 {
@@ -42,6 +44,11 @@ namespace Quaver.States.Gameplay
         ///     If the game is currently paused.
         /// </summary>
         internal bool Paused { get; set; }
+
+        /// <summary>
+        ///     The curent game mode object.
+        /// </summary>
+        private GameModeRuleset GameModeComponent { get; }
 
         /// <summary>
         ///     The current parsed .qua file that is being played.
@@ -80,6 +87,17 @@ namespace Quaver.States.Gameplay
             MapHash = md5;
             
             AudioTiming = new GameplayAudio(this);
+
+            // Set the game mode component.
+            switch (map.Mode)
+            {
+                case GameMode.Keys4:
+                case GameMode.Keys7:
+                    GameModeComponent = new GameModeKeys(map.Mode, map);
+                    break;
+                default:
+                    throw new InvalidEnumArgumentException("Game mode must be a valid!");
+            }
         }
         
         /// <inheritdoc />
@@ -97,6 +115,9 @@ namespace Quaver.States.Gameplay
             Logger.Add("Resume In Progress", $"Resume In Progress {ResumeInProgress}", Color.White);
             Logger.Add("Intro Skippable", $"Intro Skippable: {IntroSkippable}", Color.White);
             
+            // Initialize the game mode.
+            GameModeComponent.Initialize();
+            
             UpdateReady = true;
         }
 
@@ -106,6 +127,7 @@ namespace Quaver.States.Gameplay
         public void UnloadContent()
         {
             AudioTiming.UnloadContent();
+            GameModeComponent.Destroy();
             Logger.Clear();
         }
 
@@ -118,6 +140,7 @@ namespace Quaver.States.Gameplay
             AudioTiming.Update(dt);  
             HandleInput(dt);
             HandleResuming();
+            GameModeComponent.Update(dt);
         }
 
         /// <inheritdoc />
@@ -129,6 +152,7 @@ namespace Quaver.States.Gameplay
             GameBase.SpriteBatch.Begin();
             
             BackgroundManager.Draw();
+            GameModeComponent.Draw();
             
             // Update loggers.
             Logger.Update("Paused", $"Paused: {Paused}");
@@ -137,7 +161,7 @@ namespace Quaver.States.Gameplay
             
             GameBase.SpriteBatch.End();
         }
-
+        
 #region INPUT               
         /// <summary>
         ///     Handles the input of the game + individual game modes.
@@ -160,15 +184,7 @@ namespace Quaver.States.Gameplay
                 return;
             
             // Handle input per game mode.
-            switch (Map.Mode)
-            {
-                case GameModes.Keys4:
-                    break;
-                case GameModes.Keys7:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }    
+            GameModeComponent.HandleInput(dt);
         }
 
         /// <summary>

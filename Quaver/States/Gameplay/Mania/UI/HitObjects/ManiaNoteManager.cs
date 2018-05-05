@@ -214,7 +214,9 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
                 }
 
                 // Initialize Object and add it to HitObjectPool
-                if (i < HitObjectPoolSize) newObject.Initialize(DownScroll, qua.HitObjects[i].EndTime > 0, QuaverContainer);
+                if (i < HitObjectPoolSize) 
+                    newObject.Initialize(DownScroll, qua.HitObjects[i].EndTime > 0, QuaverContainer);
+                
                     HitObjectPool.Add(newObject);
             }
 

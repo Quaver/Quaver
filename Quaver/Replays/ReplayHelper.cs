@@ -115,7 +115,7 @@ namespace Quaver.Replays
         {
             switch (qua.Mode)
             {
-                case GameModes.Keys4:
+                case GameMode.Keys4:
                     // Key 1
                     if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania4K1.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K1;
@@ -132,7 +132,7 @@ namespace Quaver.Replays
                     if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania4K4.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K4;
                     break;
-                case GameModes.Keys7:
+                case GameMode.Keys7:
                     // Key 1
                     if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyMania7K1.Value))
                         frame.KeyPressState = frame.KeyPressState | KeyPressState.K1;

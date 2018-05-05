@@ -13,6 +13,7 @@ using Quaver.Logging;
 using Quaver.Main;
 using Quaver.StepMania;
 using SQLite;
+using GameMode = Quaver.API.Enums.GameMode;
 
 namespace Quaver.Database.Maps
 {
@@ -398,7 +399,7 @@ namespace Quaver.Database.Maps
                 var db = OsuDb.Read(ConfigManager.OsuDbPath.Value);
                 GameBase.OsuSongsFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath.Value) + "/Songs/";
 
-                var mapsFound = db.Beatmaps.Where(x => x.GameMode == GameMode.Mania && (x.CircleSize == 4 || x.CircleSize == 7)).ToList();
+                var mapsFound = db.Beatmaps.Where(x => x.GameMode == osu.Shared.GameMode.Mania && (x.CircleSize == 4 || x.CircleSize == 7)).ToList();
 
                 var maps = new List<Map>();
 
@@ -422,7 +423,7 @@ namespace Quaver.Database.Maps
                         Description = $"This map is a Quaver converted version of {Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(map.Creator))}'s map",
                         Source = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(map.SongSource)),
                         Tags = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(map.SongTags)),
-                        Mode = (map.CircleSize == 4) ? GameModes.Keys4 : GameModes.Keys7,
+                        Mode = (map.CircleSize == 4) ? GameMode.Keys4 : GameMode.Keys7,
                         SongLength = map.TotalTime,
                         Game = MapGame.Osu,
                         BackgroundPath = "",      
@@ -499,7 +500,7 @@ namespace Quaver.Database.Maps
                                 Description = $"This map is a StepMania converted version of {etternaFile.Credit}'s chart",
                                 Source = "StepMania",
                                 Tags = "StepMania",
-                                Mode = GameModes.Keys4,
+                                Mode = GameMode.Keys4,
                                 SongLength = 0,
                                 Game = MapGame.Etterna,
                                 BackgroundPath = etternaFile.Background,

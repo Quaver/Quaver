@@ -94,10 +94,10 @@ namespace Quaver.Discord
                     // Set presence based Mode
                     switch (GameBase.SelectedMap.Mode)
                     {
-                        case GameModes.Keys4:
+                        case GameMode.Keys4:
                             GameBase.DiscordController.presence.smallImageText = "Mania: 4 Keys";
                             break;
-                        case GameModes.Keys7:
+                        case GameMode.Keys7:
                             GameBase.DiscordController.presence.smallImageText = "Mania: 7 Keys";
                             break;
                         default:

@@ -123,7 +123,7 @@ namespace Quaver.Database.Maps
         /// <summary>
         ///     The Game Mode of the map
         /// </summary>
-        public GameModes Mode { get; set; }
+        public GameMode Mode { get; set; }
 
         /// <summary>
         ///     The local offset for this map

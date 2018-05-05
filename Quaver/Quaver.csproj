@@ -97,6 +97,11 @@
     <Compile Include="Main\FontAwesome.cs" />
     <Compile Include="States\Gameplay\GameplayAudio.cs" />
     <Compile Include="States\Gameplay\GameplayScreen.cs" />
+    <Compile Include="States\Gameplay\GameModeRuleset.cs" />
+    <Compile Include="States\Gameplay\HitObject.cs" />
+    <Compile Include="States\Gameplay\HitObjectPool.cs" />
+    <Compile Include="States\Gameplay\Keys\GameModeKeys.cs" />
+    <Compile Include="States\Gameplay\Keys\KeysHitObject.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="States\Select\MapInfoWindow.cs" />
     <Compile Include="States\Select\ModSelector.cs" />

@@ -1,5 +1,7 @@
 ﻿using Quaver.API.Enums;
+using Quaver.API.Maps;
 using Quaver.Graphics.Sprites;
+using Quaver.Logging;
 
 namespace Quaver.States.Gameplay
 {
@@ -16,12 +18,33 @@ namespace Quaver.States.Gameplay
         internal QuaverContainer Playfield { get; set; }
 
         /// <summary>
+        ///     The objects in the pool.
+        /// </summary>
+        private HitObjectPool HitObjectPool { get; }
+
+        /// <summary>
+        ///     Reference to the map.
+        /// </summary>
+        private Qua Map { get; }
+
+        /// <summary>
+        ///     Ctor - 
+        /// </summary>
+        /// <param name="map"></param>
+        internal GameModeRuleset(Qua map)
+        {
+            Map = map;
+            HitObjectPool = new HitObjectPool(255);
+        }
+        
+        /// <summary>
         ///     Initializes the game mode ruleset.
         /// </summary>
         internal virtual void Initialize()
         {
             Playfield = new QuaverContainer();
             CreatePlayfield();
+            InitializeHitObjects();
         }
 
          /// <summary>
@@ -31,7 +54,6 @@ namespace Quaver.States.Gameplay
         internal virtual void Update(double dt)
         {
             Playfield.Update(dt);    
-            HandleInput(dt);
         }
 
         /// <summary>
@@ -50,16 +72,40 @@ namespace Quaver.States.Gameplay
             Playfield.Destroy();
         }
         
-
+         /// <summary>
+        ///     Creates the actual playfield.
+        /// </summary>
+        protected abstract void CreatePlayfield();
+        
         /// <summary>
         ///     Handles the input of the game mode.
         /// </summary>
         /// <param name="dt"></param>
-        protected abstract void HandleInput(double dt);
+        internal abstract void HandleInput(double dt);
 
         /// <summary>
-        ///     Creates the actual playfield.
+        ///     Initializes all the HitObjects in the game.
         /// </summary>
-        protected abstract void CreatePlayfield();
+        protected abstract HitObject CreateHitObject(HitObjectInfo info);
+
+        /// <summary>
+        ///     Initializes all the HitObjects
+        /// </summary>
+        private void InitializeHitObjects()
+        {
+            for (var i = 0; i < Map.HitObjects.Count; i++)
+            {
+                var hitObject = CreateHitObject(Map.HitObjects[i]);
+                
+                // If the pool isn't full, then initialize the object.
+                if (i < HitObjectPool.Size)
+                    hitObject.Initialize(Playfield);
+                    
+                // Add this object to hhe pool.
+                HitObjectPool.Objects.Add(hitObject);
+            }
+            
+            Logger.LogInfo($"Initialized HitObjects", LogType.Runtime);
+        }
     }
 }
