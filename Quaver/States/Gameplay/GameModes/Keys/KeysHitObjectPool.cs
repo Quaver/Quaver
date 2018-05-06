@@ -5,6 +5,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys
 {
     internal class KeysHitObjectPool : HitObjectPool
     {
+         /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="size"></param>
         internal KeysHitObjectPool(int size) : base(size)
         {
         }
