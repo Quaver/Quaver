@@ -14,5 +14,14 @@ namespace Quaver.States.Gameplay.HitObjects
         /// </summary>
         /// <param name="playfield"></param>
         internal abstract void Initialize(IGameplayPlayfield playfield);
+
+        /// <summary>
+        ///     Ctor - 
+        /// </summary>
+        /// <param name="info"></param>
+        internal HitObject(HitObjectInfo info)
+        {
+            Info = info;
+        }
     }
 }
