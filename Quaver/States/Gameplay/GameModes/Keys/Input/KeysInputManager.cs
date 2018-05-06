@@ -5,6 +5,7 @@ using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Input;
 using Quaver.Main;
+using Quaver.States.Gameplay.GameModes.Keys.Playfield;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Input
 {
@@ -16,10 +17,16 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         private List<KeysInputButtonContainer> BindingStore { get; }
 
         /// <summary>
+        ///     Reference to the playfield for this input manager.
+        /// </summary>
+        private KeysPlayfield Playfield { get; set; }
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
+        /// <param name="playfield"></param>
         /// <param name="mode"></param>
-        internal KeysInputManager(GameMode mode)
+        internal KeysInputManager(KeysPlayfield playfield, GameMode mode)
         {
             switch (mode)
             {
@@ -49,6 +56,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
+
+            Playfield = playfield;
         }
 
         /// <summary>
@@ -56,21 +65,29 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         /// </summary>
         public void HandleInput(double dt)
         {
-            foreach (var binding in BindingStore)
+            for (var i = 0; i < BindingStore.Count; i++)
             {
-                if (InputHelper.IsUniqueKeyPress(binding.Key.Value) && !binding.Pressed)
+                // Key Pressed Uniquely
+                if (InputHelper.IsUniqueKeyPress(BindingStore[i].Key.Value) && !BindingStore[i].Pressed)
                 {
-                    binding.Pressed = true;
-                    
+                    BindingStore[i].Pressed = true;
+                                  
                     // Handle Key Press
-                    Console.WriteLine($"Lane {BindingStore.IndexOf(binding) + 1} Key Pressed");
+                    Console.WriteLine($"Lane {BindingStore.IndexOf(BindingStore[i]) + 1} Key Pressed");
+                    
+                    Console.WriteLine(Playfield.Width);
+                    Playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
+
                 }
-                else if (GameBase.KeyboardState.IsKeyUp(binding.Key.Value) && binding.Pressed)
+                // Key Released Uniquely.
+                else if (GameBase.KeyboardState.IsKeyUp(BindingStore[i].Key.Value) && BindingStore[i].Pressed)
                 {
-                    binding.Pressed = false;
+                    BindingStore[i].Pressed = false;
+                
+                    Console.WriteLine($"Lane {BindingStore.IndexOf(BindingStore[i]) + 1} Key Released");
                     
                     // Handle Key Release
-                    Console.WriteLine($"Lane {BindingStore.IndexOf(binding) + 1} Key Released");
+                    Playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
                 }
             }
         }
