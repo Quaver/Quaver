@@ -279,5 +279,15 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Parent = Playfield.ForegroundContainer
             };    
         }
+
+        /// <summary>
+        ///     Performs the animations for all column lighting
+        /// </summary>
+        /// <param name="dt"></param>
+        internal void PeformAllColumnLightingAnimations(double dt)
+        {
+            foreach (var light in ColumnLightingObjects)
+                light.PerformAnimation(dt);
+        }
     }
 }

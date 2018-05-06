@@ -1,4 +1,6 @@
-﻿using Quaver.Graphics.Sprites;
+﻿using System;
+using Quaver.Graphics.Sprites;
+using Quaver.Helpers;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
 {
@@ -12,12 +14,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <summary>
         ///     If the column lighting is currently active.
         /// </summary>
-        internal bool Active { get;  }
+        internal bool Active { get; set; }
 
         /// <summary>
         ///     The animation for this column lighting
         /// </summary>
-        internal float Animation { get; }
+        private float AnimationValue { get; set; }
 
         /// <summary>
         ///     Ctor - 
@@ -26,6 +28,22 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         internal ColumnLighting(QuaverSprite sprite)
         {
             Sprite = sprite;
+        }
+
+        /// <summary>
+        ///     Performs 
+        /// </summary>
+        /// <param name="dt"></param>
+        internal void PerformAnimation(double dt)
+        {
+            // Update the animation value based on if it's active or not.
+            if (Active)
+                AnimationValue = GraphicsHelper.Tween(1, AnimationValue, Math.Min(dt / 2, 1));
+            else
+                AnimationValue = GraphicsHelper.Tween(0, AnimationValue, Math.Min(dt / 60, 1));
+                
+            // Update the alpha of the sprite.
+            Sprite.Alpha = AnimationValue;
         }
     }
 }
