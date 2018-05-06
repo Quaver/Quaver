@@ -49,6 +49,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         private QuaverSprite DistantOverlay { get; set; }
 
+        /// <summary>
+        ///     The sprite that goes over the hit position.
+        /// </summary>
+        private QuaverSprite HitPositionOverlay { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
@@ -61,7 +66,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             CreateStageLeft();
             CreateStageRight();
             CreateDistantOverlay();
-
+            CreateHitPositionOverlay();
+            
             // Create game mode specific sprites.
             // 4K and 7K are two separate modes and do NOT use the same textures
             // or skin properties. So we have to implement them separately.
@@ -257,7 +263,21 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         private void CreateHitPositionOverlay()
         {
+            // Get the downscroll setting for this mode.
+            // We handle it here because it's too basic to re-copy its implementation for 7K.
+            var modeDownscroll = Playfield.Map.Mode == GameMode.Keys4 ? ConfigManager.DownScroll4K : ConfigManager.DownScroll7K;
             
+            // Create Stage HitPosition Overlay
+            var sizeY = GameBase.LoadedSkin.StageHitPositionOverlay.Height * Playfield.Width / GameBase.LoadedSkin.StageHitPositionOverlay.Width;
+            var offsetY = Playfield.LaneSize * ((float)GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width);
+            
+            HitPositionOverlay = new QuaverSprite()
+            {
+                Image = GameBase.LoadedSkin.StageHitPositionOverlay,
+                Size = new UDim2D(Playfield.Width, sizeY),
+                PosY = modeDownscroll.Value ? Playfield.ReceptorPositionY : Playfield.ReceptorPositionY + offsetY + sizeY,
+                Parent = Playfield.ForegroundContainer
+            };    
         }
     }
 }
