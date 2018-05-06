@@ -2,6 +2,7 @@
 using Quaver.API.Maps;
 using Quaver.Graphics.Sprites;
 using Quaver.Logging;
+using Quaver.States.Gameplay.GameModes;
 using Quaver.States.Gameplay.HitObjects;
 
 namespace Quaver.States.Gameplay
@@ -27,6 +28,11 @@ namespace Quaver.States.Gameplay
         ///     The playfield for this ruleset.
         /// </summary>
         protected IGameplayPlayfield Playfield { get; set; }
+
+        /// <summary>
+        ///     The input manager for this ruleset.
+        /// </summary>
+        protected abstract IGameplayInputManager InputManager { get; set; }
 
         /// <summary>
         ///     Ctor - 
@@ -100,13 +106,16 @@ namespace Quaver.States.Gameplay
         ///     Creates the actual playfield.
         /// </summary>
         protected abstract void CreatePlayfield();
-        
+
         /// <summary>
         ///     Handles the input of the game mode.
         /// </summary>
         /// <param name="dt"></param>
-        internal abstract void HandleInput(double dt);
-
+        internal void HandleInput(double dt)
+        {
+            InputManager.HandleInput(dt);
+        }
+        
         /// <summary>
         ///     Initializes all the HitObjects in the game.
         /// </summary>
