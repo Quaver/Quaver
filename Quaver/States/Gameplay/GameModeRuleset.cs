@@ -28,7 +28,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The playfield for this ruleset.
         /// </summary>
-        protected IGameplayPlayfield Playfield { get; set; }
+        internal IGameplayPlayfield Playfield { get; set; }
 
         /// <summary>
         ///     The input manager for this ruleset.
