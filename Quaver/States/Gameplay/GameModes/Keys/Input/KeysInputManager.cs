@@ -61,9 +61,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
             Ruleset = ruleset;
         }
 
-        /// <summary>
-        ///     Handle the input 
-        /// </summary>
+         /// <inheritdoc />
+         /// <summary>
+         /// </summary>
         public void HandleInput(double dt)
         {
             for (var i = 0; i < BindingStore.Count; i++)
@@ -103,7 +103,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 if (index == -1)
                     continue;
                 
-                Console.WriteLine($"{index}: " + (BindingStore[i].Pressed ? "Pressed" : "Released") + $" @ {Ruleset.Screen.AudioTiming.CurrentTime}ms");
+                Console.WriteLine($"{index}: " + (BindingStore[i].Pressed ? "Pressed" : "Released") + $" @{Ruleset.Screen.AudioTiming.CurrentTime}ms");
                 
                 // If the key was pressed, 
                 if (BindingStore[i].Pressed)
