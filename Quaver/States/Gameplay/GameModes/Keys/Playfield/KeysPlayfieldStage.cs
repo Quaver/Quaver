@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
@@ -236,15 +237,27 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         private void CreateDistantOverlay()
         {
+            // Get the downscroll setting for this mode.
+            // We handle it here because it's too basic to re-copy its implementation for 7K.
+            var modeDownscroll = Playfield.Map.Mode == GameMode.Keys4 ? ConfigManager.DownScroll4K : ConfigManager.DownScroll7K;
+            
             var sizeY = GameBase.LoadedSkin.StageDistantOverlay.Height * Playfield.Width / GameBase.LoadedSkin.StageDistantOverlay.Width;
             DistantOverlay = new QuaverSprite
             {
                 Image = GameBase.LoadedSkin.StageDistantOverlay,
                 Size = new UDim2D(Playfield.Width, sizeY),
-                PosY = ConfigManager.DownScroll4K.Value ? -1 : 1,
-                Alignment = ConfigManager.DownScroll4K.Value ? Alignment.TopRight : Alignment.BotRight,
+                PosY = modeDownscroll.Value ? -1 : 1,
+                Alignment = modeDownscroll.Value ? Alignment.TopRight : Alignment.BotRight,
                 Parent = Playfield.ForegroundContainer
             };
+        }
+
+        /// <summary>
+        ///     Creates the HitPositionOverlay and utilizes the 
+        /// </summary>
+        private void CreateHitPositionOverlay()
+        {
+            
         }
     }
 }
