@@ -19,7 +19,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         /// <summary>
         ///     Reference to the playfield for this input manager.
         /// </summary>
-        private KeysPlayfield Playfield { get; set; }
+        private KeysPlayfield Playfield { get; }
 
         /// <summary>
         ///     Ctor - 
