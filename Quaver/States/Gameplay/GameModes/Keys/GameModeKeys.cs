@@ -2,14 +2,21 @@
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Logging;
+using Quaver.States.Gameplay.GameModes.Keys.Input;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield;
 using Quaver.States.Gameplay.HitObjects;
 
 namespace Quaver.States.Gameplay.GameModes.Keys
 {
     internal class GameModeKeys : GameModeRuleset
-    {       
-         /// <inheritdoc />
+    {
+        /// <inheritdoc />
+        /// <summary>
+        ///     The input manager for this ruleset.
+        /// </summary>
+        protected sealed override IGameplayInputManager InputManager { get; set; }
+        
+        /// <inheritdoc />
         /// <summary>
         ///     Ctor - Sets the correct mode, either 4 or 7k.
         /// </summary>
@@ -22,19 +29,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 case GameMode.Keys4:
                 case GameMode.Keys7:
                     Mode = mode;
+                    InputManager = new KeysInputManager(Mode);
                     break;
                 default:
                     throw new InvalidEnumArgumentException("GameModeKeys can only be initialized with GameMode.Keys4 or GameModes.Keys7");
             }
-        }
-
-        /// <inheritdoc />
-         /// <summary>
-         ///     Handles the input of the game mode.
-         /// </summary>
-         /// <param name="dt"></param>
-        internal override void HandleInput(double dt)
-        {
         }
 
         /// <inheritdoc />
