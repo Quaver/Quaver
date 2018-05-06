@@ -161,6 +161,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                     CreateReceptorsAndLighting4K();
                     break;
                 case GameMode.Keys7:
+                    CreateReceptorsAndLighting7K();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -204,7 +205,47 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                     Alignment = Alignment.TopLeft,
                     Parent = Playfield.BackgroundContainer
                 }));
-            }
+            }      
+        }
+        
+         /// <summary>
+        ///     Creates the receptors and column lighting for 7K.
+        /// </summary>
+        private void CreateReceptorsAndLighting7K()
+        {
+            Receptors = new List<QuaverSprite>();
+            ColumnLightingObjects = new List<ColumnLighting>();
+            
+            // Go through and create the 7 receptors and column lighting objects.
+            for (var i = 0; i < 7; i++)
+            {
+                var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
+                
+                // Create individiaul receptor.
+                Receptors.Add(new QuaverSprite
+                {
+                    Size = new UDim2D(Playfield.LaneSize, Playfield.LaneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width),
+                    Position = new UDim2D(posX, Playfield.ReceptorPositionY),
+                    Alignment = Alignment.TopLeft,
+                    Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i],
+                    SpriteEffect = !ConfigManager.DownScroll7K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    Parent = Playfield.ForegroundContainer
+                });
+                
+                // Create the column lighting sprite.
+                var lightingY = GameBase.LoadedSkin.ColumnLightingScale * Playfield.LaneSize * ((float)GameBase.LoadedSkin.ColumnLighting7K.Height / GameBase.LoadedSkin.ColumnLighting7K.Width);                 
+                ColumnLightingObjects.Add(new ColumnLighting(new QuaverSprite
+                {
+                    Image = GameBase.LoadedSkin.ColumnLighting7K,
+                    Size = new UDim2D(Playfield.LaneSize, lightingY),
+                    Tint = GameBase.LoadedSkin.ColumnColors7K[i],
+                    PosX = posX,
+                    PosY = ConfigManager.DownScroll7K.Value ? Playfield.ColumnLightingPositionY - lightingY : Playfield.ColumnLightingPositionY,
+                    SpriteEffect = !ConfigManager.DownScroll7K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    Alignment = Alignment.TopLeft,
+                    Parent = Playfield.BackgroundContainer
+                }));
+            }      
         }
     }
 }
