@@ -1,6 +1,7 @@
 ﻿using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Graphics.Sprites;
+using Quaver.Input;
 using Quaver.Logging;
 using Quaver.States.Gameplay.GameModes;
 using Quaver.States.Gameplay.HitObjects;
@@ -53,6 +54,9 @@ namespace Quaver.States.Gameplay
             CreatePlayfield();
             Playfield.Initialize(null);
             
+            // Create the input manager after the playfield since the input manager relies on it.
+            InputManager = CreateInputManager();
+            
             // Initialize all HitObjects.
             InitializeHitObjects();
         }
@@ -103,11 +107,6 @@ namespace Quaver.States.Gameplay
         }
         
         /// <summary>
-        ///     Creates the actual playfield.
-        /// </summary>
-        protected abstract void CreatePlayfield();
-
-        /// <summary>
         ///     Handles the input of the game mode.
         /// </summary>
         /// <param name="dt"></param>
@@ -120,5 +119,15 @@ namespace Quaver.States.Gameplay
         ///     Initializes all the HitObjects in the game.
         /// </summary>
         protected abstract HitObject CreateHitObject(HitObjectInfo info);
+        
+        /// <summary>
+        ///     Creates the actual playfield.
+        /// </summary>
+        protected abstract void CreatePlayfield();
+
+        /// <summary>
+        ///     Creates the input manager for this ruleset.
+        /// </summary>
+        protected abstract IGameplayInputManager CreateInputManager();
     }
 }
