@@ -3,7 +3,7 @@ using Quaver.Config;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Input
 {
-    internal class KeysInputButtonContainer
+    internal class KeysInputBinding
     {
         /// <summary>
         ///     The key that this maps to.
@@ -19,7 +19,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         ///     Ctor - 
         /// </summary>
         /// <param name="key"></param>
-        internal KeysInputButtonContainer(BindedValue<Microsoft.Xna.Framework.Input.Keys> key)
+        internal KeysInputBinding(BindedValue<Microsoft.Xna.Framework.Input.Keys> key)
         {
             Key = key;
         }

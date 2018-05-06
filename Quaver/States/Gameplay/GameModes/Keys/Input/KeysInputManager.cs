@@ -15,7 +15,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         /// <summary>
         ///     The list of button containers for these keys.
         /// </summary>
-        private List<KeysInputButtonContainer> BindingStore { get; }
+        private List<KeysInputBinding> BindingStore { get; }
 
         /// <summary>
         ///     Reference to the ruleset
@@ -33,25 +33,25 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
             {
                 case GameMode.Keys4:
                     // Initialize 4K Input button container.
-                    BindingStore = new List<KeysInputButtonContainer>
+                    BindingStore = new List<KeysInputBinding>
                     {
-                        new KeysInputButtonContainer(ConfigManager.KeyMania4K1),
-                        new KeysInputButtonContainer(ConfigManager.KeyMania4K2),
-                        new KeysInputButtonContainer(ConfigManager.KeyMania4K3),
-                        new KeysInputButtonContainer(ConfigManager.KeyMania4K4)
+                        new KeysInputBinding(ConfigManager.KeyMania4K1),
+                        new KeysInputBinding(ConfigManager.KeyMania4K2),
+                        new KeysInputBinding(ConfigManager.KeyMania4K3),
+                        new KeysInputBinding(ConfigManager.KeyMania4K4)
                     };
                     break;
                 case GameMode.Keys7:
                     // Initialize 7K input button container.
-                    BindingStore = new List<KeysInputButtonContainer>
+                    BindingStore = new List<KeysInputBinding>
                     {
-                        new KeysInputButtonContainer(ConfigManager.KeyMania7K1),
-                        new KeysInputButtonContainer(ConfigManager.KeyMania7K2),
-                        new KeysInputButtonContainer(ConfigManager.KeyMania7K3),
-                        new KeysInputButtonContainer(ConfigManager.KeyMania7K4),
-                        new KeysInputButtonContainer(ConfigManager.KeyMania7K5),
-                        new KeysInputButtonContainer(ConfigManager.KeyMania7K6),
-                        new KeysInputButtonContainer(ConfigManager.KeyMania7K7)
+                        new KeysInputBinding(ConfigManager.KeyMania7K1),
+                        new KeysInputBinding(ConfigManager.KeyMania7K2),
+                        new KeysInputBinding(ConfigManager.KeyMania7K3),
+                        new KeysInputBinding(ConfigManager.KeyMania7K4),
+                        new KeysInputBinding(ConfigManager.KeyMania7K5),
+                        new KeysInputBinding(ConfigManager.KeyMania7K6),
+                        new KeysInputBinding(ConfigManager.KeyMania7K7)
                     };
                     break;
                 default:
