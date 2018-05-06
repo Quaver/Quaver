@@ -13,7 +13,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         /// <summary>
         ///     The list of button containers for these keys.
         /// </summary>
-        internal List<KeysInputButtonContainer> Bindings { get; }
+        internal List<KeysInputButtonContainer> BindingStore { get; }
 
         /// <summary>
         ///     Ctor - 
@@ -25,7 +25,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
             {
                 case GameMode.Keys4:
                     // Initialize 4K Input button container.
-                    Bindings = new List<KeysInputButtonContainer>
+                    BindingStore = new List<KeysInputButtonContainer>
                     {
                         new KeysInputButtonContainer(ConfigManager.KeyMania4K1),
                         new KeysInputButtonContainer(ConfigManager.KeyMania4K2),
@@ -35,7 +35,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                     break;
                 case GameMode.Keys7:
                     // Initialize 7K input button container.
-                    Bindings = new List<KeysInputButtonContainer>
+                    BindingStore = new List<KeysInputButtonContainer>
                     {
                         new KeysInputButtonContainer(ConfigManager.KeyMania7K1),
                         new KeysInputButtonContainer(ConfigManager.KeyMania7K2),
@@ -56,21 +56,21 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         /// </summary>
         public void HandleInput(double dt)
         {
-            foreach (var binding in Bindings)
+            foreach (var binding in BindingStore)
             {
                 if (InputHelper.IsUniqueKeyPress(binding.Key.Value) && !binding.Pressed)
                 {
                     binding.Pressed = true;
                     
                     // Handle Key Press
-                    Console.WriteLine($"Lane {Bindings.IndexOf(binding) + 1} Key Pressed");
+                    Console.WriteLine($"Lane {BindingStore.IndexOf(binding) + 1} Key Pressed");
                 }
                 else if (GameBase.KeyboardState.IsKeyUp(binding.Key.Value) && binding.Pressed)
                 {
                     binding.Pressed = false;
                     
                     // Handle Key Release
-                    Console.WriteLine($"Lane {Bindings.IndexOf(binding) + 1} Key Released");
+                    Console.WriteLine($"Lane {BindingStore.IndexOf(binding) + 1} Key Released");
                 }
             }
         }
