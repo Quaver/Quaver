@@ -6,7 +6,7 @@ using Quaver.GameState;
 using Quaver.Logging;
 using Quaver.Main;
 
-namespace Quaver.States.Gameplay.Timing
+namespace Quaver.States.Gameplay
 {
     internal class GameplayAudio : IGameStateComponent
     {

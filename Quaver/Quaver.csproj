@@ -99,12 +99,12 @@
     <Compile Include="States\Gameplay\GameModes\Keys\KeysHitObject.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\KeysPlayfield.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\KeysPlayfieldStage.cs" />
+    <Compile Include="States\Gameplay\GameplayAudio.cs" />
     <Compile Include="States\Gameplay\GameplayScreen.cs" />
     <Compile Include="States\Gameplay\GameModeRuleset.cs" />
     <Compile Include="States\Gameplay\HitObjects\HitObject.cs" />
     <Compile Include="States\Gameplay\HitObjects\HitObjectPool.cs" />
     <Compile Include="States\Gameplay\IGameplayPlayfield.cs" />
-    <Compile Include="States\Gameplay\Timing\GameplayAudio.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="States\Select\MapInfoWindow.cs" />
     <Compile Include="States\Select\ModSelector.cs" />

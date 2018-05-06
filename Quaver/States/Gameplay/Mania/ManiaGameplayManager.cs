@@ -345,6 +345,7 @@ namespace Quaver.States.Gameplay.Mania
                     ManiaPlayfield.ReceptorYPosition = Config.ConfigManager.DownScroll4K.Value  //todo: use list for scaling
                         ? GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale + (laneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width))
                         : GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale;
+                    
                     ManiaPlayfield.ColumnLightingPosition = Config.ConfigManager.DownScroll4K.Value
                         ? ManiaPlayfield.ReceptorYPosition
                         : ManiaPlayfield.ReceptorYPosition

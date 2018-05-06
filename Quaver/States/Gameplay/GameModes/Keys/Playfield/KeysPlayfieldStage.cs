@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.Config;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Main;
+using Quaver.States.Gameplay.Mania;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
 {
@@ -29,6 +33,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         private QuaverSprite BgMask { get; set; }
 
+        /// <summary>
+        ///     The receptors for this stage.
+        /// </summary>
+        private List<QuaverSprite> Receptors { get; set; }
+
+        
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
@@ -41,6 +51,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             CreateStageLeft();
             CreateStageRight();
             CreateBgMask();
+            CreateReceptorsAndColumnLighting();
         }
 
         /// <summary>
@@ -65,7 +76,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         private void CreateStageRight()
         {
             // Create the right side of the stage.
-            // Create Stage Right
             var stageRightX = GameBase.LoadedSkin.StageRightBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageRightBorder.Height;
             StageRight = new QuaverSprite
             {
@@ -75,7 +85,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Parent = Playfield.BackgroundContainer,
                 Alignment = Alignment.TopRight
             };
-
         }
 
         /// <summary>
@@ -134,6 +143,49 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Alignment = Alignment.MidCenter,
                 Parent = Playfield.BackgroundContainer
             };
+        }
+
+         /// <summary>
+        ///     Creates both the receptors and column lighting per mode.
+        /// </summary>
+        private void CreateReceptorsAndColumnLighting()
+        {
+            // Create BG Mask
+            switch (Playfield.Map.Mode)
+            {
+                case GameMode.Keys4:
+                    CreateReceptorsAndLighting4K();
+                    break;
+                case GameMode.Keys7:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        ///     Creates the receptors and column lighting for 4K.
+        /// </summary>
+        private void CreateReceptorsAndLighting4K()
+        {
+            Receptors = new List<QuaverSprite>();
+            
+            // Go through and create the 4 receptors and column lighting objects.
+            for (var i = 0; i < 4; i++)
+            {
+                var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
+                
+                // Create individiaul receptor.
+                Receptors.Add(new QuaverSprite
+                {
+                    Size = new UDim2D(Playfield.LaneSize, Playfield.LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width),
+                    Position = new UDim2D(posX, Playfield.ReceptorPositionY),
+                    Alignment = Alignment.TopLeft,
+                    Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i],
+                    SpriteEffect = !ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    Parent = Playfield.ForegroundContainer
+                });
+            }
         }
     }
 }

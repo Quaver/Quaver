@@ -1,6 +1,7 @@
 ﻿using System;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
@@ -17,9 +18,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         public QuaverContainer Container { get; set; }
 
         /// <summary>
-        ///     The background of this container.
+        ///     The background of the playfield.
         /// </summary>
         internal QuaverContainer BackgroundContainer { get; }
+        
+        /// <summary>
+        ///     The foreground of the playfield.
+        /// </summary>
+        internal QuaverContainer ForegroundContainer { get; }
         
         /// <summary>
         ///     Reference to the map.
@@ -29,27 +35,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <summary>
         ///     The stage for this playfield.
         /// </summary>
-        private KeysPlayfieldStage Stage { get; set; }
-
-        /// <summary>
-        ///     The size of the each ane.
-        /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private float LaneSize
-        {
-            get
-            {
-                switch (Map.Mode)
-                {
-                    case GameMode.Keys4:
-                        return (int)(GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale);
-                    case GameMode.Keys7:
-                        return (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
+        private KeysPlayfieldStage Stage { get; }
 
         /// <summary>
         ///     The X size of the playfield.
@@ -60,7 +46,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         ///     Padding of the playfield.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private float Padding
+        internal float Padding
         {
             get
             {
@@ -75,12 +61,33 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 }
             }
         }
-
+        
+        
+        /// <summary>
+        ///     The size of the each ane.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        internal float LaneSize
+        {
+            get
+            {
+                switch (Map.Mode)
+                {
+                    case GameMode.Keys4:
+                        return (int)(GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale);
+                    case GameMode.Keys7:
+                        return (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+       
         /// <summary>
         ///     Padding of the receptor.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private float ReceptorPadding
+        internal float ReceptorPadding
         {
             get
             {
@@ -95,12 +102,37 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 }
             }
         }
+
+        /// <summary>
+        ///     The Y position of the receptors.
+        /// </summary>
+        internal float ReceptorPositionY
+        {
+            get
+            {
+                switch (Map.Mode)
+                {
+                    case GameMode.Keys4:
+                        if (ConfigManager.DownScroll4K.Value)
+                            return GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale + LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width);
+                        else
+                            return GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale;
+                    case GameMode.Keys7:
+                        if (ConfigManager.DownScroll7K.Value)
+                            return GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset7K * GameBase.WindowUIScale + LaneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width);
+                        else
+                            return GameBase.LoadedSkin.ReceptorPositionOffset7K * GameBase.WindowUIScale;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
         
         /// <summary>
         ///     Ctor - 
         /// </summary>
         internal KeysPlayfield(Qua map)
-        {            
+        {    
             Map = map;
             
             // Create the playfield's container.
@@ -113,8 +145,17 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Size = new UDim2D(Width, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.TopCenter
             };
-                 
-            CreateBackgroundContainer();
+            
+            // Create the foreground container.
+            ForegroundContainer = new QuaverContainer
+            {
+                Parent = Container,
+                Size = new UDim2D(Width, GameBase.WindowRectangle.Height),
+                Alignment = Alignment.TopCenter
+            };
+            
+            // Create the entire stage.               
+            Stage = new KeysPlayfieldStage(this);
         }
         
         /// <summary>
@@ -148,14 +189,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         public void Draw()
         {
             Container.Draw();
-        }
-
-        /// <summary>
-        ///     Creates the entire background of the playfield.
-        /// </summary>
-        private void CreateBackgroundContainer()
-        {
-            Stage = new KeysPlayfieldStage(this);   
         }
     }
 }
