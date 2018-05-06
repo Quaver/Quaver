@@ -73,9 +73,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                     BindingStore[i].Pressed = true;
                                   
                     // Handle Key Press
-                    Console.WriteLine($"Lane {BindingStore.IndexOf(BindingStore[i]) + 1} Key Pressed");
-                    
-                    Console.WriteLine(Playfield.Width);
                     Playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
 
                 }
@@ -84,8 +81,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 {
                     BindingStore[i].Pressed = false;
                 
-                    Console.WriteLine($"Lane {BindingStore.IndexOf(BindingStore[i]) + 1} Key Released");
-                    
                     // Handle Key Release
                     Playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
                 }
