@@ -1,4 +1,5 @@
-﻿using Quaver.States.Gameplay.HitObjects;
+﻿using Quaver.API.Maps;
+using Quaver.States.Gameplay.HitObjects;
 
 namespace Quaver.States.Gameplay.GameModes.Keys
 {
@@ -15,6 +16,15 @@ namespace Quaver.States.Gameplay.GameModes.Keys
        /// </summary>
         internal float Y { get; set; }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Ctor - 
+        /// </summary>
+        /// <param name="info"></param>
+        public KeysHitObject(HitObjectInfo info) : base(info)
+        {
+        }
+        
         /// <inheritdoc />
         /// <summary>
         /// </summary>
