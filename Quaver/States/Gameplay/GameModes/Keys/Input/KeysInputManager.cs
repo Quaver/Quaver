@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Helpers;
@@ -102,7 +103,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 if (index == -1)
                     continue;
                 
-                Console.WriteLine(Ruleset.Screen.AudioTiming.CurrentTime + " " + index);
+                Console.WriteLine($"{index}: " + (BindingStore[i].Pressed ? "Pressed" : "Released") + $" @ {Ruleset.Screen.AudioTiming.CurrentTime}ms");
+                
+                // If the key was pressed, 
+                if (BindingStore[i].Pressed)
+                {
+                    // Play the HitSounds for this object.
+                    objectPool.PlayObjectHitSounds(index);
+                }                   
             }
         }
     }

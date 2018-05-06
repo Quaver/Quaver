@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Quaver.API.Enums;
+using Quaver.Main;
 
 namespace Quaver.States.Gameplay.HitObjects
 {
@@ -22,6 +24,30 @@ namespace Quaver.States.Gameplay.HitObjects
         {
             Size = size;
             Objects = new List<HitObject>();
+        }
+        
+        /// <summary>
+        ///     Plays the correct hitsounds based on the note index of the HitObjectPool.
+        /// </summary>
+        internal void PlayObjectHitSounds(int index)
+        {
+            var hitObject = Objects[index].Info;
+
+            // Normal
+            if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHit);
+
+            // Clap
+            if ((HitSounds.Clap & hitObject.HitSound) != 0)
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHitClap);
+
+            // Whistle
+            if ((HitSounds.Whistle & hitObject.HitSound) != 0)
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHitWhistle);
+
+            // Finish
+            if ((HitSounds.Finish & hitObject.HitSound) != 0)
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHitFinish);
         }
     }
 }
