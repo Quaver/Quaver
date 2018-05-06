@@ -17,16 +17,16 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         private List<KeysInputButtonContainer> BindingStore { get; }
 
         /// <summary>
-        ///     Reference to the playfield for this input manager.
+        ///     Reference to the ruleset
         /// </summary>
-        private KeysPlayfield Playfield { get; }
+        private GameModeKeys Ruleset { get;}
 
         /// <summary>
         ///     Ctor - 
         /// </summary>
-        /// <param name="playfield"></param>
+        /// <param name="ruleset"></param>
         /// <param name="mode"></param>
-        internal KeysInputManager(KeysPlayfield playfield, GameMode mode)
+        internal KeysInputManager(GameModeKeys ruleset, GameMode mode)
         {
             switch (mode)
             {
@@ -57,7 +57,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                     throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
 
-            Playfield = playfield;
+            Ruleset = ruleset;
         }
 
         /// <summary>
@@ -71,10 +71,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 if (InputHelper.IsUniqueKeyPress(BindingStore[i].Key.Value) && !BindingStore[i].Pressed)
                 {
                     BindingStore[i].Pressed = true;
-                                  
-                    // Handle Key Press
-                    Playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
 
+                    // Update the receptor of the playfield for this ruleset.
+                    var playfield = (KeysPlayfield) Ruleset.Playfield;             
+                    playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
                 }
                 // Key Released Uniquely.
                 else if (GameBase.KeyboardState.IsKeyUp(BindingStore[i].Key.Value) && BindingStore[i].Pressed)
@@ -82,7 +82,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                     BindingStore[i].Pressed = false;
                 
                     // Handle Key Release
-                    Playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
+                    var playfield = (KeysPlayfield) Ruleset.Playfield;             
+                    playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
                 }
             }
         }

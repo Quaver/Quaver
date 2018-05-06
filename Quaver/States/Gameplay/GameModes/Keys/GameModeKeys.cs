@@ -64,7 +64,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         protected override IGameplayInputManager CreateInputManager()
         {
-            return new KeysInputManager((KeysPlayfield)Playfield, Mode);
+            return new KeysInputManager(this, Mode);
         }
     }
 }
