@@ -86,7 +86,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             }
         }
 
-        /// <summary>
+#region SPRITE_CREATION
+         /// <summary>
         ///     Creates the left side of the stage.
         /// </summary>
         private void CreateStageLeft()
@@ -279,8 +280,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Parent = Playfield.ForegroundContainer
             };    
         }
+#endregion
 
-        /// <summary>
+#region ANIMATIONS
+         /// <summary>
         ///     Performs the animations for all column lighting
         /// </summary>
         /// <param name="dt"></param>
@@ -289,5 +292,45 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             foreach (var light in ColumnLightingObjects)
                 light.PerformAnimation(dt);
         }
+
+        /// <summary>
+        ///     Updates the given receptor and column lighting activity
+        ///     (Called when pressing/releasing keys.)
+        /// </summary>
+        internal void SetReceptorAndLightingActivity(int index, bool pressed)
+        {      
+            switch (GameBase.SelectedMap.Qua.Mode)
+            {
+                case GameMode.Keys4:
+                    if (pressed)
+                    {
+                        Receptors[index].Image = GameBase.LoadedSkin.NoteReceptorsDown4K[index];
+                        ColumnLightingObjects[index].Active = true;
+                        ColumnLightingObjects[index].AnimationValue = 1.0f;
+                    }
+                    else
+                    {
+                        Receptors[index].Image = GameBase.LoadedSkin.NoteReceptorsUp4K[index];
+                        ColumnLightingObjects[index].Active = false;
+                    }
+                    break;
+                case GameMode.Keys7:
+                    if (pressed)
+                    {
+                        Receptors[index].Image = GameBase.LoadedSkin.NoteReceptorsDown7K[index];
+                        ColumnLightingObjects[index].Active = true;
+                        ColumnLightingObjects[index].AnimationValue = 1.0f;
+                    }
+                    else
+                    {
+                        Receptors[index].Image = GameBase.LoadedSkin.NoteReceptorsUp7K[index];
+                        ColumnLightingObjects[index].Active = false;
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+#endregion
     }
 }
