@@ -67,24 +67,42 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         {
             for (var i = 0; i < BindingStore.Count; i++)
             {
+                // Keeps track of if this key input is is important enough for us to want to 
+                // update more things like animations, score, etc.
+                var needsUpdating = false;
+                
                 // Key Pressed Uniquely
                 if (InputHelper.IsUniqueKeyPress(BindingStore[i].Key.Value) && !BindingStore[i].Pressed)
                 {
                     BindingStore[i].Pressed = true;
-
-                    // Update the receptor of the playfield for this ruleset.
-                    var playfield = (KeysPlayfield) Ruleset.Playfield;             
-                    playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
+                    needsUpdating = true;
                 }
                 // Key Released Uniquely.
                 else if (GameBase.KeyboardState.IsKeyUp(BindingStore[i].Key.Value) && BindingStore[i].Pressed)
                 {
                     BindingStore[i].Pressed = false;
-                
-                    // Handle Key Release
-                    var playfield = (KeysPlayfield) Ruleset.Playfield;             
-                    playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
+                    needsUpdating = true;                    
                 }
+
+                // Don't bother updating the game any further if this event isn't important.
+                if (!needsUpdating)
+                    continue;
+                
+                // Update the receptor of the playfield 
+                var playfield = (KeysPlayfield) Ruleset.Playfield;             
+                playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
+
+                // Get the object pool itself.
+                var objectPool = (KeysHitObjectPool) Ruleset.HitObjectPool;
+                    
+                // Find the object that is nearest in the lane that the user has pressed.
+                var index = objectPool.GetIndexOfNearestLaneObject(i + 1, Ruleset.Screen.AudioTiming.CurrentTime);
+
+                // Don't proceed if an object wasn't found.
+                if (index == -1)
+                    continue;
+                
+                Console.WriteLine(Ruleset.Screen.AudioTiming.CurrentTime + " " + index);
             }
         }
     }
