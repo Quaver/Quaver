@@ -1,4 +1,4 @@
-﻿namespace Quaver.States.Gameplay.GameModes
+﻿namespace Quaver.States.Gameplay
 {
     public interface IGameplayInputManager
     {

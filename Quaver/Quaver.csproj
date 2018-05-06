@@ -95,7 +95,6 @@
     <Compile Include="Helpers\XNAKeyHelper.cs" />
     <Compile Include="Main\CommonTaskScheduler.cs" />
     <Compile Include="Main\FontAwesome.cs" />
-    <Compile Include="States\Gameplay\GameModes\IGameplayInputManager.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\GameModeKeys.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputManager.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputButtonContainer.cs" />
@@ -108,6 +107,7 @@
     <Compile Include="States\Gameplay\GameModeRuleset.cs" />
     <Compile Include="States\Gameplay\HitObjects\HitObject.cs" />
     <Compile Include="States\Gameplay\HitObjects\HitObjectPool.cs" />
+    <Compile Include="States\Gameplay\IGameplayInputManager.cs" />
     <Compile Include="States\Gameplay\IGameplayPlayfield.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="States\Select\MapInfoWindow.cs" />
