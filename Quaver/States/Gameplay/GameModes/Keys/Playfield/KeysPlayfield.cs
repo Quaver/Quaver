@@ -35,7 +35,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <summary>
         ///     The stage for this playfield.
         /// </summary>
-        private KeysPlayfieldStage Stage { get; }
+        internal KeysPlayfieldStage Stage { get; }
 
         /// <summary>
         ///     The X size of the playfield.
