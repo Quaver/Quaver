@@ -43,6 +43,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         private List<ColumnLighting> ColumnLightingObjects { get; set; }
 
+        /// <summary>
+        ///     The sprite that essentially covers the top (or bottom if upscroll) of the playfield.
+        /// </summary>
+        private QuaverSprite DistantOverlay { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
@@ -54,8 +59,23 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
        
             CreateStageLeft();
             CreateStageRight();
-            CreateBgMask();
-            CreateReceptorsAndColumnLighting();
+
+            // Create game mode specific sprites.
+            // 4K and 7K are two separate modes and do NOT use the same textures
+            // or skin properties. So we have to implement them separately.
+            switch (Playfield.Map.Mode)
+            {
+                case GameMode.Keys4:
+                    CreateBgMask4K();
+                    CreateReceptorsAndLighting4K();
+                    break;
+                case GameMode.Keys7:
+                    CreateBgMask7K();
+                    CreateReceptorsAndLighting7K();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>
@@ -90,26 +110,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Alignment = Alignment.TopRight
             };
         }
-
-        /// <summary>
-        ///     Creates the Bg Mask for the stage.
-        /// </summary>
-        private void CreateBgMask()
-        {
-            // Create BG Mask
-            switch (Playfield.Map.Mode)
-            {
-                case GameMode.Keys4:
-                    CreateBgMask4K();
-                    break;
-                case GameMode.Keys7:
-                    CreateBgMask7K();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-        
+      
         /// <summary>
         ///     Creates the BG Mask for 4K.
         /// </summary>
@@ -147,25 +148,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Alignment = Alignment.MidCenter,
                 Parent = Playfield.BackgroundContainer
             };
-        }
-
-         /// <summary>
-        ///     Creates both the receptors and column lighting per mode.
-        /// </summary>
-        private void CreateReceptorsAndColumnLighting()
-        {
-            // Create BG Mask
-            switch (Playfield.Map.Mode)
-            {
-                case GameMode.Keys4:
-                    CreateReceptorsAndLighting4K();
-                    break;
-                case GameMode.Keys7:
-                    CreateReceptorsAndLighting7K();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
 
         /// <summary>
@@ -246,6 +228,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                     Parent = Playfield.BackgroundContainer
                 }));
             }      
+        }
+
+        /// <summary>
+        ///     Cre
+        /// </summary>
+        private void CreateDistantOverlay()
+        {
+            
         }
     }
 }
