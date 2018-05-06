@@ -93,7 +93,7 @@ namespace Quaver.States.Gameplay
             {
                 case GameMode.Keys4:
                 case GameMode.Keys7:
-                    GameModeComponent = new GameModeKeys(map.Mode, map);
+                    GameModeComponent = new GameModeKeys(this, map.Mode, map);
                     break;
                 default:
                     throw new InvalidEnumArgumentException("Game mode must be a valid!");
