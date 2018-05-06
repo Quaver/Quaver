@@ -16,9 +16,14 @@ namespace Quaver.States.Gameplay
         internal GameMode Mode { get; set; }
 
         /// <summary>
+        ///     The supervising gameplay screen.
+        /// </summary>
+        internal GameplayScreen Screen { get; }
+
+        /// <summary>
         ///     The objects in the pool.
         /// </summary>
-        private HitObjectPool HitObjectPool { get; }
+        internal HitObjectPool HitObjectPool { get; set; }
 
         /// <summary>
         ///     Reference to the map.
@@ -34,15 +39,15 @@ namespace Quaver.States.Gameplay
         ///     The input manager for this ruleset.
         /// </summary>
         protected abstract IGameplayInputManager InputManager { get; set; }
-
+        
         /// <summary>
         ///     Ctor - 
         /// </summary>
         /// <param name="map"></param>
-        internal GameModeRuleset(Qua map)
+        internal GameModeRuleset(GameplayScreen screen, Qua map)
         {
             Map = map;
-            HitObjectPool = new HitObjectPool(255);
+            Screen = screen;
         }
         
         /// <summary>
@@ -56,8 +61,11 @@ namespace Quaver.States.Gameplay
             
             // Create the input manager after the playfield since the input manager relies on it.
             InputManager = CreateInputManager();
+
+            // Create the HitObjectPool.
+            HitObjectPool = CreateHitObjectPool();
             
-            // Initialize all HitObjects.
+            // Initialize all HitObjects after creating the pool.
             InitializeHitObjects();
         }
 
@@ -103,7 +111,7 @@ namespace Quaver.States.Gameplay
                 HitObjectPool.Objects.Add(hitObject);
             }
             
-            Logger.LogInfo($"Initialized HitObjects", LogType.Runtime);
+            Logger.LogInfo($"Initialized HitObjects - " + HitObjectPool.Objects.Count, LogType.Runtime);
         }
         
         /// <summary>
@@ -129,5 +137,11 @@ namespace Quaver.States.Gameplay
         ///     Creates the input manager for this ruleset.
         /// </summary>
         protected abstract IGameplayInputManager CreateInputManager();
+
+        /// <summary>
+        ///     Creates a custom HitObjectPool for this ruleset.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract HitObjectPool CreateHitObjectPool();
     }
 }
