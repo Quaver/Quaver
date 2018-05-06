@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.Input;
 using Quaver.Logging;
 using Quaver.States.Gameplay.GameModes.Keys.Input;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield;
@@ -29,7 +30,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 case GameMode.Keys4:
                 case GameMode.Keys7:
                     Mode = mode;
-                    InputManager = new KeysInputManager(Mode);
                     break;
                 default:
                     throw new InvalidEnumArgumentException("GameModeKeys can only be initialized with GameMode.Keys4 or GameModes.Keys7");
@@ -57,6 +57,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         {
             Playfield = new KeysPlayfield(Map);
             Logger.LogSuccess("Playfield Initialized", LogType.Runtime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        protected override IGameplayInputManager CreateInputManager()
+        {
+            return new KeysInputManager((KeysPlayfield)Playfield, Mode);
         }
     }
 }
