@@ -23,7 +23,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         /// <param name="mode"></param>
         /// <param name="map"></param>
-        public GameModeKeys(GameMode mode, Qua map): base(map)
+        public GameModeKeys(GameplayScreen screen, GameMode mode, Qua map): base(screen, map)
         {
             switch (mode)
             {
@@ -43,10 +43,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <returns></returns>
         protected override HitObject CreateHitObject(HitObjectInfo info)
         {
-            var hitObject = new KeysHitObject();
-
-            // Initialize Object
-            
+            var hitObject = new KeysHitObject(info);       
             return hitObject;
         }
 
@@ -66,5 +63,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         {
             return new KeysInputManager(this, Mode);
         }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        protected override HitObjectPool CreateHitObjectPool() => new KeysHitObjectPool(255);
     }
 }
