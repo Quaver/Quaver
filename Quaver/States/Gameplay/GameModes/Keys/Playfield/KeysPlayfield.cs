@@ -215,6 +215,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <param name="dt"></param>
         public void Update(double dt)
         {
+            // Animate Column Lighting
+            Stage.PeformAllColumnLightingAnimations(dt);
+            
             Container.Update(dt);
         }
 
