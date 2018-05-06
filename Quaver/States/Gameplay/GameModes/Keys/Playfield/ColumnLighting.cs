@@ -19,7 +19,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <summary>
         ///     The animation for this column lighting
         /// </summary>
-        private float AnimationValue { get; set; }
+        internal float AnimationValue { get; set; }
 
         /// <summary>
         ///     Ctor - 
