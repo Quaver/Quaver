@@ -16,7 +16,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <summary>
         ///     Reference to the parent playfield.
         /// </summary>
-        private KeysPlayfield Playfield { get; set; }
+        private KeysPlayfield Playfield { get; }
 
         /// <summary>
         ///     The left side of the stage.
@@ -38,7 +38,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         private List<QuaverSprite> Receptors { get; set; }
 
-        
+        /// <summary>
+        ///     The column lighting objects.
+        /// </summary>
+        private List<ColumnLighting> ColumnLightingObjects { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
@@ -169,6 +173,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         private void CreateReceptorsAndLighting4K()
         {
             Receptors = new List<QuaverSprite>();
+            ColumnLightingObjects = new List<ColumnLighting>();
             
             // Go through and create the 4 receptors and column lighting objects.
             for (var i = 0; i < 4; i++)
@@ -185,6 +190,20 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                     SpriteEffect = !ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                     Parent = Playfield.ForegroundContainer
                 });
+                
+                // Create the column lighting sprite.
+                var lightingY = GameBase.LoadedSkin.ColumnLightingScale * Playfield.LaneSize * ((float)GameBase.LoadedSkin.ColumnLighting4K.Height / GameBase.LoadedSkin.ColumnLighting4K.Width);                 
+                ColumnLightingObjects.Add(new ColumnLighting(new QuaverSprite
+                {
+                    Image = GameBase.LoadedSkin.ColumnLighting4K,
+                    Size = new UDim2D(Playfield.LaneSize, lightingY),
+                    Tint = GameBase.LoadedSkin.ColumnColors4K[i],
+                    PosX = posX,
+                    PosY = ConfigManager.DownScroll4K.Value ? Playfield.ColumnLightingPositionY - lightingY : Playfield.ColumnLightingPositionY,
+                    SpriteEffect = !ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    Alignment = Alignment.TopLeft,
+                    Parent = Playfield.BackgroundContainer
+                }));
             }
         }
     }

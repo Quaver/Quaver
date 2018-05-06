@@ -127,6 +127,41 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 }
             }
         }
+
+        /// <summary>
+        ///     The Y position of the column lighting
+        /// </summary>
+        internal float ColumnLightingPositionY
+        {
+            get
+            {
+                switch (Map.Mode)
+                {
+                    case GameMode.Keys4:
+                        if (ConfigManager.DownScroll4K.Value)
+                            return ReceptorPositionY;
+                        else
+                        {
+                            var receptor = GameBase.LoadedSkin.NoteReceptorsUp4K[0];
+                            var hitObject = GameBase.LoadedSkin.NoteHitObjects4K[0][0];
+                            
+                            return ReceptorPositionY + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
+                        }
+                    case GameMode.Keys7:
+                        if (ConfigManager.DownScroll7K.Value)
+                            return ReceptorPositionY;
+                        else
+                        {
+                            var receptor = GameBase.LoadedSkin.NoteReceptorsUp7K[0];
+                            var hitObject = GameBase.LoadedSkin.NoteHitObjects7K[0][0];
+                            
+                            return ReceptorPositionY + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
+                        }
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
         
         /// <summary>
         ///     Ctor - 

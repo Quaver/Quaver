@@ -170,7 +170,8 @@ namespace Quaver.Skinning
 
         // 7k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
-        internal Texture2D[] NoteHitObjects7K { get; set; } = new Texture2D[7];
+        internal List<List<Texture2D>> NoteHitObjects7K { get; set; } = new List<List<Texture2D>>();
+        internal List<List<Texture2D>> NoteHoldHitObjects7K { get; set; } = new List<List<Texture2D>>();
         internal Texture2D[] NoteHoldBodies7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteHoldEnds7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteReceptorsUp7K { get; set; } = new Texture2D[7];
@@ -275,6 +276,14 @@ namespace Quaver.Skinning
                 @"7k-note-hitobject-5",
                 @"7k-note-hitobject-6",
                 @"7k-note-hitobject-7",
+            
+                @"7k-note-holdhitobject-1",
+                @"7k-note-holdhitobject-2",
+                @"7k-note-holdhitobject-3",
+                @"7k-note-holdhitobject-4",
+                @"7k-note-holdhitobject-5",
+                @"7k-note-holdhitobject-6",
+                @"7k-note-holdhitobject-7",
 
                 // Grades
                 @"grade-small-a",
@@ -495,25 +504,46 @@ namespace Quaver.Skinning
                         LoadHitObjects(NoteHoldHitObjects4K, skinDir, element, 3);
                         break;
                     case @"7k-note-hitobject-1":
-                        NoteHitObjects7K[0] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 0);
                         break;
                     case @"7k-note-hitobject-2":
-                        NoteHitObjects7K[1] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 1);
                         break;
                     case @"7k-note-hitobject-3":
-                        NoteHitObjects7K[2] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 2);
                         break;
                     case @"7k-note-hitobject-4":
-                        NoteHitObjects7K[3] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 3);
                         break;
                     case @"7k-note-hitobject-5":
-                        NoteHitObjects7K[4] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 4);
                         break;
                     case @"7k-note-hitobject-6":
-                        NoteHitObjects7K[5] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 5);
                         break;
                     case @"7k-note-hitobject-7":
-                        NoteHitObjects7K[6] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 6);
+                        break;
+                    case @"7k-note-holdhitobject-1":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 0);
+                        break;
+                    case @"7k-note-holdhitobject-2":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 1);
+                        break;
+                    case @"7k-note-holdhitobject-3":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 2);
+                        break;
+                    case @"7k-note-holdhitobject-4":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 3);
+                        break;
+                    case @"7k-note-holdhitobject-5":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 4);
+                        break;
+                    case @"7k-note-holdhitobject-6":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 5);
+                        break;
+                    case @"7k-note-holdhitobject-7":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 6);
                         break;
                     case @"grade-small-a":
                         GradeSmallA = LoadIndividualElement(element, skinElementPath);
@@ -790,12 +820,12 @@ namespace Quaver.Skinning
         ///         - note-hitobject2 (Lane 2 Default which is also 1/1 snap.)
         ///         - note-hitobject2-2nd (Lane 2, 1/2 Snap)
         /// </summary>
+        /// <param name="hitObjects"></param>
         /// <param name="skinDir"></param>
         /// <param name="element"></param>
-        /// <param name="defaultNum"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private void LoadHitObjects(List<List<Texture2D>> HitObjects, string skinDir, string element, int index)
+        private void LoadHitObjects(List<List<Texture2D>> hitObjects, string skinDir, string element, int index)
         {
             var objectsList = new List<Texture2D>();
 
@@ -805,7 +835,7 @@ namespace Quaver.Skinning
             // Don't bother looking for snap objects if the skin config doesn't permit it.
             if (!ColourObjectsBySnapDistance)
             {
-                HitObjects.Insert(index, objectsList);
+                hitObjects.Insert(index, objectsList);
                 return;
             }
 
@@ -818,7 +848,7 @@ namespace Quaver.Skinning
             for (var i = 0; i < snaps.Length; i++)
                 objectsList.Add(LoadIndividualElement($"{element}-{snaps[i]}", skinDir + $"/{element}-{snaps[i]}.png"));
 
-            HitObjects.Insert(index, objectsList);
+            hitObjects.Insert(index, objectsList);
         }
 
         /// <summary>

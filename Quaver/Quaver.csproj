@@ -97,6 +97,7 @@
     <Compile Include="Main\FontAwesome.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\GameModeKeys.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\KeysHitObject.cs" />
+    <Compile Include="States\Gameplay\GameModes\Keys\Playfield\ColumnLighting.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\KeysPlayfield.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\KeysPlayfieldStage.cs" />
     <Compile Include="States\Gameplay\GameplayAudio.cs" />

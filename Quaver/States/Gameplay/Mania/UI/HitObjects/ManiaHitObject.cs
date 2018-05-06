@@ -211,7 +211,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
                     }
                     break;
                 case GameMode.Keys7:
-                    HitBodyQuaverSprite.Image = GameBase.LoadedSkin.NoteHitObjects7K[keyLaneIndex];
+                    HitBodyQuaverSprite.Image = GameBase.LoadedSkin.NoteHitObjects7K[keyLaneIndex][0];
                     HitBodyQuaverSprite.Size = new UDim2D(HitObjectSize, HitObjectSize * HitBodyQuaverSprite.Image.Height / HitBodyQuaverSprite.Image.Width);
                     HitBodyQuaverSprite.Parent = parent;
                     HoldBodyOffset = HitBodyQuaverSprite.SizeY / 2;

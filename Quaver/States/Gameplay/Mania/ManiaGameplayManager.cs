@@ -352,7 +352,6 @@ namespace Quaver.States.Gameplay.Mania
                         + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
                         * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
                         - ((double)GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
-                    Console.WriteLine(ManiaPlayfield.ColumnLightingPosition);
 
                     // Update Note Manager
                     ManiaNoteManager.ScrollSpeed = GameBase.WindowUIScale * ConfigManager.ScrollSpeed4K.Value / (20f * GameBase.AudioEngine.PlaybackRate);
@@ -385,7 +384,7 @@ namespace Quaver.States.Gameplay.Mania
                         : ManiaPlayfield.ReceptorYPosition 
                         + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
                         * ((GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
-                        - (GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
+                        - (GameBase.LoadedSkin.NoteHitObjects7K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0][0].Width));
 
                     // Update Note Manager
                     ManiaNoteManager.ScrollSpeed = GameBase.WindowUIScale * ConfigManager.ScrollSpeed7K.Value / (20f * GameBase.AudioEngine.PlaybackRate);
@@ -396,7 +395,7 @@ namespace Quaver.States.Gameplay.Mania
                         : ManiaPlayfield.ReceptorYPosition - ((ConfigManager.UserHitPositionOffset7K.Value + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
                         * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
-                        - ((double)GameBase.LoadedSkin.NoteHitObjects7K[0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0].Width));
+                        - ((double)GameBase.LoadedSkin.NoteHitObjects7K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0][0].Width));
 
                     // Update Score Manager
                     ManiaScoreManager.ScrollSpeed = ConfigManager.ScrollSpeed7K.Value;
