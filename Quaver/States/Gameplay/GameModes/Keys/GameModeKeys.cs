@@ -46,7 +46,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         protected override HitObject CreateHitObject(HitObjectInfo info)
         {
             var playfield = (KeysPlayfield)Playfield;
-            var pool = (KeysHitObjectPool) HitObjectPool;
+            var objectManager = (KeysHitObjectManager) HitObjectManager;
             
             // Create the new HitObject.
             var hitObject = new KeysHitObject(info)
@@ -57,7 +57,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
 
             // Calculate position & offset from the receptor.
             // TODO: Handle SV's.
-            hitObject.PositionY = hitObject.OffsetYFromReceptor + pool.HitPositionOffset;
+            hitObject.PositionY = hitObject.OffsetYFromReceptor + objectManager.HitPositionOffset;
             
             // Get Note Snapping
             if (GameBase.LoadedSkin.ColourObjectsBySnapDistance)
@@ -70,7 +70,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             // TODO: Handle SV's.
             hitObject.LongNoteOffsetYFromReceptor = info.EndTime;
             
-            hitObject.InitialLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - hitObject.OffsetYFromReceptor) * pool.ScrollSpeed);
+            hitObject.InitialLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - hitObject.OffsetYFromReceptor) * objectManager.ScrollSpeed);
             hitObject.CurrentLongNoteSize = hitObject.InitialLongNoteSize;
 
             return hitObject;
@@ -97,6 +97,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override HitObjectPool CreateHitObjectPool() => new KeysHitObjectPool(this, 255);
+        protected override HitObjectManager CreateHitObjectManager() => new KeysHitObjectManager(this, 255);
     }
 }

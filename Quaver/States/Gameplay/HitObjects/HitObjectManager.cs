@@ -4,26 +4,20 @@ using Quaver.Main;
 
 namespace Quaver.States.Gameplay.HitObjects
 {
-    internal class HitObjectPool
+    internal class HitObjectManager
     {
         /// <summary>
         ///     All of the objects in the pool.
         /// </summary>
-        internal List<HitObject> Objects { get; }
-
-        /// <summary>
-        ///     The amount of objects in the pool.
-        /// </summary>
-        internal int Size { get; }
+        internal List<HitObject> ObjectPool { get; }
 
         /// <summary>
         ///     Ctor - 
         /// </summary>
         /// <param name="size"></param>
-        internal HitObjectPool(int size)
+        internal HitObjectManager(int size)
         {
-            Size = size;
-            Objects = new List<HitObject>();
+            ObjectPool = new List<HitObject>(size);
         }
         
         /// <summary>
@@ -31,7 +25,7 @@ namespace Quaver.States.Gameplay.HitObjects
         /// </summary>
         internal void PlayObjectHitSounds(int index)
         {
-            var hitObject = Objects[index].Info;
+            var hitObject = ObjectPool[index].Info;
 
             // Normal
             if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)

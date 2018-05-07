@@ -13,10 +13,10 @@ namespace Quaver.States.Gameplay.HitObjects
         internal HitObjectInfo Info { get; set; }
 
         /// <summary>
-        ///     Initializes the HitObject.
+        ///     Initializes the HitObject's sprite.
         /// </summary>
         /// <param name="playfield"></param>
-        internal abstract void Initialize(IGameplayPlayfield playfield);
+        internal abstract void InitializeSprite(IGameplayPlayfield playfield);
 
         /// <summary>
         ///     Ctor - 

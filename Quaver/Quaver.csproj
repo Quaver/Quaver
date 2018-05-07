@@ -99,7 +99,7 @@
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputManager.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputBinding.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\KeysHitObject.cs" />
-    <Compile Include="States\Gameplay\GameModes\Keys\KeysHitObjectPool.cs" />
+    <Compile Include="States\Gameplay\GameModes\Keys\KeysHitObjectManager.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\ColumnLighting.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\KeysPlayfield.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\KeysPlayfieldStage.cs" />
@@ -108,7 +108,7 @@
     <Compile Include="States\Gameplay\GameModeRuleset.cs" />
     <Compile Include="States\Gameplay\HitObjects\BeatSnap.cs" />
     <Compile Include="States\Gameplay\HitObjects\HitObject.cs" />
-    <Compile Include="States\Gameplay\HitObjects\HitObjectPool.cs" />
+    <Compile Include="States\Gameplay\HitObjects\HitObjectManager.cs" />
     <Compile Include="States\Gameplay\IGameplayInputManager.cs" />
     <Compile Include="States\Gameplay\IGameplayPlayfield.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />

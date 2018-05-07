@@ -94,7 +94,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
 
                 // Get the object pool itself.
-                var objectPool = (KeysHitObjectPool) Ruleset.HitObjectPool;
+                var objectPool = (KeysHitObjectManager) Ruleset.HitObjectManager;
                     
                 // Find the object that is nearest in the lane that the user has pressed.
                 var index = objectPool.GetIndexOfNearestLaneObject(i + 1, Ruleset.Screen.AudioTiming.CurrentTime);

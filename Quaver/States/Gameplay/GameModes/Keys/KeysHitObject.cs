@@ -1,4 +1,6 @@
-﻿using Quaver.API.Maps;
+﻿using System;
+using Quaver.API.Maps;
+using Quaver.Graphics.Sprites;
 using Quaver.States.Gameplay.HitObjects;
 
 namespace Quaver.States.Gameplay.GameModes.Keys
@@ -46,6 +48,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         internal ulong CurrentLongNoteSize { get; set; }
 
+        /// <summary>
+        ///     The 
+        /// </summary>
+        private QuaverSprite HitObjectSprite { get; set; }
+        
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
@@ -59,8 +66,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         /// </summary>
         /// <param name="playfield"></param>
-        internal override void Initialize(IGameplayPlayfield playfield)
+        internal override void InitializeSprite(IGameplayPlayfield playfield)
         {
+            
         }
     }
 }

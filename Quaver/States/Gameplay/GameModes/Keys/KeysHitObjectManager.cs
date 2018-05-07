@@ -9,7 +9,7 @@ using Quaver.States.Gameplay.HitObjects;
 
 namespace Quaver.States.Gameplay.GameModes.Keys
 {
-    internal class KeysHitObjectPool : HitObjectPool
+    internal class KeysHitObjectManager : HitObjectManager
     {
         /// <summary>
         ///     Reference to the entire ruleset.
@@ -62,7 +62,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         /// </summary>
         /// <param name="size"></param>
-        internal KeysHitObjectPool(GameModeKeys ruleset, int size) : base(size)
+        internal KeysHitObjectManager(GameModeKeys ruleset, int size) : base(size)
         {
             Ruleset = ruleset;
             
@@ -79,9 +79,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         public int GetIndexOfNearestLaneObject(int lane, double songTime)
         {
             // Search for closest ManiaHitObject that is inside the HitTiming Window
-            for (var i = 0; i < Size && i < Objects.Count; i++)
+            for (var i = 0; i < ObjectPool.Capacity && i < ObjectPool.Count; i++)
             {
-                if (Objects[i].Info.Lane == lane && Objects[i].Info.StartTime - songTime > -JudgeWindow.Okay)
+                if (ObjectPool[i].Info.Lane == lane && ObjectPool[i].Info.StartTime - songTime > -JudgeWindow.Okay)
                     return i;
             }
             

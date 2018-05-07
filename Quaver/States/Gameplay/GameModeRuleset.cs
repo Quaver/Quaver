@@ -23,7 +23,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The objects in the pool.
         /// </summary>
-        internal HitObjectPool HitObjectPool { get; set; }
+        internal HitObjectManager HitObjectManager { get; private set; }
 
         /// <summary>
         ///     Reference to the map.
@@ -64,7 +64,7 @@ namespace Quaver.States.Gameplay
             InputManager = CreateInputManager();
 
             // Create the HitObjectPool.
-            HitObjectPool = CreateHitObjectPool();
+            HitObjectManager = CreateHitObjectManager();
             
             // Initialize all HitObjects after creating the pool.
             InitializeHitObjects();
@@ -100,19 +100,16 @@ namespace Quaver.States.Gameplay
         /// </summary>
         private void InitializeHitObjects()
         {
-            for (var i = 0; i < Map.HitObjects.Count; i++)
+            foreach (var t in Map.HitObjects)
             {
-                var hitObject = CreateHitObject(Map.HitObjects[i]);
+                var hitObject = CreateHitObject(t);
+                hitObject.InitializeSprite(Playfield);
                 
-                // If the pool isn't full, then initialize the object.
-                if (i < HitObjectPool.Size)
-                    hitObject.Initialize(Playfield);
-                    
                 // Add this object to hhe pool.
-                HitObjectPool.Objects.Add(hitObject);
+                HitObjectManager.ObjectPool.Add(hitObject);
             }
-            
-            Logger.LogInfo($"Initialized HitObjects - " + HitObjectPool.Objects.Count, LogType.Runtime);
+
+            Logger.LogInfo($"Initialized HitObjects - " + HitObjectManager.ObjectPool.Count, LogType.Runtime);
         }
         
         /// <summary>
@@ -125,7 +122,7 @@ namespace Quaver.States.Gameplay
         }
         
         /// <summary>
-        ///     Initializes all the HitObjects in the game.
+        ///     Initializes a single HitObject.
         /// </summary>
         protected abstract HitObject CreateHitObject(HitObjectInfo info);
         
@@ -140,9 +137,9 @@ namespace Quaver.States.Gameplay
         protected abstract IGameplayInputManager CreateInputManager();
 
         /// <summary>
-        ///     Creates a custom HitObjectPool for this ruleset.
+        ///     Creates a custom HitObjectManager for this ruleset.
         /// </summary>
         /// <returns></returns>
-        protected abstract HitObjectPool CreateHitObjectPool();
+        protected abstract HitObjectManager CreateHitObjectManager();
     }
 }
