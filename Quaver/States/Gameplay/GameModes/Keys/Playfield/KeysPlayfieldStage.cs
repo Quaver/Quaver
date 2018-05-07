@@ -37,7 +37,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <summary>
         ///     The receptors for this stage.
         /// </summary>
-        private List<QuaverSprite> Receptors { get; set; }
+        internal List<QuaverSprite> Receptors { get; set; }
 
         /// <summary>
         ///     The column lighting objects.

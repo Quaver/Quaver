@@ -102,9 +102,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 // Don't proceed if an object wasn't found.
                 if (index == -1)
                     continue;
-                
-                Console.WriteLine($"{index}: " + (BindingStore[i].Pressed ? "Pressed" : "Released") + $" @{Ruleset.Screen.AudioTiming.CurrentTime}ms");
-                
+                                
                 // If the key was pressed, 
                 if (BindingStore[i].Pressed)
                 {

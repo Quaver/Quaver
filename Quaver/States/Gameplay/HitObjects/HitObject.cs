@@ -10,8 +10,19 @@ namespace Quaver.States.Gameplay.HitObjects
         /// <summary>
         ///     The info of this particular HitObject from the map file.
         /// </summary>
-        internal HitObjectInfo Info { get; set; }
+        internal HitObjectInfo Info { get; }
 
+        /// <summary>
+        ///     The list of possible beat snaps.
+        /// </summary>
+        private static int[] BeatSnaps = { 48, 24, 16, 12, 8, 6, 4, 3 };
+        
+        /// <summary>
+        ///     The beat snap index
+        ///     (See: BeatSnaps array)
+        /// </summary>
+        internal int SnapIndex { get; set; }
+        
         /// <summary>
         ///     Initializes the HitObject's sprite.
         /// </summary>
@@ -47,7 +58,7 @@ namespace Quaver.States.Gameplay.HitObjects
         /// </summary>
         /// <param name="timingPoint"></param>
         /// <returns></returns>
-        internal BeatSnap GetBeatSnap(TimingPointInfo timingPoint)
+        internal int GetBeatSnap(TimingPointInfo timingPoint)
         {
             // Add 2ms offset buffer space to offset and get beat length
             var pos = Info.StartTime - timingPoint.StartTime + 2;
@@ -60,9 +71,25 @@ namespace Quaver.States.Gameplay.HitObjects
             while (pos >= beatlength * (1 << 4))  pos -= beatlength * (1 << 4);            
             while (pos >= beatlength)  pos -= beatlength;
 
+            // Calculate Note's snap index
+            var index = (int)(Math.Floor(48 * pos / beatlength));
+
+            // Return Color of snap index
+            for (var i=0; i< 8; i++)
+            {
+                if (index % BeatSnaps[i] == 0)
+                {
+                    return i;
+                }
+            }
+
             // If it's not snapped to 1/16 or less, return 1/48 snap color
-            var snap = Math.Floor(48 * pos / beatlength);    
-            return (BeatSnap) snap;
+            return 8;
         }
+
+        /// <summary>
+        ///     Destroys the HitObject
+        /// </summary>
+        internal abstract void Destroy();
     }
 }

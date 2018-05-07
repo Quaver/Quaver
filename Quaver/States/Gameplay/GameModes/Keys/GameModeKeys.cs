@@ -23,6 +23,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         ///     Ctor - Sets the correct mode, either 4 or 7k.
         /// </summary>
+        /// <param name="screen"></param>
         /// <param name="mode"></param>
         /// <param name="map"></param>
         public GameModeKeys(GameplayScreen screen, GameMode mode, Qua map): base(screen, map)
@@ -61,7 +62,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             
             // Get Note Snapping
             if (GameBase.LoadedSkin.ColourObjectsBySnapDistance)
-                hitObject.Snap = hitObject.GetBeatSnap(hitObject.GetTimingPoint(Map.TimingPoints)); 
+                hitObject.SnapIndex = hitObject.GetBeatSnap(hitObject.GetTimingPoint(Map.TimingPoints)); 
             
             // Disregard non-long note objects after this point, so we can initailize them separately.
             if (!hitObject.IsLongNote) 
