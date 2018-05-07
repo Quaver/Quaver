@@ -14,7 +14,22 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
        ///     The Y position of the HitObject.
        /// </summary>
-        internal float Y { get; set; }
+        internal float PositionY { get; set; }
+
+        /// <summary>
+        ///     The width of the object.
+        /// </summary>
+        internal float Width { get; set; }
+
+        /// <summary>
+        ///     The Y-Offset from the receptor.
+        /// </summary>
+        internal float OffsetYFromReceptor { get; set; }
+
+        /// <summary>
+        ///     The beat snap for this object.
+        /// </summary>
+        internal BeatSnap Snap { get; set; }
 
         /// <inheritdoc />
         /// <summary>
