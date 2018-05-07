@@ -119,7 +119,6 @@ namespace Quaver.States.Loading.Map
                 });
 
                 Logger.LogSuccess("Finished loading Map", LogType.Runtime);
-                GameBase.SelectedMap.Qua.CalculateDifficulty(GameBase.AudioEngine.PlaybackRate);
             }
             catch (Exception e)
             {
