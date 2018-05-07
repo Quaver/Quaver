@@ -61,12 +61,18 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             
             // Get Note Snapping
             if (GameBase.LoadedSkin.ColourObjectsBySnapDistance)
-            {
                 hitObject.Snap = hitObject.GetBeatSnap(hitObject.GetTimingPoint(Map.TimingPoints)); 
-                Console.WriteLine(hitObject.Snap);
-            }
+            
+            // Disregard non-long note objects after this point, so we can initailize them separately.
+            if (!hitObject.IsLongNote) 
+                return hitObject;
+            
+            // TODO: Handle SV's.
+            hitObject.LongNoteOffsetYFromReceptor = info.EndTime;
+            
+            hitObject.InitialLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - hitObject.OffsetYFromReceptor) * pool.ScrollSpeed);
+            hitObject.CurrentLongNoteSize = hitObject.InitialLongNoteSize;
 
-                            
             return hitObject;
         }
 

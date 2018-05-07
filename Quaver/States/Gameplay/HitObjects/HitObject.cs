@@ -61,7 +61,7 @@ namespace Quaver.States.Gameplay.HitObjects
             while (pos >= beatlength)  pos -= beatlength;
 
             // If it's not snapped to 1/16 or less, return 1/48 snap color
-            var snap = Math.Floor(48 * pos / beatlength);
+            var snap = Math.Floor(48 * pos / beatlength);    
             return (BeatSnap) snap;
         }
     }

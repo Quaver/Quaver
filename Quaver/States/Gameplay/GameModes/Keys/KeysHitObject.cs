@@ -31,6 +31,21 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         internal BeatSnap Snap { get; set; }
 
+        /// <summary>
+        ///     The long note Y offset from the receptor.        
+        /// </summary>
+        internal float LongNoteOffsetYFromReceptor { get; set; }
+
+        /// <summary>
+        ///     The initial size of this object's long note.
+        /// </summary>
+        internal ulong InitialLongNoteSize { get; set; }
+
+        /// <summary>
+        ///     The current size of this object's long note.
+        /// </summary>
+        internal ulong CurrentLongNoteSize { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
