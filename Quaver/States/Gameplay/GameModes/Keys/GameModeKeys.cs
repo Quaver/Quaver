@@ -1,8 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Input;
 using Quaver.Logging;
+using Quaver.Main;
 using Quaver.States.Gameplay.GameModes.Keys.Input;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield;
 using Quaver.States.Gameplay.HitObjects;
@@ -16,7 +18,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         ///     The input manager for this ruleset.
         /// </summary>
         protected sealed override IGameplayInputManager InputManager { get; set; }
-        
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - Sets the correct mode, either 4 or 7k.
@@ -43,7 +45,28 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <returns></returns>
         protected override HitObject CreateHitObject(HitObjectInfo info)
         {
-            var hitObject = new KeysHitObject(info);       
+            var playfield = (KeysPlayfield)Playfield;
+            var pool = (KeysHitObjectPool) HitObjectPool;
+            
+            // Create the new HitObject.
+            var hitObject = new KeysHitObject(info)
+            {
+                Width = playfield.LaneSize,
+                OffsetYFromReceptor = info.StartTime
+            };
+
+            // Calculate position & offset from the receptor.
+            // TODO: Handle SV's.
+            hitObject.PositionY = hitObject.OffsetYFromReceptor + pool.HitPositionOffset;
+            
+            // Get Note Snapping
+            if (GameBase.LoadedSkin.ColourObjectsBySnapDistance)
+            {
+                hitObject.Snap = hitObject.GetBeatSnap(hitObject.GetTimingPoint(Map.TimingPoints)); 
+                Console.WriteLine(hitObject.Snap);
+            }
+
+                            
             return hitObject;
         }
 
@@ -68,6 +91,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override HitObjectPool CreateHitObjectPool() => new KeysHitObjectPool(255);
+        protected override HitObjectPool CreateHitObjectPool() => new KeysHitObjectPool(this, 255);
     }
 }

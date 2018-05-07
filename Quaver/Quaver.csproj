@@ -106,6 +106,7 @@
     <Compile Include="States\Gameplay\GameplayAudio.cs" />
     <Compile Include="States\Gameplay\GameplayScreen.cs" />
     <Compile Include="States\Gameplay\GameModeRuleset.cs" />
+    <Compile Include="States\Gameplay\HitObjects\BeatSnap.cs" />
     <Compile Include="States\Gameplay\HitObjects\HitObject.cs" />
     <Compile Include="States\Gameplay\HitObjects\HitObjectPool.cs" />
     <Compile Include="States\Gameplay\IGameplayInputManager.cs" />
