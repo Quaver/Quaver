@@ -39,10 +39,11 @@ namespace Quaver.States.Gameplay
         ///     The input manager for this ruleset.
         /// </summary>
         protected abstract IGameplayInputManager InputManager { get; set; }
-        
+
         /// <summary>
         ///     Ctor - 
         /// </summary>
+        /// <param name="screen"></param>
         /// <param name="map"></param>
         internal GameModeRuleset(GameplayScreen screen, Qua map)
         {
