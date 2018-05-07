@@ -276,7 +276,7 @@ namespace Quaver.States.Results
         /// <returns></returns>
         private LocalScore CreateLocalScore(Replay rp)
         {
-            var grade = (ManiaScoreData.Failed) ? Grades.F : GradeHelper.GetGradeFromAccuracy((float) Math.Round(ManiaScoreData.Accuracy * 100, 2));
+            var grade = (ManiaScoreData.Failed) ? Grade.F : GradeHelper.GetGradeFromAccuracy((float) Math.Round(ManiaScoreData.Accuracy * 100, 2));
 
             // Store the score in the database
             return new LocalScore
@@ -374,7 +374,7 @@ namespace Quaver.States.Results
             // Set Discord Rich Presence w/ score data
             var mapData = $"{GameBase.SelectedMap.Qua.Artist} - {GameBase.SelectedMap.Qua.Title} [{GameBase.SelectedMap.Qua.DifficultyName}]";
             var accuracy = (float)Math.Round(ManiaScoreData.Accuracy * 100, 2);
-            var grade = (ManiaScoreData.Failed) ? Grades.F : GradeHelper.GetGradeFromAccuracy(accuracy);
+            var grade = (ManiaScoreData.Failed) ? Grade.F : GradeHelper.GetGradeFromAccuracy(accuracy);
             var status = (ManiaScoreData.Failed) ? "Failed - " : "Finished -";
 
             DiscordController.ChangeDiscordPresence(mapData, $"{status} {accuracy}% {grade.ToString()} {ManiaScoreData.MaxCombo}x");
@@ -437,7 +437,7 @@ namespace Quaver.States.Results
                     {
                         Position = new UDim2D(((float)(ms.Position / ManiaScoreData.PlayTimeTotal) * boundary.Size.X.Offset) - 1f, 0),
                         Size = new UDim2D(2, 0, 0, 1),
-                        Tint = GameBase.LoadedSkin.GetJudgeColor(Judge.Miss),
+                        Tint = GameBase.LoadedSkin.GetJudgeColor(Judgement.Miss),
                         Alpha = 0.25f,
                         Parent = boundary
                     };

@@ -1052,11 +1052,11 @@ namespace Quaver.Skinning
         ///     Gets an individual judge color from the list of Judge colors
         ///     Returns black if its unable to be found.
         /// </summary>
-        /// <param name="judge"></param>
+        /// <param name="judgement"></param>
         /// <returns></returns>
-        public Color GetJudgeColor(Judge judge)
+        public Color GetJudgeColor(Judgement judgement)
         {
-            return JudgeColors.Count == 0 ? new Color(0, 0, 0) : JudgeColors[(int) judge];
+            return JudgeColors.Count == 0 ? new Color(0, 0, 0) : JudgeColors[(int) judgement];
         }
     }
 }

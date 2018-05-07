@@ -58,7 +58,7 @@ namespace Quaver.Database.Maps
         /// <summary>
         ///     The highest rank that the player has gotten on the map.
         /// </summary>
-        public Grades HighestRank { get; set; }
+        public Grade HighestRank { get; set; }
 
         /// <summary>
         ///     The ranked status of the map.
@@ -158,7 +158,7 @@ namespace Quaver.Database.Maps
                 Path = System.IO.Path.GetFileName(path).Replace("\\", "/"),
                 Artist = qua.Artist,
                 Title = qua.Title,
-                HighestRank = Grades.None,
+                HighestRank = Grade.None,
                 AudioPath = qua.AudioFile,
                 AudioPreviewTime = qua.SongPreviewTime,
                 BackgroundPath = qua.BackgroundFile,
