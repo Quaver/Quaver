@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Config;
@@ -13,12 +14,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The current audio time.
         /// </summary>
-        private double _currentTime;
-        internal double CurrentTime
-        {
-            get => _currentTime + (AudioEngine.BassDelayOffset - ConfigManager.GlobalAudioOffset.Value) * GameBase.AudioEngine.PlaybackRate;
-            set => _currentTime = value;
-        }
+        internal double CurrentTime { get; set; }
 
         /// <summary>
         ///     If the song is currently done.
@@ -79,6 +75,9 @@ namespace Quaver.States.Gameplay
         public void Update(double dt)
         {        
             UpdateSongTime(dt);
+            
+            // Update the audio's time on the logger.
+            Logger.Update("GameplayAudio", $"Audio Time: {CurrentTime}");
         }
 
          /// <summary>
@@ -134,7 +133,6 @@ namespace Quaver.States.Gameplay
             }
             
             CurrentTime = (GameBase.AudioEngine.Position + (CurrentTime + dt * GameBase.AudioEngine.PlaybackRate)) / 2;
-            Logger.Update("GameplayAudio", $"Audio Time: {CurrentTime}");
         }
     }
 }
