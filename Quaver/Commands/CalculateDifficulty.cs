@@ -28,7 +28,6 @@ namespace Quaver.Commands
             Console.WriteLine($"Artist: {qua.Artist}");
             Console.WriteLine($"Title: {qua.Title}");
             Console.WriteLine($"Difficulty Name: {qua.DifficultyName}");
-            qua.CalculateDifficulty();
         }
     }
 }
