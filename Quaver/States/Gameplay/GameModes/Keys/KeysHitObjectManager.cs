@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.API.Gameplay;
 using Quaver.Config;
@@ -22,14 +23,34 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         internal List<HitObject> DeadNotes { get; }
 
         /// <summary>
-        ///     The list of long notes in the pool.
+        ///     The list of currently held long notes.
         /// </summary>
-        internal List<HitObject> LongNotes { get; }
- 
+        internal List<HitObject> HeldLongNotes { get; }
+
         /// <summary>
         ///     The speed at which objects fall down from the screen.
         /// </summary>
-        internal float ScrollSpeed => ConfigManager.ScrollSpeed4K.Value / (20f * GameBase.AudioEngine.PlaybackRate);
+        internal static float ScrollSpeed => ConfigManager.ScrollSpeed4K.Value / (20f * GameBase.AudioEngine.PlaybackRate);
+
+        /// <summary>
+        ///     Dictates if we are currently using downscroll or not.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        internal static bool IsDownscroll
+        {
+            get
+            {
+                switch (GameBase.SelectedMap.Qua.Mode)
+                {
+                    case GameMode.Keys4:
+                        return ConfigManager.DownScroll4K.Value;
+                    case GameMode.Keys7:
+                        return ConfigManager.DownScroll7K.Value;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
 
         /// <summary>
         ///     The offset of the hit position.
@@ -39,25 +60,33 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             get
             {
                 var playfield = (KeysPlayfield) Ruleset.Playfield;
-                
+
                 switch (Ruleset.Mode)
                 {
                     case GameMode.Keys4:
                         if (ConfigManager.DownScroll4K.Value)
-                            return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset4K.Value + GameBase.LoadedSkin.HitPositionOffset4K);
+                            return playfield.ReceptorPositionY +
+                                   (ConfigManager.UserHitPositionOffset4K.Value +
+                                    GameBase.LoadedSkin.HitPositionOffset4K);
                         else
-                            return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset4K.Value + GameBase.LoadedSkin.HitPositionOffset4K) + GameBase.LoadedSkin.ColumnSize4K;
+                            return playfield.ReceptorPositionY -
+                                   (ConfigManager.UserHitPositionOffset4K.Value +
+                                    GameBase.LoadedSkin.HitPositionOffset4K) + GameBase.LoadedSkin.ColumnSize4K;
                     case GameMode.Keys7:
                         if (ConfigManager.DownScroll7K.Value)
-                            return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset7K.Value + GameBase.LoadedSkin.HitPositionOffset7K);
+                            return playfield.ReceptorPositionY +
+                                   (ConfigManager.UserHitPositionOffset7K.Value +
+                                    GameBase.LoadedSkin.HitPositionOffset7K);
                         else
-                            return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset7K.Value + GameBase.LoadedSkin.HitPositionOffset7K) + GameBase.LoadedSkin.ColumnSize7K;
+                            return playfield.ReceptorPositionY -
+                                   (ConfigManager.UserHitPositionOffset7K.Value +
+                                    GameBase.LoadedSkin.HitPositionOffset7K) + GameBase.LoadedSkin.ColumnSize7K;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -65,9 +94,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         internal KeysHitObjectManager(GameModeKeys ruleset, int size) : base(size)
         {
             Ruleset = ruleset;
-            
+
             DeadNotes = new List<HitObject>();
-            LongNotes = new List<HitObject>();
+            HeldLongNotes = new List<HitObject>();
         }
 
         /// <summary>
@@ -84,8 +113,29 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 if (ObjectPool[i].Info.Lane == lane && ObjectPool[i].Info.StartTime - songTime > -JudgeWindow.Okay)
                     return i;
             }
-            
+
             return -1;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Updates all of the containing notes.
+        ///
+        ///     Controls things like:
+        ///         - Updating the position of objects
+        ///         - Detecting if a user has missed object presses or releases. 
+        ///     
+        /// </summary>
+        /// <param name="dt"></param>
+        internal override void Update(double dt)
+        {
+            for (var i = 0; i < ObjectPool.Count && i < PoolSize; i++)
+            {
+                // TODO: Handle if user misses etc.
+
+                var hitObject = (KeysHitObject) Ruleset.HitObjectManager.ObjectPool[i];
+                hitObject.UpdateSpritePositions();
+            }
         }
     }
 }

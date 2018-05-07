@@ -50,7 +50,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             var objectManager = (KeysHitObjectManager) HitObjectManager;
             
             // Create the new HitObject.
-            var hitObject = new KeysHitObject(info)
+            var hitObject = new KeysHitObject(this, info)
             {
                 Width = playfield.LaneSize,
                 OffsetYFromReceptor = info.StartTime
@@ -71,7 +71,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             // TODO: Handle SV's.
             hitObject.LongNoteOffsetYFromReceptor = info.EndTime;
             
-            hitObject.InitialLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - hitObject.OffsetYFromReceptor) * objectManager.ScrollSpeed);
+            hitObject.InitialLongNoteSize = (ulong)((hitObject.LongNoteOffsetYFromReceptor - hitObject.OffsetYFromReceptor) * KeysHitObjectManager.ScrollSpeed);
             hitObject.CurrentLongNoteSize = hitObject.InitialLongNoteSize;
 
             return hitObject;
@@ -98,6 +98,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override HitObjectManager CreateHitObjectManager() => new KeysHitObjectManager(this, 255);
+        protected override HitObjectManager CreateHitObjectManager() => new KeysHitObjectManager(this, 50);
     }
 }

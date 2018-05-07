@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.Config;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
@@ -15,6 +16,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
 {
     internal class KeysHitObject : HitObject
     {
+        /// <summary>
+        ///     Reference to the Keys ruleset.
+        /// </summary>
+        private GameModeKeys Ruleset { get; }
+
         /// <summary>
         ///     Reference to the actual playfield.
         /// </summary>
@@ -89,7 +95,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         ///     The SpriteEffects. Flips the image horizontally if we are using upscroll.
         /// </summary>
-        private static SpriteEffects Effects => !Config.ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None;
+        private static SpriteEffects Effects => !ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
         /// <summary>
         ///     The index of this object of the receptor's lane.
@@ -100,9 +106,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         ///     Ctor - 
         /// </summary>
+        /// <param name="ruleset"></param>
         /// <param name="info"></param>
-        public KeysHitObject(HitObjectInfo info) : base(info)
+        public KeysHitObject(GameModeKeys ruleset, HitObjectInfo info) : base(info)
         {
+            Ruleset = ruleset;
         }
         
         /// <inheritdoc />
@@ -117,11 +125,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             // Create the base HitObjectSprite
             HitObjectSprite = new QuaverSprite()
             {
-                Parent = playfield.Container,
+                Parent = Playfield.HitObjectContainer,
                 Alignment = Alignment.TopLeft,
                 Position = new UDim2D(PositionX, PositionY),
                 SpriteEffect = Effects,
-                Image = GetHitObjectTexture()
+                Image = GetHitObjectTexture(),
             };
             
             // Update hit body's size to match image ratio
@@ -157,7 +165,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 Alignment = Alignment.TopLeft,
                 Size = new UDim2D(Playfield.LaneSize, InitialLongNoteSize),
                 Position = new UDim2D(PositionX, PositionY),
-                Parent = Playfield.Container
+                Parent = Playfield.HitObjectContainer
             };
             
             // Create the Hold End
@@ -166,7 +174,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 Alignment = Alignment.TopLeft,
                 Position = new UDim2D(PositionX, PositionY),
                 Size = new UDim2D(Playfield.LaneSize),
-                Parent = Playfield.Container,
+                Parent = Playfield.HitObjectContainer,
                 SpriteEffect = Effects
             };
 
@@ -220,6 +228,59 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                         return IsLongNote ? GameBase.LoadedSkin.NoteHoldHitObjects7K[Index][0] : GameBase.LoadedSkin.NoteHitObjects7K[Index][0];    
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+        }
+        
+        /// <summary>
+        ///     Calculates the position from the offset.
+        /// </summary>
+        /// <returns></returns>
+        internal float PosFromOffset()
+        {
+            var manager = (KeysHitObjectManager) Ruleset.HitObjectManager;
+            
+            var pos = (float) (manager.HitPositionOffset + (OffsetYFromReceptor - Ruleset.Screen.AudioTiming.CurrentTime));
+            return KeysHitObjectManager.IsDownscroll ? pos * -KeysHitObjectManager.ScrollSpeed : pos * KeysHitObjectManager.ScrollSpeed;
+        }
+
+        /// <summary>
+        ///     Updates the HitObject sprite positions
+        /// </summary>
+        internal void UpdateSpritePositions()
+        {
+            PositionY = PosFromOffset();
+            
+            // Only update note if it's inside the window
+            if ((!KeysHitObjectManager.IsDownscroll || PositionY + HitObjectSprite.SizeY <= 0) && (KeysHitObjectManager.IsDownscroll || !(PositionY < GameBase.WindowRectangle.Height))) 
+                return;
+            
+            // Update HitBody
+            HitObjectSprite.PosY = PositionY;
+;
+            // Disregard the rest if it isn't a long note.
+            if (!IsLongNote) 
+                return;
+            
+            // It will ignore the rest of the code after this statement if long note size is equal/less than 0
+            if (CurrentLongNoteSize <= 0)
+            {
+                LongNoteBodySprite.Visible = false;
+                LongNoteEndSprite.Visible = false;
+                return;
+            }
+
+            //Update HoldBody Position and Size
+            LongNoteBodySprite.SizeY = CurrentLongNoteSize;
+
+            if (KeysHitObjectManager.IsDownscroll)
+            {
+                LongNoteBodySprite.PosY = -(float) CurrentLongNoteSize + LongNoteBodyOffset + PositionY;
+                LongNoteEndSprite.PosY = PositionY - CurrentLongNoteSize - LongNoteEndOffset + LongNoteBodyOffset;
+            }
+            else
+            {
+                LongNoteBodySprite.PosY = PositionY + LongNoteBodyOffset;
+                LongNoteEndSprite.PosY = PositionY + CurrentLongNoteSize - LongNoteEndOffset + LongNoteBodyOffset;
             }
         }
     }

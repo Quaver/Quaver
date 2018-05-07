@@ -26,7 +26,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         ///     The foreground of the playfield.
         /// </summary>
         internal QuaverContainer ForegroundContainer { get; }
-        
+
+        /// <summary>
+        ///     The container that holds all of the HitObjects
+        /// </summary>
+        internal QuaverContainer HitObjectContainer { get; }
+
         /// <summary>
         ///     Reference to the map.
         /// </summary>
@@ -191,6 +196,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             
             // Create the entire stage.               
             Stage = new KeysPlayfieldStage(this);
+
+            // Create the container for HitObjects
+            HitObjectContainer = new QuaverContainer
+            {
+                Size = new UDim2D(Width, 0, 0, 1),
+                Alignment = Alignment.TopCenter,
+                Parent = Container
+            };
         }
         
         /// <summary>

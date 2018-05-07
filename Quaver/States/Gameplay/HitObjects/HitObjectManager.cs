@@ -4,7 +4,7 @@ using Quaver.Main;
 
 namespace Quaver.States.Gameplay.HitObjects
 {
-    internal class HitObjectManager
+    internal abstract class HitObjectManager
     {
         /// <summary>
         ///     All of the objects in the pool.
@@ -12,12 +12,18 @@ namespace Quaver.States.Gameplay.HitObjects
         internal List<HitObject> ObjectPool { get; }
 
         /// <summary>
+        ///     The object pool size.
+        /// </summary>
+        internal int PoolSize { get; }
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         /// <param name="size"></param>
         internal HitObjectManager(int size)
         {
-            ObjectPool = new List<HitObject>(size);
+            PoolSize = size;
+            ObjectPool = new List<HitObject>(PoolSize);
         }
         
         /// <summary>
@@ -43,5 +49,11 @@ namespace Quaver.States.Gameplay.HitObjects
             if ((HitSounds.Finish & hitObject.HitSound) != 0)
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHitFinish);
         }
+
+        /// <summary>
+        ///     Updates all the containing HitObjects
+        /// </summary>
+        /// <param name="dt"></param>
+        internal abstract void Update(double dt);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Quaver.API.Enums;
+﻿using System;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Graphics.Sprites;
 using Quaver.Input;
@@ -76,6 +77,7 @@ namespace Quaver.States.Gameplay
         /// <param name="dt"></param>
         internal void Update(double dt)
         {
+            HitObjectManager.Update(dt);
             Playfield.Update(dt);
         }
 
@@ -100,15 +102,18 @@ namespace Quaver.States.Gameplay
         /// </summary>
         private void InitializeHitObjects()
         {
-            foreach (var t in Map.HitObjects)
+            for (var i = 0; i < Map.HitObjects.Count; i++)
             {
-                var hitObject = CreateHitObject(t);
-                hitObject.InitializeSprite(Playfield);
-                
-                // Add this object to hhe pool.
+                var hitObject = CreateHitObject(Map.HitObjects[i]);
+
+                // Only actually initialize 
+                if (i < HitObjectManager.PoolSize)
+                    hitObject.InitializeSprite(Playfield);
+
+                // Add this object to the pool.
                 HitObjectManager.ObjectPool.Add(hitObject);
             }
-
+            
             Logger.LogInfo($"Initialized HitObjects - " + HitObjectManager.ObjectPool.Count, LogType.Runtime);
         }
         
