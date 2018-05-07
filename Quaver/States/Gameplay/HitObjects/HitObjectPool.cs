@@ -9,7 +9,7 @@ namespace Quaver.States.Gameplay.HitObjects
         /// <summary>
         ///     All of the objects in the pool.
         /// </summary>
-        internal List<HitObject> Objects { get; set; }
+        internal List<HitObject> Objects { get; }
 
         /// <summary>
         ///     The amount of objects in the pool.
