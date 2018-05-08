@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Input;
 using Quaver.Logging;
 using Quaver.Main;
@@ -21,6 +22,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
 
         /// <inheritdoc />
         /// <summary>
+        /// </summary>
+        protected sealed override ScoreProcessor ScoreProcessor { get; set; }
+
+        /// <inheritdoc />
+        /// <summary>
         ///     Ctor - Sets the correct mode, either 4 or 7k.
         /// </summary>
         /// <param name="screen"></param>
@@ -37,6 +43,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 default:
                     throw new InvalidEnumArgumentException("GameModeKeys can only be initialized with GameMode.Keys4 or GameModes.Keys7");
             }
+
+            // Initialize the score processor.
+            ScoreProcessor = new ScoreProcessorKeys(map);
         }
 
         /// <inheritdoc />
