@@ -371,6 +371,9 @@ namespace Quaver.States.Gameplay.Mania.Components.Scoring
             }
             else
                 ScoreMax = 25650 + (count - 149) * 250;
+            
+            Console.WriteLine($"Total Judgements: {count}");
+            Console.WriteLine($"Summed Score: {ScoreMax}");
         }
 
         /// <summary>

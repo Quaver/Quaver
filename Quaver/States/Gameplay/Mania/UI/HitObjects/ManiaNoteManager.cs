@@ -195,7 +195,6 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
                 // Calculate Y-Offset From Receptor
                 newObject.OffsetFromReceptor = SvOffsetFromTime(newObject.StartTime, GetSvIndex(newObject.StartTime));
                 newObject.HitObjectPositionY = newObject.OffsetFromReceptor + HitPositionOffset;
-                Console.WriteLine(newObject.HitObjectPositionY);
 
                 // Set Snap Color of Object
                 // Right now this method only changes the tint of the hitobject, but hopefully we can come up with something better
