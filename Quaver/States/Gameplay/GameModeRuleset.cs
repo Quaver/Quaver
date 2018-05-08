@@ -1,6 +1,7 @@
 ﻿using System;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Graphics.Sprites;
 using Quaver.Input;
 using Quaver.Logging;
@@ -40,6 +41,11 @@ namespace Quaver.States.Gameplay
         ///     The input manager for this ruleset.
         /// </summary>
         protected abstract IGameplayInputManager InputManager { get; set; }
+
+        /// <summary>
+        ///     The score processor for this ruleset.
+        /// </summary>
+        protected abstract ScoreProcessor ScoreProcessor { get; set; }
 
         /// <summary>
         ///     Ctor - 
