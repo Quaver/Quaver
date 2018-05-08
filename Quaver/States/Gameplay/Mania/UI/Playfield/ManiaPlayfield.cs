@@ -160,6 +160,8 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                             SpriteEffect = !Config.ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Parent = ForegroundQuaverContainer
                         };
+                        
+                        Console.WriteLine($"{i} - {ReceptorObjects[i].SizeY}: {ReceptorYPosition}");
 
                         // Create hit lighting sprite
                         var columnLightingSize = GameBase.LoadedSkin.ColumnLightingScale * LaneSize * ((float)GameBase.LoadedSkin.ColumnLighting4K.Height / GameBase.LoadedSkin.ColumnLighting4K.Width);

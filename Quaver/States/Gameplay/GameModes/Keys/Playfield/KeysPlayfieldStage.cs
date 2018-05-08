@@ -94,12 +94,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         {
             // Create the left side of the stage.
             var stageLeftX = GameBase.LoadedSkin.StageLeftBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageLeftBorder.Height;
+
             StageLeft = new QuaverSprite()
             {
                 Image = GameBase.LoadedSkin.StageLeftBorder,
                 Size = new UDim2D(stageLeftX, GameBase.WindowRectangle.Height),
                 Position = new UDim2D(-stageLeftX + 1),
-                Parent = Playfield.BackgroundContainer
+                Parent = Playfield.BackgroundContainer,
+                Alignment = Alignment.TopLeft
             };   
         }
 
@@ -114,7 +116,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             {
                 Image = GameBase.LoadedSkin.StageRightBorder,
                 Size = new UDim2D(stageRightX, GameBase.WindowRectangle.Height),
-                Position = new UDim2D(stageRightX - 1, 0),
+                Position = new UDim2D(stageRightX - 1),
                 Parent = Playfield.BackgroundContainer,
                 Alignment = Alignment.TopRight
             };

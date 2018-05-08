@@ -231,6 +231,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             // Animate Column Lighting
             Stage.PeformAllColumnLightingAnimations(dt);
             
+            
             Container.Update(dt);
         }
 

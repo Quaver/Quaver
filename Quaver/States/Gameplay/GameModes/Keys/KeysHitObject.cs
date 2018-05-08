@@ -238,9 +238,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         internal float PosFromOffset()
         {
             var manager = (KeysHitObjectManager) Ruleset.HitObjectManager;
-            
-            var pos = (float) (manager.HitPositionOffset + (OffsetYFromReceptor - Ruleset.Screen.AudioTiming.CurrentTime));
-            return KeysHitObjectManager.IsDownscroll ? pos * -KeysHitObjectManager.ScrollSpeed : pos * KeysHitObjectManager.ScrollSpeed;
+
+            var speed = KeysHitObjectManager.IsDownscroll ? -KeysHitObjectManager.ScrollSpeed : KeysHitObjectManager.ScrollSpeed;
+            return (float) (manager.HitPositionOffset + (OffsetYFromReceptor - Ruleset.Screen.AudioTiming.CurrentTime) * speed);
         }
 
         /// <summary>
