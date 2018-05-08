@@ -168,7 +168,8 @@ namespace Quaver.States.Loading.Map
                         md5 = GameBase.SelectedMap.Md5Checksum;
                         break;
                 }
-
+            
+                //GameBase.GameStateManager.ChangeState(new ManiaGameplayState(GameBase.SelectedMap.Qua, md5));
                 GameBase.GameStateManager.ChangeState(new GameplayScreen(GameBase.SelectedMap.Qua, md5));
             }
             catch (Exception e)
