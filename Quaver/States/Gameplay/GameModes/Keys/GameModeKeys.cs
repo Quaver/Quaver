@@ -23,7 +23,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        protected sealed override ScoreProcessor ScoreProcessor { get; set; }
+        internal sealed override ScoreProcessor ScoreProcessor { get; set; }
 
         /// <inheritdoc />
         /// <summary>

@@ -45,7 +45,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The score processor for this ruleset.
         /// </summary>
-        protected abstract ScoreProcessor ScoreProcessor { get; set; }
+        internal abstract ScoreProcessor ScoreProcessor { get; set; }
 
         /// <summary>
         ///     Ctor - 
