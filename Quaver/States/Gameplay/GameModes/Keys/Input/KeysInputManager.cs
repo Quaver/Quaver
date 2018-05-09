@@ -108,6 +108,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 {
                     // Play the HitSounds for this object.
                     objectPool.PlayObjectHitSounds(index);
+                    
+                    // Send this hit off to the score processor and let it determine the score.
+                    Ruleset.ScoreProcessor.CalculateScoreForObject(GameBase.SelectedMap.Qua.HitObjects[index], Ruleset.Screen.AudioTiming.CurrentTime, true);
                 }                   
             }
         }
