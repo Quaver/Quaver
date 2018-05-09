@@ -108,7 +108,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         public int GetIndexOfNearestLaneObject(int lane, double songTime)
         {
             // Search for closest ManiaHitObject that is inside the HitTiming Window
-            for (var i = 0; i < ObjectPool.Capacity && i < ObjectPool.Count; i++)
+            for (var i = 0; i < PoolSize && i < ObjectPool.Count; i++)
             {
                 if (ObjectPool[i].Info.Lane == lane && ObjectPool[i].Info.StartTime - songTime > -JudgeWindow.Okay)
                     return i;
