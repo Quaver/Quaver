@@ -131,9 +131,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         {
             for (var i = 0; i < ObjectPool.Count && i < PoolSize; i++)
             {
-                // TODO: Handle if user misses etc.
-
+                // First get the object.
                 var hitObject = (KeysHitObject) Ruleset.HitObjectManager.ObjectPool[i];
+                
+                // Update the position of the object.
                 hitObject.UpdateSpritePositions();
             }
         }
