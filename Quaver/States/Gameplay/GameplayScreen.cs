@@ -140,6 +140,7 @@ namespace Quaver.States.Gameplay
             AudioTiming.Update(dt);  
             HandleInput(dt);
             HandleResuming();
+            PauseIfWindowInactive();
             GameModeComponent.Update(dt);
         }
 
@@ -275,5 +276,17 @@ namespace Quaver.States.Gameplay
             }
         }   
  #endregion
+        /// <summary>
+        ///     Checks if the window is currently active and pauses the game if it isn't.
+        /// </summary>
+        private void PauseIfWindowInactive()
+        {
+            if (Paused)
+                return;
+            
+            // Pause the game
+            if (!QuaverGame.Game.IsActive)
+                Pause();
+        }
     }
 }
