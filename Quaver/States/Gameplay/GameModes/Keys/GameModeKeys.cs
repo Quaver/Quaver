@@ -107,6 +107,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override HitObjectManager CreateHitObjectManager() => new KeysHitObjectManager(this, 50);
+        protected override HitObjectManager CreateHitObjectManager() => new KeysHitObjectManager(this, 255);
     }
 }
