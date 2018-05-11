@@ -14,7 +14,18 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The current audio time.
         /// </summary>
-        internal double CurrentTime { get; set; }
+        private double _currentTime;
+        internal double CurrentTime
+        {
+            get
+            {
+                if (_currentTime <= 0)
+                    return _currentTime;
+                
+                return _currentTime + (AudioEngine.BassDelayOffset - ConfigManager.GlobalAudioOffset.Value) * GameBase.AudioEngine.PlaybackRate;
+            }
+            set => _currentTime = value;
+        }
 
         /// <summary>
         ///     If the song is currently done.
