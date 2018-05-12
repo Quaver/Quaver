@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.API.Gameplay;
@@ -87,9 +88,15 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             }
         }
 
+        /// <summary>
+        ///     The time it takes for a dead note to be removed after missing it.
+        /// </summary>
+        private uint DeadNoteRemovalTime { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
+        /// <param name="ruleset"></param>
         /// <param name="size"></param>
         internal KeysHitObjectManager(GameModeKeys ruleset, int size) : base(size)
         {
@@ -97,6 +104,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
 
             DeadNotes = new List<HitObject>();
             HeldLongNotes = new List<HitObject>();
+            
+            // Set the dead note removal time.
+            DeadNoteRemovalTime = (uint)(1000 * GameBase.AudioEngine.PlaybackRate);
         }
 
         /// <summary>
@@ -104,14 +114,15 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         /// <param name="lane"></param>
         /// <param name="songTime"></param>
+        /// <param name="searchLongNote"></param>
         /// <returns></returns>
         public int GetIndexOfNearestLaneObject(int lane, double songTime)
         {
             // Search for closest ManiaHitObject that is inside the HitTiming Window
             for (var i = 0; i < PoolSize && i < ObjectPool.Count; i++)
             {
-                if (ObjectPool[i].Info.Lane == lane && ObjectPool[i].Info.StartTime - songTime > -JudgeWindow.Okay)
-                    return i;
+                    if (ObjectPool[i].Info.Lane == lane && ObjectPool[i].Info.StartTime - songTime > -JudgeWindow.Okay)
+                        return i;
             }
 
             return -1;
@@ -129,14 +140,188 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <param name="dt"></param>
         internal override void Update(double dt)
         {
+#region ACTIVE_HITOBJECTS
+            // Update active objects.
             for (var i = 0; i < ObjectPool.Count && i < PoolSize; i++)
             {
-                // First get the object.
-                var hitObject = (KeysHitObject) Ruleset.HitObjectManager.ObjectPool[i];
+                var hitObject = (KeysHitObject) ObjectPool[i];
                 
-                // Update the position of the object.
-                hitObject.UpdateSpritePositions();
+                // If the user misses the note.
+                if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.Info.StartTime + Ruleset.ScoreProcessor.JudgementWindow.Last().Value)
+                {
+                    // Add a miss to their score.
+                    Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                    
+                    // If ManiaHitObject is an LN, kill it and count it as another miss because of the tail.
+                    if (hitObject.IsLongNote)
+                    {
+                        KillPoolObject(i);
+                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                    }
+                    // Otherwise recycle the object.
+                    else
+                    {
+                        RecyclePoolObject(i);
+                    }
+
+                    i--;
+                }
+                // The note is still active and ready to be updated.
+                else
+                {
+                    // Set new HitObject positions.
+                    hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.OffsetYFromReceptor);
+                    hitObject.UpdateSpritePositions();
+                }
+            }           
+#endregion
+
+#region HELD_OBJECTS
+            // Update the currently held long notes.
+            for (var i = 0; i < HeldLongNotes.Count; i++)
+            {
+                var hitObject = (KeysHitObject) HeldLongNotes[i];
+                
+                // If the LN's release was missed.
+                if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.Info.EndTime * Ruleset.ScoreProcessor.WindowReleaseMultiplier.Last().Value)
+                {
+                    Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+
+                    // Remove from the queue of long notes.
+                    hitObject.Destroy();
+                    HeldLongNotes.RemoveAt(i);
+                    i--;
+                }
+                // The long note is still active and ready to be updated.
+                else
+                {
+                    // Set the long note size and position.
+                    if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.Info.StartTime)
+                    {
+                        hitObject.CurrentLongNoteSize = (ulong) ((hitObject.OffsetYFromReceptor - Ruleset.Screen.AudioTiming.CurrentTime) * ScrollSpeed);
+                        hitObject.PositionY = HitPositionOffset;
+                    }
+                    else
+                    {
+                        hitObject.CurrentLongNoteSize = hitObject.InitialLongNoteSize;
+                        hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.OffsetYFromReceptor);
+                    }
+
+                    // Update the sprite positions of the object.
+                    hitObject.UpdateSpritePositions();
+                }
+            }           
+#endregion
+
+#region DEAD_HITOBJECTS
+            // Update dead objects.
+            for (var i = 0; i < DeadNotes.Count; i++)
+            {
+                var hitObject = (KeysHitObject) DeadNotes[i];
+                
+                // If the note is past the time of removal, then destroy it.
+                if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.Info.EndTime + DeadNoteRemovalTime 
+                    && Ruleset.Screen.AudioTiming.CurrentTime > hitObject.Info.StartTime + DeadNoteRemovalTime)
+                {
+                    // Remove from dead notes pool.
+                    hitObject.Destroy();
+                    DeadNotes.RemoveAt(i);
+                    i--;
+                }
+                // Otherwise keep updating it accordingly.
+                else
+                {
+                    hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.OffsetYFromReceptor);
+                    hitObject.UpdateSpritePositions();
+                }
             }
+#endregion
+        }
+
+        /// <summary>
+        ///     Kills a note at a specific index of the object pool.
+        /// </summary>
+        /// <param name="index"></param>
+        internal void KillPoolObject(int index)
+        {
+            var hitObject = (KeysHitObject) ObjectPool[index];
+            
+            // Change the sprite color to dead.
+            hitObject.ChangeSpriteColorToDead();
+            
+            // Add the object to the dead notes pool.
+            DeadNotes.Add(hitObject);
+            
+            // Remove the old HitObject
+            ObjectPool.RemoveAt(index);
+
+            //Initialize the new ManiaHitObject (create the hit object sprites)
+            InitializeNewPoolObject();
+        }
+
+        /// <summary>
+        ///     Initializes a new note in the pool.
+        /// </summary>
+        private void InitializeNewPoolObject()
+        {
+            if (ObjectPool.Count >= PoolSize)
+                ObjectPool[PoolSize - 1].InitializeSprite(Ruleset.Playfield);
+        }
+
+        /// <summary>
+        ///     Recycles a pool object.
+        /// </summary>
+        /// <param name="index"></param>
+        internal void RecyclePoolObject(int index)
+        {
+            // Destroy and remove the old object.
+            ObjectPool[index].Destroy();
+            ObjectPool.RemoveAt(index);
+            
+            // Initialize a new one in its place at the end.
+            InitializeNewPoolObject();
+        }
+
+        /// <summary>
+        ///     Changes a pool object to a long note that is held at the receptors.
+        /// </summary>
+        /// <param name="index"></param>
+        internal void ChangePoolObjectStatusToHeld(int index)
+        {
+            // Add to the held long notes.
+            HeldLongNotes.Add(ObjectPool[index]);
+            
+            // Remove the one from the object pool
+            ObjectPool.RemoveAt(index);
+            
+            // Initialize the new note.
+            InitializeNewPoolObject();
+        }
+        
+        /// <summary>
+        ///     Kills a hold pool object.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="destroy"></param>
+        internal void KillHoldPoolObject(int index, bool destroy = false)
+        {
+            var hitObject = (KeysHitObject) HeldLongNotes[index];
+            
+            //hitObject.Info.StartTime = (int) Ruleset.Screen.AudioTiming.CurrentTime;
+            //hitObject.OffsetYFromReceptor =
+
+            if (destroy)
+            {
+                hitObject.Destroy();
+            }
+            else
+            {
+                hitObject.ChangeSpriteColorToDead();
+                DeadNotes.Add(hitObject);
+            }
+
+            // Remove from the hold pool
+            HeldLongNotes.RemoveAt(index);
         }
     }
 }
