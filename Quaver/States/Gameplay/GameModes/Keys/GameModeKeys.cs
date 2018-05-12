@@ -45,7 +45,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             }
 
             // Initialize the score processor.
-            ScoreProcessor = new ScoreProcessorKeys(map);
+            ScoreProcessor = new ScoreProcessorKeys(map, GameBase.CurrentMods);
         }
 
         /// <inheritdoc />
