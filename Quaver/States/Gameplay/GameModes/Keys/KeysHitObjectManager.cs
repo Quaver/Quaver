@@ -114,7 +114,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         /// <param name="lane"></param>
         /// <param name="songTime"></param>
-        /// <param name="searchLongNote"></param>
         /// <returns></returns>
         public int GetIndexOfNearestLaneObject(int lane, double songTime)
         {
@@ -181,9 +180,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             for (var i = 0; i < HeldLongNotes.Count; i++)
             {
                 var hitObject = (KeysHitObject) HeldLongNotes[i];
+
+                // The release window. (Window * Multiplier)
+                var window = Ruleset.ScoreProcessor.JudgementWindow.Last().Value * Ruleset.ScoreProcessor.WindowReleaseMultiplier.Last().Value;
                 
                 // If the LN's release was missed.
-                if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.Info.EndTime * Ruleset.ScoreProcessor.WindowReleaseMultiplier.Last().Value)
+                if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.Info.EndTime + window)
                 {
                     Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
 
@@ -198,7 +200,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     // Set the long note size and position.
                     if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.Info.StartTime)
                     {
-                        hitObject.CurrentLongNoteSize = (ulong) ((hitObject.OffsetYFromReceptor - Ruleset.Screen.AudioTiming.CurrentTime) * ScrollSpeed);
+                        hitObject.CurrentLongNoteSize = (ulong) ((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.AudioTiming.CurrentTime) * ScrollSpeed);
                         hitObject.PositionY = HitPositionOffset;
                     }
                     else
@@ -295,7 +297,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             ObjectPool.RemoveAt(index);
             
             // Initialize the new note.
-            InitializeNewPoolObject();
+            InitializeNewPoolObject();          
         }
         
         /// <summary>
@@ -306,9 +308,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         internal void KillHoldPoolObject(int index, bool destroy = false)
         {
             var hitObject = (KeysHitObject) HeldLongNotes[index];
-            
-            //hitObject.Info.StartTime = (int) Ruleset.Screen.AudioTiming.CurrentTime;
-            //hitObject.OffsetYFromReceptor =
 
             if (destroy)
             {
