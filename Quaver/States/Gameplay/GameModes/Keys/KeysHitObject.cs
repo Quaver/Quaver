@@ -248,9 +248,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         ///     Updates the HitObject sprite positions
         /// </summary>
         internal void UpdateSpritePositions()
-        {
-            PositionY = GetPosFromOffset(OffsetYFromReceptor);
-            
+        {           
             // Only update note if it's inside the window
             if ((!KeysHitObjectManager.IsDownscroll || PositionY + HitObjectSprite.SizeY <= 0) && (KeysHitObjectManager.IsDownscroll || !(PositionY < GameBase.WindowRectangle.Height))) 
                 return;
