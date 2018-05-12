@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Config;
+using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
@@ -235,12 +236,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         ///     Calculates the position from the offset.
         /// </summary>
         /// <returns></returns>
-        internal float PosFromOffset()
+        internal float GetPosFromOffset(float offset)
         {
             var manager = (KeysHitObjectManager) Ruleset.HitObjectManager;
 
             var speed = KeysHitObjectManager.IsDownscroll ? -KeysHitObjectManager.ScrollSpeed : KeysHitObjectManager.ScrollSpeed;
-            return (float) (manager.HitPositionOffset + (OffsetYFromReceptor - Ruleset.Screen.AudioTiming.CurrentTime) * speed);
+            return (float) (manager.HitPositionOffset + (offset - Ruleset.Screen.AudioTiming.CurrentTime) * speed);
         }
 
         /// <summary>
@@ -248,7 +249,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         internal void UpdateSpritePositions()
         {
-            PositionY = PosFromOffset();
+            PositionY = GetPosFromOffset(OffsetYFromReceptor);
             
             // Only update note if it's inside the window
             if ((!KeysHitObjectManager.IsDownscroll || PositionY + HitObjectSprite.SizeY <= 0) && (KeysHitObjectManager.IsDownscroll || !(PositionY < GameBase.WindowRectangle.Height))) 
@@ -282,6 +283,20 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 LongNoteBodySprite.PosY = PositionY + LongNoteBodyOffset;
                 LongNoteEndSprite.PosY = PositionY + CurrentLongNoteSize - LongNoteEndOffset + LongNoteBodyOffset;
             }
+        }
+
+        /// <summary>
+        ///     When the object iself dies, we want to change it to a dead color.
+        /// </summary>
+        internal void ChangeSpriteColorToDead()
+        {
+            if (IsLongNote)
+            {
+                LongNoteBodySprite.Tint = QuaverColors.DeadNote;
+                LongNoteEndSprite.Tint = QuaverColors.DeadNote;
+            }
+
+            HitObjectSprite.Tint = QuaverColors.DeadNote;
         }
     }
 }
