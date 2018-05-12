@@ -71,6 +71,11 @@ namespace Quaver.States.Gameplay
         private long ResumeTime { get; set; }
 
         /// <summary>
+        ///     The last recorded combo. We use this value for combo breaking.
+        /// </summary>
+        private int LastRecordedCombo { get; set; }
+
+        /// <summary>
         ///     Dictates if the intro of the song is currently skippable.
         /// </summary>
         private bool IntroSkippable
@@ -114,6 +119,10 @@ namespace Quaver.States.Gameplay
             Logger.Add("Paused", $"Paused: {Paused}", Color.White);
             Logger.Add("Resume In Progress", $"Resume In Progress {ResumeInProgress}", Color.White);
             Logger.Add("Intro Skippable", $"Intro Skippable: {IntroSkippable}", Color.White);
+            Logger.Add("Score", $"Score: {GameModeComponent.ScoreProcessor.Score}", Color.White);
+            Logger.Add($"Accuracy", $"Accuracy: {GameModeComponent.ScoreProcessor.Accuracy}", Color.White);
+            Logger.Add($"Combo", $"Combo: {GameModeComponent.ScoreProcessor.Combo}", Color.White);
+            Logger.Add($"Max Combo", $"Max Combo: {GameModeComponent.ScoreProcessor.MaxCombo}", Color.White);
             
             // Initialize the game mode.
             GameModeComponent.Initialize();
@@ -141,6 +150,7 @@ namespace Quaver.States.Gameplay
             HandleInput(dt);
             HandleResuming();
             PauseIfWindowInactive();
+            PlayComboBreakSound();
             GameModeComponent.Update(dt);
         }
 
@@ -159,6 +169,10 @@ namespace Quaver.States.Gameplay
             Logger.Update("Paused", $"Paused: {Paused}");
             Logger.Update("Resume In Progress", $"Resume In Progress {ResumeInProgress}");
             Logger.Update("Intro Skippable", $"Intro Skippable: {IntroSkippable}");
+            Logger.Update("Score", $"Score: {GameModeComponent.ScoreProcessor.Score}");
+            Logger.Update($"Accuracy", $"Accuracy: {GameModeComponent.ScoreProcessor.Accuracy}");
+            Logger.Update($"Combo", $"Combo: {GameModeComponent.ScoreProcessor.Combo}");
+            Logger.Update($"Max Combo", $"Max Combo: {GameModeComponent.ScoreProcessor.MaxCombo}");
             
             GameBase.SpriteBatch.End();
         }
@@ -287,6 +301,17 @@ namespace Quaver.States.Gameplay
             // Pause the game
             if (!QuaverGame.Game.IsActive)
                 Pause();
+        }
+
+        /// <summary>
+        ///     Plays a combo break sound if we've 
+        /// </summary>
+        private void PlayComboBreakSound()
+        {
+            if (LastRecordedCombo >= 20 && GameModeComponent.ScoreProcessor.Combo == 0)
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundComboBreak);
+
+            LastRecordedCombo = GameModeComponent.ScoreProcessor.Combo;
         }
     }
 }
