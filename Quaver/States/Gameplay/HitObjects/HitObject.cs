@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Quaver.API.Maps;
+using Quaver.Main;
 
 namespace Quaver.States.Gameplay.HitObjects
 {
