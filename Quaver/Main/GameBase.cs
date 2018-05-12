@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
 using Quaver.API.Osu;
 using Quaver.Audio;
 using Quaver.Config;
@@ -246,6 +247,22 @@ namespace Quaver.Main
                     default:
                         return "";
                 }
+            }
+        }
+
+        /// <summary>
+        ///     The current mods of the game in ModIdentifier form.
+        /// </summary>
+        public static ModIdentifier CurrentMods
+        {
+            get
+            {
+                var mods = 0;
+
+                foreach (var mod in CurrentGameModifiers)
+                    mods += (int)mod.ModIdentifier;
+
+                return (ModIdentifier) mods;
             }
         }
     }
