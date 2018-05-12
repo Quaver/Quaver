@@ -93,25 +93,104 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 var playfield = (KeysPlayfield) Ruleset.Playfield;             
                 playfield.Stage.SetReceptorAndLightingActivity(i, BindingStore[i].Pressed);
 
-                // Get the object pool itself.
-                var objectPool = (KeysHitObjectManager) Ruleset.HitObjectManager;
+                // Get the object manager itself.
+                var manager = (KeysHitObjectManager) Ruleset.HitObjectManager;
                     
                 // Find the object that is nearest in the lane that the user has pressed.
-                var index = objectPool.GetIndexOfNearestLaneObject(i + 1, Ruleset.Screen.AudioTiming.CurrentTime);
+                var objectIndex = manager.GetIndexOfNearestLaneObject(i + 1, Ruleset.Screen.AudioTiming.CurrentTime);
+                var hitObject = (KeysHitObject) manager.ObjectPool[objectIndex];
 
                 // Don't proceed if an object wasn't found.
-                if (index == -1)
+                if (objectIndex == -1)
                     continue;
                                 
                 // If the key was pressed, 
                 if (BindingStore[i].Pressed)
                 {
                     // Play the HitSounds for this object.
-                    objectPool.PlayObjectHitSounds(index);
+                    manager.PlayObjectHitSounds(objectIndex);
+
+                    // Check which hit window this object's timing is in
+                    for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
+                    {
+                        // Check if the user actually hit the object.
+                        if (!(Math.Abs(hitObject.Info.StartTime - Ruleset.Screen.AudioTiming.CurrentTime) <= Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j])) 
+                            continue;
+                        
+                        var judgement = (Judgement) j;
+                            
+                        // Update the user's score
+                        Ruleset.ScoreProcessor.CalculateScore(judgement);
+
+                        // If the user is spamming.
+                        if (judgement >= Judgement.Good)
+                        {
+                            manager.KillPoolObject(objectIndex);
+                        }
+                        else
+                        {
+                            // If the object is an LN, change the status to held.
+                            if (hitObject.IsLongNote)
+                                manager.ChangePoolObjectStatusToHeld(objectIndex);
+                            // Otherwise, just recycle the object.
+                            else
+                                manager.RecyclePoolObject(objectIndex);
+                        }
+
+                        break;
+                    }
+                }
+                // If the key was released.
+                else
+                {                                   
+                    // Look for the nearest long note in the current lane.
+                    var longNoteIndex = -1;
+                    for (i = 0; i < manager.HeldLongNotes.Count; i++)
+                    {
+                        if (manager.HeldLongNotes[i].Info.Lane != i + 1) 
+                            continue;
+                        
+                        longNoteIndex = i;
+                        break;
+                    }
+
+                    // Return if we can't find a long note.
+                    if (longNoteIndex == -1)
+                        return;
                     
-                    // Send this hit off to the score processor and let it determine the score.
-                    Ruleset.ScoreProcessor.CalculateScoreForObject(GameBase.SelectedMap.Qua.HitObjects[index], Ruleset.Screen.AudioTiming.CurrentTime, true);
-                }                   
+                    // Keeps track of if we've released in a judgement window.
+                    var judgementIndex = -1;
+                    
+                    for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
+                    {
+                        var judgement = (Judgement) j;
+
+                        // The window for releasing a long note. (Window * Multiplier.)
+                        var releaseWindow = Ruleset.ScoreProcessor.JudgementWindow[judgement] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[judgement];
+                        
+                        // Find if we've released in a judgement window.
+                        if (!(Math.Abs(hitObject.Info.EndTime - Ruleset.Screen.AudioTiming.CurrentTime) < releaseWindow))
+                            continue;
+                        
+                        judgementIndex = i;
+                        break;
+                    }
+                    
+                    // If LN has been released during a HitWindow
+                    if (judgementIndex > -1)
+                    {
+                        // Update the user's score with that specific judgement.
+                        Ruleset.ScoreProcessor.CalculateScore((Judgement) judgementIndex);
+                    }
+                    // Otherwise if it has been released too early, count is as a miss.
+                    else
+                    {
+                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                        
+                        // Stop holding the note.
+                        manager.KillHoldPoolObject(longNoteIndex);
+                    }
+                }
             }
         }
     }
