@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using Quaver.API.Enums;
 using Quaver.Config;
@@ -98,12 +99,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                     
                 // Find the object that is nearest in the lane that the user has pressed.
                 var objectIndex = manager.GetIndexOfNearestLaneObject(i + 1, Ruleset.Screen.AudioTiming.CurrentTime);
-                var hitObject = (KeysHitObject) manager.ObjectPool[objectIndex];
 
                 // Don't proceed if an object wasn't found.
                 if (objectIndex == -1)
                     continue;
-                                
+                
+                var hitObject = (KeysHitObject) manager.ObjectPool[objectIndex];
+                
                 // If the key was pressed, 
                 if (BindingStore[i].Pressed)
                 {
@@ -122,73 +124,61 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                         // Update the user's score
                         Ruleset.ScoreProcessor.CalculateScore(judgement);
 
-                        // If the user is spamming.
-                        if (judgement >= Judgement.Good)
-                        {
-                            manager.KillPoolObject(objectIndex);
-                        }
+                        // If the object is an LN, change the status to held.
+                        if (hitObject.IsLongNote)
+                            manager.ChangePoolObjectStatusToHeld(objectIndex);
+                        // Otherwise, just recycle the object.
                         else
-                        {
-                            // If the object is an LN, change the status to held.
-                            if (hitObject.IsLongNote)
-                                manager.ChangePoolObjectStatusToHeld(objectIndex);
-                            // Otherwise, just recycle the object.
-                            else
-                                manager.RecyclePoolObject(objectIndex);
-                        }
-
+                            manager.RecyclePoolObject(objectIndex);
+                        
                         break;
                     }
                 }
                 // If the key was released.
                 else
                 {                                   
-                    // Look for the nearest long note in the current lane.
-                    var longNoteIndex = -1;
-                    for (i = 0; i < manager.HeldLongNotes.Count; i++)
+                    var noteIndex = -1;
+                    
+                    // Get the most recent held long note in the current lane.
+                    for (var j = 0; j < manager.HeldLongNotes.Count; j++)
                     {
-                        if (manager.HeldLongNotes[i].Info.Lane != i + 1) 
+                        if (manager.HeldLongNotes[j].Info.Lane != i + 1) 
                             continue;
                         
-                        longNoteIndex = i;
+                        noteIndex = j;
                         break;
                     }
 
-                    // Return if we can't find a long note.
-                    if (longNoteIndex == -1)
-                        return;
+                    // If there is no object, then don't bother.
+                    if (noteIndex == -1)
+                        continue;
                     
-                    // Keeps track of if we've released in a judgement window.
-                    var judgementIndex = -1;
-                    
+                    // Check which window the object has 
+                    var receivedJudgementIndex = -1;                   
                     for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
                     {
-                        var judgement = (Judgement) j;
+                        // Get the release window of the current judgement.
+                        var releaseWindow = Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[(Judgement) j];
 
-                        // The window for releasing a long note. (Window * Multiplier.)
-                        var releaseWindow = Ruleset.ScoreProcessor.JudgementWindow[judgement] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[judgement];
-                        
-                        // Find if we've released in a judgement window.
-                        if (!(Math.Abs(hitObject.Info.EndTime - Ruleset.Screen.AudioTiming.CurrentTime) < releaseWindow))
+                        if (!(Math.Abs(manager.HeldLongNotes[noteIndex].Info.EndTime - Ruleset.Screen.AudioTiming.CurrentTime) < releaseWindow)) 
                             continue;
                         
-                        judgementIndex = i;
+                        receivedJudgementIndex = j;
                         break;
                     }
-                    
-                    // If LN has been released during a HitWindow
-                    if (judgementIndex > -1)
+    
+                    // If LN has been released during a window
+                    if (receivedJudgementIndex != -1)
                     {
-                        // Update the user's score with that specific judgement.
-                        Ruleset.ScoreProcessor.CalculateScore((Judgement) judgementIndex);
+                        Ruleset.ScoreProcessor.CalculateScore((Judgement) receivedJudgementIndex);
+                        manager.KillHoldPoolObject(noteIndex);
                     }
-                    // Otherwise if it has been released too early, count is as a miss.
+                    // If LN has been released early
                     else
                     {
-                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
-                        
-                        // Stop holding the note.
-                        manager.KillHoldPoolObject(longNoteIndex);
+                        // Count it as an okay if it was released early and kill the hold.
+                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Okay);
+                        manager.KillHoldPoolObject(noteIndex);
                     }
                 }
             }
