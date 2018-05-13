@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Main;
 
@@ -16,6 +17,17 @@ namespace Quaver.States.Gameplay.HitObjects
         /// </summary>
         internal int PoolSize { get; }
 
+        /// <summary>
+        ///     The number of objects left in the map
+        ///     (Has to be implemented per game mode because pooling may be different.)
+        /// </summary>
+        internal abstract int ObjectsLeft { get; }
+
+        /// <summary>
+        ///     If there are no more objects and the map is complete.
+        /// </summary>
+        internal bool IsComplete => ObjectsLeft == 0;
+        
         /// <summary>
         ///     Ctor - 
         /// </summary>
