@@ -106,47 +106,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 
                 var hitObject = (KeysHitObject) manager.ObjectPool[objectIndex];
                 
-                // If the key was pressed, 
+                // If the key was pressed during this frame.
                 if (BindingStore[i].Pressed)
                 {
-                    // Play the HitSounds for this object.
-                    manager.PlayObjectHitSounds(objectIndex);
-
-                    // Check which hit window this object's timing is in
-                    for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
-                    {
-                        // Check if the user actually hit the object.
-                        if (!(Math.Abs(hitObject.TrueStartTime - Ruleset.Screen.AudioTiming.CurrentTime) <= Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j])) 
-                            continue;
-                        
-                        var judgement = (Judgement) j;
-                            
-                        // Update the user's score
-                        Ruleset.ScoreProcessor.CalculateScore(judgement);
-
-                        // If the user is spamming.
-                        if (judgement >= Judgement.Good)
-                        {
-                            // If the object is an LN, count it as a miss.
-                            if (hitObject.IsLongNote)
-                                Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
-                            
-                            manager.KillPoolObject(objectIndex);
-                        }
-                        else
-                        {
-                            // If the object is an LN, hold it at the receptors
-                            if (hitObject.IsLongNote) 
-                                manager.ChangePoolObjectStatusToHeld(objectIndex);
-                            // If the object is not an LN, recycle it.
-                            else
-                                manager.RecyclePoolObject(objectIndex);
-                        }
-                                                
-                        break;
-                    }
+                    HandleKeyPress(manager, hitObject, objectIndex);
                 }
-                // If the key was released.
+                // If the key was released during this frame.
                 else
                 {                                   
                     var noteIndex = -1;
@@ -165,34 +130,89 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                     if (noteIndex == -1)
                         continue;
                     
-                    // Check which window the object has 
-                    var receivedJudgementIndex = -1;                   
-                    for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
-                    {
-                        // Get the release window of the current judgement.
-                        var releaseWindow = Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[(Judgement) j];
-
-                        if (!(Math.Abs(manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.AudioTiming.CurrentTime) < releaseWindow)) 
-                            continue;
-                        
-                        receivedJudgementIndex = j;
-                        break;
-                    }
-    
-                    // If LN has been released during a window
-                    if (receivedJudgementIndex != -1)
-                    {
-                        Ruleset.ScoreProcessor.CalculateScore((Judgement) receivedJudgementIndex);
-                        manager.KillHoldPoolObject(noteIndex, true);
-                    }
-                    // If LN has been released early
-                    else
-                    {
-                        // Count it as an okay if it was released early and kill the hold.
-                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
-                        manager.KillHoldPoolObject(noteIndex);
-                    }
+                    // Handle the release.
+                    HandleKeyRelease(manager, noteIndex);
                 }
+            }
+        }
+
+        /// <summary>
+        ///     Handles an individual key press during gameplay.
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <param name="hitObject"></param>
+        /// <param name="objectIndex"></param>
+        private void HandleKeyPress(KeysHitObjectManager manager, KeysHitObject hitObject, int objectIndex)
+        {
+            // Play the HitSounds for this object.
+            manager.PlayObjectHitSounds(objectIndex);
+
+            // Check which hit window this object's timing is in
+            for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
+            {
+                // Check if the user actually hit the object.
+                if (!(Math.Abs(hitObject.TrueStartTime - Ruleset.Screen.AudioTiming.CurrentTime) <= Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j])) 
+                    continue;
+                        
+                var judgement = (Judgement) j;
+                            
+                // Update the user's score
+                Ruleset.ScoreProcessor.CalculateScore(judgement);
+
+                // If the user is spamming.
+                if (judgement >= Judgement.Good)
+                {
+                    // If the object is an LN, count it as a miss.
+                    if (hitObject.IsLongNote)
+                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                            
+                    manager.KillPoolObject(objectIndex);
+                }
+                else
+                {
+                    // If the object is an LN, hold it at the receptors
+                    if (hitObject.IsLongNote) 
+                        manager.ChangePoolObjectStatusToHeld(objectIndex);
+                    // If the object is not an LN, recycle it.
+                    else
+                        manager.RecyclePoolObject(objectIndex);
+                }
+                                                
+                break;
+            }
+        }
+
+        /// <summary>
+        ///     Handles an individual key release during gameplay.
+        /// </summary>
+        private void HandleKeyRelease(KeysHitObjectManager manager, int noteIndex)
+        {
+            // Check which window the object has 
+            var receivedJudgementIndex = -1;                   
+            for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
+            {
+                // Get the release window of the current judgement.
+                var releaseWindow = Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[(Judgement) j];
+
+                if (!(Math.Abs(manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.AudioTiming.CurrentTime) < releaseWindow)) 
+                    continue;
+                        
+                receivedJudgementIndex = j;
+                break;
+            }
+    
+            // If LN has been released during a window
+            if (receivedJudgementIndex != -1)
+            {
+                Ruleset.ScoreProcessor.CalculateScore((Judgement) receivedJudgementIndex);
+                manager.KillHoldPoolObject(noteIndex, true);
+            }
+            // If LN has been released early
+            else
+            {
+                // Count it as an okay if it was released early and kill the hold.
+                Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                manager.KillHoldPoolObject(noteIndex);
             }
         }
     }
