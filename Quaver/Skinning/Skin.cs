@@ -221,14 +221,8 @@ namespace Quaver.Skinning
         internal SoundEffect SoundBack { get; set; }
         internal SoundEffect SoundHover { get; set; }
 
-        /// <summary>
-        ///     The number of files that will be loaded in the default skin
-        ///     for hit burst animations.
-        /// </summary>
-        private int HitBurstAnimDefault { get; } = 5;
-
         // Contains the file names of all skin elements
-        private readonly string[] skinElements = new[]
+        private readonly string[] skinElements =
         {
                 // Stage
                 @"4k-stage-bgmask",
@@ -238,6 +232,8 @@ namespace Quaver.Skinning
                 @"stage-hitposition-overlay",
                 @"stage-distant-overlay",
                 @"stage-timingbar",
+            
+                // Column Lighting
                 @"4k-column-lighting",
                 @"7k-column-lighting",
 
@@ -277,6 +273,7 @@ namespace Quaver.Skinning
                 @"7k-note-hitobject-6",
                 @"7k-note-hitobject-7",
             
+                // 7K LN hit Objects
                 @"7k-note-holdhitobject-1",
                 @"7k-note-holdhitobject-2",
                 @"7k-note-holdhitobject-3",
@@ -364,16 +361,19 @@ namespace Quaver.Skinning
                 @"judge-perf",
                 @"judge-marv",
 
-                //  QuaverCursor
+                // Cursor
                 @"main-cursor",
 
-                // Sound Effects
+                // ----- Sound Effects -----
+            
+                // Gameplay SFX
                 @"sound-hit",
                 @"sound-hitclap",
                 @"sound-hitwhistle",
                 @"sound-hitfinish",
-
                 @"sound-combobreak",
+            
+                // Menu SFX
                 @"sound-applause",
                 @"sound-screenshot",
                 @"sound-click",
