@@ -126,7 +126,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             // Create the base HitObjectSprite
             HitObjectSprite = new QuaverSprite()
             {
-                Parent = Playfield.HitObjectContainer,
                 Alignment = Alignment.TopLeft,
                 Position = new UDim2D(PositionX, PositionY),
                 SpriteEffect = Effects,
@@ -139,6 +138,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             
             if (IsLongNote)
                 CreateLongNote();
+
+            // We set the parent of the HitObjectSprite **AFTER** we create the long note
+            // so that the body of the long note isn't drawn over the object.
+            HitObjectSprite.Parent = Playfield.HitObjectContainer;
         }
         
         /// <inheritdoc />
