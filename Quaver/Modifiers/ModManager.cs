@@ -102,7 +102,7 @@ namespace Quaver.Modifiers
         /// </summary>
         /// <param name="modIdentifier"></param>
         /// <returns></returns>
-        public static bool Activated(ModIdentifier modIdentifier)
+        public static bool IsActivated(ModIdentifier modIdentifier)
         {
             return GameBase.CurrentGameModifiers.Exists(x => x.ModIdentifier == modIdentifier);
         }

@@ -164,7 +164,7 @@ namespace Quaver.States.Gameplay.Mania.Components.Timing
             var svQueue = new List<ManiaTimingObject>();
 
             //Create SVs
-            if (ModManager.Activated(ModIdentifier.NoSliderVelocity) == false)
+            if (ModManager.IsActivated(ModIdentifier.NoSliderVelocity) == false)
             {
                 //Todo: Implement SV change
                 CreateSV(svQueue, 0, 1f);
