@@ -969,7 +969,7 @@ namespace Quaver.Skinning
                     ColumnSize4K = 95;
                     ColumnSize7K = 65;
                     ReceptorPositionOffset4K = 0;
-                    ReceptorPositionOffset7K = -75;
+                    ReceptorPositionOffset7K = 0;
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = true;
                     LightFramesPerSecond = 240;
