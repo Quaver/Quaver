@@ -36,14 +36,14 @@ namespace Quaver.States.Gameplay
         internal GameplayAudio AudioTiming { get; }
 
         /// <summary>
-        ///     If the play session is finished.
-        /// </summary>
-        internal bool Finished { get; set; }
-
-        /// <summary>
         ///     If the game is currently paused.
         /// </summary>
         internal bool Paused { get; set; }
+
+        /// <summary>
+        ///     If the game session has already been started.
+        /// </summary>
+        internal bool Started { get; set; }
 
         /// <summary>
         ///     The curent game mode object.
@@ -115,6 +115,9 @@ namespace Quaver.States.Gameplay
             // Change discord rich presence.
             DiscordController.ChangeDiscordPresenceGameplay(false);
             
+            // Initialize the game mode.
+            GameModeComponent.Initialize();
+            
             // Add gameplay loggers
             Logger.Add("Paused", $"Paused: {Paused}", Color.White);
             Logger.Add("Resume In Progress", $"Resume In Progress {ResumeInProgress}", Color.White);
@@ -123,10 +126,9 @@ namespace Quaver.States.Gameplay
             Logger.Add($"Accuracy", $"Accuracy: {GameModeComponent.ScoreProcessor.Accuracy}", Color.White);
             Logger.Add($"Combo", $"Combo: {GameModeComponent.ScoreProcessor.Combo}", Color.White);
             Logger.Add($"Max Combo", $"Max Combo: {GameModeComponent.ScoreProcessor.MaxCombo}", Color.White);
-            
-            // Initialize the game mode.
-            GameModeComponent.Initialize();
-            
+            Logger.Add($"Objects Left", $"Objects Left {GameModeComponent.HitObjectManager.ObjectsLeft}", Color.White);
+            Logger.Add($"Finished", $"Finished: {GameModeComponent.HitObjectManager.IsComplete}", Color.White);
+                        
             UpdateReady = true;
         }
 
@@ -173,6 +175,8 @@ namespace Quaver.States.Gameplay
             Logger.Update($"Accuracy", $"Accuracy: {GameModeComponent.ScoreProcessor.Accuracy}");
             Logger.Update($"Combo", $"Combo: {GameModeComponent.ScoreProcessor.Combo}");
             Logger.Update($"Max Combo", $"Max Combo: {GameModeComponent.ScoreProcessor.MaxCombo}");
+            Logger.Update($"Objects Left", $"Objects Left {GameModeComponent.HitObjectManager.ObjectsLeft}");
+            Logger.Update($"Finished", $"Finished: {GameModeComponent.HitObjectManager.IsComplete}");
             
             GameBase.SpriteBatch.End();
         }
