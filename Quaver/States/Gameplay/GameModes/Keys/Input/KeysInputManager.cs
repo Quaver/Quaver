@@ -116,7 +116,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                     for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
                     {
                         // Check if the user actually hit the object.
-                        if (!(Math.Abs(hitObject.Info.StartTime - Ruleset.Screen.AudioTiming.CurrentTime) <= Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j])) 
+                        if (!(Math.Abs(hitObject.TrueStartTime - Ruleset.Screen.AudioTiming.CurrentTime) <= Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j])) 
                             continue;
                         
                         var judgement = (Judgement) j;
@@ -124,13 +124,25 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                         // Update the user's score
                         Ruleset.ScoreProcessor.CalculateScore(judgement);
 
-                        // If the object is an LN, change the status to held.
-                        if (hitObject.IsLongNote)
-                            manager.ChangePoolObjectStatusToHeld(objectIndex);
-                        // Otherwise, just recycle the object.
+                        // If the user is spamming.
+                        if (judgement >= Judgement.Good)
+                        {
+                            // If the object is an LN, count it as a miss.
+                            if (hitObject.IsLongNote)
+                                Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                            
+                            manager.KillPoolObject(objectIndex);
+                        }
                         else
-                            manager.RecyclePoolObject(objectIndex);
-                        
+                        {
+                            // If the object is an LN, hold it at the receptors
+                            if (hitObject.IsLongNote) 
+                                manager.ChangePoolObjectStatusToHeld(objectIndex);
+                            // If the object is not an LN, recycle it.
+                            else
+                                manager.RecyclePoolObject(objectIndex);
+                        }
+                                                
                         break;
                     }
                 }
@@ -160,7 +172,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                         // Get the release window of the current judgement.
                         var releaseWindow = Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[(Judgement) j];
 
-                        if (!(Math.Abs(manager.HeldLongNotes[noteIndex].Info.EndTime - Ruleset.Screen.AudioTiming.CurrentTime) < releaseWindow)) 
+                        if (!(Math.Abs(manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.AudioTiming.CurrentTime) < releaseWindow)) 
                             continue;
                         
                         receivedJudgementIndex = j;
@@ -171,13 +183,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                     if (receivedJudgementIndex != -1)
                     {
                         Ruleset.ScoreProcessor.CalculateScore((Judgement) receivedJudgementIndex);
-                        manager.KillHoldPoolObject(noteIndex);
+                        manager.KillHoldPoolObject(noteIndex, true);
                     }
                     // If LN has been released early
                     else
                     {
                         // Count it as an okay if it was released early and kill the hold.
-                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Okay);
+                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
                         manager.KillHoldPoolObject(noteIndex);
                     }
                 }
