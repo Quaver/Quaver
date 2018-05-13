@@ -315,9 +315,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             var hitObject = (KeysHitObject) HeldLongNotes[index];
             
             // Change start time and y offset.
+            // TODO: This.
             hitObject.TrueStartTime = (float) Ruleset.Screen.AudioTiming.CurrentTime;
             hitObject.OffsetYFromReceptor = hitObject.TrueStartTime;
-
+            
             if (destroy)
             {
                 hitObject.Destroy();
@@ -325,11 +326,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             else
             {
                 hitObject.ChangeSpriteColorToDead();
-                DeadNotes.Add(hitObject);
             }
-
+            
             // Remove from the hold pool
             HeldLongNotes.RemoveAt(index);
+            DeadNotes.Add(hitObject);
         }
     }
 }
