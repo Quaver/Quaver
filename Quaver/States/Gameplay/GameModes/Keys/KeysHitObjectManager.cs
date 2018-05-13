@@ -144,7 +144,16 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <param name="dt"></param>
         internal override void Update(double dt)
         {
-#region ACTIVE_HITOBJECTS
+            UpdateAndScoreActiveObjects();
+            UpdateAndScoreHeldObjects();
+            UpdateDeadObjects();
+        }
+
+        /// <summary>
+        ///     Updates the active objects in the pool + adds to score when applicable.
+        /// </summary>
+        private void UpdateAndScoreActiveObjects()
+        {
             // Update active objects.
             for (var i = 0; i < ObjectPool.Count && i < PoolSize; i++)
             {
@@ -177,10 +186,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.OffsetYFromReceptor);
                     hitObject.UpdateSpritePositions();
                 }
-            }           
-#endregion
+            }        
+        }
 
-#region HELD_OBJECTS
+        /// <summary>
+        ///     Updates the held long note objects in the pool + adds to score when applicable.
+        /// </summary>
+        private void UpdateAndScoreHeldObjects()
+        {
             // Update the currently held long notes.
             for (var i = 0; i < HeldLongNotes.Count; i++)
             {
@@ -217,10 +230,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     // Update the sprite positions of the object.
                     hitObject.UpdateSpritePositions();
                 }
-            }           
-#endregion
+            }       
+        }
 
-#region DEAD_HITOBJECTS
+        /// <summary>
+        ///     Updates all of the dead objects in the pool.
+        /// </summary>
+        private void UpdateDeadObjects()
+        {
             // Update dead objects.
             for (var i = 0; i < DeadNotes.Count; i++)
             {
@@ -242,9 +259,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     hitObject.UpdateSpritePositions();
                 }
             }
-#endregion
         }
-
+        
         /// <summary>
         ///     Kills a note at a specific index of the object pool.
         /// </summary>

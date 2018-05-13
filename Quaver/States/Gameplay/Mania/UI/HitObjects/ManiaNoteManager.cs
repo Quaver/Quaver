@@ -505,7 +505,8 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
             HitObjectHold[index].OffsetFromReceptor = SvOffsetFromTime(HitObjectHold[index].StartTime, GetSvIndex(HitObjectHold[index].StartTime));
 
             //Kill the object and add it to the HitObjectDead pool
-            if (destroy) HitObjectHold[index].Destroy();
+            if (destroy) 
+                HitObjectHold[index].Destroy();
             else
             {
                 HitObjectHold[index].Kill();
