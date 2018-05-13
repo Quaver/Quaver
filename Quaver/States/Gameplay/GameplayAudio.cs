@@ -28,11 +28,6 @@ namespace Quaver.States.Gameplay
         }
 
         /// <summary>
-        ///     If the song is currently done.
-        /// </summary>
-        internal bool Done { get; set; }
-
-        /// <summary>
         ///     The amount of time it takes before the gameplay/song actually starts.
         ///     The amount of time it takes before gameplay resumes after pausing. 
         /// </summary>
@@ -55,11 +50,11 @@ namespace Quaver.States.Gameplay
         {
             GameplayScreen = game;
             
+            // Reload the audio stream.
             GameBase.AudioEngine.ReloadStream();
             
             // Set the current time & the end time of the map.
             CurrentTime = -StartDelay * GameBase.AudioEngine.PlaybackRate;
-            EndTime = Qua.FindSongLength(GameBase.SelectedMap.Qua) + (AudioEngine.BassDelayOffset - ConfigManager.GlobalAudioOffset.Value + 1500) * GameBase.AudioEngine.PlaybackRate;
         }
 
         /// <summary>
@@ -106,41 +101,23 @@ namespace Quaver.States.Gameplay
         {
             if (GameplayScreen.Paused)
                 return;
-            
-            // Calculate Time after Song Done
-            if (Done)
-            {
-                CurrentTime += dt * GameBase.AudioEngine.PlaybackRate;
-
-                //If song is done and song time is over playingEndOffset, the play session is done
-                if (CurrentTime >= EndTime)
-                    GameplayScreen.Finished = true;
-                
-                return;
-            }
-            
+                        
             // If the audio didn't begin yet, 
             if (CurrentTime < 0)
             {
                 CurrentTime += dt * GameBase.AudioEngine.PlaybackRate;
                 return;
             }
-            
+                      
             // Play the audio stream if the current time is past the start delay. 
-            if (!GameBase.AudioEngine.IsPlaying)
+            if (!GameplayScreen.Started)
             {
                 try
                 {
+                    GameplayScreen.Started = true;
                     GameBase.AudioEngine.Play();
                 }
                 catch (AudioEngineException e) {}
-            }
-            
-            //If song time > song end, song is done.
-            if (GameBase.AudioEngine.Position + 1 > GameBase.AudioEngine.Length || CurrentTime >= EndTime)
-            {
-                Done = true;
-                return;
             }
             
             CurrentTime = (GameBase.AudioEngine.Position + (CurrentTime + dt * GameBase.AudioEngine.PlaybackRate)) / 2;
