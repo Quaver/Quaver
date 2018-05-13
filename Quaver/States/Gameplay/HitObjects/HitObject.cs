@@ -58,13 +58,22 @@ namespace Quaver.States.Gameplay.HitObjects
         /// <returns></returns>
         internal TimingPointInfo GetTimingPoint(List<TimingPointInfo> timingPoints)
         {
-            // If the start time of the object is greater than the last timing point, then return the last 
-            // point.
+            // If the object's time is greater than the time of the last timing point, return the last point
             if (Info.StartTime >= timingPoints.Last().StartTime)
                 return timingPoints.Last();
+            
+            // Search through the entire list for the correct point
+            for (var i = 0; i < timingPoints.Count - 1; i++)
+            {
+                if (Info.StartTime < timingPoints.Last().StartTime)
+                {
+                    return timingPoints[i];
+                }
+            }
 
-            // Otherwise loop through all the timing points to find the correct one.
-            return timingPoints.Where((t, i) => Info.StartTime < timingPoints[i + 1].StartTime).FirstOrDefault();
+            // Otherwise just return first point if we can't find it. 
+            // Qua file won't be considered valid if it doesn't have at least one timing point.
+            return timingPoints.First();
         }
 
         /// <summary>
