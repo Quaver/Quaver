@@ -14,6 +14,16 @@ namespace Quaver.States.Gameplay.HitObjects
         internal HitObjectInfo Info { get; }
 
         /// <summary>
+        ///     The true start time of the object.
+        /// </summary>
+        internal float TrueStartTime { get; set; }
+
+        /// <summary>
+        ///     The true end time of the object.
+        /// </summary>
+        internal float TrueEndTime { get; set; }
+        
+        /// <summary>
         ///     The list of possible beat snaps.
         /// </summary>
         private static int[] BeatSnaps = { 48, 24, 16, 12, 8, 6, 4, 3 };
@@ -37,6 +47,9 @@ namespace Quaver.States.Gameplay.HitObjects
         internal HitObject(HitObjectInfo info)
         {
             Info = info;
+
+            TrueStartTime = Info.StartTime;
+            TrueEndTime = Info.EndTime;
         }
 
         /// <summary>

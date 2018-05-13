@@ -33,6 +33,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         internal static float ScrollSpeed => ConfigManager.ScrollSpeed4K.Value / (20f * GameBase.AudioEngine.PlaybackRate);
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        internal override int ObjectsLeft => ObjectPool.Count + HeldLongNotes.Count + DeadNotes.Count;
+        
         /// <summary>
         ///     Dictates if we are currently using downscroll or not.
         /// </summary>
@@ -146,7 +151,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 var hitObject = (KeysHitObject) ObjectPool[i];
                 
                 // If the user misses the note.
-                if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.Info.StartTime + Ruleset.ScoreProcessor.JudgementWindow.Last().Value)
+                if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.TrueStartTime + Ruleset.ScoreProcessor.JudgementWindow.Last().Value)
                 {
                     // Add a miss to their score.
                     Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
@@ -185,7 +190,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 var window = Ruleset.ScoreProcessor.JudgementWindow.Last().Value * Ruleset.ScoreProcessor.WindowReleaseMultiplier.Last().Value;
                 
                 // If the LN's release was missed.
-                if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.Info.EndTime + window)
+                if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.TrueEndTime + window)
                 {
                     Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
 
@@ -198,7 +203,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 else
                 {
                     // Set the long note size and position.
-                    if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.Info.StartTime)
+                    if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.TrueStartTime)
                     {
                         hitObject.CurrentLongNoteSize = (ulong) ((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.AudioTiming.CurrentTime) * ScrollSpeed);
                         hitObject.PositionY = HitPositionOffset;
@@ -222,8 +227,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 var hitObject = (KeysHitObject) DeadNotes[i];
                 
                 // If the note is past the time of removal, then destroy it.
-                if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.Info.EndTime + DeadNoteRemovalTime 
-                    && Ruleset.Screen.AudioTiming.CurrentTime > hitObject.Info.StartTime + DeadNoteRemovalTime)
+                if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.TrueEndTime + DeadNoteRemovalTime 
+                    && Ruleset.Screen.AudioTiming.CurrentTime > hitObject.TrueStartTime + DeadNoteRemovalTime)
                 {
                     // Remove from dead notes pool.
                     hitObject.Destroy();
@@ -308,6 +313,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         internal void KillHoldPoolObject(int index, bool destroy = false)
         {
             var hitObject = (KeysHitObject) HeldLongNotes[index];
+            
+            // Change start time and y offset.
+            hitObject.TrueStartTime = (float) Ruleset.Screen.AudioTiming.CurrentTime;
+            hitObject.OffsetYFromReceptor = hitObject.TrueStartTime;
 
             if (destroy)
             {

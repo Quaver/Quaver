@@ -243,7 +243,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             var speed = KeysHitObjectManager.IsDownscroll ? -KeysHitObjectManager.ScrollSpeed : KeysHitObjectManager.ScrollSpeed;
             return (float) (manager.HitPositionOffset + (offset - Ruleset.Screen.AudioTiming.CurrentTime) * speed);
         }
-
+        
         /// <summary>
         ///     Updates the HitObject sprite positions
         /// </summary>
