@@ -23,7 +23,7 @@ namespace Quaver.Audio
         ///     This offset tries to mitigate the offset, however the value is seemingly
         ///     arbitrary.
         /// </summary>
-        internal static int BassDelayOffset { get; } = 35;
+        internal static int BassDelayOffset { get; } = 15;
 
         /// <summary>
         ///     The length of the current audio stream in milliseconds.
