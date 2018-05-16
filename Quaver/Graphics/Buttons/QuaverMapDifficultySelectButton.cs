@@ -26,7 +26,7 @@ namespace Quaver.Graphics.Buttons
 
         internal int Index { get; set; }
 
-        private QuaverTextbox DifficultyNameText { get; set; }
+        private QuaverSpriteText DifficultyNameText { get; set; }
 
         private QuaverSprite GradeImage { get; set; }
 
@@ -53,7 +53,7 @@ namespace Quaver.Graphics.Buttons
             Size.Y.Offset = BUTTON_Y_SIZE * ButtonScale;
             Size.X.Offset = BUTTON_X_SIZE * ButtonScale;
 
-            DifficultyNameText = new QuaverTextbox()
+            DifficultyNameText = new QuaverSpriteText()
             {
                 Font = QuaverFonts.Medium48,
                 Size = new UDim2D(-40 * ButtonScale, -ButtonScale, 1, 0.6f),

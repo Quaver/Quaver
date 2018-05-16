@@ -25,9 +25,9 @@ namespace Quaver.Graphics.Buttons
 
         internal int Index { get; set; }
 
-        private QuaverTextbox TitleText { get; set; }
+        private QuaverSpriteText TitleText { get; set; }
 
-        private QuaverTextbox ArtistText { get; set; }
+        private QuaverSpriteText ArtistText { get; set; }
 
         /// <summary>
         ///     Current tween value of the object. Used for animation.
@@ -63,7 +63,7 @@ namespace Quaver.Graphics.Buttons
                 }
             });*/
 
-            TitleText = new QuaverTextbox()
+            TitleText = new QuaverSpriteText()
             {
                 Text = "Song Title", //map.Title,
                 Font = QuaverFonts.Medium48,
@@ -76,7 +76,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = this
             };
 
-            ArtistText = new QuaverTextbox()
+            ArtistText = new QuaverSpriteText()
             {
                 Text = "Song Artist | Charter", //map.Artist + " | "+ map.Creator,
                 Font = QuaverFonts.Medium48,

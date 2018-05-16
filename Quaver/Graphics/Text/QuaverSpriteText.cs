@@ -17,7 +17,7 @@ namespace Quaver.Graphics.Text
     /// <summary>
     ///     Any drawable object that uses 
     /// </summary>
-    internal class QuaverTextbox : Drawable
+    internal class QuaverSpriteText : Drawable
     {
         /// <summary>
         ///     The Actual text of the text Box.

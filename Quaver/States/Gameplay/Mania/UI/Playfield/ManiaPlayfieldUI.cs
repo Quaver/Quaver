@@ -51,7 +51,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
         /// <summary>
         ///     The text displaying combo
         /// </summary>
-        private QuaverTextbox ComboQuaverText { get; set; }
+        private QuaverSpriteText ComboQuaverText { get; set; }
 
         /// <summary>
         ///     When the JudgeQuaverSprite gets updated, it'll update JudgeQuaverSprite.PositionY to this variable.
@@ -144,7 +144,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             };
 
             // Create Combo Text
-            ComboQuaverText = new QuaverTextbox()
+            ComboQuaverText = new QuaverSpriteText()
             {
                 Size = new UDim2D(100 * GameBase.WindowUIScale, 20 * GameBase.WindowUIScale),
                 Position = new UDim2D(0, 45 * GameBase.WindowUIScale),

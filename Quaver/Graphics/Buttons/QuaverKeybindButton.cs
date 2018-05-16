@@ -26,7 +26,7 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     The text sprite displayed in the key button.
         /// </summary>
-        private QuaverTextbox QuaverTextSprite { get; set; }
+        private QuaverSpriteText QuaverTextSprite { get; set; }
 
         /// <summary>
         ///     If the keybind button is currently selected.
@@ -55,7 +55,7 @@ namespace Quaver.Graphics.Buttons
             Keybind = keybind;
             
             // Create text sprite.
-            QuaverTextSprite = new QuaverTextbox()
+            QuaverTextSprite = new QuaverSpriteText()
             {
                 Text = XNAKeyHelper.GetStringFromKey(Keybind.Value),
                 Size = new UDim2D(size.X, size.Y),

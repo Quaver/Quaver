@@ -99,7 +99,7 @@ namespace Quaver.States.Gameplay.Mania
 
         //todo: remove. TEST.
         private QuaverSprite SvInfoTextBox { get; set; }
-        private QuaverTextbox SvQuaverText { get; set; }
+        private QuaverSpriteText SvQuaverText { get; set; }
         private QuaverTextButton TestButton { get; set; }
 
         //Rendering

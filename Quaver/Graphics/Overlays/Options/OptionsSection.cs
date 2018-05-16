@@ -216,7 +216,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <param name="text"></param>
         private void AddTextField(string text)
         {
-            new QuaverTextbox()
+            new QuaverSpriteText()
             {
                 TextAlignment = Alignment.TopLeft,
                 Alignment = Alignment.TopLeft,

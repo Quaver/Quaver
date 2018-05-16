@@ -27,7 +27,7 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
 
         private string[] ChatValues { get; set; }
 
-        private QuaverTextbox[] ChatQuaverTextBoxs { get; set; }
+        private QuaverSpriteText[] ChatQuaverTextBoxs { get; set; }
 
         public void Initialize()
         {
@@ -54,10 +54,10 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
 
             //create chat. todo: this is temporary
             ChatValues = new string[ChatSize];
-            ChatQuaverTextBoxs = new QuaverTextbox[ChatSize];
+            ChatQuaverTextBoxs = new QuaverSpriteText[ChatSize];
             for (var i = 0; i < ChatSize; i++)
             {
-                ChatQuaverTextBoxs[i] = new QuaverTextbox()
+                ChatQuaverTextBoxs[i] = new QuaverSpriteText()
                 {
                     Size = new UDim2D(400, 30),
                     Position = new UDim2D(10, -(230 + (i * 30))),

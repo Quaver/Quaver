@@ -14,12 +14,12 @@ namespace Quaver.Graphics.Buttons
     /// </summary>
     internal class QuaverTextButton : QuaverButton
     {
-        internal QuaverTextbox QuaverTextSprite { get; set; }
+        internal QuaverSpriteText QuaverTextSprite { get; set; }
 
         //Constructor
         internal QuaverTextButton(Vector2 ButtonSize, string ButtonText)
         {
-            QuaverTextSprite = new QuaverTextbox()
+            QuaverTextSprite = new QuaverSpriteText()
             {
                 Text = ButtonText,
                 Size = new UDim2D(ButtonSize.X, ButtonSize.Y),

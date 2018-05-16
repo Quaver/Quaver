@@ -21,7 +21,7 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     The Text box spprite
         /// </summary>
-        internal QuaverTextbox QuaverTextSprite { get; set; }
+        internal QuaverSpriteText QuaverTextSprite { get; set; }
 
         /// <summary>
         ///     The place holder text for the input field
@@ -71,7 +71,7 @@ namespace Quaver.Graphics.Buttons
             // Set the reference to the method that will be called on submit
             OnTextInputSubmit = onTextInputSubmit;
 
-            QuaverTextSprite = new QuaverTextbox()
+            QuaverTextSprite = new QuaverSpriteText()
             {
                 Text = placeHolderText,
                 Size = new UDim2D(ButtonSize.X - 8, ButtonSize.Y - 4),

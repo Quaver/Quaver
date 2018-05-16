@@ -594,7 +594,7 @@ namespace Quaver.States.Results
         private void CreateJudgeWindowUI()
         {
             //Create Judge Info QuaverContainer
-            QuaverTextbox ob;
+            QuaverSpriteText ob;
             var boundary = new QuaverContainer()
             {
                 Size = new UDim2D(350, 240),
@@ -607,7 +607,7 @@ namespace Quaver.States.Results
             //Create Judge Text
             for (var i = 0; i < 6; i++)
             {
-                ob = new QuaverTextbox()
+                ob = new QuaverSpriteText()
                 {
                     Text = "[" + ManiaGameplayReferences.JudgeNames[i] + "]: " + ManiaScoreData.JudgePressSpread[i] + " | " + ManiaScoreData.JudgeReleaseSpread[i] + " Total: " + (ManiaScoreData.JudgePressSpread[i] + ManiaScoreData.JudgeReleaseSpread[i]),
                     TextColor = GameBase.LoadedSkin.JudgeColors[i],
@@ -620,7 +620,7 @@ namespace Quaver.States.Results
             }
 
             //Create Score Text
-            ob = new QuaverTextbox()
+            ob = new QuaverSpriteText()
             {
                 Text = ManiaScoreData.ScoreTotal.ToString(),
                 Font = QuaverFonts.Medium24,
@@ -632,7 +632,7 @@ namespace Quaver.States.Results
             };
 
             //Create Accuracy Text
-            ob = new QuaverTextbox()
+            ob = new QuaverSpriteText()
             {
                 Text = $"{ManiaScoreData.Accuracy * 100:0.00}%",
                 Font = QuaverFonts.Medium24,
@@ -735,7 +735,7 @@ namespace Quaver.States.Results
         private void CreateAxisLabels(Drawable parent, string topLabel, string botLabel)
         {
             //top
-            var label = new QuaverTextbox()
+            var label = new QuaverSpriteText()
             {
                 Text = topLabel,
                 Font = QuaverFonts.Medium12,
@@ -747,7 +747,7 @@ namespace Quaver.States.Results
             };
 
             //bottom
-            label = new QuaverTextbox()
+            label = new QuaverSpriteText()
             {
                 Text = botLabel,
                 Font = QuaverFonts.Medium12,

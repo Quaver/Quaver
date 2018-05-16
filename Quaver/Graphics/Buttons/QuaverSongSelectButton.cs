@@ -19,11 +19,11 @@ namespace Quaver.Graphics.Buttons
 
         internal Map Map { get; set; }
 
-        private QuaverTextbox TitleQuaverText { get; set; }
+        private QuaverSpriteText TitleQuaverText { get; set; }
 
-        private QuaverTextbox ArtistQuaverText { get; set; }
+        private QuaverSpriteText ArtistQuaverText { get; set; }
 
-        private QuaverTextbox DiffQuaverText { get; set; }
+        private QuaverSpriteText DiffQuaverText { get; set; }
 
         private Sprites.QuaverSprite UnderlayImage { get; set; }
 
@@ -68,7 +68,7 @@ namespace Quaver.Graphics.Buttons
                 }
             });*/
 
-            TitleQuaverText = new QuaverTextbox()
+            TitleQuaverText = new QuaverSpriteText()
             {
                 Text = map.Title,
                 Font = QuaverFonts.Medium48,
@@ -81,7 +81,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = this
             };
 
-            ArtistQuaverText = new QuaverTextbox()
+            ArtistQuaverText = new QuaverSpriteText()
             {
                 Text = map.Artist + " | "+ map.Creator,
                 Font = QuaverFonts.Medium48,
@@ -94,7 +94,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = this
             };
 
-            DiffQuaverText = new QuaverTextbox()
+            DiffQuaverText = new QuaverSpriteText()
             {
                 Text = string.Format("{0:f2}", map.DifficultyRating),
                 Font = QuaverFonts.Bold12,

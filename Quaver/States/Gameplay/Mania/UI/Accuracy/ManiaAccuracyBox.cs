@@ -26,7 +26,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
         /// <summary>
         ///     Text box which displays a count of every judgement
         /// </summary>
-        private QuaverTextbox[] AccuracyCountQuaverText { get; set; }
+        private QuaverSpriteText[] AccuracyCountQuaverText { get; set; }
 
         /// <summary>
         ///     The graph which displays judgement count relative to total count of every judgement
@@ -61,7 +61,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
         /// <summary>
         ///     Text which displays current score
         /// </summary>
-        private QuaverTextbox ScoreQuaverText { get; set; }
+        private QuaverSpriteText ScoreQuaverText { get; set; }
 
         /// <summary>
         ///     Current accuracy the player has. Used for animation
@@ -139,10 +139,10 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
                 };
             }
 
-            var accuracyIndicatorText = new QuaverTextbox[7];
+            var accuracyIndicatorText = new QuaverSpriteText[7];
             for (var i = 0; i < 7; i++)
             {
-                accuracyIndicatorText[i] = new QuaverTextbox()
+                accuracyIndicatorText[i] = new QuaverSpriteText()
                 {
                     Parent = accuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
@@ -158,10 +158,10 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
                 };
             }
 
-            AccuracyCountQuaverText = new QuaverTextbox[7];
+            AccuracyCountQuaverText = new QuaverSpriteText[7];
             for (var i = 0; i < 7; i++)
             {
-                AccuracyCountQuaverText[i] = new QuaverTextbox()
+                AccuracyCountQuaverText[i] = new QuaverSpriteText()
                 {
                     Parent = accuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
@@ -176,7 +176,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
                 };
             }
 
-            ScoreQuaverText = new QuaverTextbox()
+            ScoreQuaverText = new QuaverSpriteText()
             {
                 Parent = accuracyBox,
                 Alignment = Alignment.TopLeft,

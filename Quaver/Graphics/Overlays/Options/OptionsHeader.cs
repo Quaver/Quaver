@@ -20,7 +20,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     The header's title.
         /// </summary>
-        internal QuaverTextbox Title { get; set; }
+        internal QuaverSpriteText Title { get; set; }
         
         /// <summary>
         ///     Reference to the header's icon.
@@ -30,7 +30,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     The description text 
         /// </summary>
-        internal QuaverTextbox Description { get; set; }
+        internal QuaverSpriteText Description { get; set; }
 
         /// <summary>
         ///     The line displayed under the header.
@@ -64,7 +64,7 @@ namespace Quaver.Graphics.Overlays.Options
             };
             
             // Header Title.
-            Title = new QuaverTextbox()
+            Title = new QuaverSpriteText()
             {
                 Text = "Settings",
                 Font = QuaverFonts.Medium24,
@@ -91,7 +91,7 @@ namespace Quaver.Graphics.Overlays.Options
             };
             
             // Header Description.
-            Description = new QuaverTextbox()
+            Description = new QuaverSpriteText()
             {
                 Text = "Change the way Quaver looks, sounds, feels... and tastes?",
                 Font = QuaverFonts.Medium24,

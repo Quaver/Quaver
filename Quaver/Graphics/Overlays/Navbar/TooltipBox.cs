@@ -37,12 +37,12 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The name of currently highlighted button
         /// </summary>
-        internal QuaverTextbox Name { get; set; }
+        internal QuaverSpriteText Name { get; set; }
 
         /// <summary>
         ///     The description of the currently highlighted button.
         /// </summary>
-        internal QuaverTextbox Description { get; set; }
+        internal QuaverSpriteText Description { get; set; }
 
         /// <summary>
         ///     Dictates if the tooltip box is currently in an animation.
@@ -94,7 +94,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             Icon.Size = new UDim2D(Icon.Image.Width, Icon.Image.Height);
             
             // Create Textbox for the name of the button.
-            Name = new QuaverTextbox()
+            Name = new QuaverSpriteText()
             {
                 Text = "",
                 Font = QuaverFonts.Medium24,
@@ -108,7 +108,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             };
             
             // Create Textbox for the description of the button.
-            Description = new QuaverTextbox()
+            Description = new QuaverSpriteText()
             {
                 Text = "",
                 Font = QuaverFonts.Medium24,

@@ -43,7 +43,7 @@ namespace Quaver.States.Tests
                 Alignment = Alignment.MidCenter
             };
 
-            var ds4ktext = new QuaverTextbox()
+            var ds4ktext = new QuaverSpriteText()
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
@@ -59,7 +59,7 @@ namespace Quaver.States.Tests
                 PosY = ds4k.PosY + 50
             };
 
-            var ds7ktext = new QuaverTextbox()
+            var ds7ktext = new QuaverSpriteText()
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,

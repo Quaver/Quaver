@@ -22,7 +22,7 @@ namespace Quaver.States.Select
         /// <summary>
         /// 
         /// </summary>
-        private QuaverTextbox MapInfo { get; set; }
+        private QuaverSpriteText MapInfo { get; set; }
 
         public void Initialize(IGameState state)
         {
@@ -37,7 +37,7 @@ namespace Quaver.States.Select
                 Parent = Boundary
             };
 
-            MapInfo = new QuaverTextbox()
+            MapInfo = new QuaverSpriteText()
             {
                 Size = new UDim2D(-10, -10, 1, 1),
                 Position = new UDim2D(5, 5),

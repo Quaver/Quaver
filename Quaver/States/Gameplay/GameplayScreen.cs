@@ -15,6 +15,7 @@ using Quaver.Logging;
 using Quaver.Main;
 using Quaver.States.Enums;
 using Quaver.States.Gameplay.GameModes.Keys;
+using Quaver.States.Gameplay.UI;
 
 namespace Quaver.States.Gameplay
 {

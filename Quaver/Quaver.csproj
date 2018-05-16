@@ -105,7 +105,6 @@
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\KeysPlayfield.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\KeysPlayfieldStage.cs" />
     <Compile Include="States\Gameplay\GameplayAudio.cs" />
-    <Compile Include="States\Gameplay\GameplayInterface.cs" />
     <Compile Include="States\Gameplay\GameplayScreen.cs" />
     <Compile Include="States\Gameplay\GameModeRuleset.cs" />
     <Compile Include="States\Gameplay\HitObjects\BeatSnap.cs" />
@@ -113,6 +112,8 @@
     <Compile Include="States\Gameplay\HitObjects\HitObjectManager.cs" />
     <Compile Include="States\Gameplay\IGameplayInputManager.cs" />
     <Compile Include="States\Gameplay\IGameplayPlayfield.cs" />
+    <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />
+    <Compile Include="States\Gameplay\UI\SongTimeProgressBar.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="States\Select\MapInfoWindow.cs" />
     <Compile Include="States\Select\ModSelector.cs" />
@@ -164,7 +165,7 @@
     <Compile Include="Graphics\Sprites\QuaverBakeableSprite.cs" />
     <Compile Include="Graphics\Sprites\QuaverContainer.cs" />
     <Compile Include="Main\QuaverFonts.cs" />
-    <Compile Include="Graphics\Text\QuaverTextbox.cs" />
+    <Compile Include="Graphics\Text\QuaverSpriteText.cs" />
     <Compile Include="Graphics\Text\TextBoxStyle.cs" />
     <Compile Include="Graphics\UniversalDim\UDim2D.cs" />
     <Compile Include="Graphics\UniversalDim\UDim.cs" />

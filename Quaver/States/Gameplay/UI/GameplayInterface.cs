@@ -6,7 +6,7 @@ using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Main;
 
-namespace Quaver.States.Gameplay
+namespace Quaver.States.Gameplay.UI
 {
     internal class GameplayInterface : IGameStateComponent
     {
@@ -26,7 +26,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The progress bar for the song time.
         /// </summary>
-        internal ProgressBar SongTimeProgressBar { get; set;  }
+        internal SongTimeProgressBar SongTimeProgressBar { get; set;  }
 
         /// <summary>
         ///     Ctor -
@@ -44,7 +44,7 @@ namespace Quaver.States.Gameplay
         public void Initialize(IGameState state)
         {
             // Initialize the progress bar.
-            SongTimeProgressBar = new ProgressBar(Qua.FindSongLength(GameBase.SelectedMap.Qua), 0, new UDim2D(GameBase.WindowRectangle.Width, 6),
+            SongTimeProgressBar = new SongTimeProgressBar(Qua.FindSongLength(GameBase.SelectedMap.Qua), 0, new UDim2D(GameBase.WindowRectangle.Width, 6),
                                                         Container, Alignment.BotLeft);
         }
 
