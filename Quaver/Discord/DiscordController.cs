@@ -25,11 +25,18 @@ namespace Quaver.Discord
         /// </summary>
         public void Initialize()
         {
-            handlers = new DiscordRPC.EventHandlers();
-            handlers.readyCallback = ReadyCallback;
-            handlers.disconnectedCallback += DisconnectedCallback;
-            handlers.errorCallback += ErrorCallback;
-            DiscordRPC.Initialize(applicationId, ref handlers, true, optionalSteamId);
+            try
+            {
+                handlers = new DiscordRPC.EventHandlers();
+                handlers.readyCallback = ReadyCallback;
+                handlers.disconnectedCallback += DisconnectedCallback;
+                handlers.errorCallback += ErrorCallback;
+                DiscordRPC.Initialize(applicationId, ref handlers, true, optionalSteamId);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, LogType.Runtime);
+            }
         }
 
         public void ReadyCallback()
