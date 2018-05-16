@@ -84,6 +84,7 @@
     <Compile Include="Graphics\Overlays\Options\OptionsSection.cs" />
     <Compile Include="Graphics\Overlays\Options\OptionsType.cs" />
     <Compile Include="Graphics\Overlays\Volume\VolumeController.cs" />
+    <Compile Include="Graphics\UserInterface\ProgressBar.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
     <Compile Include="Helpers\InputHelper.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\KeysPlayfield.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\KeysPlayfieldStage.cs" />
     <Compile Include="States\Gameplay\GameplayAudio.cs" />
+    <Compile Include="States\Gameplay\GameplayInterface.cs" />
     <Compile Include="States\Gameplay\GameplayScreen.cs" />
     <Compile Include="States\Gameplay\GameModeRuleset.cs" />
     <Compile Include="States\Gameplay\HitObjects\BeatSnap.cs" />
