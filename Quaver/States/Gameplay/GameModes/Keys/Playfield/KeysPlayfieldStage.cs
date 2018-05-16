@@ -65,9 +65,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
        
             CreateStageLeft();
             CreateStageRight();
-            CreateDistantOverlay();
-            CreateHitPositionOverlay();
-            
+                          
             // Create game mode specific sprites.
             // 4K and 7K are two separate modes and do NOT use the same textures
             // or skin properties. So we have to implement them separately.
@@ -75,15 +73,51 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             {
                 case GameMode.Keys4:
                     CreateBgMask4K();
-                    CreateReceptorsAndLighting4K();
+
+                    // If the receptors aren't set to be over the objects, then we create it before the
+                    // HitObjects.
+                    if (!GameBase.LoadedSkin.ReceptorsOverHitObjects4K)
+                        CreateReceptorsAndLighting4K();
+                    
+                    // Create the container for HitObjects
+                    Playfield.HitObjectContainer = new QuaverContainer
+                    {
+                        Size = new UDim2D(Playfield.Width, 0, 0, 1),
+                        Alignment = Alignment.TopCenter,
+                        Parent = Playfield.ForegroundContainer
+                    };
+                    
+                    // If the receptors are set to be over, then we create it after.
+                    if (GameBase.LoadedSkin.ReceptorsOverHitObjects4K)
+                        CreateReceptorsAndLighting4K();
                     break;
                 case GameMode.Keys7:
                     CreateBgMask7K();
-                    CreateReceptorsAndLighting7K();
+                    
+                    // If the receptors aren't set to be over the objects, then we create it before the
+                    // HitObjects.
+                    if (!GameBase.LoadedSkin.ReceptorsOverHitObjects7K)
+                        CreateReceptorsAndLighting7K();
+                    
+                    // Create the container for HitObjects
+                    Playfield.HitObjectContainer = new QuaverContainer
+                    {
+                        Size = new UDim2D(Playfield.Width, 0, 0, 1),
+                        Alignment = Alignment.TopCenter,
+                        Parent = Playfield.ForegroundContainer
+                    };
+                    
+                    // If the receptors are set to be over, then we create it after.
+                    if (GameBase.LoadedSkin.ReceptorsOverHitObjects4K)
+                        CreateReceptorsAndLighting7K();
+                    
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            
+            CreateDistantOverlay();
+            CreateHitPositionOverlay();
         }
 
 #region SPRITE_CREATION
