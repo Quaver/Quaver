@@ -36,6 +36,16 @@ namespace Quaver.States.Gameplay
         internal GameplayAudio AudioTiming { get; }
 
         /// <summary>
+        ///     The curent game mode object.
+        /// </summary>
+        private GameModeRuleset GameModeComponent { get; }
+
+        /// <summary>
+        ///     The general gameplay UI.
+        /// </summary>
+        private GameplayInterface UI { get; }
+
+        /// <summary>
         ///     If the game is currently paused.
         /// </summary>
         internal bool Paused { get; set; }
@@ -44,11 +54,6 @@ namespace Quaver.States.Gameplay
         ///     If the game session has already been started.
         /// </summary>
         internal bool Started { get; set; }
-
-        /// <summary>
-        ///     The curent game mode object.
-        /// </summary>
-        private GameModeRuleset GameModeComponent { get; }
 
         /// <summary>
         ///     The current parsed .qua file that is being played.
@@ -92,7 +97,8 @@ namespace Quaver.States.Gameplay
             MapHash = md5;
             
             AudioTiming = new GameplayAudio(this);
-
+            UI = new GameplayInterface(this);
+            
             // Set the game mode component.
             switch (map.Mode)
             {
@@ -111,6 +117,7 @@ namespace Quaver.States.Gameplay
         public void Initialize()
         {           
             AudioTiming.Initialize(this);
+            UI.Initialize(this);
             
             // Change discord rich presence.
             DiscordController.ChangeDiscordPresenceGameplay(false);
@@ -128,7 +135,7 @@ namespace Quaver.States.Gameplay
             Logger.Add($"Max Combo", $"Max Combo: {GameModeComponent.ScoreProcessor.MaxCombo}", Color.White);
             Logger.Add($"Objects Left", $"Objects Left {GameModeComponent.HitObjectManager.ObjectsLeft}", Color.White);
             Logger.Add($"Finished", $"Finished: {GameModeComponent.HitObjectManager.IsComplete}", Color.White);
-                        
+               
             UpdateReady = true;
         }
 
@@ -138,6 +145,7 @@ namespace Quaver.States.Gameplay
         public void UnloadContent()
         {
             AudioTiming.UnloadContent();
+            UI.UnloadContent();
             GameModeComponent.Destroy();
             Logger.Clear();
         }
@@ -148,7 +156,8 @@ namespace Quaver.States.Gameplay
         /// <param name="dt"></param>
         public void Update(double dt)
         {
-            AudioTiming.Update(dt);  
+            AudioTiming.Update(dt); 
+            UI.Update(dt);
             HandleInput(dt);
             HandleResuming();
             PauseIfWindowInactive();
@@ -166,6 +175,7 @@ namespace Quaver.States.Gameplay
             
             BackgroundManager.Draw();
             GameModeComponent.Draw();
+            UI.Draw();
             
             // Update loggers.
             Logger.Update("Paused", $"Paused: {Paused}");
