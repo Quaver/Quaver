@@ -68,14 +68,14 @@ namespace Quaver.States.Gameplay.UI
             // Set the time of the current time
             if (CurrentValue > 0)
             {
-                var currTime = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds(CurrentValue);
+                var currTime = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int) CurrentValue);
                 CurrentTime.Text = currTime.ToString("mm:ss");
             }
             
             // Set the time of the time left.
             if (MaxValue - CurrentValue >= 0)
             {
-                var timeLeft = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds(MaxValue - CurrentValue);
+                var timeLeft = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int) (MaxValue - CurrentValue));
                 TimeLeft.Text = $"-{timeLeft:mm:ss}";
             }
             
