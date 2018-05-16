@@ -1,4 +1,5 @@
 ﻿using Quaver.API.Maps;
+using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
@@ -43,9 +44,10 @@ namespace Quaver.States.Gameplay.UI
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {
-            // Initialize the progress bar.
-            SongTimeProgressBar = new SongTimeProgressBar(Qua.FindSongLength(GameBase.SelectedMap.Qua), 0, new UDim2D(GameBase.WindowRectangle.Width, 6),
-                                                        Container, Alignment.BotLeft);
+            // Initialize the progress bar if the user has it set in config.
+            if (ConfigManager.DisplaySongTimeProgress.Value)
+                SongTimeProgressBar = new SongTimeProgressBar(Qua.FindSongLength(GameBase.SelectedMap.Qua), 0, new UDim2D(GameBase.WindowRectangle.Width, 6),
+                                                            Container, Alignment.BotLeft);
         }
 
         /// <summary>
@@ -62,8 +64,10 @@ namespace Quaver.States.Gameplay.UI
         /// <param name="dt"></param>
         public void Update(double dt)
         {
-            // Update the current vaalue of the song time progress bar.
-            SongTimeProgressBar.CurrentValue = (float) Screen.AudioTiming.CurrentTime;
+            // Update the current value of the song time progress bar if it is actually initialized
+            // and the user wants to actually display it.
+            if (ConfigManager.DisplaySongTimeProgress.Value && SongTimeProgressBar != null)
+                SongTimeProgressBar.CurrentValue = (float) Screen.AudioTiming.CurrentTime;
             
             Container.Update(dt);
         }
