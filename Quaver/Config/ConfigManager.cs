@@ -144,6 +144,12 @@ namespace Quaver.Config
         internal static BindedValue<bool> HealthBarPositionTop { get; private set; }
 
         /// <summary>
+        ///     Determines if we should show the song time progress display in the
+        ///     gameplay screen.
+        /// </summary>
+        internal static BindedValue<bool> DisplaySongTimeProgress { get; private set; }
+
+        /// <summary>
         ///     The scroll speed for mania 4k
         /// </summary>
         internal static BindedInt ScrollSpeed4K { get; private set; }
@@ -328,6 +334,7 @@ namespace Quaver.Config
             WindowHeight = ReadInt(@"WindowHeight", 720, 600, short.MaxValue, data);
             WindowWidth = ReadInt(@"WindowWidth", 1280, 800, short.MaxValue, data);
             HealthBarPositionTop = ReadValue(@"HealthBarPositionTop", false, data);
+            DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
             UserHitPositionOffset4K = ReadInt(@"UserHitPositionOffset4K", 0, 0, byte.MaxValue, data);
             UserHitPositionOffset7K = ReadInt(@"UserHitPositionOffset7K", 0, 0, byte.MaxValue, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
@@ -392,6 +399,7 @@ namespace Quaver.Config
                     WindowFullScreen.OnValueChanged += AutoSaveConfiguration;
                     WindowLetterboxed.OnValueChanged += AutoSaveConfiguration;
                     FpsCounter.OnValueChanged += AutoSaveConfiguration;
+                    DisplaySongTimeProgress.OnValueChanged += AutoSaveConfiguration;
                     ScrollSpeed4K.OnValueChanged += AutoSaveConfiguration;
                     ScrollSpeed7K.OnValueChanged += AutoSaveConfiguration;
                     DownScroll4K.OnValueChanged += AutoSaveConfiguration;
