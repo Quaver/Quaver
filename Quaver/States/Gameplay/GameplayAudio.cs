@@ -31,13 +31,8 @@ namespace Quaver.States.Gameplay
         ///     The amount of time it takes before the gameplay/song actually starts.
         ///     The amount of time it takes before gameplay resumes after pausing. 
         /// </summary>
-        internal int StartDelay { get; } = 2000;
+        internal int StartDelay { get; } = 1500;
         
-        /// <summary>
-        ///     The offset in milliseconds at which the map actually ends.
-        /// </summary>
-        private float EndTime { get; }
-
         /// <summary>
         ///     Reference to the gameplay screen.
         /// </summary>
