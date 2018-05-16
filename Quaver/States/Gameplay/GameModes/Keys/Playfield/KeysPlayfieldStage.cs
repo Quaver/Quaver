@@ -74,43 +74,34 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 case GameMode.Keys4:
                     CreateBgMask4K();
 
-                    // If the receptors aren't set to be over the objects, then we create it before the
-                    // HitObjects.
-                    if (!GameBase.LoadedSkin.ReceptorsOverHitObjects4K)
-                        CreateReceptorsAndLighting4K();
-                    
-                    // Create the container for HitObjects
-                    Playfield.HitObjectContainer = new QuaverContainer
-                    {
-                        Size = new UDim2D(Playfield.Width, 0, 0, 1),
-                        Alignment = Alignment.TopCenter,
-                        Parent = Playfield.ForegroundContainer
-                    };
-                    
-                    // If the receptors are set to be over, then we create it after.
+                    // Depending on what the skin.ini's value is, we'll want to either initialize
+                    // the receptors first, or the playfield first.
                     if (GameBase.LoadedSkin.ReceptorsOverHitObjects4K)
-                        CreateReceptorsAndLighting4K();
+                    {
+                        Playfield.CreateHitObjectContainer();
+                        CreateReceptorsAndLighting4K();                 
+                    }
+                    else
+                    {
+                        CreateReceptorsAndLighting4K();  
+                        Playfield.CreateHitObjectContainer();
+                    }                          
                     break;
                 case GameMode.Keys7:
                     CreateBgMask7K();
-                    
-                    // If the receptors aren't set to be over the objects, then we create it before the
-                    // HitObjects.
-                    if (!GameBase.LoadedSkin.ReceptorsOverHitObjects7K)
-                        CreateReceptorsAndLighting7K();
-                    
-                    // Create the container for HitObjects
-                    Playfield.HitObjectContainer = new QuaverContainer
+
+                    // Depending on what the skin.ini's value is, we'll want to either initialize
+                    // the receptors first, or the playfield first.
+                    if (GameBase.LoadedSkin.ReceptorsOverHitObjects7K)
                     {
-                        Size = new UDim2D(Playfield.Width, 0, 0, 1),
-                        Alignment = Alignment.TopCenter,
-                        Parent = Playfield.ForegroundContainer
-                    };
-                    
-                    // If the receptors are set to be over, then we create it after.
-                    if (GameBase.LoadedSkin.ReceptorsOverHitObjects4K)
-                        CreateReceptorsAndLighting7K();
-                    
+                        Playfield.CreateHitObjectContainer();
+                        CreateReceptorsAndLighting7K();                 
+                    }
+                    else
+                    {
+                        CreateReceptorsAndLighting7K();  
+                        Playfield.CreateHitObjectContainer();
+                    }                    
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

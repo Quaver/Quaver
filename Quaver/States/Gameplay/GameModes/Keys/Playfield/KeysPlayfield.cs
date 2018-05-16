@@ -234,5 +234,18 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         {
             Container.Draw();
         }
+
+        /// <summary>
+        ///     Creates the HitObjectContainer.
+        /// </summary>
+        internal void CreateHitObjectContainer()
+        {
+            HitObjectContainer = new QuaverContainer
+            {
+                Size = new UDim2D(Width, 0, 0, 1),
+                Alignment = Alignment.TopCenter,
+                Parent = ForegroundContainer
+            };
+        }
     }
 }
