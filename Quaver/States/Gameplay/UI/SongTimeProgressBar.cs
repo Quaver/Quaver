@@ -73,8 +73,11 @@ namespace Quaver.States.Gameplay.UI
             }
             
             // Set the time of the time left.
-            var timeLeft = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds(MaxValue - CurrentValue);
-            TimeLeft.Text = $"-{timeLeft:mm:ss}";
+            if (MaxValue - CurrentValue >= 0)
+            {
+                var timeLeft = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds(MaxValue - CurrentValue);
+                TimeLeft.Text = $"-{timeLeft:mm:ss}";
+            }
             
             base.Update(dt);
         }
