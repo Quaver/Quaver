@@ -28,11 +28,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         internal QuaverContainer ForegroundContainer { get; }
 
         /// <summary>
-        ///     The container that holds all of the HitObjects
-        /// </summary>
-        internal QuaverContainer HitObjectContainer { get; set; }
-
-        /// <summary>
         ///     Reference to the map.
         /// </summary>
         internal Qua Map { get; }
@@ -233,19 +228,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         public void Draw()
         {
             Container.Draw();
-        }
-
-        /// <summary>
-        ///     Creates the HitObjectContainer.
-        /// </summary>
-        internal void CreateHitObjectContainer()
-        {
-            HitObjectContainer = new QuaverContainer
-            {
-                Size = new UDim2D(Width, 0, 0, 1),
-                Alignment = Alignment.TopCenter,
-                Parent = ForegroundContainer
-            };
         }
     }
 }

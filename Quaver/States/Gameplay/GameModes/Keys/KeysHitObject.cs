@@ -141,7 +141,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
 
             // We set the parent of the HitObjectSprite **AFTER** we create the long note
             // so that the body of the long note isn't drawn over the object.
-            HitObjectSprite.Parent = Playfield.HitObjectContainer;
+            HitObjectSprite.Parent = Playfield.Stage.HitObjectContainer;
         }
         
         /// <inheritdoc />
@@ -169,7 +169,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 Alignment = Alignment.TopLeft,
                 Size = new UDim2D(Playfield.LaneSize, InitialLongNoteSize),
                 Position = new UDim2D(PositionX, PositionY),
-                Parent = Playfield.HitObjectContainer
+                Parent = Playfield.Stage.HitObjectContainer
             };
             
             // Create the Hold End
@@ -178,7 +178,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 Alignment = Alignment.TopLeft,
                 Position = new UDim2D(PositionX, PositionY),
                 Size = new UDim2D(Playfield.LaneSize),
-                Parent = Playfield.HitObjectContainer,
+                Parent = Playfield.Stage.HitObjectContainer,
                 SpriteEffect = Effects
             };
 

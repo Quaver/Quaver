@@ -54,6 +54,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         private QuaverSprite HitPositionOverlay { get; set; }
 
+        /// <summary>
+        ///     The container that holds all of the HitObjects
+        /// </summary>
+        internal QuaverContainer HitObjectContainer { get; set; }
+        
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
@@ -65,6 +70,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
        
             CreateStageLeft();
             CreateStageRight();
+            CreateHitPositionOverlay();
                           
             // Create game mode specific sprites.
             // 4K and 7K are two separate modes and do NOT use the same textures
@@ -78,13 +84,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                     // the receptors first, or the playfield first.
                     if (GameBase.LoadedSkin.ReceptorsOverHitObjects4K)
                     {
-                        Playfield.CreateHitObjectContainer();
+                        CreateHitObjectContainer();
                         CreateReceptorsAndLighting4K();                 
                     }
                     else
                     {
                         CreateReceptorsAndLighting4K();  
-                        Playfield.CreateHitObjectContainer();
+                        CreateHitObjectContainer();
                     }                          
                     break;
                 case GameMode.Keys7:
@@ -94,24 +100,38 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                     // the receptors first, or the playfield first.
                     if (GameBase.LoadedSkin.ReceptorsOverHitObjects7K)
                     {
-                        Playfield.CreateHitObjectContainer();
+                        CreateHitObjectContainer();
                         CreateReceptorsAndLighting7K();                 
                     }
                     else
                     {
                         CreateReceptorsAndLighting7K();  
-                        Playfield.CreateHitObjectContainer();
+                        CreateHitObjectContainer();
                     }                    
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
             
+            // Create distant overlay last so it shows over the objects.
             CreateDistantOverlay();
-            CreateHitPositionOverlay();
         }
 
 #region SPRITE_CREATION
+        
+        /// <summary>
+        ///     Creates the HitObjectContainer.
+        /// </summary>
+        private void CreateHitObjectContainer()
+        {
+            HitObjectContainer = new QuaverContainer
+            {
+                Size = new UDim2D(Playfield.Width, 0, 0, 1),
+                Alignment = Alignment.TopCenter,
+                Parent = Playfield.ForegroundContainer
+            };
+        }
+        
          /// <summary>
         ///     Creates the left side of the stage.
         /// </summary>
@@ -185,7 +205,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Parent = Playfield.BackgroundContainer
             };
         }
-
+        
         /// <summary>
         ///     Creates the receptors and column lighting for 4K.
         /// </summary>
