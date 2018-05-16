@@ -205,6 +205,7 @@ namespace Quaver.Graphics.Overlays.Options
             section.AddSliderOption(ConfigManager.UserHitPositionOffset4K, "Hit Position - 4 Keys");
             section.AddSliderOption(ConfigManager.UserHitPositionOffset7K, "Hit Position - 7 Keys");
             section.AddCheckboxOption(ConfigManager.HealthBarPositionTop, "Health Bar On Top");
+            section.AddCheckboxOption(ConfigManager.DisplaySongTimeProgress, "Display Song Time Progress");
             section.AddCheckboxOption(ConfigManager.DownScroll4K, "Down Scroll - 4 Keys");
             section.AddCheckboxOption(ConfigManager.DownScroll7K, "Down Scroll - 7 Keys");
         }
