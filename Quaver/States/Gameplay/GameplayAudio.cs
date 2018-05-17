@@ -46,7 +46,15 @@ namespace Quaver.States.Gameplay
             GameplayScreen = game;
             
             // Reload the audio stream.
-            GameBase.AudioEngine.ReloadStream();
+            try
+            {
+                GameBase.AudioEngine.ReloadStream();
+            }
+            catch (AudioEngineException e)
+            {
+                Logger.LogError(e, LogType.Runtime);
+            }
+
             
             // Set the current time & the end time of the map.
             CurrentTime = -StartDelay * GameBase.AudioEngine.PlaybackRate;
@@ -115,7 +123,12 @@ namespace Quaver.States.Gameplay
                 catch (AudioEngineException e) {}
             }
             
-            CurrentTime = (GameBase.AudioEngine.Position + (CurrentTime + dt * GameBase.AudioEngine.PlaybackRate)) / 2;
+            // If the audio is playing, use the song itself for song pos.
+            if (GameBase.AudioEngine.IsPlaying)
+                CurrentTime = (GameBase.AudioEngine.Position + (CurrentTime + dt * GameBase.AudioEngine.PlaybackRate)) / 2;
+            // Otherwise use deltatime.
+            else
+                CurrentTime += dt * GameBase.AudioEngine.PlaybackRate;
         }
     }
 }
