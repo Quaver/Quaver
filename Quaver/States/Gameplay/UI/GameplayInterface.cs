@@ -1,4 +1,6 @@
-﻿using Quaver.API.Maps;
+﻿using System;
+using Microsoft.Xna.Framework;
+using Quaver.API.Maps;
 using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics.Enums;
@@ -28,7 +30,7 @@ namespace Quaver.States.Gameplay.UI
         /// <summary>
         ///     The progress bar for the song time.
         /// </summary>
-        internal SongTimeProgressBar SongTimeProgressBar { get; set;  }
+        private SongTimeProgressBar SongTimeProgressBar { get; set;  }
 
         /// <summary>
         ///     The display for score.
@@ -64,17 +66,20 @@ namespace Quaver.States.Gameplay.UI
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
-                PosX = -500,
-                PosY = 40
             };
 
+            // Put the display in the top right corner.
+            ScoreDisplay.PosX = -ScoreDisplay.TotalWidth;
+            
             AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
-                PosX = ScoreDisplay.PosX,
-                PosY = ScoreDisplay.PosY + 30
             };
+            
+            // Set the position of the accuracy display.
+            AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth;
+            AccuracyDisplay.PosY = ScoreDisplay.Digits[0].SizeY + 10;
         }
 
         /// <summary>
