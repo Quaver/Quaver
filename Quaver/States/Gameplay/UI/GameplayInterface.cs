@@ -5,6 +5,7 @@ using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
+using Quaver.Helpers;
 using Quaver.Main;
 
 namespace Quaver.States.Gameplay.UI
@@ -30,6 +31,16 @@ namespace Quaver.States.Gameplay.UI
         internal SongTimeProgressBar SongTimeProgressBar { get; set;  }
 
         /// <summary>
+        ///     The display for score.
+        /// </summary>
+        private NumberDisplay ScoreDisplay { get; set; }
+
+        /// <summary>
+        ///     The display for accuracy.
+        /// </summary>
+        private NumberDisplay AccuracyDisplay { get; set; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         internal GameplayInterface(GameplayScreen screen)
@@ -48,6 +59,22 @@ namespace Quaver.States.Gameplay.UI
             if (ConfigManager.DisplaySongTimeProgress.Value)
                 SongTimeProgressBar = new SongTimeProgressBar(Qua.FindSongLength(GameBase.SelectedMap.Qua), 0, new UDim2D(GameBase.WindowRectangle.Width, 6),
                                                             Container, Alignment.BotLeft);
+
+            ScoreDisplay = new NumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0))
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                PosX = -500,
+                PosY = 40
+            };
+
+            AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0))
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                PosX = ScoreDisplay.PosX,
+                PosY = ScoreDisplay.PosY + 30
+            };
         }
 
         /// <summary>
@@ -68,6 +95,10 @@ namespace Quaver.States.Gameplay.UI
             // and the user wants to actually display it.
             if (ConfigManager.DisplaySongTimeProgress.Value && SongTimeProgressBar != null)
                 SongTimeProgressBar.CurrentValue = (float) Screen.AudioTiming.CurrentTime;
+            
+            // Update score and accuracy displays
+            ScoreDisplay.Value = StringHelper.ScoreToString(Screen.GameModeComponent.ScoreProcessor.Score);
+            AccuracyDisplay.Value = StringHelper.AccuracyToString(Screen.GameModeComponent.ScoreProcessor.Accuracy);
             
             Container.Update(dt);
         }
