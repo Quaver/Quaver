@@ -39,7 +39,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The curent game mode object.
         /// </summary>
-        private GameModeRuleset GameModeComponent { get; }
+        internal GameModeRuleset GameModeComponent { get; }
 
         /// <summary>
         ///     The general gameplay UI.
