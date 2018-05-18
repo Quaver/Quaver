@@ -202,6 +202,13 @@ namespace Quaver.Skinning
         internal Texture2D JudgeMarv { get; set; }
 
         /// <summary>
+        ///     Score display
+        /// </summary>
+        internal Texture2D[] ScoreDisplayNumbers { get; } = new Texture2D[10];
+        internal Texture2D ScoreDisplayDecimal { get; set; }
+        internal Texture2D ScoreDisplayPercent { get; set; }
+
+        /// <summary>
         ///     QuaverCursor
         /// </summary>
         internal Texture2D Cursor { get; set; }
@@ -361,6 +368,20 @@ namespace Quaver.Skinning
                 @"judge-perf",
                 @"judge-marv",
 
+                // Number Display
+                @"score-0",
+                @"score-1",
+                @"score-2",
+                @"score-3",
+                @"score-4",
+                @"score-5",
+                @"score-6",
+                @"score-7",
+                @"score-8",
+                @"score-9",
+                @"score-decimal",
+                @"score-percent",
+            
                 // Cursor
                 @"main-cursor",
 
@@ -721,6 +742,42 @@ namespace Quaver.Skinning
                         break;
                     case @"judge-marv":
                         JudgeMarv = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-0":
+                        ScoreDisplayNumbers[0] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-1":
+                        ScoreDisplayNumbers[1] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-2":
+                        ScoreDisplayNumbers[2] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-3":
+                        ScoreDisplayNumbers[3] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-4":
+                        ScoreDisplayNumbers[4] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-5":
+                        ScoreDisplayNumbers[5] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-6":
+                        ScoreDisplayNumbers[6] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-7":
+                        ScoreDisplayNumbers[7] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-8":
+                        ScoreDisplayNumbers[8] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-9":
+                        ScoreDisplayNumbers[9] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-decimal":
+                        ScoreDisplayDecimal = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-percent":
+                        ScoreDisplayPercent = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"sound-hit":
                         SoundHit = LoadSoundEffectElement(element, skinElementPath);
