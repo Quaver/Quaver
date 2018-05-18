@@ -60,24 +60,24 @@ namespace Quaver.Discord
         /// <param name="details"></param>
         public static void ChangeDiscordPresence(string details, string state, double timeLeft = 0)
         {
-            // Initialize Discord RPC if it isn't already
-            if (!GameBase.DiscordRichPresencedInited)
-            {
-                InitializeDiscordPresence();
-
-                // Create a new Rich Presence
-                GameBase.DiscordController.presence = new DiscordRPC.RichPresence()
-                {
-                    details = "Idle",
-                    largeImageKey = "quaver",
-                    largeImageText = ConfigManager.Username.Value
-                };
-
-                GameBase.DiscordRichPresencedInited = true;
-            }
-
             try
             {
+                // Initialize Discord RPC if it isn't already
+                if (!GameBase.DiscordRichPresencedInited)
+                {
+                    InitializeDiscordPresence();
+
+                    // Create a new Rich Presence
+                    GameBase.DiscordController.presence = new DiscordRPC.RichPresence()
+                    {
+                        details = "Idle",
+                        largeImageKey = "quaver",
+                        largeImageText = ConfigManager.Username.Value
+                    };
+
+                    GameBase.DiscordRichPresencedInited = true;
+                }
+                
                 GameBase.DiscordController.presence.details = details;
 
                 if (timeLeft != 0)
@@ -114,11 +114,11 @@ namespace Quaver.Discord
 
                 GameBase.DiscordController.presence.state = state;
                 DiscordRPC.UpdatePresence(ref GameBase.DiscordController.presence);
+                
             }
             catch (Exception e)
             {
                 Logger.LogError(e, LogType.Runtime);
-                throw;
             }
         }
 
