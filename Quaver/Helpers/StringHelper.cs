@@ -21,6 +21,16 @@ namespace Quaver.Helpers
         }
 
         /// <summary>
+        ///     Converts an accuracy percentage into a string.
+        /// </summary>
+        /// <param name="accuracy"></param>
+        /// <returns></returns>
+        internal static string AccuracyToString(float accuracy)
+        {
+            return accuracy >= 100 ? "100.00%" : $"{accuracy:00.00}%";
+        }
+        
+        /// <summary>
         ///     Makes a string safe to be written as a file name.
         /// </summary>
         /// <param name="str"></param>
