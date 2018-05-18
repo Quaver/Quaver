@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
@@ -58,7 +59,33 @@ namespace Quaver.Graphics.UserInterface
         /// <summary>
         ///     The digits in the number display.
         /// </summary>
-        private List<QuaverSprite> Digits { get; }
+        internal List<QuaverSprite> Digits { get; }
+
+        /// <summary>
+        ///     The absolute width of the number display.
+        /// </summary>
+        internal float TotalWidth
+        {
+            get
+            {
+                float sum = 0;
+
+                foreach (var d in Digits)
+                {
+                    switch (Type)
+                    {
+                        case NumberDisplayType.Score:
+                            sum += d.SizeX;
+                            break;
+                        case NumberDisplayType.Accuracy:
+                            sum += d.SizeX;
+                            break;
+                    }
+                }
+
+                return sum;
+            }
+        }
 
         /// <summary>
         ///     Ctor -
@@ -108,9 +135,28 @@ namespace Quaver.Graphics.UserInterface
                     {
                         Parent = this,
                         Image = CharacterToTexture(Value[i]),
-                        Size = new UDim2D(30, 30),
-                        PosX = i * 60
                     });
+                    
+                    // Set size
+                    switch (Type)
+                    {
+                        case NumberDisplayType.Score:
+                            Digits[i].Size = new UDim2D(Image.Width, Image.Height);
+                            break;
+                        case NumberDisplayType.Accuracy:
+                            Digits[i].Size = new UDim2D(Image.Width / 1.5f, Image.Height / 1.5f);
+                            break;
+                    }
+
+                    
+                    // Set position
+                    // If it's the first image, set the x pos to 0.
+                    if (i == 0)
+                        Digits[i].PosX = 0;
+                    // Otherwise, make it next to the previous one.
+                    else
+                        Digits[i].PosX = Digits[i - 1].PosX + Digits[i - 1].SizeX;
+                    
                 }
                 // If the digit already exists, then we need to just update the texture of it.
                 else
@@ -143,29 +189,29 @@ namespace Quaver.Graphics.UserInterface
             switch (c)
             {
                 case '0':
-                    return FontAwesome.Archive;
+                    return GameBase.LoadedSkin.ScoreDisplayNumbers[0];
                 case '1':
-                    return FontAwesome.CaretDown;
+                    return GameBase.LoadedSkin.ScoreDisplayNumbers[1];
                 case '2':
-                    return FontAwesome.ChevronDown;
+                    return GameBase.LoadedSkin.ScoreDisplayNumbers[2];
                 case '3':
-                    return FontAwesome.CircleClosed;
+                    return GameBase.LoadedSkin.ScoreDisplayNumbers[3];
                 case '4':
-                    return FontAwesome.CircleOpen;
+                    return GameBase.LoadedSkin.ScoreDisplayNumbers[4];
                 case '5':
-                    return FontAwesome.Cloud;
+                    return GameBase.LoadedSkin.ScoreDisplayNumbers[5];
                 case '6':
-                    return FontAwesome.Coffee;
+                    return GameBase.LoadedSkin.ScoreDisplayNumbers[6];
                 case '7':
-                    return FontAwesome.Cog;
+                    return GameBase.LoadedSkin.ScoreDisplayNumbers[7];
                 case '8':
-                    return FontAwesome.Copy;
+                    return GameBase.LoadedSkin.ScoreDisplayNumbers[8];
                 case '9':
-                    return FontAwesome.Desktop;
+                    return GameBase.LoadedSkin.ScoreDisplayNumbers[9];
                 case '.':
-                    return FontAwesome.Discord;
+                    return GameBase.LoadedSkin.ScoreDisplayDecimal;
                 case '%':
-                    return FontAwesome.Volume;
+                    return GameBase.LoadedSkin.ScoreDisplayPercent;
                 default:
                     throw new ArgumentException($"Invalid character {c} specified.");
             }
