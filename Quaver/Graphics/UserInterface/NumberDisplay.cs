@@ -92,6 +92,12 @@ namespace Quaver.Graphics.UserInterface
         }
 
         /// <summary>
+        ///     The last time the value was changed
+        ///     (Used for timing animations for example).
+        /// </summary>
+        internal long LastValueChangeTime { get; private set; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="type"></param>
@@ -109,6 +115,33 @@ namespace Quaver.Graphics.UserInterface
             InitializeDigits();
         }
 
+        /// <summary>
+        ///     Makes the display visible.
+        /// </summary>
+        internal void MakeVisible()
+        {
+            if (Visible)
+                return;
+
+            Visible = true;
+            
+            // Only make the digits we're using visible.
+            for (var i = 0; i < Value.Length; i++)
+                Digits[i].Visible = true;
+        }
+        
+        /// <summary>
+        ///     Makes the display invisible.
+        /// </summary>
+        internal void MakeInvisible()
+        {
+            if (!Visible)
+                return;
+            
+            Visible = false;
+            Digits.ForEach(x => x.Visible = false);
+        }
+        
         /// <summary>
         ///     Validates the current value to see if it is a correct number.
         ///     If it isn't, it'll throw an exception.
@@ -135,7 +168,7 @@ namespace Quaver.Graphics.UserInterface
                 // If the digit doesn't already exist, we need to create it.
                 if (i >= Digits.Count)
                 {             
-                    Digits.Add( new QuaverSprite
+                    Digits.Add(new QuaverSprite
                     {
                         Parent = this,
                         Image = CharacterToTexture(Value[i]),
