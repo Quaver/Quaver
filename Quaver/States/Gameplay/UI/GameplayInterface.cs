@@ -69,7 +69,7 @@ namespace Quaver.States.Gameplay.UI
             };
 
             // Put the display in the top right corner.
-            ScoreDisplay.PosX = -ScoreDisplay.TotalWidth;
+            ScoreDisplay.PosX = -ScoreDisplay.TotalWidth - 10;
             
             AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0))
             {
@@ -78,7 +78,7 @@ namespace Quaver.States.Gameplay.UI
             };
             
             // Set the position of the accuracy display.
-            AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth;
+            AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth - 10;
             AccuracyDisplay.PosY = ScoreDisplay.Digits[0].SizeY + 10;
         }
 
@@ -96,14 +96,8 @@ namespace Quaver.States.Gameplay.UI
         /// <param name="dt"></param>
         public void Update(double dt)
         {
-            // Update the current value of the song time progress bar if it is actually initialized
-            // and the user wants to actually display it.
-            if (ConfigManager.DisplaySongTimeProgress.Value && SongTimeProgressBar != null)
-                SongTimeProgressBar.CurrentValue = (float) Screen.AudioTiming.CurrentTime;
-            
-            // Update score and accuracy displays
-            ScoreDisplay.Value = StringHelper.ScoreToString(Screen.GameModeComponent.ScoreProcessor.Score);
-            AccuracyDisplay.Value = StringHelper.AccuracyToString(Screen.GameModeComponent.ScoreProcessor.Accuracy);
+            UpdateSongProgressDisplay();
+            UpdateScoreAndAccuracyDisplays();
             
             Container.Update(dt);
         }
@@ -114,6 +108,38 @@ namespace Quaver.States.Gameplay.UI
         public void Draw()
         {
             Container.Draw();
+        }
+        
+        /// <summary>
+        ///     Updates the number displays
+        ///     Score and Accuracy
+        /// </summary>
+        private void UpdateScoreAndAccuracyDisplays()
+        {
+            // Update score and accuracy displays
+            ScoreDisplay.Value = StringHelper.ScoreToString(Screen.GameModeComponent.ScoreProcessor.Score);
+
+            // Grab the old accuracy
+            var oldAcc = AccuracyDisplay.Value;
+            
+            // Update the new accuracy.
+            AccuracyDisplay.Value = StringHelper.AccuracyToString(Screen.GameModeComponent.ScoreProcessor.Accuracy);
+            
+            // If the old accuracy's length isn't the same, then we need to reposition the sprite
+            // Example: 100.00% to 99.99% needs repositioning.
+            if (oldAcc.Length != AccuracyDisplay.Value.Length)
+                AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth - 10;
+        }
+
+        /// <summary>
+        ///     Updates the song progress display.
+        /// </summary>
+        private void UpdateSongProgressDisplay()
+        {
+            // Update the current value of the song time progress bar if it is actually initialized
+            // and the user wants to actually display it.
+            if (ConfigManager.DisplaySongTimeProgress.Value && SongTimeProgressBar != null)
+                SongTimeProgressBar.CurrentValue = (float) Screen.AudioTiming.CurrentTime;
         }
     }
 }
