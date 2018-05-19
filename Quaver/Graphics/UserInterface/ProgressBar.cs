@@ -40,7 +40,7 @@ namespace Quaver.Graphics.UserInterface
         /// <summary>
         ///     The current active progress bar.
         /// </summary>
-        private QuaverSprite ActiveProgressBar { get; }
+        internal QuaverSprite ActiveProgressBar { get; }
 
         /// <summary>
         ///     The current percentage of the progress bar.
