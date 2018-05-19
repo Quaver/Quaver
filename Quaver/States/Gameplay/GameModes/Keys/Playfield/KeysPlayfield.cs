@@ -43,6 +43,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         internal float Width => (LaneSize + ReceptorPadding) * Map.FindKeyCountFromMode() + Padding * 2 - ReceptorPadding;
 
         /// <summary>
+        ///     Reference to the gameplay screen.
+        /// </summary>
+        private GameplayScreen Screen { get; }
+
+        /// <summary>
         ///     Padding of the playfield.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
@@ -166,9 +171,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <summary>
         ///     Ctor - 
         /// </summary>
-        internal KeysPlayfield(Qua map)
-        {    
-            Map = map;
+        internal KeysPlayfield(GameplayScreen screen)
+        {
+            Screen = screen;
+            Map = Screen.Map;
             
             // Create the playfield's container.
             Container = new QuaverContainer();
@@ -190,7 +196,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             };
             
             // Create a new playfield stage               
-            Stage = new KeysPlayfieldStage(this);
+            Stage = new KeysPlayfieldStage(this, Screen);
         }
         
         /// <summary>
@@ -215,10 +221,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <param name="dt"></param>
         public void Update(double dt)
         {
-            // Animate Column Lighting
-            Stage.PeformAllColumnLightingAnimations(dt);
-            
-            
+            // Update the stage
+            Stage.Update(dt);
+        
             Container.Update(dt);
         }
 

@@ -71,22 +71,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 {
                     case GameMode.Keys4:
                         if (ConfigManager.DownScroll4K.Value)
-                            return playfield.ReceptorPositionY +
-                                   (ConfigManager.UserHitPositionOffset4K.Value +
-                                    GameBase.LoadedSkin.HitPositionOffset4K);
+                            return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset4K.Value + GameBase.LoadedSkin.HitPositionOffset4K);
                         else
-                            return playfield.ReceptorPositionY -
-                                   (ConfigManager.UserHitPositionOffset4K.Value +
-                                    GameBase.LoadedSkin.HitPositionOffset4K) + GameBase.LoadedSkin.ColumnSize4K;
+                            return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset4K.Value + GameBase.LoadedSkin.HitPositionOffset4K) + GameBase.LoadedSkin.ColumnSize4K;
                     case GameMode.Keys7:
                         if (ConfigManager.DownScroll7K.Value)
-                            return playfield.ReceptorPositionY +
-                                   (ConfigManager.UserHitPositionOffset7K.Value +
-                                    GameBase.LoadedSkin.HitPositionOffset7K);
+                            return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset7K.Value + GameBase.LoadedSkin.HitPositionOffset7K);
                         else
-                            return playfield.ReceptorPositionY -
-                                   (ConfigManager.UserHitPositionOffset7K.Value +
-                                    GameBase.LoadedSkin.HitPositionOffset7K) + GameBase.LoadedSkin.ColumnSize7K;
+                            return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset7K.Value + GameBase.LoadedSkin.HitPositionOffset7K) + GameBase.LoadedSkin.ColumnSize7K;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -164,6 +156,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 {
                     // Add a miss to their score.
                     Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+
+                    // Make the combo display visible since it is now changing.
+                    var playfield = (KeysPlayfield) Ruleset.Playfield;
+                    playfield.Stage.ComboDisplay.MakeVisible();
                     
                     // If ManiaHitObject is an LN, kill it and count it as another miss because of the tail.
                     if (hitObject.IsLongNote)
@@ -206,6 +202,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.TrueEndTime + window)
                 {
                     Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                    
+                    // Make the combo display visible since it is now changing.
+                    var playfield = (KeysPlayfield) Ruleset.Playfield;
+                    playfield.Stage.ComboDisplay.MakeVisible();
 
                     // Remove from the queue of long notes.
                     hitObject.Destroy();

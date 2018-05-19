@@ -177,7 +177,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                     else
                         manager.RecyclePoolObject(objectIndex);
                 }
-                                                
+                        
+                // Make the combo display visible since it is now changing.
+                var playfield = (KeysPlayfield) Ruleset.Playfield;
+                playfield.Stage.ComboDisplay.MakeVisible();
+                
                 break;
             }
         }
@@ -214,6 +218,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
                 manager.KillHoldPoolObject(noteIndex);
             }
+            
+            // Make the combo display visible since it is now changing.
+            var playfield = (KeysPlayfield) Ruleset.Playfield;
+            playfield.Stage.ComboDisplay.MakeVisible();
         }
     }
 }

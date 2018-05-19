@@ -25,6 +25,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         internal sealed override ScoreProcessor ScoreProcessor { get; set; }
 
+        /// <summary>
+        ///     Reference to the actual gameplay screen.
+        /// </summary>
+        private GameplayScreen Screen { get; }
+        
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - Sets the correct mode, either 4 or 7k.
@@ -34,6 +39,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <param name="map"></param>
         public GameModeKeys(GameplayScreen screen, GameMode mode, Qua map): base(screen, map)
         {
+            Screen = screen;
+            
             switch (mode)
             {
                 case GameMode.Keys4:
@@ -91,7 +98,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         protected override void CreatePlayfield()
         {
-            Playfield = new KeysPlayfield(Map);
+            Playfield = new KeysPlayfield(Screen);
             Logger.LogSuccess("Playfield Initialized", LogType.Runtime);
         }
 

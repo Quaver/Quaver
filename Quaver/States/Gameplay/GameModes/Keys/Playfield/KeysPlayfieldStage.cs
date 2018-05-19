@@ -7,13 +7,25 @@ using Quaver.Database.Maps;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
+using Quaver.Graphics.UserInterface;
+using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States.Gameplay.Mania;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
 {
     internal class KeysPlayfieldStage
-    {
+    {       
+        /// <summary>
+        ///     The container that holds all of the HitObjects
+        /// </summary>
+        internal QuaverContainer HitObjectContainer { get; set; }
+
+        /// <summary>
+        ///     Reference to the gameplay screen itself.
+        /// </summary>
+        private GameplayScreen Screen { get;  }
+
         /// <summary>
         ///     Reference to the parent playfield.
         /// </summary>
@@ -55,18 +67,19 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         private QuaverSprite HitPositionOverlay { get; set; }
 
         /// <summary>
-        ///     The container that holds all of the HitObjects
+        ///     The display for combo.
         /// </summary>
-        internal QuaverContainer HitObjectContainer { get; set; }
-        
+        internal NumberDisplay ComboDisplay { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
         /// </summary>
         /// <param name="playfield"></param>
-        internal KeysPlayfieldStage(KeysPlayfield playfield)
+        internal KeysPlayfieldStage(KeysPlayfield playfield, GameplayScreen screen)
         {
             Playfield = playfield;
+            Screen = screen;
        
             CreateStageLeft();
             CreateStageRight();
@@ -115,8 +128,21 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             
             // Create distant overlay last so it shows over the objects.
             CreateDistantOverlay();
+            
+            // Create combo display.
+            CreateComboDisplay();
         }
 
+        /// <summary>
+        ///     Update method for the stage.
+        /// </summary>
+        /// <param name="dt"></param>
+        internal void Update(double dt)
+        {
+            PeformAllColumnLightingAnimations(dt);
+            UpdateComboDisplay(dt);
+        }
+        
 #region SPRITE_CREATION
         
         /// <summary>
@@ -327,6 +353,24 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Parent = Playfield.ForegroundContainer
             };    
         }
+
+        /// <summary>
+        ///     Creates the display for combo.
+        /// </summary>
+        private void CreateComboDisplay()
+        {
+            // Create the combo display.
+            ComboDisplay = new NumberDisplay(NumberDisplayType.Score, "0")
+            {
+                Parent = Playfield.ForegroundContainer,
+                Alignment = Alignment.MidCenter,
+            };
+            
+            ComboDisplay.PosX = -ComboDisplay.TotalWidth / 2f;
+            
+            // Start off the map by making the display invisible.
+            ComboDisplay.MakeInvisible();
+        }
 #endregion
 
 #region ANIMATIONS
@@ -334,7 +378,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         ///     Performs the animations for all column lighting
         /// </summary>
         /// <param name="dt"></param>
-        internal void PeformAllColumnLightingAnimations(double dt)
+         private void PeformAllColumnLightingAnimations(double dt)
         {
             foreach (var light in ColumnLightingObjects)
                 light.PerformAnimation(dt);
@@ -377,6 +421,22 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        /// <summary>
+        ///     Updates the combo display.
+        /// </summary>
+        private void UpdateComboDisplay(double dt)
+        {                
+            // Grab the old value
+            var oldCombo = ComboDisplay.Value;
+            
+            // Set the new one
+            ComboDisplay.Value = Screen.GameModeComponent.ScoreProcessor.Combo.ToString();
+            
+            // If the combo needs repositioning, do so accordingly.
+            if (oldCombo.Length != ComboDisplay.Value.Length)
+                ComboDisplay.PosX = -ComboDisplay.TotalWidth / 2f;
         }
 #endregion
     }
