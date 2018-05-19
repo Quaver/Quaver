@@ -212,7 +212,14 @@ namespace Quaver.Skinning
         ///     Combo display.
         /// </summary>
         internal Texture2D[] ComboDisplayNumbers { get; } = new Texture2D[10];
-        
+
+        /// <summary>
+        ///     Siong Time Display.
+        /// </summary>
+        internal Texture2D[] SongTimeDisplayNumbers { get; } = new Texture2D[10];
+        internal Texture2D SongTimeDisplayColon { get; set;  }
+        internal Texture2D SongTimeDisplayMinus { get; set; }
+
         /// <summary>
         ///     QuaverCursor
         /// </summary>
@@ -399,6 +406,20 @@ namespace Quaver.Skinning
             @"combo-8",
             @"combo-9",
         
+            // Number - Song Time Display
+            @"song-time-0",
+            @"song-time-1",
+            @"song-time-2",
+            @"song-time-3",
+            @"song-time-4",
+            @"song-time-5",
+            @"song-time-6",
+            @"song-time-7",
+            @"song-time-8",
+            @"song-time-9",
+            @"song-time-colon",
+            @"song-time-minus",
+            
             // Cursor
             @"main-cursor",
 
@@ -825,6 +846,42 @@ namespace Quaver.Skinning
                         break;
                     case @"combo-9":
                         ComboDisplayNumbers[9] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-0":
+                        SongTimeDisplayNumbers[0] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-1":
+                        SongTimeDisplayNumbers[1] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-2":
+                        SongTimeDisplayNumbers[2] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-3":
+                        SongTimeDisplayNumbers[3] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-4":
+                        SongTimeDisplayNumbers[4] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-5":
+                        SongTimeDisplayNumbers[5] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-6":
+                        SongTimeDisplayNumbers[6] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-7":
+                        SongTimeDisplayNumbers[7] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-8":
+                        SongTimeDisplayNumbers[8] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-9":
+                        SongTimeDisplayNumbers[9] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-colon":
+                        SongTimeDisplayColon = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-minus":
+                        SongTimeDisplayMinus = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"sound-hit":
                         SoundHit = LoadSoundEffectElement(element, skinElementPath);
