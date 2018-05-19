@@ -209,6 +209,11 @@ namespace Quaver.Skinning
         internal Texture2D ScoreDisplayPercent { get; set; }
 
         /// <summary>
+        ///     Combo display.
+        /// </summary>
+        internal Texture2D[] ComboDisplayNumbers { get; } = new Texture2D[10];
+        
+        /// <summary>
         ///     QuaverCursor
         /// </summary>
         internal Texture2D Cursor { get; set; }
@@ -231,175 +236,187 @@ namespace Quaver.Skinning
         // Contains the file names of all skin elements
         private readonly string[] skinElements =
         {
-                // Stage
-                @"4k-stage-bgmask",
-                @"7k-stage-bgmask",
-                @"stage-left-border",
-                @"stage-right-border",
-                @"stage-hitposition-overlay",
-                @"stage-distant-overlay",
-                @"stage-timingbar",
-            
-                // Column Lighting
-                @"4k-column-lighting",
-                @"7k-column-lighting",
+            // Stage
+            @"4k-stage-bgmask",
+            @"7k-stage-bgmask",
+            @"stage-left-border",
+            @"stage-right-border",
+            @"stage-hitposition-overlay",
+            @"stage-distant-overlay",
+            @"stage-timingbar",
+        
+            // Column Lighting
+            @"4k-column-lighting",
+            @"7k-column-lighting",
 
-                // 4k Hit effect
-                @"4k-note-hiteffect-1",
-                @"4k-note-hiteffect-2",
-                @"4k-note-hiteffect-3",
-                @"4k-note-hiteffect-4",
+            // 4k Hit effect
+            @"4k-note-hiteffect-1",
+            @"4k-note-hiteffect-2",
+            @"4k-note-hiteffect-3",
+            @"4k-note-hiteffect-4",
 
-                // 7k Hit Effect
-                @"7k-note-hiteffect-1",
-                @"7k-note-hiteffect-2",
-                @"7k-note-hiteffect-3",
-                @"7k-note-hiteffect-4",
-                @"7k-note-hiteffect-5",
-                @"7k-note-hiteffect-6",
-                @"7k-note-hiteffect-7",
+            // 7k Hit Effect
+            @"7k-note-hiteffect-1",
+            @"7k-note-hiteffect-2",
+            @"7k-note-hiteffect-3",
+            @"7k-note-hiteffect-4",
+            @"7k-note-hiteffect-5",
+            @"7k-note-hiteffect-6",
+            @"7k-note-hiteffect-7",
 
-                // 4k HitObjects
-                @"4k-note-hitobject-1",
-                @"4k-note-hitobject-2",
-                @"4k-note-hitobject-3",
-                @"4k-note-hitobject-4",
+            // 4k HitObjects
+            @"4k-note-hitobject-1",
+            @"4k-note-hitobject-2",
+            @"4k-note-hitobject-3",
+            @"4k-note-hitobject-4",
 
-                // 4k LN Hit Objects
-                @"4k-note-holdhitobject-1",
-                @"4k-note-holdhitobject-2",
-                @"4k-note-holdhitobject-3",
-                @"4k-note-holdhitobject-4",
+            // 4k LN Hit Objects
+            @"4k-note-holdhitobject-1",
+            @"4k-note-holdhitobject-2",
+            @"4k-note-holdhitobject-3",
+            @"4k-note-holdhitobject-4",
 
-                // 7k HitObjects
-                @"7k-note-hitobject-1",
-                @"7k-note-hitobject-2",
-                @"7k-note-hitobject-3",
-                @"7k-note-hitobject-4",
-                @"7k-note-hitobject-5",
-                @"7k-note-hitobject-6",
-                @"7k-note-hitobject-7",
-            
-                // 7K LN hit Objects
-                @"7k-note-holdhitobject-1",
-                @"7k-note-holdhitobject-2",
-                @"7k-note-holdhitobject-3",
-                @"7k-note-holdhitobject-4",
-                @"7k-note-holdhitobject-5",
-                @"7k-note-holdhitobject-6",
-                @"7k-note-holdhitobject-7",
+            // 7k HitObjects
+            @"7k-note-hitobject-1",
+            @"7k-note-hitobject-2",
+            @"7k-note-hitobject-3",
+            @"7k-note-hitobject-4",
+            @"7k-note-hitobject-5",
+            @"7k-note-hitobject-6",
+            @"7k-note-hitobject-7",
+        
+            // 7K LN hit Objects
+            @"7k-note-holdhitobject-1",
+            @"7k-note-holdhitobject-2",
+            @"7k-note-holdhitobject-3",
+            @"7k-note-holdhitobject-4",
+            @"7k-note-holdhitobject-5",
+            @"7k-note-holdhitobject-6",
+            @"7k-note-holdhitobject-7",
 
-                // Grades
-                @"grade-small-a",
-                @"grade-small-b",
-                @"grade-small-c",
-                @"grade-small-d",
-                @"grade-small-f",
-                @"grade-small-s",
-                @"grade-small-ss",
-                @"grade-small-x",
-                @"grade-small-xx",
+            // Grades
+            @"grade-small-a",
+            @"grade-small-b",
+            @"grade-small-c",
+            @"grade-small-d",
+            @"grade-small-f",
+            @"grade-small-s",
+            @"grade-small-ss",
+            @"grade-small-x",
+            @"grade-small-xx",
 
-                // 4k Hit Object Hold Ends
-                @"4k-note-holdend-1",
-                @"4k-note-holdend-2",
-                @"4k-note-holdend-3",
-                @"4k-note-holdend-4",
+            // 4k Hit Object Hold Ends
+            @"4k-note-holdend-1",
+            @"4k-note-holdend-2",
+            @"4k-note-holdend-3",
+            @"4k-note-holdend-4",
 
-                // 7k Hit Object Hold Ends
-                @"7k-note-holdend-1",
-                @"7k-note-holdend-2",
-                @"7k-note-holdend-3",
-                @"7k-note-holdend-4",
-                @"7k-note-holdend-5",
-                @"7k-note-holdend-6",
-                @"7k-note-holdend-7",
+            // 7k Hit Object Hold Ends
+            @"7k-note-holdend-1",
+            @"7k-note-holdend-2",
+            @"7k-note-holdend-3",
+            @"7k-note-holdend-4",
+            @"7k-note-holdend-5",
+            @"7k-note-holdend-6",
+            @"7k-note-holdend-7",
 
-                // 4k Hit Object Hold Bodies
-                @"4k-note-holdbody-1",
-                @"4k-note-holdbody-2",
-                @"4k-note-holdbody-3",
-                @"4k-note-holdbody-4",
+            // 4k Hit Object Hold Bodies
+            @"4k-note-holdbody-1",
+            @"4k-note-holdbody-2",
+            @"4k-note-holdbody-3",
+            @"4k-note-holdbody-4",
 
-                // 7k Hit Object Hold Bodies
-                @"7k-note-holdbody-1",
-                @"7k-note-holdbody-2",
-                @"7k-note-holdbody-3",
-                @"7k-note-holdbody-4",
-                @"7k-note-holdbody-5",
-                @"7k-note-holdbody-6",
-                @"7k-note-holdbody-7",
+            // 7k Hit Object Hold Bodies
+            @"7k-note-holdbody-1",
+            @"7k-note-holdbody-2",
+            @"7k-note-holdbody-3",
+            @"7k-note-holdbody-4",
+            @"7k-note-holdbody-5",
+            @"7k-note-holdbody-6",
+            @"7k-note-holdbody-7",
 
-                // 4k Note Receptors
-                @"4k-receptor-up-1",
-                @"4k-receptor-up-2",
-                @"4k-receptor-up-3",
-                @"4k-receptor-up-4",
+            // 4k Note Receptors
+            @"4k-receptor-up-1",
+            @"4k-receptor-up-2",
+            @"4k-receptor-up-3",
+            @"4k-receptor-up-4",
 
-                // 4k Note Receptors Down
-                @"4k-receptor-down-1",
-                @"4k-receptor-down-2",
-                @"4k-receptor-down-3",
-                @"4k-receptor-down-4",
+            // 4k Note Receptors Down
+            @"4k-receptor-down-1",
+            @"4k-receptor-down-2",
+            @"4k-receptor-down-3",
+            @"4k-receptor-down-4",
 
-                // 7k Note Receptors
-                @"7k-receptor-up-1",
-                @"7k-receptor-up-2",
-                @"7k-receptor-up-3",
-                @"7k-receptor-up-4",
-                @"7k-receptor-up-5",
-                @"7k-receptor-up-6",
-                @"7k-receptor-up-7",
+            // 7k Note Receptors
+            @"7k-receptor-up-1",
+            @"7k-receptor-up-2",
+            @"7k-receptor-up-3",
+            @"7k-receptor-up-4",
+            @"7k-receptor-up-5",
+            @"7k-receptor-up-6",
+            @"7k-receptor-up-7",
 
-                // 7k Note Receptors Down
-                @"7k-receptor-down-1",
-                @"7k-receptor-down-2",
-                @"7k-receptor-down-3",
-                @"7k-receptor-down-4",
-                @"7k-receptor-down-5",
-                @"7k-receptor-down-6",
-                @"7k-receptor-down-7",
+            // 7k Note Receptors Down
+            @"7k-receptor-down-1",
+            @"7k-receptor-down-2",
+            @"7k-receptor-down-3",
+            @"7k-receptor-down-4",
+            @"7k-receptor-down-5",
+            @"7k-receptor-down-6",
+            @"7k-receptor-down-7",
 
-                // Judge
-                @"judge-miss",
-                @"judge-okay",
-                @"judge-good",
-                @"judge-great",
-                @"judge-perf",
-                @"judge-marv",
+            // Judge
+            @"judge-miss",
+            @"judge-okay",
+            @"judge-good",
+            @"judge-great",
+            @"judge-perf",
+            @"judge-marv",
 
-                // Number Display
-                @"score-0",
-                @"score-1",
-                @"score-2",
-                @"score-3",
-                @"score-4",
-                @"score-5",
-                @"score-6",
-                @"score-7",
-                @"score-8",
-                @"score-9",
-                @"score-decimal",
-                @"score-percent",
-            
-                // Cursor
-                @"main-cursor",
+            // Number - Score Display
+            @"score-0",
+            @"score-1",
+            @"score-2",
+            @"score-3",
+            @"score-4",
+            @"score-5",
+            @"score-6",
+            @"score-7",
+            @"score-8",
+            @"score-9",
+            @"score-decimal",
+            @"score-percent",
+        
+            // Number - Combo Display
+            @"combo-0",
+            @"combo-1",
+            @"combo-2",
+            @"combo-3",
+            @"combo-4",
+            @"combo-5",
+            @"combo-6",
+            @"combo-7",
+            @"combo-8",
+            @"combo-9",
+        
+            // Cursor
+            @"main-cursor",
 
-                // ----- Sound Effects -----
-            
-                // Gameplay SFX
-                @"sound-hit",
-                @"sound-hitclap",
-                @"sound-hitwhistle",
-                @"sound-hitfinish",
-                @"sound-combobreak",
-            
-                // Menu SFX
-                @"sound-applause",
-                @"sound-screenshot",
-                @"sound-click",
-                @"sound-back",
-                @"sound-hover"
+            // ----- Sound Effects -----
+        
+            // Gameplay SFX
+            @"sound-hit",
+            @"sound-hitclap",
+            @"sound-hitwhistle",
+            @"sound-hitfinish",
+            @"sound-combobreak",
+        
+            // Menu SFX
+            @"sound-applause",
+            @"sound-screenshot",
+            @"sound-click",
+            @"sound-back",
+            @"sound-hover"
         };
 
         /// <summary>
@@ -778,6 +795,36 @@ namespace Quaver.Skinning
                         break;
                     case @"score-percent":
                         ScoreDisplayPercent = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-0":
+                        ComboDisplayNumbers[0] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-1":
+                        ComboDisplayNumbers[1] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-2":
+                        ComboDisplayNumbers[2] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-3":
+                        ComboDisplayNumbers[3] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-4":
+                        ComboDisplayNumbers[4] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-5":
+                        ComboDisplayNumbers[5] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-6":
+                        ComboDisplayNumbers[6] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-7":
+                        ComboDisplayNumbers[7] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-8":
+                        ComboDisplayNumbers[8] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-9":
+                        ComboDisplayNumbers[9] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"sound-hit":
                         SoundHit = LoadSoundEffectElement(element, skinElementPath);
