@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;

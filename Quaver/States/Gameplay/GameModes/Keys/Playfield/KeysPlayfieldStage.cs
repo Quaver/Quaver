@@ -360,7 +360,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         private void CreateComboDisplay()
         {
             // Create the combo display.
-            ComboDisplay = new NumberDisplay(NumberDisplayType.Score, "0")
+            ComboDisplay = new NumberDisplay(NumberDisplayType.Combo, "0")
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,

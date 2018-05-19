@@ -78,6 +78,7 @@ namespace Quaver.Graphics.UserInterface
                     
                     switch (Type)
                     {
+                        case NumberDisplayType.Combo:
                         case NumberDisplayType.Score:
                             sum += d.SizeX;
                             break;
@@ -177,6 +178,7 @@ namespace Quaver.Graphics.UserInterface
                     // Set size
                     switch (Type)
                     {
+                        case NumberDisplayType.Combo:
                         case NumberDisplayType.Score:
                             Digits[i].Size = new UDim2D(Image.Width, Image.Height);
                             break;
@@ -221,30 +223,70 @@ namespace Quaver.Graphics.UserInterface
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        private static Texture2D CharacterToTexture(char c)
+        private Texture2D CharacterToTexture(char c)
         {
             switch (c)
             {
-                case '0':
+                // 0
+                case '0' when Type == NumberDisplayType.Score:
+                case '0' when Type == NumberDisplayType.Accuracy:
                     return GameBase.LoadedSkin.ScoreDisplayNumbers[0];
-                case '1':
+                case '0' when Type == NumberDisplayType.Combo:
+                    return GameBase.LoadedSkin.ComboDisplayNumbers[0];
+                // 1
+                case '1' when Type == NumberDisplayType.Score:
+                case '1' when Type == NumberDisplayType.Accuracy:
                     return GameBase.LoadedSkin.ScoreDisplayNumbers[1];
-                case '2':
+                case '1' when Type == NumberDisplayType.Combo:
+                    return GameBase.LoadedSkin.ComboDisplayNumbers[1];
+                // 2
+                case '2' when Type == NumberDisplayType.Score:
+                case '2' when Type == NumberDisplayType.Accuracy:
                     return GameBase.LoadedSkin.ScoreDisplayNumbers[2];
-                case '3':
+                case '2' when Type == NumberDisplayType.Combo:
+                    return GameBase.LoadedSkin.ComboDisplayNumbers[2];
+                // 3
+                case '3' when Type == NumberDisplayType.Score:
+                case '3' when Type == NumberDisplayType.Accuracy:
                     return GameBase.LoadedSkin.ScoreDisplayNumbers[3];
-                case '4':
+                case '3' when Type == NumberDisplayType.Combo:
+                    return GameBase.LoadedSkin.ComboDisplayNumbers[3];
+                // 4
+                case '4' when Type == NumberDisplayType.Score:
+                case '4' when Type == NumberDisplayType.Accuracy:
                     return GameBase.LoadedSkin.ScoreDisplayNumbers[4];
-                case '5':
+                case '4' when Type == NumberDisplayType.Combo:
+                    return GameBase.LoadedSkin.ComboDisplayNumbers[4];
+                // 5
+                case '5' when Type == NumberDisplayType.Score:
+                case '5' when Type == NumberDisplayType.Accuracy:
                     return GameBase.LoadedSkin.ScoreDisplayNumbers[5];
-                case '6':
+                case '5' when Type == NumberDisplayType.Combo:
+                    return GameBase.LoadedSkin.ComboDisplayNumbers[5];
+                // 6
+                case '6' when Type == NumberDisplayType.Score:
+                case '6' when Type == NumberDisplayType.Accuracy:
                     return GameBase.LoadedSkin.ScoreDisplayNumbers[6];
-                case '7':
+                case '6' when Type == NumberDisplayType.Combo:
+                    return GameBase.LoadedSkin.ComboDisplayNumbers[6];
+                // 7
+                case '7' when Type == NumberDisplayType.Score:
+                case '7' when Type == NumberDisplayType.Accuracy:
                     return GameBase.LoadedSkin.ScoreDisplayNumbers[7];
-                case '8':
+                case '7' when Type == NumberDisplayType.Combo:
+                    return GameBase.LoadedSkin.ComboDisplayNumbers[7];
+                // 8
+                case '8' when Type == NumberDisplayType.Score:
+                case '8' when Type == NumberDisplayType.Accuracy:
                     return GameBase.LoadedSkin.ScoreDisplayNumbers[8];
-                case '9':
+                case '8' when Type == NumberDisplayType.Combo:
+                    return GameBase.LoadedSkin.ComboDisplayNumbers[8];
+                // 9
+                case '9' when Type == NumberDisplayType.Score:
+                case '9' when Type == NumberDisplayType.Accuracy:
                     return GameBase.LoadedSkin.ScoreDisplayNumbers[9];
+                case '9' when Type == NumberDisplayType.Combo:
+                    return GameBase.LoadedSkin.ComboDisplayNumbers[9];
                 case '.':
                     return GameBase.LoadedSkin.ScoreDisplayDecimal;
                 case '%':
