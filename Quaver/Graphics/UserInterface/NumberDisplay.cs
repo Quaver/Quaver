@@ -72,6 +72,10 @@ namespace Quaver.Graphics.UserInterface
 
                 foreach (var d in Digits)
                 {
+                    // Only calc width for actually visible digits.
+                    if (!d.Visible)
+                        continue;
+                    
                     switch (Type)
                     {
                         case NumberDisplayType.Score:
