@@ -127,7 +127,7 @@ namespace Quaver.States.Gameplay
             GameModeComponent.Initialize();
             
             // Add gameplay loggers
-            Logger.Add("Paused", $"Paused: {Paused}", Color.White);
+            /*Logger.Add("Paused", $"Paused: {Paused}", Color.White);
             Logger.Add("Resume In Progress", $"Resume In Progress {ResumeInProgress}", Color.White);
             Logger.Add("Intro Skippable", $"Intro Skippable: {IntroSkippable}", Color.White);
             Logger.Add("Score", $"Score: {GameModeComponent.ScoreProcessor.Score}", Color.White);
@@ -135,7 +135,7 @@ namespace Quaver.States.Gameplay
             Logger.Add($"Combo", $"Combo: {GameModeComponent.ScoreProcessor.Combo}", Color.White);
             Logger.Add($"Max Combo", $"Max Combo: {GameModeComponent.ScoreProcessor.MaxCombo}", Color.White);
             Logger.Add($"Objects Left", $"Objects Left {GameModeComponent.HitObjectManager.ObjectsLeft}", Color.White);
-            Logger.Add($"Finished", $"Finished: {GameModeComponent.HitObjectManager.IsComplete}", Color.White);
+            Logger.Add($"Finished", $"Finished: {GameModeComponent.HitObjectManager.IsComplete}", Color.White);*/
                
             UpdateReady = true;
         }
@@ -179,7 +179,7 @@ namespace Quaver.States.Gameplay
             UI.Draw();
             
             // Update loggers.
-            Logger.Update("Paused", $"Paused: {Paused}");
+            /*Logger.Update("Paused", $"Paused: {Paused}");
             Logger.Update("Resume In Progress", $"Resume In Progress {ResumeInProgress}");
             Logger.Update("Intro Skippable", $"Intro Skippable: {IntroSkippable}");
             Logger.Update("Score", $"Score: {GameModeComponent.ScoreProcessor.Score}");
@@ -187,7 +187,7 @@ namespace Quaver.States.Gameplay
             Logger.Update($"Combo", $"Combo: {GameModeComponent.ScoreProcessor.Combo}");
             Logger.Update($"Max Combo", $"Max Combo: {GameModeComponent.ScoreProcessor.MaxCombo}");
             Logger.Update($"Objects Left", $"Objects Left {GameModeComponent.HitObjectManager.ObjectsLeft}");
-            Logger.Update($"Finished", $"Finished: {GameModeComponent.HitObjectManager.IsComplete}");
+            Logger.Update($"Finished", $"Finished: {GameModeComponent.HitObjectManager.IsComplete}");*/
             
             GameBase.SpriteBatch.End();
         }

@@ -14,14 +14,14 @@ namespace Quaver.States.Gameplay.UI
     internal class SongTimeProgressBar : ProgressBar
     {
         /// <summary>
-        ///     The text that displays the current audio time
+        ///     The display for the current time.
         /// </summary>
-        private QuaverSpriteText CurrentTime { get; }
+        private NumberDisplay CurrentTime { get; }
 
         /// <summary>
-        ///     The text that displays the time left.
+        ///     The display for the time left.
         /// </summary>
-        private QuaverSpriteText TimeLeft { get; }
+        private NumberDisplay TimeLeft { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -35,29 +35,22 @@ namespace Quaver.States.Gameplay.UI
         internal SongTimeProgressBar(float maxValue, float initialValue, UDim2D size, Drawable parent, Alignment alignment) 
             : base(maxValue, initialValue, size, parent, alignment)
         {
-            CurrentTime = new QuaverSpriteText()
+            CurrentTime = new NumberDisplay(NumberDisplayType.SongTime, "00:00")
             {
                 Parent = this,
-                Alignment = Alignment.TopLeft,
-                Size = new UDim2D(30, 30),
-                Font = QuaverFonts.AssistantRegular16,
-                TextColor = Color.FloralWhite,
-                Text = "00:00",
-                PosY = -35,
-                PosX = 23
+                Alignment = Alignment.TopLeft,     
+                PosY = -SizeY - 25,
+                PosX = 10
             };
-            
-            TimeLeft = new QuaverSpriteText()
+
+            TimeLeft = new NumberDisplay(NumberDisplayType.SongTime, "-00:00")
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                Size = new UDim2D(30, 30),
-                Font = QuaverFonts.AssistantRegular16,
-                TextColor = Color.FloralWhite,
-                Text = "00:00",
-                PosY = -35,
-                PosX = -27
+                PosY = CurrentTime.PosY
             };
+
+            TimeLeft.PosX = -TimeLeft.TotalWidth - 10;
         }
 
         /// <inheritdoc />
@@ -70,14 +63,23 @@ namespace Quaver.States.Gameplay.UI
             if (CurrentValue > 0)
             {
                 var currTime = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int) CurrentValue);
-                CurrentTime.Text = currTime.ToString("mm:ss");
+                CurrentTime.Value = currTime.ToString("mm:ss");
             }
             
             // Set the time of the time left.
             if (MaxValue - CurrentValue >= 0)
             {
                 var timeLeft = new DateTime(1970, 1, 1) + TimeSpan.FromMilliseconds((int) (MaxValue - CurrentValue));
-                TimeLeft.Text = $"-{timeLeft:mm:ss}";
+                
+                // Get the old value.
+                var oldValue = TimeLeft.Value;
+                
+                // Set the new value.
+                TimeLeft.Value = "-" + timeLeft.ToString("mm:ss");
+                
+                // Check if we need to reposition it since it's on the right side of the screen.
+                if (oldValue.Length != TimeLeft.Value.Length)
+                    TimeLeft.PosX = -TimeLeft.TotalWidth - 10;
             }
             
             base.Update(dt);
