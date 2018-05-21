@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
@@ -110,8 +111,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
        
             CreateStageLeft();
             CreateStageRight();
-            CreateHitPositionOverlay();
-                          
+            
             // Create game mode specific sprites.
             // 4K and 7K are two separate modes and do NOT use the same textures
             // or skin properties. So we have to implement them separately.
@@ -152,7 +152,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
+            // Create the hit position overlay
+            CreateHitPositionOverlay();
+
             // Create distant overlay last so it shows over the objects.
             CreateDistantOverlay();
             
@@ -272,15 +275,15 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             {
                 var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
                 
-                // Create individiaul receptor.
+                // Create individiaul receptor.     
                 Receptors.Add(new QuaverSprite
                 {
-                    Size = new UDim2D(Playfield.LaneSize, Playfield.LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width),
                     Position = new UDim2D(posX, Playfield.ReceptorPositionY),
                     Alignment = Alignment.TopLeft,
                     Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i],
                     SpriteEffect = !ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
-                    Parent = Playfield.ForegroundContainer
+                    Parent = Playfield.ForegroundContainer,
+                    Size = new UDim2D(Playfield.LaneSize, Playfield.LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width)
                 });
                 
                 // Create the column lighting sprite.

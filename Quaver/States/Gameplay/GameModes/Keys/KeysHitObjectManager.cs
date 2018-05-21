@@ -194,7 +194,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                         hitObject.CurrentLongNoteSize = (ulong) ((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.AudioTiming.CurrentTime) * ScrollSpeed);
                         
                         var playfield = (KeysPlayfield) Ruleset.Playfield;
-                        hitObject.PositionY = playfield.ReceptorPositionY;
+                        hitObject.PositionY = playfield.Stage.HitPositionOffset;
                     }
                     else
                     {
