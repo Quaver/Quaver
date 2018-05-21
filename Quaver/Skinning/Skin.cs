@@ -1079,8 +1079,8 @@ namespace Quaver.Skinning
                     Version = "1.0";
                     BgMaskPadding4K = 0;
                     BgMaskPadding7K = 0;
-                    HitPositionOffset4K = -28;
-                    HitPositionOffset7K = -28;
+                    HitPositionOffset4K = 665;
+                    HitPositionOffset7K = 665;
                     NotePadding4K = 0;
                     NotePadding7K = 0;
                     TimingBarPixelSize = 2;
