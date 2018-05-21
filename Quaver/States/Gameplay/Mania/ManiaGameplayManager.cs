@@ -358,8 +358,8 @@ namespace Quaver.States.Gameplay.Mania
                     ManiaNoteManager.DownScroll = ConfigManager.DownScroll4K.Value;
                     ManiaNoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale;
                     ManiaNoteManager.HitPositionOffset = Config.ConfigManager.DownScroll4K.Value
-                        ? ManiaPlayfield.ReceptorYPosition + ((ConfigManager.UserHitPositionOffset4K.Value + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
-                        : ManiaPlayfield.ReceptorYPosition - ((ConfigManager.UserHitPositionOffset4K.Value + GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
+                        ? ManiaPlayfield.ReceptorYPosition + (( GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
+                        : ManiaPlayfield.ReceptorYPosition - ((GameBase.LoadedSkin.HitPositionOffset4K) * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale
                         * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width)
                         - ((double)GameBase.LoadedSkin.NoteHitObjects4K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width));
@@ -391,8 +391,8 @@ namespace Quaver.States.Gameplay.Mania
                     ManiaNoteManager.DownScroll = ConfigManager.DownScroll7K.Value;
                     ManiaNoteManager.LaneSize = GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale;
                     ManiaNoteManager.HitPositionOffset = Config.ConfigManager.DownScroll7K.Value
-                        ? ManiaPlayfield.ReceptorYPosition + ((ConfigManager.UserHitPositionOffset7K.Value + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
-                        : ManiaPlayfield.ReceptorYPosition - ((ConfigManager.UserHitPositionOffset7K.Value + GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
+                        ? ManiaPlayfield.ReceptorYPosition + ((GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
+                        : ManiaPlayfield.ReceptorYPosition - ((GameBase.LoadedSkin.HitPositionOffset7K) * GameBase.WindowUIScale)
                         + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale
                         * (float)(((double)GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width)
                         - ((double)GameBase.LoadedSkin.NoteHitObjects7K[0][0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0][0].Width));

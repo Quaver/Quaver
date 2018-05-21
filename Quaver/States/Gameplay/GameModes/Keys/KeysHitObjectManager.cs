@@ -59,33 +59,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         }
 
         /// <summary>
-        ///     The offset of the hit position.
-        /// </summary>
-        internal float HitPositionOffset
-        {
-            get
-            {
-                var playfield = (KeysPlayfield) Ruleset.Playfield;
-
-                switch (Ruleset.Mode)
-                {
-                    case GameMode.Keys4:
-                        if (ConfigManager.DownScroll4K.Value)
-                            return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset4K.Value + GameBase.LoadedSkin.HitPositionOffset4K);
-                        else
-                            return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset4K.Value + GameBase.LoadedSkin.HitPositionOffset4K) + GameBase.LoadedSkin.ColumnSize4K;
-                    case GameMode.Keys7:
-                        if (ConfigManager.DownScroll7K.Value)
-                            return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset7K.Value + GameBase.LoadedSkin.HitPositionOffset7K);
-                        else
-                            return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset7K.Value + GameBase.LoadedSkin.HitPositionOffset7K) + GameBase.LoadedSkin.ColumnSize7K;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
-
-        /// <summary>
         ///     The time it takes for a dead note to be removed after missing it.
         /// </summary>
         private uint DeadNoteRemovalTime { get; }
@@ -219,7 +192,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.TrueStartTime)
                     {
                         hitObject.CurrentLongNoteSize = (ulong) ((hitObject.LongNoteOffsetYFromReceptor - Ruleset.Screen.AudioTiming.CurrentTime) * ScrollSpeed);
-                        hitObject.PositionY = HitPositionOffset;
+                        
+                        var playfield = (KeysPlayfield) Ruleset.Playfield;
+                        hitObject.PositionY = playfield.ReceptorPositionY;
                     }
                     else
                     {

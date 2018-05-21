@@ -71,6 +71,33 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         internal NumberDisplay ComboDisplay { get; set; }
 
+        /// <summary>
+        ///     The offset of the hit position.
+        /// </summary>
+        internal float HitPositionOffset
+        {
+            get
+            {
+                var playfield = (KeysPlayfield) Screen.GameModeComponent.Playfield;
+
+                switch (Screen.GameModeComponent.Mode)
+                {
+                    case GameMode.Keys4:
+                        if (ConfigManager.DownScroll4K.Value)
+                            return GameBase.LoadedSkin.HitPositionOffset4K;
+                        else
+                            return -GameBase.LoadedSkin.HitPositionOffset4K;
+                    case GameMode.Keys7:
+                        if (ConfigManager.DownScroll7K.Value)
+                            return GameBase.LoadedSkin.HitPositionOffset7K;
+                        else
+                            return -GameBase.LoadedSkin.HitPositionOffset7K;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+        
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
@@ -349,7 +376,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             {
                 Image = GameBase.LoadedSkin.StageHitPositionOverlay,
                 Size = new UDim2D(Playfield.Width, sizeY),
-                PosY = modeDownscroll.Value ? Playfield.ReceptorPositionY : Playfield.ReceptorPositionY + offsetY + sizeY,
+                PosY = HitPositionOffset,
+                Alignment = Alignment.TopLeft,
                 Parent = Playfield.ForegroundContainer
             };    
         }
