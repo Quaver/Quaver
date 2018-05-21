@@ -114,6 +114,16 @@ namespace Quaver.Config
         internal static BindedInt WindowWidth { get; private set; }
 
         /// <summary>
+        ///     4k Hit Position offset from receptor
+        /// </summary>
+        internal static BindedInt UserHitPositionOffset4K { get; private set; }
+
+        /// <summary>
+        ///     7k Hit Position offset from receptor
+        /// </summary>
+        internal static BindedInt UserHitPositionOffset7K { get; private set; }
+
+        /// <summary>
         ///     Is the window fullscreen?
         /// </summary>
         internal static BindedValue<bool> WindowFullScreen { get; private set; }
@@ -325,6 +335,8 @@ namespace Quaver.Config
             WindowWidth = ReadInt(@"WindowWidth", 1280, 800, short.MaxValue, data);
             HealthBarPositionTop = ReadValue(@"HealthBarPositionTop", false, data);
             DisplaySongTimeProgress = ReadValue(@"DisplaySongTimeProgress", true, data);
+            UserHitPositionOffset4K = ReadInt(@"UserHitPositionOffset4K", 0, 0, byte.MaxValue, data);
+            UserHitPositionOffset7K = ReadInt(@"UserHitPositionOffset7K", 0, 0, byte.MaxValue, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             WindowLetterboxed = ReadValue(@"WindowLetterboxed", false, data);
             FpsCounter = ReadValue(@"FpsCounter", true, data);
@@ -382,6 +394,8 @@ namespace Quaver.Config
                     WindowHeight.OnValueChanged += AutoSaveConfiguration;
                     WindowWidth.OnValueChanged += AutoSaveConfiguration;
                     HealthBarPositionTop.OnValueChanged += AutoSaveConfiguration;
+                    UserHitPositionOffset4K.OnValueChanged += AutoSaveConfiguration;
+                    UserHitPositionOffset7K.OnValueChanged += AutoSaveConfiguration;
                     WindowFullScreen.OnValueChanged += AutoSaveConfiguration;
                     WindowLetterboxed.OnValueChanged += AutoSaveConfiguration;
                     FpsCounter.OnValueChanged += AutoSaveConfiguration;

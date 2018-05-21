@@ -241,10 +241,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <returns></returns>
         internal float GetPosFromOffset(float offset)
         {
-            var pf = (KeysPlayfield) Ruleset.Playfield;
+            var manager = (KeysHitObjectManager) Ruleset.HitObjectManager;
 
             var speed = KeysHitObjectManager.IsDownscroll ? -KeysHitObjectManager.ScrollSpeed : KeysHitObjectManager.ScrollSpeed;
-            return (float) (pf.Stage.HitPositionOffset + (offset - Ruleset.Screen.AudioTiming.CurrentTime) * speed);
+            return (float) (manager.HitPositionOffset + (offset - Ruleset.Screen.AudioTiming.CurrentTime) * speed);
         }
         
         /// <summary>

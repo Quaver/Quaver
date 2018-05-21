@@ -74,7 +74,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
 
             // Calculate position & offset from the receptor.
             // TODO: Handle SV's.
-            hitObject.PositionY = hitObject.OffsetYFromReceptor + playfield.Stage.HitPositionOffset;
+            hitObject.PositionY = hitObject.OffsetYFromReceptor + objectManager.HitPositionOffset;
             
             // Get Note Snapping
             if (GameBase.LoadedSkin.ColourObjectsBySnapDistance)

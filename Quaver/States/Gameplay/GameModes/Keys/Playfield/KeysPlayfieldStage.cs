@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
@@ -72,33 +71,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         internal NumberDisplay ComboDisplay { get; set; }
 
-        /// <summary>
-        ///     The offset of the hit position.
-        /// </summary>
-        internal float HitPositionOffset
-        {
-            get
-            {
-                var playfield = (KeysPlayfield) Screen.GameModeComponent.Playfield;
-
-                switch (Screen.GameModeComponent.Mode)
-                {
-                    case GameMode.Keys4:
-                        if (ConfigManager.DownScroll4K.Value)
-                            return GameBase.LoadedSkin.HitPositionOffset4K;
-                        else
-                            return -GameBase.LoadedSkin.HitPositionOffset4K;
-                    case GameMode.Keys7:
-                        if (ConfigManager.DownScroll7K.Value)
-                            return GameBase.LoadedSkin.HitPositionOffset7K;
-                        else
-                            return -GameBase.LoadedSkin.HitPositionOffset7K;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
-        
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
@@ -111,7 +83,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
        
             CreateStageLeft();
             CreateStageRight();
-            
+            CreateHitPositionOverlay();
+                          
             // Create game mode specific sprites.
             // 4K and 7K are two separate modes and do NOT use the same textures
             // or skin properties. So we have to implement them separately.
@@ -152,10 +125,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            // Create the hit position overlay
-            CreateHitPositionOverlay();
-
+            
             // Create distant overlay last so it shows over the objects.
             CreateDistantOverlay();
             
@@ -275,15 +245,15 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             {
                 var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
                 
-                // Create individiaul receptor.     
+                // Create individiaul receptor.
                 Receptors.Add(new QuaverSprite
                 {
+                    Size = new UDim2D(Playfield.LaneSize, Playfield.LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width),
                     Position = new UDim2D(posX, Playfield.ReceptorPositionY),
                     Alignment = Alignment.TopLeft,
                     Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i],
                     SpriteEffect = !ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
-                    Parent = Playfield.ForegroundContainer,
-                    Size = new UDim2D(Playfield.LaneSize, Playfield.LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width)
+                    Parent = Playfield.ForegroundContainer
                 });
                 
                 // Create the column lighting sprite.
@@ -379,8 +349,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             {
                 Image = GameBase.LoadedSkin.StageHitPositionOverlay,
                 Size = new UDim2D(Playfield.Width, sizeY),
-                PosY = HitPositionOffset,
-                Alignment = Alignment.TopLeft,
+                PosY = modeDownscroll.Value ? Playfield.ReceptorPositionY : Playfield.ReceptorPositionY + offsetY + sizeY,
                 Parent = Playfield.ForegroundContainer
             };    
         }
