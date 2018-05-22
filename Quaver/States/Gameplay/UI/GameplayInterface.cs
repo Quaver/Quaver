@@ -9,6 +9,7 @@ using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Main;
+using Quaver.States.Gameplay.UI.Judgements;
 
 namespace Quaver.States.Gameplay.UI
 {
@@ -43,6 +44,11 @@ namespace Quaver.States.Gameplay.UI
         private NumberDisplay AccuracyDisplay { get; set; }
 
         /// <summary>
+        ///     Displays the judgements and KPS if specified.
+        /// </summary>
+        private JudgementStatusDisplay JudgementStatusDisplay { get; set; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         internal GameplayInterface(GameplayScreen screen)
@@ -62,6 +68,7 @@ namespace Quaver.States.Gameplay.UI
                 SongTimeProgressBar = new SongTimeProgressBar(Qua.FindSongLength(GameBase.SelectedMap.Qua), 0, new Vector2(GameBase.WindowRectangle.Width, 6),
                                                             Container, Alignment.BotLeft);
 
+            // Create score display
             ScoreDisplay = new NumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0))
             {
                 Parent = Container,
@@ -71,6 +78,7 @@ namespace Quaver.States.Gameplay.UI
             // Put the display in the top right corner.
             ScoreDisplay.PosX = -ScoreDisplay.TotalWidth - 10;
             
+            // Create acc display
             AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0))
             {
                 Parent = Container,
@@ -80,6 +88,9 @@ namespace Quaver.States.Gameplay.UI
             // Set the position of the accuracy display.
             AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth - 10;
             AccuracyDisplay.PosY = ScoreDisplay.Digits[0].SizeY + 10;
+            
+            // Create judgement status display
+            JudgementStatusDisplay = new JudgementStatusDisplay(Screen) { Parent = Container };
         }
 
         /// <summary>
@@ -98,7 +109,7 @@ namespace Quaver.States.Gameplay.UI
         {
             UpdateSongProgressDisplay();
             UpdateScoreAndAccuracyDisplays();
-            
+                    
             Container.Update(dt);
         }
 
