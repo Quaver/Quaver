@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Microsoft.Xna.Framework;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
@@ -32,7 +33,7 @@ namespace Quaver.States.Gameplay.UI
         /// <param name="size"></param>
         /// <param name="parent"></param>
         /// <param name="alignment"></param>
-        internal SongTimeProgressBar(float maxValue, float initialValue, UDim2D size, Drawable parent, Alignment alignment) 
+        internal SongTimeProgressBar(float maxValue, float initialValue, Vector2 size, Drawable parent, Alignment alignment) 
             : base(maxValue, initialValue, size, parent, alignment)
         {
             CurrentTime = new NumberDisplay(NumberDisplayType.SongTime, "00:00")

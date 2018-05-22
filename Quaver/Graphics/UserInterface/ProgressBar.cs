@@ -19,12 +19,12 @@ namespace Quaver.Graphics.UserInterface
         /// <summary>
         ///     The  maximum value of the progress bar.
         /// </summary>
-        internal float MaxValue { get; }
+        internal double MaxValue { get; }
 
         /// <summary>
         ///     The current value of the progress bar.
         /// </summary>
-        internal float CurrentValue { get; set; }
+        internal double CurrentValue { get; set; }
 
         /// <summary>
         ///     The active color of the progress bar
@@ -45,8 +45,13 @@ namespace Quaver.Graphics.UserInterface
         /// <summary>
         ///     The current percentage of the progress bar.
         /// </summary>
-        private float Percentage => (CurrentValue - 0) * 100 / MaxValue - 0 * 100;
-        
+        private double Percentage => (CurrentValue - 0) * 100 / MaxValue - 0 * 100;
+
+        /// <summary>
+        ///     The X size of the progress bar.
+        /// </summary>
+        private float BarSizeX { get; }
+
         /// <summary>
         ///     
         /// </summary>
@@ -55,14 +60,14 @@ namespace Quaver.Graphics.UserInterface
         /// <param name="size"></param>
         /// <param name="parent"></param>
         /// <param name="alignment"></param>
-        internal ProgressBar(float maxValue, float initialValue, UDim2D size, Drawable parent, Alignment alignment)
+        internal ProgressBar(float maxValue, float initialValue, Vector2 size, Drawable parent, Alignment alignment)
         {
             MaxValue = maxValue;
             CurrentValue = initialValue;
             
             // Set the initial color of it.
             Tint = InactiveColor;
-            Size = size;
+            Size = new UDim2D(size.X, size.Y);
             Alignment = alignment;
             Parent = parent;
 
@@ -71,8 +76,8 @@ namespace Quaver.Graphics.UserInterface
             {
                 Tint = ActiveColor,
                 Alignment = alignment,
-                Parent = parent,
-                Size = size
+                Parent = this,
+                Size = new UDim2D(0, size.Y)
             };
         }
         
@@ -82,8 +87,8 @@ namespace Quaver.Graphics.UserInterface
         /// </summary>
         /// <param name="dt"></param>
         internal override void Update(double dt)
-        { 
-            ActiveProgressBar.Size = new UDim2D(GraphicsHelper.Tween(SizeX * (Percentage / 100f), ActiveProgressBar.SizeX, Math.Min(dt / 60f, 1)), SizeY);
+        {
+            ActiveProgressBar.SizeX = GraphicsHelper.Tween((float)(SizeX * (Percentage / 100f)), ActiveProgressBar.SizeX, Math.Min(dt / 240, 1));
             base.Update(dt);
         }
     }
