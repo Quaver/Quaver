@@ -71,6 +71,18 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         internal NumberDisplay ComboDisplay { get; set; }
 
+        /// <summary>
+        ///     The original value for the combo display's Y position,
+        ///     so we can use this to set it back after it's done with its animation.
+        /// </summary>
+        private float OriginalComboDisplayY { get; set; }
+
+        /// <summary>
+        ///     The original size of the combo display, used for animations so we can
+        ///     tween it back down.
+        /// </summary>
+        private UDim2D OriginalComboDisplaySize { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
@@ -365,7 +377,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,
             };
-            
+
+            OriginalComboDisplayY = ComboDisplay.PosY;
             ComboDisplay.PosX = -ComboDisplay.TotalWidth / 2f;
             
             // Start off the map by making the display invisible.
@@ -437,6 +450,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             // If the combo needs repositioning, do so accordingly.
             if (oldCombo.Length != ComboDisplay.Value.Length)
                 ComboDisplay.PosX = -ComboDisplay.TotalWidth / 2f;
+
+            // Set the position and scale  of the combo display, so that we can perform some animations.
+            if (oldCombo != ComboDisplay.Value && ComboDisplay.Visible)
+                ComboDisplay.PosY = OriginalComboDisplayY - 10;
+         
+            // Gradually tween the position back to what it was originally.
+            ComboDisplay.PosY = GraphicsHelper.Tween(OriginalComboDisplayY, ComboDisplay.PosY, Math.Min(dt / 30, 1) / 2);          
         }
 #endregion
     }

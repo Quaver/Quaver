@@ -39,6 +39,7 @@ namespace Quaver.Graphics.UserInterface
                     return;
                 
                 _value = value;
+                LastValueChangeTime = GameBase.GameTime.ElapsedMilliseconds;
                 
                 // Only initialize if Digits has already been created.
                 if (Digits != null)
