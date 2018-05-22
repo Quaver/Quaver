@@ -21,7 +21,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
         /// <summary>
         ///     Reference to the ruleset.
         /// </summary>
-        internal GameplayScreen Screen { get; }
+        private GameplayScreen Screen { get; }
 
         /// <summary>
         ///     The list of judgement displays.
@@ -71,9 +71,9 @@ namespace Quaver.States.Gameplay.UI.Judgements
             foreach (var item in JudgementDisplays)
                 JudgementDisplays[item.Key].JudgementCount = Screen.GameModeComponent.ScoreProcessor.CurrentJudgements[item.Key];
             
-            // Perform the collapse animation for now if the audio is > -500
+            // Perform the collapse animation when the break is finished.
             // TODO: Make a "OnBreak" property in the screen.
-            if (Screen.AudioTiming.CurrentTime >= -500)
+            if (Screen.AudioTiming.CurrentTime >= -1000)
                 PerformCollapseAnimation(dt);
           
             base.Update(dt);
@@ -88,12 +88,11 @@ namespace Quaver.States.Gameplay.UI.Judgements
             for (var i = 0; i < JudgementDisplays.Count; i++)
             { 
                 var judgement = (Judgement) i;
-              
+                
                 // Start off the first collapse.
                 if (i == 0)
-                {
-                    JudgementDisplays[judgement].SizeX = GraphicsHelper.Tween(40, JudgementDisplays[judgement].SizeX, Math.Min(dt / 240, 1));            
-                    ChangeTextWhenCollapsing(JudgementDisplays[judgement]);
+                {    
+                    ChangeSizeAndTextWhenCollapsing(JudgementDisplays[judgement], dt);
                     continue;
                 }
                 
@@ -101,12 +100,12 @@ namespace Quaver.States.Gameplay.UI.Judgements
                 var previous = JudgementDisplays[(Judgement) (i - 1)];
 
                 // Don't preform the animation unless the previous one has gotten to a certain size.
+                // or if we're already hit our target
                 if (previous.SizeX > 100)
                     continue;
-                
-                // Start changing the size
-                JudgementDisplays[judgement].SizeX = GraphicsHelper.Tween(40, JudgementDisplays[judgement].SizeX, Math.Min(dt / 240, 1));                               
-                ChangeTextWhenCollapsing(JudgementDisplays[judgement]);
+                            
+                // Start changing the size                          
+                ChangeSizeAndTextWhenCollapsing(JudgementDisplays[judgement], dt);
             }
         }
 
@@ -114,8 +113,11 @@ namespace Quaver.States.Gameplay.UI.Judgements
         ///     Makes sure that the text is changed to a singular number when collapsing.
         /// </summary>
         /// <param name="display"></param>
-        private static void ChangeTextWhenCollapsing(JudgementDisplay display)
+        /// <param name="dt"></param>
+        private static void ChangeSizeAndTextWhenCollapsing(JudgementDisplay display, double dt)
         {
+            display.SizeX = GraphicsHelper.Lerp(40, display.SizeX, Math.Min(dt / 240, 1)); 
+                       
             if (display.SizeX <= 70)
                 display.SpriteText.Text = display.JudgementCount.ToString();
         }

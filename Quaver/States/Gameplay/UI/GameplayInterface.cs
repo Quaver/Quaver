@@ -72,7 +72,7 @@ namespace Quaver.States.Gameplay.UI
             ScoreDisplay = new NumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0))
             {
                 Parent = Container,
-                Alignment = Alignment.TopRight,
+                Alignment = Alignment.TopRight
             };
 
             // Put the display in the top right corner.

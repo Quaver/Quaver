@@ -150,6 +150,18 @@ namespace Quaver.Helpers
         }
 
         /// <summary>
+        ///     Linear interpolation.
+        /// </summary>
+        /// <param name="firstFloat"></param>
+        /// <param name="secondFloat"></param>
+        /// <param name="by"></param>
+        /// <returns></returns>
+        internal static float Lerp(float firstFloat, float secondFloat, double by)
+        {
+            return (float)(firstFloat * by + secondFloat * (1 - by));
+        }
+        
+        /// <summary>
         ///     Loads an image into a Texture2D
         /// </summary>
         /// <param name="path"></param>
