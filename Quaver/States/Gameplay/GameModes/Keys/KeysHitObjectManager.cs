@@ -198,10 +198,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 // The release window. (Window * Multiplier)
                 var window = Ruleset.ScoreProcessor.JudgementWindow.Last().Value * Ruleset.ScoreProcessor.WindowReleaseMultiplier.Last().Value;
                 
-                // If the LN's release was missed.
+                // If the LN's release was missed. (Counts as an okay instead of a miss.)
                 if (Ruleset.Screen.AudioTiming.CurrentTime > hitObject.TrueEndTime + window)
                 {
-                    Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                    Ruleset.ScoreProcessor.CalculateScore(Judgement.Okay);
                     
                     // Make the combo display visible since it is now changing.
                     var playfield = (KeysPlayfield) Ruleset.Playfield;
