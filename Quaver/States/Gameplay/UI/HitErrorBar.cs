@@ -40,14 +40,9 @@ namespace Quaver.States.Gameplay.UI
         private int CurrentLinePoolIndex { get; set; } = -1;
 
         /// <summary>
-        ///     the average hit chevron.
+        ///     the last hit chevron.
         /// </summary>
-        private QuaverSprite AverageHitCheveron { get;  }
-
-        /// <summary>
-        ///     The current average hit.
-        /// </summary>
-        private float AverageHit { get; set; }
+        private QuaverSprite LastHitCheveron { get;  }
 
         /// <inheritdoc />
         /// <summary>
@@ -90,8 +85,8 @@ namespace Quaver.States.Gameplay.UI
                 });
             }
 
-            // Create the average hit chevron.
-            AverageHitCheveron = new QuaverSprite()
+            // Create the hit chevron.
+            LastHitCheveron = new QuaverSprite()
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
@@ -114,7 +109,7 @@ namespace Quaver.States.Gameplay.UI
             
             // Tween the chevron to the last hit
             if (CurrentLinePoolIndex != -1)
-                AverageHitCheveron.PosX = GraphicsHelper.Tween(LineObjectPool[CurrentLinePoolIndex].PosX, AverageHitCheveron.PosX, Math.Min(dt / 360, 1));
+                LastHitCheveron.PosX = GraphicsHelper.Tween(LineObjectPool[CurrentLinePoolIndex].PosX, LastHitCheveron.PosX, Math.Min(dt / 360, 1));
             
             base.Update(dt);
         }
