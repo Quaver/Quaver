@@ -114,6 +114,7 @@
     <Compile Include="States\Gameplay\IGameplayInputManager.cs" />
     <Compile Include="States\Gameplay\IGameplayPlayfield.cs" />
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />
+    <Compile Include="States\Gameplay\UI\HitErrorBar.cs" />
     <Compile Include="States\Gameplay\UI\SongTimeProgressBar.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="States\Select\MapInfoWindow.cs" />

@@ -182,6 +182,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 var playfield = (KeysPlayfield) Ruleset.Playfield;
                 playfield.Stage.ComboDisplay.MakeVisible();
                 
+                // Also add a judgement to the hit error.
+                playfield.Stage.HitError.AddJudgement(judgement, hitObject.TrueStartTime - Ruleset.Screen.AudioTiming.CurrentTime);
+                
                 break;
             }
         }
@@ -205,11 +208,20 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 break;
             }
     
+            // Make the combo display visible since it is now changing.
+            var playfield = (KeysPlayfield) Ruleset.Playfield;
+            playfield.Stage.ComboDisplay.MakeVisible();
+            
             // If LN has been released during a window
             if (receivedJudgementIndex != -1)
             {
                 Ruleset.ScoreProcessor.CalculateScore((Judgement) receivedJudgementIndex);
-                manager.KillHoldPoolObject(noteIndex, true);
+                
+                // Also add a judgement to the hit error.
+                playfield.Stage.HitError.AddJudgement((Judgement)receivedJudgementIndex, manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.AudioTiming.CurrentTime);
+                
+                // Lastly kill the object.
+                manager.KillHoldPoolObject(noteIndex, true);             
             }
             // If LN has been released early
             else
@@ -218,10 +230,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
                 manager.KillHoldPoolObject(noteIndex);
             }
-            
-            // Make the combo display visible since it is now changing.
-            var playfield = (KeysPlayfield) Ruleset.Playfield;
-            playfield.Stage.ComboDisplay.MakeVisible();
+                       
         }
     }
 }

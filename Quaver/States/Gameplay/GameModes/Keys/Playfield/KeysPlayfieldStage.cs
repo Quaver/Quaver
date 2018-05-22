@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
@@ -11,6 +12,7 @@ using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States.Gameplay.Mania;
+using Quaver.States.Gameplay.UI;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
 {
@@ -78,10 +80,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         private float OriginalComboDisplayY { get; set; }
 
         /// <summary>
-        ///     The original size of the combo display, used for animations so we can
-        ///     tween it back down.
+        ///     The hit error.
         /// </summary>
-        private UDim2D OriginalComboDisplaySize { get; set; }
+        internal HitErrorBar HitError { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -143,6 +144,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             
             // Create combo display.
             CreateComboDisplay();
+            
+            // Create HitError
+            CreateHitError();
         }
 
         /// <summary>
@@ -384,6 +388,19 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             // Start off the map by making the display invisible.
             ComboDisplay.MakeInvisible();
         }
+
+        /// <summary>
+        ///     Creates the hit error bar.
+        /// </summary>
+        private void CreateHitError()
+        {
+            HitError = new HitErrorBar(HitErrorType.Quaver, new UDim2D(50, 10))
+            {
+                Parent = Playfield.ForegroundContainer,
+                Alignment = Alignment.MidCenter,
+                Position = new UDim2D(0, 55)
+            };
+        }
 #endregion
 
 #region ANIMATIONS
@@ -453,7 +470,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
 
             // Set the position and scale  of the combo display, so that we can perform some animations.
             if (oldCombo != ComboDisplay.Value && ComboDisplay.Visible)
-                ComboDisplay.PosY = OriginalComboDisplayY - 10;
+                ComboDisplay.PosY = OriginalComboDisplayY - 5;
          
             // Gradually tween the position back to what it was originally.
             ComboDisplay.PosY = GraphicsHelper.Tween(OriginalComboDisplayY, ComboDisplay.PosY, Math.Min(dt / 30, 1) / 2);          
