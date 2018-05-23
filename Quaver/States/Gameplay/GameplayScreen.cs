@@ -85,19 +85,32 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Dictates if the intro of the song is currently skippable.
         /// </summary>
-        private bool IsIntroSkippable => GameBase.SelectedMap.Qua.HitObjects[0].StartTime - AudioTiming.CurrentTime >= AudioTiming.StartDelay + 2000;            
+        private bool IsIntroSkippable => GameBase.SelectedMap.Qua.HitObjects[0].StartTime - AudioTiming.CurrentTime >= AudioTiming.StartDelay + 2000;
 
         /// <summary>
         ///     If the user is currently on a break in the song.
         /// </summary>
+        private bool _onBreak;
         internal bool OnBreak
         {
             get
             {
-                if (Ruleset.HitObjectManager.ObjectPool.Count > 0)
-                    return Ruleset.HitObjectManager.ObjectPool.First().TrueStartTime - AudioTiming.CurrentTime >= AudioTiming.StartDelay + 10000;
+                // By default if there aren't any objects left we aren't on a break.
+                if (Ruleset.HitObjectManager.ObjectPool.Count <= 0) 
+                    return false;
+
+                // Grab the next object in the object pool.
+                var nextObject = Ruleset.HitObjectManager.ObjectPool.First();
                 
-                return false;
+                // If the player is currently not on a break, then we want to detect if it's on a break
+                // by checking if the next object is 10 seconds away.
+                if (nextObject.TrueStartTime - AudioTiming.CurrentTime >= AudioTiming.StartDelay + 10000)
+                    _onBreak = true;                 
+                // If the user is already on a break, then we need to turn the break off if the next object is at the start delay.
+                else if (_onBreak && nextObject.TrueStartTime - AudioTiming.CurrentTime <= AudioTiming.StartDelay)
+                    _onBreak = false;
+
+                return _onBreak;
             }
         }
 
