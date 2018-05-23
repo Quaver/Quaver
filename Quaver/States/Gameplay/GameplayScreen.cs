@@ -83,11 +83,6 @@ namespace Quaver.States.Gameplay
         private int LastRecordedCombo { get; set; }
 
         /// <summary>
-        ///     Dictates if the intro of the song is currently skippable.
-        /// </summary>
-        private bool IsIntroSkippable => GameBase.SelectedMap.Qua.HitObjects[0].StartTime - Timing.CurrentTime >= Timing.StartDelay + 2000;
-
-        /// <summary>
         ///     If the user is currently on a break in the song.
         /// </summary>
         private bool _onBreak;
@@ -159,7 +154,6 @@ namespace Quaver.States.Gameplay
             // Add gameplay loggers
             Logger.Add("Paused", $"Paused: {IsPaused}", Color.White);
             Logger.Add("Resume In Progress", $"Resume In Progress {IsResumeInProgress}", Color.White);
-            Logger.Add("Intro Skippable", $"Intro Skippable: {IsIntroSkippable}", Color.White);
             Logger.Add($"Max Combo", $"Max Combo: {Ruleset.ScoreProcessor.MaxCombo}", Color.White);
             Logger.Add($"Objects Left", $"Objects Left {Ruleset.HitObjectManager.ObjectsLeft}", Color.White);
             Logger.Add($"Finished", $"Finished: {IsPlayComplete}", Color.White);
@@ -209,7 +203,6 @@ namespace Quaver.States.Gameplay
             // Update loggers.
             Logger.Update("Paused", $"Paused: {IsPaused}");
             Logger.Update("Resume In Progress", $"Resume In Progress {IsResumeInProgress}");
-            Logger.Update("Intro Skippable", $"Intro Skippable: {IsIntroSkippable}");
             Logger.Update($"Max Combo", $"Max Combo: {Ruleset.ScoreProcessor.MaxCombo}");
             Logger.Update($"Objects Left", $"Objects Left {Ruleset.HitObjectManager.ObjectsLeft}");
             Logger.Update($"Finished", $"Finished: {IsPlayComplete}");
@@ -300,10 +293,11 @@ namespace Quaver.States.Gameplay
        /// </summary>
         private void SkipSongIntro()
         {
-            if (!IsIntroSkippable || IsPaused || IsResumeInProgress)
+            if (!OnBreak || IsPaused || IsResumeInProgress)
                 return;
 
-            var skipTime = GameBase.SelectedMap.Qua.HitObjects[0].StartTime - Timing.StartDelay + AudioEngine.BassDelayOffset;
+            // Get the skip time of the next object.           
+            var skipTime = Ruleset.HitObjectManager.ObjectPool.First().TrueStartTime - Timing.StartDelay + AudioEngine.BassDelayOffset;
 
             try
             {
@@ -311,7 +305,7 @@ namespace Quaver.States.Gameplay
                 if (GameBase.AudioEngine.HasPlayed)
                     GameBase.AudioEngine.ChangeSongPosition(skipTime);
                 else
-                    GameBase.AudioEngine.Play(skipTime);
+                    GameBase.AudioEngine.Play((int)skipTime);
 
                 // Set the actual song time to the position in the audio if it was successful.
                 Timing.CurrentTime = GameBase.AudioEngine.Position;
