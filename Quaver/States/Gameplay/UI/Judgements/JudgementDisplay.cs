@@ -40,11 +40,12 @@ namespace Quaver.States.Gameplay.UI.Judgements
 
                 _judgementCount = value;
 
-                if (SpriteText != null)
-                    SpriteText.Text = $"{Judgement.ToString()}: {JudgementCount}";
-
                 // Change the color to its active one.
                 Tint = GameBase.LoadedSkin.GetJudgeColor(Judgement);
+                
+                // Make the size of the display look more pressed.
+                SizeX = OriginalSize.Y - OriginalSize.Y / 4;
+                SizeY = SizeX;
             }
         }
 
@@ -57,17 +58,25 @@ namespace Quaver.States.Gameplay.UI.Judgements
         ///     The inactive color for this.
         /// </summary>
         private Color InactiveColor { get; }
-        
+
+        /// <summary>
+        ///     The original passed in size for the display.
+        /// </summary>
+        internal Vector2 OriginalSize { get; }
+
         /// <summary>
         ///     Ctor - 
         /// </summary>
         /// <param name="parentDisplay"></param>
         /// <param name="j"></param>
         /// <param name="color"></param>
-        internal JudgementDisplay(JudgementStatusDisplay parentDisplay, Judgement j, Color color)
+        internal JudgementDisplay(JudgementStatusDisplay parentDisplay, Judgement j, Color color, Vector2 size)
         {
             Judgement = j;
             ParentDisplay = parentDisplay;
+            OriginalSize = size;
+            
+            Size = new UDim2D(size.X, size.Y);
            
             SpriteText = new QuaverSpriteText()
             {
@@ -93,7 +102,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
             var g = GraphicsHelper.Tween(InactiveColor.G, Tint.G, Math.Min(dt / 360, 1));
             var b = GraphicsHelper.Tween(InactiveColor.B, Tint.B, Math.Min(dt / 360, 1));
             Tint = new Color((int)r, (int)g, (int)b);
-            
+                        
             base.Update(dt);
         }
     }
