@@ -44,8 +44,9 @@ namespace Quaver.States.Gameplay.UI.Judgements
                 Tint = GameBase.LoadedSkin.GetJudgeColor(Judgement);
                 
                 // Make the size of the display look more pressed.
-                SizeX = OriginalSize.Y - OriginalSize.Y / 4;
+                SizeX = JudgementStatusDisplay.DisplayItemSize.Y - JudgementStatusDisplay.DisplayItemSize.Y / 4;
                 SizeY = SizeX;
+                PosX = -JudgementStatusDisplay.DisplayItemSize.Y / 16;
             }
         }
 
@@ -60,21 +61,16 @@ namespace Quaver.States.Gameplay.UI.Judgements
         private Color InactiveColor { get; }
 
         /// <summary>
-        ///     The original passed in size for the display.
-        /// </summary>
-        internal Vector2 OriginalSize { get; }
-
-        /// <summary>
         ///     Ctor - 
         /// </summary>
         /// <param name="parentDisplay"></param>
         /// <param name="j"></param>
         /// <param name="color"></param>
+        /// <param name="size"></param>
         internal JudgementDisplay(JudgementStatusDisplay parentDisplay, Judgement j, Color color, Vector2 size)
         {
             Judgement = j;
             ParentDisplay = parentDisplay;
-            OriginalSize = size;
             
             Size = new UDim2D(size.X, size.Y);
            
@@ -82,7 +78,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
             {
                 Alignment = Alignment.MidCenter,
                 Parent = this,
-                Text = $"{Judgement.ToString()}: {JudgementCount}",
+                Text = $"{JudgementCount}",
                 Font = QuaverFonts.Medium12,
                 TextColor = Color.Black,
                 PosX = 0,

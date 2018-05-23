@@ -28,6 +28,11 @@ namespace Quaver.States.Gameplay.UI.Judgements
         /// </summary>
         private Dictionary<Judgement, JudgementDisplay> JudgementDisplays { get; }
 
+        /// <summary>
+        ///     The size of each display item.
+        /// </summary>
+        internal static Vector2 DisplayItemSize { get; } = new Vector2(125, 45);
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor -
@@ -35,7 +40,8 @@ namespace Quaver.States.Gameplay.UI.Judgements
         internal JudgementStatusDisplay(GameplayScreen screen)
         {
             Screen = screen;
-           
+            
+            // Create the judgement displays.
             JudgementDisplays = new Dictionary<Judgement, JudgementDisplay>();
             for (var i = 0; i < Screen.Ruleset.ScoreProcessor.CurrentJudgements.Count; i++)
             {
@@ -43,10 +49,11 @@ namespace Quaver.States.Gameplay.UI.Judgements
                 var color = GameBase.LoadedSkin.GetJudgeColor(key);      
                 
                 // Default it to an inactive color.
-                JudgementDisplays[key] = new JudgementDisplay(this, key, new Color(color.R / 2, color.G / 2, color.B / 2), new Vector2(120, 40))
+                JudgementDisplays[key] = new JudgementDisplay(this, key, new Color(color.R / 2, color.G / 2, color.B / 2), new Vector2(DisplayItemSize.Y, DisplayItemSize.Y))
                 {
                     Alignment = Alignment.MidRight,
-                    Parent = this
+                    Parent = this,
+                    Image = GameBase.QuaverUserInterface.JudgementOverlay
                 };
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
@@ -56,7 +63,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
                     continue;
                 }
 
-                JudgementDisplays[key].PosY = JudgementDisplays[(Judgement) (i - 1)].PosY + JudgementDisplays[key].SizeY + 10;
+                JudgementDisplays[key].PosY = JudgementDisplays[(Judgement) (i - 1)].PosY + JudgementDisplays[key].SizeY + 5;
             }
         }
 
@@ -72,9 +79,9 @@ namespace Quaver.States.Gameplay.UI.Judgements
             
             // Perform the collapse animation when the break is finished.
             // and the song is close to starting.
-            if (!Screen.OnBreak && Screen.Timing.CurrentTime >= -500)
+            if (!Screen.OnBreak && Screen.Timing.CurrentTime >= 0)
                 PerformCollapseAnimation(dt);
-            else if (Screen.HasStarted)
+            else
                 PerformCollapseAnimation(dt, true);
           
             base.Update(dt);
@@ -103,13 +110,14 @@ namespace Quaver.States.Gameplay.UI.Judgements
 
                 // Don't preform the animation unless the previous one has gotten to a certain size.
                 // or if we're already hit our target
-                if ((previous.SizeX > previous.OriginalSize.X - previous.OriginalSize.X / JudgementDisplays.Count && !isExpanding) 
-                    || (previous.SizeX < previous.OriginalSize.X / 2f && isExpanding))
+                if ((previous.SizeX > DisplayItemSize.X - DisplayItemSize.X / JudgementDisplays.Count && !isExpanding) 
+                    || (previous.SizeX < DisplayItemSize.X / 2f && isExpanding))
                     continue;
                             
                 // Start changing the size                          
                 ChangeSizeAndTextWhenCollapsing(JudgementDisplays[judgement], dt, isExpanding);
             }
+            
         }
 
         /// <summary>
@@ -118,24 +126,25 @@ namespace Quaver.States.Gameplay.UI.Judgements
         /// <param name="display"></param>
         /// <param name="dt"></param>
         /// <param name="isExpanding"></param>
-        private static void ChangeSizeAndTextWhenCollapsing(JudgementDisplay display, double dt, bool isExpanding)
+        private void ChangeSizeAndTextWhenCollapsing(JudgementDisplay display, double dt, bool isExpanding)
         {
             // If we're expanding, we want to make it bigger and return the text.
             if (isExpanding)
             {
-                display.SizeX = GraphicsHelper.Tween(display.OriginalSize.X, display.SizeX, Math.Min(dt / 240, 1));   
-                display.SizeY = GraphicsHelper.Tween(display.OriginalSize.Y, display.SizeY, Math.Min(dt / 240, 1));   
+                display.SizeX = GraphicsHelper.Tween(DisplayItemSize.X, display.SizeX, Math.Min(dt / 180, 1));   
+                display.SizeY = GraphicsHelper.Tween(DisplayItemSize.Y, display.SizeY, Math.Min(dt / 180, 1));   
 
-                if (display.SizeX >= display.OriginalSize.X / 2f + 10)
+                if (display.SizeX >= DisplayItemSize.X / 2f + 5)
                     display.SpriteText.Text = $"{display.Judgement.ToString()}: {display.JudgementCount.ToString()}";
             }
             // If we're collapsing and not expanding, make it a square.
             else
             {
-                display.SizeX = GraphicsHelper.Tween(display.OriginalSize.Y, display.SizeX, Math.Min(dt / 240, 1)); 
-                display.SizeY = GraphicsHelper.Tween(display.OriginalSize.Y, display.SizeY, Math.Min(dt / 240, 1)); 
+                display.SizeX = GraphicsHelper.Tween(DisplayItemSize.Y, display.SizeX, Math.Min(dt / 180, 1)); 
+                display.SizeY = GraphicsHelper.Tween(DisplayItemSize.Y, display.SizeY, Math.Min(dt / 180, 1));
+                display.PosX = GraphicsHelper.Tween(0, display.PosX, Math.Min(dt / 180, 1));
                        
-                if (display.SizeX <= display.OriginalSize.X / 2f + 10)
+                if (display.SizeX <= DisplayItemSize.X / 2f + 5)
                     display.SpriteText.Text = display.JudgementCount.ToString();
             }
         }

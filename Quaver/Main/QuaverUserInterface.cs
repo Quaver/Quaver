@@ -45,6 +45,11 @@ namespace Quaver.Main
         internal Texture2D BarCorner { get; set; }
 
         /// <summary>
+        ///     judgement-overlay
+        /// </summary>
+        internal Texture2D JudgementOverlay { get; set; }
+
+        /// <summary>
         ///     Loads all the ui elements into content
         /// </summary>
         public void LoadElementsAsContent()
@@ -55,6 +60,7 @@ namespace Quaver.Main
             HollowBox = ResourceHelper.LoadTexture2DFromPng(QuaverResources.hollow_box);
             BarCap = ResourceHelper.LoadTexture2DFromPng(QuaverResources.bar_cap);
             BarCorner = ResourceHelper.LoadTexture2DFromPng(QuaverResources.bar_corner);
+            JudgementOverlay = ResourceHelper.LoadTexture2DFromPng(QuaverResources.judgement_overlay);
         }
 
         /// <summary>
