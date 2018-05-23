@@ -7,10 +7,7 @@
     {
         MainMenu,
         SongSelect,
-        SongLoading,
-        PlayScreen,
-        PlayPause,
-        GameOver,
+        Gameplay,
         ScoreScreen,
         LoadingScreen,
         TestScreen
