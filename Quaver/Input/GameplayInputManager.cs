@@ -23,7 +23,7 @@ namespace Quaver.Input
         /// <summary>
         ///     The current State
         /// </summary>
-        public State CurrentState { get; set; } = State.PlayScreen;
+        public State CurrentState { get; set; } = State.Gameplay;
 
         /// <summary>
         ///     Keeps track of if the pause key is down.

@@ -6,6 +6,7 @@ using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
+using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Main;
 using Color = Microsoft.Xna.Framework.Color;
@@ -56,8 +57,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
         ///     The inactive color for this.
         /// </summary>
         private Color InactiveColor { get; }
-
-
+        
         /// <summary>
         ///     Ctor - 
         /// </summary>

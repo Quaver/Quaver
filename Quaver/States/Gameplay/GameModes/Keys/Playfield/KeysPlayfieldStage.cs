@@ -462,7 +462,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             var oldCombo = ComboDisplay.Value;
             
             // Set the new one
-            ComboDisplay.Value = Screen.GameModeComponent.ScoreProcessor.Combo.ToString();
+            ComboDisplay.Value = Screen.Ruleset.ScoreProcessor.Combo.ToString();
             
             // If the combo needs repositioning, do so accordingly.
             if (oldCombo.Length != ComboDisplay.Value.Length)

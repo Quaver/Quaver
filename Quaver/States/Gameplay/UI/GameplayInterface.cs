@@ -128,13 +128,13 @@ namespace Quaver.States.Gameplay.UI
         private void UpdateScoreAndAccuracyDisplays()
         {
             // Update score and accuracy displays
-            ScoreDisplay.Value = StringHelper.ScoreToString(Screen.GameModeComponent.ScoreProcessor.Score);
+            ScoreDisplay.Value = StringHelper.ScoreToString(Screen.Ruleset.ScoreProcessor.Score);
 
             // Grab the old accuracy
             var oldAcc = AccuracyDisplay.Value;
             
             // Update the new accuracy.
-            AccuracyDisplay.Value = StringHelper.AccuracyToString(Screen.GameModeComponent.ScoreProcessor.Accuracy);
+            AccuracyDisplay.Value = StringHelper.AccuracyToString(Screen.Ruleset.ScoreProcessor.Accuracy);
             
             // If the old accuracy's length isn't the same, then we need to reposition the sprite
             // Example: 100.00% to 99.99% needs repositioning.

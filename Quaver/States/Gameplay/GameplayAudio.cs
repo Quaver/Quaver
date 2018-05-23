@@ -102,7 +102,7 @@ namespace Quaver.States.Gameplay
         /// <param name="dt"></param>
         private void UpdateSongTime(double dt)
         {
-            if (GameplayScreen.Paused)
+            if (GameplayScreen.IsPaused)
                 return;
                         
             // If the audio didn't begin yet, 
@@ -113,11 +113,11 @@ namespace Quaver.States.Gameplay
             }
                       
             // Play the audio stream if the current time is past the start delay. 
-            if (!GameplayScreen.Started)
+            if (!GameplayScreen.HasStarted)
             {
                 try
                 {
-                    GameplayScreen.Started = true;
+                    GameplayScreen.HasStarted = true;
                     GameBase.AudioEngine.Play();
                 }
                 catch (AudioEngineException e) {}

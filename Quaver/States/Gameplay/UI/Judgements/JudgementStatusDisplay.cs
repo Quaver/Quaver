@@ -37,7 +37,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
             Screen = screen;
            
             JudgementDisplays = new Dictionary<Judgement, JudgementDisplay>();
-            for (var i = 0; i < Screen.GameModeComponent.ScoreProcessor.CurrentJudgements.Count; i++)
+            for (var i = 0; i < Screen.Ruleset.ScoreProcessor.CurrentJudgements.Count; i++)
             {
                 var key = (Judgement) i;
                 var color = GameBase.LoadedSkin.GetJudgeColor(key);      
@@ -53,7 +53,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
                 if (i == 0)
                 {
-                    PosY = Screen.GameModeComponent.ScoreProcessor.CurrentJudgements.Count * -JudgementDisplays[key].SizeY / 2f;
+                    PosY = Screen.Ruleset.ScoreProcessor.CurrentJudgements.Count * -JudgementDisplays[key].SizeY / 2f;
                     continue;
                 }
 
@@ -69,11 +69,11 @@ namespace Quaver.States.Gameplay.UI.Judgements
         {
             // Update the judgement counts of each one.
             foreach (var item in JudgementDisplays)
-                JudgementDisplays[item.Key].JudgementCount = Screen.GameModeComponent.ScoreProcessor.CurrentJudgements[item.Key];
+                JudgementDisplays[item.Key].JudgementCount = Screen.Ruleset.ScoreProcessor.CurrentJudgements[item.Key];
             
             // Perform the collapse animation when the break is finished.
-            // TODO: Make a "OnBreak" property in the screen.
-            if (Screen.AudioTiming.CurrentTime >= -1000)
+            // and the song is close to starting.
+            if (!Screen.OnBreak && Screen.AudioTiming.CurrentTime >= -500)
                 PerformCollapseAnimation(dt);
           
             base.Update(dt);
@@ -116,7 +116,8 @@ namespace Quaver.States.Gameplay.UI.Judgements
         /// <param name="dt"></param>
         private static void ChangeSizeAndTextWhenCollapsing(JudgementDisplay display, double dt)
         {
-            display.SizeX = GraphicsHelper.Lerp(40, display.SizeX, Math.Min(dt / 240, 1)); 
+            if (display.SizeX >= 40)
+                display.SizeX = GraphicsHelper.Tween(40, display.SizeX, Math.Min(dt / 240, 1)); 
                        
             if (display.SizeX <= 70)
                 display.SpriteText.Text = display.JudgementCount.ToString();

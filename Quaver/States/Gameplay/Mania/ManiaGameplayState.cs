@@ -12,7 +12,7 @@ namespace Quaver.States.Gameplay.Mania
     /// </summary>
     internal class ManiaGameplayState : IGameState
     {
-        public State CurrentState { get; set; } = State.PlayScreen;
+        public State CurrentState { get; set; } = State.Gameplay;
         public bool UpdateReady { get; set; }
 
         /// <summary>

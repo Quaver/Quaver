@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
@@ -24,7 +25,7 @@ namespace Quaver.States.Gameplay
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public State CurrentState { get; set; } = State.PlayScreen;
+        public State CurrentState { get; set; } = State.Gameplay;
         
         /// <inheritdoc />
         /// <summary>
@@ -37,9 +38,9 @@ namespace Quaver.States.Gameplay
         internal GameplayAudio AudioTiming { get; }
 
         /// <summary>
-        ///     The curent game mode object.
+        ///     The curent game mode ruleset
         /// </summary>
-        internal GameModeRuleset GameModeComponent { get; }
+        internal GameModeRuleset Ruleset { get; }
 
         /// <summary>
         ///     The general gameplay UI.
@@ -49,12 +50,12 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     If the game is currently paused.
         /// </summary>
-        internal bool Paused { get; set; }
+        internal bool IsPaused { get; private set; }
 
         /// <summary>
         ///     If the game session has already been started.
         /// </summary>
-        internal bool Started { get; set; }
+        internal bool HasStarted { get; set; }
 
         /// <summary>
         ///     The current parsed .qua file that is being played.
@@ -69,7 +70,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Dictates if we are currently resuming the game.
         /// </summary>
-        private bool ResumeInProgress { get; set; }
+        private bool IsResumeInProgress { get; set; }
 
         /// <summary>
         ///     The time the user resumed the game.
@@ -84,11 +85,27 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Dictates if the intro of the song is currently skippable.
         /// </summary>
-        private bool IntroSkippable
+        private bool IsIntroSkippable => GameBase.SelectedMap.Qua.HitObjects[0].StartTime - AudioTiming.CurrentTime >= AudioTiming.StartDelay + 2000;            
+
+        /// <summary>
+        ///     If the user is currently on a break in the song.
+        /// </summary>
+        internal bool OnBreak
         {
-            get => GameBase.SelectedMap.Qua.HitObjects[0].StartTime - AudioTiming.CurrentTime >= AudioTiming.StartDelay + 2000;            
+            get
+            {
+                if (Ruleset.HitObjectManager.ObjectPool.Count > 0)
+                    return Ruleset.HitObjectManager.ObjectPool.First().TrueStartTime - AudioTiming.CurrentTime >= AudioTiming.StartDelay + 10000;
+                
+                return false;
+            }
         }
 
+        /// <summary>
+        ///     If the play is finished.
+        /// </summary>
+        internal bool IsPlayComplete => Ruleset.HitObjectManager.IsComplete;
+        
          /// <summary>
         ///     Ctor - 
         /// </summary>
@@ -105,7 +122,7 @@ namespace Quaver.States.Gameplay
             {
                 case GameMode.Keys4:
                 case GameMode.Keys7:
-                    GameModeComponent = new GameModeKeys(this, map.Mode, map);
+                    Ruleset = new GameModeKeys(this, map.Mode, map);
                     break;
                 default:
                     throw new InvalidEnumArgumentException("Game mode must be a valid!");
@@ -124,18 +141,16 @@ namespace Quaver.States.Gameplay
             DiscordController.ChangeDiscordPresenceGameplay(false);
             
             // Initialize the game mode.
-            GameModeComponent.Initialize();
+            Ruleset.Initialize();
             
             // Add gameplay loggers
-            /*Logger.Add("Paused", $"Paused: {Paused}", Color.White);
-            Logger.Add("Resume In Progress", $"Resume In Progress {ResumeInProgress}", Color.White);
-            Logger.Add("Intro Skippable", $"Intro Skippable: {IntroSkippable}", Color.White);
-            Logger.Add("Score", $"Score: {GameModeComponent.ScoreProcessor.Score}", Color.White);
-            Logger.Add($"Accuracy", $"Accuracy: {GameModeComponent.ScoreProcessor.Accuracy}", Color.White);
-            Logger.Add($"Combo", $"Combo: {GameModeComponent.ScoreProcessor.Combo}", Color.White);
-            Logger.Add($"Max Combo", $"Max Combo: {GameModeComponent.ScoreProcessor.MaxCombo}", Color.White);
-            Logger.Add($"Objects Left", $"Objects Left {GameModeComponent.HitObjectManager.ObjectsLeft}", Color.White);
-            Logger.Add($"Finished", $"Finished: {GameModeComponent.HitObjectManager.IsComplete}", Color.White);*/
+            Logger.Add("Paused", $"Paused: {IsPaused}", Color.White);
+            Logger.Add("Resume In Progress", $"Resume In Progress {IsResumeInProgress}", Color.White);
+            Logger.Add("Intro Skippable", $"Intro Skippable: {IsIntroSkippable}", Color.White);
+            Logger.Add($"Max Combo", $"Max Combo: {Ruleset.ScoreProcessor.MaxCombo}", Color.White);
+            Logger.Add($"Objects Left", $"Objects Left {Ruleset.HitObjectManager.ObjectsLeft}", Color.White);
+            Logger.Add($"Finished", $"Finished: {IsPlayComplete}", Color.White);
+            Logger.Add($"On Break", $"On Break: {OnBreak}", Color.White);
                
             UpdateReady = true;
         }
@@ -147,7 +162,7 @@ namespace Quaver.States.Gameplay
         {
             AudioTiming.UnloadContent();
             UI.UnloadContent();
-            GameModeComponent.Destroy();
+            Ruleset.Destroy();
             Logger.Clear();
         }
 
@@ -163,7 +178,7 @@ namespace Quaver.States.Gameplay
             HandleResuming();
             PauseIfWindowInactive();
             PlayComboBreakSound();
-            GameModeComponent.Update(dt);
+            Ruleset.Update(dt);
         }
 
         /// <inheritdoc />
@@ -175,19 +190,17 @@ namespace Quaver.States.Gameplay
             GameBase.SpriteBatch.Begin();
             
             BackgroundManager.Draw();
-            GameModeComponent.Draw();
+            Ruleset.Draw();
             UI.Draw();
             
             // Update loggers.
-            /*Logger.Update("Paused", $"Paused: {Paused}");
-            Logger.Update("Resume In Progress", $"Resume In Progress {ResumeInProgress}");
-            Logger.Update("Intro Skippable", $"Intro Skippable: {IntroSkippable}");
-            Logger.Update("Score", $"Score: {GameModeComponent.ScoreProcessor.Score}");
-            Logger.Update($"Accuracy", $"Accuracy: {GameModeComponent.ScoreProcessor.Accuracy}");
-            Logger.Update($"Combo", $"Combo: {GameModeComponent.ScoreProcessor.Combo}");
-            Logger.Update($"Max Combo", $"Max Combo: {GameModeComponent.ScoreProcessor.MaxCombo}");
-            Logger.Update($"Objects Left", $"Objects Left {GameModeComponent.HitObjectManager.ObjectsLeft}");
-            Logger.Update($"Finished", $"Finished: {GameModeComponent.HitObjectManager.IsComplete}");*/
+            Logger.Update("Paused", $"Paused: {IsPaused}");
+            Logger.Update("Resume In Progress", $"Resume In Progress {IsResumeInProgress}");
+            Logger.Update("Intro Skippable", $"Intro Skippable: {IsIntroSkippable}");
+            Logger.Update($"Max Combo", $"Max Combo: {Ruleset.ScoreProcessor.MaxCombo}");
+            Logger.Update($"Objects Left", $"Objects Left {Ruleset.HitObjectManager.ObjectsLeft}");
+            Logger.Update($"Finished", $"Finished: {IsPlayComplete}");
+            Logger.Update($"On Break", $"On Break: {OnBreak}");
             
             GameBase.SpriteBatch.End();
         }
@@ -210,11 +223,11 @@ namespace Quaver.States.Gameplay
                 GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash));
             
             // Don't handle actually gameplay specific input if the game is paused.
-            if (Paused)
+            if (IsPaused)
                 return;
             
             // Handle input per game mode.
-            GameModeComponent.HandleInput(dt);
+            Ruleset.HandleInput(dt);
         }
 
         /// <summary>
@@ -223,10 +236,10 @@ namespace Quaver.States.Gameplay
         private void Pause()
         {            
             // Handle pause.
-            if (!Paused || ResumeInProgress)
+            if (!IsPaused || IsResumeInProgress)
             {
-                Paused = true;
-                ResumeInProgress = false;
+                IsPaused = true;
+                IsResumeInProgress = false;
                 
                 try
                 {
@@ -240,7 +253,7 @@ namespace Quaver.States.Gameplay
             // Setting the resume time in this case allows us to give the user time to react 
             // with a delay before starting the audio track again.
             // When that resume time is past the specific set offset, it'll unpause the game.
-            ResumeInProgress = true;
+            IsResumeInProgress = true;
             ResumeTime = GameBase.GameTime.ElapsedMilliseconds;
         }
 
@@ -250,15 +263,15 @@ namespace Quaver.States.Gameplay
         /// </summary>
         private void HandleResuming()
         {
-            if (!Paused || !ResumeInProgress)
+            if (!IsPaused || !IsResumeInProgress)
                 return;
 
             // We don't want to resume if the time difference isn't at least or greter than the start delay.
             if (GameBase.GameTime.ElapsedMilliseconds - ResumeTime > AudioTiming.StartDelay)
             {
                 // Unpause the game and reset the resume in progress.
-                Paused = false;
-                ResumeInProgress = false;
+                IsPaused = false;
+                IsResumeInProgress = false;
             
                 // Resume the game audio stream.
                 try
@@ -274,7 +287,7 @@ namespace Quaver.States.Gameplay
        /// </summary>
         private void SkipSongIntro()
         {
-            if (!IntroSkippable || Paused || ResumeInProgress)
+            if (!IsIntroSkippable || IsPaused || IsResumeInProgress)
                 return;
 
             var skipTime = GameBase.SelectedMap.Qua.HitObjects[0].StartTime - AudioTiming.StartDelay + AudioEngine.BassDelayOffset;
@@ -310,7 +323,7 @@ namespace Quaver.States.Gameplay
         /// </summary>
         private void PauseIfWindowInactive()
         {
-            if (Paused)
+            if (IsPaused)
                 return;
             
             // Pause the game
@@ -323,10 +336,10 @@ namespace Quaver.States.Gameplay
         /// </summary>
         private void PlayComboBreakSound()
         {
-            if (LastRecordedCombo >= 20 && GameModeComponent.ScoreProcessor.Combo == 0)
+            if (LastRecordedCombo >= 20 && Ruleset.ScoreProcessor.Combo == 0)
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundComboBreak);
 
-            LastRecordedCombo = GameModeComponent.ScoreProcessor.Combo;
+            LastRecordedCombo = Ruleset.ScoreProcessor.Combo;
         }
     }
 }
