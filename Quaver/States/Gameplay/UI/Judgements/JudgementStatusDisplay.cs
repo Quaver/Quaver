@@ -75,6 +75,8 @@ namespace Quaver.States.Gameplay.UI.Judgements
             // and the song is close to starting.
             if (!Screen.OnBreak && Screen.Timing.CurrentTime >= -500)
                 PerformCollapseAnimation(dt);
+            else
+                PerformCollapseAnimation(dt, true);
           
             base.Update(dt);
         }
@@ -83,7 +85,8 @@ namespace Quaver.States.Gameplay.UI.Judgements
         ///     Collapses the judgement displays.
         /// </summary>
         /// <param name="dt"></param>
-        internal void PerformCollapseAnimation(double dt)
+        /// <param name="isExpanding"></param>
+        private void PerformCollapseAnimation(double dt, bool isExpanding = false)
         {
             for (var i = 0; i < JudgementDisplays.Count; i++)
             { 
@@ -92,7 +95,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
                 // Start off the first collapse.
                 if (i == 0)
                 {    
-                    ChangeSizeAndTextWhenCollapsing(JudgementDisplays[judgement], dt);
+                    ChangeSizeAndTextWhenCollapsing(JudgementDisplays[judgement], dt, isExpanding);
                     continue;
                 }
                 
@@ -101,11 +104,11 @@ namespace Quaver.States.Gameplay.UI.Judgements
 
                 // Don't preform the animation unless the previous one has gotten to a certain size.
                 // or if we're already hit our target
-                if (previous.SizeX > 100)
+                if ((previous.SizeX > 100 && !isExpanding) || (previous.SizeX < 60 && isExpanding))
                     continue;
                             
                 // Start changing the size                          
-                ChangeSizeAndTextWhenCollapsing(JudgementDisplays[judgement], dt);
+                ChangeSizeAndTextWhenCollapsing(JudgementDisplays[judgement], dt, isExpanding);
             }
         }
 
@@ -114,13 +117,27 @@ namespace Quaver.States.Gameplay.UI.Judgements
         /// </summary>
         /// <param name="display"></param>
         /// <param name="dt"></param>
-        private static void ChangeSizeAndTextWhenCollapsing(JudgementDisplay display, double dt)
+        /// <param name="isExpanding"></param>
+        private static void ChangeSizeAndTextWhenCollapsing(JudgementDisplay display, double dt, bool isExpanding)
         {
-            if (display.SizeX >= 40)
-                display.SizeX = GraphicsHelper.Tween(40, display.SizeX, Math.Min(dt / 240, 1)); 
+            // If we're expanding, we want to make it bigger and return the text.
+            if (isExpanding)
+            {
+                if (display.SizeX >= 40)
+                    display.SizeX = GraphicsHelper.Tween(120, display.SizeX, Math.Min(dt / 240, 1));
+
+                if (display.SizeX <= 70)
+                    display.SpriteText.Text = $"{display.Judgement.ToString()}: {display.JudgementCount.ToString()}";
+            }
+            // If we're collapsing and not expanding.
+            else
+            {
+                if (display.SizeX >= 40)
+                    display.SizeX = GraphicsHelper.Tween(40, display.SizeX, Math.Min(dt / 240, 1)); 
                        
-            if (display.SizeX <= 70)
-                display.SpriteText.Text = display.JudgementCount.ToString();
+                if (display.SizeX <= 70)
+                    display.SpriteText.Text = display.JudgementCount.ToString();
+            }
         }
     }
 }

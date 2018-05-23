@@ -23,7 +23,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
         /// <summary>
         ///     The actual judgement this represents.
         /// </summary>
-        private Judgement Judgement { get; }
+        internal Judgement Judgement { get; }
 
         /// <summary>
         ///     The current judgement count for this
