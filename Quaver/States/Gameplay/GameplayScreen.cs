@@ -35,7 +35,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The specific audio timimg for this gameplay state.
         /// </summary>
-        internal GameplayAudio AudioTiming { get; }
+        internal GameplayTiming Timing { get; }
 
         /// <summary>
         ///     The curent game mode ruleset
@@ -85,7 +85,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Dictates if the intro of the song is currently skippable.
         /// </summary>
-        private bool IsIntroSkippable => GameBase.SelectedMap.Qua.HitObjects[0].StartTime - AudioTiming.CurrentTime >= AudioTiming.StartDelay + 2000;
+        private bool IsIntroSkippable => GameBase.SelectedMap.Qua.HitObjects[0].StartTime - Timing.CurrentTime >= Timing.StartDelay + 2000;
 
         /// <summary>
         ///     If the user is currently on a break in the song.
@@ -104,10 +104,10 @@ namespace Quaver.States.Gameplay
                 
                 // If the player is currently not on a break, then we want to detect if it's on a break
                 // by checking if the next object is 10 seconds away.
-                if (nextObject.TrueStartTime - AudioTiming.CurrentTime >= AudioTiming.StartDelay + 10000)
+                if (nextObject.TrueStartTime - Timing.CurrentTime >= Timing.StartDelay + 10000)
                     _onBreak = true;                 
                 // If the user is already on a break, then we need to turn the break off if the next object is at the start delay.
-                else if (_onBreak && nextObject.TrueStartTime - AudioTiming.CurrentTime <= AudioTiming.StartDelay)
+                else if (_onBreak && nextObject.TrueStartTime - Timing.CurrentTime <= Timing.StartDelay)
                     _onBreak = false;
 
                 return _onBreak;
@@ -127,7 +127,7 @@ namespace Quaver.States.Gameplay
             Map = map;
             MapHash = md5;
             
-            AudioTiming = new GameplayAudio(this);
+            Timing = new GameplayTiming(this);
             UI = new GameplayInterface(this);
             
             // Set the game mode component.
@@ -147,7 +147,7 @@ namespace Quaver.States.Gameplay
         /// </summary>
         public void Initialize()
         {           
-            AudioTiming.Initialize(this);
+            Timing.Initialize(this);
             UI.Initialize(this);
             
             // Change discord rich presence.
@@ -173,7 +173,7 @@ namespace Quaver.States.Gameplay
         /// </summary>
         public void UnloadContent()
         {
-            AudioTiming.UnloadContent();
+            Timing.UnloadContent();
             UI.UnloadContent();
             Ruleset.Destroy();
             Logger.Clear();
@@ -185,7 +185,7 @@ namespace Quaver.States.Gameplay
         /// <param name="dt"></param>
         public void Update(double dt)
         {
-            AudioTiming.Update(dt); 
+            Timing.Update(dt); 
             UI.Update(dt);
             HandleInput(dt);
             HandleResuming();
@@ -280,7 +280,7 @@ namespace Quaver.States.Gameplay
                 return;
 
             // We don't want to resume if the time difference isn't at least or greter than the start delay.
-            if (GameBase.GameTime.ElapsedMilliseconds - ResumeTime > AudioTiming.StartDelay)
+            if (GameBase.GameTime.ElapsedMilliseconds - ResumeTime > Timing.StartDelay)
             {
                 // Unpause the game and reset the resume in progress.
                 IsPaused = false;
@@ -303,7 +303,7 @@ namespace Quaver.States.Gameplay
             if (!IsIntroSkippable || IsPaused || IsResumeInProgress)
                 return;
 
-            var skipTime = GameBase.SelectedMap.Qua.HitObjects[0].StartTime - AudioTiming.StartDelay + AudioEngine.BassDelayOffset;
+            var skipTime = GameBase.SelectedMap.Qua.HitObjects[0].StartTime - Timing.StartDelay + AudioEngine.BassDelayOffset;
 
             try
             {
@@ -314,7 +314,7 @@ namespace Quaver.States.Gameplay
                     GameBase.AudioEngine.Play(skipTime);
 
                 // Set the actual song time to the position in the audio if it was successful.
-                AudioTiming.CurrentTime = GameBase.AudioEngine.Position;
+                Timing.CurrentTime = GameBase.AudioEngine.Position;
             }
             catch (AudioEngineException ex)
             {
@@ -322,7 +322,7 @@ namespace Quaver.States.Gameplay
 
                 // If there is no audio file, make sure the actual song time is set to the skip time.
                 const int actualSongTimeOffset = 10000; // The offset between the actual song time and audio position (?)
-                AudioTiming.CurrentTime = skipTime + actualSongTimeOffset;
+                Timing.CurrentTime = skipTime + actualSongTimeOffset;
             }
             finally
             {
@@ -331,6 +331,7 @@ namespace Quaver.States.Gameplay
             }
         }   
  #endregion
+        
         /// <summary>
         ///     Checks if the window is currently active and pauses the game if it isn't.
         /// </summary>

@@ -150,7 +150,7 @@ namespace Quaver.States.Gameplay.UI
             // Update the current value of the song time progress bar if it is actually initialized
             // and the user wants to actually display it.
             if (ConfigManager.DisplaySongTimeProgress.Value && SongTimeProgressBar != null)
-                SongTimeProgressBar.CurrentValue = (float) Screen.AudioTiming.CurrentTime;
+                SongTimeProgressBar.CurrentValue = (float) Screen.Timing.CurrentTime;
         }
     }
 }

@@ -98,7 +98,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 var manager = (KeysHitObjectManager) Ruleset.HitObjectManager;
                     
                 // Find the object that is nearest in the lane that the user has pressed.
-                var objectIndex = manager.GetIndexOfNearestLaneObject(i + 1, Ruleset.Screen.AudioTiming.CurrentTime);
+                var objectIndex = manager.GetIndexOfNearestLaneObject(i + 1, Ruleset.Screen.Timing.CurrentTime);
 
                 // Don't proceed if an object wasn't found.
                 if (objectIndex == -1)
@@ -151,7 +151,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
             for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
             {
                 // Check if the user actually hit the object.
-                if (!(Math.Abs(hitObject.TrueStartTime - Ruleset.Screen.AudioTiming.CurrentTime) <= Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j])) 
+                if (!(Math.Abs(hitObject.TrueStartTime - Ruleset.Screen.Timing.CurrentTime) <= Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j])) 
                     continue;
                         
                 var judgement = (Judgement) j;
@@ -183,7 +183,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 playfield.Stage.ComboDisplay.MakeVisible();
                 
                 // Also add a judgement to the hit error.
-                playfield.Stage.HitError.AddJudgement(judgement, hitObject.TrueStartTime - Ruleset.Screen.AudioTiming.CurrentTime);
+                playfield.Stage.HitError.AddJudgement(judgement, hitObject.TrueStartTime - Ruleset.Screen.Timing.CurrentTime);
                 
                 break;
             }
@@ -201,7 +201,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 // Get the release window of the current judgement.
                 var releaseWindow = Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[(Judgement) j];
 
-                if (!(Math.Abs(manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.AudioTiming.CurrentTime) < releaseWindow)) 
+                if (!(Math.Abs(manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.Timing.CurrentTime) < releaseWindow)) 
                     continue;
                         
                 receivedJudgementIndex = j;
@@ -218,7 +218,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 Ruleset.ScoreProcessor.CalculateScore((Judgement) receivedJudgementIndex);
                 
                 // Also add a judgement to the hit error.
-                playfield.Stage.HitError.AddJudgement((Judgement)receivedJudgementIndex, manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.AudioTiming.CurrentTime);
+                playfield.Stage.HitError.AddJudgement((Judgement)receivedJudgementIndex, manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.Timing.CurrentTime);
                 
                 // Lastly kill the object.
                 manager.KillHoldPoolObject(noteIndex, true);             

@@ -73,7 +73,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
             
             // Perform the collapse animation when the break is finished.
             // and the song is close to starting.
-            if (!Screen.OnBreak && Screen.AudioTiming.CurrentTime >= -500)
+            if (!Screen.OnBreak && Screen.Timing.CurrentTime >= -500)
                 PerformCollapseAnimation(dt);
           
             base.Update(dt);

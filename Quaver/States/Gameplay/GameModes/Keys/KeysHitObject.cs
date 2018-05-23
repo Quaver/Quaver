@@ -244,7 +244,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             var manager = (KeysHitObjectManager) Ruleset.HitObjectManager;
 
             var speed = KeysHitObjectManager.IsDownscroll ? -KeysHitObjectManager.ScrollSpeed : KeysHitObjectManager.ScrollSpeed;
-            return (float) (manager.HitPositionOffset + (offset - Ruleset.Screen.AudioTiming.CurrentTime) * speed);
+            return (float) (manager.HitPositionOffset + (offset - Ruleset.Screen.Timing.CurrentTime) * speed);
         }
         
         /// <summary>

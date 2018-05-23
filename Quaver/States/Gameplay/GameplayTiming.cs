@@ -9,7 +9,7 @@ using Quaver.Main;
 
 namespace Quaver.States.Gameplay
 {
-    internal class GameplayAudio : IGameStateComponent
+    internal class GameplayTiming : IGameStateComponent
     {
         /// <summary>
         ///     The current audio time.
@@ -41,7 +41,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Ctor - 
         /// </summary>
-        internal GameplayAudio(GameplayScreen game)
+        internal GameplayTiming(GameplayScreen game)
         {
             GameplayScreen = game;
             
