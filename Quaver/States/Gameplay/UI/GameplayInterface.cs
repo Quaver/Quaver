@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics.Enums;
@@ -52,6 +53,11 @@ namespace Quaver.States.Gameplay.UI
         ///     The sprite used solely to fade the screen with transitions.
         /// </summary>
         internal Sprite ScreenTransitioner { get; set; }
+
+        /// <summary>
+        ///     If the volume has already been set to fade out.
+        /// </summary>
+        private bool VolumeFadedOut { get; set; }
 
         /// <summary>
         ///     Ctor -
@@ -180,6 +186,13 @@ namespace Quaver.States.Gameplay.UI
                 return;
 
             Screen.Ruleset.Playfield.HandleFailure(dt);
+            
+            // Pause the audio
+            if (GameBase.AudioEngine.IsPlaying && !VolumeFadedOut)
+            {
+                VolumeFadedOut = true;
+                AudioEngine.Fade(0, 1500);
+            }
             
             // Transition the screen.
             ScreenTransitioner.Image = GameBase.QuaverUserInterface.BlankBox;
