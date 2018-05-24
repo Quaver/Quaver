@@ -340,8 +340,8 @@ namespace Quaver.Config
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             WindowLetterboxed = ReadValue(@"WindowLetterboxed", false, data);
             FpsCounter = ReadValue(@"FpsCounter", true, data);
-            ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 1, 100, data);
-            ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 1, 100, data);
+            ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
+            ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
             DownScroll4K = ReadValue(@"DownScroll4K", true, data);
             DownScroll7K = ReadValue(@"DownScroll7K", true, data);
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, 0, byte.MaxValue, data);
