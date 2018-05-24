@@ -51,7 +51,7 @@ namespace Quaver.States.Gameplay.UI
         /// <summary>
         ///     The sprite used solely to fade the screen with transitions.
         /// </summary>
-        private Sprite ScreenTransitioner { get; set; }
+        internal Sprite ScreenTransitioner { get; set; }
 
         /// <summary>
         ///     Ctor -
@@ -104,7 +104,7 @@ namespace Quaver.States.Gameplay.UI
                 ScaleX = 1,
                 ScaleY = 1,
                 Tint = Color.Black,
-                Alpha = 0
+                Alpha = 1
             };
         }
 
@@ -126,6 +126,7 @@ namespace Quaver.States.Gameplay.UI
             UpdateScoreAndAccuracyDisplays();
             HandlePlayCompletion(dt);
             HandlePause(dt);
+            FadeInScreen(dt);
                     
             Container.Update(dt);
         }
@@ -200,6 +201,16 @@ namespace Quaver.States.Gameplay.UI
                 ScreenTransitioner.Fade(dt, 0, scale * 2f);
             else
                 ScreenTransitioner.Fade(dt, 0.75f, scale);            
+        }
+
+        /// <summary>
+        ///     Fades in the screen ready for gameplay.
+        /// </summary>
+        /// <param name="dt"></param>
+        private void FadeInScreen(double dt)
+        {
+            if (!Screen.HasStarted && !Screen.IsPaused && !Screen.IsResumeInProgress && !Screen.IsRestartingPlay)
+                ScreenTransitioner.FadeOut(dt, 480);
         }
     }
 }

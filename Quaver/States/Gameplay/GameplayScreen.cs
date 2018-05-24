@@ -125,6 +125,16 @@ namespace Quaver.States.Gameplay
         private bool FailureHandled { get; set; }
 
         /// <summary>
+        ///     The amount of time the restart key has been held down for.
+        /// </summary>
+        private double RestartKeyHoldTime { get; set; }
+
+        /// <summary>
+        ///     Flag that dictates if the user is currently restarting the play.
+        /// </summary>
+        internal bool IsRestartingPlay { get; set; }
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         internal GameplayScreen(Qua map, string md5)
@@ -236,16 +246,15 @@ namespace Quaver.States.Gameplay
         /// <param name="dt"></param>
         private void HandleInput(double dt)
         {
-            if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyPause.Value))
+            if (!Failed && !IsPlayComplete && InputHelper.IsUniqueKeyPress(ConfigManager.KeyPause.Value))
                 Pause();
                         
-            // Restart map.
-            if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyRestartMap.Value))
-                GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash));
-            
             // Don't handle actually gameplay specific input if the game is paused.
             if (IsPaused || Failed || IsPlayComplete)
                 return;
+            
+            // Handle the restarting of the map.
+            HandlePlayRestart(dt);
             
             if (InputHelper.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
                 SkipToNextObject();
@@ -345,7 +354,35 @@ namespace Quaver.States.Gameplay
                 // Skip to 3 seconds before the notes start
                 DiscordController.ChangeDiscordPresenceGameplay(true);
             }
-        }   
+        }
+
+        /// <summary>
+        ///     Restarts the game if the user is holding down the key for a specified amount of time
+        ///     
+        /// </summary>
+        private void HandlePlayRestart(double dt)
+        {
+            if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyRestartMap.Value))
+                IsRestartingPlay = true;
+            
+            if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyRestartMap.Value) && IsRestartingPlay)
+            {                
+                RestartKeyHoldTime += dt;
+                UI.ScreenTransitioner.FadeIn(dt, 240);
+                
+                // Restart the map if the user has held it down for 
+                if (RestartKeyHoldTime >= 350)
+                {
+                    GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundScreenshot);
+                    GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash));
+                }
+
+                return;
+            }
+
+            RestartKeyHoldTime = 0;
+            IsRestartingPlay = false;
+        }
  #endregion
         
         /// <summary>
