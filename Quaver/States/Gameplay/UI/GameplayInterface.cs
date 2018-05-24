@@ -209,7 +209,7 @@ namespace Quaver.States.Gameplay.UI
         /// <param name="dt"></param>
         private void FadeInScreen(double dt)
         {
-            if (!Screen.HasStarted && !Screen.IsPaused && !Screen.IsResumeInProgress && !Screen.IsRestartingPlay)
+            if (!Screen.IsPaused && !Screen.IsResumeInProgress && !Screen.IsRestartingPlay && !Screen.Failed && !Screen.IsPlayComplete)
                 ScreenTransitioner.FadeOut(dt, 480);
         }
     }

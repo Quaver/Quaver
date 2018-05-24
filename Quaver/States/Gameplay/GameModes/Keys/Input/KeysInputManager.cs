@@ -134,6 +134,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                     HandleKeyRelease(manager, noteIndex);
                 }
             }
+            
+            // Handle scroll speed changes.
+            ChangeScrollSpeed();
         }
 
         /// <summary>
@@ -229,8 +232,42 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 // Count it as an okay if it was released early and kill the hold.
                 Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
                 manager.KillHoldPoolObject(noteIndex);
+            }                    
+        }
+
+        /// <summary>
+        ///     Handles scroll speed changes.
+        /// </summary>
+        private void ChangeScrollSpeed()
+        {
+            // Only allow scroll speed changes if the map hasn't started or if we're on a break
+            if (Ruleset.Screen.Timing.CurrentTime >= 5000 && !Ruleset.Screen.OnBreak)
+                return;
+            
+            if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
+            {
+                switch (Ruleset.Screen.Map.Mode)
+                {
+                    case GameMode.Keys4:
+                        ConfigManager.ScrollSpeed4K.Value--;
+                        break;
+                    case GameMode.Keys7:
+                        ConfigManager.ScrollSpeed7K.Value--;
+                        break;
+                }
             }
-                       
+            else if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
+            {
+                switch (Ruleset.Screen.Map.Mode)
+                {
+                    case GameMode.Keys4:
+                        ConfigManager.ScrollSpeed4K.Value++;
+                        break;
+                    case GameMode.Keys7:
+                        ConfigManager.ScrollSpeed7K.Value++;
+                        break;
+                }
+            }
         }
     }
 }
