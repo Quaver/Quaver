@@ -8,12 +8,12 @@ using Quaver.Graphics.Sprites;
 
 namespace Quaver.Graphics.Buttons.Dropdowns
 {
-    internal class QuaverDropdown : QuaverSprite
+    internal class Dropdown : Sprite
     {
         /// <summary>
         ///     The options for the dropdown buttons.
         /// </summary>
-        internal List<QuaverDropdownButton> Options { get; set; }
+        internal List<DropdownButton> Options { get; set; }
 
         /// <summary>
         ///     The list of options strings.
@@ -33,14 +33,14 @@ namespace Quaver.Graphics.Buttons.Dropdowns
         /// <summary>
         ///     Ctor - 
         /// </summary>
-        internal QuaverDropdown(List<string> options, EventHandler<DropdownButtonClickedEventArgs> onClick, int width = 380, uint selectedIndex = 0)
+        internal Dropdown(List<string> options, EventHandler<DropdownButtonClickedEventArgs> onClick, int width = 380, uint selectedIndex = 0)
         {
             // Only allow correct selected button.
             if (selectedIndex > options.Count - 1)
                 throw new ArgumentException("Selected dropdown index must not be greater than the size of the options.");
                    
             // Set options lists
-            Options = new List<QuaverDropdownButton>();
+            Options = new List<DropdownButton>();
             OptionsStringList = options;
             
             // Set button size.
@@ -51,7 +51,7 @@ namespace Quaver.Graphics.Buttons.Dropdowns
             foreach (var option in options)
             {
                 // Create the new button
-                var btn = new QuaverDropdownButton(this, ButtonSize, option)
+                var btn = new DropdownButton(this, ButtonSize, option)
                 {
                     Parent = this,
                     IsSelected = options.IndexOf(option) == selectedIndex

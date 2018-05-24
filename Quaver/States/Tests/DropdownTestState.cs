@@ -28,7 +28,7 @@ namespace Quaver.States.Tests
         /// </summary>
         public bool UpdateReady { get; set; }
 
-        private QuaverContainer Container { get; set; }
+        private Container Container { get; set; }
 
         /// <summary>
         ///     Navbar sprite
@@ -37,7 +37,7 @@ namespace Quaver.States.Tests
 
         public void Initialize()
         {
-            Container = new QuaverContainer();
+            Container = new Container();
             Nav = new Nav();
             Nav.Initialize(this);
 
@@ -48,7 +48,7 @@ namespace Quaver.States.Tests
             
             skins.Insert(0, "None");
 
-            var defaultSkinSelect = new QuaverDropdown(new List<string>() {"Default Arrow Skin", "Default Bar Skin"},
+            var defaultSkinSelect = new Dropdown(new List<string>() {"Default Arrow Skin", "Default Bar Skin"},
                 OnDefaultSkinDropdownButtonClicked)
             {
                 Parent = Container,
@@ -56,7 +56,7 @@ namespace Quaver.States.Tests
                 PosY = -200
             };
             
-            var skinSelect = new QuaverDropdown(skins, OnSkinDropdownButtonClicked)
+            var skinSelect = new Dropdown(skins, OnSkinDropdownButtonClicked)
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter

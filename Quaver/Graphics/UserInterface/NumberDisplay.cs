@@ -13,7 +13,7 @@ namespace Quaver.Graphics.UserInterface
     /// <summary>
     ///     Sprite that displays numbers as textures.
     /// </summary>
-    internal class NumberDisplay : QuaverSprite
+    internal class NumberDisplay : Sprite
     {
         /// <summary>
         ///     The number value for this display in string format.
@@ -60,7 +60,7 @@ namespace Quaver.Graphics.UserInterface
         /// <summary>
         ///     The digits in the number display.
         /// </summary>
-        internal List<QuaverSprite> Digits { get; }
+        internal List<Sprite> Digits { get; }
 
         /// <summary>
         ///     The absolute width of the number display.
@@ -104,7 +104,7 @@ namespace Quaver.Graphics.UserInterface
             Validate();
             
             // Create and initialize the digits.
-            Digits = new List<QuaverSprite>();
+            Digits = new List<Sprite>();
             InitializeDigits();
         }
 
@@ -161,7 +161,7 @@ namespace Quaver.Graphics.UserInterface
                 // If the digit doesn't already exist, we need to create it.
                 if (i >= Digits.Count)
                 {             
-                    Digits.Add(new QuaverSprite
+                    Digits.Add(new Sprite
                     {
                         Parent = this,
                         Image = CharacterToTexture(Value[i]),

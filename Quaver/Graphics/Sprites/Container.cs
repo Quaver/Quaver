@@ -7,7 +7,7 @@ namespace Quaver.Graphics.Sprites
     /// <summary>
     ///     This is used for sprite/QuaverUserInterface layout
     /// </summary>
-    internal class QuaverContainer : Drawable
+    internal class Container : Drawable
     {
         /// <summary>
         ///     Create a new QuaverContainer Given Xposition, Yposition, Xsize, Ysize
@@ -16,10 +16,10 @@ namespace Quaver.Graphics.Sprites
         /// <param name="yPosition"></param>
         /// <param name="xSize"></param>
         /// <param name="ySize"></param>
-        public QuaverContainer(float xPosition = 0, float yPosition = 0, float? xSize = null, float? ySize = null)
+        public Container(float xPosition = 0, float yPosition = 0, float? xSize = null, float? ySize = null)
         {
-            Size.X.Offset = xSize != null ? (float)xSize : GameBase.WindowRectangle.Width;
-            Size.Y.Offset = ySize != null ? (float)ySize : GameBase.WindowRectangle.Height;
+            Size.X.Offset = xSize ?? GameBase.WindowRectangle.Width;
+            Size.Y.Offset = ySize ?? GameBase.WindowRectangle.Height;
             Position.X.Offset = xPosition;
             Position.Y.Offset = yPosition;
         }

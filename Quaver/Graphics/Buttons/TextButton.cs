@@ -12,12 +12,12 @@ namespace Quaver.Graphics.Buttons
     /// <summary>
     ///     This type of button is used for simple buttons that only require a single image + text, but also includes a tint animation.
     /// </summary>
-    internal class QuaverTextButton : QuaverButton
+    internal class TextButton : Button
     {
         internal QuaverSpriteText QuaverTextSprite { get; set; }
 
         //Constructor
-        internal QuaverTextButton(Vector2 ButtonSize, string ButtonText)
+        internal TextButton(Vector2 ButtonSize, string ButtonText)
         {
             QuaverTextSprite = new QuaverSpriteText()
             {

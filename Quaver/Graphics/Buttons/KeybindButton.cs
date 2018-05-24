@@ -16,7 +16,7 @@ namespace Quaver.Graphics.Buttons
     /// <summary>
     /// This class will be inherited from every button class.
     /// </summary>
-    internal class QuaverKeybindButton : QuaverButton
+    internal class KeybindButton : Button
     {
         /// <summary>
         ///     The binded keybind value.
@@ -50,7 +50,7 @@ namespace Quaver.Graphics.Buttons
         /// <param name="keybind"></param>
         /// <param name="size"></param>
         /// <param name="???"></param>
-        internal QuaverKeybindButton(BindedValue<Keys> keybind, Vector2 size)
+        internal KeybindButton(BindedValue<Keys> keybind, Vector2 size)
         {
             Keybind = keybind;
             

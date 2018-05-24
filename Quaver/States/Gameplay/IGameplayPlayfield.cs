@@ -7,6 +7,12 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The playfield.
         /// </summary>
-        QuaverContainer Container { get; set; }
+        Container Container { get; set; }
+
+        /// <summary>
+        ///     Handles what happens to the playfield upon failure.
+        /// </summary>
+        /// <param name="dt"></param>
+        void HandleFailure(double dt);
     }
 }

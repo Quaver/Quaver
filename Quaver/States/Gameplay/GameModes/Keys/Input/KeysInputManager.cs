@@ -21,14 +21,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         /// <summary>
         ///     Reference to the ruleset
         /// </summary>
-        private GameModeKeys Ruleset { get;}
+        private GameModeRulesetKeys Ruleset { get;}
 
         /// <summary>
         ///     Ctor - 
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="mode"></param>
-        internal KeysInputManager(GameModeKeys ruleset, GameMode mode)
+        internal KeysInputManager(GameModeRulesetKeys ruleset, GameMode mode)
         {
             switch (mode)
             {

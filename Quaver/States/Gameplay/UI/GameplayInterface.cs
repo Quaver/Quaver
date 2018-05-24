@@ -26,7 +26,7 @@ namespace Quaver.States.Gameplay.UI
         ///         - Leaderboard display
         ///         - Song progress time display
         /// </summary>
-        private QuaverContainer Container { get; }
+        private Container Container { get; }
 
         /// <summary>
         ///     The progress bar for the song time.
@@ -49,12 +49,17 @@ namespace Quaver.States.Gameplay.UI
         private JudgementStatusDisplay JudgementStatusDisplay { get; set; }
 
         /// <summary>
+        ///     The sprite used solely to fade the screen with transitions.
+        /// </summary>
+        private Sprite ScreenTransitioner { get; set; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         internal GameplayInterface(GameplayScreen screen)
         {
             Screen = screen;
-            Container = new QuaverContainer();
+            Container = new Container();
         }
        
         /// <summary>
@@ -91,6 +96,16 @@ namespace Quaver.States.Gameplay.UI
             
             // Create judgement status display
             JudgementStatusDisplay = new JudgementStatusDisplay(Screen) { Parent = Container };
+            
+            // Initialize the failure trannsitioner. 
+            ScreenTransitioner = new Sprite()
+            {
+                Parent = Container,
+                ScaleX = 1,
+                ScaleY = 1,
+                Tint = Color.Black,
+                Alpha = 0
+            };
         }
 
         /// <summary>
@@ -109,6 +124,8 @@ namespace Quaver.States.Gameplay.UI
         {
             UpdateSongProgressDisplay();
             UpdateScoreAndAccuracyDisplays();
+            HandleFailure(dt);
+            HandlePause(dt);
                     
             Container.Update(dt);
         }
@@ -151,6 +168,38 @@ namespace Quaver.States.Gameplay.UI
             // and the user wants to actually display it.
             if (ConfigManager.DisplaySongTimeProgress.Value && SongTimeProgressBar != null)
                 SongTimeProgressBar.CurrentValue = (float) Screen.Timing.CurrentTime;
+        }
+
+        /// <summary>
+        ///     Handles the failure from a UI perspective.
+        /// </summary>
+        private void HandleFailure(double dt)
+        {
+            if (!Screen.Failed)
+                return;
+
+            Screen.Ruleset.Playfield.HandleFailure(dt);
+            
+            // Transition the screen.
+            ScreenTransitioner.Image = GameBase.QuaverUserInterface.BlankBox;
+            ScreenTransitioner.FadeIn(dt, 640);
+        }
+
+        /// <summary>
+        ///     Handle pausing & unpausing UI.
+        /// </summary>
+        /// <param name="dt"></param>
+        private void HandlePause(double dt)
+        {
+            if (!Screen.IsPaused)
+                return;
+
+            const int scale = 120;
+            
+            if (Screen.IsResumeInProgress)
+                ScreenTransitioner.Fade(dt, 0, scale * 2f);
+            else
+                ScreenTransitioner.Fade(dt, 0.6f, scale);            
         }
     }
 }

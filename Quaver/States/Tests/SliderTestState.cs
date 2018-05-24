@@ -29,7 +29,7 @@ namespace Quaver.States.Tests
         /// </summary>
         public bool UpdateReady { get; set; }
 
-        private QuaverContainer Container { get; set; }
+        private Container Container { get; set; }
 
         private Nav Nav { get; set; }
 
@@ -37,14 +37,14 @@ namespace Quaver.States.Tests
 
         public void Initialize()
         {            
-            Container = new QuaverContainer();
+            Container = new Container();
             Nav = new Nav();
             Nav.Initialize(this);
             
             VolumeController = new VolumeController();
             VolumeController.Initialize(this);
             
-            var sliderBg = new QuaverSlider(ConfigManager.BackgroundBrightness, new Vector2(300, 3))
+            var sliderBg = new Slider(ConfigManager.BackgroundBrightness, new Vector2(300, 3))
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,

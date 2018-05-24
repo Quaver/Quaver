@@ -13,7 +13,7 @@ namespace Quaver.Graphics.Buttons
     /// <summary>
     ///     This type of button is used for simple buttons that only require a single image + text, but also includes a tint animation.
     /// </summary>
-    internal class QuaverMapsetSelectButton : QuaverButton
+    internal class MapsetSelectButton : Button
     {
         internal static float BUTTON_Y_SIZE = 56.0f;
 
@@ -45,7 +45,7 @@ namespace Quaver.Graphics.Buttons
         private Color CurrentTint = Color.White;
 
         //Constructor
-        internal QuaverMapsetSelectButton(float ButtonScale, int index, Mapset mapset)
+        internal MapsetSelectButton(float ButtonScale, int index, Mapset mapset)
         {
             Size.Y.Offset = BUTTON_Y_SIZE * ButtonScale;
             Size.X.Offset = BUTTON_X_SIZE * ButtonScale;

@@ -11,7 +11,7 @@ using Quaver.Skinning;
 
 namespace Quaver.States.Gameplay.UI
 {
-    internal class HitErrorBar : QuaverContainer
+    internal class HitErrorBar : Container
     {
         /// <summary>
         ///     The type of hit error this is.
@@ -21,7 +21,7 @@ namespace Quaver.States.Gameplay.UI
         /// <summary>
         ///     The middle 0ms line for the hit error bar.
         /// </summary>
-        private QuaverSprite MiddleLine { get; }
+        internal Sprite MiddleLine { get; }
 
         /// <summary>
         ///     The size of the hit error object pool.
@@ -31,7 +31,7 @@ namespace Quaver.States.Gameplay.UI
         /// <summary>
         ///     The list of lines that are currently in the hit error.
         /// </summary>
-        private List<QuaverSprite> LineObjectPool { get; }
+        internal List<Sprite> LineObjectPool { get; }
 
         /// <summary>
         ///     The current index we're in within the object pool.
@@ -42,7 +42,7 @@ namespace Quaver.States.Gameplay.UI
         /// <summary>
         ///     the last hit chevron.
         /// </summary>
-        private QuaverSprite LastHitCheveron { get;  }
+        internal Sprite LastHitCheveron { get;  }
 
         /// <inheritdoc />
         /// <summary>
@@ -59,7 +59,7 @@ namespace Quaver.States.Gameplay.UI
             {
                 case HitErrorType.Quaver:
                     // Create the middle line bar.
-                    MiddleLine = new QuaverSprite()
+                    MiddleLine = new Sprite()
                     {
                         Size = new UDim2D(2, 0, 0, 1),
                         Alignment = Alignment.MidCenter,
@@ -73,10 +73,10 @@ namespace Quaver.States.Gameplay.UI
             }
             
             // Create the object pool and initialize all of the sprites.
-            LineObjectPool = new List<QuaverSprite>();          
+            LineObjectPool = new List<Sprite>();          
             for (var i = 0; i < PoolSize; i++)
             {
-                LineObjectPool.Add(new QuaverSprite()
+                LineObjectPool.Add(new Sprite()
                 {
                     Parent = this,
                     Size = new UDim2D(4, 0, 0, 1),
@@ -86,7 +86,7 @@ namespace Quaver.States.Gameplay.UI
             }
 
             // Create the hit chevron.
-            LastHitCheveron = new QuaverSprite()
+            LastHitCheveron = new Sprite()
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

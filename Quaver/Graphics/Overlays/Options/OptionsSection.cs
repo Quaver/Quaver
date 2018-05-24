@@ -39,7 +39,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     The container of the options section.
         /// </summary>
-        internal QuaverSprite Container { get; }
+        internal Sprite Container { get; }
         
         /// <summary>
         ///     Probably a bad name, but all of the sprites that are interactable
@@ -61,7 +61,7 @@ namespace Quaver.Graphics.Overlays.Options
             Name = name;
             Icon = icon;
             
-            Container = new QuaverSprite()
+            Container = new Sprite()
             {
                 Parent = overlay,               
                 Size = new UDim2D(650, 450),
@@ -82,7 +82,7 @@ namespace Quaver.Graphics.Overlays.Options
             AddTextField(name);
             
             // Create the slider.
-            var slider = new QuaverSlider(value, new Vector2(380, 3))
+            var slider = new Slider(value, new Vector2(380, 3))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
@@ -120,7 +120,7 @@ namespace Quaver.Graphics.Overlays.Options
             AddTextField(name);
 
             // Create the checkbox.
-            var checkbox = new QuaverCheckbox(value, new Vector2(20, 20))
+            var checkbox = new Checkbox(value, new Vector2(20, 20))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
@@ -135,7 +135,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     Adds a dropdown option 
         /// </summary>
-        internal void AddDropdownOption(QuaverDropdown dropdown, string name)
+        internal void AddDropdownOption(Dropdown dropdown, string name)
         {         
             AddTextField(name);
 
@@ -157,7 +157,7 @@ namespace Quaver.Graphics.Overlays.Options
             AddTextField(name);
 
             // Create the keybind button.
-            var keybind = new QuaverKeybindButton(value, new Vector2(90, 25))
+            var keybind = new KeybindButton(value, new Vector2(90, 25))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
@@ -180,7 +180,7 @@ namespace Quaver.Graphics.Overlays.Options
             for (var i = 0; i < values.Count; i++)
             {
                 // Create the keybind button.
-                new QuaverKeybindButton(values[i], new Vector2(60, 25))
+                new KeybindButton(values[i], new Vector2(60, 25))
                 {
                     Parent = Container,
                     Alignment = Alignment.TopRight,
@@ -197,7 +197,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// </summary>
         /// <param name="button"></param>
         /// <param name="name"></param>
-        internal void AddButton(QuaverButton button, string name)
+        internal void AddButton(Button button, string name)
         {
             AddTextField(name);
 

@@ -98,9 +98,9 @@ namespace Quaver.States.Gameplay.Mania
         private bool DrawPlayfieldFirst { get; set; }
 
         //todo: remove. TEST.
-        private QuaverSprite SvInfoTextBox { get; set; }
+        private Sprite SvInfoTextBox { get; set; }
         private QuaverSpriteText SvQuaverText { get; set; }
-        private QuaverTextButton TestButton { get; set; }
+        private TextButton TestButton { get; set; }
 
         //Rendering
         private const int RENDER_SAMPLES = 8;
@@ -160,13 +160,13 @@ namespace Quaver.States.Gameplay.Mania
         public void Initialize(IGameState playScreen)
         {
             //Todo: Remove. TEST.
-            TestButton = new QuaverTextButton(new Vector2(200, 30), "BACK")
+            TestButton = new TextButton(new Vector2(200, 30), "BACK")
             {
                 Alignment = Alignment.MidLeft
             };
             TestButton.Clicked += BackButtonClick;
 
-            SvInfoTextBox = new QuaverSprite()
+            SvInfoTextBox = new Sprite()
             {
                 Image = GameBase.QuaverUserInterface.HollowBox,
                 Tint = Color.Blue,

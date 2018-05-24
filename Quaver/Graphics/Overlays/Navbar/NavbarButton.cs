@@ -11,7 +11,7 @@ using Quaver.Main;
 
 namespace Quaver.Graphics.Overlays.Navbar
 {
-    internal class NavbarButton : QuaverButton
+    internal class NavbarButton : Button
     {
         /// <summary>
         ///     The name of name of the tooltip when you hover over the button

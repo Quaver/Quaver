@@ -14,38 +14,38 @@ namespace Quaver.Graphics.GameOverlay
 {
     class MenuOverlay : IGameOverlayComponent
     {
-        private QuaverContainer QuaverContainer { get; set; }
+        private Container Container { get; set; }
 
         public void Draw()
         {
-            QuaverContainer.Draw();
+            Container.Draw();
         }
 
         public void Initialize()
         {
-            QuaverContainer = new QuaverContainer();
+            Container = new Container();
 
             // bottom bar
-            var bot = new Sprites.QuaverSprite()
+            var bot = new Sprites.Sprite()
             {
                 Size = new UDim2D(0, 80, 1, 0),
                 Alignment = Alignment.BotLeft,
                 Tint = new Color(0, 4, 16),
-                Parent = QuaverContainer
+                Parent = Container
             };
 
             // top bar
-            var top = new Sprites.QuaverSprite()
+            var top = new Sprites.Sprite()
             {
                 Size = new UDim2D(0, 30, 1, 0),
                 Alignment = Alignment.TopLeft,
                 Tint = new Color(0, 4, 16),
-                Parent = QuaverContainer
+                Parent = Container
             };
 
             // todoL: add actual content later
             // temp
-            var pixel = new Sprites.QuaverSprite()
+            var pixel = new Sprites.Sprite()
             {
                 Size = new UDim2D(0, 1, 1, 0),
                 Alignment = Alignment.BotLeft,
@@ -53,7 +53,7 @@ namespace Quaver.Graphics.GameOverlay
                 Parent = top
             };
 
-            pixel = new Sprites.QuaverSprite()
+            pixel = new Sprites.Sprite()
             {
                 Size = new UDim2D(0, 1, 1, 0),
                 Alignment = Alignment.TopLeft,
@@ -88,17 +88,17 @@ namespace Quaver.Graphics.GameOverlay
 
         public void RecalculateWindow()
         {
-            QuaverContainer.Size = new UDim2D(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height);
+            Container.Size = new UDim2D(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height);
         }
 
         public void UnloadContent()
         {
-            QuaverContainer.Destroy();
+            Container.Destroy();
         }
 
         public void Update(double dt)
         {
-            QuaverContainer.Update(dt);
+            Container.Update(dt);
         }
     }
 }

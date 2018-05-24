@@ -12,7 +12,7 @@ using Quaver.States.Gameplay.HitObjects;
 
 namespace Quaver.States.Gameplay.GameModes.Keys
 {
-    internal class GameModeKeys : GameModeRuleset
+    internal class GameModeRulesetKeys : GameModeRuleset
     {
         /// <inheritdoc />
         /// <summary>
@@ -37,7 +37,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <param name="screen"></param>
         /// <param name="mode"></param>
         /// <param name="map"></param>
-        public GameModeKeys(GameplayScreen screen, GameMode mode, Qua map): base(screen, map)
+        public GameModeRulesetKeys(GameplayScreen screen, GameMode mode, Qua map): base(screen, map)
         {
             Screen = screen;
             

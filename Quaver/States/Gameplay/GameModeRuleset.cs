@@ -65,7 +65,7 @@ namespace Quaver.States.Gameplay
         {
             // Create and initalize the playfield.
             CreatePlayfield();
-            Playfield.Initialize(null);
+            Playfield.Initialize(Screen);
             
             // Create the input manager after the playfield since the input manager relies on it.
             InputManager = CreateInputManager();
@@ -83,7 +83,9 @@ namespace Quaver.States.Gameplay
         /// <param name="dt"></param>
         internal void Update(double dt)
         {
-            HitObjectManager.Update(dt);
+            if (!Screen.Failed || !Screen.IsPlayComplete)
+                HitObjectManager.Update(dt);
+            
             Playfield.Update(dt);
         }
 
@@ -119,8 +121,6 @@ namespace Quaver.States.Gameplay
                 // Add this object to the pool.
                 HitObjectManager.ObjectPool.Add(hitObject);
             }
-            
-            Logger.LogInfo($"Initialized HitObjects - " + HitObjectManager.ObjectPool.Count, LogType.Runtime);
         }
         
         /// <summary>

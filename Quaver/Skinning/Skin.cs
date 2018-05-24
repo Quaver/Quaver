@@ -462,7 +462,7 @@ namespace Quaver.Skinning
         public static void LoadSkin()
         {
             GameBase.LoadedSkin = new Skin(ConfigManager.Skin.Value);
-            GameBase.QuaverCursor = new QuaverCursor();
+            GameBase.Cursor = new Cursor();
         }
 
         /// <summary>

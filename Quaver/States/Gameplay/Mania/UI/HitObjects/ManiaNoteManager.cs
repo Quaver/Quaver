@@ -37,7 +37,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
         internal List<ManiaHitObject> HitObjectHold { get; set; }
         internal int HitObjectPoolSize { get; } = 255;
         internal uint RemoveTimeAfterMiss;
-        internal QuaverContainer QuaverContainer;
+        internal Container Container;
 
         /// <summary>
         ///     Baked rectangle for each lane. Determines size + position of where note is supposed to be hit.
@@ -97,12 +97,12 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
             //TrackPosition = (ulong)(-ManiaGameplayReferences.PlayStartDelayed + SV_POSITIVE_CONST); //SV_POSITIVE_CONSTms added since curSVPos is a ulong. -2000 offset is the wait time before song starts
 
             // Initialize QuaverContainer
-            QuaverContainer = new QuaverContainer()
+            Container = new Container()
             {
                 Size = new UDim2D(PlayfieldSize, 0, 0, 1),
                 Alignment = Alignment.TopCenter
             };
-            QuaverContainer.Update(0);
+            Container.Update(0);
 
             // Initialize ManiaTiming Bars
             // todo: Initialize from ManiaMeasureBarManager
@@ -137,8 +137,8 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
                     for (var i = 0; i < 4; i++)
                     {
                         NoteHitRectangle[i] = new DrawRectangle(
-                            QuaverContainer.GlobalRectangle.X + ManiaGameplayReferences.ReceptorXPosition[i],
-                            QuaverContainer.GlobalRectangle.Y + PosFromOffset(SV_POSITIVE_CONST),
+                            Container.GlobalRectangle.X + ManiaGameplayReferences.ReceptorXPosition[i],
+                            Container.GlobalRectangle.Y + PosFromOffset(SV_POSITIVE_CONST),
                             LaneSize,
                             LaneSize * GameBase.LoadedSkin.NoteHitObjects4K[i][0].Height / GameBase.LoadedSkin.NoteHitObjects4K[0][0].Width);
 
@@ -156,8 +156,8 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
                     for (var i = 0; i < 7; i++)
                     {
                         NoteHitRectangle[i] = new DrawRectangle(
-                            QuaverContainer.GlobalRectangle.X + ManiaGameplayReferences.ReceptorXPosition[i],
-                            QuaverContainer.GlobalRectangle.Y + PosFromOffset(SV_POSITIVE_CONST),
+                            Container.GlobalRectangle.X + ManiaGameplayReferences.ReceptorXPosition[i],
+                            Container.GlobalRectangle.Y + PosFromOffset(SV_POSITIVE_CONST),
                             LaneSize,
                             LaneSize * GameBase.LoadedSkin.NoteHitObjects7K[i][0].Height / GameBase.LoadedSkin.NoteHitObjects7K[0][0].Width);
 
@@ -172,7 +172,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
             ManiaMeasureBarManager.BarObjectActive = ManiaMeasureBarManager.BarObjectQueue;
             for (var i = 0; i < ManiaMeasureBarManager.BarObjectActive.Count; i++)
             {
-                ManiaMeasureBarManager.BarObjectActive[i].Initialize(QuaverContainer, GameBase.LoadedSkin.TimingBarPixelSize, 0);
+                ManiaMeasureBarManager.BarObjectActive[i].Initialize(Container, GameBase.LoadedSkin.TimingBarPixelSize, 0);
             }
 
             // Initialize HitObjects
@@ -215,7 +215,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
 
                 // Initialize Object and add it to HitObjectPool
                 if (i < HitObjectPoolSize) 
-                    newObject.Initialize(DownScroll, qua.HitObjects[i].EndTime > 0, QuaverContainer);
+                    newObject.Initialize(DownScroll, qua.HitObjects[i].EndTime > 0, Container);
                 
                     HitObjectPool.Add(newObject);
             }
@@ -241,7 +241,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
                 ManiaMeasureBarManager.TrackPosition = TrackPosition;
                 for (i = 0; i < ManiaMeasureBarManager.BarObjectActive.Count; i++)
                 {
-                    ManiaMeasureBarManager.BarObjectActive[i].BarQuaverSprite.PosY = PosFromOffset(ManiaMeasureBarManager.BarObjectActive[i].OffsetFromReceptor) + BarOffset;
+                    ManiaMeasureBarManager.BarObjectActive[i].BarSprite.PosY = PosFromOffset(ManiaMeasureBarManager.BarObjectActive[i].OffsetFromReceptor) + BarOffset;
                 }
                 ManiaMeasureBarManager.Update(dt);
                 //Console.WriteLine(ManiaMeasureBarManager.BarObjectActive[0].BarQuaverSprite.PositionY);
@@ -327,7 +327,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
             }
 
             //Update QuaverContainer
-            QuaverContainer.Update(dt);
+            Container.Update(dt);
         }
 
         /// <summary>
@@ -336,14 +336,14 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
         public void Draw()
         {
             if (true) ManiaMeasureBarManager.Draw();
-            QuaverContainer.Draw();
+            Container.Draw();
         }
         /// <summary>
         ///     Unloads content after the game is done.
         /// </summary>
         public void UnloadContent()
         {
-            QuaverContainer.Destroy();
+            Container.Destroy();
             HitObjectHold.Clear();
             HitObjectDead.Clear();
             HitObjectPool.Clear();
@@ -549,7 +549,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
 
         internal void CreateNote()
         {
-            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(DownScroll, HitObjectPool[HitObjectPoolSize - 1].EndTime > 0, QuaverContainer);
+            if (HitObjectPool.Count >= HitObjectPoolSize) HitObjectPool[HitObjectPoolSize - 1].Initialize(DownScroll, HitObjectPool[HitObjectPoolSize - 1].EndTime > 0, Container);
         }
     }
 }

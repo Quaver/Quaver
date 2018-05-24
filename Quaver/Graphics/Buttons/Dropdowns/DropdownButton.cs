@@ -12,12 +12,12 @@ using Quaver.Main;
 
 namespace Quaver.Graphics.Buttons.Dropdowns
 {
-    internal class QuaverDropdownButton : QuaverTextButton
+    internal class DropdownButton : TextButton
     {
         /// <summary>
         ///     Reference to the dropdown this belongs to.
         /// </summary>
-        internal QuaverDropdown Dropdown { get; set; }
+        internal Dropdown Dropdown { get; set; }
 
         /// <summary>
         ///     If this button is the one that's selected. We'll want to perform different actions
@@ -28,12 +28,12 @@ namespace Quaver.Graphics.Buttons.Dropdowns
         /// <summary>
         ///     The chevron icon displayed on the selected dropdown button. 
         /// </summary>
-        private QuaverSprite ChevronDownIcon { get; }
+        private Sprite ChevronDownIcon { get; }
 
         /// <summary>
         ///     The chevron (right facing) icon displayed at the left of the text.
         /// </summary>
-        private QuaverSprite ChevronRightIcon { get; }
+        private Sprite ChevronRightIcon { get; }
 
         /// <summary>
         ///     Overriden property for the clicked event. We pass in the actual button text here.
@@ -46,7 +46,7 @@ namespace Quaver.Graphics.Buttons.Dropdowns
         /// <param name="dropdown"></param>
         /// <param name="buttonSize"></param>
         /// <param name="buttonText"></param>
-        internal QuaverDropdownButton(QuaverDropdown dropdown, Vector2 buttonSize, string buttonText) : base(buttonSize, buttonText)
+        internal DropdownButton(Dropdown dropdown, Vector2 buttonSize, string buttonText) : base(buttonSize, buttonText)
         {
             Dropdown = dropdown;
               
@@ -59,7 +59,7 @@ namespace Quaver.Graphics.Buttons.Dropdowns
             QuaverTextSprite.TextColor = Color.White;
 
             // Add sprite for the chevron displayed at the left of the text.
-            ChevronRightIcon = new QuaverSprite()
+            ChevronRightIcon = new Sprite()
             {
                 Parent = this,
                 Image = FontAwesome.ChevronDown,
@@ -72,7 +72,7 @@ namespace Quaver.Graphics.Buttons.Dropdowns
             };
             
             // Add sprite for the chevron (displayed on the selected dropdown button.)
-            ChevronDownIcon = new QuaverSprite()
+            ChevronDownIcon = new Sprite()
             {
                 Parent = this,
                 Image = FontAwesome.ChevronDown,

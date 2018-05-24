@@ -72,7 +72,7 @@ namespace Quaver.States.Results
         /// <summary>
         ///     The button to get back to song select
         /// </summary>
-        private QuaverTextButton BackButton { get; set; }
+        private TextButton BackButton { get; set; }
 
         /// <summary>
         ///     The replay from the previous play state
@@ -97,9 +97,9 @@ namespace Quaver.States.Results
         /// <summary>
         ///     Static image of the players' play stats
         /// </summary>
-        private QuaverBakeableSprite PlayStatsSprite { get; set; }
+        private BakeableSprite PlayStatsSprite { get; set; }
 
-        private QuaverContainer QuaverContainer { get; set; }
+        private Container Container { get; set; }
 
         /// <summary>
         ///     Constructor - In order to get to this state, it's essential that you pass in 
@@ -202,7 +202,7 @@ namespace Quaver.States.Results
         {
             BackButton.Clicked -= OnBackButtonClick;
             BackButton.Destroy();
-            QuaverContainer.Destroy();
+            Container.Destroy();
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Quaver.States.Results
         public void Update(double dt)
         {
             BackButton.Update(dt);
-            QuaverContainer.Update(dt);
+            Container.Update(dt);
         }
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace Quaver.States.Results
             GameBase.SpriteBatch.Begin();
             BackgroundManager.Draw();
             BackButton.Draw();
-            QuaverContainer.Draw();
+            Container.Draw();
             GameBase.SpriteBatch.End();
         }
 
@@ -233,10 +233,10 @@ namespace Quaver.States.Results
         private void CreateUI()
         {
             // Create Base QuaverContainer
-            QuaverContainer = new QuaverContainer();
+            Container = new Container();
 
             // Create Back QuaverButton
-            BackButton = new QuaverTextButton(new Vector2(150,40),"BACK" )
+            BackButton = new TextButton(new Vector2(150,40),"BACK" )
             {
                 PosY = 70,
                 Alignment = Alignment.TopRight
@@ -245,9 +245,9 @@ namespace Quaver.States.Results
             BackButton.Clicked += OnBackButtonClick;
 
             //create note data graph todo: add text and stuff
-            PlayStatsSprite = new QuaverBakeableSprite()
+            PlayStatsSprite = new BakeableSprite()
             {
-                Parent = QuaverContainer,
+                Parent = Container,
                 ScaleX = 1,
                 ScaleY = 1
             };
@@ -386,7 +386,7 @@ namespace Quaver.States.Results
         private void CreateMsDevianceUI()
         {
             // create ms deviance box
-            var boundary = new QuaverSprite()
+            var boundary = new Sprite()
             {
                 Size = new UDim2D(400, 150),
                 Position = new UDim2D(10, -90),
@@ -399,10 +399,10 @@ namespace Quaver.States.Results
             // create labels for hit windows
             for (var i = 0; i < 5; i++)
             {
-                QuaverSprite ob;
+                Sprite ob;
 
                 //bottom
-                ob = new QuaverSprite()
+                ob = new Sprite()
                 {
                     Position = new UDim2D(0, boundary.Size.Y.Offset * (ManiaScoreData.HitWindowPress[i] / ManiaScoreData.HitWindowPress[4]) / 2),
                     Size = new UDim2D(0, 1, 1, 0),
@@ -413,7 +413,7 @@ namespace Quaver.States.Results
                 };
 
                 //top
-                ob = new QuaverSprite()
+                ob = new Sprite()
                 {
                     Position = new UDim2D(0, -boundary.Size.Y.Offset * (ManiaScoreData.HitWindowPress[i] / ManiaScoreData.HitWindowPress[4]) / 2),
                     Size = new UDim2D(0, 1, 1, 0),
@@ -433,7 +433,7 @@ namespace Quaver.States.Results
             {
                 if (ms.Value > ManiaScoreData.HitWindowPress[4])
                 {
-                    var ob = new QuaverSprite()
+                    var ob = new Sprite()
                     {
                         Position = new UDim2D(((float)(ms.Position / ManiaScoreData.PlayTimeTotal) * boundary.Size.X.Offset) - 1f, 0),
                         Size = new UDim2D(2, 0, 0, 1),
@@ -455,7 +455,7 @@ namespace Quaver.States.Results
                         if (Math.Abs(ms.Value) < ManiaScoreData.HitWindowPress[tint]) break;
                     }
 
-                    var ob = new QuaverSprite()
+                    var ob = new Sprite()
                     {
                         Position = new UDim2D((float)(ms.Position / ManiaScoreData.PlayTimeTotal * boundary.Size.X.Offset) - 1.5f, (float)(ms.Value * (boundary.Size.Y.Offset / 2) / ManiaScoreData.HitWindowPress[4]) - 1.5f),
                         Size = new UDim2D(3, 3),
@@ -475,7 +475,7 @@ namespace Quaver.States.Results
         private void CreateHealthDataUI()
         {
             //Create QuaverContainer for Health Data Display
-            var boundary = new QuaverSprite()
+            var boundary = new Sprite()
             {
                 Size = new UDim2D(400, 150),
                 Position = new UDim2D(-10, -160 - 90),
@@ -519,7 +519,7 @@ namespace Quaver.States.Results
             var lowAccRatio = (float)(1 / (100 - lowestAcc));
 
             //Create QuaverContainer for Accuracy Display
-            var boundary = new QuaverSprite()
+            var boundary = new Sprite()
             {
                 Size = new UDim2D(400, 150),
                 Position = new UDim2D(-10, -90),
@@ -533,12 +533,12 @@ namespace Quaver.States.Results
             CreateTimeMarkers(boundary);
 
             //Create labels for grade windows
-            List<QuaverSprite> guides = new List<QuaverSprite>();
+            List<Sprite> guides = new List<Sprite>();
             for (var i = 1; i < 7; i++)
             {
                 if (ManiaScoreData.GradePercentage[i] > lowestAcc)
                 {
-                    QuaverSprite ob = new QuaverSprite()
+                    Sprite ob = new Sprite()
                     {
                         Position = new UDim2D(0, boundary.Size.Y.Offset * (float)(1 - ((ManiaScoreData.GradePercentage[i] - lowestAcc) * lowAccRatio))),
                         Size = new UDim2D(0, 1, 1, 0),
@@ -595,7 +595,7 @@ namespace Quaver.States.Results
         {
             //Create Judge Info QuaverContainer
             QuaverSpriteText ob;
-            var boundary = new QuaverContainer()
+            var boundary = new Container()
             {
                 Size = new UDim2D(350, 240),
                 PosX = 10,
@@ -655,10 +655,10 @@ namespace Quaver.States.Results
         /// <param name="boundarySizeY">Size of boundary parent (y offset)</param>
         /// <param name="dataLowestY">Lowest point of the data set</param>
         /// <returns></returns>
-        private List<QuaverSprite> InterpolateGraph(List<ManiaGameplayData> graph, float boundarySizeX, float boundarySizeY, double dataLowestY)
+        private List<Sprite> InterpolateGraph(List<ManiaGameplayData> graph, float boundarySizeX, float boundarySizeY, double dataLowestY)
         {
             // Create graph elements and any references to object
-            List<QuaverSprite> graphElements = new List<QuaverSprite>();
+            List<Sprite> graphElements = new List<Sprite>();
             double lowestRatio = (1 / (1 - dataLowestY));
             int currentIndex = 0;
 
@@ -716,7 +716,7 @@ namespace Quaver.States.Results
                 }
 
                 // Create graph element
-                var ob = new QuaverSprite()
+                var ob = new Sprite()
                 {
                     Position = new UDim2D((float)currentXPos, (float)currentYpos),
                     Size = new UDim2D(3, 3)
@@ -769,7 +769,7 @@ namespace Quaver.States.Results
             int timeIndex = 1;
             while (timeIndex * 15000 < ManiaScoreData.PlayTimeTotal)
             {
-                var ob = new QuaverSprite()
+                var ob = new Sprite()
                 {
                     Position = new UDim2D(parent.Size.X.Offset * (float)((timeIndex * 15000) / ManiaScoreData.PlayTimeTotal), 0),
                     Size = new UDim2D(1, 0, 0, 1),
@@ -787,7 +787,7 @@ namespace Quaver.States.Results
         /// <param name="parent"></param>
         /// <param name="radius"></param>
         /// <returns></returns>
-        private void CreateJudgeSpreadPiChart(QuaverContainer parent, double radius, Vector2 offset)
+        private void CreateJudgeSpreadPiChart(Container parent, double radius, Vector2 offset)
         {
             // Variables used for calculation
             int[] totalSpreadCount = new int[6];
@@ -831,7 +831,7 @@ namespace Quaver.States.Results
                 //if (drawPause <= 0)
                     for (int i =0; i< 14; i++)
                     {
-                        var ob = new QuaverSprite()
+                        var ob = new Sprite()
                         {
                             Position = new UDim2D
                             (

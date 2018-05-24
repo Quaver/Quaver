@@ -8,7 +8,7 @@ namespace Quaver.Graphics.Buttons
     /// <summary>
     ///     This type of button is used for simple buttons that only require a single image + tint animation.
     /// </summary>
-    internal class QuaverBasicButton : QuaverButton
+    internal class BasicButton : Button
     {
         /// <summary>
         ///     Current tween value of the object. Used for animation.

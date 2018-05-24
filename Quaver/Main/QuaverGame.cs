@@ -170,7 +170,7 @@ namespace Quaver.Main
             GameBase.GameStateManager.Update(dt);
 
             // Update Mouse QuaverCursor
-            GameBase.QuaverCursor.Update(dt);
+            GameBase.Cursor.Update(dt);
 
             // Update volume controller
             GameBase.VolumeController.Update(dt);
@@ -203,7 +203,7 @@ namespace Quaver.Main
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GraphicsDevice.RasterizerState);
             GameBase.VolumeController.Draw();
             GameBase.Navbar.Draw();
-            GameBase.QuaverCursor.Draw();
+            GameBase.Cursor.Draw();
             Logger.Draw(dt);
      
             if (ConfigManager.FpsCounter.Value)

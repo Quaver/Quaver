@@ -15,17 +15,17 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public QuaverContainer Container { get; set; }
+        public Container Container { get; set; }
 
         /// <summary>
         ///     The background of the playfield.
         /// </summary>
-        internal QuaverContainer BackgroundContainer { get; }
+        internal Container BackgroundContainer { get; }
         
         /// <summary>
         ///     The foreground of the playfield.
         /// </summary>
-        internal QuaverContainer ForegroundContainer { get; }
+        internal Container ForegroundContainer { get; }
 
         /// <summary>
         ///     Reference to the map.
@@ -177,10 +177,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             Map = Screen.Map;
             
             // Create the playfield's container.
-            Container = new QuaverContainer();
+            Container = new Container();
             
             // Create background container
-            BackgroundContainer = new QuaverContainer
+            BackgroundContainer = new Container
             {
                 Parent = Container,
                 Size = new UDim2D(Width, GameBase.WindowRectangle.Height),
@@ -188,7 +188,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             };
                         
             // Create the foreground container.
-            ForegroundContainer = new QuaverContainer
+            ForegroundContainer = new Container
             {
                 Parent = Container,
                 Size = new UDim2D(Width, GameBase.WindowRectangle.Height),
@@ -233,6 +233,48 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         public void Draw()
         {
             Container.Draw();
+        }
+        
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="dt"></param>
+        public void HandleFailure(double dt)
+        {
+            FadeOut(dt);
+        }
+
+        /// <summary>
+        ///     Fades out the playfield & entire stage if specified.
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="fadeStage"></param>
+        private void FadeOut(double dt, bool fadeStage = false)
+        {
+            // Fade out all of the active HitObjects.
+            var manager = (KeysHitObjectManager) Screen.Ruleset.HitObjectManager;
+
+            // Fade out the objects in the pool.
+            for (var i = 0; i < manager.ObjectPool.Count && i < manager.PoolSize; i++)
+            {
+                var o = (KeysHitObject) manager.ObjectPool[i];
+                o.FadeOut(dt);
+            }
+            
+            foreach (var hitObject in manager.HeldLongNotes)
+            {
+                var o = (KeysHitObject) hitObject;
+                o.FadeOut(dt);
+            }
+            
+            foreach (var hitObject in manager.DeadNotes)
+            {
+                var o = (KeysHitObject) hitObject;
+                o.FadeOut(dt);
+            }
+            
+            if (fadeStage)
+                Stage.FadeOut(dt);
         }
     }
 }

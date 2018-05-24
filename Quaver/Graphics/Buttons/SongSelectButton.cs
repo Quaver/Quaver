@@ -13,7 +13,7 @@ namespace Quaver.Graphics.Buttons
     /// <summary>
     ///     This type of button is used for simple buttons that only require a single image + text, but also includes a tint animation.
     /// </summary>
-    internal class QuaverSongSelectButton : QuaverButton
+    internal class SongSelectButton : Button
     {
         internal bool Selected { get; set; }
 
@@ -25,11 +25,11 @@ namespace Quaver.Graphics.Buttons
 
         private QuaverSpriteText DiffQuaverText { get; set; }
 
-        private Sprites.QuaverSprite UnderlayImage { get; set; }
+        private Sprites.Sprite UnderlayImage { get; set; }
 
-        private Sprites.QuaverSprite GameModeImage { get; set; }
+        private Sprites.Sprite GameModeImage { get; set; }
 
-        private Sprites.QuaverSprite GradeImage { get; set; }
+        private Sprites.Sprite GradeImage { get; set; }
 
         /// <summary>
         ///     Current tween value of the object. Used for animation.
@@ -47,7 +47,7 @@ namespace Quaver.Graphics.Buttons
         private Color CurrentTint = Color.White;
 
         //Constructor
-        internal QuaverSongSelectButton(Map map, float ButtonScale)
+        internal SongSelectButton(Map map, float ButtonScale)
         {
             var ButtonSizeY = 40 * ButtonScale;
             var mapText = map.Artist + " - " + map.Title + " [" + map.DifficultyName + "]";
@@ -116,7 +116,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = ModeAndGradeBoundaryOutter
             };*/
 
-            UnderlayImage = new Sprites.QuaverSprite
+            UnderlayImage = new Sprites.Sprite
             {
                 Position = new UDim2D(2 * ButtonScale, -5 * ButtonScale),
                 Size = new UDim2D(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
@@ -125,7 +125,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = this
             };
             
-            GradeImage = new Sprites.QuaverSprite()
+            GradeImage = new Sprites.Sprite()
             {
                 Position = new UDim2D(-16 * ButtonScale, 0),
                 Size = new UDim2D(14 * ButtonScale, 14 * ButtonScale),
@@ -135,7 +135,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = UnderlayImage
             };
 
-            GameModeImage = new Sprites.QuaverSprite()
+            GameModeImage = new Sprites.Sprite()
             {
                 Size = new UDim2D(14 * ButtonScale, 14 * ButtonScale),
                 Image = GameBase.LoadedSkin.Cursor,

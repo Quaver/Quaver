@@ -21,7 +21,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
         /// <summary>
         ///     QuaverContainer that holds all QuaverUserInterface element for this object
         /// </summary>
-        private QuaverContainer QuaverContainer { get; set; }
+        private Container Container { get; set; }
 
         /// <summary>
         ///     Text box which displays a count of every judgement
@@ -31,22 +31,22 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
         /// <summary>
         ///     The graph which displays judgement count relative to total count of every judgement
         /// </summary>
-        private QuaverSprite[] AccuracyGraphBar { get; set; }
+        private Sprite[] AccuracyGraphBar { get; set; }
 
         /// <summary>
         ///     Grade image which sits at the left side of the grade progress bar
         /// </summary>
-        private QuaverSprite GradeLeft { get; set; }
+        private Sprite GradeLeft { get; set; }
 
         /// <summary>
         ///     Grade image which sits at the right side of the grade progress bar
         /// </summary>
-        private QuaverSprite GradeRight { get; set; }
+        private Sprite GradeRight { get; set; }
 
         /// <summary>
         ///     Bar which shows how far the player is from acheiving a certain grade
         /// </summary>
-        private QuaverBarDisplay GradeProgressQuaverBar { get; set; }
+        private BarDisplay GradeProgressBar { get; set; }
 
         /// <summary>
         ///     Counts the number of total judgement for each hit window to display
@@ -98,26 +98,26 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
             ProgressBarScale = 0;
 
             // Create QuaverContainer
-            QuaverContainer = new QuaverContainer();
+            Container = new Container();
 
             // Create Accuracy Box Variables
             AccuracyGraphTargetScale = new float[6];
 
             // Create new Accuracy Box
-            var accuracyBox = new QuaverSprite()
+            var accuracyBox = new Sprite()
             {
                 Alignment = Alignment.TopRight,
                 Size = new UDim2D(200 * GameBase.WindowUIScale, 240 * GameBase.WindowUIScale),
                 Position = new UDim2D(-10,10),
-                Parent = QuaverContainer,
+                Parent = Container,
                 Alpha = 0.7f,
                 Tint = Color.Black //todo: remove later and use skin image
             };
 
-            var accuracyDisplaySet = new QuaverContainer[7];
+            var accuracyDisplaySet = new Container[7];
             for (var i = 0; i < 7; i++)
             {
-                accuracyDisplaySet[i] = new QuaverContainer()
+                accuracyDisplaySet[i] = new Container()
                 {
                     Parent = accuracyBox,
                     Alignment = Alignment.TopLeft,
@@ -126,10 +126,10 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
                 };
             }
 
-            AccuracyGraphBar = new QuaverSprite[6];
+            AccuracyGraphBar = new Sprite[6];
             for (var i = 0; i < 6; i++)
             {
-                AccuracyGraphBar[i] = new QuaverSprite()
+                AccuracyGraphBar[i] = new Sprite()
                 {
                     Parent = accuracyDisplaySet[i+1],
                     Alignment = Alignment.MidLeft,
@@ -190,7 +190,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
             };
 
             // Create Grade box
-            var gradeBox = new QuaverContainer()
+            var gradeBox = new Container()
             {
                 Parent = accuracyBox,
                 Size = new UDim2D(accuracyBox.SizeX, 26 * GameBase.WindowUIScale),
@@ -198,13 +198,13 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
                 Alignment = Alignment.BotLeft,
             };
 
-            GradeProgressQuaverBar = new QuaverBarDisplay(GameBase.WindowUIScale, accuracyBox.SizeX - (gradeBox.SizeY * 2) - 30 * GameBase.WindowUIScale, new Color[] { Color.Red })
+            GradeProgressBar = new BarDisplay(GameBase.WindowUIScale, accuracyBox.SizeX - (gradeBox.SizeY * 2) - 30 * GameBase.WindowUIScale, new Color[] { Color.Red })
             {
                 Parent = gradeBox,
                 Alignment = Alignment.MidCenter
             };
 
-            GradeLeft = new QuaverSprite()
+            GradeLeft = new Sprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallF,
                 Size = new UDim2D(gradeBox.SizeY * GameBase.WindowUIScale, gradeBox.SizeY * GameBase.WindowUIScale),
@@ -212,7 +212,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
                 Parent = gradeBox
             };
 
-            GradeRight = new QuaverSprite()
+            GradeRight = new Sprite()
             {
                 Image = GameBase.LoadedSkin.GradeSmallD,
                 Size = new UDim2D(gradeBox.SizeY * GameBase.WindowUIScale, gradeBox.SizeY * GameBase.WindowUIScale),
@@ -267,7 +267,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
                 GradeRight.Image = GradeImages[CurrentGrade + 2];
 
                 //Upgrade Bar Color and Size
-                GradeProgressQuaverBar.UpdateBar(0, scale,
+                GradeProgressBar.UpdateBar(0, scale,
                 QuaverColors.GradeColors[CurrentGrade + 1]);
             }
         }
@@ -289,21 +289,21 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
             AccuracyCountQuaverText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
 
             // Upgrade Grade Progress Bar
-            GradeProgressQuaverBar.UpdateBar(0,
-                GraphicsHelper.Tween(ProgressBarScale, GradeProgressQuaverBar.GetBarScale(0), tween));
+            GradeProgressBar.UpdateBar(0,
+                GraphicsHelper.Tween(ProgressBarScale, GradeProgressBar.GetBarScale(0), tween));
 
             // Update QuaverContainer
-            QuaverContainer.Update(dt);   
+            Container.Update(dt);   
         }
 
         public void Draw()
         {
-            QuaverContainer.Draw();
+            Container.Draw();
         }
 
         public void UnloadContent()
         {
-            QuaverContainer.Destroy();
+            Container.Destroy();
         }
     }
 }

@@ -16,11 +16,11 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
 {
     class ChatManager : IGameOverlayComponent
     {
-        private QuaverContainer QuaverContainer { get; set; }
+        private Container Container { get; set; }
 
-        private Sprites.QuaverSprite QuaverSprite { get; set; }
+        private Sprites.Sprite Sprite { get; set; }
 
-        private QuaverTextInputField ChatInputField { get; set; }
+        private TextInputField ChatInputField { get; set; }
 
         //chat lines todo: use proper class for chatting
         private int ChatSize { get; } = 10;
@@ -32,24 +32,24 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
         public void Initialize()
         {
             // Create main boundary
-            QuaverContainer = new QuaverContainer();
+            Container = new Container();
 
             // Create background dimmer
-            QuaverSprite = new Sprites.QuaverSprite()
+            Sprite = new Sprites.Sprite()
             {
                 Size = new UDim2D(0, 0, 1, 1),
                 Alignment = Alignment.MidCenter,
                 Alpha = 0.8f,
                 Tint = Color.Black,
-                Parent = QuaverContainer
+                Parent = Container
             };
 
             // Create input box
-            ChatInputField = new QuaverTextInputField(new Vector2(400, 30), "Type something", OnChatSubmit)
+            ChatInputField = new TextInputField(new Vector2(400, 30), "Type something", OnChatSubmit)
             {
                 PosY = -200,
                 Alignment = Alignment.BotLeft,
-                Parent = QuaverContainer
+                Parent = Container
             };
 
             //create chat. todo: this is temporary
@@ -64,29 +64,29 @@ namespace Quaver.Graphics.GameOverlay.Multiplayer
                     Alignment = Alignment.BotLeft,
                     TextAlignment = Alignment.MidLeft,
                     TextColor = Color.LightGreen,
-                    Parent = QuaverContainer
+                    Parent = Container
                 };
             }
         }
 
         public void RecalculateWindow()
         {
-            QuaverContainer.Size = new UDim2D(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height);
+            Container.Size = new UDim2D(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height);
         }
 
         public void UnloadContent()
         {
-            QuaverContainer.Destroy();
+            Container.Destroy();
         }
 
         public void Update(double dt)
         {
-            QuaverContainer.Update(dt);
+            Container.Update(dt);
         }
 
         public void Draw()
         {
-            QuaverContainer.Draw();
+            Container.Draw();
         }
 
         private void NewChatLine(object sender, EventArgs e)

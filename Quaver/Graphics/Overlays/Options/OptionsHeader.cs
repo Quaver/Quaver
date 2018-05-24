@@ -15,7 +15,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     Container for the header.
         /// </summary>
-        internal QuaverSprite Container { get; set; }
+        internal Sprite Container { get; set; }
 
         /// <summary>
         ///     The header's title.
@@ -25,7 +25,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     Reference to the header's icon.
         /// </summary>
-        internal QuaverSprite Icon { get; set; }
+        internal Sprite Icon { get; set; }
 
         /// <summary>
         ///     The description text 
@@ -35,7 +35,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     The line displayed under the header.
         /// </summary>
-        internal QuaverSprite Underline { get; set; }
+        internal Sprite Underline { get; set; }
 
         /// <summary>
         ///     Reference to the actual overlay.
@@ -52,7 +52,7 @@ namespace Quaver.Graphics.Overlays.Options
             Overlay = overlay;
             
             // Container for this header.
-            Container = new QuaverSprite()
+            Container = new Sprite()
             {
                 Position = new UDim2D(0, Nav.Height),
                 SizeX = 300,
@@ -79,7 +79,7 @@ namespace Quaver.Graphics.Overlays.Options
             };
             
             // Header icon
-            Icon = new QuaverSprite()
+            Icon = new Sprite()
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
@@ -105,7 +105,7 @@ namespace Quaver.Graphics.Overlays.Options
             };
             
             // Add a line under the header description
-            Underline = new QuaverSprite()
+            Underline = new Sprite()
             {
                 Parent = Container,
                 Tint = Color.White,

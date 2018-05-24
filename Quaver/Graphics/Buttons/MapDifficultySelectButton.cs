@@ -14,7 +14,7 @@ namespace Quaver.Graphics.Buttons
     /// <summary>
     ///     This type of button is used for simple buttons that only require a single image + text, but also includes a tint animation.
     /// </summary>
-    internal class QuaverMapDifficultySelectButton : QuaverButton
+    internal class MapDifficultySelectButton : Button
     {
         internal static float BUTTON_Y_SIZE = 40.0f;
 
@@ -28,9 +28,9 @@ namespace Quaver.Graphics.Buttons
 
         private QuaverSpriteText DifficultyNameText { get; set; }
 
-        private QuaverSprite GradeImage { get; set; }
+        private Sprite GradeImage { get; set; }
 
-        private QuaverSprite DifficultyScaleImage { get; set; }
+        private Sprite DifficultyScaleImage { get; set; }
 
         /// <summary>
         ///     Current tween value of the object. Used for animation.
@@ -48,7 +48,7 @@ namespace Quaver.Graphics.Buttons
         private Color CurrentTint = Color.White;
 
         //Constructor
-        internal QuaverMapDifficultySelectButton(float ButtonScale, int index, Map map)
+        internal MapDifficultySelectButton(float ButtonScale, int index, Map map)
         {
             Size.Y.Offset = BUTTON_Y_SIZE * ButtonScale;
             Size.X.Offset = BUTTON_X_SIZE * ButtonScale;
@@ -65,7 +65,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = this
             };
 
-            DifficultyScaleImage = new QuaverSprite()
+            DifficultyScaleImage = new Sprite()
             {
                 Size = new UDim2D(-40 * ButtonScale, -ButtonScale * 2, 1, 0.4f),
                 Position = new UDim2D(40 * ButtonScale, -ButtonScale * 2),
@@ -73,7 +73,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = this
             };
 
-            GradeImage = new QuaverSprite()
+            GradeImage = new Sprite()
             {
                 Position = new UDim2D(ButtonScale, 0),
                 Size = new UDim2D(38 * ButtonScale, 38 * ButtonScale),

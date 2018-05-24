@@ -14,7 +14,7 @@ namespace Quaver.Graphics.UserInterface
     ///     General purpose progress bar.
     ///     TODO: Make this with BindedFloat class instead for auto-updates.
     /// </summary>
-    internal class ProgressBar : QuaverSprite
+    internal class ProgressBar : Sprite
     {
         /// <summary>
         ///     The  maximum value of the progress bar.
@@ -40,7 +40,7 @@ namespace Quaver.Graphics.UserInterface
         /// <summary>
         ///     The current active progress bar.
         /// </summary>
-        internal QuaverSprite ActiveProgressBar { get; }
+        internal Sprite ActiveProgressBar { get; }
 
         /// <summary>
         ///     The current percentage of the progress bar.
@@ -72,7 +72,7 @@ namespace Quaver.Graphics.UserInterface
             Parent = parent;
 
             // Create the active progress bar.
-            ActiveProgressBar = new QuaverSprite
+            ActiveProgressBar = new Sprite
             {
                 Tint = ActiveColor,
                 Alignment = alignment,

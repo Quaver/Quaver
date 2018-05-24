@@ -24,7 +24,7 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Graphics.Overlays.Options
 {
-    internal class OptionsOverlay : QuaverSprite
+    internal class OptionsOverlay : Sprite
     {
         /// <summary>
         ///     If the options overlay is currently active.
@@ -253,7 +253,7 @@ namespace Quaver.Graphics.Overlays.Options
             #region Peppy
 
             // Create the peppy button.
-            var peppyButton = new QuaverTextButton(Vector2.One, "Select peppy!.db File");
+            var peppyButton = new TextButton(Vector2.One, "Select peppy!.db File");
 
             // Add click handler for peppy button.
             peppyButton.Clicked += (o, e) =>
@@ -304,7 +304,7 @@ namespace Quaver.Graphics.Overlays.Options
             #region Etterna
 
             // Create the peppy button.
-            var etternaButton = new QuaverTextButton(Vector2.One, "Etterna Cache Folder");
+            var etternaButton = new TextButton(Vector2.One, "Etterna Cache Folder");
 
             // Add click handler for peppy button.
             etternaButton.Clicked += (o, e) =>
@@ -339,7 +339,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     Creates the dropdown to select the current resolution.
         /// </summary>
-        private QuaverDropdown CreateResolutionDropdown()
+        private Dropdown CreateResolutionDropdown()
         {
             // Create a list of the most common resolutions
             var commonResolutions = new List<Point>
@@ -379,7 +379,7 @@ namespace Quaver.Graphics.Overlays.Options
             options = options.OrderByDescending(x => x == $"{selected.X}x{selected.Y}").ThenBy(x => Convert.ToInt32(x.Split('x')[0])).ToList();
             
             // Create and return the new dropdown.
-            return new QuaverDropdown(options, (o, e) =>
+            return new Dropdown(options, (o, e) =>
             {
                 // Split the given resolution.
                 var resSplit = e.ButtonText.Split('x');
@@ -397,7 +397,7 @@ namespace Quaver.Graphics.Overlays.Options
         ///     Creates the dropdown to select the default skin.
         /// </summary>
         /// <returns></returns>
-        private QuaverDropdown CreateDefaultSkinDropdown()
+        private Dropdown CreateDefaultSkinDropdown()
         {
             // Create constant variables for both default skin options.
             const string arrowText = "Default Arrow Skin";
@@ -417,7 +417,7 @@ namespace Quaver.Graphics.Overlays.Options
             }
             
             // Create the new dropdown button.
-            return new QuaverDropdown(options, (o, e) =>
+            return new Dropdown(options, (o, e) =>
             {
                 switch (e.ButtonText)
                 {
@@ -437,7 +437,7 @@ namespace Quaver.Graphics.Overlays.Options
         ///     Creates the dropdown to select a skin.
         /// </summary>
         /// <returns></returns>
-        private QuaverDropdown CreateSkinDropdown()
+        private Dropdown CreateSkinDropdown()
         {
             // The text for the default option if the user doesn't have any skins.
             const string defaultText = "Default - Import more skins!";
@@ -450,7 +450,7 @@ namespace Quaver.Graphics.Overlays.Options
                 skins.Add(defaultText);
             
             // Create the dropdown
-            return new QuaverDropdown(skins, (o, e) =>
+            return new Dropdown(skins, (o, e) =>
             {
                 if (e.ButtonText == defaultText) 
                     return;

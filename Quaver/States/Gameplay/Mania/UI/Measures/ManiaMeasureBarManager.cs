@@ -8,19 +8,19 @@ namespace Quaver.States.Gameplay.Mania.UI.Measures
     internal class ManiaMeasureBarManager : IGameStateComponent
     {
         internal ulong TrackPosition { get; set; }
-        private QuaverContainer QuaverContainer { get; set; }
+        private Container Container { get; set; }
         internal List<ManiaBarObject> BarObjectQueue { get; set; }
         internal List<ManiaBarObject> BarObjectActive { get; set; }
         internal float PlayfieldSize { get; set; }
 
         public void Draw()
         {
-            QuaverContainer.Draw();
+            Container.Draw();
         }
 
         public void Initialize(IGameState state)
         {
-            QuaverContainer = new QuaverContainer(0, 0, PlayfieldSize, null)
+            Container = new Container(0, 0, PlayfieldSize, null)
             {
                 Alignment = Alignment.MidCenter
             };
@@ -30,12 +30,12 @@ namespace Quaver.States.Gameplay.Mania.UI.Measures
 
         public void UnloadContent()
         {
-            QuaverContainer.Destroy();
+            Container.Destroy();
         }
 
         public void Update(double dt)
         {
-            QuaverContainer.Update(dt);
+            Container.Update(dt);
         }
 
         //Creates timing bars (used to measure 16 beats)

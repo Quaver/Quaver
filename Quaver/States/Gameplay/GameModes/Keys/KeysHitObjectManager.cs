@@ -16,7 +16,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         ///     Reference to the entire ruleset.
         /// </summary>
-        private GameModeKeys Ruleset { get; }
+        private GameModeRulesetKeys Ruleset { get; }
 
         /// <summary>
         ///     The list of currently dead notes
@@ -95,7 +95,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="size"></param>
-        internal KeysHitObjectManager(GameModeKeys ruleset, int size) : base(size)
+        internal KeysHitObjectManager(GameModeRulesetKeys ruleset, int size) : base(size)
         {
             Ruleset = ruleset;
 

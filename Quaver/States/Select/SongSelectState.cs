@@ -40,32 +40,32 @@ namespace Quaver.States.Select
         /// <summary>
         ///     QuaverContainer
         /// </summary>
-        private QuaverContainer QuaverContainer { get; set; } = new QuaverContainer();
+        private Container Container { get; set; } = new Container();
 
         /// <summary>
         ///     Reference to the play button
         /// </summary>        
-        private QuaverTextButton PlayButton { get; set; }
+        private TextButton PlayButton { get; set; }
 
         /// <summary>
         ///     Reference to the back button
         /// </summary>        
-        private QuaverTextButton BackButton { get; set; }
+        private TextButton BackButton { get; set; }
 
         /// <summary>
         ///     Reference to the speed gameplayModifier button
         /// </summary>
-        private QuaverTextButton SpeedModButton { get; set; }
+        private TextButton SpeedModButton { get; set; }
 
         /// <summary>
         ///     Reference to the toggle pitch button
         /// </summary>
-        private QuaverTextButton TogglePitch { get; set; }
+        private TextButton TogglePitch { get; set; }
 
         /// <summary>
         ///     Search bar for song searching
         /// </summary>
-        private QuaverTextInputField SearchField { get; set; }
+        private TextInputField SearchField { get; set; }
 
         /// <summary>MapSelectSystem
         ///     Position of mouse from previous frame
@@ -138,7 +138,7 @@ namespace Quaver.States.Select
             SpeedModButton.Clicked -= OnSpeedModButtonClick;
             TogglePitch.Clicked -= OnTogglePitchButtonClick;
             MapSelectSystem.UnloadContent();
-            QuaverContainer.Destroy();
+            Container.Destroy();
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Quaver.States.Select
             }*/
 
             //Update Objects
-            QuaverContainer.Update(dt);
+            Container.Update(dt);
             MapSelectSystem.Update(dt);
 
             // Repeat the song preview if necessary
@@ -196,7 +196,7 @@ namespace Quaver.States.Select
         {
             GameBase.SpriteBatch.Begin();
             BackgroundManager.Draw();
-            QuaverContainer.Draw();
+            Container.Draw();
             MapSelectSystem.Draw();
 
             GameBase.SpriteBatch.End();
@@ -208,11 +208,11 @@ namespace Quaver.States.Select
         private void CreatePlayMapButton()
         {
             // Create play button
-            PlayButton = new QuaverTextButton(new Vector2(200, 50), "Play Map")
+            PlayButton = new TextButton(new Vector2(200, 50), "Play Map")
             {
                 PosY = 300 * GameBase.WindowUIScale + 80,
                 Alignment = Alignment.TopLeft,
-                Parent = QuaverContainer
+                Parent = Container
             };
 
             PlayButton.Clicked += OnPlayMapButtonClick;
@@ -262,11 +262,11 @@ namespace Quaver.States.Select
         private void CreateBackButton()
         {
             // Create back button
-            BackButton = new QuaverTextButton(new Vector2(200, 50), "Back")
+            BackButton = new TextButton(new Vector2(200, 50), "Back")
             {
                 PosY = - 90,
                 Alignment = Alignment.BotCenter,
-                Parent = QuaverContainer
+                Parent = Container
             };
             BackButton.Clicked += OnBackButtonClick;
         }
@@ -288,11 +288,11 @@ namespace Quaver.States.Select
         private void CreateSpeedModButton()
         {
             // Create ManiaModSpeed Mod QuaverButton
-            SpeedModButton = new QuaverTextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x")
+            SpeedModButton = new TextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x")
             {
                 PosY = 300 * GameBase.WindowUIScale + 200,
                 Alignment = Alignment.TopLeft,
-                Parent = QuaverContainer
+                Parent = Container
             };
             SpeedModButton.Clicked += OnSpeedModButtonClick;
         }
@@ -376,11 +376,11 @@ namespace Quaver.States.Select
         /// </summary>
         private void CreateTogglePitchButton()
         {
-            TogglePitch = new QuaverTextButton(new Vector2(200, 50), $"Toggle Pitch: {ConfigManager.Pitched.Value}")
+            TogglePitch = new TextButton(new Vector2(200, 50), $"Toggle Pitch: {ConfigManager.Pitched.Value}")
             {
                 Alignment = Alignment.TopLeft,
                 PosY = 300 * GameBase.WindowUIScale + 140,
-                Parent = QuaverContainer
+                Parent = Container
             };
             TogglePitch.Clicked += OnTogglePitchButtonClick;
         }
@@ -398,12 +398,12 @@ namespace Quaver.States.Select
 
         private void CreateSearchField()
         {
-            SearchField = new QuaverTextInputField(new Vector2(300, 30), "Search Mapset", (search) => MapSelectSystem.OnSearchbarUpdated(search))
+            SearchField = new TextInputField(new Vector2(300, 30), "Search Mapset", (search) => MapSelectSystem.OnSearchbarUpdated(search))
             {
                 Alignment = Alignment.TopLeft,
                 PosX = 5,
                 PosY = 300 * GameBase.WindowUIScale + 45,
-                Parent = QuaverContainer
+                Parent = Container
             };
         }
     }

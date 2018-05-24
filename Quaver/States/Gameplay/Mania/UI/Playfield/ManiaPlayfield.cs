@@ -15,22 +15,22 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
         /// <summary>
         ///     The receptor sprites.
         /// </summary>
-        internal QuaverSprite[] ReceptorObjects { get; set; }
+        internal Sprite[] ReceptorObjects { get; set; }
 
         /// <summary>
         ///     The Hit Lighting Sprites. Will be visible when designated key is held down.
         /// </summary>
-        internal QuaverSprite[] ColumnLightingObjects { get; set; }
+        internal Sprite[] ColumnLightingObjects { get; set; }
 
         /// <summary>
         ///     The first layer of the playfield. Used to render playfield mask + ColumnLighting (+ receptors if set in skin.ini)
         /// </summary>
-        private QuaverContainer ForegroundQuaverContainer { get; set; }
+        private Container ForegroundContainer { get; set; }
 
         /// <summary>
         ///     The second layer of the playfield. Used to render receptors
         /// </summary>
-        private QuaverContainer BackgroundQuaverContainer { get; set; }
+        private Container BackgroundContainer { get; set; }
 
         /// <summary>
         ///     Size of the playfield
@@ -81,13 +81,13 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             //PlayScreen = playScreen;
 
             // Create playfield boundary
-            ForegroundQuaverContainer = new QuaverContainer()
+            ForegroundContainer = new Container()
             {
                 Size = new UDim2D(PlayfieldSize, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.TopCenter
             };
 
-            BackgroundQuaverContainer = new QuaverContainer()
+            BackgroundContainer = new Container()
             {
                 Size = new UDim2D(PlayfieldSize, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.TopCenter
@@ -95,24 +95,24 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
 
             // Create Stage Left
             var borderSize = GameBase.LoadedSkin.StageLeftBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageLeftBorder.Height;
-            var stage = new QuaverSprite()
+            var stage = new Sprite()
             {
                 Image = GameBase.LoadedSkin.StageLeftBorder,
                 Size = new UDim2D(borderSize, GameBase.WindowRectangle.Height),
                 Position = new UDim2D(-borderSize + 1, 0),
                 Alignment = Alignment.TopLeft,
-                Parent = BackgroundQuaverContainer
+                Parent = BackgroundContainer
             };
 
             // Create Stage Right
             borderSize = GameBase.LoadedSkin.StageRightBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageRightBorder.Height;
-            stage = new QuaverSprite()
+            stage = new Sprite()
             {
                 Image = GameBase.LoadedSkin.StageRightBorder,
                 Size = new UDim2D(borderSize, GameBase.WindowRectangle.Height),
                 Position = new UDim2D(borderSize - 1, 0),
                 Alignment = Alignment.TopRight,
-                Parent = BackgroundQuaverContainer
+                Parent = BackgroundContainer
             };
 
             // todo: code cleanup
@@ -122,7 +122,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             float bgMaskSize;
             float overlaySize;
             float posOffset;
-            QuaverSprite bgMask;
+            Sprite bgMask;
             switch (GameBase.SelectedMap.Qua.Mode)
             {
                 case GameMode.Keys4:
@@ -131,18 +131,18 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                     columnRatio = PlayfieldSize / GameBase.WindowRectangle.Height;
                     bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
 
-                    bgMask = new QuaverSprite()
+                    bgMask = new Sprite()
                     {
                         Image = GameBase.LoadedSkin.StageBgMask4K,
                         Alpha = GameBase.LoadedSkin.BgMaskAlpha,
                         Size = new UDim2D(PlayfieldSize, bgMaskSize),
                         Alignment = Alignment.MidCenter,
-                        Parent = BackgroundQuaverContainer
+                        Parent = BackgroundContainer
                     };
 
                     // Create Receptors + Hit Lighting
-                    ReceptorObjects = new QuaverSprite[4];
-                    ColumnLightingObjects = new QuaverSprite[4];
+                    ReceptorObjects = new Sprite[4];
+                    ColumnLightingObjects = new Sprite[4];
                     ColumnLightingActive = new bool[4];
                     ColumnLightingAnimation = new float[4];
                     for (var i = 0; i < ReceptorObjects.Length; i++)
@@ -151,21 +151,21 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                         ManiaGameplayReferences.ReceptorXPosition[i] = ((LaneSize + ReceptorPadding) * i) + PlayfieldPadding;
 
                         // Create receptor QuaverSprite
-                        ReceptorObjects[i] = new QuaverSprite
+                        ReceptorObjects[i] = new Sprite
                         {
                             Size = new UDim2D(LaneSize, LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width),
                             Position = new UDim2D(ManiaGameplayReferences.ReceptorXPosition[i], ReceptorYPosition),
                             Alignment = Alignment.TopLeft,
                             Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i],
                             SpriteEffect = !Config.ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
-                            Parent = ForegroundQuaverContainer
+                            Parent = ForegroundContainer
                         };
                         
                         Console.WriteLine($"{i} - {ReceptorObjects[i].SizeY}: {ReceptorYPosition}");
 
                         // Create hit lighting sprite
                         var columnLightingSize = GameBase.LoadedSkin.ColumnLightingScale * LaneSize * ((float)GameBase.LoadedSkin.ColumnLighting4K.Height / GameBase.LoadedSkin.ColumnLighting4K.Width);
-                        ColumnLightingObjects[i] = new QuaverSprite
+                        ColumnLightingObjects[i] = new Sprite
                         {
                             Image = GameBase.LoadedSkin.ColumnLighting4K,
                             Size = new UDim2D(LaneSize, columnLightingSize),
@@ -174,30 +174,30 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                             PosY = Config.ConfigManager.DownScroll4K.Value ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
                             SpriteEffect = !Config.ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Alignment = Alignment.TopLeft,
-                            Parent = BackgroundQuaverContainer
+                            Parent = BackgroundContainer
                         };
                     }
 
                     // Create Stage Distant
                     overlaySize = GameBase.LoadedSkin.StageDistantOverlay.Height * PlayfieldSize / GameBase.LoadedSkin.StageDistantOverlay.Width;
-                    stage = new QuaverSprite()
+                    stage = new Sprite()
                     {
                         Image = GameBase.LoadedSkin.StageDistantOverlay,
                         Size = new UDim2D(PlayfieldSize, overlaySize),
                         PosY = Config.ConfigManager.DownScroll4K.Value ? -1 : 1,
                         Alignment = Config.ConfigManager.DownScroll4K.Value ? Alignment.TopRight : Alignment.BotRight,
-                        Parent = ForegroundQuaverContainer
+                        Parent = ForegroundContainer
                     };
 
                     // Create Stage HitPosition Overlay
                     overlaySize = GameBase.LoadedSkin.StageHitPositionOverlay.Height * PlayfieldSize / GameBase.LoadedSkin.StageHitPositionOverlay.Width;
                     posOffset = LaneSize * ((float)GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width);
-                    stage = new QuaverSprite()
+                    stage = new Sprite()
                     {
                         Image = GameBase.LoadedSkin.StageHitPositionOverlay,
                         Size = new UDim2D(PlayfieldSize, overlaySize),
                         PosY = Config.ConfigManager.DownScroll4K.Value ? ReceptorYPosition : ReceptorYPosition + posOffset + overlaySize,
-                        Parent = ForegroundQuaverContainer
+                        Parent = ForegroundContainer
                     };
                     break;
                 case GameMode.Keys7:
@@ -206,18 +206,18 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                     columnRatio = PlayfieldSize / GameBase.WindowRectangle.Height;
                     bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
 
-                    bgMask = new QuaverSprite()
+                    bgMask = new Sprite()
                     {
                         Image = GameBase.LoadedSkin.StageBgMask7K,
                         Alpha = GameBase.LoadedSkin.BgMaskAlpha,
                         Size = new UDim2D(PlayfieldSize, bgMaskSize),
                         Alignment = Alignment.MidCenter,
-                        Parent = BackgroundQuaverContainer
+                        Parent = BackgroundContainer
                     };
 
                     // Create Receptors + HitLighting
-                    ReceptorObjects = new QuaverSprite[7];
-                    ColumnLightingObjects = new QuaverSprite[7];
+                    ReceptorObjects = new Sprite[7];
+                    ColumnLightingObjects = new Sprite[7];
                     ColumnLightingActive = new bool[7];
                     ColumnLightingAnimation = new float[7];
                     for (var i = 0; i < ReceptorObjects.Length; i++)
@@ -226,19 +226,19 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                         ManiaGameplayReferences.ReceptorXPosition[i] = ((LaneSize + ReceptorPadding) * i) + PlayfieldPadding;
 
                         // Create receptor QuaverSprite
-                        ReceptorObjects[i] = new QuaverSprite
+                        ReceptorObjects[i] = new Sprite
                         {
                             Size = new UDim2D(LaneSize, LaneSize * ((float)GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width)),
                             Position = new UDim2D(ManiaGameplayReferences.ReceptorXPosition[i], ReceptorYPosition),
                             Alignment = Alignment.TopLeft,
                             Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i],
                             SpriteEffect = !Config.ConfigManager.DownScroll7K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
-                            Parent = ForegroundQuaverContainer
+                            Parent = ForegroundContainer
                         };
 
                         // Create hit lighting sprite
                         var columnLightingSize = LaneSize * GameBase.LoadedSkin.ColumnLightingScale * GameBase.LoadedSkin.ColumnLighting7K.Height / GameBase.LoadedSkin.ColumnLighting7K.Width;
-                        ColumnLightingObjects[i] = new QuaverSprite
+                        ColumnLightingObjects[i] = new Sprite
                         {
                             Image = GameBase.LoadedSkin.ColumnLighting7K,
                             Size = new UDim2D(LaneSize, columnLightingSize),
@@ -247,30 +247,30 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                             PosY = Config.ConfigManager.DownScroll7K.Value ? ColumnLightingPosition - columnLightingSize : ColumnLightingPosition,
                             SpriteEffect = !Config.ConfigManager.DownScroll7K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                             Alignment = Alignment.TopLeft,
-                            Parent = BackgroundQuaverContainer
+                            Parent = BackgroundContainer
                         };
                     }
 
                     // Create StageDistant
                     overlaySize = GameBase.LoadedSkin.StageDistantOverlay.Height * PlayfieldSize / GameBase.LoadedSkin.StageDistantOverlay.Width;
-                    stage = new QuaverSprite()
+                    stage = new Sprite()
                     {
                         Image = GameBase.LoadedSkin.StageDistantOverlay,
                         Size = new UDim2D(PlayfieldSize, overlaySize),
                         PosY = Config.ConfigManager.DownScroll7K.Value ? -1 : 1,
                         Alignment = Config.ConfigManager.DownScroll7K.Value ? Alignment.TopRight : Alignment.BotRight,
-                        Parent = ForegroundQuaverContainer
+                        Parent = ForegroundContainer
                     };
 
                     // Create Stage HitPosition Overlay
                     overlaySize = GameBase.LoadedSkin.StageHitPositionOverlay.Height * PlayfieldSize / GameBase.LoadedSkin.StageHitPositionOverlay.Width;
                     posOffset = LaneSize * ((float)GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width);
-                    stage = new QuaverSprite()
+                    stage = new Sprite()
                     {
                         Image = GameBase.LoadedSkin.StageHitPositionOverlay,
                         Size = new UDim2D(PlayfieldSize, overlaySize),
                         PosY = Config.ConfigManager.DownScroll7K.Value ? ReceptorYPosition : ReceptorYPosition + posOffset + overlaySize,
-                        Parent = ForegroundQuaverContainer
+                        Parent = ForegroundContainer
                     };
                     break;
             }
@@ -278,12 +278,12 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
 
         public void DrawBgMask()
         {
-            BackgroundQuaverContainer.Draw();
+            BackgroundContainer.Draw();
         }
 
         public void Draw()
         {
-            ForegroundQuaverContainer.Draw();
+            ForegroundContainer.Draw();
         }
 
         /// <summary>
@@ -304,8 +304,8 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                 ColumnLightingObjects[i].Alpha = ColumnLightingAnimation[i];
             }
 
-            ForegroundQuaverContainer.Update(dt);
-            BackgroundQuaverContainer.Update(dt);
+            ForegroundContainer.Update(dt);
+            BackgroundContainer.Update(dt);
         }
 
         /// <summary>
@@ -313,8 +313,8 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
         /// </summary>
         public  void UnloadContent()
         {
-            ForegroundQuaverContainer.Destroy();
-            BackgroundQuaverContainer.Destroy();
+            ForegroundContainer.Destroy();
+            BackgroundContainer.Destroy();
         }
 
         /// <summary>

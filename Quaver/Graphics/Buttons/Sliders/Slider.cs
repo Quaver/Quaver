@@ -14,7 +14,7 @@ using AudioEngine = Quaver.Audio.AudioEngine;
 
 namespace Quaver.Graphics.Buttons.Sliders
 {
-    internal class QuaverSlider : QuaverButton
+    internal class Slider : Button
     {
         /// <summary>
         ///     Global property that dictates if **any** slider is actually held.
@@ -29,7 +29,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <summary>
         ///     The progress slider image.
         /// </summary>
-        internal QuaverSprite ProgressBall { get; }
+        internal Sprite ProgressBall { get; }
 
         /// <summary>
         ///     If the mouse is held down and hasn't let go yet.
@@ -82,7 +82,7 @@ namespace Quaver.Graphics.Buttons.Sliders
         /// <param name="lineColor"></param>
         /// <param name="progressColor"></param>
         /// <param name="progressTexture"></param>
-        internal QuaverSlider(BindedInt binded, Vector2 size, bool vertical = false)
+        internal Slider(BindedInt binded, Vector2 size, bool vertical = false)
         {
             BindedValue = binded;
             IsVertical = vertical;
@@ -93,7 +93,7 @@ namespace Quaver.Graphics.Buttons.Sliders
             Tint = Color.White;
                       
             // Create the progress sliding thing.
-            ProgressBall = new QuaverSprite()
+            ProgressBall = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
                 Image = FontAwesome.CircleClosed,

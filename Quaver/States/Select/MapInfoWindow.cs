@@ -17,7 +17,7 @@ namespace Quaver.States.Select
         /// <summary>
         /// 
         /// </summary>
-        private QuaverContainer Boundary { get; set; }
+        private Container Boundary { get; set; }
 
         /// <summary>
         /// 
@@ -26,9 +26,9 @@ namespace Quaver.States.Select
 
         public void Initialize(IGameState state)
         {
-            Boundary = new QuaverContainer();
+            Boundary = new Container();
 
-            var window = new QuaverSprite()
+            var window = new Sprite()
             {
                 Size = new UDim2D(600 * GameBase.WindowUIScale, 300 * GameBase.WindowUIScale),
                 Position = new UDim2D(5, 40),

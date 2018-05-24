@@ -34,12 +34,12 @@ namespace Quaver.Graphics.Particles.Gameplay
         /// <summary>
         ///     The Hit Burst QuaverSprite. Will be animated.
         /// </summary>
-        private Sprites.QuaverSprite HitBurstQuaverSprite { get; set; }
+        private Sprites.Sprite HitBurstSprite { get; set; }
 
         /// <summary>
         ///     Hit Burst QuaverSprite's Parent. Used for object alignment.
         /// </summary>
-        private QuaverContainer QuaverContainer { get; set; }
+        private Container Container { get; set; }
 
         /// <summary>
         ///     Create a new hit burst. Used after a note has been hit.
@@ -50,28 +50,28 @@ namespace Quaver.Graphics.Particles.Gameplay
         public HitEffect(DrawRectangle rect, Drawable parent, int keyLane)
         {
             // Create QuaverContainer and Particle
-            QuaverContainer = new QuaverContainer(rect.X, rect.Y, rect.Width, rect.Height)
+            Container = new Container(rect.X, rect.Y, rect.Width, rect.Height)
             {
                 Parent = parent
             };
 
-            HitBurstQuaverSprite = new Sprites.QuaverSprite()
+            HitBurstSprite = new Sprites.Sprite()
             {
                 Alignment = Alignment.MidCenter,
                 Size = new UDim2D(0, 0, 1, 1),
-                Parent = QuaverContainer
+                Parent = Container
             };
 
             // Choose the correct image based on the specific key lane.
             switch (GameBase.SelectedMap.Qua.Mode)
             {
                 case GameMode.Keys4:
-                    HitBurstQuaverSprite.Image = GameBase.LoadedSkin.NoteHitEffects4K[keyLane];
-                    HitBurstQuaverSprite.SpriteEffect = !Config.ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None;
+                    HitBurstSprite.Image = GameBase.LoadedSkin.NoteHitEffects4K[keyLane];
+                    HitBurstSprite.SpriteEffect = !Config.ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None;
                     break;
                 case GameMode.Keys7:
-                    HitBurstQuaverSprite.Image = GameBase.LoadedSkin.NoteHitEffects7K[keyLane];
-                    HitBurstQuaverSprite.SpriteEffect = !Config.ConfigManager.DownScroll7K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None;
+                    HitBurstSprite.Image = GameBase.LoadedSkin.NoteHitEffects7K[keyLane];
+                    HitBurstSprite.SpriteEffect = !Config.ConfigManager.DownScroll7K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None;
                     break;
             }
         }
@@ -81,7 +81,7 @@ namespace Quaver.Graphics.Particles.Gameplay
         /// </summary>
         public override void Destroy()
         {
-            QuaverContainer.Destroy();
+            Container.Destroy();
         }
 
         /// <summary>
@@ -102,12 +102,12 @@ namespace Quaver.Graphics.Particles.Gameplay
             }
 
             // Update Objects
-            HitBurstQuaverSprite.ScaleX = (float)(1 + (Math.Pow(timeRatio, 0.5) * MaxScale));
-            HitBurstQuaverSprite.ScaleY = HitBurstQuaverSprite.ScaleX;
-            HitBurstQuaverSprite.Alpha = 1 - timeRatio;
+            HitBurstSprite.ScaleX = (float)(1 + (Math.Pow(timeRatio, 0.5) * MaxScale));
+            HitBurstSprite.ScaleY = HitBurstSprite.ScaleX;
+            HitBurstSprite.Alpha = 1 - timeRatio;
 
             // Update QuaverContainer
-            QuaverContainer.Update(dt);
+            Container.Update(dt);
         }
     }
 }

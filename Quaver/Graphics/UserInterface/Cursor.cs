@@ -11,7 +11,7 @@ namespace Quaver.Graphics.UserInterface
     /// <summary>
     /// 
     /// </summary>
-    internal class QuaverCursor : Sprites.QuaverSprite
+    internal class Cursor : Sprites.Sprite
     {
         //Mouse Click
         private bool MouseDown { get; set; }
@@ -23,7 +23,7 @@ namespace Quaver.Graphics.UserInterface
         private float ClickCurrentSize { get; set; }
         private float ClickTargetSize { get; set; }
 
-        internal QuaverCursor()
+        internal Cursor()
         {
             Size = new UDim2D(CursorSize, CursorSize);
             Image = GameBase.LoadedSkin.Cursor;

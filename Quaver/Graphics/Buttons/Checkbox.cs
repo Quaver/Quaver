@@ -8,7 +8,7 @@ using Quaver.Main;
 
 namespace Quaver.Graphics.Buttons
 {
-    internal class QuaverCheckbox : QuaverButton
+    internal class Checkbox : Button
     {
         /// <summary>
         ///     The binded value for this checkbox.
@@ -26,7 +26,7 @@ namespace Quaver.Graphics.Buttons
         /// </summary>
         /// <param name="bindedValue"></param>
         /// <param name="size"></param>
-        internal QuaverCheckbox(BindedValue<bool> bindedValue, Vector2 size, DrawRectangle clickArea = null)
+        internal Checkbox(BindedValue<bool> bindedValue, Vector2 size, DrawRectangle clickArea = null)
         {
             BindedValue = bindedValue;
             CheckboxSize = size;

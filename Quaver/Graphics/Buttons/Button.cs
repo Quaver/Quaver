@@ -11,7 +11,7 @@ namespace Quaver.Graphics.Buttons
     /// <summary>
     /// This class will be inherited from every button class.
     /// </summary>
-    internal abstract class QuaverButton : Sprites.QuaverSprite
+    internal abstract class Button : Sprites.Sprite
     {
         /// <summary>
         ///     Event that fires when the button is clicked.
@@ -47,7 +47,7 @@ namespace Quaver.Graphics.Buttons
         ///     Ctor - Optionally pass in an action.
         /// </summary>
         /// <param name="action"></param>
-        internal QuaverButton(EventHandler clickAction = null, EventHandler holdAction = null)
+        internal Button(EventHandler clickAction = null, EventHandler holdAction = null)
         {
             Clicked += clickAction;
             Held += holdAction;

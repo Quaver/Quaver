@@ -12,24 +12,24 @@ namespace Quaver.States.Gameplay.Mania.UI.Particles
         /// <summary>
         ///     Particle Container
         /// </summary>
-        private QuaverContainer QuaverContainer { get; set; }
+        private Container Container { get; set; }
 
         internal List<Particle> Particles { get; set; }
 
         public void Draw()
         {
-            QuaverContainer.Draw();
+            Container.Draw();
         }
 
         public void Initialize(IGameState state)
         {
-            QuaverContainer = new QuaverContainer();
+            Container = new Container();
             Particles = new List<Particle>();
         }
 
         public void UnloadContent()
         {
-            QuaverContainer.Destroy();
+            Container.Destroy();
         }
 
         public void Update(double dt)
@@ -54,12 +54,12 @@ namespace Quaver.States.Gameplay.Mania.UI.Particles
             }
 
             // Update QuaverContainer
-            QuaverContainer.Update(dt);
+            Container.Update(dt);
         }
 
         internal void CreateHitBurst(DrawRectangle rect, int keyIndex)
         {
-            Particles.Add(new HitEffect(rect, QuaverContainer, keyIndex));
+            Particles.Add(new HitEffect(rect, Container, keyIndex));
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
     /// <summary>
     ///     Displays all the current judgements + KPS
     /// </summary>
-    internal class JudgementStatusDisplay : QuaverContainer
+    internal class JudgementStatusDisplay : Container
     {
         /// <summary>
         ///     Reference to the ruleset.

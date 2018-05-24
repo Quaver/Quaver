@@ -24,7 +24,7 @@ namespace Quaver.States.Tests
         /// </summary>
         public bool UpdateReady { get; set; }
 
-        private QuaverContainer Container { get; set; }
+        private Container Container { get; set; }
 
         /// <summary>
         ///     Navbar sprite
@@ -33,11 +33,11 @@ namespace Quaver.States.Tests
 
         public void Initialize()
         {
-            Container = new QuaverContainer();
+            Container = new Container();
             Nav = new Nav();
             Nav.Initialize(this);
             
-            var ds4k = new QuaverCheckbox(ConfigManager.DownScroll4K, new Vector2(20, 20))
+            var ds4k = new Checkbox(ConfigManager.DownScroll4K, new Vector2(20, 20))
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter
@@ -52,7 +52,7 @@ namespace Quaver.States.Tests
                 Font = QuaverFonts.Medium12
             };
             
-            var ds7k = new QuaverCheckbox(ConfigManager.DownScroll7K, new Vector2(20, 20))
+            var ds7k = new Checkbox(ConfigManager.DownScroll7K, new Vector2(20, 20))
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,

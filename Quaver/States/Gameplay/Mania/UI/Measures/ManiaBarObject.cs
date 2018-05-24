@@ -16,12 +16,12 @@ namespace Quaver.States.Gameplay.Mania.UI.Measures
         /// <summary>
         ///     The QuaverSprite of the bar
         /// </summary>
-        internal QuaverSprite BarQuaverSprite { get; set; }
+        internal Sprite BarSprite { get; set; }
 
         internal void Initialize(Drawable parent, float sizeY, float posY)
         {
             //Create bar
-            BarQuaverSprite = new QuaverSprite()
+            BarSprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
                 Image = GameBase.LoadedSkin.StageTimingBar,
@@ -33,7 +33,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Measures
 
         internal void Destroy()
         {
-            BarQuaverSprite.Destroy();
+            BarSprite.Destroy();
         }
     }
 }

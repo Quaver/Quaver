@@ -12,7 +12,7 @@ namespace Quaver.Graphics.Sprites
     ///     This is used for optimization for static sprites. 
     ///     All sprites will be saved onto a texture to save space
     /// </summary>
-    internal class QuaverBakeableSprite : Sprites.QuaverSprite
+    internal class BakeableSprite : Sprites.Sprite
     {
         /// <summary>
         ///     All sprites will be baked onto here

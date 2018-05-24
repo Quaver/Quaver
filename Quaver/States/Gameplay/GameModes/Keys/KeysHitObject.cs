@@ -9,6 +9,7 @@ using Quaver.Graphics.Colors;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
+using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield;
 using Quaver.States.Gameplay.HitObjects;
@@ -20,7 +21,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         ///     Reference to the Keys ruleset.
         /// </summary>
-        private GameModeKeys Ruleset { get; }
+        private GameModeRulesetKeys Ruleset { get; }
 
         /// <summary>
         ///     Reference to the actual playfield.
@@ -81,17 +82,17 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         ///     The actual HitObject sprite.
         /// </summary>
-        private QuaverSprite HitObjectSprite { get; set; }
+        private Sprite HitObjectSprite { get; set; }
 
         /// <summary>
         ///     The hold body sprite for long notes.
         /// </summary>
-        private QuaverSprite LongNoteBodySprite { get; set; }
+        private Sprite LongNoteBodySprite { get; set; }
 
          /// <summary>
         ///     The hold end sprite for long notes.
         /// </summary>
-        private QuaverSprite LongNoteEndSprite { get; set; }
+        private Sprite LongNoteEndSprite { get; set; }
 
         /// <summary>
         ///     The SpriteEffects. Flips the image horizontally if we are using upscroll.
@@ -109,7 +110,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="info"></param>
-        public KeysHitObject(GameModeKeys ruleset, HitObjectInfo info) : base(info)
+        public KeysHitObject(GameModeRulesetKeys ruleset, HitObjectInfo info) : base(info)
         {
             Ruleset = ruleset;
         }
@@ -124,7 +125,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             Playfield = (KeysPlayfield) playfield;
     
             // Create the base HitObjectSprite
-            HitObjectSprite = new QuaverSprite()
+            HitObjectSprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
                 Position = new UDim2D(PositionX, PositionY),
@@ -164,7 +165,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         private void CreateLongNote()
         {
             // Create the hold body
-            LongNoteBodySprite = new QuaverSprite()
+            LongNoteBodySprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
                 Size = new UDim2D(Playfield.LaneSize, InitialLongNoteSize),
@@ -173,7 +174,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             };
             
             // Create the Hold End
-            LongNoteEndSprite = new QuaverSprite()
+            LongNoteEndSprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
                 Position = new UDim2D(PositionX, PositionY),
@@ -298,6 +299,21 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             }
 
             HitObjectSprite.Tint = QuaverColors.DeadNote;
+        }
+
+        /// <summary>
+        ///     Fades out the object. Usually used for failure. 
+        /// </summary>
+        /// <param name="dt"></param>
+        internal void FadeOut(double dt)
+        {
+            HitObjectSprite.FadeOut(dt, 240);
+
+            if (!IsLongNote) 
+                return;
+            
+            LongNoteBodySprite.FadeOut(dt, 240);
+            LongNoteEndSprite.FadeOut(dt, 240);
         }
     }
 }

@@ -13,7 +13,7 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.States.Gameplay.UI.Judgements
 {
-    internal class JudgementDisplay : QuaverSprite
+    internal class JudgementDisplay : Sprite
     {
         /// <summary>
         ///     The parent judgement display that controls the rest of them.

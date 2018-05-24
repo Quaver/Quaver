@@ -43,7 +43,7 @@ namespace Quaver.States.Menu
         /// <summary>
         ///     QuaverContainer
         /// </summary>
-        private QuaverContainer QuaverContainer { get; set; }
+        private Container Container { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -66,7 +66,7 @@ namespace Quaver.States.Menu
 #endif
 
             //Initialize Menu Screen
-            QuaverContainer = new QuaverContainer();
+            Container = new Container();
             CreateUI();
 
             UpdateReady = true;
@@ -78,7 +78,7 @@ namespace Quaver.States.Menu
         /// </summary>
         public void UnloadContent()
         {
-            QuaverContainer.Destroy();
+            Container.Destroy();
         }
 
         /// <inheritdoc />
@@ -88,7 +88,7 @@ namespace Quaver.States.Menu
         /// <param name="gameTime"></param>
         public void Update(double dt)
         {
-            QuaverContainer.Update(dt);
+            Container.Update(dt);
         }
         
         /// <inheritdoc />
@@ -100,7 +100,7 @@ namespace Quaver.States.Menu
             GameBase.GraphicsDevice.Clear(Color.DarkSlateBlue);
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GameBase.GraphicsDevice.RasterizerState);
             
-            QuaverContainer.Draw();
+            Container.Draw();
             
             GameBase.SpriteBatch.End();
         }

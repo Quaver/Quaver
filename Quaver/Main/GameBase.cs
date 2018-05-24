@@ -163,7 +163,7 @@ namespace Quaver.Main
         /// <summary>
         /// The mouse cursor
         /// </summary>
-        public static QuaverCursor QuaverCursor { get; set; }
+        public static Cursor Cursor { get; set; }
 
         /// <summary>
         ///     The current Discord Controller for RichPresence.

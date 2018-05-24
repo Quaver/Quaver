@@ -16,7 +16,7 @@ namespace Quaver.Graphics.Buttons
     /// <summary>
     /// This class will be inherited from every button class.
     /// </summary>
-    internal class QuaverTextInputField : QuaverButton
+    internal class TextInputField : Button
     {
         /// <summary>
         ///     The Text box spprite
@@ -66,7 +66,7 @@ namespace Quaver.Graphics.Buttons
         /// <param name="ButtonSize"></param>
         /// <param name="placeHolderText"></param>
         /// <param name="onTextInputSubmit"></param>
-        internal QuaverTextInputField(Vector2 ButtonSize, string placeHolderText, TextBoxSubmittedDelegate onTextInputSubmit)
+        internal TextInputField(Vector2 ButtonSize, string placeHolderText, TextBoxSubmittedDelegate onTextInputSubmit)
         {
             // Set the reference to the method that will be called on submit
             OnTextInputSubmit = onTextInputSubmit;

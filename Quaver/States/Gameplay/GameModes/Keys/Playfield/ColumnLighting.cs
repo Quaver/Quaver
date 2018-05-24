@@ -9,7 +9,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <summary>
         ///     The actual column lighting sprite.
         /// </summary>
-        private QuaverSprite Sprite { get; }
+        private Sprite Sprite { get; }
 
         /// <summary>
         ///     If the column lighting is currently active.
@@ -25,7 +25,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         ///     Ctor - 
         /// </summary>
         /// <param name="sprite"></param>
-        internal ColumnLighting(QuaverSprite sprite)
+        internal ColumnLighting(Sprite sprite)
         {
             Sprite = sprite;
         }

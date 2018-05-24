@@ -16,27 +16,27 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
         /// <summary>
         ///     The parent of every ManiaPlayfield QuaverUserInterface Component
         /// </summary>
-        public QuaverContainer QuaverContainer { get; private set; }
+        public Container Container { get; private set; }
 
         /// <summary>
         ///     This displays the judging (MARV/PERF/GREAT/ect)
         /// </summary>
-        private QuaverSprite JudgeQuaverSprite { get; set; }
+        private Sprite JudgeSprite { get; set; }
 
         /// <summary>
         ///     The sprite for every Offset Indicator bar
         /// </summary>
-        private QuaverSprite[] OffsetIndicatorsQuaverSprites { get; set; }
+        private Sprite[] OffsetIndicatorsSprites { get; set; }
 
         /// <summary>
         ///     Bar images which display the player's current multiplier
         /// </summary>
-        private QuaverSprite[] MultiplierBars { get; set; }
+        private Sprite[] MultiplierBars { get; set; }
 
         /// <summary>
         ///     The player's health bar
         /// </summary>
-        private QuaverSprite HealthBarOver { get; set; }
+        private Sprite HealthBarOver { get; set; }
 
         /// <summary>
         ///     Used to reference the images for JudgeQuaverSprite
@@ -97,7 +97,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
 
         public void Draw()
         {
-            QuaverContainer.Draw();
+            Container.Draw();
         }
 
         public void Initialize(IGameState state)
@@ -127,19 +127,19 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             JudgeHitOffset = -5f * GameBase.WindowUIScale;
 
             // Create QuaverContainer
-            QuaverContainer = new QuaverContainer()
+            Container = new Container()
             {
                 Size = new UDim2D(PlayfieldSize, 0, 0, 1),
                 Alignment = Alignment.MidCenter
             };
 
             // TODO: add judge scale
-            JudgeQuaverSprite = new QuaverSprite()
+            JudgeSprite = new Sprite()
             {
                 Size = new UDim2D(JudgeSizes[0].X, JudgeSizes[0].Y),
                 Alignment = Alignment.MidCenter,
                 Image = JudgeImages[0],
-                Parent = QuaverContainer,
+                Parent = Container,
                 Alpha = 0
             };
 
@@ -153,27 +153,27 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                 Text = "0x",
                 TextScale = GameBase.WindowUIScale,
                 Font = QuaverFonts.Medium16,
-                Parent = QuaverContainer,
+                Parent = Container,
                 Alpha = 0
             };
 
             // Create Offset Gauge
-            var offsetGaugeBoundary = new QuaverContainer()
+            var offsetGaugeBoundary = new Container()
             {
                 Size = new UDim2D(220 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale),
                 Position = new UDim2D(0, 30 * GameBase.WindowUIScale),
                 Alignment = Alignment.MidCenter,
-                Parent = QuaverContainer
+                Parent = Container
             };
 
             //todo: offsetGaugeBoundary.SizeX with a new size. Right now the offset gauge is the same size as the hitwindow
             //OffsetGaugeSize = offsetGaugeBoundary.SizeX / (ManiaGameplayReferences.PressWindowLatest * 2 * GameBase.WindowUIScale);
             OffsetGaugeSize = offsetGaugeBoundary.SizeX / (200 * GameBase.WindowUIScale);
 
-            OffsetIndicatorsQuaverSprites = new QuaverSprite[OffsetIndicatorSize];
+            OffsetIndicatorsSprites = new Sprite[OffsetIndicatorSize];
             for (var i = 0; i < OffsetIndicatorSize; i++)
             {
-                OffsetIndicatorsQuaverSprites[i] = new QuaverSprite()
+                OffsetIndicatorsSprites[i] = new Sprite()
                 {
                     Parent = offsetGaugeBoundary,
                     Size = new UDim2D(4, 0, 0, 1),
@@ -182,7 +182,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                 };
             }
 
-            var offsetGaugeMiddle = new QuaverSprite()
+            var offsetGaugeMiddle = new Sprite()
             {
                 Size = new UDim2D(2, 0, 0, 1),
                 Alignment = Alignment.MidCenter,
@@ -190,22 +190,22 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             };
 
             // Create Health Bar
-            var healthMultiplierBoundary = new QuaverContainer()
+            var healthMultiplierBoundary = new Container()
             {
                 Size = new UDim2D(PlayfieldSize - 4, 20 * GameBase.WindowUIScale),
                 PosY = Config.ConfigManager.HealthBarPositionTop.Value ? 2 : -2,
                 Alignment = Config.ConfigManager.HealthBarPositionTop.Value ? Alignment.TopCenter : Alignment.BotCenter,
-                Parent = QuaverContainer
+                Parent = Container
             };
 
-            var healthBarUnder = new QuaverSprite()
+            var healthBarUnder = new Sprite()
             {
                 Size = new UDim2D(0, 10 * GameBase.WindowUIScale -1, 1, 0),
                 Alignment = Config.ConfigManager.HealthBarPositionTop.Value ? Alignment.TopCenter : Alignment.BotCenter,
                 Parent = healthMultiplierBoundary
             };
 
-            HealthBarOver = new QuaverSprite()
+            HealthBarOver = new Sprite()
             {
                 Size = new UDim2D(-2, -2, 1, 1),
                 PosX = 1,
@@ -215,10 +215,10 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             };
 
             // Create Multiplier Bars
-            MultiplierBars = new QuaverSprite[15];
+            MultiplierBars = new Sprite[15];
             for (var i = 0; i < 15; i++)
             {
-                MultiplierBars[i] = new QuaverSprite()
+                MultiplierBars[i] = new Sprite()
                 {
                     Size = new UDim2D(14 * GameBase.WindowUIScale, 10 * GameBase.WindowUIScale -1),
                     PosX = (i-7.5f) * 16 * GameBase.WindowUIScale,
@@ -232,7 +232,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
 
         public void UnloadContent()
         {
-            QuaverContainer.Destroy();
+            Container.Destroy();
         }
 
         public void Update(double dt)
@@ -248,21 +248,21 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             var tween = Math.Min(dt / 30, 1);
 
             // Update Offset Indicators
-            foreach (var sprite in OffsetIndicatorsQuaverSprites)
+            foreach (var sprite in OffsetIndicatorsSprites)
             {
                 sprite.Alpha = GraphicsHelper.Tween(0, sprite.Alpha, tween / 30);
             }
 
             // Update Judge Alpha
-            JudgeQuaverSprite.PosY = GraphicsHelper.Tween(0, JudgeQuaverSprite.PosY, tween / 2);
+            JudgeSprite.PosY = GraphicsHelper.Tween(0, JudgeSprite.PosY, tween / 2);
             if (SpriteAlphaHold > 500 && PriorityJudgeLength <= 0)
             {
-                JudgeQuaverSprite.Alpha = GraphicsHelper.Tween(0, JudgeQuaverSprite.Alpha, tween / 10);
+                JudgeSprite.Alpha = GraphicsHelper.Tween(0, JudgeSprite.Alpha, tween / 10);
                 ComboQuaverText.Alpha = GraphicsHelper.Tween(0, ComboQuaverText.Alpha, tween / 10);
             }
 
             //Update QuaverContainer
-            QuaverContainer.Update(dt);
+            Container.Update(dt);
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             //TODO: add judge scale
             ComboQuaverText.Text = combo + "x";
             ComboQuaverText.Alpha = 1;
-            JudgeQuaverSprite.Alpha = 1;
+            JudgeSprite.Alpha = 1;
             SpriteAlphaHold = 0;
 
             if (index >= PriorityJudgeImage || PriorityJudgeLength <= 0)
@@ -290,21 +290,21 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
                 PriorityJudgeImage = index;
 
                 // Update judge sprite
-                JudgeQuaverSprite.SizeX = JudgeSizes[index].X;
-                JudgeQuaverSprite.SizeY = JudgeSizes[index].Y;
-                JudgeQuaverSprite.Image = JudgeImages[index];
-                JudgeQuaverSprite.PosY = JudgeHitOffset;
-                JudgeQuaverSprite.Update(0);
+                JudgeSprite.SizeX = JudgeSizes[index].X;
+                JudgeSprite.SizeY = JudgeSizes[index].Y;
+                JudgeSprite.Image = JudgeImages[index];
+                JudgeSprite.PosY = JudgeHitOffset;
+                JudgeSprite.Update(0);
             }
 
             if (index != 5 && !release && offset != null)
             {
                 CurrentOffsetObjectIndex++;
                 if (CurrentOffsetObjectIndex >= OffsetIndicatorSize) CurrentOffsetObjectIndex = 0;
-                OffsetIndicatorsQuaverSprites[CurrentOffsetObjectIndex].Tint = GameBase.LoadedSkin.JudgeColors[index];
-                OffsetIndicatorsQuaverSprites[CurrentOffsetObjectIndex].PosX = -(float)offset * OffsetGaugeSize;
-                OffsetIndicatorsQuaverSprites[CurrentOffsetObjectIndex].Alpha = 0.5f;
-                OffsetIndicatorsQuaverSprites[CurrentOffsetObjectIndex].Update(0);
+                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Tint = GameBase.LoadedSkin.JudgeColors[index];
+                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].PosX = -(float)offset * OffsetGaugeSize;
+                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Alpha = 0.5f;
+                OffsetIndicatorsSprites[CurrentOffsetObjectIndex].Update(0);
             }
         }
 

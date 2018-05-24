@@ -70,7 +70,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Dictates if we are currently resuming the game.
         /// </summary>
-        private bool IsResumeInProgress { get; set; }
+        internal bool IsResumeInProgress { get; private set; }
 
         /// <summary>
         ///     The time the user resumed the game.
@@ -113,8 +113,18 @@ namespace Quaver.States.Gameplay
         ///     If the play is finished.
         /// </summary>
         internal bool IsPlayComplete => Ruleset.HitObjectManager.IsComplete;
-        
-         /// <summary>
+
+        /// <summary>
+        ///     If the play was failed (0 health)
+        /// </summary>
+        internal bool Failed => Ruleset.ScoreProcessor.Health <= 0;
+
+        /// <summary>
+        ///     Flag that makes sure the failure sound only gets played once.
+        /// </summary>
+        private bool FailureHandled { get; set; }
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         internal GameplayScreen(Qua map, string md5)
@@ -130,7 +140,7 @@ namespace Quaver.States.Gameplay
             {
                 case GameMode.Keys4:
                 case GameMode.Keys7:
-                    Ruleset = new GameModeKeys(this, map.Mode, map);
+                    Ruleset = new GameModeRulesetKeys(this, map.Mode, map);
                     break;
                 default:
                     throw new InvalidEnumArgumentException("Game mode must be a valid!");
@@ -158,6 +168,7 @@ namespace Quaver.States.Gameplay
             Logger.Add($"Objects Left", $"Objects Left {Ruleset.HitObjectManager.ObjectsLeft}", Color.White);
             Logger.Add($"Finished", $"Finished: {IsPlayComplete}", Color.White);
             Logger.Add($"On Break", $"On Break: {OnBreak}", Color.White);
+            Logger.Add($"Failed", $"Failed: {Failed}", Color.White);
                
             UpdateReady = true;
         }
@@ -179,12 +190,18 @@ namespace Quaver.States.Gameplay
         /// <param name="dt"></param>
         public void Update(double dt)
         {
-            Timing.Update(dt); 
             UI.Update(dt);
+
+            if (!Failed && !IsPlayComplete)
+            {
+                Timing.Update(dt);
+                HandleResuming();
+                PauseIfWindowInactive();
+                PlayComboBreakSound();
+            }
+
             HandleInput(dt);
-            HandleResuming();
-            PauseIfWindowInactive();
-            PlayComboBreakSound();
+            HandleFailure();
             Ruleset.Update(dt);
         }
 
@@ -207,6 +224,7 @@ namespace Quaver.States.Gameplay
             Logger.Update($"Objects Left", $"Objects Left {Ruleset.HitObjectManager.ObjectsLeft}");
             Logger.Update($"Finished", $"Finished: {IsPlayComplete}");
             Logger.Update($"On Break", $"On Break: {OnBreak}");
+            Logger.Update($"Failed", $"Failed: {Failed}");
             
             GameBase.SpriteBatch.End();
         }
@@ -220,17 +238,17 @@ namespace Quaver.States.Gameplay
         {
             if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyPause.Value))
                 Pause();
-            
-            if (InputHelper.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
-                SkipSongIntro();
-            
+                        
             // Restart map.
             if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyRestartMap.Value))
                 GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash));
             
             // Don't handle actually gameplay specific input if the game is paused.
-            if (IsPaused)
+            if (IsPaused || Failed || IsPlayComplete)
                 return;
+            
+            if (InputHelper.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
+                SkipToNextObject();
             
             // Handle input per game mode.
             Ruleset.HandleInput(dt);
@@ -273,7 +291,7 @@ namespace Quaver.States.Gameplay
                 return;
 
             // We don't want to resume if the time difference isn't at least or greter than the start delay.
-            if (GameBase.GameTime.ElapsedMilliseconds - ResumeTime > Timing.StartDelay)
+            if (GameBase.GameTime.ElapsedMilliseconds - ResumeTime > 800)
             {
                 // Unpause the game and reset the resume in progress.
                 IsPaused = false;
@@ -289,9 +307,9 @@ namespace Quaver.States.Gameplay
         }
 
         /// <summary>
-       ///     Skips the song intro to 3 seconds before the first note.
+       ///     Skips the song to the next object if on a break.
        /// </summary>
-        private void SkipSongIntro()
+        private void SkipToNextObject()
         {
             if (!OnBreak || IsPaused || IsResumeInProgress)
                 return;
@@ -348,6 +366,28 @@ namespace Quaver.States.Gameplay
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundComboBreak);
 
             LastRecordedCombo = Ruleset.ScoreProcessor.Combo;
+        }
+
+        /// <summary>
+        ///     Stops the music and begins the failure process.
+        /// </summary>
+        private void HandleFailure()
+        {
+            if (!Failed || FailureHandled)
+                return;
+
+            try
+            {
+                // Pause the audio if applicable.
+                GameBase.AudioEngine.Pause();
+            }
+            // No need to handle this exception.
+            catch (AudioEngineException e) {}
+            
+            // Play failure sound.
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundComboBreak);
+
+            FailureHandled = true;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Quaver.Graphics.UserInterface
         /// <summary>
         ///     The Background QuaverSprite.
         /// </summary>
-        public static Sprites.QuaverSprite Background;
+        public static Sprites.Sprite Background;
 
         /// <summary>
         ///     The tint of the background
@@ -49,7 +49,7 @@ namespace Quaver.Graphics.UserInterface
         /// </summary>
         public static void Initialize()
         {
-            Background = new Sprites.QuaverSprite()
+            Background = new Sprites.Sprite()
             {
                 Size = new UDim2D(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.MidCenter,
