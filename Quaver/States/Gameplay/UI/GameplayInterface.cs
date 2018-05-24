@@ -196,7 +196,11 @@ namespace Quaver.States.Gameplay.UI
             
             // Transition the screen.
             ScreenTransitioner.Image = GameBase.QuaverUserInterface.BlankBox;
-            ScreenTransitioner.FadeIn(dt, 640);
+            
+            if (Screen.Failed)
+                ScreenTransitioner.FadeIn(dt, 640);
+            else if (Screen.IsPlayComplete)
+                ScreenTransitioner.FadeIn(dt, 720);
         }
 
         /// <summary>
@@ -223,7 +227,7 @@ namespace Quaver.States.Gameplay.UI
         private void FadeInScreen(double dt)
         {
             if (!Screen.IsPaused && !Screen.IsResumeInProgress && !Screen.IsRestartingPlay && !Screen.Failed && !Screen.IsPlayComplete)
-                ScreenTransitioner.FadeOut(dt, 720);
+                ScreenTransitioner.FadeOut(dt, 960);
         }
     }
 }
