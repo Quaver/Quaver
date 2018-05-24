@@ -124,7 +124,7 @@ namespace Quaver.States.Gameplay.UI
         {
             UpdateSongProgressDisplay();
             UpdateScoreAndAccuracyDisplays();
-            HandleFailure(dt);
+            HandlePlayCompletion(dt);
             HandlePause(dt);
                     
             Container.Update(dt);
@@ -171,11 +171,11 @@ namespace Quaver.States.Gameplay.UI
         }
 
         /// <summary>
-        ///     Handles the failure from a UI perspective.
+        ///     Handles the fadeout with failure/play completion.
         /// </summary>
-        private void HandleFailure(double dt)
+        private void HandlePlayCompletion(double dt)
         {
-            if (!Screen.Failed)
+            if (!Screen.Failed && !Screen.IsPlayComplete)
                 return;
 
             Screen.Ruleset.Playfield.HandleFailure(dt);
@@ -199,7 +199,7 @@ namespace Quaver.States.Gameplay.UI
             if (Screen.IsResumeInProgress)
                 ScreenTransitioner.Fade(dt, 0, scale * 2f);
             else
-                ScreenTransitioner.Fade(dt, 0.6f, scale);            
+                ScreenTransitioner.Fade(dt, 0.75f, scale);            
         }
     }
 }

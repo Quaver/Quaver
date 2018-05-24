@@ -258,7 +258,11 @@ namespace Quaver.States.Gameplay
         ///     Pauses the game.
         /// </summary>
         private void Pause()
-        {            
+        {
+            // Don't allow any sort of pausing if the play is already finished.
+            if (IsPlayComplete)
+                return;
+            
             // Handle pause.
             if (!IsPaused || IsResumeInProgress)
             {
