@@ -24,18 +24,11 @@ namespace Quaver.GameState
         /// <param name="newState"></param>
         public void AddState(IGameState newState)
         {
-            try
-            {
-                // Add the screen to the stack
-                States.Push(newState);
+            // Add the screen to the stack
+            States.Push(newState);
 
-                // Initialize the screen
-                newState.Initialize();
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e, LogType.Runtime);
-            }
+            // Initialize the screen
+            newState.Initialize();
         }
 
         /// <summary>
@@ -45,16 +38,9 @@ namespace Quaver.GameState
         {
             if (States.Count == 0)
                 return;
-
-            try
-            {
-                States.Peek().UnloadContent();
-                States.Pop();
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e, LogType.Runtime);
-            }
+       
+            States.Peek().UnloadContent();
+            States.Pop();
         }
 
         /// <summary>
@@ -74,35 +60,22 @@ namespace Quaver.GameState
         /// <param name="screen"></param>
         public void ChangeState(IGameState screen)
         {
-            try
-            {
-                ClearStates();
-                AddState(screen);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e, LogType.Runtime);
-            }
+            ClearStates();
+            AddState(screen);
         }
-    
+
         /// <summary>
         ///     Updates the top screen.
         /// </summary>
         /// <param name="gameTime"></param>
+        /// <param name="dt"></param>
         public void Update(double dt)
         {
-            try
-            {
-                if (States.Count == 0)
-                    return;
+            if (States.Count == 0)
+                return;
 
-                if (States.Peek().UpdateReady)
-                    States.Peek().Update(dt);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e, LogType.Runtime);
-            }
+            if (States.Peek().UpdateReady)
+                States.Peek().Update(dt);
         }
 
         /// <summary>
@@ -110,19 +83,11 @@ namespace Quaver.GameState
         /// </summary>
         public void Draw()
         {
-            try
-            {
-                if (States.Count == 0)
-                    return;
+            if (States.Count == 0)
+                return;
 
-                if (States.Peek().UpdateReady)
-                    States.Peek().Draw();
-                
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e, LogType.Runtime);
-            }
+            if (States.Peek().UpdateReady)
+                States.Peek().Draw();
         }
     }
 }
