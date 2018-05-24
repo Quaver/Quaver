@@ -220,7 +220,7 @@ namespace Quaver.States.Gameplay
         /// </summary>
         public void Draw()
         {
-            GameBase.GraphicsDevice.Clear(Color.BlanchedAlmond);
+            GameBase.GraphicsDevice.Clear(Color.Black);
             GameBase.SpriteBatch.Begin();
             
             BackgroundManager.Draw();
@@ -368,7 +368,7 @@ namespace Quaver.States.Gameplay
             if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyRestartMap.Value) && IsRestartingPlay)
             {                
                 RestartKeyHoldTime += dt;
-                UI.ScreenTransitioner.FadeIn(dt, 240);
+                UI.ScreenTransitioner.FadeIn(dt, 60);
                 
                 // Restart the map if the user has held it down for 
                 if (RestartKeyHoldTime >= 350)
