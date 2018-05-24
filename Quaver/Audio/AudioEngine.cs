@@ -287,6 +287,13 @@ namespace Quaver.Audio
                 
             Bass.Free();
         }
+
+        /// <summary>
+        ///     Fades the current audio stream's volume to a given volume in a specified time frame.
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="time"></param>
+        internal static void Fade(float to, int time) => Bass.ChannelSlideAttribute(Stream, ChannelAttribute.Volume, to, time);
     }
 
     /// <inheritdoc />
