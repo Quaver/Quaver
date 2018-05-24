@@ -53,7 +53,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
                 {
                     Alignment = Alignment.MidRight,
                     Parent = this,
-                    Image = GameBase.QuaverUserInterface.JudgementOverlay
+                    Image = GameBase.QuaverUserInterface.JudgementOverlay,
                 };
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
@@ -79,7 +79,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
             
             // Perform the collapse animation when the break is finished.
             // and the song is close to starting.
-            if (!Screen.OnBreak && Screen.Timing.CurrentTime >= 0)
+            if (!Screen.OnBreak && Screen.Timing.CurrentTime >= -500)
                 PerformCollapseAnimation(dt);
             else
                 PerformCollapseAnimation(dt, true);

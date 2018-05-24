@@ -98,7 +98,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
             var g = GraphicsHelper.Tween(InactiveColor.G, Tint.G, Math.Min(dt / 360, 1));
             var b = GraphicsHelper.Tween(InactiveColor.B, Tint.B, Math.Min(dt / 360, 1));
             Tint = new Color((int)r, (int)g, (int)b);
-                        
+                       
             base.Update(dt);
         }
     }
