@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using IniParser;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,7 +22,7 @@ namespace Quaver.Skinning
     /// This class has everything to do with parsing skin.ini files
     /// </summary>
     internal class Skin
-    {
+    {        
         /// <summary>
         /// Name of the skin
         /// </summary>
@@ -162,7 +163,7 @@ namespace Quaver.Skinning
         // defined for each key lane.
         internal List<List<Texture2D>> NoteHitObjects4K { get; set; } = new List<List<Texture2D>>();
         internal List<List<Texture2D>> NoteHoldHitObjects4K { get; set; } = new List<List<Texture2D>>();
-        internal Texture2D[] NoteHoldBodies4K { get; set; } = new Texture2D[4];
+        internal List<List<Texture2D>> NoteHoldBodies4K { get; set; } = new List<List<Texture2D>>();
         internal Texture2D[] NoteHoldEnds4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsUp4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsDown4K { get; set; } = new Texture2D[4];
@@ -226,6 +227,11 @@ namespace Quaver.Skinning
         internal Texture2D Cursor { get; set; }
 
         /// <summary>
+        ///     Animation elements.
+        /// </summary>
+        internal List<Texture2D> Meme { get; set; }
+
+        /// <summary>
         ///     Sound Effect elements. 
         ///     NOTE: SFX need to be 16-bit wav otherwise MonoGame doesn't play them correctly??
         /// </summary>
@@ -240,7 +246,16 @@ namespace Quaver.Skinning
         internal SoundEffect SoundBack { get; set; }
         internal SoundEffect SoundHover { get; set; }
 
-        // Contains the file names of all skin elements
+        /// <summary>
+        ///     Regular expression for animation element file names.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        private static string AnimationElementRegex(string element) => $@"^{element}@(\d)x(\d).png$";
+        
+        /// <summary>
+        ///     Contains the file names of all skin elements
+        /// </summary>
         private readonly string[] skinElements =
         {
             // Stage
@@ -422,6 +437,9 @@ namespace Quaver.Skinning
             
             // Cursor
             @"main-cursor",
+            
+            // test
+            @"meme",
 
             // ----- Sound Effects -----
         
@@ -665,16 +683,16 @@ namespace Quaver.Skinning
                         NoteHoldEnds7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-holdbody-1":
-                        NoteHoldBodies4K[0] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies4K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"4k-note-holdbody-2":
-                        NoteHoldBodies4K[1] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies4K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"4k-note-holdbody-3":
-                        NoteHoldBodies4K[2] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies4K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"4k-note-holdbody-4":
-                        NoteHoldBodies4K[3] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies4K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-1":
                         NoteHoldBodies7K[0] = LoadIndividualElement(element, skinElementPath);
@@ -916,7 +934,8 @@ namespace Quaver.Skinning
                     case @"main-cursor":
                         Cursor = LoadIndividualElement(element, skinElementPath);
                         break;
-                    default:
+                    case @"meme":
+                        Meme = LoadAnimationElements(element, 10, 2);
                         break;
                 }
             }            
@@ -925,40 +944,11 @@ namespace Quaver.Skinning
         /// <summary>
         ///     Loads an individual element.
         /// </summary>
+        /// <param name="element"></param>
         /// <param name="path"></param>
-        /// <param name="tex"></param>
-        private Texture2D LoadIndividualElement(string element, string path)
+        private static Texture2D LoadIndividualElement(string element, string path)
         {
-            // If the image file exists, go ahead and load it into a texture.
-            if (File.Exists(path))
-                return GraphicsHelper.LoadTexture2DFromFile(path);
-
-            // Otherwise, we'll have to change the path to that of the default element and load that instead.
-            path = element;
-
-            // Load default skin element    
-            try
-            {
-                // Load based on which default skin is loaded
-                // prepend with 'arrow' for the file name if the arrow skin is selected.
-                switch (ConfigManager.DefaultSkin.Value)
-                {
-                    case DefaultSkins.Arrow:
-                        path = "arrow-" + path;
-                        break;
-                    case DefaultSkins.Bar:
-                        path = "bar-" + path;
-                        break;
-                }
-
-                return ResourceHelper.LoadTexture2DFromPng((Bitmap)ResourceHelper.GetProperty(path));
-            }
-            catch (Exception e)
-            {
-                // Logger.LogError(e, LogType.Runtime);
-                Logger.LogError($"Default skin element not found {path}", LogType.Runtime);
-                return ResourceHelper.LoadTexture2DFromPng(QuaverResources.blank_box);
-            }    
+            return File.Exists(path) ? GraphicsHelper.LoadTexture2DFromFile(path) : LoadSkinTextureFromResources(element); 
         }
 
         /// <summary>
@@ -1015,29 +1005,43 @@ namespace Quaver.Skinning
         /// <summary>
         ///     Loads a list of elements to be used in an animation.
         ///     Example:
-        ///         - 4k-note-hiteffect-0@0
-        ///         - 4k-note-hiteffect-1@1
-        ///         - 4k-note-hiteffect-2@2
-        ///         //
-        ///         - 4k-note-holdbody-active-1@0
-        ///         - 4k-note-holdbody-active-1@1
-        ///         - 4k-note-holdbody-active-1@2
+        ///         - 4k-note-holdbody-active-1@3x4; (3 rows, 4 columns.)
+        ///
+        ///     Note: if 0x0 is specified for the default rows and columns,
+        ///     it will load the element without the @rowsxcolumns extension.
         /// </summary>
-        /// <param name="skinDir"></param>
         /// <param name="element"></param>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
         /// <returns></returns>
-        private List<Texture2D> LoadAnimationElements(string skinDir, string element, int defaultNum)
+        private static List<Texture2D> LoadAnimationElements(string element, int rows, int columns)
         {
-            var animationList = new List<Texture2D>();
+            // Attempt to find a file that matches the regular expression in the skin directory.      
+            var files = Directory.GetFiles(ConfigManager.SkinDirectory.Value + "/" + ConfigManager.Skin.Value);
 
-            // Run a loop and check if each file in the animation exists,
-            for (var i = 0; File.Exists($"{skinDir}/{element}@{i}.png"); i++)
-                animationList.Add(GraphicsHelper.LoadTexture2DFromFile($"{skinDir}/{element}@{i}.png"));
-
-            // TODO: Run a check to see if the animation list has any in it.
-            // If it does, then return it. If not, then we want to load the default skin's 
-            // animations using the defaultNum specified.
-            return animationList;
+            foreach (var f in files)
+            {
+                var regex = new Regex(AnimationElementRegex(element));
+                var match = regex.Match(Path.GetFileName(f));
+                
+                // See if the file matches the regex.
+                if (match.Success)
+                {                    
+                    // Load it up if so.
+                    var texture = GraphicsHelper.LoadTexture2DFromFile(f);
+                    return GraphicsHelper.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+                }
+                
+                // Otherwise check to see if that base element (without animations) actually exists.
+                // if so, load it singularly into a list.
+                if (Path.GetFileNameWithoutExtension(f) == element)
+                    return new List<Texture2D> { GraphicsHelper.LoadTexture2DFromFile(f) };
+            }
+                        
+            // If we end up getting down here, that means we need to load the spritesheet from our resources.
+            // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
+            var elementToLoad = rows == 0 && columns == 0 ? element : $"{element}@{rows}x{columns}";
+            return new List<Texture2D>{LoadSkinTextureFromResources(elementToLoad)};
         }
 
         /// <summary>
@@ -1061,6 +1065,40 @@ namespace Quaver.Skinning
 
             // Load the default if the path doesn't exist
             return SoundEffect.FromStream((UnmanagedMemoryStream)ResourceHelper.GetProperty(element.Replace(".wav", "")));
+        }
+
+        /// <summary>
+        ///     Loads a skin's texture from resources.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        private static Texture2D LoadSkinTextureFromResources(string element)
+        {
+            // Load default skin element    
+            try
+            {
+                // Load based on which default skin is loaded
+                // prepend with 'arrow' for the file name if the arrow skin is selected.
+                switch (ConfigManager.DefaultSkin.Value)
+                {
+                    case DefaultSkins.Arrow:
+                        element = "arrow-" + element;
+                        break;
+                    case DefaultSkins.Bar:
+                        element = "bar-" + element;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                return ResourceHelper.LoadTexture2DFromPng((Bitmap)ResourceHelper.GetProperty(element));
+            }
+            catch (Exception e)
+            {
+                // Logger.LogError(e, LogType.Runtime);
+                Logger.LogError($"Default skin element not found {element}", LogType.Runtime);
+                return ResourceHelper.LoadTexture2DFromPng(QuaverResources.blank_box);
+            }   
         }
 
         /// <summary>
@@ -1219,5 +1257,6 @@ namespace Quaver.Skinning
         {
             return JudgeColors.Count == 0 ? new Color(0, 0, 0) : JudgeColors[(int) judgement];
         }
+        
     }
 }
