@@ -60,6 +60,11 @@ namespace Quaver.States.Gameplay.UI
         private bool VolumeFadedOut { get; set; }
 
         /// <summary>
+        ///     The time counter where the game should start fading out.
+        /// </summary>
+        private double GameShouldFadeOutTime { get; set; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         internal GameplayInterface(GameplayScreen screen)
@@ -181,26 +186,25 @@ namespace Quaver.States.Gameplay.UI
         ///     Handles the fadeout with failure/play completion.
         /// </summary>
         private void HandlePlayCompletion(double dt)
-        {
+        {            
             if (!Screen.Failed && !Screen.IsPlayComplete)
                 return;
 
+            // Wait a bit before actually fading out the game.
+            GameShouldFadeOutTime += dt;
+            if (Screen.IsPlayComplete && GameShouldFadeOutTime <= 1000)
+                return;
+            
             Screen.Ruleset.Playfield.HandleFailure(dt);
             
             // Pause the audio
             if (GameBase.AudioEngine.IsPlaying && !VolumeFadedOut)
             {
                 VolumeFadedOut = true;
-                AudioEngine.Fade(0, 1500);
+                AudioEngine.Fade(0, 1800);
             }
             
-            // Transition the screen.
-            ScreenTransitioner.Image = GameBase.QuaverUserInterface.BlankBox;
-            
-            if (Screen.Failed)
-                ScreenTransitioner.FadeIn(dt, 640);
-            else if (Screen.IsPlayComplete)
-                ScreenTransitioner.FadeIn(dt, 720);
+            ScreenTransitioner.FadeIn(dt, 240);
         }
 
         /// <summary>
