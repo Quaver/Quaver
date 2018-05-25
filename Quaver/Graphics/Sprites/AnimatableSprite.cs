@@ -106,7 +106,7 @@ namespace Quaver.Graphics.Sprites
         ///     Changes the sprites image to the next frame.
         /// </summary>
         internal void ChangeToNext()
-        {
+        { 
             if (CurrentFrame + 1 > Frames.Count - 1)
                 CurrentFrame = 0;
             else
@@ -190,7 +190,7 @@ namespace Quaver.Graphics.Sprites
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         private void PerformLoopAnimation(double dt)
         {
-            if (!IsLooping)
+            if (!IsLooping || Frames.Count <= 1)
                 return;
             
             TimeSinceLastFrame += dt;
