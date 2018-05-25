@@ -84,6 +84,7 @@
     <Compile Include="Graphics\Overlays\Options\OptionsSection.cs" />
     <Compile Include="Graphics\Overlays\Options\OptionsType.cs" />
     <Compile Include="Graphics\Overlays\Volume\VolumeController.cs" />
+    <Compile Include="Graphics\Sprites\AnimatableSprite.cs" />
     <Compile Include="Graphics\UserInterface\NumberDisplay.cs" />
     <Compile Include="Graphics\UserInterface\ProgressBar.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
@@ -227,6 +228,7 @@
     <Compile Include="Replays\ReplayHelper.cs" />
     <Compile Include="Database\Scores\LocalScore.cs" />
     <Compile Include="Skinning\Skin.cs" />
+    <Compile Include="States\Tests\AnimatableSpriteTestScreen.cs" />
     <Compile Include="States\Tests\DropdownTestState.cs" />
     <Compile Include="States\Tests\CheckboxTestState.cs" />
     <Compile Include="States\Tests\NavbarTestState.cs" />

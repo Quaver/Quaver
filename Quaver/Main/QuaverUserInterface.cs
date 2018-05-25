@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -49,6 +50,8 @@ namespace Quaver.Main
         /// </summary>
         internal Texture2D JudgementOverlay { get; set; }
 
+        internal List<Texture2D> TestSpritesheet { get; set; }
+
         /// <summary>
         ///     Loads all the ui elements into content
         /// </summary>
@@ -61,6 +64,7 @@ namespace Quaver.Main
             BarCap = ResourceHelper.LoadTexture2DFromPng(QuaverResources.bar_cap);
             BarCorner = ResourceHelper.LoadTexture2DFromPng(QuaverResources.bar_corner);
             JudgementOverlay = ResourceHelper.LoadTexture2DFromPng(QuaverResources.judgement_overlay);
+            TestSpritesheet = GraphicsHelper.LoadSpritesheetFromTexture(ResourceHelper.LoadTexture2DFromPng(QuaverResources.test_spritesheet), 9, 9);
         }
 
         /// <summary>
