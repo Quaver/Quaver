@@ -26,10 +26,10 @@ namespace Quaver.States.Tests
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
-                Size = new UDim2D(128, 128)
+                Size = new UDim2D(64, 128)
             };
             
-            TestSprite.StartLoop(LoopDirection.Backward, 24, 1);
+            TestSprite.StartLoop(LoopDirection.Backward, 24);
             Nav = new Nav();
             Nav.Initialize(this);
             UpdateReady = true;
