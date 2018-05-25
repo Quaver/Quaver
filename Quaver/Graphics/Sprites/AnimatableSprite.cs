@@ -120,7 +120,7 @@ namespace Quaver.Graphics.Sprites
         /// </summary>
         internal void ChangeToPrevious()
         {
-            if (CurrentFrame - 1 <= 0)
+            if (CurrentFrame - 1 < 0)
                 CurrentFrame = Frames.Count - 1;
             else
                 CurrentFrame--;
@@ -211,6 +211,7 @@ namespace Quaver.Graphics.Sprites
             }
                 
             TimeSinceLastFrame = 0;
+            Console.WriteLine(CurrentFrame);
 
             // If we're back on the frame we've started on, then we need to increment our counter.
             if (FrameLoopStartedOn != CurrentFrame) 
