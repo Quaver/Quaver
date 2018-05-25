@@ -211,7 +211,6 @@ namespace Quaver.Graphics.Sprites
             }
                 
             TimeSinceLastFrame = 0;
-            Console.WriteLine(CurrentFrame);
 
             // If we're back on the frame we've started on, then we need to increment our counter.
             if (FrameLoopStartedOn != CurrentFrame) 
