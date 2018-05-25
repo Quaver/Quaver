@@ -196,12 +196,7 @@ namespace Quaver.Helpers
                 var column = i / rows;
                 var row = i % rows;
                 
-                // Get the x and y from the row and column
-                Console.WriteLine(tex.Width / columns + "x" + tex.Height / rows);
-
-
                 var sourceRect = new Rectangle(imgWidth * column, imgHeight * row, imgWidth, imgHeight);
-                Console.WriteLine(sourceRect);
                 var cropTexture = new Texture2D(GameBase.GraphicsDevice, sourceRect.Width, sourceRect.Height);
                 var data = new Color[sourceRect.Width * sourceRect.Height];
                 tex.GetData(0, sourceRect, data, 0, data.Length);
