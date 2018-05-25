@@ -249,7 +249,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 var hitObject = (KeysHitObject) DeadNotes[i];
                 
                 // Stop looping the animation.
-                if (hitObject.LongNoteBodySprite.IsLooping)
+                if (hitObject.IsLongNote && hitObject.LongNoteBodySprite.IsLooping)
                     hitObject.LongNoteBodySprite.StopLoop();
                 
                 // If the note is past the time of removal, then destroy it.
