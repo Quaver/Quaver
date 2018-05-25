@@ -166,7 +166,7 @@ namespace Quaver.States.Gameplay.Mania.UI.HitObjects
                 {
                     case GameMode.Keys4:
                         HoldEndSprite.Image = GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex];
-                        HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies4K[keyLaneIndex];
+                        HoldBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies4K[keyLaneIndex][0];
                         HoldEndSprite.SizeY = HitObjectSize * GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Height / GameBase.LoadedSkin.NoteHoldEnds4K[keyLaneIndex].Width;
                         HoldEndOffset = HoldEndSprite.SizeY / 2;
                         break;

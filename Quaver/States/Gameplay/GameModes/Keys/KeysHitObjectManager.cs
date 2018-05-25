@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.API.Gameplay;
 using Quaver.Config;
+using Quaver.Graphics.Sprites;
 using Quaver.Main;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield;
 using Quaver.States.Gameplay.HitObjects;
@@ -215,6 +216,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 // The long note is still active and ready to be updated.
                 else
                 {
+                    // Start looping the long note body.
+                    if (!hitObject.LongNoteBodySprite.IsLooping)
+                        hitObject.LongNoteBodySprite.StartLoop(LoopDirection.Forward, 24);
+                        
                     // Set the long note size and position.
                     if (Ruleset.Screen.Timing.CurrentTime > hitObject.TrueStartTime)
                     {
@@ -242,6 +247,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             for (var i = 0; i < DeadNotes.Count; i++)
             {
                 var hitObject = (KeysHitObject) DeadNotes[i];
+                
+                // Stop looping the animation.
+                if (hitObject.LongNoteBodySprite.IsLooping)
+                    hitObject.LongNoteBodySprite.StopLoop();
                 
                 // If the note is past the time of removal, then destroy it.
                 if (Ruleset.Screen.Timing.CurrentTime > hitObject.TrueEndTime + DeadNoteRemovalTime 
