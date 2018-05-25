@@ -3,7 +3,7 @@
     /// <summary>
     ///     Enum for all the different game states.
     /// </summary>
-    internal enum State
+    public enum State
     {
         MainMenu,
         SongSelect,
