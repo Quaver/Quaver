@@ -241,6 +241,11 @@ namespace Quaver.Graphics.Overlays.Options
             section.AddKeybindOption(ConfigManager.KeyTakeScreenshot, "Take Screenshot");
             section.AddKeybindOption(ConfigManager.KeyToggleOverlay, "Toggle Overlay");
             section.AddKeybindOption(ConfigManager.KeyRestartMap, "Quick Restart Map");
+            section.AddKeybindOption(new List<BindedValue<Keys>>
+            {
+                ConfigManager.KeyDecreaseScrollSpeed, 
+                ConfigManager.KeyIncreaseScrollSpeed
+            }, "Change Scroll Speed");
         }
 
         /// <summary>
