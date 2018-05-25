@@ -12,6 +12,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Enums;
 using Quaver.Main;
+using Color = Microsoft.Xna.Framework.Color;
 using Point = Microsoft.Xna.Framework.Point;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -172,6 +173,36 @@ namespace Quaver.Helpers
             {
                 return Texture2D.FromStream(GameBase.GraphicsDevice, fileStream);
             }
+        }
+
+        /// <summary>
+        ///     Returns a list of textures from a spritesheet texture.
+        /// </summary>
+        /// <param name="tex"></param>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <returns></returns>
+        internal static List<Texture2D> LoadSpritesheetFromTexture(Texture2D tex, int rows, int columns)
+        {
+            var frames = new List<Texture2D>();
+            
+            for (var i = 0; i < rows * columns; i++)
+            {
+                // Get the specific row and column from the index.
+                var row = i / rows;
+                var column = i % rows;
+                
+                // Get the x and y from the row and column
+                var sourceRect = new Rectangle(tex.Width / rows * row, tex.Height / columns * column, tex.Width / rows, tex.Height / columns);
+                var cropTexture = new Texture2D(GameBase.GraphicsDevice, sourceRect.Width, sourceRect.Height);
+                var data = new Color[sourceRect.Width * sourceRect.Height];
+                tex.GetData(0, sourceRect, data, 0, data.Length);
+                cropTexture.SetData(data);
+                
+                frames.Add(cropTexture);
+            }
+
+            return frames;
         }
     }
 }
