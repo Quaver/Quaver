@@ -189,8 +189,8 @@ namespace Quaver.Helpers
             for (var i = 0; i < rows * columns; i++)
             {
                 // Get the specific row and column from the index.
-                var row = i / rows;
-                var column = i % rows;
+                var column = i / rows;
+                var row = i % rows;
                 
                 // Get the x and y from the row and column
                 var sourceRect = new Rectangle(tex.Width / rows * row, tex.Height / columns * column, tex.Width / rows, tex.Height / columns);

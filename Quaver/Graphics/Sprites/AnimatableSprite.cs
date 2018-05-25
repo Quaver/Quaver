@@ -42,6 +42,21 @@ namespace Quaver.Graphics.Sprites
         internal LoopDirection Direction { get; set; }
 
         /// <summary>
+        ///     The given frame the loop began on.
+        /// </summary>
+        private int FrameLoopStartedOn { get; set; }
+
+        /// <summary>
+        ///     The amount of times to loop.
+        /// </summary>
+        internal int TimesToLoop { get; private set; }
+        
+        /// <summary>
+        ///     The amount of times looped so far.
+        /// </summary>
+        internal int TimesLooped { get; private set; }
+
+        /// <summary>
         ///     Ctor - if you only have the image itself, but also the rows and columns
         /// </summary>
         /// <param name="spritesheet"></param>
@@ -69,28 +84,7 @@ namespace Quaver.Graphics.Sprites
         /// <param name="dt"></param>
         internal override void Update(double dt)
         {
-            if (IsLooping)
-            {
-                TimeSinceLastFrame += dt;
-
-                if (TimeSinceLastFrame >= 1000f / LoopFramesPerSecond)
-                {
-                    switch (Direction)
-                    {
-                        case LoopDirection.Forward:
-                            ChangeToNext();
-                            break;
-                        case LoopDirection.Backward:
-                            ChangeToPrevious();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                    
-                    TimeSinceLastFrame = 0;
-                }
-            }
-                
+            PerformLoopAnimation(dt);                
             base.Update(dt);
         }
 
@@ -173,17 +167,62 @@ namespace Quaver.Graphics.Sprites
         /// </summary>
         /// <param name="direction"></param>
         /// <param name="fps"></param>
-        internal void StartLooping(LoopDirection direction, int fps)
+        /// <param name="timesToLoop">The amount of times to loop. If 0, it'll loop infinitely.</param>
+        internal void StartLoop(LoopDirection direction, int fps, int timesToLoop = 0)
         {
             Direction = direction;
             LoopFramesPerSecond = fps;
             IsLooping = true;
+            FrameLoopStartedOn = CurrentFrame;
+            TimesLooped = 0;
+            TimesToLoop = timesToLoop;
         }
 
         /// <summary>
         ///     To stop the animation frame loop.
         /// </summary>
-        internal void StopLooping() => IsLooping = false;
+        internal void StopLoop() => IsLooping = false;
+
+        /// <summary>
+        ///     Handles the looping of the animation frames.
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        private void PerformLoopAnimation(double dt)
+        {
+            if (!IsLooping)
+                return;
+            
+            TimeSinceLastFrame += dt;
+
+            if (!(TimeSinceLastFrame >= 1000f / LoopFramesPerSecond)) 
+                return;
+            
+            switch (Direction)
+            {
+                case LoopDirection.Forward:
+                    ChangeToNext();
+                    break;
+                case LoopDirection.Backward:
+                    ChangeToPrevious();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+                
+            TimeSinceLastFrame = 0;
+
+            Console.WriteLine(FrameLoopStartedOn + " " + CurrentFrame);
+            // If we're back on the frame we've started on, then we need to increment our counter.
+            if (FrameLoopStartedOn != CurrentFrame) 
+                return;
+            
+            TimesLooped++;
+                
+            // Automatically stop the loop if we've looped the specified amount of times.
+            if (TimesToLoop != 0 && TimesLooped == TimesToLoop)
+                StopLoop();
+        }
     }
 
     internal enum LoopDirection

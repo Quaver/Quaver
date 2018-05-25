@@ -29,7 +29,7 @@ namespace Quaver.States.Tests
                 Size = new UDim2D(128, 128)
             };
             
-            TestSprite.StartLooping(LoopDirection.Forward, 12);
+            TestSprite.StartLoop(LoopDirection.Forward, 60);
             Nav = new Nav();
             Nav.Initialize(this);
             UpdateReady = true;
