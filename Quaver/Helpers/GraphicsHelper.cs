@@ -186,6 +186,10 @@ namespace Quaver.Helpers
         {
             var frames = new List<Texture2D>();
             
+            // Get the width and height of each individual texture.
+            var imgWidth = tex.Width / columns;
+            var imgHeight = tex.Height / rows;
+            
             for (var i = 0; i < rows * columns; i++)
             {
                 // Get the specific row and column from the index.
@@ -193,7 +197,11 @@ namespace Quaver.Helpers
                 var row = i % rows;
                 
                 // Get the x and y from the row and column
-                var sourceRect = new Rectangle(tex.Width / rows * row, tex.Height / columns * column, tex.Width / rows, tex.Height / columns);
+                Console.WriteLine(tex.Width / columns + "x" + tex.Height / rows);
+
+
+                var sourceRect = new Rectangle(imgWidth * column, imgHeight * row, imgWidth, imgHeight);
+                Console.WriteLine(sourceRect);
                 var cropTexture = new Texture2D(GameBase.GraphicsDevice, sourceRect.Width, sourceRect.Height);
                 var data = new Color[sourceRect.Width * sourceRect.Height];
                 tex.GetData(0, sourceRect, data, 0, data.Length);

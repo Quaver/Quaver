@@ -64,7 +64,7 @@ namespace Quaver.Main
             BarCap = ResourceHelper.LoadTexture2DFromPng(QuaverResources.bar_cap);
             BarCorner = ResourceHelper.LoadTexture2DFromPng(QuaverResources.bar_corner);
             JudgementOverlay = ResourceHelper.LoadTexture2DFromPng(QuaverResources.judgement_overlay);
-            TestSpritesheet = GraphicsHelper.LoadSpritesheetFromTexture(ResourceHelper.LoadTexture2DFromPng(QuaverResources.test_spritesheet), 9, 9);
+            TestSpritesheet = GraphicsHelper.LoadSpritesheetFromTexture(ResourceHelper.LoadTexture2DFromPng(QuaverResources.test_spritesheet), 3, 4);
         }
 
         /// <summary>
