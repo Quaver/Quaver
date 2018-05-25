@@ -95,8 +95,8 @@ namespace Quaver.Graphics.Sprites
         /// <exception cref="ArgumentException"></exception>
         internal void ChangeTo(int i)
         {
-            if (i > Frames.Count)
-                throw new ArgumentException("Cannot change to frame greater than the size of the list.");
+            if (i > Frames.Count || i < 0)
+                throw new ArgumentOutOfRangeException();
 
             CurrentFrame = i;
             Image = Frames[CurrentFrame];
@@ -154,7 +154,7 @@ namespace Quaver.Graphics.Sprites
         internal void RemoveAt(int i)
         {
             if (i > Frames.Count || i < 0)
-                throw new ArgumentException("Index specified must be in range of the list.");
+                throw new ArgumentOutOfRangeException();
             
             if (CurrentFrame == i)
                 ChangeToNext();
