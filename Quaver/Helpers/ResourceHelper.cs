@@ -50,7 +50,7 @@ namespace Quaver.Helpers
         /// <returns></returns>
         internal static object GetProperty(string name)
         {
-            return typeof(QuaverResources).GetProperty(name.Replace("-", "_"))?.GetValue(null, null);
+            return typeof(QuaverResources).GetProperty(name.Replace("-", "_").Replace("@", "_"))?.GetValue(null, null);
         }
     }
 }

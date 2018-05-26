@@ -773,22 +773,22 @@ namespace Quaver.Skinning
                         NoteReceptorsDown7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-miss":
-                        JudgeMiss = LoadAnimationElements(element, 0, 0);
+                        JudgeMiss = LoadAnimationElements(element, 1, 16);
                         break;
                     case @"judge-okay":
-                        JudgeOkay = LoadAnimationElements(element, 0, 0);
+                        JudgeOkay = LoadAnimationElements(element, 1, 9);
                         break;
                     case @"judge-good":
-                        JudgeGood = LoadAnimationElements(element, 0, 0);
+                        JudgeGood = LoadAnimationElements(element, 1, 8);
                         break;
                     case @"judge-great":
-                        JudgeGreat = LoadAnimationElements(element, 0, 0);
+                        JudgeGreat = LoadAnimationElements(element, 1, 7);
                         break;
                     case @"judge-perf":
-                        JudgePerf = LoadAnimationElements(element, 0, 0);
+                        JudgePerf = LoadAnimationElements(element, 1, 12);
                         break;
                     case @"judge-marv":
-                        JudgeMarv = LoadAnimationElements(element, 0, 0);
+                        JudgeMarv = LoadAnimationElements(element, 1, 15);
                         break;
                     case @"score-0":
                         ScoreDisplayNumbers[0] = LoadIndividualElement(element, skinElementPath);
@@ -1028,8 +1028,8 @@ namespace Quaver.Skinning
                         
             // If we end up getting down here, that means we need to load the spritesheet from our resources.
             // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
-            var elementToLoad = rows == 0 && columns == 0 ? element : $"{element}@{rows}x{columns}";
-            return new List<Texture2D>{LoadSkinTextureFromResources(elementToLoad)};
+            var elementToLoad = rows == 0 && columns == 0 ? element : $"{element}_{rows}x{columns}";
+            return GraphicsHelper.LoadSpritesheetFromTexture(LoadSkinTextureFromResources(elementToLoad), rows, columns);
         }
 
         /// <summary>
