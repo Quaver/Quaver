@@ -43,6 +43,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
             OriginalPosY = posY;
             OriginalSize = size;
             Size = new UDim2D(OriginalSize.X, OriginalSize.Y);
+            PosY = OriginalPosY;
             Visible = false;
             
             // Whenever the judgement is finished looping, then we'll make it invisible.
@@ -103,10 +104,10 @@ namespace Quaver.States.Gameplay.UI.Judgements
             ChangeJudgementFrames(j);
             Visible = true;
 
-            if (Frames.Count > 1)
+            if (Frames.Count != 1)
                 StartLoop(LoopDirection.Forward, (int) (30 * GameBase.AudioEngine.PlaybackRate), 1);
             else
-            {
+            {;
                 // Set the position to slightly above, so we can tween it back down in the animation.
                 PosY = OriginalPosY - 5;
                 Alpha = 1;
@@ -116,13 +117,14 @@ namespace Quaver.States.Gameplay.UI.Judgements
 
         /// <summary>
         ///     If there is only 1 frame in the list, then we'll roll out our own animations here.
-        ///     O
         /// </summary>
         /// <param name="dt"></param>
         private void PerformOneFrameAnimation(double dt)
         {
             if (!IsAnimatingWithOneFrame)
                 return;
+            
+            Console.WriteLine("hi");
 
             // Tween the position if need be
             if (Math.Abs(PosY - OriginalPosY) > 0.01)
