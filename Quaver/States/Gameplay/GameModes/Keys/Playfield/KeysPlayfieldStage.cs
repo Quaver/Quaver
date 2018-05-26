@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
@@ -425,8 +426,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Position = new UDim2D(0, 105)
             };
 
-            var firstFrame = JudgementHitBurst.Frames.First();
-            JudgementHitBurst.Size = new UDim2D(firstFrame.Width, firstFrame.Height);
+            var firstFrame = JudgementHitBurst.Frames[0];
+            var size = new Vector2(firstFrame.Width, firstFrame.Height) * GameBase.LoadedSkin.JudgementHitBurstScale / firstFrame.Height;
+            JudgementHitBurst.Size = new UDim2D(size.X, size.Y);
         }
 #endregion
 

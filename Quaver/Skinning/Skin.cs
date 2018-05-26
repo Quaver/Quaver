@@ -112,10 +112,9 @@ namespace Quaver.Skinning
         internal Color[] ColumnColors7K { get; set; } = new Color[7];
 
         /// <summary>
-        ///     Determines the FPS of the animations
-        ///     Max - 255fps.
+        ///     The scale of the judgement hit burst.
         /// </summary>
-        internal byte LightFramesPerSecond { get; set; }
+        internal byte JudgementHitBurstScale { get; set; }
 
         /// <summary>
         ///     The colour that is used for the column's lighting.
@@ -1118,7 +1117,7 @@ namespace Quaver.Skinning
                     ReceptorPositionOffset7K = -110;
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = false;
-                    LightFramesPerSecond = 240;
+                    JudgementHitBurstScale = 40;
                     ReceptorsOverHitObjects4K = true;
                     ReceptorsOverHitObjects7K = true;
                     JudgeColors.Insert(0, new Color(255, 255, 200));
@@ -1160,7 +1159,7 @@ namespace Quaver.Skinning
                     ReceptorPositionOffset7K = 0;
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = true;
-                    LightFramesPerSecond = 240;
+                    JudgementHitBurstScale = 40;
                     ReceptorsOverHitObjects4K = false;
                     ReceptorsOverHitObjects7K = false;
                     JudgeColors.Insert(0, new Color(255, 255, 200));
@@ -1209,7 +1208,7 @@ namespace Quaver.Skinning
             ReceptorPositionOffset7K = ConfigHelper.ReadInt32(ReceptorPositionOffset7K, data["Gameplay"]["ReceptorPositionOffset7K"]);
             ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, data["Gameplay"]["ColumnAlignment"]);
             ColourObjectsBySnapDistance = ConfigHelper.ReadBool(ColourObjectsBySnapDistance, data["Gameplay"]["ColourObjectsBySnapDistance"]);
-            LightFramesPerSecond = ConfigHelper.ReadByte(LightFramesPerSecond, data["Gameplay"]["LightsFramesPerSecond"]);
+            JudgementHitBurstScale = ConfigHelper.ReadByte(JudgementHitBurstScale, data["Gameplay"]["JudgementHitBurstScale"]);
             ReceptorsOverHitObjects4K = ConfigHelper.ReadBool(ReceptorsOverHitObjects4K, data["Gameplay"]["ReceptorsOverHitObjects4K"]);
             ReceptorsOverHitObjects7K = ConfigHelper.ReadBool(ReceptorsOverHitObjects7K, data["Gameplay"]["ReceptorsOverHitObjects7K"]);
             JudgeColors[0] = ConfigHelper.ReadColor(JudgeColors[0], data["Gameplay"]["JudgeColorMarv"]);
