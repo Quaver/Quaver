@@ -136,7 +136,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         /// <param name="dt"></param>
         internal override void Update(double dt)
-        {
+        {            
             UpdateAndScoreActiveObjects();
             UpdateAndScoreHeldObjects();
             UpdateDeadObjects();
@@ -217,8 +217,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 else
                 {
                     // Start looping the long note body.
-                    if (!hitObject.LongNoteBodySprite.IsLooping)
-                        hitObject.LongNoteBodySprite.StartLoop(LoopDirection.Forward, 24);
+                    if (!hitObject.LongNoteBodySprite.IsLooping && !Ruleset.Screen.IsPaused)
+                        hitObject.LongNoteBodySprite.StartLoop(LoopDirection.Forward, 30);
+                    // If it is looping however and the game is paused, we'll want to stop the loop.
+                    else if (hitObject.LongNoteBodySprite.IsLooping && Ruleset.Screen.IsPaused)
+                        hitObject.LongNoteBodySprite.StopLoop();
                         
                     // Set the long note size and position.
                     if (Ruleset.Screen.Timing.CurrentTime > hitObject.TrueStartTime)
