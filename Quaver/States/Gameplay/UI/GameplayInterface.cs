@@ -231,7 +231,7 @@ namespace Quaver.States.Gameplay.UI
         private void FadeInScreen(double dt)
         {
             if (!Screen.IsPaused && !Screen.IsResumeInProgress && !Screen.IsRestartingPlay && !Screen.Failed && !Screen.IsPlayComplete)
-                ScreenTransitioner.FadeOut(dt, 1080);
+                ScreenTransitioner.FadeOut(dt, 720);
         }
     }
 }

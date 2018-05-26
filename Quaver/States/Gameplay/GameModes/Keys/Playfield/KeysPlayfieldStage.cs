@@ -419,16 +419,20 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         private void CreateJudgementHitBurst()
         {
-            JudgementHitBurst = new JudgementHitBurst(GameBase.LoadedSkin.JudgeMiss)
+            // Default the frames to miss.
+            var frames = GameBase.LoadedSkin.JudgeMiss;
+            
+            // Grab the first frame for convenience.
+            var firstFrame = frames[0];
+            
+            // Set size w/ scaling.
+            var size = new Vector2(firstFrame.Width, firstFrame.Height) * GameBase.LoadedSkin.JudgementHitBurstScale / firstFrame.Height;
+            
+            JudgementHitBurst = new JudgementHitBurst(frames, size, 105)
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,
-                Position = new UDim2D(0, 105)
             };
-
-            var firstFrame = JudgementHitBurst.Frames[0];
-            var size = new Vector2(firstFrame.Width, firstFrame.Height) * GameBase.LoadedSkin.JudgementHitBurstScale / firstFrame.Height;
-            JudgementHitBurst.Size = new UDim2D(size.X, size.Y);
         }
 #endregion
 
