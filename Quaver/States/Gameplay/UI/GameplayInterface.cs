@@ -192,7 +192,7 @@ namespace Quaver.States.Gameplay.UI
 
             // Wait a bit before actually fading out the game.
             GameShouldFadeOutTime += dt;
-            if (Screen.IsPlayComplete && GameShouldFadeOutTime <= 800)
+            if (GameShouldFadeOutTime <= 800)
                 return;
             
             Screen.Ruleset.Playfield.HandleFailure(dt);
