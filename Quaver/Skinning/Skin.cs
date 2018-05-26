@@ -227,11 +227,6 @@ namespace Quaver.Skinning
         internal Texture2D Cursor { get; set; }
 
         /// <summary>
-        ///     Animation elements.
-        /// </summary>
-        internal List<Texture2D> Meme { get; set; }
-
-        /// <summary>
         ///     Sound Effect elements. 
         ///     NOTE: SFX need to be 16-bit wav otherwise MonoGame doesn't play them correctly??
         /// </summary>
@@ -437,9 +432,6 @@ namespace Quaver.Skinning
             
             // Cursor
             @"main-cursor",
-            
-            // test
-            @"meme",
 
             // ----- Sound Effects -----
         
@@ -933,9 +925,6 @@ namespace Quaver.Skinning
                         break;
                     case @"main-cursor":
                         Cursor = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"meme":
-                        Meme = LoadAnimationElements(element, 10, 2);
                         break;
                 }
             }            
