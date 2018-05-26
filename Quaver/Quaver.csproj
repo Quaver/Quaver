@@ -109,7 +109,6 @@
     <Compile Include="States\Gameplay\GameplayTiming.cs" />
     <Compile Include="States\Gameplay\GameplayScreen.cs" />
     <Compile Include="States\Gameplay\GameModeRuleset.cs" />
-    <Compile Include="States\Gameplay\HitObjects\BeatSnap.cs" />
     <Compile Include="States\Gameplay\HitObjects\HitObject.cs" />
     <Compile Include="States\Gameplay\HitObjects\HitObjectManager.cs" />
     <Compile Include="States\Gameplay\IGameplayInputManager.cs" />
