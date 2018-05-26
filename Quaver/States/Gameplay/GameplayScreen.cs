@@ -277,6 +277,7 @@ namespace Quaver.States.Gameplay
             {
                 IsPaused = true;
                 IsResumeInProgress = false;
+                DiscordController.ChangeDiscordPresence($"{Map.Artist} - {Map.Title} [{Map.DifficultyName}]", "Taking a break");
                 
                 try
                 {
@@ -292,6 +293,7 @@ namespace Quaver.States.Gameplay
             // When that resume time is past the specific set offset, it'll unpause the game.
             IsResumeInProgress = true;
             ResumeTime = GameBase.GameTime.ElapsedMilliseconds;
+            DiscordController.ChangeDiscordPresenceGameplay(true);
         }
 
         /// <summary>
