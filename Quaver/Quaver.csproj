@@ -116,6 +116,7 @@
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />
     <Compile Include="States\Gameplay\UI\HitErrorBar.cs" />
     <Compile Include="States\Gameplay\UI\Judgements\JudgementDisplay.cs" />
+    <Compile Include="States\Gameplay\UI\Judgements\JudgementHitBurst.cs" />
     <Compile Include="States\Gameplay\UI\Judgements\JudgementStatusDisplay.cs" />
     <Compile Include="States\Gameplay\UI\SongTimeProgressBar.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />

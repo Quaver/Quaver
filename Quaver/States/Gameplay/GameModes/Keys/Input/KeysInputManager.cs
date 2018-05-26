@@ -188,6 +188,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 // Also add a judgement to the hit error.
                 playfield.Stage.HitError.AddJudgement(judgement, hitObject.TrueStartTime - Ruleset.Screen.Timing.CurrentTime);
                 
+                // Perform hit burst animation
+                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+                
                 break;
             }
         }
@@ -223,6 +226,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 // Also add a judgement to the hit error.
                 playfield.Stage.HitError.AddJudgement((Judgement)receivedJudgementIndex, manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.Timing.CurrentTime);
                 
+                // Perform hit burst animation
+                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation((Judgement)receivedJudgementIndex);
+                
                 // Lastly kill the object.
                 manager.KillHoldPoolObject(noteIndex, true);             
             }
@@ -231,6 +237,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
             {
                 // Count it as an okay if it was released early and kill the hold.
                 Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                
+                // Perform hit burst animation
+                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
+                
                 manager.KillHoldPoolObject(noteIndex);
             }                    
         }

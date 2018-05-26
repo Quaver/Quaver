@@ -162,6 +162,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     var playfield = (KeysPlayfield) Ruleset.Playfield;
                     playfield.Stage.ComboDisplay.MakeVisible();
                     
+                    // Perform hit burst animation
+                    playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
+                    
                     // If ManiaHitObject is an LN, kill it and count it as another miss because of the tail.
                     if (hitObject.IsLongNote)
                     {
@@ -207,6 +210,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     // Make the combo display visible since it is now changing.
                     var playfield = (KeysPlayfield) Ruleset.Playfield;
                     playfield.Stage.ComboDisplay.MakeVisible();
+                    
+                    // Perform hit burst animation
+                    playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
 
                     // Remove from the queue of long notes.
                     hitObject.Destroy();

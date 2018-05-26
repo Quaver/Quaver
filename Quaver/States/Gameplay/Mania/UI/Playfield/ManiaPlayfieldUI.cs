@@ -110,12 +110,12 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             // Create Judge QuaverSprite/References
             JudgeImages = new Texture2D[6]
             {
-                GameBase.LoadedSkin.JudgeMarv,
-                GameBase.LoadedSkin.JudgePerf,
-                GameBase.LoadedSkin.JudgeGreat,
-                GameBase.LoadedSkin.JudgeGood,
-                GameBase.LoadedSkin.JudgeOkay,
-                GameBase.LoadedSkin.JudgeMiss
+                GameBase.LoadedSkin.JudgeMarv[0],
+                GameBase.LoadedSkin.JudgePerf[0],
+                GameBase.LoadedSkin.JudgeGreat[0],
+                GameBase.LoadedSkin.JudgeGood[0],
+                GameBase.LoadedSkin.JudgeOkay[0],
+                GameBase.LoadedSkin.JudgeMiss[0]
             };
 
             JudgeSizes = new Vector2[6];

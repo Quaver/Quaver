@@ -195,12 +195,12 @@ namespace Quaver.Skinning
         /// <summary>
         ///     Judge
         /// </summary>
-        internal Texture2D JudgeMiss { get; set; }
-        internal Texture2D JudgeOkay { get; set; }
-        internal Texture2D JudgeGood { get; set; }
-        internal Texture2D JudgeGreat { get; set; }
-        internal Texture2D JudgePerf { get; set; }
-        internal Texture2D JudgeMarv { get; set; }
+        internal List<Texture2D> JudgeMiss { get; set; }
+        internal List<Texture2D> JudgeOkay { get; set; }
+        internal List<Texture2D> JudgeGood { get; set; }
+        internal List<Texture2D> JudgeGreat { get; set; }
+        internal List<Texture2D> JudgePerf { get; set; }
+        internal List<Texture2D> JudgeMarv { get; set; }
 
         /// <summary>
         ///     Score display
@@ -246,7 +246,7 @@ namespace Quaver.Skinning
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        private static string AnimationElementRegex(string element) => $@"^{element}@(\d)x(\d).png$";
+        private static string AnimationElementRegex(string element) => $@"^{element}@(\d+)x(\d+).png$";
         
         /// <summary>
         ///     Contains the file names of all skin elements
@@ -774,22 +774,22 @@ namespace Quaver.Skinning
                         NoteReceptorsDown7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-miss":
-                        JudgeMiss = LoadIndividualElement(element, skinElementPath);
+                        JudgeMiss = LoadAnimationElements(element, 0, 0);
                         break;
                     case @"judge-okay":
-                        JudgeOkay = LoadIndividualElement(element, skinElementPath);
+                        JudgeOkay = LoadAnimationElements(element, 0, 0);
                         break;
                     case @"judge-good":
-                        JudgeGood = LoadIndividualElement(element, skinElementPath);
+                        JudgeGood = LoadAnimationElements(element, 0, 0);
                         break;
                     case @"judge-great":
-                        JudgeGreat = LoadIndividualElement(element, skinElementPath);
+                        JudgeGreat = LoadAnimationElements(element, 0, 0);
                         break;
                     case @"judge-perf":
-                        JudgePerf = LoadIndividualElement(element, skinElementPath);
+                        JudgePerf = LoadAnimationElements(element, 0, 0);
                         break;
                     case @"judge-marv":
-                        JudgeMarv = LoadIndividualElement(element, skinElementPath);
+                        JudgeMarv = LoadAnimationElements(element, 0, 0);
                         break;
                     case @"score-0":
                         ScoreDisplayNumbers[0] = LoadIndividualElement(element, skinElementPath);

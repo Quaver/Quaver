@@ -14,7 +14,7 @@ namespace Quaver.Graphics.Sprites
         /// <summary>
         ///     The animation frames 
         /// </summary>
-        internal List<Texture2D> Frames { get; }
+        internal List<Texture2D> Frames { get; set; }
         
         /// <summary>
         ///     The current animation frame we're on.
@@ -55,6 +55,11 @@ namespace Quaver.Graphics.Sprites
         ///     The amount of times looped so far.
         /// </summary>
         internal int TimesLooped { get; private set; }
+
+        /// <summary>
+        ///     Emitted when the sprite has finished its loop.
+        /// </summary>
+        internal EventHandler FinishedLooping { get; set; }
 
         /// <summary>
         ///     Ctor - if you only have the image itself, but also the rows and columns
@@ -184,6 +189,20 @@ namespace Quaver.Graphics.Sprites
         internal void StopLoop() => IsLooping = false;
 
         /// <summary>
+        ///    Replaces all the frames with some new ones. 
+        /// </summary>
+        /// <param name="newFrames"></param>
+        /// <exception cref="ArgumentException"></exception>
+        internal void ReplaceFrames(List<Texture2D> newFrames)
+        {
+            if (newFrames.Count == 0)
+                throw new ArgumentException("The new frames added must be greater than 0.");
+
+            Frames = newFrames;
+            ChangeTo(0);
+        }
+        
+        /// <summary>
         ///     Handles the looping of the animation frames.
         /// </summary>
         /// <param name="dt"></param>
@@ -217,6 +236,7 @@ namespace Quaver.Graphics.Sprites
                 return;
             
             TimesLooped++;
+            FinishedLooping?.Invoke(this, null);
                 
             // Automatically stop the loop if we've looped the specified amount of times.
             if (TimesToLoop != 0 && TimesLooped == TimesToLoop)

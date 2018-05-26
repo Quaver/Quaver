@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -13,6 +14,7 @@ using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States.Gameplay.Mania;
 using Quaver.States.Gameplay.UI;
+using Quaver.States.Gameplay.UI.Judgements;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
 {
@@ -84,11 +86,17 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         internal HitErrorBar HitError { get; set; }
 
+        /// <summary>
+        ///     The judgement hit burst when hitting objects.
+        /// </summary>
+        internal JudgementHitBurst JudgementHitBurst { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
         /// </summary>
         /// <param name="playfield"></param>
+        /// <param name="screen"></param>
         internal KeysPlayfieldStage(KeysPlayfield playfield, GameplayScreen screen)
         {
             Playfield = playfield;
@@ -147,6 +155,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             
             // Create HitError
             CreateHitError();
+            
+            // Create judgement hit burst
+            CreateJudgementHitBurst();
         }
 
         /// <summary>
@@ -401,6 +412,22 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Position = new UDim2D(0, 55)
             };
         }
+
+        /// <summary>
+        ///     Creates the judgement hit burst.
+        /// </summary>
+        private void CreateJudgementHitBurst()
+        {
+            JudgementHitBurst = new JudgementHitBurst(GameBase.LoadedSkin.JudgeMiss)
+            {
+                Parent = Playfield.ForegroundContainer,
+                Alignment = Alignment.MidCenter,
+                Position = new UDim2D(0, 105)
+            };
+
+            var firstFrame = JudgementHitBurst.Frames.First();
+            JudgementHitBurst.Size = new UDim2D(firstFrame.Width, firstFrame.Height);
+        }
 #endregion
 
 #region ANIMATIONS
@@ -493,7 +520,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             ComboDisplay.Digits.ForEach(x => x.FadeOut(dt, scale));
             HitError.LastHitCheveron.FadeOut(dt, scale);
             HitError.MiddleLine.FadeOut(dt, scale);
-            HitError.LineObjectPool.ForEach(x => x.FadeOut(dt, scale));            
+            HitError.LineObjectPool.ForEach(x => x.FadeOut(dt, scale));  
+            JudgementHitBurst.FadeOut(dt, scale);
         }
 #endregion
     }
