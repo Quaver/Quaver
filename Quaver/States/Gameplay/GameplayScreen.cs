@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Audio;
@@ -227,13 +228,18 @@ namespace Quaver.States.Gameplay
         public void Draw()
         {
             GameBase.GraphicsDevice.Clear(Color.Black);
-            GameBase.SpriteBatch.Begin();
             
+            // Draw BG Manager
+            GameBase.SpriteBatch.Begin();            
             BackgroundManager.Draw();
+            GameBase.SpriteBatch.End();
+            
+            // Draw the ruleset which gets its own spritebatch.       
             Ruleset.Draw();
+            
+            GameBase.SpriteBatch.Begin();
             UI.Draw();
             
-            // Update loggers.
             Logger.Update("Paused", $"Paused: {IsPaused}");
             Logger.Update("Resume In Progress", $"Resume In Progress {IsResumeInProgress}");
             Logger.Update($"Max Combo", $"Max Combo: {Ruleset.ScoreProcessor.MaxCombo}");

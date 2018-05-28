@@ -111,7 +111,6 @@ namespace Quaver.Graphics.Sprites
         internal override void Draw()
         {
             //Draw itself if it is in the window
-            //Old: GameBase.SpriteBatch.Draw(Image, GlobalRect, Tint);
             if (GraphicsHelper.RectangleIntercepts(GlobalRectangle, GameBase.WindowRectangle) && Visible)
             {
                 GameBase.SpriteBatch.Draw(_image, _renderRectangle, null, _color, _rotation, _origin, SpriteEffect, 0f);
@@ -135,8 +134,8 @@ namespace Quaver.Graphics.Sprites
             // Update Render Rect
             _renderRectangle.X = (int)_originRectangle.X;
             _renderRectangle.Y = (int)_originRectangle.Y;
-            _renderRectangle.Width = (int)_originRectangle.Width;
-            _renderRectangle.Height = (int)_originRectangle.Height;
+            _renderRectangle.Width = (int) _originRectangle.Width;
+            _renderRectangle.Height = (int) _originRectangle.Height;
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Quaver.API.Enums;
 using Quaver.Config;
+using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Input;
 using Quaver.Main;
@@ -191,6 +192,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 // Perform hit burst animation
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
                 
+                // Perform hit lighting animation
+                var laneIndex = hitObject.Info.Lane - 1;
+
+                // If the object is a long note, let the hitlighting actually know about it.
+                if (hitObject.IsLongNote)
+                    playfield.Stage.HitLighting[laneIndex].IsHoldingLongNote = true;
+                
+                playfield.Stage.HitLighting[laneIndex].PerformHitAnimation();
                 break;
             }
         }
@@ -217,7 +226,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
             // Make the combo display visible since it is now changing.
             var playfield = (KeysPlayfield) Ruleset.Playfield;
             playfield.Stage.ComboDisplay.MakeVisible();
-            
+                                  
+            // Stop looping hit lighting.
+            playfield.Stage.HitLighting[manager.HeldLongNotes[noteIndex].Info.Lane - 1].StopHolding();
+                
             // If LN has been released during a window
             if (receivedJudgementIndex != -1)
             {
@@ -242,7 +254,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
                 
                 manager.KillHoldPoolObject(noteIndex);
-            }                    
+            } 
         }
 
         /// <summary>

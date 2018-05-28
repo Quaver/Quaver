@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Config;
@@ -26,6 +27,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         ///     The foreground of the playfield.
         /// </summary>
         internal Container ForegroundContainer { get; }
+
+        /// <summary>
+        ///     The special container for hit lighting.
+        ///     We create an entirely new container for this so that we can
+        ///     draw it under a new spritebatch to give it an additive blendstate.
+        /// </summary>
+        internal Container HitLightingContainer { get; }
 
         /// <summary>
         ///     Reference to the map.
@@ -195,6 +203,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Alignment = Alignment.TopCenter
             };
             
+            // Create container for hit lighting
+            HitLightingContainer = new Container
+            {
+                Size = new UDim2D(Width, GameBase.WindowRectangle.Height),
+                Alignment = Alignment.TopCenter
+            };
+            
             // Create a new playfield stage               
             Stage = new KeysPlayfieldStage(this, Screen);
         }
@@ -213,6 +228,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         public void UnloadContent()
         {
             Container.Destroy();
+            HitLightingContainer.Destroy();
         }
         
         /// <summary>
@@ -225,6 +241,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             Stage.Update(dt);
         
             Container.Update(dt);
+            HitLightingContainer.Update(dt);
         }
 
         /// <summary>
@@ -232,7 +249,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         public void Draw()
         {
+            GameBase.SpriteBatch.Begin();
             Container.Draw();
+            GameBase.SpriteBatch.End();
+            
+            GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
+            HitLightingContainer.Draw();
+            GameBase.SpriteBatch.End();        
         }
         
         /// <inheritdoc />

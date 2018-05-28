@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.API.Maps;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Enums;
@@ -92,6 +93,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         internal JudgementHitBurst JudgementHitBurst { get; set; }
 
+        /// <summary>
+        ///     When hitting an object, this is the sprite that will be shown at
+        ///     the hitposition.
+        /// </summary>
+        internal List<HitLighting> HitLighting { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
@@ -159,6 +166,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             
             // Create judgement hit burst
             CreateJudgementHitBurst();
+            
+            CreateHitLighting();
         }
 
         /// <summary>
@@ -433,6 +442,27 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,
             };
+        }
+
+        /// <summary>
+        ///     Creates the hit lighting sprites.
+        /// </summary>
+        private void CreateHitLighting()
+        {
+            HitLighting = new List<HitLighting>();
+
+            for (var i = 0; i < Screen.Map.FindKeyCountFromMode(); i++)
+            {
+                var hl = new HitLighting(GameBase.QuaverUserInterface.TestSpritesheet)
+                {
+                    Parent = Playfield.HitLightingContainer,
+                    Visible = false
+                };
+
+                hl.Size = new UDim2D(hl.Frames.First().Width, hl.Frames.First().Height);
+                hl.Position = new UDim2D(Receptors[i].PosX - Playfield.LaneSize / 2f, HitPositionOverlay.PosY - hl.SizeY / 2f);
+                HitLighting.Add(hl);
+            }
         }
 #endregion
 

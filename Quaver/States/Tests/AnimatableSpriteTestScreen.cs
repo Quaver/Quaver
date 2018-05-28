@@ -1,8 +1,11 @@
-﻿using Quaver.GameState;
+﻿using System;
+using Microsoft.Xna.Framework;
+using Quaver.GameState;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UniversalDim;
+using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States.Enums;
 
@@ -14,6 +17,8 @@ namespace Quaver.States.Tests
         public bool UpdateReady { get; set; }
         internal Container Container { get; set; }
         internal AnimatableSprite TestSprite { get; set; }
+        internal Sprite Test { get; set; }
+
         /// <summary>
         ///     Navbar sprite
         /// </summary>
@@ -25,11 +30,21 @@ namespace Quaver.States.Tests
             TestSprite = new AnimatableSprite(GameBase.QuaverUserInterface.TestSpritesheet)
             {
                 Parent = Container,
-                Alignment = Alignment.MidCenter,
+                Alignment = Alignment.MidRight,
                 Size = new UDim2D(64, 128)
             };
             
             TestSprite.StartLoop(LoopDirection.Backward, 24);
+
+            Test = new Sprite()
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                Size = new UDim2D(200, 200),
+                Image = FontAwesome.GiftBox,
+            };
+            
+            
             Nav = new Nav();
             Nav.Initialize(this);
             UpdateReady = true;

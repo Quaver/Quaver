@@ -105,6 +105,7 @@
     <Compile Include="States\Gameplay\GameModes\Keys\KeysHitObject.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\KeysHitObjectManager.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\ColumnLighting.cs" />
+    <Compile Include="States\Gameplay\GameModes\Keys\Playfield\HitLighting.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\KeysPlayfield.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\KeysPlayfieldStage.cs" />
     <Compile Include="States\Gameplay\GameplayTiming.cs" />
