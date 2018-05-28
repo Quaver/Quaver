@@ -214,6 +214,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     // Perform hit burst animation
                     playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
 
+                    // Stop the hitlighting animation.
+                    playfield.Stage.HitLighting[hitObject.Info.Lane - 1].StopHolding();
+                    
                     // Remove from the queue of long notes.
                     hitObject.Destroy();
                     HeldLongNotes.RemoveAt(i);
