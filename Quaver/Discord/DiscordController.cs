@@ -145,12 +145,21 @@ namespace Quaver.Discord
                 sb.Append("Playing");
 
                 // Add mods to the string if mods exist
-                if (GameBase.CurrentGameModifiers.Count > 0)
+                for (var i = 0; i < GameBase.CurrentGameModifiers.Count; i++)
                 {
-                    sb.Append(" + ");
+                    if (i == 0)
+                        sb.Append(" +");
 
-                    if (GameBase.CurrentGameModifiers.Exists(x => x.Type == ModType.Speed))
-                        sb.Append($"Speed {GameBase.AudioEngine.PlaybackRate}x");
+                    if (i > 0)
+                        sb.Append(",");
+                    
+                    if (GameBase.CurrentGameModifiers[i].Type == ModType.Speed)
+                    {
+                        sb.Append($" {GameBase.AudioEngine.PlaybackRate}x");
+                        continue;
+                    }
+
+                    sb.Append(" " + GameBase.CurrentGameModifiers[i].Name);
                 }
 
                 ChangeDiscordPresence(mapString, sb.ToString(), mapLength);
