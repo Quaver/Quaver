@@ -410,7 +410,7 @@ namespace Quaver.States.Gameplay
                 return;
             
             // Pause the game
-            if (!QuaverGame.Game.IsActive)
+            if (!QuaverGame.Game.IsActive && !ModManager.IsActivated(ModIdentifier.NoPause))
                 Pause();
         }
 
