@@ -63,6 +63,11 @@ namespace Quaver.States.Select
         private TextButton TogglePitch { get; set; }
 
         /// <summary>
+        ///     Reference to the button to toggle the no pause mod.
+        /// </summary>
+        private TextButton ToggleNoPause { get; set; }
+
+        /// <summary>
         ///     Search bar for song searching
         /// </summary>
         private TextInputField SearchField { get; set; }
@@ -111,6 +116,7 @@ namespace Quaver.States.Select
             CreateSpeedModButton();
             CreateTogglePitchButton();
             CreateSearchField();
+            CreateNoPause();
 
             //Add map selected text TODO: remove later
             try
@@ -404,6 +410,29 @@ namespace Quaver.States.Select
                 PosX = 5,
                 PosY = 300 * GameBase.WindowUIScale + 45,
                 Parent = Container
+            };
+        }
+
+        /// <summary>
+        ///     Creates button for no pause.
+        /// </summary>
+        private void CreateNoPause()
+        {
+            ToggleNoPause = new TextButton(new Vector2(200, 50), $"No Pause Mod: {ModManager.IsActivated(ModIdentifier.NoPause)}")
+            {
+                Alignment = Alignment.TopLeft,
+                PosY = 300 * GameBase.WindowUIScale + 300,
+                Parent = Container
+            };
+            
+            ToggleNoPause.Clicked += (o, e) =>
+            {
+                if (!ModManager.IsActivated(ModIdentifier.NoPause))
+                    ModManager.AddMod(ModIdentifier.NoPause);
+                else
+                    ModManager.RemoveMod(ModIdentifier.NoPause);
+                
+                ToggleNoPause.QuaverTextSprite.Text = $"No Pause Mod: {ModManager.IsActivated(ModIdentifier.NoPause)}";
             };
         }
     }

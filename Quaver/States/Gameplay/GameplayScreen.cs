@@ -14,6 +14,7 @@ using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
+using Quaver.Modifiers;
 using Quaver.States.Enums;
 using Quaver.States.Gameplay.GameModes.Keys;
 using Quaver.States.Gameplay.UI;
@@ -271,6 +272,12 @@ namespace Quaver.States.Gameplay
             // Don't allow any sort of pausing if the play is already finished.
             if (IsPlayComplete)
                 return;
+
+            if (ModManager.IsActivated(ModIdentifier.NoPause))
+            {
+                Logger.LogImportant($"You cannot pause while the no-pause mod is activated!", LogType.Runtime);
+                return;
+            }
             
             // Handle pause.
             if (!IsPaused || IsResumeInProgress)
