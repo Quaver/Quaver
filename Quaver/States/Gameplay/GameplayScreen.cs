@@ -54,6 +54,11 @@ namespace Quaver.States.Gameplay
         internal bool IsPaused { get; private set; }
 
         /// <summary>
+        ///     The amount of times the user has paused.
+        /// </summary>
+        private int PauseCounter { get; set; }
+
+        /// <summary>
         ///     If the game session has already been started.
         /// </summary>
         internal bool HasStarted { get; set; }
@@ -284,7 +289,9 @@ namespace Quaver.States.Gameplay
             {
                 IsPaused = true;
                 IsResumeInProgress = false;
-                DiscordController.ChangeDiscordPresence($"{Map.Artist} - {Map.Title} [{Map.DifficultyName}]", "Taking a break");
+                PauseCounter++;
+                
+                DiscordController.ChangeDiscordPresence($"{Map.Artist} - {Map.Title} [{Map.DifficultyName}]", $"Paused for the {StringHelper.AddOrdinal(PauseCounter)} time");
                 
                 try
                 {
