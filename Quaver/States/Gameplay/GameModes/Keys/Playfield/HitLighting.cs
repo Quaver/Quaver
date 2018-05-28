@@ -31,7 +31,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         {
             ChangeTo(0);
             Visible = true;
-            StartLoop(LoopDirection.Forward, (int)(60 * GameBase.AudioEngine.PlaybackRate), 1);
+            StartLoop(LoopDirection.Forward, (int)(120 * GameBase.AudioEngine.PlaybackRate), 1);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             {
                 StopLoop();  
                 ChangeTo(0);
-                StartLoop(LoopDirection.Forward, (int)(60 * GameBase.AudioEngine.PlaybackRate));
+                StartLoop(LoopDirection.Forward, (int)(120 * GameBase.AudioEngine.PlaybackRate));
             }
         }
     }
