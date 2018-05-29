@@ -114,6 +114,17 @@ namespace Quaver.States.Gameplay.UI
             
             // Create judgement status display
             JudgementStatusDisplay = new JudgementStatusDisplay(Screen) { Parent = Container };
+           
+            // Create KPS display
+            KpsDisplay = new KeysPerSecond(NumberDisplayType.Score, "0", new Vector2(1.75f, 1.75f))
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight
+            };
+            
+            // Set the position of the KPS display
+            KpsDisplay.PosX = -KpsDisplay.TotalWidth - 10;
+            KpsDisplay.PosY = AccuracyDisplay.PosY + AccuracyDisplay.Digits[0].SizeY + 10;
             
             // Initialize the failure trannsitioner. 
             ScreenTransitioner = new Sprite()
@@ -124,16 +135,6 @@ namespace Quaver.States.Gameplay.UI
                 Tint = Color.Black,
                 Alpha = 1
             };
-
-            KpsDisplay = new KeysPerSecond(NumberDisplayType.Score, "0", new Vector2(1.75f, 1.75f))
-            {
-                Parent = Container,
-                Alignment = Alignment.TopRight,
-            };
-            
-            // Set the position of the KPS display
-            KpsDisplay.PosX = -KpsDisplay.TotalWidth - 10;
-            KpsDisplay.PosY = AccuracyDisplay.PosY + AccuracyDisplay.Digits[0].SizeY + 10;
         }
 
         /// <summary>
