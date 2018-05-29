@@ -163,25 +163,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 // Update the user's score
                 Ruleset.ScoreProcessor.CalculateScore(judgement);
 
-                // If the user is spamming.
-                if (judgement >= Judgement.Good)
-                {
-                    // If the object is an LN, count it as a miss.
-                    if (hitObject.IsLongNote)
-                        Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
-                            
-                    manager.KillPoolObject(objectIndex);
-                }
+                // If the object is an LN, hold it at the receptors
+                if (hitObject.IsLongNote) 
+                    manager.ChangePoolObjectStatusToHeld(objectIndex);
+                // If the object is not an LN, recycle it.
                 else
-                {
-                    // If the object is an LN, hold it at the receptors
-                    if (hitObject.IsLongNote) 
-                        manager.ChangePoolObjectStatusToHeld(objectIndex);
-                    // If the object is not an LN, recycle it.
-                    else
-                        manager.RecyclePoolObject(objectIndex);
-                }
-                        
+                    manager.RecyclePoolObject(objectIndex);
+
                 // Make the combo display visible since it is now changing.
                 var playfield = (KeysPlayfield) Ruleset.Playfield;
                 playfield.Stage.ComboDisplay.MakeVisible();
