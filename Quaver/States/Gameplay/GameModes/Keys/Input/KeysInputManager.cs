@@ -179,10 +179,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 
                 // Perform hit burst animation
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
-                
+                             
                 // Perform hit lighting animation
                 var laneIndex = hitObject.Info.Lane - 1;
-
+                
                 // If the object is a long note, let the hitlighting actually know about it.
                 if (hitObject.IsLongNote)
                     playfield.Stage.HitLighting[laneIndex].IsHoldingLongNote = true;
