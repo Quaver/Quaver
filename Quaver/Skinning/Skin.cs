@@ -117,6 +117,13 @@ namespace Quaver.Skinning
         internal byte JudgementHitBurstScale { get; set; }
 
         /// <summary>
+        ///     HitLighting skin eleemtns.
+        /// </summary>
+        internal int HitLightingWidth { get; set; }
+        internal int HitLightingHeight { get; set; }
+        internal int HitLightingY { get; set; }
+
+        /// <summary>
         ///     The colour that is used for the column's lighting.
         ///     [0] Marv
         ///     [1] Perf
@@ -1160,6 +1167,9 @@ namespace Quaver.Skinning
                     BgMaskAlpha = 1f;
                     FlipNoteImagesOnUpScroll4K = true;
                     FlipNoteImagesOnUpScroll7K = true;
+                    HitLightingY = 0;
+                    HitLightingWidth = 0;
+                    HitLightingHeight = 0;
                     break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
@@ -1202,6 +1212,9 @@ namespace Quaver.Skinning
                     BgMaskAlpha = 0.9f;
                     FlipNoteImagesOnUpScroll4K = true;
                     FlipNoteImagesOnUpScroll7K = true;
+                    HitLightingY = 0;
+                    HitLightingWidth = 0;
+                    HitLightingHeight = 0;
                     break;
             }
 

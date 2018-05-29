@@ -459,8 +459,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                     Visible = false
                 };
 
-                hl.Size = new UDim2D(hl.Frames.First().Width, hl.Frames.First().Height);
-                hl.Position = new UDim2D(Receptors[i].PosX - Playfield.LaneSize / 2f, HitPositionOverlay.PosY - hl.SizeY / 2f);
+                // If the width or height are less than 0, then we'll assume the user wants it to be the height of the texture
+                // otherwise we'll use the one from their skin config.
+                var width = GameBase.LoadedSkin.HitLightingWidth <= 0 ? hl.Frames.First().Width : GameBase.LoadedSkin.HitLightingWidth;
+                var height = GameBase.LoadedSkin.HitLightingHeight <= 0 ? hl.Frames.First().Height : GameBase.LoadedSkin.HitLightingHeight;               
+                hl.Size = new UDim2D(width, height);
+                
+                hl.Position = new UDim2D(Receptors[i].PosX - Playfield.LaneSize / 2f, HitPositionOverlay.PosY - hl.SizeY / 2f + GameBase.LoadedSkin.HitLightingY);
+                
                 HitLighting.Add(hl);
             }
         }
