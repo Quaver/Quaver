@@ -79,6 +79,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 {
                     BindingStore[i].Pressed = true;
                     needsUpdating = true;
+                    
+                    // Add to keys per second
+                    Ruleset.Screen.UI.KpsDisplay.AddClick();
                 }
                 // Key Released Uniquely.
                 else if (GameBase.KeyboardState.IsKeyUp(BindingStore[i].Key.Value) && BindingStore[i].Pressed)

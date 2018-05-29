@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.Audio;
@@ -6,6 +7,7 @@ using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.Text;
 using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
@@ -55,6 +57,11 @@ namespace Quaver.States.Gameplay.UI
         internal Sprite ScreenTransitioner { get; set; }
 
         /// <summary>
+        ///     The keys per second display.
+        /// </summary>
+        internal KeysPerSecond KpsDisplay { get; set; }
+
+        /// <summary>
         ///     If the volume has already been set to fade out.
         /// </summary>
         private bool VolumeFadedOut { get; set; }
@@ -85,7 +92,7 @@ namespace Quaver.States.Gameplay.UI
                                                             Container, Alignment.BotLeft);
 
             // Create score display
-            ScoreDisplay = new NumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0))
+            ScoreDisplay = new NumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0), new Vector2(1, 1))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight
@@ -95,7 +102,7 @@ namespace Quaver.States.Gameplay.UI
             ScoreDisplay.PosX = -ScoreDisplay.TotalWidth - 10;
             
             // Create acc display
-            AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0))
+            AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0), new Vector2(1.5f, 1.5f))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
@@ -117,6 +124,16 @@ namespace Quaver.States.Gameplay.UI
                 Tint = Color.Black,
                 Alpha = 1
             };
+
+            KpsDisplay = new KeysPerSecond(NumberDisplayType.Score, "0", new Vector2(1.75f, 1.75f))
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+            };
+            
+            // Set the position of the KPS display
+            KpsDisplay.PosX = -KpsDisplay.TotalWidth - 10;
+            KpsDisplay.PosY = AccuracyDisplay.PosY + AccuracyDisplay.Digits[0].SizeY + 10;
         }
 
         /// <summary>

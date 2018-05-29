@@ -47,7 +47,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The general gameplay UI.
         /// </summary>
-        private GameplayInterface UI { get; }
+        internal GameplayInterface UI { get; }
 
         /// <summary>
         ///     If the game is currently paused.

@@ -91,12 +91,19 @@ namespace Quaver.Graphics.UserInterface
         internal long LastValueChangeTime { get; private set; }
 
         /// <summary>
+        ///     The size of the digits.
+        /// </summary>
+        private Vector2 ImageScale { get; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="type"></param>
         /// <param name="startingValue"></param>
-        internal NumberDisplay(NumberDisplayType type, string startingValue)
+        /// <param name="imageScale"></param>
+        internal NumberDisplay(NumberDisplayType type, string startingValue, Vector2 imageScale)
         {
+            ImageScale = imageScale;
             Value = startingValue;
             Type = type;
             
@@ -168,21 +175,8 @@ namespace Quaver.Graphics.UserInterface
                     });
                     
                     // Set size
-                    switch (Type)
-                    {
-                        case NumberDisplayType.Combo:
-                        case NumberDisplayType.Score:
-                            Digits[i].Size = new UDim2D(Image.Width, Image.Height);
-                            break;
-                        case NumberDisplayType.Accuracy:
-                            Digits[i].Size = new UDim2D(Image.Width / 1.5f, Image.Height / 1.5f);
-                            break;
-                        case NumberDisplayType.SongTime:
-                            Digits[i].Size = new UDim2D(Image.Width / 2f, Image.Height / 2f);
-                            break;
-                    }
-
-                    
+                    Digits[i].Size = new UDim2D(Image.Width / ImageScale.X, Image.Height / ImageScale.Y);
+                                        
                     // Set position
                     // If it's the first image, set the x pos to 0.
                     if (i == 0)

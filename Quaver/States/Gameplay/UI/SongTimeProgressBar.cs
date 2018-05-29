@@ -17,12 +17,12 @@ namespace Quaver.States.Gameplay.UI
         /// <summary>
         ///     The display for the current time.
         /// </summary>
-        private NumberDisplay CurrentTime { get; }
+        internal NumberDisplay CurrentTime { get; }
 
         /// <summary>
         ///     The display for the time left.
         /// </summary>
-        private NumberDisplay TimeLeft { get; }
+        internal NumberDisplay TimeLeft { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -36,7 +36,7 @@ namespace Quaver.States.Gameplay.UI
         internal SongTimeProgressBar(float maxValue, float initialValue, Vector2 size, Drawable parent, Alignment alignment) 
             : base(maxValue, initialValue, size, parent, alignment)
         {
-            CurrentTime = new NumberDisplay(NumberDisplayType.SongTime, "00:00")
+            CurrentTime = new NumberDisplay(NumberDisplayType.SongTime, "00:00", new Vector2(2, 2))
             {
                 Parent = this,
                 Alignment = Alignment.TopLeft,     
@@ -44,7 +44,7 @@ namespace Quaver.States.Gameplay.UI
                 PosX = 10
             };
 
-            TimeLeft = new NumberDisplay(NumberDisplayType.SongTime, "-00:00")
+            TimeLeft = new NumberDisplay(NumberDisplayType.SongTime, "-00:00", new Vector2(2, 2))
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
