@@ -221,6 +221,16 @@ namespace Quaver.Skinning
         internal Texture2D SongTimeDisplayMinus { get; set; }
 
         /// <summary>
+        ///     Animation sprites that display when hitting an object
+        /// </summary>
+        internal List<Texture2D> HitLighting { get; set; }
+
+        /// <summary>
+        ///     Animation sprites that display when holding an LN
+        /// </summary>
+        internal List<Texture2D> HoldLighting { get; set; }
+
+        /// <summary>
         ///     QuaverCursor
         /// </summary>
         internal Texture2D Cursor { get; set; }
@@ -428,6 +438,10 @@ namespace Quaver.Skinning
             @"song-time-9",
             @"song-time-colon",
             @"song-time-minus",
+            
+            // Lighting
+            @"hitlighting",
+            @"holdlighting",
             
             // Cursor
             @"main-cursor",
@@ -891,6 +905,12 @@ namespace Quaver.Skinning
                         break;
                     case @"song-time-minus":
                         SongTimeDisplayMinus = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"hitlighting":
+                        HitLighting = LoadAnimationElements(element, 1, 8);
+                        break;
+                    case @"holdlighting":
+                        HoldLighting = LoadAnimationElements(element, 1, 12);
                         break;
                     case @"sound-hit":
                         SoundHit = LoadSoundEffectElement(element, skinElementPath);

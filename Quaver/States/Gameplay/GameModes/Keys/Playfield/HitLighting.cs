@@ -14,12 +14,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         internal bool IsHoldingLongNote { get; set; }
 
-        internal HitLighting(Texture2D spritesheet, int rows, int columns) : base(spritesheet, rows, columns)
-        {
-            FinishedLooping += OnLoopCompletion;
-        }
-
-        internal HitLighting(List<Texture2D> frames) : base(frames)
+        internal HitLighting() : base(GameBase.LoadedSkin.HitLighting)
         {
             FinishedLooping += OnLoopCompletion;
         }
@@ -58,7 +53,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             else
             {
                 StopLoop();  
-                ChangeTo(0);
+                ReplaceFrames(GameBase.LoadedSkin.HoldLighting);
                 StartLoop(LoopDirection.Forward, (int)(180 * GameBase.AudioEngine.PlaybackRate));
             }
         }

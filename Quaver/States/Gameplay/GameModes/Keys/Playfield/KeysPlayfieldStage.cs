@@ -453,7 +453,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
 
             for (var i = 0; i < Screen.Map.FindKeyCountFromMode(); i++)
             {
-                var hl = new HitLighting(GameBase.QuaverUserInterface.TestSpritesheet)
+                var hl = new HitLighting()
                 {
                     Parent = Playfield.HitLightingContainer,
                     Visible = false
