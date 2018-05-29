@@ -22,7 +22,7 @@ namespace Quaver.States.Gameplay
                 if (_currentTime <= 0)
                     return _currentTime;
                 
-                return _currentTime + (AudioEngine.BassDelayOffset - ConfigManager.GlobalAudioOffset.Value) * GameBase.AudioEngine.PlaybackRate;
+                return _currentTime + AudioEngine.BassDelayOffset * GameBase.AudioEngine.PlaybackRate;
             }
             set => _currentTime = value;
         }
