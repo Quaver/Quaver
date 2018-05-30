@@ -395,7 +395,7 @@ namespace Quaver.States.Gameplay
                 // Restart the map if the user has held it down for 
                 if (RestartKeyHoldTime >= 350)
                 {
-                    GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundScreenshot);
+                    GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundRetry);
                     GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash));
                 }
 
@@ -448,7 +448,7 @@ namespace Quaver.States.Gameplay
             catch (AudioEngineException e) {}
             
             // Play failure sound.
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundComboBreak);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundFailure);
 
             FailureHandled = true;
         }
