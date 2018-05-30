@@ -52,7 +52,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     If the game is currently paused.
         /// </summary>
-        internal bool IsPaused { get; private set; }
+        internal bool IsPaused { get; set; }
 
         /// <summary>
         ///     The amount of times the user has paused.
@@ -72,7 +72,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The hash of the map that was played.
         /// </summary>
-        private string MapHash { get; }
+        internal string MapHash { get; }
 
         /// <summary>
         ///     Dictates if we are currently resuming the game.
@@ -124,7 +124,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     If the play was failed (0 health)
         /// </summary>
-        internal bool Failed => Ruleset.ScoreProcessor.Health <= 0;
+        internal bool Failed => Ruleset.ScoreProcessor.Health <= 0 || ForceFail;
 
         /// <summary>
         ///     Flag that makes sure the failure sound only gets played once.
@@ -140,6 +140,11 @@ namespace Quaver.States.Gameplay
         ///     Flag that dictates if the user is currently restarting the play.
         /// </summary>
         internal bool IsRestartingPlay { get; set; }
+
+        /// <summary>
+        ///     If we're force failing the user.
+        /// </summary>
+        internal bool ForceFail { get; set; }
 
         /// <summary>
         ///     Ctor - 
@@ -278,7 +283,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Pauses the game.
         /// </summary>
-        private void Pause()
+        internal void Pause()
         {
             // Don't allow any sort of pausing if the play is already finished.
             if (IsPlayComplete)

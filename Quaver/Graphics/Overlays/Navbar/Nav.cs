@@ -221,7 +221,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         ///     Performs an animation which shows the navbar.
         /// </summary>
         /// <param name="dt"></param>
-        private void PerformShowAnimation(double dt)
+        internal void PerformShowAnimation(double dt)
          {
              // Make the container visible again when performing this animation.
              Container.Visible = true;

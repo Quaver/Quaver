@@ -66,7 +66,12 @@ namespace Quaver.States.Gameplay.UI
         ///     Sprite that displays the grade next to the accuracy display
         /// </summary>
         internal GradeDisplay GradeDisplay { get; set;  }
-        
+
+        /// <summary>
+        ///     Overlay that's shown when paused.
+        /// </summary>
+        internal PauseOverlay PauseOverlay { get; set; }
+
         /// <summary>
         ///     If the volume has already been set to fade out.
         /// </summary>
@@ -76,6 +81,11 @@ namespace Quaver.States.Gameplay.UI
         ///     The time counter where the game should start fading out.
         /// </summary>
         private double GameShouldFadeOutTime { get; set; }
+
+        /// <summary>
+        ///     The amount of time for the overlay to fade in/out
+        /// </summary>
+        internal int PauseFadeTimeScale { get; } = 120;
 
         /// <summary>
         ///     Ctor -
@@ -149,6 +159,8 @@ namespace Quaver.States.Gameplay.UI
                 Tint = Color.Black,
                 Alpha = 1
             };
+
+            PauseOverlay = new PauseOverlay(Screen) {Parent = Container};
         }
 
         /// <summary>
@@ -165,6 +177,10 @@ namespace Quaver.States.Gameplay.UI
         /// <param name="dt"></param>
         public void Update(double dt)
         {
+            // Hide navbar in gameplay
+            if (!Screen.IsPaused && !Screen.Failed)
+                GameBase.Navbar.PerformHideAnimation(dt);
+            
             UpdateSongProgressDisplay();
             UpdateScoreAndAccuracyDisplays();
             
@@ -251,13 +267,11 @@ namespace Quaver.States.Gameplay.UI
         {
             if (!Screen.IsPaused)
                 return;
-
-            const int scale = 120;
-            
+       
             if (Screen.IsResumeInProgress)
-                ScreenTransitioner.Fade(dt, 0, scale * 2f);
+                ScreenTransitioner.Fade(dt, 0, PauseFadeTimeScale * 2f);
             else
-                ScreenTransitioner.Fade(dt, 0.75f, scale);            
+                ScreenTransitioner.Fade(dt, 0.75f, PauseFadeTimeScale);            
         }
 
         /// <summary>
