@@ -256,6 +256,8 @@ namespace Quaver.Skinning
         internal SoundEffect SoundClick { get; set; }
         internal SoundEffect SoundBack { get; set; }
         internal SoundEffect SoundHover { get; set; }
+        internal SoundEffect SoundFailure { get; set; }
+        internal SoundEffect SoundRetry { get; set; }
 
         /// <summary>
         ///     Regular expression for animation element file names.
@@ -461,6 +463,8 @@ namespace Quaver.Skinning
             @"sound-hitwhistle",
             @"sound-hitfinish",
             @"sound-combobreak",
+            @"sound-failure",
+            @"sound-retry",
         
             // Menu SFX
             @"sound-applause",
@@ -948,6 +952,12 @@ namespace Quaver.Skinning
                         break;
                     case @"sound-hover":
                         SoundHover = LoadSoundEffectElement(element, skinElementPath);
+                        break;
+                    case @"sound-failure":
+                        SoundFailure = LoadSoundEffectElement(element, skinElementPath);
+                        break;
+                    case @"sound-retry":
+                        SoundRetry = LoadSoundEffectElement(element, skinElementPath);
                         break;
                     case @"main-cursor":
                         Cursor = LoadIndividualElement(element, skinElementPath);
