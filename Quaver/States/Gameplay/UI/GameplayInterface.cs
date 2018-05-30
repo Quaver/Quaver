@@ -5,14 +5,15 @@ using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.GameState;
-using Quaver.Graphics.Enums;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Main;
-using Quaver.States.Gameplay.UI.Judgements;
+using Quaver.States.Gameplay.UI.Components;
+using Quaver.States.Gameplay.UI.Components.Judgements;
 
 namespace Quaver.States.Gameplay.UI
 {
@@ -61,8 +62,11 @@ namespace Quaver.States.Gameplay.UI
         /// </summary>
         internal KeysPerSecond KpsDisplay { get; set; }
 
+        /// <summary>
+        ///     Sprite that displays the grade next to the accuracy display
+        /// </summary>
         internal GradeDisplay GradeDisplay { get; set;  }
-
+        
         /// <summary>
         ///     If the volume has already been set to fade out.
         /// </summary>

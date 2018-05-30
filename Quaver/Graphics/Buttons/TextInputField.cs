@@ -2,9 +2,7 @@ using System;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
@@ -21,7 +19,7 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     The Text box spprite
         /// </summary>
-        internal QuaverSpriteText QuaverTextSprite { get; set; }
+        internal SpriteText TextSprite { get; set; }
 
         /// <summary>
         ///     The place holder text for the input field
@@ -71,7 +69,7 @@ namespace Quaver.Graphics.Buttons
             // Set the reference to the method that will be called on submit
             OnTextInputSubmit = onTextInputSubmit;
 
-            QuaverTextSprite = new QuaverSpriteText()
+            TextSprite = new SpriteText()
             {
                 Text = placeHolderText,
                 Size = new UDim2D(ButtonSize.X - 8, ButtonSize.Y - 4),
@@ -84,7 +82,7 @@ namespace Quaver.Graphics.Buttons
             Size.X.Offset = ButtonSize.X;
             Size.Y.Offset = ButtonSize.Y;
             Image = GameBase.QuaverUserInterface.BlankBox;
-            QuaverTextSprite.TextColor = Color.White;
+            TextSprite.TextColor = Color.White;
 
             PlaceHolderText = placeHolderText;
             CurrentTextField = new StringBuilder();
@@ -173,7 +171,7 @@ namespace Quaver.Graphics.Buttons
                                 break;
                         }
 
-                        QuaverTextSprite.Text = CurrentTextField.ToString();
+                        TextSprite.Text = CurrentTextField.ToString();
                         TextHighlighted = false;
                         return;
                     }
@@ -188,29 +186,29 @@ namespace Quaver.Graphics.Buttons
 
                         // Back spacking
                         case Keys.Back:
-                            if (string.IsNullOrEmpty(QuaverTextSprite.Text))
+                            if (string.IsNullOrEmpty(TextSprite.Text))
                                 return;
                             
                             CurrentTextField.Length--;
-                            QuaverTextSprite.Text = CurrentTextField.ToString();
+                            TextSprite.Text = CurrentTextField.ToString();
                             break;
                         
                         // On Submit
                         case Keys.Enter:
-                            if (string.IsNullOrEmpty(QuaverTextSprite.Text))
+                            if (string.IsNullOrEmpty(TextSprite.Text))
                                 return;
 
                             // Run the callback function that was passed in.
-                            OnTextInputSubmit(QuaverTextSprite.Text);
+                            OnTextInputSubmit(TextSprite.Text);
                             CurrentTextField.Clear();
                             UnSelect();
-                            QuaverTextSprite.Text = PlaceHolderText;
+                            TextSprite.Text = PlaceHolderText;
                             break;
 
                         // Input text
                         default:
                             CurrentTextField.Append(e.Character.ToString());
-                            QuaverTextSprite.Text = CurrentTextField.ToString();
+                            TextSprite.Text = CurrentTextField.ToString();
                             break;
                     }
                 }
@@ -234,7 +232,7 @@ namespace Quaver.Graphics.Buttons
             if (ClearFieldWhenDeselected)
             {
                 CurrentTextField.Clear();
-                QuaverTextSprite.Text = PlaceHolderText;
+                TextSprite.Text = PlaceHolderText;
             }
         }
 
@@ -252,7 +250,7 @@ namespace Quaver.Graphics.Buttons
             if (ClearFieldWhenDeselected)
                 CurrentTextField.Clear();
 
-            QuaverTextSprite.Text = CurrentTextField.ToString();
+            TextSprite.Text = CurrentTextField.ToString();
             HoverTargetTween = 1;
 
             base.OnClicked();
@@ -293,14 +291,14 @@ namespace Quaver.Graphics.Buttons
             {
                 // Clear the entire input
                 CurrentTextField.Length = 0;
-                QuaverTextSprite.Text = CurrentTextField.ToString();
+                TextSprite.Text = CurrentTextField.ToString();
             }
 
             // CTRL + C (Copy)
             else if (GameBase.KeyboardState.IsKeyDown(Keys.C))
             {
                 if (TextHighlighted)
-                    Clipboard.SetText(QuaverTextSprite.Text);
+                    Clipboard.SetText(TextSprite.Text);
             }
 
             // CTRL + V (Paste)
@@ -316,7 +314,7 @@ namespace Quaver.Graphics.Buttons
                     CurrentTextField.Length = 0;
                     // Append clipboard text
                     CurrentTextField.Append(Clipboard.GetText());
-                    QuaverTextSprite.Text = CurrentTextField.ToString();
+                    TextSprite.Text = CurrentTextField.ToString();
                     return;
                 }
 
@@ -326,7 +324,7 @@ namespace Quaver.Graphics.Buttons
                 // Append old text + new text
                 CurrentTextField.Length = 0;               
                 CurrentTextField.Append(oldText + Clipboard.GetText());
-                QuaverTextSprite.Text = CurrentTextField.ToString();
+                TextSprite.Text = CurrentTextField.ToString();
             }
         }
     }

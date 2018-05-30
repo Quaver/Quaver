@@ -2,14 +2,12 @@
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Quaver.GameState;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States;
-using Container = Quaver.Graphics.Sprites.Container;
+using Container = Quaver.Graphics.Base.Container;
 
 namespace Quaver.Graphics.Overlays.Navbar
 {
@@ -38,12 +36,12 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The name of currently highlighted button
         /// </summary>
-        internal QuaverSpriteText Name { get; set; }
+        internal SpriteText Name { get; set; }
 
         /// <summary>
         ///     The description of the currently highlighted button.
         /// </summary>
-        internal QuaverSpriteText Description { get; set; }
+        internal SpriteText Description { get; set; }
 
         /// <summary>
         ///     Dictates if the tooltip box is currently in an animation.
@@ -95,7 +93,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             Icon.Size = new UDim2D(Icon.Image.Width, Icon.Image.Height);
             
             // Create Textbox for the name of the button.
-            Name = new QuaverSpriteText()
+            Name = new SpriteText()
             {
                 Text = "",
                 Font = QuaverFonts.Medium24,
@@ -109,7 +107,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             };
             
             // Create Textbox for the description of the button.
-            Description = new QuaverSpriteText()
+            Description = new SpriteText()
             {
                 Text = "",
                 Font = QuaverFonts.Medium24,

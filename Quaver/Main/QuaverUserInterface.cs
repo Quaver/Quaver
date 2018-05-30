@@ -4,6 +4,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
+using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Helpers;
 using Quaver.Resources;

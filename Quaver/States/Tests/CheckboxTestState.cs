@@ -2,8 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.GameState;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
@@ -43,7 +44,7 @@ namespace Quaver.States.Tests
                 Alignment = Alignment.MidCenter
             };
 
-            var ds4ktext = new QuaverSpriteText()
+            var ds4ktext = new SpriteText()
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
@@ -59,7 +60,7 @@ namespace Quaver.States.Tests
                 PosY = ds4k.PosY + 50
             };
 
-            var ds7ktext = new QuaverSpriteText()
+            var ds7ktext = new SpriteText()
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,

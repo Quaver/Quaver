@@ -11,6 +11,7 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
 using Quaver.GameState;
+using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;

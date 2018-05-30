@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Quaver.Database.Maps;
 using Quaver.GameState;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Logging;
 using Quaver.Main;
 using Microsoft.Xna.Framework;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 
 namespace Quaver.States.Select
 {

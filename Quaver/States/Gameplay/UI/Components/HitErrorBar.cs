@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Quaver.API.Enums;
-using Quaver.Graphics.Enums;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
-using Quaver.Skinning;
 
-namespace Quaver.States.Gameplay.UI
+namespace Quaver.States.Gameplay.UI.Components
 {
     internal class HitErrorBar : Container
     {

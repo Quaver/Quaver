@@ -5,7 +5,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms.VisualStyles;
 using Microsoft.Xna.Framework;
 using Quaver.Graphics.Colors;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -55,8 +54,8 @@ namespace Quaver.Graphics.Buttons.Dropdowns
             Alignment = Alignment.MidCenter;
             
             // Align the text and set it up properly.
-            QuaverTextSprite.TextAlignment = Alignment.MidLeft;
-            QuaverTextSprite.TextColor = Color.White;
+            TextSprite.TextAlignment = Alignment.MidLeft;
+            TextSprite.TextColor = Color.White;
 
             // Add sprite for the chevron displayed at the left of the text.
             ChevronRightIcon = new Sprite()
@@ -84,7 +83,7 @@ namespace Quaver.Graphics.Buttons.Dropdowns
             };
             
             // Set the position of the text, brotha.
-            QuaverTextSprite.PosX = ChevronRightIcon.PosX + ChevronRightIcon.SizeX + 5;
+            TextSprite.PosX = ChevronRightIcon.PosX + ChevronRightIcon.SizeX + 5;
         }
 
         internal override void Update(double dt)
@@ -112,7 +111,7 @@ namespace Quaver.Graphics.Buttons.Dropdowns
             else
             {
                 // Emit the event.
-                Clicked?.Invoke(this, new DropdownButtonClickedEventArgs(QuaverTextSprite.Text, Dropdown.Options.IndexOf(this)));
+                Clicked?.Invoke(this, new DropdownButtonClickedEventArgs(TextSprite.Text, Dropdown.Options.IndexOf(this)));
                 
                 // Swap the indexes in the list.
                 ListHelper.Swap(Dropdown.Options, Dropdown.Options.IndexOf(this), Dropdown.Options.FindIndex(x => x.IsSelected));
@@ -126,7 +125,7 @@ namespace Quaver.Graphics.Buttons.Dropdowns
                     oldBtn.IsSelected = false;
                 
                 // Order the list, taking into account that the selected must be the first item.
-                Dropdown.Options = Dropdown.Options.OrderByDescending(x => x.IsSelected).ThenBy(x => x.QuaverTextSprite.Text).ToList();
+                Dropdown.Options = Dropdown.Options.OrderByDescending(x => x.IsSelected).ThenBy(x => x.TextSprite.Text).ToList();
             
                 // Re-set up the button positions now that it's reordered.
                 Dropdown.SetButtonPositions();

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.Database.Maps;
 using Quaver.GameState;
-using Quaver.Graphics.Enums;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Main;
 
 namespace Quaver.States.Select
@@ -22,7 +22,7 @@ namespace Quaver.States.Select
         /// <summary>
         /// 
         /// </summary>
-        private QuaverSpriteText MapInfo { get; set; }
+        private SpriteText MapInfo { get; set; }
 
         public void Initialize(IGameState state)
         {
@@ -37,7 +37,7 @@ namespace Quaver.States.Select
                 Parent = Boundary
             };
 
-            MapInfo = new QuaverSpriteText()
+            MapInfo = new SpriteText()
             {
                 Size = new UDim2D(-10, -10, 1, 1),
                 Position = new UDim2D(5, 5),

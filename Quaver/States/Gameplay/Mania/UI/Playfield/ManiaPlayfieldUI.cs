@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.GameState;
-using Quaver.Graphics.Enums;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -51,7 +51,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
         /// <summary>
         ///     The text displaying combo
         /// </summary>
-        private QuaverSpriteText ComboQuaverText { get; set; }
+        private SpriteText ComboText { get; set; }
 
         /// <summary>
         ///     When the JudgeQuaverSprite gets updated, it'll update JudgeQuaverSprite.PositionY to this variable.
@@ -144,7 +144,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             };
 
             // Create Combo Text
-            ComboQuaverText = new QuaverSpriteText()
+            ComboText = new SpriteText()
             {
                 Size = new UDim2D(100 * GameBase.WindowUIScale, 20 * GameBase.WindowUIScale),
                 Position = new UDim2D(0, 45 * GameBase.WindowUIScale),
@@ -258,7 +258,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
             if (SpriteAlphaHold > 500 && PriorityJudgeLength <= 0)
             {
                 JudgeSprite.Alpha = GraphicsHelper.Tween(0, JudgeSprite.Alpha, tween / 10);
-                ComboQuaverText.Alpha = GraphicsHelper.Tween(0, ComboQuaverText.Alpha, tween / 10);
+                ComboText.Alpha = GraphicsHelper.Tween(0, ComboText.Alpha, tween / 10);
             }
 
             //Update QuaverContainer
@@ -275,8 +275,8 @@ namespace Quaver.States.Gameplay.Mania.UI.Playfield
         internal void UpdateJudge(int index, int combo, bool release = false, double? offset = null)
         {
             //TODO: add judge scale
-            ComboQuaverText.Text = combo + "x";
-            ComboQuaverText.Alpha = 1;
+            ComboText.Text = combo + "x";
+            ComboText.Alpha = 1;
             JudgeSprite.Alpha = 1;
             SpriteAlphaHold = 0;
 

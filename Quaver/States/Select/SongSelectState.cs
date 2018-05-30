@@ -6,7 +6,6 @@ using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
 using Quaver.Input;
@@ -17,6 +16,8 @@ using Quaver.States.Enums;
 using Quaver.States.Loading.Map;
 using Quaver.States.Menu;
 using Quaver.Database.Maps;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 
 namespace Quaver.States.Select
 {
@@ -374,7 +375,7 @@ namespace Quaver.States.Select
             }
 
             // Change the song speed directly.
-            SpeedModButton.QuaverTextSprite.Text = $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x";
+            SpeedModButton.TextSprite.Text = $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x";
         }
 
         /// <summary>
@@ -399,7 +400,7 @@ namespace Quaver.States.Select
         private void OnTogglePitchButtonClick(object sender, EventArgs e)
         {
             GameBase.AudioEngine.TogglePitch();
-            TogglePitch.QuaverTextSprite.Text = $"Toggle Pitch: {ConfigManager.Pitched.Value}";
+            TogglePitch.TextSprite.Text = $"Toggle Pitch: {ConfigManager.Pitched.Value}";
         }
 
         private void CreateSearchField()
@@ -432,7 +433,7 @@ namespace Quaver.States.Select
                 else
                     ModManager.RemoveMod(ModIdentifier.NoPause);
                 
-                ToggleNoPause.QuaverTextSprite.Text = $"No Pause Mod: {ModManager.IsActivated(ModIdentifier.NoPause)}";
+                ToggleNoPause.TextSprite.Text = $"No Pause Mod: {ModManager.IsActivated(ModIdentifier.NoPause)}";
             };
         }
     }

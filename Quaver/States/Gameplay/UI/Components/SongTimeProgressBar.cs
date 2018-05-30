@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Drawing;
 using Microsoft.Xna.Framework;
+using Quaver.Graphics;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Colors;
-using Quaver.Graphics.Enums;
-using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
-using Quaver.Main;
-using Color = Microsoft.Xna.Framework.Color;
 
-namespace Quaver.States.Gameplay.UI
+namespace Quaver.States.Gameplay.UI.Components
 {
     internal class SongTimeProgressBar : ProgressBar
     {

@@ -3,9 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.Graphics.Colors;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
@@ -26,7 +24,7 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     The text sprite displayed in the key button.
         /// </summary>
-        private QuaverSpriteText QuaverTextSprite { get; set; }
+        private SpriteText TextSprite { get; set; }
 
         /// <summary>
         ///     If the keybind button is currently selected.
@@ -55,7 +53,7 @@ namespace Quaver.Graphics.Buttons
             Keybind = keybind;
             
             // Create text sprite.
-            QuaverTextSprite = new QuaverSpriteText()
+            TextSprite = new SpriteText()
             {
                 Text = XNAKeyHelper.GetStringFromKey(Keybind.Value),
                 Size = new UDim2D(size.X, size.Y),
@@ -151,7 +149,7 @@ namespace Quaver.Graphics.Buttons
             Tint = QuaverColors.MainAccentInactive;
             Selected = false;
             HoverTargetTween = 0;
-            QuaverTextSprite.Text = XNAKeyHelper.GetStringFromKey(Keybind.Value);
+            TextSprite.Text = XNAKeyHelper.GetStringFromKey(Keybind.Value);
         }
 
         /// <inheritdoc />
@@ -167,7 +165,7 @@ namespace Quaver.Graphics.Buttons
                 return;
             
             Tint = QuaverColors.MainAccent;
-            QuaverTextSprite.Text = "Key?";
+            TextSprite.Text = "Key?";
             HoverTargetTween = 1;
         }
 

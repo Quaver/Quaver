@@ -4,8 +4,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Enums;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 

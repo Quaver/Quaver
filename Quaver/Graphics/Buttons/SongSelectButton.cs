@@ -1,9 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Quaver.Database.Maps;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -19,11 +17,11 @@ namespace Quaver.Graphics.Buttons
 
         internal Map Map { get; set; }
 
-        private QuaverSpriteText TitleQuaverText { get; set; }
+        private SpriteText TitleText { get; set; }
 
-        private QuaverSpriteText ArtistQuaverText { get; set; }
+        private SpriteText ArtistText { get; set; }
 
-        private QuaverSpriteText DiffQuaverText { get; set; }
+        private SpriteText DiffText { get; set; }
 
         private Sprites.Sprite UnderlayImage { get; set; }
 
@@ -68,7 +66,7 @@ namespace Quaver.Graphics.Buttons
                 }
             });*/
 
-            TitleQuaverText = new QuaverSpriteText()
+            TitleText = new SpriteText()
             {
                 Text = map.Title,
                 Font = QuaverFonts.Medium48,
@@ -81,7 +79,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = this
             };
 
-            ArtistQuaverText = new QuaverSpriteText()
+            ArtistText = new SpriteText()
             {
                 Text = map.Artist + " | "+ map.Creator,
                 Font = QuaverFonts.Medium48,
@@ -94,7 +92,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = this
             };
 
-            DiffQuaverText = new QuaverSpriteText()
+            DiffText = new SpriteText()
             {
                 Text = string.Format("{0:f2}", map.DifficultyRating),
                 Font = QuaverFonts.Bold12,

@@ -2,11 +2,11 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.GameState;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Colors;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -26,7 +26,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
         /// <summary>
         ///     Text box which displays a count of every judgement
         /// </summary>
-        private QuaverSpriteText[] AccuracyCountQuaverText { get; set; }
+        private SpriteText[] AccuracyCountText { get; set; }
 
         /// <summary>
         ///     The graph which displays judgement count relative to total count of every judgement
@@ -61,7 +61,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
         /// <summary>
         ///     Text which displays current score
         /// </summary>
-        private QuaverSpriteText ScoreQuaverText { get; set; }
+        private SpriteText ScoreText { get; set; }
 
         /// <summary>
         ///     Current accuracy the player has. Used for animation
@@ -139,10 +139,10 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
                 };
             }
 
-            var accuracyIndicatorText = new QuaverSpriteText[7];
+            var accuracyIndicatorText = new SpriteText[7];
             for (var i = 0; i < 7; i++)
             {
-                accuracyIndicatorText[i] = new QuaverSpriteText()
+                accuracyIndicatorText[i] = new SpriteText()
                 {
                     Parent = accuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
@@ -158,10 +158,10 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
                 };
             }
 
-            AccuracyCountQuaverText = new QuaverSpriteText[7];
+            AccuracyCountText = new SpriteText[7];
             for (var i = 0; i < 7; i++)
             {
-                AccuracyCountQuaverText[i] = new QuaverSpriteText()
+                AccuracyCountText[i] = new SpriteText()
                 {
                     Parent = accuracyDisplaySet[i],
                     Alignment = Alignment.TopLeft,
@@ -176,7 +176,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
                 };
             }
 
-            ScoreQuaverText = new QuaverSpriteText()
+            ScoreText = new SpriteText()
             {
                 Parent = accuracyBox,
                 Alignment = Alignment.TopLeft,
@@ -244,10 +244,10 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
         {
             // Update Variables and Text
             //CurrentScore = totalScore;
-            ScoreQuaverText.Text = StringHelper.ScoreToString(totalScore);
+            ScoreText.Text = StringHelper.ScoreToString(totalScore);
             TargetAccuracy = (float)tarAcc;
             JudgementCount[index] = pressSpread + releaseSpread;
-            AccuracyCountQuaverText[index+1].Text = pressSpread + " | " + releaseSpread;
+            AccuracyCountText[index+1].Text = pressSpread + " | " + releaseSpread;
 
             //Calculate graph bars
             AccuracyGraphTargetScale[index] = (float)Math.Sqrt((double)(JudgementCount[index]) / judgeCount);
@@ -286,7 +286,7 @@ namespace Quaver.States.Gameplay.Mania.UI.Accuracy
 
             // Update Accuracy Text
             CurrentAccuracy = GraphicsHelper.Tween(TargetAccuracy, CurrentAccuracy, tween);
-            AccuracyCountQuaverText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
+            AccuracyCountText[0].Text = $"{CurrentAccuracy * 100:0.00}%";
 
             // Upgrade Grade Progress Bar
             GradeProgressBar.UpdateBar(0,

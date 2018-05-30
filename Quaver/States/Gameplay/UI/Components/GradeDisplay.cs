@@ -1,12 +1,10 @@
-﻿using System;
-using Quaver.API.Enums;
+﻿using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
-using Quaver.Skinning;
 
-namespace Quaver.States.Gameplay.UI
+namespace Quaver.States.Gameplay.UI.Components
 {
     internal class GradeDisplay : Sprite
     {

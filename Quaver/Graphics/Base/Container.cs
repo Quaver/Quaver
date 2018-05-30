@@ -1,7 +1,6 @@
-﻿using Quaver.Graphics.Base;
-using Quaver.Main;
+﻿using Quaver.Main;
 
-namespace Quaver.Graphics.Sprites
+namespace Quaver.Graphics.Base
 {
     /// <inheritdoc />
     /// <summary>

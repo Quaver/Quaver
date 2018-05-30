@@ -8,15 +8,16 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Config;
 using Quaver.Database.Maps;
-using Quaver.Graphics.Enums;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States.Gameplay.Mania;
 using Quaver.States.Gameplay.UI;
-using Quaver.States.Gameplay.UI.Judgements;
+using Quaver.States.Gameplay.UI.Components;
+using Quaver.States.Gameplay.UI.Components.Judgements;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
 {

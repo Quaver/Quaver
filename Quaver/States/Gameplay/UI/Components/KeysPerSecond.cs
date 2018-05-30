@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Graphics.UserInterface;
 
-namespace Quaver.States.Gameplay.UI
+namespace Quaver.States.Gameplay.UI.Components
 {
     internal class KeysPerSecond : NumberDisplay
     {

@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Colors;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Main;
 
 namespace Quaver.Graphics.Overlays.Options
@@ -20,7 +18,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     The header's title.
         /// </summary>
-        internal QuaverSpriteText Title { get; set; }
+        internal SpriteText Title { get; set; }
         
         /// <summary>
         ///     Reference to the header's icon.
@@ -30,7 +28,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     The description text 
         /// </summary>
-        internal QuaverSpriteText Description { get; set; }
+        internal SpriteText Description { get; set; }
 
         /// <summary>
         ///     The line displayed under the header.
@@ -64,7 +62,7 @@ namespace Quaver.Graphics.Overlays.Options
             };
             
             // Header Title.
-            Title = new QuaverSpriteText()
+            Title = new SpriteText()
             {
                 Text = "Settings",
                 Font = QuaverFonts.Medium24,
@@ -91,7 +89,7 @@ namespace Quaver.Graphics.Overlays.Options
             };
             
             // Header Description.
-            Description = new QuaverSpriteText()
+            Description = new SpriteText()
             {
                 Text = "Change the way Quaver looks, sounds, feels... and tastes?",
                 Font = QuaverFonts.Medium24,

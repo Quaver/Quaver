@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
-using Quaver.API.Maps.Processors.Scoring;
-using Quaver.Graphics.Enums;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 
-namespace Quaver.States.Gameplay.UI.Judgements
+namespace Quaver.States.Gameplay.UI.Components.Judgements
 {
     /// <inheritdoc />
     /// <summary>

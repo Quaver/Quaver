@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
+using Quaver.Graphics;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 
-namespace Quaver.States.Gameplay.UI.Judgements
+namespace Quaver.States.Gameplay.UI.Components.Judgements
 {
     /// <inheritdoc />
     /// <summary>

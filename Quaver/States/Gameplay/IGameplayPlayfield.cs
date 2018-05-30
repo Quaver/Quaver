@@ -1,4 +1,5 @@
-﻿using Quaver.Graphics.Sprites;
+﻿using Quaver.Graphics.Base;
+using Quaver.Graphics.Sprites;
 
 namespace Quaver.States.Gameplay
 {

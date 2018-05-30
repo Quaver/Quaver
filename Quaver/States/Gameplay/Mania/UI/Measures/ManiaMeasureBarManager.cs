@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Quaver.GameState;
-using Quaver.Graphics.Enums;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
 
 namespace Quaver.States.Gameplay.Mania.UI.Measures

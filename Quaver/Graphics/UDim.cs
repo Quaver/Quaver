@@ -1,4 +1,4 @@
-﻿namespace Quaver.Graphics.UniversalDim
+﻿namespace Quaver.Graphics
 {
     /// <summary>
     ///     Universal Dimension Value used for QuaverUserInterface and other scalars

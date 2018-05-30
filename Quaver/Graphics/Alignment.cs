@@ -1,4 +1,4 @@
-﻿namespace Quaver.Graphics.Enums
+﻿namespace Quaver.Graphics
 {
     /// <summary>
     ///     The alignment enumerators for a Rectangle Transform.

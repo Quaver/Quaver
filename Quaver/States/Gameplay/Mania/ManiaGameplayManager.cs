@@ -8,12 +8,11 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState;
+using Quaver.Graphics;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Colors;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Input;
 using Quaver.Logging;
@@ -99,7 +98,7 @@ namespace Quaver.States.Gameplay.Mania
 
         //todo: remove. TEST.
         private Sprite SvInfoTextBox { get; set; }
-        private QuaverSpriteText SvQuaverText { get; set; }
+        private SpriteText SvText { get; set; }
         private TextButton TestButton { get; set; }
 
         //Rendering

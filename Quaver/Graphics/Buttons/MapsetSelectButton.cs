@@ -1,9 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Quaver.Database.Maps;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -25,9 +23,9 @@ namespace Quaver.Graphics.Buttons
 
         internal int Index { get; set; }
 
-        private QuaverSpriteText TitleText { get; set; }
+        private SpriteText TitleText { get; set; }
 
-        private QuaverSpriteText ArtistText { get; set; }
+        private SpriteText ArtistText { get; set; }
 
         /// <summary>
         ///     Current tween value of the object. Used for animation.
@@ -63,7 +61,7 @@ namespace Quaver.Graphics.Buttons
                 }
             });*/
 
-            TitleText = new QuaverSpriteText()
+            TitleText = new SpriteText()
             {
                 Text = "Song Title", //map.Title,
                 Font = QuaverFonts.Medium48,
@@ -76,7 +74,7 @@ namespace Quaver.Graphics.Buttons
                 Parent = this
             };
 
-            ArtistText = new QuaverSpriteText()
+            ArtistText = new SpriteText()
             {
                 Text = "Song Artist | Charter", //map.Artist + " | "+ map.Creator,
                 Font = QuaverFonts.Medium48,

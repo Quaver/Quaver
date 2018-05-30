@@ -13,13 +13,12 @@ using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Discord;
 using Quaver.GameState;
+using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Colors;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Logging;
 using Quaver.Main;
@@ -594,7 +593,7 @@ namespace Quaver.States.Results
         private void CreateJudgeWindowUI()
         {
             //Create Judge Info QuaverContainer
-            QuaverSpriteText ob;
+            SpriteText ob;
             var boundary = new Container()
             {
                 Size = new UDim2D(350, 240),
@@ -607,7 +606,7 @@ namespace Quaver.States.Results
             //Create Judge Text
             for (var i = 0; i < 6; i++)
             {
-                ob = new QuaverSpriteText()
+                ob = new SpriteText()
                 {
                     Text = "[" + ManiaGameplayReferences.JudgeNames[i] + "]: " + ManiaScoreData.JudgePressSpread[i] + " | " + ManiaScoreData.JudgeReleaseSpread[i] + " Total: " + (ManiaScoreData.JudgePressSpread[i] + ManiaScoreData.JudgeReleaseSpread[i]),
                     TextColor = GameBase.LoadedSkin.JudgeColors[i],
@@ -620,7 +619,7 @@ namespace Quaver.States.Results
             }
 
             //Create Score Text
-            ob = new QuaverSpriteText()
+            ob = new SpriteText()
             {
                 Text = ManiaScoreData.ScoreTotal.ToString(),
                 Font = QuaverFonts.Medium24,
@@ -632,7 +631,7 @@ namespace Quaver.States.Results
             };
 
             //Create Accuracy Text
-            ob = new QuaverSpriteText()
+            ob = new SpriteText()
             {
                 Text = $"{ManiaScoreData.Accuracy * 100:0.00}%",
                 Font = QuaverFonts.Medium24,
@@ -735,7 +734,7 @@ namespace Quaver.States.Results
         private void CreateAxisLabels(Drawable parent, string topLabel, string botLabel)
         {
             //top
-            var label = new QuaverSpriteText()
+            var label = new SpriteText()
             {
                 Text = topLabel,
                 Font = QuaverFonts.Medium12,
@@ -747,7 +746,7 @@ namespace Quaver.States.Results
             };
 
             //bottom
-            label = new QuaverSpriteText()
+            label = new SpriteText()
             {
                 Text = botLabel,
                 Font = QuaverFonts.Medium12,

@@ -70,10 +70,13 @@
   <ItemGroup>
     <Compile Include="Config\BindedInt.cs" />
     <Compile Include="Config\BindedValue.cs" />
+    <Compile Include="Graphics\Alignment.cs" />
+    <Compile Include="Graphics\Base\Container.cs" />
     <Compile Include="Graphics\Buttons\Dropdowns\Dropdown.cs" />
     <Compile Include="Graphics\Buttons\Dropdowns\DropdownButton.cs" />
     <Compile Include="Graphics\Buttons\Checkbox.cs" />
     <Compile Include="Graphics\Buttons\Sliders\Slider.cs" />
+    <Compile Include="Graphics\DrawRectangle.cs" />
     <Compile Include="Graphics\Overlays\Navbar\Nav.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarButton.cs" />
@@ -85,6 +88,8 @@
     <Compile Include="Graphics\Overlays\Options\OptionsType.cs" />
     <Compile Include="Graphics\Overlays\Volume\VolumeController.cs" />
     <Compile Include="Graphics\Sprites\AnimatableSprite.cs" />
+    <Compile Include="Graphics\UDim.cs" />
+    <Compile Include="Graphics\UDim2D.cs" />
     <Compile Include="Graphics\UserInterface\NumberDisplay.cs" />
     <Compile Include="Graphics\UserInterface\ProgressBar.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
@@ -115,14 +120,14 @@
     <Compile Include="States\Gameplay\HitObjects\HitObjectManager.cs" />
     <Compile Include="States\Gameplay\IGameplayInputManager.cs" />
     <Compile Include="States\Gameplay\IGameplayPlayfield.cs" />
+    <Compile Include="States\Gameplay\UI\Components\GradeDisplay.cs" />
+    <Compile Include="States\Gameplay\UI\Components\HitErrorBar.cs" />
+    <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementDisplay.cs" />
+    <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementHitBurst.cs" />
+    <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementStatusDisplay.cs" />
+    <Compile Include="States\Gameplay\UI\Components\KeysPerSecond.cs" />
+    <Compile Include="States\Gameplay\UI\Components\SongTimeProgressBar.cs" />
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />
-    <Compile Include="States\Gameplay\UI\GradeDisplay.cs" />
-    <Compile Include="States\Gameplay\UI\HitErrorBar.cs" />
-    <Compile Include="States\Gameplay\UI\Judgements\JudgementDisplay.cs" />
-    <Compile Include="States\Gameplay\UI\Judgements\JudgementHitBurst.cs" />
-    <Compile Include="States\Gameplay\UI\Judgements\JudgementStatusDisplay.cs" />
-    <Compile Include="States\Gameplay\UI\KeysPerSecond.cs" />
-    <Compile Include="States\Gameplay\UI\SongTimeProgressBar.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="States\Select\MapInfoWindow.cs" />
     <Compile Include="States\Select\ModSelector.cs" />
@@ -164,20 +169,12 @@
     <Compile Include="Graphics\Buttons\SongSelectButton.cs" />
     <Compile Include="Graphics\Buttons\TextButton.cs" />
     <Compile Include="Graphics\Buttons\BasicButton.cs" />
-    <Compile Include="Graphics\Base\DrawRectangle.cs" />
-    <Compile Include="Graphics\GameOverlay\Multiplayer\ChatManager.cs" />
-    <Compile Include="Graphics\GameOverlay\GameOverlay.cs" />
-    <Compile Include="Graphics\GameOverlay\IGameOverlayComponent.cs" />
-    <Compile Include="Graphics\GameOverlay\MenuOverlay.cs" />
     <Compile Include="Graphics\Particles\Particle.cs" />
     <Compile Include="Graphics\UserInterface\BarDisplay.cs" />
     <Compile Include="Graphics\Sprites\BakeableSprite.cs" />
-    <Compile Include="Graphics\Sprites\Container.cs" />
     <Compile Include="Main\QuaverFonts.cs" />
-    <Compile Include="Graphics\Text\QuaverSpriteText.cs" />
+    <Compile Include="Graphics\Text\SpriteText.cs" />
     <Compile Include="Graphics\Text\TextBoxStyle.cs" />
-    <Compile Include="Graphics\UniversalDim\UDim2D.cs" />
-    <Compile Include="Graphics\UniversalDim\UDim.cs" />
     <Compile Include="Main\QuaverUserInterface.cs" />
     <Compile Include="Graphics\UserInterface\BackgroundManager.cs" />
     <Compile Include="Input\ManiaKeyEventArgs.cs" />
@@ -240,7 +237,6 @@
     <Compile Include="StepMania\Etterna.cs" />
     <Compile Include="StepMania\EtternaCache.cs" />
     <Compile Include="StepMania\StepManiaConverter.cs" />
-    <Compile Include="Graphics\Enums\Alignment.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">

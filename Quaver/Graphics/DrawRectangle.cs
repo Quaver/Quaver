@@ -1,4 +1,4 @@
-﻿namespace Quaver.Graphics.Base
+﻿namespace Quaver.Graphics
 {
     /// <summary>
     ///     Similar to Xna.Framework.Rectangle, but uses float instead of int

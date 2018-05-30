@@ -2,9 +2,7 @@
 using Microsoft.Xna.Framework;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Colors;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 
 namespace Quaver.Graphics.UserInterface

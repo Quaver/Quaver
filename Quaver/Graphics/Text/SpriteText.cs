@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Enums;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -17,7 +16,7 @@ namespace Quaver.Graphics.Text
     /// <summary>
     ///     Any drawable object that uses 
     /// </summary>
-    internal class QuaverSpriteText : Drawable
+    internal class SpriteText : Drawable
     {
         /// <summary>
         ///     The Actual text of the text Box.

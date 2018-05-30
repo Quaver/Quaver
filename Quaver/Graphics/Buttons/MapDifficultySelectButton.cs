@@ -1,9 +1,7 @@
 ﻿using System;
 using Quaver.Database.Maps;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 using Color = Microsoft.Xna.Framework.Color;
@@ -26,7 +24,7 @@ namespace Quaver.Graphics.Buttons
 
         internal int Index { get; set; }
 
-        private QuaverSpriteText DifficultyNameText { get; set; }
+        private SpriteText DifficultyNameText { get; set; }
 
         private Sprite GradeImage { get; set; }
 
@@ -53,7 +51,7 @@ namespace Quaver.Graphics.Buttons
             Size.Y.Offset = BUTTON_Y_SIZE * ButtonScale;
             Size.X.Offset = BUTTON_X_SIZE * ButtonScale;
 
-            DifficultyNameText = new QuaverSpriteText()
+            DifficultyNameText = new SpriteText()
             {
                 Font = QuaverFonts.Medium48,
                 Size = new UDim2D(-40 * ButtonScale, -ButtonScale, 1, 0.6f),

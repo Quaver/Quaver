@@ -2,9 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Main;
 
 namespace Quaver.Graphics.Particles.Gameplay

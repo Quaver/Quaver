@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -14,12 +12,12 @@ namespace Quaver.Graphics.Buttons
     /// </summary>
     internal class TextButton : Button
     {
-        internal QuaverSpriteText QuaverTextSprite { get; set; }
+        internal SpriteText TextSprite { get; set; }
 
         //Constructor
         internal TextButton(Vector2 ButtonSize, string ButtonText)
         {
-            QuaverTextSprite = new QuaverSpriteText()
+            TextSprite = new SpriteText()
             {
                 Text = ButtonText,
                 Size = new UDim2D(ButtonSize.X, ButtonSize.Y),
@@ -30,7 +28,7 @@ namespace Quaver.Graphics.Buttons
             Size.X.Offset = ButtonSize.X;
             Size.Y.Offset = ButtonSize.Y;
             Image = GameBase.QuaverUserInterface.BlankBox;
-            QuaverTextSprite.TextColor = Color.Black;
+            TextSprite.TextColor = Color.Black;
         }
 
         /// <summary>

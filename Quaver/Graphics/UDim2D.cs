@@ -1,4 +1,4 @@
-﻿namespace Quaver.Graphics.UniversalDim
+﻿namespace Quaver.Graphics
 {
     /// <summary>
     ///     2 Dimensional Udim value used for QuaverUserInterface

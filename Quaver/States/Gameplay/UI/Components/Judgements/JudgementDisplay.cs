@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Drawing;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
-using Quaver.Graphics.Enums;
+using Quaver.Graphics;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
-using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Main;
 using Color = Microsoft.Xna.Framework.Color;
 
-namespace Quaver.States.Gameplay.UI.Judgements
+namespace Quaver.States.Gameplay.UI.Components.Judgements
 {
     internal class JudgementDisplay : Sprite
     {
@@ -53,7 +50,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
         /// <summary>
         ///     The sprite text for this given judgement.
         /// </summary>
-        internal QuaverSpriteText SpriteText { get; }
+        internal SpriteText SpriteText { get; }
 
         /// <summary>
         ///     The inactive color for this.
@@ -74,7 +71,7 @@ namespace Quaver.States.Gameplay.UI.Judgements
             
             Size = new UDim2D(size.X, size.Y);
            
-            SpriteText = new QuaverSpriteText()
+            SpriteText = new SpriteText()
             {
                 Alignment = Alignment.MidCenter,
                 Parent = this,

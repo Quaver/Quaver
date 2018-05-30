@@ -1,7 +1,5 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Graphics.Enums;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -17,7 +15,7 @@ namespace Quaver.Graphics.UserInterface
         private bool MouseDown { get; set; }
 
         //QuaverCursor Size
-        private float CursorSize { get; set; } = 30;
+        private float CursorSize { get; set; } = 75;
 
         //Click Size
         private float ClickCurrentSize { get; set; }

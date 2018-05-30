@@ -10,10 +10,8 @@ using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Buttons.Dropdowns;
 using Quaver.Graphics.Buttons.Sliders;
 using Quaver.Graphics.Colors;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Main;
 using Steamworks;
 
@@ -216,7 +214,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <param name="text"></param>
         private void AddTextField(string text)
         {
-            new QuaverSpriteText()
+            new SpriteText()
             {
                 TextAlignment = Alignment.TopLeft,
                 Alignment = Alignment.TopLeft,
