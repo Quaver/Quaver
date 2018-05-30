@@ -1,4 +1,5 @@
-﻿using Quaver.API.Enums;
+﻿using System;
+using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Graphics.Sprites;
@@ -39,7 +40,7 @@ namespace Quaver.States.Gameplay.UI
             Visible = Scoring.Score > 0;
             
             var grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy, Scoring.Accuracy >= 100f && Scoring.CurrentJudgements[Judgement.Perf] == 0);
-            Image = GameBase.LoadedSkin.ConvertGradeToSkinElement(grade);  
+            Image = Scoring.Failed ? GameBase.LoadedSkin.GradeSmallF : GameBase.LoadedSkin.ConvertGradeToSkinElement(grade);  
         }
     }
 }
