@@ -180,7 +180,13 @@ namespace Quaver.States.Gameplay.UI
             // Hide navbar in gameplay
             if (!Screen.IsPaused && !Screen.Failed)
                 GameBase.Navbar.PerformHideAnimation(dt);
-            
+
+            // Fade the cursor depending on if the user is paused or not.
+            if (Screen.IsPaused && !Screen.IsResumeInProgress)
+                GameBase.Cursor.FadeIn(dt, 240);
+            else
+                GameBase.Cursor.FadeOut(dt, 240);
+                
             UpdateSongProgressDisplay();
             UpdateScoreAndAccuracyDisplays();
             
