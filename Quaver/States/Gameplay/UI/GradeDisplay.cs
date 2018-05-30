@@ -27,6 +27,7 @@ namespace Quaver.States.Gameplay.UI
         internal override void Update(double dt)
         {
             ChangeGradeImage();
+            
             base.Update(dt);
         }
 

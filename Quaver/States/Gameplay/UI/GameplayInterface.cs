@@ -133,7 +133,7 @@ namespace Quaver.States.Gameplay.UI
                 Parent = Container,
                 Size = new UDim2D(AccuracyDisplay.Digits[0].SizeX, AccuracyDisplay.Digits[0].SizeY),
                 Alignment = Alignment.TopRight,
-                Position = new UDim2D(AccuracyDisplay.PosX - AccuracyDisplay.Digits[0].SizeX - 5, AccuracyDisplay.PosY)
+                Position = new UDim2D(GetGradeDisplayPosX(), AccuracyDisplay.PosY)
             };
             
             // Initialize the failure trannsitioner. 
@@ -163,6 +163,10 @@ namespace Quaver.States.Gameplay.UI
         {
             UpdateSongProgressDisplay();
             UpdateScoreAndAccuracyDisplays();
+            
+            // Change grade display posX
+            GradeDisplay.PosX = GetGradeDisplayPosX();
+            
             HandlePlayCompletion(dt);
             HandlePause(dt);
             FadeInScreen(dt);
@@ -261,5 +265,11 @@ namespace Quaver.States.Gameplay.UI
             if (!Screen.IsPaused && !Screen.IsResumeInProgress && !Screen.IsRestartingPlay && !Screen.Failed && !Screen.IsPlayComplete)
                 ScreenTransitioner.FadeOut(dt, 720);
         }
+
+        /// <summary>
+        ///     F
+        /// </summary>
+        /// <returns></returns>
+        private float GetGradeDisplayPosX() => AccuracyDisplay.PosX - 8;
     }
 }
