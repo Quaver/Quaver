@@ -416,7 +416,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         private void CreateHitError()
         {
-            HitError = new HitErrorBar(HitErrorType.Quaver, new UDim2D(50, 10))
+            HitError = new HitErrorBar(new UDim2D(50, 10))
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,

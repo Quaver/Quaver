@@ -12,11 +12,6 @@ namespace Quaver.States.Gameplay.UI.Components
     internal class HitErrorBar : Container
     {
         /// <summary>
-        ///     The type of hit error this is.
-        /// </summary>
-        internal HitErrorType Type { get; }
-
-        /// <summary>
         ///     The middle 0ms line for the hit error bar.
         /// </summary>
         internal Sprite MiddleLine { get; }
@@ -48,28 +43,17 @@ namespace Quaver.States.Gameplay.UI.Components
         /// </summary>
         /// <param name="type"></param>
         /// <param name="size"></param>
-        internal HitErrorBar(HitErrorType type, UDim2D size)
+        internal HitErrorBar(UDim2D size)
         {
-            Type = type;
             Size = size;
 
-            switch (Type)
+            MiddleLine = new Sprite()
             {
-                case HitErrorType.Quaver:
-                    // Create the middle line bar.
-                    MiddleLine = new Sprite()
-                    {
-                        Size = new UDim2D(2, 0, 0, 1),
-                        Alignment = Alignment.MidCenter,
-                        Parent = this
-                    };
-                    break;
-                case HitErrorType.Legacy:
-                    throw new NotImplementedException();
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            
+                Size = new UDim2D(2, 0, 0, 1),
+                Alignment = Alignment.MidCenter,
+                Parent = this
+            };
+
             // Create the object pool and initialize all of the sprites.
             LineObjectPool = new List<Sprite>();          
             for (var i = 0; i < PoolSize; i++)
@@ -126,14 +110,5 @@ namespace Quaver.States.Gameplay.UI.Components
             LineObjectPool[CurrentLinePoolIndex].PosX = -(float) hitTime;
             LineObjectPool[CurrentLinePoolIndex].Alpha = 0.5f;
         }
-    }
-
-    /// <summary>
-    ///     The type of hit error that will be displayed to the user.
-    /// </summary>
-    internal enum HitErrorType
-    {
-        Quaver,  // Normal, default styled.
-        Legacy // osu! styled hit error bar.
     }
 }
