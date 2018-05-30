@@ -61,6 +61,8 @@ namespace Quaver.States.Gameplay.UI
         /// </summary>
         internal KeysPerSecond KpsDisplay { get; set; }
 
+        internal GradeDisplay GradeDisplay { get; set;  }
+
         /// <summary>
         ///     If the volume has already been set to fade out.
         /// </summary>
@@ -125,6 +127,14 @@ namespace Quaver.States.Gameplay.UI
             // Set the position of the KPS display
             KpsDisplay.PosX = -KpsDisplay.TotalWidth - 10;
             KpsDisplay.PosY = AccuracyDisplay.PosY + AccuracyDisplay.Digits[0].SizeY + 10;
+
+            GradeDisplay = new GradeDisplay(Screen.Ruleset.ScoreProcessor)
+            {
+                Parent = Container,
+                Size = new UDim2D(AccuracyDisplay.Digits[0].SizeX, AccuracyDisplay.Digits[0].SizeY),
+                Alignment = Alignment.TopRight,
+                Position = new UDim2D(AccuracyDisplay.PosX - AccuracyDisplay.Digits[0].SizeX - 5, AccuracyDisplay.PosY)
+            };
             
             // Initialize the failure trannsitioner. 
             ScreenTransitioner = new Sprite()

@@ -116,6 +116,7 @@
     <Compile Include="States\Gameplay\IGameplayInputManager.cs" />
     <Compile Include="States\Gameplay\IGameplayPlayfield.cs" />
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />
+    <Compile Include="States\Gameplay\UI\GradeDisplay.cs" />
     <Compile Include="States\Gameplay\UI\HitErrorBar.cs" />
     <Compile Include="States\Gameplay\UI\Judgements\JudgementDisplay.cs" />
     <Compile Include="States\Gameplay\UI\Judgements\JudgementHitBurst.cs" />

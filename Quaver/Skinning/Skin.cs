@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -1288,6 +1289,39 @@ namespace Quaver.Skinning
         {
             return JudgeColors.Count == 0 ? new Color(0, 0, 0) : JudgeColors[(int) judgement];
         }
-        
+
+        /// <summary>
+        ///     Converts a grade enum value to its respective skin texture.
+        /// </summary>
+        /// <param name="g"></param>
+        /// <returns></returns>
+        public Texture2D ConvertGradeToSkinElement(Grade g)
+        {
+            switch (g)
+            {
+                case Grade.XX:
+                    return GradeSmallXX;
+                case Grade.X:
+                    return GradeSmallX;
+                case Grade.SS:
+                    return GradeSmallSS;
+                case Grade.S:
+                    return GradeSmallS;
+                case Grade.A:
+                    return GradeSmallA;
+                case Grade.B:
+                    return GradeSmallB;
+                case Grade.C:
+                    return GradeSmallC;
+                case Grade.D:
+                    return GradeSmallD;
+                case Grade.F:
+                    return GradeSmallF;
+                case Grade.None:
+                    return null;
+                default:
+                    throw new InvalidEnumArgumentException();
+            }
+        }
     }
 }
