@@ -86,7 +86,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The options menu attached to this navbar.
         /// </summary>
-        private OptionsOverlay OptionsMenu { get; set; }
+        internal OptionsOverlay OptionsMenu { get; set; }
 
         /// <summary>
         ///     Initialize

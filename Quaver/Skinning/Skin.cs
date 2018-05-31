@@ -244,6 +244,14 @@ namespace Quaver.Skinning
         internal Texture2D Cursor { get; set; }
 
         /// <summary>
+        ///     Pause overlay textures.
+        /// </summary>
+        internal Texture2D PauseBackground { get; set; }
+        internal Texture2D PauseContinue { get; set; }
+        internal Texture2D PauseRetry { get; set; }
+        internal Texture2D PauseBack { get; set; }
+
+        /// <summary>
         ///     Sound Effect elements. 
         ///     NOTE: SFX need to be 16-bit wav otherwise MonoGame doesn't play them correctly??
         /// </summary>
@@ -453,6 +461,12 @@ namespace Quaver.Skinning
             @"hitlighting",
             @"holdlighting",
             
+            // Pause
+            @"pause-background",
+            @"pause-continue",
+            @"pause-retry",
+            @"pause-back",
+                
             // Cursor
             @"main-cursor",
 
@@ -923,6 +937,18 @@ namespace Quaver.Skinning
                         break;
                     case @"holdlighting":
                         HoldLighting = LoadAnimationElements(element, 1, 12);
+                        break;
+                    case @"pause-background":
+                        PauseBackground = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"pause-continue":
+                        PauseContinue = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"pause-retry":
+                        PauseRetry = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"pause-back":
+                        PauseBack = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"sound-hit":
                         SoundHit = LoadSoundEffectElement(element, skinElementPath);

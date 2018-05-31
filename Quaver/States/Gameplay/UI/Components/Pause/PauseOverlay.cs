@@ -29,7 +29,7 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
         ///     Retry Button
         /// </summary>
         private BasicButton Retry { get; }
-        
+
         /// <summary>
         ///     Quit Button
         /// </summary>
@@ -54,15 +54,15 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
             {
                 Parent = this,
                 Size = new UDim2D(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height),
-                Tint = Color.Aqua,
-                Alpha = 0
+                Alpha = 0,
+                Image = GameBase.LoadedSkin.PauseBackground
             };
 
             // Continue Button
             Continue = new BasicButton()
             {
                 Parent = this,
-                Image = GameBase.QuaverUserInterface.JudgementOverlay,
+                Image = GameBase.LoadedSkin.PauseContinue,
                 Alignment = Alignment.MidLeft,
                 PosY = -150,
                 PosX = ButtonInactivePosX,
@@ -82,7 +82,7 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
             Retry = new BasicButton()
             {
                 Parent = this,
-                Image = GameBase.QuaverUserInterface.JudgementOverlay,
+                Image = GameBase.LoadedSkin.PauseRetry,
                 Alignment = Alignment.MidLeft,
                 PosY = 0,
                 PosX = ButtonInactivePosX,
@@ -98,12 +98,12 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundRetry);
                 GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Map, Screen.MapHash));
             };
-            
+                 
             // Quit Button
             Quit = new BasicButton()
             {
                 Parent = this,
-                Image = GameBase.QuaverUserInterface.JudgementOverlay,
+                Image = GameBase.LoadedSkin.PauseBack,
                 Alignment = Alignment.MidLeft,
                 PosY = 150,
                 PosX = ButtonInactivePosX,
