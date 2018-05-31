@@ -133,7 +133,7 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
                 display.SizeY = GraphicsHelper.Tween(DisplayItemSize.Y, display.SizeY, Math.Min(dt / 180, 1));   
 
                 if (display.SizeX >= DisplayItemSize.X / 2f + 5)
-                    display.SpriteText.Text = $"{display.Judgement.ToString()}: {display.JudgementCount.ToString()}";
+                    display.SpriteText.Text = $"{display.Judgement.ToString()}" + (display.JudgementCount > 0 ? $": {display.JudgementCount.ToString()}" : "");
             }
             // If we're collapsing and not expanding, make it a square.
             else
@@ -142,7 +142,7 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
                 display.SizeY = GraphicsHelper.Tween(DisplayItemSize.Y, display.SizeY, Math.Min(dt / 180, 1));
                 display.PosX = GraphicsHelper.Tween(0, display.PosX, Math.Min(dt / 180, 1));
                        
-                if (display.SizeX <= DisplayItemSize.X / 2f + 5)
+                if (display.SizeX <= DisplayItemSize.X / 2f + 10)
                     display.SpriteText.Text = display.JudgementCount.ToString();
             }
         }

@@ -72,10 +72,10 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
             
             switch (j)
             {
-                case Judgement.Marv:
+                case Judgement.Marvelous:
                     ReplaceFrames(GameBase.LoadedSkin.JudgeMarv);
                     break;
-                case Judgement.Perf:
+                case Judgement.Perfect:
                     ReplaceFrames(GameBase.LoadedSkin.JudgePerf);
                     break;
                 case Judgement.Great:
