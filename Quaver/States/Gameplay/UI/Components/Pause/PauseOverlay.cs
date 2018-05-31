@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;
+using Quaver.Helpers;
 using Quaver.Main;
 using Button = System.Windows.Forms.Button;
 
@@ -15,6 +17,9 @@ namespace Quaver.States.Gameplay.UI.Components
         internal BasicButton Continue { get; }
         internal BasicButton Retry { get; }
         internal BasicButton Quit { get; }
+
+        internal float GetActivePosX(BasicButton button) => GameBase.WindowRectangle.Width / 2f - button.SizeX / 2f;
+        internal int ButtonInactivePosX { get; } = -100;
 
         internal PauseOverlay(GameplayScreen screen)
         {
@@ -34,8 +39,9 @@ namespace Quaver.States.Gameplay.UI.Components
             {
                 Parent = this,
                 Image = GameBase.QuaverUserInterface.JudgementOverlay,
-                Alignment = Alignment.MidCenter,
+                Alignment = Alignment.MidLeft,
                 PosY = -150,
+                PosX = ButtonInactivePosX,
                 Alpha = 0
             };
             
@@ -53,8 +59,9 @@ namespace Quaver.States.Gameplay.UI.Components
             {
                 Parent = this,
                 Image = GameBase.QuaverUserInterface.JudgementOverlay,
-                Alignment = Alignment.MidCenter,
+                Alignment = Alignment.MidLeft,
                 PosY = 0,
+                PosX = ButtonInactivePosX,
                 Alpha = 0
             };
             
@@ -73,8 +80,9 @@ namespace Quaver.States.Gameplay.UI.Components
             {
                 Parent = this,
                 Image = GameBase.QuaverUserInterface.JudgementOverlay,
-                Alignment = Alignment.MidCenter,
+                Alignment = Alignment.MidLeft,
                 PosY = 150,
+                PosX = ButtonInactivePosX,
                 Alpha = 0
             };
             
@@ -106,24 +114,40 @@ namespace Quaver.States.Gameplay.UI.Components
             base.Update(dt);
         }
 
+        /// <summary>
+        ///     When the pause menu is activated, it'll fade/translate the interface on-screen.
+        /// </summary>
+        /// <param name="dt"></param>
         private void Activate(double dt)
         {
-            Background.FadeIn(dt, Screen.UI.PauseFadeTimeScale);
+            GameBase.Navbar.PerformShowAnimation(dt);
+            
+            //Background.FadeIn(dt, Screen.UI.PauseFadeTimeScale);
             Continue.FadeIn(dt, Screen.UI.PauseFadeTimeScale);
             Retry.FadeIn(dt, Screen.UI.PauseFadeTimeScale);
             Quit.FadeIn(dt, Screen.UI.PauseFadeTimeScale);
             
-            GameBase.Navbar.PerformShowAnimation(dt);
+            Continue.Translate(new Vector2(GetActivePosX(Continue), Continue.PosY), dt, Screen.UI.PauseFadeTimeScale);
+            Retry.Translate(new Vector2(GetActivePosX(Retry), Retry.PosY), dt, Screen.UI.PauseFadeTimeScale);
+            Quit.Translate(new Vector2(GetActivePosX(Quit), Quit.PosY), dt, Screen.UI.PauseFadeTimeScale);
         }
 
+        /// <summary>
+        ///     When the pause menu is deactivated, it'll fade/translate the interface off-screen.
+        /// </summary>
+        /// <param name="dt"></param>
         private void Deactivate(double dt)
         {
+            GameBase.Navbar.PerformHideAnimation(dt);
+            
             Background.FadeOut(dt, Screen.UI.PauseFadeTimeScale * 2f);
             Continue.FadeOut(dt, Screen.UI.PauseFadeTimeScale * 2f);
             Retry.FadeOut(dt, Screen.UI.PauseFadeTimeScale * 2f);
             Quit.FadeOut(dt, Screen.UI.PauseFadeTimeScale * 2f);
             
-            GameBase.Navbar.PerformHideAnimation(dt);
+            Continue.Translate(new Vector2(ButtonInactivePosX, Continue.PosY), dt, Screen.UI.PauseFadeTimeScale * 2f);
+            Retry.Translate(new Vector2(ButtonInactivePosX, Retry.PosY), dt, Screen.UI.PauseFadeTimeScale * 2f);
+            Quit.Translate(new Vector2(ButtonInactivePosX, Quit.PosY), dt, Screen.UI.PauseFadeTimeScale * 2f);
         }
     }
 }

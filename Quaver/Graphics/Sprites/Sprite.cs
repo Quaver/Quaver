@@ -158,6 +158,18 @@ namespace Quaver.Graphics.Sprites
         internal void FadeIn(double dt, float scale) => Alpha = GraphicsHelper.Tween(1, Alpha, Math.Min(dt / scale, 1));
 
         /// <summary>
+        ///     Moves the sprite to a given position.
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="dt"></param>
+        /// <param name="scale"></param>
+        internal void Translate(Vector2 pos, double dt, float scale)
+        {
+            PosX = GraphicsHelper.Tween(pos.X, PosX, Math.Min(dt / scale, 1));
+            PosY = GraphicsHelper.Tween(pos.Y, PosY, Math.Min(dt / scale, 1));
+        }
+        
+        /// <summary>
         ///     Fades the sprite to a given color.
         /// </summary>
         /// <param name="color"></param>
