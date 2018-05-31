@@ -14,6 +14,7 @@ using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States.Gameplay.UI.Components;
 using Quaver.States.Gameplay.UI.Components.Judgements;
+using Quaver.States.Gameplay.UI.Components.Pause;
 
 namespace Quaver.States.Gameplay.UI
 {
@@ -277,7 +278,7 @@ namespace Quaver.States.Gameplay.UI
             if (Screen.IsResumeInProgress)
                 ScreenTransitioner.Fade(dt, 0, PauseFadeTimeScale * 2f);
             else
-                ScreenTransitioner.Fade(dt, 0.75f, PauseFadeTimeScale);            
+                ScreenTransitioner.Fade(dt, 0.90f, PauseFadeTimeScale);            
         }
 
         /// <summary>

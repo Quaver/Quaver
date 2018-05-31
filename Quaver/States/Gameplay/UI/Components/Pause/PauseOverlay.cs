@@ -1,26 +1,50 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;
-using Quaver.Helpers;
 using Quaver.Main;
-using Button = System.Windows.Forms.Button;
 
-namespace Quaver.States.Gameplay.UI.Components
+namespace Quaver.States.Gameplay.UI.Components.Pause
 {
     internal class PauseOverlay : Container
     {
-        internal GameplayScreen Screen { get; }
-        internal Sprite Background { get; }
-        internal BasicButton Continue { get; }
-        internal BasicButton Retry { get; }
-        internal BasicButton Quit { get; }
+        /// <summary>
+        ///     Reference to the gameplay screen itself
+        /// </summary>
+        private GameplayScreen Screen { get; }
+        
+        /// <summary>
+        ///     The pause overlay's background
+        ///     (Skinnable)
+        /// </summary>
+        private Sprite Background { get; }
+        
+        /// <summary>
+        ///     Continue Button
+        /// </summary>
+        private BasicButton Continue { get; }
+        
+        /// <summary>
+        ///     Retry Button
+        /// </summary>
+        private BasicButton Retry { get; }
+        
+        /// <summary>
+        ///     Quit Button
+        /// </summary>
+        private BasicButton Quit { get; }
 
-        internal float GetActivePosX(BasicButton button) => GameBase.WindowRectangle.Width / 2f - button.SizeX / 2f;
-        internal int ButtonInactivePosX { get; } = -100;
+        /// <summary>
+        ///     The X position of where the buttons are hidden off-screen.
+        /// </summary>
+        private int ButtonInactivePosX { get; } = -500;
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Ctor
+        /// </summary>
+        /// <param name="screen"></param>
         internal PauseOverlay(GameplayScreen screen)
         {
             Screen = screen;
@@ -149,5 +173,14 @@ namespace Quaver.States.Gameplay.UI.Components
             Retry.Translate(new Vector2(ButtonInactivePosX, Retry.PosY), dt, Screen.UI.PauseFadeTimeScale * 2f);
             Quit.Translate(new Vector2(ButtonInactivePosX, Quit.PosY), dt, Screen.UI.PauseFadeTimeScale * 2f);
         }
+        
+        /// <summary>
+        ///     Gets the X position of when the button is active (Middle of the screen).
+        ///     Handled by this method because the size of the button is unknown and skinnable up to the user.
+        ///     We use this method to place it in the middle regardless.
+        /// </summary>
+        /// <param name="button"></param>
+        /// <returns></returns>
+        internal static float GetActivePosX(BasicButton button) => GameBase.WindowRectangle.Width / 2f - button.SizeX / 2f;
     }
 }

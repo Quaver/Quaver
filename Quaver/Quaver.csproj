@@ -122,11 +122,12 @@
     <Compile Include="States\Gameplay\IGameplayPlayfield.cs" />
     <Compile Include="States\Gameplay\UI\Components\GradeDisplay.cs" />
     <Compile Include="States\Gameplay\UI\Components\HitErrorBar.cs" />
+    <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementBarGraph.cs" />
     <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementDisplay.cs" />
     <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementHitBurst.cs" />
     <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementStatusDisplay.cs" />
     <Compile Include="States\Gameplay\UI\Components\KeysPerSecond.cs" />
-    <Compile Include="States\Gameplay\UI\Components\PauseOverlay.cs" />
+    <Compile Include="States\Gameplay\UI\Components\Pause\PauseOverlay.cs" />
     <Compile Include="States\Gameplay\UI\Components\SongTimeProgressBar.cs" />
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
