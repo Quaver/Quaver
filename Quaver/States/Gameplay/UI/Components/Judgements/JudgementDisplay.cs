@@ -76,8 +76,9 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
                 Alignment = Alignment.MidCenter,
                 Parent = this,
                 Text = $"{JudgementCount}",
-                Font = QuaverFonts.Medium12,
+                Font = QuaverFonts.AssistantRegular16,
                 TextColor = Color.Black,
+                TextScale = 0.85f,
                 PosX = 0,
             };
 
