@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
@@ -29,7 +30,7 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
         /// <summary>
         ///     The size of each display item.
         /// </summary>
-        internal static Vector2 DisplayItemSize { get; } = new Vector2(125, 45);
+        internal static Vector2 DisplayItemSize { get; } = new Vector2(50, 50);
 
         /// <inheritdoc />
         /// <summary>
@@ -73,49 +74,12 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
         {
             // Update the judgement counts of each one.
             foreach (var item in JudgementDisplays)
+            {
                 JudgementDisplays[item.Key].JudgementCount = Screen.Ruleset.ScoreProcessor.CurrentJudgements[item.Key];
-            
-            // Perform the collapse animation when the break is finished.
-            // and the song is close to starting.
-            if (!Screen.OnBreak && Screen.Timing.CurrentTime >= -500)
-                PerformCollapseAnimation(dt);
-            else
-                PerformCollapseAnimation(dt, true);
-          
-            base.Update(dt);
-        }
-
-        /// <summary>
-        ///     Collapses the judgement displays.
-        /// </summary>
-        /// <param name="dt"></param>
-        /// <param name="isExpanding"></param>
-        private void PerformCollapseAnimation(double dt, bool isExpanding = false)
-        {
-            for (var i = 0; i < JudgementDisplays.Count; i++)
-            { 
-                var judgement = (Judgement) i;
-                
-                // Start off the first collapse.
-                if (i == 0)
-                {    
-                    ChangeSizeAndTextWhenCollapsing(JudgementDisplays[judgement], dt, isExpanding);
-                    continue;
-                }
-                
-                // Get the previous judgement display.
-                var previous = JudgementDisplays[(Judgement) (i - 1)];
-
-                // Don't preform the animation unless the previous one has gotten to a certain size.
-                // or if we're already hit our target
-                if ((previous.SizeX > DisplayItemSize.X - DisplayItemSize.X / JudgementDisplays.Count && !isExpanding) 
-                    || (previous.SizeX < DisplayItemSize.X / 2f && isExpanding))
-                    continue;
-                            
-                // Start changing the size                          
-                ChangeSizeAndTextWhenCollapsing(JudgementDisplays[judgement], dt, isExpanding);
+                UpdateTextAndSize(JudgementDisplays[item.Key], dt);
             }
-            
+
+            base.Update(dt);
         }
 
         /// <summary>
@@ -123,28 +87,14 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
         /// </summary>
         /// <param name="display"></param>
         /// <param name="dt"></param>
-        /// <param name="isExpanding"></param>
-        private void ChangeSizeAndTextWhenCollapsing(JudgementDisplay display, double dt, bool isExpanding)
+        private static void UpdateTextAndSize(JudgementDisplay display, double dt)
         {
-            // If we're expanding, we want to make it bigger and return the text.
-            if (isExpanding)
-            {
-                display.SizeX = GraphicsHelper.Tween(DisplayItemSize.X, display.SizeX, Math.Min(dt / 180, 1));   
-                display.SizeY = GraphicsHelper.Tween(DisplayItemSize.Y, display.SizeY, Math.Min(dt / 180, 1));   
-
-                if (display.SizeX >= DisplayItemSize.X / 2f + 5)
-                    display.SpriteText.Text = $"{display.Judgement.ToString()}" + (display.JudgementCount > 0 ? $": {display.JudgementCount.ToString()}" : "");
-            }
-            // If we're collapsing and not expanding, make it a square.
-            else
-            {
-                display.SizeX = GraphicsHelper.Tween(DisplayItemSize.Y, display.SizeX, Math.Min(dt / 180, 1)); 
-                display.SizeY = GraphicsHelper.Tween(DisplayItemSize.Y, display.SizeY, Math.Min(dt / 180, 1));
-                display.PosX = GraphicsHelper.Tween(0, display.PosX, Math.Min(dt / 180, 1));
-                       
-                if (display.SizeX <= DisplayItemSize.X / 2f + 10)
-                    display.SpriteText.Text = display.JudgementCount.ToString();
-            }
+            // Tween size and pos back to normal
+            display.SizeX = GraphicsHelper.Tween(DisplayItemSize.Y, display.SizeX, Math.Min(dt / 180, 1)); 
+            display.SizeY = GraphicsHelper.Tween(DisplayItemSize.Y, display.SizeY, Math.Min(dt / 180, 1));
+            display.PosX = GraphicsHelper.Tween(0, display.PosX, Math.Min(dt / 180, 1));
+                   
+            display.SpriteText.Text = display.JudgementCount == 0 ? JudgementHelper.JudgementToShortName(display.Judgement) : display.JudgementCount.ToString();
         }
     }
 }

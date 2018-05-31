@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
@@ -75,7 +76,7 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
             {
                 Alignment = Alignment.MidCenter,
                 Parent = this,
-                Text = $"{JudgementCount}",
+                Text = $"{JudgementHelper.JudgementToShortName(j)}",
                 Font = QuaverFonts.AssistantRegular16,
                 TextColor = Color.Black,
                 TextScale = 0.85f,

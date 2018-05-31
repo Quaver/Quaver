@@ -41,7 +41,7 @@ namespace Quaver.States.Tests
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
                 Size = new UDim2D(200, 200),
-                Image = FontAwesome.GiftBox,
+                Image = GameBase.QuaverUserInterface.JudgementOverlay,
             };
             
             
