@@ -12,7 +12,6 @@ using Quaver.Logging;
 using Quaver.Main;
 using Quaver.States.Enums;
 using Quaver.States.Gameplay;
-using Quaver.States.Gameplay.Mania;
 using Quaver.States.Select;
 
 namespace Quaver.States.Loading.Map

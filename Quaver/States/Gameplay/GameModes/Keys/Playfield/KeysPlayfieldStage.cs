@@ -14,7 +14,6 @@ using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Main;
-using Quaver.States.Gameplay.Mania;
 using Quaver.States.Gameplay.UI;
 using Quaver.States.Gameplay.UI.Components;
 using Quaver.States.Gameplay.UI.Components.Judgements;
