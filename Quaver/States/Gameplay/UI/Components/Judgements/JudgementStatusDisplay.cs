@@ -52,7 +52,7 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
                 {
                     Alignment = Alignment.MidRight,
                     Parent = this,
-                    Image = GameBase.QuaverUserInterface.JudgementOverlay,
+                    Image = GameBase.LoadedSkin.JudgementOverlay,
                 };
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
@@ -94,7 +94,7 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
             display.SizeY = GraphicsHelper.Tween(DisplayItemSize.Y, display.SizeY, Math.Min(dt / 180, 1));
             display.PosX = GraphicsHelper.Tween(0, display.PosX, Math.Min(dt / 180, 1));
                    
-            display.SpriteText.Text = display.JudgementCount == 0 ? JudgementHelper.JudgementToShortName(display.Judgement) : display.JudgementCount.ToString();
+            display.SpriteText.Text = (display.JudgementCount == 0) ? JudgementHelper.JudgementToShortName(display.Judgement) : display.JudgementCount.ToString();
         }
     }
 }
