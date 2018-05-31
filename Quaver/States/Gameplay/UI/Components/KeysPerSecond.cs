@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Graphics.UserInterface;
+using Quaver.Main;
 
 namespace Quaver.States.Gameplay.UI.Components
 {
@@ -36,7 +37,7 @@ namespace Quaver.States.Gameplay.UI.Components
             
             CalculateKeysPerSecond();
             Value = Kps.ToString();
-            PosX = -TotalWidth - 10;
+            PosX = -TotalWidth + GameBase.LoadedSkin.KpsDisplayPosX;
                       
             base.Update(dt);
         }

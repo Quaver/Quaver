@@ -125,6 +125,34 @@ namespace Quaver.Skinning
         internal int HitLightingY { get; set; }
 
         /// <summary>
+        ///     Position of the score display.
+        /// </summary>
+        internal int ScoreDisplayPosX { get; set; }
+        internal int ScoreDisplayPosY { get; set; }
+
+        /// <summary>
+        ///     Position of the accuracy display.
+        /// </summary>
+        internal int AccuracyDisplayPosX { get; set; }
+        internal int AccuracyDisplayPosY { get; set; }
+
+        /// <summary>
+        ///     Position of the KPS display
+        /// </summary>
+        internal int KpsDisplayPosX { get; set; }
+        internal int KpsDisplayPosY { get; set; }
+
+        /// <summary>
+        ///     Y Pos of the combo counter
+        /// </summary>
+        internal int ComboPosY { get; set; }
+
+        /// <summary>
+        ///     Y Pos of the judgement hit burst.
+        /// </summary>
+        internal int JudgementBurstPosY { get; set; }
+
+        /// <summary>
         ///     The colour that is used for the column's lighting.
         ///     [0] Marv
         ///     [1] Perf
@@ -1207,6 +1235,14 @@ namespace Quaver.Skinning
                     HitLightingY = 0;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
+                    ScoreDisplayPosX = -10;
+                    ScoreDisplayPosY = 0;
+                    AccuracyDisplayPosX = -10;
+                    AccuracyDisplayPosY = 10;
+                    KpsDisplayPosX = -10;
+                    KpsDisplayPosY = 10;
+                    ComboPosY = 0;
+                    JudgementBurstPosY = 105;
                     break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
@@ -1252,6 +1288,14 @@ namespace Quaver.Skinning
                     HitLightingY = 0;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
+                    ScoreDisplayPosX = -10;
+                    ScoreDisplayPosY = 0;
+                    AccuracyDisplayPosX = -10;
+                    AccuracyDisplayPosY = 10;
+                    KpsDisplayPosX = -10;
+                    KpsDisplayPosY = 10;
+                    ComboPosY = 0;
+                    JudgementBurstPosY = 105;
                     break;
             }
 
@@ -1301,6 +1345,14 @@ namespace Quaver.Skinning
             BgMaskAlpha = ConfigHelper.ReadFloat(BgMaskAlpha, data["Gameplay"]["BgMaskAlpha"]);
             FlipNoteImagesOnUpScroll4K = ConfigHelper.ReadBool(FlipNoteImagesOnUpScroll4K, data["Gameplay"]["FlipNoteImagesOnUpScroll4K"]);
             FlipNoteImagesOnUpScroll7K = ConfigHelper.ReadBool(FlipNoteImagesOnUpScroll7K, data["Gameplay"]["FlipNoteImagesOnUpScroll7K"]);
+            ScoreDisplayPosX = ConfigHelper.ReadInt32(ScoreDisplayPosX, data["Gameplay"]["ScoreDisplayPosX"]);
+            ScoreDisplayPosY = ConfigHelper.ReadInt32(ScoreDisplayPosY, data["Gameplay"]["ScoreDisplayPosY"]);
+            AccuracyDisplayPosX = ConfigHelper.ReadInt32(AccuracyDisplayPosX, data["Gameplay"]["AccuracyDisplayPosX"]);
+            AccuracyDisplayPosY = ConfigHelper.ReadInt32(AccuracyDisplayPosY, data["Gameplay"]["AccuracyDisplayPosY"]);
+            KpsDisplayPosX = ConfigHelper.ReadInt32(KpsDisplayPosX, data["Gameplay"]["KpsDisplayPosX"]);
+            KpsDisplayPosY = ConfigHelper.ReadInt32(KpsDisplayPosY, data["Gameplay"]["KpsDisplayPosY"]);
+            ComboPosY = ConfigHelper.ReadInt32(ComboPosY, data["Gameplay"]["ComboPosY"]);
+            JudgementBurstPosY = ConfigHelper.ReadInt32(JudgementBurstPosY, data["Gameplay"]["JudgementBurstPosY"]);
 
             Logger.LogSuccess($"skin.ini file has successfully been read.", LogType.Runtime);
         }

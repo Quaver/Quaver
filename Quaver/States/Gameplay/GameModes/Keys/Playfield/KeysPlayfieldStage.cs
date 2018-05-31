@@ -401,6 +401,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,
+                PosY = GameBase.LoadedSkin.ComboPosY
             };
 
             OriginalComboDisplayY = ComboDisplay.PosY;
@@ -437,7 +438,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             // Set size w/ scaling.
             var size = new Vector2(firstFrame.Width, firstFrame.Height) * GameBase.LoadedSkin.JudgementHitBurstScale / firstFrame.Height;
             
-            JudgementHitBurst = new JudgementHitBurst(frames, size, 105)
+            JudgementHitBurst = new JudgementHitBurst(frames, size, GameBase.LoadedSkin.JudgementBurstPosY)
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,

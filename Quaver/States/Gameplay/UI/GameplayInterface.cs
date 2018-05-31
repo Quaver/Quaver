@@ -116,7 +116,8 @@ namespace Quaver.States.Gameplay.UI
             };
 
             // Put the display in the top right corner.
-            ScoreDisplay.PosX = -ScoreDisplay.TotalWidth - 10;
+            ScoreDisplay.PosX = -ScoreDisplay.TotalWidth + GameBase.LoadedSkin.ScoreDisplayPosX;
+            ScoreDisplay.PosY = GameBase.LoadedSkin.ScoreDisplayPosY;
             
             // Create acc display
             AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0), new Vector2(1.5f, 1.5f))
@@ -126,8 +127,8 @@ namespace Quaver.States.Gameplay.UI
             };
             
             // Set the position of the accuracy display.
-            AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth - 10;
-            AccuracyDisplay.PosY = ScoreDisplay.Digits[0].SizeY + 10;
+            AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth + GameBase.LoadedSkin.AccuracyDisplayPosX;
+            AccuracyDisplay.PosY = ScoreDisplay.Digits[0].SizeY + GameBase.LoadedSkin.AccuracyDisplayPosY;
             
             // Create judgement status display
             JudgementStatusDisplay = new JudgementStatusDisplay(Screen) { Parent = Container };
@@ -140,8 +141,8 @@ namespace Quaver.States.Gameplay.UI
             };
             
             // Set the position of the KPS display
-            KpsDisplay.PosX = -KpsDisplay.TotalWidth - 10;
-            KpsDisplay.PosY = AccuracyDisplay.PosY + AccuracyDisplay.Digits[0].SizeY + 10;
+            KpsDisplay.PosX = -KpsDisplay.TotalWidth + GameBase.LoadedSkin.KpsDisplayPosX;
+            KpsDisplay.PosY = AccuracyDisplay.PosY + AccuracyDisplay.Digits[0].SizeY + GameBase.LoadedSkin.KpsDisplayPosY;
 
             GradeDisplay = new GradeDisplay(Screen.Ruleset.ScoreProcessor)
             {
@@ -227,7 +228,7 @@ namespace Quaver.States.Gameplay.UI
             // If the old accuracy's length isn't the same, then we need to reposition the sprite
             // Example: 100.00% to 99.99% needs repositioning.
             if (oldAcc.Length != AccuracyDisplay.Value.Length)
-                AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth - 10;
+                AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth + GameBase.LoadedSkin.AccuracyDisplayPosX;
         }
 
         /// <summary>
