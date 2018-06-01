@@ -560,6 +560,8 @@ namespace Quaver.Skinning
             {
                 var skinElementPath = skinDir + $"/{element}.png";
                     
+                Console.WriteLine(element);
+                
                 // Load up all the skin elements.
                 switch (element)
                 {
@@ -1107,8 +1109,9 @@ namespace Quaver.Skinning
         /// <returns></returns>
         private static List<Texture2D> LoadAnimationElements(string element, int rows, int columns)
         {
-            // Attempt to find a file that matches the regular expression in the skin directory.      
-            var files = Directory.GetFiles(ConfigManager.SkinDirectory.Value + "/" + ConfigManager.Skin.Value);
+            // Attempt to find a file that matches the regular expression in the skin directory.    
+            var directory = $"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}";
+            var files = Directory.GetFiles(directory);
 
             foreach (var f in files)
             {
@@ -1131,8 +1134,10 @@ namespace Quaver.Skinning
                         
             // If we end up getting down here, that means we need to load the spritesheet from our resources.
             // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
-            var elementToLoad = rows == 0 && columns == 0 ? element : $"{element}_{rows}x{columns}";
-            return GraphicsHelper.LoadSpritesheetFromTexture(LoadSkinTextureFromResources(elementToLoad), rows, columns);
+            if (rows == 0 && columns == 0)
+                return new List<Texture2D> {LoadIndividualElement(element, directory)};
+
+            return GraphicsHelper.LoadSpritesheetFromTexture(LoadSkinTextureFromResources($"{element}_{rows}x{columns}"), rows, columns);
         }
 
         /// <summary>
@@ -1220,7 +1225,7 @@ namespace Quaver.Skinning
                     ReceptorPositionOffset7K = -110;
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = false;
-                    JudgementHitBurstScale = 40;
+                    JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects4K = true;
                     ReceptorsOverHitObjects7K = true;
                     JudgeColors.Insert(0, new Color(255, 255, 200));
@@ -1273,7 +1278,7 @@ namespace Quaver.Skinning
                     ReceptorPositionOffset7K = 0;
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = true;
-                    JudgementHitBurstScale = 40;
+                    JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects4K = false;
                     ReceptorsOverHitObjects7K = false;
                     JudgeColors.Insert(0, new Color(255, 255, 200));
