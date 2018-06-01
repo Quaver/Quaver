@@ -265,16 +265,18 @@ namespace Quaver.States.Gameplay
         {
             if (!Failed && !IsPlayComplete && InputHelper.IsUniqueKeyPress(ConfigManager.KeyPause.Value))
                 Pause();
-                        
-            // Don't handle actually gameplay specific input if the game is paused.
-            if (IsPaused || Failed || IsPlayComplete)
+
+            if (IsPaused || Failed)
                 return;
+
+            if (!IsPlayComplete)
+            {
+                // Handle the restarting of the map.
+                HandlePlayRestart(dt);
             
-            // Handle the restarting of the map.
-            HandlePlayRestart(dt);
-            
-            if (InputHelper.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
-                SkipToNextObject();
+                if (InputHelper.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
+                    SkipToNextObject();              
+            }
             
             // Handle input per game mode.
             Ruleset.HandleInput(dt);

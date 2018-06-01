@@ -83,7 +83,7 @@ namespace Quaver.States.Gameplay
         /// <param name="dt"></param>
         internal void Update(double dt)
         {
-            if (!Screen.Failed || !Screen.IsPlayComplete)
+            if (!Screen.Failed)
                 HitObjectManager.Update(dt);
             
             Playfield.Update(dt);
