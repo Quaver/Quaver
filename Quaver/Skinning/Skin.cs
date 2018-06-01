@@ -559,9 +559,7 @@ namespace Quaver.Skinning
             foreach (var element in skinElements)
             {
                 var skinElementPath = skinDir + $"/{element}.png";
-                    
-                Console.WriteLine(element);
-                
+                                    
                 // Load up all the skin elements.
                 switch (element)
                 {
