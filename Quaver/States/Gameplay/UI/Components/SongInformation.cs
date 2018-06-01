@@ -10,22 +10,51 @@ using Quaver.Modifiers;
 
 namespace Quaver.States.Gameplay.UI.Components
 {
-    
+    /// <inheritdoc />
+    /// <summary>
+    ///     Sprite that displays the song's information, displayed at the beginning of the play session.
+    /// </summary>
     internal class SongInformation : Sprite
     {
+        /// <summary>
+        /// Reference to the actual gameplay screen.
+        /// </summary>
         private GameplayScreen Screen { get; }
 
+        /// <summary>
+        ///     The title of the song
+        /// </summary>
         private SpriteText Title { get; }
 
+        /// <summary>
+        ///     The difficulty name of the song
+        /// </summary>
         private SpriteText Difficulty { get; }
 
+        /// <summary>
+        ///     The creator of the map
+        /// </summary>
         private SpriteText Creator { get; }
 
-        private SpriteText QSS { get; }
+        /// <summary>
+        ///     The map's difficulty rating
+        /// </summary>
+        private SpriteText Rating { get; }
         
+        /// <summary>
+        ///     The activated mods.
+        /// </summary>
         private SpriteText Mods { get; }
 
+        /// <summary>
+        ///     The amount of spacing between each piece of text.
+        /// </summary>
         private int TextYSpacing { get; } = 16;
+
+        /// <summary>
+        ///     The scale used for fade animations.
+        /// </summary>
+        private static float AnimationScale => 120f / GameBase.AudioEngine.PlaybackRate;
 
         /// <summary>
         ///     Ctor -
@@ -71,7 +100,7 @@ namespace Quaver.States.Gameplay.UI.Components
                 Alpha = 0
             };
 
-            QSS = new SpriteText()
+            Rating = new SpriteText()
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
@@ -83,40 +112,42 @@ namespace Quaver.States.Gameplay.UI.Components
                 TextColor = ColorHelper.DifficultyToColor(Screen.Map.CalculateFakeDifficulty(GameBase.AudioEngine.PlaybackRate))
             };
 
-            var modsString = "Mods: " + (GameBase.CurrentGameModifiers.Count > 0 ? $"{ModHelper.GetActivatedModsString()}" :  "None");
-            
+            // Get a formatted string of the activated mods.
+            var modsString = "Mods: " + (GameBase.CurrentGameModifiers.Count > 0 ? $"{ModHelper.GetActivatedModsString()}" :  "None");         
             Mods = new SpriteText()
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = modsString,
                 Font = QuaverFonts.AssistantRegular16,
-                PosY = QSS.PosY + TextYSpacing + TextYSpacing * 0.7f,
+                PosY = Rating.PosY + TextYSpacing + TextYSpacing * 0.7f,
                 TextScale = 0.7f,
                 Alpha = 0
             };
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="dt"></param>
         internal override void Update(double dt)
         {
-            // Fade in 
+            // Fade in on map start
             if (Screen.Timing.CurrentTime < -500)
             {
-                Fade(dt, 0.75f, 120 / GameBase.AudioEngine.PlaybackRate);
-                Title.FadeIn(dt, 120 / GameBase.AudioEngine.PlaybackRate);
-                Difficulty.FadeIn(dt, 120/ GameBase.AudioEngine.PlaybackRate);
-                Creator.FadeIn(dt, 120 / GameBase.AudioEngine.PlaybackRate);
-                QSS.FadeIn(dt, 120 / GameBase.AudioEngine.PlaybackRate);
-                Mods.FadeIn(dt, 120 / GameBase.AudioEngine.PlaybackRate);
+                Title.FadeIn(dt, AnimationScale);
+                Difficulty.FadeIn(dt, AnimationScale);
+                Creator.FadeIn(dt, AnimationScale);
+                Rating.FadeIn(dt, AnimationScale);
+                Mods.FadeIn(dt, AnimationScale);
             }
             else
             {
-                FadeOut(dt, 120 / GameBase.AudioEngine.PlaybackRate);
-                Title.FadeOut(dt, 120 / GameBase.AudioEngine.PlaybackRate);
-                Difficulty.FadeOut(dt, 120 / GameBase.AudioEngine.PlaybackRate);
-                Creator.FadeOut(dt, 120 / GameBase.AudioEngine.PlaybackRate);
-                QSS.FadeOut(dt, 120 / GameBase.AudioEngine.PlaybackRate);
-                Mods.FadeOut(dt, 120 / GameBase.AudioEngine.PlaybackRate);
+                Title.FadeOut(dt, AnimationScale);
+                Difficulty.FadeOut(dt, AnimationScale);
+                Creator.FadeOut(dt, AnimationScale);
+                Rating.FadeOut(dt, AnimationScale);
+                Mods.FadeOut(dt, AnimationScale);
             }
             
             base.Update(dt);
