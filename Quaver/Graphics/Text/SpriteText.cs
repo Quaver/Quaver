@@ -231,5 +231,24 @@ namespace Quaver.Graphics.Text
             //Console.WriteLine("MAX: {0}, TOTAL {1}", MaxTextLines, textline);
             return wrappedText.ToString();
         }
+        
+        /// <summary>
+        ///     Fades out the sprite to a given alpha.
+        /// </summary>
+        internal void Fade(double dt, float target, float scale) => Alpha = GraphicsHelper.Tween(target, Alpha, Math.Min(dt / scale, 1)); 
+        
+        /// <summary>
+        ///     Completely fades out the object.
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="scale"></param>
+        internal void FadeOut(double dt, float scale) => Alpha = GraphicsHelper.Tween(0, Alpha, Math.Min(dt / scale, 1)); 
+        
+        /// <summary>
+        ///     Completely fades in the object.
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="scale"></param>
+        internal void FadeIn(double dt, float scale) => Alpha = GraphicsHelper.Tween(1, Alpha, Math.Min(dt / scale, 1));
     }
 }
