@@ -74,6 +74,11 @@ namespace Quaver.States.Gameplay.UI
         internal PauseOverlay PauseOverlay { get; set; }
 
         /// <summary>
+        ///     Song information displayed at the beginning of the map.
+        /// </summary>
+        internal SongInformation SongInfo { get; set; }
+
+        /// <summary>
         ///     If the volume has already been set to fade out.
         /// </summary>
         private bool VolumeFadedOut { get; set; }
@@ -150,6 +155,14 @@ namespace Quaver.States.Gameplay.UI
                 Size = new UDim2D(AccuracyDisplay.Digits[0].SizeX, AccuracyDisplay.Digits[0].SizeY),
                 Alignment = Alignment.TopRight,
                 Position = new UDim2D(GetGradeDisplayPosX(), AccuracyDisplay.PosY)
+            };
+
+            // Song Information Display
+            SongInfo = new SongInformation(Screen)
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                PosY = -200
             };
             
             // Initialize the failure trannsitioner. 
