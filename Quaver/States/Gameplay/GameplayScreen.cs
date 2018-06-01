@@ -213,10 +213,10 @@ namespace Quaver.States.Gameplay
         public void Update(double dt)
         {
             UI.Update(dt);
-
+            Timing.Update(dt);
+            
             if (!Failed && !IsPlayComplete)
             {
-                Timing.Update(dt);
                 HandleResuming();
                 PauseIfWindowInactive();
                 PlayComboBreakSound();

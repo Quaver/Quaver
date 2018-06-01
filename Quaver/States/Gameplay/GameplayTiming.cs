@@ -101,7 +101,7 @@ namespace Quaver.States.Gameplay
         /// <param name="dt"></param>
         private void UpdateSongTime(double dt)
         {
-            if (GameplayScreen.IsPaused || GameplayScreen.Failed || GameplayScreen.IsPlayComplete)
+            if (GameplayScreen.IsPaused || GameplayScreen.Failed)
                 return;
                         
             // If the audio didn't begin yet, 

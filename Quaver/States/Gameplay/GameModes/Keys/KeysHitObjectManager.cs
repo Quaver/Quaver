@@ -118,10 +118,17 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             // Search for closest ManiaHitObject that is inside the HitTiming Window
             for (var i = 0; i < PoolSize && i < ObjectPool.Count; i++)
             {
-                    if (ObjectPool[i].Info.Lane == lane && ObjectPool[i].Info.StartTime - songTime > -JudgeWindow.Okay)
-                        return i;
+                if (ObjectPool[i].Info.Lane == lane && ObjectPool[i].Info.StartTime - songTime > -Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay])
+                    return i;
             }
 
+            // Search held long notes as well for the time being.
+            for (var i = 0; i < HeldLongNotes.Count; i++)
+            {
+                if (HeldLongNotes[i].Info.Lane == lane && HeldLongNotes[i].Info.EndTime - songTime > -Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[Judgement.Okay])
+                    return i;
+            }
+            
             return -1;
         }
 
@@ -205,14 +212,17 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 // If the LN's release was missed. (Counts as an okay instead of a miss.)
                 if (Ruleset.Screen.Timing.CurrentTime > hitObject.TrueEndTime + window)
                 {
-                    Ruleset.ScoreProcessor.CalculateScore(Judgement.Okay);
+                    // The judgement that is given when a user completely misses the release.
+                    const Judgement missedJudgement = Judgement.Okay;
+                    
+                    Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
                     
                     // Make the combo display visible since it is now changing.
                     var playfield = (KeysPlayfield) Ruleset.Playfield;
                     playfield.Stage.ComboDisplay.MakeVisible();
                     
                     // Perform hit burst animation
-                    playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
+                    playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(missedJudgement);
 
                     // Stop the hitlighting animation.
                     playfield.Stage.HitLighting[hitObject.Info.Lane - 1].StopHolding();

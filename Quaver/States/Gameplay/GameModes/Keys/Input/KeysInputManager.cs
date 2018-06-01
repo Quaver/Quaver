@@ -108,34 +108,22 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 if (objectIndex == -1)
                     continue;
                 
-                var hitObject = (KeysHitObject) manager.ObjectPool[objectIndex];
-                
                 // If the key was pressed during this frame.
                 if (BindingStore[i].Pressed)
                 {
-                    HandleKeyPress(manager, hitObject, objectIndex);
+                    HandleKeyPress(manager, (KeysHitObject) manager.ObjectPool[objectIndex], objectIndex);
                 }
                 // If the key was released during this frame.
                 else
-                {                                   
-                    var noteIndex = -1;
-                    
-                    // Get the most recent held long note in the current lane.
+                {   
+                    // Find the index of the actual closest LN and handle the key release 
+                    // if so.
                     for (var j = 0; j < manager.HeldLongNotes.Count; j++)
                     {
-                        if (manager.HeldLongNotes[j].Info.Lane != i + 1) 
-                            continue;
-                        
-                        noteIndex = j;
-                        break;
+                        // Handle the release.
+                        if (manager.HeldLongNotes[j].Info.Lane == i + 1)
+                            HandleKeyRelease(manager, j);
                     }
-
-                    // If there is no object, then don't bother.
-                    if (noteIndex == -1)
-                        continue;
-                    
-                    // Handle the release.
-                    HandleKeyRelease(manager, noteIndex);
                 }
             }
             
@@ -216,7 +204,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         ///     Handles an individual key release during gameplay.
         /// </summary>
         private void HandleKeyRelease(KeysHitObjectManager manager, int noteIndex)
-        {
+        {            
+            // Don't bother executing if there aren't any long notes.
+            if (manager.HeldLongNotes.Count == 0)
+                return;
+
+            
             // Check which window the object has 
             var receivedJudgementIndex = -1;                   
             
