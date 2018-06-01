@@ -153,7 +153,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 var hitObject = (KeysHitObject) ObjectPool[i];
                 
                 // If the user misses the note.
-                if (Ruleset.Screen.Timing.CurrentTime > hitObject.TrueStartTime + Ruleset.ScoreProcessor.JudgementWindow.Last().Value)
+                if (Ruleset.Screen.Timing.CurrentTime > hitObject.TrueStartTime + Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay])
                 {
                     // Add a miss to their score.
                     Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
@@ -194,14 +194,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         private void UpdateAndScoreHeldObjects()
         {
+            // The release window. (Window * Multiplier)
+            var window = Ruleset.ScoreProcessor.JudgementWindow[Judgement.Okay] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[Judgement.Okay];
+
             // Update the currently held long notes.
             for (var i = 0; i < HeldLongNotes.Count; i++)
             {
                 var hitObject = (KeysHitObject) HeldLongNotes[i];
 
-                // The release window. (Window * Multiplier)
-                var window = Ruleset.ScoreProcessor.JudgementWindow.Last().Value * Ruleset.ScoreProcessor.WindowReleaseMultiplier.Last().Value;
-                
                 // If the LN's release was missed. (Counts as an okay instead of a miss.)
                 if (Ruleset.Screen.Timing.CurrentTime > hitObject.TrueEndTime + window)
                 {

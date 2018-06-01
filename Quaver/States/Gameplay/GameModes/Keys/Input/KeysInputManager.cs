@@ -166,23 +166,40 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 // Update the user's score
                 Ruleset.ScoreProcessor.CalculateScore(judgement);
 
-                // If the object is an LN, hold it at the receptors
-                if (hitObject.IsLongNote) 
-                    manager.ChangePoolObjectStatusToHeld(objectIndex);
-                // If the object is not an LN, recycle it.
-                else
-                    manager.RecyclePoolObject(objectIndex);
+                switch (judgement)
+                {
+                    // Handle early miss cases here.
+                    case Judgement.Miss when hitObject.IsLongNote:
+                        manager.KillPoolObject(objectIndex);
+                        break;
+                    // Handle non-miss cases.
+                    case Judgement.Miss:
+                        manager.RecyclePoolObject(objectIndex);
+                        break;
+                    default:
+                        if (hitObject.IsLongNote) 
+                            manager.ChangePoolObjectStatusToHeld(objectIndex);
+                        // If the object is not an LN, recycle it.
+                        else
+                            manager.RecyclePoolObject(objectIndex);
+                        break;
+                }
 
                 // Make the combo display visible since it is now changing.
                 var playfield = (KeysPlayfield) Ruleset.Playfield;
                 playfield.Stage.ComboDisplay.MakeVisible();
-                
+
                 // Also add a judgement to the hit error.
                 playfield.Stage.HitError.AddJudgement(judgement, hitObject.TrueStartTime - Ruleset.Screen.Timing.CurrentTime);
-                
+                               
                 // Perform hit burst animation
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
-                             
+                
+                // Don't execute any further if the user early missed, as these
+                // are things pertaining to animations when the user actually hits the note.
+                if (judgement == Judgement.Miss)
+                    return;
+                      
                 // Perform hit lighting animation
                 var laneIndex = hitObject.Info.Lane - 1;
                 
@@ -202,7 +219,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         {
             // Check which window the object has 
             var receivedJudgementIndex = -1;                   
-            for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
+            
+            // JudgementWindow.Count -1 here because we don't count "misses" in this case, which is the last judgement.
+            for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count - 1; j++) 
             {
                 // Get the release window of the current judgement.
                 var releaseWindow = Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[(Judgement) j];
