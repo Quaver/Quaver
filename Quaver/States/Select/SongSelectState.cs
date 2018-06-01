@@ -371,6 +371,7 @@ namespace Quaver.States.Select
             }
             catch (Exception ex)
             {
+                Logger.LogError(ex, LogType.Runtime);
                 ModManager.RemoveSpeedMods();
             }
 
