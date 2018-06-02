@@ -148,14 +148,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         /// </summary>
         internal override void Destroy()
-        {
+        {            
+            HitObjectSprite.Destroy();
+            
             if (IsLongNote)
             {
                 LongNoteBodySprite.Destroy();
                 LongNoteEndSprite.Destroy();
             }
-            
-            HitObjectSprite.Destroy();
         }
         
         /// <summary>
