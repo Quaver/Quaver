@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Quaver.API.Enums;
+using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Config;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
@@ -145,8 +146,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
             // Check which hit window this object's timing is in
             for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
             {
+                var time = Ruleset.Screen.Timing.CurrentTime;
+                var hitDifference = hitObject.TrueStartTime - time;
+                
                 // Check if the user actually hit the object.
-                if (!(Math.Abs(hitObject.TrueStartTime - Ruleset.Screen.Timing.CurrentTime) <= Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j])) 
+                if (!(Math.Abs(hitDifference) <= Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j])) 
                     continue;
                         
                 var judgement = (Judgement) j;
@@ -154,6 +158,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 // Update the user's score
                 Ruleset.ScoreProcessor.CalculateScore(judgement);
 
+                // Add new hit stat data.
+                var stat = new HitStat(hitObject.Info, time, judgement, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+                Ruleset.ScoreProcessor.Stats.Add(stat);
+                
                 switch (judgement)
                 {
                     // Handle early miss cases here.
@@ -208,10 +216,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
             // Don't bother executing if there aren't any long notes.
             if (manager.HeldLongNotes.Count == 0)
                 return;
-
             
             // Check which window the object has 
             var receivedJudgementIndex = -1;                   
+            
+            // Stores the hit time difference. Declared out of scope of the loop so we can use it
+            // to store hit data.
+            double timeDiff = 0;
             
             // JudgementWindow.Count -1 here because we don't count "misses" in this case, which is the last judgement.
             for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count - 1; j++) 
@@ -219,7 +230,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 // Get the release window of the current judgement.
                 var releaseWindow = Ruleset.ScoreProcessor.JudgementWindow[(Judgement) j] * Ruleset.ScoreProcessor.WindowReleaseMultiplier[(Judgement) j];
 
-                if (!(Math.Abs(manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.Timing.CurrentTime) < releaseWindow)) 
+                timeDiff = manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.Timing.CurrentTime;
+                if (!(Math.Abs(timeDiff) < releaseWindow)) 
                     continue;
                         
                 receivedJudgementIndex = j;
@@ -236,7 +248,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
             // If LN has been released during a window
             if (receivedJudgementIndex != -1)
             {
-                Ruleset.ScoreProcessor.CalculateScore((Judgement) receivedJudgementIndex);
+                // Calc new score.
+                var receivedJudgement = (Judgement) receivedJudgementIndex;
+                Ruleset.ScoreProcessor.CalculateScore(receivedJudgement);
+                
+                // Add new hit stat data.
+                var stat = new HitStat(manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.CurrentTime, receivedJudgement, timeDiff, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+                Ruleset.ScoreProcessor.Stats.Add(stat);
                 
                 // Also add a judgement to the hit error.
                 playfield.Stage.HitError.AddJudgement((Judgement)receivedJudgementIndex, manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.Timing.CurrentTime);
@@ -250,8 +268,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
             // If LN has been released early
             else
             {
+                const Judgement receivedJudgement = Judgement.Miss;
+                
                 // Count it as an okay if it was released early and kill the hold.
-                Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                Ruleset.ScoreProcessor.CalculateScore(receivedJudgement);
+                
+                // Add new hit stat data.
+                var stat = new HitStat(manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.CurrentTime, receivedJudgement, timeDiff, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+                Ruleset.ScoreProcessor.Stats.Add(stat);
                 
                 // Perform hit burst animation
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
