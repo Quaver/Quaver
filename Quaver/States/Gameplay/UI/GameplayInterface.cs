@@ -96,8 +96,11 @@ namespace Quaver.States.Gameplay.UI
         /// </summary>
         internal int PauseFadeTimeScale { get; } = 120;
 
-        internal ScoreboardUser TestUser { get; set;  }
-        
+        /// <summary>
+        ///     The scoreboard, lol.
+        /// </summary>
+        internal Scoreboard Scoreboard { get; set; }
+
         /// <summary>
         ///     Ctor -
         /// </summary>
@@ -323,30 +326,39 @@ namespace Quaver.States.Gameplay.UI
         ///     Creates all of the scoreboard users.
         /// </summary>
         private void CreateScoreboard()
-        {                    
+        {      
             var judges = new List<Judgement>();
             Screen.Map.HitObjects.ForEach(x =>
             {
-                judges.Add(Judgement.Marvelous);
+                judges.Add(Judgement.Great);
                 
                 if (x.IsLongNote)
-                    judges.Add(Judgement.Marvelous);
+                    judges.Add(Judgement.Great);
+            });
+            
+            Scoreboard = new Scoreboard(new List<ScoreboardUser>
+            {
+                // Add self to scoreboard
+                new ScoreboardUser(Screen, ScoreboardUserType.Self, ConfigManager.Username.Value, null, GameBase.LoadedSkin.GradeSmallA)
+                {
+                    Parent = Container,
+                    Alignment = Alignment.MidLeft
+                },
+                
+                // Add test user
+                new ScoreboardUser(Screen, ScoreboardUserType.Other, "Bot", judges, GameBase.LoadedSkin.NoteReceptorsUp4K[0])
+                {
+                    Parent = Container,
+                    Alignment = Alignment.MidLeft,
+                },
             });
 
-            TestUser = new ScoreboardUser(Screen, ScoreboardUserType.Other, "Test", judges, GameBase.LoadedSkin.NoteReceptorsUp4K[0])
-            {
-                Parent = Container,
-                Alignment = Alignment.MidLeft,
-                PosX = 5
-            };
+            Scoreboard.Parent = Container;
         }
         
         /// <summary>
         ///     Updates the scoreboard for all the current users.
         /// </summary>
-        internal void UpdateScoreboardUsers()
-        {
-            TestUser.CalculateScoreForNextObject();
-        }
+        internal void UpdateScoreboardUsers() => Scoreboard.CalculateScores();
     }
 }

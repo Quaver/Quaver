@@ -25,13 +25,18 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         /// <summary>
         ///     The type of user this is. Either self or another.
         /// </summary>
-        private ScoreboardUserType Type { get; }
+        internal ScoreboardUserType Type { get; }
 
         /// <summary>
         ///    New score processor for this current user's scoreboard.
         ///    So we can calculate score on the fly.
         /// </summary>
-        private ScoreProcessor Processor { get; }
+        internal ScoreProcessor Processor { get; }
+
+        /// <summary>
+        ///    The user's target Y position based on their current rank.
+        /// </summary>
+        internal float TargetYPosition { get; set; }
 
         /// <summary>
         ///     The list of order judgements the user has gotten, so we can calculate their score
@@ -47,7 +52,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         /// <summary>
         ///     Text that displays the username of the player.
         /// </summary>
-        private SpriteText Username { get; }
+        internal SpriteText Username { get; }
 
         /// <summary>
         ///     Text that displays the current score of the user.
@@ -81,14 +86,14 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             Size = new UDim2D(275, 50);
 
             // The alpha of the tect - determined by the scoreboard user type.
-            var textAlpha = 0f;
+            float textAlpha;
 
             // Set props based on the type of scoreboard user this is.
             switch (Type)
             {
                 case ScoreboardUserType.Self:
                     Tint = QuaverColors.MainAccent;
-                    Alpha = 0.75f;
+                    Alpha = 1f;
                     textAlpha = 1f;
                     break;
                 case ScoreboardUserType.Other:
@@ -96,6 +101,8 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                     Alpha = 0.75f;
                     textAlpha = 0.75f;
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             switch (Screen.Map.Mode)
@@ -119,13 +126,13 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 Alignment = Alignment.MidLeft,
                 Image = avatar
             };
-
+            
             // Create username text.
             Username = new SpriteText()
             {
                 Parent = this,
                 Font = QuaverFonts.AssistantRegular16,
-                Text = username,
+                Text = (username == "") ? "  " : username,
                 Alignment = Alignment.TopLeft,
                 Alpha = textAlpha
             };
