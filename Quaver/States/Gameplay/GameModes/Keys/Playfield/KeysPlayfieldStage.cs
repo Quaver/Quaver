@@ -112,6 +112,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
        
             CreateStageLeft();
             CreateStageRight();
+            CreateHitPositionOverlay();
                           
             // Create game mode specific sprites.
             // 4K and 7K are two separate modes and do NOT use the same textures
@@ -153,8 +154,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
-            CreateHitPositionOverlay();
             
             // Create distant overlay last so it shows over the objects.
             CreateDistantOverlay();
@@ -322,9 +321,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             for (var i = 0; i < 7; i++)
             {
                 var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
-
-                // Create individiaul receptor.
-                Receptors.Add(new Sprite
+                
+                var receptor = new Sprite
                 {
                     Size = new UDim2D(Playfield.LaneSize, Playfield.LaneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width),
                     Position = new UDim2D(posX, Playfield.ReceptorPositionY),
@@ -332,7 +330,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                     Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i],
                     SpriteEffect = !ConfigManager.DownScroll7K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
                     Parent = Playfield.ForegroundContainer,
-                });
+                };
+                    
+                // Create individiaul receptor.
+                Receptors.Add(receptor);
                 
                 // Create the column lighting sprite.
                 var lightingY = GameBase.LoadedSkin.ColumnLightingScale * Playfield.LaneSize * ((float)GameBase.LoadedSkin.ColumnLighting7K.Height / GameBase.LoadedSkin.ColumnLighting7K.Width);                 
