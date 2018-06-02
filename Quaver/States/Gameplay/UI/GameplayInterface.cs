@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Config;
@@ -15,6 +17,7 @@ using Quaver.Main;
 using Quaver.States.Gameplay.UI.Components;
 using Quaver.States.Gameplay.UI.Components.Judgements;
 using Quaver.States.Gameplay.UI.Components.Pause;
+using Quaver.States.Gameplay.UI.Components.Scoreboard;
 
 namespace Quaver.States.Gameplay.UI
 {
@@ -93,6 +96,8 @@ namespace Quaver.States.Gameplay.UI
         /// </summary>
         internal int PauseFadeTimeScale { get; } = 120;
 
+        internal ScoreboardUser TestUser { get; set;  }
+        
         /// <summary>
         ///     Ctor -
         /// </summary>
@@ -164,6 +169,9 @@ namespace Quaver.States.Gameplay.UI
                 Alignment = Alignment.MidCenter,
                 PosY = -200
             };
+  
+            // Create scoreboard
+            CreateScoreboard();
             
             // Initialize the failure trannsitioner. 
             ScreenTransitioner = new Sprite()
@@ -310,5 +318,35 @@ namespace Quaver.States.Gameplay.UI
         /// </summary>
         /// <returns></returns>
         private float GetGradeDisplayPosX() => AccuracyDisplay.PosX - 8;
+
+        /// <summary>
+        ///     Creates all of the scoreboard users.
+        /// </summary>
+        private void CreateScoreboard()
+        {                    
+            var judges = new List<Judgement>();
+            Screen.Map.HitObjects.ForEach(x =>
+            {
+                judges.Add(Judgement.Marvelous);
+                
+                if (x.IsLongNote)
+                    judges.Add(Judgement.Marvelous);
+            });
+
+            TestUser = new ScoreboardUser(Screen, ScoreboardUserType.Other, "Test", judges, GameBase.LoadedSkin.NoteReceptorsUp4K[0])
+            {
+                Parent = Container,
+                Alignment = Alignment.MidLeft,
+                PosX = 5
+            };
+        }
+        
+        /// <summary>
+        ///     Updates the scoreboard for all the current users.
+        /// </summary>
+        internal void UpdateScoreboardUsers()
+        {
+            TestUser.CalculateScoreForNextObject();
+        }
     }
 }

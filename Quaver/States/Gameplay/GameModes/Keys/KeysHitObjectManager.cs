@@ -164,6 +164,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 {
                     // Add a miss to their score.
                     Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                    
+                    // Update all the users on the scoreboard.
+                    Ruleset.Screen.UI.UpdateScoreboardUsers();
 
                     // Make the combo display visible since it is now changing.
                     var playfield = (KeysPlayfield) Ruleset.Playfield;
@@ -177,6 +180,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     {
                         KillPoolObject(i);
                         Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                        
+                        // Update all the users on the scoreboard.
+                        Ruleset.Screen.UI.UpdateScoreboardUsers();
                     }
                     // Otherwise recycle the object.
                     else
@@ -216,6 +222,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     const Judgement missedJudgement = Judgement.Okay;
                     
                     Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
+                    
+                    // Update all the users on the scoreboard.
+                    Ruleset.Screen.UI.UpdateScoreboardUsers();
                     
                     // Make the combo display visible since it is now changing.
                     var playfield = (KeysPlayfield) Ruleset.Playfield;

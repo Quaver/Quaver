@@ -130,6 +130,8 @@
     <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementStatusDisplay.cs" />
     <Compile Include="States\Gameplay\UI\Components\KeysPerSecond.cs" />
     <Compile Include="States\Gameplay\UI\Components\Pause\PauseOverlay.cs" />
+    <Compile Include="States\Gameplay\UI\Components\Scoreboard\ScoreboardUser.cs" />
+    <Compile Include="States\Gameplay\UI\Components\Scoreboard\ScoreboardUserType.cs" />
     <Compile Include="States\Gameplay\UI\Components\SongInformation.cs" />
     <Compile Include="States\Gameplay\UI\Components\SongTimeProgressBar.cs" />
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />

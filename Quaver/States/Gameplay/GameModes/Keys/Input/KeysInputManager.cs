@@ -162,6 +162,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 var stat = new HitStat(hitObject.Info, time, judgement, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                 Ruleset.ScoreProcessor.Stats.Add(stat);
                 
+                // Update all the users on the scoreboard.
+                Ruleset.Screen.UI.UpdateScoreboardUsers();
+                
                 switch (judgement)
                 {
                     // Handle early miss cases here.
@@ -256,6 +259,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 var stat = new HitStat(manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.CurrentTime, receivedJudgement, timeDiff, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                 Ruleset.ScoreProcessor.Stats.Add(stat);
                 
+                // Update all the users on the scoreboard.
+                Ruleset.Screen.UI.UpdateScoreboardUsers();
+                
                 // Also add a judgement to the hit error.
                 playfield.Stage.HitError.AddJudgement((Judgement)receivedJudgementIndex, manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.Timing.CurrentTime);
                 
@@ -276,6 +282,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 // Add new hit stat data.
                 var stat = new HitStat(manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.CurrentTime, receivedJudgement, timeDiff, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                 Ruleset.ScoreProcessor.Stats.Add(stat);
+                
+                // Update all the users on the scoreboard.
+                Ruleset.Screen.UI.UpdateScoreboardUsers();
                 
                 // Perform hit burst animation
                 playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
