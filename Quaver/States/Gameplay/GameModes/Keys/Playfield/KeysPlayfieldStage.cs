@@ -112,7 +112,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
        
             CreateStageLeft();
             CreateStageRight();
-            CreateHitPositionOverlay();
                           
             // Create game mode specific sprites.
             // 4K and 7K are two separate modes and do NOT use the same textures
@@ -154,6 +153,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            
+            CreateHitPositionOverlay();
             
             // Create distant overlay last so it shows over the objects.
             CreateDistantOverlay();
@@ -321,7 +322,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             for (var i = 0; i < 7; i++)
             {
                 var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
-                
+
                 // Create individiaul receptor.
                 Receptors.Add(new Sprite
                 {
@@ -330,7 +331,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                     Alignment = Alignment.TopLeft,
                     Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i],
                     SpriteEffect = !ConfigManager.DownScroll7K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
-                    Parent = Playfield.ForegroundContainer
+                    Parent = Playfield.ForegroundContainer,
                 });
                 
                 // Create the column lighting sprite.
