@@ -163,15 +163,17 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         private void CreateLongNote()
         {
-            // Create the hold body
-            LongNoteBodySprite = new AnimatableSprite(GameBase.LoadedSkin.NoteHoldBodies4K[Index])
+            // Get the long note bodies to use.
+            var bodies = Playfield.Map.Mode == GameMode.Keys4 ? GameBase.LoadedSkin.NoteHoldBodies4K[Index] : GameBase.LoadedSkin.NoteHoldBodies7K[Index];
+            
+            LongNoteBodySprite = new AnimatableSprite(bodies)
             {
                 Alignment = Alignment.TopLeft,
                 Size = new UDim2D(Playfield.LaneSize, InitialLongNoteSize),
                 Position = new UDim2D(PositionX, PositionY),
                 Parent = Playfield.Stage.HitObjectContainer
             };
-            
+                                  
             // Create the Hold End
             LongNoteEndSprite = new Sprite()
             {
@@ -191,7 +193,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     longNoteEndTexture = GameBase.LoadedSkin.NoteHoldEnds4K[Index];
                     break;
                 case GameMode.Keys7:
-                    LongNoteBodySprite.Image = GameBase.LoadedSkin.NoteHoldBodies7K[Index];
                     longNoteEndTexture = GameBase.LoadedSkin.NoteHoldEnds7K[Index];
                     break;
                 default:

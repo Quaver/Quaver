@@ -208,7 +208,7 @@ namespace Quaver.Skinning
         // defined for each key lane.
         internal List<List<Texture2D>> NoteHitObjects7K { get; set; } = new List<List<Texture2D>>();
         internal List<List<Texture2D>> NoteHoldHitObjects7K { get; set; } = new List<List<Texture2D>>();
-        internal Texture2D[] NoteHoldBodies7K { get; set; } = new Texture2D[7];
+        internal List<List<Texture2D>> NoteHoldBodies7K { get; set; } = new List<List<Texture2D>>();
         internal Texture2D[] NoteHoldEnds7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteReceptorsUp7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteReceptorsDown7K { get; set; } = new Texture2D[7];
@@ -762,25 +762,25 @@ namespace Quaver.Skinning
                         NoteHoldBodies4K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-1":
-                        NoteHoldBodies7K[0] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-2":
-                        NoteHoldBodies7K[1] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-3":
-                        NoteHoldBodies7K[2] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-4":
-                        NoteHoldBodies7K[3] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-5":
-                        NoteHoldBodies7K[4] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-6":
-                        NoteHoldBodies7K[5] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-7":
-                        NoteHoldBodies7K[6] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"4k-receptor-up-1":
                         NoteReceptorsUp4K[0] = LoadIndividualElement(element, skinElementPath);
