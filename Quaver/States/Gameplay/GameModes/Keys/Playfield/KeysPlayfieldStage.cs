@@ -466,7 +466,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 var height = GameBase.LoadedSkin.HitLightingHeight <= 0 ? hl.Frames.First().Height : GameBase.LoadedSkin.HitLightingHeight;               
                 hl.Size = new UDim2D(width, height);
                 
-                hl.Position = new UDim2D(Receptors[i].PosX - Playfield.LaneSize / 2f, HitPositionOverlay.PosY - hl.SizeY / 2f + GameBase.LoadedSkin.HitLightingY);
+                hl.Position = new UDim2D(Receptors[i].PosX - Playfield.LaneSize / 2f - Playfield.ReceptorPadding, 
+                                            HitPositionOverlay.PosY - hl.SizeY / 2f + GameBase.LoadedSkin.HitLightingY);
                 
                 HitLighting.Add(hl);
             }
