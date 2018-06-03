@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
-using Quaver.API.Osu;
+using Quaver.API.Maps.Parsers;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;

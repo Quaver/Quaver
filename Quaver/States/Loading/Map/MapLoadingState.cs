@@ -2,8 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Quaver.API.Maps;
-using Quaver.API.Osu;
-using Quaver.API.StepMania;
+using Quaver.API.Maps.Parsers;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;

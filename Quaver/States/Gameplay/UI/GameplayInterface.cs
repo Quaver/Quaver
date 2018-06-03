@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.API.Gameplay;
 using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Config;
@@ -326,34 +328,32 @@ namespace Quaver.States.Gameplay.UI
         ///     Creates all of the scoreboard users.
         /// </summary>
         private void CreateScoreboard()
-        {      
-            var judges = new List<Judgement>();
-            Screen.Map.HitObjects.ForEach(x =>
+        {
+            // Scoreboard users.
+            var users = new List<ScoreboardUser>
             {
-                judges.Add(Judgement.Great);
-                
-                if (x.IsLongNote)
-                    judges.Add(Judgement.Great);
-            });
-            
-            Scoreboard = new Scoreboard(new List<ScoreboardUser>
-            {
-                // Add self to scoreboard
+                // Add ourself to the list of scoreboard users first.
                 new ScoreboardUser(Screen, ScoreboardUserType.Self, ConfigManager.Username.Value, null, GameBase.LoadedSkin.GradeSmallA)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidLeft
-                },
+                }
+            };
+
+            // Generate bots users on the scoreboard if need be.
+            for (var i = 0; i < 4; i++)
+            {
+                // Create new bot.
+                var bot = new Bot(Screen.Map, BotLevel.Decent);
                 
-                // Add test user
-                new ScoreboardUser(Screen, ScoreboardUserType.Other, "Bot", judges, GameBase.LoadedSkin.NoteReceptorsUp4K[0])
+                users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, bot.Judgements, GameBase.LoadedSkin.Cursor)
                 {
                     Parent = Container,
-                    Alignment = Alignment.MidLeft,
-                },
-            });
+                    Alignment = Alignment.MidLeft
+                });
+            }
 
-            Scoreboard.Parent = Container;
+            Scoreboard = new Scoreboard(users) {Parent = Container};
         }
         
         /// <summary>

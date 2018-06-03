@@ -195,14 +195,14 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         {
             // Score
             Score.Text = Processor.Score.ToString("N0");
-                        
+
             var scoreTextSize = Score.Font.MeasureString(Score.Text);
             Score.PosX = Avatar.SizeX + scoreTextSize.X * Score.TextScale / 2f + 12;
             Score.PosY = Username.PosY + scoreTextSize.Y * Score.TextScale / 2f + 10;
-            
+
             // Combo
             Combo.Text = Processor.Combo.ToString("N0") + "x";
-            
+
             var comboTextSize = Combo.Font.MeasureString(Combo.Text);
             Combo.PosX = -comboTextSize.X * Combo.TextScale / 2f - 10;
             Combo.PosY = Score.PosY - comboTextSize.Y * Combo.TextScale / 2f + 10;

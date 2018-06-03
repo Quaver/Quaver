@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Quaver.API.StepMania;
+using Quaver.API.Maps.Parsers;
 
 namespace Quaver.StepMania
 {

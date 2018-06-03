@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Quaver.API.Enums;
-using Quaver.API.Gameplay;
 using Quaver.Config;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
