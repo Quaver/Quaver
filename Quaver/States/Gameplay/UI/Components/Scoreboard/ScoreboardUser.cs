@@ -142,10 +142,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 TextScale = 0.85f
             };
 
-            // Set username position.
-            var usernameTextSize = Username.Font.MeasureString(Username.Text);        
-            Username.PosX = Avatar.SizeX + usernameTextSize.X * Username.TextScale / 2f + 10;
-            Username.PosY = usernameTextSize.Y * Username.TextScale / 2f - 2;
+            SetUsernamePosition();
             
             // Create score text.
             Score = new SpriteText()
@@ -208,6 +205,17 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             CurrentJudgement++;   
         }
 
+        /// <summary>
+        ///     Sets the correct username position.
+        /// </summary>
+        internal void SetUsernamePosition()
+        {
+            // Set username position.
+            var usernameTextSize = Username.Font.MeasureString(Username.Text);        
+            Username.PosX = Avatar.SizeX + usernameTextSize.X * Username.TextScale / 2f + 10;
+            Username.PosY = usernameTextSize.Y * Username.TextScale / 2f - 2;
+        }
+        
         /// <summary>
         ///     Updates the text & position to stay aligned.
         /// </summary>
