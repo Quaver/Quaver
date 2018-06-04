@@ -47,12 +47,11 @@ namespace Quaver.Main
             
             GameBase.GraphicsManager.GraphicsProfile = GraphicsProfile.HiDef;
             GameBase.GraphicsManager.PreferMultiSampling = true;
-            
-            // Set the global window size
-            //GameBase.Window = new Vector4(0, 0, GameBase.GraphicsManager.PreferredBackBufferHeight, GameBase.GraphicsManager.PreferredBackBufferWidth);
-
-            IsFixedTimeStep = false;
-
+         
+            // TODO: Make thie configurable.
+            TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / 240f);
+            IsFixedTimeStep = true;
+           
             // Use Content in Resources folder (Don't touch this please)
             var resxContent = new ResourceContentManager(Services, QuaverResources.ResourceManager);
             Content = resxContent;
