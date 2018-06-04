@@ -285,6 +285,11 @@ namespace Quaver.Skinning
         internal Texture2D JudgementOverlay { get; set; }
 
         /// <summary>
+        ///     Scoreboard background.
+        /// </summary>
+        internal Texture2D Scoreboard { get; set; }
+
+        /// <summary>
         ///     Sound Effect elements. 
         ///     NOTE: SFX need to be 16-bit wav otherwise MonoGame doesn't play them correctly??
         /// </summary>
@@ -502,6 +507,9 @@ namespace Quaver.Skinning
                 
             // Judgement Overlay
             @"judgement-overlay",
+            
+            // Scoreboard
+            @"scoreboard",
             
             // Cursor
             @"main-cursor",
@@ -988,6 +996,9 @@ namespace Quaver.Skinning
                         break;
                     case @"judgement-overlay":
                         JudgementOverlay = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"scoreboard":
+                        Scoreboard = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"sound-hit":
                         SoundHit = LoadSoundEffectElement(element, skinElementPath);
