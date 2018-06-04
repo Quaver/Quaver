@@ -1260,10 +1260,10 @@ namespace Quaver.Skinning
                     HitLightingY = 0;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
-                    ScoreDisplayPosX = -10;
-                    ScoreDisplayPosY = 0;
+                    ScoreDisplayPosX = 10;
+                    ScoreDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
-                    AccuracyDisplayPosY = 10;
+                    AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
                     KpsDisplayPosY = 10;
                     ComboPosY = 0;
@@ -1313,10 +1313,10 @@ namespace Quaver.Skinning
                     HitLightingY = 0;
                     HitLightingWidth = 0;
                     HitLightingHeight = 0;
-                    ScoreDisplayPosX = -10;
-                    ScoreDisplayPosY = 0;
+                    ScoreDisplayPosX = 10;
+                    ScoreDisplayPosY = 5;
                     AccuracyDisplayPosX = -10;
-                    AccuracyDisplayPosY = 10;
+                    AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
                     KpsDisplayPosY = 10;
                     ComboPosY = 0;

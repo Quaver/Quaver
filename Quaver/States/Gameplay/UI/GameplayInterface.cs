@@ -127,11 +127,11 @@ namespace Quaver.States.Gameplay.UI
             ScoreDisplay = new NumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0), new Vector2(1, 1))
             {
                 Parent = Container,
-                Alignment = Alignment.TopRight
+                Alignment = Alignment.TopLeft
             };
 
             // Put the display in the top right corner.
-            ScoreDisplay.PosX = -ScoreDisplay.TotalWidth + GameBase.LoadedSkin.ScoreDisplayPosX;
+            ScoreDisplay.PosX = GameBase.LoadedSkin.ScoreDisplayPosX;
             ScoreDisplay.PosY = GameBase.LoadedSkin.ScoreDisplayPosY;
             
             // Create acc display
@@ -143,7 +143,7 @@ namespace Quaver.States.Gameplay.UI
             
             // Set the position of the accuracy display.
             AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth + GameBase.LoadedSkin.AccuracyDisplayPosX;
-            AccuracyDisplay.PosY = ScoreDisplay.Digits[0].SizeY + GameBase.LoadedSkin.AccuracyDisplayPosY;
+            AccuracyDisplay.PosY = GameBase.LoadedSkin.AccuracyDisplayPosY;
             
             // Create judgement status display
             JudgementStatusDisplay = new JudgementStatusDisplay(Screen) { Parent = Container };

@@ -184,13 +184,13 @@ namespace Quaver.States.Gameplay
             Ruleset.Initialize();
             
             // Add gameplay loggers
-            Logger.Add("Paused", $"Paused: {IsPaused}", Color.White);
+            /*Logger.Add("Paused", $"Paused: {IsPaused}", Color.White);
             Logger.Add("Resume In Progress", $"Resume In Progress {IsResumeInProgress}", Color.White);
             Logger.Add($"Max Combo", $"Max Combo: {Ruleset.ScoreProcessor.MaxCombo}", Color.White);
             Logger.Add($"Objects Left", $"Objects Left {Ruleset.HitObjectManager.ObjectsLeft}", Color.White);
             Logger.Add($"Finished", $"Finished: {IsPlayComplete}", Color.White);
             Logger.Add($"On Break", $"On Break: {OnBreak}", Color.White);
-            Logger.Add($"Failed", $"Failed: {Failed}", Color.White);
+            Logger.Add($"Failed", $"Failed: {Failed}", Color.White);*/
                
             UpdateReady = true;
         }
@@ -245,13 +245,13 @@ namespace Quaver.States.Gameplay
             GameBase.SpriteBatch.Begin();
             UI.Draw();
             
-            Logger.Update("Paused", $"Paused: {IsPaused}");
+            /*Logger.Update("Paused", $"Paused: {IsPaused}");
             Logger.Update("Resume In Progress", $"Resume In Progress {IsResumeInProgress}");
             Logger.Update($"Max Combo", $"Max Combo: {Ruleset.ScoreProcessor.MaxCombo}");
             Logger.Update($"Objects Left", $"Objects Left {Ruleset.HitObjectManager.ObjectsLeft}");
             Logger.Update($"Finished", $"Finished: {IsPlayComplete}");
             Logger.Update($"On Break", $"On Break: {OnBreak}");
-            Logger.Update($"Failed", $"Failed: {Failed}");
+            Logger.Update($"Failed", $"Failed: {Failed}");*/
             
             GameBase.SpriteBatch.End();
         }

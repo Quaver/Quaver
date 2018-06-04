@@ -65,7 +65,7 @@ namespace Quaver.States.Gameplay
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {            
-            Logger.Add("GameplayAudio", $"Audio Time: 0", Color.White);
+            //Logger.Add("GameplayAudio", $"Audio Time: 0", Color.White);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Quaver.States.Gameplay
         /// </summary>
         public void UnloadContent()
         {
-            Logger.Remove("GameplayAudio");
+            //Logger.Remove("GameplayAudio");
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Quaver.States.Gameplay
             UpdateSongTime(dt);
             
             // Update the audio's time on the logger.
-            Logger.Update("GameplayAudio", $"Audio Time: {CurrentTime}");
+            //Logger.Update("GameplayAudio", $"Audio Time: {CurrentTime}");
         }
 
          /// <summary>
