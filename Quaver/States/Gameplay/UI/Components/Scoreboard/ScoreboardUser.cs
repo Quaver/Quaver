@@ -101,7 +101,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             UserJudgements = judgements;
             UsernameRaw = username;
             Type = type;
-            Size = new UDim2D(250, 40);
+            Size = new UDim2D(260, 50);
             Image = GameBase.LoadedSkin.Scoreboard;
 
             // The alpha of the tect - determined by the scoreboard user type.
@@ -139,7 +139,6 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 Size = new UDim2D(SizeY, SizeY),
                 Alignment = Alignment.MidLeft,
                 Image = avatar,
-                Alpha = textAlpha
             };
             
             // Create username text.
@@ -162,7 +161,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 Font = QuaverFonts.AssistantRegular16,
                 Alignment = Alignment.TopLeft,
                 Text = Processor.Score.ToString("N0"),
-                TextScale = 0.60f,
+                TextScale = 0.70f,
                 Alpha = textAlpha
             };
             
@@ -243,7 +242,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
 
             var scoreTextSize = Score.Font.MeasureString(Score.Text);
             Score.PosX = Avatar.SizeX + scoreTextSize.X * Score.TextScale / 2f + 12;
-            Score.PosY = Username.PosY + scoreTextSize.Y * Score.TextScale / 2f + 8;
+            Score.PosY = Username.PosY + scoreTextSize.Y * Score.TextScale / 2f + 10;
 
             // Combo
             Combo.Text = Processor.Combo.ToString("N0") + "x";
