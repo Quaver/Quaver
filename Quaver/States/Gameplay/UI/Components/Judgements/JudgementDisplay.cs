@@ -79,7 +79,7 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
                 Text = $"{JudgementHelper.JudgementToShortName(j)}",
                 Font = QuaverFonts.AssistantRegular16,
                 TextColor = Color.Black,
-                TextScale = 0.85f,
+                TextScale = 0.75f,
                 PosX = 0,
             };
 

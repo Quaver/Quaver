@@ -30,7 +30,7 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
         /// <summary>
         ///     The size of each display item.
         /// </summary>
-        internal static Vector2 DisplayItemSize { get; } = new Vector2(50, 50);
+        internal static Vector2 DisplayItemSize { get; } = new Vector2(45, 45);
 
         /// <inheritdoc />
         /// <summary>
