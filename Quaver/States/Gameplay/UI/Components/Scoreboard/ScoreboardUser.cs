@@ -138,7 +138,8 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 Parent = this,
                 Size = new UDim2D(SizeY, SizeY),
                 Alignment = Alignment.MidLeft,
-                Image = avatar
+                Image = avatar,
+                Alpha = textAlpha
             };
             
             // Create username text.

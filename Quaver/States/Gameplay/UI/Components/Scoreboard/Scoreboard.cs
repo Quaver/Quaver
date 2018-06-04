@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Quaver.Config;
 using Quaver.Graphics.Base;
 using Quaver.Helpers;
 
@@ -11,7 +12,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         /// <summary>
         ///     The list of users on the scoreboard.
         /// </summary>
-        private List<ScoreboardUser> Users { get; set; }
+        private List<ScoreboardUser> Users { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -30,7 +31,18 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         internal override void Update(double dt)
         {     
             // Tween to target Y positions
-            Users.ForEach(x => x.PosY = GraphicsHelper.Tween(x.TargetYPosition, x.PosY, Math.Min(dt / 120, 1)));
+            Users.ForEach(x =>
+            {
+                x.PosY = GraphicsHelper.Tween(x.TargetYPosition, x.PosY, Math.Min(dt / 120, 1));
+                
+                            
+                // Tween X Position based on if the scoreboard is hidden
+                if (ConfigManager.ScoreboardVisible.Value)
+                    x.PosX = GraphicsHelper.Tween(0, x.PosX, Math.Min(dt / 120, 1));
+                else
+                    x.PosX = GraphicsHelper.Tween(-x.SizeX - 10, x.PosX, Math.Min(dt / 120, 1));
+            });
+                
             base.Update(dt);
         }
 

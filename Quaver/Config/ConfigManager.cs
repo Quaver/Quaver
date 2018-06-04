@@ -18,6 +18,7 @@ using Microsoft.Xna.Framework.Audio;
 using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Main;
+using Quaver.States.Gameplay.UI.Components.Scoreboard;
 using SQLitePCL;
 using AudioEngine = Quaver.Audio.AudioEngine;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
@@ -201,6 +202,11 @@ namespace Quaver.Config
         internal static BindedValue<bool> AutoLoadEtternaCharts { get; private set; }
 
         /// <summary>
+        ///     If the scoreboard is currently visible.
+        /// </summary>
+        internal static BindedValue<bool> ScoreboardVisible { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static BindedValue<Keys> KeyMania4K1 { get; private set; }
@@ -250,6 +256,11 @@ namespace Quaver.Config
         /// </summary>
         internal static BindedValue<Keys> KeyIncreaseScrollSpeed { get; private set; }
         internal static BindedValue<Keys> KeyDecreaseScrollSpeed { get; private set; }
+
+        /// <summary>
+        ///     The key to hide the scoreboard in-game.
+        /// </summary>
+        internal static BindedValue<Keys> KeyHideScoreboard { get; private set; }
 
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
@@ -354,6 +365,7 @@ namespace Quaver.Config
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Arrow, data);
             Pitched = ReadValue(@"Pitched", false, data);
+            ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
@@ -372,6 +384,7 @@ namespace Quaver.Config
             KeyRestartMap = ReadValue(@"KeyRestartMap", Keys.OemTilde, data);
             KeyDecreaseScrollSpeed = ReadValue(@"KeyDecreaseScrollSpeed", Keys.F3, data);
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
+            KeyHideScoreboard = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
 
             // Set Master and Sound Effect Volume
             SoundEffect.MasterVolume = VolumeGlobal.Value / 100f;
@@ -416,6 +429,7 @@ namespace Quaver.Config
                     Skin.OnValueChanged += AutoSaveConfiguration;
                     DefaultSkin.OnValueChanged += AutoSaveConfiguration;
                     Pitched.OnValueChanged += AutoSaveConfiguration;
+                    ScoreboardVisible.OnValueChanged += AutoSaveConfiguration;
                     KeyMania4K1.OnValueChanged += AutoSaveConfiguration;
                     KeyMania4K2.OnValueChanged += AutoSaveConfiguration;
                     KeyMania4K3.OnValueChanged += AutoSaveConfiguration;
@@ -434,6 +448,7 @@ namespace Quaver.Config
                     KeyRestartMap.OnValueChanged += AutoSaveConfiguration;
                     KeyIncreaseScrollSpeed.OnValueChanged += AutoSaveConfiguration;
                     KeyDecreaseScrollSpeed.OnValueChanged += AutoSaveConfiguration;
+                    KeyHideScoreboard.OnValueChanged += AutoSaveConfiguration;
                 });
         }
 
