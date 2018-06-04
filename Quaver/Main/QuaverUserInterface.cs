@@ -52,6 +52,8 @@ namespace Quaver.Main
         internal Texture2D JudgementOverlay { get; set; }
 
         internal List<Texture2D> TestSpritesheet { get; set; }
+        internal Texture2D UnknownAvatar { get; set; }
+        internal Texture2D YouAvatar { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -66,6 +68,8 @@ namespace Quaver.Main
             BarCorner = ResourceHelper.LoadTexture2DFromPng(QuaverResources.bar_corner);
             JudgementOverlay = ResourceHelper.LoadTexture2DFromPng(QuaverResources.judgement_overlay);
             TestSpritesheet = GraphicsHelper.LoadSpritesheetFromTexture(ResourceHelper.LoadTexture2DFromPng(QuaverResources.test_spritesheet), 1, 8);
+            UnknownAvatar = ResourceHelper.LoadTexture2DFromPng(QuaverResources.unknown_avatar);
+            YouAvatar = ResourceHelper.LoadTexture2DFromPng(QuaverResources.you_avatar);
         }
 
         /// <summary>
