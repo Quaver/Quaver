@@ -19,7 +19,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         /// </summary>
         internal Scoreboard(IEnumerable<ScoreboardUser> users)
         {
-            Users = users.OrderByDescending(x => x.Processor.Score).ToList();
+            Users = users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => x.Processor.Score).ToList();
             SetTargetYPositions();
             Users.ForEach(x => x.PosY = x.TargetYPosition);
         }
@@ -63,7 +63,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         /// </summary>
         private void SetTargetYPositions()
         {
-            var users = Users.OrderByDescending(x => x.Processor.Score).ToList();
+            var users = Users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => x.Processor.Score).ToList();
             
             for (var i = 0; i < users.Count; i++)
             {

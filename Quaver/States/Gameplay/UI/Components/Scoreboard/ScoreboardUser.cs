@@ -175,7 +175,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 Font = QuaverFonts.AssistantRegular16,
                 Alignment = Alignment.MidRight,
                 Text = $"{Processor.Combo:N0}x",
-                TextScale = 0.85f,
+                TextScale = 0.78f,
                 Alpha = textAlpha
             };
             
