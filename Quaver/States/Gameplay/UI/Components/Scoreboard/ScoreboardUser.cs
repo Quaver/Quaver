@@ -104,6 +104,9 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             Size = new UDim2D(260, 50);
             Image = GameBase.LoadedSkin.Scoreboard;
 
+            // Set position initially to offscreen
+            PosX = -SizeX - 10;
+            
             // The alpha of the tect - determined by the scoreboard user type.
             float textAlpha;
 
@@ -149,7 +152,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 Text = GetUsernameFormatted(),
                 Alignment = Alignment.TopLeft,
                 Alpha = textAlpha,
-                TextScale = 0.75f
+                TextScale = 0.85f
             };
 
             SetUsernamePosition();
@@ -161,7 +164,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 Font = QuaverFonts.AssistantRegular16,
                 Alignment = Alignment.TopLeft,
                 Text = Processor.Score.ToString("N0"),
-                TextScale = 0.70f,
+                TextScale = 0.78f,
                 Alpha = textAlpha
             };
             
@@ -172,7 +175,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 Font = QuaverFonts.AssistantRegular16,
                 Alignment = Alignment.MidRight,
                 Text = $"{Processor.Combo:N0}x",
-                TextScale = 0.65f,
+                TextScale = 0.85f,
                 Alpha = textAlpha
             };
             
@@ -242,7 +245,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
 
             var scoreTextSize = Score.Font.MeasureString(Score.Text);
             Score.PosX = Avatar.SizeX + scoreTextSize.X * Score.TextScale / 2f + 12;
-            Score.PosY = Username.PosY + scoreTextSize.Y * Score.TextScale / 2f + 10;
+            Score.PosY = Username.PosY + scoreTextSize.Y * Score.TextScale / 2f + 12;
 
             // Combo
             Combo.Text = Processor.Combo.ToString("N0") + "x";
@@ -257,7 +260,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         /// </summary>
         /// <param name="???"></param>
         /// <returns></returns>
-        internal string GetUsernameFormatted() => $"#{Rank} - " + (UsernameRaw == "" ? "  " : UsernameRaw);
+        internal string GetUsernameFormatted() => UsernameRaw == "" ? "  " : UsernameRaw;
 
         /// <summary>
         ///     Sets the text's color based on how much health the user has.

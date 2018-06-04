@@ -124,18 +124,18 @@ namespace Quaver.States.Gameplay.UI
                                                             Container, Alignment.BotLeft);
 
             // Create score display
-            ScoreDisplay = new NumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0), new Vector2(1, 1))
+            ScoreDisplay = new NumberDisplay(NumberDisplayType.Score, StringHelper.ScoreToString(0), new Vector2(1.4f, 1.4f))
             {
                 Parent = Container,
-                Alignment = Alignment.TopLeft
+                Alignment = Alignment.TopLeft,
+                PosX = GameBase.LoadedSkin.ScoreDisplayPosX,
+                PosY = GameBase.LoadedSkin.ScoreDisplayPosY
             };
 
             // Put the display in the top right corner.
-            ScoreDisplay.PosX = GameBase.LoadedSkin.ScoreDisplayPosX;
-            ScoreDisplay.PosY = GameBase.LoadedSkin.ScoreDisplayPosY;
-            
+
             // Create acc display
-            AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0), new Vector2(1.5f, 1.5f))
+            AccuracyDisplay = new NumberDisplay(NumberDisplayType.Accuracy, StringHelper.AccuracyToString(0), new Vector2(1.4f, 1.4f))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,

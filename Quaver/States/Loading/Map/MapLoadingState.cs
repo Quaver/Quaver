@@ -115,8 +115,6 @@ namespace Quaver.States.Loading.Map
                     using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/difficulty.txt"))
                         await writer.WriteAsync($"{Math.Round(GameBase.SelectedMap.Qua.CalculateFakeDifficulty(), 2)}");
                 });
-
-                Logger.LogSuccess("Finished loading Map", LogType.Runtime);
             }
             catch (Exception e)
             {

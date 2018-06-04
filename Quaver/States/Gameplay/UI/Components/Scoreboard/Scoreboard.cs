@@ -34,8 +34,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             Users.ForEach(x =>
             {
                 x.PosY = GraphicsHelper.Tween(x.TargetYPosition, x.PosY, Math.Min(dt / 120, 1));
-                
-                            
+                                            
                 // Tween X Position based on if the scoreboard is hidden
                 if (ConfigManager.ScoreboardVisible.Value)
                     x.PosX = GraphicsHelper.Tween(0, x.PosX, Math.Min(dt / 120, 1));

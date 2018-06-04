@@ -89,19 +89,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        protected override void CreatePlayfield()
-        {
-            Playfield = new KeysPlayfield(Screen);
-            Logger.LogSuccess("Playfield Initialized", LogType.Runtime);
-        }
+        protected override void CreatePlayfield() => Playfield = new KeysPlayfield(Screen);
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        protected override IGameplayInputManager CreateInputManager()
-        {
-            return new KeysInputManager(this, Mode);
-        }
+        protected override IGameplayInputManager CreateInputManager() => new KeysInputManager(this, Mode);
 
         /// <inheritdoc />
         /// <summary>
