@@ -340,21 +340,25 @@ namespace Quaver.States.Gameplay.UI
                 }
             };
 
-            // Generate bots users on the scoreboard if need be.
-            for (var i = 0; i < 4; i++)
+            // Create bots on the scoreboard.
+            if (ConfigManager.BotsEnabled.Value)
             {
-                // Create new bot.
-                var bot = new Bot(Screen.Map, BotLevel.Decent);
-
-                // Keep selecting usernames if we have duplicate bot names.
-                while (users.Any(x => x.Username.Text.Contains(bot.Name)))
-                    bot.Name = Bot.GenerateRandomName();
-
-                users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, bot.Judgements, GameBase.QuaverUserInterface.UnknownAvatar)
+                // Generate bots users on the scoreboard if need be.
+                for (var i = 0; i < ConfigManager.BotCount.Value; i++)
                 {
-                    Parent = Container,
-                    Alignment = Alignment.MidLeft
-                });
+                    // Create new bot.
+                    var bot = new Bot(Screen.Map, BotLevel.Decent);
+
+                    // Keep selecting usernames if we have duplicate bot names.
+                    while (users.Any(x => x.Username.Text.Contains(bot.Name)))
+                        bot.Name = Bot.GenerateRandomName();
+
+                    users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, bot.Judgements, GameBase.QuaverUserInterface.UnknownAvatar)
+                    {
+                        Parent = Container,
+                        Alignment = Alignment.MidLeft
+                    });
+                }                
             }
 
             Scoreboard = new Scoreboard(users) {Parent = Container};

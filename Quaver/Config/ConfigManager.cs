@@ -151,6 +151,16 @@ namespace Quaver.Config
         internal static BindedValue<bool> DisplaySongTimeProgress { get; private set; }
 
         /// <summary>
+        ///     If the user is choosing to play with bots.
+        /// </summary>
+        internal static BindedValue<bool> BotsEnabled { get; private set; }
+
+        /// <summary>
+        ///     The amount of bots to be playing with.
+        /// </summary>
+        internal static BindedInt BotCount { get; private set; }
+
+        /// <summary>
         ///     The scroll speed for mania 4k
         /// </summary>
         internal static BindedInt ScrollSpeed4K { get; private set; }
@@ -224,7 +234,6 @@ namespace Quaver.Config
         internal static BindedValue<Keys> KeyMania7K5 { get; private set; }
         internal static BindedValue<Keys> KeyMania7K6 { get; private set; }
         internal static BindedValue<Keys> KeyMania7K7 { get; private set; }
-
 
         /// <summary>
         ///     The key pressed to pause and menu-back.
@@ -366,6 +375,8 @@ namespace Quaver.Config
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Arrow, data);
             Pitched = ReadValue(@"Pitched", false, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
+            BotsEnabled = ReadValue(@"BotsEnabled", true, data);
+            BotCount = ReadInt(@"BotCount", 4, 1, 6, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
@@ -449,6 +460,7 @@ namespace Quaver.Config
                     KeyIncreaseScrollSpeed.OnValueChanged += AutoSaveConfiguration;
                     KeyDecreaseScrollSpeed.OnValueChanged += AutoSaveConfiguration;
                     KeyScoreboardVisible.OnValueChanged += AutoSaveConfiguration;
+                    BotsEnabled.OnValueChanged += AutoSaveConfiguration;
                 });
         }
 

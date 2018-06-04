@@ -69,6 +69,16 @@ namespace Quaver.States.Select
         private TextButton ToggleNoPause { get; set; }
 
         /// <summary>
+        ///     Button that toggles bots.
+        /// </summary>
+        private TextButton BotsEnabled { get; set; }
+
+        /// <summary>
+        ///     Button that dictates the bot count.
+        /// </summary>
+        private TextButton BotCount { get; set; }
+
+        /// <summary>
         ///     Search bar for song searching
         /// </summary>
         private TextInputField SearchField { get; set; }
@@ -118,6 +128,7 @@ namespace Quaver.States.Select
             CreateTogglePitchButton();
             CreateSearchField();
             CreateNoPause();
+            CreateBotButtons();
 
             //Add map selected text TODO: remove later
             try
@@ -234,20 +245,10 @@ namespace Quaver.States.Select
             GameBase.GameStateManager.ChangeState(new MapLoadingState());
         }
 
-        private void ScrollUpMapIndex()
-        {
-            //MapSelectSystem.OffsetMapSelectSystemIndex(-1);
-        }
-
-        private void ScrollDownMapIndex()
-        {
-            //MapSelectSystem.OffsetMapSelectSystemIndex(1);
-        }
-
         /// <summary>
         ///     Responsible for repeating the song preview in song select once the song is over.
         /// </summary>
-        private void RepeatSongPreview()
+        private static void RepeatSongPreview()
         {
             if (GameBase.AudioEngine.Position < GameBase.AudioEngine.Length || AudioEngine.Stream == 0)
                 return;
@@ -435,6 +436,39 @@ namespace Quaver.States.Select
                     ModManager.RemoveMod(ModIdentifier.NoPause);
                 
                 ToggleNoPause.TextSprite.Text = $"No Pause Mod: {ModManager.IsActivated(ModIdentifier.NoPause)}";
+            };
+        }
+
+        private void CreateBotButtons()
+        {
+            BotsEnabled = new TextButton(new Vector2(200, 50), $"Enable Bots: {ConfigManager.BotsEnabled.Value}")
+            {
+                Alignment = Alignment.TopLeft,
+                PosY = 300 * GameBase.WindowUIScale - 100,
+                Parent = Container
+            };
+
+            BotsEnabled.Clicked += (o, e) =>
+            {
+                ConfigManager.BotsEnabled.Value = !ConfigManager.BotsEnabled.Value;
+                BotsEnabled.TextSprite.Text = $"Enable Bots: {ConfigManager.BotsEnabled.Value}";
+            };
+            
+            BotCount = new TextButton(new Vector2(200, 50), $"Bot Count: {ConfigManager.BotCount.Value}")
+            {
+                Alignment = Alignment.TopLeft,
+                PosY = 300 * GameBase.WindowUIScale - 175,
+                Parent = Container
+            };
+
+            BotCount.Clicked += (o, e) =>
+            {
+                if (ConfigManager.BotCount.Value + 1 > ConfigManager.BotCount.MaxValue)
+                    ConfigManager.BotCount.Value = ConfigManager.BotCount.MinValue;
+                else
+                    ConfigManager.BotCount.Value++;
+                
+                BotCount.TextSprite.Text = $"Bot Count: {ConfigManager.BotCount.Value}";
             };
         }
     }
