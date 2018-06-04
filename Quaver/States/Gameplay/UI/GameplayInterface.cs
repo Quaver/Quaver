@@ -333,7 +333,7 @@ namespace Quaver.States.Gameplay.UI
             var users = new List<ScoreboardUser>
             {
                 // Add ourself to the list of scoreboard users first.
-                new ScoreboardUser(Screen, ScoreboardUserType.Self, ConfigManager.Username.Value, null, GameBase.LoadedSkin.GradeSmallA)
+                new ScoreboardUser(Screen, ScoreboardUserType.Self, ConfigManager.Username.Value, null, GameBase.QuaverUserInterface.YouAvatar)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidLeft
@@ -350,7 +350,7 @@ namespace Quaver.States.Gameplay.UI
                 while (users.Any(x => x.Username.Text.Contains(bot.Name)))
                     bot.Name = Bot.GenerateRandomName();
 
-                users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, bot.Judgements, GameBase.LoadedSkin.Cursor)
+                users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, bot.Judgements, GameBase.QuaverUserInterface.UnknownAvatar)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidLeft

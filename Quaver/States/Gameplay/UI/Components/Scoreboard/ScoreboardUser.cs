@@ -207,11 +207,14 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             {
                 // We don't actually store miss data in stats, so we'll just go by if the user's combo is now 0.
                 HitBurst.PerformJudgementAnimation(Processor.Combo == 0 ? Judgement.Miss : Processor.Stats.Last().Judgement);
+                SetTextColorBasedOnHealth();
                 return;
             }
             
             Processor.CalculateScore(UserJudgements[CurrentJudgement]);
             HitBurst.PerformJudgementAnimation(UserJudgements[CurrentJudgement]);
+            SetTextColorBasedOnHealth();
+              
             CurrentJudgement++;   
         }
 
@@ -253,8 +256,22 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         ///     Formatted username with rank
         /// </summary>
         /// <param name="???"></param>
-        /// <param name="username"></param>
         /// <returns></returns>
-        internal string GetUsernameFormatted() => $"#{Rank} " + (UsernameRaw == "" ? "  " : UsernameRaw);
+        internal string GetUsernameFormatted() => $"#{Rank} - " + (UsernameRaw == "" ? "  " : UsernameRaw);
+
+        /// <summary>
+        ///     Sets the text's color based on how much health the user has.
+        /// </summary>
+        private void SetTextColorBasedOnHealth()
+        {
+            if (Processor.Health >= 75)
+                Username.TextColor = Color.White;
+            else if (Processor.Health >= 50)
+                Username.TextColor = Color.Yellow;
+            else if (Processor.Health >= 30)
+                Username.TextColor = Color.Orange;
+            else
+                Username.TextColor = Color.Red;
+        }
     }
 }
