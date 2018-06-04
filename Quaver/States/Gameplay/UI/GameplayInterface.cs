@@ -347,7 +347,7 @@ namespace Quaver.States.Gameplay.UI
                 var bot = new Bot(Screen.Map, BotLevel.Decent);
 
                 // Keep selecting usernames if we have duplicate bot names.
-                while (users.Any(x => x.Username.Text == bot.Name))
+                while (users.Any(x => x.Username.Text.Contains(bot.Name)))
                     bot.Name = Bot.GenerateRandomName();
 
                 users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, bot.Judgements, GameBase.LoadedSkin.Cursor)
