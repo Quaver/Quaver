@@ -355,7 +355,7 @@ namespace Quaver.States.Gameplay.UI
 
             Scoreboard = new Scoreboard(users) {Parent = Container};
         }
-        
+
         /// <summary>
         ///     Updates the scoreboard for all the current users.
         /// </summary>

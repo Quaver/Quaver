@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.Remoting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,6 +13,7 @@ using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Main;
+using Quaver.States.Gameplay.UI.Components.Judgements;
 
 namespace Quaver.States.Gameplay.UI.Components.Scoreboard
 {
@@ -65,7 +67,12 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         private SpriteText Combo { get; }
 
         /// <summary>
-        ///     The current judgement we're on in the list of them.
+        ///     The hit burst, whenever score is calculated again.
+        /// </summary>
+        private JudgementHitBurst HitBurst { get; }
+
+        /// <summary>
+        ///     The current judgement we're on in the list of them to calculate their score.
         /// </summary>
         private int CurrentJudgement { get; set; }
 
@@ -83,7 +90,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             Screen = screen;       
             UserJudgements = judgements;
             Type = type;
-            Size = new UDim2D(275, 50);
+            Size = new UDim2D(250, 40);
 
             // The alpha of the tect - determined by the scoreboard user type.
             float textAlpha;
@@ -92,14 +99,14 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             switch (Type)
             {
                 case ScoreboardUserType.Self:
-                    Tint = QuaverColors.MainAccent;
+                    Tint = Color.Black;
                     Alpha = 1f;
                     textAlpha = 1f;
                     break;
                 case ScoreboardUserType.Other:
-                    Tint = QuaverColors.MainAccentInactive;
+                    Tint = Color.Black;
                     Alpha = 0.75f;
-                    textAlpha = 0.75f;
+                    textAlpha = 0.50f;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -109,10 +116,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             {
                 case GameMode.Keys4:
                 case GameMode.Keys7:
-                    if (Type == ScoreboardUserType.Other)
-                        Processor = new ScoreProcessorKeys(Screen.Map, GameBase.CurrentMods);
-                    else
-                        Processor = Screen.Ruleset.ScoreProcessor;
+                    Processor = Type == ScoreboardUserType.Other ? new ScoreProcessorKeys(Screen.Map, GameBase.CurrentMods) : Screen.Ruleset.ScoreProcessor;
                     break;
                 default:
                     throw new InvalidEnumArgumentException();
@@ -134,13 +138,14 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 Font = QuaverFonts.AssistantRegular16,
                 Text = (username == "") ? "  " : username,
                 Alignment = Alignment.TopLeft,
-                Alpha = textAlpha
+                Alpha = textAlpha,
+                TextScale = 0.85f
             };
 
             // Set username position.
             var usernameTextSize = Username.Font.MeasureString(Username.Text);        
-            Username.PosX = Avatar.SizeX + usernameTextSize.X / 2f + 10;
-            Username.PosY = usernameTextSize.Y / 2f;
+            Username.PosX = Avatar.SizeX + usernameTextSize.X * Username.TextScale / 2f + 10;
+            Username.PosY = usernameTextSize.Y * Username.TextScale / 2f - 2;
             
             // Create score text.
             Score = new SpriteText()
@@ -149,7 +154,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 Font = QuaverFonts.AssistantRegular16,
                 Alignment = Alignment.TopLeft,
                 Text = Processor.Score.ToString("N0"),
-                TextScale = 0.85f,
+                TextScale = 0.70f,
                 Alpha = textAlpha
             };
             
@@ -158,11 +163,20 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             {
                 Parent = this,
                 Font = QuaverFonts.AssistantRegular16,
-                Alignment = Alignment.TopRight,
+                Alignment = Alignment.MidRight,
                 Text = $"{Processor.Combo:N0}x",
-                TextScale = 0.98f,
+                TextScale = 0.75f,
                 Alpha = textAlpha
             };
+            
+            // Create hit burst
+            HitBurst = new JudgementHitBurst(GameBase.LoadedSkin.JudgeMiss, new Vector2(50, 50), 0)
+            {
+                Parent = this,
+                Alignment = Alignment.MidCenter,
+                Alpha = 0.75f
+            };
+            HitBurst.PosX = HitBurst.Frames[0].Width / 2f - 20;
         }
         
         /// <inheritdoc />
@@ -179,12 +193,18 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         ///     Calculates score for a given object. Essentially it just calcs for the next judgement.
         /// </summary>
         internal void CalculateScoreForNextObject()
-        {
+        {           
             // Don't bother calculating if the type is self, because we already have it calculated.
+            // but perform the judgement animation however.
             if (Type == ScoreboardUserType.Self)
+            {
+                // We don't actually store miss data in stats, so we'll just go by if the user's combo is now 0.
+                HitBurst.PerformJudgementAnimation(Processor.Combo == 0 ? Judgement.Miss : Processor.Stats.Last().Judgement);
                 return;
+            }
             
             Processor.CalculateScore(UserJudgements[CurrentJudgement]);
+            HitBurst.PerformJudgementAnimation(UserJudgements[CurrentJudgement]);
             CurrentJudgement++;   
         }
 
@@ -198,14 +218,14 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
 
             var scoreTextSize = Score.Font.MeasureString(Score.Text);
             Score.PosX = Avatar.SizeX + scoreTextSize.X * Score.TextScale / 2f + 12;
-            Score.PosY = Username.PosY + scoreTextSize.Y * Score.TextScale / 2f + 10;
+            Score.PosY = Username.PosY + scoreTextSize.Y * Score.TextScale / 2f + 8;
 
             // Combo
             Combo.Text = Processor.Combo.ToString("N0") + "x";
 
             var comboTextSize = Combo.Font.MeasureString(Combo.Text);
-            Combo.PosX = -comboTextSize.X * Combo.TextScale / 2f - 10;
-            Combo.PosY = Score.PosY - comboTextSize.Y * Combo.TextScale / 2f + 10;
+            Combo.PosX = -comboTextSize.X * Combo.TextScale / 2f - 8;
+            Combo.PosY = 0;
         }
     }
 }
