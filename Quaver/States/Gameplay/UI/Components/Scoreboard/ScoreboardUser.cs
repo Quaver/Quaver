@@ -77,6 +77,16 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         private int CurrentJudgement { get; set; }
 
         /// <summary>
+        ///     The user's raw username.
+        /// </summary>
+        internal string UsernameRaw { get; }
+
+        /// <summary>
+        ///     The rank of the user on the scoreboard.
+        /// </summary>
+        internal int Rank { get; set; }
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
@@ -89,8 +99,10 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         {
             Screen = screen;       
             UserJudgements = judgements;
+            UsernameRaw = username;
             Type = type;
             Size = new UDim2D(250, 40);
+            Image = GameBase.LoadedSkin.Scoreboard;
 
             // The alpha of the tect - determined by the scoreboard user type.
             float textAlpha;
@@ -99,12 +111,10 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             switch (Type)
             {
                 case ScoreboardUserType.Self:
-                    Tint = Color.Black;
                     Alpha = 1f;
                     textAlpha = 1f;
                     break;
                 case ScoreboardUserType.Other:
-                    Tint = Color.Black;
                     Alpha = 0.75f;
                     textAlpha = 0.50f;
                     break;
@@ -136,7 +146,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             {
                 Parent = this,
                 Font = QuaverFonts.AssistantRegular16,
-                Text = (username == "") ? "  " : username,
+                Text = GetUsernameFormatted(),
                 Alignment = Alignment.TopLeft,
                 Alpha = textAlpha,
                 TextScale = 0.75f
@@ -171,7 +181,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
-                Alpha = 0.75f
+                Alpha = textAlpha
             };
             HitBurst.PosX = HitBurst.Frames[0].Width / 2f - 20;
         }
@@ -208,7 +218,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         /// <summary>
         ///     Sets the correct username position.
         /// </summary>
-        internal void SetUsernamePosition()
+        private void SetUsernamePosition()
         {
             // Set username position.
             var usernameTextSize = Username.Font.MeasureString(Username.Text);        
@@ -221,6 +231,9 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         /// </summary>
         private void UpdateScoreTextAndPosition()
         {
+            // Username
+            SetUsernamePosition();
+            
             // Score
             Score.Text = Processor.Score.ToString("N0");
 
@@ -235,5 +248,13 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             Combo.PosX = -comboTextSize.X * Combo.TextScale / 2f - 8;
             Combo.PosY = 0;
         }
+
+        /// <summary>
+        ///     Formatted username with rank
+        /// </summary>
+        /// <param name="???"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        internal string GetUsernameFormatted() => $"#{Rank} " + (UsernameRaw == "" ? "  " : UsernameRaw);
     }
 }

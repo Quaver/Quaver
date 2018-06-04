@@ -46,19 +46,27 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             SetTargetYPositions();
         }
 
+        /// <summary>
+        ///     Sets the target y positions (where the scoreboard should move to)
+        ///     Based on their rank.
+        /// </summary>
         private void SetTargetYPositions()
         {
             var users = Users.OrderByDescending(x => x.Processor.Score).ToList();
             
             for (var i = 0; i < users.Count; i++)
             {
+                // Set new username and rank.
+                users[i].Rank = i + 1;
+                users[i].Username.Text = users[i].GetUsernameFormatted();
+                
                 // Normalize the position of the first one so that all the rest will be completely in the middle.
                 if (i == 0)
                 {
                     users[i].TargetYPosition = users.Count * -users[i].SizeY / 2f;
                     continue;
                 }
-
+                
                 users[i].TargetYPosition = users[i - 1].TargetYPosition + users[i].SizeY + 8;
             } 
         }
