@@ -139,7 +139,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 Text = (username == "") ? "  " : username,
                 Alignment = Alignment.TopLeft,
                 Alpha = textAlpha,
-                TextScale = 0.85f
+                TextScale = 0.75f
             };
 
             SetUsernamePosition();
@@ -151,7 +151,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 Font = QuaverFonts.AssistantRegular16,
                 Alignment = Alignment.TopLeft,
                 Text = Processor.Score.ToString("N0"),
-                TextScale = 0.70f,
+                TextScale = 0.60f,
                 Alpha = textAlpha
             };
             
@@ -162,7 +162,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 Font = QuaverFonts.AssistantRegular16,
                 Alignment = Alignment.MidRight,
                 Text = $"{Processor.Combo:N0}x",
-                TextScale = 0.75f,
+                TextScale = 0.65f,
                 Alpha = textAlpha
             };
             
