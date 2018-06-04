@@ -260,7 +260,7 @@ namespace Quaver.Config
         /// <summary>
         ///     The key to hide the scoreboard in-game.
         /// </summary>
-        internal static BindedValue<Keys> KeyHideScoreboard { get; private set; }
+        internal static BindedValue<Keys> KeyScoreboardVisible { get; private set; }
 
         /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
@@ -384,7 +384,7 @@ namespace Quaver.Config
             KeyRestartMap = ReadValue(@"KeyRestartMap", Keys.OemTilde, data);
             KeyDecreaseScrollSpeed = ReadValue(@"KeyDecreaseScrollSpeed", Keys.F3, data);
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
-            KeyHideScoreboard = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
+            KeyScoreboardVisible = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
 
             // Set Master and Sound Effect Volume
             SoundEffect.MasterVolume = VolumeGlobal.Value / 100f;
@@ -448,7 +448,7 @@ namespace Quaver.Config
                     KeyRestartMap.OnValueChanged += AutoSaveConfiguration;
                     KeyIncreaseScrollSpeed.OnValueChanged += AutoSaveConfiguration;
                     KeyDecreaseScrollSpeed.OnValueChanged += AutoSaveConfiguration;
-                    KeyHideScoreboard.OnValueChanged += AutoSaveConfiguration;
+                    KeyScoreboardVisible.OnValueChanged += AutoSaveConfiguration;
                 });
         }
 

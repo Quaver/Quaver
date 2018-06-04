@@ -267,7 +267,7 @@ namespace Quaver.States.Gameplay
                 Pause();
 
             // Show/hide scoreboard.
-            if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyHideScoreboard.Value))
+            if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyScoreboardVisible.Value))
                 ConfigManager.ScoreboardVisible.Value = !ConfigManager.ScoreboardVisible.Value;
             
             if (IsPaused || Failed)
