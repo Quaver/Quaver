@@ -30,7 +30,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         internal override void Update(double dt)
         {     
             // Tween to target Y positions
-            Users.ForEach(x => x.PosY = GraphicsHelper.Tween(x.TargetYPosition, x.PosY, Math.Min(dt / 60, 1)));
+            Users.ForEach(x => x.PosY = GraphicsHelper.Tween(x.TargetYPosition, x.PosY, Math.Min(dt / 120, 1)));
             base.Update(dt);
         }
 
