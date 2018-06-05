@@ -1,8 +1,10 @@
 # Quaver [![CodeFactor](https://www.codefactor.io/repository/github/swan/quaver/badge)](https://www.codefactor.io/repository/github/swan/quaver) [![Trello](https://img.shields.io/badge/Trello-Roadmap-blue.svg)](https://trello.com/b/QVbVwKN1/quaver-client) [![Discord](https://discordapp.com/api/guilds/354206121386573824/widget.png?style=shield)](https://discord.gg/nJa8VFr)
+
 <p align="center"> 
   <img src="https://eggplants.org/9du6q8.jpg">
 </p>
-🎶 The ultimate community-driven, modern, and open-source competitive rhythm game.
+
+> 🎶 The ultimate community-driven, modern, and open-source competitive rhythm game.
 
 [Quaver](https://github.com/Swan/Quaver) strives to provide a familiar gameplay experience, with much more to offer such as:
 
