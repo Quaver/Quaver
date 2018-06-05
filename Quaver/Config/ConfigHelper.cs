@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Logging;
+using Quaver.States.Gameplay.GameModes.Keys.Playfield.Health;
+using Quaver.States.Gameplay.UI.Components.Health;
 
 namespace Quaver.Config
 {
@@ -236,6 +238,28 @@ namespace Quaver.Config
         internal static DefaultSkins ReadDefaultSkin(DefaultSkins defaultSkins, string newVal)
         {
             return Enum.TryParse(newVal, out DefaultSkins newDefault) ? newDefault : defaultSkins;
+        }
+
+        /// <summary>
+        ///     Reads a HealtHBarType
+        /// </summary>
+        /// <param name="defaultType"></param>
+        /// <param name="newVal"></param>
+        /// <returns></returns>
+        internal static HealthBarType ReadHealthBarType(HealthBarType defaultType, string newVal)
+        {
+            return Enum.TryParse(newVal, out HealthBarType newOne) ? newOne : defaultType;
+        }
+        
+        /// <summary>
+        ///     Reads a HealtHBarType
+        /// </summary>
+        /// <param name="defaultType"></param>
+        /// <param name="newVal"></param>
+        /// <returns></returns>
+        internal static HealthBarKeysAlignment ReadHealthBarKeysAlignment(HealthBarKeysAlignment defaultType, string newVal)
+        {
+            return Enum.TryParse(newVal, out HealthBarKeysAlignment newOne) ? newOne : defaultType;
         }
     }
 }

@@ -15,6 +15,8 @@ using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Resources;
+using Quaver.States.Gameplay.GameModes.Keys.Playfield.Health;
+using Quaver.States.Gameplay.UI.Components.Health;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.Skinning
@@ -151,6 +153,16 @@ namespace Quaver.Skinning
         ///     Y Pos of the judgement hit burst.
         /// </summary>
         internal int JudgementBurstPosY { get; set; }
+
+        /// <summary>
+        ///     The type of health bar the skin has.
+        /// </summary>
+        internal HealthBarType HealthBarType { get; set; }
+
+        /// <summary>
+        ///     Health Bar alignment for Keys game mode.
+        /// </summary>
+        internal HealthBarKeysAlignment HealthBarKeysAlignment { get; set; }
 
         /// <summary>
         ///     The colour that is used for the column's lighting.
@@ -1284,6 +1296,8 @@ namespace Quaver.Skinning
                     KpsDisplayPosY = 10;
                     ComboPosY = 0;
                     JudgementBurstPosY = 105;
+                    HealthBarType = HealthBarType.Vertical;
+                    HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
                     break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
@@ -1337,6 +1351,8 @@ namespace Quaver.Skinning
                     KpsDisplayPosY = 10;
                     ComboPosY = 0;
                     JudgementBurstPosY = 105;
+                    HealthBarType = HealthBarType.Vertical;
+                    HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
                     break;
             }
 
@@ -1394,6 +1410,8 @@ namespace Quaver.Skinning
             KpsDisplayPosY = ConfigHelper.ReadInt32(KpsDisplayPosY, data["Gameplay"]["KpsDisplayPosY"]);
             ComboPosY = ConfigHelper.ReadInt32(ComboPosY, data["Gameplay"]["ComboPosY"]);
             JudgementBurstPosY = ConfigHelper.ReadInt32(JudgementBurstPosY, data["Gameplay"]["JudgementBurstPosY"]);
+            HealthBarType = ConfigHelper.ReadHealthBarType(HealthBarType, data["Gameplay"]["HealthBarType"]);
+            HealthBarKeysAlignment = ConfigHelper.ReadHealthBarKeysAlignment(HealthBarKeysAlignment, data["Gameplay"]["HealthBarKeysAlignment"]);
 
             Logger.LogSuccess($"skin.ini file has successfully been read.", LogType.Runtime);
         }
