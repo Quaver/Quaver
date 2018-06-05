@@ -8,6 +8,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
+using Quaver.States.Gameplay.UI.Components.Health;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
 {
@@ -54,6 +55,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         ///     Reference to the gameplay screen.
         /// </summary>
         private GameplayScreen Screen { get; }
+
+        /// <summary>
+        ///     The health bar for the playfield.
+        /// </summary>
+        private HealthBar HealthBar { get; }
 
         /// <summary>
         ///     Padding of the playfield.
@@ -212,6 +218,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             
             // Create a new playfield stage               
             Stage = new KeysPlayfieldStage(this, Screen);
+            
+            // Create health bar.
+            HealthBar = new HealthBar(HealthBarType.Horizontal, Screen.Ruleset.ScoreProcessor);
         }
         
         /// <summary>
@@ -220,6 +229,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {
+            HealthBar.Initialize(state);
         }
 
         /// <summary>
@@ -229,6 +239,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         {
             Container.Destroy();
             HitLightingContainer.Destroy();
+            HealthBar.UnloadContent();
         }
         
         /// <summary>
@@ -242,6 +253,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         
             Container.Update(dt);
             HitLightingContainer.Update(dt);
+            HealthBar.Update(dt);
         }
 
         /// <summary>
@@ -255,7 +267,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
             HitLightingContainer.Draw();
-            GameBase.SpriteBatch.End();        
+            GameBase.SpriteBatch.End();   
+            
+            // Draw health bar (Has its own spritebatch system).
+            HealthBar.Draw();
         }
         
         /// <inheritdoc />

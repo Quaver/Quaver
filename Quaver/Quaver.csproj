@@ -123,6 +123,8 @@
     <Compile Include="States\Gameplay\IGameplayInputManager.cs" />
     <Compile Include="States\Gameplay\IGameplayPlayfield.cs" />
     <Compile Include="States\Gameplay\UI\Components\GradeDisplay.cs" />
+    <Compile Include="States\Gameplay\UI\Components\Health\HealthBar.cs" />
+    <Compile Include="States\Gameplay\UI\Components\Health\HealthBarType.cs" />
     <Compile Include="States\Gameplay\UI\Components\HitErrorBar.cs" />
     <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementBarGraph.cs" />
     <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementDisplay.cs" />

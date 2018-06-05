@@ -192,12 +192,9 @@ namespace Quaver.States.Gameplay.UI
         }
 
         /// <summary>
-        /// 
+        ///     Destroy
         /// </summary>
-        public void UnloadContent()
-        {
-            Container.Destroy();
-        }
+        public void UnloadContent() => Container.Destroy();
 
         /// <summary>
         /// 
@@ -229,12 +226,9 @@ namespace Quaver.States.Gameplay.UI
         }
 
         /// <summary>
-        /// 
+        ///     Draw
         /// </summary>
-        public void Draw()
-        {
-            Container.Draw();
-        }
+        public void Draw() => Container.Draw();
         
         /// <summary>
         ///     Updates the number displays
