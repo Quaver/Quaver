@@ -8,14 +8,18 @@ The following are the two creators of the game and their roles.
 
 * [**Swan**](https://github.com/Swan)
   - Game Framework Development
+  - Gameplay Development
   - Multiplayer Server Development
   - Web Development
   - API Development
+  - UI/UX Development
+  
 * [**Staravia**](https://github.com/Staravia)
   - Gameplay Development
-  - Difficulty Calculation Development
-  - User Interface Development
+  - Difficulty Calculation (QSS) Development
+  - UI/UX Development
   - Game Asset Creation
+  - Graphics API Development
 
 ### Contributors ###
 
@@ -25,10 +29,12 @@ The following is an alphabetized list of Quaver's contributors and what they hav
   - Web Design
   - QA / Play Tester
   - Certified, Top Quality, Grade A Bug Buster (Abuser)
-* **arpia97**
+* **[arpia97](https://github.com/arpia97)**
   - QA / Play Tester
   - Difficulty Calculation
 * [**ATTang / Droptable**](https://github.com/droptable0133)
   - Difficulty Calculation
 * [**barrysir**](https://github.com/barrysir)
   - Difficulty Calculation
+* [**Vortex-**](https://github.com/VortexCoyote)
+  - Shader Development
