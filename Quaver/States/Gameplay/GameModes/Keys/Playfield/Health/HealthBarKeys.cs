@@ -26,9 +26,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield.Health
         /// <param name="playfield"></param>
         /// <param name="type"></param>
         /// <param name="alignment"></param>
-        /// <param name="procesor"></param>
-        internal HealthBarKeys(KeysPlayfield playfield, HealthBarType type, HealthBarKeysAlignment alignment, ScoreProcessor procesor) 
-                                : base(type, procesor)
+        /// <param name="processor"></param>
+        internal HealthBarKeys(KeysPlayfield playfield, HealthBarType type, HealthBarKeysAlignment alignment, ScoreProcessor processor) 
+                                : base(type, processor)
         {
             Playfield = playfield;
             BarAlignment = alignment;

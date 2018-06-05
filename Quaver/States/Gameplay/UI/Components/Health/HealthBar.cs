@@ -42,16 +42,16 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         ///     Shader to make health bar foreground partially transparent.
         /// </summary>
         private Effect SemiTransparent { get; }
-        
+
         /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="type"></param>
-        /// <param name="procesor"></param>
-        internal HealthBar(HealthBarType type, ScoreProcessor procesor)
+        /// <param name="processor"></param>
+        internal HealthBar(HealthBarType type, ScoreProcessor processor)
         {
             Type = type;
-            Processor = procesor;
+            Processor = processor;
             SemiTransparent = ResourceHelper.LoadShader(QuaverResources.semi_transparent);
         }
         
