@@ -267,11 +267,11 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
         /// </summary>
         private void SetTextColorBasedOnHealth()
         {
-            if (Processor.Health >= 75)
+            if (Processor.Health >= 60)
                 Username.TextColor = Color.White;
-            else if (Processor.Health >= 50)
+            else if (Processor.Health >= 40)
                 Username.TextColor = Color.Yellow;
-            else if (Processor.Health >= 30)
+            else if (Processor.Health >= 1)
                 Username.TextColor = Color.Orange;
             else
                 Username.TextColor = Color.Red;
