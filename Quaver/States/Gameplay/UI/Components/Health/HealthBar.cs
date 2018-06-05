@@ -6,6 +6,7 @@ using Quaver.API.Maps.Processors.Scoring;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -26,8 +27,13 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         internal Effect SemiTransparent { get; }
 
         /// <summary>
+        ///     The bar displayed in the background. This one doesn't move.
+        /// </summary>
+        private Sprite BackgroundBar { get; set; }
+
+        /// <summary>
         ///     The bar displayed in the foreground. This one dictates the amount
-        ///     of health the user currentl has.
+        ///     of health the user currently has.
         /// </summary>
         private Sprite ForegroundBar { get; set; }
 
@@ -54,19 +60,47 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {
-            // Create the foreground bar (the one that'll serve as the gauge progress).
-            ForegroundBar = new Sprite { Image = GameBase.QuaverUserInterface.BlankBox };
+            // Create the background bar sprite.
+            BackgroundBar = new Sprite
+            {
+                Image = GameBase.QuaverUserInterface.BlankBox,
+                Tint = Color.Red
+            };
             
+            // Create the foreground bar (the one that'll serve as the gauge progress).
+            ForegroundBar = new Sprite
+            {
+                Image = GameBase.QuaverUserInterface.BlankBox,
+                Tint = Color.Green
+            };
+                   
+            // Set initial positions and sizes of both bars.
             switch (Type)
             {
                 case HealthBarType.Horizontal:
+                    // Background.
+                    // TODO: Set based on image width and height.
+                    BackgroundBar.Alignment = Alignment.TopLeft;
+                    BackgroundBar.Size = new UDim2D(GameBase.WindowRectangle.Width, 20);
+                    BackgroundBar.PosY = 40;
+                    
+                    // Foreground
+                    // TODO: Set based on image width and height.
                     ForegroundBar.Alignment = Alignment.TopLeft;
                     ForegroundBar.Size = new UDim2D(GameBase.WindowRectangle.Width, 20);
-                    ForegroundBar.PosY = 40;
-                    
+                    ForegroundBar.PosY = BackgroundBar.PosY;
+
                     SemiTransparent.Parameters["p_position"].SetValue(new Vector2(ForegroundBar.SizeX, 0f));
                     break;
                 case HealthBarType.Vertical:
+                    // Background
+                    // TODO: Set based on image width and height.
+                    BackgroundBar.Alignment = Alignment.BotLeft;
+                    BackgroundBar.Size = new UDim2D(20, GameBase.WindowRectangle.Height);
+                    BackgroundBar.PosX = 50;
+                    
+                    // Foreground
+                    // TODO: Set based on image width and height.
                     ForegroundBar.Alignment = Alignment.BotLeft;
                     ForegroundBar.Size = new UDim2D(20, GameBase.WindowRectangle.Height);
                     ForegroundBar.PosX = 50;
@@ -88,6 +122,7 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         /// </summary>
         public void UnloadContent()
         {
+            BackgroundBar.Destroy();
             ForegroundBar.Destroy();
         }
 
@@ -97,6 +132,7 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         /// <param name="dt"></param>
         public void Update(double dt)
         {
+            BackgroundBar.Update(dt);
             ForegroundBar.Update(dt);
             SetHealthBarProgress(dt);
         }
@@ -106,13 +142,15 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         /// </summary>
         public void Draw()
         {        
+            // Draw Background Bar.
+            GameBase.SpriteBatch.Begin();
+            BackgroundBar.Draw();
+            GameBase.SpriteBatch.End();
+            
             // Use new spritebatch for ST Shader.
             GameBase.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied,
-                                            SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, 
-                                            SemiTransparent);
-            
-            ForegroundBar.Draw();
-            
+                                   SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, SemiTransparent);         
+            ForegroundBar.Draw();       
             GameBase.SpriteBatch.End();
         }
 
