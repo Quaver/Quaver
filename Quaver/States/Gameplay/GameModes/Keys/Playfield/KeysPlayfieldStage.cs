@@ -40,12 +40,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <summary>
         ///     The left side of the stage.
         /// </summary>
-        private Sprite StageLeft { get; set; }
+        internal Sprite StageLeft { get; private set; }
 
         /// <summary>
         ///     The right side of the stage.
         /// </summary>
-        private Sprite StageRight { get; set; }
+        internal Sprite StageRight { get; private set; }
 
         /// <summary>
         ///     The Bg mask of the stage.

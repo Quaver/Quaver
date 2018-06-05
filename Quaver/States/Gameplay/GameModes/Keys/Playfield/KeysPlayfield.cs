@@ -8,6 +8,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
+using Quaver.States.Gameplay.GameModes.Keys.Playfield.Health;
 using Quaver.States.Gameplay.UI.Components.Health;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
@@ -59,7 +60,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <summary>
         ///     The health bar for the playfield.
         /// </summary>
-        private HealthBar HealthBar { get; }
+        private HealthBarKeys HealthBar { get; }
 
         /// <summary>
         ///     Padding of the playfield.
@@ -220,7 +221,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             Stage = new KeysPlayfieldStage(this, Screen);
             
             // Create health bar.
-            HealthBar = new HealthBar(HealthBarType.Horizontal, Screen.Ruleset.ScoreProcessor);
+            HealthBar = new HealthBarKeys(this, HealthBarType.Vertical, HealthBarKeysAlignment.RightStage, Screen.Ruleset.ScoreProcessor);
         }
         
         /// <summary>
