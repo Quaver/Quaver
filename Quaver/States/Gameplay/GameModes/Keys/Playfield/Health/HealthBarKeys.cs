@@ -9,10 +9,26 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield.Health
 {
     internal class HealthBarKeys : HealthBar
     {
+        /// <summary>
+        ///     Reference to the mania playfield.
+        /// </summary>
         private KeysPlayfield Playfield { get; }
+        
+        /// <summary>
+        ///     Where the health bar is aligned relative to the playfield.
+        /// </summary>
         private HealthBarKeysAlignment BarAlignment { get; }
 
-        internal HealthBarKeys(KeysPlayfield playfield, HealthBarType type, HealthBarKeysAlignment alignment, ScoreProcessor procesor) : base(type, procesor)
+        /// <inheritdoc />
+        /// <summary>
+        ///     Ctor
+        /// </summary>
+        /// <param name="playfield"></param>
+        /// <param name="type"></param>
+        /// <param name="alignment"></param>
+        /// <param name="procesor"></param>
+        internal HealthBarKeys(KeysPlayfield playfield, HealthBarType type, HealthBarKeysAlignment alignment, ScoreProcessor procesor) 
+                                : base(type, procesor)
         {
             Playfield = playfield;
             BarAlignment = alignment;
