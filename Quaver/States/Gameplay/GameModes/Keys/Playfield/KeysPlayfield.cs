@@ -221,7 +221,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             Stage = new KeysPlayfieldStage(this, Screen);
             
             // Create health bar.
-            HealthBar = new HealthBarKeys(this, HealthBarType.Vertical, HealthBarKeysAlignment.RightStage, Screen.Ruleset.ScoreProcessor);
+            HealthBar = new HealthBarKeys(this, GameBase.LoadedSkin.HealthBarType, GameBase.LoadedSkin.HealthBarKeysAlignment, Screen.Ruleset.ScoreProcessor);
         }
         
         /// <summary>
