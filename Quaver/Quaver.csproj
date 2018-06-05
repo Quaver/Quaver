@@ -102,7 +102,7 @@
     <Compile Include="Helpers\RngHelper.cs" />
     <Compile Include="Helpers\StreamHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
-    <Compile Include="Helpers\XNAKeyHelper.cs" />
+    <Compile Include="Helpers\XnaKeyHelper.cs" />
     <Compile Include="Main\CommonTaskScheduler.cs" />
     <Compile Include="Main\FontAwesome.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModNoPause.cs" />
@@ -223,6 +223,7 @@
     <Compile Include="States\Tests\DropdownTestState.cs" />
     <Compile Include="States\Tests\CheckboxTestState.cs" />
     <Compile Include="States\Tests\NavbarTestState.cs" />
+    <Compile Include="States\Tests\SemiTransparentTestScreen.cs" />
     <Compile Include="States\Tests\SliderTestState.cs" />
     <Compile Include="StepMania\Etterna.cs" />
     <Compile Include="StepMania\EtternaCache.cs" />

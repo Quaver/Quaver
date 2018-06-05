@@ -55,7 +55,7 @@ namespace Quaver.Graphics.Buttons
             // Create text sprite.
             TextSprite = new SpriteText()
             {
-                Text = XNAKeyHelper.GetStringFromKey(Keybind.Value),
+                Text = XnaKeyHelper.GetStringFromKey(Keybind.Value),
                 Size = new UDim2D(size.X, size.Y),
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.MidCenter,
@@ -149,7 +149,7 @@ namespace Quaver.Graphics.Buttons
             Tint = QuaverColors.MainAccentInactive;
             Selected = false;
             HoverTargetTween = 0;
-            TextSprite.Text = XNAKeyHelper.GetStringFromKey(Keybind.Value);
+            TextSprite.Text = XnaKeyHelper.GetStringFromKey(Keybind.Value);
         }
 
         /// <inheritdoc />

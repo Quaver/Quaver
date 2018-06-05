@@ -2,7 +2,7 @@
 
 namespace Quaver.Helpers
 {
-    internal static class XNAKeyHelper
+    internal static class XnaKeyHelper
     {
         /// <summary>
         ///     Gets a key from a given string.
