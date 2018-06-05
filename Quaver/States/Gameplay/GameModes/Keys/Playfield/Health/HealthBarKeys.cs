@@ -54,8 +54,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield.Health
                     ForegroundBar.Alignment = Alignment.BotCenter;
 
                     var newLeftPosX = -Playfield.Width / 2f;
-                    BackgroundBar.PosX = newLeftPosX;
-                    ForegroundBar.PosX = newLeftPosX;
+                    BackgroundBar.PosX = newLeftPosX - BackgroundBar.SizeX / 2f;
+                    ForegroundBar.PosX = newLeftPosX - ForegroundBar.SizeX / 2f;
                     break;
                 case HealthBarKeysAlignment.RightStage:
                     // Align the two bars at the center where the playfield is.
@@ -63,8 +63,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield.Health
                     ForegroundBar.Alignment = Alignment.BotCenter;
                     
                     var newRightPosX = Playfield.Width / 2f;
-                    BackgroundBar.PosX = newRightPosX;
-                    ForegroundBar.PosX = newRightPosX;
+                    BackgroundBar.PosX = newRightPosX + BackgroundBar.SizeX / 2f;
+                    ForegroundBar.PosX = newRightPosX + ForegroundBar.SizeX / 2f;
                     break;
             }
         }
