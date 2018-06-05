@@ -55,13 +55,8 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         public void Initialize(IGameState state)
         {
             // Create the foreground bar (the one that'll serve as the gauge progress).
-            ForegroundBar = new Sprite
-            {
-                Image = GameBase.QuaverUserInterface.BlankBox,         
-                Alignment = Alignment.TopLeft,
-            };
+            ForegroundBar = new Sprite { Image = GameBase.QuaverUserInterface.BlankBox };
             
-            // Set initial position of the foreground health bar.
             switch (Type)
             {
                 case HealthBarType.Horizontal:
@@ -122,7 +117,7 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         }
 
         /// <summary>
-        ///        Moves the shader rect's position back and forth based on the user's health.
+        ///        Moves the shader rect's position/size back and forth based on the user's health.
         ///        This creates that health gauge effect.
         /// </summary>
         /// <param name="dt"></param>
@@ -136,10 +131,7 @@ namespace Quaver.States.Gameplay.UI.Components.Health
                     // Target position based on the user's current health.
                     var targetPosX = Processor.Health / 100 * ForegroundBar.SizeX;
                     
-                    // Get the new lerped y pos.
                     var newPosX = MathHelper.Lerp(SemiTransparent.Parameters["p_position"].GetValueVector2().X, targetPosX, (float)Math.Min(dt / 30, 1));
-                    
-                    // Set new pos
                     SemiTransparent.Parameters["p_position"].SetValue(new Vector2(newPosX, 0f));
                     break;
                 // We handle vertical bar types with the size of the bar instead of position, since we're 
@@ -148,10 +140,7 @@ namespace Quaver.States.Gameplay.UI.Components.Health
                     // Get new size of the bar based on the user's current health.
                     var targetSizeY = ForegroundBar.SizeY - Processor.Health / 100 * ForegroundBar.SizeY;
                     
-                    // Get lerped size of the bar
-                    var newSizeY = MathHelper.Lerp(SemiTransparent.Parameters["p_rectangle"].GetValueVector2().Y, targetSizeY, (float)Math.Min(dt / 30, 1));
-                    
-                    // Set param.
+                    var newSizeY = MathHelper.Lerp(SemiTransparent.Parameters["p_rectangle"].GetValueVector2().Y, targetSizeY, (float)Math.Min(dt / 30, 1));    
                     SemiTransparent.Parameters["p_rectangle"].SetValue(new Vector2(ForegroundBar.SizeX, newSizeY));
                     break;
                 default:
