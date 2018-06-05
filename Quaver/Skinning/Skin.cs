@@ -290,6 +290,12 @@ namespace Quaver.Skinning
         internal Texture2D Scoreboard { get; set; }
 
         /// <summary>
+        ///     Health Bar
+        /// </summary>
+        internal List<Texture2D> HealthBarBackground { get; set; }
+        internal List<Texture2D> HealthBarForeground { get; set; }
+
+        /// <summary>
         ///     Sound Effect elements. 
         ///     NOTE: SFX need to be 16-bit wav otherwise MonoGame doesn't play them correctly??
         /// </summary>
@@ -510,6 +516,10 @@ namespace Quaver.Skinning
             
             // Scoreboard
             @"scoreboard",
+            
+            // Health Bar
+            @"health-background",
+            @"health-foreground",
             
             // Cursor
             @"main-cursor",
@@ -999,6 +1009,12 @@ namespace Quaver.Skinning
                         break;
                     case @"scoreboard":
                         Scoreboard = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"health-background":
+                        HealthBarBackground = LoadAnimationElements(element, 0, 0);
+                        break;
+                    case @"health-foreground":
+                        HealthBarForeground = LoadAnimationElements(element, 0, 0);
                         break;
                     case @"sound-hit":
                         SoundHit = LoadSoundEffectElement(element, skinElementPath);

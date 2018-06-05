@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Processors.Scoring;
@@ -25,13 +26,13 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         /// <summary>
         ///     The bar displayed in the background. This one doesn't move.
         /// </summary>
-        protected Sprite BackgroundBar { get; set; }
+        protected AnimatableSprite BackgroundBar { get; set; }
 
         /// <summary>
         ///     The bar displayed in the foreground. This one dictates the amount
         ///     of health the user currently has.
         /// </summary>
-        protected Sprite ForegroundBar { get; set; }
+        protected AnimatableSprite ForegroundBar { get; set; }
 
         /// <summary>
         ///     Reference to the current score processor.
@@ -62,46 +63,31 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         public virtual void Initialize(IGameState state)
         {
             // Create the background bar sprite.
-            BackgroundBar = new Sprite
-            {
-                Image = GameBase.QuaverUserInterface.BlankBox,
-                Tint = Color.Red
-            };
-            
+            BackgroundBar = new AnimatableSprite(GameBase.LoadedSkin.HealthBarBackground);
+            BackgroundBar.Size = new UDim2D(BackgroundBar.Frames.First().Width, BackgroundBar.Frames.First().Height);
+   
+            // Start animation
+            BackgroundBar.StartLoop(LoopDirection.Forward, 60);
+                  
             // Create the foreground bar (the one that'll serve as the gauge progress).
-            ForegroundBar = new Sprite
-            {
-                Image = GameBase.QuaverUserInterface.BlankBox,
-                Tint = Color.Green
-            };
-                   
-            // Set initial positions and sizes of both bars.
+            ForegroundBar = new AnimatableSprite(GameBase.LoadedSkin.HealthBarForeground);
+            ForegroundBar.Size = new UDim2D(ForegroundBar.Frames.First().Width, ForegroundBar.Frames.First().Height);
+                        
+            // Start animation.
+            ForegroundBar.StartLoop(LoopDirection.Forward, 60);
+            
             switch (Type)
             {
                 case HealthBarType.Horizontal:
-                    // Background.
-                    // TODO: Set based on image width and height.
                     BackgroundBar.Alignment = Alignment.TopLeft;
-                    BackgroundBar.Size = new UDim2D(GameBase.WindowRectangle.Width, 20);
-                    
-                    // Foreground
-                    // TODO: Set based on image width and height.
                     ForegroundBar.Alignment = Alignment.TopLeft;
-                    ForegroundBar.Size = new UDim2D(GameBase.WindowRectangle.Width, 20);
-                    
+                
                     SemiTransparent.Parameters["p_position"].SetValue(new Vector2(ForegroundBar.SizeX, 0f));
                     break;
                 case HealthBarType.Vertical:
-                    // Background
-                    // TODO: Set based on image width and height.
                     BackgroundBar.Alignment = Alignment.BotLeft;
-                    BackgroundBar.Size = new UDim2D(20, GameBase.WindowRectangle.Height);
-                    
-                    // Foreground
-                    // TODO: Set based on image width and height.
                     ForegroundBar.Alignment = Alignment.BotLeft;
-                    ForegroundBar.Size = new UDim2D(20, GameBase.WindowRectangle.Height);
-                    
+                                       
                     SemiTransparent.Parameters["p_position"].SetValue(new Vector2(0, 0));
                     break;
                 default:
