@@ -286,7 +286,7 @@ namespace Quaver.States.Gameplay.UI
                 AudioEngine.Fade(0, 1800);
             }
             
-            ScreenTransitioner.FadeIn(dt, 240);
+            ScreenTransitioner.FadeIn(dt, 360);
             
             // Increase time after the user failed.
             Screen.TimeSincePlayEnded += dt;

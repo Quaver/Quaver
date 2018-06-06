@@ -4,6 +4,7 @@ using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UserInterface;
 using Quaver.Main;
 using Quaver.States.Enums;
 using Quaver.States.Gameplay;
@@ -90,6 +91,7 @@ namespace Quaver.States.Results
             GameBase.GraphicsDevice.Clear(Color.Aqua);
             GameBase.SpriteBatch.Begin();
             
+            BackgroundManager.Draw();
             Container.Draw();
             
             GameBase.SpriteBatch.End();
