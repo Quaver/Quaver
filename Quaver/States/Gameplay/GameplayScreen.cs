@@ -106,10 +106,10 @@ namespace Quaver.States.Gameplay
                 
                 // If the player is currently not on a break, then we want to detect if it's on a break
                 // by checking if the next object is 10 seconds away.
-                if (nextObject.TrueStartTime - Timing.CurrentTime >= Timing.StartDelay + 10000)
+                if (nextObject.TrueStartTime - Timing.CurrentTime >= GameplayTiming.StartDelay + 10000)
                     _onBreak = true;                 
                 // If the user is already on a break, then we need to turn the break off if the next object is at the start delay.
-                else if (_onBreak && nextObject.TrueStartTime - Timing.CurrentTime <= Timing.StartDelay)
+                else if (_onBreak && nextObject.TrueStartTime - Timing.CurrentTime <= GameplayTiming.StartDelay)
                     _onBreak = false;
 
                 return _onBreak;
@@ -367,7 +367,7 @@ namespace Quaver.States.Gameplay
                 return;
 
             // Get the skip time of the next object.           
-            var skipTime = Ruleset.HitObjectManager.ObjectPool.First().TrueStartTime - Timing.StartDelay + AudioEngine.BassDelayOffset;
+            var skipTime = Ruleset.HitObjectManager.ObjectPool.First().TrueStartTime - GameplayTiming.StartDelay + AudioEngine.BassDelayOffset;
 
             try
             {

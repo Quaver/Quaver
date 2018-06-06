@@ -30,7 +30,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The amount of time it takes before the gameplay/song actually starts.
         /// </summary>
-        internal int StartDelay { get; } = 3000;
+        internal static int StartDelay { get; } = 3000;
         
         /// <summary>
         ///     Reference to the gameplay screen.

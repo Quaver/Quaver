@@ -11,6 +11,7 @@ using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
+using Quaver.States.Gameplay;
 
 namespace Quaver.Discord
 {
@@ -85,10 +86,10 @@ namespace Quaver.Discord
                 {
                     // Get Current Unix Time
                     var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                    var unixDateTime = (DateTime.Now.ToLocalTime().ToUniversalTime() - epoch).TotalSeconds;
+                    var unixDateTime = (DateTime.Now.ToLocalTime().ToUniversalTime() - epoch).TotalSeconds + GameplayTiming.StartDelay / 1000f;
 
                     // Set Discord presence to the "time left" specified.
-                    GameBase.DiscordController.presence.endTimestamp = (long)(unixDateTime + (timeLeft / 1000));
+                    GameBase.DiscordController.presence.endTimestamp = (long)(unixDateTime + timeLeft / 1000);
                 }
                 else
                 {
