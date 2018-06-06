@@ -102,7 +102,6 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             UsernameRaw = username;
             Type = type;
             Size = new UDim2D(260, 50);
-            Image = GameBase.LoadedSkin.Scoreboard;
 
             // Set position initially to offscreen
             PosX = -SizeX - 10;
@@ -114,12 +113,14 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             switch (Type)
             {
                 case ScoreboardUserType.Self:
+                    Image = GameBase.LoadedSkin.Scoreboard;
                     Alpha = 1f;
                     textAlpha = 1f;
                     break;
                 case ScoreboardUserType.Other:
-                    Alpha = 0.50f;
-                    textAlpha = 0.50f;
+                    Image = GameBase.LoadedSkin.ScoreboardOther;
+                    Alpha = 0.75f;
+                    textAlpha = 0.45f;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

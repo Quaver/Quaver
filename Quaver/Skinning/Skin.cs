@@ -302,6 +302,11 @@ namespace Quaver.Skinning
         internal Texture2D Scoreboard { get; set; }
 
         /// <summary>
+        ///    Scoreboard background for other players.       
+        /// </summary>
+        internal Texture2D ScoreboardOther { get; set; }
+
+        /// <summary>
         ///     Health Bar
         /// </summary>
         internal List<Texture2D> HealthBarBackground { get; set; }
@@ -528,6 +533,7 @@ namespace Quaver.Skinning
             
             // Scoreboard
             @"scoreboard",
+            @"scoreboard-other",
             
             // Health Bar
             @"health-background",
@@ -1021,6 +1027,9 @@ namespace Quaver.Skinning
                         break;
                     case @"scoreboard":
                         Scoreboard = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"scoreboard-other":
+                        ScoreboardOther = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"health-background":
                         HealthBarBackground = LoadAnimationElements(element, 0, 0);
