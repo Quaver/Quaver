@@ -118,7 +118,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                     textAlpha = 1f;
                     break;
                 case ScoreboardUserType.Other:
-                    Alpha = 0.75f;
+                    Alpha = 0.50f;
                     textAlpha = 0.50f;
                     break;
                 default:
