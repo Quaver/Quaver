@@ -52,7 +52,7 @@ namespace Quaver.Graphics.UserInterface
                 Size = new UDim2D(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.MidCenter,
                 Image = GameBase.QuaverUserInterface.DiffSelectMask,
-                Tint = Color.Gray
+                Tint = Color.Black
             };
 
             // Change the brightness of the 

@@ -288,6 +288,9 @@ namespace Quaver.States.Gameplay.UI
             
             ScreenTransitioner.FadeIn(dt, 360);
             
+            // Fade background to black.
+            BackgroundManager.Blacken();
+            
             // Increase time after the user failed.
             Screen.TimeSincePlayEnded += dt;
             
