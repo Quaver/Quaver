@@ -8,6 +8,7 @@ using Quaver.Config;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Input;
+using Quaver.Logging;
 using Quaver.Main;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield;
 
@@ -308,9 +309,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 {
                     case GameMode.Keys4:
                         ConfigManager.ScrollSpeed4K.Value--;
+                        Logger.LogImportant($"Scroll Speed Set To: {ConfigManager.ScrollSpeed4K.Value}", LogType.Runtime);
                         break;
                     case GameMode.Keys7:
                         ConfigManager.ScrollSpeed7K.Value--;
+                        Logger.LogImportant($"Scroll Speed Set To: {ConfigManager.ScrollSpeed7K.Value}", LogType.Runtime);
                         break;
                 }
             }
@@ -320,9 +323,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 {
                     case GameMode.Keys4:
                         ConfigManager.ScrollSpeed4K.Value++;
+                        Logger.LogImportant($"Scroll Speed Set To: {ConfigManager.ScrollSpeed4K.Value}", LogType.Runtime);
                         break;
                     case GameMode.Keys7:
                         ConfigManager.ScrollSpeed7K.Value++;
+                        Logger.LogImportant($"Scroll Speed Set To: {ConfigManager.ScrollSpeed7K.Value}", LogType.Runtime);
                         break;
                 }
             }
