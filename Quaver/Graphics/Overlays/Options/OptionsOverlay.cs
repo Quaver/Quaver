@@ -444,19 +444,12 @@ namespace Quaver.Graphics.Overlays.Options
             // The text for the default option if the user doesn't have any skins.
             const string defaultText = "Default";
 
-            var skins = Directory.GetDirectories(ConfigManager.SkinDirectory.Value).ToList();
-
-            var selectedIndex = -1;
-
-            for (var i = 0; i < skins.Count; i++)
+            var skins = new List<string>()
             {
-                skins[i] = new DirectoryInfo(skins[i]).Name;
-
-                if (skins[i] == ConfigManager.Skin.Value)
-                    selectedIndex = i;
-            }
-      
-            skins.Add(defaultText);
+                "Default"
+            };
+            
+            Directory.GetDirectories(ConfigManager.SkinDirectory.Value).ToList().ForEach(x => skins.Add(new DirectoryInfo(x).Name));
       
             // Create the dropdown
             var dropdown = new Dropdown(skins, (o, e) =>
