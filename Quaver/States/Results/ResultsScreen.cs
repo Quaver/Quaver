@@ -149,10 +149,10 @@ namespace Quaver.States.Results
                 BackgroundManager.Blacken();
                 
                 // Fade Screen
-                ScreenTransitioner.FadeIn(dt, 240);   
+                ScreenTransitioner.FadeIn(dt, 120);   
                 
                 // Switch to the song select state after a second.
-                if (TimeSinceExitingScreen >= 2000)
+                if (TimeSinceExitingScreen >= 1000)
                     GameBase.GameStateManager.ChangeState(new SongSelectState());
             }
         }
