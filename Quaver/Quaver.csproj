@@ -128,10 +128,9 @@
     <Compile Include="States\Gameplay\UI\Components\Health\HealthBar.cs" />
     <Compile Include="States\Gameplay\UI\Components\Health\HealthBarType.cs" />
     <Compile Include="States\Gameplay\UI\Components\HitErrorBar.cs" />
-    <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementBarGraph.cs" />
-    <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementDisplay.cs" />
+    <Compile Include="States\Gameplay\UI\Components\Judgements\Counter\JudgementCounter.cs" />
+    <Compile Include="States\Gameplay\UI\Components\Judgements\Counter\JudgementCounterItem.cs" />
     <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementHitBurst.cs" />
-    <Compile Include="States\Gameplay\UI\Components\Judgements\JudgementStatusDisplay.cs" />
     <Compile Include="States\Gameplay\UI\Components\KeysPerSecond.cs" />
     <Compile Include="States\Gameplay\UI\Components\Pause\PauseOverlay.cs" />
     <Compile Include="States\Gameplay\UI\Components\Scoreboard\Scoreboard.cs" />

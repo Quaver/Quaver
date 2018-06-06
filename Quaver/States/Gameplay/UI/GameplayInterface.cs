@@ -18,6 +18,7 @@ using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States.Gameplay.UI.Components;
 using Quaver.States.Gameplay.UI.Components.Judgements;
+using Quaver.States.Gameplay.UI.Components.Judgements.Counter;
 using Quaver.States.Gameplay.UI.Components.Pause;
 using Quaver.States.Gameplay.UI.Components.Scoreboard;
 
@@ -56,7 +57,7 @@ namespace Quaver.States.Gameplay.UI
         /// <summary>
         ///     Displays the judgements and KPS if specified.
         /// </summary>
-        private JudgementStatusDisplay JudgementStatusDisplay { get; set; }
+        private JudgementCounter JudgementCounter { get; set; }
 
         /// <summary>
         ///     The sprite used solely to fade the screen with transitions.
@@ -146,7 +147,7 @@ namespace Quaver.States.Gameplay.UI
             AccuracyDisplay.PosY = GameBase.LoadedSkin.AccuracyDisplayPosY;
             
             // Create judgement status display
-            JudgementStatusDisplay = new JudgementStatusDisplay(Screen) { Parent = Container };
+            JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
            
             // Create KPS display
             KpsDisplay = new KeysPerSecond(NumberDisplayType.Score, "0", new Vector2(1.75f, 1.75f))

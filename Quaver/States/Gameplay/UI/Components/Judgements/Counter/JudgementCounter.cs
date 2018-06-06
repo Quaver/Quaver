@@ -5,17 +5,16 @@ using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
 
-namespace Quaver.States.Gameplay.UI.Components.Judgements
+namespace Quaver.States.Gameplay.UI.Components.Judgements.Counter
 {
     /// <inheritdoc />
     /// <summary>
     ///     Displays all the current judgements + KPS
     /// </summary>
-    internal class JudgementStatusDisplay : Container
+    internal class JudgementCounter : Container
     {
         /// <summary>
         ///     Reference to the ruleset.
@@ -25,7 +24,7 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
         /// <summary>
         ///     The list of judgement displays.
         /// </summary>
-        private Dictionary<Judgement, JudgementDisplay> JudgementDisplays { get; }
+        private Dictionary<Judgement, JudgementCounterItem> JudgementDisplays { get; }
 
         /// <summary>
         ///     The size of each display item.
@@ -36,19 +35,19 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
         /// <summary>
         ///     Ctor -
         /// </summary>
-        internal JudgementStatusDisplay(GameplayScreen screen)
+        internal JudgementCounter(GameplayScreen screen)
         {
             Screen = screen;
             
             // Create the judgement displays.
-            JudgementDisplays = new Dictionary<Judgement, JudgementDisplay>();
+            JudgementDisplays = new Dictionary<Judgement, JudgementCounterItem>();
             for (var i = 0; i < Screen.Ruleset.ScoreProcessor.CurrentJudgements.Count; i++)
             {
                 var key = (Judgement) i;
                 var color = GameBase.LoadedSkin.GetJudgeColor(key);      
                 
                 // Default it to an inactive color.
-                JudgementDisplays[key] = new JudgementDisplay(this, key, new Color(color.R / 2, color.G / 2, color.B / 2), new Vector2(DisplayItemSize.Y, DisplayItemSize.Y))
+                JudgementDisplays[key] = new JudgementCounterItem(this, key, new Color(color.R / 2, color.G / 2, color.B / 2), new Vector2(DisplayItemSize.Y, DisplayItemSize.Y))
                 {
                     Alignment = Alignment.MidRight,
                     Parent = this,
@@ -85,16 +84,16 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
         /// <summary>
         ///     Makes sure that the text is changed to a singular number when collapsing.
         /// </summary>
-        /// <param name="display"></param>
+        /// <param name="counterItem"></param>
         /// <param name="dt"></param>
-        private static void UpdateTextAndSize(JudgementDisplay display, double dt)
+        private static void UpdateTextAndSize(JudgementCounterItem counterItem, double dt)
         {
             // Tween size and pos back to normal
-            display.SizeX = GraphicsHelper.Tween(DisplayItemSize.Y, display.SizeX, Math.Min(dt / 180, 1)); 
-            display.SizeY = GraphicsHelper.Tween(DisplayItemSize.Y, display.SizeY, Math.Min(dt / 180, 1));
-            display.PosX = GraphicsHelper.Tween(0, display.PosX, Math.Min(dt / 180, 1));
+            counterItem.SizeX = GraphicsHelper.Tween(DisplayItemSize.Y, counterItem.SizeX, Math.Min(dt / 180, 1)); 
+            counterItem.SizeY = GraphicsHelper.Tween(DisplayItemSize.Y, counterItem.SizeY, Math.Min(dt / 180, 1));
+            counterItem.PosX = GraphicsHelper.Tween(0, counterItem.PosX, Math.Min(dt / 180, 1));
                    
-            display.SpriteText.Text = (display.JudgementCount == 0) ? JudgementHelper.JudgementToShortName(display.Judgement) : display.JudgementCount.ToString();
+            counterItem.SpriteText.Text = (counterItem.JudgementCount == 0) ? JudgementHelper.JudgementToShortName(counterItem.Judgement) : counterItem.JudgementCount.ToString();
         }
     }
 }

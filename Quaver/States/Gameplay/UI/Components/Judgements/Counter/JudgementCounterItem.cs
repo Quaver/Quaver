@@ -9,14 +9,14 @@ using Quaver.Helpers;
 using Quaver.Main;
 using Color = Microsoft.Xna.Framework.Color;
 
-namespace Quaver.States.Gameplay.UI.Components.Judgements
+namespace Quaver.States.Gameplay.UI.Components.Judgements.Counter
 {
-    internal class JudgementDisplay : Sprite
+    internal class JudgementCounterItem : Sprite
     {
         /// <summary>
         ///     The parent judgement display that controls the rest of them.
         /// </summary>
-        private JudgementCounterContainer ParentDisplay { get; }
+        private JudgementCounter ParentDisplay { get; }
 
         /// <summary>
         ///     The actual judgement this represents.
@@ -42,9 +42,9 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
                 Tint = GameBase.LoadedSkin.GetJudgeColor(Judgement);
                 
                 // Make the size of the display look more pressed.
-                SizeX = JudgementCounterContainer.DisplayItemSize.Y - JudgementCounterContainer.DisplayItemSize.Y / 4;
+                SizeX = JudgementCounter.DisplayItemSize.Y - JudgementCounter.DisplayItemSize.Y / 4;
                 SizeY = SizeX;
-                PosX = -JudgementCounterContainer.DisplayItemSize.Y / 16;
+                PosX = -JudgementCounter.DisplayItemSize.Y / 16;
             }
         }
 
@@ -65,7 +65,7 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
         /// <param name="j"></param>
         /// <param name="color"></param>
         /// <param name="size"></param>
-        internal JudgementDisplay(JudgementCounterContainer parentDisplay, Judgement j, Color color, Vector2 size)
+        internal JudgementCounterItem(JudgementCounter parentDisplay, Judgement j, Color color, Vector2 size)
         {
             Judgement = j;
             ParentDisplay = parentDisplay;
