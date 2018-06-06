@@ -196,14 +196,14 @@ namespace Quaver.Graphics.Overlays.Options
         {
             var section = Sections[OptionsType.Gameplay];
             
-            section.AddDropdownOption(CreateDefaultSkinDropdown(), "Default Skin");   
-            section.AddDropdownOption(CreateSkinDropdown(), "Custom Skin");
             section.AddSliderOption(ConfigManager.ScrollSpeed4K, "Scroll Speed - 4 Keys");
             section.AddSliderOption(ConfigManager.ScrollSpeed7K, "Scroll Speed - 7 Keys");
             section.AddCheckboxOption(ConfigManager.DisplaySongTimeProgress, "Display Song Time Progress");
             section.AddCheckboxOption(ConfigManager.DownScroll4K, "Down Scroll - 4 Keys");
             section.AddCheckboxOption(ConfigManager.DownScroll7K, "Down Scroll - 7 Keys");
             section.AddCheckboxOption(ConfigManager.AnimateJudgementCounter, "Animate Judgement Counter");
+            section.AddDropdownOption(CreateDefaultSkinDropdown(), "Default Skin");   
+            section.AddDropdownOption(CreateSkinDropdown(), "Custom Skin");
         }
 
         /// <summary>
@@ -442,24 +442,30 @@ namespace Quaver.Graphics.Overlays.Options
         private Dropdown CreateSkinDropdown()
         {
             // The text for the default option if the user doesn't have any skins.
-            const string defaultText = "Default - Import more skins!";
+            const string defaultText = "Default";
 
             var skins = Directory.GetDirectories(ConfigManager.SkinDirectory.Value).ToList();
+
+            var selectedIndex = -1;
+
             for (var i = 0; i < skins.Count; i++)
-                skins[i] = new DirectoryInfo(skins[i]).Name;
-            
-            if (skins.Count == 0)
-                skins.Add(defaultText);
-            
-            // Create the dropdown
-            return new Dropdown(skins, (o, e) =>
             {
-                if (e.ButtonText == defaultText) 
-                    return;
-                
-                ConfigManager.Skin.Value = e.ButtonText;
+                skins[i] = new DirectoryInfo(skins[i]).Name;
+
+                if (skins[i] == ConfigManager.Skin.Value)
+                    selectedIndex = i;
+            }
+      
+            skins.Add(defaultText);
+      
+            // Create the dropdown
+            var dropdown = new Dropdown(skins, (o, e) =>
+            {
+                ConfigManager.Skin.Value = e.ButtonText == defaultText ? "" : e.ButtonText;
                 Skin.LoadSkin();
             });
+
+            return dropdown;
         }
     }
 }
