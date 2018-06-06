@@ -147,6 +147,12 @@ namespace Quaver.States.Gameplay
         internal bool ForceFail { get; set; }
 
         /// <summary>
+        ///     When the play is either failed or completed, this is a counter that
+        ///     will increase and dictates when to go to the results screen.
+        /// </summary>
+        internal double TimeSincePlayEnded { get; set; }
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         internal GameplayScreen(Qua map, string md5)

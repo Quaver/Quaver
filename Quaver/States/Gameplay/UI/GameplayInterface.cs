@@ -21,6 +21,7 @@ using Quaver.States.Gameplay.UI.Components.Judgements;
 using Quaver.States.Gameplay.UI.Components.Judgements.Counter;
 using Quaver.States.Gameplay.UI.Components.Pause;
 using Quaver.States.Gameplay.UI.Components.Scoreboard;
+using Quaver.States.Results;
 
 namespace Quaver.States.Gameplay.UI
 {
@@ -270,7 +271,7 @@ namespace Quaver.States.Gameplay.UI
         {            
             if (!Screen.Failed && !Screen.IsPlayComplete)
                 return;
-
+            
             // Wait a bit before actually fading out the game.
             GameShouldFadeOutTime += dt;
             if (GameShouldFadeOutTime <= 800)
@@ -286,6 +287,13 @@ namespace Quaver.States.Gameplay.UI
             }
             
             ScreenTransitioner.FadeIn(dt, 240);
+            
+            // Increase time after the user failed.
+            Screen.TimeSincePlayEnded += dt;
+            
+            // Change to the results screen.
+            if (Screen.TimeSincePlayEnded >= 2000)
+                GameBase.GameStateManager.ChangeState(new ResultsScreen(Screen));
         }
 
         /// <summary>
