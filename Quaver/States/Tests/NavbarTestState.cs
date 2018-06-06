@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.GameState;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
@@ -13,14 +14,14 @@ namespace Quaver.States.Tests
         /// <summary>
         ///     Test Screen
         /// </summary>
-        public State CurrentState { get; set; } = State.TestScreen;
+        public State CurrentState { get; set; } = State.Test;
         
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public bool UpdateReady { get; set; }
 
-        private QuaverContainer Container { get; set; }
+        private Container Container { get; set; }
 
         /// <summary>
         ///     Navbar sprite
@@ -29,7 +30,7 @@ namespace Quaver.States.Tests
         
         public void Initialize()
         {
-            Container = new QuaverContainer();
+            Container = new Container();
             Nav = new Nav();
             Nav.Initialize(this);
             

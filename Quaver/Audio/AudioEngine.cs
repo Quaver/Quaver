@@ -23,7 +23,7 @@ namespace Quaver.Audio
         ///     This offset tries to mitigate the offset, however the value is seemingly
         ///     arbitrary.
         /// </summary>
-        internal static int BassDelayOffset { get; } = 70;
+        internal static int BassDelayOffset { get; } = 15;
 
         /// <summary>
         ///     The length of the current audio stream in milliseconds.
@@ -44,6 +44,11 @@ namespace Quaver.Audio
         ///     Returns if the audio stream is currently pitched.
         /// </summary>
         internal bool IsPitched { get; set; }
+
+        /// <summary>
+        ///     Returns if the audio stream is currently playing.
+        /// </summary>
+        internal bool IsPlaying => Bass.ChannelIsActive(Stream) == PlaybackState.Playing;
 
         /// <summary>
         ///     The master volume of all audio streams
@@ -282,6 +287,13 @@ namespace Quaver.Audio
                 
             Bass.Free();
         }
+
+        /// <summary>
+        ///     Fades the current audio stream's volume to a given volume in a specified time frame.
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="time"></param>
+        internal static void Fade(float to, int time) => Bass.ChannelSlideAttribute(Stream, ChannelAttribute.Volume, to, time);
     }
 
     /// <inheritdoc />

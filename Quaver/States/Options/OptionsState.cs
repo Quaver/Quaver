@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UserInterface;

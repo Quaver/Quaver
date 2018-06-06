@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using Quaver.API.Enums;
 using Quaver.Logging;
@@ -48,7 +49,24 @@ namespace Quaver.Modifiers.Mods.Mania
         /// <summary>
         ///     Incompatible Mods
         /// </summary>
-        public ModIdentifier[] IncompatibleMods { get; set; }
+        public ModIdentifier[] IncompatibleMods { get; set; } =
+        {
+            ModIdentifier.Speed05X,
+            ModIdentifier.Speed06X,
+            ModIdentifier.Speed07X,
+            ModIdentifier.Speed08X,
+            ModIdentifier.Speed09X,
+            ModIdentifier.Speed11X,
+            ModIdentifier.Speed12X,
+            ModIdentifier.Speed13X,
+            ModIdentifier.Speed14X,
+            ModIdentifier.Speed15X,
+            ModIdentifier.Speed16X,
+            ModIdentifier.Speed17X,
+            ModIdentifier.Speed18X,
+            ModIdentifier.Speed19X,
+            ModIdentifier.Speed20X,
+        };
 
         /// <summary>
         ///     Ctor - Set speed
@@ -105,23 +123,20 @@ namespace Quaver.Modifiers.Mods.Mania
                 case ModIdentifier.Speed20X:
                     GameBase.AudioEngine.PlaybackRate = 2.0f;
                     break;
+                default:
+                    throw new InvalidEnumArgumentException();
             }
-
-            IncompatibleMods = Enum
-                .GetValues(typeof(ModIdentifier))
-                .Cast<ModIdentifier>()
-                .Where(w => w != modIdentifier)
-                .ToArray();
+            
+            // Remove the incoming mod from the list of incompatible ones.
+            var im = IncompatibleMods.ToList();
+            im.Remove(modIdentifier);
+            IncompatibleMods = im.ToArray();
         }
 
         /// <inheritdoc />
         /// <summary>
         ///     Initialize
         /// </summary>
-        public void InitializeMod()
-        {
-            GameBase.AudioEngine.SetPlaybackRate();
-            Logger.LogImportant($"ManiaModSpeed is now set to {GameBase.AudioEngine.PlaybackRate}x", LogType.Runtime);
-        }
+        public void InitializeMod() => GameBase.AudioEngine.SetPlaybackRate();
     }
 }

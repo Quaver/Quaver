@@ -4,13 +4,13 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
 using Quaver.GameState;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Buttons.Sliders;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Main;
 using Quaver.States.Enums;
@@ -22,14 +22,14 @@ namespace Quaver.States.Tests
         /// <summary>
         ///     Test Screen
         /// </summary>
-        public State CurrentState { get; set; } = State.TestScreen;
+        public State CurrentState { get; set; } = State.Test;
         
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public bool UpdateReady { get; set; }
 
-        private QuaverContainer Container { get; set; }
+        private Container Container { get; set; }
 
         private Nav Nav { get; set; }
 
@@ -37,14 +37,14 @@ namespace Quaver.States.Tests
 
         public void Initialize()
         {            
-            Container = new QuaverContainer();
+            Container = new Container();
             Nav = new Nav();
             Nav.Initialize(this);
             
             VolumeController = new VolumeController();
             VolumeController.Initialize(this);
             
-            var sliderBg = new QuaverSlider(ConfigManager.BackgroundBrightness, new Vector2(300, 3))
+            var sliderBg = new Slider(ConfigManager.BackgroundBrightness, new Vector2(300, 3))
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,

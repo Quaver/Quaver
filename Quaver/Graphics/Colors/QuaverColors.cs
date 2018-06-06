@@ -59,9 +59,21 @@ namespace Quaver.Graphics.Colors
         public static readonly Color[] SnapColors = new Color[9] { Snap1, Snap2, Snap3, Snap4, Snap6, Snap8, Snap12, Snap16, Snap48 };
         
         /// <summary>
-        ///     
+        ///     Main Accent Color
         /// </summary>
         public static readonly Color MainAccent = new Color(81,197,249);
         public static readonly Color MainAccentInactive = new Color(6,71,122);
+        
+        /// <summary>
+        ///     Secondary Accent Color
+        /// </summary>
+        public static readonly Color SecondaryAccent = new Color(255,222,124);
+        public static readonly Color SecondaryAccentInactive = new Color(128,97,1);
+        
+        /// <summary>
+        ///     Negative color (Red)
+        /// </summary>
+        public static readonly Color Negative = new Color(255,152,164);
+        public static readonly Color NegativeInactive = new Color(119,20,31);
     }
 }

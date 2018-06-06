@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
+using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
@@ -46,12 +47,11 @@ namespace Quaver.Main
             
             GameBase.GraphicsManager.GraphicsProfile = GraphicsProfile.HiDef;
             GameBase.GraphicsManager.PreferMultiSampling = true;
-            
-            // Set the global window size
-            //GameBase.Window = new Vector4(0, 0, GameBase.GraphicsManager.PreferredBackBufferHeight, GameBase.GraphicsManager.PreferredBackBufferWidth);
-
-            IsFixedTimeStep = false;
-
+         
+            // TODO: Make thie configurable.
+            TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / 240f);
+            IsFixedTimeStep = true;
+           
             // Use Content in Resources folder (Don't touch this please)
             var resxContent = new ResourceContentManager(Services, QuaverResources.ResourceManager);
             Content = resxContent;
@@ -96,7 +96,7 @@ namespace Quaver.Main
 
             // Load QuaverUserInterface .xnb elements
             GameBase.QuaverUserInterface.LoadElementsAsContent();
-
+            
             // Load all FontAwesome icons
             FontAwesome.Load();
             
@@ -170,7 +170,7 @@ namespace Quaver.Main
             GameBase.GameStateManager.Update(dt);
 
             // Update Mouse QuaverCursor
-            GameBase.QuaverCursor.Update(dt);
+            GameBase.Cursor.Update(dt);
 
             // Update volume controller
             GameBase.VolumeController.Update(dt);
@@ -194,7 +194,7 @@ namespace Quaver.Main
             double dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Clear Background so it doesnt render everything from previous frame
-            GameBase.GraphicsDevice.Clear(Color.Transparent);
+            GameBase.GraphicsDevice.Clear(Color.Black);
 
             // Draw from Game State Manager
             GameBase.GameStateManager.Draw();
@@ -203,7 +203,7 @@ namespace Quaver.Main
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GraphicsDevice.RasterizerState);
             GameBase.VolumeController.Draw();
             GameBase.Navbar.Draw();
-            GameBase.QuaverCursor.Draw();
+            GameBase.Cursor.Draw();
             Logger.Draw(dt);
      
             if (ConfigManager.FpsCounter.Value)

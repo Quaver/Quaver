@@ -3,16 +3,13 @@
     /// <summary>
     ///     Enum for all the different game states.
     /// </summary>
-    internal enum State
+    public enum State
     {
-        MainMenu,
-        SongSelect,
-        SongLoading,
-        PlayScreen,
-        PlayPause,
-        GameOver,
-        ScoreScreen,
-        LoadingScreen,
-        TestScreen
+        Menu,
+        Select,
+        Gameplay,
+        Results,
+        Loading,
+        Test
     }
 }

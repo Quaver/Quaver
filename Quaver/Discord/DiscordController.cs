@@ -7,9 +7,11 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Config;
+using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
+using Quaver.States.Gameplay;
 
 namespace Quaver.Discord
 {
@@ -84,10 +86,10 @@ namespace Quaver.Discord
                 {
                     // Get Current Unix Time
                     var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                    var unixDateTime = (DateTime.Now.ToLocalTime().ToUniversalTime() - epoch).TotalSeconds;
+                    var unixDateTime = (DateTime.Now.ToLocalTime().ToUniversalTime() - epoch).TotalSeconds + GameplayTiming.StartDelay / 1000f;
 
                     // Set Discord presence to the "time left" specified.
-                    GameBase.DiscordController.presence.endTimestamp = (long)(unixDateTime + (timeLeft / 1000));
+                    GameBase.DiscordController.presence.endTimestamp = (long)(unixDateTime + timeLeft / 1000);
                 }
                 else
                 {
@@ -101,10 +103,10 @@ namespace Quaver.Discord
                     // Set presence based Mode
                     switch (GameBase.SelectedMap.Mode)
                     {
-                        case GameModes.Keys4:
+                        case GameMode.Keys4:
                             GameBase.DiscordController.presence.smallImageText = "Mania: 4 Keys";
                             break;
-                        case GameModes.Keys7:
+                        case GameMode.Keys7:
                             GameBase.DiscordController.presence.smallImageText = "Mania: 7 Keys";
                             break;
                         default:
@@ -143,15 +145,7 @@ namespace Quaver.Discord
 
                 var sb = new StringBuilder();
                 sb.Append("Playing");
-
-                // Add mods to the string if mods exist
-                if (GameBase.CurrentGameModifiers.Count > 0)
-                {
-                    sb.Append(" + ");
-
-                    if (GameBase.CurrentGameModifiers.Exists(x => x.Type == ModType.Speed))
-                        sb.Append($"Speed {GameBase.AudioEngine.PlaybackRate}x");
-                }
+                sb.Append(ModHelper.GetActivatedModsString(true));
 
                 ChangeDiscordPresence(mapString, sb.ToString(), mapLength);
             }

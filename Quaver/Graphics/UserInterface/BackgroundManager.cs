@@ -3,8 +3,6 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
-using Quaver.Graphics.Enums;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -15,7 +13,7 @@ namespace Quaver.Graphics.UserInterface
         /// <summary>
         ///     The Background QuaverSprite.
         /// </summary>
-        public static Sprites.QuaverSprite Background;
+        public static Sprites.Sprite Background;
 
         /// <summary>
         ///     The tint of the background
@@ -49,12 +47,12 @@ namespace Quaver.Graphics.UserInterface
         /// </summary>
         public static void Initialize()
         {
-            Background = new Sprites.QuaverSprite()
+            Background = new Sprites.Sprite()
             {
                 Size = new UDim2D(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.MidCenter,
                 Image = GameBase.QuaverUserInterface.DiffSelectMask,
-                Tint = Color.Gray
+                Tint = Color.Black
             };
 
             // Change the brightness of the 

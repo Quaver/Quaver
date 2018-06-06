@@ -6,7 +6,6 @@ using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
 using Quaver.Input;
@@ -17,6 +16,8 @@ using Quaver.States.Enums;
 using Quaver.States.Loading.Map;
 using Quaver.States.Menu;
 using Quaver.Database.Maps;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 
 namespace Quaver.States.Select
 {
@@ -25,7 +26,7 @@ namespace Quaver.States.Select
         /// <summary>
         ///     The current state
         /// </summary>
-        public State CurrentState { get; set; } = State.MainMenu;
+        public State CurrentState { get; set; } = State.Menu;
 
         /// <summary>
         ///     Update Ready?
@@ -40,32 +41,47 @@ namespace Quaver.States.Select
         /// <summary>
         ///     QuaverContainer
         /// </summary>
-        private QuaverContainer QuaverContainer { get; set; } = new QuaverContainer();
+        private Container Container { get; set; } = new Container();
 
         /// <summary>
         ///     Reference to the play button
         /// </summary>        
-        private QuaverTextButton PlayButton { get; set; }
+        private TextButton PlayButton { get; set; }
 
         /// <summary>
         ///     Reference to the back button
         /// </summary>        
-        private QuaverTextButton BackButton { get; set; }
+        private TextButton BackButton { get; set; }
 
         /// <summary>
         ///     Reference to the speed gameplayModifier button
         /// </summary>
-        private QuaverTextButton SpeedModButton { get; set; }
+        private TextButton SpeedModButton { get; set; }
 
         /// <summary>
         ///     Reference to the toggle pitch button
         /// </summary>
-        private QuaverTextButton TogglePitch { get; set; }
+        private TextButton TogglePitch { get; set; }
+
+        /// <summary>
+        ///     Reference to the button to toggle the no pause mod.
+        /// </summary>
+        private TextButton ToggleNoPause { get; set; }
+
+        /// <summary>
+        ///     Button that toggles bots.
+        /// </summary>
+        private TextButton BotsEnabled { get; set; }
+
+        /// <summary>
+        ///     Button that dictates the bot count.
+        /// </summary>
+        private TextButton BotCount { get; set; }
 
         /// <summary>
         ///     Search bar for song searching
         /// </summary>
-        private QuaverTextInputField SearchField { get; set; }
+        private TextInputField SearchField { get; set; }
 
         /// <summary>MapSelectSystem
         ///     Position of mouse from previous frame
@@ -111,6 +127,8 @@ namespace Quaver.States.Select
             CreateSpeedModButton();
             CreateTogglePitchButton();
             CreateSearchField();
+            CreateNoPause();
+            CreateBotButtons();
 
             //Add map selected text TODO: remove later
             try
@@ -138,7 +156,7 @@ namespace Quaver.States.Select
             SpeedModButton.Clicked -= OnSpeedModButtonClick;
             TogglePitch.Clicked -= OnTogglePitchButtonClick;
             MapSelectSystem.UnloadContent();
-            QuaverContainer.Destroy();
+            Container.Destroy();
         }
 
         /// <summary>
@@ -182,7 +200,7 @@ namespace Quaver.States.Select
             }*/
 
             //Update Objects
-            QuaverContainer.Update(dt);
+            Container.Update(dt);
             MapSelectSystem.Update(dt);
 
             // Repeat the song preview if necessary
@@ -196,7 +214,7 @@ namespace Quaver.States.Select
         {
             GameBase.SpriteBatch.Begin();
             BackgroundManager.Draw();
-            QuaverContainer.Draw();
+            Container.Draw();
             MapSelectSystem.Draw();
 
             GameBase.SpriteBatch.End();
@@ -208,11 +226,11 @@ namespace Quaver.States.Select
         private void CreatePlayMapButton()
         {
             // Create play button
-            PlayButton = new QuaverTextButton(new Vector2(200, 50), "Play Map")
+            PlayButton = new TextButton(new Vector2(200, 50), "Play Map")
             {
                 PosY = 300 * GameBase.WindowUIScale + 80,
                 Alignment = Alignment.TopLeft,
-                Parent = QuaverContainer
+                Parent = Container
             };
 
             PlayButton.Clicked += OnPlayMapButtonClick;
@@ -227,20 +245,10 @@ namespace Quaver.States.Select
             GameBase.GameStateManager.ChangeState(new MapLoadingState());
         }
 
-        private void ScrollUpMapIndex()
-        {
-            //MapSelectSystem.OffsetMapSelectSystemIndex(-1);
-        }
-
-        private void ScrollDownMapIndex()
-        {
-            //MapSelectSystem.OffsetMapSelectSystemIndex(1);
-        }
-
         /// <summary>
         ///     Responsible for repeating the song preview in song select once the song is over.
         /// </summary>
-        private void RepeatSongPreview()
+        private static void RepeatSongPreview()
         {
             if (GameBase.AudioEngine.Position < GameBase.AudioEngine.Length || AudioEngine.Stream == 0)
                 return;
@@ -262,11 +270,11 @@ namespace Quaver.States.Select
         private void CreateBackButton()
         {
             // Create back button
-            BackButton = new QuaverTextButton(new Vector2(200, 50), "Back")
+            BackButton = new TextButton(new Vector2(200, 50), "Back")
             {
                 PosY = - 90,
                 Alignment = Alignment.BotCenter,
-                Parent = QuaverContainer
+                Parent = Container
             };
             BackButton.Clicked += OnBackButtonClick;
         }
@@ -288,11 +296,11 @@ namespace Quaver.States.Select
         private void CreateSpeedModButton()
         {
             // Create ManiaModSpeed Mod QuaverButton
-            SpeedModButton = new QuaverTextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x")
+            SpeedModButton = new TextButton(new Vector2(200, 50), $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x")
             {
                 PosY = 300 * GameBase.WindowUIScale + 200,
                 Alignment = Alignment.TopLeft,
-                Parent = QuaverContainer
+                Parent = Container
             };
             SpeedModButton.Clicked += OnSpeedModButtonClick;
         }
@@ -364,11 +372,12 @@ namespace Quaver.States.Select
             }
             catch (Exception ex)
             {
+                Logger.LogError(ex, LogType.Runtime);
                 ModManager.RemoveSpeedMods();
             }
 
             // Change the song speed directly.
-            SpeedModButton.QuaverTextSprite.Text = $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x";
+            SpeedModButton.TextSprite.Text = $"Add Speed Mod {GameBase.AudioEngine.PlaybackRate}x";
         }
 
         /// <summary>
@@ -376,11 +385,11 @@ namespace Quaver.States.Select
         /// </summary>
         private void CreateTogglePitchButton()
         {
-            TogglePitch = new QuaverTextButton(new Vector2(200, 50), $"Toggle Pitch: {ConfigManager.Pitched.Value}")
+            TogglePitch = new TextButton(new Vector2(200, 50), $"Toggle Pitch: {ConfigManager.Pitched.Value}")
             {
                 Alignment = Alignment.TopLeft,
                 PosY = 300 * GameBase.WindowUIScale + 140,
-                Parent = QuaverContainer
+                Parent = Container
             };
             TogglePitch.Clicked += OnTogglePitchButtonClick;
         }
@@ -393,17 +402,73 @@ namespace Quaver.States.Select
         private void OnTogglePitchButtonClick(object sender, EventArgs e)
         {
             GameBase.AudioEngine.TogglePitch();
-            TogglePitch.QuaverTextSprite.Text = $"Toggle Pitch: {ConfigManager.Pitched.Value}";
+            TogglePitch.TextSprite.Text = $"Toggle Pitch: {ConfigManager.Pitched.Value}";
         }
 
         private void CreateSearchField()
         {
-            SearchField = new QuaverTextInputField(new Vector2(300, 30), "Search Mapset", (search) => MapSelectSystem.OnSearchbarUpdated(search))
+            SearchField = new TextInputField(new Vector2(300, 30), "Search Mapset", (search) => MapSelectSystem.OnSearchbarUpdated(search))
             {
                 Alignment = Alignment.TopLeft,
                 PosX = 5,
                 PosY = 300 * GameBase.WindowUIScale + 45,
-                Parent = QuaverContainer
+                Parent = Container
+            };
+        }
+
+        /// <summary>
+        ///     Creates button for no pause.
+        /// </summary>
+        private void CreateNoPause()
+        {
+            ToggleNoPause = new TextButton(new Vector2(200, 50), $"No Pause Mod: {ModManager.IsActivated(ModIdentifier.NoPause)}")
+            {
+                Alignment = Alignment.TopLeft,
+                PosY = 300 * GameBase.WindowUIScale + 300,
+                Parent = Container
+            };
+            
+            ToggleNoPause.Clicked += (o, e) =>
+            {
+                if (!ModManager.IsActivated(ModIdentifier.NoPause))
+                    ModManager.AddMod(ModIdentifier.NoPause);
+                else
+                    ModManager.RemoveMod(ModIdentifier.NoPause);
+                
+                ToggleNoPause.TextSprite.Text = $"No Pause Mod: {ModManager.IsActivated(ModIdentifier.NoPause)}";
+            };
+        }
+
+        private void CreateBotButtons()
+        {
+            BotsEnabled = new TextButton(new Vector2(200, 50), $"Enable Bots: {ConfigManager.BotsEnabled.Value}")
+            {
+                Alignment = Alignment.TopLeft,
+                PosY = 300 * GameBase.WindowUIScale - 100,
+                Parent = Container
+            };
+
+            BotsEnabled.Clicked += (o, e) =>
+            {
+                ConfigManager.BotsEnabled.Value = !ConfigManager.BotsEnabled.Value;
+                BotsEnabled.TextSprite.Text = $"Enable Bots: {ConfigManager.BotsEnabled.Value}";
+            };
+            
+            BotCount = new TextButton(new Vector2(200, 50), $"Bot Count: {ConfigManager.BotCount.Value}")
+            {
+                Alignment = Alignment.TopLeft,
+                PosY = 300 * GameBase.WindowUIScale - 175,
+                Parent = Container
+            };
+
+            BotCount.Clicked += (o, e) =>
+            {
+                if (ConfigManager.BotCount.Value + 1 > ConfigManager.BotCount.MaxValue)
+                    ConfigManager.BotCount.Value = ConfigManager.BotCount.MinValue;
+                else
+                    ConfigManager.BotCount.Value++;
+                
+                BotCount.TextSprite.Text = $"Bot Count: {ConfigManager.BotCount.Value}";
             };
         }
     }

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.Database.Maps;
 using Quaver.GameState;
-using Quaver.Graphics.Enums;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Main;
 
 namespace Quaver.States.Select
@@ -17,18 +17,18 @@ namespace Quaver.States.Select
         /// <summary>
         /// 
         /// </summary>
-        private QuaverContainer Boundary { get; set; }
+        private Container Boundary { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        private QuaverTextbox MapInfo { get; set; }
+        private SpriteText MapInfo { get; set; }
 
         public void Initialize(IGameState state)
         {
-            Boundary = new QuaverContainer();
+            Boundary = new Container();
 
-            var window = new QuaverSprite()
+            var window = new Sprite()
             {
                 Size = new UDim2D(600 * GameBase.WindowUIScale, 300 * GameBase.WindowUIScale),
                 Position = new UDim2D(5, 40),
@@ -37,7 +37,7 @@ namespace Quaver.States.Select
                 Parent = Boundary
             };
 
-            MapInfo = new QuaverTextbox()
+            MapInfo = new SpriteText()
             {
                 Size = new UDim2D(-10, -10, 1, 1),
                 Position = new UDim2D(5, 5),

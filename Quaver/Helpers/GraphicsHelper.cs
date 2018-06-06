@@ -10,8 +10,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Enums;
 using Quaver.Main;
+using Color = Microsoft.Xna.Framework.Color;
 using Point = Microsoft.Xna.Framework.Point;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -150,6 +150,18 @@ namespace Quaver.Helpers
         }
 
         /// <summary>
+        ///     Linear interpolation.
+        /// </summary>
+        /// <param name="firstFloat"></param>
+        /// <param name="secondFloat"></param>
+        /// <param name="by"></param>
+        /// <returns></returns>
+        internal static float Lerp(float firstFloat, float secondFloat, double by)
+        {
+            return (float)(firstFloat * by + secondFloat * (1 - by));
+        }
+        
+        /// <summary>
         ///     Loads an image into a Texture2D
         /// </summary>
         /// <param name="path"></param>
@@ -160,6 +172,39 @@ namespace Quaver.Helpers
             {
                 return Texture2D.FromStream(GameBase.GraphicsDevice, fileStream);
             }
+        }
+
+        /// <summary>
+        ///     Returns a list of textures from a spritesheet texture.
+        /// </summary>
+        /// <param name="tex"></param>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <returns></returns>
+        internal static List<Texture2D> LoadSpritesheetFromTexture(Texture2D tex, int rows, int columns)
+        {
+            var frames = new List<Texture2D>();
+            
+            // Get the width and height of each individual texture.
+            var imgWidth = tex.Width / columns;
+            var imgHeight = tex.Height / rows;
+            
+            for (var i = 0; i < rows * columns; i++)
+            {
+                // Get the specific row and column from the index.
+                var column = i / rows;
+                var row = i % rows;
+                
+                var sourceRect = new Rectangle(imgWidth * column, imgHeight * row, imgWidth, imgHeight);
+                var cropTexture = new Texture2D(GameBase.GraphicsDevice, sourceRect.Width, sourceRect.Height);
+                var data = new Color[sourceRect.Width * sourceRect.Height];
+                tex.GetData(0, sourceRect, data, 0, data.Length);
+                cropTexture.SetData(data);
+                
+                frames.Add(cropTexture);
+            }
+
+            return frames;
         }
     }
 }

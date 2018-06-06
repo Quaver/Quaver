@@ -8,7 +8,7 @@ using Ionic.Zip;
 using Microsoft.Xna.Framework;
 using NAudio.Wave;
 using Quaver.API.Maps;
-using Quaver.API.Osu;
+using Quaver.API.Maps.Parsers;
 using Quaver.Config;
 using Quaver.Logging;
 

@@ -6,8 +6,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.GameState;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons.Dropdowns;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
@@ -21,14 +22,14 @@ namespace Quaver.States.Tests
         /// <summary>
         ///     Test Screen
         /// </summary>
-        public State CurrentState { get; set; } = State.TestScreen;
+        public State CurrentState { get; set; } = State.Test;
         
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public bool UpdateReady { get; set; }
 
-        private QuaverContainer Container { get; set; }
+        private Container Container { get; set; }
 
         /// <summary>
         ///     Navbar sprite
@@ -37,7 +38,7 @@ namespace Quaver.States.Tests
 
         public void Initialize()
         {
-            Container = new QuaverContainer();
+            Container = new Container();
             Nav = new Nav();
             Nav.Initialize(this);
 
@@ -48,7 +49,7 @@ namespace Quaver.States.Tests
             
             skins.Insert(0, "None");
 
-            var defaultSkinSelect = new QuaverDropdown(new List<string>() {"Default Arrow Skin", "Default Bar Skin"},
+            var defaultSkinSelect = new Dropdown(new List<string>() {"Default Arrow Skin", "Default Bar Skin"},
                 OnDefaultSkinDropdownButtonClicked)
             {
                 Parent = Container,
@@ -56,7 +57,7 @@ namespace Quaver.States.Tests
                 PosY = -200
             };
             
-            var skinSelect = new QuaverDropdown(skins, OnSkinDropdownButtonClicked)
+            var skinSelect = new Dropdown(skins, OnSkinDropdownButtonClicked)
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter

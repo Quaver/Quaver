@@ -50,7 +50,15 @@ namespace Quaver.Helpers
         /// <returns></returns>
         internal static object GetProperty(string name)
         {
-            return typeof(QuaverResources).GetProperty(name.Replace("-", "_"))?.GetValue(null, null);
+            return typeof(QuaverResources).GetProperty(name.Replace("-", "_").Replace("@", "_"))?.GetValue(null, null);
         }
+
+        
+        /// <summary>
+        ///     Loads a shader from a byte[] (embedded resource.)
+        /// </summary>
+        /// <param name="mgfxo"></param>
+        /// <returns></returns>
+        internal static Effect LoadShader(byte[] mgfxo) => new Effect(GameBase.GraphicsDevice, mgfxo);
     }
 }

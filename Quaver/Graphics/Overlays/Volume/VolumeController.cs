@@ -6,11 +6,10 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.GameState;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons.Sliders;
 using Quaver.Graphics.Colors;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States;
@@ -29,52 +28,52 @@ namespace Quaver.Graphics.Overlays.Volume
         /// <summary>
         ///     The container for the volume controller.   
         /// </summary>
-        private QuaverContainer Container { get; set; }
+        private Container Container { get; set; }
 
         /// <summary>
         ///     The surrounding box of the volume controller.
         /// </summary>
-        private QuaverSprite SurroundingBox { get; set; }
+        private Sprite SurroundingBox { get; set; }
 
         /// <summary>
         ///     The slider that controls the master volume.
         /// </summary>
-        private QuaverSlider MasterVolumeSlider { get; set; }
+        private Slider MasterVolumeSlider { get; set; }
 
         /// <summary>
         ///  The icon to that's associated with the master volume.
         /// </summary>
-        private QuaverSprite MasterVolumeSliderIcon { get; set; }
+        private Sprite MasterVolumeSliderIcon { get; set; }
         
         /// <summary>
         ///     The slider that controls the music volume.
         /// </summary>
-        private QuaverSlider MusicVolumeSlider { get; set; }
+        private Slider MusicVolumeSlider { get; set; }
 
         /// <summary>
         ///     The icon that's asscoiated with the music volume slider.
         /// </summary>
-        private QuaverSprite MusicVolumeSliderIcon { get; set; }
+        private Sprite MusicVolumeSliderIcon { get; set; }
 
         /// <summary>
         ///     The slider that controls the sound effects.
         /// </summary>
-        private QuaverSlider EffectVolumeSlider { get; set; }
+        private Slider EffectVolumeSlider { get; set; }
 
         /// <summary>
         ///     The icon that's associated with the effect volume slider.
         /// </summary>
-        private QuaverSprite EffectVolumeSliderIcon { get; set; }
+        private Sprite EffectVolumeSliderIcon { get; set; }
 
         /// <summary>
         ///     Array containing all of the sliders, so we can iterate over them.
         /// </summary>
-        private List<QuaverSlider> Sliders { get; }
+        private List<Slider> Sliders { get; }
 
         /// <summary>
         ///     List containing all of the slider icons, so we can iterate over them.
         /// </summary>
-        private List<QuaverSprite> SliderIcons { get; }
+        private List<Sprite> SliderIcons { get; }
 
         /// <summary>
         ///     The size of each slider.
@@ -84,7 +83,7 @@ namespace Quaver.Graphics.Overlays.Volume
         /// <summary>
         ///     The slider that is currently "focused"
         /// </summary>
-        private QuaverSlider FocusedSlider { get; set; }
+        private Slider FocusedSlider { get; set; }
 
         /// <summary>
         ///     The time elapsed since the last volume change.
@@ -107,8 +106,8 @@ namespace Quaver.Graphics.Overlays.Volume
         internal VolumeController()
         {
             SliderSize = new Vector2(300, 3);
-            Sliders = new List<QuaverSlider>();
-            SliderIcons = new List<QuaverSprite>();
+            Sliders = new List<Slider>();
+            SliderIcons = new List<Sprite>();
         }
         
         /// <summary>
@@ -117,10 +116,10 @@ namespace Quaver.Graphics.Overlays.Volume
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {            
-            Container = new QuaverContainer();
+            Container = new Container();
 
             // Create the surrounding box that will house the sliders.
-            SurroundingBox = new QuaverSprite()
+            SurroundingBox = new Sprite()
             {
                 Size = new UDim2D(250, 150, 0.1f, 0),
                 Alignment = Alignment.TopRight,
@@ -136,7 +135,7 @@ namespace Quaver.Graphics.Overlays.Volume
             #region masterVolumeSlider
             
             // Create master volume slider.
-            MasterVolumeSlider = new QuaverSlider(ConfigManager.VolumeGlobal, SliderSize)
+            MasterVolumeSlider = new Slider(ConfigManager.VolumeGlobal, SliderSize)
             {
                 Parent = SurroundingBox,
                 Alignment = Alignment.TopLeft,
@@ -145,7 +144,7 @@ namespace Quaver.Graphics.Overlays.Volume
             };
             
             // Create the icon next to the slider.
-            MasterVolumeSliderIcon = new QuaverSprite()
+            MasterVolumeSliderIcon = new Sprite()
             {
                 Parent = SurroundingBox,
                 Image = FontAwesome.Volume,
@@ -163,7 +162,7 @@ namespace Quaver.Graphics.Overlays.Volume
             #region musicVolumeSlider
 
             // Create music volume slider.
-            MusicVolumeSlider = new QuaverSlider(ConfigManager.VolumeMusic, SliderSize)
+            MusicVolumeSlider = new Slider(ConfigManager.VolumeMusic, SliderSize)
             {
                 Parent = SurroundingBox,
                 Alignment = Alignment.MidLeft,
@@ -172,7 +171,7 @@ namespace Quaver.Graphics.Overlays.Volume
             };
             
             // Create the icon next to the music slider.
-            MusicVolumeSliderIcon = new QuaverSprite()
+            MusicVolumeSliderIcon = new Sprite()
             {
                 Parent = SurroundingBox,
                 Image = FontAwesome.Music,
@@ -190,7 +189,7 @@ namespace Quaver.Graphics.Overlays.Volume
             #region effectVolumeSlider
             
             // Create master volume slider.
-            EffectVolumeSlider = new QuaverSlider(ConfigManager.VolumeEffect, SliderSize)
+            EffectVolumeSlider = new Slider(ConfigManager.VolumeEffect, SliderSize)
             {
                 Parent = SurroundingBox,
                 Alignment = Alignment.BotLeft,
@@ -199,7 +198,7 @@ namespace Quaver.Graphics.Overlays.Volume
             };
             
             // Create the icon that's next to the effect volume slider.
-            EffectVolumeSliderIcon = new QuaverSprite()
+            EffectVolumeSliderIcon = new Sprite()
             {
                 Parent = SurroundingBox,
                 Image = FontAwesome.Headphones,

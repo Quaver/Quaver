@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Colors;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Main;
 
 namespace Quaver.Graphics.Overlays.Options
@@ -15,27 +13,27 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     Container for the header.
         /// </summary>
-        internal QuaverSprite Container { get; set; }
+        internal Sprite Container { get; set; }
 
         /// <summary>
         ///     The header's title.
         /// </summary>
-        internal QuaverTextbox Title { get; set; }
+        internal SpriteText Title { get; set; }
         
         /// <summary>
         ///     Reference to the header's icon.
         /// </summary>
-        internal QuaverSprite Icon { get; set; }
+        internal Sprite Icon { get; set; }
 
         /// <summary>
         ///     The description text 
         /// </summary>
-        internal QuaverTextbox Description { get; set; }
+        internal SpriteText Description { get; set; }
 
         /// <summary>
         ///     The line displayed under the header.
         /// </summary>
-        internal QuaverSprite Underline { get; set; }
+        internal Sprite Underline { get; set; }
 
         /// <summary>
         ///     Reference to the actual overlay.
@@ -52,7 +50,7 @@ namespace Quaver.Graphics.Overlays.Options
             Overlay = overlay;
             
             // Container for this header.
-            Container = new QuaverSprite()
+            Container = new Sprite()
             {
                 Position = new UDim2D(0, Nav.Height),
                 SizeX = 300,
@@ -64,7 +62,7 @@ namespace Quaver.Graphics.Overlays.Options
             };
             
             // Header Title.
-            Title = new QuaverTextbox()
+            Title = new SpriteText()
             {
                 Text = "Settings",
                 Font = QuaverFonts.Medium24,
@@ -79,7 +77,7 @@ namespace Quaver.Graphics.Overlays.Options
             };
             
             // Header icon
-            Icon = new QuaverSprite()
+            Icon = new Sprite()
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
@@ -91,7 +89,7 @@ namespace Quaver.Graphics.Overlays.Options
             };
             
             // Header Description.
-            Description = new QuaverTextbox()
+            Description = new SpriteText()
             {
                 Text = "Change the way Quaver looks, sounds, feels... and tastes?",
                 Font = QuaverFonts.Medium24,
@@ -105,7 +103,7 @@ namespace Quaver.Graphics.Overlays.Options
             };
             
             // Add a line under the header description
-            Underline = new QuaverSprite()
+            Underline = new Sprite()
             {
                 Parent = Container,
                 Tint = Color.White,

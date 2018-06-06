@@ -55,11 +55,14 @@ namespace Quaver.Modifiers
                 case ModIdentifier.Chill:
                     gameplayModifier = new ManiaModChill();
                     break;
+                case ModIdentifier.NoPause:
+                    gameplayModifier = new ManiaModNoPause();
+                    break;
                 default:
                     return;
             }
-
-            // Check if any incompatible mods are already in our current game modifiers, and remove them if that is the case.
+            
+            // Remove incompatible mods.
             var incompatibleMods = GameBase.CurrentGameModifiers.FindAll(x => x.IncompatibleMods.Contains(gameplayModifier.ModIdentifier));
             incompatibleMods.ForEach(x => RemoveMod(x.ModIdentifier));
 
@@ -69,9 +72,6 @@ namespace Quaver.Modifiers
             // Initialize the gameplayModifier and set its score multiplier.
             GameBase.ScoreMultiplier += gameplayModifier.ScoreMultiplierAddition;
             gameplayModifier.InitializeMod();  
-            
-            Logger.LogSuccess($"Added Mod: {gameplayModifier.ModIdentifier} and removed all incompatible mods.", LogType.Runtime);
-            Logger.LogInfo($"Current Mods: {string.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ToString()))}", LogType.Runtime);
         }
 
         /// <summary>
@@ -89,7 +89,6 @@ namespace Quaver.Modifiers
    
                 // Remove the Mod
                 GameBase.CurrentGameModifiers.Remove(removedMod);
-                Logger.LogSuccess($"Removed {modIdentifier} from the current game modifiers.", LogType.Runtime);
             }
             catch (Exception e)
             {
@@ -102,10 +101,7 @@ namespace Quaver.Modifiers
         /// </summary>
         /// <param name="modIdentifier"></param>
         /// <returns></returns>
-        public static bool Activated(ModIdentifier modIdentifier)
-        {
-            return GameBase.CurrentGameModifiers.Exists(x => x.ModIdentifier == modIdentifier);
-        }
+        public static bool IsActivated(ModIdentifier modIdentifier) => GameBase.CurrentGameModifiers.Exists(x => x.ModIdentifier == modIdentifier);
 
         /// <summary>
         ///     Removes all items from our list of mods
@@ -128,9 +124,6 @@ namespace Quaver.Modifiers
             {
                 GameBase.CurrentGameModifiers.RemoveAll(x => x.Type == ModType.Speed);
                 GameBase.AudioEngine.SetPlaybackRate();
-
-                Logger.LogSuccess($"Removed ManiaModSpeed Mods from the current game modifiers.", LogType.Runtime);
-                Logger.LogInfo($"Current Mods: {string.Join(", ", GameBase.CurrentGameModifiers.Select(x => x.ToString()))}", LogType.Runtime);
             }
             catch (Exception e)
             {

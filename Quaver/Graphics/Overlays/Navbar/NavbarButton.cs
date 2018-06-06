@@ -4,14 +4,12 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Enums;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 
 namespace Quaver.Graphics.Overlays.Navbar
 {
-    internal class NavbarButton : QuaverButton
+    internal class NavbarButton : Button
     {
         /// <summary>
         ///     The name of name of the tooltip when you hover over the button

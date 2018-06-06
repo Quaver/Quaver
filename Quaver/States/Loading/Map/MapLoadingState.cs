@@ -2,8 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Quaver.API.Maps;
-using Quaver.API.Osu;
-using Quaver.API.StepMania;
+using Quaver.API.Maps.Parsers;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -11,7 +10,7 @@ using Quaver.GameState;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.States.Enums;
-using Quaver.States.Gameplay.Mania;
+using Quaver.States.Gameplay;
 using Quaver.States.Select;
 
 namespace Quaver.States.Loading.Map
@@ -21,7 +20,7 @@ namespace Quaver.States.Loading.Map
         /// <summary>
         ///     Current State
         /// </summary>
-        public State CurrentState { get; set; } = State.LoadingScreen;
+        public State CurrentState { get; set; } = State.Loading;
 
         /// <summary>
         ///     Update Ready
@@ -116,9 +115,6 @@ namespace Quaver.States.Loading.Map
                     using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/difficulty.txt"))
                         await writer.WriteAsync($"{Math.Round(GameBase.SelectedMap.Qua.CalculateFakeDifficulty(), 2)}");
                 });
-
-                Logger.LogSuccess("Finished loading Map", LogType.Runtime);
-                GameBase.SelectedMap.Qua.CalculateDifficulty(GameBase.AudioEngine.PlaybackRate);
             }
             catch (Exception e)
             {
@@ -129,7 +125,7 @@ namespace Quaver.States.Loading.Map
         /// <summary>
         ///     Responsible for getting the state ready to be changed, and then actually changing it.
         /// </summary>
-        private void ChangeState()
+        private static void ChangeState()
         {
             // If the Qua isn't valid then return back to the song select state
             if (!GameBase.SelectedMap.Qua.IsValidQua)
@@ -138,7 +134,6 @@ namespace Quaver.States.Loading.Map
                 return;
             }
 
-            Console.WriteLine(GameBase.CurrentAudioPath);
             try
             {
                 // Stop the current audio and load it again before moving onto the next state.
@@ -169,8 +164,9 @@ namespace Quaver.States.Loading.Map
                         md5 = GameBase.SelectedMap.Md5Checksum;
                         break;
                 }
-
-                GameBase.GameStateManager.ChangeState(new ManiaGameplayState(GameBase.SelectedMap.Qua, md5));
+            
+                // GameBase.GameStateManager.ChangeState(new ManiaGameplayState(GameBase.SelectedMap.Qua, md5));
+                GameBase.GameStateManager.ChangeState(new GameplayScreen(GameBase.SelectedMap.Qua, md5));
             }
             catch (Exception e)
             {

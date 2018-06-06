@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using IniParser;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,6 +15,8 @@ using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Resources;
+using Quaver.States.Gameplay.GameModes.Keys.Playfield.Health;
+using Quaver.States.Gameplay.UI.Components.Health;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.Skinning
@@ -21,7 +25,7 @@ namespace Quaver.Skinning
     /// This class has everything to do with parsing skin.ini files
     /// </summary>
     internal class Skin
-    {
+    {        
         /// <summary>
         /// Name of the skin
         /// </summary>
@@ -111,10 +115,54 @@ namespace Quaver.Skinning
         internal Color[] ColumnColors7K { get; set; } = new Color[7];
 
         /// <summary>
-        ///     Determines the FPS of the animations
-        ///     Max - 255fps.
+        ///     The scale of the judgement hit burst.
         /// </summary>
-        internal byte LightFramesPerSecond { get; set; }
+        internal byte JudgementHitBurstScale { get; set; }
+
+        /// <summary>
+        ///     HitLighting skin eleemtns.
+        /// </summary>
+        internal int HitLightingWidth { get; set; }
+        internal int HitLightingHeight { get; set; }
+        internal int HitLightingY { get; set; }
+
+        /// <summary>
+        ///     Position of the score display.
+        /// </summary>
+        internal int ScoreDisplayPosX { get; set; }
+        internal int ScoreDisplayPosY { get; set; }
+
+        /// <summary>
+        ///     Position of the accuracy display.
+        /// </summary>
+        internal int AccuracyDisplayPosX { get; set; }
+        internal int AccuracyDisplayPosY { get; set; }
+
+        /// <summary>
+        ///     Position of the KPS display
+        /// </summary>
+        internal int KpsDisplayPosX { get; set; }
+        internal int KpsDisplayPosY { get; set; }
+
+        /// <summary>
+        ///     Y Pos of the combo counter
+        /// </summary>
+        internal int ComboPosY { get; set; }
+
+        /// <summary>
+        ///     Y Pos of the judgement hit burst.
+        /// </summary>
+        internal int JudgementBurstPosY { get; set; }
+
+        /// <summary>
+        ///     The type of health bar the skin has.
+        /// </summary>
+        internal HealthBarType HealthBarType { get; set; }
+
+        /// <summary>
+        ///     Health Bar alignment for Keys game mode.
+        /// </summary>
+        internal HealthBarKeysAlignment HealthBarKeysAlignment { get; set; }
 
         /// <summary>
         ///     The colour that is used for the column's lighting.
@@ -162,7 +210,7 @@ namespace Quaver.Skinning
         // defined for each key lane.
         internal List<List<Texture2D>> NoteHitObjects4K { get; set; } = new List<List<Texture2D>>();
         internal List<List<Texture2D>> NoteHoldHitObjects4K { get; set; } = new List<List<Texture2D>>();
-        internal Texture2D[] NoteHoldBodies4K { get; set; } = new Texture2D[4];
+        internal List<List<Texture2D>> NoteHoldBodies4K { get; set; } = new List<List<Texture2D>>();
         internal Texture2D[] NoteHoldEnds4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsUp4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsDown4K { get; set; } = new Texture2D[4];
@@ -170,8 +218,9 @@ namespace Quaver.Skinning
 
         // 7k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
-        internal Texture2D[] NoteHitObjects7K { get; set; } = new Texture2D[7];
-        internal Texture2D[] NoteHoldBodies7K { get; set; } = new Texture2D[7];
+        internal List<List<Texture2D>> NoteHitObjects7K { get; set; } = new List<List<Texture2D>>();
+        internal List<List<Texture2D>> NoteHoldHitObjects7K { get; set; } = new List<List<Texture2D>>();
+        internal List<List<Texture2D>> NoteHoldBodies7K { get; set; } = new List<List<Texture2D>>();
         internal Texture2D[] NoteHoldEnds7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteReceptorsUp7K { get; set; } = new Texture2D[7];
         internal Texture2D[] NoteReceptorsDown7K { get; set; } = new Texture2D[7];
@@ -193,17 +242,75 @@ namespace Quaver.Skinning
         /// <summary>
         ///     Judge
         /// </summary>
-        internal Texture2D JudgeMiss { get; set; }
-        internal Texture2D JudgeOkay { get; set; }
-        internal Texture2D JudgeGood { get; set; }
-        internal Texture2D JudgeGreat { get; set; }
-        internal Texture2D JudgePerf { get; set; }
-        internal Texture2D JudgeMarv { get; set; }
+        internal List<Texture2D> JudgeMiss { get; set; }
+        internal List<Texture2D> JudgeOkay { get; set; }
+        internal List<Texture2D> JudgeGood { get; set; }
+        internal List<Texture2D> JudgeGreat { get; set; }
+        internal List<Texture2D> JudgePerf { get; set; }
+        internal List<Texture2D> JudgeMarv { get; set; }
+
+        /// <summary>
+        ///     Score display
+        /// </summary>
+        internal Texture2D[] ScoreDisplayNumbers { get; } = new Texture2D[10];
+        internal Texture2D ScoreDisplayDecimal { get; set; }
+        internal Texture2D ScoreDisplayPercent { get; set; }
+
+        /// <summary>
+        ///     Combo display.
+        /// </summary>
+        internal Texture2D[] ComboDisplayNumbers { get; } = new Texture2D[10];
+
+        /// <summary>
+        ///     Siong Time Display.
+        /// </summary>
+        internal Texture2D[] SongTimeDisplayNumbers { get; } = new Texture2D[10];
+        internal Texture2D SongTimeDisplayColon { get; set;  }
+        internal Texture2D SongTimeDisplayMinus { get; set; }
+
+        /// <summary>
+        ///     Animation sprites that display when hitting an object
+        /// </summary>
+        internal List<Texture2D> HitLighting { get; set; }
+
+        /// <summary>
+        ///     Animation sprites that display when holding an LN
+        /// </summary>
+        internal List<Texture2D> HoldLighting { get; set; }
 
         /// <summary>
         ///     QuaverCursor
         /// </summary>
         internal Texture2D Cursor { get; set; }
+
+        /// <summary>
+        ///     Pause overlay textures.
+        /// </summary>
+        internal Texture2D PauseBackground { get; set; }
+        internal Texture2D PauseContinue { get; set; }
+        internal Texture2D PauseRetry { get; set; }
+        internal Texture2D PauseBack { get; set; }
+
+        /// <summary>
+        ///     Judgement Overlay
+        /// </summary>
+        internal Texture2D JudgementOverlay { get; set; }
+
+        /// <summary>
+        ///     Scoreboard background.
+        /// </summary>
+        internal Texture2D Scoreboard { get; set; }
+
+        /// <summary>
+        ///    Scoreboard background for other players.       
+        /// </summary>
+        internal Texture2D ScoreboardOther { get; set; }
+
+        /// <summary>
+        ///     Health Bar
+        /// </summary>
+        internal List<Texture2D> HealthBarBackground { get; set; }
+        internal List<Texture2D> HealthBarForeground { get; set; }
 
         /// <summary>
         ///     Sound Effect elements. 
@@ -219,157 +326,239 @@ namespace Quaver.Skinning
         internal SoundEffect SoundClick { get; set; }
         internal SoundEffect SoundBack { get; set; }
         internal SoundEffect SoundHover { get; set; }
+        internal SoundEffect SoundFailure { get; set; }
+        internal SoundEffect SoundRetry { get; set; }
 
         /// <summary>
-        ///     The number of files that will be loaded in the default skin
-        ///     for hit burst animations.
+        ///     Regular expression for animation element file names.
         /// </summary>
-        private int HitBurstAnimDefault { get; } = 5;
-
-        // Contains the file names of all skin elements
-        private readonly string[] skinElements = new[]
+        /// <param name="element"></param>
+        /// <returns></returns>
+        private static string AnimationElementRegex(string element) => $@"^{element}@(\d+)x(\d+).png$";
+        
+        /// <summary>
+        ///     Contains the file names of all skin elements
+        /// </summary>
+        private readonly string[] skinElements =
         {
-                // Stage
-                @"4k-stage-bgmask",
-                @"7k-stage-bgmask",
-                @"stage-left-border",
-                @"stage-right-border",
-                @"stage-hitposition-overlay",
-                @"stage-distant-overlay",
-                @"stage-timingbar",
-                @"4k-column-lighting",
-                @"7k-column-lighting",
+            // Stage
+            @"4k-stage-bgmask",
+            @"7k-stage-bgmask",
+            @"stage-left-border",
+            @"stage-right-border",
+            @"stage-hitposition-overlay",
+            @"stage-distant-overlay",
+            @"stage-timingbar",
+        
+            // Column Lighting
+            @"4k-column-lighting",
+            @"7k-column-lighting",
 
-                // 4k Hit effect
-                @"4k-note-hiteffect-1",
-                @"4k-note-hiteffect-2",
-                @"4k-note-hiteffect-3",
-                @"4k-note-hiteffect-4",
+            // 4k Hit effect
+            @"4k-note-hiteffect-1",
+            @"4k-note-hiteffect-2",
+            @"4k-note-hiteffect-3",
+            @"4k-note-hiteffect-4",
 
-                // 7k Hit Effect
-                @"7k-note-hiteffect-1",
-                @"7k-note-hiteffect-2",
-                @"7k-note-hiteffect-3",
-                @"7k-note-hiteffect-4",
-                @"7k-note-hiteffect-5",
-                @"7k-note-hiteffect-6",
-                @"7k-note-hiteffect-7",
+            // 7k Hit Effect
+            @"7k-note-hiteffect-1",
+            @"7k-note-hiteffect-2",
+            @"7k-note-hiteffect-3",
+            @"7k-note-hiteffect-4",
+            @"7k-note-hiteffect-5",
+            @"7k-note-hiteffect-6",
+            @"7k-note-hiteffect-7",
 
-                // 4k HitObjects
-                @"4k-note-hitobject-1",
-                @"4k-note-hitobject-2",
-                @"4k-note-hitobject-3",
-                @"4k-note-hitobject-4",
+            // 4k HitObjects
+            @"4k-note-hitobject-1",
+            @"4k-note-hitobject-2",
+            @"4k-note-hitobject-3",
+            @"4k-note-hitobject-4",
 
-                // 4k LN Hit Objects
-                @"4k-note-holdhitobject-1",
-                @"4k-note-holdhitobject-2",
-                @"4k-note-holdhitobject-3",
-                @"4k-note-holdhitobject-4",
+            // 4k LN Hit Objects
+            @"4k-note-holdhitobject-1",
+            @"4k-note-holdhitobject-2",
+            @"4k-note-holdhitobject-3",
+            @"4k-note-holdhitobject-4",
 
-                // 7k HitObjects
-                @"7k-note-hitobject-1",
-                @"7k-note-hitobject-2",
-                @"7k-note-hitobject-3",
-                @"7k-note-hitobject-4",
-                @"7k-note-hitobject-5",
-                @"7k-note-hitobject-6",
-                @"7k-note-hitobject-7",
+            // 7k HitObjects
+            @"7k-note-hitobject-1",
+            @"7k-note-hitobject-2",
+            @"7k-note-hitobject-3",
+            @"7k-note-hitobject-4",
+            @"7k-note-hitobject-5",
+            @"7k-note-hitobject-6",
+            @"7k-note-hitobject-7",
+        
+            // 7K LN hit Objects
+            @"7k-note-holdhitobject-1",
+            @"7k-note-holdhitobject-2",
+            @"7k-note-holdhitobject-3",
+            @"7k-note-holdhitobject-4",
+            @"7k-note-holdhitobject-5",
+            @"7k-note-holdhitobject-6",
+            @"7k-note-holdhitobject-7",
 
-                // Grades
-                @"grade-small-a",
-                @"grade-small-b",
-                @"grade-small-c",
-                @"grade-small-d",
-                @"grade-small-f",
-                @"grade-small-s",
-                @"grade-small-ss",
-                @"grade-small-x",
-                @"grade-small-xx",
+            // Grades
+            @"grade-small-a",
+            @"grade-small-b",
+            @"grade-small-c",
+            @"grade-small-d",
+            @"grade-small-f",
+            @"grade-small-s",
+            @"grade-small-ss",
+            @"grade-small-x",
+            @"grade-small-xx",
 
-                // 4k Hit Object Hold Ends
-                @"4k-note-holdend-1",
-                @"4k-note-holdend-2",
-                @"4k-note-holdend-3",
-                @"4k-note-holdend-4",
+            // 4k Hit Object Hold Ends
+            @"4k-note-holdend-1",
+            @"4k-note-holdend-2",
+            @"4k-note-holdend-3",
+            @"4k-note-holdend-4",
 
-                // 7k Hit Object Hold Ends
-                @"7k-note-holdend-1",
-                @"7k-note-holdend-2",
-                @"7k-note-holdend-3",
-                @"7k-note-holdend-4",
-                @"7k-note-holdend-5",
-                @"7k-note-holdend-6",
-                @"7k-note-holdend-7",
+            // 7k Hit Object Hold Ends
+            @"7k-note-holdend-1",
+            @"7k-note-holdend-2",
+            @"7k-note-holdend-3",
+            @"7k-note-holdend-4",
+            @"7k-note-holdend-5",
+            @"7k-note-holdend-6",
+            @"7k-note-holdend-7",
 
-                // 4k Hit Object Hold Bodies
-                @"4k-note-holdbody-1",
-                @"4k-note-holdbody-2",
-                @"4k-note-holdbody-3",
-                @"4k-note-holdbody-4",
+            // 4k Hit Object Hold Bodies
+            @"4k-note-holdbody-1",
+            @"4k-note-holdbody-2",
+            @"4k-note-holdbody-3",
+            @"4k-note-holdbody-4",
 
-                // 7k Hit Object Hold Bodies
-                @"7k-note-holdbody-1",
-                @"7k-note-holdbody-2",
-                @"7k-note-holdbody-3",
-                @"7k-note-holdbody-4",
-                @"7k-note-holdbody-5",
-                @"7k-note-holdbody-6",
-                @"7k-note-holdbody-7",
+            // 7k Hit Object Hold Bodies
+            @"7k-note-holdbody-1",
+            @"7k-note-holdbody-2",
+            @"7k-note-holdbody-3",
+            @"7k-note-holdbody-4",
+            @"7k-note-holdbody-5",
+            @"7k-note-holdbody-6",
+            @"7k-note-holdbody-7",
 
-                // 4k Note Receptors
-                @"4k-receptor-up-1",
-                @"4k-receptor-up-2",
-                @"4k-receptor-up-3",
-                @"4k-receptor-up-4",
+            // 4k Note Receptors
+            @"4k-receptor-up-1",
+            @"4k-receptor-up-2",
+            @"4k-receptor-up-3",
+            @"4k-receptor-up-4",
 
-                // 4k Note Receptors Down
-                @"4k-receptor-down-1",
-                @"4k-receptor-down-2",
-                @"4k-receptor-down-3",
-                @"4k-receptor-down-4",
+            // 4k Note Receptors Down
+            @"4k-receptor-down-1",
+            @"4k-receptor-down-2",
+            @"4k-receptor-down-3",
+            @"4k-receptor-down-4",
 
-                // 7k Note Receptors
-                @"7k-receptor-up-1",
-                @"7k-receptor-up-2",
-                @"7k-receptor-up-3",
-                @"7k-receptor-up-4",
-                @"7k-receptor-up-5",
-                @"7k-receptor-up-6",
-                @"7k-receptor-up-7",
+            // 7k Note Receptors
+            @"7k-receptor-up-1",
+            @"7k-receptor-up-2",
+            @"7k-receptor-up-3",
+            @"7k-receptor-up-4",
+            @"7k-receptor-up-5",
+            @"7k-receptor-up-6",
+            @"7k-receptor-up-7",
 
-                // 7k Note Receptors Down
-                @"7k-receptor-down-1",
-                @"7k-receptor-down-2",
-                @"7k-receptor-down-3",
-                @"7k-receptor-down-4",
-                @"7k-receptor-down-5",
-                @"7k-receptor-down-6",
-                @"7k-receptor-down-7",
+            // 7k Note Receptors Down
+            @"7k-receptor-down-1",
+            @"7k-receptor-down-2",
+            @"7k-receptor-down-3",
+            @"7k-receptor-down-4",
+            @"7k-receptor-down-5",
+            @"7k-receptor-down-6",
+            @"7k-receptor-down-7",
 
-                // Judge
-                @"judge-miss",
-                @"judge-okay",
-                @"judge-good",
-                @"judge-great",
-                @"judge-perf",
-                @"judge-marv",
+            // Judge
+            @"judge-miss",
+            @"judge-okay",
+            @"judge-good",
+            @"judge-great",
+            @"judge-perf",
+            @"judge-marv",
 
-                //  QuaverCursor
-                @"main-cursor",
+            // Number - Score Display
+            @"score-0",
+            @"score-1",
+            @"score-2",
+            @"score-3",
+            @"score-4",
+            @"score-5",
+            @"score-6",
+            @"score-7",
+            @"score-8",
+            @"score-9",
+            @"score-decimal",
+            @"score-percent",
+        
+            // Number - Combo Display
+            @"combo-0",
+            @"combo-1",
+            @"combo-2",
+            @"combo-3",
+            @"combo-4",
+            @"combo-5",
+            @"combo-6",
+            @"combo-7",
+            @"combo-8",
+            @"combo-9",
+        
+            // Number - Song Time Display
+            @"song-time-0",
+            @"song-time-1",
+            @"song-time-2",
+            @"song-time-3",
+            @"song-time-4",
+            @"song-time-5",
+            @"song-time-6",
+            @"song-time-7",
+            @"song-time-8",
+            @"song-time-9",
+            @"song-time-colon",
+            @"song-time-minus",
+            
+            // Lighting
+            @"hitlighting",
+            @"holdlighting",
+            
+            // Pause
+            @"pause-background",
+            @"pause-continue",
+            @"pause-retry",
+            @"pause-back",
+                
+            // Judgement Overlay
+            @"judgement-overlay",
+            
+            // Scoreboard
+            @"scoreboard",
+            @"scoreboard-other",
+            
+            // Health Bar
+            @"health-background",
+            @"health-foreground",
+            
+            // Cursor
+            @"main-cursor",
 
-                // Sound Effects
-                @"sound-hit",
-                @"sound-hitclap",
-                @"sound-hitwhistle",
-                @"sound-hitfinish",
-
-                @"sound-combobreak",
-                @"sound-applause",
-                @"sound-screenshot",
-                @"sound-click",
-                @"sound-back",
-                @"sound-hover"
+            // ----- Sound Effects -----
+        
+            // Gameplay SFX
+            @"sound-hit",
+            @"sound-hitclap",
+            @"sound-hitwhistle",
+            @"sound-hitfinish",
+            @"sound-combobreak",
+            @"sound-failure",
+            @"sound-retry",
+        
+            // Menu SFX
+            @"sound-applause",
+            @"sound-screenshot",
+            @"sound-click",
+            @"sound-back",
+            @"sound-hover"
         };
 
         /// <summary>
@@ -394,7 +583,7 @@ namespace Quaver.Skinning
         public static void LoadSkin()
         {
             GameBase.LoadedSkin = new Skin(ConfigManager.Skin.Value);
-            GameBase.QuaverCursor = new QuaverCursor();
+            GameBase.Cursor = new Cursor();
         }
 
         /// <summary>
@@ -406,7 +595,7 @@ namespace Quaver.Skinning
             foreach (var element in skinElements)
             {
                 var skinElementPath = skinDir + $"/{element}.png";
-                    
+                                    
                 // Load up all the skin elements.
                 switch (element)
                 {
@@ -495,25 +684,46 @@ namespace Quaver.Skinning
                         LoadHitObjects(NoteHoldHitObjects4K, skinDir, element, 3);
                         break;
                     case @"7k-note-hitobject-1":
-                        NoteHitObjects7K[0] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 0);
                         break;
                     case @"7k-note-hitobject-2":
-                        NoteHitObjects7K[1] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 1);
                         break;
                     case @"7k-note-hitobject-3":
-                        NoteHitObjects7K[2] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 2);
                         break;
                     case @"7k-note-hitobject-4":
-                        NoteHitObjects7K[3] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 3);
                         break;
                     case @"7k-note-hitobject-5":
-                        NoteHitObjects7K[4] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 4);
                         break;
                     case @"7k-note-hitobject-6":
-                        NoteHitObjects7K[5] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 5);
                         break;
                     case @"7k-note-hitobject-7":
-                        NoteHitObjects7K[6] = LoadIndividualElement(element, skinElementPath);
+                        LoadHitObjects(NoteHitObjects7K, skinDir, element, 6);
+                        break;
+                    case @"7k-note-holdhitobject-1":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 0);
+                        break;
+                    case @"7k-note-holdhitobject-2":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 1);
+                        break;
+                    case @"7k-note-holdhitobject-3":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 2);
+                        break;
+                    case @"7k-note-holdhitobject-4":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 3);
+                        break;
+                    case @"7k-note-holdhitobject-5":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 4);
+                        break;
+                    case @"7k-note-holdhitobject-6":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 5);
+                        break;
+                    case @"7k-note-holdhitobject-7":
+                        LoadHitObjects(NoteHoldHitObjects7K, skinDir, element, 6);
                         break;
                     case @"grade-small-a":
                         GradeSmallA = LoadIndividualElement(element, skinElementPath);
@@ -576,37 +786,37 @@ namespace Quaver.Skinning
                         NoteHoldEnds7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-holdbody-1":
-                        NoteHoldBodies4K[0] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies4K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"4k-note-holdbody-2":
-                        NoteHoldBodies4K[1] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies4K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"4k-note-holdbody-3":
-                        NoteHoldBodies4K[2] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies4K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"4k-note-holdbody-4":
-                        NoteHoldBodies4K[3] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies4K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-1":
-                        NoteHoldBodies7K[0] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-2":
-                        NoteHoldBodies7K[1] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-3":
-                        NoteHoldBodies7K[2] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-4":
-                        NoteHoldBodies7K[3] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-5":
-                        NoteHoldBodies7K[4] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-6":
-                        NoteHoldBodies7K[5] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"7k-note-holdbody-7":
-                        NoteHoldBodies7K[6] = LoadIndividualElement(element, skinElementPath);
+                        NoteHoldBodies7K.Add(LoadAnimationElements(element, 0, 0));
                         break;
                     case @"4k-receptor-up-1":
                         NoteReceptorsUp4K[0] = LoadIndividualElement(element, skinElementPath);
@@ -675,22 +885,157 @@ namespace Quaver.Skinning
                         NoteReceptorsDown7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"judge-miss":
-                        JudgeMiss = LoadIndividualElement(element, skinElementPath);
+                        JudgeMiss = LoadAnimationElements(element, 1, 16);
                         break;
                     case @"judge-okay":
-                        JudgeOkay = LoadIndividualElement(element, skinElementPath);
+                        JudgeOkay = LoadAnimationElements(element, 1, 9);
                         break;
                     case @"judge-good":
-                        JudgeGood = LoadIndividualElement(element, skinElementPath);
+                        JudgeGood = LoadAnimationElements(element, 1, 8);
                         break;
                     case @"judge-great":
-                        JudgeGreat = LoadIndividualElement(element, skinElementPath);
+                        JudgeGreat = LoadAnimationElements(element, 1, 7);
                         break;
                     case @"judge-perf":
-                        JudgePerf = LoadIndividualElement(element, skinElementPath);
+                        JudgePerf = LoadAnimationElements(element, 1, 12);
                         break;
                     case @"judge-marv":
-                        JudgeMarv = LoadIndividualElement(element, skinElementPath);
+                        JudgeMarv = LoadAnimationElements(element, 1, 15);
+                        break;
+                    case @"score-0":
+                        ScoreDisplayNumbers[0] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-1":
+                        ScoreDisplayNumbers[1] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-2":
+                        ScoreDisplayNumbers[2] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-3":
+                        ScoreDisplayNumbers[3] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-4":
+                        ScoreDisplayNumbers[4] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-5":
+                        ScoreDisplayNumbers[5] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-6":
+                        ScoreDisplayNumbers[6] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-7":
+                        ScoreDisplayNumbers[7] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-8":
+                        ScoreDisplayNumbers[8] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-9":
+                        ScoreDisplayNumbers[9] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-decimal":
+                        ScoreDisplayDecimal = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"score-percent":
+                        ScoreDisplayPercent = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-0":
+                        ComboDisplayNumbers[0] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-1":
+                        ComboDisplayNumbers[1] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-2":
+                        ComboDisplayNumbers[2] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-3":
+                        ComboDisplayNumbers[3] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-4":
+                        ComboDisplayNumbers[4] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-5":
+                        ComboDisplayNumbers[5] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-6":
+                        ComboDisplayNumbers[6] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-7":
+                        ComboDisplayNumbers[7] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-8":
+                        ComboDisplayNumbers[8] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"combo-9":
+                        ComboDisplayNumbers[9] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-0":
+                        SongTimeDisplayNumbers[0] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-1":
+                        SongTimeDisplayNumbers[1] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-2":
+                        SongTimeDisplayNumbers[2] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-3":
+                        SongTimeDisplayNumbers[3] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-4":
+                        SongTimeDisplayNumbers[4] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-5":
+                        SongTimeDisplayNumbers[5] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-6":
+                        SongTimeDisplayNumbers[6] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-7":
+                        SongTimeDisplayNumbers[7] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-8":
+                        SongTimeDisplayNumbers[8] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-9":
+                        SongTimeDisplayNumbers[9] = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-colon":
+                        SongTimeDisplayColon = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"song-time-minus":
+                        SongTimeDisplayMinus = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"hitlighting":
+                        HitLighting = LoadAnimationElements(element, 1, 8);
+                        break;
+                    case @"holdlighting":
+                        HoldLighting = LoadAnimationElements(element, 1, 12);
+                        break;
+                    case @"pause-background":
+                        PauseBackground = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"pause-continue":
+                        PauseContinue = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"pause-retry":
+                        PauseRetry = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"pause-back":
+                        PauseBack = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"judgement-overlay":
+                        JudgementOverlay = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"scoreboard":
+                        Scoreboard = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"scoreboard-other":
+                        ScoreboardOther = LoadIndividualElement(element, skinElementPath);
+                        break;
+                    case @"health-background":
+                        HealthBarBackground = LoadAnimationElements(element, 0, 0);
+                        break;
+                    case @"health-foreground":
+                        HealthBarForeground = LoadAnimationElements(element, 0, 0);
                         break;
                     case @"sound-hit":
                         SoundHit = LoadSoundEffectElement(element, skinElementPath);
@@ -722,10 +1067,14 @@ namespace Quaver.Skinning
                     case @"sound-hover":
                         SoundHover = LoadSoundEffectElement(element, skinElementPath);
                         break;
+                    case @"sound-failure":
+                        SoundFailure = LoadSoundEffectElement(element, skinElementPath);
+                        break;
+                    case @"sound-retry":
+                        SoundRetry = LoadSoundEffectElement(element, skinElementPath);
+                        break;
                     case @"main-cursor":
                         Cursor = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    default:
                         break;
                 }
             }            
@@ -734,40 +1083,11 @@ namespace Quaver.Skinning
         /// <summary>
         ///     Loads an individual element.
         /// </summary>
+        /// <param name="element"></param>
         /// <param name="path"></param>
-        /// <param name="tex"></param>
-        private Texture2D LoadIndividualElement(string element, string path)
+        private static Texture2D LoadIndividualElement(string element, string path)
         {
-            // If the image file exists, go ahead and load it into a texture.
-            if (File.Exists(path))
-                return GraphicsHelper.LoadTexture2DFromFile(path);
-
-            // Otherwise, we'll have to change the path to that of the default element and load that instead.
-            path = element;
-
-            // Load default skin element    
-            try
-            {
-                // Load based on which default skin is loaded
-                // prepend with 'arrow' for the file name if the arrow skin is selected.
-                switch (ConfigManager.DefaultSkin.Value)
-                {
-                    case DefaultSkins.Arrow:
-                        path = "arrow-" + path;
-                        break;
-                    case DefaultSkins.Bar:
-                        path = "bar-" + path;
-                        break;
-                }
-
-                return ResourceHelper.LoadTexture2DFromPng((Bitmap)ResourceHelper.GetProperty(path));
-            }
-            catch (Exception e)
-            {
-                // Logger.LogError(e, LogType.Runtime);
-                Logger.LogError($"Default skin element not found {path}", LogType.Runtime);
-                return ResourceHelper.LoadTexture2DFromPng(QuaverResources.blank_box);
-            }    
+            return File.Exists(path) ? GraphicsHelper.LoadTexture2DFromFile(path) : LoadSkinTextureFromResources(element); 
         }
 
         /// <summary>
@@ -790,12 +1110,12 @@ namespace Quaver.Skinning
         ///         - note-hitobject2 (Lane 2 Default which is also 1/1 snap.)
         ///         - note-hitobject2-2nd (Lane 2, 1/2 Snap)
         /// </summary>
+        /// <param name="hitObjects"></param>
         /// <param name="skinDir"></param>
         /// <param name="element"></param>
-        /// <param name="defaultNum"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private void LoadHitObjects(List<List<Texture2D>> HitObjects, string skinDir, string element, int index)
+        private void LoadHitObjects(List<List<Texture2D>> hitObjects, string skinDir, string element, int index)
         {
             var objectsList = new List<Texture2D>();
 
@@ -805,7 +1125,7 @@ namespace Quaver.Skinning
             // Don't bother looking for snap objects if the skin config doesn't permit it.
             if (!ColourObjectsBySnapDistance)
             {
-                HitObjects.Insert(index, objectsList);
+                hitObjects.Insert(index, objectsList);
                 return;
             }
 
@@ -818,35 +1138,52 @@ namespace Quaver.Skinning
             for (var i = 0; i < snaps.Length; i++)
                 objectsList.Add(LoadIndividualElement($"{element}-{snaps[i]}", skinDir + $"/{element}-{snaps[i]}.png"));
 
-            HitObjects.Insert(index, objectsList);
+            hitObjects.Insert(index, objectsList);
         }
 
         /// <summary>
         ///     Loads a list of elements to be used in an animation.
         ///     Example:
-        ///         - 4k-note-hiteffect-0@0
-        ///         - 4k-note-hiteffect-1@1
-        ///         - 4k-note-hiteffect-2@2
-        ///         //
-        ///         - 4k-note-holdbody-active-1@0
-        ///         - 4k-note-holdbody-active-1@1
-        ///         - 4k-note-holdbody-active-1@2
+        ///         - 4k-note-holdbody-active-1@3x4; (3 rows, 4 columns.)
+        ///
+        ///     Note: if 0x0 is specified for the default rows and columns,
+        ///     it will load the element without the @rowsxcolumns extension.
         /// </summary>
-        /// <param name="skinDir"></param>
         /// <param name="element"></param>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
         /// <returns></returns>
-        private List<Texture2D> LoadAnimationElements(string skinDir, string element, int defaultNum)
+        private static List<Texture2D> LoadAnimationElements(string element, int rows, int columns)
         {
-            var animationList = new List<Texture2D>();
+            // Attempt to find a file that matches the regular expression in the skin directory.    
+            var directory = $"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}";
+            var files = Directory.GetFiles(directory);
 
-            // Run a loop and check if each file in the animation exists,
-            for (var i = 0; File.Exists($"{skinDir}/{element}@{i}.png"); i++)
-                animationList.Add(GraphicsHelper.LoadTexture2DFromFile($"{skinDir}/{element}@{i}.png"));
+            foreach (var f in files)
+            {
+                var regex = new Regex(AnimationElementRegex(element));
+                var match = regex.Match(Path.GetFileName(f));
+                
+                // See if the file matches the regex.
+                if (match.Success)
+                {                    
+                    // Load it up if so.
+                    var texture = GraphicsHelper.LoadTexture2DFromFile(f);
+                    return GraphicsHelper.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+                }
+                
+                // Otherwise check to see if that base element (without animations) actually exists.
+                // if so, load it singularly into a list.
+                if (Path.GetFileNameWithoutExtension(f) == element)
+                    return new List<Texture2D> { GraphicsHelper.LoadTexture2DFromFile(f) };
+            }
+                        
+            // If we end up getting down here, that means we need to load the spritesheet from our resources.
+            // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
+            if (rows == 0 && columns == 0)
+                return new List<Texture2D> {LoadIndividualElement(element, directory)};
 
-            // TODO: Run a check to see if the animation list has any in it.
-            // If it does, then return it. If not, then we want to load the default skin's 
-            // animations using the defaultNum specified.
-            return animationList;
+            return GraphicsHelper.LoadSpritesheetFromTexture(LoadSkinTextureFromResources($"{element}_{rows}x{columns}"), rows, columns);
         }
 
         /// <summary>
@@ -873,6 +1210,40 @@ namespace Quaver.Skinning
         }
 
         /// <summary>
+        ///     Loads a skin's texture from resources.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        private static Texture2D LoadSkinTextureFromResources(string element)
+        {
+            // Load default skin element    
+            try
+            {
+                // Load based on which default skin is loaded
+                // prepend with 'arrow' for the file name if the arrow skin is selected.
+                switch (ConfigManager.DefaultSkin.Value)
+                {
+                    case DefaultSkins.Arrow:
+                        element = "arrow-" + element;
+                        break;
+                    case DefaultSkins.Bar:
+                        element = "bar-" + element;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                return ResourceHelper.LoadTexture2DFromPng((Bitmap)ResourceHelper.GetProperty(element));
+            }
+            catch (Exception e)
+            {
+                // Logger.LogError(e, LogType.Runtime);
+                Logger.LogError($"Default skin element not found {element}", LogType.Runtime);
+                return ResourceHelper.LoadTexture2DFromPng(QuaverResources.blank_box);
+            }   
+        }
+
+        /// <summary>
         ///     Reads a skin.ini file/sets skin config
         /// </summary>
         /// <param name="skinDir"></param>
@@ -888,8 +1259,8 @@ namespace Quaver.Skinning
                     Version = "1.0";
                     BgMaskPadding4K = 0;
                     BgMaskPadding7K = 0;
-                    HitPositionOffset4K = -28;
-                    HitPositionOffset7K = -28;
+                    HitPositionOffset4K = 0;
+                    HitPositionOffset7K = 0;
                     NotePadding4K = 0;
                     NotePadding7K = 0;
                     TimingBarPixelSize = 2;
@@ -900,7 +1271,7 @@ namespace Quaver.Skinning
                     ReceptorPositionOffset7K = -110;
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = false;
-                    LightFramesPerSecond = 240;
+                    JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects4K = true;
                     ReceptorsOverHitObjects7K = true;
                     JudgeColors.Insert(0, new Color(255, 255, 200));
@@ -923,6 +1294,19 @@ namespace Quaver.Skinning
                     BgMaskAlpha = 1f;
                     FlipNoteImagesOnUpScroll4K = true;
                     FlipNoteImagesOnUpScroll7K = true;
+                    HitLightingY = 0;
+                    HitLightingWidth = 0;
+                    HitLightingHeight = 0;
+                    ScoreDisplayPosX = 10;
+                    ScoreDisplayPosY = 5;
+                    AccuracyDisplayPosX = -10;
+                    AccuracyDisplayPosY = 5;
+                    KpsDisplayPosX = -10;
+                    KpsDisplayPosY = 10;
+                    ComboPosY = 0;
+                    JudgementBurstPosY = 105;
+                    HealthBarType = HealthBarType.Vertical;
+                    HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
                     break;
                 case DefaultSkins.Arrow:
                     Name = "Default Arrow Skin";
@@ -938,11 +1322,11 @@ namespace Quaver.Skinning
                     ColumnLightingScale = 1.0f;
                     ColumnSize4K = 95;
                     ColumnSize7K = 65;
-                    ReceptorPositionOffset4K = -75;
-                    ReceptorPositionOffset7K = -75;
+                    ReceptorPositionOffset4K = 10;
+                    ReceptorPositionOffset7K = 0;
                     ColumnAlignment = 50;
                     ColourObjectsBySnapDistance = true;
-                    LightFramesPerSecond = 240;
+                    JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects4K = false;
                     ReceptorsOverHitObjects7K = false;
                     JudgeColors.Insert(0, new Color(255, 255, 200));
@@ -965,6 +1349,19 @@ namespace Quaver.Skinning
                     BgMaskAlpha = 0.9f;
                     FlipNoteImagesOnUpScroll4K = true;
                     FlipNoteImagesOnUpScroll7K = true;
+                    HitLightingY = 0;
+                    HitLightingWidth = 0;
+                    HitLightingHeight = 0;
+                    ScoreDisplayPosX = 10;
+                    ScoreDisplayPosY = 5;
+                    AccuracyDisplayPosX = -10;
+                    AccuracyDisplayPosY = 5;
+                    KpsDisplayPosX = -10;
+                    KpsDisplayPosY = 10;
+                    ComboPosY = 0;
+                    JudgementBurstPosY = 105;
+                    HealthBarType = HealthBarType.Vertical;
+                    HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
                     break;
             }
 
@@ -991,7 +1388,7 @@ namespace Quaver.Skinning
             ReceptorPositionOffset7K = ConfigHelper.ReadInt32(ReceptorPositionOffset7K, data["Gameplay"]["ReceptorPositionOffset7K"]);
             ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, data["Gameplay"]["ColumnAlignment"]);
             ColourObjectsBySnapDistance = ConfigHelper.ReadBool(ColourObjectsBySnapDistance, data["Gameplay"]["ColourObjectsBySnapDistance"]);
-            LightFramesPerSecond = ConfigHelper.ReadByte(LightFramesPerSecond, data["Gameplay"]["LightsFramesPerSecond"]);
+            JudgementHitBurstScale = ConfigHelper.ReadByte(JudgementHitBurstScale, data["Gameplay"]["JudgementHitBurstScale"]);
             ReceptorsOverHitObjects4K = ConfigHelper.ReadBool(ReceptorsOverHitObjects4K, data["Gameplay"]["ReceptorsOverHitObjects4K"]);
             ReceptorsOverHitObjects7K = ConfigHelper.ReadBool(ReceptorsOverHitObjects7K, data["Gameplay"]["ReceptorsOverHitObjects7K"]);
             JudgeColors[0] = ConfigHelper.ReadColor(JudgeColors[0], data["Gameplay"]["JudgeColorMarv"]);
@@ -1014,6 +1411,16 @@ namespace Quaver.Skinning
             BgMaskAlpha = ConfigHelper.ReadFloat(BgMaskAlpha, data["Gameplay"]["BgMaskAlpha"]);
             FlipNoteImagesOnUpScroll4K = ConfigHelper.ReadBool(FlipNoteImagesOnUpScroll4K, data["Gameplay"]["FlipNoteImagesOnUpScroll4K"]);
             FlipNoteImagesOnUpScroll7K = ConfigHelper.ReadBool(FlipNoteImagesOnUpScroll7K, data["Gameplay"]["FlipNoteImagesOnUpScroll7K"]);
+            ScoreDisplayPosX = ConfigHelper.ReadInt32(ScoreDisplayPosX, data["Gameplay"]["ScoreDisplayPosX"]);
+            ScoreDisplayPosY = ConfigHelper.ReadInt32(ScoreDisplayPosY, data["Gameplay"]["ScoreDisplayPosY"]);
+            AccuracyDisplayPosX = ConfigHelper.ReadInt32(AccuracyDisplayPosX, data["Gameplay"]["AccuracyDisplayPosX"]);
+            AccuracyDisplayPosY = ConfigHelper.ReadInt32(AccuracyDisplayPosY, data["Gameplay"]["AccuracyDisplayPosY"]);
+            KpsDisplayPosX = ConfigHelper.ReadInt32(KpsDisplayPosX, data["Gameplay"]["KpsDisplayPosX"]);
+            KpsDisplayPosY = ConfigHelper.ReadInt32(KpsDisplayPosY, data["Gameplay"]["KpsDisplayPosY"]);
+            ComboPosY = ConfigHelper.ReadInt32(ComboPosY, data["Gameplay"]["ComboPosY"]);
+            JudgementBurstPosY = ConfigHelper.ReadInt32(JudgementBurstPosY, data["Gameplay"]["JudgementBurstPosY"]);
+            HealthBarType = ConfigHelper.ReadHealthBarType(HealthBarType, data["Gameplay"]["HealthBarType"]);
+            HealthBarKeysAlignment = ConfigHelper.ReadHealthBarKeysAlignment(HealthBarKeysAlignment, data["Gameplay"]["HealthBarKeysAlignment"]);
 
             Logger.LogSuccess($"skin.ini file has successfully been read.", LogType.Runtime);
         }
@@ -1022,11 +1429,45 @@ namespace Quaver.Skinning
         ///     Gets an individual judge color from the list of Judge colors
         ///     Returns black if its unable to be found.
         /// </summary>
-        /// <param name="judge"></param>
+        /// <param name="judgement"></param>
         /// <returns></returns>
-        public Color GetJudgeColor(Judge judge)
+        public Color GetJudgeColor(Judgement judgement)
         {
-            return JudgeColors.Count == 0 ? new Color(0, 0, 0) : JudgeColors[(int) judge];
+            return JudgeColors.Count == 0 ? new Color(0, 0, 0) : JudgeColors[(int) judgement];
+        }
+
+        /// <summary>
+        ///     Converts a grade enum value to its respective skin texture.
+        /// </summary>
+        /// <param name="g"></param>
+        /// <returns></returns>
+        public Texture2D ConvertGradeToSkinElement(Grade g)
+        {
+            switch (g)
+            {
+                case Grade.XX:
+                    return GradeSmallXX;
+                case Grade.X:
+                    return GradeSmallX;
+                case Grade.SS:
+                    return GradeSmallSS;
+                case Grade.S:
+                    return GradeSmallS;
+                case Grade.A:
+                    return GradeSmallA;
+                case Grade.B:
+                    return GradeSmallB;
+                case Grade.C:
+                    return GradeSmallC;
+                case Grade.D:
+                    return GradeSmallD;
+                case Grade.F:
+                    return GradeSmallF;
+                case Grade.None:
+                    return null;
+                default:
+                    throw new InvalidEnumArgumentException();
+            }
         }
     }
 }

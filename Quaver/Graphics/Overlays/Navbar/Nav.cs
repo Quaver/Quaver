@@ -12,11 +12,9 @@ using Quaver.Database.Maps;
 using Quaver.GameState;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Options;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
@@ -40,7 +38,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The actual navbar sprite
         /// </summary>
-        internal QuaverSprite NavbarSprite { get; set; }
+        internal Sprite NavbarSprite { get; set; }
             
         /// <summary>
         ///     The tooltip box that appears when hovering over a button.
@@ -61,7 +59,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The container for the navbar
         /// </summary>
-        private QuaverContainer Container { get; set; }
+        private Container Container { get; set; }
                 
         /// <summary>
         ///     If the navbar is shown
@@ -88,7 +86,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The options menu attached to this navbar.
         /// </summary>
-        private OptionsOverlay OptionsMenu { get; set; }
+        internal OptionsOverlay OptionsMenu { get; set; }
 
         /// <summary>
         ///     Initialize
@@ -96,7 +94,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {
-            Container = new QuaverContainer();
+            Container = new Container();
             
             // Create the options menu.
             OptionsMenu = new OptionsOverlay();
@@ -109,7 +107,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             };
             
             // Create navbar
-            NavbarSprite = new QuaverSprite()
+            NavbarSprite = new Sprite()
             {
                 Size = new UDim2D(0, Height, 1, 0),
                 Alignment = Alignment.TopLeft,
@@ -140,7 +138,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             Github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
             
             // Test States.
-            // CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Coffee, "Test State", "Go to testing", (sender, args) => GameBase.GameStateManager.ChangeState(new DropdownTestState()));
+            CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Coffee, "Test State", "Go to testing", (sender, args) => GameBase.GameStateManager.ChangeState(new SemiTransparentTestScreen()));
 #endregion
         }
 
@@ -223,7 +221,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         ///     Performs an animation which shows the navbar.
         /// </summary>
         /// <param name="dt"></param>
-        private void PerformShowAnimation(double dt)
+        internal void PerformShowAnimation(double dt)
          {
              // Make the container visible again when performing this animation.
              Container.Visible = true;

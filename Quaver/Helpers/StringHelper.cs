@@ -21,6 +21,16 @@ namespace Quaver.Helpers
         }
 
         /// <summary>
+        ///     Converts an accuracy percentage into a string.
+        /// </summary>
+        /// <param name="accuracy"></param>
+        /// <returns></returns>
+        internal static string AccuracyToString(float accuracy)
+        {
+            return accuracy >= 100 ? "100.00%" : $"{accuracy:00.00}%";
+        }
+        
+        /// <summary>
         ///     Makes a string safe to be written as a file name.
         /// </summary>
         /// <param name="str"></param>
@@ -39,6 +49,37 @@ namespace Quaver.Helpers
         internal static string ColorToString(Color color)
         {
             return $"{color.R},{color.G},{color.G},{color.A}";
+        }
+        
+        /// <summary>
+        ///     Adds an ordinal to a string.
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static string AddOrdinal(int num)
+        {
+            if( num <= 0 ) return num.ToString();
+
+            switch(num % 100)
+            {
+                case 11:
+                case 12:
+                case 13:
+                    return num + "th";
+            }
+
+            switch(num % 10)
+            {
+                case 1:
+                    return num + "st";
+                case 2:
+                    return num + "nd";
+                case 3:
+                    return num + "rd";
+                default:
+                    return num + "th";
+            }
+
         }
     }
 }

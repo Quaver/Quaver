@@ -4,12 +4,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Quaver.API.Osu;
+using Quaver.API.Enums;
+using Quaver.API.Maps.Parsers;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
 using Quaver.GameState;
+using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
@@ -162,7 +164,7 @@ namespace Quaver.Main
         /// <summary>
         /// The mouse cursor
         /// </summary>
-        public static QuaverCursor QuaverCursor { get; set; }
+        public static Cursor Cursor { get; set; }
 
         /// <summary>
         ///     The current Discord Controller for RichPresence.
@@ -246,6 +248,22 @@ namespace Quaver.Main
                     default:
                         return "";
                 }
+            }
+        }
+
+        /// <summary>
+        ///     The current mods of the game in ModIdentifier form.
+        /// </summary>
+        public static ModIdentifier CurrentMods
+        {
+            get
+            {
+                var mods = 0;
+
+                foreach (var mod in CurrentGameModifiers)
+                    mods += (int)mod.ModIdentifier;
+
+                return (ModIdentifier) mods;
             }
         }
     }

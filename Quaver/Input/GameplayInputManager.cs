@@ -23,7 +23,7 @@ namespace Quaver.Input
         /// <summary>
         ///     The current State
         /// </summary>
-        public State CurrentState { get; set; } = State.PlayScreen;
+        public State CurrentState { get; set; } = State.Gameplay;
 
         /// <summary>
         ///     Keeps track of if the pause key is down.
@@ -105,10 +105,10 @@ namespace Quaver.Input
             // Determine which set of keys to use based on the .qua
             switch (GameBase.SelectedMap.Qua.Mode)
             {
-                case GameModes.Keys4:
+                case GameMode.Keys4:
                     InputManiaKeys = LaneKeys;
                     break;
-                case GameModes.Keys7:
+                case GameMode.Keys7:
                     InputManiaKeys = LaneKeys7K;
                     break;
                 default:

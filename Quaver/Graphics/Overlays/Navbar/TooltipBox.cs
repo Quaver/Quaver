@@ -2,47 +2,46 @@
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Quaver.GameState;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States;
+using Container = Quaver.Graphics.Base.Container;
 
 namespace Quaver.Graphics.Overlays.Navbar
 {
-    internal class TooltipBox : QuaverSprite
+    internal class TooltipBox : Sprite
     {
         /// <summary>
         ///     The container for the entire tooltip box.
         /// </summary>
-        internal QuaverContainer Container { get; }
+        internal Container Container { get; }
 
         /// <summary>
         ///     Reference to the navbar sprite that this tooltip box is in accordance with.
         /// </summary>
-        internal QuaverSprite Nav{ get; }
+        internal Sprite Nav{ get; }
 
         /// <summary>
         ///     The surrounding container box for the tooltip itself.
         /// </summary>
-        internal QuaverSprite ContainerBox { get; set; }
+        internal Sprite ContainerBox { get; set; }
 
         /// <summary>
         ///     The icon displayed in the tooltip box.
         /// </summary>
-        internal QuaverSprite Icon { get; set; }
+        internal Sprite Icon { get; set; }
 
         /// <summary>
         ///     The name of currently highlighted button
         /// </summary>
-        internal QuaverTextbox Name { get; set; }
+        internal SpriteText Name { get; set; }
 
         /// <summary>
         ///     The description of the currently highlighted button.
         /// </summary>
-        internal QuaverTextbox Description { get; set; }
+        internal SpriteText Description { get; set; }
 
         /// <summary>
         ///     Dictates if the tooltip box is currently in an animation.
@@ -61,14 +60,14 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         /// <param name="container"></param>
         /// <param name="nav"></param>
-        internal TooltipBox(QuaverContainer container, QuaverSprite nav)
+        internal TooltipBox(Container container, Sprite nav)
         {
             Container = container;
             Nav = nav;
             Parent = Container;
             
             // Create the tooltip box.
-            ContainerBox = new QuaverSprite()
+            ContainerBox = new Sprite()
             {
                 Position = new UDim2D(-50, Nav.SizeY),
                 Size = new UDim2D(0, 60, 0.250f, 0),
@@ -83,7 +82,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             const int tooltipTopLineY = 5;
             
             // Create the icon sprite (displayed to the left of the text.)
-            Icon = new QuaverSprite()
+            Icon = new Sprite()
             {
                 Image = GameBase.QuaverUserInterface.BlankBox,
                 Position = new UDim2D(tooltipTopLineX, tooltipTopLineY),
@@ -94,7 +93,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             Icon.Size = new UDim2D(Icon.Image.Width, Icon.Image.Height);
             
             // Create Textbox for the name of the button.
-            Name = new QuaverTextbox()
+            Name = new SpriteText()
             {
                 Text = "",
                 Font = QuaverFonts.Medium24,
@@ -108,7 +107,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             };
             
             // Create Textbox for the description of the button.
-            Description = new QuaverTextbox()
+            Description = new SpriteText()
             {
                 Text = "",
                 Font = QuaverFonts.Medium24,

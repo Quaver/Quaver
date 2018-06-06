@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Quaver.Database.Maps;
 using Quaver.GameState;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Logging;
 using Quaver.Main;
 using Microsoft.Xna.Framework;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 
 namespace Quaver.States.Select
 {
@@ -27,12 +27,12 @@ namespace Quaver.States.Select
         /// <summary>
         ///     Reference to the list of song select buttons
         /// </summary>
-        private List<QuaverMapsetSelectButton> SongSelectButtons { get; set; }
+        private List<MapsetSelectButton> SongSelectButtons { get; set; }
 
         /// <summary>
         ///     Reference to the list of difficulty select buttons.
         /// </summary>
-        private List<QuaverMapDifficultySelectButton> DiffSelectButtons { get; set; }
+        private List<MapDifficultySelectButton> DiffSelectButtons { get; set; }
 
         /// <summary>
         /// 
@@ -47,7 +47,7 @@ namespace Quaver.States.Select
         /// <summary>
         ///     The Button Container
         /// </summary>
-        private QuaverContainer Boundary { get; set; }
+        private Container Boundary { get; set; }
 
         /// <summary>
         ///     Selected beatmap's index
@@ -85,9 +85,9 @@ namespace Quaver.States.Select
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {
-            SongSelectButtons = new List<QuaverMapsetSelectButton>();
-            DiffSelectButtons = new List<QuaverMapDifficultySelectButton>();
-            Boundary = new QuaverContainer();
+            SongSelectButtons = new List<MapsetSelectButton>();
+            DiffSelectButtons = new List<MapDifficultySelectButton>();
+            Boundary = new Container();
             GenerateButtonPool();
         }
 
@@ -134,14 +134,14 @@ namespace Quaver.States.Select
         /// </summary>
         public void GenerateButtonPool()
         {
-            MaxButtonsOnScreen = (int)Math.Ceiling(GameBase.WindowRectangle.Height / (QuaverMapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale)) + INDEX_OFFSET_AMOUNT;
+            MaxButtonsOnScreen = (int)Math.Ceiling(GameBase.WindowRectangle.Height / (MapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale)) + INDEX_OFFSET_AMOUNT;
             int targetPoolSize = MaxButtonsOnScreen * 2;
 
             for (var i = 0; i < targetPoolSize; i++)
             {
                 Mapset curmap = i < GameBase.VisibleMapsets.Count ? GameBase.Mapsets[i] : null;
 
-                var newButton = new QuaverMapsetSelectButton(GameBase.WindowUIScale, i, curmap)
+                var newButton = new MapsetSelectButton(GameBase.WindowUIScale, i, curmap)
                 {
                     Image = GameBase.QuaverUserInterface.BlankBox,
                     Alignment = Alignment.TopRight,
@@ -240,10 +240,10 @@ namespace Quaver.States.Select
                 return;
             }
 
-            if (Math.Abs(Boundary.PosY) > QuaverMapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale)
+            if (Math.Abs(Boundary.PosY) > MapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale)
             {
-                int shiftAmt = (int)(Math.Floor(Boundary.PosY / (QuaverMapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale)));
-                Boundary.PosY -= shiftAmt * (QuaverMapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale);
+                int shiftAmt = (int)(Math.Floor(Boundary.PosY / (MapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale)));
+                Boundary.PosY -= shiftAmt * (MapsetSelectButton.BUTTON_OFFSET_PADDING * GameBase.WindowUIScale);
                 ShiftButtonPool(-shiftAmt);
             }
         }
@@ -260,15 +260,15 @@ namespace Quaver.States.Select
                 if (index >= 0 && index < GameBase.VisibleMapsets.Count)
                 {
                     SongSelectButtons[i].PosY = index - SelectedSongIndex <= 0
-                        ? (i - MaxButtonsOnScreen) * GameBase.WindowUIScale * QuaverMapsetSelectButton.BUTTON_OFFSET_PADDING
-                        : GameBase.WindowUIScale * (((i - MaxButtonsOnScreen) * QuaverMapsetSelectButton.BUTTON_OFFSET_PADDING) + (DiffSelectButtons.Count * QuaverMapDifficultySelectButton.BUTTON_OFFSET_PADDING));
+                        ? (i - MaxButtonsOnScreen) * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING
+                        : GameBase.WindowUIScale * (((i - MaxButtonsOnScreen) * MapsetSelectButton.BUTTON_OFFSET_PADDING) + (DiffSelectButtons.Count * MapDifficultySelectButton.BUTTON_OFFSET_PADDING));
                 }
             }
 
-            var posOffset = ((SelectedSongIndex - CurrentPoolIndex + 1) * GameBase.WindowUIScale * QuaverMapsetSelectButton.BUTTON_OFFSET_PADDING);
+            var posOffset = ((SelectedSongIndex - CurrentPoolIndex + 1) * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING);
             for (var i = 0; i < DiffSelectButtons.Count; i++)
             {
-                DiffSelectButtons[i].PosY = posOffset + (GameBase.WindowUIScale * QuaverMapDifficultySelectButton.BUTTON_OFFSET_PADDING * i);
+                DiffSelectButtons[i].PosY = posOffset + (GameBase.WindowUIScale * MapDifficultySelectButton.BUTTON_OFFSET_PADDING * i);
             }
         }
 
@@ -310,7 +310,7 @@ namespace Quaver.States.Select
         private float GetFocusOffsetOfCurrentMap()
         {
             // todo:temp
-            float total = ((SelectedSongIndex - CurrentPoolIndex) * GameBase.WindowUIScale * QuaverMapsetSelectButton.BUTTON_OFFSET_PADDING) - DiffSelectButtons[0].PosY; //+ (GameBase.WindowRectangle.Height/2);
+            float total = ((SelectedSongIndex - CurrentPoolIndex) * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING) - DiffSelectButtons[0].PosY; //+ (GameBase.WindowRectangle.Height/2);
             Console.WriteLine(total);
             return 0; //total;
 
@@ -370,14 +370,14 @@ namespace Quaver.States.Select
 
             // Create Diff Select Buttons
             var mapset = GameBase.VisibleMapsets[SelectedSongIndex];
-            var posOffset = ((SelectedSongIndex + 1) * GameBase.WindowUIScale * QuaverMapsetSelectButton.BUTTON_OFFSET_PADDING);
+            var posOffset = ((SelectedSongIndex + 1) * GameBase.WindowUIScale * MapsetSelectButton.BUTTON_OFFSET_PADDING);
             for (var i = 0; i < mapset.Maps.Count; i++)
             {
-                var newButton = new QuaverMapDifficultySelectButton(GameBase.WindowUIScale, i, mapset.Maps[i])
+                var newButton = new MapDifficultySelectButton(GameBase.WindowUIScale, i, mapset.Maps[i])
                 {
                     Image = GameBase.QuaverUserInterface.BlankBox,
                     Alignment = Alignment.TopRight,
-                    Position = new UDim2D(-5, posOffset + (GameBase.WindowUIScale * QuaverMapDifficultySelectButton.BUTTON_OFFSET_PADDING * i)),
+                    Position = new UDim2D(-5, posOffset + (GameBase.WindowUIScale * MapDifficultySelectButton.BUTTON_OFFSET_PADDING * i)),
                     Parent = Boundary
                 };
 

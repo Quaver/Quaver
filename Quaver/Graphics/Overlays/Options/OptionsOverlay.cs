@@ -12,9 +12,7 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Buttons.Dropdowns;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UniversalDim;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Logging;
@@ -24,7 +22,7 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Graphics.Overlays.Options
 {
-    internal class OptionsOverlay : QuaverSprite
+    internal class OptionsOverlay : Sprite
     {
         /// <summary>
         ///     If the options overlay is currently active.
@@ -198,15 +196,14 @@ namespace Quaver.Graphics.Overlays.Options
         {
             var section = Sections[OptionsType.Gameplay];
             
-            section.AddDropdownOption(CreateDefaultSkinDropdown(), "Default Skin");   
-            section.AddDropdownOption(CreateSkinDropdown(), "Custom Skin");
             section.AddSliderOption(ConfigManager.ScrollSpeed4K, "Scroll Speed - 4 Keys");
             section.AddSliderOption(ConfigManager.ScrollSpeed7K, "Scroll Speed - 7 Keys");
-            section.AddSliderOption(ConfigManager.UserHitPositionOffset4K, "Hit Position - 4 Keys");
-            section.AddSliderOption(ConfigManager.UserHitPositionOffset7K, "Hit Position - 7 Keys");
-            section.AddCheckboxOption(ConfigManager.HealthBarPositionTop, "Health Bar On Top");
+            section.AddCheckboxOption(ConfigManager.DisplaySongTimeProgress, "Display Song Time Progress");
             section.AddCheckboxOption(ConfigManager.DownScroll4K, "Down Scroll - 4 Keys");
             section.AddCheckboxOption(ConfigManager.DownScroll7K, "Down Scroll - 7 Keys");
+            section.AddCheckboxOption(ConfigManager.AnimateJudgementCounter, "Animate Judgement Counter");
+            section.AddDropdownOption(CreateDefaultSkinDropdown(), "Default Skin");   
+            section.AddDropdownOption(CreateSkinDropdown(), "Custom Skin");
         }
 
         /// <summary>
@@ -239,6 +236,13 @@ namespace Quaver.Graphics.Overlays.Options
             section.AddKeybindOption(ConfigManager.KeySkipIntro, "Skip Song Intro");
             section.AddKeybindOption(ConfigManager.KeyTakeScreenshot, "Take Screenshot");
             section.AddKeybindOption(ConfigManager.KeyToggleOverlay, "Toggle Overlay");
+            section.AddKeybindOption(ConfigManager.KeyRestartMap, "Quick Restart Map");
+            section.AddKeybindOption(new List<BindedValue<Keys>>
+            {
+                ConfigManager.KeyDecreaseScrollSpeed, 
+                ConfigManager.KeyIncreaseScrollSpeed
+            }, "Change Scroll Speed");
+            section.AddKeybindOption(ConfigManager.KeyScoreboardVisible, "Show Scoreboard");
         }
 
         /// <summary>
@@ -251,7 +255,7 @@ namespace Quaver.Graphics.Overlays.Options
             #region Peppy
 
             // Create the peppy button.
-            var peppyButton = new QuaverTextButton(Vector2.One, "Select peppy!.db File");
+            var peppyButton = new TextButton(Vector2.One, "Select peppy!.db File");
 
             // Add click handler for peppy button.
             peppyButton.Clicked += (o, e) =>
@@ -302,7 +306,7 @@ namespace Quaver.Graphics.Overlays.Options
             #region Etterna
 
             // Create the peppy button.
-            var etternaButton = new QuaverTextButton(Vector2.One, "Etterna Cache Folder");
+            var etternaButton = new TextButton(Vector2.One, "Etterna Cache Folder");
 
             // Add click handler for peppy button.
             etternaButton.Clicked += (o, e) =>
@@ -337,7 +341,7 @@ namespace Quaver.Graphics.Overlays.Options
         /// <summary>
         ///     Creates the dropdown to select the current resolution.
         /// </summary>
-        private QuaverDropdown CreateResolutionDropdown()
+        private Dropdown CreateResolutionDropdown()
         {
             // Create a list of the most common resolutions
             var commonResolutions = new List<Point>
@@ -377,7 +381,7 @@ namespace Quaver.Graphics.Overlays.Options
             options = options.OrderByDescending(x => x == $"{selected.X}x{selected.Y}").ThenBy(x => Convert.ToInt32(x.Split('x')[0])).ToList();
             
             // Create and return the new dropdown.
-            return new QuaverDropdown(options, (o, e) =>
+            return new Dropdown(options, (o, e) =>
             {
                 // Split the given resolution.
                 var resSplit = e.ButtonText.Split('x');
@@ -395,7 +399,7 @@ namespace Quaver.Graphics.Overlays.Options
         ///     Creates the dropdown to select the default skin.
         /// </summary>
         /// <returns></returns>
-        private QuaverDropdown CreateDefaultSkinDropdown()
+        private Dropdown CreateDefaultSkinDropdown()
         {
             // Create constant variables for both default skin options.
             const string arrowText = "Default Arrow Skin";
@@ -415,7 +419,7 @@ namespace Quaver.Graphics.Overlays.Options
             }
             
             // Create the new dropdown button.
-            return new QuaverDropdown(options, (o, e) =>
+            return new Dropdown(options, (o, e) =>
             {
                 switch (e.ButtonText)
                 {
@@ -435,27 +439,26 @@ namespace Quaver.Graphics.Overlays.Options
         ///     Creates the dropdown to select a skin.
         /// </summary>
         /// <returns></returns>
-        private QuaverDropdown CreateSkinDropdown()
+        private Dropdown CreateSkinDropdown()
         {
             // The text for the default option if the user doesn't have any skins.
-            const string defaultText = "Default - Import more skins!";
+            const string defaultText = "Default";
 
-            var skins = Directory.GetDirectories(ConfigManager.SkinDirectory.Value).ToList();
-            for (var i = 0; i < skins.Count; i++)
-                skins[i] = new DirectoryInfo(skins[i]).Name;
-            
-            if (skins.Count == 0)
-                skins.Add(defaultText);
-            
-            // Create the dropdown
-            return new QuaverDropdown(skins, (o, e) =>
+            var skins = new List<string>()
             {
-                if (e.ButtonText == defaultText) 
-                    return;
-                
-                ConfigManager.Skin.Value = e.ButtonText;
+                "Default"
+            };
+            
+            Directory.GetDirectories(ConfigManager.SkinDirectory.Value).ToList().ForEach(x => skins.Add(new DirectoryInfo(x).Name));
+      
+            // Create the dropdown
+            var dropdown = new Dropdown(skins, (o, e) =>
+            {
+                ConfigManager.Skin.Value = e.ButtonText == defaultText ? "" : e.ButtonText;
                 Skin.LoadSkin();
             });
+
+            return dropdown;
         }
     }
 }

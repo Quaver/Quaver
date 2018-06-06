@@ -40,7 +40,7 @@ namespace Quaver.Database.Scores
         /// <summary>
         ///     The grade achieved for this score
         /// </summary>
-        public Grades Grade { get; set; }
+        public Grade Grade { get; set; }
 
         /// <summary>
         ///     The accuracy the player achieved

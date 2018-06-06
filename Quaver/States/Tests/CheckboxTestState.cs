@@ -2,8 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.GameState;
+using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Enums;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
@@ -17,14 +18,14 @@ namespace Quaver.States.Tests
         /// <summary>
         ///     Test Screen
         /// </summary>
-        public State CurrentState { get; set; } = State.TestScreen;
+        public State CurrentState { get; set; } = State.Test;
         
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public bool UpdateReady { get; set; }
 
-        private QuaverContainer Container { get; set; }
+        private Container Container { get; set; }
 
         /// <summary>
         ///     Navbar sprite
@@ -33,17 +34,17 @@ namespace Quaver.States.Tests
 
         public void Initialize()
         {
-            Container = new QuaverContainer();
+            Container = new Container();
             Nav = new Nav();
             Nav.Initialize(this);
             
-            var ds4k = new QuaverCheckbox(ConfigManager.DownScroll4K, new Vector2(20, 20))
+            var ds4k = new Checkbox(ConfigManager.DownScroll4K, new Vector2(20, 20))
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter
             };
 
-            var ds4ktext = new QuaverTextbox()
+            var ds4ktext = new SpriteText()
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
@@ -52,14 +53,14 @@ namespace Quaver.States.Tests
                 Font = QuaverFonts.Medium12
             };
             
-            var ds7k = new QuaverCheckbox(ConfigManager.DownScroll7K, new Vector2(20, 20))
+            var ds7k = new Checkbox(ConfigManager.DownScroll7K, new Vector2(20, 20))
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
                 PosY = ds4k.PosY + 50
             };
 
-            var ds7ktext = new QuaverTextbox()
+            var ds7ktext = new SpriteText()
             {
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
