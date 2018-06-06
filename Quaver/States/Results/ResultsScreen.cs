@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Microsoft.Xna.Framework;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
@@ -52,7 +53,7 @@ namespace Quaver.States.Results
         /// <summary>
         ///     Back to menu button.
         /// </summary>
-        private BasicButton Back { get; set; }
+        private TextButton Back { get; set; }
 
         /// <summary>
         ///     If we're currently exiting the screen.
@@ -215,12 +216,10 @@ namespace Quaver.States.Results
         /// </summary>
         private void CreateBackButton()
         {
-            Back = new BasicButton
+            Back = new TextButton(new Vector2(200, 40), "Back To Menu")
             {
                 Parent = Container,
-                Size = new UDim2D(240, 40),
                 Alignment = Alignment.BotLeft,
-                Image = GameBase.LoadedSkin.PauseBack
             };
 
             Back.Clicked += (o, e) =>

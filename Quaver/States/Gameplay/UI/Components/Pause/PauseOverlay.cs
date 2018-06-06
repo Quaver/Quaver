@@ -146,7 +146,7 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
         {
             GameBase.Navbar.PerformShowAnimation(dt);
             
-            //Background.FadeIn(dt, Screen.UI.PauseFadeTimeScale);
+            Background.FadeIn(dt, Screen.UI.PauseFadeTimeScale);
             Continue.FadeIn(dt, Screen.UI.PauseFadeTimeScale);
             Retry.FadeIn(dt, Screen.UI.PauseFadeTimeScale);
             Quit.FadeIn(dt, Screen.UI.PauseFadeTimeScale);

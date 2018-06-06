@@ -124,8 +124,6 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
             if (!IsAnimatingWithOneFrame)
                 return;
             
-            Console.WriteLine("hi");
-
             // Tween the position if need be
             if (Math.Abs(PosY - OriginalPosY) > 0.01)
                 PosY = GraphicsHelper.Tween(OriginalPosY, PosY, Math.Min(dt / (30 / GameBase.AudioEngine.PlaybackRate), 1));
