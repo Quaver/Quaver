@@ -26,7 +26,7 @@ namespace Quaver.States.Select
         /// <summary>
         ///     The current state
         /// </summary>
-        public State CurrentState { get; set; } = State.MainMenu;
+        public State CurrentState { get; set; } = State.Menu;
 
         /// <summary>
         ///     Update Ready?

@@ -18,7 +18,7 @@ namespace Quaver.States.Tests
         /// <summary>
         ///     Test Screen
         /// </summary>
-        public State CurrentState { get; set; } = State.TestScreen;
+        public State CurrentState { get; set; } = State.Test;
         
         /// <inheritdoc />
         /// <summary>

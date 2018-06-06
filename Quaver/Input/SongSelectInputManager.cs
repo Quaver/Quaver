@@ -22,7 +22,7 @@ namespace Quaver.Input
         /// <summary>
         ///     The current State
         /// </summary>
-        public State CurrentState { get; set; } = State.SongSelect;
+        public State CurrentState { get; set; } = State.Select;
 
         public event EventHandler LeftMouseClicked;
         public event EventHandler RightMouseClicked;

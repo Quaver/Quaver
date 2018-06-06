@@ -5,11 +5,11 @@
     /// </summary>
     public enum State
     {
-        MainMenu,
-        SongSelect,
+        Menu,
+        Select,
         Gameplay,
-        ScoreScreen,
-        LoadingScreen,
-        TestScreen
+        Results,
+        Loading,
+        Test
     }
 }

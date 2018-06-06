@@ -20,7 +20,7 @@ namespace Quaver.States.Loading.Map
         /// <summary>
         ///     Current State
         /// </summary>
-        public State CurrentState { get; set; } = State.LoadingScreen;
+        public State CurrentState { get; set; } = State.Loading;
 
         /// <summary>
         ///     Update Ready

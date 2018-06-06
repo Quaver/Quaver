@@ -32,7 +32,7 @@ namespace Quaver.States.Menu
         /// <summary>
         ///     State
         /// </summary>
-        public State CurrentState { get; set; } = State.MainMenu;
+        public State CurrentState { get; set; } = State.Menu;
 
         /// <inheritdoc />
         /// <summary>

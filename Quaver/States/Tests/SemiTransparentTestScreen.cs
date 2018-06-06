@@ -15,7 +15,7 @@ namespace Quaver.States.Tests
 {
     internal class SemiTransparentTestScreen : IGameState
     {
-        public State CurrentState { get; set; } = State.TestScreen;
+        public State CurrentState { get; set; } = State.Test;
         
         public bool UpdateReady { get; set; }
 

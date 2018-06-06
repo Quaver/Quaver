@@ -139,6 +139,7 @@
     <Compile Include="States\Gameplay\UI\Components\SongInformation.cs" />
     <Compile Include="States\Gameplay\UI\Components\SongTimeProgressBar.cs" />
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />
+    <Compile Include="States\Results\ResultsScreen.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="States\Select\MapInfoWindow.cs" />
     <Compile Include="States\Select\ModSelector.cs" />
