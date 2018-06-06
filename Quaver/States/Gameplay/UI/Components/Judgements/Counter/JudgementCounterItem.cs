@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
@@ -40,6 +41,10 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements.Counter
 
                 // Change the color to its active one.
                 Tint = GameBase.LoadedSkin.GetJudgeColor(Judgement);
+                
+                // Don't animate it if the user doesn't want to.
+                if (!ConfigManager.AnimateJudgementCounter.Value)
+                    return;
                 
                 // Make the size of the display look more pressed.
                 SizeX = JudgementCounter.DisplayItemSize.Y - JudgementCounter.DisplayItemSize.Y / 4;
