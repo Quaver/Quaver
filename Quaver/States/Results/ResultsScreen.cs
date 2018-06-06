@@ -9,6 +9,9 @@ using Quaver.Main;
 using Quaver.States.Enums;
 using Quaver.States.Gameplay;
 using Microsoft.Xna.Framework;
+using Quaver.API.Helpers;
+using Quaver.Discord;
+using Quaver.Helpers;
 using Quaver.States.Select;
 
 namespace Quaver.States.Results
@@ -83,6 +86,7 @@ namespace Quaver.States.Results
             };
 #endregion
             UpdateReady = true;
+            ChangeDiscordPresence();
         }
 
         /// <inheritdoc />
@@ -153,6 +157,22 @@ namespace Quaver.States.Results
             }
         }
 
+        /// <summary>
+        ///     Changes discord rich presence to show results.
+        /// </summary>
+        private void ChangeDiscordPresence()
+        {
+            var song = $"{GameplayScreen.Map.Artist} - {GameplayScreen.Map.Title} [{GameplayScreen.Map.DifficultyName}]";
+
+            var state = GameplayScreen.Failed ? "Fail" : "Pass";
+            var score = $"{GameplayScreen.Ruleset.ScoreProcessor.Score / 1000}k";
+            var acc = $"{StringHelper.AccuracyToString(GameplayScreen.Ruleset.ScoreProcessor.Accuracy)}";
+            var grade = GameplayScreen.Failed ? "F" : GradeHelper.GetGradeFromAccuracy(GameplayScreen.Ruleset.ScoreProcessor.Accuracy).ToString();
+            var combo = $"{GameplayScreen.Ruleset.ScoreProcessor.MaxCombo}x";
+            
+            DiscordController.ChangeDiscordPresence(song, $"{state}: {score} {acc} {grade} {combo}");
+        }
+        
         /// <summary>
         ///     When the back button is clicked. It should start the screen exiting process.
         /// </summary>
