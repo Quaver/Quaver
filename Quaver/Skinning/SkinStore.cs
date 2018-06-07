@@ -4,10 +4,12 @@ using System.IO;
 using System.Text.RegularExpressions;
 using IniParser;
 using IniParser.Model;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Helpers;
+using Quaver.Logging;
 
 namespace Quaver.Skinning
 {
@@ -146,6 +148,22 @@ namespace Quaver.Skinning
         internal List<Texture2D> HealthBarForeground { get; private set; }
 
         /// <summary>
+        ///     Sound effect elements.
+        /// </summary>
+        internal SoundEffect SoundHit { get; private set; }
+        internal SoundEffect SoundHitClap { get; private set; }
+        internal SoundEffect SoundHitWhistle { get; private set; }
+        internal SoundEffect SoundHitFinish { get; private set; }
+        internal SoundEffect SoundComboBreak { get; private set; }
+        internal SoundEffect SoundApplause { get; private set; }
+        internal SoundEffect SoundScreenshot { get; private set; }
+        internal SoundEffect SoundClick { get; private set; }
+        internal SoundEffect SoundBack { get; private set; }
+        internal SoundEffect SoundHover { get; private set; }
+        internal SoundEffect SoundFailure { get; private set; }
+        internal SoundEffect SoundRetry { get; private set; }
+        
+        /// <summary>
         ///     Ctor - Loads up a skin from a given directory.
         /// </summary>
         internal SkinStore()
@@ -194,6 +212,7 @@ namespace Quaver.Skinning
             LoadPause();
             LoadScoreboard();
             LoadHealthBar();
+            LoadSoundEffects();
         }
         
         /// <summary>
@@ -252,6 +271,31 @@ namespace Quaver.Skinning
             return GraphicsHelper.LoadSpritesheetFromTexture(ResourceHelper.LoadTexture($"{resource}_{rows}x{columns}"), rows, columns);
         }
 
+        /// <summary>
+        ///     Loads .wav sound effect files.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        private SoundEffect LoadSoundEffect(string path, string element)
+        {
+            path += ".wav";
+            
+            // Load the actual file stream if it exists.
+            try
+            {
+                if (File.Exists(path))
+                    return SoundEffect.FromStream(new FileStream(path, FileMode.Open));
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, LogType.Runtime);
+            }
+
+            // Load the default if the path doesn't exist
+            return SoundEffect.FromStream((UnmanagedMemoryStream)ResourceHelper.GetProperty(element));
+        }
+        
         /// <summary>
         ///     Loads all grade texture elements
         /// </summary>
@@ -391,6 +435,50 @@ namespace Quaver.Skinning
 
             const string healthForeground = "health-foreground";
             HealthBarForeground = LoadSpritesheet(healthFolder, healthForeground, healthForeground, 0, 0);
+        }
+
+        /// <summary>
+        ///     Loads all sound effect elements.
+        /// </summary>
+        private void LoadSoundEffects()
+        {
+            var sfxFolder = $"{Dir}/SFX/";
+
+            const string soundHit = "sound-hit";
+            SoundHit = LoadSoundEffect($"{sfxFolder}/{soundHit}", soundHit);
+
+            const string soundHitClap = "sound-hitclap";
+            SoundHitClap = LoadSoundEffect($"{sfxFolder}/{soundHitClap}", soundHitClap);
+
+            const string soundHitWhistle = "sound-hitwhistle";
+            SoundHitWhistle = LoadSoundEffect($"{sfxFolder}/{soundHitWhistle}", soundHitWhistle);
+
+            const string soundHitFinish = "sound-hitfinish";
+            SoundHitFinish = LoadSoundEffect($"{sfxFolder}/{soundHitFinish}", soundHitFinish);
+            
+            const string soundComboBreak = "sound-combobreak";
+            SoundComboBreak = LoadSoundEffect($"{sfxFolder}/{soundComboBreak}", soundComboBreak);
+
+            const string soundFailure = "sound-failure";
+            SoundFailure = LoadSoundEffect($"{sfxFolder}/{soundFailure}", soundFailure);
+
+            const string soundRetry = "sound-retry";
+            SoundRetry = LoadSoundEffect($"{sfxFolder}/{soundRetry}", soundRetry);
+
+            const string soundApplause = "sound-applause";
+            SoundApplause = LoadSoundEffect($"{sfxFolder}/{soundApplause}", soundApplause);
+
+            const string soundScreenshot = "sound-screenshot";
+            SoundScreenshot = LoadSoundEffect($"{sfxFolder}/{soundScreenshot}", soundScreenshot);
+
+            const string soundClick = "sound-click";
+            SoundClick = LoadSoundEffect($"{sfxFolder}/{soundClick}", soundClick);
+
+            const string soundBack = "sound-back";
+            SoundBack = LoadSoundEffect($"{sfxFolder}/{soundBack}", soundBack);
+
+            const string soundHover = "sound-hover";
+            SoundHover = LoadSoundEffect($"{sfxFolder}/{soundHover}", soundHover);
         }
     }
 }
