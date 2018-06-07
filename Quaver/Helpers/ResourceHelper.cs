@@ -9,6 +9,7 @@ using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Resources;
 
@@ -60,5 +61,23 @@ namespace Quaver.Helpers
         /// <param name="mgfxo"></param>
         /// <returns></returns>
         internal static Effect LoadShader(byte[] mgfxo) => new Effect(GameBase.GraphicsDevice, mgfxo);
+        
+        /// <summary>
+        ///     Loads a skin's texture from resources.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        internal static Texture2D LoadTexture(string element)
+        {
+            try
+            {
+                return LoadTexture2DFromPng((Bitmap)GetProperty(element));
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Element: {element} was not found in QuaverResources", LogType.Runtime);
+                return LoadTexture2DFromPng(QuaverResources.blank_box);
+            }   
+        }
     }
 }

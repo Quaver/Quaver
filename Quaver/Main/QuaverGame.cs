@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
@@ -105,6 +106,10 @@ namespace Quaver.Main
 
             // Load the Game Skin Before Starting
             Skin.LoadSkin();
+            
+            var skin = new SkinStore();
+            Console.WriteLine(skin.KeysSkins[GameMode.Keys4].ColumnSize);
+            Console.WriteLine(skin.KeysSkins[GameMode.Keys7].ColumnSize);
 
             // Initialze the logger
             Logger.Initialize();

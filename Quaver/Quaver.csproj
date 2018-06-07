@@ -106,6 +106,9 @@
     <Compile Include="Main\CommonTaskScheduler.cs" />
     <Compile Include="Main\FontAwesome.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModNoPause.cs" />
+    <Compile Include="Skinning\SkinElementType.cs" />
+    <Compile Include="Skinning\SkinKeys.cs" />
+    <Compile Include="Skinning\SkinStore.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\GameModeRulesetKeys.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputManager.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputBinding.cs" />
