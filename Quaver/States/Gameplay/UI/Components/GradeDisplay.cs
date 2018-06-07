@@ -37,7 +37,7 @@ namespace Quaver.States.Gameplay.UI.Components
         {
             Visible = Scoring.Score > 0;
             
-            var grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy, Scoring.Accuracy >= 100f && Scoring.CurrentJudgements[Judgement.Perfect] == 0);
+            var grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy, Scoring.Accuracy >= 100f && Scoring.CurrentJudgements[Judgement.Perf] == 0);
             Image = Scoring.Failed ? GameBase.LoadedSkin.GradeSmallF : GameBase.LoadedSkin.ConvertGradeToSkinElement(grade);  
         }
     }

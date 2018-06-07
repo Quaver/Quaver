@@ -318,8 +318,8 @@ namespace Quaver.Skinning
             
             JudgeColors = new SortedDictionary<Judgement, Color>
             {
-                {Judgement.Marvelous, new Color(255, 255, 200)},
-                {Judgement.Perfect, new Color(255, 255, 0)},
+                {Judgement.Marv, new Color(255, 255, 200)},
+                {Judgement.Perf, new Color(255, 255, 0)},
                 {Judgement.Great, new Color(0, 255, 0)},
                 {Judgement.Good, new Color(0, 168, 255)},
                 {Judgement.Okay, new Color(255, 0, 255)},
@@ -522,8 +522,8 @@ namespace Quaver.Skinning
             ColorObjectsBySnapDistance = ConfigHelper.ReadBool(ColorObjectsBySnapDistance, ini["ColorObjectsBySnapDistance"]);
             JudgementHitBurstScale = ConfigHelper.ReadByte(JudgementHitBurstScale, ini["JudgementHitBurstScale"]);
             ReceptorsOverHitObjects = ConfigHelper.ReadBool(ReceptorsOverHitObjects, ini["ReceptorsOverHitObjects"]);
-            JudgeColors[Judgement.Marvelous] = ConfigHelper.ReadColor(JudgeColors[Judgement.Marvelous], ini["JudgeColorMarv"]);
-            JudgeColors[Judgement.Perfect] = ConfigHelper.ReadColor(JudgeColors[Judgement.Perfect], ini["JudgeColorPerf"]);
+            JudgeColors[Judgement.Marv] = ConfigHelper.ReadColor(JudgeColors[Judgement.Marv], ini["JudgeColorMarv"]);
+            JudgeColors[Judgement.Perf] = ConfigHelper.ReadColor(JudgeColors[Judgement.Perf], ini["JudgeColorPerf"]);
             JudgeColors[Judgement.Great] = ConfigHelper.ReadColor(JudgeColors[Judgement.Great], ini["JudgeColorGreat"]);
             JudgeColors[Judgement.Good] = ConfigHelper.ReadColor(JudgeColors[Judgement.Good], ini["JudgeColorGood"]);
             JudgeColors[Judgement.Okay] = ConfigHelper.ReadColor(JudgeColors[Judgement.Okay], ini["JudgeColorOkay"]);
@@ -609,19 +609,19 @@ namespace Quaver.Skinning
         ///         would have a file name of note-hitobject4. This is so that we don't require filename changes
         ///         even though the user may not use snapping.    
         /// 
-        ///         - note-hitobject1 (Lane 1 Default which is also 1/1 snap.)
-        ///         - note-hitobject1-2nd (Lane 1, 1/2 Snap)
-        ///         - note-hitobject1-3rd (Lane 1, 1/3 Snap)
-        ///         - note-hitobject1-4th (Lane 1, 1/4 Snap)
+        ///         - note-hitobject-1 (Lane 1 Default which is also 1/1 snap.)
+        ///         - note-hitobject-1-2nd (Lane 1, 1/2 Snap)
+        ///         - note-hitobject-1-3rd (Lane 1, 1/3 Snap)
+        ///         - note-hitobject-1-4th (Lane 1, 1/4 Snap)
         ///         //
-        ///         - note-hitobject2 (Lane 2 Default which is also 1/1 snap.)
-        ///         - note-hitobject2-2nd (Lane 2, 1/2 Snap)
+        ///         - note-hitobject-2 (Lane 2 Default which is also 1/1 snap.)
+        ///         - note-hitobject-2-2nd (Lane 2, 1/2 Snap)
         /// </summary>
         /// <param name="hitObjects"></param>
         /// <param name="element"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private void LoadHitObjects(List<List<Texture2D>> hitObjects, string element, int index)
+        private void LoadHitObjects(IList<List<Texture2D>> hitObjects, string element, int index)
         {
             // First load the beginning HitObject element that doesn't require snapping.
             var objectsList = new List<Texture2D> {LoadTexture(SkinKeysFolder.HitObjects, element, false)};

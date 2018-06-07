@@ -184,132 +184,132 @@ namespace Quaver.Skinning
         ///     We first attempt to load the selected skin's elements, however if we can't,
         ///     it'll result it to the default.
         /// </summary>
-        internal Texture2D StageBgMask4K { get; set; }
-        internal Texture2D StageBgMask7K { get; set; }
+        internal Texture2D StageBgMask4K { get; set; } //
+        internal Texture2D StageBgMask7K { get; set; } //
 
         /// <summary>
         ///     Lane Lighting Sprites
         /// </summary>
-        internal Texture2D ColumnLighting4K { get; set; }
-        internal Texture2D ColumnLighting7K { get; set; }
+        internal Texture2D ColumnLighting4K { get; set; }  //
+        internal Texture2D ColumnLighting7K { get; set; } //
 
         /// <summary>
         ///     ManiaTiming bar QuaverSprite
         /// </summary>
-        internal Texture2D StageTimingBar { get; set; }
-
+        internal Texture2D StageTimingBar { get; set; } //
+ 
         /// <summary>
         ///     Stage QuaverSprite. Is displayed on the left side of the stage.
         /// </summary>
-        internal Texture2D StageLeftBorder { get; set; }
-        internal Texture2D StageRightBorder { get; set; }
-        internal Texture2D StageHitPositionOverlay { get; set; }
-        internal Texture2D StageDistantOverlay { get; set; }
+        internal Texture2D StageLeftBorder { get; set; } //
+        internal Texture2D StageRightBorder { get; set; } //
+        internal Texture2D StageHitPositionOverlay { get; set; } //
+        internal Texture2D StageDistantOverlay { get; set; } //
 
         // 4k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
-        internal List<List<Texture2D>> NoteHitObjects4K { get; set; } = new List<List<Texture2D>>();
-        internal List<List<Texture2D>> NoteHoldHitObjects4K { get; set; } = new List<List<Texture2D>>();
-        internal List<List<Texture2D>> NoteHoldBodies4K { get; set; } = new List<List<Texture2D>>();
-        internal Texture2D[] NoteHoldEnds4K { get; set; } = new Texture2D[4];
-        internal Texture2D[] NoteReceptorsUp4K { get; set; } = new Texture2D[4];
-        internal Texture2D[] NoteReceptorsDown4K { get; set; } = new Texture2D[4];
+        internal List<List<Texture2D>> NoteHitObjects4K { get; set; } = new List<List<Texture2D>>(); //
+        internal List<List<Texture2D>> NoteHoldHitObjects4K { get; set; } = new List<List<Texture2D>>(); //
+        internal List<List<Texture2D>> NoteHoldBodies4K { get; set; } = new List<List<Texture2D>>(); //
+        internal Texture2D[] NoteHoldEnds4K { get; set; } = new Texture2D[4]; //
+        internal Texture2D[] NoteReceptorsUp4K { get; set; } = new Texture2D[4]; //
+        internal Texture2D[] NoteReceptorsDown4K { get; set; } = new Texture2D[4]; //
 
         // 7k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
-        internal List<List<Texture2D>> NoteHitObjects7K { get; set; } = new List<List<Texture2D>>();
-        internal List<List<Texture2D>> NoteHoldHitObjects7K { get; set; } = new List<List<Texture2D>>();
-        internal List<List<Texture2D>> NoteHoldBodies7K { get; set; } = new List<List<Texture2D>>();
-        internal Texture2D[] NoteHoldEnds7K { get; set; } = new Texture2D[7];
-        internal Texture2D[] NoteReceptorsUp7K { get; set; } = new Texture2D[7];
-        internal Texture2D[] NoteReceptorsDown7K { get; set; } = new Texture2D[7];
-        internal Texture2D[] NoteHitEffects7K { get; set; } = new Texture2D[7];
+        internal List<List<Texture2D>> NoteHitObjects7K { get; set; } = new List<List<Texture2D>>(); //
+        internal List<List<Texture2D>> NoteHoldHitObjects7K { get; set; } = new List<List<Texture2D>>(); //
+        internal List<List<Texture2D>> NoteHoldBodies7K { get; set; } = new List<List<Texture2D>>(); //
+        internal Texture2D[] NoteHoldEnds7K { get; set; } = new Texture2D[7]; //
+        internal Texture2D[] NoteReceptorsUp7K { get; set; } = new Texture2D[7]; //
+        internal Texture2D[] NoteReceptorsDown7K { get; set; } = new Texture2D[7]; //
+        internal Texture2D[] NoteHitEffects7K { get; set; } = new Texture2D[7]; //
 
         /// <summary>
         ///     Grades
         /// </summary>
-        internal Texture2D GradeSmallA { get; set; }
-        internal Texture2D GradeSmallB { get; set; }
-        internal Texture2D GradeSmallC { get; set; }
-        internal Texture2D GradeSmallD { get; set; }
-        internal Texture2D GradeSmallF { get; set; }
-        internal Texture2D GradeSmallS { get; set; }
-        internal Texture2D GradeSmallSS { get; set; }
-        internal Texture2D GradeSmallX { get; set; }
-        internal Texture2D GradeSmallXX { get; set; }
+        internal Texture2D GradeSmallA { get; set; } //
+        internal Texture2D GradeSmallB { get; set; } //
+        internal Texture2D GradeSmallC { get; set; } //
+        internal Texture2D GradeSmallD { get; set; } //
+        internal Texture2D GradeSmallF { get; set; } //
+        internal Texture2D GradeSmallS { get; set; } // 
+        internal Texture2D GradeSmallSS { get; set; } //
+        internal Texture2D GradeSmallX { get; set; } // 
+        internal Texture2D GradeSmallXX { get; set; } //
 
         /// <summary>
         ///     Judge
         /// </summary>
-        internal List<Texture2D> JudgeMiss { get; set; }
-        internal List<Texture2D> JudgeOkay { get; set; }
-        internal List<Texture2D> JudgeGood { get; set; }
-        internal List<Texture2D> JudgeGreat { get; set; }
-        internal List<Texture2D> JudgePerf { get; set; }
-        internal List<Texture2D> JudgeMarv { get; set; }
+        internal List<Texture2D> JudgeMiss { get; set; } //
+        internal List<Texture2D> JudgeOkay { get; set; } //
+        internal List<Texture2D> JudgeGood { get; set; } //
+        internal List<Texture2D> JudgeGreat { get; set; } //
+        internal List<Texture2D> JudgePerf { get; set; } //
+        internal List<Texture2D> JudgeMarv { get; set; } //
 
         /// <summary>
         ///     Score display
         /// </summary>
-        internal Texture2D[] ScoreDisplayNumbers { get; } = new Texture2D[10];
-        internal Texture2D ScoreDisplayDecimal { get; set; }
-        internal Texture2D ScoreDisplayPercent { get; set; }
+        internal Texture2D[] ScoreDisplayNumbers { get; } = new Texture2D[10]; //
+        internal Texture2D ScoreDisplayDecimal { get; set; } //
+        internal Texture2D ScoreDisplayPercent { get; set; } //
 
         /// <summary>
         ///     Combo display.
         /// </summary>
-        internal Texture2D[] ComboDisplayNumbers { get; } = new Texture2D[10];
+        internal Texture2D[] ComboDisplayNumbers { get; } = new Texture2D[10]; //
 
         /// <summary>
         ///     Siong Time Display.
         /// </summary>
-        internal Texture2D[] SongTimeDisplayNumbers { get; } = new Texture2D[10];
-        internal Texture2D SongTimeDisplayColon { get; set;  }
-        internal Texture2D SongTimeDisplayMinus { get; set; }
+        internal Texture2D[] SongTimeDisplayNumbers { get; } = new Texture2D[10]; //
+        internal Texture2D SongTimeDisplayColon { get; set;  } //
+        internal Texture2D SongTimeDisplayMinus { get; set; } //
 
         /// <summary>
         ///     Animation sprites that display when hitting an object
         /// </summary>
-        internal List<Texture2D> HitLighting { get; set; }
+        internal List<Texture2D> HitLighting { get; set; } //
 
         /// <summary>
         ///     Animation sprites that display when holding an LN
         /// </summary>
-        internal List<Texture2D> HoldLighting { get; set; }
+        internal List<Texture2D> HoldLighting { get; set; } //
 
         /// <summary>
         ///     QuaverCursor
         /// </summary>
-        internal Texture2D Cursor { get; set; }
+        internal Texture2D Cursor { get; set; } //
 
         /// <summary>
         ///     Pause overlay textures.
         /// </summary>
-        internal Texture2D PauseBackground { get; set; }
-        internal Texture2D PauseContinue { get; set; }
-        internal Texture2D PauseRetry { get; set; }
-        internal Texture2D PauseBack { get; set; }
+        internal Texture2D PauseBackground { get; set; } //
+        internal Texture2D PauseContinue { get; set; } //
+        internal Texture2D PauseRetry { get; set; } //
+        internal Texture2D PauseBack { get; set; } // 
 
         /// <summary>
         ///     Judgement Overlay
         /// </summary>
-        internal Texture2D JudgementOverlay { get; set; }
+        internal Texture2D JudgementOverlay { get; set; } //
 
         /// <summary>
         ///     Scoreboard background.
         /// </summary>
-        internal Texture2D Scoreboard { get; set; }
+        internal Texture2D Scoreboard { get; set; } //
 
         /// <summary>
         ///    Scoreboard background for other players.       
         /// </summary>
-        internal Texture2D ScoreboardOther { get; set; }
+        internal Texture2D ScoreboardOther { get; set; } //
 
         /// <summary>
         ///     Health Bar
         /// </summary>
-        internal List<Texture2D> HealthBarBackground { get; set; }
-        internal List<Texture2D> HealthBarForeground { get; set; }
+        internal List<Texture2D> HealthBarBackground { get; set; } //
+        internal List<Texture2D> HealthBarForeground { get; set; } //
 
         /// <summary>
         ///     Sound Effect elements. 

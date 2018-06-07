@@ -49,7 +49,102 @@ namespace Quaver.Skinning
         /// <param name="element"></param>
         /// <returns></returns>
         internal static string SpritesheetRegex(string element) => $@"^{element}@(\d+)x(\d+).png$";
+
+        /// <summary>
+        ///     The user's mouse cursor.
+        /// </summary>
+        internal Texture2D Cursor { get; private set; }
+
+        /// <summary>
+        ///     Grade Textures.
+        /// </summary>
+        internal Dictionary<Grade, Texture2D> Grades { get; } = new Dictionary<Grade, Texture2D>();
+
+        /// <summary>
+        ///     Judgement animation elements
+        /// </summary>
+        internal Dictionary<Judgement, List<Texture2D>> Judgements { get; } = new Dictionary<Judgement, List<Texture2D>>();
+
+        /// <summary>
+        ///     The numbers that display the user's current score.
+        /// </summary>
+        internal Texture2D[] ScoreDisplayNumbers { get; } = new Texture2D[10];
+
+        /// <summary>
+        ///     The decimal "." character in the score display.
+        /// </summary>
+        internal Texture2D ScoreDisplayDecimal { get; private set; }
+
+        /// <summary>
+        ///     The percent "%" character in the score display.
+        /// </summary>
+        internal Texture2D ScoreDisplayPercent { get; private set; }
+
+        /// <summary>
+        ///     The numbers that display the user's current combo
+        /// </summary>
+        internal Texture2D[] ComboDisplayNumbers = new Texture2D[10];
         
+        /// <summary>
+        ///     The numbers that display the current song time.
+        /// </summary>
+        internal Texture2D[] SongTimeDisplayNumbers = new Texture2D[10];
+
+        /// <summary>
+        ///     The ":" character displayed in the song time display.
+        /// </summary>
+        internal Texture2D SongTimeDisplayColon { get; private set; }
+
+        /// <summary>
+        ///     The minus "-" character displayed in the song time display.
+        /// </summary>
+        internal Texture2D SongTimeDisplayMinus { get; private set; }
+
+        /// <summary>
+        ///     The user's background displayed during the pause menu.
+        /// </summary>
+        internal Texture2D PauseBackground { get; private set; }
+
+        /// <summary>
+        ///     The continue button displayed in the pause menu
+        /// </summary>
+        internal Texture2D PauseContinue { get; private set; }
+        
+        /// <summary>
+        ///     The retry button displayed in the pause menu
+        /// </summary>
+        internal Texture2D PauseRetry { get; private set; }
+        
+        /// <summary>
+        ///     The back button displayed in the pause menu.
+        /// </summary>
+        internal Texture2D PauseBack { get; private set; }
+
+        /// <summary>
+        ///     The overlay that displayed the judgement counts.
+        /// </summary>
+        internal Texture2D JudgementOverlay { get; private set; }
+
+        /// <summary>
+        ///     The scoreboard displayed on the screen for the player.
+        /// </summary>
+        internal Texture2D Scoreboard { get; private set; }
+
+        /// <summary>
+        ///     The scoreboard displayed for other players.
+        /// </summary>
+        internal Texture2D ScoreboardOther { get; private set; }
+
+        /// <summary>
+        ///     The health bar displayed in the background. (Non-Moving one.)
+        /// </summary>
+        internal List<Texture2D> HealthBarBackground { get; private set; }
+
+        /// <summary>
+        ///     The health bar displayed in the foreground (Moving)
+        /// </summary>
+        internal List<Texture2D> HealthBarForeground { get; private set; }
+
         /// <summary>
         ///     Ctor - Loads up a skin from a given directory.
         /// </summary>
@@ -63,6 +158,8 @@ namespace Quaver.Skinning
                 {GameMode.Keys4, new SkinKeys(this, GameMode.Keys4)},
                 {GameMode.Keys7, new SkinKeys(this, GameMode.Keys7)}
             };
+            
+            LoadUniversalElements();
         }
 
         /// <summary>
@@ -83,6 +180,22 @@ namespace Quaver.Skinning
             Version = ConfigHelper.ReadString(Version, Config["General"]["Version"]);
         }
 
+        /// <summary>
+        ///     Loads universal skin elements used across every single game mode.
+        /// </summary>
+        private void LoadUniversalElements()
+        {
+            const string cursor = "main-cursor";
+            Cursor = LoadSingleTexture($"{Dir}/Cursor/{cursor}", cursor);
+            
+            LoadGradeElements();
+            LoadJudgements();
+            LoadNumberDisplays();
+            LoadPause();
+            LoadScoreboard();
+            LoadHealthBar();
+        }
+        
         /// <summary>
         ///     Loads a single texture element.
         /// </summary>
@@ -137,6 +250,147 @@ namespace Quaver.Skinning
                 return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}{extension}", resource)};
 
             return GraphicsHelper.LoadSpritesheetFromTexture(ResourceHelper.LoadTexture($"{resource}_{rows}x{columns}"), rows, columns);
+        }
+
+        /// <summary>
+        ///     Loads all grade texture elements
+        /// </summary>
+        private void LoadGradeElements()
+        {
+            // Load Grades
+            foreach (Grade grade in Enum.GetValues(typeof(Grade)))
+            {
+                if (grade == Grade.None)
+                    continue;
+                
+                var element = $"grade-small-{grade.ToString().ToLower()}";
+                Grades[grade] = LoadSingleTexture($"{Dir}/Grades/{element}", element);
+            }    
+        }
+
+        /// <summary>
+        ///     Loads judgement texture elements.
+        /// </summary>
+        private void LoadJudgements()
+        {
+            const string folder = "Judgements";
+            
+            // Load Judgements
+            foreach (Judgement j in Enum.GetValues(typeof(Judgement)))
+            {
+                var element = $"judge-{j.ToString().ToLower()}";
+         
+                switch (j)
+                {
+                    case Judgement.Marv:
+                        Judgements[j] = LoadSpritesheet(folder, element, element, 1, 15);
+                        break;
+                    case Judgement.Perf:
+                        Judgements[j] = LoadSpritesheet(folder, element, element, 1, 12);
+                        break;
+                    case Judgement.Great:
+                        Judgements[j] = LoadSpritesheet(folder, element, element, 1, 7);
+                        break;
+                    case Judgement.Good:
+                        Judgements[j] = LoadSpritesheet(folder, element, element, 1, 8);
+                        break;
+                    case Judgement.Okay:
+                        Judgements[j] = LoadSpritesheet(folder, element, element, 1, 9);
+                        break;
+                    case Judgement.Miss:
+                        Judgements[j] = LoadSpritesheet(folder, element, element, 1, 16);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            
+            // Load judgement overlay
+            const string judgementOverlay = "judgement-overlay";
+            JudgementOverlay = LoadSingleTexture($"{Dir}/{folder}/{judgementOverlay}", judgementOverlay);
+        }
+        
+        /// <summary>
+        ///     Loads all number display skin elements.
+        /// </summary>
+        private void LoadNumberDisplays()
+        {
+            // Load Number Displays
+            var numberDisplayFolder = $"{Dir}/Numbers/";
+            for (var i = 0; i < 10; i++)
+            {
+                // Score
+                var scoreElement = $"score-{i}";
+                ScoreDisplayNumbers[i] = LoadSingleTexture($"{numberDisplayFolder}/{scoreElement}", $"{scoreElement}");
+                
+                // Combo
+                var comboElement = $"combo-{i}";
+                ComboDisplayNumbers[i] = LoadSingleTexture($"{numberDisplayFolder}/{comboElement}", comboElement);
+
+                // Song Time
+                var songTimeElement = $"song-time-{i}";
+                SongTimeDisplayNumbers[i] = LoadSingleTexture($"{numberDisplayFolder}/{songTimeElement}", songTimeElement);
+            }
+
+            const string scoreDecimal = "score-decimal";
+            ScoreDisplayDecimal = LoadSingleTexture($"{numberDisplayFolder}/{scoreDecimal}", scoreDecimal);
+
+            const string scorePercent = "score-percent";
+            ScoreDisplayPercent = LoadSingleTexture($"{numberDisplayFolder}/{scorePercent}", scorePercent);
+
+            const string songTimeColon = "song-time-colon";
+            SongTimeDisplayColon = LoadSingleTexture($"{numberDisplayFolder}/{songTimeColon}", songTimeColon);
+
+            const string songTimeMinus = "song-time-minus";
+            SongTimeDisplayMinus = LoadSingleTexture($"{numberDisplayFolder}/{songTimeMinus}", songTimeMinus);
+        }
+
+        /// <summary>
+        ///     Loads all pause menu elements.
+        /// </summary>
+        private void LoadPause()
+        {
+            var pauseFolder = $"{Dir}/Pause/";
+            
+            const string pauseBackground = "pause-background";
+            PauseBackground = LoadSingleTexture($"{pauseFolder}/{pauseBackground}", pauseBackground);
+
+            const string pauseContinue = "pause-continue";
+            PauseContinue = LoadSingleTexture($"{pauseFolder}/{pauseContinue}", pauseContinue);
+
+            const string pauseRetry = "pause-retry";
+            PauseRetry = LoadSingleTexture($"{pauseFolder}/{pauseRetry}", pauseRetry);
+
+            const string pauseBack = "pause-back";
+            PauseBack = LoadSingleTexture($"{pauseFolder}/{pauseBack}", pauseBack);
+        }
+
+        /// <summary>
+        ///     Loads all scoreboard elements.
+        /// </summary>
+        private void LoadScoreboard()
+        {
+            var scoreboardFolder = $"{Dir}/Scoreboard/";
+
+            const string scoreboard = "scoreboard";
+            Scoreboard = LoadSingleTexture($"{scoreboardFolder}/{scoreboard}", scoreboard);
+
+            const string scoreboardOther = "scoreboard-other";
+            ScoreboardOther = LoadSingleTexture($"{scoreboardFolder}/{scoreboardOther}", scoreboardOther);
+        }
+
+        /// <summary>
+        ///     Loads all health bar elements.
+        /// </summary>
+        private void LoadHealthBar()
+        {
+            var healthFolder = $"{Dir}/Health/";
+
+            const string healthBackground = "health-background";       
+            HealthBarBackground = LoadSpritesheet(healthFolder, healthBackground, healthBackground, 0, 0);
+
+            const string healthForeground = "health-foreground";
+            HealthBarForeground = LoadSpritesheet(healthFolder, healthForeground, healthForeground, 0, 0);
         }
     }
 }

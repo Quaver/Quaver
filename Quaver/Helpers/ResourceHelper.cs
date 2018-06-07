@@ -76,7 +76,7 @@ namespace Quaver.Helpers
             catch (Exception e)
             {
                 Logger.LogError($"Element: {element} was not found in QuaverResources", LogType.Runtime);
-                return LoadTexture2DFromPng(QuaverResources.blank_box);
+                return GameBase.QuaverUserInterface.BlankBox;
             }   
         }
     }
