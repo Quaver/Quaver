@@ -214,7 +214,6 @@ namespace Quaver.Skinning
         internal Texture2D[] NoteHoldEnds4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsUp4K { get; set; } = new Texture2D[4];
         internal Texture2D[] NoteReceptorsDown4K { get; set; } = new Texture2D[4];
-        internal Texture2D[] NoteHitEffects4K { get; set; } = new Texture2D[4];
 
         // 7k - HitObjects, HoldBodies, HoldEndies, & NoteReceptors
         // defined for each key lane.
@@ -625,39 +624,6 @@ namespace Quaver.Skinning
                         break;
                     case @"7k-column-lighting":
                         ColumnLighting7K = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"4k-note-hiteffect-1":
-                        NoteHitEffects4K[0] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"4k-note-hiteffect-2":
-                        NoteHitEffects4K[1] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"4k-note-hiteffect-3":
-                        NoteHitEffects4K[2] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"4k-note-hiteffect-4":
-                        NoteHitEffects4K[3] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-note-hiteffect-1":
-                        NoteHitEffects7K[0] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-note-hiteffect-2":
-                        NoteHitEffects7K[1] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-note-hiteffect-3":
-                        NoteHitEffects7K[2] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-note-hiteffect-4":
-                        NoteHitEffects7K[3] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-note-hiteffect-5":
-                        NoteHitEffects7K[4] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-note-hiteffect-6":
-                        NoteHitEffects7K[5] = LoadIndividualElement(element, skinElementPath);
-                        break;
-                    case @"7k-note-hiteffect-7":
-                        NoteHitEffects7K[6] = LoadIndividualElement(element, skinElementPath);
                         break;
                     case @"4k-note-hitobject-1":
                         LoadHitObjects(NoteHitObjects4K, skinDir, element, 0);

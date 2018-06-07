@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
+using Quaver.Helpers;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield.Health;
 using Quaver.States.Gameplay.UI.Components.Health;
 
@@ -26,8 +31,13 @@ namespace Quaver.Skinning
         /// </summary>
         private string ShortName { get; }
 
-#region SKIN.INI VALUES
+        /// <summary>
+        ///     Value thats prepended before file names in the resource store.
+        /// </summary>
+        private string ResourceFilePrepender { get; set; }
 
+#region SKIN.INI VALUES
+        
         /// <summary>
         /// 
         /// </summary>
@@ -166,11 +176,98 @@ namespace Quaver.Skinning
         /// <summary>
         /// 
         /// </summary>
-        internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }
+        internal HealthBarKeysAlignment HealthBarKeysAlignment { get; private set; }    
         
-        //
 #endregion
 
+#region TEXTURES   
+        
+        // ----- Column ----- //
+        /// <summary>
+        /// 
+        /// </summary>
+        internal Texture2D ColumnLighting { get; private set; }
+  
+        // ----- Stage ----- //
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        internal Texture2D StageBgMask { get; private set; }
+
+        /// <summary>
+        ///     
+        /// </summary>
+        internal Texture2D StageTimingBar { get; private set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal Texture2D StageLeftBorder { get; private set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal Texture2D StageRightBorder { get; private set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal Texture2D StageHitPositionOverlay { get; private set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        internal Texture2D StageDistantOverlay { get; private set; }
+          
+        // ----- HitObjects ----- //
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal List<List<Texture2D>> NoteHitObjects { get; } = new List<List<Texture2D>>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal List<List<Texture2D>> NoteHoldHitObjects { get; } = new List<List<Texture2D>>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal List<List<Texture2D>> NoteHoldBodies { get;} = new List<List<Texture2D>>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal List<Texture2D> NoteHoldEnds { get; } = new List<Texture2D>();
+
+        // ----- Receptors ----- //
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        internal List<Texture2D> NoteReceptorsUp { get; } = new List<Texture2D>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal List<Texture2D> NoteReceptorsDown { get; } = new List<Texture2D>();
+
+        // ----- Hitlighting ----- //
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        internal List<Texture2D> HitLighting { get; private set; } = new List<Texture2D>();
+
+        /// <summary>
+        ///     
+        /// </summary>
+        internal List<Texture2D> HoldLighting { get; private set; } = new List<Texture2D>();
+               
+#endregion
+        
         /// <summary>
         ///     Ctor - 
         /// </summary>
@@ -199,23 +296,21 @@ namespace Quaver.Skinning
             // skin.ini. 
             SetGenericConfig();
             ReadConfig();
+            LoadTextures();
         }
 
         /// <summary>
         ///     Sets config values based on the selected default skin.
         /// </summary>
         private void SetGenericConfig()
-        {
-            Store.Author = "Quaver Team";
-            Store.Version = "v0.1";
-            
+        {     
             switch (ConfigManager.DefaultSkin.Value)
             {
                 case DefaultSkins.Arrow:
-                    Store.Name = "Default Arrow Skin";
+                    ResourceFilePrepender = "arrow";
                     break;
                 case DefaultSkins.Bar:
-                    Store.Name = "Default Bar Skin";
+                    ResourceFilePrepender = "bar";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -405,13 +500,15 @@ namespace Quaver.Skinning
 
         /// <summary>
         ///     Reads config file for skin.ini elements.
+        /// 
+        ///     REMEMBER TO SET YOUR DEFAULTS FOR BOTH 4K AND 7K
+        ///     AND ALL DEFAULT SKINS (BARS/ARROWS)
         /// </summary>
         private void ReadConfig()
         {
             if (Store.Config == null)
                 return;
-            
-            
+                        
             var ini = Store.Config[ShortName.ToUpper()];
             
             BgMaskPadding = ConfigHelper.ReadInt32(BgMaskPadding, ini["BgMaskPadding"]);
@@ -431,16 +528,6 @@ namespace Quaver.Skinning
             JudgeColors[Judgement.Good] = ConfigHelper.ReadColor(JudgeColors[Judgement.Good], ini["JudgeColorGood"]);
             JudgeColors[Judgement.Okay] = ConfigHelper.ReadColor(JudgeColors[Judgement.Okay], ini["JudgeColorOkay"]);
             JudgeColors[Judgement.Miss] = ConfigHelper.ReadColor(JudgeColors[Judgement.Miss], ini["JudgeColorMiss"]);
-            ColumnColors[0] = ConfigHelper.ReadColor(ColumnColors[0], ini["ColumnColor1"]);
-            ColumnColors[1] = ConfigHelper.ReadColor(ColumnColors[1], ini["ColumnColor2"]);
-            ColumnColors[2] = ConfigHelper.ReadColor(ColumnColors[2], ini["ColumnColor3"]);
-            ColumnColors[3] = ConfigHelper.ReadColor(ColumnColors[3], ini["ColumnColor4"]);
-            if (Mode == GameMode.Keys7)
-            {
-                ColumnColors[4] = ConfigHelper.ReadColor(ColumnColors[4], ini["ColumnColor5"]);
-                ColumnColors[5] = ConfigHelper.ReadColor(ColumnColors[5], ini["ColumnColor6"]);
-                ColumnColors[6] = ConfigHelper.ReadColor(ColumnColors[6], ini["ColumnColor7"]);
-            }
             BgMaskAlpha = ConfigHelper.ReadFloat(BgMaskAlpha, ini["BgMaskAlpha"]);
             FlipNoteImagesOnUpscroll = ConfigHelper.ReadBool(FlipNoteImagesOnUpscroll, ini["FlipNoteImagesOnUpscroll"]);
             ScoreDisplayPosX = ConfigHelper.ReadInt32(ScoreDisplayPosX, ini["ScoreDisplayPosX"]);
@@ -453,6 +540,158 @@ namespace Quaver.Skinning
             JudgementBurstPosY = ConfigHelper.ReadInt32(JudgementBurstPosY, ini["JudgementBurstPosY"]);
             HealthBarType = ConfigHelper.ReadHealthBarType(HealthBarType, ini["HealthBarType"]);
             HealthBarKeysAlignment = ConfigHelper.ReadHealthBarKeysAlignment(HealthBarKeysAlignment, ini["HealthBarKeysAlignment"]);
+        }
+
+        /// <summary>
+        ///     Loads skin element textures.
+        /// </summary>
+        private void LoadTextures()
+        {
+            #region LIGHTING
+            ColumnLighting = LoadTexture(SkinKeysFolder.Lighting, "column-lighting", false);
+            HitLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "hitlighting", true, 1, 8);
+            HoldLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "holdlighting", true, 1, 12);
+            #endregion
+
+            #region STAGE
+            StageBgMask = LoadTexture(SkinKeysFolder.Stage, "stage-bgmask", false);
+            StageTimingBar = LoadTexture(SkinKeysFolder.Stage, "stage-timingbar", true);
+            StageLeftBorder = LoadTexture(SkinKeysFolder.Stage, "stage-left-border", true);
+            StageRightBorder = LoadTexture(SkinKeysFolder.Stage, "stage-right-border", true);
+            StageHitPositionOverlay = LoadTexture(SkinKeysFolder.Stage, "stage-hitposition-overlay", true);
+            StageDistantOverlay = LoadTexture(SkinKeysFolder.Stage, "stage-distant-overlay", true);
+            #endregion
+
+            #region MISC
+            LoadLaneSpecificElements();
+            #endregion
+        }
+
+        /// <summary>
+        ///     Loads an individual skin element.
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="element"></param>
+        /// <param name="shared">If the resource is shared between key modes.</param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        private Texture2D LoadTexture(SkinKeysFolder folder, string element, bool shared, string extension = ".png")
+        {
+            var resource = shared ? GetModeSharedResourcePath(element) : GetResourcePath(element);
+            return SkinStore.LoadSingleTexture(GetElementPath(folder, element, extension), resource);
+        }
+
+        /// <summary>
+        ///     Loads a spritesheet 
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="element"></param>
+        /// <param name="shared">If the resource is shared between key modes.</param>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        private List<Texture2D> LoadSpritesheet(SkinKeysFolder folder, string element, bool shared, int rows, int columns, string extension = ".png")
+        {
+            var resource = shared ? GetModeSharedResourcePath(element) : GetResourcePath(element);
+            return SkinStore.LoadSpritesheet(folder.ToString(), element, resource, rows, columns, extension);
+        }
+        
+        /// <summary>
+        ///     Loads the HitObjects w/ note snapping
+        ///     Each hitobject lane, gets to have more images for each snap distance.
+        /// 
+        ///     Example:
+        ///         In "note-hitobjectx-y", (x is denoted as the lane, and y is the snap)
+        ///         That being said, note-hitobject3-16th, would be the object in lane 3, with 16th snap. 
+        /// 
+        ///         NOTE: For 1/1, objects, there is no concept of y. So the ManiaHitObject in lane 4, with 1/1 snap
+        ///         would have a file name of note-hitobject4. This is so that we don't require filename changes
+        ///         even though the user may not use snapping.    
+        /// 
+        ///         - note-hitobject1 (Lane 1 Default which is also 1/1 snap.)
+        ///         - note-hitobject1-2nd (Lane 1, 1/2 Snap)
+        ///         - note-hitobject1-3rd (Lane 1, 1/3 Snap)
+        ///         - note-hitobject1-4th (Lane 1, 1/4 Snap)
+        ///         //
+        ///         - note-hitobject2 (Lane 2 Default which is also 1/1 snap.)
+        ///         - note-hitobject2-2nd (Lane 2, 1/2 Snap)
+        /// </summary>
+        /// <param name="hitObjects"></param>
+        /// <param name="element"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        private void LoadHitObjects(List<List<Texture2D>> hitObjects, string element, int index)
+        {
+            // First load the beginning HitObject element that doesn't require snapping.
+            var objectsList = new List<Texture2D> {LoadTexture(SkinKeysFolder.HitObjects, element, false)};
+
+            // Don't bother looking for snap objects if the skin config doesn't permit it.
+            if (!ColorObjectsBySnapDistance)
+            {
+                hitObjects.Insert(index, objectsList);
+                return;
+            }
+
+            // For each snap we load the separate image for it. 
+            // It HAS to be loaded in an incremental fashion. 
+            // So you can't have 1/48, but not have 1/3, etc.
+            var snaps = new [] { "2nd", "3rd", "4th", "6th", "8th", "12th", "16th", "48th" };
+
+            // If it can find the appropriate files, load them.
+            objectsList.AddRange(snaps.Select(snap => LoadTexture(SkinKeysFolder.HitObjects, $"{element}-{snap}", false)));
+
+            hitObjects.Insert(index, objectsList);
+        }
+        
+        /// <summary>
+        ///     Gets a skin element's path.
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="element"></param>
+        /// <param name="ext"></param>
+        /// <returns></returns>
+        private string GetElementPath(SkinKeysFolder folder, string element, string ext) => $"{SkinStore.Dir}/{ShortName}/{folder}/{element}{ext}";
+
+        /// <summary>
+        ///     Gets a file name in our resource store that is shared between all keys modes.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        private string GetModeSharedResourcePath(string element) => $"{ResourceFilePrepender}-{element}";
+        
+        /// <summary>
+        ///     Gets a file name in our resource store.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        private string GetResourcePath(string element) => $"{ResourceFilePrepender}-{ShortName}-{element}";
+
+        /// <summary>
+        ///     Loads elements that rely on the lane.
+        /// </summary>
+        private void LoadLaneSpecificElements()
+        {
+            for (var i = 0; i < 7; i++)
+            {
+                if (i == 4 && Mode == GameMode.Keys4)
+                    break;
+                
+                // Column Colors
+                ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ShortName.ToUpper()][$"ColumnColor{i + 1}"]);
+                
+                // HitObjects
+                LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);
+                LoadHitObjects(NoteHoldHitObjects, $"note-holdhitobject-{i + 1}", i);
+                
+                // LNS
+                NoteHoldBodies.Add(LoadSpritesheet(SkinKeysFolder.HitObjects, $"note-holdbody-{i + 1}", false, 0, 0));
+                NoteHoldEnds.Add(LoadTexture(SkinKeysFolder.HitObjects, $"note-holdend-{i + 1}", false));
+                
+                // Receptors
+                NoteReceptorsUp.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-up-{i + 1}", false));
+                NoteReceptorsDown.Add(LoadTexture(SkinKeysFolder.Receptors, $"receptor-down-{i + 1}", false));
+            }
         }
     }
 }
