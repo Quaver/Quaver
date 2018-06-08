@@ -594,7 +594,9 @@ namespace Quaver.Skinning
         private List<Texture2D> LoadSpritesheet(SkinKeysFolder folder, string element, bool shared, int rows, int columns, string extension = ".png")
         {
             var resource = shared ? GetModeSharedResourcePath(element) : GetResourcePath(element);
-            return SkinStore.LoadSpritesheet(folder.ToString(), element, resource, rows, columns, extension);
+            var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}/";
+                
+            return SkinStore.LoadSpritesheet(folderName, element, resource, rows, columns, extension);
         }
         
         /// <summary>
