@@ -359,7 +359,7 @@ namespace Quaver.Config
             AutoLoadEtternaCharts = ReadValue(@"AutoLoadEtternaCharts", false, data);
             Username = ReadValue(@"Username", "", data);
             VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
-            VolumeEffect = ReadInt(@"VolumeEffect", 80, 0, 100, data);
+            VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
             BackgroundBrightness = ReadInt(@"BackgroundBrightness", 30, 0, 100, data);
             WindowHeight = ReadInt(@"WindowHeight", 720, 600, short.MaxValue, data);
