@@ -95,6 +95,7 @@
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
+    <Compile Include="Helpers\GzipHelper.cs" />
     <Compile Include="Helpers\InputHelper.cs" />
     <Compile Include="Helpers\ListHelper.cs" />
     <Compile Include="Helpers\ModHelper.cs" />
