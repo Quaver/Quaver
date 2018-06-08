@@ -2,6 +2,7 @@
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Config;
+using Quaver.Helpers;
 using SQLite;
 
 namespace Quaver.Database.Scores
@@ -127,7 +128,7 @@ namespace Quaver.Database.Scores
                 CountMiss = processor.CurrentJudgements[Judgement.Miss],
                 Mods = (int)processor.Mods,
                 ScrollSpeed = scrollSpeed,
-                JudgementBreakdown = processor.GetJudgementBreakdown()
+                JudgementBreakdown = GzipHelper.Compress(processor.GetJudgementBreakdown()) 
             };
 
             return score;
