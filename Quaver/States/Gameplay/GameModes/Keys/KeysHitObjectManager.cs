@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield;
@@ -31,7 +32,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         ///     The speed at which objects fall down from the screen.
         /// </summary>
-        internal static float ScrollSpeed => ConfigManager.ScrollSpeed4K.Value / (20f * GameBase.AudioEngine.PlaybackRate);
+        internal static float ScrollSpeed {
+            get
+            {
+                var speed = GameBase.SelectedMap.Qua.Mode  == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K : ConfigManager.ScrollSpeed7K;
+                return speed.Value / (20f * GameBase.AudioEngine.PlaybackRate);
+            }          
+        }
 
         /// <inheritdoc />
         /// <summary>

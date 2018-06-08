@@ -223,8 +223,7 @@ namespace Quaver.Skinning
         /// <param name="path"></param>
         /// <param name="resource"></param>
         internal static Texture2D LoadSingleTexture(string path, string resource)
-        {
-            Console.WriteLine(path);  
+        {  
             return File.Exists(path) ? GraphicsHelper.LoadTexture2DFromFile(path) : ResourceHelper.LoadTexture(resource);
         }
 
@@ -254,7 +253,6 @@ namespace Quaver.Skinning
                     // See if the file matches the regex.
                     if (match.Success)
                     {                    
-                        Console.WriteLine("REGEX SUCCESS: " + element + " " + Path.GetFileName(f));
                         // Load it up if so.
                         var texture = GraphicsHelper.LoadTexture2DFromFile(f);
                         return GraphicsHelper.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
