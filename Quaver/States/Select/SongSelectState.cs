@@ -167,7 +167,8 @@ namespace Quaver.States.Select
             //Check input to update song select ui
             TimeElapsedSinceStartup += (float)dt;
             KeyboardScrollBuffer += (float)dt;
-
+            GameBase.Navbar.PerformShowAnimation(dt);
+            
             // It will ignore input until 250ms go by
             /*
             if (!MapSelectSystem.ScrollingDisabled && TimeElapsedSinceStartup > 250)
