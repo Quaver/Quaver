@@ -184,6 +184,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                         KillPoolObject(i);
                         Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
                         
+                        // Add a duplicate stat since it's an LN, and it counts as two misses.
+                        Ruleset.ScoreProcessor.Stats.Add(stat);
+                        
                         // Update all the users on the scoreboard.
                         Ruleset.Screen.UI.UpdateScoreboardUsers();
                     }
