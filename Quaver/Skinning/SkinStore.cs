@@ -216,14 +216,16 @@ namespace Quaver.Skinning
             LoadHealthBar();
             LoadSoundEffects();
         }
-        
+
         /// <summary>
         ///     Loads a single texture element.
         /// </summary>
         /// <param name="path"></param>
         /// <param name="resource"></param>
-        internal static Texture2D LoadSingleTexture(string path, string resource)
-        {  
+        /// <param name="extension"></param>
+        internal static Texture2D LoadSingleTexture(string path, string resource, string extension = ".png")
+        {
+            path += extension;
             return File.Exists(path) ? GraphicsHelper.LoadTexture2DFromFile(path) : ResourceHelper.LoadTexture(resource);
         }
 
@@ -268,7 +270,7 @@ namespace Quaver.Skinning
             // If we end up getting down here, that means we need to load the spritesheet from our resources.
             // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
             if (rows == 0 && columns == 0)
-                return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}{extension}", resource)};
+                return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}", resource)};
 
             return GraphicsHelper.LoadSpritesheetFromTexture(ResourceHelper.LoadTexture($"{resource}_{rows}x{columns}"), rows, columns);
         }

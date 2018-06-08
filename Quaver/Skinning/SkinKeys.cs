@@ -580,7 +580,7 @@ namespace Quaver.Skinning
             var resource = shared ? GetModeSharedResourcePath(element) : GetResourcePath(element);
             var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}";
 
-            return SkinStore.LoadSingleTexture($"{SkinStore.Dir}/{folderName}/{element}{extension}", resource);
+            return SkinStore.LoadSingleTexture($"{SkinStore.Dir}/{folderName}/{element}", resource);
         }
 
         /// <summary>
