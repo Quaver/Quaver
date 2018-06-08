@@ -549,17 +549,17 @@ namespace Quaver.Skinning
         {
             #region LIGHTING
             ColumnLighting = LoadTexture(SkinKeysFolder.Lighting, "column-lighting", false);
-            HitLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "hitlighting", true, 1, 8);
-            HoldLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "holdlighting", true, 1, 12);
+            HitLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "hitlighting", false, 1, 8);
+            HoldLighting = LoadSpritesheet(SkinKeysFolder.Lighting, "holdlighting", false, 1, 12);
             #endregion
 
             #region STAGE
             StageBgMask = LoadTexture(SkinKeysFolder.Stage, "stage-bgmask", false);
-            StageTimingBar = LoadTexture(SkinKeysFolder.Stage, "stage-timingbar", true);
-            StageLeftBorder = LoadTexture(SkinKeysFolder.Stage, "stage-left-border", true);
-            StageRightBorder = LoadTexture(SkinKeysFolder.Stage, "stage-right-border", true);
-            StageHitPositionOverlay = LoadTexture(SkinKeysFolder.Stage, "stage-hitposition-overlay", true);
-            StageDistantOverlay = LoadTexture(SkinKeysFolder.Stage, "stage-distant-overlay", true);
+            StageTimingBar = LoadTexture(SkinKeysFolder.Stage, "stage-timingbar", false);
+            StageLeftBorder = LoadTexture(SkinKeysFolder.Stage, "stage-left-border", false);
+            StageRightBorder = LoadTexture(SkinKeysFolder.Stage, "stage-right-border", false);
+            StageHitPositionOverlay = LoadTexture(SkinKeysFolder.Stage, "stage-hitposition-overlay", false);
+            StageDistantOverlay = LoadTexture(SkinKeysFolder.Stage, "stage-distant-overlay", false);
             #endregion
 
             #region MISC
@@ -578,7 +578,9 @@ namespace Quaver.Skinning
         private Texture2D LoadTexture(SkinKeysFolder folder, string element, bool shared, string extension = ".png")
         {
             var resource = shared ? GetModeSharedResourcePath(element) : GetResourcePath(element);
-            return SkinStore.LoadSingleTexture(GetElementPath(folder, element, extension), resource);
+            var folderName = shared ? folder.ToString() : $"/{ShortName}/{folder.ToString()}";
+
+            return SkinStore.LoadSingleTexture($"{SkinStore.Dir}/{folderName}/{element}{extension}", resource);
         }
 
         /// <summary>
