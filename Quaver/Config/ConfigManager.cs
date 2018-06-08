@@ -380,7 +380,7 @@ namespace Quaver.Config
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Arrow, data);
             Pitched = ReadValue(@"Pitched", false, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
-            BotsEnabled = ReadValue(@"BotsEnabled", true, data);
+            BotsEnabled = ReadValue(@"BotsEnabled", false, data);
             BotCount = ReadInt(@"BotCount", 4, 1, 6, data);
             AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
