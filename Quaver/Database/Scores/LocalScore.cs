@@ -89,7 +89,7 @@ namespace Quaver.Database.Scores
         /// <summary>
         ///     Bitwise sum of the mods used in the play
         /// </summary>
-        public int Mods { get; set; }
+        public ModIdentifier Mods { get; set; }
 
         /// <summary>
         ///     The scroll speed the player used during this play.
@@ -126,7 +126,7 @@ namespace Quaver.Database.Scores
                 CountGood = processor.CurrentJudgements[Judgement.Good],
                 CountOkay = processor.CurrentJudgements[Judgement.Okay],
                 CountMiss = processor.CurrentJudgements[Judgement.Miss],
-                Mods = (int)processor.Mods,
+                Mods = processor.Mods,
                 ScrollSpeed = scrollSpeed,
                 JudgementBreakdown = GzipHelper.Compress(processor.GetJudgementBreakdown()) 
             };
