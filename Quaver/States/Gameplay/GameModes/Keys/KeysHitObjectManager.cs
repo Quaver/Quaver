@@ -76,10 +76,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 var skin = GameBase.Skin.Keys[Ruleset.Mode];
                 
                 if (IsDownscroll)
-                    return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPositionOffsetY);
+                    return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPosOffsetY);
 
                 // Up Scroll
-                return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPositionOffsetY) + skin.ColumnSize;
+                return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPosOffsetY) + skin.ColumnSize;
             }
         }
 

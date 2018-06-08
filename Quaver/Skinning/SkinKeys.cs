@@ -46,7 +46,7 @@ namespace Quaver.Skinning
         /// <summary>
         ///     
         /// </summary>
-        internal int HitPositionOffsetY { get; private set; }
+        internal int HitPosOffsetY { get; private set; }
 
         /// <summary>
         ///     
@@ -71,7 +71,7 @@ namespace Quaver.Skinning
         /// <summary>
         ///     
         /// </summary>
-        internal int ReceptorPositionOffsetY { get; private set; }
+        internal int ReceptorPosOffsetY { get; private set; }
 
         /// <summary>
         /// 
@@ -337,12 +337,12 @@ namespace Quaver.Skinning
             {
                 case DefaultSkins.Bar:
                     BgMaskPadding = 0;
-                    HitPositionOffsetY= 0;
+                    HitPosOffsetY= 0;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.5f;
                     ColumnSize = 100;
-                    ReceptorPositionOffsetY = -110;
+                    ReceptorPosOffsetY = -110;
                     ColumnAlignment = 50;
                     ColorObjectsBySnapDistance = false;
                     JudgementHitBurstScale = 150;
@@ -372,12 +372,12 @@ namespace Quaver.Skinning
                     break;
                 case DefaultSkins.Arrow:
                     BgMaskPadding = 10;
-                    HitPositionOffsetY = 0;
+                    HitPosOffsetY = 0;
                     NotePadding = 4;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
                     ColumnSize = 95;
-                    ReceptorPositionOffsetY = 10;
+                    ReceptorPosOffsetY = 10;
                     ColumnAlignment = 50;
                     ColorObjectsBySnapDistance = true;
                     JudgementHitBurstScale = 150;
@@ -419,12 +419,12 @@ namespace Quaver.Skinning
             {
                 case DefaultSkins.Bar:
                     BgMaskPadding = 0;
-                    HitPositionOffsetY = 0;
+                    HitPosOffsetY = 0;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.5f;
                     ColumnSize = 75;
-                    ReceptorPositionOffsetY = -110;
+                    ReceptorPosOffsetY = -110;
                     ColumnAlignment = 50;
                     ColorObjectsBySnapDistance = false;
                     JudgementHitBurstScale = 150;
@@ -457,12 +457,12 @@ namespace Quaver.Skinning
                     break;
                 case DefaultSkins.Arrow:
                     BgMaskPadding = 10;
-                    HitPositionOffsetY = 0;
+                    HitPosOffsetY = 0;
                     NotePadding = 4;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.0f;
                     ColumnSize = 65;
-                    ReceptorPositionOffsetY = 0;
+                    ReceptorPosOffsetY = 0;
                     ColumnAlignment = 50;
                     ColorObjectsBySnapDistance = true;
                     JudgementHitBurstScale = 150;
@@ -512,12 +512,12 @@ namespace Quaver.Skinning
             var ini = Store.Config[ShortName.ToUpper()];
             
             BgMaskPadding = ConfigHelper.ReadInt32(BgMaskPadding, ini["BgMaskPadding"]);
-            HitPositionOffsetY = ConfigHelper.ReadInt32(HitPositionOffsetY, ini["HitPositionOffsetY"]);
+            HitPosOffsetY = ConfigHelper.ReadInt32(HitPosOffsetY, ini["HitPosOffsetY"]);
             NotePadding = ConfigHelper.ReadInt32(NotePadding, ini["NotePadding"]);
             TimingBarPixelSize = ConfigHelper.ReadInt32(TimingBarPixelSize, ini["TimingBarPixelSize"]);
             ColumnLightingScale = ConfigHelper.ReadFloat(ColumnLightingScale, ini["ColumnLightingScale"]);
             ColumnSize = ConfigHelper.ReadInt32(ColumnSize, ini["ColumnSize"]);
-            ReceptorPositionOffsetY = ConfigHelper.ReadInt32(ReceptorPositionOffsetY, ini["ReceptorPositionOffsetY"]);
+            ReceptorPosOffsetY = ConfigHelper.ReadInt32(ReceptorPosOffsetY, ini["ReceptorPosOffsetY"]);
             ColumnAlignment = ConfigHelper.ReadPercentage(ColumnAlignment, ini["ColumnAlignment"]);
             ColorObjectsBySnapDistance = ConfigHelper.ReadBool(ColorObjectsBySnapDistance, ini["ColorObjectsBySnapDistance"]);
             JudgementHitBurstScale = ConfigHelper.ReadByte(JudgementHitBurstScale, ini["JudgementHitBurstScale"]);
