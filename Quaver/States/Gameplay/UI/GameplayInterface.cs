@@ -367,7 +367,7 @@ namespace Quaver.States.Gameplay.UI
             if (ConfigManager.BotsEnabled.Value)
             {
                 // Generate bots users on the scoreboard if need be.
-                for (var i = 0; i < ConfigManager.BotCount.Value && users.Count < ConfigManager.BotCount.Value; i++)
+                for (var i = 0; i < ConfigManager.BotCount.Value && users.Count - 1 < ConfigManager.BotCount.Value; i++)
                 {
                     // Create new bot.
                     var bot = new Bot(Screen.Map, BotLevel.Decent);

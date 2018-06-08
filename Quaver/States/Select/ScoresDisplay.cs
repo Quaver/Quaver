@@ -5,6 +5,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
+using Quaver.Helpers;
 using Quaver.Main;
 using Color = Microsoft.Xna.Framework.Color;
 
@@ -71,7 +72,22 @@ namespace Quaver.States.Select
                 var usernameTextSize = username.Font.MeasureString(username.Text);        
                 username.PosX = avatar.SizeX + usernameTextSize.X * username.TextScale / 2f + 10;
                 username.PosY = usernameTextSize.Y * username.TextScale / 2f - 2;
-            
+
+                var mods = new SpriteText()
+                {
+                    Parent = display,
+                    Font = QuaverFonts.AssistantRegular16,
+                    Text = Scores[i].Mods != 0 ? "+ " + Scores[i].Mods : "",
+                    Alignment = Alignment.BotLeft,
+                    Alpha = 1,
+                    TextScale = 0.65f
+                };
+                
+                // Set modsposition.
+                var modsTextSize = mods.Font.MeasureString(mods.Text);        
+                mods.PosX = avatar.SizeX + modsTextSize.X * mods.TextScale / 2f + 10;
+                mods.PosY = -modsTextSize.Y * mods.TextScale / 2f - 2;
+                
                 // Create score text.
                 var score = new SpriteText()
                 {
