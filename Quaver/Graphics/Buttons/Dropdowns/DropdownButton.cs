@@ -102,7 +102,7 @@ namespace Quaver.Graphics.Buttons.Dropdowns
         protected override void OnClicked()
         {
             // Play sound effect here.
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             
             // If this button is the one that's selected, we want to toggle the dropdown open/close
             if (IsSelected)

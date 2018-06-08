@@ -101,7 +101,7 @@ namespace Quaver.Skinning
         /// <summary>
         /// 
         /// </summary>
-        internal List<Color> ColumnColors { get; private set; }
+        internal List<Color> ColumnColors { get; private set; } = new List<Color>();
         
         /// <summary>
         /// 
@@ -678,7 +678,8 @@ namespace Quaver.Skinning
                     break;
                 
                 // Column Colors
-                ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ShortName.ToUpper()][$"ColumnColor{i + 1}"]);
+                if (Store.Config != null)
+                    ColumnColors[i] = ConfigHelper.ReadColor(ColumnColors[i], Store.Config[ShortName.ToUpper()][$"ColumnColor{i + 1}"]);
                 
                 // HitObjects
                 LoadHitObjects(NoteHitObjects, $"note-hitobject-{i + 1}", i);

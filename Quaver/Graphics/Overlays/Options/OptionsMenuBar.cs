@@ -66,7 +66,7 @@ namespace Quaver.Graphics.Overlays.Options
              // Add a click handler (move to the new section.)
              SectionButtons[type].Clicked += (sender, args) =>
              {
-                 GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
+                 GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
                  
                  Overlay.SelectedSection = Overlay.Sections[type];
                  Overlay.RefreshSections();

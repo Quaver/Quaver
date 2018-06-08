@@ -241,7 +241,7 @@ namespace Quaver.States.Select
         /// </summary>
         private void OnPlayMapButtonClick(object sender, EventArgs e)
         {
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             GameBase.GameStateManager.ChangeState(new MapLoadingState());
         }
 
@@ -286,7 +286,7 @@ namespace Quaver.States.Select
         /// <param name="e"></param>
         private void OnBackButtonClick(object sender, EventArgs e)
         {
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundBack);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundBack);
             GameBase.GameStateManager.ChangeState(new MainMenuState());
         }
 

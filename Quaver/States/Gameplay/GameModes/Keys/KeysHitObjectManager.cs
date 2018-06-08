@@ -66,22 +66,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             get
             {
                 var playfield = (KeysPlayfield) Ruleset.Playfield;
+                var skin = GameBase.Skin.Keys[Ruleset.Mode];
+                
+                if (IsDownscroll)
+                    return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPositionOffsetY);
 
-                switch (Ruleset.Mode)
-                {
-                    case GameMode.Keys4:
-                        if (ConfigManager.DownScroll4K.Value)
-                            return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset4K.Value + GameBase.LoadedSkin.HitPositionOffset4K);
-                        else
-                            return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset4K.Value + GameBase.LoadedSkin.HitPositionOffset4K) + GameBase.LoadedSkin.ColumnSize4K;
-                    case GameMode.Keys7:
-                        if (ConfigManager.DownScroll7K.Value)
-                            return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset7K.Value + GameBase.LoadedSkin.HitPositionOffset7K);
-                        else
-                            return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset7K.Value + GameBase.LoadedSkin.HitPositionOffset7K) + GameBase.LoadedSkin.ColumnSize7K;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                // Up Scroll
+                return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPositionOffsetY) + skin.ColumnSize;
             }
         }
 

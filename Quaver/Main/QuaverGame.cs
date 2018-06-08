@@ -104,13 +104,12 @@ namespace Quaver.Main
             // Load all fonts
             QuaverFonts.Load();
 
-            // Load the Game Skin Before Starting
-            Skin.LoadSkin();
+            // Load the Game Skin 
+            GameBase.Skin = new SkinStore();
             
-            var skin = new SkinStore();
-            Console.WriteLine(skin.KeysSkins[GameMode.Keys4].ColumnSize);
-            Console.WriteLine(skin.KeysSkins[GameMode.Keys7].ColumnSize);
-
+            // Load cursor after skin.
+            GameBase.Cursor = new Cursor();
+                      
             // Initialze the logger
             Logger.Initialize();
 

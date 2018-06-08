@@ -96,7 +96,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         ///     The SpriteEffects. Flips the image horizontally if we are using upscroll.
         /// </summary>
-        private static SpriteEffects Effects => !ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None;
+        private static SpriteEffects Effects => !ConfigManager.DownScroll4K.Value && GameBase.Skin.Keys[GameBase.SelectedMap.Mode].FlipNoteImagesOnUpscroll 
+                                                    ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
         /// <summary>
         ///     The index of this object of the receptor's lane.
@@ -164,8 +165,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         private void CreateLongNote()
         {
             // Get the long note bodies to use.
-            var bodies = Playfield.Map.Mode == GameMode.Keys4 ? GameBase.LoadedSkin.NoteHoldBodies4K[Index] : GameBase.LoadedSkin.NoteHoldBodies7K[Index];
-            
+            var bodies = GameBase.Skin.Keys[Playfield.Map.Mode].NoteHoldBodies[Index];
+     
             LongNoteBodySprite = new AnimatableSprite(bodies)
             {
                 Alignment = Alignment.TopLeft,
@@ -183,25 +184,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 Parent = Playfield.Stage.HitObjectContainer,
                 SpriteEffect = Effects
             };
-
-            // Choose the correct image for the long note body & end based on the game mode
-            // and set the correct texture.
-            Texture2D longNoteEndTexture;         
-            switch (Playfield.Map.Mode)
-            {
-                case GameMode.Keys4:
-                    longNoteEndTexture = GameBase.LoadedSkin.NoteHoldEnds4K[Index];
-                    break;
-                case GameMode.Keys7:
-                    longNoteEndTexture = GameBase.LoadedSkin.NoteHoldEnds7K[Index];
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
             
             // Set long note end properties.
-            LongNoteEndSprite.Image = longNoteEndTexture;       
-            LongNoteEndSprite.SizeY =  Playfield.LaneSize * longNoteEndTexture.Height / longNoteEndTexture.Width;
+            LongNoteEndSprite.Image = GameBase.Skin.Keys[Playfield.Map.Mode].NoteHoldEnds[Index];       
+            LongNoteEndSprite.SizeY =  Playfield.LaneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
             LongNoteEndOffset = LongNoteEndSprite.SizeY / 2f;    
         }
 
@@ -217,21 +203,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <returns></returns>
         private Texture2D GetHitObjectTexture()
         {
-            switch (Playfield.Map.Mode)
-            {
-                case GameMode.Keys4:
-                    if (GameBase.LoadedSkin.ColourObjectsBySnapDistance)
-                        return IsLongNote ? GameBase.LoadedSkin.NoteHoldHitObjects4K[Index][SnapIndex] : GameBase.LoadedSkin.NoteHitObjects4K[Index][SnapIndex];
-                    else
-                        return IsLongNote ? GameBase.LoadedSkin.NoteHoldHitObjects4K[Index][0] : GameBase.LoadedSkin.NoteHitObjects4K[Index][0];                    
-                case GameMode.Keys7:
-                    if (GameBase.LoadedSkin.ColourObjectsBySnapDistance)
-                        return IsLongNote ? GameBase.LoadedSkin.NoteHoldHitObjects7K[Index][SnapIndex] : GameBase.LoadedSkin.NoteHitObjects7K[Index][SnapIndex];
-                    else
-                        return IsLongNote ? GameBase.LoadedSkin.NoteHoldHitObjects7K[Index][0] : GameBase.LoadedSkin.NoteHitObjects7K[Index][0];    
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var skin = GameBase.Skin.Keys[Playfield.Map.Mode];
+            
+            if (skin.ColorObjectsBySnapDistance)
+                return IsLongNote ? skin.NoteHoldHitObjects[Index][SnapIndex] : skin.NoteHitObjects[Index][SnapIndex];
+            
+            return IsLongNote ? skin.NoteHoldHitObjects[Index][0] : skin.NoteHitObjects[Index][0];
         }
         
         /// <summary>

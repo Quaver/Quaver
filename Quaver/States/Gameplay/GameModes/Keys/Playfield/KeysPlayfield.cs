@@ -66,62 +66,19 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         ///     Padding of the playfield.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        internal float Padding
-        {
-            get
-            {
-                switch (Map.Mode)
-                {
-                    case GameMode.Keys4:
-                        return (int)(GameBase.LoadedSkin.BgMaskPadding4K * GameBase.WindowUIScale);
-                    case GameMode.Keys7:
-                        return (int)(GameBase.LoadedSkin.BgMaskPadding7K * GameBase.WindowUIScale);
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
-        
-        
+        internal float Padding => GameBase.Skin.Keys[Map.Mode].BgMaskPadding * GameBase.WindowUIScale;
+
         /// <summary>
         ///     The size of the each ane.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        internal float LaneSize
-        {
-            get
-            {
-                switch (Map.Mode)
-                {
-                    case GameMode.Keys4:
-                        return (int)(GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale);
-                    case GameMode.Keys7:
-                        return (int)(GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale);
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
-       
+        internal float LaneSize => GameBase.Skin.Keys[Map.Mode].ColumnSize * GameBase.WindowUIScale;
+
         /// <summary>
         ///     Padding of the receptor.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        internal float ReceptorPadding
-        {
-            get
-            {
-                switch (Map.Mode)
-                {
-                    case GameMode.Keys4:
-                        return (int)(GameBase.LoadedSkin.NotePadding4K * GameBase.WindowUIScale);
-                    case GameMode.Keys7:
-                        return (int)(GameBase.LoadedSkin.NotePadding7K * GameBase.WindowUIScale);
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
+        internal float ReceptorPadding => GameBase.Skin.Keys[Map.Mode].NotePadding * GameBase.WindowUIScale;
 
         /// <summary>
         ///     The Y position of the receptors.
@@ -130,21 +87,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         {
             get
             {
-                switch (Map.Mode)
-                {
-                    case GameMode.Keys4:
-                        if (ConfigManager.DownScroll4K.Value)
-                            return GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale + LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width);
-                        else
-                            return GameBase.LoadedSkin.ReceptorPositionOffset4K * GameBase.WindowUIScale;
-                    case GameMode.Keys7:
-                        if (ConfigManager.DownScroll7K.Value)
-                            return GameBase.WindowRectangle.Height - (GameBase.LoadedSkin.ReceptorPositionOffset7K * GameBase.WindowUIScale + LaneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[0].Width);
-                        else
-                            return GameBase.LoadedSkin.ReceptorPositionOffset7K * GameBase.WindowUIScale;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                var skin = GameBase.Skin.Keys[Map.Mode];
+                
+                if (ConfigManager.DownScroll4K.Value || ConfigManager.DownScroll7K.Value)
+                    return GameBase.WindowRectangle.Height - (skin.ReceptorPositionOffsetY  * GameBase.WindowUIScale + LaneSize * skin.NoteReceptorsUp[0].Height / skin.NoteReceptorsUp[0].Width);
+                return skin.ReceptorPositionOffsetY * GameBase.WindowUIScale;
             }
         }
 
@@ -155,31 +102,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         {
             get
             {
-                switch (Map.Mode)
-                {
-                    case GameMode.Keys4:
-                        if (ConfigManager.DownScroll4K.Value)
-                            return ReceptorPositionY;
-                        else
-                        {
-                            var receptor = GameBase.LoadedSkin.NoteReceptorsUp4K[0];
-                            var hitObject = GameBase.LoadedSkin.NoteHitObjects4K[0][0];
-                            
-                            return ReceptorPositionY + GameBase.LoadedSkin.ColumnSize4K * GameBase.WindowUIScale * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
-                        }
-                    case GameMode.Keys7:
-                        if (ConfigManager.DownScroll7K.Value)
-                            return ReceptorPositionY;
-                        else
-                        {
-                            var receptor = GameBase.LoadedSkin.NoteReceptorsUp7K[0];
-                            var hitObject = GameBase.LoadedSkin.NoteHitObjects7K[0][0];
-                            
-                            return ReceptorPositionY + GameBase.LoadedSkin.ColumnSize7K * GameBase.WindowUIScale * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
-                        }
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                if (ConfigManager.DownScroll4K.Value || ConfigManager.DownScroll7K.Value)
+                    return ReceptorPositionY;
+
+                    var skin = GameBase.Skin.Keys[Map.Mode];
+                    
+                    var receptor = skin.NoteReceptorsUp[0];
+                    var hitObject = skin.NoteHitObjects[0][0];                          
+                    return ReceptorPositionY + skin.ColumnSize * GameBase.WindowUIScale * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
             }
         }
         
@@ -221,7 +151,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             Stage = new KeysPlayfieldStage(this, Screen);
             
             // Create health bar.
-            HealthBar = new HealthBarKeys(this, GameBase.LoadedSkin.HealthBarType, GameBase.LoadedSkin.HealthBarKeysAlignment, Screen.Ruleset.ScoreProcessor);
+            var skin = GameBase.Skin.Keys[Map.Mode];
+            HealthBar = new HealthBarKeys(this, skin.HealthBarType, skin.HealthBarKeysAlignment, Screen.Ruleset.ScoreProcessor);
         }
         
         /// <summary>

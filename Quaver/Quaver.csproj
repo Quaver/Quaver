@@ -224,7 +224,6 @@
     <Compile Include="Replays\ReplayFrame.cs" />
     <Compile Include="Replays\ReplayHelper.cs" />
     <Compile Include="Database\Scores\LocalScore.cs" />
-    <Compile Include="Skinning\Skin.cs" />
     <Compile Include="States\Tests\AnimatableSpriteTestScreen.cs" />
     <Compile Include="States\Tests\DropdownTestState.cs" />
     <Compile Include="States\Tests\CheckboxTestState.cs" />

@@ -130,8 +130,8 @@ namespace Quaver.States.Gameplay.UI
             {
                 Parent = Container,
                 Alignment = Alignment.TopLeft,
-                PosX = GameBase.LoadedSkin.ScoreDisplayPosX,
-                PosY = GameBase.LoadedSkin.ScoreDisplayPosY
+                PosX = GameBase.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosX,
+                PosY = GameBase.Skin.Keys[Screen.Map.Mode].ScoreDisplayPosY
             };
 
             // Put the display in the top right corner.
@@ -144,8 +144,8 @@ namespace Quaver.States.Gameplay.UI
             };
             
             // Set the position of the accuracy display.
-            AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth + GameBase.LoadedSkin.AccuracyDisplayPosX;
-            AccuracyDisplay.PosY = GameBase.LoadedSkin.AccuracyDisplayPosY;
+            AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth + GameBase.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosX;
+            AccuracyDisplay.PosY = GameBase.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosY;
             
             // Create judgement status display
             JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
@@ -158,8 +158,8 @@ namespace Quaver.States.Gameplay.UI
             };
             
             // Set the position of the KPS display
-            KpsDisplay.PosX = -KpsDisplay.TotalWidth + GameBase.LoadedSkin.KpsDisplayPosX;
-            KpsDisplay.PosY = AccuracyDisplay.PosY + AccuracyDisplay.Digits[0].SizeY + GameBase.LoadedSkin.KpsDisplayPosY;
+            KpsDisplay.PosX = -KpsDisplay.TotalWidth + GameBase.Skin.Keys[Screen.Map.Mode].KpsDisplayPosX;
+            KpsDisplay.PosY = AccuracyDisplay.PosY + AccuracyDisplay.Digits[0].SizeY + GameBase.Skin.Keys[Screen.Map.Mode].KpsDisplayPosY;
 
             GradeDisplay = new GradeDisplay(Screen.Ruleset.ScoreProcessor)
             {
@@ -250,7 +250,7 @@ namespace Quaver.States.Gameplay.UI
             // If the old accuracy's length isn't the same, then we need to reposition the sprite
             // Example: 100.00% to 99.99% needs repositioning.
             if (oldAcc.Length != AccuracyDisplay.Value.Length)
-                AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth + GameBase.LoadedSkin.AccuracyDisplayPosX;
+                AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth + GameBase.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosX;
         }
 
         /// <summary>

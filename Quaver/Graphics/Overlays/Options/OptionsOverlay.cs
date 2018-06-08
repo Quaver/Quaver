@@ -425,11 +425,11 @@ namespace Quaver.Graphics.Overlays.Options
                 {
                     case arrowText:
                         ConfigManager.DefaultSkin.Value = DefaultSkins.Arrow;
-                        Skin.LoadSkin();
+                        GameBase.Skin = new SkinStore();
                         break;
                     case barText:
                         ConfigManager.DefaultSkin.Value = DefaultSkins.Bar;
-                        Skin.LoadSkin();
+                        GameBase.Skin = new SkinStore();
                         break;
                 }
             });
@@ -455,7 +455,7 @@ namespace Quaver.Graphics.Overlays.Options
             var dropdown = new Dropdown(skins, (o, e) =>
             {
                 ConfigManager.Skin.Value = e.ButtonText == defaultText ? "" : e.ButtonText;
-                Skin.LoadSkin();
+                GameBase.Skin = new SkinStore();
             });
 
             return dropdown;

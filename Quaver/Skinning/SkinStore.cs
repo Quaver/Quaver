@@ -8,8 +8,10 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
+using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Logging;
+using Quaver.Main;
 
 namespace Quaver.Skinning
 {
@@ -28,7 +30,7 @@ namespace Quaver.Skinning
         /// <summary>
         ///     Dictionary that contains both skins for 4K & 7K
         /// </summary>
-        internal Dictionary<GameMode, SkinKeys> KeysSkins { get; }
+        internal Dictionary<GameMode, SkinKeys> Keys { get; }
 
         /// <summary>
         ///     The name of the skin.
@@ -171,7 +173,7 @@ namespace Quaver.Skinning
             LoadConfig();
 
             // Load up Keys game mode skins.
-            KeysSkins = new Dictionary<GameMode, SkinKeys>
+            Keys = new Dictionary<GameMode, SkinKeys>
             {
                 {GameMode.Keys4, new SkinKeys(this, GameMode.Keys4)},
                 {GameMode.Keys7, new SkinKeys(this, GameMode.Keys7)}

@@ -59,7 +59,7 @@ namespace Quaver.Graphics.Buttons
         protected override void OnClicked()
         {
             BindedValue.Value = !BindedValue.Value;
-            GameBase.AudioEngine.PlaySoundEffect(BindedValue.Value ? GameBase.LoadedSkin.SoundClick : GameBase.LoadedSkin.SoundBack);
+            GameBase.AudioEngine.PlaySoundEffect(BindedValue.Value ? GameBase.Skin.SoundClick : GameBase.Skin.SoundBack);
             
             base.OnClicked();
         }

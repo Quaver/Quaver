@@ -325,7 +325,7 @@ namespace Quaver.Graphics.Overlays.Volume
             if (InputHelper.IsUniqueKeyPress(Keys.Up) && (GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) || GameBase.KeyboardState.IsKeyDown(Keys.RightAlt)))
             {
                 // Play hover sound effect
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover);
                 
                 // Reset inactive timer.
                 TimeInactive = 0;
@@ -347,7 +347,7 @@ namespace Quaver.Graphics.Overlays.Volume
             if (InputHelper.IsUniqueKeyPress(Keys.Down) && (GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) || GameBase.KeyboardState.IsKeyDown(Keys.RightAlt)))
             {
                 // Play hover sound effect
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover);
 
                 // Reset inactive timer.
                 TimeInactive = 0;

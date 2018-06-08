@@ -70,7 +70,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             hitObject.PositionY = hitObject.OffsetYFromReceptor + objectManager.HitPositionOffset;
             
             // Get Note Snapping
-            if (GameBase.LoadedSkin.ColourObjectsBySnapDistance)
+            if (GameBase.Skin.Keys[playfield.Map.Mode].ColorObjectsBySnapDistance)
                 hitObject.SnapIndex = hitObject.GetBeatSnap(hitObject.GetTimingPoint(Map.TimingPoints)); 
             
             // Disregard non-long note objects after this point, so we can initailize them separately.

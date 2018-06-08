@@ -133,7 +133,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             Export = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Archive, "Export Mapset", "Zip your current mapset to a file.", OnExportButtonClicked);
             
             // Right Side
-            Notifications = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => { GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick); Logger.LogImportant("This button does nothing. Don't click it.", LogType.Runtime);});
+            Notifications = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => { GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick); Logger.LogImportant("This button does nothing. Don't click it.", LogType.Runtime);});
             Discord = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Discord, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
             Github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
             
@@ -247,7 +247,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="e"></param>
         private void OnHomeButtonClicked(object sender, EventArgs e)
         {
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             GameBase.GameStateManager.ChangeState(new MainMenuState());
         }
 
@@ -262,9 +262,9 @@ namespace Quaver.Graphics.Overlays.Navbar
             OptionsMenu.Active = !OptionsMenu.Active;
             
             if (OptionsMenu.Active)
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             else
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundBack);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundBack);
         }
         
         /// <summary>
@@ -274,7 +274,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="e"></param>
         private void OnPlayButtonClicked(object sender, EventArgs e)
         {
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 
@@ -285,7 +285,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="e"></param>
         private void OnDiscordButtonClicked(object sender, EventArgs e)
         {
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             System.Diagnostics.Process.Start("https://discord.gg/nJa8VFr");
         }
 
@@ -296,7 +296,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="e"></param>
         private void OnGithubButtonClicked(object sender, EventArgs e)
         {
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             System.Diagnostics.Process.Start("https://github.com/Swan/Quaver");
         }
         
@@ -346,7 +346,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="e"></param>
         private void OnExportButtonClicked(object sender, EventArgs e)
         {
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
 
             Task.Run(() =>
             {

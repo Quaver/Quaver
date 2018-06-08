@@ -106,7 +106,7 @@ namespace Quaver.States.Gameplay.UI.Components
             if (CurrentLinePoolIndex >= PoolSize)
                 CurrentLinePoolIndex = 0;
 
-            LineObjectPool[CurrentLinePoolIndex].Tint = GameBase.LoadedSkin.JudgeColors[(int) j];
+            LineObjectPool[CurrentLinePoolIndex].Tint = GameBase.Skin.Keys[GameBase.SelectedMap.Mode].JudgeColors[j];
             LineObjectPool[CurrentLinePoolIndex].PosX = -(float) hitTime;
             LineObjectPool[CurrentLinePoolIndex].Alpha = 0.5f;
         }
