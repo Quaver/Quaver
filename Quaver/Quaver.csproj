@@ -145,8 +145,6 @@
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />
     <Compile Include="States\Results\ResultsScreen.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
-    <Compile Include="States\Select\MapInfoWindow.cs" />
-    <Compile Include="States\Select\ModSelector.cs" />
     <Compile Include="Graphics\Buttons\MapDifficultySelectButton.cs" />
     <Compile Include="Graphics\Buttons\MapsetSelectButton.cs" />
     <Compile Include="Audio\AudioEngine.cs" />
@@ -168,6 +166,7 @@
     <Compile Include="Discord\DiscordRPC.cs" />
     <Compile Include="States\IGameStateComponent.cs" />
     <Compile Include="States\Options\OptionsState.cs" />
+    <Compile Include="States\Select\ScoresDisplay.cs" />
     <Compile Include="States\Select\SongSelectState.cs" />
     <Compile Include="Graphics\Buttons\TextInputField.cs" />
     <Compile Include="Graphics\Buttons\KeybindButton.cs" />

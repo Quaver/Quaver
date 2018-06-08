@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Audio;
@@ -16,6 +17,7 @@ using Quaver.States.Enums;
 using Quaver.States.Loading.Map;
 using Quaver.States.Menu;
 using Quaver.Database.Maps;
+using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 
@@ -104,6 +106,11 @@ namespace Quaver.States.Select
         private float KeyboardScrollBuffer { get; set; }
 
         /// <summary>
+        ///     The display for scores on the map.
+        /// </summary>
+        internal ScoresDisplay ScoreDisplay { get; set; }
+
+        /// <summary>
         ///     Initialize
         /// </summary>
         public void Initialize()
@@ -114,7 +121,7 @@ namespace Quaver.States.Select
                 MapsetHelper.SelectRandomMap();
 
             //Initialize Helpers
-            MapSelectSystem = new MapSelectSystem();
+            MapSelectSystem = new MapSelectSystem(this);
             MapSelectSystem.Initialize(this);
             SongSelectInputManager = new SongSelectInputManager();
 
@@ -129,17 +136,12 @@ namespace Quaver.States.Select
             CreateSearchField();
             CreateNoPause();
             CreateBotButtons();
+            BackgroundManager.Change();
+            BackgroundManager.Readjust();
 
-            //Add map selected text TODO: remove later
-            try
-            {
-                Logger.Add("MapSelected", "Map Selected: " + GameBase.SelectedMap.Artist + " - " + GameBase.SelectedMap.Title + " [" + GameBase.SelectedMap.DifficultyName + "]", Color.Yellow);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e, LogType.Runtime);
-            }
-
+            ScoreDisplay = new ScoresDisplay() { Parent = Container};
+            
+            LoadScores();
             UpdateReady = true;
         }
 
@@ -148,7 +150,7 @@ namespace Quaver.States.Select
         /// </summary>
         public void UnloadContent()
         {
-            Logger.Remove("MapSelected");
+            Logger.Clear();
 
             UpdateReady = false;
             PlayButton.Clicked -= OnPlayMapButtonClick;
@@ -169,37 +171,6 @@ namespace Quaver.States.Select
             KeyboardScrollBuffer += (float)dt;
             GameBase.Navbar.PerformShowAnimation(dt);
             
-            // It will ignore input until 250ms go by
-            /*
-            if (!MapSelectSystem.ScrollingDisabled && TimeElapsedSinceStartup > 250)
-            {
-                SongSelectInputManager.CheckInput();
-
-                // Check and update any mouse input
-                
-                if (SongSelectInputManager.RightMouseIsDown)
-                    MapSelectSystem.SetMapSelectSystemPosition(-SongSelectInputManager.MouseYPos / GameBase.WindowRectangle.Height);
-                else if (SongSelectInputManager.LeftMouseIsDown)
-                    MapSelectSystem.OffsetMapSelectSystemPosition(GameBase.MouseState.Position.Y - PreviousMouseYPosition);
-                else if (SongSelectInputManager.CurrentScrollAmount != 0)
-                    MapSelectSystem.OffsetMapSelectSystemPosition(SongSelectInputManager.CurrentScrollAmount);
-
-                // Check and update any keyboard input
-                int scroll = 0;
-                if (SongSelectInputManager.UpArrowIsDown || SongSelectInputManager.LeftArrowIsDown)
-                    scroll += 1;
-                if (SongSelectInputManager.RightArrowIsDown || SongSelectInputManager.DownArrowIsDown)
-                    scroll -= 1;
-
-                if (scroll != 0 && KeyboardScrollBuffer > 100)
-                {
-                    KeyboardScrollBuffer = 0;
-                    if (scroll > 0) ScrollUpMapIndex();
-                    else if (scroll < 0) ScrollDownMapIndex();
-                }
-                PreviousMouseYPosition = SongSelectInputManager.MouseYPos;
-            }*/
-
             //Update Objects
             Container.Update(dt);
             MapSelectSystem.Update(dt);
@@ -243,7 +214,7 @@ namespace Quaver.States.Select
         private void OnPlayMapButtonClick(object sender, EventArgs e)
         {
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
-            GameBase.GameStateManager.ChangeState(new MapLoadingState());
+            GameBase.GameStateManager.ChangeState(new MapLoadingState(ScoreDisplay.Scores));
         }
 
         /// <summary>
@@ -471,6 +442,26 @@ namespace Quaver.States.Select
                 
                 BotCount.TextSprite.Text = $"Bot Count: {ConfigManager.BotCount.Value}";
             };
+        }
+        
+        /// <summary>
+        ///     Loads all user scores for this map.
+        /// </summary>
+        internal void LoadScores()
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    var scores = await LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
+                    ScoreDisplay.UpdateDisplay(scores);
+                    Logger.LogSuccess($"{scores.Count} scores loaded for this map.", LogType.Runtime);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e, LogType.Runtime);
+                }
+            }).Wait();
         }
     }
 }

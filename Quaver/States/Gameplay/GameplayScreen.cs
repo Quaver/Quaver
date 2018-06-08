@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
@@ -8,6 +9,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Config;
+using Quaver.Database.Scores;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Sprites;
@@ -153,10 +155,16 @@ namespace Quaver.States.Gameplay
         internal double TimeSincePlayEnded { get; set; }
 
         /// <summary>
+        ///     All of the local scores for this map.
+        /// </summary>
+        internal List<LocalScore> LocalScores { get; }
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
-        internal GameplayScreen(Qua map, string md5)
+        internal GameplayScreen(Qua map, string md5, List<LocalScore> scores)
         {
+            LocalScores = scores;
             Map = map;
             MapHash = md5;
             
@@ -413,7 +421,7 @@ namespace Quaver.States.Gameplay
                 if (RestartKeyHoldTime >= 350)
                 {
                     GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundRetry);
-                    GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash));
+                    GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash, LocalScores));
                 }
 
                 return;
