@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Audio;
@@ -385,6 +387,25 @@ namespace Quaver.States.Select
                 PosX = 5,
                 PosY = 300 * GameBase.WindowUIScale + 45,
                 Parent = Container
+            };
+
+            var name = (ConfigManager.Username.Value == "") ? "Enter Your Player Name!" : ConfigManager.Username.Value;
+            var enterName = new TextInputField(new Vector2(300, 30), name, null)
+            {
+                Alignment = Alignment.TopLeft,
+                PosX = 5,
+                PosY = 300 * GameBase.WindowUIScale + 5,
+                Parent = Container
+            };
+            
+            enterName.OnTextInputSubmit += (term) =>
+            {
+                if (term == "")
+                    return;
+
+                ConfigManager.Username.Value = term;
+                
+                enterName.PlaceHolderText = (ConfigManager.Username.Value == "") ? "Enter Your Player Name!" : ConfigManager.Username.Value;
             };
         }
 
