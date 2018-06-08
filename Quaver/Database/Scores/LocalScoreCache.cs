@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Logging;
 using SQLite;
@@ -44,7 +46,9 @@ namespace Quaver.Database.Scores
             try
             {
                 var conn = new SQLiteAsyncConnection(DatabasePath);         
-                return await conn.Table<LocalScore>().Where(x => x.MapMd5 == md5).ToListAsync();
+                var scores = await conn.Table<LocalScore>().Where(x => x.MapMd5 == md5).ToListAsync();
+                
+                return scores.OrderBy(x => x.Grade == Grade.F).ThenByDescending(x => x.Score).ToList();
             }
             catch (Exception e)
             {
