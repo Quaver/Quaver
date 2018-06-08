@@ -370,7 +370,7 @@ namespace Quaver.Config
             UserHitPositionOffset7K = ReadInt(@"UserHitPositionOffset7K", 0, 0, byte.MaxValue, data);
             WindowFullScreen = ReadValue(@"WindowFullScreen", false, data);
             WindowLetterboxed = ReadValue(@"WindowLetterboxed", false, data);
-            FpsCounter = ReadValue(@"FpsCounter", true, data);
+            FpsCounter = ReadValue(@"FpsCounter", false, data);
             ScrollSpeed4K = ReadInt(@"ScrollSpeed4K", 15, 0, 100, data);
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
             DownScroll4K = ReadValue(@"DownScroll4K", true, data);
