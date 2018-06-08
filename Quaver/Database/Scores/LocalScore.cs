@@ -1,4 +1,7 @@
 ﻿using Quaver.API.Enums;
+using Quaver.API.Helpers;
+using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Config;
 using SQLite;
 
 namespace Quaver.Database.Scores
@@ -53,64 +56,34 @@ namespace Quaver.Database.Scores
         public int MaxCombo { get; set; }
 
         /// <summary>
-        ///     The number of marv presses
+        ///     The amount of marvs the user got.
         /// </summary>
-        public int MarvPressCount { get; set; }
+        public int CountMarv { get; set; }
 
         /// <summary>
-        ///     The number of marv releases
+        ///     The amount of perfs the user got.
         /// </summary>
-        public int MarvReleaseCount { get; set; }
+        public int CountPerf { get; set; }
 
         /// <summary>
-        ///     The number of Perf presses
+        ///     The amount of greats the user got.
         /// </summary>
-        public int PerfPressCount { get; set; }
+        public int CountGreat { get; set; }
 
         /// <summary>
-        ///     The number of perf releases
+        ///     The amount of goods the user got.
         /// </summary>
-        public int PerfReleaseCount { get; set; }
+        public int CountGood { get; set; }
 
         /// <summary>
-        ///     The number of great presses
+        ///     The amount of okays the user got.
         /// </summary>
-        public int GreatPressCount { get; set; }
+        public int CountOkay { get; set; }
 
         /// <summary>
-        ///     The number of great releases
+        ///     The amount of misses the user got.
         /// </summary>
-        public int GreatReleaseCount { get; set; }
-
-        /// <summary>
-        ///     The number of good presses
-        /// </summary>
-        public int GoodPressCount { get; set; }
-
-        /// <summary>
-        ///     The number of good releases
-        /// </summary>
-        public int GoodReleaseCount { get; set; }
-
-        /// <summary>
-        ///     The number of okay presses
-        /// </summary>
-        public int OkayPressCount { get; set; }
-
-        /// <summary>
-        ///     The number of okay releases
-        /// </summary>
-        public int OkayReleaseCount { get; set; }
-
-        /// <summary>
-        ///     The number of misses for the score.
-        /// </summary>
-        public int Misses { get; set; }
-
-        /// <summary>
-        ///     The "rating" for the achieved play.
-        /// </summary>
-        public float Rating { get; set; }
+        public int CountMiss { get; set; }
 
         /// <summary>
         ///     Bitwise sum of the mods used in the play
@@ -123,8 +96,41 @@ namespace Quaver.Database.Scores
         public int ScrollSpeed { get; set; }
 
         /// <summary>
-        ///     The replay data for this particular score.
+        ///     String that contains the judgement breakdown the user received.
         /// </summary>
-        public string ReplayData { get; set; }
+        public string JudgementBreakdown { get; set; }
+
+        /// <summary>
+        ///     Creates a local score object from a score processor.
+        /// </summary>
+        /// <param name="processor"></param>
+        /// <param name="md5"></param>
+        /// <param name="name"></param>
+        /// <param name="scrollSpeed"></param>
+        /// <returns></returns>
+        public static LocalScore FromScoreProcessor(ScoreProcessor processor, string md5, string name, int scrollSpeed)
+        {
+            var score = new LocalScore()
+            {
+                MapMd5 = md5,
+                Name = name,
+                DateTime = $"{System.DateTime.Now.ToShortDateString()} {System.DateTime.Now.ToShortTimeString()}",
+                Score = processor.Score,
+                Grade = processor.Failed ? Grade.F : GradeHelper.GetGradeFromAccuracy(processor.Accuracy),
+                Accuracy = processor.Accuracy,
+                MaxCombo = processor.MaxCombo,
+                CountMarv = processor.CurrentJudgements[Judgement.Marv],
+                CountPerf = processor.CurrentJudgements[Judgement.Perf],
+                CountGreat = processor.CurrentJudgements[Judgement.Great],
+                CountGood = processor.CurrentJudgements[Judgement.Good],
+                CountOkay = processor.CurrentJudgements[Judgement.Okay],
+                CountMiss = processor.CurrentJudgements[Judgement.Miss],
+                Mods = (int)processor.Mods,
+                ScrollSpeed = scrollSpeed,
+                JudgementBreakdown = processor.GetJudgementBreakdown()
+            };
+
+            return score;
+        }
     }
 }
