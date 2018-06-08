@@ -83,6 +83,7 @@ namespace Quaver.States.Select
                     TextScale = 0.65f
                 };
                 
+                
                 // Set modsposition.
                 var modsTextSize = mods.Font.MeasureString(mods.Text);        
                 mods.PosX = avatar.SizeX + modsTextSize.X * mods.TextScale / 2f + 10;
@@ -117,6 +118,21 @@ namespace Quaver.States.Select
                 var comboTextSize = maxCombo.Font.MeasureString(maxCombo.Text);
                 maxCombo.PosX = -comboTextSize.X * maxCombo.TextScale / 2f - 8;
                 maxCombo.PosY = -comboTextSize.Y / 2f;
+                
+                // Create score text.
+                var ma = new SpriteText()
+                {
+                    Parent = display,
+                    Font = QuaverFonts.AssistantRegular16,
+                    Alignment = Alignment.MidRight,
+                    Text = $"{Scores[i].CountMarv}/{Scores[i].CountPerf}/{Scores[i].CountGreat}/{Scores[i].CountGood}/{Scores[i].CountOkay}/{Scores[i].CountMiss}",
+                    TextScale = 0.72f,
+                    Alpha = 1
+                };
+                
+                var maTextSize = ma.Font.MeasureString(ma.Text);
+                ma.PosX = -maTextSize.X * ma.TextScale / 2f - 8;
+                ma.PosY = -maTextSize.Y / 2f + 10;
 
                 var grade = new Sprite()
                 {

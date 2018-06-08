@@ -244,8 +244,8 @@ namespace Quaver.States.Select
             // Create back button
             BackButton = new TextButton(new Vector2(200, 50), "Back")
             {
-                PosY = - 90,
-                Alignment = Alignment.BotCenter,
+                PosY = -10,
+                Alignment = Alignment.BotLeft,
                 Parent = Container
             };
             BackButton.Clicked += OnBackButtonClick;
