@@ -127,6 +127,8 @@ namespace Quaver.States.Results
             UpdateReady = true;
             ChangeDiscordPresence();
             PlayApplauseEffect();
+            
+            Console.WriteLine(GameplayScreen.Ruleset.ScoreProcessor.Stats.Count);
         }
 
         /// <inheritdoc />
