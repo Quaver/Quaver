@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Quaver.Helpers;
 using Quaver.Resources;
-using Steamworks;
 
 namespace Quaver.Main
 {

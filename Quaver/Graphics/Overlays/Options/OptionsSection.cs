@@ -13,7 +13,6 @@ using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Main;
-using Steamworks;
 
 namespace Quaver.Graphics.Overlays.Options
 {
