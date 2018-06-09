@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
 using Microsoft.Xna.Framework;
@@ -473,10 +475,9 @@ namespace Quaver.States.Select
             Task.Run(async () =>
             {
                 try
-                {
+                {   
                     var scores = await LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
                     ScoreDisplay.UpdateDisplay(scores);
-                    Logger.LogSuccess($"{scores.Count} scores loaded for this map.", LogType.Runtime);
                 }
                 catch (Exception e)
                 {

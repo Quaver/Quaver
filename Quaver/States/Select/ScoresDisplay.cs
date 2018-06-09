@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
+using System.Threading;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
@@ -103,6 +106,21 @@ namespace Quaver.States.Select
                 var scoreTextSize = score.Font.MeasureString(score.Text);
                 score.PosX = avatar.SizeX + scoreTextSize.X * score.TextScale / 2f + 12;
                 score.PosY = username.PosY + scoreTextSize.Y * score.TextScale / 2f + 12;
+                
+                // Create score text.
+                var acc = new SpriteText()
+                {
+                    Parent = display,
+                    Font = QuaverFonts.AssistantRegular16,
+                    Alignment = Alignment.BotLeft,
+                    Text = StringHelper.AccuracyToString((float)scores[i].Accuracy),
+                    TextScale = 0.78f,
+                    Alpha = 1
+                };
+            
+                var accTextSize = acc.Font.MeasureString(acc.Text);
+                acc.PosX = avatar.SizeX + accTextSize.X * acc.TextScale / 2f + 12;
+                acc.PosY = acc.PosY -accTextSize.Y * acc.TextScale / 2f;
                 
                 // Create score text.
                 var maxCombo = new SpriteText()
