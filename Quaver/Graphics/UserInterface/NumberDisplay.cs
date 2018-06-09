@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Sprites;
@@ -29,7 +31,7 @@ namespace Quaver.Graphics.UserInterface
         {
             get => _value;
             set
-            {
+            {              
                 // Here we run a check to see if the value incoming isn't the same as the
                 // already set one. If is then we skip over it. If not, we set the new value,
                 // and re-initialize the digits. This is so that we aren't looping more times than

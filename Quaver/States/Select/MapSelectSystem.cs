@@ -9,6 +9,7 @@ using Quaver.Graphics.UserInterface;
 using Quaver.Logging;
 using Quaver.Main;
 using Microsoft.Xna.Framework;
+using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 
@@ -79,6 +80,13 @@ namespace Quaver.States.Select
         /// </summary>
         private bool FirstLoad { get; set; }
 
+        private SongSelectState State { get; }
+
+        internal MapSelectSystem(SongSelectState state)
+        {
+            State = state;
+        }
+        
         /// <summary>
         ///     Initialize
         /// </summary>
@@ -412,7 +420,6 @@ namespace Quaver.States.Select
 
             var oldMapAudioPath = GameBase.SelectedMap.Directory + "/" + GameBase.SelectedMap.AudioPath;
             Map.ChangeSelected(map);
-            //Console.WriteLine(GameBase.CurrentAudioPath);
 
             // Only load the audio again if the new map's audio isn't the same as the old ones.
             if (oldMapAudioPath != map.Directory + "/" + map.AudioPath || !FirstLoad)
@@ -441,16 +448,9 @@ namespace Quaver.States.Select
                     BackgroundManager.Change(GameBase.CurrentBackground);
                 });
             }
-
-            // Load all the local scores from this map 
-            // TODO: Add filters, this should come after there's some sort of UI to do so
-            // TODO #2: Actually display these scores on-screen somewhere. Add loading animation before running task.
-            // TODO #3: Move this somewhere so that it automatically loads the scores upon first load as well.
-            //Task.Run(async () => await LocalScoreCache.SelectBeatmapScores(GameBase.SelectedBeatmap.Md5Checksum))
-            //    .ContinueWith(t => Logger.Log($"Successfully loaded {t.Result.Count} local scores for this map.", LogColors.GameInfo,0.2f));
-
-            //TODO: make it so scrolling is disabled until background has been loaded
-            //ScrollingDisabled = false;
+                                 
+            // Load local scores
+            State.LoadScores();
         }
 
         /// <summary>
@@ -479,7 +479,7 @@ namespace Quaver.States.Select
         {
             DiffSelectButtons[SelectedDiffIndex].Selected = false;
             DiffSelectButtons[index].Selected = true;
-            SelectDifficulty(index);
+            SelectDifficulty(index);       
         }
     }
 }

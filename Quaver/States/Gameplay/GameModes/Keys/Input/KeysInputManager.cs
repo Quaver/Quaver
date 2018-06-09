@@ -160,7 +160,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 Ruleset.ScoreProcessor.CalculateScore(judgement);
 
                 // Add new hit stat data.
-                var stat = new HitStat(hitObject.Info, time, judgement, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+                var stat = new HitStat(HitStatType.Hit, hitObject.Info, time, judgement, hitDifference, 
+                                        Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                 Ruleset.ScoreProcessor.Stats.Add(stat);
                 
                 // Update all the users on the scoreboard.
@@ -257,7 +258,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 Ruleset.ScoreProcessor.CalculateScore(receivedJudgement);
                 
                 // Add new hit stat data.
-                var stat = new HitStat(manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.CurrentTime, receivedJudgement, timeDiff, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+                var stat = new HitStat(HitStatType.Hit, manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.CurrentTime, 
+                                            receivedJudgement, timeDiff, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                 Ruleset.ScoreProcessor.Stats.Add(stat);
                 
                 // Update all the users on the scoreboard.
@@ -281,7 +283,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 Ruleset.ScoreProcessor.CalculateScore(receivedJudgement);
                 
                 // Add new hit stat data.
-                var stat = new HitStat(manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.CurrentTime, receivedJudgement, timeDiff, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+                var stat = new HitStat(HitStatType.Hit, manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.CurrentTime, 
+                                            receivedJudgement, timeDiff, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
                 Ruleset.ScoreProcessor.Stats.Add(stat);
                 
                 // Update all the users on the scoreboard.

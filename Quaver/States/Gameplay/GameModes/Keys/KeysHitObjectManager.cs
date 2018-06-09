@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Quaver.API.Enums;
+using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Sprites;
@@ -164,7 +165,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     
                     // Update all the users on the scoreboard.
                     Ruleset.Screen.UI.UpdateScoreboardUsers();
-
+                    
+                    // Add new hit stat data.
+                    var stat = new HitStat(HitStatType.Miss, hitObject.Info, Ruleset.Screen.Timing.CurrentTime, Judgement.Miss, 
+                                            int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+                    Ruleset.ScoreProcessor.Stats.Add(stat);
+                    
                     // Make the combo display visible since it is now changing.
                     var playfield = (KeysPlayfield) Ruleset.Playfield;
                     playfield.Stage.ComboDisplay.MakeVisible();
@@ -177,6 +183,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     {
                         KillPoolObject(i);
                         Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                        
+                        // Add a duplicate stat since it's an LN, and it counts as two misses.
+                        Ruleset.ScoreProcessor.Stats.Add(stat);
                         
                         // Update all the users on the scoreboard.
                         Ruleset.Screen.UI.UpdateScoreboardUsers();
@@ -217,8 +226,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 {
                     // The judgement that is given when a user completely misses the release.
                     const Judgement missedJudgement = Judgement.Okay;
-                    
+   
+                    // Calc new score.
                     Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
+                    
+                    // Add new hit stat data.
+                    var stat = new HitStat(HitStatType.Miss, hitObject.Info, Ruleset.Screen.Timing.CurrentTime, Judgement.Okay, 
+                                                int.MinValue, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+                    Ruleset.ScoreProcessor.Stats.Add(stat);
                     
                     // Update all the users on the scoreboard.
                     Ruleset.Screen.UI.UpdateScoreboardUsers();

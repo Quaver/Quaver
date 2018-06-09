@@ -96,7 +96,7 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
                     return;
                 
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundRetry);
-                GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Map, Screen.MapHash));
+                GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Map, Screen.MapHash, Screen.LocalScores));
             };
                  
             // Quit Button

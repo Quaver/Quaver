@@ -25,12 +25,12 @@ namespace Quaver.Graphics.Buttons
         ///     The place holder text for the input field
         ///     TODO: This should NOT be the actual text that is in the box. Currently it is treated as the actual text.
         /// </summary>
-        internal string PlaceHolderText { get; private set; }
+        internal string PlaceHolderText { get; set; }
 
         /// <summary>
         ///     The current text in the box
         /// </summary>
-        internal StringBuilder CurrentTextField { get; private set; }
+        internal StringBuilder CurrentTextField { get; set; }
 
         /// <summary>
         ///     If the text input is currently selected

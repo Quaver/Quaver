@@ -214,6 +214,10 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
                 SetTextColorBasedOnHealth();
                 return;
             }
+
+            // If the user doesn't have any more judgements then don't update them.
+            if (UserJudgements.Count - 1 < CurrentJudgement)
+                return;
             
             Processor.CalculateScore(UserJudgements[CurrentJudgement]);
             HitBurst.PerformJudgementAnimation(UserJudgements[CurrentJudgement]);

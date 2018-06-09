@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -31,6 +32,11 @@ namespace Quaver
         [STAThread]
         private static void Main()
         {
+            // Set invariant culture.
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+            
             // Set UTF-8 encoding for console outputs
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 

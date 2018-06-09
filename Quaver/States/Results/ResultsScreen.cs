@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.GameState;
 using Quaver.Graphics;
@@ -15,9 +18,12 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.Config;
+using Quaver.Database.Scores;
 using Quaver.Discord;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
+using Quaver.Logging;
 using Quaver.States.Select;
 using Color = Microsoft.Xna.Framework.Color;
 
@@ -95,6 +101,16 @@ namespace Quaver.States.Results
         ///     Song title + Difficulty name.
         /// </summary>
         private string SongTitle => $"{GameplayScreen.Map.Artist} - {GameplayScreen.Map.Title} [{GameplayScreen.Map.DifficultyName}]";
+
+        /// <summary>
+        ///     MD5 Hash of the map played.
+        /// </summary>
+        private string Md5 => GameplayScreen.MapHash;
+        
+        /// <summary>
+        ///     The user's scroll speed.
+        /// </summary>
+        private int ScrollSpeed => GameplayScreen.Map.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K.Value : ConfigManager.ScrollSpeed7K.Value;
         
         /// <summary>
         ///     Ctor
@@ -127,6 +143,9 @@ namespace Quaver.States.Results
             UpdateReady = true;
             ChangeDiscordPresence();
             PlayApplauseEffect();
+            
+            // Save local score asynchronously.
+            SaveLocalScore();
         }
 
         /// <inheritdoc />
@@ -312,6 +331,27 @@ namespace Quaver.States.Results
             
             if (!GameplayScreen.Failed && GameplayScreen.Ruleset.ScoreProcessor.Accuracy >= 80)
                 ApplauseSound.Play();
+        }
+
+        /// <summary>
+        ///     Saves a local score to the database.
+        /// </summary>
+        private void SaveLocalScore()
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    var localScore = LocalScore.FromScoreProcessor(GameplayScreen.Ruleset.ScoreProcessor, Md5, ConfigManager.Username.Value, ScrollSpeed);
+                    await LocalScoreCache.InsertScoreIntoDatabase(localScore);
+                    
+                    Logger.LogSuccess($"Successfully saved local score to the database", LogType.Runtime);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError($"There was a fatal error when saving the local score!" + e.Message, LogType.Runtime);
+                }
+            });
         }
     }
 }

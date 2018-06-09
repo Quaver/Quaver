@@ -359,7 +359,7 @@ namespace Quaver.Config
             AutoLoadEtternaCharts = ReadValue(@"AutoLoadEtternaCharts", false, data);
             Username = ReadValue(@"Username", "", data);
             VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
-            VolumeEffect = ReadInt(@"VolumeEffect", 80, 0, 100, data);
+            VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
             BackgroundBrightness = ReadInt(@"BackgroundBrightness", 30, 0, 100, data);
             WindowHeight = ReadInt(@"WindowHeight", 720, 600, short.MaxValue, data);
@@ -380,7 +380,7 @@ namespace Quaver.Config
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Arrow, data);
             Pitched = ReadValue(@"Pitched", false, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
-            BotsEnabled = ReadValue(@"BotsEnabled", true, data);
+            BotsEnabled = ReadValue(@"BotsEnabled", false, data);
             BotCount = ReadInt(@"BotCount", 4, 1, 6, data);
             AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);

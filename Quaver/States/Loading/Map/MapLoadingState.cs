@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Quaver.API.Maps;
@@ -6,6 +7,7 @@ using Quaver.API.Maps.Parsers;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
+using Quaver.Database.Scores;
 using Quaver.GameState;
 using Quaver.Logging;
 using Quaver.Main;
@@ -27,6 +29,12 @@ namespace Quaver.States.Loading.Map
         /// </summary>
         public bool UpdateReady { get; set; }
 
+        private List<LocalScore> Scores { get; }
+
+        internal MapLoadingState(List<LocalScore> scores)
+        {
+            Scores = scores;
+        }
         /// <summary>
         ///     Try to load the qua file and song. 
         ///     If we've successfully loaded it, move onto the play state.
@@ -125,7 +133,7 @@ namespace Quaver.States.Loading.Map
         /// <summary>
         ///     Responsible for getting the state ready to be changed, and then actually changing it.
         /// </summary>
-        private static void ChangeState()
+        private void ChangeState()
         {
             // If the Qua isn't valid then return back to the song select state
             if (!GameBase.SelectedMap.Qua.IsValidQua)
@@ -166,7 +174,7 @@ namespace Quaver.States.Loading.Map
                 }
             
                 // GameBase.GameStateManager.ChangeState(new ManiaGameplayState(GameBase.SelectedMap.Qua, md5));
-                GameBase.GameStateManager.ChangeState(new GameplayScreen(GameBase.SelectedMap.Qua, md5));
+                GameBase.GameStateManager.ChangeState(new GameplayScreen(GameBase.SelectedMap.Qua, md5, Scores));
             }
             catch (Exception e)
             {

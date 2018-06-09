@@ -346,11 +346,28 @@ namespace Quaver.States.Gameplay.UI
                 }
             };
 
+            // Add local scores.
+            for (var i = 0; i < Screen.LocalScores.Count && i < 5; i++)
+            {                
+                // Decompress score
+                var scoreJudgements = new List<Judgement>();
+
+                // Decompress the local score and add all the judgements to the list
+                foreach (var c in GzipHelper.Decompress(Screen.LocalScores[i].JudgementBreakdown))
+                    scoreJudgements.Add((Judgement)int.Parse(c.ToString()));
+
+                users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{Screen.LocalScores[i].Name} #{i + 1}", scoreJudgements, GameBase.QuaverUserInterface.UnknownAvatar)
+                {
+                    Parent = Container,
+                    Alignment = Alignment.MidLeft
+                });
+            }
+            
             // Create bots on the scoreboard.
             if (ConfigManager.BotsEnabled.Value)
             {
                 // Generate bots users on the scoreboard if need be.
-                for (var i = 0; i < ConfigManager.BotCount.Value; i++)
+                for (var i = 0; i < ConfigManager.BotCount.Value && users.Count - 1 < ConfigManager.BotCount.Value; i++)
                 {
                     // Create new bot.
                     var bot = new Bot(Screen.Map, BotLevel.Decent);
