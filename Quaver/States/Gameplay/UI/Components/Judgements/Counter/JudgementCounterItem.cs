@@ -40,7 +40,7 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements.Counter
                 _judgementCount = value;
 
                 // Change the color to its active one.
-                Tint = GameBase.LoadedSkin.GetJudgeColor(Judgement);
+                Tint = GameBase.Skin.Keys[GameBase.SelectedMap.Mode].JudgeColors[Judgement];
                 
                 // Don't animate it if the user doesn't want to.
                 if (!ConfigManager.AnimateJudgementCounter.Value)

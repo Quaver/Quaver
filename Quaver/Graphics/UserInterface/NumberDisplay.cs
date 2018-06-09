@@ -218,91 +218,91 @@ namespace Quaver.Graphics.UserInterface
                 // 0
                 case '0' when Type == NumberDisplayType.Score:
                 case '0' when Type == NumberDisplayType.Accuracy:
-                    return GameBase.LoadedSkin.ScoreDisplayNumbers[0];
+                    return GameBase.Skin.ScoreDisplayNumbers[0];
                 case '0' when Type == NumberDisplayType.Combo:
-                    return GameBase.LoadedSkin.ComboDisplayNumbers[0];
+                    return GameBase.Skin.ComboDisplayNumbers[0];
                 case '0' when Type == NumberDisplayType.SongTime:
-                    return GameBase.LoadedSkin.SongTimeDisplayNumbers[0];
+                    return GameBase.Skin.SongTimeDisplayNumbers[0];
                 // 1
                 case '1' when Type == NumberDisplayType.Score:
                 case '1' when Type == NumberDisplayType.Accuracy:
-                    return GameBase.LoadedSkin.ScoreDisplayNumbers[1];
+                    return GameBase.Skin.ScoreDisplayNumbers[1];
                 case '1' when Type == NumberDisplayType.Combo:
-                    return GameBase.LoadedSkin.ComboDisplayNumbers[1];
+                    return GameBase.Skin.ComboDisplayNumbers[1];
                 case '1' when Type == NumberDisplayType.SongTime:
-                    return GameBase.LoadedSkin.SongTimeDisplayNumbers[1];
+                    return GameBase.Skin.SongTimeDisplayNumbers[1];
                 // 2
                 case '2' when Type == NumberDisplayType.Score:
                 case '2' when Type == NumberDisplayType.Accuracy:
-                    return GameBase.LoadedSkin.ScoreDisplayNumbers[2];
+                    return GameBase.Skin.ScoreDisplayNumbers[2];
                 case '2' when Type == NumberDisplayType.Combo:
-                    return GameBase.LoadedSkin.ComboDisplayNumbers[2];
+                    return GameBase.Skin.ComboDisplayNumbers[2];
                 case '2' when Type == NumberDisplayType.SongTime:
-                    return GameBase.LoadedSkin.SongTimeDisplayNumbers[2];
+                    return GameBase.Skin.SongTimeDisplayNumbers[2];
                 // 3
                 case '3' when Type == NumberDisplayType.Score:
                 case '3' when Type == NumberDisplayType.Accuracy:
-                    return GameBase.LoadedSkin.ScoreDisplayNumbers[3];
+                    return GameBase.Skin.ScoreDisplayNumbers[3];
                 case '3' when Type == NumberDisplayType.Combo:
-                    return GameBase.LoadedSkin.ComboDisplayNumbers[3];
+                    return GameBase.Skin.ComboDisplayNumbers[3];
                 case '3' when Type == NumberDisplayType.SongTime:
-                    return GameBase.LoadedSkin.SongTimeDisplayNumbers[3];
+                    return GameBase.Skin.SongTimeDisplayNumbers[3];
                 // 4
                 case '4' when Type == NumberDisplayType.Score:
                 case '4' when Type == NumberDisplayType.Accuracy:
-                    return GameBase.LoadedSkin.ScoreDisplayNumbers[4];
+                    return GameBase.Skin.ScoreDisplayNumbers[4];
                 case '4' when Type == NumberDisplayType.Combo:
-                    return GameBase.LoadedSkin.ComboDisplayNumbers[4];
+                    return GameBase.Skin.ComboDisplayNumbers[4];
                 case '4' when Type == NumberDisplayType.SongTime:
-                    return GameBase.LoadedSkin.SongTimeDisplayNumbers[4];
+                    return GameBase.Skin.SongTimeDisplayNumbers[4];
                 // 5
                 case '5' when Type == NumberDisplayType.Score:
                 case '5' when Type == NumberDisplayType.Accuracy:
-                    return GameBase.LoadedSkin.ScoreDisplayNumbers[5];
+                    return GameBase.Skin.ScoreDisplayNumbers[5];
                 case '5' when Type == NumberDisplayType.Combo:
-                    return GameBase.LoadedSkin.ComboDisplayNumbers[5];
+                    return GameBase.Skin.ComboDisplayNumbers[5];
                 case '5' when Type == NumberDisplayType.SongTime:
-                    return GameBase.LoadedSkin.SongTimeDisplayNumbers[5];
+                    return GameBase.Skin.SongTimeDisplayNumbers[5];
                 // 6
                 case '6' when Type == NumberDisplayType.Score:
                 case '6' when Type == NumberDisplayType.Accuracy:
-                    return GameBase.LoadedSkin.ScoreDisplayNumbers[6];
+                    return GameBase.Skin.ScoreDisplayNumbers[6];
                 case '6' when Type == NumberDisplayType.Combo:
-                    return GameBase.LoadedSkin.ComboDisplayNumbers[6];
+                    return GameBase.Skin.ComboDisplayNumbers[6];
                 case '6' when Type == NumberDisplayType.SongTime:
-                    return GameBase.LoadedSkin.SongTimeDisplayNumbers[6];
+                    return GameBase.Skin.SongTimeDisplayNumbers[6];
                 // 7
                 case '7' when Type == NumberDisplayType.Score:
                 case '7' when Type == NumberDisplayType.Accuracy:
-                    return GameBase.LoadedSkin.ScoreDisplayNumbers[7];
+                    return GameBase.Skin.ScoreDisplayNumbers[7];
                 case '7' when Type == NumberDisplayType.Combo:
-                    return GameBase.LoadedSkin.ComboDisplayNumbers[7];
+                    return GameBase.Skin.ComboDisplayNumbers[7];
                 case '7' when Type == NumberDisplayType.SongTime:
-                    return GameBase.LoadedSkin.SongTimeDisplayNumbers[7];
+                    return GameBase.Skin.SongTimeDisplayNumbers[7];
                 // 8
                 case '8' when Type == NumberDisplayType.Score:
                 case '8' when Type == NumberDisplayType.Accuracy:
-                    return GameBase.LoadedSkin.ScoreDisplayNumbers[8];
+                    return GameBase.Skin.ScoreDisplayNumbers[8];
                 case '8' when Type == NumberDisplayType.Combo:
-                    return GameBase.LoadedSkin.ComboDisplayNumbers[8];
+                    return GameBase.Skin.ComboDisplayNumbers[8];
                 case '8' when Type == NumberDisplayType.SongTime:
-                    return GameBase.LoadedSkin.SongTimeDisplayNumbers[8];
+                    return GameBase.Skin.SongTimeDisplayNumbers[8];
                 // 9
                 case '9' when Type == NumberDisplayType.Score:
                 case '9' when Type == NumberDisplayType.Accuracy:
-                    return GameBase.LoadedSkin.ScoreDisplayNumbers[9];
+                    return GameBase.Skin.ScoreDisplayNumbers[9];
                 case '9' when Type == NumberDisplayType.Combo:
-                    return GameBase.LoadedSkin.ComboDisplayNumbers[9];
+                    return GameBase.Skin.ComboDisplayNumbers[9];
                 case '9' when Type == NumberDisplayType.SongTime:
-                    return GameBase.LoadedSkin.SongTimeDisplayNumbers[9];
+                    return GameBase.Skin.SongTimeDisplayNumbers[9];
                 case '.':
-                    return GameBase.LoadedSkin.ScoreDisplayDecimal;
+                    return GameBase.Skin.ScoreDisplayDecimal;
                 case '%':
-                    return GameBase.LoadedSkin.ScoreDisplayPercent;
+                    return GameBase.Skin.ScoreDisplayPercent;
                 case '-':
-                    return GameBase.LoadedSkin.SongTimeDisplayMinus;
+                    return GameBase.Skin.SongTimeDisplayMinus;
                 case ':':
-                    return GameBase.LoadedSkin.SongTimeDisplayColon;
+                    return GameBase.Skin.SongTimeDisplayColon;
                 default:
                     throw new ArgumentException($"Invalid character {c} specified.");
             }

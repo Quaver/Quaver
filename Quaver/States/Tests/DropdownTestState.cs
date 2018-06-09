@@ -101,7 +101,7 @@ namespace Quaver.States.Tests
                     break;
             }
             
-            Skin.LoadSkin();
+            GameBase.Skin = new SkinStore();
         }
         
         /// <summary>
@@ -112,7 +112,7 @@ namespace Quaver.States.Tests
         private void OnSkinDropdownButtonClicked(object sender, DropdownButtonClickedEventArgs e)
         {
             ConfigManager.Skin.Value = e.ButtonText == "None" ? "" : e.ButtonText;
-            Skin.LoadSkin();
+            GameBase.Skin = new SkinStore();
         }
     }
 }

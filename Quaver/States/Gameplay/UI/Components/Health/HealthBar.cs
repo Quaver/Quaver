@@ -63,14 +63,14 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         public virtual void Initialize(IGameState state)
         {
             // Create the background bar sprite.
-            BackgroundBar = new AnimatableSprite(GameBase.LoadedSkin.HealthBarBackground);
+            BackgroundBar = new AnimatableSprite(GameBase.Skin.HealthBarBackground);
             BackgroundBar.Size = new UDim2D(BackgroundBar.Frames.First().Width, BackgroundBar.Frames.First().Height);
    
             // Start animation
             BackgroundBar.StartLoop(LoopDirection.Forward, 60);
                   
             // Create the foreground bar (the one that'll serve as the gauge progress).
-            ForegroundBar = new AnimatableSprite(GameBase.LoadedSkin.HealthBarForeground);
+            ForegroundBar = new AnimatableSprite(GameBase.Skin.HealthBarForeground);
             ForegroundBar.Size = new UDim2D(ForegroundBar.Frames.First().Width, ForegroundBar.Frames.First().Height);
                         
             // Start animation.

@@ -89,6 +89,7 @@ namespace Quaver.States.Menu
         public void Update(double dt)
         {
             Container.Update(dt);
+            GameBase.Navbar.PerformShowAnimation(dt);
         }
         
         /// <inheritdoc />

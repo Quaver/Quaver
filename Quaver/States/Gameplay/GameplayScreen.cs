@@ -412,7 +412,7 @@ namespace Quaver.States.Gameplay
                 // Restart the map if the user has held it down for 
                 if (RestartKeyHoldTime >= 350)
                 {
-                    GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundRetry);
+                    GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundRetry);
                     GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash));
                 }
 
@@ -443,7 +443,7 @@ namespace Quaver.States.Gameplay
         private void PlayComboBreakSound()
         {
             if (LastRecordedCombo >= 20 && Ruleset.ScoreProcessor.Combo == 0)
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundComboBreak);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundComboBreak);
 
             LastRecordedCombo = Ruleset.ScoreProcessor.Combo;
         }
@@ -465,7 +465,7 @@ namespace Quaver.States.Gameplay
             catch (AudioEngineException e) {}
             
             // Play failure sound.
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundFailure);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundFailure);
 
             FailureHandled = true;
         }

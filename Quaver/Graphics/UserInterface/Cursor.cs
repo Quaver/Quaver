@@ -24,7 +24,7 @@ namespace Quaver.Graphics.UserInterface
         internal Cursor()
         {
             Size = new UDim2D(CursorSize, CursorSize);
-            Image = GameBase.LoadedSkin.Cursor;
+            Image = GameBase.Skin.Cursor;
             Alignment = Alignment.TopLeft;
         }
 

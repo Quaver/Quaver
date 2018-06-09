@@ -70,29 +70,7 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements
             if (IsLooping)
                 StopLoop();
             
-            switch (j)
-            {
-                case Judgement.Marvelous:
-                    ReplaceFrames(GameBase.LoadedSkin.JudgeMarv);
-                    break;
-                case Judgement.Perfect:
-                    ReplaceFrames(GameBase.LoadedSkin.JudgePerf);
-                    break;
-                case Judgement.Great:
-                    ReplaceFrames(GameBase.LoadedSkin.JudgeGreat);
-                    break;
-                case Judgement.Good:
-                    ReplaceFrames(GameBase.LoadedSkin.JudgeGood);
-                    break;
-                case Judgement.Okay:
-                    ReplaceFrames(GameBase.LoadedSkin.JudgeOkay);
-                    break;
-                case Judgement.Miss:
-                    ReplaceFrames(GameBase.LoadedSkin.JudgeMiss);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(j), j, null);
-            }
+            ReplaceFrames(GameBase.Skin.Judgements[j]);
         }
 
         /// <summary>

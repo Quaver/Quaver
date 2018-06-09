@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Quaver.API.Enums;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
@@ -128,7 +129,7 @@ namespace Quaver.Graphics.Buttons
                 Position = new UDim2D(-16 * ButtonScale, 0),
                 Size = new UDim2D(14 * ButtonScale, 14 * ButtonScale),
                 Alpha = 1f,
-                Image = GameBase.LoadedSkin.GradeSmallA,
+                Image = GameBase.Skin.Grades[Grade.A],
                 Alignment = Alignment.MidRight,
                 Parent = UnderlayImage
             };
@@ -136,7 +137,7 @@ namespace Quaver.Graphics.Buttons
             GameModeImage = new Sprites.Sprite()
             {
                 Size = new UDim2D(14 * ButtonScale, 14 * ButtonScale),
-                Image = GameBase.LoadedSkin.Cursor,
+                Image = GameBase.Skin.Cursor,
                 Alpha = 0.5f,
                 Alignment = Alignment.MidRight,
                 Parent = UnderlayImage

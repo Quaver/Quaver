@@ -133,7 +133,7 @@ namespace Quaver.Graphics.Overlays.Navbar
              // Play sound effect if necessary
              if (!MouseOverSoundPlayed)
              {
-                 GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover);
+                 GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover);
                  MouseOverSoundPlayed = true;
              }
         }

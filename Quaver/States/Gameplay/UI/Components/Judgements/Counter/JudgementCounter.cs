@@ -44,14 +44,14 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements.Counter
             for (var i = 0; i < Screen.Ruleset.ScoreProcessor.CurrentJudgements.Count; i++)
             {
                 var key = (Judgement) i;
-                var color = GameBase.LoadedSkin.GetJudgeColor(key);      
+                var color = GameBase.Skin.Keys[Screen.Map.Mode].JudgeColors[key];      
                 
                 // Default it to an inactive color.
                 JudgementDisplays[key] = new JudgementCounterItem(this, key, new Color(color.R / 2, color.G / 2, color.B / 2), new Vector2(DisplayItemSize.Y, DisplayItemSize.Y))
                 {
                     Alignment = Alignment.MidRight,
                     Parent = this,
-                    Image = GameBase.LoadedSkin.JudgementOverlay,
+                    Image = GameBase.Skin.JudgementOverlay,
                 };
 
                 // Normalize the position of the first one so that all the rest will be completely in the middle.

@@ -1,4 +1,5 @@
 ﻿using System;
+using Quaver.API.Enums;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
@@ -76,7 +77,7 @@ namespace Quaver.Graphics.Buttons
                 Position = new UDim2D(ButtonScale, 0),
                 Size = new UDim2D(38 * ButtonScale, 38 * ButtonScale),
                 Alpha = 1f,
-                Image = GameBase.LoadedSkin.GradeSmallA,
+                Image = GameBase.Skin.Grades[Grade.A],
                 Alignment = Alignment.MidLeft,
                 Parent = this
             };

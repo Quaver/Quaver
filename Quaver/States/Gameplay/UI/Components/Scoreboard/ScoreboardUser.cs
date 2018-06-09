@@ -113,12 +113,12 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             switch (Type)
             {
                 case ScoreboardUserType.Self:
-                    Image = GameBase.LoadedSkin.Scoreboard;
+                    Image = GameBase.Skin.Scoreboard;
                     Alpha = 1f;
                     textAlpha = 1f;
                     break;
                 case ScoreboardUserType.Other:
-                    Image = GameBase.LoadedSkin.ScoreboardOther;
+                    Image = GameBase.Skin.ScoreboardOther;
                     Alpha = 0.75f;
                     textAlpha = 0.45f;
                     break;
@@ -181,7 +181,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             };
             
             // Create hit burst
-            HitBurst = new JudgementHitBurst(GameBase.LoadedSkin.JudgeMiss, new Vector2(50, 50), 0)
+            HitBurst = new JudgementHitBurst(GameBase.Skin.Judgements[Judgement.Miss], new Vector2(50, 50), 0)
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,

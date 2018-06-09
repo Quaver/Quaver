@@ -225,7 +225,7 @@ namespace Quaver.States.Results
             Back.Clicked += (o, e) =>
             {                      
                 IsExitingScreen = true;
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundBack);  
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundBack);  
                 ApplauseSound.Stop();
             };
         }
@@ -275,7 +275,7 @@ namespace Quaver.States.Results
                     PosY = 35 * i + -150,
                     Font = QuaverFonts.AssistantRegular16,
                     Text = $"{judgement.ToString()}: {GameplayScreen.Ruleset.ScoreProcessor.CurrentJudgements[judgement]}",
-                    TextColor = GameBase.LoadedSkin.GetJudgeColor(judgement)
+                    TextColor = GameBase.Skin.Keys[GameplayScreen.Map.Mode].JudgeColors[judgement]
                 });
             }
         }
@@ -288,9 +288,9 @@ namespace Quaver.States.Results
             Texture2D gradeTexture;
 
             if (GameplayScreen.Failed)
-                gradeTexture = GameBase.LoadedSkin.GradeSmallF;
+                gradeTexture = GameBase.Skin.Grades[Grade.F];
             else
-                gradeTexture = GameBase.LoadedSkin.ConvertGradeToSkinElement(GradeHelper.GetGradeFromAccuracy(GameplayScreen.Ruleset.ScoreProcessor.Accuracy));
+                gradeTexture = GameBase.Skin.Grades[GradeHelper.GetGradeFromAccuracy(GameplayScreen.Ruleset.ScoreProcessor.Accuracy)];
             
             var grade = new Sprite()
             {
@@ -308,7 +308,7 @@ namespace Quaver.States.Results
         /// </summary>
         private void PlayApplauseEffect()
         {
-            ApplauseSound = GameBase.LoadedSkin.SoundApplause.CreateInstance();
+            ApplauseSound = GameBase.Skin.SoundApplause.CreateInstance();
             
             if (!GameplayScreen.Failed && GameplayScreen.Ruleset.ScoreProcessor.Accuracy >= 80)
                 ApplauseSound.Play();

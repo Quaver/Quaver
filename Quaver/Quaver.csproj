@@ -106,6 +106,9 @@
     <Compile Include="Main\CommonTaskScheduler.cs" />
     <Compile Include="Main\FontAwesome.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModNoPause.cs" />
+    <Compile Include="Skinning\SkinKeys.cs" />
+    <Compile Include="Skinning\SkinKeysFolder.cs" />
+    <Compile Include="Skinning\SkinStore.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\GameModeRulesetKeys.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputManager.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputBinding.cs" />
@@ -162,7 +165,6 @@
     <Compile Include="Database\Scores\LocalScoreCache.cs" />
     <Compile Include="Discord\DiscordController.cs" />
     <Compile Include="Discord\DiscordRPC.cs" />
-    <Compile Include="Graphics\Particles\Gameplay\HitEffect.cs" />
     <Compile Include="States\IGameStateComponent.cs" />
     <Compile Include="States\Options\OptionsState.cs" />
     <Compile Include="States\Select\SongSelectState.cs" />
@@ -222,7 +224,6 @@
     <Compile Include="Replays\ReplayFrame.cs" />
     <Compile Include="Replays\ReplayHelper.cs" />
     <Compile Include="Database\Scores\LocalScore.cs" />
-    <Compile Include="Skinning\Skin.cs" />
     <Compile Include="States\Tests\AnimatableSpriteTestScreen.cs" />
     <Compile Include="States\Tests\DropdownTestState.cs" />
     <Compile Include="States\Tests\CheckboxTestState.cs" />

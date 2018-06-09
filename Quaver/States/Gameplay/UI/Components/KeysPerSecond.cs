@@ -37,7 +37,7 @@ namespace Quaver.States.Gameplay.UI.Components
             
             CalculateKeysPerSecond();
             Value = Kps.ToString();
-            PosX = -TotalWidth + GameBase.LoadedSkin.KpsDisplayPosX;
+            PosX = -TotalWidth + GameBase.Skin.Keys[GameBase.SelectedMap.Mode].KpsDisplayPosX;
                       
             base.Update(dt);
         }

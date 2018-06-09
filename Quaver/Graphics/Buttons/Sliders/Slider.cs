@@ -207,7 +207,7 @@ namespace Quaver.Graphics.Buttons.Sliders
             // Play sound effect if necessary
             if (!MouseOverSoundPlayed && !SliderAlreadyHeld)
             {
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover);
                 MouseOverSoundPlayed = true;
             }         
         }
@@ -259,7 +259,7 @@ namespace Quaver.Graphics.Buttons.Sliders
             var max = val > PreviousValue ? 1f : 0;
             var min = val > PreviousValue ? 0 : -1f;
             
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHover, ProgressPercentage* (max - min) / 100f + min);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover, ProgressPercentage* (max - min) / 100f + min);
         }
 
         /// <summary>

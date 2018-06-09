@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield;
@@ -31,7 +32,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         ///     The speed at which objects fall down from the screen.
         /// </summary>
-        internal static float ScrollSpeed => ConfigManager.ScrollSpeed4K.Value / (20f * GameBase.AudioEngine.PlaybackRate);
+        internal static float ScrollSpeed {
+            get
+            {
+                var speed = GameBase.SelectedMap.Qua.Mode  == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K : ConfigManager.ScrollSpeed7K;
+                return speed.Value / (20f * GameBase.AudioEngine.PlaybackRate);
+            }          
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -66,22 +73,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             get
             {
                 var playfield = (KeysPlayfield) Ruleset.Playfield;
+                var skin = GameBase.Skin.Keys[Ruleset.Mode];
+                
+                if (IsDownscroll)
+                    return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPosOffsetY);
 
-                switch (Ruleset.Mode)
-                {
-                    case GameMode.Keys4:
-                        if (ConfigManager.DownScroll4K.Value)
-                            return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset4K.Value + GameBase.LoadedSkin.HitPositionOffset4K);
-                        else
-                            return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset4K.Value + GameBase.LoadedSkin.HitPositionOffset4K) + GameBase.LoadedSkin.ColumnSize4K;
-                    case GameMode.Keys7:
-                        if (ConfigManager.DownScroll7K.Value)
-                            return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset7K.Value + GameBase.LoadedSkin.HitPositionOffset7K);
-                        else
-                            return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset7K.Value + GameBase.LoadedSkin.HitPositionOffset7K) + GameBase.LoadedSkin.ColumnSize7K;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                // Up Scroll
+                return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPosOffsetY) + skin.ColumnSize;
             }
         }
 

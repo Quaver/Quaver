@@ -167,7 +167,8 @@ namespace Quaver.States.Select
             //Check input to update song select ui
             TimeElapsedSinceStartup += (float)dt;
             KeyboardScrollBuffer += (float)dt;
-
+            GameBase.Navbar.PerformShowAnimation(dt);
+            
             // It will ignore input until 250ms go by
             /*
             if (!MapSelectSystem.ScrollingDisabled && TimeElapsedSinceStartup > 250)
@@ -241,7 +242,7 @@ namespace Quaver.States.Select
         /// </summary>
         private void OnPlayMapButtonClick(object sender, EventArgs e)
         {
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundClick);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             GameBase.GameStateManager.ChangeState(new MapLoadingState());
         }
 
@@ -286,7 +287,7 @@ namespace Quaver.States.Select
         /// <param name="e"></param>
         private void OnBackButtonClick(object sender, EventArgs e)
         {
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundBack);
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundBack);
             GameBase.GameStateManager.ChangeState(new MainMenuState());
         }
 

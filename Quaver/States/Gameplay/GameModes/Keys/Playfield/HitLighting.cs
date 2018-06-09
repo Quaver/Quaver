@@ -29,7 +29,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        internal HitLighting() : base(GameBase.LoadedSkin.HitLighting)
+        internal HitLighting() : base(GameBase.Skin.Keys[GameBase.SelectedMap.Mode].HitLighting)
         {
             FinishedLooping += OnLoopCompletion;
         }
@@ -52,8 +52,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         internal void PerformHitAnimation()
         {
+            var skin = GameBase.Skin.Keys[GameBase.SelectedMap.Mode];
+            
             // First begin by replacing the frames
-            ReplaceFrames(IsHoldingLongNote ? GameBase.LoadedSkin.HoldLighting : GameBase.LoadedSkin.HitLighting);
+            ReplaceFrames(IsHoldingLongNote ? skin.HoldLighting : skin.HitLighting);
             
             // Go to the first frame and reset each of the properties 
             ChangeTo(0);

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
@@ -103,9 +104,12 @@ namespace Quaver.Main
             // Load all fonts
             QuaverFonts.Load();
 
-            // Load the Game Skin Before Starting
-            Skin.LoadSkin();
-
+            // Load the Game Skin 
+            GameBase.Skin = new SkinStore();
+            
+            // Load cursor after skin.
+            GameBase.Cursor = new Cursor();
+                      
             // Initialze the logger
             Logger.Initialize();
 

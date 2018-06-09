@@ -55,14 +55,14 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
                 Parent = this,
                 Size = new UDim2D(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height),
                 Alpha = 0,
-                Image = GameBase.LoadedSkin.PauseBackground
+                Image = GameBase.Skin.PauseBackground
             };
 
             // Continue Button
             Continue = new BasicButton()
             {
                 Parent = this,
-                Image = GameBase.LoadedSkin.PauseContinue,
+                Image = GameBase.Skin.PauseContinue,
                 Alignment = Alignment.MidLeft,
                 PosY = -150,
                 PosX = ButtonInactivePosX,
@@ -82,7 +82,7 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
             Retry = new BasicButton()
             {
                 Parent = this,
-                Image = GameBase.LoadedSkin.PauseRetry,
+                Image = GameBase.Skin.PauseRetry,
                 Alignment = Alignment.MidLeft,
                 PosY = 0,
                 PosX = ButtonInactivePosX,
@@ -95,7 +95,7 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
                 if (!Screen.IsPaused)
                     return;
                 
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundRetry);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundRetry);
                 GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Map, Screen.MapHash));
             };
                  
@@ -103,7 +103,7 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
             Quit = new BasicButton()
             {
                 Parent = this,
-                Image = GameBase.LoadedSkin.PauseBack,
+                Image = GameBase.Skin.PauseBack,
                 Alignment = Alignment.MidLeft,
                 PosY = 150,
                 PosX = ButtonInactivePosX,

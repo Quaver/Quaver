@@ -14,6 +14,7 @@ using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Main;
+using Quaver.Skinning;
 using Quaver.States.Gameplay.UI;
 using Quaver.States.Gameplay.UI.Components;
 using Quaver.States.Gameplay.UI.Components.Judgements;
@@ -99,6 +100,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// </summary>
         internal List<HitLighting> HitLighting { get; set; }
 
+        /// <summary>
+        ///     Reference to the current skin.
+        /// </summary>
+        private SkinKeys Skin => GameBase.Skin.Keys[Screen.Map.Mode];
+        
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
@@ -113,48 +119,21 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             CreateStageLeft();
             CreateStageRight();
             CreateHitPositionOverlay();
-                          
-            // Create game mode specific sprites.
-            // 4K and 7K are two separate modes and do NOT use the same textures
-            // or skin properties. So we have to implement them separately.
-            switch (Playfield.Map.Mode)
+            CreateBgMask();
+                     
+            // Depending on what the skin.ini's value is, we'll want to either initialize
+            // the receptors first, or the playfield first.
+            if (Skin.ReceptorsOverHitObjects)
             {
-                case GameMode.Keys4:
-                    CreateBgMask4K();
-
-                    // Depending on what the skin.ini's value is, we'll want to either initialize
-                    // the receptors first, or the playfield first.
-                    if (GameBase.LoadedSkin.ReceptorsOverHitObjects4K)
-                    {
-                        CreateHitObjectContainer();
-                        CreateReceptorsAndLighting4K();                 
-                    }
-                    else
-                    {
-                        CreateReceptorsAndLighting4K();  
-                        CreateHitObjectContainer();
-                    }                          
-                    break;
-                case GameMode.Keys7:
-                    CreateBgMask7K();
-
-                    // Depending on what the skin.ini's value is, we'll want to either initialize
-                    // the receptors first, or the playfield first.
-                    if (GameBase.LoadedSkin.ReceptorsOverHitObjects7K)
-                    {
-                        CreateHitObjectContainer();
-                        CreateReceptorsAndLighting7K();                 
-                    }
-                    else
-                    {
-                        CreateReceptorsAndLighting7K();  
-                        CreateHitObjectContainer();
-                    }                    
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                CreateHitObjectContainer();
+                CreateReceptorsAndLighting();
             }
-            
+            else
+            {
+                CreateReceptorsAndLighting();
+                CreateHitObjectContainer();
+            }
+                        
             // Create distant overlay last so it shows over the objects.
             CreateDistantOverlay();
             
@@ -201,11 +180,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         private void CreateStageLeft()
         {
             // Create the left side of the stage.
-            var stageLeftX = GameBase.LoadedSkin.StageLeftBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageLeftBorder.Height;
+            var stageLeftX = Skin.StageLeftBorder.Width * GameBase.WindowRectangle.Height / Skin.StageLeftBorder.Height;
 
             StageLeft = new Sprite()
             {
-                Image = GameBase.LoadedSkin.StageLeftBorder,
+                Image = Skin.StageLeftBorder,
                 Size = new UDim2D(stageLeftX, GameBase.WindowRectangle.Height),
                 Position = new UDim2D(-stageLeftX + 1),
                 Parent = Playfield.BackgroundContainer,
@@ -219,10 +198,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         private void CreateStageRight()
         {
             // Create the right side of the stage.
-            var stageRightX = GameBase.LoadedSkin.StageRightBorder.Width * GameBase.WindowRectangle.Height / GameBase.LoadedSkin.StageRightBorder.Height;
+            var stageRightX = Skin.StageRightBorder.Width * GameBase.WindowRectangle.Height / Skin.StageRightBorder.Height;
             StageRight = new Sprite
             {
-                Image = GameBase.LoadedSkin.StageRightBorder,
+                Image = Skin.StageRightBorder,
                 Size = new UDim2D(stageRightX, GameBase.WindowRectangle.Height),
                 Position = new UDim2D(stageRightX - 1),
                 Parent = Playfield.BackgroundContainer,
@@ -231,18 +210,18 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         }
       
         /// <summary>
-        ///     Creates the BG Mask for 4K.
+        ///     Creates the BG Mask
         /// </summary>
-        private void CreateBgMask4K()
+        private void CreateBgMask()
         {
-            var imageRatio = (double)GameBase.LoadedSkin.StageBgMask4K.Width / GameBase.LoadedSkin.StageBgMask4K.Height;
+            var imageRatio = (double)Skin.StageBgMask.Width / Skin.StageBgMask.Height;
             var columnRatio = Playfield.Width / GameBase.WindowRectangle.Height;
             var bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
             
             BgMask = new Sprite()
             {
-                Image = GameBase.LoadedSkin.StageBgMask4K,
-                Alpha = GameBase.LoadedSkin.BgMaskAlpha,
+                Image = Skin.StageBgMask,
+                Alpha = Skin.BgMaskAlpha,
                 Size = new UDim2D(Playfield.Width, bgMaskSize),
                 Alignment = Alignment.MidCenter,
                 Parent = Playfield.BackgroundContainer
@@ -250,120 +229,57 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         }
         
         /// <summary>
-        ///      Creates the BG Mask for 7K
+        ///     Creates the receptors and column lighting
         /// </summary>
-        private void CreateBgMask7K()
-        {
-            // Create BG Mask
-            var imageRatio = (double)GameBase.LoadedSkin.StageBgMask7K.Width / GameBase.LoadedSkin.StageBgMask7K.Height;
-            var columnRatio = Playfield.Width / GameBase.WindowRectangle.Height;
-            var bgMaskSize = (float)Math.Max(GameBase.WindowRectangle.Height * columnRatio / imageRatio, GameBase.WindowRectangle.Height);
-
-            BgMask = new Sprite()
-            {
-                Image = GameBase.LoadedSkin.StageBgMask7K,
-                Alpha = GameBase.LoadedSkin.BgMaskAlpha,
-                Size = new UDim2D(Playfield.Width, bgMaskSize),
-                Alignment = Alignment.MidCenter,
-                Parent = Playfield.BackgroundContainer
-            };
-        }
-        
-        /// <summary>
-        ///     Creates the receptors and column lighting for 4K.
-        /// </summary>
-        private void CreateReceptorsAndLighting4K()
+        private void CreateReceptorsAndLighting()
         {
             Receptors = new List<Sprite>();
             ColumnLightingObjects = new List<ColumnLighting>();
             
             // Go through and create the 4 receptors and column lighting objects.
-            for (var i = 0; i < 4; i++)
+            for (var i = 0; i < Playfield.Map.FindKeyCountFromMode(); i++)
             {
                 var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
                 
                 // Create individiaul receptor.
                 Receptors.Add(new Sprite
                 {
-                    Size = new UDim2D(Playfield.LaneSize, Playfield.LaneSize * GameBase.LoadedSkin.NoteReceptorsUp4K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[i].Width),
+                    Size = new UDim2D(Playfield.LaneSize, Playfield.LaneSize * Skin.NoteReceptorsUp[i].Height / Skin.NoteReceptorsUp[i].Width),
                     Position = new UDim2D(posX, Playfield.ReceptorPositionY),
                     Alignment = Alignment.TopLeft,
-                    Image = GameBase.LoadedSkin.NoteReceptorsUp4K[i],
-                    SpriteEffect = !ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    Image = Skin.NoteReceptorsUp[i],
+                    SpriteEffect = !ConfigManager.DownScroll4K.Value && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                     Parent = Playfield.ForegroundContainer
                 });
                 
                 // Create the column lighting sprite.
-                var lightingY = GameBase.LoadedSkin.ColumnLightingScale * Playfield.LaneSize * ((float)GameBase.LoadedSkin.ColumnLighting4K.Height / GameBase.LoadedSkin.ColumnLighting4K.Width);                 
+                var lightingY = Skin.ColumnLightingScale * Playfield.LaneSize * ((float)Skin.ColumnLighting.Height / Skin.ColumnLighting.Width);                 
                 ColumnLightingObjects.Add(new ColumnLighting(new Sprite
                 {
-                    Image = GameBase.LoadedSkin.ColumnLighting4K,
+                    Image = Skin.ColumnLighting,
                     Size = new UDim2D(Playfield.LaneSize, lightingY),
-                    Tint = GameBase.LoadedSkin.ColumnColors4K[i],
+                    Tint = Skin.ColumnColors[i],
                     PosX = posX,
                     PosY = ConfigManager.DownScroll4K.Value ? Playfield.ColumnLightingPositionY - lightingY : Playfield.ColumnLightingPositionY,
-                    SpriteEffect = !ConfigManager.DownScroll4K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll4K ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    SpriteEffect = !ConfigManager.DownScroll4K.Value && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                     Alignment = Alignment.TopLeft,
                     Parent = Playfield.BackgroundContainer
                 }));
             }      
         }
         
-         /// <summary>
-        ///     Creates the receptors and column lighting for 7K.
-        /// </summary>
-        private void CreateReceptorsAndLighting7K()
-        {
-            Receptors = new List<Sprite>();
-            ColumnLightingObjects = new List<ColumnLighting>();
-            
-            // Go through and create the 7 receptors and column lighting objects.
-            for (var i = 0; i < 7; i++)
-            {
-                var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
-                
-                var receptor = new Sprite
-                {
-                    Size = new UDim2D(Playfield.LaneSize, Playfield.LaneSize * GameBase.LoadedSkin.NoteReceptorsUp7K[i].Height / GameBase.LoadedSkin.NoteReceptorsUp7K[i].Width),
-                    Position = new UDim2D(posX, Playfield.ReceptorPositionY),
-                    Alignment = Alignment.TopLeft,
-                    Image = GameBase.LoadedSkin.NoteReceptorsUp7K[i],
-                    SpriteEffect = !ConfigManager.DownScroll7K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
-                    Parent = Playfield.ForegroundContainer,
-                };
-                    
-                // Create individiaul receptor.
-                Receptors.Add(receptor);
-                
-                // Create the column lighting sprite.
-                var lightingY = GameBase.LoadedSkin.ColumnLightingScale * Playfield.LaneSize * ((float)GameBase.LoadedSkin.ColumnLighting7K.Height / GameBase.LoadedSkin.ColumnLighting7K.Width);                 
-                ColumnLightingObjects.Add(new ColumnLighting(new Sprite
-                {
-                    Image = GameBase.LoadedSkin.ColumnLighting7K,
-                    Size = new UDim2D(Playfield.LaneSize, lightingY),
-                    Tint = GameBase.LoadedSkin.ColumnColors7K[i],
-                    PosX = posX,
-                    PosY = ConfigManager.DownScroll7K.Value ? Playfield.ColumnLightingPositionY - lightingY : Playfield.ColumnLightingPositionY,
-                    SpriteEffect = !ConfigManager.DownScroll7K.Value && GameBase.LoadedSkin.FlipNoteImagesOnUpScroll7K ? SpriteEffects.FlipVertically : SpriteEffects.None,
-                    Alignment = Alignment.TopLeft,
-                    Parent = Playfield.BackgroundContainer
-                }));
-            }      
-        }
-
         /// <summary>
         ///     Creates the distant overlay sprite.
         /// </summary>
         private void CreateDistantOverlay()
         {
-            // Get the downscroll setting for this mode.
-            // We handle it here because it's too basic to re-copy its implementation for 7K.
+            // Get if we're currently downscroll or upscroll.
             var modeDownscroll = Playfield.Map.Mode == GameMode.Keys4 ? ConfigManager.DownScroll4K : ConfigManager.DownScroll7K;
             
-            var sizeY = GameBase.LoadedSkin.StageDistantOverlay.Height * Playfield.Width / GameBase.LoadedSkin.StageDistantOverlay.Width;
+            var sizeY = Skin.StageDistantOverlay.Height * Playfield.Width / Skin.StageDistantOverlay.Width;
             DistantOverlay = new Sprite
             {
-                Image = GameBase.LoadedSkin.StageDistantOverlay,
+                Image = Skin.StageDistantOverlay,
                 Size = new UDim2D(Playfield.Width, sizeY),
                 PosY = modeDownscroll.Value ? -1 : 1,
                 Alignment = modeDownscroll.Value ? Alignment.TopRight : Alignment.BotRight,
@@ -372,7 +288,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         }
 
         /// <summary>
-        ///     Creates the HitPositionOverlay and utilizes the 
+        ///     Creates the HitPositionOverlay
         /// </summary>
         private void CreateHitPositionOverlay()
         {
@@ -381,12 +297,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             var modeDownscroll = Playfield.Map.Mode == GameMode.Keys4 ? ConfigManager.DownScroll4K : ConfigManager.DownScroll7K;
             
             // Create Stage HitPosition Overlay
-            var sizeY = GameBase.LoadedSkin.StageHitPositionOverlay.Height * Playfield.Width / GameBase.LoadedSkin.StageHitPositionOverlay.Width;
-            var offsetY = Playfield.LaneSize * ((float)GameBase.LoadedSkin.NoteReceptorsUp4K[0].Height / GameBase.LoadedSkin.NoteReceptorsUp4K[0].Width);
+            var sizeY = Skin.StageHitPositionOverlay.Height * Playfield.Width / Skin.StageHitPositionOverlay.Width;
+            var offsetY = Playfield.LaneSize * ((float)Skin.NoteReceptorsUp[0].Height / Skin.NoteReceptorsUp[0].Width);
             
             HitPositionOverlay = new Sprite()
             {
-                Image = GameBase.LoadedSkin.StageHitPositionOverlay,
+                Image = Skin.StageHitPositionOverlay,
                 Size = new UDim2D(Playfield.Width, sizeY),
                 PosY = modeDownscroll.Value ? Playfield.ReceptorPositionY : Playfield.ReceptorPositionY + offsetY + sizeY,
                 Parent = Playfield.ForegroundContainer
@@ -403,7 +319,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,
-                PosY = GameBase.LoadedSkin.ComboPosY
+                PosY = Skin.ComboPosY
             };
 
             OriginalComboDisplayY = ComboDisplay.PosY;
@@ -432,15 +348,15 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         private void CreateJudgementHitBurst()
         {
             // Default the frames to miss.
-            var frames = GameBase.LoadedSkin.JudgeMiss;
+            var frames = GameBase.Skin.Judgements[Judgement.Miss];
             
             // Grab the first frame for convenience.
             var firstFrame = frames[0];
             
             // Set size w/ scaling.
-            var size = new Vector2(firstFrame.Width, firstFrame.Height) * GameBase.LoadedSkin.JudgementHitBurstScale / firstFrame.Height;
+            var size = new Vector2(firstFrame.Width, firstFrame.Height) * Skin.JudgementHitBurstScale / firstFrame.Height;
             
-            JudgementHitBurst = new JudgementHitBurst(frames, size, GameBase.LoadedSkin.JudgementBurstPosY)
+            JudgementHitBurst = new JudgementHitBurst(frames, size, Skin.JudgementBurstPosY)
             {
                 Parent = Playfield.ForegroundContainer,
                 Alignment = Alignment.MidCenter,
@@ -464,12 +380,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
 
                 // If the width or height are less than 0, then we'll assume the user wants it to be the height of the texture
                 // otherwise we'll use the one from their skin config.
-                var width = GameBase.LoadedSkin.HitLightingWidth <= 0 ? hl.Frames.First().Width : GameBase.LoadedSkin.HitLightingWidth;
-                var height = GameBase.LoadedSkin.HitLightingHeight <= 0 ? hl.Frames.First().Height : GameBase.LoadedSkin.HitLightingHeight;               
+                var width = Skin.HitLightingWidth <= 0 ? hl.Frames.First().Width : Skin.HitLightingWidth;
+                var height = Skin.HitLightingHeight <= 0 ? hl.Frames.First().Height : Skin.HitLightingHeight;               
                 hl.Size = new UDim2D(width, height);
                 
                 hl.Position = new UDim2D(Receptors[i].PosX - Playfield.LaneSize / 2f - Playfield.ReceptorPadding, 
-                                            HitPositionOverlay.PosY - hl.SizeY / 2f + GameBase.LoadedSkin.HitLightingY);
+                                            HitPositionOverlay.PosY - hl.SizeY / 2f + Skin.HitLightingY);
                 
                 HitLighting.Add(hl);
             }
@@ -492,37 +408,17 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         ///     (Called when pressing/releasing keys.)
         /// </summary>
         internal void SetReceptorAndLightingActivity(int index, bool pressed)
-        {      
-            switch (GameBase.SelectedMap.Qua.Mode)
+        {
+            if (pressed)
             {
-                case GameMode.Keys4:
-                    if (pressed)
-                    {
-                        Receptors[index].Image = GameBase.LoadedSkin.NoteReceptorsDown4K[index];
-                        ColumnLightingObjects[index].Active = true;
-                        ColumnLightingObjects[index].AnimationValue = 1.0f;
-                    }
-                    else
-                    {
-                        Receptors[index].Image = GameBase.LoadedSkin.NoteReceptorsUp4K[index];
-                        ColumnLightingObjects[index].Active = false;
-                    }
-                    break;
-                case GameMode.Keys7:
-                    if (pressed)
-                    {
-                        Receptors[index].Image = GameBase.LoadedSkin.NoteReceptorsDown7K[index];
-                        ColumnLightingObjects[index].Active = true;
-                        ColumnLightingObjects[index].AnimationValue = 1.0f;
-                    }
-                    else
-                    {
-                        Receptors[index].Image = GameBase.LoadedSkin.NoteReceptorsUp7K[index];
-                        ColumnLightingObjects[index].Active = false;
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                Receptors[index].Image = Skin.NoteReceptorsDown[index];
+                ColumnLightingObjects[index].Active = true;
+                ColumnLightingObjects[index].AnimationValue = 1.0f;
+            }
+            else
+            {
+                Receptors[index].Image = Skin.NoteReceptorsUp[index];
+                ColumnLightingObjects[index].Active = false;
             }
         }
 

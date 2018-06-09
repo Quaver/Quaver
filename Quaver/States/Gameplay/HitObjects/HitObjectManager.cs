@@ -47,19 +47,19 @@ namespace Quaver.States.Gameplay.HitObjects
 
             // Normal
             if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHit);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHit);
 
             // Clap
             if ((HitSounds.Clap & hitObject.HitSound) != 0)
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHitClap);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHitClap);
 
             // Whistle
             if ((HitSounds.Whistle & hitObject.HitSound) != 0)
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHitWhistle);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHitWhistle);
 
             // Finish
             if ((HitSounds.Finish & hitObject.HitSound) != 0)
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.LoadedSkin.SoundHitFinish);
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHitFinish);
         }
 
         /// <summary>

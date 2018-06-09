@@ -60,7 +60,7 @@ namespace Quaver.Main
         /// <summary>
         ///     The currently loaded Skin
         /// </summary>
-        public static Skin LoadedSkin { get; set; }
+        public static SkinStore Skin { get; set; }
 
         /// <summary>
         ///     The current background
