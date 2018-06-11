@@ -206,6 +206,28 @@ and more.
 
 ## Health Bar ##
 
+`/Health/health-background.png`
+
+![](img/Health/health-background.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| Yes | Depends | 600x40 if horizontal. 40x600 if vertical |
+
+**Notes:**
+
+- Spritesheet animation file name: `/Health/health-background@{rows}x{columns}.png`
+- Displayed as the background health bar. This one does not change and only serves as the background of the health gauge.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| HealthBarType | `Horizontal` or `Vertical` | If your image is horizontal, set it to horizontal. If vertical, set it to vertical. |
+| HealthBarKeysAlignment | `RightStage`, `LeftStage`, or `TopLeft` | Determines where to place the health bar in the Keys game mode.
+
+---
+
 ## Judgements ##
 
 ## Numbers ##
