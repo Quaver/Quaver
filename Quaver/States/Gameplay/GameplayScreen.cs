@@ -165,6 +165,11 @@ namespace Quaver.States.Gameplay
         internal List<LocalScore> LocalScores { get; }
 
         /// <summary>
+        ///     The amount of times the user requested to quit.
+        /// </summary>
+        private int TimesRequestedToQuit { get; set; }
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         internal GameplayScreen(Qua map, string md5, List<LocalScore> scores)
@@ -316,7 +321,19 @@ namespace Quaver.States.Gameplay
 
             if (ModManager.IsActivated(ModIdentifier.NoPause))
             {
-                Logger.LogImportant($"You cannot pause while the no-pause mod is activated!", LogType.Runtime);
+                TimesRequestedToQuit++;
+
+                // Force fail the user if they request to quit more than once.
+                switch (TimesRequestedToQuit)
+                {
+                    case 1:
+                        Logger.LogImportant($"Press the pause button one more time to exit.", LogType.Runtime);
+                        break;
+                    default:
+                        ForceFail = true;
+                        HasQuit = true;
+                        break;
+                }
                 return;
             }
             
