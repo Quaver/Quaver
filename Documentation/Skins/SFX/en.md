@@ -52,7 +52,7 @@ The following are a list of sound effects that are customizable in Quaver.
 `/SFX/sound-hitwhistle.wav`
 
 * In the Keys game mode, this will play when pressing an input key if the next object in the lane has the `Whistle` hitsound.
-* 
+
 ---
 
 `/SFX/sound-hitfinish.wav`
