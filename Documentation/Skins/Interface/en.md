@@ -601,6 +601,8 @@ and more.
 
 * None
 
+---
+
 `/Pause/pause-background.png`
 
 ![](img/Pause/pause-background.png)
@@ -619,7 +621,37 @@ and more.
 
 ## Scoreboard ##
 
+`/Scoreboard/scoreboard.png`
 
+![](img/Scoreboard/scoreboard.png)
 
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | MidLeft | - |
 
+**Notes:**
+
+- Background image is displayed for the current player on the scoreboard.
+
+**skin.ini Values:**
+
+* None
+
+---
+
+`/Scoreboard/scoreboard-other.png`
+
+![](img/Scoreboard/scoreboard-other.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | MidLeft | - |
+
+**Notes:**
+
+- Background image is displayed for the all other players in the scoreboard (not including the player themselves)
+
+**skin.ini Values:**
+
+* None
 
