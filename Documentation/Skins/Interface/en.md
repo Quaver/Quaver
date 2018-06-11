@@ -549,6 +549,74 @@ and more.
 
 ## Pause Screen ##
 
+`/Pause/pause-continue.png`
+
+![](img/Pause/pause-continue.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | MidCenter | - |
+
+**Notes:**
+
+- The button to continue the map in the pause screen.
+
+**skin.ini Values:**
+
+* None
+
+--- 
+
+`/Pause/pause-retry.png`
+
+![](img/Pause/pause-retry.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | MidCenter | - |
+
+**Notes:**
+
+- The button to retry the map in the pause screen.
+
+**skin.ini Values:**
+
+* None
+
+---
+
+`/Pause/pause-back.png`
+
+![](img/Pause/pause-back.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | MidCenter | - |
+
+**Notes:**
+
+- The button to quit the map in the pause screen.
+
+**skin.ini Values:**
+
+* None
+
+`/Pause/pause-background.png`
+
+![](img/Pause/pause-background.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | MidCenter | - |
+
+**Notes:**
+
+- Background image that displayed during the pause screen. If none is specified, it will dim to black.
+
+**skin.ini Values:**
+
+* None
+
 ## Scoreboard ##
 
 
