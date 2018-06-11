@@ -1,4 +1,4 @@
-# Sound Effects
+# Skinning Sound Effects
 The following are a list of sound effects that are customizable in Quaver.
 
 **Important Notes:**
