@@ -8,6 +8,10 @@ and more.
 
 ### Health Bar ###
 
+### Judgements ###
+
+### Numbers ###
+
 ### Pause Screen ###
 
 ### Scoreboard ###
