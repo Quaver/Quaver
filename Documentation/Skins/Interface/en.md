@@ -533,7 +533,7 @@ and more.
 
 `/Numbers/song-time-minus.png`
 
-![](img/Numbers/song-time-8.png)
+![](img/Numbers/song-time-minus.png)
 
 | Animatable | Alignment | Suggested Size |
 |:-:|:-:|:-:|
