@@ -95,7 +95,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 `/7k/Notes/HitObjects/note-hitobject-{1-7}.png`
 
-![](img/Notes/4K/HitObjects/bar-4k-note-hitObject-1.png)
+![](img/Notes/4K/HitObjects/bar-4k-note-hitobject-1.png)
 
 | Animatable | Alignment | Suggested Size |
 |:-:|:-:|:-:|
@@ -119,7 +119,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 `/7k/Notes/HitObjects/note-holdhitobject-{1-7}.png`
 
-![](img/Notes/4K/HitObjects/bar-4k-note-holdhitObject-1.png)
+![](img/Notes/4K/HitObjects/bar-4k-note-holdhitobject-1.png)
 
 | Animatable | Alignment | Suggested Size |
 |:-:|:-:|:-:|
