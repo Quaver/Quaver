@@ -4,6 +4,23 @@ and more.
 
 ### Cursor ###
 
+`/Cursor/main-cursor.png`
+
+![](img/Cursor/main-cursor.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | MidCenter | None |
+
+Notes:
+
+- The mouse cursor that is displayed.
+- Hidden during gameplay. Active during menu navigation.
+
+skin.ini Values:
+
+- 
+
 ### Grades ###
 
 ### Health Bar ###
