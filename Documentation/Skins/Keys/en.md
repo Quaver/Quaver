@@ -140,3 +140,98 @@ The following are the list of elements to customize the Keys game mode. This inc
 | ReceptorsOverHitObjects | True or False | If true, the receptors will be over the hitobjects when they fall down. |
  
 ## Stage ##
+
+`/4k/Stage/stage-bgmask.png`
+`/7k/Stage/stage-bgmask.png`
+
+![](img/Stage/4K/bar-4k-stage-bgmask.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | MidCenter | - |
+
+**Notes:**
+
+- The stage's background. Notes fall in front of this area.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| BgMaskAlpha | Float (0.0-1.0) | The alpha channel/opacity of the bg mask.
+
+---
+
+`/4k/Stage/stage-distant-overlay.png`
+`/7k/Stage/stage-distant-overlay.png`
+
+![](img/Stage/4K/bar-4k-stage-distant-overlay.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | TopCenter | - |
+
+**Notes:**
+
+- Displayed at the top center of the stage. Commonly used for covering notes at the top of the screen.
+
+**skin.ini Values:**
+
+- None
+
+---
+
+`/4k/Stage/stage-hitposition-overlay.png`
+`/7k/Stage/stage-hitposition-overlay.png`
+
+![](img/Stage/4K/bar-4k-stage-hitposition-overlay.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | MidCenter | - |
+
+**Notes:**
+
+- An image that is directly over the hitposition, used to indicate where the player should hit.
+
+**skin.ini Values:**
+
+- None
+
+---
+
+`/4k/Stage/stage-left-border.png`
+`/7k/Stage/stage-left-border.png`
+
+![](img/Stage/4K/bar-4k-stage-left-border.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | TopLeft | - |
+
+**Notes:**
+
+- Displayed at the left of the stage. Used purely for aesthetics.
+
+**skin.ini Values:**
+
+- None
+
+---
+
+`/4k/Stage/stage-right-border.png`
+`/7k/Stage/stage-right-border.png`
+
+![](img/Stage/4K/bar-4k-stage-right-border.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | TopRight | - |
+
+**Notes:**
+
+- Displayed at the right of the stage. Used purely for aesthetics.
+
+**skin.ini Values:**
+
+- None
