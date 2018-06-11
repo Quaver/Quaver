@@ -47,26 +47,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         internal override int ObjectsLeft => ObjectPool.Count + HeldLongNotes.Count + DeadNotes.Count;
         
         /// <summary>
-        ///     Dictates if we are currently using downscroll or not.
-        /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        internal static bool IsDownscroll
-        {
-            get
-            {
-                switch (GameBase.SelectedMap.Qua.Mode)
-                {
-                    case GameMode.Keys4:
-                        return ConfigManager.DownScroll4K.Value;
-                    case GameMode.Keys7:
-                        return ConfigManager.DownScroll7K.Value;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
-
-        /// <summary>
         ///     The offset of the hit position.
         /// </summary>
         internal float HitPositionOffset
@@ -76,11 +56,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 var playfield = (KeysPlayfield) Ruleset.Playfield;
                 var skin = GameBase.Skin.Keys[Ruleset.Mode];
                 
-                if (IsDownscroll)
+                if (GameModeRulesetKeys.IsDownscroll)
                     return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPosOffsetY);
 
                 // Up Scroll
-                return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPosOffsetY) + skin.ColumnSize;
+                return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPosOffsetY);
             }
         }
 

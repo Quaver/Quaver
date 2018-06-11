@@ -114,13 +114,13 @@ namespace Quaver.States.Select
                     Font = QuaverFonts.AssistantRegular16,
                     Alignment = Alignment.BotLeft,
                     Text = StringHelper.AccuracyToString((float)scores[i].Accuracy),
-                    TextScale = 0.78f,
+                    TextScale = 0.65f,
                     Alpha = 1
                 };
             
                 var accTextSize = acc.Font.MeasureString(acc.Text);
                 acc.PosX = avatar.SizeX + accTextSize.X * acc.TextScale / 2f + 12;
-                acc.PosY = acc.PosY -accTextSize.Y * acc.TextScale / 2f;
+                acc.PosY = acc.PosY -accTextSize.Y * acc.TextScale / 2f - 18;
                 
                 // Create score text.
                 var maxCombo = new SpriteText()

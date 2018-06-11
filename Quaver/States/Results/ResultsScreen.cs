@@ -238,7 +238,7 @@ namespace Quaver.States.Results
             Back = new TextButton(new Vector2(200, 40), "Back To Menu")
             {
                 Parent = Container,
-                Alignment = Alignment.BotLeft,
+                Alignment = Alignment.MidLeft,
             };
 
             Back.Clicked += (o, e) =>
@@ -338,6 +338,10 @@ namespace Quaver.States.Results
         /// </summary>
         private void SaveLocalScore()
         {
+            // Don't save scores if the user quit themself.
+            if (GameplayScreen.HasQuit)
+                return;
+            
             Task.Run(async () =>
             {
                 try

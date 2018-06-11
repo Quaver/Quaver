@@ -118,6 +118,7 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
                 
                 Screen.IsPaused = false;
                 Screen.ForceFail = true;
+                Screen.HasQuit = true;
             };
         }
 
