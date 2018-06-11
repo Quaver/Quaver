@@ -91,7 +91,51 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ### HitObjects ###
 
+`/4k/Notes/HitObjects/note-hitobject-{1-4}.png`
+
+`/7k/Notes/HitObjects/note-hitobject-{1-7}.png`
+
+![](img/Notes/4K/HitObjects/bar-4k-note-hitObject-1.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | TopLeft | - |
+
+**Notes:**
+
+- The note that falls down the screen for non-hold objects.
+- File names if `ColorObjectsBySnapDistance` is set to true in skin.ini: `/4k/Notes/HitObjects/note-hitobject-{1-4}-{2nd, 3rd, 4th, 6th, 8th, 12th, 16th, 48th}.png`
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| FlipNoteImagesOnUpscroll | Boolean (True or False) | If the image will be flipped upside down on upscroll. |
+| ColorObjectsBySnapDistance | Boolean (True or False) | If specified, it will look for file names with the specified snap distance. If it can't find it, it will default it.
+
 ### HoldHitObjects ###
+
+`/4k/Notes/HitObjects/note-holdhitobject-{1-4}.png`
+
+`/7k/Notes/HitObjects/note-holdhitobject-{1-7}.png`
+
+![](img/Notes/4K/HitObjects/bar-4k-note-holdhitObject-1.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | TopLeft | - |
+
+**Notes:**
+
+- The note that falls down the screen for hold objects.
+- File names if `ColorObjectsBySnapDistance` is set to true in skin.ini: `/4k/Notes/HoldHitObjects/note-hitobject-{1-4}-{2nd, 3rd, 4th, 6th, 8th, 12th, 16th, 48th}.png`
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| FlipNoteImagesOnUpscroll | Boolean (True or False) | If the image will be flipped upside down on upscroll. |
+| ColorObjectsBySnapDistance | Boolean (True or False) | If specified, it will look for file names with the specified snap distance. If it can't find it, it will default it.
 
 ### HoldBodies ###
 
