@@ -7,6 +7,6 @@ Quaver has multiple default skins to choose from which includes bars and arrows 
 ### How do I create a skin? ###
 Skinning has a very forced organization system and needs to be done correctly in order to work properly. The following list are guides to skin each part of the game.
 
-* [Gameplay Interface]()
+* [Gameplay Interface](https://github.com/Swan/Quaver/tree/documentation/Documentation/Skins/Interface)
 * [Mania: 4K and 7K]()
-* [Sound Effects (SFX)]()
+* [Sound Effects (SFX)](https://github.com/Swan/Quaver/tree/documentation/Documentation/Skins/SFX)
