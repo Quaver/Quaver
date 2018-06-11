@@ -97,11 +97,29 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ### HoldEnds ###
 
+`/4k/Notes/HoldEnds/note-holdend-{1-4}.png`
+
+`/7k/Notes/HoldEnds/note-holdend-{1-7}.png`
+
+![](img/Notes/4K/HoldEnds/bar-4k-note-holdend-1.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | TopLeft | Square Image (256x256) |
+
+**Notes:**
+
+- The image displayed at the end of a hold (long) note.
+
+**skin.ini Values:**
+
+- None
+
 ## Receptors ##
 
 ### Receptors (Up) ### 
 
-`/4k/Receptors/Up/receptor-up-{1-7}.png`
+`/4k/Receptors/Up/receptor-up-{1-4}.png`
 
 `/7k/Receptors/Up/receptor-up-{1-7}.png`
 
@@ -127,7 +145,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ### Receptors (Down) ### 
 
-`/4k/Receptors/Down/receptor-down-{1-7}.png`
+`/4k/Receptors/Down/receptor-down-{1-4}.png`
 
 `/7k/Receptors/Down/receptor-down-{1-7}.png`
 
