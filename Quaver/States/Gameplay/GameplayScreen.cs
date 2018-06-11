@@ -149,6 +149,11 @@ namespace Quaver.States.Gameplay
         internal bool ForceFail { get; set; }
 
         /// <summary>
+        ///     If the user quit the game themselves.
+        /// </summary>
+        internal bool HasQuit { get; set; }
+
+        /// <summary>
         ///     When the play is either failed or completed, this is a counter that
         ///     will increase and dictates when to go to the results screen.
         /// </summary>

@@ -338,6 +338,10 @@ namespace Quaver.States.Results
         /// </summary>
         private void SaveLocalScore()
         {
+            // Don't save scores if the user quit themself.
+            if (GameplayScreen.HasQuit)
+                return;
+            
             Task.Run(async () =>
             {
                 try
