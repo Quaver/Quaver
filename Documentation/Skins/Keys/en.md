@@ -5,7 +5,9 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ## Column ##
 
-`/{4k or 7k}/Column/column-lighting.png`
+`/4k/Column/column-lighting.png`
+
+`/7k/Column/column-lighting.png`
 
 ![](img/Column/4K/bar-4k-column-lighting.png)
 
@@ -25,7 +27,9 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ## Lighting ##
 
-`/{4k or 7k}/Lighting/hitlighting.png`
+`/4k/Lighting/hitlighting.png`
+
+`/7k/Lighting/hitlighting.png`
 
 ![](img/Lighting/4K/bar-4k-hitlighting@1x8.png)
 
@@ -35,7 +39,8 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 **Notes:**
 
-- Spritesheet animation name: `/{4k or 7k}/Lighting/hitlighting@{rows}x{columns}.png`
+- Spritesheet animation name for 4K: `/4k/Lighting/hitlighting@{rows}x{columns}.png`
+- Spritesheet animation name for 7K: `/7k/Lighting/hitlighting@{rows}x{columns}.png`
 - When hitting an object, an animation will play to give feedback to the user.
 - If animation frames are given, it it is played at 180 FPS.
 - If no animation frames are given, a default animation is played.
@@ -50,7 +55,9 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ---
 
-`/{4k or 7k}/Lighting/holdlighting.png`
+`/4k/Lighting/holdlighting.png`
+
+`/7k/Lighting/holdlighting.png`
 
 ![](img/Lighting/4K/bar-4k-holdlighting@1x12.png)
 
@@ -60,7 +67,8 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 **Notes:**
 
-- Spritesheet animation name: `/{4k or 7k}/Lighting/holdlighting@{rows}x{columns}.png`
+- Spritesheet animation name for 4K: `/4k/Lighting/holdlighting@{rows}x{columns}.png`
+- Spritesheet animation name for 7K: `/7k/Lighting/holdlighting@{rows}x{columns}.png`
 - When hold a long note, an animation will play to give feedback to the user.
 - If animation frames are given, it it is played at 180 FPS.
 - If no animation frames are given, a default animation is played.
