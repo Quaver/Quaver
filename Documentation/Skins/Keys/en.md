@@ -115,11 +115,11 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ### HoldHitObjects ###
 
-`/4k/Notes/HitObjects/note-holdhitobject-{1-4}.png`
+`/4k/Notes/HoldHitObjects/note-holdhitobject-{1-4}.png`
 
-`/7k/Notes/HitObjects/note-holdhitobject-{1-7}.png`
+`/7k/Notes/HoldHitObjects/note-holdhitobject-{1-7}.png`
 
-![](img/Notes/4K/HitObjects/bar-4k-note-holdhitobject-1.png)
+![](img/Notes/4K/HoldHitObjects/bar-4k-note-holdhitobject-1.png)
 
 | Animatable | Alignment | Suggested Size |
 |:-:|:-:|:-:|
@@ -128,7 +128,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 **Notes:**
 
 - The note that falls down the screen for hold objects.
-- File names if `ColorObjectsBySnapDistance` is set to true in skin.ini: `/4k/Notes/HoldHitObjects/note-hitobject-{1-4}-{2nd, 3rd, 4th, 6th, 8th, 12th, 16th, 48th}.png`
+- File names if `ColorObjectsBySnapDistance` is set to true in skin.ini: `/4k/Notes/HoldHitObjects/note-hitholdobject-{1-4}-{2nd, 3rd, 4th, 6th, 8th, 12th, 16th, 48th}.png`
 
 **skin.ini Values:**
 
