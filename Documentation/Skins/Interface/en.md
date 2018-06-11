@@ -282,7 +282,7 @@ and more.
 
 **Notes:**
 
-- Spritesheet animation name: `/Judgements/judge-marv@{rows}x{columns.png}`
+- Spritesheet animation name: `/Judgements/judge-marv@{rows}x{columns}.png`
 - Displayed when a judgement is received after hitting an object.
 - If no spritesheet is specified, it will perform a default animation.
 
@@ -305,7 +305,7 @@ and more.
 
 **Notes:**
 
-- Spritesheet animation name: `/Judgements/judge-perf@{rows}x{columns.png}`
+- Spritesheet animation name: `/Judgements/judge-perf@{rows}x{columns}.png`
 - Displayed when a judgement is received after hitting an object.
 - If no spritesheet is specified, it will perform a default animation.
 
@@ -328,7 +328,7 @@ and more.
 
 **Notes:**
 
-- Spritesheet animation name: `/Judgements/judge-great@{rows}x{columns.png}`
+- Spritesheet animation name: `/Judgements/judge-great@{rows}x{columns}.png`
 - Displayed when a judgement is received after hitting an object.
 - If no spritesheet is specified, it will perform a default animation.
 
@@ -351,7 +351,7 @@ and more.
 
 **Notes:**
 
-- Spritesheet animation name: `/Judgements/judge-good@{rows}x{columns.png}`
+- Spritesheet animation name: `/Judgements/judge-good@{rows}x{columns}.png}`
 - Displayed when a judgement is received after hitting an object.
 - If no spritesheet is specified, it will perform a default animation.
 
@@ -374,7 +374,7 @@ and more.
 
 **Notes:**
 
-- Spritesheet animation name: `/Judgements/judge-okay@{rows}x{columns.png}`
+- Spritesheet animation name: `/Judgements/judge-okay@{rows}x{columns}.png`
 - Displayed when a judgement is received after hitting an object.
 - If no spritesheet is specified, it will perform a default animation.
 
@@ -397,7 +397,7 @@ and more.
 
 **Notes:**
 
-- Spritesheet animation name: `/Judgements/judge-miss@{rows}x{columns.png}`
+- Spritesheet animation name: `/Judgements/judge-miss@{rows}x{columns}.png`
 - Displayed when a judgement is received after missing a hitobject.
 - If no spritesheet is specified, it will perform a default animation.
 
@@ -410,6 +410,142 @@ and more.
 
 
 ## Numbers ##
+
+`/Numbers/combo-{0-9}.png`
+
+![](img/Numbers/combo-9.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | MidCenter | - |
+
+**Notes:**
+
+- Represents the number {0-9} that displays the player's current combo.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| ComboPosY | Integer | Determines the y value of where to place the combo display.
+
+--- 
+
+`/Numbers/score-{0-9}.png`
+
+![](img/Numbers/score-9.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | Depends. TopLeft if score. TopRight if accuracy. | - |
+
+**Notes:**
+
+- Represents the number {0-9} that displays the player's current score and accuracy
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| ScoreDisplayPosX and AccuracyDisplayPosX | Integer | Determines the x position of the display relative to the alignment.
+| ScoreDisplayPosY and AccuracyDisplayPosX | Integer | Determines the y position of the display relative to the alignment.
+
+--- 
+
+`/Numbers/score-percent.png`
+
+![](img/Numbers/score-percent.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | TopRight | - |
+
+**Notes:**
+
+- Represents the `%` symbol in the user's accuracy.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| AccuracyDisplayPosX | Integer | Determines the x position of the display relative to the alignment.
+| AccuracyDisplayPosX | Integer | Determines the y position of the display relative to the alignment.
+
+---
+
+`/Numbers/score-decimal.png`
+
+![](img/Numbers/score-decimal.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | TopRight | - |
+
+**Notes:**
+
+- Represents the `.` symbol in the user's accuracy.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| AccuracyDisplayPosX | Integer | Determines the x position of the display relative to the alignment.
+| AccuracyDisplayPosX | Integer | Determines the y position of the display relative to the alignment.
+
+
+---
+
+`/Numbers/song-time-{0-9}.png`
+
+![](img/Numbers/song-time-8.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | BottomLeft / BottomRight | - |
+
+**Notes:**
+
+- Numbers that display the current song time and time left.
+
+**skin.ini Values:**
+
+* None
+
+---
+
+`/Numbers/song-time-colon.png`
+
+![](img/Numbers/song-time-colon.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | BottomLeft / BottomRight | - |
+
+**Notes:**
+
+- Displays the `:` character in the song time display.
+
+**skin.ini Values:**
+
+* None
+
+---
+
+`/Numbers/song-time-minus.png`
+
+![](img/Numbers/song-time-8.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | BottomLeft / BottomRight | - |
+
+**Notes:**
+
+- Displays the `-` character in the song time display.
+
+**skin.ini Values:**
+
+* None
 
 ## Pause Screen ##
 
