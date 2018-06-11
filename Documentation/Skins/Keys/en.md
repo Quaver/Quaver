@@ -27,7 +27,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 `/{4k or 7k}/Lighting/hitlighting.png`
 
-![](img/Column/4K/bar-4k-hitlighting@1x8.png)
+![](img/Lighting/4K/bar-4k-hitlighting@1x8.png)
 
 | Animatable | Alignment | Suggested Size |
 |:-:|:-:|:-:|
@@ -52,7 +52,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 `/{4k or 7k}/Lighting/holdlighting.png`
 
-![](img/Column/4K/bar-4k-holdlighting@1x12.png)
+![](img/Lighitng/4K/bar-4k-holdlighting@1x12.png)
 
 | Animatable | Alignment | Suggested Size |
 |:-:|:-:|:-:|
