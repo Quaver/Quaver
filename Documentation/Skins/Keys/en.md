@@ -87,7 +87,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 `/{4k or 7k}/Receptors/Up/receptor-up-{1-7}.png`
 
-![](img/Receptors/4K/Up/bar-4k-receptor-up-{1-7}.png)
+![](img/Receptors/4K/Up/bar-4k-receptor-up-1.png)
 
 | Animatable | Alignment | Suggested Size |
 |:-:|:-:|:-:|
@@ -100,6 +100,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 **skin.ini Values:**
 
 | Name | Possible Values | Notes |
+|:-:|:-:|:-:|
 | ReceptorPosOffsetY | Integer | The y position offset of the receptors relative to the bottom/top of the stage |
 | ColumnSize | Integer | Increases the width of the receptors.
 | ReceptorsOverHitObjects | True or False | If true, the receptors will be over the hitobjects when they fall down.
@@ -108,7 +109,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 `/{4k or 7k}/Receptors/Down/receptor-down-{1-7}.png`
 
-![](img/Receptors/4K/Down/bar-4k-receptor-down-{1-7}.png)
+![](img/Receptors/4K/Down/bar-4k-receptor-down-1.png)
 
 | Animatable | Alignment | Suggested Size |
 |:-:|:-:|:-:|
@@ -121,8 +122,9 @@ The following are the list of elements to customize the Keys game mode. This inc
 **skin.ini Values:**
 
 | Name | Possible Values | Notes |
+|:-:|:-:|:-:|
 | ReceptorPosOffsetY | Integer | The y position offset of the receptors relative to the bottom/top of the stage |
-| ColumnSize | Integer | Increases the width of the receptors.
-| ReceptorsOverHitObjects | True or False | If true, the receptors will be over the hitobjects when they fall down.
-
+| ColumnSize | Integer | Increases the width of the receptors. |
+| ReceptorsOverHitObjects | True or False | If true, the receptors will be over the hitobjects when they fall down. |
+ 
 ## Stage ##
