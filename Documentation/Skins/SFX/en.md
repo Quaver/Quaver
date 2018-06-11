@@ -37,7 +37,7 @@ The following are a list of sound effects that are customizable in Quaver.
 * Plays when completing a map with over 80% accuracy in the results screen.
 
 ### Gameplay ###
-`sound-hit.wav`
+`/SFX/sound-hit.wav`
 
 * In the Keys game mode, this will play when pressing an input key if the next object in the lane doesn't have hitsounds.
 
