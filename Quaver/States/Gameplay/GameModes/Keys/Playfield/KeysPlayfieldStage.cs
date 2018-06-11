@@ -104,7 +104,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         ///     Reference to the current skin.
         /// </summary>
         private SkinKeys Skin => GameBase.Skin.Keys[Screen.Map.Mode];
-        
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - 
@@ -248,7 +248,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                     Position = new UDim2D(posX, Playfield.ReceptorPositionY),
                     Alignment = Alignment.TopLeft,
                     Image = Skin.NoteReceptorsUp[i],
-                    SpriteEffect = !ConfigManager.DownScroll4K.Value && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    SpriteEffect = !GameModeRulesetKeys.IsDownscroll && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                     Parent = Playfield.ForegroundContainer
                 });
                 
@@ -260,8 +260,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                     Size = new UDim2D(Playfield.LaneSize, lightingY),
                     Tint = Skin.ColumnColors[i],
                     PosX = posX,
-                    PosY = ConfigManager.DownScroll4K.Value ? Playfield.ColumnLightingPositionY - lightingY : Playfield.ColumnLightingPositionY,
-                    SpriteEffect = !ConfigManager.DownScroll4K.Value && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
+                    PosY = GameModeRulesetKeys.IsDownscroll ? Playfield.ColumnLightingPositionY - lightingY : Playfield.ColumnLightingPositionY,
+                    SpriteEffect = !GameModeRulesetKeys.IsDownscroll && Skin.FlipNoteImagesOnUpscroll ? SpriteEffects.FlipVertically : SpriteEffects.None,
                     Alignment = Alignment.TopLeft,
                     Parent = Playfield.BackgroundContainer
                 }));
@@ -272,17 +272,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         ///     Creates the distant overlay sprite.
         /// </summary>
         private void CreateDistantOverlay()
-        {
-            // Get if we're currently downscroll or upscroll.
-            var modeDownscroll = Playfield.Map.Mode == GameMode.Keys4 ? ConfigManager.DownScroll4K : ConfigManager.DownScroll7K;
-            
+        {            
             var sizeY = Skin.StageDistantOverlay.Height * Playfield.Width / Skin.StageDistantOverlay.Width;
             DistantOverlay = new Sprite
             {
                 Image = Skin.StageDistantOverlay,
                 Size = new UDim2D(Playfield.Width, sizeY),
-                PosY = modeDownscroll.Value ? -1 : 1,
-                Alignment = modeDownscroll.Value ? Alignment.TopRight : Alignment.BotRight,
+                PosY = GameModeRulesetKeys.IsDownscroll ? -1 : 1,
+                Alignment = GameModeRulesetKeys.IsDownscroll ? Alignment.TopRight : Alignment.BotRight,
                 Parent = Playfield.ForegroundContainer
             };
         }
@@ -291,11 +288,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         ///     Creates the HitPositionOverlay
         /// </summary>
         private void CreateHitPositionOverlay()
-        {
-            // Get the downscroll setting for this mode.
-            // We handle it here because it's too basic to re-copy its implementation for 7K.
-            var modeDownscroll = Playfield.Map.Mode == GameMode.Keys4 ? ConfigManager.DownScroll4K : ConfigManager.DownScroll7K;
-            
+        {            
             // Create Stage HitPosition Overlay
             var sizeY = Skin.StageHitPositionOverlay.Height * Playfield.Width / Skin.StageHitPositionOverlay.Width;
             var offsetY = Playfield.LaneSize * ((float)Skin.NoteReceptorsUp[0].Height / Skin.NoteReceptorsUp[0].Width);
@@ -304,7 +297,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             {
                 Image = Skin.StageHitPositionOverlay,
                 Size = new UDim2D(Playfield.Width, sizeY),
-                PosY = modeDownscroll.Value ? Playfield.ReceptorPositionY : Playfield.ReceptorPositionY + offsetY + sizeY,
+                PosY = GameModeRulesetKeys.IsDownscroll ? Playfield.ReceptorPositionY : Playfield.ReceptorPositionY + offsetY + sizeY,
                 Parent = Playfield.ForegroundContainer
             };    
         }

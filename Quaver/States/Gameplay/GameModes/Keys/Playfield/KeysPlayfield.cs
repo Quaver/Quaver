@@ -89,8 +89,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             {
                 var skin = GameBase.Skin.Keys[Map.Mode];
                 
-                if (ConfigManager.DownScroll4K.Value || ConfigManager.DownScroll7K.Value)
+                if (GameModeRulesetKeys.IsDownscroll)
                     return GameBase.WindowRectangle.Height - (skin.ReceptorPosOffsetY  * GameBase.WindowUIScale + LaneSize * skin.NoteReceptorsUp[0].Height / skin.NoteReceptorsUp[0].Width);
+                
                 return skin.ReceptorPosOffsetY * GameBase.WindowUIScale;
             }
         }
@@ -102,7 +103,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         {
             get
             {
-                if (ConfigManager.DownScroll4K.Value || ConfigManager.DownScroll7K.Value)
+                if (GameModeRulesetKeys.IsDownscroll)
                     return ReceptorPositionY;
 
                     var skin = GameBase.Skin.Keys[Map.Mode];

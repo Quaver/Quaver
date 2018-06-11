@@ -219,7 +219,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         {
             var manager = (KeysHitObjectManager) Ruleset.HitObjectManager;
 
-            var speed = KeysHitObjectManager.IsDownscroll ? -KeysHitObjectManager.ScrollSpeed : KeysHitObjectManager.ScrollSpeed;
+            var speed = GameModeRulesetKeys.IsDownscroll ? -KeysHitObjectManager.ScrollSpeed : KeysHitObjectManager.ScrollSpeed;
             return (float) (manager.HitPositionOffset + (offset - (Ruleset.Screen.Timing.CurrentTime + ConfigManager.GlobalAudioOffset.Value)) * speed);
         }
         
@@ -229,7 +229,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         internal void UpdateSpritePositions()
         {           
             // Only update note if it's inside the window
-            if ((!KeysHitObjectManager.IsDownscroll || PositionY + HitObjectSprite.SizeY <= 0) && (KeysHitObjectManager.IsDownscroll || !(PositionY < GameBase.WindowRectangle.Height))) 
+            if ((!GameModeRulesetKeys.IsDownscroll || PositionY + HitObjectSprite.SizeY <= 0) && (GameModeRulesetKeys.IsDownscroll || !(PositionY < GameBase.WindowRectangle.Height))) 
                 return;
             
             // Update HitBody
@@ -250,7 +250,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             //Update HoldBody Position and Size
             LongNoteBodySprite.SizeY = CurrentLongNoteSize;
 
-            if (KeysHitObjectManager.IsDownscroll)
+            if (GameModeRulesetKeys.IsDownscroll)
             {
                 LongNoteBodySprite.PosY = -(float) CurrentLongNoteSize + LongNoteBodyOffset + PositionY;
                 LongNoteEndSprite.PosY = PositionY - CurrentLongNoteSize - LongNoteEndOffset + LongNoteBodyOffset;

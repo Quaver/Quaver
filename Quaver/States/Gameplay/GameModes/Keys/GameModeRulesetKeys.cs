@@ -3,6 +3,7 @@ using System.ComponentModel;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Config;
 using Quaver.Input;
 using Quaver.Logging;
 using Quaver.Main;
@@ -25,6 +26,26 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         internal sealed override ScoreProcessor ScoreProcessor { get; set; }
  
+        /// <summary>
+        ///     Dictates if we are currently using downscroll or not.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        internal static bool IsDownscroll
+        {
+            get
+            {
+                switch (GameBase.SelectedMap.Qua.Mode)
+                {
+                    case GameMode.Keys4:
+                        return ConfigManager.DownScroll4K.Value;
+                    case GameMode.Keys7:
+                        return ConfigManager.DownScroll7K.Value;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+        
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - Sets the correct mode, either 4 or 7k.
