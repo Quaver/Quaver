@@ -52,7 +52,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 `/{4k or 7k}/Lighting/holdlighting.png`
 
-![](img/Lighitng/4K/bar-4k-holdlighting@1x12.png)
+![](img/Lighting/4K/bar-4k-holdlighting@1x12.png)
 
 | Animatable | Alignment | Suggested Size |
 |:-:|:-:|:-:|
@@ -84,5 +84,45 @@ The following are the list of elements to customize the Keys game mode. This inc
 ### HoldEnds ###
 
 ## Receptors ##
+
+`/{4k or 7k}/Receptors/Up/receptor-up-{1-7}.png`
+
+![](img/Receptors/4K/Up/bar-4k-receptor-up-{1-7}.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | TopLeft | Square Image (256x256) |
+
+**Notes:**
+
+- The image displayed when the input key is not pressed.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+| ReceptorPosOffsetY | Integer | The y position offset of the receptors relative to the bottom/top of the stage |
+| ColumnSize | Integer | Increases the width of the receptors.
+| ReceptorsOverHitObjects | True or False | If true, the receptors will be over the hitobjects when they fall down.
+
+---
+
+`/{4k or 7k}/Receptors/Down/receptor-down-{1-7}.png`
+
+![](img/Receptors/4K/Down/bar-4k-receptor-down-{1-7}.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | TopLeft | Square Image (256x256) |
+
+**Notes:**
+
+- The image displayed when the input key is pressed.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+| ReceptorPosOffsetY | Integer | The y position offset of the receptors relative to the bottom/top of the stage |
+| ColumnSize | Integer | Increases the width of the receptors.
+| ReceptorsOverHitObjects | True or False | If true, the receptors will be over the hitobjects when they fall down.
 
 ## Stage ##
