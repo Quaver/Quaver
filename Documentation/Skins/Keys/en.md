@@ -5,7 +5,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ## Column ##
 
-#### Column Lighting ####
+### Column Lighting ###
 
 `/4k/Column/column-lighting.png`
 
@@ -29,7 +29,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ## Lighting ##
 
-#### Hit Lighting #### 
+### Hit Lighting ### 
 
 `/4k/Lighting/hitlighting.png`
 
@@ -59,7 +59,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ---
 
-#### Hold Lighting #### 
+### Hold Lighting ### 
 
 `/4k/Lighting/holdlighting.png`
 
@@ -99,7 +99,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ## Receptors ##
 
-#### Receptors (Up) #### 
+### Receptors (Up) ### 
 
 `/4k/Receptors/Up/receptor-up-{1-7}.png`
 
@@ -125,7 +125,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ---
 
-#### Receptors (Down) #### 
+### Receptors (Down) ### 
 
 `/4k/Receptors/Down/receptor-down-{1-7}.png`
 
@@ -151,7 +151,7 @@ The following are the list of elements to customize the Keys game mode. This inc
  
 ## Stage ##
 
-#### Stage BG Mask #### 
+### Stage BG Mask ### 
 
 `/4k/Stage/stage-bgmask.png`
 
@@ -175,7 +175,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ---
 
-#### Stage Distant Overlay #### 
+### Stage Distant Overlay ### 
 
 `/4k/Stage/stage-distant-overlay.png`
 
@@ -197,7 +197,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ---
 
-#### Stage Hit Position Overlay #### 
+### Stage Hit Position Overlay ###
 
 `/4k/Stage/stage-hitposition-overlay.png`
 
@@ -219,7 +219,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ---
 
-#### Stage Left Border #### 
+### Stage Left Border ###
 
 `/4k/Stage/stage-left-border.png`
 
@@ -241,7 +241,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ---
 
-#### Stage Right Border #### 
+### Stage Right Border ###
 
 `/4k/Stage/stage-right-border.png`
 
