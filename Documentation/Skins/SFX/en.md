@@ -5,7 +5,7 @@ The following are a list of sound effects that are customizable in Quaver.
 * **ALL sound effects must be located in the /SFX/ directory in the root folder of your skin**
 * **Only 16-bit .wav files are valid for sound effects. Any other types may cause unintended side effects.**
 
-### Menu ###
+## Menu ##
 `/SFX/sound-clck.wav`
 
 * Plays when advancing through the menus. 
@@ -36,7 +36,7 @@ The following are a list of sound effects that are customizable in Quaver.
 
 * Plays when completing a map with over 80% accuracy in the results screen.
 
-### Gameplay ###
+## Gameplay ##
 `/SFX/sound-hit.wav`
 
 * In the Keys game mode, this will play when pressing an input key if the next object in the lane doesn't have hitsounds.

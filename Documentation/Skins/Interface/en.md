@@ -2,7 +2,7 @@
 The gameplay interface includes general skin elements that are present in all game modes. It includes elements such as number displays, scoreboards, judgements,
 and more.
 
-### Cursor ###
+## Cursor ##
 
 `/Cursor/main-cursor.png`
 
@@ -21,7 +21,7 @@ and more.
 
 - None
 
-### Grades ###
+## Grades ##
 
 `/Grades/grade-small-a.png`
 
@@ -204,15 +204,15 @@ and more.
 ---
 
 
-### Health Bar ###
+## Health Bar ##
 
-### Judgements ###
+## Judgements ##
 
-### Numbers ###
+## Numbers ##
 
-### Pause Screen ###
+## Pause Screen ##
 
-### Scoreboard ###
+## Scoreboard ##
 
 
 
