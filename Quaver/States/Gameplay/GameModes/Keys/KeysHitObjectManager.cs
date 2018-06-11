@@ -60,7 +60,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     return playfield.ReceptorPositionY + (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPosOffsetY);
 
                 // Up Scroll
-                return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPosOffsetY) + skin.ColumnSize;
+                return playfield.ReceptorPositionY - (ConfigManager.UserHitPositionOffset4K.Value + skin.HitPosOffsetY);
             }
         }
 
