@@ -95,6 +95,30 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ### HoldBodies ###
 
+`/4k/Notes/HoldBodies/note-holdbody-{1-4}.png`
+
+`/7k/Notes/HoldEnds/note-holdbody-{1-7}.png`
+
+![](img/Notes/4K/HoldBodies/bar-4k-note-holdbody-1.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| Yes | TopLeft | - |
+
+**Notes:**
+
+- Spritesheet animation file name for 4K: `/4k/Notes/HoldBodies/note-holdbody-{1-4}@{rows}x{columns}.png`
+- Spritesheet animation file name for 7K: `/7k/Notes/HoldEnds/note-holdbody-{1-7}@{rows}x{columns}.png`
+- The body of a hold (long) note.
+- If animation spritesheet is specified, frames animate at a speed of 30 FPS.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| FlipNoteImagesOnUpscroll | Boolean (True or False) | If the image will be flipped upside down on upscroll. |
+
+
 ### HoldEnds ###
 
 `/4k/Notes/HoldEnds/note-holdend-{1-4}.png`
@@ -105,7 +129,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 | Animatable | Alignment | Suggested Size |
 |:-:|:-:|:-:|
-| No | TopLeft | Square Image (256x256) |
+| No | TopLeft | - |
 
 **Notes:**
 
@@ -113,7 +137,9 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 **skin.ini Values:**
 
-- None
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| FlipNoteImagesOnUpscroll | Boolean (True or False) | If the image will be flipped upside down on upscroll. |
 
 ## Receptors ##
 
