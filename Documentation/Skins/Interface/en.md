@@ -12,14 +12,14 @@ and more.
 |:-:|:-:|:-:|
 | No | MidCenter | None |
 
-Notes:
+**Notes:**
 
 - The mouse cursor that is displayed.
 - Hidden during gameplay. Active during menu navigation.
 
-skin.ini Values:
+**skin.ini Values:**
 
-- 
+- None
 
 ### Grades ###
 
