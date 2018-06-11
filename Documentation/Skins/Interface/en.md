@@ -4,6 +4,8 @@ and more.
 
 ## Cursor ##
 
+### Main Cursor ###
+
 `/Cursor/main-cursor.png`
 
 ![](img/Cursor/main-cursor.png)
@@ -22,6 +24,8 @@ and more.
 - None
 
 ## Grades ##
+
+### Grade Small A ###
 
 `/Grades/grade-small-a.png`
 
@@ -43,6 +47,8 @@ and more.
 
 ---
 
+### Grade Small B ###
+
 `/Grades/grade-small-b.png`
 
 ![](img/Grades/grade-small-b.png)
@@ -62,6 +68,8 @@ and more.
 - None
 
 ---
+
+### Grade Small C ###
 
 `/Grades/grade-small-c.png`
 
@@ -83,6 +91,8 @@ and more.
 
 ---
 
+### Grade Small D ###
+
 `/Grades/grade-small-d.png`
 
 ![](img/Grades/grade-small-d.png)
@@ -102,6 +112,8 @@ and more.
 - None
 
 ---
+
+### Grade Small F ###
 
 `/Grades/grade-small-f.png`
 
@@ -123,6 +135,8 @@ and more.
 
 ---
 
+### Grade Small S ###
+
 `/Grades/grade-small-s.png`
 
 ![](img/Grades/grade-small-s.png)
@@ -142,6 +156,8 @@ and more.
 - None
 
 ---
+
+### Grade Small SS ###
 
 `/Grades/grade-small-ss.png`
 
@@ -163,6 +179,8 @@ and more.
 
 ---
 
+### Grade Small X ###
+
 `/Grades/grade-small-x.png`
 
 ![](img/Grades/grade-small-x.png)
@@ -182,6 +200,8 @@ and more.
 - None
 
 ---
+
+### Grade Small XX ###
 
 `/Grades/grade-small-xx.png`
 
@@ -206,6 +226,8 @@ and more.
 
 ## Health Bar ##
 
+### Health Bar Background ###
+
 `/Health/health-background.png`
 
 ![](img/Health/health-background.png)
@@ -227,6 +249,8 @@ and more.
 | HealthBarKeysAlignment | `RightStage`, `LeftStage`, or `TopLeft` | Determines where to place the health bar in the Keys game mode.
 
 ---
+
+### Health Bar Foreground ###
 
 `/Health/health-foreground.png`
 
@@ -250,6 +274,8 @@ and more.
 
 ## Judgements ##
 
+### Judgement Overlay ###
+
 `/Judgements/judgement-overlay.png`
 
 ![](img/Judgements/judgement-overlay.png)
@@ -271,6 +297,8 @@ and more.
 | JudgeColor{Marv-Miss} | RGB Color (255,255,255) | The overlay is tinted according to these skin.ini values. 
 
 ---
+
+### Judgement (Marv) ###
 
 `/Judgements/judge-marv.png`
 
@@ -295,6 +323,8 @@ and more.
 
 --- 
 
+### Judgement (Perf) ###
+
 `/Judgements/judge-perf.png`
 
 ![](img/Judgements/judge-perf@1x12.png)
@@ -317,6 +347,8 @@ and more.
 | JudgementBurstPosY | Integer | Determines the y position of this sprite.
 
 --- 
+
+### Judgement (Great) ###
 
 `/Judgements/judge-great.png`
 
@@ -341,6 +373,8 @@ and more.
 
 --- 
 
+### Judgement (Good) ###
+
 `/Judgements/judge-good.png`
 
 ![](img/Judgements/judge-good@1x8.png)
@@ -364,6 +398,8 @@ and more.
 
 --- 
 
+### Judgement (Okay) ###
+
 `/Judgements/judge-okay.png`
 
 ![](img/Judgements/judge-okay@1x9.png)
@@ -386,6 +422,8 @@ and more.
 | JudgementBurstPosY | Integer | Determines the y position of this sprite.
 
 --- 
+
+### Judgement (Miss) ###
 
 `/Judgements/judge-miss.png`
 
@@ -411,6 +449,8 @@ and more.
 
 ## Numbers ##
 
+### Combo Display Numbers ###
+
 `/Numbers/combo-{0-9}.png`
 
 ![](img/Numbers/combo-9.png)
@@ -430,6 +470,8 @@ and more.
 | ComboPosY | Integer | Determines the y value of where to place the combo display.
 
 --- 
+
+### Score/Accuracy Numbers ###
 
 `/Numbers/score-{0-9}.png`
 
@@ -452,6 +494,8 @@ and more.
 
 --- 
 
+### Score Display Percent ###
+
 `/Numbers/score-percent.png`
 
 ![](img/Numbers/score-percent.png)
@@ -472,6 +516,8 @@ and more.
 | AccuracyDisplayPosX | Integer | Determines the y position of the display relative to the alignment.
 
 ---
+
+### Score Display Decimal ###
 
 `/Numbers/score-decimal.png`
 
@@ -495,6 +541,8 @@ and more.
 
 ---
 
+### Song Time Display Numbers ###
+
 `/Numbers/song-time-{0-9}.png`
 
 ![](img/Numbers/song-time-8.png)
@@ -512,6 +560,8 @@ and more.
 * None
 
 ---
+
+### Song Time Display Colon ###
 
 `/Numbers/song-time-colon.png`
 
@@ -531,6 +581,9 @@ and more.
 
 ---
 
+### Song Time Display Minus ###
+
+
 `/Numbers/song-time-minus.png`
 
 ![](img/Numbers/song-time-minus.png)
@@ -548,6 +601,8 @@ and more.
 * None
 
 ## Pause Screen ##
+
+### Pause Continue Button ###
 
 `/Pause/pause-continue.png`
 
@@ -567,6 +622,8 @@ and more.
 
 --- 
 
+### Pause Retry Button ###
+
 `/Pause/pause-retry.png`
 
 ![](img/Pause/pause-retry.png)
@@ -584,6 +641,8 @@ and more.
 * None
 
 ---
+
+### Pause Back Button ###
 
 `/Pause/pause-back.png`
 
@@ -603,6 +662,8 @@ and more.
 
 ---
 
+### Pause Background ###
+
 `/Pause/pause-background.png`
 
 ![](img/Pause/pause-background.png)
@@ -621,6 +682,8 @@ and more.
 
 ## Scoreboard ##
 
+### Scoreboard User ###
+
 `/Scoreboard/scoreboard.png`
 
 ![](img/Scoreboard/scoreboard.png)
@@ -638,6 +701,8 @@ and more.
 * None
 
 ---
+
+### Scoreboard Other ###
 
 `/Scoreboard/scoreboard-other.png`
 
