@@ -93,7 +93,9 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ## Receptors ##
 
-`/{4k or 7k}/Receptors/Up/receptor-up-{1-7}.png`
+`/4k/Receptors/Up/receptor-up-{1-7}.png`
+
+`/7k/Receptors/Up/receptor-up-{1-7}.png`
 
 ![](img/Receptors/4K/Up/bar-4k-receptor-up-1.png)
 
@@ -115,7 +117,9 @@ The following are the list of elements to customize the Keys game mode. This inc
 
 ---
 
-`/{4k or 7k}/Receptors/Down/receptor-down-{1-7}.png`
+`/4k/Receptors/Down/receptor-down-{1-7}.png`
+
+`/7k/Receptors/Down/receptor-down-{1-7}.png`
 
 ![](img/Receptors/4K/Down/bar-4k-receptor-down-1.png)
 
