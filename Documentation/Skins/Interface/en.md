@@ -228,6 +228,26 @@ and more.
 
 ---
 
+`/Health/health-foreground.png`
+
+![](img/Health/health-foreground.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| Yes | Depends | 600x40 if horizontal. 40x600 if vertical |
+
+**Notes:**
+
+- Spritesheet animation file name: `/Health/health-foreground@{rows}x{columns}.png`
+- Displayed in the foreground. This is the healthbar that moves according to the current health.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| HealthBarType | `Horizontal` or `Vertical` | If your image is horizontal, set it to horizontal. If vertical, set it to vertical. |
+| HealthBarKeysAlignment | `RightStage`, `LeftStage`, or `TopLeft` | Determines where to place the health bar in the Keys game mode.
+
 ## Judgements ##
 
 ## Numbers ##
