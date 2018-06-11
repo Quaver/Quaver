@@ -142,6 +142,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 ## Stage ##
 
 `/4k/Stage/stage-bgmask.png`
+
 `/7k/Stage/stage-bgmask.png`
 
 ![](img/Stage/4K/bar-4k-stage-bgmask.png)
@@ -163,6 +164,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 ---
 
 `/4k/Stage/stage-distant-overlay.png`
+
 `/7k/Stage/stage-distant-overlay.png`
 
 ![](img/Stage/4K/bar-4k-stage-distant-overlay.png)
@@ -182,6 +184,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 ---
 
 `/4k/Stage/stage-hitposition-overlay.png`
+
 `/7k/Stage/stage-hitposition-overlay.png`
 
 ![](img/Stage/4K/bar-4k-stage-hitposition-overlay.png)
@@ -201,6 +204,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 ---
 
 `/4k/Stage/stage-left-border.png`
+
 `/7k/Stage/stage-left-border.png`
 
 ![](img/Stage/4K/bar-4k-stage-left-border.png)
@@ -220,6 +224,7 @@ The following are the list of elements to customize the Keys game mode. This inc
 ---
 
 `/4k/Stage/stage-right-border.png`
+
 `/7k/Stage/stage-right-border.png`
 
 ![](img/Stage/4K/bar-4k-stage-right-border.png)
