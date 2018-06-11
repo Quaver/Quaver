@@ -270,6 +270,145 @@ and more.
 |:-:|:-:|:-:|
 | JudgeColor{Marv-Miss} | RGB Color (255,255,255) | The overlay is tinted according to these skin.ini values. 
 
+---
+
+`/Judgements/judge-marv.png`
+
+![](img/Judgements/judge-marv@1x15.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| Yes | MidCenter | - |
+
+**Notes:**
+
+- Spritesheet animation name: `/Judgements/judge-marv@{rows}x{columns.png}`
+- Displayed when a judgement is received after hitting an object.
+- If no spritesheet is specified, it will perform a default animation.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| JudgementHitBurstScale | Float | This value is multiplied to increase/decrease the size of the judgement hit burst.
+| JudgementBurstPosY | Integer | Determines the y position of this sprite.
+
+--- 
+
+`/Judgements/judge-perf.png`
+
+![](img/Judgements/judge-perf@1x12.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| Yes | MidCenter | - |
+
+**Notes:**
+
+- Spritesheet animation name: `/Judgements/judge-perf@{rows}x{columns.png}`
+- Displayed when a judgement is received after hitting an object.
+- If no spritesheet is specified, it will perform a default animation.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| JudgementHitBurstScale | Float | This value is multiplied to increase/decrease the size of the judgement hit burst.
+| JudgementBurstPosY | Integer | Determines the y position of this sprite.
+
+--- 
+
+`/Judgements/judge-great.png`
+
+![](img/Judgements/judge-great@1x7.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| Yes | MidCenter | - |
+
+**Notes:**
+
+- Spritesheet animation name: `/Judgements/judge-great@{rows}x{columns.png}`
+- Displayed when a judgement is received after hitting an object.
+- If no spritesheet is specified, it will perform a default animation.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| JudgementHitBurstScale | Float | This value is multiplied to increase/decrease the size of the judgement hit burst.
+| JudgementBurstPosY | Integer | Determines the y position of this sprite.
+
+--- 
+
+`/Judgements/judge-good.png`
+
+![](img/Judgements/judge-good@1x8.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| Yes | MidCenter | - |
+
+**Notes:**
+
+- Spritesheet animation name: `/Judgements/judge-good@{rows}x{columns.png}`
+- Displayed when a judgement is received after hitting an object.
+- If no spritesheet is specified, it will perform a default animation.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| JudgementHitBurstScale | Float | This value is multiplied to increase/decrease the size of the judgement hit burst.
+| JudgementBurstPosY | Integer | Determines the y position of this sprite.
+
+--- 
+
+`/Judgements/judge-okay.png`
+
+![](img/Judgements/judge-okay@1x9.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| Yes | MidCenter | - |
+
+**Notes:**
+
+- Spritesheet animation name: `/Judgements/judge-okay@{rows}x{columns.png}`
+- Displayed when a judgement is received after hitting an object.
+- If no spritesheet is specified, it will perform a default animation.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| JudgementHitBurstScale | Float | This value is multiplied to increase/decrease the size of the judgement hit burst.
+| JudgementBurstPosY | Integer | Determines the y position of this sprite.
+
+--- 
+
+`/Judgements/judge-miss.png`
+
+![](img/Judgements/judge-miss@1x16.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| Yes | MidCenter | - |
+
+**Notes:**
+
+- Spritesheet animation name: `/Judgements/judge-miss@{rows}x{columns.png}`
+- Displayed when a judgement is received after missing a hitobject.
+- If no spritesheet is specified, it will perform a default animation.
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| JudgementHitBurstScale | Float | This value is multiplied to increase/decrease the size of the judgement hit burst.
+| JudgementBurstPosY | Integer | Determines the y position of this sprite.
+
+
 ## Numbers ##
 
 ## Pause Screen ##
