@@ -167,7 +167,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The amount of times the user requested to quit.
         /// </summary>
-        private int TimesRequestedToQuit { get; set; }
+        private int TimesRequestedToPause { get; set; }
 
         /// <summary>
         ///     Ctor - 
@@ -321,10 +321,10 @@ namespace Quaver.States.Gameplay
 
             if (ModManager.IsActivated(ModIdentifier.NoPause))
             {
-                TimesRequestedToQuit++;
+                TimesRequestedToPause++;
 
                 // Force fail the user if they request to quit more than once.
-                switch (TimesRequestedToQuit)
+                switch (TimesRequestedToPause)
                 {
                     case 1:
                         Logger.LogImportant($"Press the pause button one more time to exit.", LogType.Runtime);
