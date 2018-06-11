@@ -250,6 +250,26 @@ and more.
 
 ## Judgements ##
 
+`/Judgements/judgement-overlay.png`
+
+![](img/Judgements/judgement-overlay.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| No | MidRight | 100x100 |
+
+**Notes:**
+
+- Background image that displays the current judgements the player has.
+- Automatically colored according to the [JudgeColors skin.ini value]()
+- Should be white!
+
+**skin.ini Values:**
+
+| Name | Possible Values | Notes |
+|:-:|:-:|:-:|
+| JudgeColor{Marv-Miss} | RGB Color (255,255,255) | The overlay is tinted according to these skin.ini values. 
+
 ## Numbers ##
 
 ## Pause Screen ##
