@@ -466,7 +466,7 @@ namespace Quaver.States.Gameplay
         /// </summary>
         private void PauseIfWindowInactive()
         {
-            if (IsPaused)
+            if (IsPaused || InReplayMode)
                 return;
             
             // Pause the game
