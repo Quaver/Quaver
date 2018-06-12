@@ -83,7 +83,7 @@ namespace Quaver.States.Gameplay.Replays
         /// <summary>
         ///     Adds a replay frame with the correct key press state.
         /// </summary>
-        private void AddFrame(ReplayKeyPressState state) => Replay.AddFrame((int)Screen.Timing.CurrentTime, state);
+        private void AddFrame(ReplayKeyPressState state) => Replay.AddFrame((float)Screen.Timing.CurrentTime, state);
         
         /// <summary>
         ///     Gets the current key press state from the binding store.

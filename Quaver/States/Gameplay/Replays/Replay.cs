@@ -37,7 +37,7 @@ namespace Quaver.States.Gameplay.Replays
         /// <summary>
         ///     The interval in milliseconds at which replays are captured.
         /// </summary>
-        public static int CaptureInterval { get; } = 1000 / 60;
+        public static int CaptureInterval { get; } = 1000 / 120;
 
         /// <summary>
         ///     Ctor -
@@ -56,7 +56,7 @@ namespace Quaver.States.Gameplay.Replays
         /// <summary>
         ///     Adds a frame to the replay.
         /// </summary>
-        internal void AddFrame(int time, ReplayKeyPressState keys)
+        internal void AddFrame(float time, ReplayKeyPressState keys)
         {
             Frames.Add(new ReplayFrame(time, keys));
         }
