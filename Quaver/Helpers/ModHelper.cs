@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Quaver.API.Enums;
 using Quaver.Main;
 using Quaver.Modifiers;
 
@@ -11,9 +12,13 @@ namespace Quaver.Helpers
             var sb = new StringBuilder();
             
             // Add mods to the string if mods exist
+            
             for (var i = 0; i < GameBase.CurrentGameModifiers.Count; i++)
             {
-                if (i == 0 && addPlus)
+                if (GameBase.CurrentGameModifiers[i].ModIdentifier == ModIdentifier.Autoplay)
+                    continue;
+                
+                if ((i == 0 || !sb.ToString().Contains(" + ")) && addPlus)
                     sb.Append(" +");
 
                 if (i > 0)

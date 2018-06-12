@@ -218,7 +218,7 @@ namespace Quaver.States.Gameplay
             UI.Initialize(this);
             
             // Change discord rich presence.
-            DiscordController.ChangeDiscordPresenceGameplay(false);
+            SetRichPresence(false);
             
             // Initialize the game mode.
             Ruleset.Initialize();
@@ -367,7 +367,7 @@ namespace Quaver.States.Gameplay
             // When that resume time is past the specific set offset, it'll unpause the game.
             IsResumeInProgress = true;
             ResumeTime = GameBase.GameTime.ElapsedMilliseconds;
-            DiscordController.ChangeDiscordPresenceGameplay(true);
+            SetRichPresence(true);
         }
 
         /// <summary>
@@ -428,7 +428,7 @@ namespace Quaver.States.Gameplay
             finally
             {
                 // Skip to 3 seconds before the notes start
-                DiscordController.ChangeDiscordPresenceGameplay(true);
+                SetRichPresence(true);
             }
         }
 
@@ -505,6 +505,17 @@ namespace Quaver.States.Gameplay
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundFailure);
 
             FailureHandled = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void SetRichPresence(bool skipped)
+        {
+            if (ModManager.IsActivated(ModIdentifier.Autoplay))
+                DiscordController.ChangeDiscordPresenceGameplay(skipped, DiscordPlayingState.Watching, "Autoplay");
+            else
+                DiscordController.ChangeDiscordPresenceGameplay(skipped, DiscordPlayingState.Playing);
         }
     }
 }
