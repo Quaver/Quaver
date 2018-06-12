@@ -165,11 +165,6 @@ namespace Quaver.States.Gameplay
         internal List<LocalScore> LocalScores { get; }
 
         /// <summary>
-        ///     If we are currently viewing a replay.
-        /// </summary>
-        internal bool InReplayMode { get; }
-
-        /// <summary>
         ///     The amount of times the user requested to quit.
         /// </summary>
         private int TimesRequestedToPause { get; set; }
@@ -178,6 +173,11 @@ namespace Quaver.States.Gameplay
         ///     The replay that is currently loaded that the player is watching.
         /// </summary>
         internal Replay LoadedReplay { get; }
+        
+        /// <summary>
+        ///     If we are currently viewing a replay.
+        /// </summary>
+        internal bool InReplayMode { get; }
 
         /// <summary>
         ///     Ctor - 
