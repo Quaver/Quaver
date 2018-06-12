@@ -40,7 +40,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The input manager for this ruleset.
         /// </summary>
-        protected abstract IGameplayInputManager InputManager { get; set; }
+        internal abstract IGameplayInputManager InputManager { get; set; }
 
         /// <summary>
         ///     The score processor for this ruleset.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
@@ -89,7 +90,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The last recorded combo. We use this value for combo breaking.
         /// </summary>
-        private int LastRecordedCombo { get; set; }
+        internal int LastRecordedCombo { get; private set; }
 
         /// <summary>
         ///     If the user is currently on a break in the song.
@@ -180,6 +181,11 @@ namespace Quaver.States.Gameplay
         internal bool InReplayMode { get; }
 
         /// <summary>
+        ///     The current replay for this gameplay session.
+        /// </summary>
+        internal ReplayCapturer ReplayCapturer { get; }
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         internal GameplayScreen(Qua map, string md5, List<LocalScore> scores, Replay replay = null)
@@ -188,14 +194,19 @@ namespace Quaver.States.Gameplay
             Map = map;
             MapHash = md5;
             LoadedReplay = replay;
+           
             Timing = new GameplayTiming(this);
             UI = new GameplayInterface(this);
+            
             
             if (ModManager.IsActivated(ModIdentifier.Autoplay))
                 LoadedReplay = Replay.GeneratePerfectReplay(map);
             
             if (LoadedReplay != null)
                 InReplayMode = true;
+            
+            // Create the current replay that will be captured. 
+            ReplayCapturer = new ReplayCapturer(this);            
             
             // Set the game mode component.
             switch (map.Mode)
@@ -256,6 +267,7 @@ namespace Quaver.States.Gameplay
             HandleInput(dt);
             HandleFailure();
             Ruleset.Update(dt);
+            ReplayCapturer.Capture(dt);
         }
 
         /// <inheritdoc />
@@ -512,7 +524,7 @@ namespace Quaver.States.Gameplay
         /// </summary>
         private void SetRichPresence(bool skipped)
         {
-            if (ModManager.IsActivated(ModIdentifier.Autoplay))
+            if (InReplayMode)
                 DiscordController.ChangeDiscordPresenceGameplay(skipped, DiscordPlayingState.Watching, LoadedReplay.PlayerName);
             else
                 DiscordController.ChangeDiscordPresenceGameplay(skipped, DiscordPlayingState.Playing);

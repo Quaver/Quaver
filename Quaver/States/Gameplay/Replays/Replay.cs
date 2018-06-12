@@ -7,6 +7,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Helpers;
 using Quaver.Main;
+using Quaver.States.Gameplay.GameModes.Keys.Input;
 using Quaver.States.Gameplay.HitObjects;
 
 namespace Quaver.States.Gameplay.Replays
@@ -34,6 +35,11 @@ namespace Quaver.States.Gameplay.Replays
         public ModIdentifier Mods { get; }
 
         /// <summary>
+        ///     The interval in milliseconds at which replays are captured.
+        /// </summary>
+        public static int CaptureInterval { get; } = 1000 / 60;
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="mode"></param>
@@ -45,6 +51,14 @@ namespace Quaver.States.Gameplay.Replays
             Mode = mode;
             Mods = mods;
             Frames = new List<ReplayFrame>();
+        }
+
+        /// <summary>
+        ///     Adds a frame to the replay.
+        /// </summary>
+        internal void AddFrame(int time, ReplayKeyPressState keys)
+        {
+            Frames.Add(new ReplayFrame(time, keys));
         }
 
         /// <summary>
@@ -132,7 +146,7 @@ namespace Quaver.States.Gameplay.Replays
         /// </summary>
         /// <param name="lane"></param>
         /// <returns></returns>
-        private static ReplayKeyPressState KeyLaneToPressState(int lane)
+        internal static ReplayKeyPressState KeyLaneToPressState(int lane)
         {
             switch (lane)
             {

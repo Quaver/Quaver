@@ -132,6 +132,7 @@
     <Compile Include="States\Gameplay\IGameplayPlayfield.cs" />
     <Compile Include="States\Gameplay\Replays\Replay.cs" />
     <Compile Include="States\Gameplay\Replays\ReplayAutoplayFrame.cs" />
+    <Compile Include="States\Gameplay\Replays\ReplayCapturer.cs" />
     <Compile Include="States\Gameplay\Replays\ReplayFrame.cs" />
     <Compile Include="States\Gameplay\Replays\ReplayKeyPressState.cs" />
     <Compile Include="States\Gameplay\UI\Components\GradeDisplay.cs" />

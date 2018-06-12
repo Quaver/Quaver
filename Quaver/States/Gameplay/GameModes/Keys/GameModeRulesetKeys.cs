@@ -20,7 +20,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         ///     The input manager for this ruleset.
         /// </summary>
-        protected sealed override IGameplayInputManager InputManager { get; set; }
+        internal sealed override IGameplayInputManager InputManager { get; set; }
 
         /// <inheritdoc />
         /// <summary>

@@ -246,6 +246,26 @@ namespace Quaver.States.Results
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundBack);  
                 ApplauseSound.Stop();
             };
+            
+            var watchReplay = new TextButton(new Vector2(200, 40), "Watch Replay")
+            {
+                Parent = Container,
+                Alignment = Alignment.MidLeft,
+                PosY = 80
+            };
+
+            watchReplay.Clicked += (o, e) =>
+            {
+                IsExitingScreen = true;
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
+                
+                Task.Run(async () =>
+                {
+                    GameBase.GameStateManager.ChangeState(new GameplayScreen(GameplayScreen.Map, GameplayScreen.MapHash, 
+                            await LocalScoreCache.FetchMapScores(GameplayScreen.MapHash), GameplayScreen.ReplayCapturer.Replay));
+                }).Wait();
+                
+            };
         }
 
         /// <summary>

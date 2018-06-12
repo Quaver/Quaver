@@ -144,7 +144,7 @@ namespace Quaver.Discord
                     mapLength = (Qua.FindSongLength(GameBase.SelectedMap.Qua) - GameBase.AudioEngine.Position) / GameBase.AudioEngine.PlaybackRate;
 
                 var sb = new StringBuilder();
-                sb.Append(state + (name != "" ? " " + name : ""));
+                sb.Append(state + (name != "" ? " " + name  : ""));
                 sb.Append(ModHelper.GetActivatedModsString(true));
 
                 ChangeDiscordPresence(mapString, sb.ToString(), mapLength);

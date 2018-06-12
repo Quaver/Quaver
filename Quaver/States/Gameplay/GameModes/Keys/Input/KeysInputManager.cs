@@ -20,7 +20,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         /// <summary>
         ///     The list of button containers for these keys.
         /// </summary>
-        private List<KeysInputBinding> BindingStore { get; }
+        internal List<KeysInputBinding> BindingStore { get; }
 
         /// <summary>
         ///     Reference to the ruleset
