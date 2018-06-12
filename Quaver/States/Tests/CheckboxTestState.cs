@@ -9,7 +9,6 @@ using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Main;
-using Quaver.States.Enums;
 
 namespace Quaver.States.Tests
 {

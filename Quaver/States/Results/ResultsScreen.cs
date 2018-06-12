@@ -12,7 +12,6 @@ using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
 using Quaver.Main;
-using Quaver.States.Enums;
 using Quaver.States.Gameplay;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;

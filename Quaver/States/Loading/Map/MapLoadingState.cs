@@ -11,7 +11,6 @@ using Quaver.Database.Scores;
 using Quaver.GameState;
 using Quaver.Logging;
 using Quaver.Main;
-using Quaver.States.Enums;
 using Quaver.States.Gameplay;
 using Quaver.States.Select;
 

@@ -9,7 +9,6 @@ using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.Resources;
-using Quaver.States.Enums;
 
 namespace Quaver.States.Tests
 {

@@ -10,6 +10,7 @@ using Quaver.Main;
 using Quaver.States.Gameplay.GameModes.Keys.Input;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield;
 using Quaver.States.Gameplay.HitObjects;
+using Quaver.States.Gameplay.Replays;
 
 namespace Quaver.States.Gameplay.GameModes.Keys
 {
@@ -26,6 +27,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         internal sealed override ScoreProcessor ScoreProcessor { get; set; }
  
+        /// <summary>
+        ///     Reference to the currently played replay.
+        /// </summary>
+        private Replay ViewedReplay { get; }
+        
         /// <summary>
         ///     Dictates if we are currently using downscroll or not.
         /// </summary>
@@ -45,7 +51,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 }
             }
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - Sets the correct mode, either 4 or 7k.
@@ -53,7 +59,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <param name="screen"></param>
         /// <param name="mode"></param>
         /// <param name="map"></param>
-        public GameModeRulesetKeys(GameplayScreen screen, GameMode mode, Qua map): base(screen, map)
+        /// <param name="replay"></param>
+        public GameModeRulesetKeys(GameplayScreen screen, GameMode mode, Qua map, Replay replay = null): base(screen, map)
         {
             switch (mode)
             {
@@ -65,6 +72,9 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                     throw new InvalidEnumArgumentException("GameModeKeys can only be initialized with GameMode.Keys4 or GameModes.Keys7");
             }
 
+            // Init replay that we're viewing.
+            ViewedReplay = replay;
+            
             // Initialize the score processor.
             ScoreProcessor = new ScoreProcessorKeys(map, GameBase.CurrentMods);
         }
@@ -115,12 +125,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        protected override IGameplayInputManager CreateInputManager() => new KeysInputManager(this, Mode);
+        protected override IGameplayInputManager CreateInputManager() => new KeysInputManager(this, Mode, ViewedReplay);
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override HitObjectManager CreateHitObjectManager() => new KeysHitObjectManager(this, 255);
+        protected override HitObjectManager CreateHitObjectManager() => new KeysHitObjectManager(this, 255);      
     }
 }

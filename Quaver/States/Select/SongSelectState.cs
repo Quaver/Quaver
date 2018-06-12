@@ -17,7 +17,6 @@ using Quaver.Input;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
-using Quaver.States.Enums;
 using Quaver.States.Loading.Map;
 using Quaver.States.Menu;
 using Quaver.Database.Maps;

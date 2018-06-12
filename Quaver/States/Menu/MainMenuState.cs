@@ -19,7 +19,6 @@ using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
-using Quaver.States.Enums;
 using Quaver.States.Options;
 using Quaver.States.Select;
 using Quaver.States.Tests;

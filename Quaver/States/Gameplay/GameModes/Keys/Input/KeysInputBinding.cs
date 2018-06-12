@@ -19,9 +19,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         ///     Ctor - 
         /// </summary>
         /// <param name="key"></param>
-        internal KeysInputBinding(BindedValue<Microsoft.Xna.Framework.Input.Keys> key)
-        {
-            Key = key;
-        }
+        internal KeysInputBinding(BindedValue<Microsoft.Xna.Framework.Input.Keys> key) => Key = key;
+
+        internal KeysInputBinding() {}
     }
 }

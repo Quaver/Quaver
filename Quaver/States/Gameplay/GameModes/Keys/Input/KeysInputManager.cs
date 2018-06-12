@@ -11,6 +11,7 @@ using Quaver.Input;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield;
+using Quaver.States.Gameplay.Replays;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Input
 {
@@ -27,11 +28,22 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         private GameModeRulesetKeys Ruleset { get;}
 
         /// <summary>
+        ///     The current replay that we are viewing.
+        /// </summary>
+        private Replay ViewingReplay { get; }
+
+        /// <summary>
+        ///     The replay input manager.
+        /// </summary>
+        private ReplayInputManagerKeys ReplayInputManager { get; }
+        
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="mode"></param>
-        internal KeysInputManager(GameModeRulesetKeys ruleset, GameMode mode)
+        /// <param name="replay"></param>
+        internal KeysInputManager(GameModeRulesetKeys ruleset, GameMode mode, Replay replay = null)
         {
             switch (mode)
             {
@@ -62,34 +74,68 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                     throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
 
+            ViewingReplay = replay;
             Ruleset = ruleset;
+            
+            // Init replay 
+            if (ViewingReplay != null && Ruleset.Screen.InReplayMode)
+                ReplayInputManager = new ReplayInputManagerKeys(Ruleset.Screen, ViewingReplay);
         }
 
          /// <inheritdoc />
          /// <summary>
          /// </summary>
         public void HandleInput(double dt)
-        {
+         {
+            // Handle replay input if necessary.  
+            if (ReplayInputManager != null)
+            {
+                // Grab the previous replay frame that we're on.
+                var previousReplayFrame = ReplayInputManager.CurrentFrame;
+                 
+                // Update the replay's input manager to see if we have any updated frames.
+                ReplayInputManager?.Update(dt);
+                 
+                // Grab the current replay frame.
+                var currentReplayFrame = ReplayInputManager.CurrentFrame;
+                 
+                // If the two frames are the same, we don't have to update the key press state.
+                if (previousReplayFrame == currentReplayFrame)
+                    return;
+            }
+                         
             for (var i = 0; i < BindingStore.Count; i++)
             {
                 // Keeps track of if this key input is is important enough for us to want to 
                 // update more things like animations, score, etc.
                 var needsUpdating = false;
                 
-                // Key Pressed Uniquely
-                if (InputHelper.IsUniqueKeyPress(BindingStore[i].Key.Value) && !BindingStore[i].Pressed)
+                // A key was uniquely pressed.
+                if (!BindingStore[i].Pressed && 
+                        (InputHelper.IsUniqueKeyPress(BindingStore[i].Key.Value) && ReplayInputManager == null
+                        || ReplayInputManager != null && ReplayInputManager.UniquePresses[i]))
                 {
+                    // We've already handling the unique key press, so reset it.
+                    if (ReplayInputManager != null)
+                        ReplayInputManager.UniquePresses[i] = false;
+                    
                     BindingStore[i].Pressed = true;
                     needsUpdating = true;
                     
                     // Add to keys per second
                     Ruleset.Screen.UI.KpsDisplay.AddClick();
                 }
-                // Key Released Uniquely.
-                else if (GameBase.KeyboardState.IsKeyUp(BindingStore[i].Key.Value) && BindingStore[i].Pressed)
+                // A key was uniquely released.
+                else if (BindingStore[i].Pressed && 
+                            (InputHelper.IsUniqueKeyRelease(BindingStore[i].Key.Value) && ReplayInputManager == null 
+                            || ReplayInputManager != null && ReplayInputManager.UniqueReleases[i]))
                 {
+                    // We're already handling the unique key release so reset.
+                    if (ReplayInputManager != null)
+                        ReplayInputManager.UniqueReleases[i] = false;
+                                    
                     BindingStore[i].Pressed = false;
-                    needsUpdating = true;                    
+                    needsUpdating = true;    
                 }
 
                 // Don't bother updating the game any further if this event isn't important.

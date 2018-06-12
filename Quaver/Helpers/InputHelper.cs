@@ -14,5 +14,10 @@ namespace Quaver.Helpers
         {
             return GameBase.KeyboardState.IsKeyDown(k) && GameBase.PreviousKeyboardState.IsKeyUp(k);
         }
+
+        internal static bool IsUniqueKeyRelease(Keys k)
+        {
+            return GameBase.KeyboardState.IsKeyUp(k) && GameBase.PreviousKeyboardState.IsKeyDown(k);
+        }
     }
 }

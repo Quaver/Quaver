@@ -13,7 +13,6 @@ using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
 using Quaver.Main;
-using Quaver.States.Enums;
 
 namespace Quaver.States.Tests
 {

@@ -1,4 +1,4 @@
-﻿namespace Quaver.States.Enums
+﻿namespace Quaver.States
 {
     /// <summary>
     ///     Enum for all the different game states.

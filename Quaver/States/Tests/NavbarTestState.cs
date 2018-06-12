@@ -5,7 +5,6 @@ using Quaver.Graphics.Base;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
-using Quaver.States.Enums;
 
 namespace Quaver.States.Tests
 {

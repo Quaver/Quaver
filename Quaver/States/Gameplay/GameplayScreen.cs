@@ -18,8 +18,8 @@ using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
-using Quaver.States.Enums;
 using Quaver.States.Gameplay.GameModes.Keys;
+using Quaver.States.Gameplay.Replays;
 using Quaver.States.Gameplay.UI;
 
 namespace Quaver.States.Gameplay
@@ -165,6 +165,11 @@ namespace Quaver.States.Gameplay
         internal List<LocalScore> LocalScores { get; }
 
         /// <summary>
+        ///     If we are currently viewing a replay.
+        /// </summary>
+        internal bool InReplayMode { get; }
+
+        /// <summary>
         ///     The amount of times the user requested to quit.
         /// </summary>
         private int TimesRequestedToPause { get; set; }
@@ -172,7 +177,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Ctor - 
         /// </summary>
-        internal GameplayScreen(Qua map, string md5, List<LocalScore> scores)
+        internal GameplayScreen(Qua map, string md5, List<LocalScore> scores, Replay replay = null)
         {
             LocalScores = scores;
             Map = map;
@@ -181,12 +186,14 @@ namespace Quaver.States.Gameplay
             Timing = new GameplayTiming(this);
             UI = new GameplayInterface(this);
             
+            InReplayMode = true;
+            
             // Set the game mode component.
             switch (map.Mode)
             {
                 case GameMode.Keys4:
                 case GameMode.Keys7:
-                    Ruleset = new GameModeRulesetKeys(this, map.Mode, map);
+                    Ruleset = new GameModeRulesetKeys(this, map.Mode, map, Replay.GeneratePerfectReplay(Map));
                     break;
                 default:
                     throw new InvalidEnumArgumentException("Game mode must be a valid!");
