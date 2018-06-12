@@ -21,7 +21,7 @@ namespace Quaver.Helpers
                 if ((i == 0 || !sb.ToString().Contains(" + ")) && addPlus)
                     sb.Append(" +");
 
-                if (i > 0)
+                if (i > 0 && sb.ToString().Contains(" + "))
                     sb.Append(",");
                     
                 if (GameBase.CurrentGameModifiers[i].Type == ModType.Speed)

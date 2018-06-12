@@ -513,7 +513,7 @@ namespace Quaver.States.Gameplay
         private void SetRichPresence(bool skipped)
         {
             if (ModManager.IsActivated(ModIdentifier.Autoplay))
-                DiscordController.ChangeDiscordPresenceGameplay(skipped, DiscordPlayingState.Watching, "Autoplay");
+                DiscordController.ChangeDiscordPresenceGameplay(skipped, DiscordPlayingState.Watching, LoadedReplay.PlayerName);
             else
                 DiscordController.ChangeDiscordPresenceGameplay(skipped, DiscordPlayingState.Playing);
         }

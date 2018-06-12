@@ -5,6 +5,8 @@ using System.Linq;
 using System.Windows.Forms;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.Helpers;
+using Quaver.Main;
 using Quaver.States.Gameplay.HitObjects;
 
 namespace Quaver.States.Gameplay.Replays
@@ -22,12 +24,26 @@ namespace Quaver.States.Gameplay.Replays
         public List<ReplayFrame> Frames { get; }
 
         /// <summary>
-        /// 
+        ///     
+        /// </summary>
+        public string PlayerName { get; }
+
+        /// <summary>
+        ///     The activated mods on this replay.
+        /// </summary>
+        public ModIdentifier Mods { get; }
+
+        /// <summary>
+        ///     Ctor -
         /// </summary>
         /// <param name="mode"></param>
-        public Replay(GameMode mode)
+        /// <param name="name"></param>
+        /// <param name="mods"></param>
+        public Replay(GameMode mode, string name, ModIdentifier mods)
         {
+            PlayerName = name;
             Mode = mode;
+            Mods = mods;
             Frames = new List<ReplayFrame>();
         }
 
@@ -38,7 +54,7 @@ namespace Quaver.States.Gameplay.Replays
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static Replay GeneratePerfectReplay(Qua map)
         {        
-            var replay = new Replay(map.Mode);
+            var replay = new Replay(map.Mode, "Autoplay", GameBase.CurrentMods);
 
             switch (map.Mode)
             {
