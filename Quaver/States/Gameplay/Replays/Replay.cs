@@ -37,7 +37,7 @@ namespace Quaver.States.Gameplay.Replays
         /// <summary>
         ///     The interval in milliseconds at which replays are captured.
         /// </summary>
-        public static int CaptureInterval { get; } = 1000 / 120;
+        public static float CaptureInterval { get; } = 1000 / 60f;
 
         /// <summary>
         ///     Ctor -
