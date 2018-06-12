@@ -46,12 +46,11 @@ namespace Quaver.States.Gameplay.Replays
         }
 
         /// <summary>
-        ///     Replays are captured at a rate of 60 FPS.
         ///
         ///     Important frames are also taken into account here.
         ///         - KeyPressState Changes.
         ///         - Combo is different than the previous frame.
-        ///         - 
+        ///         - Frames at the capture interval.
         /// </summary>
         /// <param name="dt"></param>
         internal void Capture(double dt)

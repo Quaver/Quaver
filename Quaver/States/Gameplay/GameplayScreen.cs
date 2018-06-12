@@ -20,6 +20,7 @@ using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
 using Quaver.States.Gameplay.GameModes.Keys;
+using Quaver.States.Gameplay.GameModes.Keys.Input;
 using Quaver.States.Gameplay.Replays;
 using Quaver.States.Gameplay.UI;
 
@@ -439,6 +440,12 @@ namespace Quaver.States.Gameplay
             }
             finally
             {
+                if (InReplayMode)
+                {
+                    var inputManager = (KeysInputManager) Ruleset.InputManager;
+                    inputManager.ReplayInputManager.HandleSkip();
+                }
+
                 // Skip to 3 seconds before the notes start
                 SetRichPresence(true);
             }

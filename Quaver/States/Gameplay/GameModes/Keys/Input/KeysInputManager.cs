@@ -30,7 +30,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         /// <summary>
         ///     The replay input manager.
         /// </summary>
-        private ReplayInputManagerKeys ReplayInputManager { get; }
+        internal ReplayInputManagerKeys ReplayInputManager { get; }
         
         /// <summary>
         ///     Ctor - 

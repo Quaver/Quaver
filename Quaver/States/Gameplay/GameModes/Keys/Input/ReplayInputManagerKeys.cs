@@ -76,5 +76,14 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
 
             CurrentFrame++;
         }
+
+        internal void HandleSkip()
+        {
+            // Find the next frame 
+            var frame = Replay.Frames.FindLastIndex(x => x.Time <= Screen.Timing.CurrentTime);
+
+            if (frame != -1)
+                CurrentFrame = frame;
+        }
     }
 }
