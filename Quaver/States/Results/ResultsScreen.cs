@@ -261,8 +261,10 @@ namespace Quaver.States.Results
                 
                 Task.Run(async () =>
                 {
+                    var replayToLoad = GameplayScreen.InReplayMode ? GameplayScreen.LoadedReplay : GameplayScreen.ReplayCapturer.Replay;
+                    
                     GameBase.GameStateManager.ChangeState(new GameplayScreen(GameplayScreen.Map, GameplayScreen.MapHash, 
-                            await LocalScoreCache.FetchMapScores(GameplayScreen.MapHash), GameplayScreen.ReplayCapturer.Replay));
+                            await LocalScoreCache.FetchMapScores(GameplayScreen.MapHash), replayToLoad));
                 }).Wait();
                 
             };
