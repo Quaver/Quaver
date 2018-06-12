@@ -45,7 +45,6 @@ namespace Quaver.Modifiers
                 case ModIdentifier.Speed19X:
                 case ModIdentifier.Speed20X:
                     gameplayModifier = new ManiaModSpeed(modIdentifier);
-                    Console.WriteLine("hi");
                     break;
                 case ModIdentifier.NoSliderVelocity:
                     gameplayModifier = new ManiaModNoSliderVelocities();
@@ -58,7 +57,6 @@ namespace Quaver.Modifiers
                     break;
                 case ModIdentifier.NoPause:
                     gameplayModifier = new ManiaModNoPause();
-                    Console.WriteLine("what");
                     break;
                 case ModIdentifier.Autoplay:
                     gameplayModifier = new ManiaModAutoplay();
