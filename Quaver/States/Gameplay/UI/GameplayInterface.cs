@@ -335,11 +335,12 @@ namespace Quaver.States.Gameplay.UI
         /// </summary>
         private void CreateScoreboard()
         {
-            // Scoreboard users.
+            // Use the replay's name for the scoreboard if we're watching one.
+            var scoreboardName = Screen.InReplayMode ? Screen.LoadedReplay.PlayerName : ConfigManager.Username.Value;       
             var users = new List<ScoreboardUser>
             {
                 // Add ourself to the list of scoreboard users first.
-                new ScoreboardUser(Screen, ScoreboardUserType.Self, ConfigManager.Username.Value, null, GameBase.QuaverUserInterface.YouAvatar)
+                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, GameBase.QuaverUserInterface.YouAvatar)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidLeft
