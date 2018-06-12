@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.Modifiers
 {
-    internal enum ModType
+    public enum ModType
     {
         DifficultyIncrease,
         DifficultyDecrease,

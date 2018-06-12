@@ -14,12 +14,12 @@ namespace Quaver.States.Gameplay.Replays
         /// <summary>
         ///     The game mode this replay is for.
         /// </summary>
-        public GameMode Mode { get; set; }
+        public GameMode Mode { get; }
         
         /// <summary>
         ///     All of the replay frames.
         /// </summary>
-        public List<ReplayFrame> Frames { get; set; }
+        public List<ReplayFrame> Frames { get; }
 
         /// <summary>
         /// 

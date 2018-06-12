@@ -2,6 +2,9 @@
 
 namespace Quaver.States.Gameplay.Replays
 {
+    /// <summary>
+    ///     Bitwise combination of the keys that were pressed in a given replay frame.
+    /// </summary>
     [Flags]
     public enum ReplayKeyPressState
     {

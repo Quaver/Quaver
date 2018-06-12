@@ -84,6 +84,11 @@ namespace Quaver.States.Select
         private TextButton BotCount { get; set; }
 
         /// <summary>
+        ///     Button that enables autoplay.
+        /// </summary>
+        private TextButton AutoplayEnabled { get; set; }
+
+        /// <summary>
         ///     Search bar for song searching
         /// </summary>
         private TextInputField SearchField { get; set; }
@@ -463,6 +468,24 @@ namespace Quaver.States.Select
                     ConfigManager.BotCount.Value++;
                 
                 BotCount.TextSprite.Text = $"Bot Count: {ConfigManager.BotCount.Value}";
+            };
+
+            AutoplayEnabled = new TextButton(new Vector2(200, 50), $"Autoplay: {ModManager.IsActivated(ModIdentifier.Autoplay)}")
+            {
+                Alignment = Alignment.TopLeft,
+                PosY = 50,
+                Parent = Container
+            };
+
+            AutoplayEnabled.Clicked += (o, e) =>
+            {
+                Console.WriteLine("hi");
+                if (ModManager.IsActivated(ModIdentifier.Autoplay))
+                    ModManager.RemoveMod(ModIdentifier.Autoplay);
+                else
+                    ModManager.AddMod(ModIdentifier.Autoplay);
+
+                AutoplayEnabled.TextSprite.Text = $"Autoplay: {ModManager.IsActivated(ModIdentifier.Autoplay)}";
             };
         }
         

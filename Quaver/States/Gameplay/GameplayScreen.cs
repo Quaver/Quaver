@@ -175,6 +175,11 @@ namespace Quaver.States.Gameplay
         private int TimesRequestedToPause { get; set; }
 
         /// <summary>
+        ///     The replay that is currently loaded that the player is watching.
+        /// </summary>
+        internal Replay LoadedReplay { get; }
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         internal GameplayScreen(Qua map, string md5, List<LocalScore> scores, Replay replay = null)
@@ -182,18 +187,22 @@ namespace Quaver.States.Gameplay
             LocalScores = scores;
             Map = map;
             MapHash = md5;
-            
+            LoadedReplay = replay;
             Timing = new GameplayTiming(this);
             UI = new GameplayInterface(this);
             
-            InReplayMode = true;
+            if (ModManager.IsActivated(ModIdentifier.Autoplay))
+                LoadedReplay = Replay.GeneratePerfectReplay(map);
+            
+            if (LoadedReplay != null)
+                InReplayMode = true;
             
             // Set the game mode component.
             switch (map.Mode)
             {
                 case GameMode.Keys4:
                 case GameMode.Keys7:
-                    Ruleset = new GameModeRulesetKeys(this, map.Mode, map, Replay.GeneratePerfectReplay(Map));
+                    Ruleset = new GameModeRulesetKeys(this, map.Mode, map);
                     break;
                 default:
                     throw new InvalidEnumArgumentException("Game mode must be a valid!");
@@ -213,15 +222,6 @@ namespace Quaver.States.Gameplay
             
             // Initialize the game mode.
             Ruleset.Initialize();
-            
-            // Add gameplay loggers
-            /*Logger.Add("Paused", $"Paused: {IsPaused}", Color.White);
-            Logger.Add("Resume In Progress", $"Resume In Progress {IsResumeInProgress}", Color.White);
-            Logger.Add($"Max Combo", $"Max Combo: {Ruleset.ScoreProcessor.MaxCombo}", Color.White);
-            Logger.Add($"Objects Left", $"Objects Left {Ruleset.HitObjectManager.ObjectsLeft}", Color.White);
-            Logger.Add($"Finished", $"Finished: {IsPlayComplete}", Color.White);
-            Logger.Add($"On Break", $"On Break: {OnBreak}", Color.White);
-            Logger.Add($"Failed", $"Failed: {Failed}", Color.White);*/
                
             UpdateReady = true;
         }

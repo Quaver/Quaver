@@ -28,11 +28,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         private GameModeRulesetKeys Ruleset { get;}
 
         /// <summary>
-        ///     The current replay that we are viewing.
-        /// </summary>
-        private Replay ViewingReplay { get; }
-
-        /// <summary>
         ///     The replay input manager.
         /// </summary>
         private ReplayInputManagerKeys ReplayInputManager { get; }
@@ -43,7 +38,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         /// <param name="ruleset"></param>
         /// <param name="mode"></param>
         /// <param name="replay"></param>
-        internal KeysInputManager(GameModeRulesetKeys ruleset, GameMode mode, Replay replay = null)
+        internal KeysInputManager(GameModeRulesetKeys ruleset, GameMode mode)
         {
             switch (mode)
             {
@@ -74,12 +69,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                     throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
 
-            ViewingReplay = replay;
             Ruleset = ruleset;
             
             // Init replay 
-            if (ViewingReplay != null && Ruleset.Screen.InReplayMode)
-                ReplayInputManager = new ReplayInputManagerKeys(Ruleset.Screen, ViewingReplay);
+            if (Ruleset.Screen != null && Ruleset.Screen.InReplayMode)
+                ReplayInputManager = new ReplayInputManagerKeys(Ruleset.Screen);
         }
 
          /// <inheritdoc />
@@ -94,7 +88,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
                 var previousReplayFrame = ReplayInputManager.CurrentFrame;
                  
                 // Update the replay's input manager to see if we have any updated frames.
-                ReplayInputManager?.Update(dt);
+                ReplayInputManager?.HandleInput();
                  
                 // Grab the current replay frame.
                 var currentReplayFrame = ReplayInputManager.CurrentFrame;
