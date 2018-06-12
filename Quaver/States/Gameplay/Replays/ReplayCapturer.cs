@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Quaver.Config;
 using Quaver.Main;
+using Quaver.Modifiers;
 using Quaver.States.Gameplay.GameModes.Keys.Input;
 
 namespace Quaver.States.Gameplay.Replays
@@ -40,6 +41,8 @@ namespace Quaver.States.Gameplay.Replays
             var mods = Screen.InReplayMode && Screen.LoadedReplay != null ? Screen.LoadedReplay.Mods : GameBase.CurrentMods;
             
             Replay = new Replay(Screen.Map.Mode, name, mods);
+            
+            // Activate all the mods that are in this replay
             
             // Add ssample first frame.
             Replay.AddFrame(-10000, 0);

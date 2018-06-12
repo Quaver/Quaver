@@ -198,8 +198,7 @@ namespace Quaver.States.Gameplay
            
             Timing = new GameplayTiming(this);
             UI = new GameplayInterface(this);
-            
-            
+                        
             if (ModManager.IsActivated(ModIdentifier.Autoplay))
                 LoadedReplay = Replay.GeneratePerfectReplay(map);
             
