@@ -724,6 +724,12 @@ namespace Quaver.States.Results
         /// </summary>
         private void ExportReplay()
         {
+            if (!Replay.HasData)
+            {
+                Logger.LogError($"Replay doesn't have any data", LogType.Runtime);
+                return;
+            }
+            
             var path = $@"{ConfigManager.ReplayDirectory.Value}/{Replay.PlayerName} - {SongTitle} - {DateTime.Now:yyyyddMMhhmmss}{GameBase.GameTime.ElapsedMilliseconds}.qr";
             Replay.Write(path);
             
