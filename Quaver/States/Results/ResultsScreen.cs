@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -17,6 +18,7 @@ using Quaver.Main;
 using Quaver.States.Gameplay;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
@@ -156,7 +158,7 @@ namespace Quaver.States.Results
         /// <summary>
         ///     Score processor.        
         /// </summary>
-        private ScoreProcessor ScoreProcessor { get; }
+        private ScoreProcessor ScoreProcessor { get; set; }
 
         /// <summary>
         ///     Ctor
@@ -165,7 +167,6 @@ namespace Quaver.States.Results
         public ResultsScreen(GameplayScreen gameplay)
         {
             GameplayScreen = gameplay;
-            ScoreProcessor = GameplayScreen.Ruleset.ScoreProcessor;
             Qua = GameplayScreen.Map;
             Type = ResultsScreenType.FromGameplay;
         }
@@ -239,6 +240,7 @@ namespace Quaver.States.Results
         {            
             Container.Update(dt);
             HandleScreenTransitions(dt);
+            HandleInput();
         }
 
         /// <inheritdoc />
@@ -339,7 +341,7 @@ namespace Quaver.States.Results
                 
                 ApplauseSound?.Stop();
             };
-            
+                        
             var watchReplay = new TextButton(new Vector2(200, 40), "Watch Replay")
             {
                 Parent = Container,
@@ -381,6 +383,15 @@ namespace Quaver.States.Results
                                   
                 IsExitingScreen = true;     
             };
+            
+            var export = new TextButton(new Vector2(200, 40), "Export Replay")
+            {
+                Parent = Container,
+                Alignment = Alignment.MidLeft,
+                PosY = 160
+            };
+
+            export.Clicked += (o, e) => ExportReplay();
         }
 
         /// <summary>
@@ -523,13 +534,25 @@ namespace Quaver.States.Results
         /// </summary>
         private void InitializeFromGameplay()
         {
+            // Keep the same replay and score processor if the user was watching a replay before.
+            if (GameplayScreen.InReplayMode)
+            {
+                Replay = GameplayScreen.LoadedReplay;
+                ScoreProcessor = new ScoreProcessorKeys(Replay);
+            }
+            // Otherwise the replay and processor should be the one that the user just played.
+            else
+            {
+                // Populate the replay with values from the score processor.
+                Replay = GameplayScreen.ReplayCapturer.Replay;
+                ScoreProcessor = GameplayScreen.Ruleset.ScoreProcessor;
+                
+                Replay.FromScoreProcessor(ScoreProcessor);
+            }
+
             ChangeDiscordPresence();
             PlayApplauseEffect();
-
-            // Populate the replay with values from the score processor.
-            Replay = GameplayScreen.ReplayCapturer.Replay;
-            Replay.FromScoreProcessor(ScoreProcessor);
-
+            
             // Submit score
             SubmitScore();
         }
@@ -636,6 +659,29 @@ namespace Quaver.States.Results
             OnExitingScreen += action;
 
             IsExitingScreen = true;
+        }
+        
+        /// <summary>
+        ///     Handles input for the entire screen.
+        /// </summary>
+        private void HandleInput()
+        {
+            if (InputHelper.IsUniqueKeyPress(Keys.F2))
+                ExportReplay();
+        }
+
+        /// <summary>
+        ///     Exports the currently looked at replay.
+        /// </summary>
+        private void ExportReplay()
+        {
+            var path = $@"{ConfigManager.ReplayDirectory.Value}/{Replay.PlayerName} - {SongTitle} - {DateTime.Now:yyyyddMMhhmmss}{GameBase.GameTime.ElapsedMilliseconds}.qr";
+            Replay.Write(path);
+            
+            // Open containing folder
+            Process.Start("explorer.exe", "/select, \"" + path.Replace("/", "\\") + "\"");
+            
+            Logger.LogSuccess($"Replay successfully exported", LogType.Runtime);
         }
     }
 }
