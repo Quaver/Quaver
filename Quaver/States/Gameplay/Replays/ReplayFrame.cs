@@ -22,5 +22,9 @@
             Time = time;
             Keys = keys;
         }
+
+        public override string ToString() => $"{Time}|{(int) Keys}";
+
+        public string ToDebugString() => $"{Time}|{Keys}";
     }
 }

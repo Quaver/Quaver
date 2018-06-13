@@ -200,7 +200,7 @@ namespace Quaver.States.Gameplay
                       
             // Handle autoplay replays.
             if (ModManager.IsActivated(ModIdentifier.Autoplay))
-                LoadedReplay = Replay.GeneratePerfectReplay(map);
+                LoadedReplay = Replay.GeneratePerfectReplay(map, MapHash);
             
             // Determine if we're in replay mode.
             if (LoadedReplay != null)
@@ -472,7 +472,11 @@ namespace Quaver.States.Gameplay
                 if (RestartKeyHoldTime >= 350)
                 {
                     GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundRetry);
-                    GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash, LocalScores));
+                    
+                    if (InReplayMode)
+                        GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
+                    else        
+                        GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash, LocalScores));
                 }
 
                 return;
@@ -530,7 +534,7 @@ namespace Quaver.States.Gameplay
         }
 
         /// <summary>
-        /// 
+        ///     Sets rich presence based on which activity we're doing in gameplay.
         /// </summary>
         private void SetRichPresence(bool skipped)
         {

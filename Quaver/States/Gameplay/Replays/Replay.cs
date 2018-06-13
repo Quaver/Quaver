@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
+using osu_database_reader;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States.Gameplay.GameModes.Keys.Input;
@@ -25,6 +31,11 @@ namespace Quaver.States.Gameplay.Replays
         public List<ReplayFrame> Frames { get; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public string QuaverVersion => "Quaver Test Build";
+        
+        /// <summary>
         ///     
         /// </summary>
         public string PlayerName { get; }
@@ -33,6 +44,29 @@ namespace Quaver.States.Gameplay.Replays
         ///     The activated mods on this replay.
         /// </summary>
         public ModIdentifier Mods { get; }
+
+        /// <summary>
+        ///     The md5 hash of the map.
+        /// </summary>
+        public string MapMd5 { get; }
+
+        public int Score { get; private set; }
+
+        public float Accuracy { get; private set; }
+
+        public int MaxCombo { get; private set; }
+
+        public int CountMarv { get; private set; }
+
+        public int CountPerf { get; private set; }
+
+        public int CountGreat { get; private set; }
+
+        public int CountGood { get; private set; }
+
+        public int CountOkay { get; private set; }
+
+        public int CountMiss { get; private set; }
 
         /// <summary>
         ///     The interval in milliseconds at which replays are captured.
@@ -45,30 +79,76 @@ namespace Quaver.States.Gameplay.Replays
         /// <param name="mode"></param>
         /// <param name="name"></param>
         /// <param name="mods"></param>
-        public Replay(GameMode mode, string name, ModIdentifier mods)
+        /// <param name="md5"></param>
+        public Replay(GameMode mode, string name, ModIdentifier mods, string md5)
         {
             PlayerName = name;
             Mode = mode;
             Mods = mods;
+            MapMd5 = md5;
             Frames = new List<ReplayFrame>();
         }
 
         /// <summary>
+        ///    Writes the current replay to a binary file.
+        /// </summary>
+        internal void Write(string path)
+        {       
+            using (var replayDataStream = new MemoryStream(Encoding.ASCII.GetBytes(FramesToString())))
+            using (var bw = new BinaryWriter(File.Open(path, FileMode.Create)))
+            {
+                var str = $"{QuaverVersion}--{MapMd5}//{PlayerName}=w{(int) Mods}xxx={Score}--.{Accuracy}--" +
+                          $"{MaxCombo}@#{CountMarv}$!---{CountPerf}" +
+                          $"---{CountGreat}@!!{CountGood}.@@@!@!{CountOkay}----{CountMiss}--{replayDataStream}";
+                              
+                bw.Write(QuaverVersion);
+                bw.Write(MapMd5);
+                bw.Write(CryptoHelper.StringToMd5(str));
+                bw.Write(PlayerName);
+                bw.Write(DateTime.Now.ToString(CultureInfo.InvariantCulture));
+                bw.Write((int)Mods);
+                bw.Write(Score);
+                bw.Write(Accuracy);
+                bw.Write(MaxCombo);
+                bw.Write(CountMarv);
+                bw.Write(CountPerf);
+                bw.Write(CountGreat);
+                bw.Write(CountGood);
+                bw.Write(CountOkay);
+                bw.Write(CountMiss);
+                bw.Write(StreamHelper.ConvertStreamToByteArray(LZMACoder.Compress(replayDataStream)));
+            }
+        }
+        
+        /// <summary>
         ///     Adds a frame to the replay.
         /// </summary>
-        internal void AddFrame(float time, ReplayKeyPressState keys)
-        {
-            Frames.Add(new ReplayFrame(time, keys));
-        }
+        internal void AddFrame(float time, ReplayKeyPressState keys) => Frames.Add(new ReplayFrame(time, keys));
 
+        /// <summary>
+        ///    Populates the replay header properties from a score processor.
+        /// </summary>
+        internal void FromScoreProcessor(ScoreProcessor processor)
+        {
+            Score = processor.Score;
+            Accuracy = processor.Accuracy;
+            MaxCombo = processor.MaxCombo;
+            CountMarv = processor.CurrentJudgements[Judgement.Marv];
+            CountPerf = processor.CurrentJudgements[Judgement.Perf];
+            CountGreat = processor.CurrentJudgements[Judgement.Great];
+            CountGood = processor.CurrentJudgements[Judgement.Good];
+            CountOkay = processor.CurrentJudgements[Judgement.Okay];
+            CountMiss = processor.CurrentJudgements[Judgement.Miss];
+        }
+        
         /// <summary>
         ///     Generates a perfect replay given the game mode.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static Replay GeneratePerfectReplay(Qua map)
+        public static Replay GeneratePerfectReplay(Qua map, string md5)
         {        
-            var replay = new Replay(map.Mode, "Autoplay", GameBase.CurrentMods);
+            var replay = new Replay(map.Mode, "Autoplay", GameBase.CurrentMods, md5);
 
             switch (map.Mode)
             {
@@ -194,6 +274,23 @@ namespace Quaver.States.Gameplay.Replays
                 lanes.Add(6);
 
              return lanes;
+        }
+        
+        /// <summary>
+        ///     Converts all replay frames to a string
+        /// </summary>
+        internal string FramesToString(bool debug = false)
+        {
+            // The format for the replay frames are the following:
+            //     Time|KeysPressed,
+            var frameStr = "";
+            
+            if (debug)
+                Frames.ForEach(x => frameStr += $"{x.ToDebugString()}\r\n");
+            else
+                Frames.ForEach(x => frameStr += $"{x.ToString()},");
+
+            return frameStr;
         }
     }
 }

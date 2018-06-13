@@ -40,7 +40,7 @@ namespace Quaver.States.Gameplay.Replays
             var name = Screen.InReplayMode && Screen.LoadedReplay != null ? Screen.LoadedReplay.PlayerName : ConfigManager.Username.Value;
             var mods = Screen.InReplayMode && Screen.LoadedReplay != null ? Screen.LoadedReplay.Mods : GameBase.CurrentMods;
             
-            Replay = new Replay(Screen.Map.Mode, name, mods);
+            Replay = new Replay(Screen.Map.Mode, name, mods, Screen.MapHash);
                         
             // Add ssample first frame.
             Replay.AddFrame(-10000, 0);

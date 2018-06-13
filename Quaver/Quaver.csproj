@@ -94,6 +94,7 @@
     <Compile Include="Graphics\UserInterface\ProgressBar.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
+    <Compile Include="Helpers\CryptoHelper.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
     <Compile Include="Helpers\GzipHelper.cs" />
     <Compile Include="Helpers\InputHelper.cs" />

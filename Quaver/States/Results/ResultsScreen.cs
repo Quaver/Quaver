@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.GameState;
@@ -23,6 +24,7 @@ using Quaver.Discord;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Logging;
+using Quaver.States.Gameplay.Replays;
 using Quaver.States.Select;
 using Color = Microsoft.Xna.Framework.Color;
 
@@ -110,7 +112,12 @@ namespace Quaver.States.Results
         ///     The user's scroll speed.
         /// </summary>
         private int ScrollSpeed => GameplayScreen.Map.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K.Value : ConfigManager.ScrollSpeed7K.Value;
-        
+
+        /// <summary>
+        ///     The replay that was just played.
+        /// </summary>
+        private Replay Replay { get; set; }
+
         /// <summary>
         ///     Ctor
         /// </summary>
@@ -143,8 +150,12 @@ namespace Quaver.States.Results
             ChangeDiscordPresence();
             PlayApplauseEffect();
             
-            // Save local score asynchronously.
-            SaveLocalScore();
+            // Populate the replay with values from the score processor.
+            Replay = GameplayScreen.ReplayCapturer.Replay;              
+            Replay.FromScoreProcessor(GameplayScreen.Ruleset.ScoreProcessor);
+            
+            // Submit score
+            SubmitScore();
         }
 
         /// <inheritdoc />
@@ -265,8 +276,7 @@ namespace Quaver.States.Results
                     
                     GameBase.GameStateManager.ChangeState(new GameplayScreen(GameplayScreen.Map, GameplayScreen.MapHash, 
                             await LocalScoreCache.FetchMapScores(GameplayScreen.MapHash), replayToLoad));
-                }).Wait();
-                
+                }).Wait();            
             };
         }
 
@@ -350,33 +360,70 @@ namespace Quaver.States.Results
         {
             ApplauseSound = GameBase.Skin.SoundApplause.CreateInstance();
             
-            if (!GameplayScreen.Failed && GameplayScreen.Ruleset.ScoreProcessor.Accuracy >= 80)
+            if (!GameplayScreen.Failed && GameplayScreen.Ruleset.ScoreProcessor.Accuracy >= 80 && !GameplayScreen.InReplayMode)
                 ApplauseSound.Play();
         }
 
         /// <summary>
-        ///     Saves a local score to the database.
+        ///     Goes through the score submission process.
         /// </summary>
-        private void SaveLocalScore()
+        private void SubmitScore()
         {
             // Don't save scores if the user quit themself.
             if (GameplayScreen.HasQuit || GameplayScreen.InReplayMode)
                 return;
-            
-            Task.Run(async () =>
+
+            var t = new Thread(() =>
             {
-                try
+                // Save local score.
+                Task.Run(async () =>
                 {
-                    var localScore = LocalScore.FromScoreProcessor(GameplayScreen.Ruleset.ScoreProcessor, Md5, ConfigManager.Username.Value, ScrollSpeed);
-                    await LocalScoreCache.InsertScoreIntoDatabase(localScore);
-                    
-                    Logger.LogSuccess($"Successfully saved local score to the database", LogType.Runtime);
-                }
-                catch (Exception e)
+                    try
+                    {
+                        var localScore = LocalScore.FromScoreProcessor(GameplayScreen.Ruleset.ScoreProcessor, Md5, ConfigManager.Username.Value, ScrollSpeed);
+                        await LocalScoreCache.InsertScoreIntoDatabase(localScore);         
+                        Logger.LogSuccess($"Successfully saved local score to the database", LogType.Runtime);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.LogError($"There was a fatal error when saving the local score!" + e.Message, LogType.Runtime);
+                    }
+                });
+
+                // Save replay.
+                Task.Run(() =>
                 {
-                    Logger.LogError($"There was a fatal error when saving the local score!" + e.Message, LogType.Runtime);
-                }
+                    try
+                    {
+                        Replay.Write($@"c:\users\admin\desktop\replay.qr");
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.LogError($"There was an error when writing the replay: " + e, LogType.Runtime);
+                    }
+                });
+            
+#if DEBUG
+                // Save debug replay and hit stat data.
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        File.WriteAllText($"{ConfigManager.DataDirectory.Value}/replay_debug.txt", Replay.FramesToString(true));
+
+                        var hitStats = "";
+                        GameplayScreen.Ruleset.ScoreProcessor.Stats.ForEach(x => hitStats += $"{x.ToString()}\r\n");
+                        File.WriteAllText($"{ConfigManager.DataDirectory.Value}/replay_debug_hitstats.txt", hitStats);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.LogError($"There was an error when writing debug replay files: {e}", LogType.Runtime);
+                    }
+                });
+#endif
             });
+            
+            t.Start();
         }
     }
 }
