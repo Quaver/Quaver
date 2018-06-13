@@ -32,6 +32,7 @@ using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.States.Gameplay.Replays;
 using Quaver.States.Select;
+using AudioEngine = Quaver.Audio.AudioEngine;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.States.Results
@@ -93,6 +94,12 @@ namespace Quaver.States.Results
         ///     to avoid spam calling the method, since it's called in update.
         /// </summary>
         private bool ExitHandlerExecuted { get; set;  }
+
+        /// <summary>
+        ///     When exiting the screen, we want to fade the audio. This'll make sure it only
+        ///     happens once.
+        /// </summary>
+        private bool HasFadedAudioOnExit { get; set; }
 
         /// <summary>
         ///     When the user is exiting the screen, this counter will determine when
@@ -266,6 +273,17 @@ namespace Quaver.States.Results
             // Exiting Screen
             else
             {
+                if (!HasFadedAudioOnExit)
+                {
+                    try
+                    {
+                        AudioEngine.Fade(0, 500);
+                    }
+                    catch (AudioEngineException ex) {}
+
+                    HasFadedAudioOnExit = true;
+                }
+          
                 // Add to the time if the user is exiting the screen in any way.
                 TimeSinceExitingScreen += dt;
                 
@@ -329,8 +347,7 @@ namespace Quaver.States.Results
             };
 
             watchReplay.Clicked += (o, e) =>
-            {
-                GameBase.AudioEngine.Pause();
+            {                
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
                 
                 switch (Type)
