@@ -579,7 +579,11 @@ namespace Quaver.States.Results
             if (GameplayScreen.InReplayMode)
             {
                 Replay = GameplayScreen.LoadedReplay;
-                ScoreProcessor = new ScoreProcessorKeys(Replay);
+
+                if (Replay.Mods.HasFlag(ModIdentifier.Autoplay))
+                    ScoreProcessor = GameplayScreen.Ruleset.ScoreProcessor;
+                else
+                    ScoreProcessor = new ScoreProcessorKeys(Replay);
             }
             // Otherwise the replay and processor should be the one that the user just played.
             else

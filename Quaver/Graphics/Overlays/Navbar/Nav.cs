@@ -134,7 +134,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             Play = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.GamePad, "Play", "Smash some keys!", OnPlayButtonClicked);
             Import = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Copy, "Import Mapsets","Add new songs to play!", OnImportButtonClicked);
             Export = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Archive, "Export Mapset", "Zip your current mapset to a file.", OnExportButtonClicked);
-            Replay = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Desktop, "Watch Replay", "Load up a replay to watch.", OnReplayButtonClicked);
+            Replay = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.VideoPlay, "Watch Replay", "Load up a replay to watch.", OnReplayButtonClicked);
             
             // Right Side
             Notifications = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => { GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick); Logger.LogImportant("This button does nothing. Don't click it.", LogType.Runtime);});
