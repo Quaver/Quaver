@@ -92,6 +92,11 @@ namespace Quaver.Database.Scores
         public ModIdentifier Mods { get; set; }
 
         /// <summary>
+        ///     The game mode for this local score.
+        /// </summary>
+        public GameMode Mode { get; set; }
+
+        /// <summary>
         ///     The scroll speed the player used during this play.
         /// </summary>
         public int ScrollSpeed { get; set; }
@@ -116,6 +121,7 @@ namespace Quaver.Database.Scores
                 MapMd5 = md5,
                 Name = name,
                 DateTime = $"{System.DateTime.Now.ToShortDateString()} {System.DateTime.Now.ToShortTimeString()}",
+                Mode = processor.Map.Mode,
                 Score = processor.Score,
                 Grade = processor.Failed ? Grade.F : GradeHelper.GetGradeFromAccuracy(processor.Accuracy),
                 Accuracy = processor.Accuracy,

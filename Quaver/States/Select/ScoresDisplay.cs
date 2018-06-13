@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Threading;
+using Microsoft.Xna.Framework;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Main;
+using Quaver.States.Results;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.States.Select
@@ -24,7 +27,7 @@ namespace Quaver.States.Select
         /// <summary>
         ///     All of the current score displays.
         /// </summary>
-        internal List<Sprite> Displays { get; private set; } = new List<Sprite>();
+        internal List<TextButton> Displays { get; private set; } = new List<TextButton>();
 
         /// <summary>
         ///     Updates the display with new scores.
@@ -35,22 +38,33 @@ namespace Quaver.States.Select
             Scores = scores;           
             
             // Get rid of all other displays.
-            Displays.ForEach(x => x.Destroy());
+            Displays.ForEach(x =>
+            {
+                x.Destroy();
+                x.Clicked = null;
+            });
 
+            Displays = new List<TextButton>();
+            
             for (var i = 0; i < scores.Count && i < 8; i++)
             {
-                var display = new Sprite()
+                var display = new TextButton(new Vector2(320, 75), "")
                 {
                     Parent = this,
-                    Size = new UDim2D(320, 75),
                     Alignment = Alignment.TopCenter,
                     Tint = Color.White,
-                    Alpha = 0.85f,
                     PosY = i * 80 + 100,
                     PosX = -20,
                     Image = GameBase.Skin.ScoreboardOther
                 };
+
+                display.Clicked += (o, e) =>
+                {
+                    var localScore = Scores[Displays.IndexOf((TextButton) o)];
+                    GameBase.GameStateManager.ChangeState(new ResultsScreen(localScore));
+                };
                 
+                 
                 // Create avatar
                 var avatar = new Sprite()
                 {

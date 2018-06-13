@@ -3,6 +3,7 @@
     public enum ResultsScreenType
     {
         FromGameplay,
-        FromReplayFile
+        FromReplayFile,
+        FromLocalScore
     }
 }

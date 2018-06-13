@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -99,12 +100,6 @@ namespace Quaver.States.Results
         private bool ExitHandlerExecuted { get; set;  }
 
         /// <summary>
-        ///     When exiting the screen, we want to fade the audio. This'll make sure it only
-        ///     happens once.
-        /// </summary>
-        private bool HasFadedAudioOnExit { get; set; }
-
-        /// <summary>
         ///     When the user is exiting the screen, this counter will determine when
         ///     to switch to the next screen.
         /// </summary>
@@ -181,6 +176,45 @@ namespace Quaver.States.Results
             ScoreProcessor = new ScoreProcessorKeys(Replay);
             Type = ResultsScreenType.FromReplayFile;
         }
+
+        /// <summary>
+        ///     When loading up the results screen with a local score.
+        /// </summary>
+        /// <param name="score"></param>
+        public ResultsScreen(LocalScore score)
+        {
+            GameBase.SelectedMap.Qua = GameBase.SelectedMap.LoadQua();
+            Qua = GameBase.SelectedMap.Qua;
+            
+            var localPath = $"{ConfigManager.DataDirectory.Value}/r/{score.Id}.qr";
+            
+            // Try to find replay w/ local score id.
+            // Otherwise we want to find 
+            if (File.Exists(localPath))
+            {
+                Replay = new Replay(localPath);
+            }
+            // Otherwise we want to create an artificial replay.
+            else
+            {
+                Replay = new Replay(score.Mode, score.Name, score.Mods, score.MapMd5)
+                {
+                    Date = Convert.ToDateTime(score.DateTime, CultureInfo.InvariantCulture),
+                    Score = score.Score,
+                    Accuracy = (float) score.Accuracy,
+                    MaxCombo = score.MaxCombo,
+                    CountMarv = score.CountMarv,
+                    CountPerf = score.CountPerf,
+                    CountGreat = score.CountGreat,
+                    CountGood = score.CountGood,
+                    CountOkay = score.CountOkay,
+                    CountMiss = score.CountMiss
+                };
+            }
+                    
+            ScoreProcessor = new ScoreProcessorKeys(Replay);
+            Type = ResultsScreenType.FromLocalScore;
+        }
         
         /// <inheritdoc />
         /// <summary>
@@ -198,6 +232,9 @@ namespace Quaver.States.Results
                     break;
                 case ResultsScreenType.FromReplayFile:
                     InitializeFromReplayFile();
+                    break;
+                case ResultsScreenType.FromLocalScore:
+                    InitializeFromLocalScore();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -276,17 +313,6 @@ namespace Quaver.States.Results
             // Exiting Screen
             else
             {
-                if (!HasFadedAudioOnExit)
-                {
-                    try
-                    {
-                        AudioEngine.Fade(0, 500);
-                    }
-                    catch (AudioEngineException ex) {}
-
-                    HasFadedAudioOnExit = true;
-                }
-          
                 // Add to the time if the user is exiting the screen in any way.
                 TimeSinceExitingScreen += dt;
                 
@@ -341,7 +367,11 @@ namespace Quaver.States.Results
                 
                 ApplauseSound?.Stop();
             };
-                        
+
+            // Don't add replay specific buttons if there is no data.
+            if (!Replay.HasData)
+                return;
+            
             var watchReplay = new TextButton(new Vector2(200, 40), "Watch Replay")
             {
                 Parent = Container,
@@ -369,6 +399,7 @@ namespace Quaver.States.Results
                         break;
                     // If user is loading up from a replay file, use that incoming replay file.
                     case ResultsScreenType.FromReplayFile:
+                    case ResultsScreenType.FromLocalScore:
                         ExitScreen(async (obj, sender) =>
                         {
                             var scores = await LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
@@ -380,7 +411,13 @@ namespace Quaver.States.Results
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                                  
+
+                try
+                {
+                    AudioEngine.Fade(0, 500);
+                }
+                catch (AudioEngineException ex) {}
+                
                 IsExitingScreen = true;     
             };
             
@@ -391,7 +428,11 @@ namespace Quaver.States.Results
                 PosY = 160
             };
 
-            export.Clicked += (o, e) => ExportReplay();
+            export.Clicked += (o, e) =>
+            {
+                ExportReplay();
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
+            };
         }
 
         /// <summary>
@@ -597,6 +638,14 @@ namespace Quaver.States.Results
             }
         }
 
+        /// <summary>
+        ///     Initialize the screen from a local score.
+        /// </summary>
+        private void InitializeFromLocalScore()
+        {
+            
+        }
+        
         /// <summary>
         ///     Saves a local score to the database.
         /// </summary>

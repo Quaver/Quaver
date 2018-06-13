@@ -122,7 +122,7 @@ namespace Quaver.States.Gameplay.UI
         {
             // Initialize the progress bar if the user has it set in config.
             if (ConfigManager.DisplaySongTimeProgress.Value)
-                SongTimeProgressBar = new SongTimeProgressBar(Qua.FindSongLength(GameBase.SelectedMap.Qua), 0, new Vector2(GameBase.WindowRectangle.Width, 6),
+                SongTimeProgressBar = new SongTimeProgressBar(Qua.FindSongLength(Screen.Map), 0, new Vector2(GameBase.WindowRectangle.Width, 6),
                                                             Container, Alignment.BotLeft);
 
             // Create score display
