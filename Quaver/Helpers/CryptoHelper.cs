@@ -24,7 +24,7 @@ namespace Quaver.Helpers
                 {
                     sb.Append(hashBytes[i].ToString("X2"));
                 }
-                return sb.ToString();
+                return sb.ToString().ToLower();
             }
         }
     }
