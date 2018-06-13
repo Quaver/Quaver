@@ -208,14 +208,8 @@ namespace Quaver.States.Gameplay
             {
                 InReplayMode = true;
                 AddModsFromReplay();
-                
-                Logger.LogImportant($"Loaded replay from: {LoadedReplay.PlayerName}", LogType.Runtime, 3.0f);
-                Logger.LogImportant($"Replay has: {LoadedReplay.Frames.Count}", LogType.Runtime, 3.0f);
-                Logger.LogImportant($"Mods: {LoadedReplay.Mods}", LogType.Runtime, 3.0f);
-                Logger.LogImportant($"Key Down Frames: {LoadedReplay.Frames.FindAll(x => x.Keys != 0).ToList().Count}", LogType.Runtime, 3.0f);
             }
-                
-            
+                          
             // Create the current replay that will be captured. 
             ReplayCapturer = new ReplayCapturer(this);          
             

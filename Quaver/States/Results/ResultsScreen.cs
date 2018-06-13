@@ -645,10 +645,7 @@ namespace Quaver.States.Results
         /// <summary>
         ///     Initialize the screen from a local score.
         /// </summary>
-        private void InitializeFromLocalScore()
-        {
-            
-        }
+        private void InitializeFromLocalScore() {}
         
         /// <summary>
         ///     Saves a local score to the database.
