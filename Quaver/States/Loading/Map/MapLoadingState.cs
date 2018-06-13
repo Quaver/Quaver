@@ -76,45 +76,7 @@ namespace Quaver.States.Loading.Map
                 if (GameBase.SelectedMap == null)
                     throw new Exception("No selected map, we should not be on this screen!!!");
 
-                // Reference to the parsed .qua file
-                var qua = new Qua();
-
-                // Handle osu! maps as well
-                switch (GameBase.SelectedMap.Game)
-                {
-                    case MapGame.Quaver:
-                        var quaPath = $"{ConfigManager.SongDirectory}/{GameBase.SelectedMap.Directory}/{GameBase.SelectedMap.Path}";
-                        qua = Qua.Parse(quaPath);
-                        break;
-                    case MapGame.Osu:
-                        var osu = new PeppyBeatmap(GameBase.OsuSongsFolder + GameBase.SelectedMap.Directory + "/" + GameBase.SelectedMap.Path);
-                        qua = Qua.ConvertOsuBeatmap(osu);
-                        break;
-                    case MapGame.Etterna:
-                        // In short, find the chart with the same DifficultyName. There's literally no other way for us to check
-                        // other than through this means.
-                        var smCharts = Qua.ConvertStepManiaChart(StepManiaFile.Parse(GameBase.EtternaFolder + GameBase.SelectedMap.Directory + "/" + GameBase.SelectedMap.Path));
-                        qua = smCharts.Find(x => x.DifficultyName == GameBase.SelectedMap.DifficultyName);
-                        break;
-                    default:
-                        throw new ArgumentException("Could not load map because MapGame is invalid");
-                }
-
-                // Check if the map is actually valid
-                if (qua != null)
-                    qua.IsValidQua = Qua.CheckQuaValidity(qua);
-
-                if (qua == null || !qua.IsValidQua)
-                {
-                    Logger.LogError("Map could not be loaded!", LogType.Runtime);
-                    GameBase.GameStateManager.ChangeState(new SongSelectState());
-                    return;
-                }
-                    
-                // Set the map's Qua. 
-                // We parse it and set it each time the player is going to play to kmake sure they are
-                // actually playing the correct map.
-                GameBase.SelectedMap.Qua = qua;
+                GameBase.SelectedMap.Qua = GameBase.SelectedMap.LoadQua();
 
                 // Asynchronously write to a file for livestreamers the difficulty rating
                 Task.Run(async () =>
@@ -157,7 +119,7 @@ namespace Quaver.States.Loading.Map
                 var quaPath = $"{ConfigManager.SongDirectory}/{GameBase.SelectedMap.Directory}/{GameBase.SelectedMap.Path}";
 
                 // Get the Md5 of the played map
-                var md5 = "";
+                string md5;
                 switch (GameBase.SelectedMap.Game)
                 {
                     case MapGame.Quaver:
@@ -170,6 +132,8 @@ namespace Quaver.States.Loading.Map
                         // Etterna uses some weird ChartKey system, no point in implementing that here.
                         md5 = GameBase.SelectedMap.Md5Checksum;
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             
                 // GameBase.GameStateManager.ChangeState(new ManiaGameplayState(GameBase.SelectedMap.Qua, md5));

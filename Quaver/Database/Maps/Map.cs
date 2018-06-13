@@ -1,10 +1,14 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Parsers;
 using Quaver.Config;
+using Quaver.Logging;
 using Quaver.Main;
+using Quaver.States.Select;
 using SQLite;
 
 namespace Quaver.Database.Maps
@@ -176,6 +180,47 @@ namespace Quaver.Database.Maps
             };
         }
 
+        /// <summary>
+        ///     
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public Qua LoadQua()
+        {
+            // Reference to the parsed .qua file
+            Qua qua;
+
+            // Handle osu! maps as well
+            switch (Game)
+            {
+                case MapGame.Quaver:
+                    var quaPath = $"{ConfigManager.SongDirectory}/{Directory}/{Path}";
+                    qua = Qua.Parse(quaPath);
+                    break;
+                case MapGame.Osu:
+                    var osu = new PeppyBeatmap(GameBase.OsuSongsFolder + Directory + "/" + Path);
+                    qua = Qua.ConvertOsuBeatmap(osu);
+                    break;
+                case MapGame.Etterna:
+                    // In short, find the chart with the same DifficultyName. There's literally no other way for us to check
+                    // other than through this means.
+                    var smCharts = Qua.ConvertStepManiaChart(StepManiaFile.Parse(GameBase.EtternaFolder + Directory + "/" + Path));
+                    qua = smCharts.Find(x => x.DifficultyName == DifficultyName);
+                    break;
+                default:
+                    throw new InvalidEnumArgumentException();
+            }
+
+            // Check if the map is actually valid
+            if (qua != null)
+                qua.IsValidQua = Qua.CheckQuaValidity(qua);
+
+            if (qua == null || !qua.IsValidQua)
+                throw new ArgumentException();
+
+            return qua;
+        }
+        
         /// <summary>
         ///     Changes selected map
         /// </summary>
