@@ -2,7 +2,7 @@
 {
     public enum ResultsScreenType
     {
-        Gameplay,
-        Replay
+        FromGameplay,
+        FromReplayFile
     }
 }
