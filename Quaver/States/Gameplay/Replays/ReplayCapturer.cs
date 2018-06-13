@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Quaver.API.Replays;
 using Quaver.Config;
 using Quaver.Main;
 using Quaver.Modifiers;

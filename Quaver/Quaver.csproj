@@ -94,15 +94,14 @@
     <Compile Include="Graphics\UserInterface\ProgressBar.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
-    <Compile Include="Helpers\CryptoHelper.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
     <Compile Include="Helpers\GzipHelper.cs" />
     <Compile Include="Helpers\InputHelper.cs" />
     <Compile Include="Helpers\ListHelper.cs" />
     <Compile Include="Helpers\ModHelper.cs" />
+    <Compile Include="Helpers\ReplayHelper.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Helpers\RngHelper.cs" />
-    <Compile Include="Helpers\StreamHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\XnaKeyHelper.cs" />
     <Compile Include="Main\CommonTaskScheduler.cs" />
@@ -131,11 +130,7 @@
     <Compile Include="States\Gameplay\HitObjects\HitObjectManager.cs" />
     <Compile Include="States\Gameplay\IGameplayInputManager.cs" />
     <Compile Include="States\Gameplay\IGameplayPlayfield.cs" />
-    <Compile Include="States\Gameplay\Replays\Replay.cs" />
-    <Compile Include="States\Gameplay\Replays\ReplayAutoplayFrame.cs" />
     <Compile Include="States\Gameplay\Replays\ReplayCapturer.cs" />
-    <Compile Include="States\Gameplay\Replays\ReplayFrame.cs" />
-    <Compile Include="States\Gameplay\Replays\ReplayKeyPressState.cs" />
     <Compile Include="States\Gameplay\UI\Components\GradeDisplay.cs" />
     <Compile Include="States\Gameplay\UI\Components\Health\HealthBar.cs" />
     <Compile Include="States\Gameplay\UI\Components\Health\HealthBarType.cs" />
@@ -152,6 +147,7 @@
     <Compile Include="States\Gameplay\UI\Components\SongTimeProgressBar.cs" />
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />
     <Compile Include="States\Results\ResultsScreen.cs" />
+    <Compile Include="States\Results\ResultsScreenType.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="Graphics\Buttons\MapDifficultySelectButton.cs" />
     <Compile Include="Graphics\Buttons\MapsetSelectButton.cs" />

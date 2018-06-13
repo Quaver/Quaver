@@ -206,7 +206,10 @@ namespace Quaver.States.Gameplay.UI
         {
             // Hide navbar in gameplay
             if (!Screen.IsPaused && !Screen.Failed)
-                GameBase.Navbar.PerformHideAnimation(dt);
+            {
+                GameBase.Navbar.PerformHideAnimation(dt);      
+                BackgroundManager.Readjust();
+            }
 
             // Fade the cursor depending on if the user is paused or not.
             if (Screen.IsPaused && !Screen.IsResumeInProgress)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Quaver.API.Enums;
+using Quaver.API.Replays;
 using Quaver.States.Gameplay.Replays;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Input

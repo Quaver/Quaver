@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.API.Replays;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Scores;
@@ -200,7 +201,7 @@ namespace Quaver.States.Gameplay
                       
             // Handle autoplay replays.
             if (ModManager.IsActivated(ModIdentifier.Autoplay))
-                LoadedReplay = Replay.GeneratePerfectReplay(map, MapHash);
+                LoadedReplay = ReplayHelper.GeneratePerfectReplay(map, MapHash);
             
             // Determine if we're in replay mode.
             if (LoadedReplay != null)
@@ -217,7 +218,6 @@ namespace Quaver.States.Gameplay
             
             // Create the current replay that will be captured. 
             ReplayCapturer = new ReplayCapturer(this);          
-
             
             // Set the game mode component.
             switch (map.Mode)
@@ -235,9 +235,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         /// </summary>
         public void Initialize()
-        {           
-            BackgroundManager.Readjust();
-            
+        {                       
             Timing.Initialize(this);
             UI.Initialize(this);
             

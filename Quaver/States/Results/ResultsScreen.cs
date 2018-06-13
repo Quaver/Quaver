@@ -18,6 +18,8 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Replays;
 using Quaver.Config;
 using Quaver.Database.Scores;
 using Quaver.Discord;
@@ -36,7 +38,12 @@ namespace Quaver.States.Results
         /// <summary>
         /// </summary>
         public State CurrentState { get; set; } = State.Results;
-        
+
+        /// <summary>
+        ///     The type of results screen.
+        /// </summary>
+        private ResultsScreenType Type { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -119,10 +126,29 @@ namespace Quaver.States.Results
         private Replay Replay { get; set; }
 
         /// <summary>
+        ///     Score processor.        
+        /// </summary>
+        private ScoreProcessor ScoreProcessor { get; }
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="gameplay"></param>
-        public ResultsScreen(GameplayScreen gameplay) => GameplayScreen = gameplay;
+        public ResultsScreen(GameplayScreen gameplay)
+        {
+            GameplayScreen = gameplay;
+            ScoreProcessor = GameplayScreen.Ruleset.ScoreProcessor;
+            Type = ResultsScreenType.Gameplay;
+        }
+
+        /// <summary>
+        ///     When going to the results screen with just a replay.
+        /// </summary>
+        /// <param name="replay"></param>
+        public ResultsScreen(Replay replay)
+        {
+            Replay = replay;
+        }
         
         /// <inheritdoc />
         /// <summary>
@@ -146,16 +172,26 @@ namespace Quaver.States.Results
                 ScaleY = 1
             };
 #endregion
+            
+            switch (Type)
+            {
+                case ResultsScreenType.Gameplay:
+                    ChangeDiscordPresence();
+                    PlayApplauseEffect();
+
+                    // Populate the replay with values from the score processor.
+                    Replay = GameplayScreen.ReplayCapturer.Replay;
+                    Replay.FromScoreProcessor(ScoreProcessor);
+
+                    // Submit score
+                    SubmitScore();
+                    break;
+                case ResultsScreenType.Replay:
+                    
+                    break;
+            }
+            
             UpdateReady = true;
-            ChangeDiscordPresence();
-            PlayApplauseEffect();
-            
-            // Populate the replay with values from the score processor.
-            Replay = GameplayScreen.ReplayCapturer.Replay;              
-            Replay.FromScoreProcessor(GameplayScreen.Ruleset.ScoreProcessor);
-            
-            // Submit score
-            SubmitScore();
         }
 
         /// <inheritdoc />
@@ -232,10 +268,10 @@ namespace Quaver.States.Results
         private void ChangeDiscordPresence()
         {
             var state = GameplayScreen.Failed ? "Fail" : "Pass";
-            var score = $"{GameplayScreen.Ruleset.ScoreProcessor.Score / 1000}k";
-            var acc = $"{StringHelper.AccuracyToString(GameplayScreen.Ruleset.ScoreProcessor.Accuracy)}";
-            var grade = GameplayScreen.Failed ? "F" : GradeHelper.GetGradeFromAccuracy(GameplayScreen.Ruleset.ScoreProcessor.Accuracy).ToString();
-            var combo = $"{GameplayScreen.Ruleset.ScoreProcessor.MaxCombo}x";
+            var score = $"{ScoreProcessor.Score / 1000}k";
+            var acc = $"{StringHelper.AccuracyToString(ScoreProcessor.Accuracy)}";
+            var grade = GameplayScreen.Failed ? "F" : GradeHelper.GetGradeFromAccuracy(ScoreProcessor.Accuracy).ToString();
+            var combo = $"{ScoreProcessor.MaxCombo}x";
             
             DiscordController.ChangeDiscordPresence(SongTitle, $"{state}: {score} {acc} {grade} {combo}");
         }
@@ -314,7 +350,7 @@ namespace Quaver.States.Results
             
             Judgements = new List<SpriteText>();
 
-            for (var i = 0; i < GameplayScreen.Ruleset.ScoreProcessor.JudgementWindow.Count; i++)
+            for (var i = 0; i < ScoreProcessor.JudgementWindow.Count; i++)
             {
                 var judgement = (Judgement) i;
                 
@@ -324,7 +360,7 @@ namespace Quaver.States.Results
                     Alignment = Alignment.MidCenter,
                     PosY = 35 * i + -150,
                     Font = QuaverFonts.AssistantRegular16,
-                    Text = $"{judgement.ToString()}: {GameplayScreen.Ruleset.ScoreProcessor.CurrentJudgements[judgement]}",
+                    Text = $"{judgement.ToString()}: {ScoreProcessor.CurrentJudgements[judgement]}",
                     TextColor = GameBase.Skin.Keys[GameplayScreen.Map.Mode].JudgeColors[judgement]
                 });
             }
@@ -340,7 +376,7 @@ namespace Quaver.States.Results
             if (GameplayScreen.Failed)
                 gradeTexture = GameBase.Skin.Grades[Grade.F];
             else
-                gradeTexture = GameBase.Skin.Grades[GradeHelper.GetGradeFromAccuracy(GameplayScreen.Ruleset.ScoreProcessor.Accuracy)];
+                gradeTexture = GameBase.Skin.Grades[GradeHelper.GetGradeFromAccuracy(ScoreProcessor.Accuracy)];
             
             var grade = new Sprite()
             {
@@ -360,7 +396,7 @@ namespace Quaver.States.Results
         {
             ApplauseSound = GameBase.Skin.SoundApplause.CreateInstance();
             
-            if (!GameplayScreen.Failed && GameplayScreen.Ruleset.ScoreProcessor.Accuracy >= 80 && !GameplayScreen.InReplayMode)
+            if (!GameplayScreen.Failed && ScoreProcessor.Accuracy >= 80 && !GameplayScreen.InReplayMode)
                 ApplauseSound.Play();
         }
 
@@ -380,7 +416,7 @@ namespace Quaver.States.Results
                 {
                     try
                     {
-                        var localScore = LocalScore.FromScoreProcessor(GameplayScreen.Ruleset.ScoreProcessor, Md5, ConfigManager.Username.Value, ScrollSpeed);
+                        var localScore = LocalScore.FromScoreProcessor(ScoreProcessor, Md5, ConfigManager.Username.Value, ScrollSpeed);
                         await LocalScoreCache.InsertScoreIntoDatabase(localScore);         
                         Logger.LogSuccess($"Successfully saved local score to the database", LogType.Runtime);
                     }
