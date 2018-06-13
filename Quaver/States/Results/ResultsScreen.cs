@@ -152,7 +152,7 @@ namespace Quaver.States.Results
         ///     The replay that was just played.
         /// </summary>
         private Replay Replay { get; set; }
-
+        
         /// <summary>
         ///     Score processor.        
         /// </summary>
@@ -510,7 +510,6 @@ namespace Quaver.States.Results
             var t = new Thread(() =>
             {
                 SaveLocalScore();
-                SaveReplay(); 
 #if DEBUG
                 SaveDebugReplayData();
 #endif
@@ -580,38 +579,28 @@ namespace Quaver.States.Results
         /// </summary>
         private void SaveLocalScore()
         {
-            // Save local score.
             Task.Run(async () =>
             {
+                var scoreId = 0;
                 try
                 {
-                    var localScore = LocalScore.FromScoreProcessor(ScoreProcessor, Md5, ConfigManager.Username.Value, ScrollSpeed);
-                    await LocalScoreCache.InsertScoreIntoDatabase(localScore);         
+                    var localScore = LocalScore.FromScoreProcessor(ScoreProcessor, Md5, ConfigManager.Username.Value, ScrollSpeed);                    
+                    scoreId = await LocalScoreCache.InsertScoreIntoDatabase(localScore);         
                 }
                 catch (Exception e)
                 {
                     Logger.LogError($"There was a fatal error when saving the local score!" + e.Message, LogType.Runtime);
                 }
-            });
-        }
-
-        /// <summary>
-        ///     Saves a replay to the data path.
-        /// </summary>
-        private void SaveReplay()
-        {
-            // Save replay.
-            Task.Run(() =>
-            {
+                
                 try
                 {
-                    Replay.Write($@"c:\users\admin\desktop\replay.qr");
+                    Replay.Write($"{ConfigManager.DataDirectory}/r/{scoreId}.qr");
                 }
                 catch (Exception e)
                 {
                     Logger.LogError($"There was an error when writing the replay: " + e, LogType.Runtime);
                 }
-            });      
+            });
         }
 
         /// <summary>

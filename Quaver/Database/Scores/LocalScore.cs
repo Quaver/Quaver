@@ -100,7 +100,7 @@ namespace Quaver.Database.Scores
         ///     String that contains the judgement breakdown the user received.
         /// </summary>
         public string JudgementBreakdown { get; set; }
-
+        
         /// <summary>
         ///     Creates a local score object from a score processor.
         /// </summary>
