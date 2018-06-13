@@ -33,8 +33,8 @@ namespace Quaver.States.Gameplay.Replays
         /// <summary>
         /// 
         /// </summary>
-        public string QuaverVersion => "Quaver Test Build";
-        
+        public string QuaverVersion { get; private set; } = "None";
+
         /// <summary>
         ///     
         /// </summary>
@@ -46,35 +46,68 @@ namespace Quaver.States.Gameplay.Replays
         public ModIdentifier Mods { get; }
 
         /// <summary>
+        ///     The date of this replay.
+        /// </summary>
+        public DateTime Date { get; private set; }
+
+        /// <summary>
+        ///     The MD5 Hash of the replay.
+        /// </summary>
+        public string Md5 { get; private set; }
+
+        /// <summary>
         ///     The md5 hash of the map.
         /// </summary>
         public string MapMd5 { get; }
 
+        /// <summary>
+        ///     The score achieved
+        /// </summary>
         public int Score { get; private set; }
 
+        /// <summary>
+        ///     The accuracy achieved
+        /// </summary>
         public float Accuracy { get; private set; }
 
+        /// <summary>
+        ///     The max combo achieved
+        /// </summary>
         public int MaxCombo { get; private set; }
 
+        /// <summary>
+        ///     Amount of marv judgements
+        /// </summary>
         public int CountMarv { get; private set; }
 
+        /// <summary>
+        ///     Amount of perf judgements
+        /// </summary>
         public int CountPerf { get; private set; }
 
+        /// <summary>
+        ///     Amount of great judgements
+        /// </summary>
         public int CountGreat { get; private set; }
 
+        /// <summary>
+        ///     Amount of good judgements
+        /// </summary>
         public int CountGood { get; private set; }
 
+        /// <summary>
+        ///     Amount of okay judgements
+        /// </summary>
         public int CountOkay { get; private set; }
 
+        /// <summary>
+        ///     Amount of miss judgements.
+        /// </summary>
         public int CountMiss { get; private set; }
 
         /// <summary>
-        ///     The interval in milliseconds at which replays are captured.
-        /// </summary>
-        public static float CaptureInterval { get; } = 1000 / 60f;
-
-        /// <summary>
         ///     Ctor -
+        ///     Create fresh replay
         /// </summary>
         /// <param name="mode"></param>
         /// <param name="name"></param>
@@ -90,20 +123,75 @@ namespace Quaver.States.Gameplay.Replays
         }
 
         /// <summary>
+        ///     Ctor - Read replay.
+        /// </summary>
+        /// <param name="path"></param>
+        public Replay(string path)
+        {
+            if (!File.Exists(path))
+                throw new FileNotFoundException();
+
+            // Read the replay data
+            using (var fs = new FileStream(path, FileMode.Open))
+            using (var br = new BinaryReader(fs))
+            {
+                QuaverVersion = br.ReadString();
+                MapMd5 = br.ReadString();
+                Md5 = br.ReadString();
+                PlayerName = br.ReadString();
+                Date = Convert.ToDateTime(br.ReadString());
+                Mods = (ModIdentifier)br.ReadInt32();
+                Score = br.ReadInt32();
+                Accuracy = br.ReadSingle();
+                MaxCombo = br.ReadInt32();
+                CountMarv = br.ReadInt32();
+                CountPerf = br.ReadInt32();
+                CountGreat = br.ReadInt32();
+                CountGood = br.ReadInt32();
+                CountOkay = br.ReadInt32();
+                CountMiss = br.ReadInt32();
+
+                // Create the new list of replay frames.
+                Frames = new List<ReplayFrame>();
+
+                // Split the frames up by commas
+                var frames = Encoding.ASCII.GetString(LZMACoder.Decompress(br.BaseStream).ToArray()).Split(',');
+
+                // Add all the replay frames to the object
+                foreach (var frame in frames)
+                {
+                    Console.WriteLine(frame);
+                    try
+                    {
+                        // Split up the frame string by SongTime|KeyPressState
+                        var frameSplit = frame.Split('|');
+
+                        // Add the replay frame to the list!
+                        Frames.Add(new ReplayFrame(float.Parse(frameSplit[0]), (ReplayKeyPressState)Enum.Parse(typeof(ReplayKeyPressState), frameSplit[1])));
+                    }
+                    catch (Exception e)
+                    {
+                        continue;
+                    }
+                }
+            }
+        }
+        
+        /// <summary>
         ///    Writes the current replay to a binary file.
         /// </summary>
         internal void Write(string path)
-        {       
+        {     
             using (var replayDataStream = new MemoryStream(Encoding.ASCII.GetBytes(FramesToString())))
             using (var bw = new BinaryWriter(File.Open(path, FileMode.Create)))
             {
-                var str = $"{QuaverVersion}--{MapMd5}//{PlayerName}=w{(int) Mods}xxx={Score}--.{Accuracy}--" +
-                          $"{MaxCombo}@#{CountMarv}$!---{CountPerf}" +
-                          $"---{CountGreat}@!!{CountGood}.@@@!@!{CountOkay}----{CountMiss}--{replayDataStream}";
-                              
+                Md5 = CryptoHelper.StringToMd5($"{QuaverVersion}--{MapMd5}//{PlayerName}=w{(int) Mods}xxx={Score}--." +
+                                                    $"{Accuracy}--" + $"{MaxCombo}@#{CountMarv}$!---{CountPerf}" +
+                                                    $"---{CountGreat}@!!{CountGood}.@@@!@!{CountOkay}----{CountMiss}" +
+                                                    $"--{replayDataStream}");              
                 bw.Write(QuaverVersion);
                 bw.Write(MapMd5);
-                bw.Write(CryptoHelper.StringToMd5(str));
+                bw.Write(Md5);
                 bw.Write(PlayerName);
                 bw.Write(DateTime.Now.ToString(CultureInfo.InvariantCulture));
                 bw.Write((int)Mods);

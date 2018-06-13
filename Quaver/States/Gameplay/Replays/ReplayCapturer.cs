@@ -71,7 +71,7 @@ namespace Quaver.States.Gameplay.Replays
                 AddFrame(currentPressState);;
             
             // Add frame for 60 fps.
-            if (TimeSinceLastCapture >= Replay.CaptureInterval)
+            if (TimeSinceLastCapture >= 1000 / 60f)
             {
                 AddFrame(currentPressState);
                 TimeSinceLastCapture = 0;

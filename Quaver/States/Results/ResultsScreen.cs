@@ -401,8 +401,7 @@ namespace Quaver.States.Results
                     {
                         Logger.LogError($"There was an error when writing the replay: " + e, LogType.Runtime);
                     }
-                });
-            
+                });        
 #if DEBUG
                 // Save debug replay and hit stat data.
                 Task.Run(() =>
