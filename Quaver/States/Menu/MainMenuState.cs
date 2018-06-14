@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using Ionic.Zip;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Commands;
 using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState;

@@ -145,19 +145,7 @@
     <Compile Include="Graphics\Buttons\MapDifficultySelectButton.cs" />
     <Compile Include="Graphics\Buttons\MapsetSelectButton.cs" />
     <Compile Include="Audio\AudioEngine.cs" />
-    <Compile Include="Commands\CalculateDifficulty.cs" />
-    <Compile Include="Commands\ConvertOsuSkin.cs" />
-    <Compile Include="Commands\ParseStepMania.cs" />
-    <Compile Include="Commands\StepManiaCache.cs" />
     <Compile Include="Database\Maps\Mapset.cs" />
-    <Compile Include="Commands\CommandHandler.cs" />
-    <Compile Include="Commands\GetScores.cs" />
-    <Compile Include="Commands\SearchMaps.cs" />
-    <Compile Include="Commands\Clear.cs" />
-    <Compile Include="Commands\Help.cs" />
-    <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Commands\DisplayMaps.cs" />
-    <Compile Include="Commands\Mapsets.cs" />
     <Compile Include="Database\Scores\LocalScoreCache.cs" />
     <Compile Include="Discord\DiscordController.cs" />
     <Compile Include="Discord\DiscordRPC.cs" />
@@ -357,8 +345,21 @@
   <PropertyGroup>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\bass.dll" "$(ProjectDir)$(outDir)bass.dll"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\bass_fx.dll" "$(ProjectDir)$(outDir)bass_fx.dll"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\discord-rpc.dll" "$(ProjectDir)$(outDir)discord-rpc.dll"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libbass.dylibl" "$(ProjectDir)$(outDir)libbass.dylib"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libbass.so" "$(ProjectDir)$(outDir)libbass.so"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libbass_fx.dylib" "$(ProjectDir)$(outDir)libbass_fx.dylib"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libbass_fx.so" "$(ProjectDir)$(outDir)libbass_fx.so"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libopenal.1.dylib" "$(ProjectDir)$(outDir)libopenal.1.dylib"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libopenal.so.1" "$(ProjectDir)$(outDir)libopenal.so.1"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libSDL2-2.0.0.dylib" "$(ProjectDir)$(outDir)libSDL2-2.0.0.dylib"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libSDL2-2.0.so.0" "$(ProjectDir)$(outDir)libSDL2-2.0.so.0"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\SDL2.dll" "$(ProjectDir)$(outDir)SDL2.dll"
+echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\soft_oal.dll" "$(ProjectDir)$(outDir)soft_oal.dll"
+
+RD /S /Q "$(ProjectDir)$(outDir)Lib\"</PostBuildEvent>
   </PropertyGroup>
   <Target Name="BeforeBuild">
   </Target>
