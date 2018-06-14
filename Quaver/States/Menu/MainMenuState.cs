@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using Ionic.Zip;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Commands;
 using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState;
@@ -58,11 +57,6 @@ namespace Quaver.States.Menu
 
             // Set Discord RP
             DiscordController.ChangeDiscordPresence("Main Menu", "In the menus");
-
-#if DEBUG
-            // Enable console commands (Only applicable if on debug release)
-            CommandHandler.HandleConsoleCommand();
-#endif
 
             //Initialize Menu Screen
             Container = new Container();

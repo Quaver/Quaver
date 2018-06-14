@@ -14,7 +14,6 @@ using ManagedBass;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Audio;
-using Quaver.Commands;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Database.Maps;
