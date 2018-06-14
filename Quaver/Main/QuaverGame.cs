@@ -16,6 +16,9 @@ using Quaver.Logging;
 using Quaver.Skinning;
 using Quaver.States.Menu;
 using Quaver.Resources;
+using System.IO;
+using System.Threading.Tasks;
+using Quaver.Database.Scores;
 
 namespace Quaver.Main
 {
@@ -29,12 +32,12 @@ namespace Quaver.Main
         /// </summary>
         public static QuaverGame Game;
 
-
         /// <summary>
         ///     Ctor - 
         /// </summary>
         public QuaverGame()
         {
+            SetupGame();
             Game = this;
 
             // Set the global graphics device manager & set Window width & height.
@@ -279,6 +282,62 @@ namespace Quaver.Main
             Logger.LogImportant($"Res: {GameBase.GraphicsManager.PreferredBackBufferWidth}x {GameBase.GraphicsManager.PreferredBackBufferHeight}", LogType.Runtime);
             Logger.LogImportant($"Letterboxing: {letterbox}", LogType.Runtime);
             Logger.LogImportant($"FullScreen: {GameBase.GraphicsManager.IsFullScreen}", LogType.Runtime);
+        }
+
+        private void SetupGame()
+        {
+            // Initialize Config
+            ConfigManager.InitializeConfig();
+
+            // Delete Temp Files
+            DeleteTemporaryFiles();
+
+            // Set up the game
+            Setup();
+        }
+
+        /// <summary>
+        ///     Deletes all temporary files if there are any.
+        /// </summary>
+        private static void DeleteTemporaryFiles()
+        {
+            try
+            {
+                foreach (var file in new DirectoryInfo(ConfigManager.DataDirectory + "/temp/").GetFiles("*", SearchOption.AllDirectories))
+                    file.Delete();
+
+                foreach (var dir in new DirectoryInfo(ConfigManager.DataDirectory + "/temp/").GetDirectories("*", SearchOption.AllDirectories))
+                    dir.Delete(true);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, LogType.Runtime);
+            }
+        }
+
+        /// <summary>
+        ///     Responsible for initializing and setting the map database and setting the loaded maps
+        /// </summary>
+        private static void Setup()
+        {
+            // Create now playing folder
+            Directory.CreateDirectory(ConfigManager.DataDirectory + "/temp/Now Playing/");
+
+            // Set the build version
+            GameBase.BuildVersion = MapsetHelper.GetMd5Checksum(ConfigManager.GameDirectory + "/" + "Quaver.exe");
+
+            // After initializing the configuration, we want to sync the map database, and load the dictionary of mapsets.
+            var loadGame = Task.Run(async () =>
+            {
+                await MapCache.LoadAndSetMapsets();
+
+                // Create the local scores database if it doesn't already exist
+                await LocalScoreCache.CreateScoresDatabase();
+
+                // Force garbage collection
+                GC.Collect();
+            });
+            Task.WaitAll(loadGame);
         }
     }
 }
