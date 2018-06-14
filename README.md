@@ -23,7 +23,7 @@
 * [Contributing](https://github.com/Swan/Quaver#contributing)
 
 # Requirements
-* Anything that can compile C#/.NET 4.5+. We recommend either [Microsoft Visual Studio 2017](https://www.visualstudio.com/), [Jetbrains Rider](https://www.jetbrains.com/rider/), or [MonoDevelop](https://www.monodevelop.com/).
+* .NET 4.7.1
 * [Monogame Framework 3.6](http://www.monogame.net/)
 * Up to date and initialized submodules
 

@@ -2,7 +2,7 @@
 
 In order to compile Quaver, you'll need the following:
 
-* .NET 4.5
+* .NET 4.7.1
 * [MonoGame 3.6](http://www.monogame.net/)
 * C# Compiler
 * Updated an initialized submodules
