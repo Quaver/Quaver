@@ -1,4 +1,6 @@
 ﻿
+using System;
+using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
 using Quaver.Graphics.Colors;
@@ -20,6 +22,16 @@ namespace Quaver.States.Gameplay.UI.Components
         /// Reference to the actual gameplay screen.
         /// </summary>
         private GameplayScreen Screen { get; }
+
+        /// <summary>
+        ///     Text that says "watching" when watching a replay.
+        /// </summary>
+        private SpriteText Watching { get; }
+
+        /// <summary>
+        ///     The player's name of the replay that we're watching.
+        /// </summary>
+        private SpriteText PlayerName { get; }
 
         /// <summary>
         ///     The title of the song
@@ -68,13 +80,53 @@ namespace Quaver.States.Gameplay.UI.Components
             Tint = QuaverColors.MainAccentInactive;
             Alpha = 0;
 
+            // Replay
+            const float replayTextScale = 0.95f;
+            
+            // Create watching text outside of replay mode because other text relies on it.
+            Watching = new SpriteText
+            {
+                Parent = this,
+                Alignment = Alignment.TopCenter,
+                Text = "Watching",
+                Font = QuaverFonts.AssistantRegular16,
+                PosY = 0,
+                TextScale = replayTextScale,
+                Alpha = 0
+            };
+            
+            // Handle positioning and create player name text if we're actually
+            // watching a replay.
+            if (Screen.InReplayMode)
+            {
+                PlayerName = new SpriteText
+                {
+                    Parent = this,
+                    Alignment = Alignment.TopCenter,
+                    Text = Screen.LoadedReplay.PlayerName,
+                    Font = QuaverFonts.AssistantRegular16,
+                    PosY = Watching.PosY,
+                    TextScale = replayTextScale,
+                    TextColor = QuaverColors.MainAccent,
+                    Alpha = 0
+                };
+
+                var watchingLength = Watching.Font.MeasureString(Watching.Text).X;
+                var playerNameLength = PlayerName.Font.MeasureString(PlayerName.Text).X;
+                var totalLength = watchingLength + playerNameLength;
+                var center = totalLength / 2f;
+
+                Watching.PosX = watchingLength / 2.0f - center;
+                PlayerName.PosX = Watching.PosX + watchingLength + playerNameLength / 2.0f - center / 2f + 2;
+            }
+        
             Title = new SpriteText
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = $"{Screen.Map.Artist} - \"{Screen.Map.Title}\"",
                 Font = QuaverFonts.AssistantRegular16,
-                PosY = 15,
+                PosY = Watching.PosY + TextYSpacing + TextYSpacing,
                 Alpha = 0
             };
 
@@ -140,6 +192,12 @@ namespace Quaver.States.Gameplay.UI.Components
                 Creator.FadeIn(dt, AnimationScale);
                 Rating.FadeIn(dt, AnimationScale);
                 Mods.FadeIn(dt, AnimationScale);
+
+                if (Screen.InReplayMode)
+                {
+                    Watching.FadeIn(dt, AnimationScale);
+                    PlayerName.FadeIn(dt, AnimationScale);
+                }
             }
             else
             {
