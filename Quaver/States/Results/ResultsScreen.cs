@@ -740,13 +740,18 @@ namespace Quaver.States.Results
                 return;             
             }
             
-            var path = $@"{ConfigManager.ReplayDirectory.Value}/{Replay.PlayerName} - {SongTitle} - {DateTime.Now:yyyyddMMhhmmss}{GameBase.GameTime.ElapsedMilliseconds}.qr";
-            Replay.Write(path);
+            Logger.LogImportant($"Just a second... We're exporting your replay!", LogType.Network, 2.0f);
+
+            Task.Run(() =>
+            {
+                var path = $@"{ConfigManager.ReplayDirectory.Value}/{Replay.PlayerName} - {SongTitle} - {DateTime.Now:yyyyddMMhhmmss}{GameBase.GameTime.ElapsedMilliseconds}.qr";
+                Replay.Write(path);
             
-            // Open containing folder
-            Process.Start("explorer.exe", "/select, \"" + path.Replace("/", "\\") + "\"");
+                // Open containing folder
+                Process.Start("explorer.exe", "/select, \"" + path.Replace("/", "\\") + "\"");
             
-            Logger.LogSuccess($"Replay successfully exported", LogType.Runtime);
+                Logger.LogSuccess($"Replay successfully exported", LogType.Runtime);
+            });
         }
     }
 }
