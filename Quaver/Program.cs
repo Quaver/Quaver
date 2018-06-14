@@ -11,6 +11,7 @@ namespace Quaver
 {
     public static class Program
     {
+        [STAThread]
         public static void Main(string[] args)
         {
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
