@@ -127,7 +127,7 @@ namespace Quaver.Discord
         /// <summary>
         ///     Responsible for handling discord presence w/ mods if any exist.
         /// </summary>
-        public static void ChangeDiscordPresenceGameplay(bool skippedSong)
+        public static void ChangeDiscordPresenceGameplay(bool skippedSong, DiscordPlayingState state, string name = "")
         {
             if (!GameBase.DiscordRichPresencedInited || GameBase.SelectedMap == null)
                 return;
@@ -144,7 +144,7 @@ namespace Quaver.Discord
                     mapLength = (Qua.FindSongLength(GameBase.SelectedMap.Qua) - GameBase.AudioEngine.Position) / GameBase.AudioEngine.PlaybackRate;
 
                 var sb = new StringBuilder();
-                sb.Append("Playing");
+                sb.Append(state + (name != "" ? " " + name  : ""));
                 sb.Append(ModHelper.GetActivatedModsString(true));
 
                 ChangeDiscordPresence(mapString, sb.ToString(), mapLength);
@@ -173,5 +173,11 @@ namespace Quaver.Discord
                 Logger.LogError(e, LogType.Runtime);
             }
         }
+    }
+
+    public enum DiscordPlayingState
+    {
+        Playing,
+        Watching
     }
 }

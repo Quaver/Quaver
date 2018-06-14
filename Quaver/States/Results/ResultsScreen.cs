@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.GameState;
@@ -12,19 +16,27 @@ using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
 using Quaver.Main;
-using Quaver.States.Enums;
 using Quaver.States.Gameplay;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
+using Quaver.API.Maps;
+using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Replays;
+using Quaver.Audio;
 using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Discord;
+using Quaver.Graphics.Colors;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Logging;
+using Quaver.States.Gameplay.Replays;
 using Quaver.States.Select;
+using AudioEngine = Quaver.Audio.AudioEngine;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.States.Results
@@ -35,7 +47,12 @@ namespace Quaver.States.Results
         /// <summary>
         /// </summary>
         public State CurrentState { get; set; } = State.Results;
-        
+
+        /// <summary>
+        ///     The type of results screen.
+        /// </summary>
+        private ResultsScreenType Type { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -45,6 +62,11 @@ namespace Quaver.States.Results
         ///     Reference to the gameplay screen that was just played.
         /// </summary>
         private GameplayScreen GameplayScreen { get; }
+
+        /// <summary>
+        ///     The .qua that this is results screen is referencing to.
+        /// </summary>
+        private Qua Qua { get; set; }
 
         /// <summary>
         ///     Container for all sprites.
@@ -65,6 +87,17 @@ namespace Quaver.States.Results
         ///     If we're currently exiting the screen.
         /// </summary>
         private bool IsExitingScreen { get; set; }
+
+        /// <summary>
+        ///     When exiting the screen, this is the action to perform.
+        /// </summary>
+        private EventHandler OnExitingScreen { get; set; }
+
+        /// <summary>
+        ///     When we invoke the OnExitingScreen event for the first time, this'll be set to true
+        ///     to avoid spam calling the method, since it's called in update.
+        /// </summary>
+        private bool ExitHandlerExecuted { get; set;  }
 
         /// <summary>
         ///     When the user is exiting the screen, this counter will determine when
@@ -100,7 +133,7 @@ namespace Quaver.States.Results
         /// <summary>
         ///     Song title + Difficulty name.
         /// </summary>
-        private string SongTitle => $"{GameplayScreen.Map.Artist} - {GameplayScreen.Map.Title} [{GameplayScreen.Map.DifficultyName}]";
+        private string SongTitle => $"{Qua.Artist} - {Qua.Title} [{Qua.DifficultyName}]";
 
         /// <summary>
         ///     MD5 Hash of the map played.
@@ -110,13 +143,78 @@ namespace Quaver.States.Results
         /// <summary>
         ///     The user's scroll speed.
         /// </summary>
-        private int ScrollSpeed => GameplayScreen.Map.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K.Value : ConfigManager.ScrollSpeed7K.Value;
+        private int ScrollSpeed => Qua.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K.Value : ConfigManager.ScrollSpeed7K.Value;
+
+        /// <summary>
+        ///     The replay that was just played.
+        /// </summary>
+        private Replay Replay { get; set; }
         
+        /// <summary>
+        ///     Score processor.        
+        /// </summary>
+        private ScoreProcessor ScoreProcessor { get; set; }
+
         /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="gameplay"></param>
-        public ResultsScreen(GameplayScreen gameplay) => GameplayScreen = gameplay;
+        public ResultsScreen(GameplayScreen gameplay)
+        {
+            GameplayScreen = gameplay;
+            Qua = GameplayScreen.Map;
+            Type = ResultsScreenType.FromGameplay;
+        }
+
+        /// <summary>
+        ///     When going to the results screen with just a replay.
+        /// </summary>
+        /// <param name="replay"></param>
+        public ResultsScreen(Replay replay)
+        {
+            Replay = replay;
+            ScoreProcessor = new ScoreProcessorKeys(Replay);
+            Type = ResultsScreenType.FromReplayFile;
+        }
+
+        /// <summary>
+        ///     When loading up the results screen with a local score.
+        /// </summary>
+        /// <param name="score"></param>
+        public ResultsScreen(LocalScore score)
+        {
+            GameBase.SelectedMap.Qua = GameBase.SelectedMap.LoadQua();
+            Qua = GameBase.SelectedMap.Qua;
+            
+            var localPath = $"{ConfigManager.DataDirectory.Value}/r/{score.Id}.qr";
+            
+            // Try to find replay w/ local score id.
+            // Otherwise we want to find 
+            if (File.Exists(localPath))
+            {
+                Replay = new Replay(localPath);
+            }
+            // Otherwise we want to create an artificial replay.
+            else
+            {
+                Replay = new Replay(score.Mode, score.Name, score.Mods, score.MapMd5)
+                {
+                    Date = Convert.ToDateTime(score.DateTime, CultureInfo.InvariantCulture),
+                    Score = score.Score,
+                    Accuracy = (float) score.Accuracy,
+                    MaxCombo = score.MaxCombo,
+                    CountMarv = score.CountMarv,
+                    CountPerf = score.CountPerf,
+                    CountGreat = score.CountGreat,
+                    CountGood = score.CountGood,
+                    CountOkay = score.CountOkay,
+                    CountMiss = score.CountMiss
+                };
+            }
+                    
+            ScoreProcessor = new ScoreProcessorKeys(Replay);
+            Type = ResultsScreenType.FromLocalScore;
+        }
         
         /// <inheritdoc />
         /// <summary>
@@ -124,6 +222,23 @@ namespace Quaver.States.Results
         public void Initialize()
         {
             Container = new Container();
+            
+            // Initialize the state depending on if we're coming from the gameplay screen
+            // or loading up a replay file.
+            switch (Type)
+            {
+                case ResultsScreenType.FromGameplay:
+                    InitializeFromGameplay();
+                    break;
+                case ResultsScreenType.FromReplayFile:
+                    InitializeFromReplayFile();
+                    break;
+                case ResultsScreenType.FromLocalScore:
+                    InitializeFromLocalScore();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             
 #region SPRITE_CREATION           
             CreateBackButton();
@@ -135,17 +250,14 @@ namespace Quaver.States.Results
             {
                 Parent = Container,
                 Tint = Color.Black,
-                Alpha = 1,
                 ScaleX = 1,
                 ScaleY = 1
             };
-#endregion
-            UpdateReady = true;
-            ChangeDiscordPresence();
-            PlayApplauseEffect();
             
-            // Save local score asynchronously.
-            SaveLocalScore();
+            BackgroundManager.Blacken();
+#endregion
+              
+            UpdateReady = true;
         }
 
         /// <inheritdoc />
@@ -165,6 +277,7 @@ namespace Quaver.States.Results
         {            
             Container.Update(dt);
             HandleScreenTransitions(dt);
+            HandleInput();
         }
 
         /// <inheritdoc />
@@ -195,8 +308,7 @@ namespace Quaver.States.Results
             {
                 // Fade background back in.        
                 BackgroundManager.Readjust();
-
-                ScreenTransitioner.FadeOut(dt, 240);      
+                ScreenTransitioner.FadeOut(dt, 120);      
             }
             // Exiting Screen
             else
@@ -211,8 +323,11 @@ namespace Quaver.States.Results
                 ScreenTransitioner.FadeIn(dt, 120);   
                 
                 // Switch to the song select state after a second.
-                if (TimeSinceExitingScreen >= 1000)
-                    GameBase.GameStateManager.ChangeState(new SongSelectState());
+                if (!(TimeSinceExitingScreen >= 500) || ExitHandlerExecuted) 
+                    return;
+                
+                OnExitingScreen?.Invoke(this, new EventArgs());
+                ExitHandlerExecuted = true;
             }
         }
 
@@ -221,11 +336,15 @@ namespace Quaver.States.Results
         /// </summary>
         private void ChangeDiscordPresence()
         {
+            // Don't change if we're loading in from a replay file.
+            if (Type == ResultsScreenType.FromReplayFile || GameplayScreen.InReplayMode)
+                return;
+            
             var state = GameplayScreen.Failed ? "Fail" : "Pass";
-            var score = $"{GameplayScreen.Ruleset.ScoreProcessor.Score / 1000}k";
-            var acc = $"{StringHelper.AccuracyToString(GameplayScreen.Ruleset.ScoreProcessor.Accuracy)}";
-            var grade = GameplayScreen.Failed ? "F" : GradeHelper.GetGradeFromAccuracy(GameplayScreen.Ruleset.ScoreProcessor.Accuracy).ToString();
-            var combo = $"{GameplayScreen.Ruleset.ScoreProcessor.MaxCombo}x";
+            var score = $"{ScoreProcessor.Score / 1000}k";
+            var acc = $"{StringHelper.AccuracyToString(ScoreProcessor.Accuracy)}";
+            var grade = GameplayScreen.Failed ? "F" : GradeHelper.GetGradeFromAccuracy(ScoreProcessor.Accuracy).ToString();
+            var combo = $"{ScoreProcessor.MaxCombo}x";
             
             DiscordController.ChangeDiscordPresence(SongTitle, $"{state}: {score} {acc} {grade} {combo}");
         }
@@ -242,10 +361,77 @@ namespace Quaver.States.Results
             };
 
             Back.Clicked += (o, e) =>
-            {                      
-                IsExitingScreen = true;
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundBack);  
-                ApplauseSound.Stop();
+            {             
+                ExitScreen((obj, sender) => GameBase.GameStateManager.ChangeState(new SongSelectState()));                
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundBack); 
+                
+                ApplauseSound?.Stop();
+            };
+
+            // Don't add replay specific buttons if there is no data.
+            if (!Replay.HasData)
+                return;
+            
+            var watchReplay = new TextButton(new Vector2(200, 40), "Watch Replay")
+            {
+                Parent = Container,
+                Alignment = Alignment.MidLeft,
+                PosY = 80
+            };
+
+            watchReplay.Clicked += (o, e) =>
+            {                
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
+                
+                switch (Type)
+                {
+                    // If user is coming from gameplay, so use that generated replay.
+                    case ResultsScreenType.FromGameplay:
+                        var replayToLoad = GameplayScreen.InReplayMode ? GameplayScreen.LoadedReplay : GameplayScreen.ReplayCapturer.Replay;
+                    
+                        ExitScreen(async (obj, sender) =>
+                        {
+                            var scores = await LocalScoreCache.FetchMapScores(GameplayScreen.MapHash);
+                            var screen = new GameplayScreen(Qua, GameplayScreen.MapHash, scores, replayToLoad);
+                            
+                            GameBase.GameStateManager.ChangeState(screen);
+                        });
+                        break;
+                    // If user is loading up from a replay file, use that incoming replay file.
+                    case ResultsScreenType.FromReplayFile:
+                    case ResultsScreenType.FromLocalScore:
+                        ExitScreen(async (obj, sender) =>
+                        {
+                            var scores = await LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
+                            var screen = new GameplayScreen(Qua, GameBase.SelectedMap.Md5Checksum, scores, Replay);
+                            
+                            GameBase.GameStateManager.ChangeState(screen);
+                        });          
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                try
+                {
+                    AudioEngine.Fade(0, 500);
+                }
+                catch (AudioEngineException ex) {}
+                
+                IsExitingScreen = true;     
+            };
+            
+            var export = new TextButton(new Vector2(200, 40), "Export Replay")
+            {
+                Parent = Container,
+                Alignment = Alignment.MidLeft,
+                PosY = 160
+            };
+
+            export.Clicked += (o, e) =>
+            {
+                ExportReplay();
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             };
         }
 
@@ -269,7 +455,7 @@ namespace Quaver.States.Results
                 Alignment = Alignment.MidCenter,
                 PosY = -250,
                 Font = QuaverFonts.AssistantRegular16,
-                Text = $"Mapped By: {GameplayScreen.Map.Creator}"
+                Text = $"Mapped By: {Qua.Creator}"
             };
 
             Date = new SpriteText()
@@ -281,9 +467,39 @@ namespace Quaver.States.Results
                 Text = $"Played At: {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}"
             };
             
+            var score = new SpriteText()
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                PosY = -150,
+                Font = QuaverFonts.AssistantRegular16,
+                Text = $"Score: {ScoreProcessor.Score:N0}",
+                TextColor = QuaverColors.MainAccent
+            };
+            
+            var acc = new SpriteText()
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                PosY = -100,
+                Font = QuaverFonts.AssistantRegular16,
+                Text = $"Accuracy: {StringHelper.AccuracyToString(ScoreProcessor.Accuracy)}",
+                TextColor = QuaverColors.SecondaryAccent
+            };
+            
+            var maxCombo = new SpriteText()
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter,
+                PosY = -50,
+                Font = QuaverFonts.AssistantRegular16,
+                Text = $"Max Combo: {ScoreProcessor.MaxCombo:N0}x",
+                TextColor = QuaverColors.Negative
+            };
+            
             Judgements = new List<SpriteText>();
 
-            for (var i = 0; i < GameplayScreen.Ruleset.ScoreProcessor.JudgementWindow.Count; i++)
+            for (var i = 0; i < ScoreProcessor.JudgementWindow.Count; i++)
             {
                 var judgement = (Judgement) i;
                 
@@ -291,10 +507,10 @@ namespace Quaver.States.Results
                 {
                     Parent = Container,
                     Alignment = Alignment.MidCenter,
-                    PosY = 35 * i + -150,
+                    PosY = 35 * i + 0,
                     Font = QuaverFonts.AssistantRegular16,
-                    Text = $"{judgement.ToString()}: {GameplayScreen.Ruleset.ScoreProcessor.CurrentJudgements[judgement]}",
-                    TextColor = GameBase.Skin.Keys[GameplayScreen.Map.Mode].JudgeColors[judgement]
+                    Text = $"{judgement.ToString()}: {ScoreProcessor.CurrentJudgements[judgement]}",
+                    TextColor = GameBase.Skin.Keys[Qua.Mode].JudgeColors[judgement]
                 });
             }
         }
@@ -306,10 +522,10 @@ namespace Quaver.States.Results
         {
             Texture2D gradeTexture;
 
-            if (GameplayScreen.Failed)
+            if (GameplayScreen != null && GameplayScreen.Failed)
                 gradeTexture = GameBase.Skin.Grades[Grade.F];
             else
-                gradeTexture = GameBase.Skin.Grades[GradeHelper.GetGradeFromAccuracy(GameplayScreen.Ruleset.ScoreProcessor.Accuracy)];
+                gradeTexture = GameBase.Skin.Grades[GradeHelper.GetGradeFromAccuracy(ScoreProcessor.Accuracy)];
             
             var grade = new Sprite()
             {
@@ -329,33 +545,199 @@ namespace Quaver.States.Results
         {
             ApplauseSound = GameBase.Skin.SoundApplause.CreateInstance();
             
-            if (!GameplayScreen.Failed && GameplayScreen.Ruleset.ScoreProcessor.Accuracy >= 80)
+            if (!GameplayScreen.Failed && ScoreProcessor.Accuracy >= 80 && !GameplayScreen.InReplayMode)
                 ApplauseSound.Play();
         }
 
+        /// <summary>
+        ///     Goes through the score submission process.
+        /// </summary>
+        private void SubmitScore()
+        {
+            // Don't save scores if the user quit themself.
+            if (GameplayScreen.HasQuit || GameplayScreen.InReplayMode)
+                return;
+
+            // Run all of these tasks inside of a new thread to avoid blocks.
+            var t = new Thread(() =>
+            {
+                SaveLocalScore();
+#if DEBUG
+                SaveDebugReplayData();
+#endif
+            });
+            
+            t.Start();
+        }
+
+        /// <summary>
+        ///     Initializes the results screen if we're coming from the gameplay screen.
+        /// </summary>
+        private void InitializeFromGameplay()
+        {
+            // Keep the same replay and score processor if the user was watching a replay before.
+            if (GameplayScreen.InReplayMode)
+            {
+                Replay = GameplayScreen.LoadedReplay;
+
+                if (Replay.Mods.HasFlag(ModIdentifier.Autoplay))
+                    ScoreProcessor = GameplayScreen.Ruleset.ScoreProcessor;
+                else
+                    ScoreProcessor = new ScoreProcessorKeys(Replay);
+            }
+            // Otherwise the replay and processor should be the one that the user just played.
+            else
+            {
+                // Populate the replay with values from the score processor.
+                Replay = GameplayScreen.ReplayCapturer.Replay;
+                ScoreProcessor = GameplayScreen.Ruleset.ScoreProcessor;
+                
+                Replay.FromScoreProcessor(ScoreProcessor);
+            }
+
+            ChangeDiscordPresence();
+            PlayApplauseEffect();
+            
+            // Submit score
+            SubmitScore();
+        }
+
+        /// <summary>
+        ///     Initialize the screen if we're coming from a replay file.
+        /// </summary>
+        private void InitializeFromReplayFile()
+        {
+            var mapset = GameBase.Mapsets.FirstOrDefault(x => x.Maps.Any(y => y.Md5Checksum == Replay.MapMd5));
+
+            // Send the user back to the song select screen with an error if there was no found mapset.
+            if (mapset == null)
+            {
+                Logger.LogError($"You do not have the map that this replay is for", LogType.Runtime);
+                GameBase.GameStateManager.ChangeState(new SongSelectState());
+                return;
+            }
+
+            // Find the map that actually has the correct hash.
+            var map = mapset.Maps.Find(x => x.Md5Checksum == Replay.MapMd5);         
+            Map.ChangeSelected(map);
+            
+            // Load up the .qua file and change the selected map's Qua.
+            Qua = map.LoadQua();
+            GameBase.SelectedMap.Qua = Qua;
+                            
+            // Make sure the background is loaded, we don't run this async because we
+            // want it to be loaded when the user starts the map.
+            BackgroundManager.LoadBackground();
+            BackgroundManager.Change(GameBase.CurrentBackground);
+                    
+            // Reload and play song.
+            try
+            {
+                GameBase.AudioEngine.ReloadStream();
+                GameBase.AudioEngine.Play();
+            }
+            catch (AudioEngineException e)
+            {
+                // No need to handle here.
+            }
+        }
+
+        /// <summary>
+        ///     Initialize the screen from a local score.
+        /// </summary>
+        private void InitializeFromLocalScore() {}
+        
         /// <summary>
         ///     Saves a local score to the database.
         /// </summary>
         private void SaveLocalScore()
         {
-            // Don't save scores if the user quit themself.
-            if (GameplayScreen.HasQuit)
-                return;
-            
             Task.Run(async () =>
             {
+                var scoreId = 0;
                 try
                 {
-                    var localScore = LocalScore.FromScoreProcessor(GameplayScreen.Ruleset.ScoreProcessor, Md5, ConfigManager.Username.Value, ScrollSpeed);
-                    await LocalScoreCache.InsertScoreIntoDatabase(localScore);
-                    
-                    Logger.LogSuccess($"Successfully saved local score to the database", LogType.Runtime);
+                    var localScore = LocalScore.FromScoreProcessor(ScoreProcessor, Md5, ConfigManager.Username.Value, ScrollSpeed);                    
+                    scoreId = await LocalScoreCache.InsertScoreIntoDatabase(localScore);         
                 }
                 catch (Exception e)
                 {
                     Logger.LogError($"There was a fatal error when saving the local score!" + e.Message, LogType.Runtime);
                 }
+                
+                try
+                {
+                    Replay.Write($"{ConfigManager.DataDirectory}/r/{scoreId}.qr");
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError($"There was an error when writing the replay: " + e, LogType.Runtime);
+                }
             });
+        }
+
+        /// <summary>
+        ///     Saves replay data related to debugging.
+        /// </summary>
+        private void SaveDebugReplayData()
+        {
+            // Save debug replay and hit stat data.
+            Task.Run(() =>
+            {
+                try
+                {
+                    File.WriteAllText($"{ConfigManager.DataDirectory.Value}/replay_debug.txt", Replay.FramesToString(true));
+
+                    var hitStats = "";
+                    GameplayScreen.Ruleset.ScoreProcessor.Stats.ForEach(x => hitStats += $"{x.ToString()}\r\n");
+                    File.WriteAllText($"{ConfigManager.DataDirectory.Value}/replay_debug_hitstats.txt", hitStats);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError($"There was an error when writing debug replay files: {e}", LogType.Runtime);
+                }
+            });
+        }
+
+        /// <summary>
+        ///     Exits the screen with an action to perform when it has finished.
+        /// </summary>
+        /// <param name="action"></param>
+        private void ExitScreen(EventHandler action)
+        {
+            OnExitingScreen = null;
+            OnExitingScreen += action;
+
+            IsExitingScreen = true;
+        }
+        
+        /// <summary>
+        ///     Handles input for the entire screen.
+        /// </summary>
+        private void HandleInput()
+        {
+            if (InputHelper.IsUniqueKeyPress(Keys.F2))
+                ExportReplay();
+        }
+
+        /// <summary>
+        ///     Exports the currently looked at replay.
+        /// </summary>
+        private void ExportReplay()
+        {
+            if (!Replay.HasData)
+            {
+                Logger.LogError($"Replay doesn't have any data", LogType.Runtime);
+                return;
+            }
+            
+            var path = $@"{ConfigManager.ReplayDirectory.Value}/{Replay.PlayerName} - {SongTitle} - {DateTime.Now:yyyyddMMhhmmss}{GameBase.GameTime.ElapsedMilliseconds}.qr";
+            Replay.Write(path);
+            
+            // Open containing folder
+            Process.Start("explorer.exe", "/select, \"" + path.Replace("/", "\\") + "\"");
+            
+            Logger.LogSuccess($"Replay successfully exported", LogType.Runtime);
         }
     }
 }

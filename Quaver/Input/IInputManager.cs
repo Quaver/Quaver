@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
 using Quaver.GameState;
 using Quaver.States;
-using Quaver.States.Enums;
 
 namespace Quaver.Input
 {

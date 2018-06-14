@@ -122,7 +122,7 @@ namespace Quaver.States.Gameplay.UI
         {
             // Initialize the progress bar if the user has it set in config.
             if (ConfigManager.DisplaySongTimeProgress.Value)
-                SongTimeProgressBar = new SongTimeProgressBar(Qua.FindSongLength(GameBase.SelectedMap.Qua), 0, new Vector2(GameBase.WindowRectangle.Width, 6),
+                SongTimeProgressBar = new SongTimeProgressBar(Qua.FindSongLength(Screen.Map), 0, new Vector2(GameBase.WindowRectangle.Width, 6),
                                                             Container, Alignment.BotLeft);
 
             // Create score display
@@ -206,7 +206,10 @@ namespace Quaver.States.Gameplay.UI
         {
             // Hide navbar in gameplay
             if (!Screen.IsPaused && !Screen.Failed)
-                GameBase.Navbar.PerformHideAnimation(dt);
+            {
+                GameBase.Navbar.PerformHideAnimation(dt);      
+                BackgroundManager.Readjust();
+            }
 
             // Fade the cursor depending on if the user is paused or not.
             if (Screen.IsPaused && !Screen.IsResumeInProgress)
@@ -335,11 +338,12 @@ namespace Quaver.States.Gameplay.UI
         /// </summary>
         private void CreateScoreboard()
         {
-            // Scoreboard users.
+            // Use the replay's name for the scoreboard if we're watching one.
+            var scoreboardName = Screen.InReplayMode ? Screen.LoadedReplay.PlayerName : ConfigManager.Username.Value;       
             var users = new List<ScoreboardUser>
             {
                 // Add ourself to the list of scoreboard users first.
-                new ScoreboardUser(Screen, ScoreboardUserType.Self, ConfigManager.Username.Value, null, GameBase.QuaverUserInterface.YouAvatar)
+                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, GameBase.QuaverUserInterface.YouAvatar)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidLeft

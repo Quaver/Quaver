@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.States;
-using Quaver.States.Enums;
 
 namespace Quaver.GameState
 {

@@ -99,13 +99,14 @@
     <Compile Include="Helpers\InputHelper.cs" />
     <Compile Include="Helpers\ListHelper.cs" />
     <Compile Include="Helpers\ModHelper.cs" />
+    <Compile Include="Helpers\ReplayHelper.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Helpers\RngHelper.cs" />
-    <Compile Include="Helpers\StreamHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\XnaKeyHelper.cs" />
     <Compile Include="Main\CommonTaskScheduler.cs" />
     <Compile Include="Main\FontAwesome.cs" />
+    <Compile Include="Modifiers\Mods\Mania\ManiaModAutoplay.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModNoPause.cs" />
     <Compile Include="Skinning\SkinKeys.cs" />
     <Compile Include="Skinning\SkinKeysFolder.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="States\Gameplay\GameModes\Keys\GameModeRulesetKeys.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputManager.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputBinding.cs" />
+    <Compile Include="States\Gameplay\GameModes\Keys\Input\ReplayInputManagerKeys.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\KeysHitObject.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\KeysHitObjectManager.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Playfield\ColumnLighting.cs" />
@@ -128,6 +130,7 @@
     <Compile Include="States\Gameplay\HitObjects\HitObjectManager.cs" />
     <Compile Include="States\Gameplay\IGameplayInputManager.cs" />
     <Compile Include="States\Gameplay\IGameplayPlayfield.cs" />
+    <Compile Include="States\Gameplay\Replays\ReplayCapturer.cs" />
     <Compile Include="States\Gameplay\UI\Components\GradeDisplay.cs" />
     <Compile Include="States\Gameplay\UI\Components\Health\HealthBar.cs" />
     <Compile Include="States\Gameplay\UI\Components\Health\HealthBarType.cs" />
@@ -144,6 +147,7 @@
     <Compile Include="States\Gameplay\UI\Components\SongTimeProgressBar.cs" />
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />
     <Compile Include="States\Results\ResultsScreen.cs" />
+    <Compile Include="States\Results\ResultsScreenType.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="Graphics\Buttons\MapDifficultySelectButton.cs" />
     <Compile Include="Graphics\Buttons\MapsetSelectButton.cs" />
@@ -193,7 +197,6 @@
     <Compile Include="States\IGameState.cs" />
     <Compile Include="States\Loading\Map\MapLoadingState.cs" />
     <Compile Include="Graphics\Buttons\Button.cs" />
-    <Compile Include="Input\GameplayInputManager.cs" />
     <Compile Include="Input\GlobalInputManager.cs" />
     <Compile Include="Input\IInputManager.cs" />
     <Compile Include="Graphics\UserInterface\Cursor.cs" />
@@ -209,7 +212,6 @@
     <Compile Include="Peppy\QuaverOsuElementMap.cs" />
     <Compile Include="Main\QuaverGame.cs" />
     <Compile Include="States\GameStateManager.cs" />
-    <Compile Include="States\Enums\State.cs" />
     <Compile Include="Modifiers\IGameplayModifier.cs" />
     <Compile Include="Modifiers\ModManager.cs" />
     <Compile Include="Modifiers\ModType.cs" />
@@ -219,11 +221,8 @@
     <Compile Include="Graphics\Base\Drawable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Replays\KeyPressState.cs" />
-    <Compile Include="Replays\Replay.cs" />
-    <Compile Include="Replays\ReplayFrame.cs" />
-    <Compile Include="Replays\ReplayHelper.cs" />
     <Compile Include="Database\Scores\LocalScore.cs" />
+    <Compile Include="States\State.cs" />
     <Compile Include="States\Tests\AnimatableSpriteTestScreen.cs" />
     <Compile Include="States\Tests\DropdownTestState.cs" />
     <Compile Include="States\Tests\CheckboxTestState.cs" />

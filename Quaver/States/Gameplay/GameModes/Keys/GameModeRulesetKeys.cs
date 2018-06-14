@@ -10,6 +10,7 @@ using Quaver.Main;
 using Quaver.States.Gameplay.GameModes.Keys.Input;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield;
 using Quaver.States.Gameplay.HitObjects;
+using Quaver.States.Gameplay.Replays;
 
 namespace Quaver.States.Gameplay.GameModes.Keys
 {
@@ -19,13 +20,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         ///     The input manager for this ruleset.
         /// </summary>
-        protected sealed override IGameplayInputManager InputManager { get; set; }
+        internal sealed override IGameplayInputManager InputManager { get; set; }
 
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         internal sealed override ScoreProcessor ScoreProcessor { get; set; }
- 
+         
         /// <summary>
         ///     Dictates if we are currently using downscroll or not.
         /// </summary>
@@ -45,7 +46,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 }
             }
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor - Sets the correct mode, either 4 or 7k.
@@ -53,6 +54,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <param name="screen"></param>
         /// <param name="mode"></param>
         /// <param name="map"></param>
+        /// <param name="replay"></param>
         public GameModeRulesetKeys(GameplayScreen screen, GameMode mode, Qua map): base(screen, map)
         {
             switch (mode)
@@ -66,7 +68,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             }
 
             // Initialize the score processor.
-            ScoreProcessor = new ScoreProcessorKeys(map, GameBase.CurrentMods);
+            ScoreProcessor = new ScoreProcessorKeys(map, Screen.InReplayMode ? Screen.LoadedReplay.Mods : GameBase.CurrentMods);
         }
 
         /// <inheritdoc />
@@ -121,6 +123,6 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected override HitObjectManager CreateHitObjectManager() => new KeysHitObjectManager(this, 255);
+        protected override HitObjectManager CreateHitObjectManager() => new KeysHitObjectManager(this, 255);      
     }
 }

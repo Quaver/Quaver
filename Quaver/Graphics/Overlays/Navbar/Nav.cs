@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Ionic.Zip;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Replays;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.GameState;
@@ -22,6 +23,7 @@ using Quaver.Peppy;
 using Quaver.States;
 using Quaver.States.Menu;
 using Quaver.States.Options;
+using Quaver.States.Results;
 using Quaver.States.Select;
 using Quaver.States.Tests;
 using Quaver.StepMania;
@@ -82,6 +84,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         private NavbarButton Discord { get; set; }
         private NavbarButton Github { get; set; }
         private NavbarButton Export { get; set; }
+        private NavbarButton Replay { get; set; }
 
         /// <summary>
         ///     The options menu attached to this navbar.
@@ -131,6 +134,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             Play = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.GamePad, "Play", "Smash some keys!", OnPlayButtonClicked);
             Import = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Copy, "Import Mapsets","Add new songs to play!", OnImportButtonClicked);
             Export = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Archive, "Export Mapset", "Zip your current mapset to a file.", OnExportButtonClicked);
+            Replay = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.VideoPlay, "Watch Replay", "Load up a replay to watch.", OnReplayButtonClicked);
             
             // Right Side
             Notifications = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => { GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick); Logger.LogImportant("This button does nothing. Don't click it.", LogType.Runtime);});
@@ -382,6 +386,30 @@ namespace Quaver.Graphics.Overlays.Navbar
                     Logger.LogError("There was an issue exportng your mapset", LogType.Runtime);
                 }
             });
+        }
+
+        /// <summary>
+        ///     When the user is choosing to watch a replay.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnReplayButtonClicked(object sender, EventArgs e)
+        {
+            // Create the openFileDialog object.
+            var openFileDialog = new OpenFileDialog()
+            {
+                InitialDirectory = ConfigManager.GameDirectory.Value,
+                Filter = "Replay (*.qr)| *.qr;",
+                FilterIndex = 0,
+                RestoreDirectory = true,
+                Multiselect = false
+            };
+
+            // If the dialog couldn't be shown, that's an issue, so we'll return for now.
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+            
+            GameBase.GameStateManager.ChangeState(new ResultsScreen(new Replay(openFileDialog.FileName)));
         }
     }
 }

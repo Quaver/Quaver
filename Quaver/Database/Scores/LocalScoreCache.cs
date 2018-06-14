@@ -62,12 +62,14 @@ namespace Quaver.Database.Scores
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
-        internal static async Task InsertScoreIntoDatabase(LocalScore score)
+        internal static async Task<int> InsertScoreIntoDatabase(LocalScore score)
         {
             try
             {
                 if (score != null)
                     await new SQLiteAsyncConnection(DatabasePath).InsertAsync(score);
+
+                return await new SQLiteAsyncConnection(DatabasePath).Table<LocalScore>().CountAsync();
             }
             catch (Exception e)
             {

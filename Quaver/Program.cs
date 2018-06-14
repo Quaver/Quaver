@@ -17,7 +17,6 @@ using Quaver.Database.Scores;
 using Quaver.Discord;
 using Quaver.Logging;
 using Quaver.Main;
-using Quaver.Replays;
 
 namespace Quaver
 {

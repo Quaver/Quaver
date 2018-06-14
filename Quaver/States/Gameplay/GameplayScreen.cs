@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.API.Replays;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Scores;
@@ -18,8 +20,9 @@ using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
-using Quaver.States.Enums;
 using Quaver.States.Gameplay.GameModes.Keys;
+using Quaver.States.Gameplay.GameModes.Keys.Input;
+using Quaver.States.Gameplay.Replays;
 using Quaver.States.Gameplay.UI;
 
 namespace Quaver.States.Gameplay
@@ -89,7 +92,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     The last recorded combo. We use this value for combo breaking.
         /// </summary>
-        private int LastRecordedCombo { get; set; }
+        internal int LastRecordedCombo { get; private set; }
 
         /// <summary>
         ///     If the user is currently on a break in the song.
@@ -170,16 +173,45 @@ namespace Quaver.States.Gameplay
         private int TimesRequestedToPause { get; set; }
 
         /// <summary>
+        ///     The replay that is currently loaded that the player is watching.
+        /// </summary>
+        internal Replay LoadedReplay { get; }
+        
+        /// <summary>
+        ///     If we are currently viewing a replay.
+        /// </summary>
+        internal bool InReplayMode { get; }
+
+        /// <summary>
+        ///     The current replay for this gameplay session.
+        /// </summary>
+        internal ReplayCapturer ReplayCapturer { get; }
+
+        /// <summary>
         ///     Ctor - 
         /// </summary>
-        internal GameplayScreen(Qua map, string md5, List<LocalScore> scores)
+        internal GameplayScreen(Qua map, string md5, List<LocalScore> scores, Replay replay = null)
         {
             LocalScores = scores;
             Map = map;
             MapHash = md5;
-            
+            LoadedReplay = replay;       
             Timing = new GameplayTiming(this);
             UI = new GameplayInterface(this);
+                      
+            // Handle autoplay replays.
+            if (ModManager.IsActivated(ModIdentifier.Autoplay))
+                LoadedReplay = ReplayHelper.GeneratePerfectReplay(map, MapHash);
+            
+            // Determine if we're in replay mode.
+            if (LoadedReplay != null)
+            {
+                InReplayMode = true;
+                AddModsFromReplay();
+            }
+                          
+            // Create the current replay that will be captured. 
+            ReplayCapturer = new ReplayCapturer(this);          
             
             // Set the game mode component.
             switch (map.Mode)
@@ -197,24 +229,15 @@ namespace Quaver.States.Gameplay
         /// <summary>
         /// </summary>
         public void Initialize()
-        {           
+        {                       
             Timing.Initialize(this);
             UI.Initialize(this);
             
             // Change discord rich presence.
-            DiscordController.ChangeDiscordPresenceGameplay(false);
+            SetRichPresence(false);
             
             // Initialize the game mode.
             Ruleset.Initialize();
-            
-            // Add gameplay loggers
-            /*Logger.Add("Paused", $"Paused: {IsPaused}", Color.White);
-            Logger.Add("Resume In Progress", $"Resume In Progress {IsResumeInProgress}", Color.White);
-            Logger.Add($"Max Combo", $"Max Combo: {Ruleset.ScoreProcessor.MaxCombo}", Color.White);
-            Logger.Add($"Objects Left", $"Objects Left {Ruleset.HitObjectManager.ObjectsLeft}", Color.White);
-            Logger.Add($"Finished", $"Finished: {IsPlayComplete}", Color.White);
-            Logger.Add($"On Break", $"On Break: {OnBreak}", Color.White);
-            Logger.Add($"Failed", $"Failed: {Failed}", Color.White);*/
                
             UpdateReady = true;
         }
@@ -249,6 +272,7 @@ namespace Quaver.States.Gameplay
             HandleInput(dt);
             HandleFailure();
             Ruleset.Update(dt);
+            ReplayCapturer.Capture(dt);
         }
 
         /// <inheritdoc />
@@ -267,16 +291,7 @@ namespace Quaver.States.Gameplay
             Ruleset.Draw();
             
             GameBase.SpriteBatch.Begin();
-            UI.Draw();
-            
-            /*Logger.Update("Paused", $"Paused: {IsPaused}");
-            Logger.Update("Resume In Progress", $"Resume In Progress {IsResumeInProgress}");
-            Logger.Update($"Max Combo", $"Max Combo: {Ruleset.ScoreProcessor.MaxCombo}");
-            Logger.Update($"Objects Left", $"Objects Left {Ruleset.HitObjectManager.ObjectsLeft}");
-            Logger.Update($"Finished", $"Finished: {IsPlayComplete}");
-            Logger.Update($"On Break", $"On Break: {OnBreak}");
-            Logger.Update($"Failed", $"Failed: {Failed}");*/
-            
+            UI.Draw();            
             GameBase.SpriteBatch.End();
         }
         
@@ -360,7 +375,7 @@ namespace Quaver.States.Gameplay
             // When that resume time is past the specific set offset, it'll unpause the game.
             IsResumeInProgress = true;
             ResumeTime = GameBase.GameTime.ElapsedMilliseconds;
-            DiscordController.ChangeDiscordPresenceGameplay(true);
+            SetRichPresence(true);
         }
 
         /// <summary>
@@ -420,8 +435,14 @@ namespace Quaver.States.Gameplay
             }
             finally
             {
+                if (InReplayMode)
+                {
+                    var inputManager = (KeysInputManager) Ruleset.InputManager;
+                    inputManager.ReplayInputManager.HandleSkip();
+                }
+
                 // Skip to 3 seconds before the notes start
-                DiscordController.ChangeDiscordPresenceGameplay(true);
+                SetRichPresence(true);
             }
         }
 
@@ -443,7 +464,11 @@ namespace Quaver.States.Gameplay
                 if (RestartKeyHoldTime >= 350)
                 {
                     GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundRetry);
-                    GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash, LocalScores));
+                    
+                    if (InReplayMode)
+                        GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
+                    else        
+                        GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash, LocalScores));
                 }
 
                 return;
@@ -459,7 +484,7 @@ namespace Quaver.States.Gameplay
         /// </summary>
         private void PauseIfWindowInactive()
         {
-            if (IsPaused)
+            if (IsPaused || InReplayMode)
                 return;
             
             // Pause the game
@@ -498,6 +523,42 @@ namespace Quaver.States.Gameplay
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundFailure);
 
             FailureHandled = true;
+        }
+
+        /// <summary>
+        ///     Sets rich presence based on which activity we're doing in gameplay.
+        /// </summary>
+        private void SetRichPresence(bool skipped)
+        {
+            if (InReplayMode)
+                DiscordController.ChangeDiscordPresenceGameplay(skipped, DiscordPlayingState.Watching, LoadedReplay.PlayerName);
+            else
+                DiscordController.ChangeDiscordPresenceGameplay(skipped, DiscordPlayingState.Playing);
+        }
+
+        /// <summary>
+        ///     Adds all modifiers that were present in the loaded replay (if there is one.)
+        /// </summary>
+        private void AddModsFromReplay()
+        {
+            // Add the correct mods on if we're in replay mode.
+            if (!InReplayMode) 
+                return;
+            
+            // Remove all the current mods that we have on.
+            ModManager.RemoveAllMods();
+                
+            // Put on the mods from the replay.);
+            for (var i = 0; i <= Math.Log((int) LoadedReplay.Mods, 2); i++)
+            {
+                var mod = (ModIdentifier) Math.Pow(2, i);
+
+                if (!LoadedReplay.Mods.HasFlag(mod)) 
+                    continue;
+                    
+                ModManager.AddMod(mod);
+                Logger.LogInfo($"Added {mod} modifier from the replay.", LogType.Runtime, 2.0f);
+            }
         }
     }
 }

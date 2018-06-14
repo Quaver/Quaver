@@ -58,6 +58,9 @@ namespace Quaver.Modifiers
                 case ModIdentifier.NoPause:
                     gameplayModifier = new ManiaModNoPause();
                     break;
+                case ModIdentifier.Autoplay:
+                    gameplayModifier = new ManiaModAutoplay();
+                    break;
                 default:
                     return;
             }
