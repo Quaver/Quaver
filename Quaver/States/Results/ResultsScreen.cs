@@ -420,6 +420,9 @@ namespace Quaver.States.Results
                 
                 IsExitingScreen = true;     
             };
+
+            if (Replay.Mods.HasFlag(ModIdentifier.Autoplay))
+                return;
             
             var export = new TextButton(new Vector2(200, 40), "Export Replay")
             {
@@ -729,6 +732,12 @@ namespace Quaver.States.Results
             {
                 Logger.LogError($"Replay doesn't have any data", LogType.Runtime);
                 return;
+            }
+
+            if (Replay.Mods.HasFlag(ModIdentifier.Autoplay))
+            {
+                Logger.LogError($"Exporting autoplay replays is disabled", LogType.Runtime);
+                return;             
             }
             
             var path = $@"{ConfigManager.ReplayDirectory.Value}/{Replay.PlayerName} - {SongTitle} - {DateTime.Now:yyyyddMMhhmmss}{GameBase.GameTime.ElapsedMilliseconds}.qr";
