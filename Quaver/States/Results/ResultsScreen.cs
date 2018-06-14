@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.GameState;
 using Quaver.Graphics;
@@ -19,7 +20,6 @@ using Quaver.Main;
 using Quaver.States.Gameplay;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps;
@@ -38,6 +38,7 @@ using Quaver.States.Gameplay.Replays;
 using Quaver.States.Select;
 using AudioEngine = Quaver.Audio.AudioEngine;
 using Color = Microsoft.Xna.Framework.Color;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.States.Results
 {
@@ -467,9 +468,11 @@ namespace Quaver.States.Results
                 Alignment = Alignment.MidCenter,
                 PosY = -200,
                 Font = QuaverFonts.AssistantRegular16,
-                Text = $"Played At: {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}"
+                Text = $"Played By: {Replay.PlayerName} At: "
             };
             
+            Date.Text += GameplayScreen != null && GameplayScreen.HasQuit ? $"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()}" 
+                                                        : $"{Replay.Date.ToShortDateString()} {Replay.Date.ToShortTimeString()}";
             var score = new SpriteText()
             {
                 Parent = Container,
