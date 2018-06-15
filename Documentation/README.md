@@ -1,4 +1,4 @@
-# Quaver Docs [![Trello](https://img.shields.io/badge/Trello-Roadmap-blue.svg)](https://trello.com/b/QVbVwKN1/quaver-client) [![Discord](https://discordapp.com/api/guilds/354206121386573824/widget.png?style=shield)](https://discord.gg/nJa8VFr)
+# Quaver.Docs [![Trello](https://img.shields.io/badge/Trello-Roadmap-blue.svg)](https://trello.com/b/QVbVwKN1/quaver-client) [![Discord](https://discordapp.com/api/guilds/354206121386573824/widget.png?style=shield)](https://discord.gg/nJa8VFr)
 
 <p align="center"> 
   <img src="https://eggplants.org/9du6q8.jpg">
