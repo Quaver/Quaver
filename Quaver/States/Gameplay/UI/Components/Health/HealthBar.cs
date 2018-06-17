@@ -81,13 +81,19 @@ namespace Quaver.States.Gameplay.UI.Components.Health
                 case HealthBarType.Horizontal:
                     BackgroundBar.Alignment = Alignment.TopLeft;
                     ForegroundBar.Alignment = Alignment.TopLeft;
+
+                    BackgroundBar.PosX = 8;
+                    ForegroundBar.PosX = 8;
                 
                     SemiTransparent.Parameters["p_position"].SetValue(new Vector2(ForegroundBar.SizeX, 0f));
                     break;
                 case HealthBarType.Vertical:
                     BackgroundBar.Alignment = Alignment.BotLeft;
                     ForegroundBar.Alignment = Alignment.BotLeft;
-                                       
+
+                    BackgroundBar.PosY = -8;
+                    ForegroundBar.PosY = -8;
+                    
                     SemiTransparent.Parameters["p_position"].SetValue(new Vector2(0, 0));
                     break;
                 default:
