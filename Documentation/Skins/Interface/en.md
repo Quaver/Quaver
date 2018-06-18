@@ -720,3 +720,23 @@ and more.
 
 * None
 
+## Skip Display ##
+
+### Skip ###
+
+`/Skip/skip.png`
+
+![](img/Skip/skip@1x31.png)
+
+| Animatable | Alignment | Suggested Size |
+|:-:|:-:|:-:|
+| Yes | MidCenter | 230x56 per frame |
+
+**Notes:**
+
+- Animatable spritesheet file name: `/Skip/skip@{rows}x{columns}.png`
+- Displayed when the player is on a break and is eligible to skip to the next object.
+
+**skin.ini Values:**
+
+- None
