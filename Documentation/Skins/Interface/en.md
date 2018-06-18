@@ -730,7 +730,7 @@ and more.
 
 | Animatable | Alignment | Suggested Size |
 |:-:|:-:|:-:|
-| Yes | MidCenter | 230x56 |
+| Yes | MidCenter | 230x56 per frame |
 
 **Notes:**
 
