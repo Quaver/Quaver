@@ -56,7 +56,9 @@ namespace Quaver.States.Menu
                 ModManager.RemoveSpeedMods();
 
             // Set Discord RP
-            DiscordController.ChangeDiscordPresence("Main Menu", "In the menus");
+            DiscordManager.Presence.Details = "Main Menu";
+            DiscordManager.Presence.State = "In the menus";
+            DiscordManager.Client.SetPresence(DiscordManager.Presence);
 
             //Initialize Menu Screen
             Container = new Container();

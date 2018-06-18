@@ -134,7 +134,9 @@ namespace Quaver.States.Select
             SongSelectInputManager = new SongSelectInputManager();
 
             // Update Discord Presence
-            DiscordController.ChangeDiscordPresence("Song Select", "In the menus");
+            DiscordManager.Presence.Details = "Selecting a song";
+            DiscordManager.Presence.State = "In the menus";
+            DiscordManager.Client.SetPresence(DiscordManager.Presence);
 
             // Initalize buttons
             CreatePlayMapButton();

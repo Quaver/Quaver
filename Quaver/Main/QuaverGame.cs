@@ -75,6 +75,8 @@ namespace Quaver.Main
         /// </summary>
         protected override void Initialize()
         {
+            DiscordManager.Initialize();
+            
             // TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -157,6 +159,9 @@ namespace Quaver.Main
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
+            // Needs to be called periodically to dequeue messages according to the lib.
+            DiscordManager.Client.Invoke();
+            
             // Check Global Input
             GameBase.GlobalInputManager.CheckInput();
 
@@ -239,7 +244,7 @@ namespace Quaver.Main
             try
             {
                 GameBase.AudioEngine.Free();
-                DiscordRPC.Shutdown();
+                DiscordManager.Client.Dispose();
             }
             catch (Exception e)
             {

@@ -339,15 +339,22 @@ namespace Quaver.States.Results
         {
             // Don't change if we're loading in from a replay file.
             if (Type == ResultsScreenType.FromReplayFile || GameplayScreen.InReplayMode)
+            {
+                DiscordManager.Presence.Details = "Idle";
+                DiscordManager.Presence.State = "In the menus";
+                DiscordManager.Client.SetPresence(DiscordManager.Presence);
                 return;
+            }
+
             
             var state = GameplayScreen.Failed ? "Fail" : "Pass";
             var score = $"{ScoreProcessor.Score / 1000}k";
             var acc = $"{StringHelper.AccuracyToString(ScoreProcessor.Accuracy)}";
             var grade = GameplayScreen.Failed ? "F" : GradeHelper.GetGradeFromAccuracy(ScoreProcessor.Accuracy).ToString();
             var combo = $"{ScoreProcessor.MaxCombo}x";
-            
-            DiscordController.ChangeDiscordPresence(SongTitle, $"{state}: {score} {acc} {grade} {combo}");
+
+            DiscordManager.Presence.State = $"{state}: {grade} {score} {acc} {combo}";
+            DiscordManager.Client.SetPresence(DiscordManager.Presence);
         }
         
         /// <summary>

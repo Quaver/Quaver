@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Config\BindedInt.cs" />
     <Compile Include="Config\BindedValue.cs" />
+    <Compile Include="Discord\DiscordManager.cs" />
     <Compile Include="Graphics\Alignment.cs" />
     <Compile Include="Graphics\Base\Container.cs" />
     <Compile Include="Graphics\Buttons\Dropdowns\Dropdown.cs" />
@@ -147,8 +148,6 @@
     <Compile Include="Audio\AudioEngine.cs" />
     <Compile Include="Database\Maps\Mapset.cs" />
     <Compile Include="Database\Scores\LocalScoreCache.cs" />
-    <Compile Include="Discord\DiscordController.cs" />
-    <Compile Include="Discord\DiscordRPC.cs" />
     <Compile Include="States\IGameStateComponent.cs" />
     <Compile Include="States\Options\OptionsState.cs" />
     <Compile Include="States\Select\ScoresDisplay.cs" />
@@ -214,6 +213,10 @@
     <Compile Include="StepMania\StepManiaConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="DiscordRPC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DiscordRPC.dll</HintPath>
+    </Reference>
     <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
     </Reference>
@@ -306,9 +309,7 @@
   <ItemGroup>
     <Content Include="Icon.bmp" />
     <Content Include="Icon.ico" />
-    <Content Include="Lib\discord-rpc.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Lib\DiscordRPC.dll" />
     <Content Include="Lib\INIFileParser.dll" />
     <Content Include="Lib\SDL2.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -347,7 +348,6 @@
   <PropertyGroup>
     <PostBuildEvent>echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\bass.dll" "$(ProjectDir)$(outDir)bass.dll"
 echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\bass_fx.dll" "$(ProjectDir)$(outDir)bass_fx.dll"
-echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\discord-rpc.dll" "$(ProjectDir)$(outDir)discord-rpc.dll"
 echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libbass.dylibl" "$(ProjectDir)$(outDir)libbass.dylib"
 echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libbass.so" "$(ProjectDir)$(outDir)libbass.so"
 echo f |  xcopy /y "$(ProjectDir)$(outDir)Lib\libbass_fx.dylib" "$(ProjectDir)$(outDir)libbass_fx.dylib"
