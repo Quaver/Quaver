@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Gameplay;
 using Quaver.API.Maps;
@@ -106,6 +107,11 @@ namespace Quaver.States.Gameplay.UI
         internal Scoreboard Scoreboard { get; set; }
 
         /// <summary>
+        ///     Displayed when a user is eligible to skip.
+        /// </summary>
+        internal SkipDisplay SkipDisplay { get; private set; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         internal GameplayInterface(GameplayScreen screen)
@@ -179,6 +185,11 @@ namespace Quaver.States.Gameplay.UI
   
             // Create scoreboard
             CreateScoreboard();
+            
+            SkipDisplay = new SkipDisplay(Screen, GameBase.Skin.Skip)
+            {
+                Parent = Container
+            };
             
             // Initialize the failure trannsitioner. 
             ScreenTransitioner = new Sprite()
