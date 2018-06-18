@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Security.Cryptography;
+using DiscordRPC;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -234,7 +235,7 @@ namespace Quaver.States.Gameplay
             UI.Initialize(this);
             
             // Change discord rich presence.
-            SetRichPresence(false);
+            SetRichPresence();
             
             // Initialize the game mode.
             Ruleset.Initialize();
@@ -358,15 +359,16 @@ namespace Quaver.States.Gameplay
                 IsPaused = true;
                 IsResumeInProgress = false;
                 PauseCounter++;
-                
-                DiscordController.ChangeDiscordPresence($"{Map.Artist} - {Map.Title} [{Map.DifficultyName}]", $"Paused for the {StringHelper.AddOrdinal(PauseCounter)} time");
-                
+                                
                 try
                 {
                     GameBase.AudioEngine.Pause();
                 }
                 catch (AudioEngineException e) {}
 
+                DiscordManager.Presence.State = "Taking a break";
+                DiscordManager.Client.SetPresence(DiscordManager.Presence);
+                
                 return;
             }
 
@@ -375,7 +377,7 @@ namespace Quaver.States.Gameplay
             // When that resume time is past the specific set offset, it'll unpause the game.
             IsResumeInProgress = true;
             ResumeTime = GameBase.GameTime.ElapsedMilliseconds;
-            SetRichPresence(true);
+            SetRichPresence();
         }
 
         /// <summary>
@@ -442,7 +444,7 @@ namespace Quaver.States.Gameplay
                 }
 
                 // Skip to 3 seconds before the notes start
-                SetRichPresence(true);
+                SetRichPresence();
             }
         }
 
@@ -528,12 +530,21 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Sets rich presence based on which activity we're doing in gameplay.
         /// </summary>
-        private void SetRichPresence(bool skipped)
+        private void SetRichPresence()
         {
+            DiscordManager.Presence.Details = Map.ToString();
+
             if (InReplayMode)
-                DiscordController.ChangeDiscordPresenceGameplay(skipped, DiscordPlayingState.Watching, LoadedReplay.PlayerName);
+                DiscordManager.Presence.State = $"Watching {LoadedReplay.PlayerName}";
             else
-                DiscordController.ChangeDiscordPresenceGameplay(skipped, DiscordPlayingState.Playing);
+                DiscordManager.Presence.State = $"Playing {ModHelper.GetActivatedModsString(true)}";
+           
+            //DiscordManager.Presence.Timestamps = new Timestamps
+            //{
+            //    End = DateTime.Now.AddSeconds(100)
+            //};
+
+            DiscordManager.Client.SetPresence(DiscordManager.Presence);
         }
 
         /// <summary>

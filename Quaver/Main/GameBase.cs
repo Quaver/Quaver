@@ -167,11 +167,6 @@ namespace Quaver.Main
         public static Cursor Cursor { get; set; }
 
         /// <summary>
-        ///     The current Discord Controller for RichPresence.
-        /// </summary>
-        public static DiscordController DiscordController { get; set; }
-
-        /// <summary>
         ///     Keeps track of whether Discord Rich Presence has been initialized.
         /// </summary>
         public static bool DiscordRichPresencedInited { get; set; }
