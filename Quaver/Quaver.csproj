@@ -137,6 +137,7 @@
     <Compile Include="States\Gameplay\UI\Components\Scoreboard\Scoreboard.cs" />
     <Compile Include="States\Gameplay\UI\Components\Scoreboard\ScoreboardUser.cs" />
     <Compile Include="States\Gameplay\UI\Components\Scoreboard\ScoreboardUserType.cs" />
+    <Compile Include="States\Gameplay\UI\Components\SkipDisplay.cs" />
     <Compile Include="States\Gameplay\UI\Components\SongInformation.cs" />
     <Compile Include="States\Gameplay\UI\Components\SongTimeProgressBar.cs" />
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />

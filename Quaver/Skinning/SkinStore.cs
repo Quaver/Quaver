@@ -150,6 +150,11 @@ namespace Quaver.Skinning
         internal List<Texture2D> HealthBarForeground { get; private set; }
 
         /// <summary>
+        ///     Skip animation when user is on a break.
+        /// </summary>
+        internal List<Texture2D> Skip { get; private set; }
+
+        /// <summary>
         ///     Sound effect elements.
         /// </summary>
         internal SoundEffect SoundHit { get; private set; }
@@ -214,6 +219,7 @@ namespace Quaver.Skinning
             LoadPause();
             LoadScoreboard();
             LoadHealthBar();
+            LoadSkip();
             LoadSoundEffects();
         }
 
@@ -441,6 +447,17 @@ namespace Quaver.Skinning
             HealthBarForeground = LoadSpritesheet(healthFolder, healthForeground, healthForeground, 0, 0);
         }
 
+        /// <summary>
+        ///     Loads the skip animation element.
+        /// </summary>
+        private void LoadSkip()
+        {
+            var skipFolder = $"/Skip/";
+            const string skip = "skip";
+
+            Skip = LoadSpritesheet(skipFolder, skip, skip, 1, 31);
+        }
+        
         /// <summary>
         ///     Loads all sound effect elements.
         /// </summary>
