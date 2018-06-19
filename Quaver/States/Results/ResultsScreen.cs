@@ -337,6 +337,8 @@ namespace Quaver.States.Results
         /// </summary>
         private void ChangeDiscordPresence()
         {
+            DiscordManager.Presence.Timestamps = null;
+
             // Don't change if we're loading in from a replay file.
             if (Type == ResultsScreenType.FromReplayFile || GameplayScreen.InReplayMode)
             {

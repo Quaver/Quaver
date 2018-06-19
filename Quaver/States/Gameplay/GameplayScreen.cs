@@ -539,10 +539,10 @@ namespace Quaver.States.Gameplay
             else
                 DiscordManager.Presence.State = $"Playing {ModHelper.GetActivatedModsString(true)}";
            
-            //DiscordManager.Presence.Timestamps = new Timestamps
-            //{
-            //    End = DateTime.Now.AddSeconds(100)
-            //};
+            DiscordManager.Presence.Timestamps = new Timestamps
+            {
+                End = DateTime.UtcNow.AddMilliseconds((Qua.FindSongLength(Map) - Timing.CurrentTime) / GameBase.AudioEngine.PlaybackRate)
+            };
 
             DiscordManager.Client.SetPresence(DiscordManager.Presence);
         }

@@ -136,6 +136,7 @@ namespace Quaver.States.Select
             // Update Discord Presence
             DiscordManager.Presence.Details = "Selecting a song";
             DiscordManager.Presence.State = "In the menus";
+            DiscordManager.Presence.Timestamps = null;
             DiscordManager.Client.SetPresence(DiscordManager.Presence);
 
             // Initalize buttons
