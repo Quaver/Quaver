@@ -58,6 +58,7 @@ namespace Quaver.States.Menu
             // Set Discord RP
             DiscordManager.Presence.Details = "Main Menu";
             DiscordManager.Presence.State = "In the menus";
+            DiscordManager.Presence.Timestamps = null;
             DiscordManager.Client.SetPresence(DiscordManager.Presence);
 
             //Initialize Menu Screen
