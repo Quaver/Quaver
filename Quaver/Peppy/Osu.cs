@@ -204,14 +204,13 @@ namespace Quaver.Peppy
                 // Now that we have them, proceed to convert them.
                 foreach (var file in Directory.GetFiles(extractPath, "*.osu", SearchOption.AllDirectories))
                 {
-                    var map = new PeppyBeatmap(file);
+                    var map = new OsuBeatmap(file);
 
                     if (!map.IsValid)
                         continue;
 
                     // Convert the map to .qua
-                    var qua = Qua.ConvertOsuBeatmap(map);
-                    qua.Save(map.OriginalFileName.Replace(".osu", ".qua"));
+                     map.ToQua().Save(map.OriginalFileName.Replace(".osu", ".qua"));
                 }
 
                 // Now that all of them are converted, we'll create a new directory with all of the files except for .osu

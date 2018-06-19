@@ -169,14 +169,14 @@ namespace Quaver.Database.Maps
                 Description = qua.Description,
                 MapId = qua.MapId,
                 MapSetId = qua.MapSetId,
-                Bpm = Qua.FindCommonBpm(qua),
+                Bpm = qua.GetCommonBpm(),
                 Creator = qua.Creator,
                 DifficultyName = qua.DifficultyName,
                 Source = qua.Source,
                 Tags = qua.Tags,
-                SongLength = Qua.FindSongLength(qua),
+                SongLength =  qua.Length,
                 Mode = qua.Mode,
-                DifficultyRating = qua.CalculateFakeDifficulty(),
+                DifficultyRating = qua.AverageNotesPerSecond()
             };
         }
 
@@ -198,26 +198,19 @@ namespace Quaver.Database.Maps
                     qua = Qua.Parse(quaPath);
                     break;
                 case MapGame.Osu:
-                    var osu = new PeppyBeatmap(GameBase.OsuSongsFolder + Directory + "/" + Path);
-                    qua = Qua.ConvertOsuBeatmap(osu);
+                    var osu = new OsuBeatmap(GameBase.OsuSongsFolder + Directory + "/" + Path);
+                    qua = osu.ToQua();
                     break;
                 case MapGame.Etterna:
                     // In short, find the chart with the same DifficultyName. There's literally no other way for us to check
                     // other than through this means.
-                    var smCharts = Qua.ConvertStepManiaChart(StepManiaFile.Parse(GameBase.EtternaFolder + Directory + "/" + Path));
-                    qua = smCharts.Find(x => x.DifficultyName == DifficultyName);
+                    var sm = StepManiaFile.Parse(GameBase.EtternaFolder + Directory + "/" + Path).ToQua();
+                    qua = sm.Find(x => x.DifficultyName == DifficultyName);
                     break;
                 default:
                     throw new InvalidEnumArgumentException();
             }
-
-            // Check if the map is actually valid
-            if (qua != null)
-                qua.IsValidQua = Qua.CheckQuaValidity(qua);
-
-            if (qua == null || !qua.IsValidQua)
-                throw new ArgumentException();
-
+            
             return qua;
         }
         

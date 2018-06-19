@@ -234,7 +234,7 @@ namespace Quaver.Main
                 {
                     case MapGame.Osu:
                         // Parse the map and get the background
-                        var osu = new PeppyBeatmap(OsuSongsFolder + SelectedMap.Directory + "/" + SelectedMap.Path);
+                        var osu = new OsuBeatmap(OsuSongsFolder + SelectedMap.Directory + "/" + SelectedMap.Path);
                         return $@"{OsuSongsFolder}/{SelectedMap.Directory}/{osu.Background}";
                     case MapGame.Quaver:
                         return ConfigManager.SongDirectory + "/" + SelectedMap.Directory + "/" + SelectedMap.BackgroundPath;

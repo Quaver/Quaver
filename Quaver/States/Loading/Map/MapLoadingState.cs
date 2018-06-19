@@ -82,7 +82,7 @@ namespace Quaver.States.Loading.Map
                 Task.Run(async () =>
                 {
                     using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/difficulty.txt"))
-                        await writer.WriteAsync($"{Math.Round(GameBase.SelectedMap.Qua.CalculateFakeDifficulty(), 2)}");
+                        await writer.WriteAsync($"{Math.Round(GameBase.SelectedMap.Qua.AverageNotesPerSecond(), 2)}");
                 });
             }
             catch (Exception e)
@@ -96,13 +96,6 @@ namespace Quaver.States.Loading.Map
         /// </summary>
         private void ChangeState()
         {
-            // If the Qua isn't valid then return back to the song select state
-            if (!GameBase.SelectedMap.Qua.IsValidQua)
-            {
-                GameBase.GameStateManager.ChangeState(new SongSelectState());
-                return;
-            }
-
             try
             {
                 // Stop the current audio and load it again before moving onto the next state.

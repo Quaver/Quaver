@@ -156,12 +156,12 @@ namespace Quaver.States.Gameplay.UI.Components
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
-                Text = $"Rating: {StringHelper.AccuracyToString(Screen.Map.CalculateFakeDifficulty(GameBase.AudioEngine.PlaybackRate)).Replace("%", "")}",
+                Text = $"Rating: {StringHelper.AccuracyToString(Screen.Map.AverageNotesPerSecond(GameBase.AudioEngine.PlaybackRate)).Replace("%", "")}",
                 Font = QuaverFonts.AssistantRegular16,
                 PosY = Creator.PosY + TextYSpacing + TextYSpacing * 0.75f,
                 TextScale = 0.75f,
                 Alpha = 0,
-                TextColor = ColorHelper.DifficultyToColor(Screen.Map.CalculateFakeDifficulty(GameBase.AudioEngine.PlaybackRate))
+                TextColor = ColorHelper.DifficultyToColor(Screen.Map.AverageNotesPerSecond(GameBase.AudioEngine.PlaybackRate))
             };
 
             // Get a formatted string of the activated mods.

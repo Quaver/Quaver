@@ -44,7 +44,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
             Replay = Screen.LoadedReplay;
             
             // Populate unique key presses/releases.
-            for (var i = 0; i < screen.Map.FindKeyCountFromMode(); i++)
+            for (var i = 0; i < screen.Map.GetKeyCount(); i++)
             {
                 UniquePresses.Add(false);
                 UniqueReleases.Add(false);
