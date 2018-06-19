@@ -22,7 +22,8 @@ namespace Quaver.StepMania
         {
             try
             {
-                var quaverMaps = Qua.ConvertStepManiaChart(StepManiaFile.Parse(path));
+
+                var quaverMaps = StepManiaFile.Parse(path).ToQua();
 
                 // Create a new directory in the songs folder
                 var quaverDir = $"{ConfigManager.SongDirectory}/StepMania - {new DirectoryInfo(path).Name} - {GameBase.GameTime.ElapsedMilliseconds}/";

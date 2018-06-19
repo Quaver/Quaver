@@ -2,6 +2,7 @@
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.API.Maps.Structures;
 using Quaver.Graphics.Sprites;
 using Quaver.Input;
 using Quaver.Logging;

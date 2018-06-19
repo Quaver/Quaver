@@ -237,7 +237,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             ColumnLightingObjects = new List<ColumnLighting>();
             
             // Go through and create the 4 receptors and column lighting objects.
-            for (var i = 0; i < Playfield.Map.FindKeyCountFromMode(); i++)
+            for (var i = 0; i < Playfield.Map.GetKeyCount(); i++)
             {
                 var posX = (Playfield.LaneSize + Playfield.ReceptorPadding) * i + Playfield.Padding;
                 
@@ -363,7 +363,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         {
             HitLighting = new List<HitLighting>();
 
-            for (var i = 0; i < Screen.Map.FindKeyCountFromMode(); i++)
+            for (var i = 0; i < Screen.Map.GetKeyCount(); i++)
             {
                 var hl = new HitLighting()
                 {

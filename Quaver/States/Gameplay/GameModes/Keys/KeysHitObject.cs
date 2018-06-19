@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Structures;
 using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Graphics.Colors;

@@ -50,7 +50,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <summary>
         ///     The X size of the playfield.
         /// </summary>
-        internal float Width => (LaneSize + ReceptorPadding) * Map.FindKeyCountFromMode() + Padding * 2 - ReceptorPadding;
+        internal float Width => (LaneSize + ReceptorPadding) * Map.GetKeyCount() + Padding * 2 - ReceptorPadding;
 
         /// <summary>
         ///     Reference to the gameplay screen.

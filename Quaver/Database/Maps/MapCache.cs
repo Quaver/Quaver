@@ -142,12 +142,6 @@ namespace Quaver.Database.Maps
 
                 // Try to parse the file and check if it is a legitimate .qua file.
                 var qua = Qua.Parse(file);
-                if (!qua.IsValidQua)
-                {
-                    Logger.LogError($"Qua File {file} could not be parsed.", LogType.Runtime);
-                    File.Delete(file);
-                    continue;
-                }
 
                 // Convert the Qua into a Map object and add it to our list of maps we want to cache.
                 var newMap = new Map().ConvertQuaToMap(qua, file);
