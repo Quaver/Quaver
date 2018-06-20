@@ -308,8 +308,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Icon.bmp" />
-    <Content Include="Icon.ico" />
+    <EmbeddedResource Include="Icon.bmp" />
+    <EmbeddedResource Include="Icon.ico" />
     <Content Include="Lib\DiscordRPC.dll" />
     <Content Include="Lib\INIFileParser.dll" />
     <Content Include="Lib\SDL2.dll">
