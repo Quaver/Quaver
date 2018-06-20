@@ -541,7 +541,7 @@ namespace Quaver.States.Gameplay
            
             DiscordManager.Presence.Timestamps = new Timestamps
             {
-                End = DateTime.UtcNow.AddMilliseconds((Qua.FindSongLength(Map) - Timing.CurrentTime) / GameBase.AudioEngine.PlaybackRate)
+                End = DateTime.UtcNow.AddMilliseconds((Map.Length - Timing.CurrentTime) / GameBase.AudioEngine.PlaybackRate)
             };
 
             DiscordManager.Client.SetPresence(DiscordManager.Presence);
