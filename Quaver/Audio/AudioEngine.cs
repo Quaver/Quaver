@@ -36,6 +36,11 @@ namespace Quaver.Audio
         internal double Position => Bass.ChannelBytes2Seconds(Stream, Bass.ChannelGetPosition(Stream)) * 1000;
 
         /// <summary>
+        ///     The position of the audio including frame times.
+        /// </summary>
+        internal double Time { get; private set; }
+        
+        /// <summary>
         ///     If the audio has already previously been played before.
         /// </summary>
         internal bool HasPlayed { get; set; }
@@ -115,6 +120,27 @@ namespace Quaver.Audio
             Bass.ChannelAddFlag(Stream, BassFlags.AutoFree);
         }
 
+        /// <summary>
+        ///     Gets the accurate time of the song including frame times.
+        /// </summary>
+        /// <param name="dt"></param>
+        internal void UpdateTime(double dt)
+        {
+            if (Stream == 0)
+            {
+                Time = 0;
+                return;
+            }
+                
+            if (!IsPlaying)
+            {
+                Time = Position;
+                return;
+            }
+
+            Time = (GameBase.AudioEngine.Position + (Time + dt * GameBase.AudioEngine.PlaybackRate)) / 2;
+        }
+   
         /// <summary>
         ///     Plays the loaded audio stream.
         /// </summary>

@@ -190,6 +190,9 @@ namespace Quaver.Main
             // Update Navbar
             GameBase.Navbar.Update(dt);
             
+            // Update audio time
+            GameBase.AudioEngine.UpdateTime(dt);
+            
             // Run scheduled background tasks
             if (GameBase.GameTime.ElapsedMilliseconds - CommonTaskScheduler.LastRunTime >= 5000)
                 CommonTaskScheduler.Run();
