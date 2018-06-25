@@ -92,6 +92,7 @@
     <Compile Include="Helpers\InputHelper.cs" />
     <Compile Include="Helpers\ListHelper.cs" />
     <Compile Include="Helpers\ModHelper.cs" />
+    <Compile Include="Helpers\ObjectHelper.cs" />
     <Compile Include="Helpers\ReplayHelper.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Helpers\RngHelper.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Skinning\SkinKeys.cs" />
     <Compile Include="Skinning\SkinKeysFolder.cs" />
     <Compile Include="Skinning\SkinStore.cs" />
+    <Compile Include="States\Edit\EditorScreen.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\GameModeRulesetKeys.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputManager.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputBinding.cs" />

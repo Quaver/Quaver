@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Ionic.Zip;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Maps;
 using Quaver.API.Replays;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -21,6 +22,7 @@ using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Peppy;
 using Quaver.States;
+using Quaver.States.Edit;
 using Quaver.States.Menu;
 using Quaver.States.Options;
 using Quaver.States.Results;
@@ -85,6 +87,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         private NavbarButton Github { get; set; }
         private NavbarButton Export { get; set; }
         private NavbarButton Replay { get; set; }
+        private NavbarButton Edit { get; set; }
 
         /// <summary>
         ///     The options menu attached to this navbar.
@@ -135,6 +138,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             Import = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Copy, "Import Mapsets","Add new songs to play!", OnImportButtonClicked);
             Export = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Archive, "Export Mapset", "Zip your current mapset to a file.", OnExportButtonClicked);
             Replay = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.VideoPlay, "Watch Replay", "Load up a replay to watch.", OnReplayButtonClicked);
+            Edit = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Pencil, "Edit", "Edit the currently selected map", OnEditButtonClicked);
             
             // Right Side
             Notifications = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => { GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick); Logger.LogImportant("This button does nothing. Don't click it.", LogType.Runtime);});
@@ -146,7 +150,7 @@ namespace Quaver.Graphics.Overlays.Navbar
 #endregion
         }
 
-         /// <summary>
+        /// <summary>
         ///     Unload
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
@@ -410,6 +414,39 @@ namespace Quaver.Graphics.Overlays.Navbar
                 return;
             
             GameBase.GameStateManager.ChangeState(new ResultsScreen(new Replay(openFileDialog.FileName)));
+        }
+        
+        /// <summary>
+        ///     User chooses to edit the currently selected map.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private static void OnEditButtonClicked(object sender, EventArgs e)
+        {
+            var map = GameBase.SelectedMap;
+            
+            if (map == null)
+            {
+                Logger.LogError("There is currently no selected map to edit!", LogType.Runtime);
+                return;
+            }
+
+            var path = $"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}";
+
+            Qua qua;
+            
+            try
+            {
+                qua = Qua.Parse(path);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, LogType.Runtime);
+                return;
+            }
+            
+            GameBase.GameStateManager.ChangeState(new EditorScreen(qua));
         }
     }
 }
