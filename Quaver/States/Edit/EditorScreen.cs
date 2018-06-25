@@ -5,6 +5,7 @@ using Quaver.GameState;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Main;
+using Quaver.States.Edit.UI;
 
 namespace Quaver.States.Edit
 {
@@ -31,6 +32,16 @@ namespace Quaver.States.Edit
         private Qua LastSavedMap { get; set; }
 
         /// <summary>
+        ///     The entire user interface for the editor.
+        /// </summary>
+        private EditorInterface UI { get; }
+
+        /// <summary>
+        ///     Handles all the input for the editor.
+        /// </summary>
+        private EditorInputManager InputManager { get; }
+
+        /// <summary>
         ///     
         /// </summary>
         /// <param name="map"></param>
@@ -41,6 +52,8 @@ namespace Quaver.States.Edit
             
             Map = map;
             LastSavedMap = ObjectHelper.DeepClone(Map);
+            UI = new EditorInterface(this);
+            InputManager = new EditorInputManager();
 
             DiscordManager.Client.CurrentPresence.Details = Map.ToString();
             DiscordManager.Client.CurrentPresence.State = "Editing Map";
@@ -52,6 +65,7 @@ namespace Quaver.States.Edit
         /// </summary>
         public void Initialize()
         {
+            UI.Initialize(this);
             UpdateReady = true;
         }
 
@@ -60,6 +74,7 @@ namespace Quaver.States.Edit
         /// </summary>
         public void UnloadContent()
         {
+            UI.UnloadContent();
         }
 
         /// <inheritdoc />
@@ -68,6 +83,8 @@ namespace Quaver.States.Edit
         /// <param name="dt"></param>
         public void Update(double dt)
         {
+            InputManager.HandleInput(dt);
+            UI.Update(dt);
         }
 
         /// <inheritdoc />
@@ -75,9 +92,7 @@ namespace Quaver.States.Edit
         /// </summary>
         public void Draw()
         {
-            GameBase.SpriteBatch.Begin();
-            BackgroundManager.Draw();
-            GameBase.SpriteBatch.End();
+            UI.Draw();
         }
     }
 }
