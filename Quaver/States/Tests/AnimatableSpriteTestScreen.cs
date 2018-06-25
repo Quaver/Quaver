@@ -44,7 +44,7 @@ namespace Quaver.States.Tests
             };
             
             
-            Nav = new Nav();
+            Nav = Nav.CreateGlobalNavbar();
             Nav.Initialize(this);
             UpdateReady = true;
         }

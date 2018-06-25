@@ -70,6 +70,7 @@
     <Compile Include="Graphics\Buttons\Checkbox.cs" />
     <Compile Include="Graphics\Buttons\Sliders\Slider.cs" />
     <Compile Include="Graphics\DrawRectangle.cs" />
+    <Compile Include="Graphics\Overlays\Navbar\NavbarActions.cs" />
     <Compile Include="Graphics\Overlays\Navbar\Nav.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarButton.cs" />
@@ -347,6 +348,9 @@
       <Project>{511cd203-9c5f-4dab-9556-437a00796cbb}</Project>
       <Name>Quaver.Resources</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Graphics\Overlays\Navbar\Main" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

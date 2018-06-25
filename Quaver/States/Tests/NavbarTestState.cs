@@ -30,7 +30,7 @@ namespace Quaver.States.Tests
         public void Initialize()
         {
             Container = new Container();
-            Nav = new Nav();
+            Nav = Nav.CreateGlobalNavbar();
             Nav.Initialize(this);
             
             UpdateReady = true;

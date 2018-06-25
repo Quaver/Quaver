@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
+using Quaver.Audio;
 using Quaver.Helpers;
 using Quaver.Main;
 

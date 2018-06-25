@@ -14,17 +14,17 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <summary>
         ///     The name of name of the tooltip when you hover over the button
         /// </summary>
-        internal string TooltipName { get; }
+        internal string TooltipName { get; set; }
 
         /// <summary>
         ///     The description of the button when you hover over the button.
         /// </summary>
-        internal string TooltipDescription { get; }
+        internal string TooltipDescription { get; set; }
 
         /// <summary>
         ///     The parent navbar for this button
         /// </summary>
-        private Nav Container { get; }
+        internal Nav ParentNav { get; }
 
         /// <summary>
         ///     The x position spacing between each navbar button.
@@ -79,7 +79,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             : base(action)
         {
             NavAlignment = alignment;
-            Container = nav;
+            ParentNav = nav;
             TooltipName = tooltipName;
             TooltipDescription = tooltipDesc;
             Image = tex;
@@ -87,24 +87,24 @@ namespace Quaver.Graphics.Overlays.Navbar
             Tint = MouseOutColor;
          
             // Get the last button in the list of the current alignment.
-            var lastButton = Container.Buttons[alignment].Count > 0 ? Container.Buttons[alignment].Last() : null;
+            var lastButton = ParentNav.Buttons[alignment].Count > 0 ? ParentNav.Buttons[alignment].Last() : null;
          
             // Set the alignment and position of the navbar button.
             switch (NavAlignment)
             {
                 case NavbarAlignment.Left:
                     Alignment = Alignment.TopLeft;
-                    PositionX = Container.NavbarSprite.SizeX + lastButton?.PosX + lastButton?.SizeX + ButtonSpacing ?? ButtonSpacing;
+                    PositionX = ParentNav.NavbarSprite.SizeX + lastButton?.PosX + lastButton?.SizeX + ButtonSpacing ?? ButtonSpacing;
                     break;
                 case NavbarAlignment.Right:
                     Alignment = Alignment.TopRight;
-                    PositionX = Container.NavbarSprite.SizeX + lastButton?.PosX - lastButton?.SizeX - ButtonSpacing ?? -ButtonSpacing;
+                    PositionX = ParentNav.NavbarSprite.SizeX + lastButton?.PosX - lastButton?.SizeX - ButtonSpacing ?? -ButtonSpacing;
                     break;
                 default:
                     throw new InvalidEnumArgumentException("Invalid NavbarAlignment given.");
             }
             
-            Position = new UDim2D(PositionX, Container.NavbarSprite.SizeY / 2 - IconHeight / 2f);
+            Position = new UDim2D(PositionX, ParentNav.NavbarSprite.SizeY / 2 - IconHeight / 2f);
         }
 
          /// <inheritdoc />
@@ -113,9 +113,9 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
          protected override void MouseOver()
          {
-             Container.TooltipBox.Name.Text = TooltipName;
-             Container.TooltipBox.Description.Text = TooltipDescription;
-             Container.TooltipBox.Icon.Image = Image;
+             ParentNav.TooltipBox.Name.Text = TooltipName;
+             ParentNav.TooltipBox.Description.Text = TooltipDescription;
+             ParentNav.TooltipBox.Icon.Image = Image;
              Tint = MouseOverColor;
               
              // The scale at which the image increases when moused over.
@@ -123,12 +123,12 @@ namespace Quaver.Graphics.Overlays.Navbar
              
              // Increase the size and normalize the position.
              Size = new UDim2D(IconWidth * scale, IconHeight * scale);
-             Position = new UDim2D(PositionX, Container.NavbarSprite.SizeY / 2 - IconHeight * scale / 2f);
+             Position = new UDim2D(PositionX, ParentNav.NavbarSprite.SizeY / 2 - IconHeight * scale / 2f);
              
              // Make tooltip box visible if it isn't already
-             Container.TooltipBox.InAnimation = true;
-             Container.TooltipBox.ContainerBox.Visible = true;
-             Container.TooltipBox.IsEnteringScreen = true;
+             ParentNav.TooltipBox.InAnimation = true;
+             ParentNav.TooltipBox.ContainerBox.Visible = true;
+             ParentNav.TooltipBox.IsEnteringScreen = true;
 
              // Play sound effect if necessary
              if (!MouseOverSoundPlayed)
@@ -144,18 +144,18 @@ namespace Quaver.Graphics.Overlays.Navbar
          /// </summary>
          protected override void MouseOut()
          {
-             Container.TooltipBox.Name.Text = string.Empty;
-             Container.TooltipBox.Description.Text = string.Empty;
+             ParentNav.TooltipBox.Name.Text = string.Empty;
+             ParentNav.TooltipBox.Description.Text = string.Empty;
              Tint = MouseOutColor;
              
              // Set the size and position back to normal.
              Size = new UDim2D(IconWidth, IconHeight);
-             Position = new UDim2D(PositionX, Container.NavbarSprite.SizeY / 2 - IconHeight / 2f);
+             Position = new UDim2D(PositionX, ParentNav.NavbarSprite.SizeY / 2 - IconHeight / 2f);
 
-             if (Container.TooltipBox.ContainerBox.Visible)
+             if (ParentNav.TooltipBox.ContainerBox.Visible)
              {
-                 Container.TooltipBox.InAnimation = true;
-                 Container.TooltipBox.IsEnteringScreen = false;
+                 ParentNav.TooltipBox.InAnimation = true;
+                 ParentNav.TooltipBox.IsEnteringScreen = false;
              }
 
              // Reset MouseOverSoundPlayed for this particular button now that we've moused out.

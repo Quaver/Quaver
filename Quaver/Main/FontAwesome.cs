@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Quaver.Helpers;
 using Quaver.Resources;
+using Quaver.States.Gameplay.UI.Components.Pause;
 
 namespace Quaver.Main
 {
@@ -28,6 +29,9 @@ namespace Quaver.Main
         internal static Texture2D GiftBox { get; set; }
         internal static Texture2D VideoPlay { get; set; }
         internal static Texture2D Pencil { get; set; }
+        internal static Texture2D Play { get; set; }
+        internal static Texture2D Pause { get; set; }
+        internal static Texture2D Stop { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -56,6 +60,9 @@ namespace Quaver.Main
             GiftBox = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_gift_box);
             VideoPlay = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_play_video_button);
             Pencil = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_pencil);
+            Play = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_play_button);
+            Pause = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_pause_symbol);
+            Stop = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_square_shape_shadow);
         }
     }
 }

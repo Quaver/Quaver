@@ -38,7 +38,7 @@ namespace Quaver.States.Tests
         public void Initialize()
         {
             Container = new Container();
-            Nav = new Nav();
+            Nav = Nav.CreateGlobalNavbar();
             Nav.Initialize(this);
 
             // Get all skins.

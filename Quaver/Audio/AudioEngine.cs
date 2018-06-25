@@ -64,7 +64,22 @@ namespace Quaver.Audio
         ///     Returns if the audio stream is currently stopped.
         /// </summary>
         internal bool IsStopped => Bass.ChannelIsActive(Stream) == PlaybackState.Stopped;
-        
+
+        /// <summary>
+        ///     Event invoked when the audio has started playing
+        /// </summary>
+        internal EventHandler OnPlayed { get; set; }
+
+        /// <summary>
+        ///     Event invoked when the audio has been paused.
+        /// </summary>
+        internal EventHandler OnPaused { get; set; }
+
+        /// <summary>
+        ///     Event invoked when the audio has been stopped.
+        /// </summary>
+        internal EventHandler OnStopped { get; set; }
+
         /// <summary>
         ///     The master volume of all audio streams
         /// </summary>
@@ -96,6 +111,16 @@ namespace Quaver.Audio
         ///     The rate at which the audio stream will play at.
         /// </summary>
         internal float PlaybackRate = 1.0f;
+
+        /// <summary>
+        ///     The audio state in the previous state
+        /// </summary>
+        private PlaybackState PreviousState { get; set; } = PlaybackState.Stopped;
+
+        /// <summary>
+        ///     The current audio state
+        /// </summary>
+        internal PlaybackState State { get; private set; } = PlaybackState.Stopped;
 
         /// <summary>
         ///     Constructor - Intitializes BASS.
@@ -134,8 +159,15 @@ namespace Quaver.Audio
         ///     Gets the accurate time of the song including frame times.
         /// </summary>
         /// <param name="dt"></param>
-        internal void UpdateTime(double dt)
+        internal void Update(double dt)
         {
+            PreviousState = State;
+            State = Bass.ChannelIsActive(Stream);
+            
+            // Emit an event when the audio has been stopped.
+            if (State == PlaybackState.Stopped && (PreviousState == PlaybackState.Playing || PreviousState == PlaybackState.Paused))
+                OnStopped?.Invoke(this, EventArgs.Empty);
+            
             if (Stream == 0 || Bass.ChannelIsActive(Stream) == PlaybackState.Stopped)
             {
                 Time = 0;
@@ -178,6 +210,8 @@ namespace Quaver.Audio
 
             Bass.ChannelPlay(Stream);
             HasPlayed = true;
+            
+            OnPlayed?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -200,6 +234,8 @@ namespace Quaver.Audio
                 throw new AudioEngineException("You cannot pause an audio stream if one is currently not playing.");
 
             Bass.ChannelPause(Stream);
+            
+            OnPaused?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
