@@ -26,8 +26,13 @@ namespace Quaver.States.Edit
             
             if (GameBase.AudioEngine.IsPlaying)
                 GameBase.AudioEngine.Pause();
-            else
+            else if (GameBase.AudioEngine.IsPaused)
                 GameBase.AudioEngine.Play();
+            else if (GameBase.AudioEngine.IsStopped)
+            {
+                GameBase.AudioEngine.ReloadStream();
+                GameBase.AudioEngine.Play();
+            }
         }
     }
 }

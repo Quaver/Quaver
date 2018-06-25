@@ -56,6 +56,16 @@ namespace Quaver.Audio
         internal bool IsPlaying => Bass.ChannelIsActive(Stream) == PlaybackState.Playing;
 
         /// <summary>
+        ///     Returns if the audio stream is currently paused
+        /// </summary>
+        internal bool IsPaused => Bass.ChannelIsActive(Stream) == PlaybackState.Paused;
+        
+        /// <summary>
+        ///     Returns if the audio stream is currently stopped.
+        /// </summary>
+        internal bool IsStopped => Bass.ChannelIsActive(Stream) == PlaybackState.Stopped;
+        
+        /// <summary>
         ///     The master volume of all audio streams
         /// </summary>
         internal static int MasterVolume
@@ -126,7 +136,7 @@ namespace Quaver.Audio
         /// <param name="dt"></param>
         internal void UpdateTime(double dt)
         {
-            if (Stream == 0)
+            if (Stream == 0 || Bass.ChannelIsActive(Stream) == PlaybackState.Stopped)
             {
                 Time = 0;
                 return;
