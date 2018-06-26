@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
+using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
@@ -150,7 +152,55 @@ namespace Quaver.States.Edit.UI
                         return;
                     
                     GameBase.AudioEngine.Stop();
-                });          
+                });
+                
+                // Change Rate Button
+                Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Clock, "Change Audio Rate to 25%", "Change the playback rate", (sender, e) =>
+                {
+                    switch (GameBase.AudioEngine.PlaybackRate)
+                    {
+                        case 0.25f:
+                            GameBase.AudioEngine.PlaybackRate = 0.50f;
+                            break;
+                        case 0.50f:
+                            GameBase.AudioEngine.PlaybackRate = 0.75f;
+                            break;
+                        case 0.75f:
+                            GameBase.AudioEngine.PlaybackRate = 1.0f;
+                            break;
+                        case 1.0f:
+                            GameBase.AudioEngine.PlaybackRate = 0.25f;
+                            break;
+                        default:
+                            GameBase.AudioEngine.PlaybackRate = 1.0f;
+                            break;
+                    }
+
+                    GameBase.AudioEngine.SetPlaybackRate(false);
+
+                    var speedButton = (NavbarButton) sender;
+                    
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
+                    var nextRate = GameBase.AudioEngine.PlaybackRate == 1.0f ? 25 : (GameBase.AudioEngine.PlaybackRate + 0.25) * 100;                  
+                    speedButton.TooltipName = $"Change Audio Rate to {nextRate}%";
+                });
+                                
+                // Open Mapset Folder
+                Navbar.CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Folder, "Open Mapset Folder", "Open the mapset directory.", (sender, e) =>
+                {
+                    var map = SelectedMap;
+                    Process.Start($"{ConfigManager.SongDirectory}/{map.Directory}/");
+                });
+                
+                // Open .qua file
+                Navbar.CreateNavbarButton(NavbarAlignment.Right, FontAwesome.File, "Open .qua File", "Opens the file in a text editor.", (sender, e) =>
+                {
+                    var map = SelectedMap;
+                    Process.Start($"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}");
+                });
+                
+                // Save 
+                Navbar.CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Save, "Save", "Save the map to disk", (sender, e) => Screen.SaveMap());
             });
             
             Navbar.Initialize(Screen);
