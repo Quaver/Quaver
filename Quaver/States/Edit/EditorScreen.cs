@@ -52,7 +52,7 @@ namespace Quaver.States.Edit
         /// <summary>
         ///     The editor for the current game mode.
         /// </summary>
-        private EditorGameMode EditorGameMode { get; }
+        internal EditorGameMode EditorGameMode { get; }
 
         /// <summary>
         ///     
@@ -123,7 +123,6 @@ namespace Quaver.States.Edit
         public void Draw()
         {
             UI.Draw();
-            EditorGameMode.Draw();
         }
 
         /// <summary>

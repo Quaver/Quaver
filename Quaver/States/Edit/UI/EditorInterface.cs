@@ -110,12 +110,17 @@ namespace Quaver.States.Edit.UI
         /// </summary>
         public void Draw()
         {
-            SpriteBatch.Begin();
-            
+            SpriteBatch.Begin();         
             BackgroundManager.Draw();
-            Container.Draw();
-            Navbar.Draw();
+            SpriteBatch.End();
             
+            // Draw editor in the middle, so it's behind all UI components but above the background.
+            Screen.EditorGameMode.Draw();
+            
+            // Draw general UI componenets
+            SpriteBatch.Begin();
+            Container.Draw();
+            Navbar.Draw();        
             SpriteBatch.End();
         }
 
@@ -217,10 +222,10 @@ namespace Quaver.States.Edit.UI
         /// </summary>
         private void CreateSeekBar()
         {
-            SeekBar = new EditorSeekBar(SeekBarAxis.Horizontal, new Vector2(WindowRectangle.Width, 50))
+            SeekBar = new EditorSeekBar(SeekBarAxis.Horizontal, new Vector2(WindowRectangle.Width, 30))
             {
                 Parent = Container,
-                Alignment = Alignment.MidCenter,
+                Alignment = Alignment.BotCenter,
             };
         }
      
