@@ -1,5 +1,5 @@
 ﻿using Quaver.API.Enums;
-using Quaver.States.Edit.UI.Components.Playfield;
+using Quaver.States.Edit.UI.Modes.Keys.Playfield;
 
 namespace Quaver.States.Edit.UI.Modes.Keys
 {

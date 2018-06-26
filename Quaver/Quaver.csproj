@@ -111,12 +111,11 @@
     <Compile Include="States\Edit\EditorScreen.cs" />
     <Compile Include="States\Edit\UI\Components\EditorSeekBar.cs" />
     <Compile Include="States\Edit\UI\Components\EditorSongTimeDisplay.cs" />
-    <Compile Include="States\Edit\UI\Components\Playfield\EditorPlayfieldKeys.cs" />
-    <Compile Include="States\Edit\UI\Components\Playfield\IEditorPlayfield.cs" />
     <Compile Include="States\Edit\UI\EditorInterface.cs" />
     <Compile Include="States\Edit\UI\Modes\EditorGameMode.cs" />
+    <Compile Include="States\Edit\UI\Modes\IEditorPlayfield.cs" />
     <Compile Include="States\Edit\UI\Modes\Keys\EditorGameModeKeys.cs" />
-    <Compile Include="States\Edit\UI\Modes\Keys\Playfield\EditorKeysPlayfield.cs" />
+    <Compile Include="States\Edit\UI\Modes\Keys\Playfield\EditorPlayfieldKeys.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\GameModeRulesetKeys.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputManager.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputBinding.cs" />

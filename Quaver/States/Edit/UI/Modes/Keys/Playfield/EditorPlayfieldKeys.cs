@@ -1,11 +1,13 @@
 ﻿using Quaver.API.Enums;
 using Quaver.GameState;
+using Quaver.Graphics;
 using Quaver.Graphics.Base;
-using Quaver.States.Edit.UI.Components.Playfield;
+using Quaver.Graphics.Sprites;
+using Quaver.Main;
 
 namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
 {
-    internal class EditorKeysPlayfield : IEditorPlayfield
+    internal class EditorPlayfieldKeys : IEditorPlayfield
     {
         /// <inheritdoc />
         /// <summary>
@@ -21,6 +23,19 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// <summary>
         /// </summary>
         public GameMode Mode { get; }
+
+        /// <summary>
+        ///     Ctor - 
+        /// </summary>
+        /// <param name="screen"></param>
+        /// <param name="mode"></param>
+        internal EditorPlayfieldKeys(EditorScreen screen, GameMode mode)
+        {
+            Screen = screen;
+            Mode = mode;
+            
+            Container = new Container();
+        }
         
         /// <summary>
         /// 
@@ -28,6 +43,13 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {
+            var box = new Sprite()
+            {
+                Parent = Container,
+                Size = new UDim2D(300, 300),
+                Alignment = Alignment.MidCenter,
+                Image = FontAwesome.Archive
+            };
         }
 
         /// <summary>
@@ -35,6 +57,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// </summary>
         public void UnloadContent()
         {
+            Container.Destroy();
         }
 
         /// <summary>
@@ -43,6 +66,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// <param name="dt"></param>
         public void Update(double dt)
         {
+            Container.Update(dt);
         }
 
         /// <summary>
@@ -50,6 +74,9 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// </summary>
         public void Draw()
         {
+            GameBase.SpriteBatch.Begin();
+            Container.Draw();
+            GameBase.SpriteBatch.End();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Quaver.API.Enums;
 using Quaver.Graphics.Base;
 
-namespace Quaver.States.Edit.UI.Components.Playfield
+namespace Quaver.States.Edit.UI.Modes
 {
     internal interface IEditorPlayfield : IGameStateComponent
     {

@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.GameState;
-using Quaver.States.Edit.UI.Components.Playfield;
 
 namespace Quaver.States.Edit.UI.Modes
 {
