@@ -306,9 +306,11 @@ namespace Quaver.Audio
         /// <summary>
         ///     Sets the playback rate based on the current game's clock.
         /// </summary>
-        internal void SetPlaybackRate()
+        internal void SetPlaybackRate(bool checkInconsistencies = true)
         {
-            ModManager.CheckModInconsistencies();
+            if (checkInconsistencies)
+                ModManager.CheckModInconsistencies();
+            
             Bass.ChannelSetAttribute(Stream, ChannelAttribute.Tempo, PlaybackRate * 100 - 100);
             SetPitch();
         }
