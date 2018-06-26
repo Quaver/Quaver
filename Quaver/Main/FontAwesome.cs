@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using System.Windows.Forms;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Helpers;
 using Quaver.Resources;
 using Quaver.States.Gameplay.UI.Components.Pause;
@@ -32,6 +33,11 @@ namespace Quaver.Main
         internal static Texture2D Play { get; set; }
         internal static Texture2D Pause { get; set; }
         internal static Texture2D Stop { get; set; }
+        internal static Texture2D File { get; set; }
+        internal static Texture2D Folder { get; set; }
+        internal static Texture2D Save { get; set; }
+        internal static Texture2D FastForward { get; set; }
+        internal static Texture2D Clock { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -63,6 +69,11 @@ namespace Quaver.Main
             Play = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_play_button);
             Pause = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_pause_symbol);
             Stop = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_square_shape_shadow);
+            File = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_file);
+            Folder = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_open_folder);
+            Save = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_save_file_option);
+            FastForward = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_fast_forward_arrows);
+            Clock = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_time);
         }
     }
 }
