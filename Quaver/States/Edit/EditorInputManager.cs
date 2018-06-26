@@ -7,6 +7,10 @@ namespace Quaver.States.Edit
 {
     internal class EditorInputManager
     {
+        private EditorScreen Screen { get; }
+        
+        internal EditorInputManager(EditorScreen screen) => Screen = screen;
+        
         /// <summary>
         ///     Captures all input for the editor.
         /// </summary>
@@ -14,6 +18,7 @@ namespace Quaver.States.Edit
         internal void HandleInput(double dt)
         {
             PauseAndResume();
+            SaveMap();
         }
 
         /// <summary>
@@ -34,6 +39,18 @@ namespace Quaver.States.Edit
                 GameBase.AudioEngine.ReloadStream();
                 GameBase.AudioEngine.Play();
             }
+        }
+
+        /// <summary>
+        ///     
+        /// </summary>
+        private void SaveMap()
+        {
+            if (!GameBase.KeyboardState.IsKeyDown(Keys.LeftControl) && !GameBase.KeyboardState.IsKeyDown(Keys.RightControl))
+                return;
+                    
+            if (InputHelper.IsUniqueKeyPress(Keys.S))
+                Screen.SaveMap();;
         }
     }
 }
