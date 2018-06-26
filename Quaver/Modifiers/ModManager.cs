@@ -115,7 +115,8 @@ namespace Quaver.Modifiers
 
             // Reset all GameBase variables to its defaults
             GameBase.ScoreMultiplier = 1.0f;
-            GameBase.AudioEngine.PlaybackRate= 1.0f;
+            GameBase.AudioEngine.PlaybackRate = 1.0f;
+            RemoveSpeedMods();
         }
 
         /// <summary>
