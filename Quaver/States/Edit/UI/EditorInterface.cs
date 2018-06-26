@@ -220,7 +220,7 @@ namespace Quaver.States.Edit.UI
             SeekBar = new EditorSeekBar(SeekBarAxis.Horizontal, new Vector2(WindowRectangle.Width, 50))
             {
                 Parent = Container,
-                Alignment = Alignment.MidCenter
+                Alignment = Alignment.MidCenter,
             };
         }
      
@@ -232,8 +232,8 @@ namespace Quaver.States.Edit.UI
             CurrentTime = new EditorSongTimeDisplay(NumberDisplayType.SongTime, "00:00", new Vector2(2, 2))
             {
                 Parent = Container,
-                Alignment = Alignment.MidCenter,     
-                PosY = -30,
+                Alignment = Alignment.BotCenter,     
+                PosY = -70,
                 PosX = 0
             };
         }

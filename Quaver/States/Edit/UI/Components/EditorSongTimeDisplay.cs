@@ -9,6 +9,7 @@ namespace Quaver.States.Edit.UI.Components
     {
         internal EditorSongTimeDisplay(NumberDisplayType type, string startingValue, Vector2 imageScale) : base(type, startingValue, imageScale)
         {
+            PosX = -TotalWidth;
         }
 
         /// <inheritdoc />
