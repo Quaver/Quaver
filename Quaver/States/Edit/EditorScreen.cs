@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Quaver.API.Maps;
+using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
+using Quaver.Logging;
 using Quaver.Main;
+using Quaver.Modifiers;
 using Quaver.States.Edit.UI;
 
 namespace Quaver.States.Edit
@@ -47,13 +52,15 @@ namespace Quaver.States.Edit
         /// <param name="map"></param>
         public EditorScreen(Qua map)
         {
+            ModManager.RemoveAllMods();
+            
             if (GameBase.AudioEngine.IsPlaying)
                 GameBase.AudioEngine.Pause();
             
             Map = map;
             LastSavedMap = ObjectHelper.DeepClone(Map);
             UI = new EditorInterface(this);
-            InputManager = new EditorInputManager();
+            InputManager = new EditorInputManager(this);
 
             DiscordManager.Client.CurrentPresence.Details = Map.ToString();
             DiscordManager.Client.CurrentPresence.State = "Editing Map";
@@ -93,6 +100,20 @@ namespace Quaver.States.Edit
         public void Draw()
         {
             UI.Draw();
+        }
+
+        /// <summary>
+        ///     Saves the map.
+        /// </summary>
+        internal void SaveMap()
+        { 
+            var map = GameBase.SelectedMap;
+            Map.Save($"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}");
+
+            LastSavedMap = ObjectHelper.DeepClone(Map);
+
+            Task.Run(async () => await MapCache.LoadAndSetMapsets()).Wait();
+            Logger.LogSuccess($"Map has been saved!", LogType.Runtime);
         }
     }
 }
