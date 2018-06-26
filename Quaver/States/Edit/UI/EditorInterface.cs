@@ -43,6 +43,11 @@ namespace Quaver.States.Edit.UI
         private NavbarButton PlayAndPauseButton { get; set; }
 
         /// <summary>
+        ///     The bar that controls where in the song to seek to.
+        /// </summary>
+        private EditorSeekBar SeekBar { get; set; }
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
@@ -57,6 +62,7 @@ namespace Quaver.States.Edit.UI
             Container = new Container();
             CreateSongTimeDisplay();
             CreateNavbar();
+            CreateSeekBar();
             
             GameBase.AudioEngine.OnPlayed += OnAudioPlayed;
             GameBase.AudioEngine.OnPaused += OnAudioPausedOrStopped;
@@ -206,6 +212,18 @@ namespace Quaver.States.Edit.UI
             Navbar.Initialize(Screen);
         }
     
+        /// <summary>
+        ///    Creates the bar to seek through the song's progress.
+        /// </summary>
+        private void CreateSeekBar()
+        {
+            SeekBar = new EditorSeekBar(SeekBarAxis.Horizontal, new Vector2(WindowRectangle.Width, 50))
+            {
+                Parent = Container,
+                Alignment = Alignment.MidCenter
+            };
+        }
+     
         /// <summary>
         ///     Creates the 
         /// </summary>

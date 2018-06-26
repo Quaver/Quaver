@@ -109,8 +109,8 @@
     <Compile Include="Skinning\SkinStore.cs" />
     <Compile Include="States\Edit\EditorInputManager.cs" />
     <Compile Include="States\Edit\EditorScreen.cs" />
+    <Compile Include="States\Edit\UI\Components\EditorSeekBar.cs" />
     <Compile Include="States\Edit\UI\Components\EditorSongTimeDisplay.cs" />
-    <Compile Include="States\Edit\UI\Components\EditorToolbar.cs" />
     <Compile Include="States\Edit\UI\EditorInterface.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\GameModeRulesetKeys.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputManager.cs" />

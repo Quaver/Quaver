@@ -111,7 +111,12 @@ namespace Quaver.Audio
         ///     The rate at which the audio stream will play at.
         /// </summary>
         internal float PlaybackRate = 1.0f;
-
+       
+        /// <summary>
+        ///     The percentage of how far the audio track is.
+        /// </summary>
+        internal float ProgressPercentage => (float) (Time / Length) * 100;
+        
         /// <summary>
         ///     The audio state in the previous state
         /// </summary>
