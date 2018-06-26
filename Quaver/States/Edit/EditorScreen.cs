@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -11,6 +12,8 @@ using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
 using Quaver.States.Edit.UI;
+using Quaver.States.Edit.UI.Modes;
+using Quaver.States.Edit.UI.Modes.Keys;
 
 namespace Quaver.States.Edit
 {
@@ -47,6 +50,11 @@ namespace Quaver.States.Edit
         private EditorInputManager InputManager { get; }
 
         /// <summary>
+        ///     The editor for the current game mode.
+        /// </summary>
+        private EditorGameMode EditorGameMode { get; }
+
+        /// <summary>
         ///     
         /// </summary>
         /// <param name="map"></param>
@@ -57,14 +65,26 @@ namespace Quaver.States.Edit
             if (GameBase.AudioEngine.IsPlaying)
                 GameBase.AudioEngine.Pause();
             
+            // Grab the map and clone it so that we can save the "last saved" one.
             Map = map;
             LastSavedMap = ObjectHelper.DeepClone(Map);
+            
+            // Initialize the UI and input manager.
             UI = new EditorInterface(this);
             InputManager = new EditorInputManager(this);
 
-            DiscordManager.Client.CurrentPresence.Details = Map.ToString();
-            DiscordManager.Client.CurrentPresence.State = "Editing Map";
-            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+            // Select the editor's game mode based on the map's mode.
+            switch (Map.Mode)
+            {
+                case GameMode.Keys4:
+                case GameMode.Keys7:
+                    EditorGameMode = new EditorGameModeKeys(this, Map.Mode);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            ChangeDiscordPresence();
         }
         
         /// <inheritdoc />
@@ -72,6 +92,7 @@ namespace Quaver.States.Edit
         /// </summary>
         public void Initialize()
         {
+            EditorGameMode.Initialize(this);
             UI.Initialize(this);
             UpdateReady = true;
         }
@@ -81,6 +102,7 @@ namespace Quaver.States.Edit
         /// </summary>
         public void UnloadContent()
         {
+            EditorGameMode.UnloadContent();
             UI.UnloadContent();
         }
 
@@ -90,6 +112,7 @@ namespace Quaver.States.Edit
         /// <param name="dt"></param>
         public void Update(double dt)
         {
+            EditorGameMode.Update(dt);
             InputManager.HandleInput(dt);
             UI.Update(dt);
         }
@@ -100,6 +123,7 @@ namespace Quaver.States.Edit
         public void Draw()
         {
             UI.Draw();
+            EditorGameMode.Draw();
         }
 
         /// <summary>
@@ -114,6 +138,16 @@ namespace Quaver.States.Edit
 
             Task.Run(async () => await MapCache.LoadAndSetMapsets()).Wait();
             Logger.LogSuccess($"Map has been saved!", LogType.Runtime);
+        }
+
+        /// <summary>
+        ///     Changes the discord presence to state that we're editing a map.
+        /// </summary>
+        private void ChangeDiscordPresence()
+        {
+            DiscordManager.Client.CurrentPresence.Details = Map.ToString();
+            DiscordManager.Client.CurrentPresence.State = "Editing Map";
+            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
         }
     }
 }

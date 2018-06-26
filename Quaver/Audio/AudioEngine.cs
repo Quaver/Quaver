@@ -344,7 +344,7 @@ namespace Quaver.Audio
                 }
                 catch (Exception e)
                 {
-                    
+                    // ignored
                 }
             }
                 

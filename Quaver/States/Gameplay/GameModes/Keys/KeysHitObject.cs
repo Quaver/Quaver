@@ -111,10 +111,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="info"></param>
-        public KeysHitObject(GameModeRulesetKeys ruleset, HitObjectInfo info) : base(info)
-        {
-            Ruleset = ruleset;
-        }
+        public KeysHitObject(GameModeRulesetKeys ruleset, HitObjectInfo info) : base(info) => Ruleset = ruleset;
         
         /// <inheritdoc />
         /// <summary>
