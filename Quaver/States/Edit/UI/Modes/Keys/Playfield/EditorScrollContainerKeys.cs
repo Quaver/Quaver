@@ -83,10 +83,12 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
                 for (var i = ObjectsOffScreenInLastFrame; i < HitObjects.Count && i < poolSize + ObjectsOffScreenInLastFrame; i++)
                 {
                     var hitObject = HitObjects[i];
-                
+                    hitObject.MakeInvisible();
+                    
                     // Set new HitObject positions.
                     hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.OffsetYFromReceptor);
                     hitObject.UpdateSpritePositions();
+                    hitObject.MakeVisible();
                 }
             }
          

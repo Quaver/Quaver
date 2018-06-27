@@ -231,5 +231,33 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
             if (GameBase.AudioEngine.Time >= Info.StartTime - delay)
                 HitsoundsPlayed = true;
         }
+
+        /// <summary>
+        ///     Makes the HitObject completely invisible.
+        /// </summary>
+        internal void MakeInvisible()
+        {
+            HitObjectSprite.Visible = false;
+
+            if (!Info.IsLongNote)
+                return;
+            
+            LongNoteBodySprite.Visible = false;
+            LongNoteEndSprite.Visible = false;
+        }
+
+        /// <summary>
+        ///     Makes the HitObject completely visible.
+        /// </summary>
+        internal void MakeVisible()
+        {
+            HitObjectSprite.Visible = true;
+
+            if (!Info.IsLongNote)
+                return;
+            
+            LongNoteBodySprite.Visible = true;
+            LongNoteEndSprite.Visible = true;
+        }
     }
 }
