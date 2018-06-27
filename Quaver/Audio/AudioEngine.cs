@@ -203,7 +203,7 @@ namespace Quaver.Audio
                 throw new AudioEngineException("You cannot play an audio stream while one is already playing.");
 
             // Set the song position 
-            ChangeSongPosition(pos);
+            Seek(pos);
 
             // Set the playback rate AND THEN toggle the pitch.
             SetPlaybackRate();
@@ -296,7 +296,7 @@ namespace Quaver.Audio
         ///     Changes the song position at a given point in milliseconds
         /// </summary>
         /// <param name="pos"></param>
-        internal void ChangeSongPosition(double pos)
+        internal void Seek(double pos)
         {
             if (Stream == 0)
                 throw new AudioEngineException("You cannot change the song's position if one isn't loaded!");

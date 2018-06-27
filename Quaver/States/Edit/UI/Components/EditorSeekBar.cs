@@ -113,11 +113,11 @@ namespace Quaver.States.Edit.UI.Components
             {
                 case SeekBarAxis.Horizontal:
                     var mouseX = GameBase.MouseState.X;
-                    GameBase.AudioEngine.ChangeSongPosition(mouseX / SizeX * GameBase.AudioEngine.Length);
+                    GameBase.AudioEngine.Seek(mouseX / SizeX * GameBase.AudioEngine.Length);
                     break;
                 case SeekBarAxis.Vertical:
                     var mouseY = GameBase.MouseState.Y;
-                    GameBase.AudioEngine.ChangeSongPosition(mouseY / SizeY * GameBase.AudioEngine.Length);
+                    GameBase.AudioEngine.Seek(mouseY / SizeY * GameBase.AudioEngine.Length);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
