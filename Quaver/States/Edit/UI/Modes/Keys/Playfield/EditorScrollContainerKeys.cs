@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
+using Quaver.Main;
 
 namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
 {
@@ -49,7 +50,10 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// <param name="dt"></param>
         internal override void Update(double dt)
         {
-            for (var i = 0; i < HitObjects.Count && i < 255; i++)
+            // The amount of objects that'll be updated each frame.
+            const int poolSize = byte.MaxValue;
+            
+            for (var i = 0; i < HitObjects.Count && i < poolSize; i++)
             {
                 var hitObject = HitObjects[i];
                 
