@@ -44,7 +44,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// <summary>
         ///     The scroll speed of the objects in the editor.
         /// </summary>
-        private float _scrollSpeed = 15;
+        private float _scrollSpeed = 22;
         internal float ScrollSpeed
         {
             get => _scrollSpeed / (20 * GameBase.AudioEngine.PlaybackRate);
