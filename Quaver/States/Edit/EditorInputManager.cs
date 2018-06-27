@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using System;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Audio;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -58,15 +59,36 @@ namespace Quaver.States.Edit
                 return;
                     
             if (InputHelper.IsUniqueKeyPress(Keys.S))
-                Screen.SaveMap();;
+                Screen.SaveMap();
         }
 
         /// <summary>
         ///     Seeks through the audio based on the current snap.
+        ///     TODO: Fix this so that it seeks to the nearest beat based on the current snap.
         /// </summary>
         private void HandleSeeking()
         {
+            var scrollWheelChange = GameBase.MouseState.ScrollWheelValue - GameBase.PreviousMouseState.ScrollWheelValue;
             
+            if (InputHelper.IsUniqueKeyPress(Keys.Left) || scrollWheelChange > 0)
+            {
+                // Get the current timing point
+                var tp = Screen.Map.TimingPoints.FindLast(x => x.StartTime <= GameBase.AudioEngine.Time);
+
+                var msPerBeat = 60000 / tp.Bpm / 4;
+                
+                GameBase.AudioEngine.Seek(GameBase.AudioEngine.Time - msPerBeat);
+            }
+            
+            if (InputHelper.IsUniqueKeyPress(Keys.Right) || scrollWheelChange < 0)
+            {
+                // Get the current timing point
+                var tp = Screen.Map.TimingPoints.FindLast(x => x.StartTime <= GameBase.AudioEngine.Time);
+
+                var msPerBeat = 60000 / tp.Bpm / 4;
+                
+                GameBase.AudioEngine.Seek(GameBase.AudioEngine.Time + msPerBeat);
+            }
         }
     }
 }
