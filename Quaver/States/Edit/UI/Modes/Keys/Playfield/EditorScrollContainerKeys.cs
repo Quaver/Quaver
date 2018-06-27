@@ -56,6 +56,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
                 // Set new HitObject positions.
                 hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.OffsetYFromReceptor);
                 hitObject.UpdateSpritePositions();
+                hitObject.PlayHitsoundsIfNecessary();
             }
             
             base.Update(dt);

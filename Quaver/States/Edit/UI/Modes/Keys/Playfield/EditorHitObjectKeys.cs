@@ -5,6 +5,7 @@ using Quaver.API.Maps.Structures;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
+using Quaver.States.Gameplay.HitObjects;
 
 namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
 {
@@ -85,6 +86,11 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// </summary>
         private float LongNoteEndOffset { get; set; }
 
+        /// <summary>
+        ///     Keeps track of if we've already played hitsounds for this object.
+        /// </summary>
+        private bool HitsoundsPlayed { get; set; }
+        
         /// <summary>
         ///     Ctor -
         /// </summary>
@@ -205,6 +211,25 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
             LongNoteBodySprite.SizeY = CurrentLongNoteSize;
             LongNoteBodySprite.PosY = -CurrentLongNoteSize + LongNoteBodyOffset + PositionY;
             LongNoteEndSprite.PosY = PositionY - CurrentLongNoteSize - LongNoteEndOffset + LongNoteBodyOffset;
+        }
+
+        /// <summary>
+        ///     Plays the object's hitsounds once it hits to the hit pos.
+        /// </summary>
+        internal void PlayHitsoundsIfNecessary()
+        {
+            // For some reason, there's an audio delay when playing hitsounds. We have to account for this
+            // by playing the sound slightly earlier.
+            const int delay = 50;
+            
+            if (GameBase.AudioEngine.Time < Info.StartTime - delay)
+                HitsoundsPlayed = false;
+
+            if (!HitsoundsPlayed && GameBase.AudioEngine.Time >= Info.StartTime - delay && GameBase.AudioEngine.Time < Info.StartTime && GameBase.AudioEngine.IsPlaying)
+                HitObjectManager.PlayObjectHitSounds(Info);            
+
+            if (GameBase.AudioEngine.Time >= Info.StartTime - delay)
+                HitsoundsPlayed = true;
         }
     }
 }

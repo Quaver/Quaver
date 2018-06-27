@@ -11,6 +11,7 @@ using Quaver.Input;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield;
+using Quaver.States.Gameplay.HitObjects;
 using Quaver.States.Gameplay.Replays;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Input
@@ -182,7 +183,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
         private void HandleKeyPress(KeysHitObjectManager manager, KeysHitObject hitObject, int objectIndex)
         {
             // Play the HitSounds for this object.
-            manager.PlayObjectHitSounds(objectIndex);
+            HitObjectManager.PlayObjectHitSounds(manager.ObjectPool[objectIndex].Info);
 
             // Check which hit window this object's timing is in
             for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
