@@ -48,6 +48,11 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         private Sprite StageBackground { get; set; }
 
         /// <summary>
+        ///     The width of the StageLeft/StageRight
+        /// </summary>
+        private int StageBorderWidth { get; } = 1;
+
+        /// <summary>
         ///     The left side of the stage.
         /// </summary>
         private Sprite StageLeft { get; set; }
@@ -57,8 +62,16 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// </summary>
         private Sprite StageRight { get; set; }
 
-#endregion
+        /// <summary>
+        ///     The y position of where the hitposition is located.
+        /// </summary>
+        private float HitPositionY => StageBackground.SizeY - 200;
 
+        /// <summary>
+        ///     Sprite that displays where the hit position is.
+        /// </summary>
+        private Sprite StageHitPosition { get; set; }
+#endregion
 
         /// <summary>
         ///     Ctor - 
@@ -143,13 +156,13 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
                 Alignment = Alignment.MidCenter,
                 Parent = BackgroundContainer
             };
-
+            
             StageLeft = new Sprite()
             {
                 Parent = BackgroundContainer,
                 Tint = Color.Gray,
                 Alignment = Alignment.TopLeft,
-                Size = new UDim2D(1, StageBackground.SizeY),
+                Size = new UDim2D(StageBorderWidth, StageBackground.SizeY),
                 Alpha = 0.5f
             };
             
@@ -158,9 +171,18 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
                 Parent = BackgroundContainer,
                 Tint = Color.Gray,
                 Alignment = Alignment.TopRight,
-                Size = new UDim2D(1, StageBackground.SizeY),
+                Size = new UDim2D(StageBorderWidth, StageBackground.SizeY),
                 Alpha = 0.5f,
-                PosX = 1
+                PosX = StageBorderWidth
+            };
+
+            StageHitPosition = new Sprite()
+            {
+                Parent = BackgroundContainer,
+                Tint = Color.Green,
+                Alignment = Alignment.TopLeft,
+                Size = new UDim2D(Width - StageBorderWidth, 5),
+                PosY = HitPositionY
             };
         }
     }
