@@ -29,17 +29,22 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// <summary>
         ///     The background of the playfield.
         /// </summary>
-        private Container BackgroundContainer { get; set; }
+        internal Container BackgroundContainer { get; private set; }
 
         /// <summary>
-        ///     The foreground of the playfield.
+        ///     The scroll container, which contains HitObjects + snap lines.
         /// </summary>
-        private Container ForegroundContainer { get; set; }
+        private EditorScrollContainerKeys ScrollContainer { get; set; }
+
+        /// <summary>
+        ///     The size of each column.
+        /// </summary>
+        internal float ColumnSize { get; } = 75;
 
         /// <summary>
         ///     The width of the playfield.
         /// </summary>
-        private float Width => 75 * Screen.Map.GetKeyCount();
+        internal float Width => ColumnSize * Screen.Map.GetKeyCount();
 
 #region STAGE_SPRITES    
         /// <summary>
@@ -65,7 +70,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// <summary>
         ///     The y position of where the hitposition is located.
         /// </summary>
-        private float HitPositionY => StageBackground.SizeY - 200;
+        internal float HitPositionY => StageBackground.SizeY - 200;
 
         /// <summary>
         ///     Sprite that displays where the hit position is.
@@ -101,14 +106,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
                 Alignment = Alignment.TopCenter
             };
             
-            // Create container for foreground elements.
-            ForegroundContainer = new Container
-            {
-                Parent = Container,
-                Size = new UDim2D(Width, GameBase.WindowRectangle.Height),
-                Alignment = Alignment.TopCenter
-            };
-            
+            ScrollContainer = new EditorScrollContainerKeys(this);
             CreateStage();
         }
 
