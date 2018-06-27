@@ -32,7 +32,7 @@ namespace Quaver.States.Edit
         /// <summary>
         ///     The map that is currently being edited.
         /// </summary>
-        private Qua Map { get; }
+        internal Qua Map { get; }
         
         /// <summary>
         ///     The last saved version of the map.

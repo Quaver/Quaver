@@ -7,8 +7,15 @@ namespace Quaver.States.Edit
 {
     internal class EditorInputManager
     {
+        /// <summary>
+        ///     Reference to the gameplay screen.
+        /// </summary>
         private EditorScreen Screen { get; }
         
+        /// <summary>
+        ///     Ctor 
+        /// </summary>
+        /// <param name="screen"></param>
         internal EditorInputManager(EditorScreen screen) => Screen = screen;
         
         /// <summary>
@@ -17,14 +24,15 @@ namespace Quaver.States.Edit
         /// <param name="dt"></param>
         internal void HandleInput(double dt)
         {
-            PauseAndResume();
-            SaveMap();
+            HandlePauseAndResume();
+            HandleSeeking();
+            HandleMapSaving();
         }
 
         /// <summary>
         ///     Pauses and resumes the audio.
         /// </summary>
-        private static void PauseAndResume()
+        private static void HandlePauseAndResume()
         {
             // Handle play
             if (!InputHelper.IsUniqueKeyPress(Keys.Space)) 
@@ -44,13 +52,21 @@ namespace Quaver.States.Edit
         /// <summary>
         ///     
         /// </summary>
-        private void SaveMap()
+        private void HandleMapSaving()
         {
             if (!GameBase.KeyboardState.IsKeyDown(Keys.LeftControl) && !GameBase.KeyboardState.IsKeyDown(Keys.RightControl))
                 return;
                     
             if (InputHelper.IsUniqueKeyPress(Keys.S))
                 Screen.SaveMap();;
+        }
+
+        /// <summary>
+        ///     Seeks through the audio based on the current snap.
+        /// </summary>
+        private void HandleSeeking()
+        {
+            
         }
     }
 }
