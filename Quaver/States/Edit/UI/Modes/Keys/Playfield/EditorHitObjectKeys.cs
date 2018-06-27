@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Structures;
 using Quaver.Graphics;
@@ -19,58 +20,68 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// </summary>
         private EditorScrollContainerKeys Container { get; }
 
-        /// <summary>
-        /// 
+         /// <summary>
+        ///     The actual note HitObject
         /// </summary>
-        public Sprite HitObjectSprite { get; set; }
+        public Sprite HitObjectSprite { get; private set; }
 
         /// <summary>
-        /// 
+        ///     The LN Body Sprite.
         /// </summary>
         private AnimatableSprite LongNoteBodySprite { get; set; }
         
         /// <summary>
-        /// 
+        ///     The LN end sprite.
         /// </summary>         
         private Sprite LongNoteEndSprite { get; set; }
-        
+
         /// <summary>
-        ///     The width of the object.
+        ///     The index of this object, used for any arrays.
+        /// </summary>
+        private int Index => Info.Lane - 1;
+
+        /// <summary>
+        ///     The x position of the object.
+        /// </summary>
+        private float PositionX => Container.Playfield.ColumnSize * Index;
+
+        /// <summary>
+        ///     The width of the HitObject
         /// </summary>
         private float Width => Container.Playfield.ColumnSize;
 
         /// <summary>
-        ///     
+        ///     The offset from the receptor.
         /// </summary>
         internal float OffsetYFromReceptor { get; set; }
 
         /// <summary>
-        /// 
+        ///     The current y position of the object.
         /// </summary>
         internal float PositionY { get; set; }
 
         /// <summary>
-        /// 
+        ///     The y offset of the LN from the receptors.
         /// </summary>
         private float LongNoteOffsetYFromReceptor { get; set; }
 
         /// <summary>
-        /// 
+        ///     The initial size of the long note.
         /// </summary>
         private float InitialLongNoteSize { get; set; }
 
         /// <summary>
-        /// 
+        ///     The current size of the long note.
         /// </summary>
         private float CurrentLongNoteSize { get; set; }
 
         /// <summary>
-        /// 
+        ///     The offset of the LN body.
         /// </summary>
         private float LongNoteBodyOffset { get; set; }
         
         /// <summary>
-        ///     
+        ///     the offset of the LN end.
         /// </summary>
         private float LongNoteEndOffset { get; set; }
 
@@ -98,7 +109,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
             if (Info.IsLongNote)
             {
                 LongNoteOffsetYFromReceptor = Info.EndTime;    
-                InitialLongNoteSize = (ulong)((LongNoteOffsetYFromReceptor - OffsetYFromReceptor) * 22 / (20f * GameBase.AudioEngine.PlaybackRate));
+                InitialLongNoteSize = (ulong)((LongNoteOffsetYFromReceptor - OffsetYFromReceptor) * Container.Playfield.ScrollSpeed);
                 CurrentLongNoteSize = InitialLongNoteSize;
             }
             
@@ -106,57 +117,60 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
             HitObjectSprite = new Sprite()
             {
                 Alignment = Alignment.TopLeft,
-                Position = new UDim2D(Container.Playfield.ColumnSize * (Info.Lane - 1), PositionY),
+                Position = new UDim2D(PositionX, PositionY),
                 Image = GetHitObjectTexture(), 
                 Parent = Container
-            };    
+            };
+
+            // Var made for readability.
+            var colSize = Container.Playfield.ColumnSize;
+            HitObjectSprite.Size = new UDim2D(colSize, colSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);    
             
-            HitObjectSprite.Size = new UDim2D(Container.Playfield.ColumnSize, Container.Playfield.ColumnSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);          
             LongNoteBodyOffset = HitObjectSprite.SizeY / 2;
 
             if (Info.IsLongNote)
                 CreateLongNote();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void CreateLongNote()
         {
             // Get the long note bodies to use.
-            var bodies = GameBase.Skin.Keys[Container.Playfield.Mode].NoteHoldBodies[Info.Lane - 1];
+            var bodies = GameBase.Skin.Keys[Container.Playfield.Mode].NoteHoldBodies[Index];
 
-            var sizeX = Container.Playfield.ColumnSize;
-            var positionX = Container.Playfield.ColumnSize * (Info.Lane - 1);
-            
             LongNoteBodySprite = new AnimatableSprite(bodies)
             {
                 Alignment = Alignment.TopLeft,
-                Size = new UDim2D(sizeX, InitialLongNoteSize),
-                Position = new UDim2D(positionX, PositionY),
+                Size = new UDim2D(Container.Playfield.ColumnSize, InitialLongNoteSize),
+                Position = new UDim2D(PositionX, PositionY),
                 Parent = Container
             };
                                   
             // Create the Hold End
-            LongNoteEndSprite = new Sprite()
+            LongNoteEndSprite = new Sprite
             {
                 Alignment = Alignment.TopLeft,
-                Position = new UDim2D(positionX, PositionY),
-                Size = new UDim2D(sizeX),
+                Position = new UDim2D(PositionX, PositionY),
+                Size = new UDim2D(Container.Playfield.ColumnSize),
                 Parent = Container,
+                Image = GameBase.Skin.Keys[Container.Playfield.Mode].NoteHoldEnds[Index]
             };
-            
+
             // Set long note end properties.
-            LongNoteEndSprite.Image = GameBase.Skin.Keys[Container.Playfield.Mode].NoteHoldEnds[Info.Lane - 1];       
-            LongNoteEndSprite.SizeY =  sizeX * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
+            LongNoteEndSprite.SizeY =  Container.Playfield.ColumnSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
             LongNoteEndOffset = LongNoteEndSprite.SizeY / 2f;    
         }
 
         /// <summary>
-        ///     
+        ///     Gets the HitObject to use based on the lane.
         /// </summary>
         /// <returns></returns>
         private Texture2D GetHitObjectTexture()
         {
             var skin = GameBase.Skin.Keys[Container.Playfield.Mode];
-            return Info.IsLongNote ? skin.NoteHoldHitObjects[Info.Lane - 1][0] : skin.NoteHitObjects[Info.Lane - 1][0];
+            return Info.IsLongNote ? skin.NoteHoldHitObjects[Index].First() : skin.NoteHitObjects[Index].First();
         }
         
         /// <summary>
@@ -165,7 +179,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// <returns></returns>
         internal float GetPosFromOffset(float offset)
         {
-            return (float)(Container.Playfield.HitPositionY - (offset - (GameBase.AudioEngine.Time)) * 22 / (20 * GameBase.AudioEngine.PlaybackRate));
+            return (float)(Container.Playfield.HitPositionY - (offset - GameBase.AudioEngine.Time) * Container.Playfield.ScrollSpeed);
         }
 
         /// <summary>
@@ -180,7 +194,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
             if (!Info.IsLongNote) 
                 return;
             
-            // It will ignore the rest of the code after this statement if long note size is equal/less than 0
+            // Don't handle long notes if the current size is non-existent.
             if (CurrentLongNoteSize <= 0)
             {
                 LongNoteBodySprite.Visible = false;
@@ -188,9 +202,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
                 return;
             }
 
-            //Update HoldBody Position and Size
             LongNoteBodySprite.SizeY = CurrentLongNoteSize;
-
             LongNoteBodySprite.PosY = -CurrentLongNoteSize + LongNoteBodyOffset + PositionY;
             LongNoteEndSprite.PosY = PositionY - CurrentLongNoteSize - LongNoteEndOffset + LongNoteBodyOffset;
         }

@@ -42,6 +42,16 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         internal float ColumnSize { get; } = 75;
 
         /// <summary>
+        ///     The scroll speed of the objects in the editor.
+        /// </summary>
+        private float _scrollSpeed = 15;
+        internal float ScrollSpeed
+        {
+            get => _scrollSpeed / (20 * GameBase.AudioEngine.PlaybackRate);
+            set => _scrollSpeed = value;
+        }
+
+         /// <summary>
         ///     The width of the playfield.
         /// </summary>
         internal float Width => ColumnSize * Screen.Map.GetKeyCount();
