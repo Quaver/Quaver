@@ -38,6 +38,10 @@ namespace Quaver.Main
         internal static Texture2D Save { get; set; }
         internal static Texture2D FastForward { get; set; }
         internal static Texture2D Clock { get; set; }
+        internal static Texture2D ArrowLeft { get; set; }
+        internal static Texture2D ArrowRight { get; set; }
+        internal static Texture2D ChevronSignLeft { get; set; }
+        internal static Texture2D ChevronSignRight { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -74,6 +78,10 @@ namespace Quaver.Main
             Save = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_save_file_option);
             FastForward = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_fast_forward_arrows);
             Clock = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_time);
+            ArrowLeft = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_arrow_pointing_to_left);
+            ArrowRight = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_arrow_pointing_to_right);
+            ChevronSignLeft = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_angle_pointing_to_left);
+            ChevronSignRight = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_angle_arrow_pointing_to_right);
         }
     }
 }
