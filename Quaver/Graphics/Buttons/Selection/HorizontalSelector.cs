@@ -40,7 +40,7 @@ namespace Quaver.Graphics.Buttons.Selection
         ///
         ///     Parameters:
         ///         string: The new value
-        ///         int: The new integer.
+        ///         int: The index of the newly selected item.
         /// </summary>
         private Action<string, int> OnChange { get; }
 
