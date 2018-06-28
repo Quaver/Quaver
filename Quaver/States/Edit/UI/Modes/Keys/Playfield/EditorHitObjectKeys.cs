@@ -185,7 +185,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// <returns></returns>
         internal float GetPosFromOffset(float offset)
         {
-            return (float)(Container.Playfield.HitPositionY - (offset - GameBase.AudioEngine.Time) * Container.Playfield.ScrollSpeed);
+            return (float)(Container.Playfield.HitPositionY - (offset - GameBase.AudioEngine.Time) * Container.Playfield.ScrollSpeed) - HitObjectSprite.SizeY;
         }
 
         /// <summary>

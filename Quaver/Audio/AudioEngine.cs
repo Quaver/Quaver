@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using ManagedBass;
 using ManagedBass.Fx;
 using Microsoft.Xna.Framework.Audio;
+using Quaver.API.Maps;
 using Quaver.Config;
 using Quaver.Main;
 using Quaver.Modifiers;
 using Quaver.Modifiers.Mods;
+using Quaver.States.Edit.Input;
 
 namespace Quaver.Audio
 { 
@@ -308,6 +312,44 @@ namespace Quaver.Audio
                 Bass.ChannelSetPosition(Stream, Bass.ChannelSeconds2Bytes(Stream, pos / 1000d));
         }
 
+        /// <summary>
+        ///     Seeks to the nearest beat in the audio based on the
+        ///     current timing point's snap.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="direction"></param>
+        /// <param name="snap"></param>
+        internal void SeekToBeat(Qua map, SeekDirection direction, int snap)
+        {
+            // Get the current timing point
+            var point = map.GetTimingPointAt(GameBase.AudioEngine.Time);
+                
+            // Get the amount of milliseconds that each snap takes in the beat.
+            var snapTimePerBeat = 60000 / point.Bpm / snap;
+            
+            // Create a list of all the beats in the map with their times
+            var beats = new List<int>();
+            for (var i = 0; i < (int)(map.GetTimingPointLength(point) / snapTimePerBeat); i++)
+                beats.Add((int) (point.StartTime + i * snapTimePerBeat));
+
+            // Determine whether or not to seek forward or backward s in the track.
+            var index = beats.FindLastIndex(x => x < (int) GameBase.AudioEngine.Time);
+            
+            switch (direction)
+            {
+                case SeekDirection.Forward:
+                    try { GameBase.AudioEngine.Seek(beats[index + 2]); }
+                    catch (Exception) { GameBase.AudioEngine.Seek(GameBase.AudioEngine.Time + snapTimePerBeat); }
+                    break;
+                case SeekDirection.Backward:
+                    try { GameBase.AudioEngine.Seek(beats[index]); }
+                    catch (Exception) { GameBase.AudioEngine.Seek(GameBase.AudioEngine.Time + snapTimePerBeat); }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+        }
+        
         /// <summary>
         ///     Sets the playback rate based on the current game's clock.
         /// </summary>
