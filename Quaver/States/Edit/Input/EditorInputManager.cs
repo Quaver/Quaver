@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Audio;
 using Quaver.Helpers;
@@ -51,7 +54,7 @@ namespace Quaver.States.Edit
         }
 
         /// <summary>
-        ///     
+        ///     Shortcut to save the map.
         /// </summary>
         private void HandleMapSaving()
         {
@@ -64,31 +67,48 @@ namespace Quaver.States.Edit
 
         /// <summary>
         ///     Seeks through the audio based on the current snap.
-        ///     TODO: Fix this so that it seeks to the nearest beat based on the current snap.
         /// </summary>
         private void HandleSeeking()
         {
-            var scrollWheelChange = GameBase.MouseState.ScrollWheelValue - GameBase.PreviousMouseState.ScrollWheelValue;
+            var scrollDiff = GameBase.MouseState.ScrollWheelValue - GameBase.PreviousMouseState.ScrollWheelValue;
             
-            if (InputHelper.IsUniqueKeyPress(Keys.Left) || scrollWheelChange > 0)
+            if (InputHelper.IsUniqueKeyPress(Keys.Left) || scrollDiff > 0)
             {
                 // Get the current timing point
-                var tp = Screen.Map.TimingPoints.FindLast(x => x.StartTime <= GameBase.AudioEngine.Time);
-
-                var msPerBeat = 60000 / tp.Bpm / 4;
+                var point = Screen.Map.GetTimingPointAt(GameBase.AudioEngine.Time);
                 
-                GameBase.AudioEngine.Seek(GameBase.AudioEngine.Time - msPerBeat);
+                var msPerBeat = 60000 / point.Bpm / 4;
+                var amountOfBeats = (int)(Screen.Map.GetTimingPointLength(point) / msPerBeat);
+
+                var beats = new List<double>();
+                for (var i = 0; i < amountOfBeats; i++)
+                    beats.Add(point.StartTime + i * msPerBeat);
+
+                try
+                {
+                    var index = beats.FindLastIndex(x => x < (int) GameBase.AudioEngine.Time);
+                    GameBase.AudioEngine.Seek(beats[index]);
+                }
+                catch (Exception e)
+                {
+                    GameBase.AudioEngine.Seek(GameBase.AudioEngine.Time - msPerBeat);
+                }
             }
             
-            if (InputHelper.IsUniqueKeyPress(Keys.Right) || scrollWheelChange < 0)
+            if (InputHelper.IsUniqueKeyPress(Keys.Right) || scrollDiff < 0)
             {
                 // Get the current timing point
-                var tp = Screen.Map.TimingPoints.FindLast(x => x.StartTime <= GameBase.AudioEngine.Time);
+                var point = Screen.Map.GetTimingPointAt(GameBase.AudioEngine.Time);
 
-                var msPerBeat = 60000 / tp.Bpm / 4;
+                var msPerBeat = 60000 / point.Bpm / 4;
                 
                 GameBase.AudioEngine.Seek(GameBase.AudioEngine.Time + msPerBeat);
             }
+        }
+
+        private void Seek()
+        {
+            
         }
     }
 }
