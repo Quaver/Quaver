@@ -8,7 +8,7 @@ using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Buttons.Dropdowns;
+using Quaver.Graphics.Buttons.Selection;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;

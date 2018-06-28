@@ -66,10 +66,11 @@
     <Compile Include="Discord\DiscordManager.cs" />
     <Compile Include="Graphics\Alignment.cs" />
     <Compile Include="Graphics\Base\Container.cs" />
-    <Compile Include="Graphics\Buttons\Dropdowns\Dropdown.cs" />
-    <Compile Include="Graphics\Buttons\Dropdowns\DropdownButton.cs" />
-    <Compile Include="Graphics\Buttons\Checkbox.cs" />
-    <Compile Include="Graphics\Buttons\Sliders\Slider.cs" />
+    <Compile Include="Graphics\Buttons\Selection\Checkbox.cs" />
+    <Compile Include="Graphics\Buttons\Selection\Dropdown.cs" />
+    <Compile Include="Graphics\Buttons\Selection\DropdownButton.cs" />
+    <Compile Include="Graphics\Buttons\Selection\HorizontalSelector.cs" />
+    <Compile Include="Graphics\Buttons\Selection\Slider.cs" />
     <Compile Include="Graphics\DrawRectangle.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarActions.cs" />
     <Compile Include="Graphics\Overlays\Navbar\Nav.cs" />

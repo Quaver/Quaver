@@ -55,6 +55,13 @@ namespace Quaver.States.Edit
         internal EditorGameMode EditorGameMode { get; }
 
         /// <summary>
+        ///     The current beat snap, it used a BindedValue<int> here
+        ///     because some parts of the editor (such as the beat snap bars) will
+        ///     need to know when this value changes so it can update accordingly.
+        /// </summary>
+        internal BindedInt CurrentBeatSnap { get; }
+
+        /// <summary>
         ///     
         /// </summary>
         /// <param name="map"></param>
@@ -73,6 +80,9 @@ namespace Quaver.States.Edit
             UI = new EditorInterface(this);
             InputManager = new EditorInputManager(this);
 
+            // Set the current beat snap and default it to 1/4th.
+            CurrentBeatSnap = new BindedInt("BeatSnap", 4, 1, 48);
+            
             // Select the editor's game mode based on the map's mode.
             switch (Map.Mode)
             {
@@ -84,7 +94,7 @@ namespace Quaver.States.Edit
                     throw new ArgumentOutOfRangeException();
             }
 
-            ChangeDiscordPresence();
+            ChangeDiscordPresence();          
         }
         
         /// <inheritdoc />

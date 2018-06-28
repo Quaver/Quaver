@@ -319,7 +319,7 @@ namespace Quaver.Audio
         /// <param name="direction"></param>
         /// <param name="snap"></param>
         internal void SeekToNearestSnap(Qua map, SeekDirection direction, int snap)
-        {
+        {            
             // Get the current timing point
             var point = map.GetTimingPointAt(Time);
                 

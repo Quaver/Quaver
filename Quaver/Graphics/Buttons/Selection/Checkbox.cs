@@ -1,12 +1,11 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Quaver.Config;
-using Quaver.Graphics.Base;
 using Quaver.Graphics.Colors;
 using Quaver.Helpers;
 using Quaver.Main;
 
-namespace Quaver.Graphics.Buttons
+namespace Quaver.Graphics.Buttons.Selection
 {
     internal class Checkbox : Button
     {

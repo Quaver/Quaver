@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
@@ -6,6 +7,7 @@ using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Buttons.Selection;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.UserInterface;
 using Quaver.Main;
@@ -48,6 +50,11 @@ namespace Quaver.States.Edit.UI
         private EditorSeekBar SeekBar { get; set; }
 
         /// <summary>
+        ///     Allows the user to select the current beat snap.
+        /// </summary>
+        private HorizontalSelector BeatSnapSelector { get; set; }
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
@@ -63,6 +70,7 @@ namespace Quaver.States.Edit.UI
             CreateSongTimeDisplay();
             CreateNavbar();
             CreateSeekBar();
+            CreateBeatSnapSelector();
             
             GameBase.AudioEngine.OnPlayed += OnAudioPlayed;
             GameBase.AudioEngine.OnPaused += OnAudioPausedOrStopped;
@@ -243,6 +251,25 @@ namespace Quaver.States.Edit.UI
             };
         }
 
+        /// <summary>
+        ///     Creates the element where users are able to select the current beat snap.
+        /// </summary>
+        private void CreateBeatSnapSelector()
+        {
+            var snaps = new List<string> { "1/1", "1/2", "1/3", "1/4", "1/6", "1/8", "1/12", "1/16", "1/32", "1/48" };
+            
+            BeatSnapSelector = new HorizontalSelector(snaps, new Vector2(200, 30), (item, index) =>
+            {
+                // Beat Snaps are in the format "1/x". This just splits it, and parses the snap.
+                Screen.CurrentBeatSnap.Value = int.Parse(item.Split('/')[1]);
+            }, 3)
+            {
+                Parent = Container,
+                Alignment = Alignment.MidLeft,
+                PosX = 200
+            };
+        }
+        
         /// <summary>
         ///     Called when the audio track has started playing.
         /// </summary>

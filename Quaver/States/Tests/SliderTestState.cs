@@ -7,7 +7,7 @@ using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Buttons.Sliders;
+using Quaver.Graphics.Buttons.Selection;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.Sprites;

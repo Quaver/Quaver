@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Buttons.Sliders;
+using Quaver.Graphics.Buttons.Selection;
 using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
