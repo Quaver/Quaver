@@ -218,7 +218,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             var manager = (KeysHitObjectManager) Ruleset.HitObjectManager;
 
             var speed = GameModeRulesetKeys.IsDownscroll ? -KeysHitObjectManager.ScrollSpeed : KeysHitObjectManager.ScrollSpeed;
-            return (float) (manager.HitPositionOffset + (offset - (Ruleset.Screen.Timing.CurrentTime + ConfigManager.GlobalAudioOffset.Value)) * speed);
+            return (float) (manager.HitPositionOffset + (offset - (Ruleset.Screen.Timing.CurrentTime + ConfigManager.GlobalAudioOffset.Value)) * speed) - HitObjectSprite.SizeY;
         }
         
         /// <summary>
