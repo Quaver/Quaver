@@ -69,10 +69,10 @@ namespace Quaver.States.Edit
             var scrollDiff = GameBase.MouseState.ScrollWheelValue - GameBase.PreviousMouseState.ScrollWheelValue;
             
             if (InputHelper.IsUniqueKeyPress(Keys.Left) || scrollDiff > 0)
-                GameBase.AudioEngine.SeekToBeat(Screen.Map, SeekDirection.Backward, 4);
+                GameBase.AudioEngine.SeekToNearestSnap(Screen.Map, SeekDirection.Backward, 4);
             
             if (InputHelper.IsUniqueKeyPress(Keys.Right) || scrollDiff < 0)
-                GameBase.AudioEngine.SeekToBeat(Screen.Map, SeekDirection.Forward, 4);
+                GameBase.AudioEngine.SeekToNearestSnap(Screen.Map, SeekDirection.Forward, 4);
         }
     }
 }

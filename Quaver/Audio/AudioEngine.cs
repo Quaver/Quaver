@@ -312,13 +312,13 @@ namespace Quaver.Audio
         }
 
         /// <summary>
-        ///     Seeks to the nearest beat in the audio based on the
+        ///     Seeks to the nearest snap(th) beat in the audio based on the
         ///     current timing point's snap.
         /// </summary>
         /// <param name="map"></param>
         /// <param name="direction"></param>
         /// <param name="snap"></param>
-        internal void SeekToBeat(Qua map, SeekDirection direction, int snap)
+        internal void SeekToNearestSnap(Qua map, SeekDirection direction, int snap)
         {
             // Get the current timing point
             var point = map.GetTimingPointAt(GameBase.AudioEngine.Time);
