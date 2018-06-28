@@ -321,7 +321,7 @@ namespace Quaver.Audio
         internal void SeekToNearestSnap(Qua map, SeekDirection direction, int snap)
         {
             // Get the current timing point
-            var point = map.GetTimingPointAt(GameBase.AudioEngine.Time);
+            var point = map.GetTimingPointAt(Time);
                 
             // Get the amount of milliseconds that each snap takes in the beat.
             var snapTimePerBeat = 60000 / point.Bpm / snap;
@@ -332,10 +332,10 @@ namespace Quaver.Audio
             switch (direction)
             {
                 case SeekDirection.Forward:
-                    pointToSnap = GameBase.AudioEngine.Time + snapTimePerBeat;
+                    pointToSnap = Time + snapTimePerBeat;
                     break;
                 case SeekDirection.Backward:
-                    pointToSnap = GameBase.AudioEngine.Time - snapTimePerBeat;
+                    pointToSnap = Time - snapTimePerBeat;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
@@ -343,7 +343,7 @@ namespace Quaver.Audio
             
             // Snap the value and seek to it.
             var seekTime = Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) * snapTimePerBeat + point.StartTime;
-            GameBase.AudioEngine.Seek(seekTime);
+            Seek(seekTime);
         }
         
         /// <summary>
