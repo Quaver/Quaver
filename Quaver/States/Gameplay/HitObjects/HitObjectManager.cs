@@ -11,7 +11,7 @@ namespace Quaver.States.Gameplay.HitObjects
         /// <summary>
         ///     All of the objects in the pool.
         /// </summary>
-        internal List<HitObject> ObjectPool { get; }
+        internal List<GameplayHitObject> ObjectPool { get; }
 
         /// <summary>
         ///     The object pool size.
@@ -36,7 +36,7 @@ namespace Quaver.States.Gameplay.HitObjects
         internal HitObjectManager(int size)
         {
             PoolSize = size;
-            ObjectPool = new List<HitObject>(PoolSize);
+            ObjectPool = new List<GameplayHitObject>(PoolSize);
         }
         
         /// <summary>

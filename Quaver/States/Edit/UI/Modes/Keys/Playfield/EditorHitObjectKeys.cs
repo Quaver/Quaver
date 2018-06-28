@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Structures;
 using Quaver.Graphics;
@@ -90,7 +91,12 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         ///     Keeps track of if we've already played hitsounds for this object.
         /// </summary>
         private bool HitsoundsPlayed { get; set; }
-        
+
+        /// <summary>
+        ///     The index of the beat snap.
+        /// </summary>
+        private int SnapIndex { get; set; }
+
         /// <summary>
         ///     Ctor -
         /// </summary>
@@ -175,8 +181,14 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// <returns></returns>
         private Texture2D GetHitObjectTexture()
         {
+            // Get Note Snapping
+            if (GameBase.Skin.Keys[Container.Playfield.Mode].ColorObjectsBySnapDistance)
+                SnapIndex = GameplayHitObject.GetBeatSnap(Info, Container.Playfield.Screen.Map.GetTimingPointAt(Info.StartTime)); 
+            else
+                SnapIndex = 0;
+            
             var skin = GameBase.Skin.Keys[Container.Playfield.Mode];
-            return Info.IsLongNote ? skin.NoteHoldHitObjects[Index].First() : skin.NoteHitObjects[Index].First();
+            return Info.IsLongNote ? skin.NoteHoldHitObjects[Index][SnapIndex] : skin.NoteHitObjects[Index][SnapIndex];
         }
         
         /// <summary>

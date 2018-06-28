@@ -16,7 +16,7 @@ using Quaver.States.Gameplay.HitObjects;
 
 namespace Quaver.States.Gameplay.GameModes.Keys
 {
-    internal class KeysHitObject : HitObject
+    internal class KeysHitObject : GameplayHitObject
     {
         /// <summary>
         ///     Reference to the Keys ruleset.

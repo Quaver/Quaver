@@ -7,7 +7,7 @@ using Quaver.Main;
 
 namespace Quaver.States.Gameplay.HitObjects
 {
-    internal abstract class HitObject
+    internal abstract class GameplayHitObject
     {
         /// <summary>
         ///     The info of this particular HitObject from the map file.
@@ -45,7 +45,7 @@ namespace Quaver.States.Gameplay.HitObjects
         ///     Ctor - 
         /// </summary>
         /// <param name="info"></param>
-        internal HitObject(HitObjectInfo info)
+        internal GameplayHitObject(HitObjectInfo info)
         {
             Info = info;
 
@@ -80,12 +80,13 @@ namespace Quaver.States.Gameplay.HitObjects
         /// <summary>
         ///     Returns color of note beatsnap
         /// </summary>
+        /// <param name="hitObject"></param>
         /// <param name="timingPoint"></param>
         /// <returns></returns>
-        internal int GetBeatSnap(TimingPointInfo timingPoint)
+        internal static int GetBeatSnap(HitObjectInfo hitObject, TimingPointInfo timingPoint)
         {
             // Add 2ms offset buffer space to offset and get beat length
-            var pos = Info.StartTime - timingPoint.StartTime + 2;
+            var pos = hitObject.StartTime - timingPoint.StartTime + 2;
             var beatlength = 60000 / timingPoint.Bpm;
 
             // subtract pos until it's less than beat length. multiple loops for efficiency

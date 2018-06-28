@@ -77,7 +77,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        protected override HitObject CreateHitObject(HitObjectInfo info)
+        protected override GameplayHitObject CreateHitObject(HitObjectInfo info)
         {
             var playfield = (KeysPlayfield)Playfield;
             var objectManager = (KeysHitObjectManager) HitObjectManager;
@@ -95,7 +95,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             
             // Get Note Snapping
             if (GameBase.Skin.Keys[playfield.Map.Mode].ColorObjectsBySnapDistance)
-                hitObject.SnapIndex = hitObject.GetBeatSnap(hitObject.GetTimingPoint(Map.TimingPoints)); 
+                hitObject.SnapIndex = GameplayHitObject.GetBeatSnap(info, hitObject.GetTimingPoint(Map.TimingPoints)); 
             
             // Disregard non-long note objects after this point, so we can initailize them separately.
             if (!hitObject.IsLongNote) 
