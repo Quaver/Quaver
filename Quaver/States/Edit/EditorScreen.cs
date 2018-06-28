@@ -11,7 +11,6 @@ using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
-using Quaver.States.Edit.Input;
 using Quaver.States.Edit.UI;
 using Quaver.States.Edit.UI.Modes;
 using Quaver.States.Edit.UI.Modes.Keys;

@@ -60,6 +60,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Audio\SeekDirection.cs" />
     <Compile Include="Config\BindedInt.cs" />
     <Compile Include="Config\BindedValue.cs" />
     <Compile Include="Discord\DiscordManager.cs" />
@@ -107,9 +108,8 @@
     <Compile Include="Skinning\SkinKeys.cs" />
     <Compile Include="Skinning\SkinKeysFolder.cs" />
     <Compile Include="Skinning\SkinStore.cs" />
+    <Compile Include="States\Edit\EditorInputManager.cs" />
     <Compile Include="States\Edit\EditorScreen.cs" />
-    <Compile Include="States\Edit\Input\EditorInputManager.cs" />
-    <Compile Include="States\Edit\Input\SeekDirection.cs" />
     <Compile Include="States\Edit\UI\Components\EditorSeekBar.cs" />
     <Compile Include="States\Edit\UI\Components\EditorSongTimeDisplay.cs" />
     <Compile Include="States\Edit\UI\EditorInterface.cs" />

@@ -1,4 +1,4 @@
-﻿namespace Quaver.States.Edit.Input
+﻿namespace Quaver.Audio
 {
     /// <summary>
     ///     The direction in which we will seek the audio.

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
+using Quaver.Audio;
 using Quaver.Helpers;
 using Quaver.Main;
 
-namespace Quaver.States.Edit.Input
+namespace Quaver.States.Edit
 {
     internal class EditorInputManager
     {
