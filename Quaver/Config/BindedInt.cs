@@ -54,6 +54,7 @@ namespace Quaver.Config
         {
             MinValue = min;
             MaxValue = max;
+            Value = defaultVal;
         }
 
         /// <inheritdoc />
