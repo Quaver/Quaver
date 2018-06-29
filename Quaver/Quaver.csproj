@@ -120,6 +120,7 @@
     <Compile Include="States\Edit\UI\Modes\Keys\Playfield\EditorHitObjectKeys.cs" />
     <Compile Include="States\Edit\UI\Modes\Keys\Playfield\EditorPlayfieldKeys.cs" />
     <Compile Include="States\Edit\UI\Modes\Keys\Playfield\EditorScrollContainerKeys.cs" />
+    <Compile Include="States\Edit\UI\Modes\Keys\Playfield\EditorSnapLinesKeys.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\GameModeRulesetKeys.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputManager.cs" />
     <Compile Include="States\Gameplay\GameModes\Keys\Input\KeysInputBinding.cs" />

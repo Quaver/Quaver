@@ -17,7 +17,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// <summary>
         ///     All of the HitObjects in the map.
         /// </summary>
-        private List<EditorHitObjectKeys> HitObjects { get; set; }
+        internal  List<EditorHitObjectKeys> HitObjects { get; private set; }
 
         /// <summary>
         ///     The amount of objects that were off-screen in the previous frame
@@ -37,10 +37,10 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
             Parent = Playfield.Container;
             Size = new UDim2D(Playfield.Width, Playfield.BackgroundContainer.SizeY);
             Alignment = Alignment.TopCenter;
-            
+        
             InitializeHitObjects();
         }
-
+        
         /// <summary>
         ///     Initializes all of the HitObjects for the map.
         /// </summary>
@@ -86,7 +86,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
                     hitObject.MakeInvisible();
                     
                     // Set new HitObject positions.
-                    hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.OffsetYFromReceptor);
+                    hitObject.PositionY = GetPosFromOffset(Playfield.HitPositionY, Playfield.ScrollSpeed, hitObject.OffsetYFromReceptor, hitObject.HitObjectSprite.SizeY);
                     hitObject.UpdateSpritePositions();
                     hitObject.MakeVisible();
                 }
@@ -98,13 +98,22 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
                 var hitObject = HitObjects[i];
                 
                 // Set new HitObject positions.
-                hitObject.PositionY = hitObject.GetPosFromOffset(hitObject.OffsetYFromReceptor);
+                hitObject.PositionY = GetPosFromOffset(Playfield.HitPositionY, Playfield.ScrollSpeed, hitObject.OffsetYFromReceptor, hitObject.HitObjectSprite.SizeY);
                 hitObject.UpdateSpritePositions();
                 hitObject.PlayHitsoundsIfNecessary();
             }
 
             ObjectsOffScreenInLastFrame = objectsOffScreen;
             base.Update(dt);
+        }
+        
+        /// <summary>
+        ///     Calculates the position from the offset.
+        /// </summary>
+        /// <returns></returns>
+        internal static float GetPosFromOffset(float hitPosY, float speed, float offset, float sizeY)
+        {
+            return (float)(hitPosY - (offset - GameBase.AudioEngine.Time) * speed) - sizeY;
         }
     }
 }

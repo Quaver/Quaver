@@ -34,7 +34,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// <summary>
         ///     The scroll container, which contains HitObjects + snap lines.
         /// </summary>
-        private EditorScrollContainerKeys ScrollContainer { get; set; }
+         internal EditorScrollContainerKeys ScrollContainer { get; private set; }
 
         /// <summary>
         ///     The size of each column.
@@ -89,6 +89,11 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
 #endregion
 
         /// <summary>
+        ///     The snap lines 
+        /// </summary>
+        private EditorSnapLinesKeys SnapLines { get; set; }
+        
+        /// <summary>
         ///     Ctor - 
         /// </summary>
         /// <param name="screen"></param>
@@ -118,6 +123,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
             
             ScrollContainer = new EditorScrollContainerKeys(this);
             CreateStage();
+            InitializeSnapLines();
         }
 
         /// <summary>
@@ -193,5 +199,10 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
                 PosY = HitPositionY
             };
         }
+        
+        /// <summary>
+        ///     Initialzies the snap lines container.
+        /// </summary>
+        private void InitializeSnapLines() => SnapLines = new EditorSnapLinesKeys(Screen);
     }
 }

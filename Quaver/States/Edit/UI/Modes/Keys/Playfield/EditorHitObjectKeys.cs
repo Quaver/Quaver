@@ -130,8 +130,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
             {
                 Alignment = Alignment.TopLeft,
                 Position = new UDim2D(PositionX, PositionY),
-                Image = GetHitObjectTexture(), 
-                Parent = Container
+                Image = GetHitObjectTexture(),   
             };
 
             // Var made for readability.
@@ -142,6 +141,9 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
 
             if (Info.IsLongNote)
                 CreateLongNote();
+
+            // Set parent last so the LN's draw under the HitObjects.
+            HitObjectSprite.Parent = Container;
         }
 
         /// <summary>
@@ -191,15 +193,6 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
             return Info.IsLongNote ? skin.NoteHoldHitObjects[Index][SnapIndex] : skin.NoteHitObjects[Index][SnapIndex];
         }
         
-        /// <summary>
-        ///     Calculates the position from the offset.
-        /// </summary>
-        /// <returns></returns>
-        internal float GetPosFromOffset(float offset)
-        {
-            return (float)(Container.Playfield.HitPositionY - (offset - GameBase.AudioEngine.Time) * Container.Playfield.ScrollSpeed) - HitObjectSprite.SizeY;
-        }
-
         /// <summary>
         ///     Updates the HitObject sprite positions
         /// </summary>
