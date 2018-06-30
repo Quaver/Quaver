@@ -117,6 +117,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
 
                 var line = LineBuffer[i];
 
+                line.SizeY = i % Screen.CurrentBeatSnap.Value == 0 ? 5 : 1;
                 var newPos = EditorScrollContainerKeys.GetPosFromOffset(Playfield.HitPositionY, Playfield.ScrollSpeed, targetTime, line.SizeY);
 
                 // Set the new position if it is indeed on-screen.
