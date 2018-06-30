@@ -37,7 +37,7 @@ namespace Quaver.Config
                     _value = value;
                  
                 if (_value != previousVal)
-                    OnValueChanged?.Invoke(this, new BindedValueEventArgs<int>(_value));
+                    OnValueChanged?.Invoke(this, new BindedValueEventArgs<int>(_value, previousVal));
             }
         }
 
