@@ -18,6 +18,7 @@ using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
+using Quaver.Graphics.UserInterface.User;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
@@ -61,6 +62,11 @@ namespace Quaver.States.Menu
         ///     The bottom bar for this screen.
         /// </summary>
         private BottomBar BottomBar { get; set; }
+
+        /// <summary>
+        ///     Displays information about the player.
+        /// </summary>
+        private Playercard Playercard { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -143,6 +149,13 @@ namespace Quaver.States.Menu
             ) { Parent = Container };
 
             BottomBar = new BottomBar { Parent = Container };
+
+            Playercard = new Playercard()
+            {
+                Parent = Container,
+                PosY = Toolbar.PosY + Toolbar.SizeY + 80,
+                PosX = 80
+            };
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Quaver.Graphics.Overlays.Toolbar
         /// <summary>
         ///     The line at the bottom of the toolbar.
         /// </summary>
-        private Sprite BottomLine { get; set; }
+        internal Sprite BottomLine { get; }
 
         /// <summary>
         ///     The buttons (left-aligned) displayed on the toolbar.
