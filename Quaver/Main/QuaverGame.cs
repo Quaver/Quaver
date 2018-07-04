@@ -109,6 +109,9 @@ namespace Quaver.Main
             // Load all fonts
             QuaverFonts.Load();
 
+            // Load all titles
+            Titles.Load();
+            
             // Load the Game Skin 
             GameBase.Skin = new SkinStore();
             
