@@ -11,7 +11,7 @@ namespace Quaver.Graphics.Overlays.BottomBar
         internal LogoButton()
         {
             Image = GameBase.QuaverUserInterface.QuaverLogoName;
-            Size = new UDim2D(135, 30);
+            Size = new UDim2D(112, 25);
             PosX = SizeX / 2f + 20;
             PosY = -2;
             Clicked += (o, e) => { Process.Start("https://quavergame.com"); };
@@ -19,7 +19,6 @@ namespace Quaver.Graphics.Overlays.BottomBar
         
         protected override void MouseOut()
         {
-            Size = new UDim2D(135, 30);
             Tint = Color.White;
         }
 

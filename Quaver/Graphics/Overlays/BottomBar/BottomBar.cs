@@ -85,7 +85,7 @@ namespace Quaver.Graphics.Overlays.BottomBar
                 Image = FontAwesome.Twitter,
                 Alignment = Alignment.MidLeft,
                 Parent = this,
-                Size = new UDim2D(20, 20),
+                Size = new UDim2D(15, 15),
                 PosX = QuaverButton.PosX + QuaverButton.SizeX + 5,
                 Tint = new Color(0, 172, 237)
             };
@@ -97,7 +97,7 @@ namespace Quaver.Graphics.Overlays.BottomBar
                 Image = FontAwesome.Rss,
                 Alignment = Alignment.MidLeft,
                 Parent = this,
-                Size = new UDim2D(18, 18),
+                Size = new UDim2D(13, 13),
                 PosX = TwitterButton.SizeX + TwitterButton.PosX + 20,
                 Tint = new Color(242,101,34)
             };
@@ -109,7 +109,7 @@ namespace Quaver.Graphics.Overlays.BottomBar
                 Image = FontAwesome.Discord,
                 Alignment = Alignment.MidLeft,
                 Parent = this,
-                Size = new UDim2D(25, 25),
+                Size = new UDim2D(20, 20),
                 PosX = BlogButton.SizeX + BlogButton.PosX + 15,
                 Tint = new Color(114,137,218)
             };
