@@ -12,6 +12,7 @@ namespace Quaver.Main
         public static SpriteFont AssistantLight16 { get; set; }
         public static SpriteFont AssistantRegular16 { get; set; }
         public static SpriteFont RationalInteger16 { get; set; }
+        public static SpriteFont GoodTimes16 { get; set; }
 
         /// <summary>
         ///     Loads all the fonts for the game.
@@ -26,6 +27,7 @@ namespace Quaver.Main
             AssistantLight16 = GameBase.Content.Load<SpriteFont>("assistant_light_16");
             AssistantRegular16 = GameBase.Content.Load<SpriteFont>("assistant_regular_16");
             RationalInteger16 = GameBase.Content.Load<SpriteFont>("rational_integer_16");
+            GoodTimes16 = GameBase.Content.Load<SpriteFont>("good_times_16");
         }
     }
 }
