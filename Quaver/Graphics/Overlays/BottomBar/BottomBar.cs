@@ -63,7 +63,7 @@ namespace Quaver.Graphics.Overlays.BottomBar
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 TextAlignment = Alignment.MidCenter,
-                Text = "Powered by Swan 2017-2018.",
+                Text = "Powered by Swan 2017-2018",
                 Font = QuaverFonts.AssistantRegular16,
                 TextScale = 0.75f
             };
