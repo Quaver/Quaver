@@ -23,7 +23,7 @@ namespace Quaver.Graphics.UserInterface.User
 
         internal Playercard()
         {
-            Size = new UDim2D(310, 75);
+            Size = new UDim2D(325, 75);
 
             Tint = Color.Black;
             Alignment = Alignment.TopLeft;
@@ -41,7 +41,7 @@ namespace Quaver.Graphics.UserInterface.User
             {
                 Parent = this,
                 Image = Titles.OfflinePlayer,
-                Size = new UDim2D(200, 25),
+                Size = new UDim2D(215, 25),
                 Alignment = Alignment.TopLeft,
                 PosX = Avatar.SizeX + 15,
                 PosY = 5
@@ -89,7 +89,7 @@ namespace Quaver.Graphics.UserInterface.User
                 Image = FontAwesome.Desktop,
                 Size = new UDim2D(20, 20),
                 Alignment = Alignment.BotRight,
-                Position = new UDim2D(-5, -5),
+                Position = new UDim2D(-10, -10),
                 Alpha = 0.75f
             };
         }
