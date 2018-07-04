@@ -13,6 +13,7 @@ using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Overlays.BottomBar;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Graphics.Sprites;
@@ -55,6 +56,11 @@ namespace Quaver.States.Menu
         ///     The toolbar for this screen.
         /// </summary>
         private Toolbar Toolbar { get; set; }
+
+        /// <summary>
+        ///     The bottom bar for this screen.
+        /// </summary>
+        private BottomBar BottomBar { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -122,18 +128,21 @@ namespace Quaver.States.Menu
             // TODO: Use an actual background instead of loading from file.
             Background = new Background(GraphicsHelper.LoadTexture2DFromFile(@"c:\users\admin\desktop\aaaddd.png"), 30) { Parent = Container };
             
-            Toolbar = new Toolbar(new List<ToolbarItem>()
-            {
-                new ToolbarItem("Home", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen()), true),
-                new ToolbarItem("Play", () => GameBase.GameStateManager.ChangeState(new SongSelectState())),
-                new ToolbarItem("Edit", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen())),
-                new ToolbarItem("Leaderboard", () => { })
-            },
+            Toolbar = new Toolbar(new List<ToolbarItem>
+                {
+                    new ToolbarItem("Home", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen()), true),
+                    new ToolbarItem("Play", () => GameBase.GameStateManager.ChangeState(new SongSelectState())),
+                    new ToolbarItem("Edit", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen())),
+                    new ToolbarItem("Leaderboard", () => { })
+                },
                 new List<ToolbarItem>
                 {
                     new ToolbarItem(FontAwesome.PowerOff, QuaverGame.Quit),
                     new ToolbarItem(FontAwesome.Cog, () => {}),               
-                }) {Parent = Container};
+                }
+            ) { Parent = Container };
+
+            BottomBar = new BottomBar { Parent = Container };
         }
     }
 }

@@ -27,6 +27,8 @@ namespace Quaver.Main
         internal static Texture2D Desktop { get; set; }
         internal static Texture2D GiftBox { get; set; }
         internal static Texture2D VideoPlay { get; set; }
+        internal static Texture2D Twitter { get; set; }
+        internal static Texture2D Rss { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -54,6 +56,8 @@ namespace Quaver.Main
             Desktop = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_desktop_monitor);
             GiftBox = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_gift_box);
             VideoPlay= ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_play_video_button);
+            Twitter = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_twitter_black_shape);
+            Rss = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_rss_symbol);
         }
     }
 }

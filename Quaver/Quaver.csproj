@@ -70,6 +70,8 @@
     <Compile Include="Graphics\Buttons\Checkbox.cs" />
     <Compile Include="Graphics\Buttons\Sliders\Slider.cs" />
     <Compile Include="Graphics\DrawRectangle.cs" />
+    <Compile Include="Graphics\Overlays\BottomBar\BottomBar.cs" />
+    <Compile Include="Graphics\Overlays\BottomBar\LogoButton.cs" />
     <Compile Include="Graphics\Overlays\Navbar\Nav.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarButton.cs" />

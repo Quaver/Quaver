@@ -57,6 +57,10 @@ namespace Quaver.Main
 
         internal Texture2D MenuBackground { get; set; }
 
+        internal Texture2D QuaverLogoName { get; set; }
+
+        internal Texture2D SwanLogo { get; set; }
+
         /// <summary>
         ///     Loads all the ui elements into content
         /// </summary>
@@ -73,6 +77,8 @@ namespace Quaver.Main
             UnknownAvatar = ResourceHelper.LoadTexture2DFromPng(QuaverResources.unknown_avatar);
             YouAvatar = ResourceHelper.LoadTexture2DFromPng(QuaverResources.you_avatar);
             MenuBackground = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_background);
+            QuaverLogoName = ResourceHelper.LoadTexture2DFromPng(QuaverResources.quaver_logo);
+            SwanLogo = ResourceHelper.LoadTexture2DFromPng(QuaverResources.swan_logo);
         }
 
         /// <summary>
