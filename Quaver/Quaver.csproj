@@ -91,6 +91,7 @@
     <Compile Include="Graphics\UserInterface\NumberDisplay.cs" />
     <Compile Include="Graphics\UserInterface\ProgressBar.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
+    <Compile Include="Graphics\UserInterface\User\Playercard.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
     <Compile Include="Helpers\GzipHelper.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Helpers\XnaKeyHelper.cs" />
     <Compile Include="Main\CommonTaskScheduler.cs" />
     <Compile Include="Main\FontAwesome.cs" />
+    <Compile Include="Main\Titles.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModAutoplay.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModNoPause.cs" />
     <Compile Include="Program.cs" />
