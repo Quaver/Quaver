@@ -11,30 +11,28 @@ namespace Quaver.Graphics.Overlays.Toolbar
 {
     internal class ToolbarItem : Button
     {
+        /// <summary>
+        ///     The bottom line sprite, used to visually show if it's highlighted.
+        /// </summary>
         private Sprite BottomLine { get; set; }
 
+        /// <summary>
+        ///     If the toolbar item is actually selected.
+        /// </summary>
         internal bool IsSelected { get; set; }
 
+        /// <summary>
+        ///     Keeps track of if a sound has played when hovering over the button.
+        /// </summary>
         private bool HoverSoundPlayed { get; set; }
 
-        private void Initialize(Action onClick, bool selected = false)
-        {
-            Clicked += (o, e) => onClick();
-            IsSelected = selected;
-            
-            Tint = Color.Black;
-            Alpha = IsSelected ? 0.1f : 0;
-            
-            BottomLine = new Sprite
-            {
-                Parent = this,
-                Alignment = Alignment.BotCenter,
-                Size = new UDim2D(SizeX, 1),
-                Tint = Color.White,
-                SizeX = IsSelected ? SizeX : 0,
-            };
-        }
-        
+        /// <inheritdoc />
+        /// <summary>
+        ///     Ctor - Creates a left-aligned one w/ a name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="onClick"></param>
+        /// <param name="selected"></param>
         internal ToolbarItem(string name, Action onClick, bool selected = false)
         {
             Size = new UDim2D(165, 45);
@@ -52,6 +50,13 @@ namespace Quaver.Graphics.Overlays.Toolbar
             };
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Ctor - Creates toolbar item with an icon. 
+        /// </summary>
+        /// <param name="icon"></param>
+        /// <param name="onClick"></param>
+        /// <param name="selected"></param>
         internal ToolbarItem(Texture2D icon, Action onClick, bool selected = false)
         {
             Size = new UDim2D(75, 45);
@@ -66,6 +71,29 @@ namespace Quaver.Graphics.Overlays.Toolbar
             };
         }
         
+        /// <summary>
+        ///     Initializes the toolbar item, used in the constructors.
+        /// </summary>
+        /// <param name="onClick"></param>
+        /// <param name="selected"></param>
+        private void Initialize(Action onClick, bool selected = false)
+        {
+            Clicked += (o, e) => onClick();
+            IsSelected = selected;
+            
+            Tint = Color.Black;
+            Alpha = IsSelected ? 0.1f : 0;
+            
+            BottomLine = new Sprite
+            {
+                Parent = this,
+                Alignment = Alignment.BotCenter,
+                Size = new UDim2D(SizeX, 1),
+                Tint = Color.White,
+                SizeX = IsSelected ? SizeX : 0,
+            };
+        }
+                
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -98,11 +126,11 @@ namespace Quaver.Graphics.Overlays.Toolbar
             Alpha = 0.05f;
 
             // Make sure the hover sound only plays one time.
-            if (!HoverSoundPlayed)
-            {
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover);
-                HoverSoundPlayed = true;
-            }
+            if (HoverSoundPlayed) 
+                return;
+            
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover);
+            HoverSoundPlayed = true;
         }
     }
 }

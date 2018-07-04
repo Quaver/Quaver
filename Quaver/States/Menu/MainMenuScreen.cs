@@ -52,7 +52,7 @@ namespace Quaver.States.Menu
         private Background Background { get; set; }
 
         /// <summary>
-        /// 
+        ///     The toolbar for this screen.
         /// </summary>
         private Toolbar Toolbar { get; set; }
 
@@ -119,7 +119,9 @@ namespace Quaver.States.Menu
         /// </summary>
         private void CreateUI()
         {
+            // TODO: Use an actual background instead of loading from file.
             Background = new Background(GraphicsHelper.LoadTexture2DFromFile(@"c:\users\admin\desktop\aaaddd.png"), 30) { Parent = Container };
+            
             Toolbar = new Toolbar(new List<ToolbarItem>()
             {
                 new ToolbarItem("Home", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen()), true),

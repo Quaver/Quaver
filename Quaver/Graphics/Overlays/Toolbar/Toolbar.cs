@@ -13,12 +13,20 @@ namespace Quaver.Graphics.Overlays.Toolbar
         private Sprite BottomLine { get; set; }
 
         /// <summary>
-        ///     The buttons displayed on the toolbar.
+        ///     The buttons (left-aligned) displayed on the toolbar.
         /// </summary>
         private List<ToolbarItem> Buttons { get; }
 
+        /// <summary>
+        ///     The icons (right-aligned)
+        /// </summary>
         private List<ToolbarItem> Icons { get; }
 
+        /// <summary>
+        ///     
+        /// </summary>
+        /// <param name="buttons"></param>
+        /// <param name="icons"></param>
         internal Toolbar(List<ToolbarItem> buttons, List<ToolbarItem> icons)
         {
             Buttons = buttons;
@@ -43,6 +51,9 @@ namespace Quaver.Graphics.Overlays.Toolbar
             InitializeIcons();
         }
 
+        /// <summary>
+        ///     Inits left aligned options.
+        /// </summary>
         private void InitializeToolbarItems()
         {
             for (var i = 0; i < Buttons.Count; i++)
@@ -57,6 +68,9 @@ namespace Quaver.Graphics.Overlays.Toolbar
             }
         }
 
+        /// <summary>
+        ///     Inits right aligned icons.
+        /// </summary>
         private void InitializeIcons()
         {
             for (var i = 0; i < Icons.Count; i++)
