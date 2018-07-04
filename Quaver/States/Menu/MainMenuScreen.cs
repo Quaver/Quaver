@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Threading.Tasks;
@@ -9,9 +10,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState;
+using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Overlays.Navbar;
+using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
@@ -24,7 +27,7 @@ using Quaver.States.Tests;
 
 namespace Quaver.States.Menu
 {
-    internal class MainMenuState : IGameState
+    internal class MainMenuScreen : IGameState
     {
         /// <inheritdoc />
         /// <summary>
@@ -42,6 +45,16 @@ namespace Quaver.States.Menu
         ///     QuaverContainer
         /// </summary>
         private Container Container { get; set; }
+
+        /// <summary>
+        ///     The main menu background.
+        /// </summary>
+        private Background Background { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private Toolbar Toolbar { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -85,7 +98,6 @@ namespace Quaver.States.Menu
         public void Update(double dt)
         {
             Container.Update(dt);
-            GameBase.Navbar.PerformShowAnimation(dt);
         }
         
         /// <inheritdoc />
@@ -107,6 +119,19 @@ namespace Quaver.States.Menu
         /// </summary>
         private void CreateUI()
         {
+            Background = new Background(GraphicsHelper.LoadTexture2DFromFile(@"c:\users\admin\desktop\aaaddd.png"), 30) { Parent = Container };
+            Toolbar = new Toolbar(new List<ToolbarItem>()
+            {
+                new ToolbarItem("Home", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen()), true),
+                new ToolbarItem("Play", () => GameBase.GameStateManager.ChangeState(new SongSelectState())),
+                new ToolbarItem("Edit", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen())),
+                new ToolbarItem("Leaderboard", () => { })
+            },
+                new List<ToolbarItem>
+                {
+                    new ToolbarItem(FontAwesome.PowerOff, QuaverGame.Quit),
+                    new ToolbarItem(FontAwesome.Cog, () => {}),               
+                }) {Parent = Container};
         }
     }
 }

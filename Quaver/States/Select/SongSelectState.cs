@@ -270,7 +270,7 @@ namespace Quaver.States.Select
         private void OnBackButtonClick(object sender, EventArgs e)
         {
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundBack);
-            GameBase.GameStateManager.ChangeState(new MainMenuState());
+            GameBase.GameStateManager.ChangeState(new MainMenuScreen());
         }
 
         /// <summary>

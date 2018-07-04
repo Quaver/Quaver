@@ -252,7 +252,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         private void OnHomeButtonClicked(object sender, EventArgs e)
         {
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
-            GameBase.GameStateManager.ChangeState(new MainMenuState());
+            GameBase.GameStateManager.ChangeState(new MainMenuScreen());
         }
 
         /// <summary>

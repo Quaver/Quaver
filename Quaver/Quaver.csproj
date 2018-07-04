@@ -79,10 +79,13 @@
     <Compile Include="Graphics\Overlays\Options\OptionsOverlay.cs" />
     <Compile Include="Graphics\Overlays\Options\OptionsSection.cs" />
     <Compile Include="Graphics\Overlays\Options\OptionsType.cs" />
+    <Compile Include="Graphics\Overlays\Toolbar\Toolbar.cs" />
+    <Compile Include="Graphics\Overlays\Toolbar\ToolbarItem.cs" />
     <Compile Include="Graphics\Overlays\Volume\VolumeController.cs" />
     <Compile Include="Graphics\Sprites\AnimatableSprite.cs" />
     <Compile Include="Graphics\UDim.cs" />
     <Compile Include="Graphics\UDim2D.cs" />
+    <Compile Include="Graphics\UserInterface\Background.cs" />
     <Compile Include="Graphics\UserInterface\NumberDisplay.cs" />
     <Compile Include="Graphics\UserInterface\ProgressBar.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
@@ -174,7 +177,7 @@
     <Compile Include="Modifiers\Mods\Mania\ManiaModChill.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModSpeed.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModStrict.cs" />
-    <Compile Include="States\Menu\MainMenuState.cs" />
+    <Compile Include="States\Menu\MainMenuScreen.cs" />
     <Compile Include="States\IGameState.cs" />
     <Compile Include="States\Loading\Map\MapLoadingState.cs" />
     <Compile Include="Graphics\Buttons\Button.cs" />

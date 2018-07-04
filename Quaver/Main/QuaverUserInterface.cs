@@ -55,6 +55,8 @@ namespace Quaver.Main
         internal Texture2D UnknownAvatar { get; set; }
         internal Texture2D YouAvatar { get; set; }
 
+        internal Texture2D MenuBackground { get; set; }
+
         /// <summary>
         ///     Loads all the ui elements into content
         /// </summary>
@@ -70,6 +72,7 @@ namespace Quaver.Main
             TestSpritesheet = GraphicsHelper.LoadSpritesheetFromTexture(ResourceHelper.LoadTexture2DFromPng(QuaverResources.test_spritesheet), 1, 8);
             UnknownAvatar = ResourceHelper.LoadTexture2DFromPng(QuaverResources.unknown_avatar);
             YouAvatar = ResourceHelper.LoadTexture2DFromPng(QuaverResources.you_avatar);
+            MenuBackground = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_background);
         }
 
         /// <summary>
