@@ -9,18 +9,39 @@ namespace Quaver.Graphics.UserInterface.User
 {
     internal class Playercard : Sprite
     {
+        /// <summary>
+        ///     The avatar of the player.
+        /// </summary>
         private Sprite Avatar { get; }
 
+        /// <summary>
+        ///     The player's title.
+        /// </summary>
         private Sprite Title { get; }
 
+        /// <summary>
+        ///     The username of the player.
+        /// </summary>
         private SpriteText Username { get; }
 
+        /// <summary>
+        ///     The badge that signifiies their "rank" or "prestige"
+        /// </summary>
         private Sprite RankBadge { get; }
 
+        /// <summary>
+        ///     The player's rank #
+        /// </summary>
         private SpriteText Rank { get; }
 
+        /// <summary>
+        ///     The game mode the player currently has activated.
+        /// </summary>
         private Sprite GameMode { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         internal Playercard()
         {
             Size = new UDim2D(325, 75);
