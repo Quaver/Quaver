@@ -153,7 +153,7 @@ namespace Quaver.States.Menu
             Playercard = new Playercard()
             {
                 Parent = Container,
-                PosY = Toolbar.PosY + Toolbar.SizeY + 80,
+                PosY = Toolbar.PosY + Toolbar.SizeY + 40,
                 PosX = 80
             };
         }
