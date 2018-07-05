@@ -20,6 +20,11 @@ namespace Quaver.Graphics.UserInterface.User
         private Sprite Title { get; }
 
         /// <summary>
+        ///     Sprite that changes the brightness for the title.
+        /// </summary>
+        private Sprite TitleBrightness { get; }
+
+        /// <summary>
         ///     The username of the player.
         /// </summary>
         private SpriteText Username { get; }
@@ -30,7 +35,12 @@ namespace Quaver.Graphics.UserInterface.User
         private Sprite RankBadge { get; }
 
         /// <summary>
-        ///     The player's rank #
+        ///     The player's rating
+        /// </summary>
+        private SpriteText Rating { get; }
+
+        /// <summary>
+        ///     The player's rank.
         /// </summary>
         private SpriteText Rank { get; }
 
@@ -40,11 +50,16 @@ namespace Quaver.Graphics.UserInterface.User
         private Sprite GameMode { get; }
 
         /// <summary>
+        ///     Shows the user's progress until their next level.
+        /// </summary>
+        private ProgressBar LevelBar { get; }
+
+        /// <summary>
         /// 
         /// </summary>
         internal Playercard()
         {
-            Size = new UDim2D(325, 75);
+            Size = new UDim2D(312, 56);
 
             Tint = Color.Black;
             Alignment = Alignment.TopLeft;
@@ -61,58 +76,88 @@ namespace Quaver.Graphics.UserInterface.User
             Title = new Sprite()
             {
                 Parent = this,
-                Image = Titles.OfflinePlayer,
-                Size = new UDim2D(215, 25),
+                Image = Titles.Default,
+                Size = new UDim2D(SizeX - Avatar.SizeX, SizeY),
                 Alignment = Alignment.TopLeft,
-                PosX = Avatar.SizeX + 15,
-                PosY = 5
+                PosX = Avatar.SizeX,
             };
 
+            TitleBrightness = new Sprite()
+            {
+                Parent = this,
+                Image = GameBase.QuaverUserInterface.BlankBox,
+                Tint = Color.Black,
+                Alpha = 0.40f,
+                Size = Title.Size,
+                Alignment = Title.Alignment,
+                Position = Title.Position
+            };
+            
             RankBadge = new Sprite()
             {
                 Parent = this,
-                Image = FontAwesome.Archive,
-                Size = new UDim2D(10, 10),
-                PosX = Title.PosX + 2,
-                PosY = Title.PosY + Title.SizeY + 8,
-                Tint = Color.Gold
+                Image = FontAwesome.Code,
+                Size = new UDim2D(25, 25),
+                PosX = Avatar.SizeX + 5,
+                PosY = 5,
+                Tint = QuaverColors.MainAccent
             };
             
             Username = new SpriteText()
             {
                 Parent = this,
-                Font = QuaverFonts.GoodTimes16,
+                Font = QuaverFonts.AssistantRegular16,
                 PosX = RankBadge.PosX + RankBadge.SizeX + 5,
-                PosY = RankBadge.PosY - 2,
+                PosY = RankBadge.PosY,
                 Text = ConfigManager.Username.Value,
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
                 TextColor = Color.White,
-                TextScale = 0.55f
+                TextScale = 0.95f
             };
             
-            Rank = new SpriteText()
+            Rating = new SpriteText()
             {
                 Parent = this,
-                Font = QuaverFonts.GoodTimes16,
+                Font = QuaverFonts.AssistantRegular16,
                 PosX = RankBadge.PosX,
-                PosY = RankBadge.PosY + 15,
-                Text = "Rank: ",
+                PosY = RankBadge.PosY + 27,
+                Text = "Rating: 00.00",
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
                 TextColor = Color.White,
-                TextScale = 0.55f
+                TextScale = 0.70f
             };
 
             GameMode = new Sprite()
             {
                 Parent = this,
                 Image = FontAwesome.Desktop,
-                Size = new UDim2D(20, 20),
-                Alignment = Alignment.BotRight,
-                Position = new UDim2D(-10, -10),
-                Alpha = 0.75f
+                Size = new UDim2D(25, 25),
+                Alignment = Alignment.TopRight,
+                Position = new UDim2D(-5, 5),
+                Alpha = 1f
             };
+
+            Rank = new SpriteText()
+            {
+                Parent = this,
+                Alignment = Alignment.TopRight,
+                TextScale = 0.70f,
+                PosY = Rating.PosY,
+                Text = "#0 (Lv.0)",
+                Font = QuaverFonts.AssistantRegular16,
+                TextAlignment = Alignment.TopRight,
+                PosX = -5
+            };
+
+            LevelBar = new ProgressBar(100, 50, new Vector2(SizeX - Avatar.SizeX, 3), this, Alignment.BotLeft)
+            {
+                PosX = Avatar.SizeX,
+                CurrentValue = 88,
+                PosY = 0.5f
+            };
+
         }
     }
 }
