@@ -29,6 +29,7 @@ namespace Quaver.Main
         internal static Texture2D VideoPlay { get; set; }
         internal static Texture2D Twitter { get; set; }
         internal static Texture2D Rss { get; set; }
+        internal static Texture2D Code { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -58,6 +59,7 @@ namespace Quaver.Main
             VideoPlay= ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_play_video_button);
             Twitter = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_twitter_black_shape);
             Rss = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_rss_symbol);
+            Code = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_code);
         }
     }
 }

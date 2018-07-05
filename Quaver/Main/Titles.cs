@@ -6,11 +6,11 @@ namespace Quaver.Main
 {
     public static class Titles
     {
-        internal static Texture2D OfflinePlayer { get; private set; }
+        internal static Texture2D Default { get; private set; }
 
         internal static void Load()
         {
-            OfflinePlayer = ResourceHelper.LoadTexture2DFromPng(QuaverResources.title_offline_player);
+            Default = ResourceHelper.LoadTexture2DFromPng(QuaverResources.title_default);
         }
     }
 }
