@@ -89,9 +89,11 @@
     <Compile Include="Graphics\UDim2D.cs" />
     <Compile Include="Graphics\UserInterface\Background.cs" />
     <Compile Include="Graphics\UserInterface\NumberDisplay.cs" />
+    <Compile Include="Graphics\UserInterface\Online\MenuStats.cs" />
     <Compile Include="Graphics\UserInterface\ProgressBar.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
-    <Compile Include="Graphics\UserInterface\User\Playercard.cs" />
+    <Compile Include="Graphics\UserInterface\Online\FriendsList.cs" />
+    <Compile Include="Graphics\UserInterface\Online\Playercard.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
     <Compile Include="Helpers\GzipHelper.cs" />

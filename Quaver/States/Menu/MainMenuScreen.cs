@@ -18,7 +18,7 @@ using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UserInterface;
-using Quaver.Graphics.UserInterface.User;
+using Quaver.Graphics.UserInterface.Online;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
@@ -150,12 +150,19 @@ namespace Quaver.States.Menu
 
             BottomBar = new BottomBar { Parent = Container };
 
-            Playercard = new Playercard()
+            var stats = new MenuStats()
             {
                 Parent = Container,
-                PosY = Toolbar.PosY + Toolbar.SizeY + 40,
+                PosY = Toolbar.PosY + Toolbar.SizeY + 60,
                 PosX = 80
             };
+            
+            var friends = new FriendsList()
+            {
+                Parent = Container,
+                Position = new UDim2D(stats.PosX, stats.PosY + stats.SizeY + 60)
+            };
+            
         }
     }
 }

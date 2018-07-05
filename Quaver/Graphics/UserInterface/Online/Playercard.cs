@@ -5,7 +5,7 @@ using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Main;
 
-namespace Quaver.Graphics.UserInterface.User
+namespace Quaver.Graphics.UserInterface.Online
 {
     internal class Playercard : Sprite
     {
@@ -97,7 +97,7 @@ namespace Quaver.Graphics.UserInterface.User
             {
                 Parent = this,
                 Image = FontAwesome.Code,
-                Size = new UDim2D(25, 25),
+                Size = new UDim2D(20, 20),
                 PosX = Avatar.SizeX + 3,
                 PosY = 5,
                 Tint = QuaverColors.MainAccent
@@ -113,7 +113,7 @@ namespace Quaver.Graphics.UserInterface.User
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
                 TextColor = Color.White,
-                TextScale = 0.95f
+                TextScale = 0.90f
             };
             
             Rating = new SpriteText()
@@ -121,8 +121,8 @@ namespace Quaver.Graphics.UserInterface.User
                 Parent = this,
                 Font = QuaverFonts.AssistantRegular16,
                 PosX = RankBadge.PosX,
-                PosY = RankBadge.PosY + 27,
-                Text = "Rating: 00.00",
+                PosY = RankBadge.PosY + 25,
+                Text = "Rating: 0.00",
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
                 TextColor = Color.White,
