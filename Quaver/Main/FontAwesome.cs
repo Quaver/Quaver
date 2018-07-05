@@ -30,6 +30,10 @@ namespace Quaver.Main
         internal static Texture2D Twitter { get; set; }
         internal static Texture2D Rss { get; set; }
         internal static Texture2D Code { get; set; }
+        internal static Texture2D Bars { get; set; }
+        internal static Texture2D Question { get; set; }
+        internal static Texture2D Trophy { get; set; }
+        internal static Texture2D Globe { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -60,6 +64,10 @@ namespace Quaver.Main
             Twitter = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_twitter_black_shape);
             Rss = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_rss_symbol);
             Code = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_code);
+            Bars = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_signal_bars);
+            Question = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_question_sign);
+            Trophy = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_trophy);
+            Globe = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_earth_globe);
         }
     }
 }

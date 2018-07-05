@@ -98,7 +98,7 @@ namespace Quaver.Graphics.UserInterface.User
                 Parent = this,
                 Image = FontAwesome.Code,
                 Size = new UDim2D(25, 25),
-                PosX = Avatar.SizeX + 5,
+                PosX = Avatar.SizeX + 3,
                 PosY = 5,
                 Tint = QuaverColors.MainAccent
             };
