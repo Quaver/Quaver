@@ -52,7 +52,9 @@ namespace Quaver.Main
         internal Texture2D JudgementOverlay { get; set; }
 
         internal List<Texture2D> TestSpritesheet { get; set; }
+        
         internal Texture2D UnknownAvatar { get; set; }
+        
         internal Texture2D YouAvatar { get; set; }
 
         internal Texture2D MenuBackground { get; set; }
@@ -60,6 +62,10 @@ namespace Quaver.Main
         internal Texture2D QuaverLogoName { get; set; }
 
         internal Texture2D SwanLogo { get; set; }
+
+        internal Texture2D MenuSinglePlayer { get; set; }
+
+        internal Texture2D MenuLock { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -79,20 +85,8 @@ namespace Quaver.Main
             MenuBackground = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_background);
             QuaverLogoName = ResourceHelper.LoadTexture2DFromPng(QuaverResources.quaver_logo);
             SwanLogo = ResourceHelper.LoadTexture2DFromPng(QuaverResources.swan_logo);
-        }
-
-        /// <summary>
-        ///     Whenever the settings for window size is changed, call this method to update the window.
-        /// </summary>
-        /// <param name="newSize"></param>
-        public static void UpdateWindow(Point newSize)
-        {
-            // NOTE: Unfinished
-            GameBase.WindowRectangle = new DrawRectangle(0, 0, ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
-            GameBase.MainRenderTarget = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
-            //Rectangle mainWindow = GraphicsDevice.PresentationParameters.Bounds;
-
-            //Align letterboxed window
+            MenuSinglePlayer = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_single_player);
+            MenuLock = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_lock);
         }
     }
 }
