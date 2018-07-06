@@ -38,7 +38,7 @@ namespace Quaver.Graphics.UserInterface.Online
                 Alignment = Alignment.MidLeft,
                 TextAlignment = Alignment.MidLeft,
                 Text = "Player Stats",
-                Font = Fonts.AllerBold16,
+                Font = Fonts.AllerRegular16,
                 TextScale = 0.75f,
                 PosX = 20
             };
@@ -55,8 +55,8 @@ namespace Quaver.Graphics.UserInterface.Online
             ContentContainer = new Sprite()
             {
                 Parent = this,
-                Size = new UDim2D(SizeX, SizeY - Header.SizeY),
-                PosY = Header.SizeY + 5,
+                Size = new UDim2D(SizeX, SizeY - Header.SizeY + 5),
+                PosY = Header.SizeY,
                 Tint = Color.Black,
                 Alpha = 0f
             };
@@ -66,8 +66,8 @@ namespace Quaver.Graphics.UserInterface.Online
             var rankContainer = new Sprite()
             {
                 Parent = ContentContainer,
-                Size = new UDim2D(SizeX, SizeY - ContentContainer.SizeY),
-                PosY = Player.SizeY + 5,
+                Size = new UDim2D(SizeX, SizeY - ContentContainer.SizeY + 5),
+                PosY = Player.SizeY,
                 Tint = ColorHelper.HexToColor("#2B2B2B"),
                 Alpha = 0.25f
             };
@@ -114,7 +114,6 @@ namespace Quaver.Graphics.UserInterface.Online
             };
 
             trophy.PosX = -(winCount.Font.MeasureString(winCount.Text).X * winCount.TextScale) - 20;
-
         }
     }
 }

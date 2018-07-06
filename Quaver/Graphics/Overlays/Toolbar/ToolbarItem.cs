@@ -45,8 +45,8 @@ namespace Quaver.Graphics.Overlays.Toolbar
                 Text = name,
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.MidCenter,
-                Font = Fonts.AssistantRegular16,
-                TextScale = 0.75f
+                Font = Fonts.Exo2Regular24,
+                TextScale = 0.50f
             };
         }
 
@@ -59,7 +59,7 @@ namespace Quaver.Graphics.Overlays.Toolbar
         /// <param name="selected"></param>
         internal ToolbarItem(Texture2D icon, Action onClick, bool selected = false)
         {
-            Size = new UDim2D(75, 45);
+            Size = new UDim2D(70, 45);
             Initialize(onClick, selected);
 
             new Sprite

@@ -65,7 +65,13 @@ namespace Quaver.Main
 
         internal Texture2D MenuSinglePlayer { get; set; }
 
+        internal Texture2D MenuMultiplayer { get; set; }
+        
+        internal Texture2D MenuCompetitive { get; set; }
+        
         internal Texture2D MenuLock { get; set; }
+
+        internal Texture2D MenuNews { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -87,6 +93,9 @@ namespace Quaver.Main
             SwanLogo = ResourceHelper.LoadTexture2DFromPng(QuaverResources.swan_logo);
             MenuSinglePlayer = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_single_player);
             MenuLock = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_lock);
+            MenuMultiplayer = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_multiplayer);
+            MenuCompetitive = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_competitive);
+            MenuNews = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_news);
         }
     }
 }

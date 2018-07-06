@@ -31,6 +31,16 @@ namespace Quaver.States.Menu
         /// </summary>
         private bool HoverSoundPlayed { get; set; }
 
+        /// <summary>
+        ///     The background of the footer.
+        /// </summary>
+        private Sprite FooterBackground { get; set; }
+
+        /// <summary>
+        ///     The actual footer text that describes the button. 
+        /// </summary>
+        private SpriteText FooterText { get;  }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor -
@@ -38,7 +48,7 @@ namespace Quaver.States.Menu
         /// <param name="size"></param>
         /// <param name="headerText"></param>
         /// <param name="image"></param>
-        internal NavigationButton(Vector2 size, string headerText, Texture2D image)
+        internal NavigationButton(Vector2 size, string headerText, Texture2D image, string footerText = null)
         {
             Size = new UDim2D(size.X, size.Y);
             
@@ -47,7 +57,7 @@ namespace Quaver.States.Menu
                 Parent = this,
                 Alignment = Alignment.TopLeft,
                 Tint = Colors.DarkGray,
-                Size = new UDim2D(SizeX, 50)
+                Size = new UDim2D(SizeX, 45)
             };
 
             HeaderText = new SpriteText
@@ -55,9 +65,9 @@ namespace Quaver.States.Menu
                 Parent = Header,
                 Alignment = Alignment.MidLeft,
                 TextAlignment = Alignment.MidLeft,
-                Font = Fonts.GoodTimes16,
+                Font = Fonts.Exo2Regular24,
                 Text = headerText,
-                TextScale = 0.75f,
+                TextScale = 0.58f,
                 PosX = 20
             };
 
@@ -68,6 +78,28 @@ namespace Quaver.States.Menu
                 Size = new UDim2D(SizeX, SizeY - Header.SizeY),
                 PosY = Header.SizeY,
                 Image = image
+            };
+
+            if (footerText == null)
+                return;
+            
+            FooterBackground = new Sprite()
+            {
+                Parent = this,
+                Alignment = Alignment.BotLeft,
+                Size = new UDim2D(SizeX, 40),
+                Tint = Color.Black,
+                Alpha = 0.70f
+            };
+
+            FooterText = new SpriteText()
+            {
+                Parent = FooterBackground,
+                Alignment = Alignment.MidCenter,
+                TextAlignment = Alignment.MidCenter,
+                Font = Fonts.Exo2Regular24,
+                Text = footerText,
+                TextScale = 0.42f
             };
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Quaver.Config;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
@@ -15,9 +16,9 @@ namespace Quaver.Graphics.Overlays.BottomBar
 
         private LogoButton QuaverButton { get; }
 
-        private Sprite SwanLogo { get; }
+        private Sprite Avatar { get; }
 
-        private SpriteText SwanText { get; }
+        private SpriteText UsernameText { get; }
 
         private BasicButton TwitterButton { get; }
 
@@ -47,9 +48,9 @@ namespace Quaver.Graphics.Overlays.BottomBar
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
-                Font = Fonts.AllerRegular16,
+                Font = Fonts.Exo2Regular24,
                 Text = "Tip: If our knees were bent the other way, what would chairs look like?",
-                TextScale = 0.75f
+                TextScale = 0.45f
             };
 
             QuaverButton = new LogoButton
@@ -58,28 +59,36 @@ namespace Quaver.Graphics.Overlays.BottomBar
                 Alignment = Alignment.MidLeft
             };
 
-            SwanText = new SpriteText()
+            var nameContainer = new Sprite()
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
-                TextAlignment = Alignment.MidCenter,
-                Text = "Powered by Swan 2017-2018",
-                Font = Fonts.AllerRegular16,
-                TextScale = 0.65f
+                Size = new UDim2D(120, 30),
+                PosX = -150,
+                Alpha = 0
+            };
+                    
+            Avatar = new Sprite()
+            {
+                Image = GameBase.QuaverUserInterface.YouAvatar,
+                Parent = nameContainer,
+                Alignment = Alignment.TopLeft,
+                Size = new UDim2D(30, 30),
             };
 
-            SwanText.PosX = (-SwanText.Font.MeasureString(SwanText.Text) * SwanText.TextScale).X;
-
-            SwanLogo = new Sprite()
+            UsernameText = new SpriteText
             {
-                Image = GameBase.QuaverUserInterface.SwanLogo,
-                Parent = this,
-                Alignment = Alignment.MidRight,
-                Size = new UDim2D(40, 40),
-                PosX = SwanText.PosX - 100,
+                Parent = nameContainer,
+                Alignment = Alignment.MidLeft,
+                TextAlignment = Alignment.MidLeft,
+                Text = ConfigManager.Username.Value != "" ? ConfigManager.Username.Value : "Unknown Player",
+                Font = Fonts.Exo2Regular24,
+                TextScale = 0.55f,
+                PosX = Avatar.SizeX + 8,
                 PosY = -2
             };
-            
+
+
             TwitterButton = new BasicButton()
             {
                 Image = FontAwesome.Twitter,

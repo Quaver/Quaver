@@ -37,7 +37,7 @@ namespace Quaver.Graphics.UserInterface.Online
                 Alignment = Alignment.MidLeft,
                 TextAlignment = Alignment.MidLeft,
                 Text = "Friends List",
-                Font = Fonts.AllerBold16,
+                Font = Fonts.AllerRegular16,
                 TextScale = 0.75f,
                 PosX = 20
             };
@@ -45,8 +45,8 @@ namespace Quaver.Graphics.UserInterface.Online
             ListContainer = new Sprite()
             {
                 Parent = this,
-                Size = new UDim2D(SizeX, SizeY - Header.SizeY),
-                PosY = Header.SizeY + 5,
+                Size = new UDim2D(SizeX, SizeY - Header.SizeY + 5),
+                PosY = Header.SizeY,
                 Tint = ColorHelper.HexToColor("#2B2B2B"),
                 Alpha = 0.25f
             };
@@ -57,7 +57,7 @@ namespace Quaver.Graphics.UserInterface.Online
                 Alignment = Alignment.MidRight,
                 TextAlignment = Alignment.MidRight,
                 Text = "0 Online",
-                Font = Fonts.AllerBold16,
+                Font = Fonts.AllerRegular16,
                 TextScale = 0.75f,
                 PosX = -20
             };            

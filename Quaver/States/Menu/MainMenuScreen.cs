@@ -138,20 +138,21 @@ namespace Quaver.States.Menu
             Toolbar = new Toolbar(new List<ToolbarItem>
                 {
                     new ToolbarItem("Home", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen()), true),
-                    new ToolbarItem("Play", () => GameBase.GameStateManager.ChangeState(new SongSelectState())),
-                    new ToolbarItem("Edit", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen())),
-                    new ToolbarItem("Leaderboard", () => { })
+                    new ToolbarItem("Customization", () => { }),
+                    new ToolbarItem("Challenges", () => { }),
+                    new ToolbarItem("Leaderboard", () => {}),
+                    new ToolbarItem("Stats", () => { })
                 },
                 new List<ToolbarItem>
                 {
                     new ToolbarItem(FontAwesome.PowerOff, QuaverGame.Quit),
-                    new ToolbarItem(FontAwesome.Cog, () => {}),               
+                    new ToolbarItem(FontAwesome.Cog, () => {}), 
                 }
             ) { Parent = Container };
 
             BottomBar = new BottomBar { Parent = Container };
 
-            var stats = new MenuStats()
+            /*var stats = new MenuStats()
             {
                 Parent = Container,
                 PosY = Toolbar.PosY + Toolbar.SizeY + 60,
@@ -162,45 +163,58 @@ namespace Quaver.States.Menu
             {
                 Parent = Container,
                 Position = new UDim2D(stats.PosX, stats.PosY + stats.SizeY + 60)
-            };
+            };*/
             
             CreateNavigationButtons();
         }
 
         private void CreateNavigationButtons()
         {
-            var competitive = new NavigationButton(new Vector2(325, 230), "Competitive", GameBase.QuaverUserInterface.MenuLock)
+            var competitive = new NavigationButton(new Vector2(325, 230), "Competitive", GameBase.QuaverUserInterface.MenuCompetitive,
+                "Compete against the world and rank up!")
             {
                 Parent = Container,
-                Alignment = Alignment.TopRight,
-                PosX = -80,
+                Alignment = Alignment.TopCenter,
+                PosX = 0,
                 PosY = Toolbar.PosY + Toolbar.SizeY + 60
             };
             
-            var singlePlayer = new NavigationButton(new Vector2(325, 230), "Single Player", GameBase.QuaverUserInterface.MenuSinglePlayer)
+            var singlePlayer = new NavigationButton(new Vector2(325, 230), "Single Player", 
+                GameBase.QuaverUserInterface.MenuSinglePlayer, "Play offline and compete for scoreboard ranks!")
             {
                 Parent = Container,
-                Alignment = Alignment.TopRight,
+                Alignment = Alignment.TopCenter,
                 PosX = competitive.PosX - competitive.SizeX - 30,
                 PosY = competitive.PosY
             };
 
             singlePlayer.Clicked += (sender, e) => GameBase.GameStateManager.ChangeState(new SongSelectState());
             
-            var edit = new NavigationButton(new Vector2(325, 230), "Map Editor", GameBase.QuaverUserInterface.MenuLock)
+            var edit = new NavigationButton(new Vector2(325, 230), "Map Editor", GameBase.QuaverUserInterface.MenuLock,
+                "Create or edit a map to any song you'd like!")
             {
                 Parent = Container,
-                Alignment = Alignment.TopRight,
+                Alignment = Alignment.TopCenter,
                 PosX = competitive.PosX,
                 PosY = competitive.PosY + competitive.SizeY + 30
             };
             
-            var multiplayer = new NavigationButton(new Vector2(325, 230), "Multiplayer", GameBase.QuaverUserInterface.MenuLock)
+            var multiplayer = new NavigationButton(new Vector2(325, 230), "Multiplayer", GameBase.QuaverUserInterface.MenuMultiplayer,
+                "Play casually with your friends online!")
             {
                 Parent = Container,
-                Alignment = Alignment.TopRight,
+                Alignment = Alignment.TopCenter,
                 PosX = singlePlayer.PosX,
                 PosY = singlePlayer.PosY + singlePlayer.SizeY + 30
+            };
+
+            var news = new NavigationButton(new Vector2(250, 490), "Latest News", GameBase.QuaverUserInterface.MenuNews,
+                "No news found!")
+            {
+                Parent = Container,
+                Alignment = Alignment.TopCenter,
+                PosY = singlePlayer.PosY,
+                PosX = competitive.SizeX + competitive.PosX + 15
             };
         }
     }
