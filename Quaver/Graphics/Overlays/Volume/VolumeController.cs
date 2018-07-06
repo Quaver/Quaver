@@ -8,7 +8,6 @@ using Quaver.Config;
 using Quaver.GameState;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons.Sliders;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -382,10 +381,10 @@ namespace Quaver.Graphics.Overlays.Volume
         {
             // Change unfocused sliders
             foreach (var slider in Sliders.FindAll(x => x != FocusedSlider).ToList())
-                slider.ChangeColor(QuaverColors.MainAccentInactive);
+                slider.ChangeColor(Colors.MainAccentInactive);
             
             // Change focused sliders.
-            FocusedSlider.ChangeColor(QuaverColors.MainAccent);
+            FocusedSlider.ChangeColor(Colors.MainAccent);
 
             /*
             // Change tint of master vol icon - Not sure how I like this.

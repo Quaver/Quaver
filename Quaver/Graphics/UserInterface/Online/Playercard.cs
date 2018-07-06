@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.Config;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Main;
@@ -100,28 +99,28 @@ namespace Quaver.Graphics.UserInterface.Online
                 Size = new UDim2D(20, 20),
                 PosX = Avatar.SizeX + 3,
                 PosY = 5,
-                Tint = QuaverColors.MainAccent
+                Tint = Colors.MainAccent
             };
             
             Username = new SpriteText()
             {
                 Parent = this,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AllerBold16,
                 PosX = RankBadge.PosX + RankBadge.SizeX + 5,
                 PosY = RankBadge.PosY,
                 Text = ConfigManager.Username.Value,
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
                 TextColor = Color.White,
-                TextScale = 0.90f
+                TextScale = 0.85f
             };
             
             Rating = new SpriteText()
             {
                 Parent = this,
-                Font = QuaverFonts.AssistantRegular16,
-                PosX = RankBadge.PosX,
-                PosY = RankBadge.PosY + 25,
+                Font = Fonts.AllerRegular16,
+                PosX = RankBadge.PosX + 5,
+                PosY = RankBadge.PosY + 28,
                 Text = "Rating: 0.00",
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
@@ -133,7 +132,7 @@ namespace Quaver.Graphics.UserInterface.Online
             {
                 Parent = this,
                 Image = FontAwesome.Desktop,
-                Size = new UDim2D(25, 25),
+                Size = new UDim2D(20, 20),
                 Alignment = Alignment.TopRight,
                 Position = new UDim2D(-5, 5),
                 Alpha = 1f
@@ -146,18 +145,10 @@ namespace Quaver.Graphics.UserInterface.Online
                 TextScale = 0.70f,
                 PosY = Rating.PosY,
                 Text = "#0 (Lv.0)",
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AllerRegular16,
                 TextAlignment = Alignment.TopRight,
                 PosX = -5
             };
-
-            LevelBar = new ProgressBar(100, 50, new Vector2(SizeX - Avatar.SizeX, 3), this, Alignment.BotLeft)
-            {
-                PosX = Avatar.SizeX,
-                CurrentValue = 88,
-                PosY = 0.5f
-            };
-
         }
     }
 }

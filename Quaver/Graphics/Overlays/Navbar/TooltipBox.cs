@@ -96,7 +96,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             Name = new SpriteText()
             {
                 Text = "",
-                Font = QuaverFonts.Medium24,
+                Font = Fonts.Medium24,
                 Size = new UDim2D(20, 20, 1, 0),
                 Position = new UDim2D(tooltipTopLineX + Icon.Image.Width + 10, Icon.Image.Height / 2f - 8),
                 Alignment = Alignment.TopLeft,
@@ -110,7 +110,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             Description = new SpriteText()
             {
                 Text = "",
-                Font = QuaverFonts.Medium24,
+                Font = Fonts.Medium24,
                 Size = new UDim2D(15, 16, 1, 0),
                 Position = new UDim2D(Name.PosX, Name.PosY + Name.SizeY + 2),
                 Alignment = Alignment.TopLeft,

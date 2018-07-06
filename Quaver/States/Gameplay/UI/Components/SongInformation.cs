@@ -3,7 +3,6 @@ using System;
 using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
@@ -77,7 +76,7 @@ namespace Quaver.States.Gameplay.UI.Components
             Screen = screen;
             
             Size = new UDim2D(750, 150);
-            Tint = QuaverColors.MainAccentInactive;
+            Tint = Colors.MainAccentInactive;
             Alpha = 0;
 
             // Replay
@@ -89,7 +88,7 @@ namespace Quaver.States.Gameplay.UI.Components
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = "Watching",
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 PosY = 0,
                 TextScale = replayTextScale,
                 Alpha = 0
@@ -104,10 +103,10 @@ namespace Quaver.States.Gameplay.UI.Components
                     Parent = this,
                     Alignment = Alignment.TopCenter,
                     Text = Screen.LoadedReplay.PlayerName,
-                    Font = QuaverFonts.AssistantRegular16,
+                    Font = Fonts.AssistantRegular16,
                     PosY = Watching.PosY,
                     TextScale = replayTextScale,
-                    TextColor = QuaverColors.MainAccent,
+                    TextColor = Colors.MainAccent,
                     Alpha = 0
                 };
 
@@ -125,7 +124,7 @@ namespace Quaver.States.Gameplay.UI.Components
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = $"{Screen.Map.Artist} - \"{Screen.Map.Title}\"",
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 PosY = Watching.PosY + TextYSpacing + TextYSpacing,
                 Alpha = 0
             };
@@ -135,7 +134,7 @@ namespace Quaver.States.Gameplay.UI.Components
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = $"[{Screen.Map.DifficultyName}]",
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 PosY = Title.PosY + TextYSpacing + TextYSpacing * 0.90f,
                 TextScale = 0.90f,
                 Alpha = 0
@@ -146,7 +145,7 @@ namespace Quaver.States.Gameplay.UI.Components
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = $"Mapped By: \"{Screen.Map.Creator}\"",
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 PosY = Difficulty.PosY + TextYSpacing + TextYSpacing * 0.80f,
                 TextScale = 0.80f,
                 Alpha = 0
@@ -157,7 +156,7 @@ namespace Quaver.States.Gameplay.UI.Components
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = $"Rating: {StringHelper.AccuracyToString(Screen.Map.AverageNotesPerSecond(GameBase.AudioEngine.PlaybackRate)).Replace("%", "")}",
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 PosY = Creator.PosY + TextYSpacing + TextYSpacing * 0.75f,
                 TextScale = 0.75f,
                 Alpha = 0,
@@ -171,7 +170,7 @@ namespace Quaver.States.Gameplay.UI.Components
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = modsString,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 PosY = Rating.PosY + TextYSpacing + TextYSpacing * 0.7f,
                 TextScale = 0.7f,
                 Alpha = 0

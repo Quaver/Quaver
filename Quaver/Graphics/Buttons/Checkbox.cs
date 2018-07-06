@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Quaver.Config;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Colors;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -70,7 +69,7 @@ namespace Quaver.Graphics.Buttons
         private void SetCheckboxImage()
         {
             Image = BindedValue.Value ? FontAwesome.CircleClosed : FontAwesome.CircleOpen;
-            Tint = BindedValue.Value ? QuaverColors.MainAccent : QuaverColors.MainAccentInactive;
+            Tint = BindedValue.Value ? Colors.MainAccent : Colors.MainAccentInactive;
         }
         
         /// <summary>

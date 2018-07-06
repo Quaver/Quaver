@@ -45,7 +45,7 @@ namespace Quaver.Graphics.Overlays.Toolbar
                 Text = name,
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.MidCenter,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 TextScale = 0.75f
             };
         }

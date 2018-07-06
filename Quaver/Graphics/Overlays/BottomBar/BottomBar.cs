@@ -47,7 +47,7 @@ namespace Quaver.Graphics.Overlays.BottomBar
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AllerRegular16,
                 Text = "Tip: If our knees were bent the other way, what would chairs look like?",
                 TextScale = 0.75f
             };
@@ -64,8 +64,8 @@ namespace Quaver.Graphics.Overlays.BottomBar
                 Alignment = Alignment.MidRight,
                 TextAlignment = Alignment.MidCenter,
                 Text = "Powered by Swan 2017-2018",
-                Font = QuaverFonts.AssistantRegular16,
-                TextScale = 0.75f
+                Font = Fonts.AllerRegular16,
+                TextScale = 0.65f
             };
 
             SwanText.PosX = (-SwanText.Font.MeasureString(SwanText.Text) * SwanText.TextScale).X;

@@ -30,7 +30,6 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Discord;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Logging;
@@ -458,7 +457,7 @@ namespace Quaver.States.Results
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
                 PosY = -300,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 Text = SongTitle
             };
             
@@ -467,7 +466,7 @@ namespace Quaver.States.Results
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
                 PosY = -250,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 Text = $"Mapped By: {Qua.Creator}"
             };
 
@@ -476,7 +475,7 @@ namespace Quaver.States.Results
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
                 PosY = -200,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 Text = $"Played By: {Replay.PlayerName} At: "
             };
             
@@ -487,9 +486,9 @@ namespace Quaver.States.Results
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
                 PosY = -150,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 Text = $"Score: {ScoreProcessor.Score:N0}",
-                TextColor = QuaverColors.MainAccent
+                TextColor = Colors.MainAccent
             };
             
             var acc = new SpriteText()
@@ -497,9 +496,9 @@ namespace Quaver.States.Results
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
                 PosY = -100,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 Text = $"Accuracy: {StringHelper.AccuracyToString(ScoreProcessor.Accuracy)}",
-                TextColor = QuaverColors.SecondaryAccent
+                TextColor = Colors.SecondaryAccent
             };
             
             var maxCombo = new SpriteText()
@@ -507,9 +506,9 @@ namespace Quaver.States.Results
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
                 PosY = -50,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 Text = $"Max Combo: {ScoreProcessor.MaxCombo:N0}x",
-                TextColor = QuaverColors.Negative
+                TextColor = Colors.Negative
             };
             
             Judgements = new List<SpriteText>();
@@ -523,7 +522,7 @@ namespace Quaver.States.Results
                     Parent = Container,
                     Alignment = Alignment.MidCenter,
                     PosY = 35 * i + 0,
-                    Font = QuaverFonts.AssistantRegular16,
+                    Font = Fonts.AssistantRegular16,
                     Text = $"{judgement.ToString()}: {ScoreProcessor.CurrentJudgements[judgement]}",
                     TextColor = GameBase.Skin.Keys[Qua.Mode].JudgeColors[judgement]
                 });

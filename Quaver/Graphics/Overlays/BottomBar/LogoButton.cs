@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Colors;
 using Quaver.Main;
 
 namespace Quaver.Graphics.Overlays.BottomBar
@@ -24,7 +23,7 @@ namespace Quaver.Graphics.Overlays.BottomBar
 
         protected override void MouseOver()
         {
-            Tint = QuaverColors.MainAccent;
+            Tint = Colors.MainAccent;
         }
     }
 }

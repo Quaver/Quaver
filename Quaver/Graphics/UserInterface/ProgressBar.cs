@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 
@@ -28,12 +27,12 @@ namespace Quaver.Graphics.UserInterface
         ///     The active color of the progress bar
         ///     
         /// </summary>
-        internal Color ActiveColor { get; set; } = QuaverColors.MainAccent;
+        internal Color ActiveColor { get; set; } = Colors.MainAccent;
 
         /// <summary>
         ///     The inactive color of the progress bar.
         /// </summary>
-        internal Color InactiveColor { get; set; } = QuaverColors.MainAccentInactive;
+        internal Color InactiveColor { get; set; } = Colors.MainAccentInactive;
 
         /// <summary>
         ///     The current active progress bar.

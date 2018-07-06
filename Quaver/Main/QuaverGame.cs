@@ -107,7 +107,7 @@ namespace Quaver.Main
             FontAwesome.Load();
             
             // Load all fonts
-            QuaverFonts.Load();
+            Fonts.Load();
 
             // Load all titles
             Titles.Load();

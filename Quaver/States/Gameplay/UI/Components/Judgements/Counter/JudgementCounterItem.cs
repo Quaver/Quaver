@@ -82,7 +82,7 @@ namespace Quaver.States.Gameplay.UI.Components.Judgements.Counter
                 Alignment = Alignment.MidCenter,
                 Parent = this,
                 Text = $"{JudgementHelper.JudgementToShortName(j)}",
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 TextColor = Color.Black,
                 TextScale = 0.75f,
                 PosX = 0,

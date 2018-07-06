@@ -17,6 +17,7 @@ using Quaver.Graphics.Overlays.BottomBar;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.Text;
 using Quaver.Graphics.UserInterface;
 using Quaver.Graphics.UserInterface.Online;
 using Quaver.Helpers;
@@ -88,7 +89,7 @@ namespace Quaver.States.Menu
 
             //Initialize Menu Screen
             Container = new Container();
-            CreateUI();
+            CreateInterface();
 
             UpdateReady = true;
         }
@@ -129,7 +130,7 @@ namespace Quaver.States.Menu
         /// <summary>
         ///     Initializes the UI for this state
         /// </summary>
-        private void CreateUI()
+        private void CreateInterface()
         {
             // TODO: Use an actual background instead of loading from file.
             Background = new Background(GraphicsHelper.LoadTexture2DFromFile(@"c:\users\admin\desktop\aaaddd.png"), 30) { Parent = Container };
@@ -163,6 +164,44 @@ namespace Quaver.States.Menu
                 Position = new UDim2D(stats.PosX, stats.PosY + stats.SizeY + 60)
             };
             
+            CreateNavigationButtons();
+        }
+
+        private void CreateNavigationButtons()
+        {
+            var competitive = new NavigationButton(new Vector2(325, 230), "Competitive", GameBase.QuaverUserInterface.MenuLock)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                PosX = -80,
+                PosY = Toolbar.PosY + Toolbar.SizeY + 60
+            };
+            
+            var singlePlayer = new NavigationButton(new Vector2(325, 230), "Single Player", GameBase.QuaverUserInterface.MenuSinglePlayer)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                PosX = competitive.PosX - competitive.SizeX - 30,
+                PosY = competitive.PosY
+            };
+
+            singlePlayer.Clicked += (sender, e) => GameBase.GameStateManager.ChangeState(new SongSelectState());
+            
+            var edit = new NavigationButton(new Vector2(325, 230), "Map Editor", GameBase.QuaverUserInterface.MenuLock)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                PosX = competitive.PosX,
+                PosY = competitive.PosY + competitive.SizeY + 30
+            };
+            
+            var multiplayer = new NavigationButton(new Vector2(325, 230), "Multiplayer", GameBase.QuaverUserInterface.MenuLock)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopRight,
+                PosX = singlePlayer.PosX,
+                PosY = singlePlayer.PosY + singlePlayer.SizeY + 30
+            };
         }
     }
 }

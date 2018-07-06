@@ -2,6 +2,7 @@
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
+using Quaver.Helpers;
 using Quaver.Main;
 
 namespace Quaver.Graphics.UserInterface.Online
@@ -26,8 +27,8 @@ namespace Quaver.Graphics.UserInterface.Online
             {
                 Parent = this,
                 Size = new UDim2D(SizeX, 40),
-                Tint = Color.Black,
-                Alpha = 0.60f
+                Tint = Colors.DarkGray,
+                Alpha = 1f
             };
 
             HeaderText = new SpriteText()
@@ -36,7 +37,7 @@ namespace Quaver.Graphics.UserInterface.Online
                 Alignment = Alignment.MidLeft,
                 TextAlignment = Alignment.MidLeft,
                 Text = "Friends List",
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AllerBold16,
                 TextScale = 0.75f,
                 PosX = 20
             };
@@ -46,7 +47,7 @@ namespace Quaver.Graphics.UserInterface.Online
                 Parent = this,
                 Size = new UDim2D(SizeX, SizeY - Header.SizeY),
                 PosY = Header.SizeY + 5,
-                Tint = Color.Black,
+                Tint = ColorHelper.HexToColor("#2B2B2B"),
                 Alpha = 0.25f
             };
 
@@ -56,7 +57,7 @@ namespace Quaver.Graphics.UserInterface.Online
                 Alignment = Alignment.MidRight,
                 TextAlignment = Alignment.MidRight,
                 Text = "0 Online",
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AllerBold16,
                 TextScale = 0.75f,
                 PosX = -20
             };            

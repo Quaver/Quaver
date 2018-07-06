@@ -64,7 +64,7 @@ namespace Quaver.Graphics.Buttons
             TitleText = new SpriteText()
             {
                 Text = "Song Title", //map.Title,
-                Font = QuaverFonts.Medium48,
+                Font = Fonts.Medium48,
                 Size = new UDim2D(-2 * ButtonScale, 22 * ButtonScale, 1, 0),
                 Position = new UDim2D(ButtonScale, ButtonScale),
                 Alignment = Alignment.TopLeft,
@@ -77,7 +77,7 @@ namespace Quaver.Graphics.Buttons
             ArtistText = new SpriteText()
             {
                 Text = "Song Artist | Charter", //map.Artist + " | "+ map.Creator,
-                Font = QuaverFonts.Medium48,
+                Font = Fonts.Medium48,
                 Size = new UDim2D(-2 * ButtonScale, 14 * ButtonScale, 1, 0),
                 Position = new UDim2D(ButtonScale, 22 * ButtonScale, 0, 0),
                 Alignment = Alignment.TopLeft,
