@@ -123,10 +123,11 @@ namespace Quaver.States.Gameplay.UI.Components
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
-                Text = $"{Screen.Map.Artist} - \"{Screen.Map.Title}\"",
-                Font = Fonts.AssistantRegular16,
+                Text = $"{Screen.Map.Artist} - {Screen.Map.Title}",
+                Font = Fonts.AllerRegular16,
                 PosY = Watching.PosY + TextYSpacing + TextYSpacing,
-                Alpha = 0
+                Alpha = 0,
+                TextScale = 0.85f
             };
 
             Difficulty = new SpriteText()
@@ -134,9 +135,9 @@ namespace Quaver.States.Gameplay.UI.Components
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = $"[{Screen.Map.DifficultyName}]",
-                Font = Fonts.AssistantRegular16,
-                PosY = Title.PosY + TextYSpacing + TextYSpacing * 0.90f,
-                TextScale = 0.90f,
+                Font = Fonts.AllerRegular16,
+                PosY = Title.PosY + TextYSpacing + TextYSpacing * 0.85f,
+                TextScale = 0.80f,
                 Alpha = 0
             };
 
@@ -145,9 +146,9 @@ namespace Quaver.States.Gameplay.UI.Components
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = $"Mapped By: \"{Screen.Map.Creator}\"",
-                Font = Fonts.AssistantRegular16,
+                Font = Fonts.AllerRegular16,
                 PosY = Difficulty.PosY + TextYSpacing + TextYSpacing * 0.80f,
-                TextScale = 0.80f,
+                TextScale = 0.75f,
                 Alpha = 0
             };
 
@@ -156,9 +157,9 @@ namespace Quaver.States.Gameplay.UI.Components
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = $"Rating: {StringHelper.AccuracyToString(Screen.Map.AverageNotesPerSecond(GameBase.AudioEngine.PlaybackRate)).Replace("%", "")}",
-                Font = Fonts.AssistantRegular16,
+                Font = Fonts.AllerRegular16,
                 PosY = Creator.PosY + TextYSpacing + TextYSpacing * 0.75f,
-                TextScale = 0.75f,
+                TextScale = 0.70f,
                 Alpha = 0,
                 TextColor = ColorHelper.DifficultyToColor(Screen.Map.AverageNotesPerSecond(GameBase.AudioEngine.PlaybackRate))
             };
@@ -170,7 +171,7 @@ namespace Quaver.States.Gameplay.UI.Components
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = modsString,
-                Font = Fonts.AssistantRegular16,
+                Font = Fonts.AllerRegular16,
                 PosY = Rating.PosY + TextYSpacing + TextYSpacing * 0.7f,
                 TextScale = 0.7f,
                 Alpha = 0

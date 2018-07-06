@@ -99,7 +99,7 @@ namespace Quaver.Graphics.UserInterface.Online
                 TextAlignment = Alignment.MidRight,
                 Text = "0",
                 Font = Fonts.AllerRegular16,
-                TextScale = 0.70f,
+                TextScale = 0.75f,
                 PosX = -10
             };
 

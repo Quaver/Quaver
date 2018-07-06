@@ -29,11 +29,6 @@ namespace Quaver.Graphics.UserInterface.Online
         private SpriteText Username { get; }
 
         /// <summary>
-        ///     The badge that signifiies their "rank" or "prestige"
-        /// </summary>
-        private Sprite RankBadge { get; }
-
-        /// <summary>
         ///     The player's rating
         /// </summary>
         private SpriteText Rating { get; }
@@ -47,11 +42,6 @@ namespace Quaver.Graphics.UserInterface.Online
         ///     The game mode the player currently has activated.
         /// </summary>
         private Sprite GameMode { get; }
-
-        /// <summary>
-        ///     Shows the user's progress until their next level.
-        /// </summary>
-        private ProgressBar LevelBar { get; }
 
         /// <summary>
         /// 
@@ -86,41 +76,31 @@ namespace Quaver.Graphics.UserInterface.Online
                 Parent = this,
                 Image = GameBase.QuaverUserInterface.BlankBox,
                 Tint = Color.Black,
-                Alpha = 0.40f,
+                Alpha = 0.50f,
                 Size = Title.Size,
                 Alignment = Title.Alignment,
                 Position = Title.Position
             };
-            
-            RankBadge = new Sprite()
-            {
-                Parent = this,
-                Image = FontAwesome.Code,
-                Size = new UDim2D(20, 20),
-                PosX = Avatar.SizeX + 3,
-                PosY = 5,
-                Tint = Colors.MainAccent
-            };
-            
+
             Username = new SpriteText()
             {
                 Parent = this,
-                Font = Fonts.AllerBold16,
-                PosX = RankBadge.PosX + RankBadge.SizeX + 5,
-                PosY = RankBadge.PosY,
+                Font = Fonts.AllerRegular16,
+                PosX = Avatar.PosX + Avatar.SizeX + 7,
+                PosY = 5,
                 Text = ConfigManager.Username.Value,
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
                 TextColor = Color.White,
-                TextScale = 0.85f
+                TextScale = 0.90f
             };
             
             Rating = new SpriteText()
             {
                 Parent = this,
                 Font = Fonts.AllerRegular16,
-                PosX = RankBadge.PosX + 5,
-                PosY = RankBadge.PosY + 28,
+                PosX = Username.PosX,
+                PosY = Username.PosY + 28,
                 Text = "Rating: 0.00",
                 Alignment = Alignment.TopLeft,
                 TextAlignment = Alignment.TopLeft,
@@ -134,7 +114,7 @@ namespace Quaver.Graphics.UserInterface.Online
                 Image = FontAwesome.Desktop,
                 Size = new UDim2D(20, 20),
                 Alignment = Alignment.TopRight,
-                Position = new UDim2D(-5, 5),
+                Position = new UDim2D(-7, Username.PosY),
                 Alpha = 1f
             };
 
@@ -147,7 +127,7 @@ namespace Quaver.Graphics.UserInterface.Online
                 Text = "#0 (Lv.0)",
                 Font = Fonts.AllerRegular16,
                 TextAlignment = Alignment.TopRight,
-                PosX = -5
+                PosX = -7
             };
         }
     }
