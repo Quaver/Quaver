@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
 using Quaver.Graphics.Buttons;
@@ -51,6 +52,7 @@ namespace Quaver.States.Menu
         internal NavigationButton(Vector2 size, string headerText, Texture2D image, string footerText = null)
         {
             Size = new UDim2D(size.X, size.Y);
+            Alpha = 0;
             
             Header = new Sprite
             {
@@ -101,6 +103,29 @@ namespace Quaver.States.Menu
                 Text = footerText,
                 TextScale = 0.42f
             };
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="dt"></param>
+        internal override void Update(double dt)
+        {
+            if (FooterBackground != null)
+            {
+                if (IsHovered)
+                {
+                    FooterText.Visible = true;
+                    FooterBackground.SizeY = GraphicsHelper.Tween(40, FooterBackground.SizeY, Math.Min(dt / 60, 1));
+                }
+                else
+                {
+                    FooterText.Visible = false;
+                    FooterBackground.SizeY = GraphicsHelper.Tween(0, FooterBackground.SizeY, Math.Min(dt / 60, 1));
+                }
+            }
+
+            base.Update(dt);
         }
 
         /// <inheritdoc />
