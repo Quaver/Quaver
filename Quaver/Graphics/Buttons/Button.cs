@@ -2,6 +2,7 @@
 using System.Drawing;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -11,7 +12,7 @@ namespace Quaver.Graphics.Buttons
     /// <summary>
     /// This class will be inherited from every button class.
     /// </summary>
-    internal abstract class Button : Sprites.Sprite
+    internal abstract class Button : Sprite
     {
         /// <summary>
         ///     Event that fires when the button is clicked.
@@ -32,7 +33,12 @@ namespace Quaver.Graphics.Buttons
         ///     Determines if the button is currently hovered over.
         /// </summary>
         internal bool IsHovered { get; set; }
-        
+
+        /// <summary>
+        ///     If the button is actually clickable.
+        /// </summary>
+        internal bool IsClickable { get; set; } = true;
+
         /// <summary>
         ///     The mouse state of the previous frame
         /// </summary>
@@ -106,6 +112,9 @@ namespace Quaver.Graphics.Buttons
         /// </summary>
         protected virtual void OnClicked()
         {
+            if (!IsClickable)
+                return;
+            
             Clicked?.Invoke(this, new EventArgs());
         }
 
