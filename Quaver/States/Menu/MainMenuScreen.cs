@@ -69,6 +69,11 @@ namespace Quaver.States.Menu
         /// </summary>
         private Playercard Playercard { get; set; }
 
+        /// <summary>
+        ///     The container for the navigation buttons we have.
+        /// </summary>
+        private NavigationButtonContainer NavigationButtonContainer { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Initialize
@@ -151,38 +156,25 @@ namespace Quaver.States.Menu
             ) { Parent = Container };
 
             BottomBar = new BottomBar { Parent = Container };
-
-            /*var stats = new MenuStats()
-            {
-                Parent = Container,
-                PosY = Toolbar.PosY + Toolbar.SizeY + 60,
-                PosX = 80
-            };
-            
-            var friends = new FriendsList()
-            {
-                Parent = Container,
-                Position = new UDim2D(stats.PosX, stats.PosY + stats.SizeY + 60)
-            };*/
-            
+                
             CreateNavigationButtons();
         }
 
         private void CreateNavigationButtons()
-        {
+        {          
+            // Competitive
             var competitive = new NavigationButton(new Vector2(325, 230), "Competitive", GameBase.QuaverUserInterface.MenuCompetitive,
                 "Compete against the world and rank up!")
             {
-                Parent = Container,
                 Alignment = Alignment.TopCenter,
                 PosX = 0,
                 PosY = Toolbar.PosY + Toolbar.SizeY + 60
             };
             
+            // Single Player.
             var singlePlayer = new NavigationButton(new Vector2(325, 230), "Single Player", 
                 GameBase.QuaverUserInterface.MenuSinglePlayer, "Play offline and compete for scoreboard ranks!")
             {
-                Parent = Container,
                 Alignment = Alignment.TopCenter,
                 PosX = competitive.PosX - competitive.SizeX - 30,
                 PosY = competitive.PosY
@@ -190,32 +182,42 @@ namespace Quaver.States.Menu
 
             singlePlayer.Clicked += (sender, e) => GameBase.GameStateManager.ChangeState(new SongSelectState());
             
+            // Editor
             var edit = new NavigationButton(new Vector2(325, 230), "Map Editor", GameBase.QuaverUserInterface.MenuLock,
                 "Create or edit a map to any song you'd like!")
             {
-                Parent = Container,
                 Alignment = Alignment.TopCenter,
                 PosX = competitive.PosX,
                 PosY = competitive.PosY + competitive.SizeY + 30
             };
             
+            // Multiplayer
             var multiplayer = new NavigationButton(new Vector2(325, 230), "Multiplayer", GameBase.QuaverUserInterface.MenuMultiplayer,
                 "Play casually with your friends online!")
             {
-                Parent = Container,
                 Alignment = Alignment.TopCenter,
                 PosX = singlePlayer.PosX,
                 PosY = singlePlayer.PosY + singlePlayer.SizeY + 30
             };
 
+            // News
             var news = new NavigationButton(new Vector2(250, 490), "Latest News", GameBase.QuaverUserInterface.MenuNews,
-                "No news found!")
+                "Keep up-to-date wih Quaver!")
             {
-                Parent = Container,
                 Alignment = Alignment.TopCenter,
                 PosY = singlePlayer.PosY,
                 PosX = competitive.SizeX + competitive.PosX + 15
             };
+            
+            // Create a new button container with all of the created buttons.
+            NavigationButtonContainer = new NavigationButtonContainer(new List<NavigationButton>
+            {
+                competitive,
+                singlePlayer,
+                edit,
+                multiplayer,
+                news
+            }) { Parent = Container };
         }
     }
 }

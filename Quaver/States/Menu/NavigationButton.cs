@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
 using Quaver.Graphics.Buttons;
@@ -7,6 +8,7 @@ using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Main;
+using AudioEngine = Quaver.Audio.AudioEngine;
 
 namespace Quaver.States.Menu
 {
@@ -35,12 +37,17 @@ namespace Quaver.States.Menu
         /// <summary>
         ///     The background of the footer.
         /// </summary>
-        private Sprite FooterBackground { get; set; }
+        private Sprite FooterBackground { get; }
 
         /// <summary>
         ///     The actual footer text that describes the button. 
         /// </summary>
         private SpriteText FooterText { get;  }
+
+        /// <summary>
+        ///     If the footer is always shown here.
+        /// </summary>
+        internal bool FooterAlwaysShown { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -113,7 +120,7 @@ namespace Quaver.States.Menu
         {
             if (FooterBackground != null)
             {
-                if (IsHovered)
+                if (IsHovered || FooterAlwaysShown)
                 {
                     FooterText.Visible = true;
                     FooterBackground.SizeY = GraphicsHelper.Tween(40, FooterBackground.SizeY, Math.Min(dt / 60, 1));
@@ -133,7 +140,9 @@ namespace Quaver.States.Menu
         /// </summary>
         protected override void OnClicked()
         {
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
+            if (IsClickable)
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick, AudioEngine.EffectVolume - AudioEngine.EffectVolume / 2, 0.5f);
+            
             base.OnClicked();
         }
 
