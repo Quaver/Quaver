@@ -132,8 +132,7 @@ namespace Quaver.States.Menu
         /// </summary>
         private void CreateInterface()
         {
-            // TODO: Use an actual background instead of loading from file.
-            Background = new Background(GraphicsHelper.LoadTexture2DFromFile(@"c:\users\admin\desktop\aaaddd.png"), 30) { Parent = Container };
+            Background = new Background(GameBase.QuaverUserInterface.MenuBackground, 30) { Parent = Container };
             
             Toolbar = new Toolbar(new List<ToolbarItem>
                 {
