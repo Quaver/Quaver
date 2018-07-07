@@ -204,7 +204,10 @@ namespace Quaver.States.Menu
 
             // News
             var news = new NavigationButton(new Vector2(250, 490), "Latest News", GameBase.QuaverUserInterface.MenuNews,
-                "Keep up-to-date wih Quaver!", () => { })
+                "Keep up-to-date wih Quaver!", () =>
+                {
+                    Logger.LogImportant($"This is not implemented yet! Check back later!", LogType.Runtime);
+                }, true)
             {
                 Alignment = Alignment.TopCenter,
                 PosY = singlePlayer.PosY,

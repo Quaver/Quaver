@@ -102,13 +102,23 @@ namespace Quaver.States.Menu
         /// <param name="dt"></param>
         private void PerformClickAnimation(double dt)
         {
+            // Keeps track of if the animation is actually done,
+            // when it is, we'll call the OnClick action that the button
+            // has.
+            var animationDone = false;
+            
             Buttons.ForEach(x =>
             {
                 // Put the clicked button in the middle of the screen.
                 if (x == ClickedButton)
                 {
-                    x.PosX = GraphicsHelper.Tween(0, x.PosX, Math.Min(dt / 60, 1));
-                    x.PosY = GraphicsHelper.Tween(GameBase.WindowRectangle.Height / 2f - x.SizeY / 2f, x.PosY, Math.Min(dt / 60, 1));                
+                    var targetPosition = new Vector2(0, GameBase.WindowRectangle.Height / 2f - x.SizeY / 2f);
+                    
+                    x.PosX = GraphicsHelper.Tween(targetPosition.X, x.PosX, Math.Min(dt / 60, 1));
+                    x.PosY = GraphicsHelper.Tween(targetPosition.Y, x.PosY, Math.Min(dt / 60, 1));
+
+                    if (Math.Abs(x.PosX - targetPosition.X) < 0.02f && Math.Abs(x.PosY - targetPosition.Y) < 0.02f)
+                        animationDone = true;
                 }
                 else
                 {                    
@@ -128,6 +138,10 @@ namespace Quaver.States.Menu
                     }                  
                 }
             });
+
+            // Call click action if the animation was completed.
+            if (animationDone)
+                ClickedButton.OnClick();
         }
     }
 }
