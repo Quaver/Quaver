@@ -107,6 +107,7 @@ namespace Quaver.States.Menu
             // has.
             var animationDone = false;
             
+            // Perform animations for each button.
             Buttons.ForEach(x =>
             {
                 // Put the clicked button in the middle of the screen.
@@ -122,20 +123,16 @@ namespace Quaver.States.Menu
                 }
                 else
                 {                    
-                    var pos = x.AbsolutePosition;
-
                     // If the button is on the left side of the screen, then we want to lerp it left.
-                    var width = pos.X + x.SizeX;
+                    var width = x.AbsolutePosition.X + x.SizeX;
                     var middleScreen = GameBase.WindowRectangle.Width / 2f;
                     
+                    // Based on where the button is, we'll want to move it in the horizontal direction closest
+                    // to where it can go off-screen.
                     if (width < middleScreen)
-                    {
                         x.PosX = GraphicsHelper.Tween(-GameBase.WindowRectangle.Width - x.SizeX, x.PosX, Math.Min(dt / 240, 1));
-                    }
                     else if (width > middleScreen)
-                    {
-                        x.PosX = GraphicsHelper.Tween(GameBase.WindowRectangle.Width + x.SizeX, x.PosX, Math.Min(dt / 240, 1));
-                    }                  
+                        x.PosX = GraphicsHelper.Tween(GameBase.WindowRectangle.Width + x.SizeX, x.PosX, Math.Min(dt / 240, 1));               
                 }
             });
 

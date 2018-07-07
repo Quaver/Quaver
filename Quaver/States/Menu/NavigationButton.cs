@@ -174,10 +174,7 @@ namespace Quaver.States.Menu
                     OnClick();
                 }
             }
-
-
-            
-            
+        
             base.OnClicked();
         }
 
