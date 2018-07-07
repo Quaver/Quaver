@@ -160,11 +160,14 @@ namespace Quaver.States.Menu
             CreateNavigationButtons();
         }
 
+        /// <summary>
+        ///     Initializes the navigation buttons and its container.
+        /// </summary>
         private void CreateNavigationButtons()
         {          
             // Competitive
             var competitive = new NavigationButton(new Vector2(325, 230), "Competitive", GameBase.QuaverUserInterface.MenuCompetitive,
-                "Compete against the world and rank up!")
+                "Compete against the world and rank up!", () => { })
             {
                 Alignment = Alignment.TopCenter,
                 PosX = 0,
@@ -173,18 +176,17 @@ namespace Quaver.States.Menu
             
             // Single Player.
             var singlePlayer = new NavigationButton(new Vector2(325, 230), "Single Player", 
-                GameBase.QuaverUserInterface.MenuSinglePlayer, "Play offline and compete for scoreboard ranks!")
+                GameBase.QuaverUserInterface.MenuSinglePlayer, "Play offline and compete for scoreboard ranks!",
+                () => GameBase.GameStateManager.ChangeState(new SongSelectState()))
             {
                 Alignment = Alignment.TopCenter,
                 PosX = competitive.PosX - competitive.SizeX - 30,
                 PosY = competitive.PosY
             };
 
-            singlePlayer.Clicked += (sender, e) => GameBase.GameStateManager.ChangeState(new SongSelectState());
-            
             // Editor
             var edit = new NavigationButton(new Vector2(325, 230), "Map Editor", GameBase.QuaverUserInterface.MenuLock,
-                "Create or edit a map to any song you'd like!")
+                "Create or edit a map to any song you'd like!", () => { })
             {
                 Alignment = Alignment.TopCenter,
                 PosX = competitive.PosX,
@@ -193,7 +195,7 @@ namespace Quaver.States.Menu
             
             // Multiplayer
             var multiplayer = new NavigationButton(new Vector2(325, 230), "Multiplayer", GameBase.QuaverUserInterface.MenuMultiplayer,
-                "Play casually with your friends online!")
+                "Play casually with your friends online!", () => { })
             {
                 Alignment = Alignment.TopCenter,
                 PosX = singlePlayer.PosX,
@@ -202,7 +204,7 @@ namespace Quaver.States.Menu
 
             // News
             var news = new NavigationButton(new Vector2(250, 490), "Latest News", GameBase.QuaverUserInterface.MenuNews,
-                "Keep up-to-date wih Quaver!")
+                "Keep up-to-date wih Quaver!", () => { })
             {
                 Alignment = Alignment.TopCenter,
                 PosY = singlePlayer.PosY,

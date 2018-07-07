@@ -64,6 +64,18 @@ namespace Quaver.States.Menu
         /// <param name="e"></param>
         private void OnItemClicked(object sender, EventArgs e)
         {
+            // Get the button that was clicked.
+            var button = (NavigationButton) sender;
+
+            // If the button's action was set to be called immediately, then
+            // we'll want to just call whatever action was there and disregard the entire
+            // animation process.
+            if (button.CallActionImmediately)
+            {
+                button.OnClick();
+                return;
+            }
+            
             OriginalSizes = new Dictionary<NavigationButton, Vector2>();
             
             Buttons.ForEach(x =>
@@ -73,7 +85,10 @@ namespace Quaver.States.Menu
             });
 
             // Set the clicked button (Makes it so that it starts performing the exit animation.
-            ClickedButton = (NavigationButton) sender;
+            // We set this down here as opposed to above because WHENEVER this is set, it will
+            // perform the animation. We don't want to perform any animations if the button
+            // was set to call its action immediately.
+            ClickedButton = button;
             ClickedButton.FooterAlwaysShown = true;
             
             GameBase.AudioEngine.PlaySoundEffect(SFX.Woosh);

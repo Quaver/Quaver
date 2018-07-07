@@ -49,6 +49,18 @@ namespace Quaver.States.Menu
         /// </summary>
         internal bool FooterAlwaysShown { get; set; }
 
+        /// <summary>
+        ///     The action that is called when the button is clicked.
+        /// </summary>
+        internal Action OnClick { get;}
+
+        /// <summary>
+        ///     If this is set to true, it'll call the action immediately.
+        ///     If it isn't, it'll wait until it is handled in the navigation button container,
+        ///     after any animations have been performed.
+        /// </summary>
+        internal bool CallActionImmediately { get; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor -
@@ -56,10 +68,15 @@ namespace Quaver.States.Menu
         /// <param name="size"></param>
         /// <param name="headerText"></param>
         /// <param name="image"></param>
-        internal NavigationButton(Vector2 size, string headerText, Texture2D image, string footerText = null)
+        /// <param name="footerText"></param>
+        /// <param name="onClick"></param>
+        /// <param name="callActionImmediately"></param>
+        internal NavigationButton(Vector2 size, string headerText, Texture2D image, string footerText, Action onClick, bool callActionImmediately = false)
         {
             Size = new UDim2D(size.X, size.Y);
             Alpha = 0;
+            OnClick = onClick;
+            CallActionImmediately = callActionImmediately;
             
             Header = new Sprite
             {
@@ -141,7 +158,25 @@ namespace Quaver.States.Menu
         protected override void OnClicked()
         {
             if (IsClickable)
+            {
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick, AudioEngine.EffectVolume - AudioEngine.EffectVolume / 2, 0.5f);
+                
+                // If the button doesn't have a container, we'll need to handle its action here. 
+                if (Parent.GetType() != typeof(NavigationButtonContainer))
+                {
+                    // Throw an exception if a developer decided that they wouldn't call the action immediately
+                    // even if there wasn't a container.
+                    if (!CallActionImmediately)
+                        throw new ArgumentException("CallActionImmediately is false but the button does not " +
+                                                    "have a NavigationButtonContainer. Either set to true, or " +
+                                                    "add a container.");
+                    
+                    OnClick();
+                }
+            }
+
+
+            
             
             base.OnClicked();
         }
