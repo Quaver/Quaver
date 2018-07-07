@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Config;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
 
@@ -51,6 +52,9 @@ namespace Quaver.Graphics.UserInterface
         /// </summary>
         private void PerformParallaxEffect()
         {
+            if (!ConfigManager.BackgroundParallax.Value)
+                return;
+            
             // Parallax
             var mousePos = GameBase.MouseState.Position;
 
