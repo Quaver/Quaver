@@ -45,7 +45,7 @@ namespace Quaver.Helpers
         }
 
         /// <summary>
-        ///     Gets a Bitmap object from the resouurces given their file name.
+        ///     Gets an object from the resouurces given their file name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
