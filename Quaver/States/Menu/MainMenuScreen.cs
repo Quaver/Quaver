@@ -65,11 +65,6 @@ namespace Quaver.States.Menu
         private BottomBar BottomBar { get; set; }
 
         /// <summary>
-        ///     Displays information about the player.
-        /// </summary>
-        private Playercard Playercard { get; set; }
-
-        /// <summary>
         ///     The container for the navigation buttons we have.
         /// </summary>
         private NavigationButtonContainer NavigationButtonContainer { get; set; }
@@ -112,9 +107,9 @@ namespace Quaver.States.Menu
         /// <summary>
         ///     Update
         /// </summary>
-        /// <param name="gameTime"></param>
         public void Update(double dt)
         {
+            GameBase.Navbar.PerformHideAnimation(dt);
             Container.Update(dt);
         }
         
@@ -124,7 +119,7 @@ namespace Quaver.States.Menu
         /// </summary>
         public void Draw()
         {
-            GameBase.GraphicsDevice.Clear(Color.DarkSlateBlue);
+            GameBase.GraphicsDevice.Clear(Color.Black);
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GameBase.GraphicsDevice.RasterizerState);
             
             Container.Draw();
