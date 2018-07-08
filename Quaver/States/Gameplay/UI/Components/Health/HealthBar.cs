@@ -7,7 +7,6 @@ using Quaver.API.Maps.Processors.Scoring;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;

@@ -103,7 +103,7 @@ namespace Quaver.Graphics.UserInterface
         {
             // Draw text
             GameBase.SpriteBatch.Draw(GameBase.QuaverUserInterface.BlankBox, new Rectangle((int)GameBase.WindowRectangle.Width - 80, (int)GameBase.WindowRectangle.Height - 20, 75, 18), Color.Black);
-            GameBase.SpriteBatch.DrawString(QuaverFonts.Medium12, Math.Floor(FpsCurrent) + " FPS", new Vector2(GameBase.WindowRectangle.Width - 80, GameBase.WindowRectangle.Height - 20), Color.White);
+            GameBase.SpriteBatch.DrawString(Fonts.Medium12, Math.Floor(FpsCurrent) + " FPS", new Vector2(GameBase.WindowRectangle.Width - 80, GameBase.WindowRectangle.Height - 20), Color.White);
 
             // Draw graph and color according to fps.
             if (!DisplayGraph) return;

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
@@ -65,7 +64,7 @@ namespace Quaver.Graphics.Overlays.Options
             Title = new SpriteText()
             {
                 Text = "Settings",
-                Font = QuaverFonts.Medium24,
+                Font = Fonts.Medium24,
                 Size = new UDim2D(30, 30, 1, 0),
                 PosX = Container.SizeX / 2f - 25,
                 PosY = 20,
@@ -92,13 +91,13 @@ namespace Quaver.Graphics.Overlays.Options
             Description = new SpriteText()
             {
                 Text = "Change the way Quaver looks, sounds, feels... and tastes?",
-                Font = QuaverFonts.Medium24,
+                Font = Fonts.Medium24,
                 Size = new UDim2D(100, 100, 1, 0),
                 PosY = Title.PosY + 40,
                 Alignment = Alignment.TopCenter,
                 TextAlignment = Alignment.TopCenter,
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
-                TextColor = QuaverColors.MainAccent,
+                TextColor = Colors.MainAccent,
                 Parent = Container
             };
             

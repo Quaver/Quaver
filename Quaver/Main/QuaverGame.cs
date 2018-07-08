@@ -18,6 +18,7 @@ using Quaver.States.Menu;
 using Quaver.Resources;
 using System.IO;
 using System.Threading.Tasks;
+using Quaver.Audio;
 using Quaver.Database.Scores;
 
 namespace Quaver.Main
@@ -107,8 +108,14 @@ namespace Quaver.Main
             FontAwesome.Load();
             
             // Load all fonts
-            QuaverFonts.Load();
+            Fonts.Load();
 
+            // Load all titles
+            Titles.Load();
+            
+            // Load all non-skinnable sound effects
+            SFX.Load();
+            
             // Load the Game Skin 
             GameBase.Skin = new SkinStore();
             
@@ -134,7 +141,7 @@ namespace Quaver.Main
             
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
-            GameBase.GameStateManager.ChangeState(new MainMenuState());             
+            GameBase.GameStateManager.ChangeState(new MainMenuScreen());             
         }
 
         /// <summary>

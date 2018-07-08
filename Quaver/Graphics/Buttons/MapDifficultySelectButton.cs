@@ -54,7 +54,7 @@ namespace Quaver.Graphics.Buttons
 
             DifficultyNameText = new SpriteText()
             {
-                Font = QuaverFonts.Medium48,
+                Font = Fonts.Medium48,
                 Size = new UDim2D(-40 * ButtonScale, -ButtonScale, 1, 0.6f),
                 Position = new UDim2D(-ButtonScale, ButtonScale),
                 Alignment = Alignment.TopRight,

@@ -60,6 +60,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Audio\SFX.cs" />
     <Compile Include="Config\BindedInt.cs" />
     <Compile Include="Config\BindedValue.cs" />
     <Compile Include="Discord\DiscordManager.cs" />
@@ -70,6 +71,8 @@
     <Compile Include="Graphics\Buttons\Checkbox.cs" />
     <Compile Include="Graphics\Buttons\Sliders\Slider.cs" />
     <Compile Include="Graphics\DrawRectangle.cs" />
+    <Compile Include="Graphics\Overlays\BottomBar\BottomBar.cs" />
+    <Compile Include="Graphics\Overlays\BottomBar\LogoButton.cs" />
     <Compile Include="Graphics\Overlays\Navbar\Nav.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarButton.cs" />
@@ -79,13 +82,20 @@
     <Compile Include="Graphics\Overlays\Options\OptionsOverlay.cs" />
     <Compile Include="Graphics\Overlays\Options\OptionsSection.cs" />
     <Compile Include="Graphics\Overlays\Options\OptionsType.cs" />
+    <Compile Include="Graphics\Overlays\Toolbar\Toolbar.cs" />
+    <Compile Include="Graphics\Overlays\Toolbar\ToolbarItem.cs" />
     <Compile Include="Graphics\Overlays\Volume\VolumeController.cs" />
+    <Compile Include="Graphics\Colors.cs" />
     <Compile Include="Graphics\Sprites\AnimatableSprite.cs" />
     <Compile Include="Graphics\UDim.cs" />
     <Compile Include="Graphics\UDim2D.cs" />
+    <Compile Include="Graphics\UserInterface\Background.cs" />
     <Compile Include="Graphics\UserInterface\NumberDisplay.cs" />
+    <Compile Include="Graphics\UserInterface\Online\MenuStats.cs" />
     <Compile Include="Graphics\UserInterface\ProgressBar.cs" />
     <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
+    <Compile Include="Graphics\UserInterface\Online\FriendsList.cs" />
+    <Compile Include="Graphics\UserInterface\Online\Playercard.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
     <Compile Include="Helpers\GzipHelper.cs" />
@@ -99,6 +109,7 @@
     <Compile Include="Helpers\XnaKeyHelper.cs" />
     <Compile Include="Main\CommonTaskScheduler.cs" />
     <Compile Include="Main\FontAwesome.cs" />
+    <Compile Include="Main\Titles.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModAutoplay.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModNoPause.cs" />
     <Compile Include="Program.cs" />
@@ -141,6 +152,8 @@
     <Compile Include="States\Gameplay\UI\Components\SongInformation.cs" />
     <Compile Include="States\Gameplay\UI\Components\SongTimeProgressBar.cs" />
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />
+    <Compile Include="States\Menu\NavigationButton.cs" />
+    <Compile Include="States\Menu\NavigationButtonContainer.cs" />
     <Compile Include="States\Results\ResultsScreen.cs" />
     <Compile Include="States\Results\ResultsScreenType.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
@@ -161,7 +174,7 @@
     <Compile Include="Graphics\Particles\Particle.cs" />
     <Compile Include="Graphics\UserInterface\BarDisplay.cs" />
     <Compile Include="Graphics\Sprites\BakeableSprite.cs" />
-    <Compile Include="Main\QuaverFonts.cs" />
+    <Compile Include="Main\Fonts.cs" />
     <Compile Include="Graphics\Text\SpriteText.cs" />
     <Compile Include="Graphics\Text\TextBoxStyle.cs" />
     <Compile Include="Main\QuaverUserInterface.cs" />
@@ -174,7 +187,7 @@
     <Compile Include="Modifiers\Mods\Mania\ManiaModChill.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModSpeed.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModStrict.cs" />
-    <Compile Include="States\Menu\MainMenuState.cs" />
+    <Compile Include="States\Menu\MainMenuScreen.cs" />
     <Compile Include="States\IGameState.cs" />
     <Compile Include="States\Loading\Map\MapLoadingState.cs" />
     <Compile Include="Graphics\Buttons\Button.cs" />
@@ -197,7 +210,6 @@
     <Compile Include="Modifiers\ModManager.cs" />
     <Compile Include="Modifiers\ModType.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModNoSliderVelocities.cs" />
-    <Compile Include="Graphics\Colors\QuaverColors.cs" />
     <Compile Include="Graphics\Sprites\Sprite.cs" />
     <Compile Include="Graphics\Base\Drawable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

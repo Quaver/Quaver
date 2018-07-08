@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Graphics;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Main;
@@ -149,7 +148,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             Username = new SpriteText()
             {
                 Parent = this,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AllerRegular16,
                 Text = GetUsernameFormatted(),
                 Alignment = Alignment.TopLeft,
                 Alpha = textAlpha,
@@ -162,10 +161,10 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             Score = new SpriteText()
             {
                 Parent = this,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AllerRegular16,
                 Alignment = Alignment.TopLeft,
                 Text = Processor.Score.ToString("N0"),
-                TextScale = 0.78f,
+                TextScale = 0.70f,
                 Alpha = textAlpha
             };
             
@@ -173,7 +172,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             Combo = new SpriteText()
             {
                 Parent = this,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AllerRegular16,
                 Alignment = Alignment.MidRight,
                 Text = $"{Processor.Combo:N0}x",
                 TextScale = 0.78f,
@@ -234,7 +233,7 @@ namespace Quaver.States.Gameplay.UI.Components.Scoreboard
             // Set username position.
             var usernameTextSize = Username.Font.MeasureString(Username.Text);        
             Username.PosX = Avatar.SizeX + usernameTextSize.X * Username.TextScale / 2f + 10;
-            Username.PosY = usernameTextSize.Y * Username.TextScale / 2f - 2;
+            Username.PosY = usernameTextSize.Y * Username.TextScale / 2f + 2;
         }
         
         /// <summary>

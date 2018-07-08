@@ -7,7 +7,6 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Config;
 using Quaver.Graphics;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -270,11 +269,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         {
             if (IsLongNote)
             {
-                LongNoteBodySprite.Tint = QuaverColors.DeadNote;
-                LongNoteEndSprite.Tint = QuaverColors.DeadNote;
+                LongNoteBodySprite.Tint = Colors.DeadLongNote;
+                LongNoteEndSprite.Tint = Colors.DeadLongNote;
             }
 
-            HitObjectSprite.Tint = QuaverColors.DeadNote;
+            HitObjectSprite.Tint = Colors.DeadLongNote;
         }
 
         /// <summary>

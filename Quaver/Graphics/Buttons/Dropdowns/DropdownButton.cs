@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms.VisualStyles;
 using Microsoft.Xna.Framework;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -151,7 +150,7 @@ namespace Quaver.Graphics.Buttons.Dropdowns
         /// </summary>
         protected override void MouseOver()
         {
-            Tint = QuaverColors.MainAccent;
+            Tint = Colors.MainAccent;
             Alpha = 0.90f;
             ChevronRightIcon.Alpha = 1f;
         }

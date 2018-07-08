@@ -183,5 +183,23 @@ namespace Quaver.Graphics.Sprites
             
             Tint = new Color((int)r, (int)g, (int)b);
         }
+
+        /// <summary>
+        ///     Increases the size of the sprite and all of its children.
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="dt"></param>
+        /// <param name="by"></param>
+        internal void IncreaseSizeBy(float to, double dt, int by)
+        {
+            SizeX = GraphicsHelper.Lerp(to, SizeX, Math.Min(dt / by, 1));
+            SizeY = GraphicsHelper.Lerp(to, SizeY, Math.Min(dt / by, 1));
+            
+            Children.ForEach(x =>
+            {
+                x.SizeX = GraphicsHelper.Lerp(to, x.SizeX, Math.Min(dt / by, 1));
+                x.SizeY = GraphicsHelper.Lerp(to, x.SizeY, Math.Min(dt / by, 1));
+            });
+        }
     }
 }

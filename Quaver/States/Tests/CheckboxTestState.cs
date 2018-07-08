@@ -49,7 +49,7 @@ namespace Quaver.States.Tests
                 Alignment = Alignment.MidCenter,
                 PosX = ds4k.PosX + 120,
                 Text = "Toggle DownScroll for 4K",
-                Font = QuaverFonts.Medium12
+                Font = Fonts.Medium12
             };
             
             var ds7k = new Checkbox(ConfigManager.DownScroll7K, new Vector2(20, 20))
@@ -66,7 +66,7 @@ namespace Quaver.States.Tests
                 PosX = ds4k.PosX + 120,
                 PosY = ds7k.PosY,
                 Text = "Toggle DownScroll for 7K",
-                Font = QuaverFonts.Medium12
+                Font = Fonts.Medium12
             };
             
             UpdateReady = true;

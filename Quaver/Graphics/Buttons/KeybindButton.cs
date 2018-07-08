@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Logging;
@@ -68,7 +67,7 @@ namespace Quaver.Graphics.Buttons
             Size.Y.Offset = size.Y;
             
             // Set color.
-            Tint = QuaverColors.MainAccentInactive;
+            Tint = Colors.MainAccentInactive;
 
             // Hook onto when a user enters text.
             GameBase.GameWindow.TextInput += OnTextEntered;
@@ -146,7 +145,7 @@ namespace Quaver.Graphics.Buttons
         /// </summary>
         private void Deselect()
         {
-            Tint = QuaverColors.MainAccentInactive;
+            Tint = Colors.MainAccentInactive;
             Selected = false;
             HoverTargetTween = 0;
             TextSprite.Text = XnaKeyHelper.GetStringFromKey(Keybind.Value);
@@ -164,7 +163,7 @@ namespace Quaver.Graphics.Buttons
             if (!Selected) 
                 return;
             
-            Tint = QuaverColors.MainAccent;
+            Tint = Colors.MainAccent;
             TextSprite.Text = "Key?";
             HoverTargetTween = 1;
         }

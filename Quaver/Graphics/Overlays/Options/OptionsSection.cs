@@ -9,7 +9,6 @@ using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Buttons.Dropdowns;
 using Quaver.Graphics.Buttons.Sliders;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Main;
@@ -84,8 +83,8 @@ namespace Quaver.Graphics.Overlays.Options
                 Parent = Container,
                 Alignment = Alignment.TopRight,
                 PosY = SpacingY + 8,
-                Tint = QuaverColors.MainAccentInactive,
-                ProgressBall = { Tint = QuaverColors.MainAccentInactive }
+                Tint = Colors.MainAccentInactive,
+                ProgressBall = { Tint = Colors.MainAccentInactive }
             };
 
             // Make sure the slider's colors get updated accordingly.
@@ -93,13 +92,13 @@ namespace Quaver.Graphics.Overlays.Options
             {
                 if (slider.MouseInHoldSequence)
                 {
-                    slider.Tint = QuaverColors.MainAccent;
-                    slider.ProgressBall.Tint = QuaverColors.MainAccent;
+                    slider.Tint = Colors.MainAccent;
+                    slider.ProgressBall.Tint = Colors.MainAccent;
                 }
                 else
                 {
-                    slider.Tint = QuaverColors.MainAccentInactive;
-                    slider.ProgressBall.Tint = QuaverColors.MainAccentInactive;
+                    slider.Tint = Colors.MainAccentInactive;
+                    slider.ProgressBall.Tint = Colors.MainAccentInactive;
                 }
             };
             
@@ -122,7 +121,7 @@ namespace Quaver.Graphics.Overlays.Options
                 Parent = Container,
                 Alignment = Alignment.TopRight,
                 PosY = SpacingY,
-                Tint = QuaverColors.MainAccentInactive
+                Tint = Colors.MainAccentInactive
             };
             
             checkbox.Clicked += onClick;
@@ -218,7 +217,7 @@ namespace Quaver.Graphics.Overlays.Options
                 TextAlignment = Alignment.TopLeft,
                 Alignment = Alignment.TopLeft,
                 Text = text,
-                Font = QuaverFonts.Medium12,
+                Font = Fonts.Medium12,
                 Parent = Container,
                 TextBoxStyle = TextBoxStyle.OverflowSingleLine,
                 PosY = SpacingY
