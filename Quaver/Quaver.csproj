@@ -90,6 +90,9 @@
     <Compile Include="Graphics\UDim.cs" />
     <Compile Include="Graphics\UDim2D.cs" />
     <Compile Include="Graphics\UI\Background.cs" />
+    <Compile Include="Graphics\UI\Notifications\Notification.cs" />
+    <Compile Include="Graphics\UI\Notifications\NotificationManager.cs" />
+    <Compile Include="Graphics\UI\Notifications\NotificationLevel.cs" />
     <Compile Include="Graphics\UI\NumberDisplay.cs" />
     <Compile Include="Graphics\UI\Online\MenuStats.cs" />
     <Compile Include="Graphics\UI\ProgressBar.cs" />
@@ -219,6 +222,7 @@
     <Compile Include="States\Tests\DropdownTestState.cs" />
     <Compile Include="States\Tests\CheckboxTestState.cs" />
     <Compile Include="States\Tests\NavbarTestState.cs" />
+    <Compile Include="States\Tests\NotificationTestScreen.cs" />
     <Compile Include="States\Tests\SemiTransparentTestScreen.cs" />
     <Compile Include="States\Tests\SliderTestState.cs" />
     <Compile Include="StepMania\Etterna.cs" />

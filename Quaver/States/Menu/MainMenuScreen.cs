@@ -19,6 +19,8 @@ using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UI;
+using Quaver.Graphics.UI.Notifications;
+using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
@@ -63,13 +65,12 @@ namespace Quaver.States.Menu
         private BottomBar BottomBar { get; set; }
 
         /// <summary>
-        ///     The container for the navigation buttons we have.
+        ///     
         /// </summary>
         private NavigationButtonContainer NavigationButtonContainer { get; set; }
 
         /// <inheritdoc />
-        /// <summary>
-        ///     Initialize
+        /// <summary>  
         /// </summary>
         public void Initialize()
         {
@@ -138,7 +139,8 @@ namespace Quaver.States.Menu
                     new ToolbarItem("Customization", () => { }),
                     new ToolbarItem("Challenges", () => { }),
                     new ToolbarItem("Leaderboard", () => {}),
-                    new ToolbarItem("Stats", () => { })
+                    new ToolbarItem("Stats", () => { }),
+                    new ToolbarItem("Test Screen", () => { GameBase.GameStateManager.ChangeState(new NotificationTestScreen()); })
                 },
                 new List<ToolbarItem>
                 {
@@ -195,8 +197,8 @@ namespace Quaver.States.Menu
             };
 
             // News
-            var news = new NavigationButton(new Vector2(250, 490), "Latest News", GameBase.QuaverUserInterface.MenuNews,
-                "Keep up-to-date wih Quaver!", () =>
+            var news = new NavigationButton(new Vector2(250, 490), "Latest News",
+                GameBase.QuaverUserInterface.MenuNews, "Keep up-to-date wih Quaver!", () =>
                 {
                     Logger.LogImportant($"This is not implemented yet! Check back later!", LogType.Runtime);
                 }, true)
