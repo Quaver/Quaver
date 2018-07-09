@@ -6,6 +6,7 @@ using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Config;
 using Quaver.Graphics.Sprites;
+using Quaver.Graphics.UI.Notifications;
 using Quaver.Helpers;
 using Quaver.Input;
 using Quaver.Logging;
@@ -346,31 +347,33 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Input
             if (Ruleset.Screen.Timing.CurrentTime >= 5000 && !Ruleset.Screen.OnBreak)
                 return;
             
+            // Decrease
             if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyDecreaseScrollSpeed.Value))
             {
                 switch (Ruleset.Screen.Map.Mode)
                 {
                     case GameMode.Keys4:
                         ConfigManager.ScrollSpeed4K.Value--;
-                        Logger.LogImportant($"Scroll Speed Set To: {ConfigManager.ScrollSpeed4K.Value}", LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Info, $"4K Scroll speed set to: {ConfigManager.ScrollSpeed4K.Value}");
                         break;
                     case GameMode.Keys7:
                         ConfigManager.ScrollSpeed7K.Value--;
-                        Logger.LogImportant($"Scroll Speed Set To: {ConfigManager.ScrollSpeed7K.Value}", LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Info, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed4K.Value}");
                         break;
                 }
             }
+            // Increase
             else if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyIncreaseScrollSpeed.Value))
             {
                 switch (Ruleset.Screen.Map.Mode)
                 {
                     case GameMode.Keys4:
                         ConfigManager.ScrollSpeed4K.Value++;
-                        Logger.LogImportant($"Scroll Speed Set To: {ConfigManager.ScrollSpeed4K.Value}", LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Info, $"4K Scroll speed set to: {ConfigManager.ScrollSpeed4K.Value}");
                         break;
                     case GameMode.Keys7:
                         ConfigManager.ScrollSpeed7K.Value++;
-                        Logger.LogImportant($"Scroll Speed Set To: {ConfigManager.ScrollSpeed7K.Value}", LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Info, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed4K.Value}");
                         break;
                 }
             }
