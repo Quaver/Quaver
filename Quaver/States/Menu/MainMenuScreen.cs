@@ -157,7 +157,10 @@ namespace Quaver.States.Menu
         {          
             // Competitive
             var competitive = new NavigationButton(new Vector2(325, 230), "Competitive", GameBase.QuaverUserInterface.MenuCompetitive,
-                "Compete against the world and rank up!", () => { })
+                "Compete against the world and rank up!", () =>
+                {
+                    NotificationManager.Show(NotificationLevel.Info, "This isn't implemented yet. Check back later!");
+                }, true)
             {
                 Alignment = Alignment.TopCenter,
                 PosX = 0,
@@ -176,7 +179,10 @@ namespace Quaver.States.Menu
 
             // Editor
             var edit = new NavigationButton(new Vector2(325, 230), "Map Editor", GameBase.QuaverUserInterface.MenuLock,
-                "Create or edit a map to any song you'd like!", () => { })
+                "Create or edit a map to any song you'd like!", () =>
+                {
+                    NotificationManager.Show(NotificationLevel.Info, "This isn't implemented yet. Check back later!");
+                }, true)
             {
                 Alignment = Alignment.TopCenter,
                 PosX = competitive.PosX,
@@ -185,7 +191,10 @@ namespace Quaver.States.Menu
             
             // Multiplayer
             var multiplayer = new NavigationButton(new Vector2(325, 230), "Multiplayer", GameBase.QuaverUserInterface.MenuMultiplayer,
-                "Play casually with your friends online!", () => { })
+                "Play casually with your friends online!", () =>
+                {
+                    NotificationManager.Show(NotificationLevel.Info, "This isn't implemented yet. Check back later!");
+                }, true)
             {
                 Alignment = Alignment.TopCenter,
                 PosX = singlePlayer.PosX,
@@ -196,7 +205,7 @@ namespace Quaver.States.Menu
             var news = new NavigationButton(new Vector2(250, 490), "Latest News",
                 GameBase.QuaverUserInterface.MenuNews, "Keep up-to-date wih Quaver!", () =>
                 {
-                    Logger.LogImportant($"This is not implemented yet! Check back later!", LogType.Runtime);
+                    NotificationManager.Show(NotificationLevel.Info, "This isn't implemented yet. Check back later!");
                 }, true)
             {
                 Alignment = Alignment.TopCenter,
