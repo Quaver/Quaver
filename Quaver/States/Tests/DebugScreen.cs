@@ -17,7 +17,7 @@ using Quaver.States.Select;
 
 namespace Quaver.States.Tests
 {
-    internal class NotificationTestScreen : IGameState
+    internal class DebugScreen : IGameState
     {
         /// <inheritdoc />
         /// <summary>
@@ -118,15 +118,7 @@ namespace Quaver.States.Tests
             Toolbar = new Toolbar(new List<ToolbarItem>
                 {
                     new ToolbarItem("Home", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen()), true),
-                    new ToolbarItem("Error", () => NotificationManager.Show(NotificationLevel.Error, "Oh no! Help! The chicken is burning!")),
-                    new ToolbarItem("Warning", () => NotificationManager.Show(NotificationLevel.Warning, "CRIME SCENE! DO NOT CROSS!")),
-                    new ToolbarItem("Success", () => NotificationManager.Show(NotificationLevel.Success, "You just won a BRAND NEW CAR!")),
-                    new ToolbarItem("Info", () => NotificationManager.Show(NotificationLevel.Info, "Knowledge is Power")),
-                    new ToolbarItem("Default", () => NotificationManager.Show(NotificationLevel.Default, "Just a default notification for anything.",
-                        (sender, e) =>
-                        {
-                            Logger.LogImportant("It was clicked! Whoa!", LogType.Runtime);
-                        })),
+                    new ToolbarItem("Notifications", () => GameBase.GameStateManager.ChangeState(new NotificationTestScreen())),
                 },
                 new List<ToolbarItem>
                 {

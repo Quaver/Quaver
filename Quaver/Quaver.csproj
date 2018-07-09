@@ -219,6 +219,7 @@
     <Compile Include="Database\Scores\LocalScore.cs" />
     <Compile Include="States\State.cs" />
     <Compile Include="States\Tests\AnimatableSpriteTestScreen.cs" />
+    <Compile Include="States\Tests\DebugScreen.cs" />
     <Compile Include="States\Tests\DropdownTestState.cs" />
     <Compile Include="States\Tests\CheckboxTestState.cs" />
     <Compile Include="States\Tests\NavbarTestState.cs" />

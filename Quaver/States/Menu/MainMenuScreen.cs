@@ -136,11 +136,7 @@ namespace Quaver.States.Menu
             Toolbar = new Toolbar(new List<ToolbarItem>
                 {
                     new ToolbarItem("Home", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen()), true),
-                    new ToolbarItem("Customization", () => { }),
-                    new ToolbarItem("Challenges", () => { }),
-                    new ToolbarItem("Leaderboard", () => {}),
-                    new ToolbarItem("Stats", () => { }),
-                    new ToolbarItem("Test Screen", () => { GameBase.GameStateManager.ChangeState(new NotificationTestScreen()); })
+                    new ToolbarItem("Debug", () => { GameBase.GameStateManager.ChangeState(new DebugScreen()); })
                 },
                 new List<ToolbarItem>
                 {
