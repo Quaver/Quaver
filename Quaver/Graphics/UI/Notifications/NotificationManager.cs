@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -54,6 +55,7 @@ namespace Quaver.Graphics.UI.Notifications
         internal static void Show(NotificationLevel level, string text, EventHandler onClick = null)
         {
             Color color;
+            var image = GameBase.QuaverUserInterface.UnknownAvatar;
 
             switch (level)
             {
@@ -65,32 +67,37 @@ namespace Quaver.Graphics.UI.Notifications
                     break;
                 case NotificationLevel.Info:
                     color = ColorHelper.HexToColor("#5BC0DE");
+                    image = GameBase.QuaverUserInterface.NotificationInfo;
                     break;
                 case NotificationLevel.Error:
                     color = ColorHelper.HexToColor("#D9534F");
+                    image = GameBase.QuaverUserInterface.NotificationError;
                     break;
                 case NotificationLevel.Warning:
                     color = Color.Yellow;
+                    image = GameBase.QuaverUserInterface.NotificationWarning;
                     break;
                 case NotificationLevel.Success:
                     color = ColorHelper.HexToColor("#5CB85C");
+                    image = GameBase.QuaverUserInterface.NotificationSuccess;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(level), level, null);
             }
             
-            Show(color, text, onClick);
+            Show(image, color, text, onClick);
         }
 
         /// <summary>
         ///     Show a notification with a custom color.
         /// </summary>
+        /// <param name="image"></param>
         /// <param name="color"></param>
         /// <param name="text"></param>
         /// <param name="onClick"></param>
-        internal static void Show(Color color, string text, EventHandler onClick = null)
+        internal static void Show(Texture2D image, Color color, string text, EventHandler onClick = null)
         {
-            var notification = new Notification(GameBase.QuaverUserInterface.UnknownAvatar, text, color, onClick)
+            var notification = new Notification(image, text, color, onClick)
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,

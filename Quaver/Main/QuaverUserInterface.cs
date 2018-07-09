@@ -73,6 +73,11 @@ namespace Quaver.Main
 
         internal Texture2D MenuNews { get; set; }
 
+        internal Texture2D NotificationError { get; set; }
+        internal Texture2D NotificationWarning { get; set; }
+        internal Texture2D NotificationInfo { get; set; }
+        internal Texture2D NotificationSuccess { get; set; }
+
         /// <summary>
         ///     Loads all the ui elements into content
         /// </summary>
@@ -96,6 +101,10 @@ namespace Quaver.Main
             MenuMultiplayer = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_multiplayer);
             MenuCompetitive = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_competitive);
             MenuNews = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_news);
+            NotificationError = ResourceHelper.LoadTexture2DFromPng(QuaverResources.notif_error);
+            NotificationInfo = ResourceHelper.LoadTexture2DFromPng(QuaverResources.notif_info);
+            NotificationSuccess = ResourceHelper.LoadTexture2DFromPng(QuaverResources.notif_success);
+            NotificationWarning = ResourceHelper.LoadTexture2DFromPng(QuaverResources.notif_warning);
         }
     }
 }
