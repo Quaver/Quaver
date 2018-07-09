@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using Quaver.Helpers;
 using Quaver.Main;
 
-namespace Quaver.Graphics.UserInterface
+namespace Quaver.Graphics.UI
 {
     /// <inheritdoc />
     /// <summary>

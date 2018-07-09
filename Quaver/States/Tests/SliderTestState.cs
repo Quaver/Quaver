@@ -11,7 +11,7 @@ using Quaver.Graphics.Buttons.Sliders;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UserInterface;
+using Quaver.Graphics.UI;
 using Quaver.Main;
 
 namespace Quaver.States.Tests

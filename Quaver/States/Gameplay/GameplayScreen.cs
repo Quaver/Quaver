@@ -16,7 +16,7 @@ using Quaver.Database.Scores;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UserInterface;
+using Quaver.Graphics.UI;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;

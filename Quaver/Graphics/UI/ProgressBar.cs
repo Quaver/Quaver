@@ -4,7 +4,7 @@ using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 
-namespace Quaver.Graphics.UserInterface
+namespace Quaver.Graphics.UI
 {
     /// <inheritdoc />
     /// <summary>

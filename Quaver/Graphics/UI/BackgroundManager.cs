@@ -6,7 +6,7 @@ using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Main;
 
-namespace Quaver.Graphics.UserInterface
+namespace Quaver.Graphics.UI
 {
     internal class BackgroundManager
     {

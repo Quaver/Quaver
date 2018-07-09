@@ -11,7 +11,6 @@ using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
-using Quaver.Graphics.UserInterface;
 using Quaver.Logging;
 using Quaver.Skinning;
 using Quaver.States.Menu;
@@ -20,6 +19,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Quaver.Audio;
 using Quaver.Database.Scores;
+using Quaver.Graphics.UI;
 
 namespace Quaver.Main
 {

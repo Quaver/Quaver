@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Main;
 
-namespace Quaver.Graphics.UserInterface.Online
+namespace Quaver.Graphics.UI.Online
 {
     internal class FriendsList : Sprite
     {

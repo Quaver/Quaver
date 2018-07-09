@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.UserInterface;
+using Quaver.Graphics.UI;
 
 namespace Quaver.States.Gameplay.UI.Components
 {

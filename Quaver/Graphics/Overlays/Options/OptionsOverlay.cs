@@ -13,7 +13,7 @@ using Quaver.Database.Maps;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Buttons.Dropdowns;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UserInterface;
+using Quaver.Graphics.UI;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;

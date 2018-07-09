@@ -4,7 +4,7 @@ using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Main;
 
-namespace Quaver.Graphics.UserInterface.Online
+namespace Quaver.Graphics.UI.Online
 {
     internal class Playercard : Sprite
     {
