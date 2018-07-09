@@ -11,8 +11,6 @@ using Quaver.Config;
 using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UserInterface;
 using Quaver.Input;
 using Quaver.Logging;
 using Quaver.Main;
@@ -23,6 +21,7 @@ using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.UI;
 
 namespace Quaver.States.Select
 {

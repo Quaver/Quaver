@@ -14,7 +14,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UserInterface;
+using Quaver.Graphics.UI;
 using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States.Gameplay.UI.Components;

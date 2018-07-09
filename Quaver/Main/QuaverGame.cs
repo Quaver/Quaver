@@ -11,7 +11,6 @@ using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
-using Quaver.Graphics.UserInterface;
 using Quaver.Logging;
 using Quaver.Skinning;
 using Quaver.States.Menu;
@@ -20,6 +19,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Quaver.Audio;
 using Quaver.Database.Scores;
+using Quaver.Graphics.UI;
+using Quaver.Graphics.UI.Notifications;
 
 namespace Quaver.Main
 {
@@ -197,6 +198,9 @@ namespace Quaver.Main
             // Update Navbar
             GameBase.Navbar.Update(dt);
             
+            // Update all notifications.
+            NotificationManager.Update(dt);
+            
             // Run scheduled background tasks
             if (GameBase.GameTime.ElapsedMilliseconds - CommonTaskScheduler.LastRunTime >= 5000)
                 CommonTaskScheduler.Run();
@@ -222,12 +226,15 @@ namespace Quaver.Main
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GraphicsDevice.RasterizerState);
             GameBase.VolumeController.Draw();
             GameBase.Navbar.Draw();
-            GameBase.Cursor.Draw();
+
             Logger.Draw(dt);
      
             if (ConfigManager.FpsCounter.Value)
                 QuaverFpsCounter.Draw();
 
+            NotificationManager.Draw();
+            
+            GameBase.Cursor.Draw();
             GameBase.SpriteBatch.End();
 
             // Draw Base

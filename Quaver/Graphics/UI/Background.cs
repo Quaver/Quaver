@@ -4,7 +4,7 @@ using Quaver.Config;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
 
-namespace Quaver.Graphics.UserInterface
+namespace Quaver.Graphics.UI
 {
     internal class Background : Sprite
     {

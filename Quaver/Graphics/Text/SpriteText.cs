@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -114,8 +115,28 @@ namespace Quaver.Graphics.Text
             {
                 _alpha = value;
                 _color = _tint * _alpha;
+                
+                if (!SetChildrenAlpha)
+                    return;
+                
+                Children.ForEach(x =>
+                {
+                    var t = x.GetType();
+
+                    if (t == typeof(Sprite))
+                    {
+                        var sprite = (Sprite) x;
+                        sprite.Alpha = value;
+                    }
+                    else if (t == typeof(SpriteText))
+                    {
+                        var text = (SpriteText) x;
+                        text.Alpha = value;
+                    }
+                });
             }
         }
+        
         private float _alpha = 1f;
 
         /// <summary>
@@ -123,6 +144,16 @@ namespace Quaver.Graphics.Text
         /// </summary>
         private Color _color = Color.White;
 
+        /// <summary>
+        ///     Dictates if we want to set the alpha of the children to this one
+        ///     if it is changed.
+        /// </summary>
+        internal bool SetChildrenAlpha { get; set; }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="dt"></param>
         internal override void Update(double dt)
         {
             if (Changed) UpdateText();

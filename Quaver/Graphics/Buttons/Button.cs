@@ -52,13 +52,13 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     Ctor - Optionally pass in an action.
         /// </summary>
-        /// <param name="action"></param>
         internal Button(EventHandler clickAction = null, EventHandler holdAction = null)
         {
             Clicked += clickAction;
             Held += holdAction;
         }
         
+        /// <inheritdoc />
         /// <summary>
         ///     This method will be used for button logic and animation
         /// </summary>

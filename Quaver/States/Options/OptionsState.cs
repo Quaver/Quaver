@@ -8,7 +8,6 @@ using Quaver.GameState;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
-using Quaver.Graphics.UserInterface;
 using Quaver.Main;
 using Quaver.Skinning;
 using Quaver.States.Menu;

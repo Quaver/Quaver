@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -84,8 +85,32 @@ namespace Quaver.Graphics.Sprites
             {
                 _alpha = value;
                 _color = _tint * _alpha;
+
+                if (!SetChildrenAlpha)
+                    return;
+                
+                Children.ForEach(x =>
+                {
+                    var t = x.GetType();
+
+                    if (t == typeof(Sprite))
+                    {
+                        var sprite = (Sprite) x;
+                        sprite.Alpha = value;
+                    }
+                    else if (t == typeof(SpriteText))
+                    {
+                        var text = (SpriteText) x;
+                        text.Alpha = value;
+                    }
+                });
             } 
         }
+        
+        /// <summary>
+        ///     Dictates if we want to set the alpha of the children as well.
+        /// </summary>
+        internal bool SetChildrenAlpha { get; set; }
 
         /// <inheritdoc />
         /// <summary>

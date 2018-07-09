@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
-using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
