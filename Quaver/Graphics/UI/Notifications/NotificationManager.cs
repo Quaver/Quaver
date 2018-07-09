@@ -89,7 +89,7 @@ namespace Quaver.Graphics.UI.Notifications
         }
 
         /// <summary>
-        ///     Show a notification with a custom color.
+        ///     Show a completely custom notification.
         /// </summary>
         /// <param name="image"></param>
         /// <param name="color"></param>
@@ -103,7 +103,7 @@ namespace Quaver.Graphics.UI.Notifications
                 Alignment = Alignment.TopRight,
                 Position = new UDim2D(InitialPosition.X, InitialPosition.Y),
             };
-
+            
             notification.PosX = notification.SizeX;           
             Notifications.Add(notification);
         }
