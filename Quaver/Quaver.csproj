@@ -356,6 +356,10 @@
       <Project>{511cd203-9c5f-4dab-9556-437a00796cbb}</Project>
       <Name>Quaver.Resources</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Quaver.Shaders\Quaver.Shaders.csproj">
+      <Project>{07b693c1-b9bc-449e-8639-926118c9b088}</Project>
+      <Name>Quaver.Shaders</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

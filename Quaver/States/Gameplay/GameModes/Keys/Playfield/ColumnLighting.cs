@@ -22,16 +22,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         internal float AnimationValue { private get; set; }
 
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="sprite"></param>
-        internal ColumnLighting(Sprite sprite)
-        {
-            Sprite = sprite;
-        }
+        internal ColumnLighting(Sprite sprite) => Sprite = sprite;
 
         /// <summary>
-        ///     Performs 
+        ///     Performs
         /// </summary>
         /// <param name="dt"></param>
         internal void PerformAnimation(double dt)
@@ -41,7 +38,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 AnimationValue = GraphicsHelper.Tween(1, AnimationValue, Math.Min(dt / 2, 1));
             else
                 AnimationValue = GraphicsHelper.Tween(0, AnimationValue, Math.Min(dt / 60, 1));
-                
+
             // Update the alpha of the sprite.
             Sprite.Alpha = AnimationValue;
         }

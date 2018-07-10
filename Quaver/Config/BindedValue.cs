@@ -63,24 +63,23 @@ namespace Quaver.Config
             return Value.ToString();
         }
     }
-    
+
+    /// <inheritdoc />
     /// <summary>
     ///     EventArgs containing the value that was changed.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     internal class BindedValueEventArgs<T> : EventArgs
-    {        
+    {
+        /// <inheritdoc />
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="value"></param>
-        internal BindedValueEventArgs(T value)
-        {
-            Value = value;
-        }
-        
+        internal BindedValueEventArgs(T value) => Value = value;
+
         /// <summary>
-        ///     The value passed when 
+        ///     The value passed when
         /// </summary>
         internal T Value { get; set; }
     }

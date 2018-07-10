@@ -29,10 +29,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        internal HitLighting() : base(GameBase.Skin.Keys[GameBase.SelectedMap.Mode].HitLighting)
-        {
-            FinishedLooping += OnLoopCompletion;
-        }
+        internal HitLighting() : base(GameBase.Skin.Keys[GameBase.SelectedMap.Mode].HitLighting) => FinishedLooping += OnLoopCompletion;
 
         /// <inheritdoc />
         /// <summary>
@@ -43,7 +40,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             // Performs a one animation frame if possible.
             if (PerformingOneFrameAnimation)
                 PerformOneFrameAnimation(dt);
-            
+
             base.Update(dt);
         }
 
@@ -53,15 +50,15 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         internal void PerformHitAnimation()
         {
             var skin = GameBase.Skin.Keys[GameBase.SelectedMap.Mode];
-            
+
             // First begin by replacing the frames
             ReplaceFrames(IsHoldingLongNote ? skin.HoldLighting : skin.HitLighting);
-            
-            // Go to the first frame and reset each of the properties 
+
+            // Go to the first frame and reset each of the properties
             ChangeTo(0);
             Visible = true;
             Alpha = 1;
-            
+
             // If we are performing a hone frame animation however, we don't want to handle it
             // through standard looping, but rather through our own rolled out animation.
             PerformingOneFrameAnimation = Frames.Count == 1;
@@ -85,18 +82,18 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             IsHoldingLongNote = false;
             PerformingOneFrameAnimation = false;
         }
-        
+
         /// <summary>
-        ///     When the animation loop is completed, we'll dictate 
+        ///     When the animation loop is completed, we'll dictate
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnLoopCompletion(object sender, EventArgs e)
         {
             // If the loop is done and this isn't a long note, then we'll want to make it invisible.
-            if (IsHoldingLongNote) 
+            if (IsHoldingLongNote)
                 return;
-            
+
             Visible = false;
             PerformingOneFrameAnimation = false;
         }
@@ -113,7 +110,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Alpha -= AlphaChangePerFrame(dt);
 
                 if (Alpha <= 0)
-                    FinishedLooping?.Invoke(this, null);             
+                    FinishedLooping?.Invoke(this, null);
             }
             // Animation for LN HitObjects.
             // Pulsate the alpha of it.
