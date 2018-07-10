@@ -20,12 +20,12 @@ namespace Quaver.Database.Scores
         ///     Asynchronously creates the scores database
         /// </summary>
         /// <returns></returns>
-        internal static async Task CreateScoresDatabase()
+        internal static void CreateScoresDatabase()
         {
             try
             {
-                var conn = new SQLiteAsyncConnection(DatabasePath);
-                await conn.CreateTableAsync<LocalScore>();
+                var conn = new SQLiteConnection(DatabasePath);
+                conn.CreateTable<LocalScore>();
 
                 Logger.LogSuccess($"Local Scores Database has been created.", LogType.Runtime);
             }
@@ -45,9 +45,9 @@ namespace Quaver.Database.Scores
         {
             try
             {
-                var conn = new SQLiteAsyncConnection(DatabasePath);         
-                var scores = await conn.Table<LocalScore>().Where(x => x.MapMd5 == md5).ToListAsync();
-                
+                var conn = new SQLiteConnection(DatabasePath);
+                var scores = conn.Table<LocalScore>().Where(x => x.MapMd5 == md5).ToList();
+
                 return scores.OrderBy(x => x.Grade == Grade.F).ThenByDescending(x => x.Score).ToList();
             }
             catch (Exception e)
@@ -62,14 +62,14 @@ namespace Quaver.Database.Scores
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
-        internal static async Task<int> InsertScoreIntoDatabase(LocalScore score)
+        internal static int InsertScoreIntoDatabase(LocalScore score)
         {
             try
             {
                 if (score != null)
-                    await new SQLiteAsyncConnection(DatabasePath).InsertAsync(score);
+                    new SQLiteConnection(DatabasePath).Insert(score);
 
-                return await new SQLiteAsyncConnection(DatabasePath).Table<LocalScore>().CountAsync();
+                return new SQLiteConnection(DatabasePath).Table<LocalScore>().Count();
             }
             catch (Exception e)
             {
@@ -83,11 +83,11 @@ namespace Quaver.Database.Scores
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
-        internal static async Task DeleteScoreFromDatabase(LocalScore score)
+        internal static void DeleteScoreFromDatabase(LocalScore score)
         {
             try
             {
-                await new SQLiteAsyncConnection(DatabasePath).DeleteAsync(score);
+                new SQLiteConnection(DatabasePath).Delete(score);
                 Logger.LogSuccess($"Successfully deleted score from map: {score.MapMd5} from the database.", LogType.Runtime);
             }
             catch (Exception e)

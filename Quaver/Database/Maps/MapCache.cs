@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,9 +32,9 @@ namespace Quaver.Database.Maps
         /// <summary>
         ///     Responsible for loading and setting our global maps variable.
         /// </summary>
-        public static async Task LoadAndSetMapsets()
+        public static void LoadAndSetMapsets()
         {
-            GameBase.Mapsets = MapsetHelper.OrderMapsetsByDifficulty(MapsetHelper.OrderMapsetsByArtist(await LoadMapDatabaseAsync()));
+            GameBase.Mapsets = MapsetHelper.OrderMapsetsByDifficulty(MapsetHelper.OrderMapsetsByArtist(LoadMapDatabase()));
             GameBase.VisibleMapsets = GameBase.Mapsets;
         }
 
@@ -42,16 +42,16 @@ namespace Quaver.Database.Maps
         ///     Initializes and loads the map database
         /// </summary>
         /// <returns></returns>
-        private static async Task<List<Mapset>> LoadMapDatabaseAsync()
+        private static List<Mapset> LoadMapDatabase()
         {
             try
             {
                 // Create and sync the database.
-                await CreateMapTableAsync();
-                await SyncMapDatabaseAsync();
+                CreateMapTable();
+                SyncMapDatabase();
 
                 // Fetch all the new maps after syncing and return them.
-                var maps = await FetchAllMaps();
+                var maps = FetchAllMaps();
                 Logger.LogSuccess($"{maps.Count} maps have been successfully loaded.", LogType.Runtime);
 
                 if (ConfigManager.AutoLoadOsuBeatmaps.Value)
@@ -69,19 +69,19 @@ namespace Quaver.Database.Maps
             {
                 Logger.LogError(e, LogType.Runtime);
                 File.Delete(DatabasePath);
-                return await LoadMapDatabaseAsync();
-            }            
+                return LoadMapDatabase();
+            }
         }
 
         /// <summary>
         ///     Create the map table. If there is an issue, we'll delete the database fully, and create it again.
         /// </summary>
-        private static async Task CreateMapTableAsync()
+        private static void CreateMapTable()
         {
             try
             {
-                var conn = new SQLiteAsyncConnection(DatabasePath);
-                await conn.CreateTableAsync<Map>();
+                var conn = new SQLiteConnection(DatabasePath);
+                conn.CreateTable<Map>();
                 Logger.LogSuccess($"Map Database has been created.", LogType.Runtime);
             }
             catch (Exception e)
@@ -90,52 +90,55 @@ namespace Quaver.Database.Maps
                 throw;
             }
         }
-        
+
         /// <summary>
         ///     Completely syncs our map database. It will call our other helper methods, and makes sure
         ///     that maps are always up-to-date in the database.
         /// </summary>
         /// <returns></returns>
-        private static async Task SyncMapDatabaseAsync()
+        private static void SyncMapDatabase()
         {
             // Find all the.qua files in the directory.
-            var Mapss = Directory.GetFiles(ConfigManager.SongDirectory.Value, "*.qua", SearchOption.AllDirectories);
-            Logger.LogInfo($"Found: {Mapss.Length} .qua files in the /songs/ directory.", LogType.Runtime);
+            var maps     = Directory.GetFiles(ConfigManager.SongDirectory.Value, "*.qua", SearchOption.AllDirectories);
+            Logger.LogInfo($"Found: {maps.Length} .qua files in the /songs/ directory.", LogType.Runtime);
 
-            await CacheByFileCount(Mapss);
+            CacheByFileCount(maps);
 
             // Remove any qua files from the list that don't actually exist.
-            var MapsList = Mapss.ToList();
-            MapsList.RemoveAll(x => !File.Exists(x));
-            Mapss = MapsList.ToArray();
+            var mapsList = maps.ToList();
+            mapsList.RemoveAll(x => !File.Exists(x));
+            maps = mapsList.ToArray();
 
-            Logger.LogImportant($"After removing missing .qua files, there are now {Mapss.Length}", LogType.Runtime);
+            Logger.LogImportant($"After removing missing .qua files, there are now {maps.Length}", LogType.Runtime);
 
-            await CacheByMd5ChecksumAsync(Mapss);
-            await RemoveMissingMaps();
+            CacheByMd5Checksum(maps);
+            RemoveMissingMaps();
         }
 
         /// <summary>
         ///     Compares the amount of files on the file system vs. that of in the database.
         ///     It will add any of them that it finds aren't in there.
         /// </summary>
-        /// <param name="Mapss"></param>
+        /// <param name="maps"></param>
         /// <returns></returns>
-        private static async Task CacheByFileCount(string[] Mapss)
+        private static void CacheByFileCount(string[] maps)
         {
-            var mapInDb = await FetchAllMaps();
+            if (maps == null)
+                throw new ArgumentNullException(nameof(maps));
+
+            var mapInDb = FetchAllMaps();
 
             // We only want to add more maps here if the counts don't add up.
-            if (mapInDb.Count == Mapss.Length)
+            if (mapInDb.Count == maps.Length)
                 return;
 
-            Logger.LogImportant($"Incorrect # of .qua files vs maps detected. {Mapss.Length} vs {mapInDb.Count}", LogType.Runtime);
+            Logger.LogImportant($"Incorrect # of .qua files vs maps detected. {maps.Length} vs {mapInDb.Count}", LogType.Runtime);
 
             // This'll store all the maps we'll be adding into the database.
             var mapsToCache = new List<Map>();
 
             // Parse & add each map to the list of maps to cache if they aren't already in the database.
-            foreach (var file in Mapss)
+            foreach (var file in maps)
             {
                 // Run a check to see if the map path already exists in the database.
                 if (mapInDb.Any(map => ConfigManager.SongDirectory.Value.Replace("\\", "/") + "/" + map.Directory + "/" + map.Path.Replace("\\", "/") == file.Replace("\\", "/"))) continue;
@@ -149,27 +152,27 @@ namespace Quaver.Database.Maps
                 mapsToCache.Add(newMap);
             }
 
-            var finalList = await RemoveDuplicates(mapsToCache);
+            var finalList = RemoveDuplicates(mapsToCache);
 
             // Add new maps to the database.
             if (finalList.Count > 0)
-                await InsertMapsIntoDatabase(finalList);
+                InsertMapsIntoDatabase(finalList);
         }
 
         /// <summary>
-        ///     Compares the maps MD5 checksums in that of the database and the file system, 
+        ///     Compares the maps MD5 checksums in that of the database and the file system,
         ///     and updates/adds/removes them from the database.
         /// </summary>
         /// <returns></returns>
-        private static async Task CacheByMd5ChecksumAsync(IEnumerable<string> Mapss)
+        private static void CacheByMd5Checksum(IEnumerable<string> maps)
         {
             // This'll hold all of the MD5 Checksums of the .qua files in the directory.
             // Since this is an updated list, we'll use these to check if they are in the database and unchanged.
             var fileChecksums = new List<string>();
-            Mapss.ToList().ForEach(qua => fileChecksums.Add(MapsetHelper.GetMd5Checksum(qua)));
+            maps.ToList().ForEach(qua => fileChecksums.Add(MapsetHelper.GetMd5Checksum(qua)));
 
             // Find all the maps in the database
-            var mapInDb = await FetchAllMaps();
+            var mapInDb = FetchAllMaps();
 
             // Find all the mismatched maps.
             var mismatchedMaps = mapInDb
@@ -178,7 +181,7 @@ namespace Quaver.Database.Maps
             Logger.LogImportant($"Found: {mismatchedMaps.Count} maps with unmatched checksums", LogType.Runtime);
 
             if (mismatchedMaps.Count > 0)
-                await DeleteMapsFromDatabase(mismatchedMaps);
+                DeleteMapsFromDatabase(mismatchedMaps);
 
             // Stores the list of maps that were successfully reprocessed and are ready to add into the DB.
             var reprocessedMaps = new List<Map>();
@@ -191,24 +194,24 @@ namespace Quaver.Database.Maps
                 reprocessedMaps.Add(new Map().ConvertQuaToMap(Qua.Parse(map.Path), map.Path));
             }
 
-            var finalList = await RemoveDuplicates(reprocessedMaps);
+            var finalList = RemoveDuplicates(reprocessedMaps);
 
             // Add new maps to the database.
             if (finalList.Count > 0)
-                await InsertMapsIntoDatabase(finalList);
+                InsertMapsIntoDatabase(finalList);
         }
 
         /// <summary>
         ///     Takes a look at all the maps that are in the db and removes any of the missing ones.
         /// </summary>
         /// <returns></returns>
-        private static async Task RemoveMissingMaps()
+        private static void RemoveMissingMaps()
         {
-            var maps = await FetchAllMaps();
-            
+            var maps = FetchAllMaps();
+
             // Stores the maps we need to delete
             var mapsToDelete = new List<Map>();
-            
+
             foreach (var map in maps)
             {
                 var mapPath = $"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}".Replace("\\", "/");
@@ -226,24 +229,21 @@ namespace Quaver.Database.Maps
                     Logger.LogError(e, LogType.Runtime);
                 }
             }
-            await DeleteMapsFromDatabase(mapsToDelete);
+            DeleteMapsFromDatabase(mapsToDelete);
         }
 
         /// <summary>
         ///     Responsible for fetching all the maps from the database and returning them.
         /// </summary>
         /// <returns></returns>
-        private static async Task<List<Map>> FetchAllMaps()
-        {
-            return await new SQLiteAsyncConnection(DatabasePath).Table<Map>().ToListAsync().ContinueWith(t => t.Result);
-        }
+        private static List<Map> FetchAllMaps() => new SQLiteConnection(DatabasePath).Table<Map>().ToList();
 
         /// <summary>
         ///     Responsible for taking a list of maps from the database and adding them to it.
         /// </summary>
         /// <param name="maps"></param>
         /// <returns></returns>
-        private static async Task InsertMapsIntoDatabase(List<Map> maps)
+        private static void InsertMapsIntoDatabase(List<Map> maps)
         {
             try
             {
@@ -251,8 +251,7 @@ namespace Quaver.Database.Maps
                 RemoveDuplicatesInList(maps);
 
                 if (maps.Count > 0)
-                    await new SQLiteAsyncConnection(DatabasePath).InsertAllAsync(maps)
-                        .ContinueWith(t => Logger.LogSuccess($"Successfully added {maps.Count} maps to the database", LogType.Runtime));
+                    new SQLiteConnection(DatabasePath).InsertAll(maps);
             }
             catch (Exception e)
             {
@@ -266,12 +265,13 @@ namespace Quaver.Database.Maps
         /// </summary>
         /// <param name="maps"></param>
         /// <returns></returns>
-        private static async Task DeleteMapsFromDatabase(List<Map> maps)
+        private static void DeleteMapsFromDatabase(List<Map> maps)
         {
+            if (maps == null) throw new ArgumentNullException(nameof(maps));
             try
             {
                 foreach (var map in maps)
-                    await new SQLiteAsyncConnection(DatabasePath).DeleteAsync(map);
+                    new SQLiteConnection(DatabasePath).Delete(map);
 
                 Logger.LogSuccess($"Successfully deleted {maps.Count} maps from the database.", LogType.Runtime);
             }
@@ -286,11 +286,14 @@ namespace Quaver.Database.Maps
         /// </summary>
         /// <param name="maps"></param>
         /// <returns></returns>
-        private static async Task<List<Map>> RemoveDuplicates(List<Map> maps)
+        private static List<Map> RemoveDuplicates(List<Map> maps)
         {
+            if (maps == null)
+                throw new ArgumentNullException(nameof(maps));
+
             // Add a check for duplicate maps being inserted into the database.
             // we do this by MD5 Checksum. Also delete them if that's the case.
-            var mapsInDb = await FetchAllMaps();
+            var mapsInDb = FetchAllMaps();
 
             // Create the final list of maps to be added.
             var finalMaps = new List<Map>();
@@ -317,6 +320,9 @@ namespace Quaver.Database.Maps
         /// <returns></returns>
         private static void RemoveDuplicatesInList(List<Map> maps)
         {
+            if (maps == null)
+                throw new ArgumentNullException(nameof(maps));
+
             var duplicateInsertEntries = maps
                 .GroupBy(x => x.Md5Checksum)
                 .Select(g => g.Count() > 1 ? g.First() : null)
@@ -349,12 +355,12 @@ namespace Quaver.Database.Maps
         /// </summary>
         /// <param name="map"></param>
         /// <returns></returns>
-        internal static async Task UpdateMap(Map map)
+        internal static void UpdateMap(Map map)
         {
             try
             {
-                var conn = new SQLiteAsyncConnection(DatabasePath);
-                await conn.ExecuteAsync("UPDATE Map SET HighestRank = ?, LastPlayed = ? Where Id = ?", map.HighestRank, map.LastPlayed, map.Id);
+                var conn = new SQLiteConnection(DatabasePath);
+                conn.Execute("UPDATE Map SET HighestRank = ?, LastPlayed = ? Where Id = ?", map.HighestRank, map.LastPlayed, map.Id);
             }
             catch (Exception e)
             {
@@ -369,12 +375,12 @@ namespace Quaver.Database.Maps
         /// <param name="map"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        internal static async Task UpdateLocalOffset(Map map, int offset)
+        internal static void UpdateLocalOffset(Map map, int offset)
         {
             try
             {
-                var conn = new SQLiteAsyncConnection(DatabasePath);
-                await conn.ExecuteAsync("UPDATE Map SET LocalOffset = ? Where Id = ?", offset, map.Id);
+                var conn = new SQLiteConnection(DatabasePath);
+                conn.Execute("UPDATE Map SET LocalOffset = ? Where Id = ?", offset, map.Id);
             }
             catch (Exception e)
             {
@@ -420,7 +426,7 @@ namespace Quaver.Database.Maps
                         Mode = (map.CircleSize == 4) ? GameMode.Keys4 : GameMode.Keys7,
                         SongLength = map.TotalTime,
                         Game = MapGame.Osu,
-                        BackgroundPath = "",      
+                        BackgroundPath = "",
                     };
 
                     // Get the BPM of the osu! maps

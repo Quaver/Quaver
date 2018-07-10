@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -48,11 +48,11 @@ namespace Quaver.Main
                 PreferredBackBufferWidth = ConfigManager.WindowWidth.Value,
                 PreferredBackBufferHeight = ConfigManager.WindowHeight.Value,
                 IsFullScreen = ConfigManager.WindowFullScreen.Value,
-                SynchronizeWithVerticalRetrace = false // Turns off vsync
+                SynchronizeWithVerticalRetrace = false,
+                GraphicsProfile = GraphicsProfile.HiDef,
+                PreferMultiSampling = true
             };
 
-            GameBase.GraphicsManager.GraphicsProfile = GraphicsProfile.HiDef;
-            GameBase.GraphicsManager.PreferMultiSampling = true;
 
             // TODO: Make thie configurable.
             TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / 240f);
@@ -343,15 +343,15 @@ namespace Quaver.Main
             Directory.CreateDirectory(ConfigManager.DataDirectory + "/temp/Now Playing/");
 
             // Set the build version
-            GameBase.BuildVersion = MapsetHelper.GetMd5Checksum(ConfigManager.GameDirectory + "/" + "Quaver.exe");
+            //GameBase.BuildVersion = MapsetHelper.GetMd5Checksum(ConfigManager.GameDirectory + "/" + "Quaver.exe");
 
             // After initializing the configuration, we want to sync the map database, and load the dictionary of mapsets.
-            var loadGame = Task.Run(async () =>
+            var loadGame = Task.Run(() =>
             {
-                await MapCache.LoadAndSetMapsets();
+                MapCache.LoadAndSetMapsets();
 
                 // Create the local scores database if it doesn't already exist
-                await LocalScoreCache.CreateScoresDatabase();
+                LocalScoreCache.CreateScoresDatabase();
 
                 // Force garbage collection
                 GC.Collect();
