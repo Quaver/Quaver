@@ -182,9 +182,7 @@
     <Compile Include="Graphics\Text\TextBoxStyle.cs" />
     <Compile Include="Main\QuaverUserInterface.cs" />
     <Compile Include="Graphics\UI\BackgroundManager.cs" />
-    <Compile Include="Input\ManiaKeyEventArgs.cs" />
     <Compile Include="Input\SongSelectInputManager.cs" />
-    <Compile Include="Input\StringInputEventArgs.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModChill.cs" />

@@ -35,7 +35,7 @@ namespace Quaver.Main
         public static QuaverGame Game;
 
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         public QuaverGame()
         {
@@ -45,19 +45,19 @@ namespace Quaver.Main
             // Set the global graphics device manager & set Window width & height.
             GameBase.GraphicsManager = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = Config.ConfigManager.WindowWidth.Value,
-                PreferredBackBufferHeight = Config.ConfigManager.WindowHeight.Value,
+                PreferredBackBufferWidth = ConfigManager.WindowWidth.Value,
+                PreferredBackBufferHeight = ConfigManager.WindowHeight.Value,
                 IsFullScreen = ConfigManager.WindowFullScreen.Value,
                 SynchronizeWithVerticalRetrace = false // Turns off vsync
             };
-            
+
             GameBase.GraphicsManager.GraphicsProfile = GraphicsProfile.HiDef;
             GameBase.GraphicsManager.PreferMultiSampling = true;
-         
+
             // TODO: Make thie configurable.
             TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / 240f);
             IsFixedTimeStep = true;
-           
+
             // Use Content in Resources folder (Don't touch this please)
             var resxContent = new ResourceContentManager(Services, QuaverResources.ResourceManager);
             Content = resxContent;
@@ -78,7 +78,7 @@ namespace Quaver.Main
         protected override void Initialize()
         {
             DiscordManager.Initialize();
-            
+
             // TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -98,31 +98,31 @@ namespace Quaver.Main
             GameBase.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
             GameBase.GraphicsDevice.RasterizerState = new RasterizerState {MultiSampleAntiAlias = true};
             GameBase.GraphicsManager.ApplyChanges();
-                       
+
             //Create new GameStateManager Instance
             GameBase.Content = Content;
 
             // Load QuaverUserInterface .xnb elements
             GameBase.QuaverUserInterface.LoadElementsAsContent();
-            
+
             // Load all FontAwesome icons
             FontAwesome.Load();
-            
+
             // Load all fonts
             Fonts.Load();
 
             // Load all titles
             Titles.Load();
-            
+
             // Load all non-skinnable sound effects
             SFX.Load();
-            
-            // Load the Game Skin 
+
+            // Load the Game Skin
             GameBase.Skin = new SkinStore();
-            
+
             // Load cursor after skin.
             GameBase.Cursor = new Cursor();
-                      
+
             // Initialze the logger
             Logger.Initialize();
 
@@ -135,14 +135,14 @@ namespace Quaver.Main
             // Set up volume controller
             GameBase.VolumeController = new VolumeController();
             GameBase.VolumeController.Initialize(null);
-            
+
             // Set up the navbar
             GameBase.Navbar = new Nav();
             GameBase.Navbar.Initialize(null);
-            
+
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
-            GameBase.GameStateManager.ChangeState(new MainMenuScreen());             
+            GameBase.GameStateManager.ChangeState(new MainMenuScreen());
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Quaver.Main
 
             // Needs to be called periodically to dequeue messages according to the lib.
             DiscordManager.Client.Invoke();
-            
+
             // Check Global Input
             GameBase.GlobalInputManager.CheckInput();
 
@@ -194,17 +194,17 @@ namespace Quaver.Main
 
             // Update volume controller
             GameBase.VolumeController.Update(dt);
-            
+
             // Update Navbar
             GameBase.Navbar.Update(dt);
-            
+
             // Update all notifications.
             NotificationManager.Update(dt);
-            
+
             // Run scheduled background tasks
             if (GameBase.GameTime.ElapsedMilliseconds - CommonTaskScheduler.LastRunTime >= 5000)
                 CommonTaskScheduler.Run();
-            
+
             base.Update(gameTime);
         }
 
@@ -214,7 +214,7 @@ namespace Quaver.Main
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            double dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Clear Background so it doesnt render everything from previous frame
             GameBase.GraphicsDevice.Clear(Color.Black);
@@ -228,12 +228,12 @@ namespace Quaver.Main
             GameBase.Navbar.Draw();
 
             Logger.Draw(dt);
-     
+
             if (ConfigManager.FpsCounter.Value)
                 QuaverFpsCounter.Draw();
 
             NotificationManager.Draw();
-            
+
             GameBase.Cursor.Draw();
             GameBase.SpriteBatch.End();
 
@@ -251,7 +251,7 @@ namespace Quaver.Main
         }
 
         /// <summary>
-        ///     Unloads all third-party libraries such as BASS, Discord RPC, and Steam    
+        ///     Unloads all third-party libraries such as BASS, Discord RPC, and Steam
         /// </summary>
         internal static void UnloadLibraries()
         {

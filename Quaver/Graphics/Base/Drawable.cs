@@ -159,22 +159,22 @@ namespace Quaver.Graphics.Base
         /// <summary>
         ///     (Read-only) Returns the Drawable's GlobalRect.
         /// </summary>
-        internal DrawRectangle GlobalRectangle { get => _globalRectangle; }
+        internal DrawRectangle GlobalRectangle => _globalRectangle;
 
         /// <summary>
         ///     (Read-only) Returns the Drawable's LocalRect.
         /// </summary>
-        internal DrawRectangle LocalRectangle { get => _localRectangle; }
+        internal DrawRectangle LocalRectangle => _localRectangle;
 
         /// <summary>
         ///     (Read-only) Absolute _size of this object
         /// </summary>
-        internal Vector2 AbsoluteSize { get => new Vector2(_globalRectangle.Width, _globalRectangle.Height); }
+        internal Vector2 AbsoluteSize => new Vector2(_globalRectangle.Width, _globalRectangle.Height);
 
         /// <summary>
         ///     (Read-only) Absolute _position of this object
         /// </summary>
-        internal Vector2 AbsolutePosition { get => new Vector2(_globalRectangle.X, _globalRectangle.Y); }
+        internal Vector2 AbsolutePosition => new Vector2(_globalRectangle.X, _globalRectangle.Y);
 
         /// <summary>
         ///     Dictates whether or not we will be setting the children's visibility as well.
@@ -191,7 +191,7 @@ namespace Quaver.Graphics.Base
             set
             {
                 _visible = value;
-                
+
                 if (SetChildrenVisibility)
                     Children.ForEach(x => x.Visible = value);
             }
@@ -247,7 +247,7 @@ namespace Quaver.Graphics.Base
                 _localRectangle.X = _position.X.Offset; //todo: implement scale
                 _localRectangle.Y = _position.Y.Offset; //todo: implement scale
             }
-            
+
             //Update Global Rect
             if (_parent != null)
                 _globalRectangle = GraphicsHelper.AlignRect(Alignment, _localRectangle, Parent.GlobalRectangle);

@@ -25,8 +25,8 @@ namespace Quaver.Config
         /// <returns></returns>
         internal static string ReadDirectory(string defaultDir, string newDir)
         {
-            // If the config specified directory already exists, then we'll return 
-            // the new directory's value, otherwise we'll make sure a default directory 
+            // If the config specified directory already exists, then we'll return
+            // the new directory's value, otherwise we'll make sure a default directory
             // is created and return the original default value.
             if (Directory.Exists(newDir))
                 return newDir;
@@ -92,7 +92,7 @@ namespace Quaver.Config
                 return defaultVal;
             }
         }
-    
+
         /// <summary>
         ///     Responsible for reading boolean values from the config file.
         /// </summary>
@@ -174,7 +174,7 @@ namespace Quaver.Config
             catch (Exception e)
             {
                 return defaultVal;
-            }   
+            }
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Quaver.Config
         {
             try
             {
-                string[] colorSplit = newVal.Split(',');
+                var colorSplit = newVal.Split(',');
                 return new Color(byte.Parse(colorSplit[0]), byte.Parse(colorSplit[1]), byte.Parse(colorSplit[2]));
             }
             catch (Exception e)
@@ -230,10 +230,11 @@ namespace Quaver.Config
         }
 
         /// <summary>
-        ///     Reads a DefaultSkin 
+        ///     Reads a DefaultSkin
         /// </summary>
         /// <param name="defaultSkins"></param>
         /// <param name="s"></param>
+        /// <param name="newVal"></param>
         /// <returns></returns>
         internal static DefaultSkins ReadDefaultSkin(DefaultSkins defaultSkins, string newVal)
         {
@@ -250,7 +251,7 @@ namespace Quaver.Config
         {
             return Enum.TryParse(newVal, out HealthBarType newOne) ? newOne : defaultType;
         }
-        
+
         /// <summary>
         ///     Reads a HealtHBarType
         /// </summary>

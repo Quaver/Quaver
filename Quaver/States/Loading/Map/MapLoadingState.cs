@@ -28,14 +28,19 @@ namespace Quaver.States.Loading.Map
         /// </summary>
         public bool UpdateReady { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         private List<LocalScore> Scores { get; }
 
-        internal MapLoadingState(List<LocalScore> scores)
-        {
-            Scores = scores;
-        }
         /// <summary>
-        ///     Try to load the qua file and song. 
+        ///
+        /// </summary>
+        /// <param name="scores"></param>
+        internal MapLoadingState(List<LocalScore> scores) => Scores = scores;
+
+        /// <summary>
+        ///     Try to load the qua file and song.
         ///     If we've successfully loaded it, move onto the play state.
         /// </summary>
         public void Initialize()
@@ -128,7 +133,7 @@ namespace Quaver.States.Loading.Map
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            
+
                 // GameBase.GameStateManager.ChangeState(new ManiaGameplayState(GameBase.SelectedMap.Qua, md5));
                 GameBase.GameStateManager.ChangeState(new GameplayScreen(GameBase.SelectedMap.Qua, md5, Scores));
             }
