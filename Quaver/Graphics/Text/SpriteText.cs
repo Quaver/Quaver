@@ -255,6 +255,12 @@ namespace Quaver.Graphics.Text
         }
 
         /// <summary>
+        ///     Measures the size of the sprite.
+        /// </summary>
+        /// <returns></returns>
+        internal Vector2 MeasureString() => Font.MeasureString(Text) * TextScale;
+
+        /// <summary>
         ///     Fades out the sprite to a given alpha.
         /// </summary>
         internal void Fade(double dt, float target, float scale) => Alpha = GraphicsHelper.Tween(target, Alpha, Math.Min(dt / scale, 1));
