@@ -47,12 +47,14 @@ namespace Quaver.States.Results.UI
         /// </summary>
         private SpriteText Player { get; }
 
-
         /// <summary>
         ///     The date played.
         /// </summary>
         private SpriteText Date { get; }
 
+        /// <summary>
+        ///     The grade achieved on the play.
+        /// </summary>
         private Sprite GradeImage { get; }
 
         /// <summary>
@@ -72,7 +74,7 @@ namespace Quaver.States.Results.UI
             Size = new UDim2D(GameBase.WindowRectangle.Width - 100, 125);
 
             Tint = Color.Black;
-            Alpha = 0.45f;
+            Alpha = 0.35f;
 
             BackgroundBorder = new Sprite
             {

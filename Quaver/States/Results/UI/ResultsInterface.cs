@@ -2,6 +2,7 @@
 using Quaver.Graphics.Base;
 using Quaver.Graphics.UI;
 using Quaver.Main;
+using Quaver.States.Results.UI.ScoreResults;
 
 namespace Quaver.States.Results.UI
 {
@@ -28,6 +29,11 @@ namespace Quaver.States.Results.UI
         private MapInformation MapInformation { get; set; }
 
         /// <summary>
+        ///     Information regarding the score's results.
+        /// </summary>
+        private ScoreResultsInfo ScoreResultsInfo { get; set; }
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
@@ -43,6 +49,7 @@ namespace Quaver.States.Results.UI
 
             CreateBackground();
             CreateMapInformation();
+            CreateScoreResultsInfo();;
         }
 
         /// <inheritdoc />
@@ -74,6 +81,12 @@ namespace Quaver.States.Results.UI
         /// <summary>
         ///     Creates the map information sprite.
         /// </summary>
-        private void CreateMapInformation() => MapInformation = new MapInformation(Screen) {Parent = Container, PosY =  25};
+        private void CreateMapInformation() => MapInformation = new MapInformation(Screen) {Parent = Container, PosY =  40};
+
+        private void CreateScoreResultsInfo() => ScoreResultsInfo = new ScoreResultsInfo(Screen)
+        {
+            Parent = Container,
+            PosY = MapInformation.PosY + MapInformation.SizeY + 20
+        };
     }
 }
