@@ -9,7 +9,7 @@ namespace Quaver.Database.Scores
 {
     /// <summary>
     ///     The following is all the schema of data that will be stored in the local scores database
-    ///     When retrieving data from the scores db, this is all the data that will be able to be 
+    ///     When retrieving data from the scores db, this is all the data that will be able to be
     ///     accessed
     /// </summary>
     public class LocalScore
@@ -22,7 +22,7 @@ namespace Quaver.Database.Scores
         public int Id { get; set; }
 
         /// <summary>
-        ///     The MD5 Hash of the map 
+        ///     The MD5 Hash of the map
         /// </summary>
         public string MapMd5 { get; set; }
 
@@ -105,7 +105,7 @@ namespace Quaver.Database.Scores
         ///     String that contains the judgement breakdown the user received.
         /// </summary>
         public string JudgementBreakdown { get; set; }
-        
+
         /// <summary>
         ///     Creates a local score object from a score processor.
         /// </summary>
@@ -134,7 +134,7 @@ namespace Quaver.Database.Scores
                 CountMiss = processor.CurrentJudgements[Judgement.Miss],
                 Mods = processor.Mods,
                 ScrollSpeed = scrollSpeed,
-                JudgementBreakdown = GzipHelper.Compress(processor.GetJudgementBreakdown()) 
+                JudgementBreakdown = GzipHelper.Compress(processor.GetJudgementBreakdown())
             };
 
             return score;

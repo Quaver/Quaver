@@ -1,7 +1,9 @@
 ﻿using Quaver.GameState;
+using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.UI;
 using Quaver.Main;
+using Quaver.States.Results.UI.Data;
 using Quaver.States.Results.UI.ScoreResults;
 
 namespace Quaver.States.Results.UI
@@ -34,6 +36,11 @@ namespace Quaver.States.Results.UI
         private ScoreResultsInfo ScoreResultsInfo { get; set; }
 
         /// <summary>
+        ///     Sprite that gives the breakdown of judgements.
+        /// </summary>
+        private JudgementBreakdown JudgementBreakdown { get; set; }
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
@@ -49,7 +56,8 @@ namespace Quaver.States.Results.UI
 
             CreateBackground();
             CreateMapInformation();
-            CreateScoreResultsInfo();;
+            CreateScoreResultsInfo();
+            CreateJudgementBreakdown();
         }
 
         /// <inheritdoc />
@@ -76,17 +84,37 @@ namespace Quaver.States.Results.UI
         /// <summary>
         ///     Creates the map background.
         /// </summary>
-        private void CreateBackground() => Background = new Background(GameBase.QuaverUserInterface.MenuBackground, 40) {Parent = Container};
+        private void CreateBackground() => Background = new Background(GameBase.QuaverUserInterface.MenuBackground, 40)
+        {
+            Parent = Container
+        };
 
         /// <summary>
         ///     Creates the map information sprite.
         /// </summary>
-        private void CreateMapInformation() => MapInformation = new MapInformation(Screen) {Parent = Container, PosY =  40};
+        private void CreateMapInformation() => MapInformation = new MapInformation(Screen)
+        {
+            Parent = Container,
+            PosY =  40
+        };
 
+        /// <summary>
+        ///     Creates the score results sprite.
+        /// </summary>
         private void CreateScoreResultsInfo() => ScoreResultsInfo = new ScoreResultsInfo(Screen)
         {
             Parent = Container,
             PosY = MapInformation.PosY + MapInformation.SizeY + 20
+        };
+
+        /// <summary>
+        ///     Creates the judgement breakdown sprite.
+        /// </summary>
+        private void CreateJudgementBreakdown() => JudgementBreakdown = new JudgementBreakdown(Screen.ScoreProcessor)
+        {
+            Parent = Container,
+            Alignment = Alignment.TopCenter,
+            PosY = ScoreResultsInfo.PosY + ScoreResultsInfo.SizeY + 20,
         };
     }
 }

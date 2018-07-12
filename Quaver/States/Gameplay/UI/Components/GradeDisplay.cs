@@ -9,12 +9,12 @@ namespace Quaver.States.Gameplay.UI.Components
     internal class GradeDisplay : Sprite
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private ScoreProcessor Scoring { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="processor"></param>
         internal GradeDisplay(ScoreProcessor processor) => Scoring = processor;
@@ -26,7 +26,7 @@ namespace Quaver.States.Gameplay.UI.Components
         internal override void Update(double dt)
         {
             ChangeGradeImage();
-            
+
             base.Update(dt);
         }
 
@@ -36,9 +36,9 @@ namespace Quaver.States.Gameplay.UI.Components
         private void ChangeGradeImage()
         {
             Visible = Scoring.Score > 0;
-            
+
             var grade = GradeHelper.GetGradeFromAccuracy(Scoring.Accuracy, Scoring.Accuracy >= 100f && Scoring.CurrentJudgements[Judgement.Perf] == 0);
-            Image = Scoring.Failed ? GameBase.Skin.Grades[Grade.F] : GameBase.Skin.Grades[grade];  
+            Image = Scoring.Failed ? GameBase.Skin.Grades[Grade.F] : GameBase.Skin.Grades[grade];
         }
     }
 }

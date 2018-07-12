@@ -87,7 +87,7 @@ namespace Quaver.Skinning
         ///     The numbers that display the user's current combo
         /// </summary>
         internal Texture2D[] ComboDisplayNumbers = new Texture2D[10];
-        
+
         /// <summary>
         ///     The numbers that display the current song time.
         /// </summary>
@@ -112,12 +112,12 @@ namespace Quaver.Skinning
         ///     The continue button displayed in the pause menu
         /// </summary>
         internal Texture2D PauseContinue { get; private set; }
-        
+
         /// <summary>
         ///     The retry button displayed in the pause menu
         /// </summary>
         internal Texture2D PauseRetry { get; private set; }
-        
+
         /// <summary>
         ///     The back button displayed in the pause menu.
         /// </summary>
@@ -168,7 +168,7 @@ namespace Quaver.Skinning
         internal SoundEffect SoundHover { get; private set; }
         internal SoundEffect SoundFailure { get; private set; }
         internal SoundEffect SoundRetry { get; private set; }
-        
+
         /// <summary>
         ///     Ctor - Loads up a skin from a given directory.
         /// </summary>
@@ -182,7 +182,7 @@ namespace Quaver.Skinning
                 {GameMode.Keys4, new SkinKeys(this, GameMode.Keys4)},
                 {GameMode.Keys7, new SkinKeys(this, GameMode.Keys7)}
             };
-            
+
             LoadUniversalElements();
         }
 
@@ -190,7 +190,7 @@ namespace Quaver.Skinning
         ///     Loads up the config file and its default elements.
         /// </summary>
         private void LoadConfig()
-        {            
+        {
             const string name = "skin.ini";
 
             if (!File.Exists($"{Dir}/{name}"))
@@ -211,7 +211,7 @@ namespace Quaver.Skinning
         {
             const string cursor = "main-cursor";
             Cursor = LoadSingleTexture($"{Dir}/Cursor/{cursor}", cursor);
-            
+
             LoadGradeElements();
             LoadJudgements();
             LoadNumberDisplays();
@@ -235,7 +235,7 @@ namespace Quaver.Skinning
         }
 
         /// <summary>
-        ///     
+        ///
         /// </summary>
         /// <param name="folder"></param>
         /// <param name="element"></param>
@@ -256,22 +256,22 @@ namespace Quaver.Skinning
                 {
                     var regex = new Regex(SpritesheetRegex($"{element}"));
                     var match = regex.Match(Path.GetFileName(f));
-                
+
                     // See if the file matches the regex.
                     if (match.Success)
-                    {                    
+                    {
                         // Load it up if so.
                         var texture = GraphicsHelper.LoadTexture2DFromFile(f);
                         return GraphicsHelper.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
                     }
-                
+
                     // Otherwise check to see if that base element (without animations) actually exists.
                     // if so, load it singularly into a list.
                     if (Path.GetFileNameWithoutExtension(f) == element)
                         return new List<Texture2D> { GraphicsHelper.LoadTexture2DFromFile(f) };
                 }
             }
-                
+
             // If we end up getting down here, that means we need to load the spritesheet from our resources.
             // if 0x0 is specified for the default, then it'll simply load the element without rowsxcolumns
             if (rows == 0 && columns == 0)
@@ -289,7 +289,7 @@ namespace Quaver.Skinning
         private SoundEffect LoadSoundEffect(string path, string element)
         {
             path += ".wav";
-            
+
             // Load the actual file stream if it exists.
             try
             {
@@ -304,7 +304,7 @@ namespace Quaver.Skinning
             // Load the default if the path doesn't exist
             return SoundEffect.FromStream((UnmanagedMemoryStream)ResourceHelper.GetProperty(element));
         }
-        
+
         /// <summary>
         ///     Loads all grade texture elements
         /// </summary>
@@ -315,10 +315,10 @@ namespace Quaver.Skinning
             {
                 if (grade == Grade.None)
                     continue;
-                
+
                 var element = $"grade-small-{grade.ToString().ToLower()}";
                 Grades[grade] = LoadSingleTexture($"{Dir}/Grades/{element}", element);
-            }    
+            }
         }
 
         /// <summary>
@@ -327,12 +327,12 @@ namespace Quaver.Skinning
         private void LoadJudgements()
         {
             const string folder = "Judgements";
-            
+
             // Load Judgements
             foreach (Judgement j in Enum.GetValues(typeof(Judgement)))
             {
                 var element = $"judge-{j.ToString().ToLower()}";
-         
+
                 switch (j)
                 {
                     case Judgement.Marv:
@@ -357,12 +357,12 @@ namespace Quaver.Skinning
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            
+
             // Load judgement overlay
             const string judgementOverlay = "judgement-overlay";
             JudgementOverlay = LoadSingleTexture($"{Dir}/{folder}/{judgementOverlay}", judgementOverlay);
         }
-        
+
         /// <summary>
         ///     Loads all number display skin elements.
         /// </summary>
@@ -375,7 +375,7 @@ namespace Quaver.Skinning
                 // Score
                 var scoreElement = $"score-{i}";
                 ScoreDisplayNumbers[i] = LoadSingleTexture($"{numberDisplayFolder}/{scoreElement}", $"{scoreElement}");
-                
+
                 // Combo
                 var comboElement = $"combo-{i}";
                 ComboDisplayNumbers[i] = LoadSingleTexture($"{numberDisplayFolder}/{comboElement}", comboElement);
@@ -404,7 +404,7 @@ namespace Quaver.Skinning
         private void LoadPause()
         {
             var pauseFolder = $"{Dir}/Pause/";
-            
+
             const string pauseBackground = "pause-background";
             PauseBackground = LoadSingleTexture($"{pauseFolder}/{pauseBackground}", pauseBackground);
 
@@ -439,7 +439,7 @@ namespace Quaver.Skinning
         {
             var healthFolder = $"/Health/";
 
-            const string healthBackground = "health-background";       
+            const string healthBackground = "health-background";
             HealthBarBackground = LoadSpritesheet(healthFolder, healthBackground, healthBackground, 0, 0);
 
             const string healthForeground = "health-foreground";
@@ -456,7 +456,7 @@ namespace Quaver.Skinning
 
             Skip = LoadSpritesheet(skipFolder, skip, skip, 1, 31);
         }
-        
+
         /// <summary>
         ///     Loads all sound effect elements.
         /// </summary>
@@ -475,7 +475,7 @@ namespace Quaver.Skinning
 
             const string soundHitFinish = "sound-hitfinish";
             SoundHitFinish = LoadSoundEffect($"{sfxFolder}/{soundHitFinish}", soundHitFinish);
-            
+
             const string soundComboBreak = "sound-combobreak";
             SoundComboBreak = LoadSoundEffect($"{sfxFolder}/{soundComboBreak}", soundComboBreak);
 

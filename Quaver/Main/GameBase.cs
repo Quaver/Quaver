@@ -73,28 +73,28 @@ namespace Quaver.Main
         public static bool ImportQueueReady { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static GraphicsDevice GraphicsDevice { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static RenderTarget2D MainRenderTarget { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static GraphicsDeviceManager GraphicsManager { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static SpriteBatch SpriteBatch { get; set; }
 
         /// <summary>
-        ///     The content manager 
-        /// </summary>       
+        ///     The content manager
+        /// </summary>
         public static ContentManager Content { get; set; }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Quaver.Main
         public static string OsuSongsFolder { get; set; }
 
         /// <summary>
-        ///     The Etterna parent folder. 
+        ///     The Etterna parent folder.
         ///     NOTE: The Map directory themselves have /songs/ already on it.
         ///     Thank you SM guys!
         /// </summary>
@@ -128,10 +128,10 @@ namespace Quaver.Main
         ///     WindowHeight / WindowWidth ratio
         ///     //TODO: Automatically set this rectangle as windoow size through method
         /// </summary>
-        public static float WindowUIScale => WindowRectangle.Height / ReferenceResolution.Y; 
+        public static float WindowUIScale => WindowRectangle.Height / ReferenceResolution.Y;
 
         /// <summary>
-        ///     The score multiplier for the game. Controls how many points the game score will be 
+        ///     The score multiplier for the game. Controls how many points the game score will be
         ///     multiplied by.
         /// </summary>
         public static float ScoreMultiplier { get; set; } = 1.0f;
@@ -204,6 +204,11 @@ namespace Quaver.Main
         public static Nav Navbar { get; set; }
 
         /// <summary>
+        ///     The total amount of time the game has been running.
+        /// </summary>
+        public static float Clock { get; set; }
+
+        /// <summary>
         ///     The current path of the selected map's audio file
         /// </summary>
         public static string CurrentAudioPath {
@@ -219,7 +224,7 @@ namespace Quaver.Main
                         return EtternaFolder + "/" + SelectedMap.Directory + "/" + SelectedMap.AudioPath;
                     default:
                         return "";
-                }                
+                }
             }
         }
 

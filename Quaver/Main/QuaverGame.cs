@@ -165,6 +165,8 @@ namespace Quaver.Main
         /// <param name="gameTime">Provides a snapshot of delta time values.</param>
         protected override void Update(GameTime gameTime)
         {
+            GameBase.Clock += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Needs to be called periodically to dequeue messages according to the lib.
