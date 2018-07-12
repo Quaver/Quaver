@@ -49,12 +49,12 @@ namespace Quaver.States.Select
 
         /// <summary>
         ///     Reference to the play button
-        /// </summary>        
+        /// </summary>
         private TextButton PlayButton { get; set; }
 
         /// <summary>
         ///     Reference to the back button
-        /// </summary>        
+        /// </summary>
         private TextButton BackButton { get; set; }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace Quaver.States.Select
             BackgroundManager.Readjust();
 
             ScoreDisplay = new ScoresDisplay() { Parent = Container};
-            
+
             LoadScores();
             UpdateReady = true;
         }
@@ -180,7 +180,7 @@ namespace Quaver.States.Select
             TimeElapsedSinceStartup += (float)dt;
             KeyboardScrollBuffer += (float)dt;
             GameBase.Navbar.PerformShowAnimation(dt);
-            
+
             //Update Objects
             Container.Update(dt);
             MapSelectSystem.Update(dt);
@@ -248,7 +248,7 @@ namespace Quaver.States.Select
 
         /// <summary>
         ///     Creates the back button
-        /// </summary>        
+        /// </summary>
         private void CreateBackButton()
         {
             // Create back button
@@ -405,14 +405,14 @@ namespace Quaver.States.Select
                 PosY = 300 * GameBase.WindowUIScale + 5,
                 Parent = Container
             };
-            
+
             enterName.OnTextInputSubmit += (term) =>
             {
                 if (term == "")
                     return;
 
                 ConfigManager.Username.Value = term;
-                
+
                 enterName.PlaceHolderText = (ConfigManager.Username.Value == "") ? "Enter Your Player Name!" : ConfigManager.Username.Value;
             };
         }
@@ -428,14 +428,14 @@ namespace Quaver.States.Select
                 PosY = 300 * GameBase.WindowUIScale + 300,
                 Parent = Container
             };
-            
+
             ToggleNoPause.Clicked += (o, e) =>
             {
                 if (!ModManager.IsActivated(ModIdentifier.NoPause))
                     ModManager.AddMod(ModIdentifier.NoPause);
                 else
                     ModManager.RemoveMod(ModIdentifier.NoPause);
-                
+
                 ToggleNoPause.TextSprite.Text = $"No Pause Mod: {ModManager.IsActivated(ModIdentifier.NoPause)}";
             };
         }
@@ -454,7 +454,7 @@ namespace Quaver.States.Select
                 ConfigManager.BotsEnabled.Value = !ConfigManager.BotsEnabled.Value;
                 BotsEnabled.TextSprite.Text = $"Enable Bots: {ConfigManager.BotsEnabled.Value}";
             };
-            
+
             BotCount = new TextButton(new Vector2(200, 50), $"Bot Count: {ConfigManager.BotCount.Value}")
             {
                 Alignment = Alignment.TopLeft,
@@ -468,7 +468,7 @@ namespace Quaver.States.Select
                     ConfigManager.BotCount.Value = ConfigManager.BotCount.MinValue;
                 else
                     ConfigManager.BotCount.Value++;
-                
+
                 BotCount.TextSprite.Text = $"Bot Count: {ConfigManager.BotCount.Value}";
             };
 
@@ -490,24 +490,21 @@ namespace Quaver.States.Select
                 AutoplayEnabled.TextSprite.Text = $"Autoplay: {ModManager.IsActivated(ModIdentifier.Autoplay)}";
             };
         }
-        
+
         /// <summary>
         ///     Loads all user scores for this map.
         /// </summary>
-        internal void LoadScores()
+        internal void LoadScores() => Task.Run(() =>
         {
-            Task.Run(async () =>
+            try
             {
-                try
-                {   
-                    var scores = await LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
-                    ScoreDisplay.UpdateDisplay(scores);
-                }
-                catch (Exception e)
-                {
-                    Logger.LogError(e, LogType.Runtime);
-                }
-            }).Wait();
-        }
+                var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
+                ScoreDisplay.UpdateDisplay(scores);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, LogType.Runtime);
+            }
+        }).Wait();
     }
 }

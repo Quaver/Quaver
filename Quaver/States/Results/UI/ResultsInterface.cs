@@ -3,6 +3,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.UI;
 using Quaver.Main;
+using Quaver.States.Results.UI.Buttons;
 using Quaver.States.Results.UI.Data;
 using Quaver.States.Results.UI.ScoreResults;
 
@@ -41,6 +42,11 @@ namespace Quaver.States.Results.UI
         private JudgementBreakdown JudgementBreakdown { get; set; }
 
         /// <summary>
+        ///     The container for the buttons.
+        /// </summary>
+        private ResultsButtonContainer ButtonContainer { get; set; }
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
@@ -58,6 +64,7 @@ namespace Quaver.States.Results.UI
             CreateMapInformation();
             CreateScoreResultsInfo();
             CreateJudgementBreakdown();
+            CreateButtonContainer();
         }
 
         /// <inheritdoc />
@@ -115,6 +122,16 @@ namespace Quaver.States.Results.UI
             Parent = Container,
             Alignment = Alignment.TopCenter,
             PosY = ScoreResultsInfo.PosY + ScoreResultsInfo.SizeY + 20,
+        };
+
+        /// <summary>
+        ///     Creates the button container sprite.
+        /// </summary>
+        private void CreateButtonContainer() => ButtonContainer = new ResultsButtonContainer(Screen)
+        {
+            Parent = Container,
+            Alignment = Alignment.TopCenter,
+            PosY = JudgementBreakdown.PosY + JudgementBreakdown.SizeY + 20
         };
     }
 }

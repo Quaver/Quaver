@@ -348,12 +348,15 @@ namespace Quaver.Main
             GameBase.BuildVersion = MapsetHelper.GetMd5Checksum(ConfigManager.GameDirectory + "/" + "Quaver.exe");
 
             // After initializing the configuration, we want to sync the map database, and load the dictionary of mapsets.
+
+            // Create the local scores database if it doesn't already exist
+            LocalScoreCache.CreateScoresDatabase();
+
             var loadGame = Task.Run(async () =>
             {
                 await MapCache.LoadAndSetMapsets();
 
-                // Create the local scores database if it doesn't already exist
-                await LocalScoreCache.CreateScoresDatabase();
+
 
                 // Force garbage collection
                 GC.Collect();

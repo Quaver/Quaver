@@ -206,6 +206,7 @@ namespace Quaver.States.Results
         public void Update(double dt)
         {
             GameBase.Navbar.PerformHideAnimation(dt);
+            GameBase.Cursor.Alpha = 1;
 
             HandleInput();
             UI.Update(dt);
@@ -235,7 +236,6 @@ namespace Quaver.States.Results
                 DiscordManager.Client.SetPresence(DiscordManager.Presence);
                 return;
             }
-
 
             var state = GameplayScreen.Failed ? "Fail" : "Pass";
             var score = $"{ScoreProcessor.Score / 1000}k";
@@ -350,54 +350,47 @@ namespace Quaver.States.Results
         /// <summary>
         ///     Saves a local score to the database.
         /// </summary>
-        private void SaveLocalScore()
+        private void SaveLocalScore() => Task.Run(() =>
         {
-            Task.Run(async () =>
+            var scoreId = 0;
+            try
             {
-                var scoreId = 0;
-                try
-                {
-                    var localScore = LocalScore.FromScoreProcessor(ScoreProcessor, Md5, ConfigManager.Username.Value, ScrollSpeed);
-                    scoreId = await LocalScoreCache.InsertScoreIntoDatabase(localScore);
-                }
-                catch (Exception e)
-                {
-                    Logger.LogError($"There was a fatal error when saving the local score!" + e.Message, LogType.Runtime);
-                }
+                var localScore = LocalScore.FromScoreProcessor(ScoreProcessor, Md5, ConfigManager.Username.Value, ScrollSpeed);
+                scoreId = LocalScoreCache.InsertScoreIntoDatabase(localScore);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"There was a fatal error when saving the local score!" + e.Message, LogType.Runtime);
+            }
 
-                try
-                {
-                    Replay.Write($"{ConfigManager.DataDirectory}/r/{scoreId}.qr");
-                }
-                catch (Exception e)
-                {
-                    Logger.LogError($"There was an error when writing the replay: " + e, LogType.Runtime);
-                }
-            });
-        }
+            try
+            {
+                Replay.Write($"{ConfigManager.DataDirectory}/r/{scoreId}.qr");
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"There was an error when writing the replay: " + e, LogType.Runtime);
+            }
+        });
 
         /// <summary>
         ///     Saves replay data related to debugging.
         /// </summary>
-        private void SaveDebugReplayData()
+        private void SaveDebugReplayData() => Task.Run(() =>
         {
-            // Save debug replay and hit stat data.
-            Task.Run(() =>
+            try
             {
-                try
-                {
-                    File.WriteAllText($"{ConfigManager.DataDirectory.Value}/replay_debug.txt", Replay.FramesToString(true));
+                File.WriteAllText($"{ConfigManager.DataDirectory.Value}/replay_debug.txt", Replay.FramesToString(true));
 
-                    var hitStats = "";
-                    GameplayScreen.Ruleset.ScoreProcessor.Stats.ForEach(x => hitStats += $"{x.ToString()}\r\n");
-                    File.WriteAllText($"{ConfigManager.DataDirectory.Value}/replay_debug_hitstats.txt", hitStats);
-                }
-                catch (Exception e)
-                {
-                    Logger.LogError($"There was an error when writing debug replay files: {e}", LogType.Runtime);
-                }
-            });
-        }
+                var hitStats = "";
+                GameplayScreen.Ruleset.ScoreProcessor.Stats.ForEach(x => hitStats += $"{x.ToString()}\r\n");
+                File.WriteAllText($"{ConfigManager.DataDirectory.Value}/replay_debug_hitstats.txt", hitStats);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"There was an error when writing debug replay files: {e}", LogType.Runtime);
+            }
+        });
 
         /// <summary>
         ///     Handles input for the entire screen.
