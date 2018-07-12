@@ -35,6 +35,7 @@ namespace Quaver.Main
         internal static Texture2D Trophy { get; set; }
         internal static Texture2D Globe { get; set; }
         internal static Texture2D Comments { get; set; }
+        internal static Texture2D Spinner { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -70,6 +71,7 @@ namespace Quaver.Main
             Trophy = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_trophy);
             Globe = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_earth_globe);
             Comments = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_comments);
+            Spinner = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_spinner_of_dots);
         }
     }
 }
