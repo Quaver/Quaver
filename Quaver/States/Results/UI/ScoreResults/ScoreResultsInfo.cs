@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprites;
@@ -15,9 +17,9 @@ namespace Quaver.States.Results.UI.ScoreResults
         private ResultsScreen Screen { get; }
 
         /// <summary>
-        ///    Dictionary containing the result value's "title" and value
+        ///
         /// </summary>
-        private Dictionary<string, string> ResultValue { get; }
+        private List<ScoreResultsInfoItem> ResultValueItems { get; }
 
         /// <summary>
         ///     Ctor -
@@ -33,16 +35,54 @@ namespace Quaver.States.Results.UI.ScoreResults
             Tint = Color.Black;
             Alpha = 0.35f;
 
-            ResultValue = new Dictionary<string, string>
+            var mods = Screen.ScoreProcessor.Mods.ToString();
+
+            ResultValueItems = new List<ScoreResultsInfoItem>
             {
-                {"Score", Screen.ScoreProcessor.Score.ToString()},
-                {"Accuracy", StringHelper.AccuracyToString(Screen.ScoreProcessor.Accuracy)},
-                {"Max Combo", Screen.ScoreProcessor.MaxCombo.ToString()},
-                {"Score Rating", "-1"},
-                {"Map Rank", "-1"},
-                {"Ranks Gained", "-1"},
-                {"XP Left To Level 0", "-1"}
+                new ScoreResultsInfoItem("Mods", mods == "0" ? "None" : mods),
+                new ScoreResultsInfoItem("Score", Screen.ScoreProcessor.Score.ToString("N0")),
+                new ScoreResultsInfoItem("Accuracy", StringHelper.AccuracyToString(Screen.ScoreProcessor.Accuracy)),
+                new ScoreResultsInfoItem("Max Combo", Screen.ScoreProcessor.MaxCombo.ToString("N0")),
+                new ScoreResultsInfoItem("Score Rating"),
+                new ScoreResultsInfoItem("Map Rank"),
+                new ScoreResultsInfoItem("Ranks Gained")
             };
+
+            ResultValueItems.ForEach(x =>
+            {
+                if (ResultValueItems.FindAll(y => y.Title == x.Title).ToList().Count > 1)
+                    throw new ArgumentException("ResultValueItems must not contain duplicate items with the same `Title.`");
+            });
+
+            InitializeItems();
+        }
+
+        /// <summary>
+        ///    Initialize all of the result value items.
+        /// </summary>
+        private void InitializeItems()
+        {
+            for (var i = 0; i < ResultValueItems.Count; i++)
+            {
+                var item = ResultValueItems[i];
+
+                // Calculate x position
+                var sizePer = SizeX / ResultValueItems.Count;
+                var posX =  sizePer * i + sizePer / 2f;
+
+                item.Initialize(this, posX);
+            }
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="dt"></param>
+        internal override void Update(double dt)
+        {
+            ResultValueItems.ForEach(x => x.Update(dt));
+
+            base.Update(dt);
         }
     }
 }
