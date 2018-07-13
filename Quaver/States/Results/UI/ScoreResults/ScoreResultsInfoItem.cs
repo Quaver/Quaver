@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Main;
@@ -58,7 +59,7 @@ namespace Quaver.States.Results.UI.ScoreResults
         /// <param name="parent"></param>
         /// <param name="posX"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        internal void Initialize(ScoreResultsInfo parent, float posX)
+        internal void Initialize(Drawable parent, float posX)
         {
             if (IsInitialized)
                 throw new InvalidOperationException($"ScoreResultsInfoItem has already been initialized.");
@@ -66,13 +67,13 @@ namespace Quaver.States.Results.UI.ScoreResults
             TitleText = new SpriteText()
             {
                 Parent = parent,
-                Font = Fonts.AllerRegular16,
+                Font = Fonts.AllerBold16,
                 TextAlignment = Alignment.MidCenter,
                 Text = Title,
                 PosX = posX,
-                PosY = 20,
+                PosY = 17,
                 TextScale = 0.80f,
-                TextColor = Colors.MainAccent
+                TextColor = Color.White
             };
 
             if (Value != null)
@@ -84,7 +85,7 @@ namespace Quaver.States.Results.UI.ScoreResults
                     TextAlignment = Alignment.MidCenter,
                     Text = Value,
                     PosX = posX,
-                    PosY = TitleText.PosY + (TitleText.MeasureString() / 2f).Y + 20,
+                    PosY = TitleText.PosY + (TitleText.MeasureString() / 2f).Y + 25,
                     TextScale = 0.70f,
                     TextColor = Color.White
                 };
@@ -95,7 +96,7 @@ namespace Quaver.States.Results.UI.ScoreResults
                 {
                     Parent = parent,
                     Size = new UDim2D(20, 20),
-                    Position = new UDim2D(posX - TitleText.MeasureString().X / 4f + 13, TitleText.PosY + ( TitleText.MeasureString() / 2f ).Y + 10),
+                    Position = new UDim2D(posX - TitleText.MeasureString().X / 4f + 13, TitleText.PosY + ( TitleText.MeasureString() / 2f ).Y + 17),
                     Image = FontAwesome.Spinner
                 };
             }

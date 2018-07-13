@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics;
+using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
 
 namespace Quaver.States.Results.UI.ScoreResults
 {
-    internal class ScoreResultsInfo : Sprite
+    internal class ScoreResultsInfo : HeaderedSprite
     {
         /// <summary>
         ///     Reference to the results screen itself
@@ -21,19 +23,15 @@ namespace Quaver.States.Results.UI.ScoreResults
         /// </summary>
         private List<ScoreResultsInfoItem> ResultValueItems { get; }
 
+        /// <inheritdoc />
         /// <summary>
-        ///     Ctor -
         /// </summary>
         /// <param name="screen"></param>
-        internal ScoreResultsInfo(ResultsScreen screen)
+        /// <exception cref="T:System.ArgumentException"></exception>
+        public ScoreResultsInfo(ResultsScreen screen) : base(new Vector2(GameBase.WindowRectangle.Width - 100, 120),
+                                                  "Results", Fonts.AllerRegular16, 0.90f, Alignment.MidCenter, 50, Colors.DarkGray)
         {
             Screen = screen;
-
-            Alignment = Alignment.TopCenter;
-            Size = new UDim2D(GameBase.WindowRectangle.Width - 100, 75);
-
-            Tint = Color.Black;
-            Alpha = 0.35f;
 
             var mods = Screen.ScoreProcessor.Mods.ToString();
 
@@ -54,6 +52,29 @@ namespace Quaver.States.Results.UI.ScoreResults
                     throw new ArgumentException("ResultValueItems must not contain duplicate items with the same `Title.`");
             });
 
+            Content = CreateContainer();
+            Content.PosY = 50;
+
+            // Create the table header coloring sprite.
+            // ReSharper disable once ObjectCreationAsStatement
+            new Sprite
+            {
+                Parent = Content,
+                Size = new UDim2D(SizeX, Content.SizeY / 2f),
+                Tint = Color.White,
+                Alpha = 0.08f
+            };
+
+            // Draw a table divider line across the width
+            // ReSharper disable once ObjectCreationAsStatement
+            new Sprite
+            {
+                Parent = Content,
+                Size = new UDim2D(SizeX, 1),
+                Alignment = Alignment.MidLeft,
+                Alpha = 0.50f
+            };
+
             InitializeItems();
         }
 
@@ -70,7 +91,7 @@ namespace Quaver.States.Results.UI.ScoreResults
                 var sizePer = SizeX / ResultValueItems.Count;
                 var posX =  sizePer * i + sizePer / 2f;
 
-                item.Initialize(this, posX);
+                item.Initialize(Content, posX);
             }
         }
 
@@ -83,6 +104,23 @@ namespace Quaver.States.Results.UI.ScoreResults
             ResultValueItems.ForEach(x => x.Update(dt));
 
             base.Update(dt);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        protected sealed override Sprite CreateContainer()
+        {
+            var content = new Sprite()
+            {
+                Parent = this,
+                Size = new UDim2D(ContentSize.X, ContentSize.Y),
+                Tint = Color.Black,
+                Alpha = 0.45f
+            };
+
+            return content;
         }
     }
 }

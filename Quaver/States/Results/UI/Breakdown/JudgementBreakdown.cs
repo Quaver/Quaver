@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Graphics;
@@ -12,56 +10,43 @@ using Quaver.Helpers;
 using Quaver.Main;
 using Color = Microsoft.Xna.Framework.Color;
 
-namespace Quaver.States.Results.UI.Data
+namespace Quaver.States.Results.UI.Breakdown
 {
-    internal class JudgementBreakdown : Sprite
+    internal class JudgementBreakdown : HeaderedSprite
     {
         /// <summary>
         ///     Reference to the score processor.
         /// </summary>
         private ScoreProcessor Processor { get; }
 
+        /// <inheritdoc />
         /// <summary>
-        ///     The text that displays
-        /// </summary>
-        private SpriteText HeaderText { get; }
-
-        /// <summary>
-        ///     Ctor -
         /// </summary>
         /// <param name="processor"></param>
-        internal JudgementBreakdown(ScoreProcessor processor)
+        public JudgementBreakdown(ScoreProcessor processor)
+                            : base(new Vector2((GameBase.WindowRectangle.Width - 120) / 2f, 285),
+                                "Judgement Breakdown", Fonts.AllerRegular16, 0.90f, Alignment.MidCenter, 50, Colors.DarkGray)
         {
             Processor = processor;
-
-            Size = new UDim2D(( GameBase.WindowRectangle.Width - 120 ) / 2f, 350);
             PosX = -SizeX / 2f - 10;
 
-            Alpha = 0.35f;
-            Tint = Color.Black;
+            Content = CreateContainer();
+            Content.Parent = this;
+            Content.PosY = 50;
+        }
 
-            HeaderText = new SpriteText()
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
+        protected sealed override Sprite CreateContainer()
+        {
+            var content = new Sprite()
             {
                 Parent = this,
-                Alignment = Alignment.TopLeft,
-                Font = Fonts.AllerRegular16,
-                TextColor = Colors.MainAccent,
-                Text = "JUDGEMENT BREAKDOWN"
-            };
-
-            var headerSize = HeaderText.MeasureString();
-            HeaderText.PosX = headerSize.X / 2f + 25;
-            HeaderText.PosY = headerSize.Y / 2f + 20;
-
-            // ReSharper disable once ObjectCreationAsStatement
-            // Line below the header.
-            var lineBreak = new Sprite
-            {
-                Parent = this,
-                Size = new UDim2D(SizeX * 0.75f, 1f),
-                Position = new UDim2D(HeaderText.PosX - headerSize.X / 2f - 2, HeaderText.PosY + headerSize.Y / 2f + 5),
-                Tint = Color.White,
-                Alpha = 0.85f
+                Size = new UDim2D(ContentSize.X, ContentSize.Y),
+                Tint = Color.Black,
+                Alpha = 0.45f
             };
 
             // It's very wonky to make a for loop out of this, so we'll just use a foreach here.
@@ -70,10 +55,11 @@ namespace Quaver.States.Results.UI.Data
             {
                 var name = new SpriteText
                 {
-                    Parent = this,
+                    Parent = content,
                     Font = Fonts.AssistantRegular16,
                     Text = j.ToString(),
-                    PosY = lineBreak.PosY + lineBreak.SizeY + i * 45 + 30
+                    PosY =  i * 35 + 30,
+                    TextScale = 0.90f
                 };
 
                 name.PosX = name.MeasureString().X / 2f + 25;
@@ -86,11 +72,11 @@ namespace Quaver.States.Results.UI.Data
                 // Draw Progress Bar
                 var progressBar = new Sprite
                 {
-                    Parent = this,
+                    Parent = content,
                     Position = new UDim2D(100, name.PosY - name.MeasureString().Y / 8f),
                     Tint = color,
                     SizeY = 15,
-                    SizeX = (SizeX - 100) * percentage
+                    SizeX = (content.SizeX - 100) * percentage
                 };
 
                 if (progressBar.SizeX < 1)
@@ -98,7 +84,7 @@ namespace Quaver.States.Results.UI.Data
 
                 var judgementAmount = new SpriteText()
                 {
-                    Parent = this,
+                    Parent = content,
                     Text = $"{Processor.CurrentJudgements[j]:N0} ({percentage * 100:0.0}%)",
                     Font = Fonts.AllerRegular16,
                     TextColor = color,
@@ -112,6 +98,8 @@ namespace Quaver.States.Results.UI.Data
 
                 i++;
             }
+
+            return content;
         }
     }
 }

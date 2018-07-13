@@ -74,7 +74,7 @@ namespace Quaver.States.Results.UI
             Size = new UDim2D(GameBase.WindowRectangle.Width - 100, 125);
 
             Tint = Color.Black;
-            Alpha = 0.35f;
+            Alpha = 0.45f;
 
             BackgroundBorder = new Sprite
             {

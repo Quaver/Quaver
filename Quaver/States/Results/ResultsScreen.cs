@@ -67,7 +67,7 @@ namespace Quaver.States.Results
         /// <summary>
         ///     All the UI elements.
         /// </summary>
-        private ResultsInterface UI { get; set; }
+        internal ResultsInterface UI { get; private set; }
 
         /// <summary>
         ///     The .qua that this is results screen is referencing to.

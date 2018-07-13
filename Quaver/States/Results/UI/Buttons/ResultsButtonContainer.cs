@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
@@ -12,7 +13,7 @@ using Quaver.States.Select;
 
 namespace Quaver.States.Results.UI.Buttons
 {
-    internal class ResultsButtonContainer : Sprite
+    internal class ResultsButtonContainer : HeaderedSprite
     {
         /// <summary>
         ///     Reference to the results screen itself.
@@ -22,26 +23,62 @@ namespace Quaver.States.Results.UI.Buttons
         /// <summary>
         ///     The list of buttons in this container.
         /// </summary>
-        private List<BasicButton> Buttons { get; set; }
+        private List<TextButton> Buttons { get; set; }
 
+        /// <inheritdoc />
         /// <summary>
-        ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
-        internal ResultsButtonContainer(ResultsScreen screen)
+        public ResultsButtonContainer(ResultsScreen screen)
+                : base(new Vector2(GameBase.WindowRectangle.Width - 100, 125), "Actions", Fonts.AllerRegular16,
+                    0.90f, Alignment.MidCenter, 50, Colors.DarkGray)
         {
             Screen = screen;
 
-            Alpha = 0.35f;
-            Size = new UDim2D(GameBase.WindowRectangle.Width - 100, 75);
-            Tint = Color.Black;
-
-            InitializeButtons();
+            Content = CreateContainer();
+            Content.PosY = 50;
         }
 
-        private void InitializeButtons()
+        /// <summary>
+        ///     Creates a button
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="onClick"></param>
+        /// <returns></returns>
+        private static TextButton CreateButton(string text, EventHandler onClick)
         {
-            Buttons = new List<BasicButton>
+            var btn = new TextButton(new Vector2(), text);
+            btn.Clicked += onClick;
+            btn.TextSprite.Font = Fonts.AllerRegular16;
+            btn.TextSprite.TextColor = Color.White;
+            btn.TextSprite.TextScale = 0.85f;
+
+            btn.OnUpdate += delegate(double dt)
+            {
+                if (btn.IsHovered)
+                {
+
+                }
+            };
+
+            return btn;
+        }
+
+        /// <inheritdoc />
+        ///  <summary>
+        ///  </summary>
+        ///  <returns></returns>
+        protected sealed override Sprite CreateContainer()
+        {
+            var content = new Sprite()
+            {
+                Parent = this,
+                Size = new UDim2D(ContentSize.X, ContentSize.Y),
+                Tint = Color.Black,
+                Alpha = 0.45f
+            };
+
+            Buttons = new List<TextButton>
             {
                 CreateButton("Back", (sender, args) =>
                 {
@@ -59,31 +96,22 @@ namespace Quaver.States.Results.UI.Buttons
                 })
             };
 
+            // Go through each button and initialize the sprite further.
             for (var i = 0; i < Buttons.Count; i++)
             {
                 var btn = Buttons[i];
 
-                btn.Parent = this;
-                btn.Size = new UDim2D(200, SizeY * 0.75f);
+                btn.Parent = content;
+                btn.Size = new UDim2D(200, content.SizeY * 0.60f);
                 btn.Alignment = Alignment.MidLeft;
+                btn.Tint = Color.White;
+                btn.Alpha = 0.25f;
 
                 var sizePer = SizeX / Buttons.Count;
                 btn.PosX = sizePer * i + sizePer / 2f - btn.SizeX / 2f;
             }
-        }
 
-        /// <summary>
-        ///     Creates a button
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="onClick"></param>
-        /// <returns></returns>
-        private static BasicButton CreateButton(string text, EventHandler onClick)
-        {
-            var btn = new BasicButton();
-            btn.Clicked += onClick;
-
-            return btn;
+            return content;
         }
     }
 }
