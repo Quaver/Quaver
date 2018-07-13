@@ -93,7 +93,11 @@ namespace Quaver.States.Results.UI.Buttons
                 {
                     var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
                     GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Qua, GameBase.SelectedMap.Md5Checksum, scores));
-                })
+                }),
+                CreateButton("Export Replay", (sender, args) =>
+                {
+                    Screen.ExportReplay();
+                }),
             };
 
             // Go through each button and initialize the sprite further.
