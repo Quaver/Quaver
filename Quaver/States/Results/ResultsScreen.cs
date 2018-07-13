@@ -31,6 +31,7 @@ using Quaver.Database.Scores;
 using Quaver.Discord;
 using Quaver.Graphics.Text;
 using Quaver.Graphics.UI;
+using Quaver.Graphics.UI.Notifications;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.States.Gameplay.Replays;
@@ -407,31 +408,31 @@ namespace Quaver.States.Results
         /// <summary>
         ///     Exports the currently looked at replay.
         /// </summary>
-        private void ExportReplay()
+        internal void ExportReplay()
         {
+            NotificationManager.Show(NotificationLevel.Info, "One moment, we're exporting your replay.");
+
             if (!Replay.HasData)
             {
-                Logger.LogError($"Replay doesn't have any data", LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "This replay doesn't have any data!");
                 return;
             }
 
             if (Replay.Mods.HasFlag(ModIdentifier.Autoplay))
             {
-                Logger.LogError($"Exporting autoplay replays is disabled", LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "Exporting autoplay replays is disabled.");;
                 return;
             }
 
-            Logger.LogImportant($"Just a second... We're exporting your replay!", LogType.Network, 2.0f);
-
             Task.Run(() =>
             {
-                var path = $@"{ConfigManager.ReplayDirectory.Value}/{Replay.PlayerName} - {SongTitle} - {DateTime.Now:yyyyddMMhhmmss}{GameBase.GameTime.ElapsedMilliseconds}.qr";
+                var path = $@"{ConfigManager.ReplayDirectory.Value}/{Replay.PlayerName} - {StringHelper.FileNameSafeString(SongTitle)} - {DateTime.Now:yyyyddMMhhmmss}{GameBase.GameTime.ElapsedMilliseconds}.qr";
                 Replay.Write(path);
 
                 // Open containing folder
                 Process.Start("explorer.exe", "/select, \"" + path.Replace("/", "\\") + "\"");
 
-                Logger.LogSuccess($"Replay successfully exported", LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Success, "The replay has been successfully exported!");
             });
         }
     }
