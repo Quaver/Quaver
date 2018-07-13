@@ -118,7 +118,7 @@ namespace Quaver.States.Results.UI
         /// <summary>
         ///     Creates the map background.
         /// </summary>
-        private void CreateBackground() => Background = new Background(GameBase.QuaverUserInterface.MenuBackground, 20)
+        private void CreateBackground() => Background = new Background(GameBase.QuaverUserInterface.MenuBackground, 0)
         {
             Parent = Container
         };
