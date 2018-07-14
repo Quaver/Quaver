@@ -13,7 +13,7 @@ using Quaver.States.Select;
 
 namespace Quaver.States.Results.UI.Buttons
 {
-    internal class ResultsButtonContainer : HeaderedSprite
+    internal class ResultsButtonContainer : Sprite
     {
         /// <summary>
         ///     Reference to the results screen itself.
@@ -30,13 +30,14 @@ namespace Quaver.States.Results.UI.Buttons
         /// </summary>
         /// <param name="screen"></param>
         public ResultsButtonContainer(ResultsScreen screen)
-                : base(new Vector2(GameBase.WindowRectangle.Width - 100, 125), "Actions", Fonts.AllerRegular16,
-                    0.90f, Alignment.MidCenter, 50, Colors.DarkGray)
         {
             Screen = screen;
 
-            Content = CreateContent();
-            Content.PosY = 50;
+            Size = new UDim2D(GameBase.WindowRectangle.Width - 100, 75);
+            Tint = Color.Black;
+            Alpha = 0.0f;
+
+            InitializeButtons();
         }
 
         /// <summary>
@@ -49,35 +50,20 @@ namespace Quaver.States.Results.UI.Buttons
         {
             var btn = new TextButton(new Vector2(), text);
             btn.Clicked += onClick;
-            btn.TextSprite.Font = Fonts.AllerRegular16;
+            btn.TextSprite.Font = Fonts.Exo2Regular24;
             btn.TextSprite.TextColor = Color.White;
-            btn.TextSprite.TextScale = 0.85f;
+            btn.TextSprite.TextScale = 0.50f;
+            btn.TextSprite.Text = btn.TextSprite.Text.ToUpper();
 
-            btn.OnUpdate += delegate(double dt)
-            {
-                if (btn.IsHovered)
-                {
-
-                }
-            };
-
+            btn.OnUpdate += delegate(double dt) { btn.FadeToColor(btn.IsHovered ? Color.White : Color.Black, dt, 60); };
             return btn;
         }
 
-        /// <inheritdoc />
         ///  <summary>
         ///  </summary>
         ///  <returns></returns>
-        protected sealed override Sprite CreateContent()
+        private void InitializeButtons()
         {
-            var content = new Sprite()
-            {
-                Parent = this,
-                Size = new UDim2D(ContentSize.X, ContentSize.Y),
-                Tint = Color.Black,
-                Alpha = 0.45f
-            };
-
             Buttons = new List<TextButton>
             {
                 CreateButton("Back", (sender, args) =>
@@ -89,7 +75,7 @@ namespace Quaver.States.Results.UI.Buttons
                     var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
                     GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Qua, GameBase.SelectedMap.Md5Checksum, scores, Screen.Replay));
                 }),
-                CreateButton("Replay Map", (sender, args) =>
+                CreateButton("Retry Map", (sender, args) =>
                 {
                     var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
                     GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Qua, GameBase.SelectedMap.Md5Checksum, scores));
@@ -105,17 +91,15 @@ namespace Quaver.States.Results.UI.Buttons
             {
                 var btn = Buttons[i];
 
-                btn.Parent = content;
-                btn.Size = new UDim2D(200, content.SizeY * 0.60f);
+                btn.Parent = this;
+                btn.Size = new UDim2D(200, SizeY * 0.60f);
                 btn.Alignment = Alignment.MidLeft;
-                btn.Tint = Color.White;
-                btn.Alpha = 0.25f;
+                btn.Tint = Color.Black;
+                btn.Alpha = 0.5f;
 
                 var sizePer = SizeX / Buttons.Count;
                 btn.PosX = sizePer * i + sizePer / 2f - btn.SizeX / 2f;
             }
-
-            return content;
         }
     }
 }

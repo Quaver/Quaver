@@ -139,7 +139,7 @@ namespace Quaver.States.Results.UI
         private void CreateMapInformation() => MapInformation = new MapInformation(Screen)
         {
             Parent = Container,
-            PosY =  30,
+            PosY = 60,
             PosX = -GameBase.WindowRectangle.Width
         };
 
