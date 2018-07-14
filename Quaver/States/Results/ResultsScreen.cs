@@ -269,15 +269,11 @@ namespace Quaver.States.Results
                 return;
 
             // Run all of these tasks inside of a new thread to avoid blocks.
-            var t = new Thread(() =>
-            {
-                SaveLocalScore();
-#if DEBUG
-                SaveDebugReplayData();
-#endif
-            });
+            Task.Run(() => { SaveLocalScore(); });
 
-            t.Start();
+/*#if DEBUG
+            Task.Run(() => { SaveDebugReplayData(); });
+#endif*/
         }
 
         /// <summary>
@@ -351,7 +347,7 @@ namespace Quaver.States.Results
         /// <summary>
         ///     Saves a local score to the database.
         /// </summary>
-        private void SaveLocalScore() => Task.Run(() =>
+        private void SaveLocalScore()
         {
             var scoreId = 0;
             try
@@ -361,7 +357,8 @@ namespace Quaver.States.Results
             }
             catch (Exception e)
             {
-                Logger.LogError($"There was a fatal error when saving the local score!" + e.Message, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "There was an error saving your score. Check Runtime.log for more details.");
+                Logger.LogError(e, LogType.Runtime);
             }
 
             try
@@ -370,14 +367,15 @@ namespace Quaver.States.Results
             }
             catch (Exception e)
             {
-                Logger.LogError($"There was an error when writing the replay: " + e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "There was an error when saving your replay. Check Runtime.log for more details.");
+                Logger.LogError(e, LogType.Runtime);
             }
-        });
+        }
 
         /// <summary>
         ///     Saves replay data related to debugging.
         /// </summary>
-        private void SaveDebugReplayData() => Task.Run(() =>
+        private void SaveDebugReplayData()
         {
             try
             {
@@ -391,7 +389,7 @@ namespace Quaver.States.Results
             {
                 Logger.LogError($"There was an error when writing debug replay files: {e}", LogType.Runtime);
             }
-        });
+        }
 
         /// <summary>
         ///     Handles input for the entire screen.
