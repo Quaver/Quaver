@@ -35,7 +35,7 @@ namespace Quaver.States.Results.UI.Buttons
         {
             Screen = screen;
 
-            Content = CreateContainer();
+            Content = CreateContent();
             Content.PosY = 50;
         }
 
@@ -68,7 +68,7 @@ namespace Quaver.States.Results.UI.Buttons
         ///  <summary>
         ///  </summary>
         ///  <returns></returns>
-        protected sealed override Sprite CreateContainer()
+        protected sealed override Sprite CreateContent()
         {
             var content = new Sprite()
             {

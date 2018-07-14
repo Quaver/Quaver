@@ -26,7 +26,7 @@ namespace Quaver.States.Results.UI.Data
             Screen = screen;
             PosX = SizeX / 2f + 10;
 
-            Content = CreateContainer();
+            Content = CreateContent();
             Content.Parent = this;
             Content.PosY = 50;
         }
@@ -35,7 +35,7 @@ namespace Quaver.States.Results.UI.Data
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected sealed override Sprite CreateContainer()
+        protected sealed override Sprite CreateContent()
         {
             var sprite = new Sprite
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -24,13 +25,13 @@ namespace Quaver.States.Results.UI.Breakdown
         /// </summary>
         /// <param name="processor"></param>
         public JudgementBreakdown(ScoreProcessor processor)
-                            : base(new Vector2((GameBase.WindowRectangle.Width - 120) / 2f, 285),
+                            : base(new Vector2((GameBase.WindowRectangle.Width - 120) / 2f, 310),
                                 "Judgement Breakdown", Fonts.AllerRegular16, 0.90f, Alignment.MidCenter, 50, Colors.DarkGray)
         {
             Processor = processor;
             PosX = -SizeX / 2f - 10;
 
-            Content = CreateContainer();
+            Content = CreateContent();
             Content.Parent = this;
             Content.PosY = 50;
         }
@@ -39,7 +40,7 @@ namespace Quaver.States.Results.UI.Breakdown
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected sealed override Sprite CreateContainer()
+        protected sealed override Sprite CreateContent()
         {
             var content = new Sprite()
             {
@@ -56,10 +57,11 @@ namespace Quaver.States.Results.UI.Breakdown
                 var name = new SpriteText
                 {
                     Parent = content,
-                    Font = Fonts.AssistantRegular16,
-                    Text = j.ToString(),
-                    PosY =  i * 35 + 30,
-                    TextScale = 0.90f
+                    Font = Fonts.Exo2Regular24,
+                    Text = j.ToString().ToUpper(),
+                    PosY =  i * 35 + 22,
+                    TextScale = 0.50f,
+                    TextColor = GameBase.Skin.Keys[GameMode.Keys4].JudgeColors[j]
                 };
 
                 name.PosX = name.MeasureString().X / 2f + 25;
@@ -73,11 +75,13 @@ namespace Quaver.States.Results.UI.Breakdown
                 var progressBar = new Sprite
                 {
                     Parent = content,
-                    Position = new UDim2D(100, name.PosY - name.MeasureString().Y / 8f),
+                    Position = new UDim2D(100, name.PosY),
                     Tint = color,
-                    SizeY = 15,
-                    SizeX = (content.SizeX - 100) * percentage
+                    SizeY = 14,
+                    SizeX = (content.SizeX - 225) * percentage
                 };
+
+                progressBar.PosY -= progressBar.SizeY / 2f;
 
                 if (progressBar.SizeX < 1)
                     progressBar.SizeX = 1;
@@ -86,20 +90,73 @@ namespace Quaver.States.Results.UI.Breakdown
                 {
                     Parent = content,
                     Text = $"{Processor.CurrentJudgements[j]:N0} ({percentage * 100:0.0}%)",
-                    Font = Fonts.AllerRegular16,
+                    Font = Fonts.Exo2Regular24,
                     TextColor = color,
-                    Position = new UDim2D(progressBar.PosX + progressBar.SizeX + 10, name.PosY),
-                    TextScale = 0.75f,
+                    Position = new UDim2D(progressBar.PosX + progressBar.SizeX + 10, progressBar.PosY),
+                    TextScale = 0.50f
                 };
 
                 var judgementAmountSize = judgementAmount.MeasureString() / 2;
                 judgementAmount.PosX += judgementAmountSize.X;
-                judgementAmount.PosY += judgementAmountSize.Y / 2f;
+                judgementAmount.PosY += judgementAmountSize.Y / 2f + 2;
 
                 i++;
             }
 
+            var dividerLine = new Sprite
+            {
+                Parent = content,
+                Size = new UDim2D(content.SizeX - 50, 1),
+                Alignment = Alignment.BotCenter,
+                PosY = -40
+            };
+
+            var totalJudgements = new SpriteText()
+            {
+                Parent = content,
+                Font = Fonts.Exo2Regular24,
+                TextScale = 0.50f,
+                Text = $"TOTAL JUDGEMENTS: {Processor.TotalJudgementCount:N0}",
+                Alignment = Alignment.BotLeft
+            };
+
+            totalJudgements.PosX = totalJudgements.MeasureString().X / 2f + 25;
+            totalJudgements.PosY = dividerLine.PosY + totalJudgements.MeasureString().Y / 2f + 10;
+
+            var bestJudgement = GetBestJudgement();
+
+            var bestJudgeValue = new SpriteText()
+            {
+                Parent = content,
+                Font = Fonts.Exo2Regular24,
+                TextScale = 0.50f,
+                Text = bestJudgement.ToString().ToUpper(),
+                Alignment = Alignment.BotRight,
+                TextColor = GameBase.Skin.Keys[GameMode.Keys4].JudgeColors[bestJudgement]
+            };
+
+            bestJudgeValue.PosY = dividerLine.PosY + bestJudgeValue.MeasureString().Y / 2f + 10;
+            bestJudgeValue.PosX = -bestJudgeValue.MeasureString().X / 2f - 25;
+
+            var bestJudgementText = new SpriteText()
+            {
+                Parent = content,
+                Font = Fonts.Exo2Regular24,
+                TextScale = 0.50f,
+                Text = "BEST JUDGEMENT:",
+                Alignment = Alignment.BotRight,
+            };
+
+            bestJudgementText.PosY = dividerLine.PosY + bestJudgementText.MeasureString().Y / 2f + 10;
+            bestJudgementText.PosX = -bestJudgementText.MeasureString().X - bestJudgeValue.PosX - bestJudgementText.MeasureString().X / 2f + 15;
+
             return content;
         }
+
+        /// <summary>
+        ///     Gets the best judgement out of all of them.
+        /// </summary>
+        /// <returns></returns>
+        private Judgement GetBestJudgement() => Processor.CurrentJudgements.FirstOrDefault(x => x.Value == Processor.CurrentJudgements.Values.Max()).Key;
     }
 }

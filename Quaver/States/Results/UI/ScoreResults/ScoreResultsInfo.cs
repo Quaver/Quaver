@@ -52,7 +52,7 @@ namespace Quaver.States.Results.UI.ScoreResults
                     throw new ArgumentException("ResultValueItems must not contain duplicate items with the same `Title.`");
             });
 
-            Content = CreateContainer();
+            Content = CreateContent();
             Content.PosY = 50;
 
             // Create the table header coloring sprite.
@@ -110,7 +110,7 @@ namespace Quaver.States.Results.UI.ScoreResults
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected sealed override Sprite CreateContainer()
+        protected sealed override Sprite CreateContent()
         {
             var content = new Sprite()
             {

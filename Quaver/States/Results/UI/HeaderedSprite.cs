@@ -66,6 +66,6 @@ namespace Quaver.States.Results.UI
         ///     Creates the sprite for the actual content.
         /// </summary>
         /// <returns></returns>
-        protected abstract Sprite CreateContainer();
+        protected abstract Sprite CreateContent();
     }
 }
