@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.GameState;
 using Quaver.Graphics;
@@ -38,7 +39,12 @@ namespace Quaver.States.Results.UI
         /// <summary>
         ///     Information regarding the score's results.
         /// </summary>
-        private ScoreResultsInfo ScoreResultsInfo { get; set; }
+        private ScoreResultsTable ScoreResultsTable { get; set; }
+
+        /// <summary>
+        ///     Information regarding online results.
+        /// </summary>
+        private ScoreResultsTable OnlineResultsTable { get; set; }
 
         /// <summary>
         ///     Sprite that gives the breakdown of judgements.
@@ -72,6 +78,7 @@ namespace Quaver.States.Results.UI
             CreateBackground();
             CreateMapInformation();
             CreateScoreResultsInfo();
+            CreateOnlineResultsInfo();
             CreateJudgementBreakdown();
             CreateButtonContainer();
             CreateScoreData();
@@ -91,7 +98,10 @@ namespace Quaver.States.Results.UI
             MapInformation.PosX = GraphicsHelper.Tween(0, MapInformation.PosX, Math.Min(dt / 120, 1));
 
             if (Math.Abs(MapInformation.PosX) < 50)
-                ScoreResultsInfo.PosX = GraphicsHelper.Tween(0, ScoreResultsInfo.PosX, Math.Min(dt / 120, 1));
+                ScoreResultsTable.PosX = GraphicsHelper.Tween(-ScoreResultsTable.SizeX / 2f - 10, ScoreResultsTable.PosX, Math.Min(dt / 120, 1));
+
+            if (Math.Abs(MapInformation.PosX) < 50)
+                OnlineResultsTable.PosX = GraphicsHelper.Tween(OnlineResultsTable.SizeX / 2f + 10, OnlineResultsTable.PosX, Math.Min(dt / 120, 1));
 
             if (MapInformation.PosX > -25)
                 JudgementBreakdown.PosX = GraphicsHelper.Tween(-JudgementBreakdown.SizeX / 2f - 10, JudgementBreakdown.PosX, Math.Min(dt / 120, 1));
@@ -136,13 +146,43 @@ namespace Quaver.States.Results.UI
         /// <summary>
         ///     Creates the score results sprite.
         /// </summary>
-        private void CreateScoreResultsInfo() => ScoreResultsInfo = new ScoreResultsInfo(Screen)
+        private void CreateScoreResultsInfo()
         {
-            Parent = Container,
-            PosY = MapInformation.PosY + MapInformation.SizeY + 20,
-            Alignment = Alignment.TopCenter,
-            PosX =  GameBase.WindowRectangle.Width
-        };
+            var mods = Screen.ScoreProcessor.Mods.ToString();
+
+            ScoreResultsTable = new ScoreResultsTable(Screen, "Score Results", new List<ScoreResultsInfoItem>()
+            {
+                new ScoreResultsInfoItem("Mods", mods == "0" ? "None" : mods),
+                new ScoreResultsInfoItem("Score", Screen.ScoreProcessor.Score.ToString("N0")),
+                new ScoreResultsInfoItem("Accuracy", StringHelper.AccuracyToString(Screen.ScoreProcessor.Accuracy)),
+                new ScoreResultsInfoItem("Max Combo", Screen.ScoreProcessor.MaxCombo.ToString("N0") + "x")
+            })
+            {
+                Parent = Container,
+                PosY = MapInformation.PosY + MapInformation.SizeY + 20,
+                Alignment = Alignment.TopCenter,
+                PosX = GameBase.WindowRectangle.Width
+            };
+        }
+
+        /// <summary>
+        ///     Creates the table for online results.
+        /// </summary>
+        private void CreateOnlineResultsInfo()
+        {
+            OnlineResultsTable = new ScoreResultsTable(Screen, "Online Results", new List<ScoreResultsInfoItem>()
+            {
+                new ScoreResultsInfoItem("Score Rating"),
+                new ScoreResultsInfoItem("Map Rank"),
+                new ScoreResultsInfoItem("Ranks Gained")
+            })
+            {
+                Parent = Container,
+                PosY = MapInformation.PosY + MapInformation.SizeY + 20,
+                Alignment = Alignment.TopCenter,
+                PosX = -GameBase.WindowRectangle.Width
+            };
+        }
 
         /// <summary>
         ///     Creates the judgement breakdown sprite.
@@ -151,7 +191,7 @@ namespace Quaver.States.Results.UI
         {
             Parent = Container,
             Alignment = Alignment.TopCenter,
-            PosY = ScoreResultsInfo.PosY + ScoreResultsInfo.SizeY + 20,
+            PosY = ScoreResultsTable.PosY + ScoreResultsTable.SizeY + 20,
             PosX = -GameBase.WindowRectangle.Width
         };
 

@@ -11,7 +11,7 @@ using Quaver.Main;
 
 namespace Quaver.States.Results.UI.ScoreResults
 {
-    internal class ScoreResultsInfo : HeaderedSprite
+    internal class ScoreResultsTable : HeaderedSprite
     {
         /// <summary>
         ///     Reference to the results screen itself
@@ -27,24 +27,13 @@ namespace Quaver.States.Results.UI.ScoreResults
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
-        /// <exception cref="T:System.ArgumentException"></exception>
-        public ScoreResultsInfo(ResultsScreen screen) : base(new Vector2(GameBase.WindowRectangle.Width - 100, 120),
-                                                  "Results", Fonts.AllerRegular16, 0.90f, Alignment.MidCenter, 50, Colors.DarkGray)
+        /// <param name="name"></param>
+        public ScoreResultsTable(ResultsScreen screen, string name, List<ScoreResultsInfoItem> items)
+                                    : base(new Vector2((GameBase.WindowRectangle.Width - 120) / 2f, 120),
+                                            name, Fonts.AllerRegular16, 0.90f, Alignment.MidCenter, 50, Colors.DarkGray)
         {
             Screen = screen;
-
-            var mods = Screen.ScoreProcessor.Mods.ToString();
-
-            ResultValueItems = new List<ScoreResultsInfoItem>
-            {
-                new ScoreResultsInfoItem("Mods", mods == "0" ? "None" : mods),
-                new ScoreResultsInfoItem("Score", Screen.ScoreProcessor.Score.ToString("N0")),
-                new ScoreResultsInfoItem("Accuracy", StringHelper.AccuracyToString(Screen.ScoreProcessor.Accuracy)),
-                new ScoreResultsInfoItem("Max Combo", Screen.ScoreProcessor.MaxCombo.ToString("N0")),
-                new ScoreResultsInfoItem("Score Rating"),
-                new ScoreResultsInfoItem("Map Rank"),
-                new ScoreResultsInfoItem("Ranks Gained")
-            };
+            ResultValueItems = items;
 
             ResultValueItems.ForEach(x =>
             {

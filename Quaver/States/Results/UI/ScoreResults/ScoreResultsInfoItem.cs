@@ -67,13 +67,13 @@ namespace Quaver.States.Results.UI.ScoreResults
             TitleText = new SpriteText()
             {
                 Parent = parent,
-                Font = Fonts.AllerBold16,
+                Font = Fonts.Exo2Regular24,
                 TextAlignment = Alignment.MidCenter,
-                Text = Title,
+                Text = Title.ToUpper(),
                 PosX = posX,
                 PosY = 17,
-                TextScale = 0.80f,
-                TextColor = Color.White
+                TextScale = 0.50f,
+                TextColor = Colors.SecondaryAccent
             };
 
             if (Value != null)
@@ -81,12 +81,12 @@ namespace Quaver.States.Results.UI.ScoreResults
                 ValueText = new SpriteText()
                 {
                     Parent = parent,
-                    Font = Fonts.AllerRegular16,
+                    Font = Fonts.Exo2Regular24,
                     TextAlignment = Alignment.MidCenter,
                     Text = Value,
                     PosX = posX,
                     PosY = TitleText.PosY + (TitleText.MeasureString() / 2f).Y + 25,
-                    TextScale = 0.70f,
+                    TextScale = 0.52f,
                     TextColor = Color.White
                 };
             }
