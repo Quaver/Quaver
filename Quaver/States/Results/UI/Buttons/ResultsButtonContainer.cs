@@ -156,6 +156,8 @@ namespace Quaver.States.Results.UI.Buttons
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         internal void ChangeSelected(Direction direction)
         {
+            var prevSelected = SelectedButton;
+
             switch (direction)
             {
                 case Direction.Forward:
@@ -170,7 +172,8 @@ namespace Quaver.States.Results.UI.Buttons
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
 
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover);
+            if (SelectedButton != prevSelected)
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover);
         }
 
         /// <summary>

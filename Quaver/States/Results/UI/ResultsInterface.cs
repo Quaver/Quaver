@@ -146,7 +146,7 @@ namespace Quaver.States.Results.UI
 
             ScoreResultsTable = new ScoreResultsTable(Screen, "Score Results", new List<ScoreResultsInfoItem>()
             {
-                new ScoreResultsInfoItem("Mods", mods == "0" ? "None" : mods),
+                new ScoreResultsInfoItem("Mods", ModHelper.GetModsString(Screen.ScoreProcessor.Mods)),
                 new ScoreResultsInfoItem("Score", Screen.ScoreProcessor.Score.ToString("N0")),
                 new ScoreResultsInfoItem("Accuracy", StringHelper.AccuracyToString(Screen.ScoreProcessor.Accuracy)),
                 new ScoreResultsInfoItem("Max Combo", Screen.ScoreProcessor.MaxCombo.ToString("N0") + "x")

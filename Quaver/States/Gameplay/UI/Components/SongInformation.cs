@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
@@ -51,7 +52,7 @@ namespace Quaver.States.Gameplay.UI.Components
         ///     The map's difficulty rating
         /// </summary>
         private SpriteText Rating { get; }
-        
+
         /// <summary>
         ///     The activated mods.
         /// </summary>
@@ -74,14 +75,14 @@ namespace Quaver.States.Gameplay.UI.Components
         internal SongInformation(GameplayScreen screen)
         {
             Screen = screen;
-            
+
             Size = new UDim2D(750, 150);
             Tint = Colors.MainAccentInactive;
             Alpha = 0;
 
             // Replay
             const float replayTextScale = 0.95f;
-            
+
             // Create watching text outside of replay mode because other text relies on it.
             Watching = new SpriteText
             {
@@ -93,7 +94,7 @@ namespace Quaver.States.Gameplay.UI.Components
                 TextScale = replayTextScale,
                 Alpha = 0
             };
-            
+
             // Handle positioning and create player name text if we're actually
             // watching a replay.
             if (Screen.InReplayMode)
@@ -118,7 +119,7 @@ namespace Quaver.States.Gameplay.UI.Components
                 Watching.PosX = watchingLength / 2.0f - center;
                 PlayerName.PosX = Watching.PosX + watchingLength + playerNameLength / 2.0f - center / 2f + 2;
             }
-        
+
             Title = new SpriteText
             {
                 Parent = this,
@@ -165,7 +166,7 @@ namespace Quaver.States.Gameplay.UI.Components
             };
 
             // Get a formatted string of the activated mods.
-            var modsString = "Mods: " + (GameBase.CurrentGameModifiers.Count > 0 ? $"{ModHelper.GetActivatedModsString()}" :  "None");         
+            var modsString = "Mods: " + (GameBase.CurrentGameModifiers.Count > 0 ? $"{ModHelper.GetModsString(Screen.Ruleset.ScoreProcessor.Mods)}" :  "None");
             Mods = new SpriteText()
             {
                 Parent = this,
@@ -207,7 +208,7 @@ namespace Quaver.States.Gameplay.UI.Components
                 Rating.FadeOut(dt, AnimationScale);
                 Mods.FadeOut(dt, AnimationScale);
             }
-            
+
             base.Update(dt);
         }
     }
