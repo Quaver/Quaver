@@ -25,6 +25,11 @@ namespace Quaver.States.Results.UI.Buttons
         /// </summary>
         private List<TextButton> Buttons { get; set; }
 
+        /// <summary>
+        ///     The currently selected button
+        /// </summary>
+        private int SelectedButton { get; set; } = -1;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>

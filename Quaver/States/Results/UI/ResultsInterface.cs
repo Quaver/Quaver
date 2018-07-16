@@ -54,7 +54,7 @@ namespace Quaver.States.Results.UI
         /// <summary>
         ///     The container for the buttons.
         /// </summary>
-        private ResultsButtonContainer ButtonContainer { get; set; }
+        internal ResultsButtonContainer ButtonContainer { get; private set; }
 
         /// <summary>
         ///     The sprite that contains all of the score data.

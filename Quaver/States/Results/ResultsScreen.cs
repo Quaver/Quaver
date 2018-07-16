@@ -35,6 +35,7 @@ using Quaver.Graphics.UI.Notifications;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.States.Gameplay.Replays;
+using Quaver.States.Results.Input;
 using Quaver.States.Results.UI;
 using Quaver.States.Select;
 using AudioEngine = Quaver.Audio.AudioEngine;
@@ -104,6 +105,11 @@ namespace Quaver.States.Results
         ///     Score processor.
         /// </summary>
         internal ScoreProcessor ScoreProcessor { get; private set; }
+
+        /// <summary>
+        ///     Handles all input for this screen.
+        /// </summary>
+        private ResultsInputManager InputManager { get; set;  }
 
         /// <summary>
         ///     Ctor
@@ -191,6 +197,8 @@ namespace Quaver.States.Results
             UI = new ResultsInterface(this);
             UI.Initialize(this);
 
+            InputManager = new ResultsInputManager(this);
+
             UpdateReady = true;
         }
 
@@ -209,7 +217,7 @@ namespace Quaver.States.Results
             GameBase.Navbar.PerformHideAnimation(dt);
             GameBase.Cursor.Alpha = 1;
 
-            HandleInput();
+            InputManager.HandleInput(dt);
             UI.Update(dt);
         }
 
@@ -389,18 +397,6 @@ namespace Quaver.States.Results
             {
                 Logger.LogError($"There was an error when writing debug replay files: {e}", LogType.Runtime);
             }
-        }
-
-        /// <summary>
-        ///     Handles input for the entire screen.
-        /// </summary>
-        private void HandleInput()
-        {
-            if (InputHelper.IsUniqueKeyPress(Keys.F2))
-                ExportReplay();
-
-            if (InputHelper.IsUniqueKeyPress(Keys.Escape))
-                GameBase.GameStateManager.ChangeState(new SongSelectState());
         }
 
         /// <summary>
