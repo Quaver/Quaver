@@ -95,22 +95,16 @@ namespace Quaver.States.Results.UI
         ///  <param name="dt"></param>
         public void Update(double dt)
         {
-            MapInformation.PosX = GraphicsHelper.Tween(0, MapInformation.PosX, Math.Min(dt / 120, 1));
+            MapInformation.PosY = GraphicsHelper.Tween(60, MapInformation.PosY, Math.Min(dt / 120, 1));
 
-            if (Math.Abs(MapInformation.PosX) < 50)
+            if (MapInformation.PosY >= 0)
+            {
                 ScoreResultsTable.PosX = GraphicsHelper.Tween(-ScoreResultsTable.SizeX / 2f - 10, ScoreResultsTable.PosX, Math.Min(dt / 120, 1));
-
-            if (Math.Abs(MapInformation.PosX) < 50)
                 OnlineResultsTable.PosX = GraphicsHelper.Tween(OnlineResultsTable.SizeX / 2f + 10, OnlineResultsTable.PosX, Math.Min(dt / 120, 1));
-
-            if (MapInformation.PosX > -25)
                 JudgementBreakdown.PosX = GraphicsHelper.Tween(-JudgementBreakdown.SizeX / 2f - 10, JudgementBreakdown.PosX, Math.Min(dt / 120, 1));
-
-            if (Math.Abs(JudgementBreakdown.PosX) > -10)
                 ScoreStatistics.PosX = GraphicsHelper.Tween(ScoreStatistics.SizeX / 2f + 10, ScoreStatistics.PosX, Math.Min(dt / 120, 1));
-
-            if (Math.Abs(MapInformation.PosX) < 20)
-                ButtonContainer.PosX = GraphicsHelper.Tween(0, ButtonContainer.PosX, Math.Min(dt / 120, 1));
+                ButtonContainer.PosY = GraphicsHelper.Tween(JudgementBreakdown.PosY + JudgementBreakdown.SizeY + 20, ButtonContainer.PosY, Math.Min(dt / 120, 1));
+            }
 
             Container.Update(dt);
         }
@@ -139,8 +133,8 @@ namespace Quaver.States.Results.UI
         private void CreateMapInformation() => MapInformation = new MapInformation(Screen)
         {
             Parent = Container,
-            PosY = 60,
-            PosX = -GameBase.WindowRectangle.Width
+            PosY = -GameBase.WindowRectangle.Height,
+            PosX = 0
         };
 
         /// <summary>
@@ -159,30 +153,28 @@ namespace Quaver.States.Results.UI
             })
             {
                 Parent = Container,
-                PosY = MapInformation.PosY + MapInformation.SizeY + 20,
+                PosY = 60 + MapInformation.SizeY + 20,
                 Alignment = Alignment.TopCenter,
-                PosX = GameBase.WindowRectangle.Width
+                PosX = -GameBase.WindowRectangle.Width
             };
         }
 
         /// <summary>
         ///     Creates the table for online results.
         /// </summary>
-        private void CreateOnlineResultsInfo()
+        private void CreateOnlineResultsInfo() => OnlineResultsTable = new ScoreResultsTable(Screen, "Online Results",
+            new List<ScoreResultsInfoItem>()
         {
-            OnlineResultsTable = new ScoreResultsTable(Screen, "Online Results", new List<ScoreResultsInfoItem>()
-            {
-                new ScoreResultsInfoItem("Score Rating"),
-                new ScoreResultsInfoItem("Map Rank"),
-                new ScoreResultsInfoItem("Ranks Gained")
-            })
-            {
-                Parent = Container,
-                PosY = MapInformation.PosY + MapInformation.SizeY + 20,
-                Alignment = Alignment.TopCenter,
-                PosX = -GameBase.WindowRectangle.Width
-            };
-        }
+            new ScoreResultsInfoItem("Score Rating"),
+            new ScoreResultsInfoItem("Map Rank"),
+            new ScoreResultsInfoItem("Ranks Gained")
+        })
+        {
+            Parent = Container,
+            PosY = 60 + MapInformation.SizeY + 20,
+            Alignment = Alignment.TopCenter,
+            PosX = GameBase.WindowRectangle.Width
+        };
 
         /// <summary>
         ///     Creates the judgement breakdown sprite.
@@ -202,8 +194,8 @@ namespace Quaver.States.Results.UI
         {
             Parent = Container,
             Alignment = Alignment.TopCenter,
-            PosY = JudgementBreakdown.PosY + JudgementBreakdown.SizeY + 20,
-            PosX = GameBase.WindowRectangle.Width
+            PosY = GameBase.WindowRectangle.Height,
+            PosX = 0
         };
 
         /// <summary>

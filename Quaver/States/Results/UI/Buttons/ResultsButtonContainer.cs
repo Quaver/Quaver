@@ -75,14 +75,14 @@ namespace Quaver.States.Results.UI.Buttons
                     var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
                     GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Qua, GameBase.SelectedMap.Md5Checksum, scores, Screen.Replay));
                 }),
+                CreateButton("Export Replay", (sender, args) =>
+                {
+                    Screen.ExportReplay();
+                }),
                 CreateButton("Retry Map", (sender, args) =>
                 {
                     var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
                     GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Qua, GameBase.SelectedMap.Md5Checksum, scores));
-                }),
-                CreateButton("Export Replay", (sender, args) =>
-                {
-                    Screen.ExportReplay();
                 }),
             };
 
