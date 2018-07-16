@@ -2,6 +2,7 @@
 using Quaver.Helpers;
 using Quaver.Input;
 using Quaver.Main;
+using Quaver.States.Results.UI.Buttons;
 using Quaver.States.Select;
 
 namespace Quaver.States.Results.Input
@@ -30,6 +31,15 @@ namespace Quaver.States.Results.Input
 
             if (InputHelper.IsUniqueKeyPress(Keys.Escape))
                 GameBase.GameStateManager.ChangeState(new SongSelectState());
+
+            if (InputHelper.IsUniqueKeyPress(Keys.Left))
+                Screen.UI.ButtonContainer.ChangeSelected(Direction.Backward);
+
+            if (InputHelper.IsUniqueKeyPress(Keys.Right))
+                Screen.UI.ButtonContainer.ChangeSelected(Direction.Forward);
+
+            if (InputHelper.IsUniqueKeyPress(Keys.Enter))
+                Screen.UI.ButtonContainer.FireButtonEvent();
         }
     }
 }

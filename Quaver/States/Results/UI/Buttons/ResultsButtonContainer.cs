@@ -46,6 +46,17 @@ namespace Quaver.States.Results.UI.Buttons
         }
 
         /// <summary>
+        ///
+        /// </summary>
+        /// <param name="dt"></param>
+        internal override void Update(double dt)
+        {
+            FadeButtons(dt);
+
+            base.Update(dt);
+        }
+
+        /// <summary>
         ///     Creates a button
         /// </summary>
         /// <param name="text"></param>
@@ -53,14 +64,19 @@ namespace Quaver.States.Results.UI.Buttons
         /// <returns></returns>
         private static TextButton CreateButton(string text, EventHandler onClick)
         {
-            var btn = new TextButton(new Vector2(), text);
-            btn.Clicked += onClick;
-            btn.TextSprite.Font = Fonts.Exo2Regular24;
-            btn.TextSprite.TextColor = Color.White;
-            btn.TextSprite.TextScale = 0.50f;
-            btn.TextSprite.Text = btn.TextSprite.Text.ToUpper();
+            var btn = new TextButton(new Vector2(), text)
+            {
+                TextSprite =
+                {
+                    Font = Fonts.Exo2Regular24,
+                    TextColor = Color.White,
+                    TextScale = 0.50f,
+                    Text = text.ToUpper()
+                }
+            };
 
-            btn.OnUpdate += delegate(double dt) { btn.FadeToColor(btn.IsHovered ? Color.White : Color.Black, dt, 60); };
+            btn.Clicked += onClick;
+
             return btn;
         }
 
@@ -73,19 +89,27 @@ namespace Quaver.States.Results.UI.Buttons
             {
                 CreateButton("Back", (sender, args) =>
                 {
+                    GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundBack);
+
                     GameBase.GameStateManager.ChangeState(new SongSelectState());
                 }),
                 CreateButton("Watch Replay", (sender, args) =>
                 {
+                    GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
+
                     var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
                     GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Qua, GameBase.SelectedMap.Md5Checksum, scores, Screen.Replay));
                 }),
                 CreateButton("Export Replay", (sender, args) =>
                 {
+                    GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
                     Screen.ExportReplay();
+
                 }),
                 CreateButton("Retry Map", (sender, args) =>
                 {
+                    GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
+
                     var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
                     GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Qua, GameBase.SelectedMap.Md5Checksum, scores));
                 }),
@@ -105,6 +129,57 @@ namespace Quaver.States.Results.UI.Buttons
                 var sizePer = SizeX / Buttons.Count;
                 btn.PosX = sizePer * i + sizePer / 2f - btn.SizeX / 2f;
             }
+
+            // If we actually do have buttons here, then we'll want to default the selected
+            // button to the first.
+            if (Buttons.Count > 0)
+                SelectedButton = 0;
+        }
+
+        /// <summary>
+        ///    Makes sure only hovered of selected buttons are faded to the correct colors.
+        /// </summary>
+        /// <param name="dt"></param>
+        private void FadeButtons(double dt)
+        {
+            for (var i = 0; i < Buttons.Count; i++)
+            {
+                var btn = Buttons[i];
+                btn.FadeToColor(btn.IsHovered || i == SelectedButton ? Color.White : Color.Black, dt, 60);
+            }
+        }
+
+        /// <summary>
+        ///     Changes the selected button to
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        internal void ChangeSelected(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Forward:
+                    if (SelectedButton + 1 < Buttons.Count)
+                        SelectedButton = SelectedButton + 1;
+                    break;
+                case Direction.Backward:
+                    if (SelectedButton - 1 >= 0)
+                        SelectedButton = SelectedButton - 1;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+
+            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover);
+        }
+
+        /// <summary>
+        ///     Fires the event of the selected button.
+        /// </summary>
+        internal void FireButtonEvent()
+        {
+            var btn = Buttons[SelectedButton];
+            btn.Clicked?.Invoke(btn, EventArgs.Empty);
         }
     }
 }

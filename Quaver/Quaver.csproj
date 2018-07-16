@@ -161,6 +161,7 @@
     <Compile Include="States\Results\ResultsScreen.cs" />
     <Compile Include="States\Results\ResultsScreenType.cs" />
     <Compile Include="States\Results\UI\Breakdown\JudgementBreakdown.cs" />
+    <Compile Include="States\Results\UI\Buttons\Direction.cs" />
     <Compile Include="States\Results\UI\Buttons\ResultsButtonContainer.cs" />
     <Compile Include="States\Results\UI\Data\ResultsScoreStatistics.cs" />
     <Compile Include="States\Results\UI\MapInformation.cs" />
