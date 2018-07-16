@@ -180,7 +180,19 @@ namespace Quaver.States.Results.UI.Buttons
         internal void FireButtonEvent()
         {
             var btn = Buttons[SelectedButton];
-            btn.Clicked?.Invoke(btn, EventArgs.Empty);
+
+            if (btn.IsClickable)
+                btn.Clicked?.Invoke(btn, EventArgs.Empty);
         }
+
+        /// <summary>
+        ///     Makes all the buttons in the container unclickable.
+        /// </summary>
+        internal void MakeButtonsUnclickable() => Buttons.ForEach(x => x.IsClickable = false);
+
+        /// <summary>
+        ///     Makes all the buttons in the container clickable.
+        /// </summary>
+        internal void MakeButtonsClickable() => Buttons.ForEach(x => x.IsClickable = false);
     }
 }

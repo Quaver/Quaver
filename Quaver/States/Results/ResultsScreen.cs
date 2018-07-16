@@ -114,12 +114,12 @@ namespace Quaver.States.Results
         /// <summary>
         ///     Boolean value that dictates if the screen is currently exiting.
         /// </summary>
-        internal bool IsScreenExiting => ScreenExiting != null;
+        internal bool IsExiting => OnExit != null;
 
         /// <summary>
         ///     If the screen is currently exiting.
         /// </summary>
-        private Action ScreenExiting { get; set; }
+        private Action OnExit { get; set; }
 
         /// <summary>
         ///     The amount of time since the screen's exit was initiated.
@@ -228,7 +228,7 @@ namespace Quaver.States.Results
         public void UnloadContent()
         {
             UI.UnloadContent();
-            ScreenExiting = null;
+            OnExit = null;
         }
 
         /// <inheritdoc />
@@ -460,11 +460,13 @@ namespace Quaver.States.Results
         /// </summary>
         internal void Exit(Action onExitScreen)
         {
+            UI.ButtonContainer.MakeButtonsUnclickable();
+
             // Make sure this is only set one time in its existence.
-            if (IsScreenExiting)
+            if (IsExiting)
                 return;
 
-            ScreenExiting += onExitScreen;
+            OnExit += onExitScreen;
         }
 
         /// <summary>
@@ -473,7 +475,7 @@ namespace Quaver.States.Results
         /// <param name="dt"></param>
         private void HandleExit(double dt)
         {
-            if (!IsScreenExiting)
+            if (!IsExiting)
                 return;
 
             TimeSinceScreenExiting += dt;
@@ -483,7 +485,7 @@ namespace Quaver.States.Results
 
             if (TimeSinceScreenExiting >= screenExitTime && !ExitInvoked)
             {
-                ScreenExiting?.Invoke();
+                OnExit?.Invoke();
                 ExitInvoked = true;
             }
         }
