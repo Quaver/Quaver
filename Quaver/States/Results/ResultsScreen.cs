@@ -481,7 +481,7 @@ namespace Quaver.States.Results
             TimeSinceScreenExiting += dt;
 
             // The amount of time it takes for the screen to exit.
-            const int screenExitTime = 1000;
+            const int screenExitTime = 800;
 
             if (TimeSinceScreenExiting >= screenExitTime && !ExitInvoked)
             {

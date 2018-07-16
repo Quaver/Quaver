@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UI;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -62,6 +63,11 @@ namespace Quaver.States.Results.UI
         private ResultsScoreStatistics ScoreStatistics { get; set; }
 
         /// <summary>
+        ///     Screen transitioner for fade effects.
+        /// </summary>
+        private Sprite ScreenTransitioner { get; set; }
+
+        /// <summary>
         ///     Ctor
         /// </summary>
         /// <param name="screen"></param>
@@ -82,6 +88,9 @@ namespace Quaver.States.Results.UI
             CreateJudgementBreakdown();
             CreateButtonContainer();
             CreateScoreData();
+
+            // Create transitioner last.
+            CreateScreenTransitioner();
         }
 
         /// <inheritdoc />
@@ -95,16 +104,8 @@ namespace Quaver.States.Results.UI
         ///  <param name="dt"></param>
         public void Update(double dt)
         {
-            MapInformation.PosY = GraphicsHelper.Tween(60, MapInformation.PosY, Math.Min(dt / 120, 1));
-
-            if (MapInformation.PosY >= 0)
-            {
-                ScoreResultsTable.PosX = GraphicsHelper.Tween(-ScoreResultsTable.SizeX / 2f - 10, ScoreResultsTable.PosX, Math.Min(dt / 120, 1));
-                OnlineResultsTable.PosX = GraphicsHelper.Tween(OnlineResultsTable.SizeX / 2f + 10, OnlineResultsTable.PosX, Math.Min(dt / 120, 1));
-                JudgementBreakdown.PosX = GraphicsHelper.Tween(-JudgementBreakdown.SizeX / 2f - 10, JudgementBreakdown.PosX, Math.Min(dt / 120, 1));
-                ScoreStatistics.PosX = GraphicsHelper.Tween(ScoreStatistics.SizeX / 2f + 10, ScoreStatistics.PosX, Math.Min(dt / 120, 1));
-                ButtonContainer.PosY = GraphicsHelper.Tween(JudgementBreakdown.PosY + JudgementBreakdown.SizeY + 20, ButtonContainer.PosY, Math.Min(dt / 120, 1));
-            }
+            PerformPanelAnimations(dt);
+            PerformScreenTransitions(dt);
 
             Container.Update(dt);
         }
@@ -140,24 +141,20 @@ namespace Quaver.States.Results.UI
         /// <summary>
         ///     Creates the score results sprite.
         /// </summary>
-        private void CreateScoreResultsInfo()
+        private void CreateScoreResultsInfo() => ScoreResultsTable = new ScoreResultsTable(Screen, "Score Results",
+            new List<ScoreResultsInfoItem>()
         {
-            var mods = Screen.ScoreProcessor.Mods.ToString();
-
-            ScoreResultsTable = new ScoreResultsTable(Screen, "Score Results", new List<ScoreResultsInfoItem>()
-            {
-                new ScoreResultsInfoItem("Mods", ModHelper.GetModsString(Screen.ScoreProcessor.Mods)),
-                new ScoreResultsInfoItem("Score", Screen.ScoreProcessor.Score.ToString("N0")),
-                new ScoreResultsInfoItem("Accuracy", StringHelper.AccuracyToString(Screen.ScoreProcessor.Accuracy)),
-                new ScoreResultsInfoItem("Max Combo", Screen.ScoreProcessor.MaxCombo.ToString("N0") + "x")
-            })
-            {
-                Parent = Container,
-                PosY = 60 + MapInformation.SizeY + 20,
-                Alignment = Alignment.TopCenter,
-                PosX = -GameBase.WindowRectangle.Width
-            };
-        }
+            new ScoreResultsInfoItem("Mods", ModHelper.GetModsString(Screen.ScoreProcessor.Mods)),
+            new ScoreResultsInfoItem("Score", Screen.ScoreProcessor.Score.ToString("N0")),
+            new ScoreResultsInfoItem("Accuracy", StringHelper.AccuracyToString(Screen.ScoreProcessor.Accuracy)),
+            new ScoreResultsInfoItem("Max Combo", Screen.ScoreProcessor.MaxCombo.ToString("N0") + "x")
+        })
+        {
+            Parent = Container,
+            PosY = 60 + MapInformation.SizeY + 20,
+            Alignment = Alignment.TopCenter,
+            PosX = -GameBase.WindowRectangle.Width
+        };
 
         /// <summary>
         ///     Creates the table for online results.
@@ -208,5 +205,62 @@ namespace Quaver.States.Results.UI
             PosY = JudgementBreakdown.PosY,
             PosX = GameBase.WindowRectangle.Width
         };
+
+        /// <summary>
+        ///     Creates the screen transitioner sprite.
+        /// </summary>
+        private void CreateScreenTransitioner() => ScreenTransitioner = new Sprite()
+        {
+            Parent = Container,
+            Alignment = Alignment.TopLeft,
+            SizeX = GameBase.WindowRectangle.Width,
+            SizeY = GameBase.WindowRectangle.Height,
+            Tint = Color.Black,
+            Alpha = 1
+        };
+
+        /// <summary>
+        ///     Performs the animations for the panels entering and exiting the screen.
+        /// </summary>
+        /// <param name="dt"></param>
+        private void PerformPanelAnimations(double dt)
+        {
+            var animSpeed = Math.Min(dt / 120, 1);
+
+            if (!Screen.IsExiting)
+            {
+                MapInformation.PosY = GraphicsHelper.Tween(60, MapInformation.PosY, animSpeed);
+
+                if (!(MapInformation.PosY >= 0))
+                    return;
+
+                ScoreResultsTable.PosX = GraphicsHelper.Tween(-ScoreResultsTable.SizeX / 2f - 10, ScoreResultsTable.PosX, animSpeed);
+                OnlineResultsTable.PosX = GraphicsHelper.Tween(OnlineResultsTable.SizeX / 2f + 10, OnlineResultsTable.PosX, animSpeed);
+                JudgementBreakdown.PosX = GraphicsHelper.Tween(-JudgementBreakdown.SizeX / 2f - 10, JudgementBreakdown.PosX, animSpeed);
+                ScoreStatistics.PosX = GraphicsHelper.Tween(ScoreStatistics.SizeX / 2f + 10, ScoreStatistics.PosX, animSpeed);
+                ButtonContainer.PosY = GraphicsHelper.Tween(JudgementBreakdown.PosY + JudgementBreakdown.SizeY + 20, ButtonContainer.PosY, animSpeed);
+            }
+            else
+            {
+                MapInformation.PosY = GraphicsHelper.Tween(-GameBase.WindowRectangle.Height, MapInformation.PosY, animSpeed);
+                ScoreResultsTable.PosX = GraphicsHelper.Tween(-GameBase.WindowRectangle.Width, ScoreResultsTable.PosX, animSpeed);
+                OnlineResultsTable.PosX = GraphicsHelper.Tween(GameBase.WindowRectangle.Width, OnlineResultsTable.PosX, animSpeed);
+                JudgementBreakdown.PosX = GraphicsHelper.Tween(-GameBase.WindowRectangle.Width, JudgementBreakdown.PosX, animSpeed);
+                ScoreStatistics.PosX = GraphicsHelper.Tween(GameBase.WindowRectangle.Width, ScoreStatistics.PosX, animSpeed);
+                ButtonContainer.PosY = GraphicsHelper.Tween(GameBase.WindowRectangle.Height, ButtonContainer.PosY, animSpeed);
+            }
+        }
+
+        /// <summary>
+        ///     Performs animations for the screen transitioner.
+        /// </summary>
+        /// <param name="dt"></param>
+        private void PerformScreenTransitions(double dt)
+        {
+            if (Screen.IsExiting)
+                ScreenTransitioner.FadeIn(dt, 120);
+            else
+                ScreenTransitioner.FadeOut(dt, 480);
+        }
     }
 }
