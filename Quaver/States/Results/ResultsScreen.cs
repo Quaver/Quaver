@@ -458,7 +458,14 @@ namespace Quaver.States.Results
         /// <summary>
         ///     Initiates the screen exit process.
         /// </summary>
-        internal void Exit(Action onExitScreen) => ScreenExiting += onExitScreen;
+        internal void Exit(Action onExitScreen)
+        {
+            // Make sure this is only set one time in its existence.
+            if (IsScreenExiting)
+                return;
+
+            ScreenExiting += onExitScreen;
+        }
 
         /// <summary>
         ///     Counts the amount of time the screen has been in progress to exit, then does so accordinly.
@@ -486,12 +493,18 @@ namespace Quaver.States.Results
         /// </summary>
         internal void GoBackToMenu() => GameBase.GameStateManager.ChangeState(new SongSelectState());
 
+        /// <summary>
+        ///     Loads up local scores and watches the replay.
+        /// </summary>
         internal void WatchReplay()
         {
             var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
             GameBase.GameStateManager.ChangeState(new GameplayScreen(Qua, GameBase.SelectedMap.Md5Checksum, scores, Replay));
         }
 
+        /// <summary>
+        ///     Goes to the gameplay screen toplay the map.
+        /// </summary>
         internal void RetryMap()
         {
             var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
