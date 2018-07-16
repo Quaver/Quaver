@@ -17,6 +17,7 @@ using Quaver.Discord;
 using Quaver.GameState;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UI;
+using Quaver.Graphics.UI.Notifications;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
@@ -335,7 +336,7 @@ namespace Quaver.States.Gameplay
             if (IsPlayComplete)
                 return;
 
-            if (ModManager.IsActivated(ModIdentifier.NoPause))
+            if (ModManager.IsActivated(ModIdentifier.NoPause) && !InReplayMode)
             {
                 TimesRequestedToPause++;
 
@@ -343,7 +344,7 @@ namespace Quaver.States.Gameplay
                 switch (TimesRequestedToPause)
                 {
                     case 1:
-                        Logger.LogImportant($"Press the pause button one more time to exit.", LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Info, "Press the pause button one more time to exit");
                         break;
                     default:
                         ForceFail = true;
@@ -366,7 +367,8 @@ namespace Quaver.States.Gameplay
                 }
                 catch (AudioEngineException e) {}
 
-                DiscordManager.Presence.State = "Taking a break";
+                DiscordManager.Presence.State = "Paused";
+                DiscordManager.Presence.Timestamps = null;
                 DiscordManager.Client.SetPresence(DiscordManager.Presence);
 
                 return;
@@ -537,7 +539,7 @@ namespace Quaver.States.Gameplay
             if (InReplayMode)
                 DiscordManager.Presence.State = $"Watching {LoadedReplay.PlayerName}";
             else
-                DiscordManager.Presence.State = $"Playing + {ModHelper.GetModsString(GameBase.CurrentMods)}";
+                DiscordManager.Presence.State = $"Playing {(GameBase.CurrentMods > 0 ? "+ " + ModHelper.GetModsString(GameBase.CurrentMods) : "")}";
 
             DiscordManager.Presence.Timestamps = new Timestamps
             {
@@ -568,7 +570,6 @@ namespace Quaver.States.Gameplay
                     continue;
 
                 ModManager.AddMod(mod);
-                Logger.LogInfo($"Added {mod} modifier from the replay.", LogType.Runtime, 2.0f);
             }
         }
     }
