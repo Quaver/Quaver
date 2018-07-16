@@ -54,7 +54,7 @@ namespace Quaver.States.Results
         /// <summary>
         ///     The type of results screen.
         /// </summary>
-        internal ResultsScreenType Type { get; }
+        private ResultsScreenType Type { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -110,6 +110,26 @@ namespace Quaver.States.Results
         ///     Handles all input for this screen.
         /// </summary>
         private ResultsInputManager InputManager { get; set;  }
+
+        /// <summary>
+        ///     Boolean value that dictates if the screen is currently exiting.
+        /// </summary>
+        internal bool IsScreenExiting => ScreenExiting != null;
+
+        /// <summary>
+        ///     If the screen is currently exiting.
+        /// </summary>
+        private Action ScreenExiting { get; set; }
+
+        /// <summary>
+        ///     The amount of time since the screen's exit was initiated.
+        /// </summary>
+        private double TimeSinceScreenExiting { get; set; }
+
+        /// <summary>
+        ///     If the screen's exit action has already been invoked.
+        /// </summary>
+        private bool ExitInvoked { get; set; }
 
         /// <summary>
         ///     Ctor
@@ -205,8 +225,11 @@ namespace Quaver.States.Results
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <exception cref="!:NotImplementedException"></exception>
-        public void UnloadContent() => UI.UnloadContent();
+        public void UnloadContent()
+        {
+            UI.UnloadContent();
+            ScreenExiting = null;
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -218,6 +241,8 @@ namespace Quaver.States.Results
             GameBase.Cursor.Alpha = 1;
 
             InputManager.HandleInput(dt);
+            HandleExit(dt);
+
             UI.Update(dt);
         }
 
@@ -428,6 +453,49 @@ namespace Quaver.States.Results
 
                 NotificationManager.Show(NotificationLevel.Success, "The replay has been successfully exported!");
             });
+        }
+
+        /// <summary>
+        ///     Initiates the screen exit process.
+        /// </summary>
+        internal void Exit(Action onExitScreen) => ScreenExiting += onExitScreen;
+
+        /// <summary>
+        ///     Counts the amount of time the screen has been in progress to exit, then does so accordinly.
+        /// </summary>
+        /// <param name="dt"></param>
+        private void HandleExit(double dt)
+        {
+            if (!IsScreenExiting)
+                return;
+
+            TimeSinceScreenExiting += dt;
+
+            // The amount of time it takes for the screen to exit.
+            const int screenExitTime = 1000;
+
+            if (TimeSinceScreenExiting >= screenExitTime && !ExitInvoked)
+            {
+                ScreenExiting?.Invoke();
+                ExitInvoked = true;
+            }
+        }
+
+        /// <summary>
+        ///     Action that goes back to the song select screen.
+        /// </summary>
+        internal void GoBackToMenu() => GameBase.GameStateManager.ChangeState(new SongSelectState());
+
+        internal void WatchReplay()
+        {
+            var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
+            GameBase.GameStateManager.ChangeState(new GameplayScreen(Qua, GameBase.SelectedMap.Md5Checksum, scores, Replay));
+        }
+
+        internal void RetryMap()
+        {
+            var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
+            GameBase.GameStateManager.ChangeState(new GameplayScreen(Qua, GameBase.SelectedMap.Md5Checksum, scores));
         }
     }
 }

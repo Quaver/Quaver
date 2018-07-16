@@ -87,32 +87,30 @@ namespace Quaver.States.Results.UI.Buttons
         {
             Buttons = new List<TextButton>
             {
+                // Back Button.
                 CreateButton("Back", (sender, args) =>
                 {
                     GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundBack);
-
-                    GameBase.GameStateManager.ChangeState(new SongSelectState());
+                    Screen.Exit(() => Screen.GoBackToMenu());
                 }),
+                // Watch Repaly Button
                 CreateButton("Watch Replay", (sender, args) =>
                 {
                     GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
-
-                    var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
-                    GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Qua, GameBase.SelectedMap.Md5Checksum, scores, Screen.Replay));
+                    Screen.Exit(() => Screen.WatchReplay());
                 }),
+                // Export Replay Button
                 CreateButton("Export Replay", (sender, args) =>
                 {
                     GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
                     Screen.ExportReplay();
-
                 }),
+                // Retry Button
                 CreateButton("Retry Map", (sender, args) =>
                 {
                     GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
-
-                    var scores = LocalScoreCache.FetchMapScores(GameBase.SelectedMap.Md5Checksum);
-                    GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Qua, GameBase.SelectedMap.Md5Checksum, scores));
-                }),
+                    Screen.Exit(() => Screen.RetryMap());
+                })
             };
 
             // Go through each button and initialize the sprite further.

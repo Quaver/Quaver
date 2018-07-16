@@ -30,7 +30,7 @@ namespace Quaver.States.Results.Input
                 Screen.ExportReplay();
 
             if (InputHelper.IsUniqueKeyPress(Keys.Escape))
-                GameBase.GameStateManager.ChangeState(new SongSelectState());
+                Screen.Exit(() => Screen.GoBackToMenu());
 
             if (InputHelper.IsUniqueKeyPress(Keys.Left))
                 Screen.UI.ButtonContainer.ChangeSelected(Direction.Backward);
