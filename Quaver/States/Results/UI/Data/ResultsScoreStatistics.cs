@@ -1,6 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Enums;
 using Quaver.Graphics;
+using Quaver.Graphics.Graphing;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
@@ -51,8 +55,44 @@ namespace Quaver.States.Results.UI.Data
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.MidCenter,
                 Font = Fonts.AssistantRegular16,
-                Text = "Coming Soon"
+                Text = "No Statistics Available.\nPlay the map or watch the replay!"
             };
+
+            // ONLY draw graph if we're coming from gameplay.
+            if (Screen.Type == ResultsScreenType.FromGameplay)
+            {
+                var points = new List<Point>();
+
+                for (var i = 0; i < Screen.ScoreProcessor.Stats.Count; i++)
+                {
+                    var point = Screen.ScoreProcessor.Stats[i];
+                    var missValue = Screen.ScoreProcessor.JudgementWindow[Judgement.Miss];
+
+                    // Make sure that all of the hits and misses are clamped to the
+                    points.Add(new Point(i, MathHelper.Clamp((int) point.HitDifference, (int) -missValue, (int) missValue)));
+                }
+
+                // Create the list of custom lines w/ their colors.
+                var judgementLineColors = new Dictionary<int, System.Drawing.Color>();
+                foreach (var window in Screen.ScoreProcessor.JudgementWindow)
+                {
+                    var judgeColor = GameBase.Skin.Keys[GameMode.Keys4].JudgeColors[window.Key];
+                    var convertedColor = System.Drawing.Color.FromArgb(judgeColor.R, judgeColor.G, judgeColor.B);
+
+                    judgementLineColors.Add((int)-window.Value, convertedColor);
+                    judgementLineColors.Add((int)window.Value, convertedColor);
+                }
+
+                // ReSharper disable once ObjectCreationAsStatement
+                new Sprite
+                {
+                    Parent = sprite,
+                    Size = new UDim2D(600, 250),
+                    Alignment = Alignment.MidCenter,
+                    Image = Graph.CreateStaticScatterPlot(points, new Vector2(600, 250), System.Drawing.Color.Black,
+                                                                3, judgementLineColors, judgementLineColors)
+                };
+            }
 
             return sprite;
         }

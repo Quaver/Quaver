@@ -174,7 +174,7 @@ namespace Quaver.Graphics.Buttons
             OnUpdate = null;
             Held = null;
             ButtonManager.Remove(this);
-            
+
             base.Destroy();
         }
     }
