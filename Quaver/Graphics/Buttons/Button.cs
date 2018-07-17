@@ -90,7 +90,6 @@ namespace Quaver.Graphics.Buttons
                 {
                     IsTrulyHovered = true;
                     MouseOver();
-                    Console.WriteLine("hi");
 
                     // If the user is holding onto the button
                     if (CurrentMouseState.LeftButton == ButtonState.Pressed)
@@ -175,6 +174,7 @@ namespace Quaver.Graphics.Buttons
             OnUpdate = null;
             Held = null;
             ButtonManager.Remove(this);
+            
             base.Destroy();
         }
     }
