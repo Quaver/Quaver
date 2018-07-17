@@ -54,7 +54,7 @@ namespace Quaver.States.Results
         /// <summary>
         ///     The type of results screen.
         /// </summary>
-        private ResultsScreenType Type { get; }
+        internal ResultsScreenType Type { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -304,9 +304,10 @@ namespace Quaver.States.Results
             // Run all of these tasks inside of a new thread to avoid blocks.
             Task.Run(() => { SaveLocalScore(); });
 
-/*#if DEBUG
+#if DEBUG
             Task.Run(() => { SaveDebugReplayData(); });
-#endif*/
+            Task.Run(() => SaveHitData());
+#endif
         }
 
         /// <summary>
@@ -403,6 +404,23 @@ namespace Quaver.States.Results
                 NotificationManager.Show(NotificationLevel.Error, "There was an error when saving your replay. Check Runtime.log for more details.");
                 Logger.LogError(e, LogType.Runtime);
             }
+        }
+
+        /// <summary>
+        ///     Saves debug hit data to a local file.
+        /// </summary>
+
+        private void SaveHitData()
+        {
+            var str = "";
+
+            for (var i = 0; i < ScoreProcessor.Stats.Count; i++)
+            {
+                var stat = ScoreProcessor.Stats[i];
+                str += $"{i},{stat.HitDifference}\r\n";
+            }
+
+            File.WriteAllText(ConfigManager.DataDirectory + "/last_hit_data.txt", str);
         }
 
         /// <summary>
