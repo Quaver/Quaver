@@ -137,7 +137,7 @@ namespace Quaver.States.Menu
         {
             if (FooterBackground != null)
             {
-                if (IsHovered || FooterAlwaysShown)
+                if (IsTrulyHovered || FooterAlwaysShown)
                 {
                     FooterText.Visible = true;
                     FooterBackground.SizeY = GraphicsHelper.Tween(40, FooterBackground.SizeY, Math.Min(dt / 60, 1));

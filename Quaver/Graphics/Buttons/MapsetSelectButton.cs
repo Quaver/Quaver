@@ -121,7 +121,7 @@ namespace Quaver.Graphics.Buttons
             CurrentTint.B = (byte)(HoverCurrentTween * 255);
 
             Tint = CurrentTint;
-            
+
             //TextSprite.Update(dt);
             base.Update(dt);
         }

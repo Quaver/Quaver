@@ -139,7 +139,7 @@ namespace Quaver.Graphics.UI.Notifications
                     n.TimeElapsedSinceShown += dt;
                     
                     // Reset the alpha if the button is hovered over, and it hasn't already been clicked.
-                    if (n.IsHovered && !n.HasBeenClicked)
+                    if (n.IsTrulyHovered && !n.HasBeenClicked)
                     {
                         n.Alpha = 1;
                         n.TimeElapsedSinceShown = 0;

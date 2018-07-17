@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -148,7 +149,18 @@ namespace Quaver.Graphics.Base
                 }
 
                 //Add this object to its new parent's Children list
-                if (value != null) value.Children.Add(this);
+                if (value != null)
+                    value.Children.Add(this);
+                else
+                {
+                    // If we received null for the parent, that must mean we want to fully destroy
+                    // the object, so delete all of its children as well
+                    for (var i = Children.Count - 1; i >= 0; i--)
+                    {
+                        var drawable = Children[i];
+                        drawable.Destroy();
+                    }
+                }
 
                 //Assign parent in this object
                 _parent = value;
@@ -182,6 +194,16 @@ namespace Quaver.Graphics.Base
         internal bool SetChildrenVisibility { get; set; }
 
         /// <summary>
+        ///     The total amount of objects drawn.
+        /// </summary>
+        internal static int TotalObjectsDrawn { get; set; }
+
+        /// <summary>
+        ///     The order at which things are drawn.
+        /// </summary>
+        internal int DrawOrder { get; private set; }
+
+        /// <summary>
         ///     Determines if the Object is going to get drawn.
         /// </summary>
         private bool _visible = true;
@@ -213,7 +235,14 @@ namespace Quaver.Graphics.Base
             //Update Children
             for (var i = Children.Count - 1; i >= 0; i--)
             {
-                Children[i].Update(dt);
+                try
+                {
+                    Children[i].Update(dt);
+                }
+                catch (Exception e)
+                {
+                    break;
+                }
             }
         }
 
@@ -222,8 +251,21 @@ namespace Quaver.Graphics.Base
         /// </summary>
         internal virtual void Draw()
         {
-            if (Visible)
-            Children.ForEach(x => x.Draw());
+            // Increase the total amount objects drawn and set the DrawOrder to this current object.
+            TotalObjectsDrawn++;
+            DrawOrder = TotalObjectsDrawn;
+
+            if (!Visible)
+                return;
+
+            // Draw children and set their draw order.
+            foreach (var drawable in Children)
+            {
+                drawable.Draw();
+
+                TotalObjectsDrawn++;
+                drawable.DrawOrder = TotalObjectsDrawn;
+            }
         }
 
         /// <summary>

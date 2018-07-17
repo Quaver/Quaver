@@ -123,7 +123,7 @@ namespace Quaver.Graphics.Buttons
                 Alpha = 0,
                 Parent = this
             };
-            
+
             GradeImage = new Sprites.Sprite()
             {
                 Position = new UDim2D(-16 * ButtonScale, 0),
@@ -177,7 +177,7 @@ namespace Quaver.Graphics.Buttons
             Tint = CurrentTint;
             GradeImage.Tint = Tint;
             GameModeImage.Tint = Tint;
-            
+
             //QuaverTextSprite.Update(dt);
             base.Update(dt);
         }

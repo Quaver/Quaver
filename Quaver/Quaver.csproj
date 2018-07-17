@@ -66,6 +66,7 @@
     <Compile Include="Discord\DiscordManager.cs" />
     <Compile Include="Graphics\Alignment.cs" />
     <Compile Include="Graphics\Base\Container.cs" />
+    <Compile Include="Graphics\Buttons\ButtonManager.cs" />
     <Compile Include="Graphics\Buttons\Dropdowns\Dropdown.cs" />
     <Compile Include="Graphics\Buttons\Dropdowns\DropdownButton.cs" />
     <Compile Include="Graphics\Buttons\Checkbox.cs" />

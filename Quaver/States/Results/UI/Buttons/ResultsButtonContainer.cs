@@ -143,7 +143,7 @@ namespace Quaver.States.Results.UI.Buttons
             for (var i = 0; i < Buttons.Count; i++)
             {
                 var btn = Buttons[i];
-                btn.FadeToColor(btn.IsHovered || i == SelectedButton ? Color.White : Color.Black, dt, 60);
+                btn.FadeToColor(btn.IsTrulyHovered || i == SelectedButton ? Color.White : Color.Black, dt, 60);
             }
         }
 

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -32,7 +34,12 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     Determines if the button is currently hovered over.
         /// </summary>
-        internal bool IsHovered { get; set; }
+        internal bool IsTrulyHovered { get; set; }
+
+        /// <summary>
+        ///     If the button is currently hovered over without any layer checks.
+        /// </summary>
+        private bool IsHoveredWithoutLayerCheck { get; set; }
 
         /// <summary>
         ///     If the button is actually clickable.
@@ -56,6 +63,8 @@ namespace Quaver.Graphics.Buttons
         {
             Clicked += clickAction;
             Held += holdAction;
+
+            ButtonManager.Add(this);
         }
 
         /// <inheritdoc />
@@ -69,22 +78,36 @@ namespace Quaver.Graphics.Buttons
 
             if (GetClickArea() && QuaverGame.Game.IsActive && Visible)
             {
-                IsHovered = true;
-                MouseOver();
+                IsHoveredWithoutLayerCheck = true;
 
-                // If the user is holding onto the button
-                if (CurrentMouseState.LeftButton == ButtonState.Pressed)
-                    OnHeld();
+                // Check if this button is truly being hovered over by its draw order.
+                if (ButtonManager.Buttons.FindAll(x => x.IsHoveredWithoutLayerCheck).OrderByDescending(x => x.DrawOrder).First() != this)
+                {
+                    IsTrulyHovered = false;
+                    MouseOut();
+                }
+                else
+                {
+                    IsTrulyHovered = true;
+                    MouseOver();
+                    Console.WriteLine("hi");
 
-                // If the user actually clicks the button, fire off the click event.
-                if (CurrentMouseState.LeftButton == ButtonState.Released && PreviousMouseState.LeftButton == ButtonState.Pressed)
-                    OnClicked();
+                    // If the user is holding onto the button
+                    if (CurrentMouseState.LeftButton == ButtonState.Pressed)
+                        OnHeld();
+
+                    // If the user actually clicks the button, fire off the click event.
+                    if (CurrentMouseState.LeftButton == ButtonState.Released && PreviousMouseState.LeftButton == ButtonState.Pressed)
+                        OnClicked();
+                }
             }
             else
             {
-                if (IsHovered)
+                IsHoveredWithoutLayerCheck = false;
+
+                if (IsTrulyHovered)
                 {
-                    IsHovered = false;
+                    IsTrulyHovered = false;
                     MouseOut();
                 }
 
@@ -151,6 +174,7 @@ namespace Quaver.Graphics.Buttons
             Clicked = null;
             OnUpdate = null;
             Held = null;
+            ButtonManager.Remove(this);
             base.Destroy();
         }
     }

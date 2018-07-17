@@ -221,6 +221,9 @@ namespace Quaver.Main
             // Clear Background so it doesnt render everything from previous frame
             GameBase.GraphicsDevice.Clear(Color.Black);
 
+            // Reset the total amount of objects drawn.
+            Drawable.TotalObjectsDrawn = 0;
+
             // Draw from Game State Manager
             GameBase.GameStateManager.Draw();
 
