@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,7 +22,15 @@ namespace Quaver.States.Results.UI.Data
         /// </summary>
         private ResultsScreen Screen { get; }
 
+        /// <summary>
+        ///     The list of stat containers that we currently have.
+        /// </summary>
         private List<StatisticContainer> StatsContainers { get; }
+
+        /// <summary>
+        ///     The currently selected container.
+        /// </summary>
+        private int SelectedContainer { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -88,7 +97,7 @@ namespace Quaver.States.Results.UI.Data
             {
                 Parent = content,
                 Alpha = 1f,
-                Size = new UDim2D(content.SizeX / StatsContainers.Count - 75, 35),
+                Size = new UDim2D(content.SizeX - 75, 35),
                 Alignment = Alignment.BotCenter,
                 Tint = Colors.DarkGray,
                 PosY = -5
@@ -99,13 +108,13 @@ namespace Quaver.States.Results.UI.Data
                 // Set the parent of the content to the actual content, so that we can display it.
                 // We want to give full control here over sprite creation, so we don't change it at all.
                 StatsContainers[i].Content.Parent = content;
+                StatsContainers[i].Content.SetChildrenAlpha = true;
 
                 // Create Tab Button
-                var btn = new TextButton(new Vector2(150, buttonContainer.SizeY), StatsContainers[i].Name.ToUpper())
+                StatsContainers[i].Button = new TextButton(new Vector2(150, buttonContainer.SizeY), StatsContainers[i].Name.ToUpper())
                 {
                     Parent = buttonContainer,
                     Alignment = Alignment.MidLeft,
-                    Tint = Colors.SecondaryAccentInactive,
                     Alpha = 1f,
                     TextSprite =
                     {
@@ -115,9 +124,77 @@ namespace Quaver.States.Results.UI.Data
                     },
                 };
 
-                var sizePer = btn.SizeX / StatsContainers.Count;
-                btn.PosX = sizePer * i + sizePer / 2f - btn.SizeX / 2f;
+                var btn = StatsContainers[i].Button;
+
+                if (i == 0)
+                {
+                    btn.Tint = Colors.SecondaryAccent;
+                    btn.TextSprite.TextColor = Color.Black;
+                }
+                else
+                {
+                    btn.Tint = Color.Black;
+                    btn.Alpha = 0.50f;
+                    btn.TextSprite.TextColor = Color.White;
+
+                    // Set button position
+                    var sizePer = btn.SizeX / StatsContainers.Count;
+                    btn.PosX = (btn.SizeX) * i;
+
+                    // Make sure that the the alpha of inactive ones are invisible.
+                    StatsContainers[i].Content.Alpha = 0;
+                }
+
+                btn.Clicked += (sender, args) =>
+                {
+                    if ((TextButton) sender == StatsContainers[SelectedContainer].Button)
+                        return;
+
+                    for (var j = 0; j < StatsContainers.Count; j++)
+                    {
+                        if (StatsContainers[j].Button != (TextButton) sender)
+                            continue;
+
+                        SelectedContainer = j;
+                        break;
+                    }
+                };
             }
+        }
+
+        /// <inheritdoc />
+        ///  <summary>
+        ///  </summary>
+        ///  <param name="dt"></param>
+        internal override void Update(double dt)
+        {
+            for (var i = 0; i < StatsContainers.Count; i++)
+            {
+                var container = StatsContainers[i];
+
+                if (i != SelectedContainer)
+                {
+                    // Make sure button is black and unfocused.
+                    container.Button.FadeToColor(container.Button.IsTrulyHovered ? Colors.SecondaryAccentInactive : Color.Black, dt, 60);
+                    container.Button.Alpha = GraphicsHelper.Tween(0.5f, container.Button.Alpha, Math.Min(dt / 60, 1));
+                    container.Button.TextSprite.TextColor = Color.White;
+
+                    // Make sure that the contaier content itself is hidden
+                    container.Content.Alpha = GraphicsHelper.Tween(0, container.Content.Alpha, Math.Min(dt / 120, 1));
+                }
+                else
+                {
+                    // Make sure button is yellow and focused.
+                    container.Button.Alpha = GraphicsHelper.Tween(1, container.Button.Alpha, Math.Min(dt / 60, 1));
+                    container.Button.FadeToColor(Colors.SecondaryAccent, dt, 60);
+                    container.Button.TextSprite.TextColor = Color.Black;
+
+                    // Make sure that the contaier content itself is visible
+                    container.Content.Alpha = GraphicsHelper.Tween(1, container.Content.Alpha, Math.Min(dt / 120, 1));
+                }
+            }
+
+            base.Update(dt);
         }
     }
 }
