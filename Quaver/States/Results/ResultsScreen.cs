@@ -291,7 +291,7 @@ namespace Quaver.States.Results
         /// </summary>
         private void PlayApplauseEffect()
         {
-            if (ApplauseSoundPlayed)
+            if (ApplauseSoundPlayed || Type != ResultsScreenType.FromGameplay)
                 return;
 
             ApplauseSound = GameBase.Skin.SoundApplause.CreateInstance();
@@ -325,11 +325,14 @@ namespace Quaver.States.Results
         /// </summary>
         private void InitializeFromGameplay()
         {
-            // Keep the same replay and score processor if the user was watching a replay before.
+            // Keep the same replay and score processor if the user was watching a replay before,
             if (GameplayScreen.InReplayMode)
             {
                 Replay = GameplayScreen.LoadedReplay;
                 ScoreProcessor = Replay.Mods.HasFlag(ModIdentifier.Autoplay) ? GameplayScreen.Ruleset.ScoreProcessor : new ScoreProcessorKeys(Replay);
+
+                // Make sure the score processor's stats are up-to-date with the replay actually played.
+                ScoreProcessor.Stats = GameplayScreen.Ruleset.ScoreProcessor.Stats;
             }
             // Otherwise the replay and processor should be the one that the user just played.
             else
