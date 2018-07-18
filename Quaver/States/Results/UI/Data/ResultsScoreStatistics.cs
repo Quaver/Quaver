@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Graphics;
+using Quaver.Graphics.Base;
+using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Graphing;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
@@ -19,16 +21,21 @@ namespace Quaver.States.Results.UI.Data
         /// </summary>
         private ResultsScreen Screen { get; }
 
+        private List<StatisticContainer> StatsContainers { get; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
-        public ResultsScoreStatistics(ResultsScreen screen)
+        /// <param name="stats"></param>
+        public ResultsScoreStatistics(ResultsScreen screen, List<StatisticContainer> stats = null)
                                     : base(new Vector2(screen.UI.JudgementBreakdown.SizeX, screen.UI.JudgementBreakdown.SizeY),
                                         "Statistics", Fonts.AllerRegular16, 0.90f, Alignment.MidCenter, 50, Colors.DarkGray)
         {
             Screen = screen;
             PosX = SizeX / 2f + 10;
+
+            StatsContainers = stats;
 
             Content = CreateContent();
             Content.Parent = this;
@@ -41,7 +48,7 @@ namespace Quaver.States.Results.UI.Data
         /// <returns></returns>
         protected sealed override Sprite CreateContent()
         {
-            var sprite = new Sprite
+            var content = new Sprite
             {
                 Parent = this,
                 Size = new UDim2D(ContentSize.X, ContentSize.Y),
@@ -49,52 +56,68 @@ namespace Quaver.States.Results.UI.Data
                 Alpha = 0.45f
             };
 
-            var comingSoon = new SpriteText()
+            // If there aren't any stats to display, then display a message to the user.
+            if (StatsContainers.Count == 0)
             {
-                Parent = sprite,
-                Alignment = Alignment.MidCenter,
-                TextAlignment = Alignment.MidCenter,
-                Font = Fonts.AssistantRegular16,
-                Text = "No Statistics Available.\nPlay the map or watch the replay!"
-            };
-
-            // ONLY draw graph if we're coming from gameplay.
-            if (Screen.Type == ResultsScreenType.FromGameplay)
-            {
-                var points = new List<Point>();
-
-                for (var i = 0; i < Screen.ScoreProcessor.Stats.Count; i++)
-                {
-                    var point = Screen.ScoreProcessor.Stats[i];
-                    var missValue = Screen.ScoreProcessor.JudgementWindow[Judgement.Miss];
-
-                    // Make sure that all of the hits and misses are clamped to the
-                    points.Add(new Point(i, MathHelper.Clamp((int) point.HitDifference, (int) -missValue, (int) missValue)));
-                }
-
-                // Create the list of custom lines w/ their colors.
-                var judgementLineColors = new Dictionary<int, System.Drawing.Color>();
-                foreach (var window in Screen.ScoreProcessor.JudgementWindow)
-                {
-                    var judgeColor = GameBase.Skin.Keys[GameMode.Keys4].JudgeColors[window.Key];
-                    var convertedColor = System.Drawing.Color.FromArgb(judgeColor.R, judgeColor.G, judgeColor.B);
-
-                    judgementLineColors.Add((int)-window.Value, convertedColor);
-                    judgementLineColors.Add((int)window.Value, convertedColor);
-                }
-
                 // ReSharper disable once ObjectCreationAsStatement
-                new Sprite
+                new SpriteText
                 {
-                    Parent = sprite,
-                    Size = new UDim2D(550, 200),
+                    Parent = content,
                     Alignment = Alignment.MidCenter,
-                    Image = Graph.CreateStaticScatterPlot(points, new Vector2(550, 188), Colors.XnaToSystemDrawing(Color.Black),
-                                                                3, judgementLineColors, judgementLineColors)
+                    TextAlignment = Alignment.MidCenter,
+                    Font = Fonts.Exo2Regular24,
+                    Text = "No statistics available. Play the map or watch the replay to retrieve them.",
+                    TextScale = 0.50f
                 };
+
+                return content;
             }
 
-            return sprite;
+            CreateTabs(content);
+
+            return content;
+        }
+
+        /// <summary>
+        ///     Creates the tabs for each individual container we have.
+        /// </summary>
+        /// <param name="content"></param>
+        private void CreateTabs(Drawable content)
+        {
+            var buttonContainer = new Sprite()
+            {
+                Parent = content,
+                Alpha = 1f,
+                Size = new UDim2D(content.SizeX / StatsContainers.Count - 75, 35),
+                Alignment = Alignment.BotCenter,
+                Tint = Colors.DarkGray,
+                PosY = -5
+            };
+
+            for (var i = 0; i < StatsContainers.Count; i++)
+            {
+                // Set the parent of the content to the actual content, so that we can display it.
+                // We want to give full control here over sprite creation, so we don't change it at all.
+                StatsContainers[i].Content.Parent = content;
+
+                // Create Tab Button
+                var btn = new TextButton(new Vector2(150, buttonContainer.SizeY), StatsContainers[i].Name.ToUpper())
+                {
+                    Parent = buttonContainer,
+                    Alignment = Alignment.MidLeft,
+                    Tint = Colors.SecondaryAccentInactive,
+                    Alpha = 1f,
+                    TextSprite =
+                    {
+                        Font = Fonts.AssistantRegular16,
+                        TextScale = 0.75f,
+                        TextColor = Color.Black
+                    },
+                };
+
+                var sizePer = btn.SizeX / StatsContainers.Count;
+                btn.PosX = sizePer * i + sizePer / 2f - btn.SizeX / 2f;
+            }
         }
     }
 }

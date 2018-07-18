@@ -81,8 +81,8 @@ namespace Quaver.Graphics.Graphing
 
                 // Set minimum and maximum based on the custom lines.
                 chart.ChartAreas.First().AxisY.IsStartedFromZero = false;
-                chart.ChartAreas.First().AxisY.Minimum = customLines.Keys.Min() - 15; //
-                chart.ChartAreas.First().AxisY.Maximum = customLines.Keys.Max() + 15;
+                chart.ChartAreas.First().AxisY.Minimum = customLines.Keys.Min() - 55;
+                chart.ChartAreas.First().AxisY.Maximum = customLines.Keys.Max() + 55;
             }
 
             for (var i = 0; i < chart.Series["Series1"].Points.Count; i++)

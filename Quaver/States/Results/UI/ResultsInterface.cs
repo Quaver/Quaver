@@ -197,13 +197,24 @@ namespace Quaver.States.Results.UI
         /// <summary>
         ///     Creates the score data container sprite.
         /// </summary>
-        private void CreateScoreData() => ScoreStatistics = new ResultsScoreStatistics(Screen)
+        private void CreateScoreData()
         {
-            Parent = Container,
-            Alignment = Alignment.TopCenter,
-            PosY = JudgementBreakdown.PosY,
-            PosX = GameBase.WindowRectangle.Width
-        };
+            var stats = new List<StatisticContainer>();
+
+            // Only add data if we're coming originally from gameplay.
+            if (Screen.Type == ResultsScreenType.FromGameplay)
+            {
+                stats.Add(new StatisticContainer("Hit Offset", new HitOffsetGraph(Screen.ScoreProcessor)));
+            }
+
+            ScoreStatistics = new ResultsScoreStatistics(Screen, stats)
+            {
+                Parent = Container,
+                Alignment = Alignment.TopCenter,
+                PosY = JudgementBreakdown.PosY,
+                PosX = GameBase.WindowRectangle.Width
+            };
+        }
 
         /// <summary>
         ///     Creates the screen transitioner sprite.
