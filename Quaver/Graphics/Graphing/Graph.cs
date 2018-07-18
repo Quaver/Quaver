@@ -75,14 +75,14 @@ namespace Quaver.Graphics.Graphing
                         Interval = 0,
                         IntervalOffset = line.Key,
                         StripWidth = 0.1f,
-                        BackColor = line.Value
+                        BackColor = Color.FromArgb(line.Value.R / 4, line.Value.G / 4, line.Value.B / 4)
                     });
                 }
 
                 // Set minimum and maximum based on the custom lines.
                 chart.ChartAreas.First().AxisY.IsStartedFromZero = false;
-                chart.ChartAreas.First().AxisY.Minimum = customLines.Keys.Min() - 10; //
-                chart.ChartAreas.First().AxisY.Maximum = customLines.Keys.Max() + 10;
+                chart.ChartAreas.First().AxisY.Minimum = customLines.Keys.Min() - 15; //
+                chart.ChartAreas.First().AxisY.Maximum = customLines.Keys.Max() + 15;
             }
 
             for (var i = 0; i < chart.Series["Series1"].Points.Count; i++)
