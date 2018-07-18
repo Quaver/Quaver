@@ -40,7 +40,7 @@ namespace Quaver.States.Menu
         private Sprite FooterBackground { get; }
 
         /// <summary>
-        ///     The actual footer text that describes the button. 
+        ///     The actual footer text that describes the button.
         /// </summary>
         private SpriteText FooterText { get;  }
 
@@ -77,7 +77,7 @@ namespace Quaver.States.Menu
             Alpha = 0;
             OnClick = onClick;
             CallActionImmediately = callActionImmediately;
-            
+
             Header = new Sprite
             {
                 Parent = this,
@@ -108,12 +108,12 @@ namespace Quaver.States.Menu
 
             if (footerText == null)
                 return;
-            
+
             FooterBackground = new Sprite()
             {
                 Parent = this,
                 Alignment = Alignment.BotLeft,
-                Size = new UDim2D(SizeX, 40),
+                Size = new UDim2D(SizeX, 0),
                 Tint = Color.Black,
                 Alpha = 0.70f
             };
@@ -160,8 +160,8 @@ namespace Quaver.States.Menu
             if (IsClickable)
             {
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick, AudioEngine.EffectVolume - AudioEngine.EffectVolume / 2, 0.5f);
-                
-                // If the button doesn't have a container, we'll need to handle its action here. 
+
+                // If the button doesn't have a container, we'll need to handle its action here.
                 if (Parent.GetType() != typeof(NavigationButtonContainer))
                 {
                     // Throw an exception if a developer decided that they wouldn't call the action immediately
@@ -170,11 +170,11 @@ namespace Quaver.States.Menu
                         throw new ArgumentException("CallActionImmediately is false but the button does not " +
                                                     "have a NavigationButtonContainer. Either set to true, or " +
                                                     "add a container.");
-                    
+
                     OnClick();
                 }
             }
-        
+
             base.OnClicked();
         }
 
