@@ -33,6 +33,7 @@ using Quaver.Graphics.UI;
 using Quaver.Graphics.UI.Notifications;
 using Quaver.Helpers;
 using Quaver.Logging;
+using Quaver.Modifiers;
 using Quaver.States.Gameplay.Replays;
 using Quaver.States.Results.Input;
 using Quaver.States.Results.UI;
@@ -333,6 +334,9 @@ namespace Quaver.States.Results
 
                 // Make sure the score processor's stats are up-to-date with the replay actually played.
                 ScoreProcessor.Stats = GameplayScreen.Ruleset.ScoreProcessor.Stats;
+
+                // Remove all the mods from the replay.
+                ModManager.RemoveAllMods();
             }
             // Otherwise the replay and processor should be the one that the user just played.
             else
