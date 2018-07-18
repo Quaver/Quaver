@@ -13,18 +13,18 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
         ///     Reference to the gameplay screen itself
         /// </summary>
         private GameplayScreen Screen { get; }
-        
+
         /// <summary>
         ///     The pause overlay's background
         ///     (Skinnable)
         /// </summary>
         private Sprite Background { get; }
-        
+
         /// <summary>
         ///     Continue Button
         /// </summary>
         private BasicButton Continue { get; }
-        
+
         /// <summary>
         ///     Retry Button
         /// </summary>
@@ -49,7 +49,7 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
         {
             Screen = screen;
 
-            // Background 
+            // Background
             Background = new Sprite()
             {
                 Parent = this,
@@ -68,16 +68,16 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
                 PosX = ButtonInactivePosX,
                 Alpha = 0
             };
-            
+
             Continue.Size = new UDim2D(Continue.Image.Width, Continue.Image.Height);
             Continue.Clicked += (o, e) =>
             {
                 if (!Screen.IsPaused)
                     return;
-                
+
                 Screen.Pause();
             };
-            
+
             // Retry Button
             Retry = new BasicButton()
             {
@@ -88,17 +88,17 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
                 PosX = ButtonInactivePosX,
                 Alpha = 0
             };
-            
+
             Retry.Size = new UDim2D(Retry.Image.Width, Retry.Image.Height);
             Retry.Clicked += (o, e) =>
             {
                 if (!Screen.IsPaused)
                     return;
-                
+
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundRetry);
                 GameBase.GameStateManager.ChangeState(new GameplayScreen(Screen.Map, Screen.MapHash, Screen.LocalScores));
             };
-                 
+
             // Quit Button
             Quit = new BasicButton()
             {
@@ -109,16 +109,19 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
                 PosX = ButtonInactivePosX,
                 Alpha = 0
             };
-            
+
             Quit.Size = new UDim2D(Quit.Image.Width, Quit.Image.Height);
             Quit.Clicked += (o, e) =>
             {
                 if (!Screen.IsPaused)
                     return;
-                
+
                 Screen.IsPaused = false;
                 Screen.ForceFail = true;
                 Screen.HasQuit = true;
+
+                // Make sure the screen transitioner isn't faded out at all
+                Screen.UI.ScreenTransitioner.Alpha = 0;
             };
         }
 
@@ -127,7 +130,7 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
         /// </summary>
         /// <param name="dt"></param>
         internal override void Update(double dt)
-        {            
+        {
             if (Screen.IsPaused && !Screen.IsResumeInProgress)
                 Activate(dt);
             else
@@ -135,7 +138,7 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
 
             if (Screen.Failed)
                 Visible = false;
-            
+
             base.Update(dt);
         }
 
@@ -146,12 +149,12 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
         private void Activate(double dt)
         {
             GameBase.Navbar.PerformShowAnimation(dt);
-            
+
             Background.FadeIn(dt, Screen.UI.PauseFadeTimeScale);
             Continue.FadeIn(dt, Screen.UI.PauseFadeTimeScale);
             Retry.FadeIn(dt, Screen.UI.PauseFadeTimeScale);
             Quit.FadeIn(dt, Screen.UI.PauseFadeTimeScale);
-            
+
             Continue.Translate(new Vector2(GetActivePosX(Continue), Continue.PosY), dt, Screen.UI.PauseFadeTimeScale);
             Retry.Translate(new Vector2(GetActivePosX(Retry), Retry.PosY), dt, Screen.UI.PauseFadeTimeScale);
             Quit.Translate(new Vector2(GetActivePosX(Quit), Quit.PosY), dt, Screen.UI.PauseFadeTimeScale);
@@ -164,17 +167,17 @@ namespace Quaver.States.Gameplay.UI.Components.Pause
         private void Deactivate(double dt)
         {
             GameBase.Navbar.PerformHideAnimation(dt);
-            
+
             Background.FadeOut(dt, Screen.UI.PauseFadeTimeScale * 2f);
             Continue.FadeOut(dt, Screen.UI.PauseFadeTimeScale * 2f);
             Retry.FadeOut(dt, Screen.UI.PauseFadeTimeScale * 2f);
             Quit.FadeOut(dt, Screen.UI.PauseFadeTimeScale * 2f);
-            
+
             Continue.Translate(new Vector2(ButtonInactivePosX, Continue.PosY), dt, Screen.UI.PauseFadeTimeScale * 2f);
             Retry.Translate(new Vector2(ButtonInactivePosX, Retry.PosY), dt, Screen.UI.PauseFadeTimeScale * 2f);
             Quit.Translate(new Vector2(ButtonInactivePosX, Quit.PosY), dt, Screen.UI.PauseFadeTimeScale * 2f);
         }
-        
+
         /// <summary>
         ///     Gets the X position of when the button is active (Middle of the screen).
         ///     Handled by this method because the size of the button is unknown and skinnable up to the user.
