@@ -1,6 +1,5 @@
 ﻿using System;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Main;
 using Quaver.States.Gameplay.UI.Components.Health;

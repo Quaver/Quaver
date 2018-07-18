@@ -66,29 +66,29 @@ namespace Quaver.Graphics.Graphing
 
             chart.Series["Series1"].Points.DataBindXY(points.Select(x => x.X).ToList(), points.Select(x => x.Y).ToList());
 
+            if (customLines != null)
+            {
+                foreach (var line in customLines)
+                {
+                    chart.ChartAreas.First().AxisY.StripLines.Add(new StripLine()
+                    {
+                        Interval = 0,
+                        IntervalOffset = line.Key,
+                        StripWidth = 0.1f,
+                        BackColor = line.Value
+                    });
+                }
+
+                // Set minimum and maximum based on the custom lines.
+                chart.ChartAreas.First().AxisY.IsStartedFromZero = false;
+                chart.ChartAreas.First().AxisY.Minimum = customLines.Keys.Min() - 10; //
+                chart.ChartAreas.First().AxisY.Maximum = customLines.Keys.Max() + 10;
+            }
+
             for (var i = 0; i < chart.Series["Series1"].Points.Count; i++)
             {
                 var point = chart.Series["Series1"].Points[i];
                 point.MarkerSize = dotWidth;
-
-                if (customLines != null)
-                {
-                    foreach (var line in customLines)
-                    {
-                        chart.ChartAreas.First().AxisY.StripLines.Add(new StripLine()
-                        {
-                            Interval = 0,
-                            IntervalOffset = line.Key,
-                            StripWidth = 0.1f,
-                            BackColor = line.Value
-                        });
-                    }
-
-                    // Set minimum and maximum based on the custom lines.
-                    chart.ChartAreas.First().AxisY.IsStartedFromZero = false;
-                    chart.ChartAreas.First().AxisY.Minimum = customLines.Keys.Min() - 10; //
-                    chart.ChartAreas.First().AxisY.Maximum = customLines.Keys.Max() + 10;
-                }
 
                 if (customDotColorRange != null)
                 {

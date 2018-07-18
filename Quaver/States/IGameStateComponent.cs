@@ -1,6 +1,4 @@
-﻿using Quaver.GameState;
-
-namespace Quaver.States
+﻿namespace Quaver.States
 {
     internal interface IGameStateComponent
     {

@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
-using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
@@ -80,6 +79,11 @@ namespace Quaver.States.Results
         ///     Applause sound effect.
         /// </summary>
         private SoundEffectInstance ApplauseSound { get; set; }
+
+        /// <summary>
+        ///     Keeps track of if we're already played the sound.
+        /// </summary>
+        private bool ApplauseSoundPlayed { get; set; }
 
         /// <summary>
         ///     Song title + Difficulty name.
@@ -240,6 +244,7 @@ namespace Quaver.States.Results
             GameBase.Navbar.PerformHideAnimation(dt);
             GameBase.Cursor.Alpha = 1;
 
+            PlayApplauseEffect();
             InputManager.HandleInput(dt);
             HandleExit(dt);
 
@@ -286,10 +291,15 @@ namespace Quaver.States.Results
         /// </summary>
         private void PlayApplauseEffect()
         {
+            if (ApplauseSoundPlayed)
+                return;
+
             ApplauseSound = GameBase.Skin.SoundApplause.CreateInstance();
 
             if (!GameplayScreen.Failed && ScoreProcessor.Accuracy >= 80 && !GameplayScreen.InReplayMode)
                 ApplauseSound.Play();
+
+            ApplauseSoundPlayed = true;
         }
 
         /// <summary>
@@ -332,7 +342,6 @@ namespace Quaver.States.Results
             }
 
             ChangeDiscordPresence();
-            PlayApplauseEffect();
 
             // Submit score
             SubmitScore();

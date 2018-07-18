@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
@@ -9,7 +10,6 @@ using Quaver.API.Gameplay;
 using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Config;
-using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
@@ -32,7 +32,7 @@ namespace Quaver.States.Gameplay.UI
         ///     Reference to the gameplay screen itself.
         /// </summary>
         private GameplayScreen Screen { get; }
-        
+
         /// <summary>
         ///     Contains general purpose stuff for this screen such as the following:
         ///         - Score/Accuracy Display
@@ -112,6 +112,21 @@ namespace Quaver.States.Gameplay.UI
         internal SkipDisplay SkipDisplay { get; private set; }
 
         /// <summary>
+        ///     If we've already initiated the load of the results screen.
+        /// </summary>
+        private bool ResultsScreenLoadInitiated { get; set; }
+
+        /// <summary>
+        ///     If we're clear to exit the screen and the results screen has loaded.
+        /// </summary>
+        private bool ClearToExitScreen { get; set; }
+
+        /// <summary>
+        ///     The results screen in the future that we'll be going to after game completion.
+        /// </summary>
+        private ResultsScreen FutureResultScreen { get; set; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         internal GameplayInterface(GameplayScreen screen)
@@ -119,9 +134,9 @@ namespace Quaver.States.Gameplay.UI
             Screen = screen;
             Container = new Container();
         }
-       
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="state"></param>
         public void Initialize(IGameState state)
@@ -148,21 +163,21 @@ namespace Quaver.States.Gameplay.UI
                 Parent = Container,
                 Alignment = Alignment.TopRight,
             };
-            
+
             // Set the position of the accuracy display.
             AccuracyDisplay.PosX = -AccuracyDisplay.TotalWidth + GameBase.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosX;
             AccuracyDisplay.PosY = GameBase.Skin.Keys[Screen.Map.Mode].AccuracyDisplayPosY;
-            
+
             // Create judgement status display
             JudgementCounter = new JudgementCounter(Screen) { Parent = Container };
-           
+
             // Create KPS display
             KpsDisplay = new KeysPerSecond(NumberDisplayType.Score, "0", new Vector2(1.75f, 1.75f))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight
             };
-            
+
             // Set the position of the KPS display
             KpsDisplay.PosX = -KpsDisplay.TotalWidth + GameBase.Skin.Keys[Screen.Map.Mode].KpsDisplayPosX;
             KpsDisplay.PosY = AccuracyDisplay.PosY + AccuracyDisplay.Digits[0].SizeY + GameBase.Skin.Keys[Screen.Map.Mode].KpsDisplayPosY;
@@ -182,16 +197,16 @@ namespace Quaver.States.Gameplay.UI
                 Alignment = Alignment.MidCenter,
                 PosY = -200
             };
-  
+
             // Create scoreboard
             CreateScoreboard();
-            
+
             SkipDisplay = new SkipDisplay(Screen, GameBase.Skin.Skip)
             {
                 Parent = Container
             };
-            
-            // Initialize the failure trannsitioner. 
+
+            // Initialize the failure trannsitioner.
             ScreenTransitioner = new Sprite()
             {
                 Parent = Container,
@@ -210,7 +225,7 @@ namespace Quaver.States.Gameplay.UI
         public void UnloadContent() => Container.Destroy();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dt"></param>
         public void Update(double dt)
@@ -218,7 +233,7 @@ namespace Quaver.States.Gameplay.UI
             // Hide navbar in gameplay
             if (!Screen.IsPaused && !Screen.Failed)
             {
-                GameBase.Navbar.PerformHideAnimation(dt);      
+                GameBase.Navbar.PerformHideAnimation(dt);
                 BackgroundManager.Readjust();
             }
 
@@ -227,17 +242,17 @@ namespace Quaver.States.Gameplay.UI
                 GameBase.Cursor.FadeIn(dt, 240);
             else
                 GameBase.Cursor.FadeOut(dt, 240);
-                
+
             UpdateSongProgressDisplay();
             UpdateScoreAndAccuracyDisplays();
-            
+
             // Change grade display posX
             GradeDisplay.PosX = GetGradeDisplayPosX();
-            
+
             HandlePlayCompletion(dt);
             HandlePause(dt);
             FadeInScreen(dt);
-                    
+
             Container.Update(dt);
         }
 
@@ -245,7 +260,7 @@ namespace Quaver.States.Gameplay.UI
         ///     Draw
         /// </summary>
         public void Draw() => Container.Draw();
-        
+
         /// <summary>
         ///     Updates the number displays
         ///     Score and Accuracy
@@ -257,10 +272,10 @@ namespace Quaver.States.Gameplay.UI
 
             // Grab the old accuracy
             var oldAcc = AccuracyDisplay.Value;
-            
+
             // Update the new accuracy.
             AccuracyDisplay.Value = StringHelper.AccuracyToString(Screen.Ruleset.ScoreProcessor.Accuracy);
-            
+
             // If the old accuracy's length isn't the same, then we need to reposition the sprite
             // Example: 100.00% to 99.99% needs repositioning.
             if (oldAcc.Length != AccuracyDisplay.Value.Length)
@@ -282,35 +297,48 @@ namespace Quaver.States.Gameplay.UI
         ///     Handles the fadeout with failure/play completion.
         /// </summary>
         private void HandlePlayCompletion(double dt)
-        {            
+        {
             if (!Screen.Failed && !Screen.IsPlayComplete)
                 return;
-            
+
             // Wait a bit before actually fading out the game.
             GameShouldFadeOutTime += dt;
             if (GameShouldFadeOutTime <= 800)
                 return;
-            
+
             Screen.Ruleset.Playfield.HandleFailure(dt);
-            
-            // Pause the audio
+
+            // Fade Out audio
             if (GameBase.AudioEngine.IsPlaying && !VolumeFadedOut)
             {
                 VolumeFadedOut = true;
                 AudioEngine.Fade(0, 1800);
             }
-            
-            ScreenTransitioner.FadeIn(dt, 360);
-            
-            // Fade background to black.
-            BackgroundManager.Blacken();
-            
+
+            // Load the results screen asynchronously, so that we don't run through any freezes.
+            if (!ResultsScreenLoadInitiated)
+            {
+                GameStateManager.LoadAsync(() =>
+                {
+                    FutureResultScreen = new ResultsScreen(Screen);
+                    return FutureResultScreen;
+                },
+                () => ClearToExitScreen = true);
+
+                ResultsScreenLoadInitiated = true;
+            }
+
+            if (!ClearToExitScreen)
+                return;
+
+            ScreenTransitioner.FadeIn(dt, 120);
+
             // Increase time after the user failed.
             Screen.TimeSincePlayEnded += dt;
-            
-            // Change to the results screen.
-            if (Screen.TimeSincePlayEnded >= 2000)
-                GameBase.GameStateManager.ChangeState(new ResultsScreen(Screen));
+
+            // Change to the results screen
+            if (Screen.TimeSincePlayEnded >= 1200)
+                GameBase.GameStateManager.ChangeState(FutureResultScreen);
         }
 
         /// <summary>
@@ -321,11 +349,11 @@ namespace Quaver.States.Gameplay.UI
         {
             if (!Screen.IsPaused)
                 return;
-       
+
             if (Screen.IsResumeInProgress)
                 ScreenTransitioner.Fade(dt, 0, PauseFadeTimeScale * 2f);
             else
-                ScreenTransitioner.Fade(dt, 0.90f, PauseFadeTimeScale);            
+                ScreenTransitioner.Fade(dt, 0.90f, PauseFadeTimeScale);
         }
 
         /// <summary>
@@ -350,7 +378,7 @@ namespace Quaver.States.Gameplay.UI
         private void CreateScoreboard()
         {
             // Use the replay's name for the scoreboard if we're watching one.
-            var scoreboardName = Screen.InReplayMode ? Screen.LoadedReplay.PlayerName : ConfigManager.Username.Value;       
+            var scoreboardName = Screen.InReplayMode ? Screen.LoadedReplay.PlayerName : ConfigManager.Username.Value;
             var users = new List<ScoreboardUser>
             {
                 // Add ourself to the list of scoreboard users first.
@@ -363,7 +391,7 @@ namespace Quaver.States.Gameplay.UI
 
             // Add local scores.
             for (var i = 0; i < Screen.LocalScores.Count && i < 5; i++)
-            {                
+            {
                 // Decompress score
                 var scoreJudgements = new List<Judgement>();
 
@@ -377,7 +405,7 @@ namespace Quaver.States.Gameplay.UI
                     Alignment = Alignment.MidLeft
                 });
             }
-            
+
             // Create bots on the scoreboard.
             if (ConfigManager.BotsEnabled.Value)
             {
@@ -396,7 +424,7 @@ namespace Quaver.States.Gameplay.UI
                         Parent = Container,
                         Alignment = Alignment.MidLeft
                     });
-                }                
+                }
             }
 
             Scoreboard = new Scoreboard(users) {Parent = Container};

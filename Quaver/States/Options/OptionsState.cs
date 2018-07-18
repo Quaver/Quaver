@@ -4,7 +4,6 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
-using Quaver.GameState;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;

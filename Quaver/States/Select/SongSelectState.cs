@@ -9,7 +9,6 @@ using Quaver.API.Enums;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Discord;
-using Quaver.GameState;
 using Quaver.Graphics.Buttons;
 using Quaver.Input;
 using Quaver.Logging;

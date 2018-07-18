@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
-using Quaver.GameState;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons.Sliders;
 using Quaver.Graphics.Sprites;

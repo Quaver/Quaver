@@ -10,7 +10,6 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
-using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Overlays.Navbar;
@@ -19,6 +18,7 @@ using Quaver.Graphics.UI;
 using Quaver.Input;
 using Quaver.Modifiers;
 using Quaver.Skinning;
+using Quaver.States;
 
 namespace Quaver.Main
 {

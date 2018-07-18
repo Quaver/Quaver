@@ -14,7 +14,6 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Scores;
 using Quaver.Discord;
-using Quaver.GameState;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UI;
 using Quaver.Graphics.UI.Notifications;

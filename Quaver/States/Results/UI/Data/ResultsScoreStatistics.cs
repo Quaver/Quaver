@@ -87,10 +87,10 @@ namespace Quaver.States.Results.UI.Data
                 new Sprite
                 {
                     Parent = sprite,
-                    Size = new UDim2D(600, 250),
+                    Size = new UDim2D(550, 200),
                     Alignment = Alignment.MidCenter,
-                    Image = Graph.CreateStaticScatterPlot(points, new Vector2(600, 250), System.Drawing.Color.Black,
-                                                                3, judgementLineColors, judgementLineColors)
+                    Image = Graph.CreateStaticScatterPlot(points, new Vector2(550, 188), Colors.XnaToSystemDrawing(Colors.DarkGray),
+                                                                2, judgementLineColors, judgementLineColors)
                 };
             }
 
