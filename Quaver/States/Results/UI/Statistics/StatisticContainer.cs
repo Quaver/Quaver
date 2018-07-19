@@ -1,7 +1,7 @@
 ﻿using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;
 
-namespace Quaver.States.Results.UI.Data
+namespace Quaver.States.Results.UI.Statistics
 {
     /// <summary>
     ///     Contains an individual statistic "screen/container" inside of the statistics.

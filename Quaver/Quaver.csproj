@@ -165,9 +165,9 @@
     <Compile Include="States\Results\UI\Breakdown\JudgementBreakdown.cs" />
     <Compile Include="States\Results\UI\Buttons\Direction.cs" />
     <Compile Include="States\Results\UI\Buttons\ResultsButtonContainer.cs" />
-    <Compile Include="States\Results\UI\Data\HitOffsetGraph.cs" />
-    <Compile Include="States\Results\UI\Data\ResultsScoreStatistics.cs" />
-    <Compile Include="States\Results\UI\Data\StatisticContainer.cs" />
+    <Compile Include="States\Results\UI\Statistics\HitOffsetGraph.cs" />
+    <Compile Include="States\Results\UI\Statistics\ResultsScoreStatistics.cs" />
+    <Compile Include="States\Results\UI\Statistics\StatisticContainer.cs" />
     <Compile Include="States\Results\UI\MapInformation.cs" />
     <Compile Include="States\Results\UI\ResultsInterface.cs" />
     <Compile Include="States\Results\UI\ScoreResults\ScoreResultsTable.cs" />

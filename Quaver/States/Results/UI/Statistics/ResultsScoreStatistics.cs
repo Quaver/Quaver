@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Quaver.API.Enums;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Graphing;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Main;
 
-namespace Quaver.States.Results.UI.Data
+namespace Quaver.States.Results.UI.Statistics
 {
     internal class ResultsScoreStatistics : HeaderedContainer
     {
@@ -98,11 +94,11 @@ namespace Quaver.States.Results.UI.Data
             var buttonContainer = new Sprite
             {
                 Parent = content,
-                Alpha = 1f,
+                Alpha = 0f,
                 Size = new UDim2D(content.SizeX - 75, 35),
                 Alignment = Alignment.BotCenter,
                 Tint = Colors.DarkGray,
-                PosY = -5
+                PosY = -5,
             };
 
             // Go through each container and c
@@ -144,7 +140,7 @@ namespace Quaver.States.Results.UI.Data
                     btn.TextSprite.TextColor = Color.White;
 
                     // Set button position
-                    btn.PosX = btn.SizeX * i;
+                    btn.PosX = btn.SizeX * i + i * 5;
 
                     // Make sure that the the alpha of inactive ones are invisible.
                     StatsContainers[i].Content.Alpha = 0;

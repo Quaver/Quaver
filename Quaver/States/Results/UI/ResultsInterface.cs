@@ -9,8 +9,8 @@ using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.States.Results.UI.Breakdown;
 using Quaver.States.Results.UI.Buttons;
-using Quaver.States.Results.UI.Data;
 using Quaver.States.Results.UI.ScoreResults;
+using Quaver.States.Results.UI.Statistics;
 
 namespace Quaver.States.Results.UI
 {

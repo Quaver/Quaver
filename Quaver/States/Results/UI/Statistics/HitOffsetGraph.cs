@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Graphics;
 using Quaver.Graphics.Graphing;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Main;
 
-namespace Quaver.States.Results.UI.Data
+namespace Quaver.States.Results.UI.Statistics
 {
     /// <inheritdoc />
     /// <summary>
