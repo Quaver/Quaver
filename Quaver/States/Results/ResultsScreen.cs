@@ -316,8 +316,9 @@ namespace Quaver.States.Results
             Task.Run(() => { SaveLocalScore(); });
 
 #if DEBUG
-            Task.Run(() => { SaveDebugReplayData(); });
+            Task.Run(() => SaveDebugReplayData());
             Task.Run(() => SaveHitData());
+            Task.Run(() => SaveHealthData());
 #endif
         }
 
@@ -425,7 +426,6 @@ namespace Quaver.States.Results
         /// <summary>
         ///     Saves debug hit data to a local file.
         /// </summary>
-
         private void SaveHitData()
         {
             var str = "";
@@ -437,6 +437,22 @@ namespace Quaver.States.Results
             }
 
             File.WriteAllText(ConfigManager.DataDirectory + "/last_hit_data.txt", str);
+        }
+
+        /// <summary>
+        ///     Saves debug hit data to a local file.
+        /// </summary>
+        private void SaveHealthData()
+        {
+            var str = "";
+
+            for (var i = 0; i < ScoreProcessor.Stats.Count; i++)
+            {
+                var stat = ScoreProcessor.Stats[i];
+                str += $"{i},{stat.Health}\r\n";
+            }
+
+            File.WriteAllText(ConfigManager.DataDirectory + "/last_health_data.txt", str);
         }
 
         /// <summary>
