@@ -15,7 +15,7 @@ using Quaver.Main;
 
 namespace Quaver.States.Results.UI.Data
 {
-    internal class ResultsScoreStatistics : HeaderedSprite
+    internal class ResultsScoreStatistics : HeaderedContainer
     {
         /// <summary>
         ///     Reference to the score processor that was played.
@@ -43,7 +43,6 @@ namespace Quaver.States.Results.UI.Data
         {
             Screen = screen;
             PosX = SizeX / 2f + 10;
-
             StatsContainers = stats;
 
             Content = CreateContent();
@@ -57,6 +56,7 @@ namespace Quaver.States.Results.UI.Data
         /// <returns></returns>
         protected sealed override Sprite CreateContent()
         {
+            // Create the sprite that acts as a parent for all of our content. (Graphs, Tab Buttons).
             var content = new Sprite
             {
                 Parent = this,
@@ -82,6 +82,7 @@ namespace Quaver.States.Results.UI.Data
                 return content;
             }
 
+            // Create all the tabs for each of our containers.
             CreateTabs(content);
 
             return content;
@@ -93,7 +94,8 @@ namespace Quaver.States.Results.UI.Data
         /// <param name="content"></param>
         private void CreateTabs(Drawable content)
         {
-            var buttonContainer = new Sprite()
+            // Create the container that houses all of the buttons.
+            var buttonContainer = new Sprite
             {
                 Parent = content,
                 Alpha = 1f,
@@ -103,6 +105,7 @@ namespace Quaver.States.Results.UI.Data
                 PosY = -5
             };
 
+            // Go through each container and c
             for (var i = 0; i < StatsContainers.Count; i++)
             {
                 // Set the parent of the content to the actual content, so that we can display it.
@@ -121,16 +124,19 @@ namespace Quaver.States.Results.UI.Data
                         Font = Fonts.AssistantRegular16,
                         TextScale = 0.75f,
                         TextColor = Color.Black
-                    },
+                    }
                 };
 
+                // Make a shorter reference to the tab button for easy access.
                 var btn = StatsContainers[i].Button;
 
+                // The first button should be the one that is selected.
                 if (i == 0)
                 {
                     btn.Tint = Colors.SecondaryAccent;
                     btn.TextSprite.TextColor = Color.Black;
                 }
+                // Any other buttons need to be placed as inactive.
                 else
                 {
                     btn.Tint = Color.Black;
@@ -138,13 +144,13 @@ namespace Quaver.States.Results.UI.Data
                     btn.TextSprite.TextColor = Color.White;
 
                     // Set button position
-                    var sizePer = btn.SizeX / StatsContainers.Count;
-                    btn.PosX = (btn.SizeX) * i;
+                    btn.PosX = btn.SizeX * i;
 
                     // Make sure that the the alpha of inactive ones are invisible.
                     StatsContainers[i].Content.Alpha = 0;
                 }
 
+                // When the button is clicked, we'll want to change the selected container.
                 btn.Clicked += (sender, args) =>
                 {
                     if ((TextButton) sender == StatsContainers[SelectedContainer].Button)

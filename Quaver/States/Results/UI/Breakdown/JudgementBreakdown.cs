@@ -13,7 +13,7 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.States.Results.UI.Breakdown
 {
-    internal class JudgementBreakdown : HeaderedSprite
+    internal class JudgementBreakdown : HeaderedContainer
     {
         /// <summary>
         ///     Reference to the score processor.

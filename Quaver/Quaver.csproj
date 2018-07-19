@@ -172,8 +172,7 @@
     <Compile Include="States\Results\UI\ResultsInterface.cs" />
     <Compile Include="States\Results\UI\ScoreResults\ScoreResultsTable.cs" />
     <Compile Include="States\Results\UI\ScoreResults\ScoreResultsInfoItem.cs" />
-    <Compile Include="States\Results\UI\ScoreResults\ScoreResultsInfoItemType.cs" />
-    <Compile Include="States\Results\UI\HeaderedSprite.cs" />
+    <Compile Include="States\Results\UI\HeaderedContainer.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="Graphics\Buttons\MapDifficultySelectButton.cs" />
     <Compile Include="Graphics\Buttons\MapsetSelectButton.cs" />

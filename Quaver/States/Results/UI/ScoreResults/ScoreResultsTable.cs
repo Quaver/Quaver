@@ -11,7 +11,7 @@ using Quaver.Main;
 
 namespace Quaver.States.Results.UI.ScoreResults
 {
-    internal class ScoreResultsTable : HeaderedSprite
+    internal class ScoreResultsTable : HeaderedContainer
     {
         /// <summary>
         ///     Reference to the results screen itself

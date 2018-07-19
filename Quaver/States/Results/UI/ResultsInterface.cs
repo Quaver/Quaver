@@ -19,7 +19,7 @@ namespace Quaver.States.Results.UI
         /// <summary>
         ///     Reference to the parent screen.
         /// </summary>
-        internal ResultsScreen Screen { get; }
+        private ResultsScreen Screen { get; }
 
         /// <summary>
         ///     Sprite container.
@@ -86,9 +86,9 @@ namespace Quaver.States.Results.UI
             CreateOnlineResultsInfo();
             CreateJudgementBreakdown();
             CreateButtonContainer();
-            CreateScoreData();
+            CreateScoreStatistics();
 
-            // Create transitioner last.
+            // Create transitioner last, so any fade animations draw on top.
             CreateScreenTransitioner();
         }
 
@@ -197,7 +197,7 @@ namespace Quaver.States.Results.UI
         /// <summary>
         ///     Creates the score data container sprite.
         /// </summary>
-        private void CreateScoreData()
+        private void CreateScoreStatistics()
         {
             var stats = new List<StatisticContainer>();
 
@@ -209,6 +209,7 @@ namespace Quaver.States.Results.UI
                 stats.Add(new StatisticContainer("Debug2", new Sprite() { Image = FontAwesome.Archive, Size = new UDim2D(500, 200), Alignment = Alignment.TopCenter}));
             }
 
+            // Create the score statistics sprite along with all of the stats screens we have.
             ScoreStatistics = new ResultsScoreStatistics(Screen, stats)
             {
                 Parent = Container,

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
@@ -14,29 +15,29 @@ using Quaver.Main;
 
 namespace Quaver.States.Results.UI.Data
 {
+    /// <inheritdoc />
+    /// <summary>
+    ///     Graph for the Hit offset, used on the results screen.
+    /// </summary>
     internal class HitOffsetGraph : Sprite
     {
+        /// <summary>
+        ///     Ctor
+        /// </summary>
+        /// <param name="processor"></param>
         internal HitOffsetGraph(ScoreProcessor processor)
         {
+            // Grab the miss judgement value, so we can use it to create the list of points.
             var missValue = processor.JudgementWindow[Judgement.Miss];
 
             // Create the list of points needed to create the graph.
-            var sum = 0;
-            var totalHits = 0;
-            var points = processor.Stats.Select((point, i) =>
-            {
-                // Add to  sum of hit differences for mean calculation.
-                if (point.Type != HitStatType.Miss)
-                {
-                    sum += (int)Math.Abs(point.HitDifference);
-                    totalHits++;
-                }
+            var points = processor.Stats.Select((point, i) => new Point(i, MathHelper.Clamp((int) point.HitDifference, (int) -missValue, (int) missValue))).ToList();
 
-                return new Point(i, MathHelper.Clamp((int) point.HitDifference, (int) -missValue, (int) missValue));
-            }).ToList();
-
-            // Create the list of custom lines w/ their colors.
+            // Create the container for custom judgement line colors for the graph.
             var judgementLineColors = new Dictionary<int, System.Drawing.Color>();
+
+            // Go through each window and create a new line with the window's color &
+            // positive and negative window values.
             foreach (var window in processor.JudgementWindow)
             {
                 var judgeColor = GameBase.Skin.Keys[GameMode.Keys4].JudgeColors[window.Key];
@@ -46,14 +47,16 @@ namespace Quaver.States.Results.UI.Data
                 judgementLineColors.Add((int)window.Value, convertedColor);
             }
 
+            // Set size position, and alignment.
             Size = new UDim2D(550, 200);
             Alignment = Alignment.TopCenter;
             PosY = 10;
 
-            // Create graph.
-            Image = Graph.CreateStaticScatterPlot(points, new Vector2(550, 200), Colors.XnaToSystemDrawing(Color.Black),
+            // Create the actual graph and set it to this sprite's texture.
+            Image = Graph.CreateStaticScatterPlot(points, new Vector2(SizeX, SizeY), Colors.XnaToSystemDrawing(Color.Black),
                                                         3, judgementLineColors, judgementLineColors);
 
+            // Create the text that displays the early miss indicator.
             var earlyText = new SpriteText
             {
                 Parent = this,
@@ -65,11 +68,12 @@ namespace Quaver.States.Results.UI.Data
                 PosY = 5
             };
 
+            // Position the early text correctly.
             var earlyTextSize = earlyText.MeasureString() / 2f;
-
             earlyText.PosX += earlyTextSize.X;
             earlyText.PosY += earlyTextSize.Y;
 
+            // Create the text that displays the late miss indicator.
             var lateText = new SpriteText
             {
                 Parent = this,
@@ -81,47 +85,20 @@ namespace Quaver.States.Results.UI.Data
                 PosY = -5
             };
 
+            // Position the late text correctly.
             var lateTextSize = lateText.MeasureString() / 2f;
-
             lateText.PosX += lateTextSize.X;
             lateText.PosY -= lateTextSize.Y;
+        }
 
-            var meanText = new SpriteText
-            {
-                Parent = this,
-                Font = Fonts.Exo2Regular24,
-                Text = $"Mean: {sum / points.Count}ms",
-                TextScale = 0.42f,
-                Alignment = Alignment.TopRight,
-                PosX = -10,
-                PosY = 5
-            };
-
-            var meanTextSize = meanText.MeasureString() / 2f;
-
-            meanText.PosX -= meanTextSize.X;
-            meanText.PosY += meanTextSize.Y;
-
-            // Find the standard deviation of the data hit differences.
-            var average = (double)sum / totalHits;
-            var sumOfSquaresOfDifferences = processor.Stats.Where(x => x.Type == HitStatType.Hit).Select(val => (Math.Abs(val.HitDifference) - average) * (Math.Abs(val.HitDifference) - average)).Sum();
-            var standardDev = Math.Sqrt(sumOfSquaresOfDifferences / totalHits);
-
-            var sdText = new SpriteText
-            {
-                Parent = this,
-                Font = Fonts.Exo2Regular24,
-                Text = $"Standard Deviation: {standardDev:0.##}ms",
-                TextScale = 0.42f,
-                Alignment = Alignment.BotRight,
-                PosX = -10,
-                PosY = -5
-            };
-
-            var sdTextSize = sdText.MeasureString() / 2f;
-
-            sdText.PosX -= sdTextSize.X;
-            sdText.PosY -= sdTextSize.Y;
+        /// <inheritdoc />
+        /// <summary>
+        ///    Disposes the graph upon destroy.
+        /// </summary>
+        internal override void Destroy()
+        {
+            Task.Run(() => Image.Dispose());
+            base.Destroy();
         }
     }
 }

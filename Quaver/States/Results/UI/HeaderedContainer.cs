@@ -6,7 +6,7 @@ using Quaver.Graphics.Text;
 
 namespace Quaver.States.Results.UI
 {
-    internal abstract class HeaderedSprite : Sprite
+    internal abstract class HeaderedContainer : Sprite
     {
         /// <summary>
         ///     The header background for the text
@@ -38,7 +38,7 @@ namespace Quaver.States.Results.UI
         /// <param name="headerTextAlignment"></param>
         /// <param name="headerHeight"></param>
         /// <param name="headerColor"></param>
-        internal HeaderedSprite(Vector2 size, string text, SpriteFont font, float textScale,
+        internal HeaderedContainer(Vector2 size, string text, SpriteFont font, float textScale,
                                         Alignment headerTextAlignment,  float headerHeight, Color headerColor)
         {
             Size = new UDim2D(size.X, size.Y);
