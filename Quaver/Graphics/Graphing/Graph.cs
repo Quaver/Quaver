@@ -115,5 +115,11 @@ namespace Quaver.Graphics.Graphing
 
             return ResourceHelper.LoadTexture2DFromPng(bm);
         }
+
+        /// <summary>
+        ///     Creates a line graph with a set of points.
+        /// </summary>
+        /// <returns></returns>
+        internal static Texture2D CreateStaticLine() => new Texture2D(null, 0, 0);
     }
 }
