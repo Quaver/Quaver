@@ -16,11 +16,13 @@ using Quaver.Skinning;
 using Quaver.States.Menu;
 using Quaver.Resources;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Quaver.Audio;
 using Quaver.Database.Scores;
 using Quaver.Graphics.UI;
 using Quaver.Graphics.UI.Notifications;
+using Quaver.Helpers;
 
 namespace Quaver.Main
 {
@@ -357,6 +359,20 @@ namespace Quaver.Main
             // Load all mapsets.
             MapCache.LoadAndSetMapsets();
             GC.Collect();
+
+            if (GameBase.Mapsets.Count > 0)
+            {
+                GameBase.SelectedMap = GameBase.Mapsets.Last().Maps.Last();
+
+                try
+                {
+                    BackgroundManager.LoadBackground();
+                    BackgroundManager.Readjust();
+                }
+                catch (Exception e)
+                {
+                }
+            }
         }
     }
 }
