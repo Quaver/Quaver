@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Parsers;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
+using Quaver.Graphics.UI.Notifications;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
@@ -155,6 +157,42 @@ namespace Quaver.States.Edit
             DiscordManager.Client.CurrentPresence.Details = Map.ToString();
             DiscordManager.Client.CurrentPresence.State = "Editing Map";
             DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+        }
+
+        /// <summary>
+        ///     Goes to the editor screen.
+        /// </summary>
+        internal static void Go()
+        {
+            var map = GameBase.SelectedMap;
+
+            if (map == null)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "There is currently no selected map to edit!");
+                return;
+            }
+
+            Qua qua = null;
+
+            string path;
+            switch (map.Game)
+            {
+                case MapGame.Quaver:
+                    path = $"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}";
+                    qua = Qua.Parse(path);
+                    break;
+                case MapGame.Osu:
+                    qua = new OsuBeatmap($"{GameBase.OsuSongsFolder}/{map.Directory}/{map.Path}").ToQua();
+                    break;
+                case MapGame.Etterna:
+                    NotificationManager.Show(NotificationLevel.Error, "Etterna maps aren't eligible to be edited");
+                    return;
+            }
+
+            if (qua != null)
+                GameBase.GameStateManager.ChangeState(new EditorScreen(qua));
+            else
+                NotificationManager.Show(NotificationLevel.Error, "An error ocurred when trying to edit this map.");
         }
     }
 }

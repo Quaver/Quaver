@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Ionic.Zip;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps;
+using Quaver.API.Maps.Parsers;
 using Quaver.API.Replays;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -16,6 +17,7 @@ using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Overlays.Options;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
+using Quaver.Graphics.UI.Notifications;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
@@ -429,31 +431,6 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
-        private static void OnEditButtonClicked(object sender, EventArgs e)
-        {
-            var map = GameBase.SelectedMap;
-
-            if (map == null)
-            {
-                Logger.LogError("There is currently no selected map to edit!", LogType.Runtime);
-                return;
-            }
-
-            var path = $"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}";
-
-            Qua qua;
-
-            try
-            {
-                qua = Qua.Parse(path);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, LogType.Runtime);
-                return;
-            }
-
-            GameBase.GameStateManager.ChangeState(new EditorScreen(qua));
-        }
+        private static void OnEditButtonClicked(object sender, EventArgs e) => EditorScreen.Go();
     }
 }
