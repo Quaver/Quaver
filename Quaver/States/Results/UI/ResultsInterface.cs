@@ -205,6 +205,7 @@ namespace Quaver.States.Results.UI
             if (Screen.Type == ResultsScreenType.FromGameplay)
             {
                 stats.Add(new StatisticContainer("Hit Offset", new HitOffsetGraph(Screen.ScoreProcessor)));
+                stats.Add(new StatisticContainer("Health", new HealthGraph(Screen.ScoreProcessor)));
 
                 //stats.Add(new StatisticContainer("Debug", new Sprite() { Image = GameBase.QuaverUserInterface.MenuBackground, Size = new UDim2D(500, 200), Alignment = Alignment.TopCenter}));
                 //stats.Add(new StatisticContainer("Debug2", new Sprite() { Image = FontAwesome.Archive, Size = new UDim2D(500, 200), Alignment = Alignment.TopCenter}));

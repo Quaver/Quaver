@@ -449,7 +449,7 @@ namespace Quaver.States.Results
             for (var i = 0; i < ScoreProcessor.Stats.Count; i++)
             {
                 var stat = ScoreProcessor.Stats[i];
-                str += $"{i},{stat.Health}\r\n";
+                str += $"{i},{(int)stat.Health}\r\n";
             }
 
             File.WriteAllText(ConfigManager.DataDirectory + "/last_health_data.txt", str);

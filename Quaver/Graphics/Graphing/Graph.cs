@@ -39,19 +39,22 @@ namespace Quaver.Graphics.Graphing
                     {
                         BackColor = bgColor,
                         Position = new ElementPosition(0, 0, 100, 100),
-                        AxisX = { Enabled = AxisEnabled.False },
+                        AxisX = {Enabled = AxisEnabled.False},
                         AxisY =
                         {
-                            LabelStyle = { Enabled = false },
-                            MajorTickMark = { Enabled = false },
-                            MinorTickMark = { Enabled = false },
+                            LabelStyle = {Enabled = false},
+                            MajorTickMark = {Enabled = false},
+                            MinorTickMark = {Enabled = false},
                             MajorGrid =
                             {
                                 Enabled = false,
                                 LineWidth = 0
                             },
                             LineWidth = 0
-                        }
+                        },
+                        BorderColor = Colors.XnaToSystemDrawing(Colors.DarkGray),
+                        BorderDashStyle = ChartDashStyle.Solid,
+                        BorderWidth = 2
                     },
                 },
                 Series =
@@ -64,7 +67,8 @@ namespace Quaver.Graphics.Graphing
                 }
             };
 
-            chart.Series["Series1"].Points.DataBindXY(points.Select(x => x.X).ToList(), points.Select(x => x.Y).ToList());
+            chart.Series["Series1"].Points
+                .DataBindXY(points.Select(x => x.X).ToList(), points.Select(x => x.Y).ToList());
 
             if (customLines != null)
             {
@@ -111,7 +115,7 @@ namespace Quaver.Graphics.Graphing
             chart.Invalidate();
 
             var bm = new Bitmap((int) size.X - 1, (int) size.Y - 1);
-            chart.DrawToBitmap(bm, new Rectangle(0, 0, (int) size.X, (int)size.Y));
+            chart.DrawToBitmap(bm, new Rectangle(0, 0, (int) size.X, (int) size.Y));
 
             return ResourceHelper.LoadTexture2DFromPng(bm);
         }
@@ -120,6 +124,69 @@ namespace Quaver.Graphics.Graphing
         ///     Creates a line graph with a set of points.
         /// </summary>
         /// <returns></returns>
-        internal static Texture2D CreateStaticLine() => new Texture2D(null, 0, 0);
+        internal static Texture2D CreateStaticLine(List<Point> points, Vector2 size, int lineWidth)
+        {
+            // Create the graphics of the chart.
+            var chart = new Chart
+            {
+                Size = new Size((int) size.X, (int) size.Y),
+                ChartAreas =
+                {
+                    new ChartArea
+                    {
+                        BackColor = Color.Black,
+                        Position = new ElementPosition(0, 0, 100, 100),
+                        AxisX = {Enabled = AxisEnabled.False},
+                        AxisY =
+                        {
+                            LabelStyle = {Enabled = false},
+                            MajorTickMark = {Enabled = false},
+                            MinorTickMark = {Enabled = false},
+                            MajorGrid =
+                            {
+                                Enabled = false,
+                                LineWidth = 0
+                            },
+                            LineWidth = 0
+                        },
+                        BorderColor = Colors.XnaToSystemDrawing(Colors.DarkGray),
+                        BorderDashStyle = ChartDashStyle.Solid,
+                        BorderWidth = 2
+                    },
+                },
+                Series =
+                {
+                    new Series
+                    {
+                        Name = "Series1",
+                        ChartType = SeriesChartType.Line,
+                        BorderWidth = lineWidth
+                    }
+                }
+            };
+
+            chart.Series["Series1"].Points.DataBindXY(points.Select(x => x.X).ToList(), points.Select(x => x.Y).ToList());
+
+            foreach (var point in chart.Series["Series1"].Points)
+            {
+                if (point.YValues[0] >= 90)
+                    point.Color = Color.Green;
+                else if (point.YValues[0] >= 60)
+                    point.Color = Color.Yellow;
+                else if (point.YValues[0] >= 30)
+                    point.Color = Color.Orange;
+                else if (point.YValues[0] >= 0)
+                    point.Color = Color.Red;
+            }
+
+            // draw!
+            chart.Invalidate();
+
+            // Draw chart to a bitmap.
+            var bm = new Bitmap((int) size.X - 1, (int) size.Y - 1);
+            chart.DrawToBitmap(bm, new Rectangle(0, 0, (int) size.X, (int) size.Y));
+
+            return ResourceHelper.LoadTexture2DFromPng(bm);
+        }
     }
 }

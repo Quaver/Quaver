@@ -140,7 +140,7 @@ namespace Quaver.States.Results.UI.Statistics
                     btn.TextSprite.TextColor = Color.White;
 
                     // Set button position
-                    btn.PosX = btn.SizeX * i + i * 5;
+                    btn.PosX = btn.SizeX * i + i * 10;
 
                     // Make sure that the the alpha of inactive ones are invisible.
                     StatsContainers[i].Content.Alpha = 0;
@@ -181,8 +181,8 @@ namespace Quaver.States.Results.UI.Statistics
                     container.Button.Alpha = GraphicsHelper.Tween(0.5f, container.Button.Alpha, Math.Min(dt / 60, 1));
                     container.Button.TextSprite.TextColor = Color.White;
 
-                    // Make sure that the contaier content itself is hidden
-                    container.Content.Alpha = GraphicsHelper.Tween(0, container.Content.Alpha, Math.Min(dt / 120, 1));
+                    // Make sure that the container content itself is hidden
+                    container.Content.Alpha = GraphicsHelper.Tween(0, container.Content.Alpha, Math.Min(dt / 240, 1));
                 }
                 else
                 {
@@ -192,7 +192,7 @@ namespace Quaver.States.Results.UI.Statistics
                     container.Button.TextSprite.TextColor = Color.Black;
 
                     // Make sure that the contaier content itself is visible
-                    container.Content.Alpha = GraphicsHelper.Tween(1, container.Content.Alpha, Math.Min(dt / 120, 1));
+                    container.Content.Alpha = GraphicsHelper.Tween(1, container.Content.Alpha, Math.Min(dt / 240, 1));
                 }
             }
 

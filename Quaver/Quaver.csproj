@@ -165,6 +165,7 @@
     <Compile Include="States\Results\UI\Breakdown\JudgementBreakdown.cs" />
     <Compile Include="States\Results\UI\Buttons\Direction.cs" />
     <Compile Include="States\Results\UI\Buttons\ResultsButtonContainer.cs" />
+    <Compile Include="States\Results\UI\Statistics\HealthGraph.cs" />
     <Compile Include="States\Results\UI\Statistics\HitOffsetGraph.cs" />
     <Compile Include="States\Results\UI\Statistics\ResultsScoreStatistics.cs" />
     <Compile Include="States\Results\UI\Statistics\StatisticContainer.cs" />
