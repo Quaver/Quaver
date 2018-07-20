@@ -40,12 +40,12 @@ namespace Quaver.Database.Maps
         {
             if (!GameBase.ImportQueueReady)
                 Logger.LogInfo($"Detected directory change at: {e.FullPath}", LogType.Runtime);
-            
+
             GameBase.ImportQueueReady = true;
         }
-        
+
         /// <summary>
-        ///     Responsible for extracting the files from the .qp 
+        ///     Responsible for extracting the files from the .qp
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="num"></param>
@@ -65,17 +65,17 @@ namespace Quaver.Database.Maps
                 Logger.LogError(e, LogType.Runtime);
             }
         }
-        
+
         /// <summary>
-        ///     Reloads the maps properly 
+        ///     Reloads the maps properly
         /// </summary>
         /// <returns></returns>
-        internal static async Task AfterImport()
+        internal static void AfterImport()
         {
             var oldMaps = GameBase.Mapsets;
 
             // Import all the maps to the db
-            await MapCache.LoadAndSetMapsets();
+            MapCache.LoadAndSetMapsets();
 
             // Update the selected map with the new one.
             // This button should only be on the song select state, so no need to check for states here.

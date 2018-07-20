@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -167,11 +167,6 @@ namespace Quaver.Main
         public static Cursor Cursor { get; set; }
 
         /// <summary>
-        ///     Keeps track of whether Discord Rich Presence has been initialized.
-        /// </summary>
-        public static bool DiscordRichPresencedInited { get; set; }
-
-        /// <summary>
         ///     Contains all of the loaded embedded QuaverUserInterface .xnb resources that aren't apart of the
         ///     default skin
         /// </summary>
@@ -183,10 +178,7 @@ namespace Quaver.Main
         /// </summary>
         public static Stopwatch GameTime { get; set; } = Stopwatch.StartNew();
 
-        /// <summary>
-        ///     The build version of the game (The md5 hash of the exe)
-        /// </summary>
-        public static string BuildVersion { get; set; }
+
 
         /// <summary>
         ///     Reference to the game's audio engine
