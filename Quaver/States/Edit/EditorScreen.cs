@@ -172,13 +172,12 @@ namespace Quaver.States.Edit
                 return;
             }
 
-            Qua qua = null;
+            Qua qua;
 
-            string path;
             switch (map.Game)
             {
                 case MapGame.Quaver:
-                    path = $"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}";
+                    var path = $"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}";
                     qua = Qua.Parse(path);
                     break;
                 case MapGame.Osu:
@@ -187,6 +186,8 @@ namespace Quaver.States.Edit
                 case MapGame.Etterna:
                     NotificationManager.Show(NotificationLevel.Error, "Etterna maps aren't eligible to be edited");
                     return;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             if (qua != null)
