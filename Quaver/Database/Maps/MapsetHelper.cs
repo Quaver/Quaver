@@ -22,7 +22,7 @@ namespace Quaver.Database.Maps
             {
                 using (var stream = File.OpenRead(path))
                 {
-                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", String.Empty).ToLower();
+                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", string.Empty).ToLower();
                 }
             }
         }
@@ -111,7 +111,7 @@ namespace Quaver.Database.Maps
                 float.TryParse(term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + op.Length).Split(' ').First(), out var val);
 
                 if (options.Contains(searchOption))
-                   foundSearchQueries.Add(new SearchQuery() { Operator = op, Option = searchOption, Value = val });             
+                   foundSearchQueries.Add(new SearchQuery() { Operator = op, Option = searchOption, Value = val });
             }
 
             // Create a list of mapsets with the matched mapsets
@@ -154,7 +154,7 @@ namespace Quaver.Database.Maps
 
                     // Check if the term exist in any of the following properties
                     if (!map.Artist.ToLower().Contains(term) && !map.Title.ToLower().Contains(term) &&
-                        !map.Creator.ToLower().Contains(term) && !map.Source.ToLower().Contains(term) && 
+                        !map.Creator.ToLower().Contains(term) && !map.Source.ToLower().Contains(term) &&
                         !map.Description.ToLower().Contains(term) && !map.Tags.ToLower().Contains(term) &&
                         !map.DifficultyName.ToLower().Contains(term))
                         continue;
@@ -171,7 +171,7 @@ namespace Quaver.Database.Maps
         }
 
         /// <summary>
-        ///     Compares two values and determines 
+        ///     Compares two values and determines
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="val1"></param>

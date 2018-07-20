@@ -17,20 +17,20 @@ namespace Quaver.Helpers
             if (string.IsNullOrEmpty(text))
                 return "";
 
-            byte[] buffer = Encoding.UTF8.GetBytes(text);
-            MemoryStream ms = new MemoryStream();
-            using (GZipStream zip = new GZipStream(ms, CompressionMode.Compress, true))
+            var buffer = Encoding.UTF8.GetBytes(text);
+            var ms = new MemoryStream();
+            using (var zip = new GZipStream(ms, CompressionMode.Compress, true))
             {
                 zip.Write(buffer, 0, buffer.Length);
             }
 
             ms.Position = 0;
-            MemoryStream outStream = new MemoryStream();
+            var outStream = new MemoryStream();
 
-            byte[] compressed = new byte[ms.Length];
+            var compressed = new byte[ms.Length];
             ms.Read(compressed, 0, compressed.Length);
 
-            byte[] gzBuffer = new byte[compressed.Length + 4];
+            var gzBuffer = new byte[compressed.Length + 4];
             Buffer.BlockCopy(compressed, 0, gzBuffer, 4, compressed.Length);
             Buffer.BlockCopy(BitConverter.GetBytes(buffer.Length), 0, gzBuffer, 0, 4);
             return Convert.ToBase64String(gzBuffer);
@@ -46,16 +46,16 @@ namespace Quaver.Helpers
             if (string.IsNullOrEmpty(compressedText))
                 return "";
 
-            byte[] gzBuffer = Convert.FromBase64String(compressedText);
-            using (MemoryStream ms = new MemoryStream())
+            var gzBuffer = Convert.FromBase64String(compressedText);
+            using (var ms = new MemoryStream())
             {
-                int msgLength = BitConverter.ToInt32(gzBuffer, 0);
+                var msgLength = BitConverter.ToInt32(gzBuffer, 0);
                 ms.Write(gzBuffer, 4, gzBuffer.Length - 4);
 
-                byte[] buffer = new byte[msgLength];
+                var buffer = new byte[msgLength];
 
                 ms.Position = 0;
-                using (GZipStream zip = new GZipStream(ms, CompressionMode.Decompress))
+                using (var zip = new GZipStream(ms, CompressionMode.Decompress))
                 {
                     zip.Read(buffer, 0, buffer.Length);
                 }

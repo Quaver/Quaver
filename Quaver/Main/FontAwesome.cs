@@ -42,6 +42,15 @@ namespace Quaver.Main
         internal static Texture2D ArrowRight { get; set; }
         internal static Texture2D ChevronSignLeft { get; set; }
         internal static Texture2D ChevronSignRight { get; set; }
+        internal static Texture2D Twitter { get; set; }
+        internal static Texture2D Rss { get; set; }
+        internal static Texture2D Code { get; set; }
+        internal static Texture2D Bars { get; set; }
+        internal static Texture2D Question { get; set; }
+        internal static Texture2D Trophy { get; set; }
+        internal static Texture2D Globe { get; set; }
+        internal static Texture2D Comments { get; set; }
+        internal static Texture2D Spinner { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -82,6 +91,16 @@ namespace Quaver.Main
             ArrowRight = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_arrow_pointing_to_right);
             ChevronSignLeft = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_angle_pointing_to_left);
             ChevronSignRight = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_angle_arrow_pointing_to_right);
+            VideoPlay= ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_play_video_button);
+            Twitter = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_twitter_black_shape);
+            Rss = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_rss_symbol);
+            Code = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_code);
+            Bars = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_signal_bars);
+            Question = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_question_sign);
+            Trophy = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_trophy);
+            Globe = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_earth_globe);
+            Comments = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_comments);
+            Spinner = ResourceHelper.LoadTexture2DFromPng(QuaverResources.fa_spinner_of_dots);
         }
     }
 }

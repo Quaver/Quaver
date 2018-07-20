@@ -11,7 +11,6 @@ using Quaver.API.Maps;
 using Quaver.API.Replays;
 using Quaver.Config;
 using Quaver.Database.Maps;
-using Quaver.GameState;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Overlays.Options;
@@ -43,7 +42,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         ///     The actual navbar sprite
         /// </summary>
         internal Sprite NavbarSprite { get; set; }
-            
+
         /// <summary>
         ///     The tooltip box that appears when hovering over a button.
         /// </summary>
@@ -64,7 +63,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         ///     The container for the navbar
         /// </summary>
         private Container Container { get; set; }
-                
+
         /// <summary>
         ///     If the navbar is shown
         /// </summary>
@@ -90,7 +89,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         /// <param name="createButtons"></param>
         public Nav(Action createButtons) => CreateButtons = createButtons;
-        
+
         /// <summary>
         ///     Initialize
         /// </summary>
@@ -98,17 +97,17 @@ namespace Quaver.Graphics.Overlays.Navbar
         public void Initialize(IGameState state)
         {
             Container = new Container();
-            
+
             // Create the options menu.
             OptionsMenu = new OptionsOverlay();
-            
+
             // Setup the dictionary of navbar buttons.
             Buttons = new Dictionary<NavbarAlignment, List<NavbarButton>>()
             {
                 { NavbarAlignment.Left, new List<NavbarButton>() },
                 { NavbarAlignment.Right, new List<NavbarButton>() }
             };
-            
+
             // Create navbar
             NavbarSprite = new Sprite()
             {
@@ -142,13 +141,13 @@ namespace Quaver.Graphics.Overlays.Navbar
         {
             if (GameBase.KeyboardState.IsKeyDown(Keys.Z))
                 PerformHideAnimation(dt);
-            
+
             if (GameBase.KeyboardState.IsKeyDown(Keys.X))
                 PerformShowAnimation(dt);
 
             if (GameBase.KeyboardState.IsKeyDown(Keys.Escape))
                 OptionsMenu.Active = false;
-            
+
             OptionsMenu.Update(dt);
             Container.Update(dt);
         }
@@ -172,8 +171,8 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="description"></param>
         /// <param name="clickAction"></param>
         internal NavbarButton CreateNavbarButton(NavbarAlignment alignment, Texture2D tex, string name, string description, EventHandler clickAction)
-        {       
-            var button = new NavbarButton(this, tex, alignment, name, description, clickAction) { Parent = Container };   
+        {
+            var button = new NavbarButton(this, tex, alignment, name, description, clickAction) { Parent = Container };
             Buttons[alignment].Add(button);
 
             return button;
@@ -196,7 +195,7 @@ namespace Quaver.Graphics.Overlays.Navbar
                 Container.Visible = false;
                 return;
             }
-            
+
             Container.PosY = GraphicsHelper.Tween(hiddenPos, Container.PosY, Math.Min(dt / 30, 1));
         }
 
@@ -208,10 +207,10 @@ namespace Quaver.Graphics.Overlays.Navbar
          {
              // Make the container visible again when performing this animation.
              Container.Visible = true;
-             
+
             // The original position of the navbar
             const int origPos = 0;
-          
+
             // Don't perform the animation anymore after reaching a certain height.
             if (Math.Abs(Container.PosY - origPos) < 0.1)
             {
@@ -219,7 +218,7 @@ namespace Quaver.Graphics.Overlays.Navbar
                 InAnimation = false;
                 return;
             }
-            
+
             Container.PosY = GraphicsHelper.Tween(origPos, Container.PosY, Math.Min(dt / 30, 1));
         }
 
@@ -235,27 +234,27 @@ namespace Quaver.Graphics.Overlays.Navbar
 
                         // Open up the options overlay.
                         btn.ParentNav.OptionsMenu.Active = !btn.ParentNav.OptionsMenu.Active;
-            
+
                         if (btn.ParentNav.OptionsMenu.Active)
                             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
                         else
                             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundBack);
                     });
-                
-                GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Home, "Home", "Go to the main menu.", OnHomeButtonClicked);         
+
+                GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Home, "Home", "Go to the main menu.", OnHomeButtonClicked);
                 GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.GamePad, "Play", "Smash some keys!", OnPlayButtonClicked);
                 GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Copy, "Import Mapsets","Add new songs to play!", OnImportButtonClicked);
                 GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Archive, "Export Mapset", "Zip your current mapset to a file.", OnExportButtonClicked);
                 GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.VideoPlay, "Watch Replay", "Load up a replay to watch.", OnReplayButtonClicked);
                 GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Pencil, "Edit", "Edit the currently selected map", OnEditButtonClicked);
-            
+
                 // Right Side
                 GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => { GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick); Logger.LogImportant("This button does nothing. Don't click it.", LogType.Runtime);});
                 GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Discord, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
                 GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
             });
         }
-        
+
         /// <summary>
         ///     Called when the home button is clicked.
         /// </summary>
@@ -264,9 +263,25 @@ namespace Quaver.Graphics.Overlays.Navbar
         private static void OnHomeButtonClicked(object sender, EventArgs e)
         {
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
-            GameBase.GameStateManager.ChangeState(new MainMenuState());
+            GameBase.GameStateManager.ChangeState(new MainMenuScreen());
         }
-        
+
+        /// <summary>
+        ///     Called when the settings button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSettingsButtonClicked(object sender, EventArgs e)
+        {
+            // Open up the options overlay.
+            OptionsMenu.Active = !OptionsMenu.Active;
+
+            if (OptionsMenu.Active)
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
+            else
+                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundBack);
+        }
+
         /// <summary>
         ///     Called when the home button is clicked.
         /// </summary>
@@ -299,7 +314,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             System.Diagnostics.Process.Start("https://github.com/Swan/Quaver");
         }
-        
+
         /// <summary>
         ///     Called when the Import button is clicked
         ///     Imports mapsets to the game.
@@ -328,7 +343,7 @@ namespace Quaver.Graphics.Overlays.Navbar
                 Logger.LogImportant($"Importing mapsets. This process runs in the background, so you can continue to play!", LogType.Runtime, 5f);
                 for (var i = 0; i < openFileDialog.FileNames.Length; i++)
                 {
-                    if (openFileDialog.FileNames[i].EndsWith(".osz")) 
+                    if (openFileDialog.FileNames[i].EndsWith(".osz"))
                         Osu.ConvertOsz(openFileDialog.FileNames[i], i);
                     else if (openFileDialog.FileNames[i].EndsWith(".qp"))
                         MapsetImporter.Import(openFileDialog.FileNames[i]);
@@ -336,7 +351,7 @@ namespace Quaver.Graphics.Overlays.Navbar
                         StepManiaConverter.ConvertSm(openFileDialog.FileNames[i]);
                 }
                 // When all the maps have been converted, select the last imported map and make that the selected one.
-            }).ContinueWith(async t => await MapsetImporter.AfterImport());    
+            }).ContinueWith(t => MapsetImporter.AfterImport());
         }
 
         /// <summary>
@@ -373,7 +388,7 @@ namespace Quaver.Graphics.Overlays.Navbar
                     // Open the folder where the file is contained.
                     if (!File.Exists(outputPath))
                         return;
-                
+
                     Console.WriteLine(outputPath);
                     System.Diagnostics.Process.Start("explorer.exe", "/select," + "\"" + $@"{outputPath.Replace("/", "\\")}" + "\"");
                 }
@@ -404,10 +419,10 @@ namespace Quaver.Graphics.Overlays.Navbar
             // If the dialog couldn't be shown, that's an issue, so we'll return for now.
             if (openFileDialog.ShowDialog() != DialogResult.OK)
                 return;
-            
+
             GameBase.GameStateManager.ChangeState(new ResultsScreen(new Replay(openFileDialog.FileName)));
         }
-        
+
         /// <summary>
         ///     User chooses to edit the currently selected map.
         /// </summary>
@@ -417,7 +432,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         private static void OnEditButtonClicked(object sender, EventArgs e)
         {
             var map = GameBase.SelectedMap;
-            
+
             if (map == null)
             {
                 Logger.LogError("There is currently no selected map to edit!", LogType.Runtime);
@@ -427,7 +442,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             var path = $"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}";
 
             Qua qua;
-            
+
             try
             {
                 qua = Qua.Parse(path);
@@ -437,7 +452,7 @@ namespace Quaver.Graphics.Overlays.Navbar
                 Logger.LogError(ex, LogType.Runtime);
                 return;
             }
-            
+
             GameBase.GameStateManager.ChangeState(new EditorScreen(qua));
         }
     }

@@ -6,7 +6,7 @@ using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Main;
 
-namespace Quaver.Graphics.UserInterface
+namespace Quaver.Graphics.UI
 {
     internal class BackgroundManager
     {
@@ -55,7 +55,7 @@ namespace Quaver.Graphics.UserInterface
                 Tint = Color.Black
             };
 
-            // Change the brightness of the 
+            // Change the brightness of the
             ConfigManager.BackgroundBrightness.OnValueChanged += (o, e) =>
             {
                 TargetColor = Vector3.One * e.Value / 100f;
@@ -78,7 +78,7 @@ namespace Quaver.Graphics.UserInterface
         public static void Update(double dt)
         {
             //Tween Color
-            float tween = (float)Math.Min(dt / 400, 1);
+            var tween = (float)Math.Min(dt / 400, 1);
 
             if (TintReady)
             CurrentColor = Vector3.Lerp(CurrentColor, TargetColor, tween);

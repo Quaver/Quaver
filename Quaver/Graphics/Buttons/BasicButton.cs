@@ -40,18 +40,5 @@ namespace Quaver.Graphics.Buttons
         {
             HoverTargetTween = 0;
         }
-
-        /// <summary>
-        ///     This method will be used for button logic and animation
-        /// </summary>
-        internal override void Update(double dt)
-        {
-            /*HoverCurrentTween = GraphicsHelper.Tween(HoverTargetTween, HoverCurrentTween, Math.Min(dt / 40, 1));
-            CurrentTint.R = (byte)((HoverCurrentTween * 0.25 + 0.75f) * 255);
-            CurrentTint.G = (byte)((HoverCurrentTween * 0.25 + 0.75f) * 255);
-            CurrentTint.B = (byte)((HoverCurrentTween * 0.25 + 0.75f) * 255);
-            Tint = CurrentTint;*/
-            base.Update(dt);
-        }
     }
 }

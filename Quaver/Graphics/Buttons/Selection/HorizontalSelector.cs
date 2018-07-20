@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Main;
@@ -45,7 +44,7 @@ namespace Quaver.Graphics.Buttons.Selection
         private Action<string, int> OnChange { get; }
 
         /// <summary>
-        ///     Ctor 
+        ///     Ctor
         /// </summary>
         /// <param name="items"></param>
         /// <param name="size"></param>
@@ -54,22 +53,22 @@ namespace Quaver.Graphics.Buttons.Selection
         internal HorizontalSelector(List<string> items, Vector2 size, Action<string, int> onChange, int selectedIndex = 0)
         {
             Items = items;
-            
+
             if (Items.Count == 0)
                 throw new ArgumentException("HorizontalSelector items must be greater than 0");
 
             OnChange = onChange;
             SelectedIndex = selectedIndex;
-          
+
             Size = new UDim2D(size.X, size.Y);
-            Tint = QuaverColors.NegativeInactive;
+            Tint = Colors.NegativeInactive;
 
             SelectedItemText = new SpriteText()
             {
                 Parent = this,
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.MidCenter,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 Text = Items[SelectedIndex],
                 TextColor = Color.White,
                 TextScale = 0.85f
@@ -85,7 +84,7 @@ namespace Quaver.Graphics.Buttons.Selection
             };
 
             ButtonSelectLeft.Clicked += (sender, e) => HandleSelection(SelectorDirection.Left);
-            
+
             ButtonSelectRight = new BasicButton
             {
                 Parent = this,
@@ -105,7 +104,7 @@ namespace Quaver.Graphics.Buttons.Selection
         private void HandleSelection(SelectorDirection direction)
         {
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
-            
+
             // Choose the newly selected index based on the direction we're going.
             switch (direction)
             {
@@ -119,12 +118,12 @@ namespace Quaver.Graphics.Buttons.Selection
                     if (SelectedIndex + 1 < Items.Count)
                         SelectedIndex += 1;
                     else
-                        SelectedIndex = 0;                 
+                        SelectedIndex = 0;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
-            
+
             SelectedItemText.Text = Items[SelectedIndex];
             OnChange(Items[SelectedIndex], SelectedIndex);
         }

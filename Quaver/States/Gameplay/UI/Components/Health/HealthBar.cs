@@ -4,14 +4,13 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
 using Quaver.Resources;
+using Quaver.Shaders;
 using Quaver.States.Gameplay.GameModes.Keys.Playfield;
 
 namespace Quaver.States.Gameplay.UI.Components.Health
@@ -53,9 +52,9 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         {
             Type = type;
             Processor = processor;
-            SemiTransparent = ResourceHelper.LoadShader(QuaverResources.semi_transparent);
+            SemiTransparent = ResourceHelper.LoadShader(ShaderStore.semi_transparent);
         }
-        
+
         /// <summary>
         ///     Initialize Sprites
         /// </summary>
@@ -65,17 +64,17 @@ namespace Quaver.States.Gameplay.UI.Components.Health
             // Create the background bar sprite.
             BackgroundBar = new AnimatableSprite(GameBase.Skin.HealthBarBackground);
             BackgroundBar.Size = new UDim2D(BackgroundBar.Frames.First().Width, BackgroundBar.Frames.First().Height);
-   
+
             // Start animation
             BackgroundBar.StartLoop(LoopDirection.Forward, 60);
-                  
+
             // Create the foreground bar (the one that'll serve as the gauge progress).
             ForegroundBar = new AnimatableSprite(GameBase.Skin.HealthBarForeground);
             ForegroundBar.Size = new UDim2D(ForegroundBar.Frames.First().Width, ForegroundBar.Frames.First().Height);
-                        
+
             // Start animation.
             ForegroundBar.StartLoop(LoopDirection.Forward, 60);
-            
+
             switch (Type)
             {
                 case HealthBarType.Horizontal:
@@ -84,7 +83,7 @@ namespace Quaver.States.Gameplay.UI.Components.Health
 
                     BackgroundBar.PosX = 8;
                     ForegroundBar.PosX = 8;
-                
+
                     SemiTransparent.Parameters["p_position"].SetValue(new Vector2(ForegroundBar.SizeX, 0f));
                     break;
                 case HealthBarType.Vertical:
@@ -93,16 +92,16 @@ namespace Quaver.States.Gameplay.UI.Components.Health
 
                     BackgroundBar.PosY = -8;
                     ForegroundBar.PosY = -8;
-                    
+
                     SemiTransparent.Parameters["p_position"].SetValue(new Vector2(0, 0));
                     break;
                 default:
                     throw new NotImplementedException();
-            }    
-           
+            }
+
             // Set default shader params.
             SemiTransparent.Parameters["p_rectangle"].SetValue(new Vector2(ForegroundBar.SizeX, ForegroundBar.SizeY));
-            SemiTransparent.Parameters["p_dimensions"].SetValue(new Vector2(ForegroundBar.SizeX, ForegroundBar.SizeY));       
+            SemiTransparent.Parameters["p_dimensions"].SetValue(new Vector2(ForegroundBar.SizeX, ForegroundBar.SizeY));
             SemiTransparent.Parameters["p_alpha"].SetValue(0f);
         }
 
@@ -130,16 +129,16 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         ///     Draw Sprites
         /// </summary>
         public void Draw()
-        {        
+        {
             // Draw Background Bar.
             GameBase.SpriteBatch.Begin();
             BackgroundBar.Draw();
             GameBase.SpriteBatch.End();
-            
+
             // Use new spritebatch for ST Shader.
             GameBase.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied,
-                                   SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, SemiTransparent);         
-            ForegroundBar.Draw();       
+                                   SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, SemiTransparent);
+            ForegroundBar.Draw();
             GameBase.SpriteBatch.End();
         }
 
@@ -152,22 +151,22 @@ namespace Quaver.States.Gameplay.UI.Components.Health
         {
             switch (Type)
             {
-                // We handle horizontal bar types with the position in this case, so we can alpha mask it 
+                // We handle horizontal bar types with the position in this case, so we can alpha mask it
                 // with a full bar from right to left.
                 case HealthBarType.Horizontal:
                     // Target position based on the user's current health.
                     var targetPosX = Processor.Health / 100 * ForegroundBar.SizeX;
-                    
+
                     var newPosX = MathHelper.Lerp(SemiTransparent.Parameters["p_position"].GetValueVector2().X, targetPosX, (float)Math.Min(dt / 30, 1));
                     SemiTransparent.Parameters["p_position"].SetValue(new Vector2(newPosX, 0f));
                     break;
-                // We handle vertical bar types with the size of the bar instead of position, since we're 
+                // We handle vertical bar types with the size of the bar instead of position, since we're
                 // going from top to bottom.
                 case HealthBarType.Vertical:
                     // Get new size of the bar based on the user's current health.
                     var targetSizeY = ForegroundBar.SizeY - Processor.Health / 100 * ForegroundBar.SizeY;
-                    
-                    var newSizeY = MathHelper.Lerp(SemiTransparent.Parameters["p_rectangle"].GetValueVector2().Y, targetSizeY, (float)Math.Min(dt / 30, 1));    
+
+                    var newSizeY = MathHelper.Lerp(SemiTransparent.Parameters["p_rectangle"].GetValueVector2().Y, targetSizeY, (float)Math.Min(dt / 30, 1));
                     SemiTransparent.Parameters["p_rectangle"].SetValue(new Vector2(ForegroundBar.SizeX, newSizeY));
                     break;
                 default:

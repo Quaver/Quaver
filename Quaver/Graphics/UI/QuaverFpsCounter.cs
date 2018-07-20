@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Graphics.Text;
 using Quaver.Main;
 
-namespace Quaver.Graphics.UserInterface
+namespace Quaver.Graphics.UI
 {
     internal static class QuaverFpsCounter
     {
@@ -103,7 +98,7 @@ namespace Quaver.Graphics.UserInterface
         {
             // Draw text
             GameBase.SpriteBatch.Draw(GameBase.QuaverUserInterface.BlankBox, new Rectangle((int)GameBase.WindowRectangle.Width - 80, (int)GameBase.WindowRectangle.Height - 20, 75, 18), Color.Black);
-            GameBase.SpriteBatch.DrawString(QuaverFonts.Medium12, Math.Floor(FpsCurrent) + " FPS", new Vector2(GameBase.WindowRectangle.Width - 80, GameBase.WindowRectangle.Height - 20), Color.White);
+            GameBase.SpriteBatch.DrawString(Fonts.Medium12, Math.Floor(FpsCurrent) + " FPS", new Vector2(GameBase.WindowRectangle.Width - 80, GameBase.WindowRectangle.Height - 20), Color.White);
 
             // Draw graph and color according to fps.
             if (!DisplayGraph) return;

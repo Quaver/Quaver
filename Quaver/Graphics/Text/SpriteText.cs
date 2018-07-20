@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -14,7 +15,7 @@ namespace Quaver.Graphics.Text
 {
     /// <inheritdoc />
     /// <summary>
-    ///     Any drawable object that uses 
+    ///     Any drawable object that uses
     /// </summary>
     internal class SpriteText : Drawable
     {
@@ -66,17 +67,14 @@ namespace Quaver.Graphics.Text
         /// <summary>
         ///     The font of this object
         /// </summary>
-        internal SpriteFont Font { get; set; } = QuaverFonts.Medium12;
+        internal SpriteFont Font { get; set; } = Fonts.Medium12;
 
         /// <summary>
         ///     The text of this QuaverTextSprite
         /// </summary>
         internal string Text
         {
-            get
-            {
-                return _text;
-            }
+            get => _text;
             set
             {
                 _text = value;
@@ -89,10 +87,7 @@ namespace Quaver.Graphics.Text
         /// </summary>
         internal Color TextColor
         {
-            get
-            {
-                return _tint;
-            }
+            get => _tint;
             set
             {
                 _tint = value;
@@ -106,16 +101,33 @@ namespace Quaver.Graphics.Text
         /// </summary>
         internal float Alpha
         {
-            get
-            {
-                return _alpha;
-            }
+            get => _alpha;
             set
             {
                 _alpha = value;
                 _color = _tint * _alpha;
+
+                if (!SetChildrenAlpha)
+                    return;
+
+                Children.ForEach(x =>
+                {
+                    var t = x.GetType();
+
+                    if (t == typeof(Sprite))
+                    {
+                        var sprite = (Sprite) x;
+                        sprite.Alpha = value;
+                    }
+                    else if (t == typeof(SpriteText))
+                    {
+                        var text = (SpriteText) x;
+                        text.Alpha = value;
+                    }
+                });
             }
         }
+
         private float _alpha = 1f;
 
         /// <summary>
@@ -123,6 +135,16 @@ namespace Quaver.Graphics.Text
         /// </summary>
         private Color _color = Color.White;
 
+        /// <summary>
+        ///     Dictates if we want to set the alpha of the children to this one
+        ///     if it is changed.
+        /// </summary>
+        internal bool SetChildrenAlpha { get; set; }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="dt"></param>
         internal override void Update(double dt)
         {
             if (Changed) UpdateText();
@@ -200,7 +222,7 @@ namespace Quaver.Graphics.Text
             if (Font.MeasureString(text).X < Size.X.Offset) return text;
 
             //Reference Variables
-            string[] words = text.Split(' ');
+            var words = text.Split(' ');
             var wrappedText = new StringBuilder();
             var linewidth = 0f;
             var spaceWidth = Font.MeasureString(" ").X;
@@ -210,7 +232,7 @@ namespace Quaver.Graphics.Text
             //Update Text
             foreach (var a in words)
             {
-                Vector2 size = Font.MeasureString(a);
+                var size = Font.MeasureString(a);
                 if (linewidth + size.X < AbsoluteSize.X)
                 {
                     linewidth += size.X + spaceWidth;
@@ -231,19 +253,25 @@ namespace Quaver.Graphics.Text
             //Console.WriteLine("MAX: {0}, TOTAL {1}", MaxTextLines, textline);
             return wrappedText.ToString();
         }
-        
+
+        /// <summary>
+        ///     Measures the size of the sprite.
+        /// </summary>
+        /// <returns></returns>
+        internal Vector2 MeasureString() => Font.MeasureString(Text) * TextScale;
+
         /// <summary>
         ///     Fades out the sprite to a given alpha.
         /// </summary>
-        internal void Fade(double dt, float target, float scale) => Alpha = GraphicsHelper.Tween(target, Alpha, Math.Min(dt / scale, 1)); 
-        
+        internal void Fade(double dt, float target, float scale) => Alpha = GraphicsHelper.Tween(target, Alpha, Math.Min(dt / scale, 1));
+
         /// <summary>
         ///     Completely fades out the object.
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="scale"></param>
-        internal void FadeOut(double dt, float scale) => Alpha = GraphicsHelper.Tween(0, Alpha, Math.Min(dt / scale, 1)); 
-        
+        internal void FadeOut(double dt, float scale) => Alpha = GraphicsHelper.Tween(0, Alpha, Math.Min(dt / scale, 1));
+
         /// <summary>
         ///     Completely fades in the object.
         /// </summary>

@@ -70,7 +70,7 @@ namespace Quaver.Graphics.Buttons
             TitleText = new SpriteText()
             {
                 Text = map.Title,
-                Font = QuaverFonts.Medium48,
+                Font = Fonts.Medium48,
                 Size = new UDim2D(-5 * ButtonScale, -2 * ButtonScale, 0.825f, 0.5f),
                 Position = new UDim2D(-5 * ButtonScale, 2 * ButtonScale),
                 Alignment = Alignment.TopRight,
@@ -83,7 +83,7 @@ namespace Quaver.Graphics.Buttons
             ArtistText = new SpriteText()
             {
                 Text = map.Artist + " | "+ map.Creator,
-                Font = QuaverFonts.Medium48,
+                Font = Fonts.Medium48,
                 Position = new UDim2D(-5 * ButtonScale, -5 * ButtonScale),
                 Size = new UDim2D(-5 * ButtonScale, -5 * ButtonScale, 0.825f, 0.5f),
                 Alignment = Alignment.BotRight,
@@ -96,7 +96,7 @@ namespace Quaver.Graphics.Buttons
             DiffText = new SpriteText()
             {
                 Text = string.Format("{0:f2}", map.DifficultyRating),
-                Font = QuaverFonts.Bold12,
+                Font = Fonts.Bold12,
                 Position = new UDim2D(2 * ButtonScale, 5 * ButtonScale),
                 Size = new UDim2D(-6 * ButtonScale, -5 * ButtonScale, 0.175f, 0.5f),
                 Alignment = Alignment.TopLeft,
@@ -123,7 +123,7 @@ namespace Quaver.Graphics.Buttons
                 Alpha = 0,
                 Parent = this
             };
-            
+
             GradeImage = new Sprites.Sprite()
             {
                 Position = new UDim2D(-16 * ButtonScale, 0),
@@ -177,7 +177,7 @@ namespace Quaver.Graphics.Buttons
             Tint = CurrentTint;
             GradeImage.Tint = Tint;
             GameModeImage.Tint = Tint;
-            
+
             //QuaverTextSprite.Update(dt);
             base.Update(dt);
         }

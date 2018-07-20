@@ -222,6 +222,11 @@ namespace Quaver.Config
         internal static BindedValue<bool> AnimateJudgementCounter { get; private set; }
 
         /// <summary>
+        ///     As the mouse moves, the background will move as well.
+        /// </summary>
+        internal static BindedValue<bool> BackgroundParallax { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static BindedValue<Keys> KeyMania4K1 { get; private set; }
@@ -383,6 +388,7 @@ namespace Quaver.Config
             BotsEnabled = ReadValue(@"BotsEnabled", false, data);
             BotCount = ReadInt(@"BotCount", 4, 1, 6, data);
             AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);
+            BackgroundParallax = ReadValue(@"BackgroundParallax", true, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
@@ -468,6 +474,7 @@ namespace Quaver.Config
                     KeyScoreboardVisible.OnValueChanged += AutoSaveConfiguration;
                     BotsEnabled.OnValueChanged += AutoSaveConfiguration;
                     AnimateJudgementCounter.OnValueChanged += AutoSaveConfiguration;
+                    BackgroundParallax.OnValueChanged += AutoSaveConfiguration;
                 });
         }
 

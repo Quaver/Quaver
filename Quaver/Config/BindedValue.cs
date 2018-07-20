@@ -34,7 +34,7 @@ namespace Quaver.Config
             set
             {
                 var oldVal = _value;
-                
+
                 _value = value;
                 OnValueChanged?.Invoke(this, new BindedValueEventArgs<T>(value, oldVal));
             }
@@ -65,15 +65,17 @@ namespace Quaver.Config
             return Value.ToString();
         }
     }
-    
+
+    /// <inheritdoc />
     /// <summary>
     ///     EventArgs containing the value that was changed.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     internal class BindedValueEventArgs<T> : EventArgs
-    {        
+    {
+        /// <inheritdoc />
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="value"></param>
         internal BindedValueEventArgs(T value, T oldValue)
@@ -81,9 +83,9 @@ namespace Quaver.Config
             Value = value;
             OldValue = oldValue;
         }
-        
+
         /// <summary>
-        ///     The value passed when 
+        ///     The value passed when
         /// </summary>
         internal T Value { get; set; }
 

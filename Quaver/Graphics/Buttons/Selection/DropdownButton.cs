@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -148,7 +147,7 @@ namespace Quaver.Graphics.Buttons.Selection
         /// </summary>
         protected override void MouseOver()
         {
-            Tint = QuaverColors.MainAccent;
+            Tint = Colors.MainAccent;
             Alpha = 0.90f;
             ChevronRightIcon.Alpha = 1f;
         }

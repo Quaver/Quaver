@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
-using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
@@ -11,7 +10,7 @@ using Quaver.Graphics.Buttons.Selection;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UserInterface;
+using Quaver.Graphics.UI;
 using Quaver.Main;
 
 namespace Quaver.States.Tests

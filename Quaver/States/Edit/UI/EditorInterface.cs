@@ -4,12 +4,11 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Config;
-using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons.Selection;
 using Quaver.Graphics.Overlays.Navbar;
-using Quaver.Graphics.UserInterface;
+using Quaver.Graphics.UI;
 using Quaver.Main;
 using Quaver.States.Edit.UI.Components;
 using Quaver.States.Menu;
@@ -61,7 +60,7 @@ namespace Quaver.States.Edit.UI
         internal EditorInterface(EditorScreen screen) => Screen = screen;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="state"></param>
         public void Initialize(IGameState state)
@@ -71,14 +70,14 @@ namespace Quaver.States.Edit.UI
             CreateNavbar();
             CreateSeekBar();
             CreateBeatSnapSelector();
-            
+
             GameBase.AudioEngine.OnPlayed += OnAudioPlayed;
             GameBase.AudioEngine.OnPaused += OnAudioPausedOrStopped;
             GameBase.AudioEngine.OnStopped += OnAudioPausedOrStopped;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void UnloadContent()
         {
@@ -89,7 +88,7 @@ namespace Quaver.States.Edit.UI
             if (GameBase.AudioEngine.OnPlayed != null)
                 GameBase.AudioEngine.OnPlayed -= OnAudioPlayed;
 
-            if (GameBase.AudioEngine.OnPaused != null) 
+            if (GameBase.AudioEngine.OnPaused != null)
                 // ReSharper disable once DelegateSubtraction
                 GameBase.AudioEngine.OnPaused -= OnAudioPausedOrStopped;
 
@@ -99,36 +98,36 @@ namespace Quaver.States.Edit.UI
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dt"></param>
         public void Update(double dt)
         {
             // Hide the global nav.
             GameBase.Navbar.PerformHideAnimation(dt);
-                    
+
             Container.Update(dt);
-            
+
             Navbar.Update(dt);
             Navbar.PerformShowAnimation(dt);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void Draw()
         {
-            SpriteBatch.Begin();         
+            SpriteBatch.Begin();
             BackgroundManager.Draw();
             SpriteBatch.End();
-            
+
             // Draw editor in the middle, so it's behind all UI components but above the background.
             Screen.EditorGameMode.Draw();
-            
+
             // Draw general UI componenets
             SpriteBatch.Begin();
             Container.Draw();
-            Navbar.Draw();        
+            Navbar.Draw();
             SpriteBatch.End();
         }
 
@@ -142,9 +141,9 @@ namespace Quaver.States.Edit.UI
                 // Go to main menu
                 Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Home, "Home", "Go to the main menu", (sender, e) =>
                 {
-                    GameBase.GameStateManager.ChangeState(new MainMenuState());
+                    GameBase.GameStateManager.ChangeState(new MainMenuScreen());
                 });
-                                
+
                 // Pause/Play
                 PlayAndPauseButton = Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Play, "Play", "Play the song.", (sender, e) =>
                 {
@@ -155,24 +154,24 @@ namespace Quaver.States.Edit.UI
                     }
                     else if (GameBase.AudioEngine.IsPaused)
                     {
-                        GameBase.AudioEngine.Play();   
-                    }           
+                        GameBase.AudioEngine.Play();
+                    }
                     else if (GameBase.AudioEngine.IsStopped)
-                    {             
+                    {
                         GameBase.AudioEngine.ReloadStream();
                         GameBase.AudioEngine.Play();
                     }
                 });
-                
+
                 // Stop Button
                 Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Stop, "Stop", "Stops the music", (sender, e) =>
                 {
                     if (GameBase.AudioEngine.IsStopped)
                         return;
-                    
+
                     GameBase.AudioEngine.Stop();
                 });
-                
+
                 // Change Rate Button
                 Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Clock, "Change Audio Rate to 25%", "Change the playback rate", (sender, e) =>
                 {
@@ -198,33 +197,33 @@ namespace Quaver.States.Edit.UI
                     GameBase.AudioEngine.SetPlaybackRate(false);
 
                     var speedButton = (NavbarButton) sender;
-                    
+
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
-                    var nextRate = GameBase.AudioEngine.PlaybackRate == 1.0f ? 25 : (GameBase.AudioEngine.PlaybackRate + 0.25) * 100;                  
+                    var nextRate = GameBase.AudioEngine.PlaybackRate == 1.0f ? 25 : (GameBase.AudioEngine.PlaybackRate + 0.25) * 100;
                     speedButton.TooltipName = $"Change Audio Rate to {nextRate}%";
                 });
-                                
+
                 // Open Mapset Folder
                 Navbar.CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Folder, "Open Mapset Folder", "Open the mapset directory.", (sender, e) =>
                 {
                     var map = SelectedMap;
                     Process.Start($"{ConfigManager.SongDirectory}/{map.Directory}/");
                 });
-                
+
                 // Open .qua file
                 Navbar.CreateNavbarButton(NavbarAlignment.Right, FontAwesome.File, "Open .qua File", "Opens the file in a text editor.", (sender, e) =>
                 {
                     var map = SelectedMap;
                     Process.Start($"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}");
                 });
-                
-                // Save 
+
+                // Save
                 Navbar.CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Save, "Save", "Save the map to disk", (sender, e) => Screen.SaveMap());
             });
-            
+
             Navbar.Initialize(Screen);
         }
-    
+
         /// <summary>
         ///    Creates the bar to seek through the song's progress.
         /// </summary>
@@ -236,16 +235,16 @@ namespace Quaver.States.Edit.UI
                 Alignment = Alignment.BotCenter,
             };
         }
-     
+
         /// <summary>
-        ///     Creates the 
+        ///     Creates the
         /// </summary>
         private void CreateSongTimeDisplay()
         {
             CurrentTime = new EditorSongTimeDisplay(NumberDisplayType.SongTime, "00:00", new Vector2(2, 2))
             {
                 Parent = Container,
-                Alignment = Alignment.BotCenter,     
+                Alignment = Alignment.BotCenter,
                 PosY = -70,
                 PosX = 0
             };
@@ -257,7 +256,7 @@ namespace Quaver.States.Edit.UI
         private void CreateBeatSnapSelector()
         {
             var snaps = new List<string> { "1/1", "1/2", "1/3", "1/4", "1/6", "1/8", "1/12", "1/16", "1/32", "1/48" };
-            
+
             BeatSnapSelector = new HorizontalSelector(snaps, new Vector2(200, 30), (item, index) =>
             {
                 // Beat Snaps are in the format "1/x". This just splits it, and parses the snap.
@@ -269,7 +268,7 @@ namespace Quaver.States.Edit.UI
                 PosX = 200
             };
         }
-        
+
         /// <summary>
         ///     Called when the audio track has started playing.
         /// </summary>

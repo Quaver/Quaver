@@ -52,8 +52,31 @@ namespace Quaver.Main
         internal Texture2D JudgementOverlay { get; set; }
 
         internal List<Texture2D> TestSpritesheet { get; set; }
+        
         internal Texture2D UnknownAvatar { get; set; }
+        
         internal Texture2D YouAvatar { get; set; }
+
+        internal Texture2D MenuBackground { get; set; }
+
+        internal Texture2D QuaverLogoName { get; set; }
+
+        internal Texture2D SwanLogo { get; set; }
+
+        internal Texture2D MenuSinglePlayer { get; set; }
+
+        internal Texture2D MenuMultiplayer { get; set; }
+        
+        internal Texture2D MenuCompetitive { get; set; }
+        
+        internal Texture2D MenuLock { get; set; }
+
+        internal Texture2D MenuNews { get; set; }
+
+        internal Texture2D NotificationError { get; set; }
+        internal Texture2D NotificationWarning { get; set; }
+        internal Texture2D NotificationInfo { get; set; }
+        internal Texture2D NotificationSuccess { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -70,20 +93,18 @@ namespace Quaver.Main
             TestSpritesheet = GraphicsHelper.LoadSpritesheetFromTexture(ResourceHelper.LoadTexture2DFromPng(QuaverResources.test_spritesheet), 1, 8);
             UnknownAvatar = ResourceHelper.LoadTexture2DFromPng(QuaverResources.unknown_avatar);
             YouAvatar = ResourceHelper.LoadTexture2DFromPng(QuaverResources.you_avatar);
-        }
-
-        /// <summary>
-        ///     Whenever the settings for window size is changed, call this method to update the window.
-        /// </summary>
-        /// <param name="newSize"></param>
-        public static void UpdateWindow(Point newSize)
-        {
-            // NOTE: Unfinished
-            GameBase.WindowRectangle = new DrawRectangle(0, 0, ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
-            GameBase.MainRenderTarget = new RenderTarget2D(GameBase.GraphicsDevice, GameBase.GraphicsDevice.Viewport.Width, GameBase.GraphicsDevice.Viewport.Height);
-            //Rectangle mainWindow = GraphicsDevice.PresentationParameters.Bounds;
-
-            //Align letterboxed window
+            MenuBackground = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_background);
+            QuaverLogoName = ResourceHelper.LoadTexture2DFromPng(QuaverResources.quaver_logo);
+            SwanLogo = ResourceHelper.LoadTexture2DFromPng(QuaverResources.swan_logo);
+            MenuSinglePlayer = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_single_player);
+            MenuLock = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_lock);
+            MenuMultiplayer = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_multiplayer);
+            MenuCompetitive = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_competitive);
+            MenuNews = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_news);
+            NotificationError = ResourceHelper.LoadTexture2DFromPng(QuaverResources.notif_error);
+            NotificationInfo = ResourceHelper.LoadTexture2DFromPng(QuaverResources.notif_info);
+            NotificationSuccess = ResourceHelper.LoadTexture2DFromPng(QuaverResources.notif_success);
+            NotificationWarning = ResourceHelper.LoadTexture2DFromPng(QuaverResources.notif_warning);
         }
     }
 }

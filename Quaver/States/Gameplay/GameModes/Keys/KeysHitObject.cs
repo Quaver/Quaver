@@ -7,7 +7,6 @@ using Quaver.API.Maps;
 using Quaver.API.Maps.Structures;
 using Quaver.Config;
 using Quaver.Graphics;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -38,7 +37,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         ///     The X position of the object.
         /// </summary>
         internal float PositionX => Playfield.Stage.Receptors[Info.Lane - 1].PosX;
-        
+
         /// <summary>
        ///     The Y position of the HitObject.
        /// </summary>
@@ -55,7 +54,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         internal float OffsetYFromReceptor { get; set; }
 
         /// <summary>
-        ///     The long note Y offset from the receptor.        
+        ///     The long note Y offset from the receptor.
         /// </summary>
         internal float LongNoteOffsetYFromReceptor { get; set; }
 
@@ -97,7 +96,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         ///     The SpriteEffects. Flips the image horizontally if we are using upscroll.
         /// </summary>
-        private static SpriteEffects Effects => !ConfigManager.DownScroll4K.Value && GameBase.Skin.Keys[GameBase.SelectedMap.Mode].FlipNoteImagesOnUpscroll 
+        private static SpriteEffects Effects => !ConfigManager.DownScroll4K.Value && GameBase.Skin.Keys[GameBase.SelectedMap.Mode].FlipNoteImagesOnUpscroll
                                                     ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
         /// <summary>
@@ -107,12 +106,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys
 
         /// <inheritdoc />
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="ruleset"></param>
         /// <param name="info"></param>
         public KeysHitObject(GameModeRulesetKeys ruleset, HitObjectInfo info) : base(info) => Ruleset = ruleset;
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -121,7 +120,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         {
             // Get the KeysPlayfield instance rather than just the interface type.
             Playfield = (KeysPlayfield) playfield;
-    
+
             // Create the base HitObjectSprite
             HitObjectSprite = new Sprite()
             {
@@ -130,11 +129,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 SpriteEffect = Effects,
                 Image = GetHitObjectTexture(),
             };
-            
+
             // Update hit body's size to match image ratio
             HitObjectSprite.Size = new UDim2D(Playfield.LaneSize, Playfield.LaneSize * HitObjectSprite.Image.Height / HitObjectSprite.Image.Width);
             LongNoteBodyOffset = HitObjectSprite.SizeY / 2;
-            
+
             if (IsLongNote)
                 CreateLongNote();
 
@@ -142,21 +141,21 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             // so that the body of the long note isn't drawn over the object.
             HitObjectSprite.Parent = Playfield.Stage.HitObjectContainer;
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         internal override void Destroy()
-        {            
+        {
             HitObjectSprite.Destroy();
-            
+
             if (IsLongNote)
             {
                 LongNoteBodySprite.Destroy();
                 LongNoteEndSprite.Destroy();
             }
         }
-        
+
         /// <summary>
         ///     Creates the long note sprite.
         /// </summary>
@@ -164,7 +163,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         {
             // Get the long note bodies to use.
             var bodies = GameBase.Skin.Keys[Playfield.Map.Mode].NoteHoldBodies[Index];
-     
+
             LongNoteBodySprite = new AnimatableSprite(bodies)
             {
                 Alignment = Alignment.TopLeft,
@@ -172,7 +171,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 Position = new UDim2D(PositionX, PositionY),
                 Parent = Playfield.Stage.HitObjectContainer
             };
-                                  
+
             // Create the Hold End
             LongNoteEndSprite = new Sprite()
             {
@@ -182,11 +181,11 @@ namespace Quaver.States.Gameplay.GameModes.Keys
                 Parent = Playfield.Stage.HitObjectContainer,
                 SpriteEffect = Effects
             };
-            
+
             // Set long note end properties.
-            LongNoteEndSprite.Image = GameBase.Skin.Keys[Playfield.Map.Mode].NoteHoldEnds[Index];       
+            LongNoteEndSprite.Image = GameBase.Skin.Keys[Playfield.Map.Mode].NoteHoldEnds[Index];
             LongNoteEndSprite.SizeY =  Playfield.LaneSize * LongNoteEndSprite.Image.Height / LongNoteEndSprite.Image.Width;
-            LongNoteEndOffset = LongNoteEndSprite.SizeY / 2f;    
+            LongNoteEndOffset = LongNoteEndSprite.SizeY / 2f;
         }
 
         /// <summary>
@@ -202,13 +201,13 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         private Texture2D GetHitObjectTexture()
         {
             var skin = GameBase.Skin.Keys[Playfield.Map.Mode];
-            
+
             if (skin.ColorObjectsBySnapDistance)
                 return IsLongNote ? skin.NoteHoldHitObjects[Index][SnapIndex] : skin.NoteHitObjects[Index][SnapIndex];
-            
+
             return IsLongNote ? skin.NoteHoldHitObjects[Index][0] : skin.NoteHitObjects[Index][0];
         }
-        
+
         /// <summary>
         ///     Calculates the position from the offset.
         /// </summary>
@@ -220,23 +219,23 @@ namespace Quaver.States.Gameplay.GameModes.Keys
             var speed = GameModeRulesetKeys.IsDownscroll ? -KeysHitObjectManager.ScrollSpeed : KeysHitObjectManager.ScrollSpeed;
             return (float) (manager.HitPositionOffset + (offset - (Ruleset.Screen.Timing.CurrentTime + ConfigManager.GlobalAudioOffset.Value)) * speed) - HitObjectSprite.SizeY;
         }
-        
+
         /// <summary>
         ///     Updates the HitObject sprite positions
         /// </summary>
         internal void UpdateSpritePositions()
-        {           
+        {
             // Only update note if it's inside the window
-            if ((!GameModeRulesetKeys.IsDownscroll || PositionY + HitObjectSprite.SizeY <= 0) && (GameModeRulesetKeys.IsDownscroll || !(PositionY < GameBase.WindowRectangle.Height))) 
+            if ((!GameModeRulesetKeys.IsDownscroll || PositionY + HitObjectSprite.SizeY <= 0) && (GameModeRulesetKeys.IsDownscroll || !(PositionY < GameBase.WindowRectangle.Height)))
                 return;
-            
+
             // Update HitBody
             HitObjectSprite.PosY = PositionY;
 ;
             // Disregard the rest if it isn't a long note.
-            if (!IsLongNote) 
+            if (!IsLongNote)
                 return;
-            
+
             // It will ignore the rest of the code after this statement if long note size is equal/less than 0
             if (CurrentLongNoteSize <= 0)
             {
@@ -267,24 +266,24 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         {
             if (IsLongNote)
             {
-                LongNoteBodySprite.Tint = QuaverColors.DeadNote;
-                LongNoteEndSprite.Tint = QuaverColors.DeadNote;
+                LongNoteBodySprite.Tint = Colors.DeadLongNote;
+                LongNoteEndSprite.Tint = Colors.DeadLongNote;
             }
 
-            HitObjectSprite.Tint = QuaverColors.DeadNote;
+            HitObjectSprite.Tint = Colors.DeadLongNote;
         }
 
         /// <summary>
-        ///     Fades out the object. Usually used for failure. 
+        ///     Fades out the object. Usually used for failure.
         /// </summary>
         /// <param name="dt"></param>
         internal void FadeOut(double dt)
         {
             HitObjectSprite.FadeOut(dt, 240);
 
-            if (!IsLongNote) 
+            if (!IsLongNote)
                 return;
-            
+
             LongNoteBodySprite.FadeOut(dt, 240);
             LongNoteEndSprite.FadeOut(dt, 240);
         }

@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
-using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
@@ -15,12 +14,12 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// <summary>
         /// </summary>
         public EditorScreen Screen { get; }
-         
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public GameMode Mode { get; }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -56,7 +55,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         /// </summary>
         internal float Width => ColumnSize * Screen.Map.GetKeyCount();
 
-#region STAGE_SPRITES    
+#region STAGE_SPRITES
         /// <summary>
         ///     The background sprite of the stage
         /// </summary>
@@ -89,12 +88,12 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
 #endregion
 
         /// <summary>
-        ///     The snap lines 
+        ///     The snap lines
         /// </summary>
         private EditorSnapLinesKeys SnapLines { get; set; }
-        
+
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="screen"></param>
         /// <param name="mode"></param>
@@ -103,16 +102,16 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
             Screen = screen;
             Mode = mode;
         }
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="state"></param>
         public void Initialize(IGameState state)
         {
             // Create parent container.
             Container = new Container();
-            
+
             // Create container for background elements
             BackgroundContainer = new Container
             {
@@ -120,14 +119,14 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
                 Size = new UDim2D(Width, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.TopCenter
             };
-            
+
             ScrollContainer = new EditorScrollContainerKeys(this);
             CreateStage();
             InitializeSnapLines();
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void UnloadContent()
         {
@@ -135,7 +134,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dt"></param>
         public void Update(double dt)
@@ -144,7 +143,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void Draw()
         {
@@ -160,7 +159,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
         {
             var columnRatio = Width / BackgroundContainer.SizeY;
             var bgMaskSize = Math.Max(GameBase.WindowRectangle.Height * columnRatio, GameBase.WindowRectangle.Height);
-            
+
             StageBackground = new Sprite()
             {
                 Image = GameBase.QuaverUserInterface.BlankBox,
@@ -170,7 +169,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
                 Alignment = Alignment.MidCenter,
                 Parent = BackgroundContainer
             };
-            
+
             StageLeft = new Sprite()
             {
                 Parent = BackgroundContainer,
@@ -179,7 +178,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
                 Size = new UDim2D(StageBorderWidth, StageBackground.SizeY),
                 Alpha = 0.5f
             };
-            
+
             StageRight = new Sprite()
             {
                 Parent = BackgroundContainer,
@@ -199,7 +198,7 @@ namespace Quaver.States.Edit.UI.Modes.Keys.Playfield
                 PosY = HitPositionY
             };
         }
-        
+
         /// <summary>
         ///     Initialzies the snap lines container.
         /// </summary>

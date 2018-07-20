@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
 
-namespace Quaver.Graphics.UserInterface
+namespace Quaver.Graphics.UI
 {
     /// <inheritdoc />
     /// <summary>

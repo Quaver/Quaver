@@ -58,9 +58,11 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Audio\SeekDirection.cs" />
+    <Compile Include="Audio\SFX.cs" />
     <Compile Include="Config\BindedInt.cs" />
     <Compile Include="Config\BindedValue.cs" />
     <Compile Include="Discord\DiscordManager.cs" />
@@ -73,6 +75,10 @@
     <Compile Include="Graphics\Buttons\Selection\Slider.cs" />
     <Compile Include="Graphics\DrawRectangle.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarActions.cs" />
+    <Compile Include="Graphics\Buttons\ButtonManager.cs" />
+    <Compile Include="Graphics\Graphing\Graph.cs" />
+    <Compile Include="Graphics\Overlays\BottomBar\BottomBar.cs" />
+    <Compile Include="Graphics\Overlays\BottomBar\LogoButton.cs" />
     <Compile Include="Graphics\Overlays\Navbar\Nav.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarAlignment.cs" />
     <Compile Include="Graphics\Overlays\Navbar\NavbarButton.cs" />
@@ -82,13 +88,23 @@
     <Compile Include="Graphics\Overlays\Options\OptionsOverlay.cs" />
     <Compile Include="Graphics\Overlays\Options\OptionsSection.cs" />
     <Compile Include="Graphics\Overlays\Options\OptionsType.cs" />
+    <Compile Include="Graphics\Overlays\Toolbar\Toolbar.cs" />
+    <Compile Include="Graphics\Overlays\Toolbar\ToolbarItem.cs" />
     <Compile Include="Graphics\Overlays\Volume\VolumeController.cs" />
+    <Compile Include="Graphics\Colors.cs" />
     <Compile Include="Graphics\Sprites\AnimatableSprite.cs" />
     <Compile Include="Graphics\UDim.cs" />
     <Compile Include="Graphics\UDim2D.cs" />
-    <Compile Include="Graphics\UserInterface\NumberDisplay.cs" />
-    <Compile Include="Graphics\UserInterface\ProgressBar.cs" />
-    <Compile Include="Graphics\UserInterface\QuaverFpsCounter.cs" />
+    <Compile Include="Graphics\UI\Background.cs" />
+    <Compile Include="Graphics\UI\Notifications\Notification.cs" />
+    <Compile Include="Graphics\UI\Notifications\NotificationManager.cs" />
+    <Compile Include="Graphics\UI\Notifications\NotificationLevel.cs" />
+    <Compile Include="Graphics\UI\NumberDisplay.cs" />
+    <Compile Include="Graphics\UI\Online\MenuStats.cs" />
+    <Compile Include="Graphics\UI\ProgressBar.cs" />
+    <Compile Include="Graphics\UI\QuaverFpsCounter.cs" />
+    <Compile Include="Graphics\UI\Online\FriendsList.cs" />
+    <Compile Include="Graphics\UI\Online\Playercard.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\GraphicsHelper.cs" />
     <Compile Include="Helpers\GzipHelper.cs" />
@@ -103,6 +119,7 @@
     <Compile Include="Helpers\XnaKeyHelper.cs" />
     <Compile Include="Main\CommonTaskScheduler.cs" />
     <Compile Include="Main\FontAwesome.cs" />
+    <Compile Include="Main\Titles.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModAutoplay.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModNoPause.cs" />
     <Compile Include="Program.cs" />
@@ -157,8 +174,23 @@
     <Compile Include="States\Gameplay\UI\Components\SongInformation.cs" />
     <Compile Include="States\Gameplay\UI\Components\SongTimeProgressBar.cs" />
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />
+    <Compile Include="States\Menu\NavigationButton.cs" />
+    <Compile Include="States\Menu\NavigationButtonContainer.cs" />
+    <Compile Include="States\Results\Input\ResultsInputManager.cs" />
     <Compile Include="States\Results\ResultsScreen.cs" />
     <Compile Include="States\Results\ResultsScreenType.cs" />
+    <Compile Include="States\Results\UI\Breakdown\JudgementBreakdown.cs" />
+    <Compile Include="States\Results\UI\Buttons\Direction.cs" />
+    <Compile Include="States\Results\UI\Buttons\ResultsButtonContainer.cs" />
+    <Compile Include="States\Results\UI\Statistics\HealthGraph.cs" />
+    <Compile Include="States\Results\UI\Statistics\HitOffsetGraph.cs" />
+    <Compile Include="States\Results\UI\Statistics\ResultsScoreStatistics.cs" />
+    <Compile Include="States\Results\UI\Statistics\StatisticContainer.cs" />
+    <Compile Include="States\Results\UI\MapInformation.cs" />
+    <Compile Include="States\Results\UI\ResultsInterface.cs" />
+    <Compile Include="States\Results\UI\ScoreResults\ScoreResultsTable.cs" />
+    <Compile Include="States\Results\UI\ScoreResults\ScoreResultsInfoItem.cs" />
+    <Compile Include="States\Results\UI\HeaderedContainer.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="Graphics\Buttons\MapDifficultySelectButton.cs" />
     <Compile Include="Graphics\Buttons\MapsetSelectButton.cs" />
@@ -175,28 +207,26 @@
     <Compile Include="Graphics\Buttons\TextButton.cs" />
     <Compile Include="Graphics\Buttons\BasicButton.cs" />
     <Compile Include="Graphics\Particles\Particle.cs" />
-    <Compile Include="Graphics\UserInterface\BarDisplay.cs" />
+    <Compile Include="Graphics\UI\BarDisplay.cs" />
     <Compile Include="Graphics\Sprites\BakeableSprite.cs" />
-    <Compile Include="Main\QuaverFonts.cs" />
+    <Compile Include="Main\Fonts.cs" />
     <Compile Include="Graphics\Text\SpriteText.cs" />
     <Compile Include="Graphics\Text\TextBoxStyle.cs" />
     <Compile Include="Main\QuaverUserInterface.cs" />
-    <Compile Include="Graphics\UserInterface\BackgroundManager.cs" />
-    <Compile Include="Input\ManiaKeyEventArgs.cs" />
+    <Compile Include="Graphics\UI\BackgroundManager.cs" />
     <Compile Include="Input\SongSelectInputManager.cs" />
-    <Compile Include="Input\StringInputEventArgs.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModChill.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModSpeed.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModStrict.cs" />
-    <Compile Include="States\Menu\MainMenuState.cs" />
+    <Compile Include="States\Menu\MainMenuScreen.cs" />
     <Compile Include="States\IGameState.cs" />
     <Compile Include="States\Loading\Map\MapLoadingState.cs" />
     <Compile Include="Graphics\Buttons\Button.cs" />
     <Compile Include="Input\GlobalInputManager.cs" />
     <Compile Include="Input\IInputManager.cs" />
-    <Compile Include="Graphics\UserInterface\Cursor.cs" />
+    <Compile Include="Graphics\UI\Cursor.cs" />
     <Compile Include="Main\GameBase.cs" />
     <Compile Include="Database\Maps\Map.cs" />
     <Compile Include="Database\Maps\MapsetHelper.cs" />
@@ -213,16 +243,17 @@
     <Compile Include="Modifiers\ModManager.cs" />
     <Compile Include="Modifiers\ModType.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModNoSliderVelocities.cs" />
-    <Compile Include="Graphics\Colors\QuaverColors.cs" />
     <Compile Include="Graphics\Sprites\Sprite.cs" />
     <Compile Include="Graphics\Base\Drawable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Database\Scores\LocalScore.cs" />
     <Compile Include="States\State.cs" />
     <Compile Include="States\Tests\AnimatableSpriteTestScreen.cs" />
+    <Compile Include="States\Tests\DebugScreen.cs" />
     <Compile Include="States\Tests\DropdownTestState.cs" />
     <Compile Include="States\Tests\CheckboxTestState.cs" />
     <Compile Include="States\Tests\NavbarTestState.cs" />
+    <Compile Include="States\Tests\NotificationTestScreen.cs" />
     <Compile Include="States\Tests\SemiTransparentTestScreen.cs" />
     <Compile Include="States\Tests\SliderTestState.cs" />
     <Compile Include="StepMania\Etterna.cs" />
@@ -285,6 +316,8 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Windows.Forms.DataVisualization.Design" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -356,6 +389,10 @@
     <ProjectReference Include="..\Quaver.Resources\Quaver.Resources\Quaver.Resources.csproj">
       <Project>{511cd203-9c5f-4dab-9556-437a00796cbb}</Project>
       <Name>Quaver.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Quaver.Shaders\Quaver.Shaders.csproj">
+      <Project>{07b693c1-b9bc-449e-8639-926118c9b088}</Project>
+      <Name>Quaver.Shaders</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

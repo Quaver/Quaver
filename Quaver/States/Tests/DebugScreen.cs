@@ -1,36 +1,28 @@
-﻿using System;
-using System.Drawing.Drawing2D;
-using System.IO;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Ionic.Zip;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Config;
 using Quaver.Discord;
-using Quaver.GameState;
+using Quaver.Graphics;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Overlays.Navbar;
-using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UserInterface;
-using Quaver.Helpers;
+using Quaver.Graphics.Overlays.BottomBar;
+using Quaver.Graphics.Overlays.Toolbar;
+using Quaver.Graphics.UI;
+using Quaver.Graphics.UI.Notifications;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
-using Quaver.States.Options;
+using Quaver.States.Menu;
 using Quaver.States.Select;
-using Quaver.States.Tests;
 
-namespace Quaver.States.Menu
+namespace Quaver.States.Tests
 {
-    internal class MainMenuState : IGameState
+    internal class DebugScreen : IGameState
     {
         /// <inheritdoc />
         /// <summary>
         ///     State
         /// </summary>
-        public State CurrentState { get; set; } = State.Menu;
+        public State CurrentState { get; set; } = State.Test;
 
         /// <inheritdoc />
         /// <summary>
@@ -43,9 +35,23 @@ namespace Quaver.States.Menu
         /// </summary>
         private Container Container { get; set; }
 
-        /// <inheritdoc />
         /// <summary>
-        ///     Initialize
+        ///     The main menu background.
+        /// </summary>
+        private Background Background { get; set; }
+
+        /// <summary>
+        ///     The toolbar for this screen.
+        /// </summary>
+        private Toolbar Toolbar { get; set; }
+
+        /// <summary>
+        ///     The bottom bar for this screen.
+        /// </summary>
+        private BottomBar BottomBar { get; set; }
+
+        /// <inheritdoc />
+        /// <summary>  
         /// </summary>
         public void Initialize()
         {
@@ -63,7 +69,7 @@ namespace Quaver.States.Menu
 
             //Initialize Menu Screen
             Container = new Container();
-            CreateUI();
+            CreateInterface();
 
             UpdateReady = true;
         }
@@ -81,11 +87,10 @@ namespace Quaver.States.Menu
         /// <summary>
         ///     Update
         /// </summary>
-        /// <param name="gameTime"></param>
         public void Update(double dt)
         {
+            GameBase.Navbar.PerformHideAnimation(dt);
             Container.Update(dt);
-            GameBase.Navbar.PerformShowAnimation(dt);
         }
         
         /// <inheritdoc />
@@ -94,7 +99,7 @@ namespace Quaver.States.Menu
         /// </summary>
         public void Draw()
         {
-            GameBase.GraphicsDevice.Clear(Color.DarkSlateBlue);
+            GameBase.GraphicsDevice.Clear(Color.Black);
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GameBase.GraphicsDevice.RasterizerState);
             
             Container.Draw();
@@ -105,8 +110,24 @@ namespace Quaver.States.Menu
         /// <summary>
         ///     Initializes the UI for this state
         /// </summary>
-        private void CreateUI()
+        private void CreateInterface()
         {
+            Background = new Background(GameBase.QuaverUserInterface.MenuBackground, 30) { Parent = Container };
+            
+            Toolbar = new Toolbar(new List<ToolbarItem>
+                {
+                    new ToolbarItem("Home", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen()), true),
+                    new ToolbarItem("Notifications", () => GameBase.GameStateManager.ChangeState(new NotificationTestScreen())),
+                },
+                new List<ToolbarItem>
+                {
+                    new ToolbarItem(FontAwesome.PowerOff, QuaverGame.Quit),
+                    new ToolbarItem(FontAwesome.Cog, () => {}), 
+                }
+            ) { Parent = Container };
+
+            BottomBar = new BottomBar { Parent = Container };
+               
         }
     }
 }

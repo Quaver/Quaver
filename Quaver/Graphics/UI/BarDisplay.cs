@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Sprites;
 using Quaver.Main;
 
-namespace Quaver.Graphics.UserInterface
+namespace Quaver.Graphics.UI
 {
     internal class BarDisplay : Container
     {

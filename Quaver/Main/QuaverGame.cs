@@ -11,14 +11,16 @@ using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
-using Quaver.Graphics.UserInterface;
 using Quaver.Logging;
 using Quaver.Skinning;
 using Quaver.States.Menu;
 using Quaver.Resources;
 using System.IO;
 using System.Threading.Tasks;
+using Quaver.Audio;
 using Quaver.Database.Scores;
+using Quaver.Graphics.UI;
+using Quaver.Graphics.UI.Notifications;
 
 namespace Quaver.Main
 {
@@ -33,7 +35,7 @@ namespace Quaver.Main
         public static QuaverGame Game;
 
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         public QuaverGame()
         {
@@ -43,19 +45,19 @@ namespace Quaver.Main
             // Set the global graphics device manager & set Window width & height.
             GameBase.GraphicsManager = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = Config.ConfigManager.WindowWidth.Value,
-                PreferredBackBufferHeight = Config.ConfigManager.WindowHeight.Value,
+                PreferredBackBufferWidth = ConfigManager.WindowWidth.Value,
+                PreferredBackBufferHeight = ConfigManager.WindowHeight.Value,
                 IsFullScreen = ConfigManager.WindowFullScreen.Value,
-                SynchronizeWithVerticalRetrace = false // Turns off vsync
+                SynchronizeWithVerticalRetrace = false,
+                GraphicsProfile = GraphicsProfile.HiDef,
+                PreferMultiSampling = true
             };
-            
-            GameBase.GraphicsManager.GraphicsProfile = GraphicsProfile.HiDef;
-            GameBase.GraphicsManager.PreferMultiSampling = true;
-         
+
+
             // TODO: Make thie configurable.
             TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / 240f);
             IsFixedTimeStep = true;
-           
+
             // Use Content in Resources folder (Don't touch this please)
             var resxContent = new ResourceContentManager(Services, QuaverResources.ResourceManager);
             Content = resxContent;
@@ -76,7 +78,7 @@ namespace Quaver.Main
         protected override void Initialize()
         {
             DiscordManager.Initialize();
-            
+
             // TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -96,25 +98,31 @@ namespace Quaver.Main
             GameBase.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
             GameBase.GraphicsDevice.RasterizerState = new RasterizerState {MultiSampleAntiAlias = true};
             GameBase.GraphicsManager.ApplyChanges();
-                       
+
             //Create new GameStateManager Instance
             GameBase.Content = Content;
 
             // Load QuaverUserInterface .xnb elements
             GameBase.QuaverUserInterface.LoadElementsAsContent();
-            
+
             // Load all FontAwesome icons
             FontAwesome.Load();
-            
-            // Load all fonts
-            QuaverFonts.Load();
 
-            // Load the Game Skin 
+            // Load all fonts
+            Fonts.Load();
+
+            // Load all titles
+            Titles.Load();
+
+            // Load all non-skinnable sound effects
+            SFX.Load();
+
+            // Load the Game Skin
             GameBase.Skin = new SkinStore();
-            
+
             // Load cursor after skin.
             GameBase.Cursor = new Cursor();
-                      
+
             // Initialze the logger
             Logger.Initialize();
 
@@ -127,15 +135,15 @@ namespace Quaver.Main
             // Set up volume controller
             GameBase.VolumeController = new VolumeController();
             GameBase.VolumeController.Initialize(null);
-            
+
             // Set up the navbar
             GameBase.Navbar = Nav.CreateGlobalNavbar();
-            
+
             GameBase.Navbar.Initialize(null);
-            
+
             // Change to the loading screen state, where we detect if the song
             // is actually able to be loaded.
-            GameBase.GameStateManager.ChangeState(new MainMenuState());             
+            GameBase.GameStateManager.ChangeState(new MainMenuScreen());
         }
 
         /// <summary>
@@ -158,11 +166,13 @@ namespace Quaver.Main
         /// <param name="gameTime">Provides a snapshot of delta time values.</param>
         protected override void Update(GameTime gameTime)
         {
+            GameBase.Clock += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Needs to be called periodically to dequeue messages according to the lib.
             DiscordManager.Client.Invoke();
-            
+
             // Check Global Input
             GameBase.GlobalInputManager.CheckInput();
 
@@ -187,17 +197,20 @@ namespace Quaver.Main
 
             // Update volume controller
             GameBase.VolumeController.Update(dt);
-            
+
             // Update Navbar
             GameBase.Navbar.Update(dt);
-            
+
             // Update audio time
             GameBase.AudioEngine.Update(dt);
-            
+
+            // Update all notifications.
+            NotificationManager.Update(dt);
+
             // Run scheduled background tasks
             if (GameBase.GameTime.ElapsedMilliseconds - CommonTaskScheduler.LastRunTime >= 5000)
                 CommonTaskScheduler.Run();
-            
+
             base.Update(gameTime);
         }
 
@@ -207,10 +220,13 @@ namespace Quaver.Main
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            double dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Clear Background so it doesnt render everything from previous frame
             GameBase.GraphicsDevice.Clear(Color.Black);
+
+            // Reset the total amount of objects drawn.
+            Drawable.TotalObjectsDrawn = 0;
 
             // Draw from Game State Manager
             GameBase.GameStateManager.Draw();
@@ -219,12 +235,15 @@ namespace Quaver.Main
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GraphicsDevice.RasterizerState);
             GameBase.VolumeController.Draw();
             GameBase.Navbar.Draw();
-            GameBase.Cursor.Draw();
+
             Logger.Draw(dt);
-     
+
             if (ConfigManager.FpsCounter.Value)
                 QuaverFpsCounter.Draw();
 
+            NotificationManager.Draw();
+
+            GameBase.Cursor.Draw();
             GameBase.SpriteBatch.End();
 
             // Draw Base
@@ -241,7 +260,7 @@ namespace Quaver.Main
         }
 
         /// <summary>
-        ///     Unloads all third-party libraries such as BASS, Discord RPC, and Steam    
+        ///     Unloads all third-party libraries such as BASS, Discord RPC, and Steam
         /// </summary>
         internal static void UnloadLibraries()
         {
@@ -332,21 +351,12 @@ namespace Quaver.Main
             // Create now playing folder
             Directory.CreateDirectory(ConfigManager.DataDirectory + "/temp/Now Playing/");
 
-            // Set the build version
-            GameBase.BuildVersion = MapsetHelper.GetMd5Checksum(ConfigManager.GameDirectory + "/" + "Quaver.exe");
+            // Create the local scores database if it doesn't already exist
+            LocalScoreCache.CreateScoresDatabase();
 
-            // After initializing the configuration, we want to sync the map database, and load the dictionary of mapsets.
-            var loadGame = Task.Run(async () =>
-            {
-                await MapCache.LoadAndSetMapsets();
-
-                // Create the local scores database if it doesn't already exist
-                await LocalScoreCache.CreateScoresDatabase();
-
-                // Force garbage collection
-                GC.Collect();
-            });
-            Task.WaitAll(loadGame);
+            // Load all mapsets.
+            MapCache.LoadAndSetMapsets();
+            GC.Collect();
         }
     }
 }

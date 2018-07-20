@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Overlays.Navbar;
+using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -11,7 +14,7 @@ namespace Quaver.Graphics.Buttons
     /// <summary>
     /// This class will be inherited from every button class.
     /// </summary>
-    internal abstract class Button : Sprites.Sprite
+    internal abstract class Button : Sprite
     {
         /// <summary>
         ///     Event that fires when the button is clicked.
@@ -31,8 +34,18 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     Determines if the button is currently hovered over.
         /// </summary>
-        internal bool IsHovered { get; set; }
-        
+        internal bool IsTrulyHovered { get; set; }
+
+        /// <summary>
+        ///     If the button is currently hovered over without any layer checks.
+        /// </summary>
+        private bool IsHoveredWithoutLayerCheck { get; set; }
+
+        /// <summary>
+        ///     If the button is actually clickable.
+        /// </summary>
+        internal bool IsClickable { get; set; } = true;
+
         /// <summary>
         ///     The mouse state of the previous frame
         /// </summary>
@@ -46,13 +59,15 @@ namespace Quaver.Graphics.Buttons
         /// <summary>
         ///     Ctor - Optionally pass in an action.
         /// </summary>
-        /// <param name="action"></param>
         internal Button(EventHandler clickAction = null, EventHandler holdAction = null)
         {
             Clicked += clickAction;
             Held += holdAction;
+
+            ButtonManager.Add(this);
         }
-        
+
+        /// <inheritdoc />
         /// <summary>
         ///     This method will be used for button logic and animation
         /// </summary>
@@ -60,35 +75,48 @@ namespace Quaver.Graphics.Buttons
         {
             PreviousMouseState = CurrentMouseState;
             CurrentMouseState = Mouse.GetState();
-            
+
             if (GetClickArea() && QuaverGame.Game.IsActive && Visible)
             {
-                IsHovered = true;
-                MouseOver();
-                
-                // If the user is holding onto the button
-                if (CurrentMouseState.LeftButton == ButtonState.Pressed)
-                    OnHeld();
-                
-                // If the user actually clicks the button, fire off the click event.
-                if (CurrentMouseState.LeftButton == ButtonState.Released && PreviousMouseState.LeftButton == ButtonState.Pressed)
-                    OnClicked();                
+                IsHoveredWithoutLayerCheck = true;
+
+                // Check if this button is truly being hovered over by its draw order.
+                if (ButtonManager.Buttons.FindAll(x => x.IsHoveredWithoutLayerCheck).OrderByDescending(x => x.DrawOrder).First() != this)
+                {
+                    IsTrulyHovered = false;
+                    MouseOut();
+                }
+                else
+                {
+                    IsTrulyHovered = true;
+                    MouseOver();
+
+                    // If the user is holding onto the button
+                    if (CurrentMouseState.LeftButton == ButtonState.Pressed)
+                        OnHeld();
+
+                    // If the user actually clicks the button, fire off the click event.
+                    if (CurrentMouseState.LeftButton == ButtonState.Released && PreviousMouseState.LeftButton == ButtonState.Pressed)
+                        OnClicked();
+                }
             }
             else
             {
-                if (IsHovered)
+                IsHoveredWithoutLayerCheck = false;
+
+                if (IsTrulyHovered)
                 {
-                    IsHovered = false;
+                    IsTrulyHovered = false;
                     MouseOut();
                 }
-         
+
                 // If the user clicks the button outside of button area.
                 if (CurrentMouseState.LeftButton == ButtonState.Released && PreviousMouseState.LeftButton == ButtonState.Pressed)
                     OnClickedOutside();
             }
 
             base.Update(dt);
-            
+
             // Call custom update method
             OnUpdate?.Invoke(dt);
         }
@@ -100,12 +128,15 @@ namespace Quaver.Graphics.Buttons
         {
             return GraphicsHelper.RectangleContains(GlobalRectangle, GraphicsHelper.PointToVector2(GameBase.MouseState.Position));
         }
-        
+
         /// <summary>
         ///     When the user actually clicks the button.
         /// </summary>
         protected virtual void OnClicked()
         {
+            if (!IsClickable)
+                return;
+
             Clicked?.Invoke(this, new EventArgs());
         }
 
@@ -116,7 +147,7 @@ namespace Quaver.Graphics.Buttons
         {
             Held?.Invoke(this, new EventArgs());
         }
-        
+
         /// <summary>
         ///     This method is called when the player has clicked outside the button
         ///     Note: No default implementation. Not forced.
@@ -132,7 +163,7 @@ namespace Quaver.Graphics.Buttons
         ///     When the mouse cursor enters the area of the button
         /// </summary>
         protected abstract void MouseOver();
-        
+
         /// <inheritdoc />
         /// <summary>
         ///     Destroys the button. Removes all event handlers.
@@ -140,6 +171,10 @@ namespace Quaver.Graphics.Buttons
         internal override void Destroy()
         {
             Clicked = null;
+            OnUpdate = null;
+            Held = null;
+            ButtonManager.Remove(this);
+
             base.Destroy();
         }
     }

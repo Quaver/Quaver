@@ -17,7 +17,6 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Database.Maps;
-using Quaver.GameState;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.States;
@@ -31,7 +30,7 @@ namespace Quaver.Input
         ///     The current state for the specifc input manager
         ///     Global State, so this isn't necessary.
         /// </summary>
-        public State CurrentState { get; set; } 
+        public State CurrentState { get; set; }
 
         /// <summary>
         ///     Keeps track of if the user is currently taking a screenshot.
@@ -112,9 +111,9 @@ namespace Quaver.Input
                 GameBase.ImportQueueReady = false;
 
                 // Asynchronously load and set the GameBase mapsets and visible ones.
-                Task.Run(async () =>
+                Task.Run(() =>
                 {
-                    await MapCache.LoadAndSetMapsets();
+                    MapCache.LoadAndSetMapsets();
                     GameBase.VisibleMapsets = GameBase.Mapsets;
                 });
             }

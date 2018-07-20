@@ -14,9 +14,9 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Scores;
 using Quaver.Discord;
-using Quaver.GameState;
 using Quaver.Graphics.Sprites;
-using Quaver.Graphics.UserInterface;
+using Quaver.Graphics.UI;
+using Quaver.Graphics.UI.Notifications;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
@@ -34,7 +34,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         /// </summary>
         public State CurrentState { get; set; } = State.Gameplay;
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -74,7 +74,7 @@ namespace Quaver.States.Gameplay
         ///     The current parsed .qua file that is being played.
         /// </summary>
         internal Qua Map { get; }
-        
+
         /// <summary>
         ///     The hash of the map that was played.
         /// </summary>
@@ -104,16 +104,16 @@ namespace Quaver.States.Gameplay
             get
             {
                 // By default if there aren't any objects left we aren't on a break.
-                if (Ruleset.HitObjectManager.ObjectPool.Count <= 0) 
+                if (Ruleset.HitObjectManager.ObjectPool.Count <= 0)
                     return false;
 
                 // Grab the next object in the object pool.
                 var nextObject = Ruleset.HitObjectManager.ObjectPool.First();
-                
+
                 // If the player is currently not on a break, then we want to detect if it's on a break
                 // by checking if the next object is 10 seconds away.
                 if (nextObject.TrueStartTime - Timing.CurrentTime >= GameplayTiming.StartDelay + 5000)
-                    _onBreak = true;                 
+                    _onBreak = true;
                 // If the user is already on a break, then we need to turn the break off if the next object is at the start delay.
                 else if (_onBreak && nextObject.TrueStartTime - Timing.CurrentTime <= GameplayTiming.StartDelay)
                     _onBreak = false;
@@ -177,7 +177,7 @@ namespace Quaver.States.Gameplay
         ///     The replay that is currently loaded that the player is watching.
         /// </summary>
         internal Replay LoadedReplay { get; }
-        
+
         /// <summary>
         ///     If we are currently viewing a replay.
         /// </summary>
@@ -189,31 +189,31 @@ namespace Quaver.States.Gameplay
         internal ReplayCapturer ReplayCapturer { get; }
 
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         internal GameplayScreen(Qua map, string md5, List<LocalScore> scores, Replay replay = null)
         {
             LocalScores = scores;
             Map = map;
             MapHash = md5;
-            LoadedReplay = replay;       
+            LoadedReplay = replay;
             Timing = new GameplayTiming(this);
             UI = new GameplayInterface(this);
-                      
+
             // Handle autoplay replays.
             if (ModManager.IsActivated(ModIdentifier.Autoplay))
                 LoadedReplay = ReplayHelper.GeneratePerfectReplay(map, MapHash);
-            
+
             // Determine if we're in replay mode.
             if (LoadedReplay != null)
             {
                 InReplayMode = true;
                 AddModsFromReplay();
             }
-                          
-            // Create the current replay that will be captured. 
-            ReplayCapturer = new ReplayCapturer(this);          
-            
+
+            // Create the current replay that will be captured.
+            ReplayCapturer = new ReplayCapturer(this);
+
             // Set the game mode component.
             switch (map.Mode)
             {
@@ -225,21 +225,21 @@ namespace Quaver.States.Gameplay
                     throw new InvalidEnumArgumentException("Game mode must be a valid!");
             }
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public void Initialize()
-        {                       
+        {
             Timing.Initialize(this);
             UI.Initialize(this);
-            
+
             // Change discord rich presence.
             SetRichPresence();
-            
+
             // Initialize the game mode.
             Ruleset.Initialize();
-               
+
             UpdateReady = true;
         }
 
@@ -262,7 +262,7 @@ namespace Quaver.States.Gameplay
         {
             UI.Update(dt);
             Timing.Update(dt);
-            
+
             if (!Failed && !IsPlayComplete)
             {
                 HandleResuming();
@@ -282,21 +282,21 @@ namespace Quaver.States.Gameplay
         public void Draw()
         {
             GameBase.GraphicsDevice.Clear(Color.Black);
-            
+
             // Draw BG Manager
-            GameBase.SpriteBatch.Begin();            
+            GameBase.SpriteBatch.Begin();
             BackgroundManager.Draw();
             GameBase.SpriteBatch.End();
-            
-            // Draw the ruleset which gets its own spritebatch.       
+
+            // Draw the ruleset which gets its own spritebatch.
             Ruleset.Draw();
-            
+
             GameBase.SpriteBatch.Begin();
-            UI.Draw();            
+            UI.Draw();
             GameBase.SpriteBatch.End();
         }
-        
-#region INPUT               
+
+#region INPUT
         /// <summary>
         ///     Handles the input of the game + individual game modes.
         /// </summary>
@@ -309,7 +309,7 @@ namespace Quaver.States.Gameplay
             // Show/hide scoreboard.
             if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyScoreboardVisible.Value))
                 ConfigManager.ScoreboardVisible.Value = !ConfigManager.ScoreboardVisible.Value;
-            
+
             if (IsPaused || Failed)
                 return;
 
@@ -317,11 +317,11 @@ namespace Quaver.States.Gameplay
             {
                 // Handle the restarting of the map.
                 HandlePlayRestart(dt);
-            
+
                 if (InputHelper.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
-                    SkipToNextObject();              
+                    SkipToNextObject();
             }
-            
+
             // Handle input per game mode.
             Ruleset.HandleInput(dt);
         }
@@ -335,7 +335,7 @@ namespace Quaver.States.Gameplay
             if (IsPlayComplete)
                 return;
 
-            if (ModManager.IsActivated(ModIdentifier.NoPause))
+            if (ModManager.IsActivated(ModIdentifier.NoPause) && !InReplayMode)
             {
                 TimesRequestedToPause++;
 
@@ -343,7 +343,7 @@ namespace Quaver.States.Gameplay
                 switch (TimesRequestedToPause)
                 {
                     case 1:
-                        Logger.LogImportant($"Press the pause button one more time to exit.", LogType.Runtime);
+                        NotificationManager.Show(NotificationLevel.Info, "Press the pause button one more time to exit");
                         break;
                     default:
                         ForceFail = true;
@@ -352,27 +352,28 @@ namespace Quaver.States.Gameplay
                 }
                 return;
             }
-            
+
             // Handle pause.
             if (!IsPaused || IsResumeInProgress)
             {
                 IsPaused = true;
                 IsResumeInProgress = false;
                 PauseCounter++;
-                                
+
                 try
                 {
                     GameBase.AudioEngine.Pause();
                 }
                 catch (AudioEngineException e) {}
 
-                DiscordManager.Presence.State = "Taking a break";
+                DiscordManager.Presence.State = "Paused";
+                DiscordManager.Presence.Timestamps = null;
                 DiscordManager.Client.SetPresence(DiscordManager.Presence);
-                
+
                 return;
             }
 
-            // Setting the resume time in this case allows us to give the user time to react 
+            // Setting the resume time in this case allows us to give the user time to react
             // with a delay before starting the audio track again.
             // When that resume time is past the specific set offset, it'll unpause the game.
             IsResumeInProgress = true;
@@ -395,12 +396,12 @@ namespace Quaver.States.Gameplay
                 // Unpause the game and reset the resume in progress.
                 IsPaused = false;
                 IsResumeInProgress = false;
-            
+
                 // Resume the game audio stream.
                 try
                 {
                     GameBase.AudioEngine.Resume();
-                } 
+                }
                 catch (AudioEngineException e) {}
             }
         }
@@ -413,7 +414,7 @@ namespace Quaver.States.Gameplay
             if (!OnBreak || IsPaused || IsResumeInProgress)
                 return;
 
-            // Get the skip time of the next object.           
+            // Get the skip time of the next object.
             var skipTime = Ruleset.HitObjectManager.ObjectPool.First().TrueStartTime - GameplayTiming.StartDelay + AudioEngine.BassDelayOffset;
 
             try
@@ -450,26 +451,26 @@ namespace Quaver.States.Gameplay
 
         /// <summary>
         ///     Restarts the game if the user is holding down the key for a specified amount of time
-        ///     
+        ///
         /// </summary>
         private void HandlePlayRestart(double dt)
         {
             if (InputHelper.IsUniqueKeyPress(ConfigManager.KeyRestartMap.Value))
                 IsRestartingPlay = true;
-            
+
             if (GameBase.KeyboardState.IsKeyDown(ConfigManager.KeyRestartMap.Value) && IsRestartingPlay)
-            {                
+            {
                 RestartKeyHoldTime += dt;
                 UI.ScreenTransitioner.FadeIn(dt, 60);
-                
-                // Restart the map if the user has held it down for 
+
+                // Restart the map if the user has held it down for
                 if (RestartKeyHoldTime >= 350)
                 {
                     GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundRetry);
-                    
+
                     if (InReplayMode)
                         GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));
-                    else        
+                    else
                         GameBase.GameStateManager.ChangeState(new GameplayScreen(Map, MapHash, LocalScores));
                 }
 
@@ -480,7 +481,7 @@ namespace Quaver.States.Gameplay
             IsRestartingPlay = false;
         }
  #endregion
-        
+
         /// <summary>
         ///     Checks if the window is currently active and pauses the game if it isn't.
         /// </summary>
@@ -488,14 +489,14 @@ namespace Quaver.States.Gameplay
         {
             if (IsPaused || InReplayMode)
                 return;
-            
+
             // Pause the game
             if (!QuaverGame.Game.IsActive && !ModManager.IsActivated(ModIdentifier.NoPause))
                 Pause();
         }
 
         /// <summary>
-        ///     Plays a combo break sound if we've 
+        ///     Plays a combo break sound if we've
         /// </summary>
         private void PlayComboBreakSound()
         {
@@ -520,7 +521,7 @@ namespace Quaver.States.Gameplay
             }
             // No need to handle this exception.
             catch (AudioEngineException e) {}
-            
+
             // Play failure sound.
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundFailure);
 
@@ -537,8 +538,8 @@ namespace Quaver.States.Gameplay
             if (InReplayMode)
                 DiscordManager.Presence.State = $"Watching {LoadedReplay.PlayerName}";
             else
-                DiscordManager.Presence.State = $"Playing {ModHelper.GetActivatedModsString(true)}";
-           
+                DiscordManager.Presence.State = $"Playing {(GameBase.CurrentMods > 0 ? "+ " + ModHelper.GetModsString(GameBase.CurrentMods) : "")}";
+
             DiscordManager.Presence.Timestamps = new Timestamps
             {
                 End = DateTime.UtcNow.AddMilliseconds((Map.Length - Timing.CurrentTime) / GameBase.AudioEngine.PlaybackRate)
@@ -553,22 +554,21 @@ namespace Quaver.States.Gameplay
         private void AddModsFromReplay()
         {
             // Add the correct mods on if we're in replay mode.
-            if (!InReplayMode) 
+            if (!InReplayMode)
                 return;
-            
+
             // Remove all the current mods that we have on.
             ModManager.RemoveAllMods();
-                
+
             // Put on the mods from the replay.);
             for (var i = 0; i <= Math.Log((int) LoadedReplay.Mods, 2); i++)
             {
                 var mod = (ModIdentifier) Math.Pow(2, i);
 
-                if (!LoadedReplay.Mods.HasFlag(mod)) 
+                if (!LoadedReplay.Mods.HasFlag(mod))
                     continue;
-                    
+
                 ModManager.AddMod(mod);
-                Logger.LogInfo($"Added {mod} modifier from the replay.", LogType.Runtime, 2.0f);
             }
         }
     }

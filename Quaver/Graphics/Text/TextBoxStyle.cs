@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quaver.Graphics.Text
 {
-    enum TextBoxStyle
+    internal enum TextBoxStyle
     {
         OverflowSingleLine,
         OverflowMultiLine,

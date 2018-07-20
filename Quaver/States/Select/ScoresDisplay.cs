@@ -78,7 +78,7 @@ namespace Quaver.States.Select
                 var username = new SpriteText()
                 {
                     Parent = display,
-                    Font = QuaverFonts.AssistantRegular16,
+                    Font = Fonts.AssistantRegular16,
                     Text = (i + 1) + ". " + scores[i].Name,
                     Alignment = Alignment.TopLeft,
                     Alpha = 1,
@@ -93,7 +93,7 @@ namespace Quaver.States.Select
                 var mods = new SpriteText()
                 {
                     Parent = display,
-                    Font = QuaverFonts.AssistantRegular16,
+                    Font = Fonts.AssistantRegular16,
                     Text = Scores[i].Mods != 0 ? "+ " + Scores[i].Mods : "",
                     Alignment = Alignment.BotLeft,
                     Alpha = 1,
@@ -110,7 +110,7 @@ namespace Quaver.States.Select
                 var score = new SpriteText()
                 {
                     Parent = display,
-                    Font = QuaverFonts.AssistantRegular16,
+                    Font = Fonts.AssistantRegular16,
                     Alignment = Alignment.TopLeft,
                     Text = scores[i].Score.ToString("N0"),
                     TextScale = 0.78f,
@@ -125,7 +125,7 @@ namespace Quaver.States.Select
                 var acc = new SpriteText()
                 {
                     Parent = display,
-                    Font = QuaverFonts.AssistantRegular16,
+                    Font = Fonts.AssistantRegular16,
                     Alignment = Alignment.BotLeft,
                     Text = StringHelper.AccuracyToString((float)scores[i].Accuracy),
                     TextScale = 0.65f,
@@ -140,7 +140,7 @@ namespace Quaver.States.Select
                 var maxCombo = new SpriteText()
                 {
                     Parent = display,
-                    Font = QuaverFonts.AssistantRegular16,
+                    Font = Fonts.AssistantRegular16,
                     Alignment = Alignment.BotRight,
                     Text = $"{scores[i].MaxCombo:N0}x",
                     TextScale = 0.78f,
@@ -155,7 +155,7 @@ namespace Quaver.States.Select
                 var ma = new SpriteText()
                 {
                     Parent = display,
-                    Font = QuaverFonts.AssistantRegular16,
+                    Font = Fonts.AssistantRegular16,
                     Alignment = Alignment.MidRight,
                     Text = $"{Scores[i].CountMarv}/{Scores[i].CountPerf}/{Scores[i].CountGreat}/{Scores[i].CountGood}/{Scores[i].CountOkay}/{Scores[i].CountMiss}",
                     TextScale = 0.72f,

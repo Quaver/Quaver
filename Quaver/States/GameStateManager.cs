@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Quaver.Logging;
-using Quaver.Main;
-
-namespace Quaver.GameState
+namespace Quaver.States
 {
     internal class GameStateManager
     {
@@ -28,7 +22,8 @@ namespace Quaver.GameState
             States.Push(newState);
 
             // Initialize the screen
-            newState.Initialize();
+            if (!newState.UpdateReady)
+                newState.Initialize();
         }
 
         /// <summary>
@@ -38,7 +33,7 @@ namespace Quaver.GameState
         {
             if (States.Count == 0)
                 return;
-       
+
             States.Peek().UnloadContent();
             States.Pop();
         }
@@ -89,5 +84,16 @@ namespace Quaver.GameState
             if (States.Peek().UpdateReady)
                 States.Peek().Draw();
         }
+
+        /// <summary>
+        ///     Asynchronously load a screen and call its initialize method.
+        ///     After doing so, the callback action will be called
+        /// </summary>
+        public static void LoadAsync(Func<IGameState> loadAction, Action callback) => Task.Run(loadAction).ContinueWith(t =>
+        {
+            t.Result.Initialize();
+            t.Result.UpdateReady = true;
+            callback();
+        });
     }
 }

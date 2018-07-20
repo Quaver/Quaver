@@ -12,7 +12,7 @@ namespace Quaver.Helpers
         internal static Keys GetKeyFromString(string keyStr)
         {
             Keys key;
-    
+
             switch (keyStr.ToUpper())
             {
                 // Letters
@@ -94,7 +94,7 @@ namespace Quaver.Helpers
                 case "M":
                     key = Keys.M;
                     return key;
-    
+
                 // TOP ROW F# KEYS ETC.
                 case "ESCAPE":
                     key = Keys.Escape;
@@ -144,7 +144,7 @@ namespace Quaver.Helpers
                 case "PAUSE":
                     key = Keys.Pause;
                     return key;
-    
+
                 // SECOND ROW NUMBERS, ETC
                 case "`":
                     key = Keys.OemTilde;
@@ -288,10 +288,10 @@ namespace Quaver.Helpers
                     key = Keys.Right;
                     return key;
             }
-    
+
             return Keys.OemQuestion; // <- RETURN QUESTION AS "NO SUCH KEY"
         }
-    
+
         /// <summary>
         ///     Gets a string from a given key.
         /// </summary>
@@ -299,8 +299,8 @@ namespace Quaver.Helpers
         /// <returns></returns>
         internal static string GetStringFromKey(Keys key)
         {
-            string keyStr = "?";
-    
+            var keyStr = "?";
+
             switch (key)
             {
                 // Letters
@@ -382,7 +382,7 @@ namespace Quaver.Helpers
                 case Keys.M:
                     keyStr = "M";
                     return keyStr;
-    
+
                 // TOP ROW F# keyStrS ETC.
                 case Keys.Escape:
                     keyStr = "Esc";
@@ -432,7 +432,7 @@ namespace Quaver.Helpers
                 case Keys.Pause:
                     keyStr = "PAUSE";
                     return keyStr;
-    
+
                 // SECOND ROW NUMBERS, ETC
                 case Keys.OemTilde:
                     keyStr = "`";
@@ -574,7 +574,7 @@ namespace Quaver.Helpers
                     return keyStr;
                 case Keys.Right:
                     keyStr = "RIGHT";
-                    return keyStr;      
+                    return keyStr;
                 case Keys.OemPeriod:
                     return ".";
                 case Keys.OemComma:

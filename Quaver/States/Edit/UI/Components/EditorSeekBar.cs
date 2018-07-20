@@ -34,7 +34,7 @@ namespace Quaver.States.Edit.UI.Components
         internal EditorSeekBar(SeekBarAxis axis, Vector2 size)
         {
             Axis = axis;
-            
+
             Size = new UDim2D(size.X, size.Y);
             Tint = Color.Black;
             Alpha = 0.75f;
@@ -42,13 +42,13 @@ namespace Quaver.States.Edit.UI.Components
             Progress = new Sprite
             {
                 Parent = this,
-                Alignment = Alignment.MidLeft       
+                Alignment = Alignment.MidLeft
             };
 
             TextProgressPercent = new SpriteText()
             {
                 TextColor = Color.White,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 Parent = Progress,
                 TextAlignment = Alignment.MidCenter,
                 TextScale = 0.85f
@@ -81,16 +81,16 @@ namespace Quaver.States.Edit.UI.Components
                     Progress.PosX = GameBase.AudioEngine.ProgressPercentage / 100 * SizeX;
                     break;
                 case SeekBarAxis.Vertical:
-                    Progress.PosY = GameBase.AudioEngine.ProgressPercentage / 100 * SizeY;           
+                    Progress.PosY = GameBase.AudioEngine.ProgressPercentage / 100 * SizeY;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
             TextProgressPercent.Text = $"{(int) GameBase.AudioEngine.ProgressPercentage}%";
             base.Update(dt);
         }
-        
+
         protected override void MouseOut()
         {
         }
@@ -99,7 +99,7 @@ namespace Quaver.States.Edit.UI.Components
         /// <summary>
         /// </summary>
         protected override void MouseOver()
-        {         
+        {
         }
 
         /// <inheritdoc />
@@ -122,7 +122,7 @@ namespace Quaver.States.Edit.UI.Components
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
             base.OnClicked();
         }
     }

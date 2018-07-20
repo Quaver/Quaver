@@ -8,7 +8,6 @@ using Quaver.Config;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Buttons.Selection;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Main;
@@ -36,7 +35,7 @@ namespace Quaver.Graphics.Overlays.Options
         ///     The container of the options section.
         /// </summary>
         internal Sprite Container { get; }
-        
+
         /// <summary>
         ///     Probably a bad name, but all of the sprites that are interactable
         ///     (Sliders, Dropdowns, Checkboxes)
@@ -47,26 +46,26 @@ namespace Quaver.Graphics.Overlays.Options
         ///     The y spacing for each options element.
         /// </summary>
         private int SpacingY => Interactables.Count * 50;
-        
+
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         internal OptionsSection(OptionsType type, OptionsOverlay overlay, string name, Texture2D icon)
         {
             Type = type;
             Name = name;
             Icon = icon;
-            
+
             Container = new Sprite()
             {
-                Parent = overlay,               
+                Parent = overlay,
                 Size = new UDim2D(650, 450),
                 Alignment = Alignment.MidCenter,
                 PosY = 100,
                 Tint = new Color(0f, 0f, 0f, 0f),
                 Visible = false
-            };     
-            
+            };
+
             Interactables = new List<Drawable>();
         }
 
@@ -76,15 +75,15 @@ namespace Quaver.Graphics.Overlays.Options
         internal void AddSliderOption(BindedInt value, string name)
         {
             AddTextField(name);
-            
+
             // Create the slider.
             var slider = new Slider(value, new Vector2(380, 3))
             {
                 Parent = Container,
                 Alignment = Alignment.TopRight,
                 PosY = SpacingY + 8,
-                Tint = QuaverColors.MainAccentInactive,
-                ProgressBall = { Tint = QuaverColors.MainAccentInactive }
+                Tint = Colors.MainAccentInactive,
+                ProgressBall = { Tint = Colors.MainAccentInactive }
             };
 
             // Make sure the slider's colors get updated accordingly.
@@ -92,21 +91,21 @@ namespace Quaver.Graphics.Overlays.Options
             {
                 if (slider.MouseInHoldSequence)
                 {
-                    slider.Tint = QuaverColors.MainAccent;
-                    slider.ProgressBall.Tint = QuaverColors.MainAccent;
+                    slider.Tint = Colors.MainAccent;
+                    slider.ProgressBall.Tint = Colors.MainAccent;
                 }
                 else
                 {
-                    slider.Tint = QuaverColors.MainAccentInactive;
-                    slider.ProgressBall.Tint = QuaverColors.MainAccentInactive;
+                    slider.Tint = Colors.MainAccentInactive;
+                    slider.ProgressBall.Tint = Colors.MainAccentInactive;
                 }
             };
-            
+
             Interactables.Add(slider);
         }
 
         /// <summary>
-        ///     Adds a checkbox option 
+        ///     Adds a checkbox option
         /// </summary>
         /// <param name="value"></param>
         /// <param name="name"></param>
@@ -121,25 +120,25 @@ namespace Quaver.Graphics.Overlays.Options
                 Parent = Container,
                 Alignment = Alignment.TopRight,
                 PosY = SpacingY,
-                Tint = QuaverColors.MainAccentInactive
+                Tint = Colors.MainAccentInactive
             };
-            
+
             checkbox.Clicked += onClick;
             Interactables.Add(checkbox);
         }
 
         /// <summary>
-        ///     Adds a dropdown option 
+        ///     Adds a dropdown option
         /// </summary>
         internal void AddDropdownOption(Dropdown dropdown, string name)
-        {         
+        {
             AddTextField(name);
 
             dropdown.Parent = Container;
             dropdown.Alignment = Alignment.TopRight;
             dropdown.PosY = SpacingY  + 8;
             dropdown.SizeX = 380;
-            
+
             Interactables.Add(dropdown);
         }
 
@@ -159,7 +158,7 @@ namespace Quaver.Graphics.Overlays.Options
                 Alignment = Alignment.TopRight,
                 PosY = SpacingY
             };
-            
+
             Interactables.Add(keybind);
         }
 
@@ -184,7 +183,7 @@ namespace Quaver.Graphics.Overlays.Options
                     PosX = (i - values.Count) * 70 + 70
                 };
             }
-            
+
             Interactables.Add(Container.Children.Last());
         }
 
@@ -202,10 +201,10 @@ namespace Quaver.Graphics.Overlays.Options
             button.PosY = SpacingY;
             button.SizeX = 200;
             button.SizeY = 30;
-            
+
             Interactables.Add(button);
         }
-        
+
         /// <summary>
         ///     Method that adds the text field to the left for each options element.
         /// </summary>
@@ -217,7 +216,7 @@ namespace Quaver.Graphics.Overlays.Options
                 TextAlignment = Alignment.TopLeft,
                 Alignment = Alignment.TopLeft,
                 Text = text,
-                Font = QuaverFonts.Medium12,
+                Font = Fonts.Medium12,
                 Parent = Container,
                 TextBoxStyle = TextBoxStyle.OverflowSingleLine,
                 PosY = SpacingY

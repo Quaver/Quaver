@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Graphics.Base;
+using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Main;
 
@@ -84,8 +85,32 @@ namespace Quaver.Graphics.Sprites
             {
                 _alpha = value;
                 _color = _tint * _alpha;
+
+                if (!SetChildrenAlpha)
+                    return;
+                
+                Children.ForEach(x =>
+                {
+                    var t = x.GetType();
+
+                    if (t == typeof(Sprite))
+                    {
+                        var sprite = (Sprite) x;
+                        sprite.Alpha = value;
+                    }
+                    else if (t == typeof(SpriteText))
+                    {
+                        var text = (SpriteText) x;
+                        text.Alpha = value;
+                    }
+                });
             } 
         }
+        
+        /// <summary>
+        ///     Dictates if we want to set the alpha of the children as well.
+        /// </summary>
+        internal bool SetChildrenAlpha { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -182,6 +207,24 @@ namespace Quaver.Graphics.Sprites
             var b = GraphicsHelper.Tween(color.B, Tint.B, Math.Min(dt / scale, 1));
             
             Tint = new Color((int)r, (int)g, (int)b);
+        }
+
+        /// <summary>
+        ///     Increases the size of the sprite and all of its children.
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="dt"></param>
+        /// <param name="by"></param>
+        internal void IncreaseSizeBy(float to, double dt, int by)
+        {
+            SizeX = GraphicsHelper.Lerp(to, SizeX, Math.Min(dt / by, 1));
+            SizeY = GraphicsHelper.Lerp(to, SizeY, Math.Min(dt / by, 1));
+            
+            Children.ForEach(x =>
+            {
+                x.SizeX = GraphicsHelper.Lerp(to, x.SizeX, Math.Min(dt / by, 1));
+                x.SizeY = GraphicsHelper.Lerp(to, x.SizeY, Math.Min(dt / by, 1));
+            });
         }
     }
 }

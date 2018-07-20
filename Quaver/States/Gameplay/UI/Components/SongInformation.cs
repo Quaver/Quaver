@@ -2,8 +2,8 @@
 using System;
 using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Maps.Processors.Scoring;
 using Quaver.Graphics;
-using Quaver.Graphics.Colors;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
@@ -52,7 +52,7 @@ namespace Quaver.States.Gameplay.UI.Components
         ///     The map's difficulty rating
         /// </summary>
         private SpriteText Rating { get; }
-        
+
         /// <summary>
         ///     The activated mods.
         /// </summary>
@@ -75,26 +75,26 @@ namespace Quaver.States.Gameplay.UI.Components
         internal SongInformation(GameplayScreen screen)
         {
             Screen = screen;
-            
+
             Size = new UDim2D(750, 150);
-            Tint = QuaverColors.MainAccentInactive;
+            Tint = Colors.MainAccentInactive;
             Alpha = 0;
 
             // Replay
             const float replayTextScale = 0.95f;
-            
+
             // Create watching text outside of replay mode because other text relies on it.
             Watching = new SpriteText
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = "Watching",
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AssistantRegular16,
                 PosY = 0,
                 TextScale = replayTextScale,
                 Alpha = 0
             };
-            
+
             // Handle positioning and create player name text if we're actually
             // watching a replay.
             if (Screen.InReplayMode)
@@ -104,10 +104,10 @@ namespace Quaver.States.Gameplay.UI.Components
                     Parent = this,
                     Alignment = Alignment.TopCenter,
                     Text = Screen.LoadedReplay.PlayerName,
-                    Font = QuaverFonts.AssistantRegular16,
+                    Font = Fonts.AssistantRegular16,
                     PosY = Watching.PosY,
                     TextScale = replayTextScale,
-                    TextColor = QuaverColors.MainAccent,
+                    TextColor = Colors.MainAccent,
                     Alpha = 0
                 };
 
@@ -119,15 +119,16 @@ namespace Quaver.States.Gameplay.UI.Components
                 Watching.PosX = watchingLength / 2.0f - center;
                 PlayerName.PosX = Watching.PosX + watchingLength + playerNameLength / 2.0f - center / 2f + 2;
             }
-        
+
             Title = new SpriteText
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
-                Text = $"{Screen.Map.Artist} - \"{Screen.Map.Title}\"",
-                Font = QuaverFonts.AssistantRegular16,
+                Text = $"{Screen.Map.Artist} - {Screen.Map.Title}",
+                Font = Fonts.AllerRegular16,
                 PosY = Watching.PosY + TextYSpacing + TextYSpacing,
-                Alpha = 0
+                Alpha = 0,
+                TextScale = 0.85f
             };
 
             Difficulty = new SpriteText()
@@ -135,9 +136,9 @@ namespace Quaver.States.Gameplay.UI.Components
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = $"[{Screen.Map.DifficultyName}]",
-                Font = QuaverFonts.AssistantRegular16,
-                PosY = Title.PosY + TextYSpacing + TextYSpacing * 0.90f,
-                TextScale = 0.90f,
+                Font = Fonts.AllerRegular16,
+                PosY = Title.PosY + TextYSpacing + TextYSpacing * 0.85f,
+                TextScale = 0.80f,
                 Alpha = 0
             };
 
@@ -146,9 +147,9 @@ namespace Quaver.States.Gameplay.UI.Components
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = $"Mapped By: \"{Screen.Map.Creator}\"",
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AllerRegular16,
                 PosY = Difficulty.PosY + TextYSpacing + TextYSpacing * 0.80f,
-                TextScale = 0.80f,
+                TextScale = 0.75f,
                 Alpha = 0
             };
 
@@ -157,21 +158,21 @@ namespace Quaver.States.Gameplay.UI.Components
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = $"Rating: {StringHelper.AccuracyToString(Screen.Map.AverageNotesPerSecond(GameBase.AudioEngine.PlaybackRate)).Replace("%", "")}",
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AllerRegular16,
                 PosY = Creator.PosY + TextYSpacing + TextYSpacing * 0.75f,
-                TextScale = 0.75f,
+                TextScale = 0.70f,
                 Alpha = 0,
                 TextColor = ColorHelper.DifficultyToColor(Screen.Map.AverageNotesPerSecond(GameBase.AudioEngine.PlaybackRate))
             };
 
             // Get a formatted string of the activated mods.
-            var modsString = "Mods: " + (GameBase.CurrentGameModifiers.Count > 0 ? $"{ModHelper.GetActivatedModsString()}" :  "None");         
+            var modsString = "Mods: " + (GameBase.CurrentGameModifiers.Count > 0 ? $"{ModHelper.GetModsString(Screen.Ruleset.ScoreProcessor.Mods)}" :  "None");
             Mods = new SpriteText()
             {
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Text = modsString,
-                Font = QuaverFonts.AssistantRegular16,
+                Font = Fonts.AllerRegular16,
                 PosY = Rating.PosY + TextYSpacing + TextYSpacing * 0.7f,
                 TextScale = 0.7f,
                 Alpha = 0
@@ -207,7 +208,7 @@ namespace Quaver.States.Gameplay.UI.Components
                 Rating.FadeOut(dt, AnimationScale);
                 Mods.FadeOut(dt, AnimationScale);
             }
-            
+
             base.Update(dt);
         }
     }

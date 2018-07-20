@@ -63,7 +63,7 @@ namespace Quaver.Logging
         /// </summary>
         internal static void Initialize()
         {
-            Font = QuaverFonts.Medium12;
+            Font = Fonts.Medium12;
         }
 
         /// <summary>

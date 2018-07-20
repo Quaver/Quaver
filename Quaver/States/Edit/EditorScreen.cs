@@ -5,8 +5,6 @@ using Quaver.API.Maps;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;
-using Quaver.GameState;
-using Quaver.Graphics.UserInterface;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
@@ -23,7 +21,7 @@ namespace Quaver.States.Edit
         /// <summary>
         /// </summary>
         public State CurrentState { get; set; } = State.Edit;
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -33,7 +31,7 @@ namespace Quaver.States.Edit
         ///     The map that is currently being edited.
         /// </summary>
         internal Qua Map { get; }
-        
+
         /// <summary>
         ///     The last saved version of the map.
         /// </summary>
@@ -62,27 +60,27 @@ namespace Quaver.States.Edit
         internal BindedInt CurrentBeatSnap { get; }
 
         /// <summary>
-        ///     
+        ///
         /// </summary>
         /// <param name="map"></param>
         public EditorScreen(Qua map)
         {
             ModManager.RemoveAllMods();
-            
+
             if (GameBase.AudioEngine.IsPlaying)
                 GameBase.AudioEngine.Pause();
-            
+
             // Grab the map and clone it so that we can save the "last saved" one.
             Map = map;
             LastSavedMap = ObjectHelper.DeepClone(Map);
-            
+
             // Initialize the UI and input manager.
             UI = new EditorInterface(this);
             InputManager = new EditorInputManager(this);
 
             // Set the current beat snap and default it to 1/4th.
             CurrentBeatSnap = new BindedInt("BeatSnap", 4, 1, 48);
-            
+
             // Select the editor's game mode based on the map's mode.
             switch (Map.Mode)
             {
@@ -94,9 +92,9 @@ namespace Quaver.States.Edit
                     throw new ArgumentOutOfRangeException();
             }
 
-            ChangeDiscordPresence();          
+            ChangeDiscordPresence();
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -139,13 +137,13 @@ namespace Quaver.States.Edit
         ///     Saves the map.
         /// </summary>
         internal void SaveMap()
-        { 
+        {
             var map = GameBase.SelectedMap;
             Map.Save($"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}");
 
             LastSavedMap = ObjectHelper.DeepClone(Map);
 
-            Task.Run(async () => await MapCache.LoadAndSetMapsets()).Wait();
+            MapCache.LoadAndSetMapsets();
             Logger.LogSuccess($"Map has been saved!", LogType.Runtime);
         }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
-using Quaver.GameState;
 
 namespace Quaver.States.Edit.UI.Modes
 {
@@ -34,7 +33,7 @@ namespace Quaver.States.Edit.UI.Modes
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="state"></param>
         public void Initialize(IGameState state)
@@ -44,7 +43,7 @@ namespace Quaver.States.Edit.UI.Modes
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void UnloadContent()
         {
@@ -52,7 +51,7 @@ namespace Quaver.States.Edit.UI.Modes
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dt"></param>
         public void Update(double dt)
@@ -61,7 +60,7 @@ namespace Quaver.States.Edit.UI.Modes
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void Draw()
         {
