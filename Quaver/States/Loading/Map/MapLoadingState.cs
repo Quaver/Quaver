@@ -8,7 +8,6 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
-using Quaver.GameState;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.States.Gameplay;

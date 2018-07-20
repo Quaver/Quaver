@@ -106,7 +106,7 @@ namespace Quaver.Graphics.Buttons
         /// <param name="dt"></param>
         private void PerformHoverAnimation(double dt)
         {
-            if (IsHovered)
+            if (IsTrulyHovered)
             {
                 var scale = 1.2f;
                 

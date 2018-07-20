@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
-using Quaver.GameState;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;

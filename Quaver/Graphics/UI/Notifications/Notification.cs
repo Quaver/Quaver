@@ -104,7 +104,7 @@ namespace Quaver.Graphics.UI.Notifications
         /// <param name="dt"></param>
         internal override void Update(double dt)
         {
-            FadeToColor(IsHovered ? Color.White : BorderColor, dt, 120);
+            FadeToColor(IsTrulyHovered ? Color.White : BorderColor, dt, 120);
 
             // Fade out super fast if the button was clicked.
             if (HasBeenClicked)

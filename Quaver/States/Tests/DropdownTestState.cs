@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
-using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons.Dropdowns;

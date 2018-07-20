@@ -17,7 +17,6 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Database.Maps;
-using Quaver.GameState;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.States;

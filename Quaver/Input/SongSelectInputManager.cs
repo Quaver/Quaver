@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Audio;
-using Quaver.GameState;
 using Quaver.Config;
 using Quaver.Database;
 using Quaver.Logging;

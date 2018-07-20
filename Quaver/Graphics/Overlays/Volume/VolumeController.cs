@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
-using Quaver.GameState;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons.Sliders;
 using Quaver.Graphics.Sprites;
@@ -312,7 +311,7 @@ namespace Quaver.Graphics.Overlays.Volume
         {
             // A slider with the mouse currently hovered over it takes precedence over
             // any other action. That is automatically the focused slider.
-            var focused = Sliders.Find(x => x.MouseInHoldSequence) ?? Sliders.Find(x => x.IsHovered);
+            var focused = Sliders.Find(x => x.MouseInHoldSequence) ?? Sliders.Find(x => x.IsTrulyHovered);
             if (focused != null)
             {
                 FocusedSlider = focused;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Quaver.Database.Maps;
-using Quaver.GameState;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;
 using Quaver.Logging;

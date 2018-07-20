@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.Discord;
-using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;

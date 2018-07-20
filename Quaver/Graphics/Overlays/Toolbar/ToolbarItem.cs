@@ -101,7 +101,7 @@ namespace Quaver.Graphics.Overlays.Toolbar
         internal override void Update(double dt)
         {
             // Change the size of the line based on if it's hovered/already selected.
-            if (IsHovered)
+            if (IsTrulyHovered)
                 BottomLine.SizeX = GraphicsHelper.Lerp(SizeX, BottomLine.SizeX, Math.Min(dt / 60f, 1));
             else if (!IsSelected)
                 BottomLine.SizeX = GraphicsHelper.Lerp(0, BottomLine.SizeX, Math.Min(dt / 60f, 1));

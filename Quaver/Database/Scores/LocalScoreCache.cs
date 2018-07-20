@@ -41,7 +41,7 @@ namespace Quaver.Database.Scores
         /// </summary>
         /// <param name="md5"></param>
         /// <returns></returns>
-        internal static async Task<List<LocalScore>> FetchMapScores(string md5)
+        internal static List<LocalScore> FetchMapScores(string md5)
         {
             try
             {

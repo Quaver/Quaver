@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Maps;
 using Quaver.Audio;
 using Quaver.Config;
-using Quaver.GameState;
 using Quaver.Logging;
 using Quaver.Main;
 

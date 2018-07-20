@@ -10,7 +10,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Replays;
 using Quaver.Config;
 using Quaver.Database.Maps;
-using Quaver.GameState;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Overlays.Options;

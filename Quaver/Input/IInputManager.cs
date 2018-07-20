@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
-using Quaver.GameState;
 using Quaver.States;
 
 namespace Quaver.Input

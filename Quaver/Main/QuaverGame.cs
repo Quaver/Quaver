@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -165,6 +165,8 @@ namespace Quaver.Main
         /// <param name="gameTime">Provides a snapshot of delta time values.</param>
         protected override void Update(GameTime gameTime)
         {
+            GameBase.Clock += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Needs to be called periodically to dequeue messages according to the lib.
@@ -218,6 +220,9 @@ namespace Quaver.Main
 
             // Clear Background so it doesnt render everything from previous frame
             GameBase.GraphicsDevice.Clear(Color.Black);
+
+            // Reset the total amount of objects drawn.
+            Drawable.TotalObjectsDrawn = 0;
 
             // Draw from Game State Manager
             GameBase.GameStateManager.Draw();
@@ -342,21 +347,12 @@ namespace Quaver.Main
             // Create now playing folder
             Directory.CreateDirectory(ConfigManager.DataDirectory + "/temp/Now Playing/");
 
-            // Set the build version
-            //GameBase.BuildVersion = MapsetHelper.GetMd5Checksum(ConfigManager.GameDirectory + "/" + "Quaver.exe");
+            // Create the local scores database if it doesn't already exist
+            LocalScoreCache.CreateScoresDatabase();
 
-            // After initializing the configuration, we want to sync the map database, and load the dictionary of mapsets.
-            var loadGame = Task.Run(() =>
-            {
-                MapCache.LoadAndSetMapsets();
-
-                // Create the local scores database if it doesn't already exist
-                LocalScoreCache.CreateScoresDatabase();
-
-                // Force garbage collection
-                GC.Collect();
-            });
-            Task.WaitAll(loadGame);
+            // Load all mapsets.
+            MapCache.LoadAndSetMapsets();
+            GC.Collect();
         }
     }
 }

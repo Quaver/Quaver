@@ -67,11 +67,13 @@
     <Compile Include="Discord\DiscordManager.cs" />
     <Compile Include="Graphics\Alignment.cs" />
     <Compile Include="Graphics\Base\Container.cs" />
+    <Compile Include="Graphics\Buttons\ButtonManager.cs" />
     <Compile Include="Graphics\Buttons\Dropdowns\Dropdown.cs" />
     <Compile Include="Graphics\Buttons\Dropdowns\DropdownButton.cs" />
     <Compile Include="Graphics\Buttons\Checkbox.cs" />
     <Compile Include="Graphics\Buttons\Sliders\Slider.cs" />
     <Compile Include="Graphics\DrawRectangle.cs" />
+    <Compile Include="Graphics\Graphing\Graph.cs" />
     <Compile Include="Graphics\Overlays\BottomBar\BottomBar.cs" />
     <Compile Include="Graphics\Overlays\BottomBar\LogoButton.cs" />
     <Compile Include="Graphics\Overlays\Navbar\Nav.cs" />
@@ -158,8 +160,21 @@
     <Compile Include="States\Gameplay\UI\GameplayInterface.cs" />
     <Compile Include="States\Menu\NavigationButton.cs" />
     <Compile Include="States\Menu\NavigationButtonContainer.cs" />
+    <Compile Include="States\Results\Input\ResultsInputManager.cs" />
     <Compile Include="States\Results\ResultsScreen.cs" />
     <Compile Include="States\Results\ResultsScreenType.cs" />
+    <Compile Include="States\Results\UI\Breakdown\JudgementBreakdown.cs" />
+    <Compile Include="States\Results\UI\Buttons\Direction.cs" />
+    <Compile Include="States\Results\UI\Buttons\ResultsButtonContainer.cs" />
+    <Compile Include="States\Results\UI\Statistics\HealthGraph.cs" />
+    <Compile Include="States\Results\UI\Statistics\HitOffsetGraph.cs" />
+    <Compile Include="States\Results\UI\Statistics\ResultsScoreStatistics.cs" />
+    <Compile Include="States\Results\UI\Statistics\StatisticContainer.cs" />
+    <Compile Include="States\Results\UI\MapInformation.cs" />
+    <Compile Include="States\Results\UI\ResultsInterface.cs" />
+    <Compile Include="States\Results\UI\ScoreResults\ScoreResultsTable.cs" />
+    <Compile Include="States\Results\UI\ScoreResults\ScoreResultsInfoItem.cs" />
+    <Compile Include="States\Results\UI\HeaderedContainer.cs" />
     <Compile Include="States\Select\MapSelectSystem.cs" />
     <Compile Include="Graphics\Buttons\MapDifficultySelectButton.cs" />
     <Compile Include="Graphics\Buttons\MapsetSelectButton.cs" />
@@ -285,6 +300,8 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Windows.Forms.DataVisualization.Design" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>

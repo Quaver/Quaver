@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Config;
-using Quaver.GameState;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
@@ -24,7 +23,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         ///     The background of the playfield.
         /// </summary>
         internal Container BackgroundContainer { get; }
-        
+
         /// <summary>
         ///     The foreground of the playfield.
         /// </summary>
@@ -88,10 +87,10 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             get
             {
                 var skin = GameBase.Skin.Keys[Map.Mode];
-                
+
                 if (GameModeRulesetKeys.IsDownscroll)
                     return GameBase.WindowRectangle.Height - (skin.ReceptorPosOffsetY  * GameBase.WindowUIScale + LaneSize * skin.NoteReceptorsUp[0].Height / skin.NoteReceptorsUp[0].Width);
-                
+
                 return skin.ReceptorPosOffsetY * GameBase.WindowUIScale;
             }
         }
@@ -107,24 +106,24 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                     return ReceptorPositionY;
 
                     var skin = GameBase.Skin.Keys[Map.Mode];
-                    
+
                     var receptor = skin.NoteReceptorsUp[0];
-                    var hitObject = skin.NoteHitObjects[0][0];                          
+                    var hitObject = skin.NoteHitObjects[0][0];
                     return ReceptorPositionY + skin.ColumnSize * GameBase.WindowUIScale * (float)((double)receptor.Height / receptor.Width - (double)hitObject.Height / hitObject.Width);
             }
         }
-        
+
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         internal KeysPlayfield(GameplayScreen screen)
         {
             Screen = screen;
             Map = Screen.Map;
-            
+
             // Create the playfield's container.
             Container = new Container();
-            
+
             // Create background container
             BackgroundContainer = new Container
             {
@@ -132,7 +131,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Size = new UDim2D(Width, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.TopCenter
             };
-                        
+
             // Create the foreground container.
             ForegroundContainer = new Container
             {
@@ -140,22 +139,22 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 Size = new UDim2D(Width, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.TopCenter
             };
-            
+
             // Create container for hit lighting
             HitLightingContainer = new Container
             {
                 Size = new UDim2D(Width, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.TopCenter
             };
-            
-            // Create a new playfield stage               
+
+            // Create a new playfield stage
             Stage = new KeysPlayfieldStage(this, Screen);
-            
+
             // Create health bar.
             var skin = GameBase.Skin.Keys[Map.Mode];
             HealthBar = new HealthBarKeys(this, skin.HealthBarType, skin.HealthBarKeysAlignment, Screen.Ruleset.ScoreProcessor);
         }
-        
+
         /// <summary>
         ///     Init
         /// </summary>
@@ -174,7 +173,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             HitLightingContainer.Destroy();
             HealthBar.UnloadContent();
         }
-        
+
         /// <summary>
         ///     Update
         /// </summary>
@@ -183,7 +182,7 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
         {
             // Update the stage
             Stage.Update(dt);
-        
+
             Container.Update(dt);
             HitLightingContainer.Update(dt);
             HealthBar.Update(dt);
@@ -197,22 +196,22 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
             GameBase.SpriteBatch.Begin();
             Container.Draw();
             GameBase.SpriteBatch.End();
-            
+
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
             HitLightingContainer.Draw();
-            GameBase.SpriteBatch.End();   
-            
+            GameBase.SpriteBatch.End();
+
             // Draw health bar (Has its own spritebatch system).
             HealthBar.Draw();
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="dt"></param>
         public void HandleFailure(double dt)
         {
-            FadeOut(dt);
+            // FadeOut(dt);
         }
 
         /// <summary>
@@ -231,19 +230,19 @@ namespace Quaver.States.Gameplay.GameModes.Keys.Playfield
                 var o = (KeysHitObject) manager.ObjectPool[i];
                 o.FadeOut(dt);
             }
-            
+
             foreach (var hitObject in manager.HeldLongNotes)
             {
                 var o = (KeysHitObject) hitObject;
                 o.FadeOut(dt);
             }
-            
+
             foreach (var hitObject in manager.DeadNotes)
             {
                 var o = (KeysHitObject) hitObject;
                 o.FadeOut(dt);
             }
-            
+
             if (fadeStage)
                 Stage.FadeOut(dt);
         }
