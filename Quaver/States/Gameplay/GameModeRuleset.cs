@@ -136,7 +136,7 @@ namespace Quaver.States.Gameplay
         /// <summary>
         ///     Initializes a single HitObject.
         /// </summary>
-        protected abstract HitObject CreateHitObject(HitObjectInfo info);
+        protected abstract GameplayHitObject CreateHitObject(HitObjectInfo info);
         
         /// <summary>
         ///     Creates the actual playfield.

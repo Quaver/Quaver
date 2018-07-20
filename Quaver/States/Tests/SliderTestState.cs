@@ -6,7 +6,7 @@ using Quaver.Discord;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Buttons.Sliders;
+using Quaver.Graphics.Buttons.Selection;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Graphics.Sprites;
@@ -36,7 +36,7 @@ namespace Quaver.States.Tests
         public void Initialize()
         {            
             Container = new Container();
-            Nav = new Nav();
+            Nav = Nav.CreateGlobalNavbar();
             Nav.Initialize(this);
             
             VolumeController = new VolumeController();

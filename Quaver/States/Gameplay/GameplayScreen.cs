@@ -421,7 +421,7 @@ namespace Quaver.States.Gameplay
             {
                 // Skip to the time if the audio already played once. If it hasn't, then play it.
                 if (GameBase.AudioEngine.HasPlayed)
-                    GameBase.AudioEngine.ChangeSongPosition(skipTime);
+                    GameBase.AudioEngine.Seek(skipTime);
                 else
                     GameBase.AudioEngine.Play((int)skipTime);
 

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.Graphics.Sprites;
 
-namespace Quaver.Graphics.Buttons.Dropdowns
+namespace Quaver.Graphics.Buttons.Selection
 {
     internal class Dropdown : Sprite
     {

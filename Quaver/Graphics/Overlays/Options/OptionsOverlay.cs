@@ -11,7 +11,7 @@ using NAudio.Wave;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Buttons.Dropdowns;
+using Quaver.Graphics.Buttons.Selection;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.UI;
 using Quaver.Helpers;

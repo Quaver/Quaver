@@ -23,12 +23,12 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         /// <summary>
         ///     The list of currently dead notes
         /// </summary>
-        internal List<HitObject> DeadNotes { get; }
+        internal List<GameplayHitObject> DeadNotes { get; }
 
         /// <summary>
         ///     The list of currently held long notes.
         /// </summary>
-        internal List<HitObject> HeldLongNotes { get; }
+        internal List<GameplayHitObject> HeldLongNotes { get; }
 
         /// <summary>
         ///     The speed at which objects fall down from the screen.
@@ -78,8 +78,8 @@ namespace Quaver.States.Gameplay.GameModes.Keys
         {
             Ruleset = ruleset;
 
-            DeadNotes = new List<HitObject>();
-            HeldLongNotes = new List<HitObject>();
+            DeadNotes = new List<GameplayHitObject>();
+            HeldLongNotes = new List<GameplayHitObject>();
             
             // Set the dead note removal time.
             DeadNoteRemovalTime = (uint)(1000 * GameBase.AudioEngine.PlaybackRate);

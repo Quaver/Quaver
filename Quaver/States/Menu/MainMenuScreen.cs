@@ -23,6 +23,7 @@ using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Modifiers;
+using Quaver.States.Edit;
 using Quaver.States.Options;
 using Quaver.States.Select;
 using Quaver.States.Tests;
@@ -64,12 +65,12 @@ namespace Quaver.States.Menu
         private BottomBar BottomBar { get; set; }
 
         /// <summary>
-        ///     
+        ///
         /// </summary>
         private NavigationButtonContainer NavigationButtonContainer { get; set; }
 
         /// <inheritdoc />
-        /// <summary>  
+        /// <summary>
         /// </summary>
         public void Initialize()
         {
@@ -110,7 +111,7 @@ namespace Quaver.States.Menu
             GameBase.Navbar.PerformHideAnimation(dt);
             Container.Update(dt);
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         ///     Draw
@@ -119,9 +120,9 @@ namespace Quaver.States.Menu
         {
             GameBase.GraphicsDevice.Clear(Color.Black);
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GameBase.GraphicsDevice.RasterizerState);
-            
+
             Container.Draw();
-            
+
             GameBase.SpriteBatch.End();
         }
 
@@ -131,7 +132,7 @@ namespace Quaver.States.Menu
         private void CreateInterface()
         {
             Background = new Background(GameBase.QuaverUserInterface.MenuBackground, 30) { Parent = Container };
-            
+
             Toolbar = new Toolbar(new List<ToolbarItem>
                 {
                     new ToolbarItem("Home", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen()), true),
@@ -140,12 +141,12 @@ namespace Quaver.States.Menu
                 new List<ToolbarItem>
                 {
                     new ToolbarItem(FontAwesome.PowerOff, QuaverGame.Quit),
-                    new ToolbarItem(FontAwesome.Cog, () => {}), 
+                    new ToolbarItem(FontAwesome.Cog, () => {}),
                 }
             ) { Parent = Container };
 
             BottomBar = new BottomBar { Parent = Container };
-                
+
             CreateNavigationButtons();
         }
 
@@ -153,43 +154,40 @@ namespace Quaver.States.Menu
         ///     Initializes the navigation buttons and its container.
         /// </summary>
         private void CreateNavigationButtons()
-        {          
-            // Competitive
-            var competitive = new NavigationButton(new Vector2(325, 230), "Competitive", GameBase.QuaverUserInterface.MenuCompetitive,
+        {
+            // Editor
+            var editor = new NavigationButton(new Vector2(325, 230), "Editor", GameBase.QuaverUserInterface.MenuCompetitive,
+                "Create or edit a map to any song you'd like!", EditorScreen.Go)
+            {
+                Alignment = Alignment.TopCenter,
+                PosX = 0,
+                PosY = Toolbar.PosY + Toolbar.SizeY + 60
+            };
+
+            // Single Player.
+            var singlePlayer = new NavigationButton(new Vector2(325, 230), "Single Player",
+                GameBase.QuaverUserInterface.MenuSinglePlayer, "Play offline and compete for scoreboard ranks!",
+                () => GameBase.GameStateManager.ChangeState(new SongSelectState()))
+            {
+                Alignment = Alignment.TopCenter,
+                PosX = editor.PosX - editor.SizeX - 30,
+                PosY = editor.PosY
+            };
+
+            // Competitve
+            var competitive = new NavigationButton(new Vector2(325, 230), "Competitive", GameBase.QuaverUserInterface.MenuLock,
                 "Compete against the world and rank up!", () =>
                 {
                     NotificationManager.Show(NotificationLevel.Info, "This isn't implemented yet. Check back later!");
                 }, true)
             {
                 Alignment = Alignment.TopCenter,
-                PosX = 0,
-                PosY = Toolbar.PosY + Toolbar.SizeY + 60
-            };
-            
-            // Single Player.
-            var singlePlayer = new NavigationButton(new Vector2(325, 230), "Single Player", 
-                GameBase.QuaverUserInterface.MenuSinglePlayer, "Play offline and compete for scoreboard ranks!",
-                () => GameBase.GameStateManager.ChangeState(new SongSelectState()))
-            {
-                Alignment = Alignment.TopCenter,
-                PosX = competitive.PosX - competitive.SizeX - 30,
-                PosY = competitive.PosY
+                PosX = editor.PosX,
+                PosY = editor.PosY + editor.SizeY + 30
             };
 
-            // Editor
-            var edit = new NavigationButton(new Vector2(325, 230), "Map Editor", GameBase.QuaverUserInterface.MenuLock,
-                "Create or edit a map to any song you'd like!", () =>
-                {
-                    NotificationManager.Show(NotificationLevel.Info, "This isn't implemented yet. Check back later!");
-                }, true)
-            {
-                Alignment = Alignment.TopCenter,
-                PosX = competitive.PosX,
-                PosY = competitive.PosY + competitive.SizeY + 30
-            };
-            
             // Multiplayer
-            var multiplayer = new NavigationButton(new Vector2(325, 230), "Multiplayer", GameBase.QuaverUserInterface.MenuMultiplayer,
+            var customGames = new NavigationButton(new Vector2(325, 230), "Custom Games", GameBase.QuaverUserInterface.MenuLock,
                 "Play casually with your friends online!", () =>
                 {
                     NotificationManager.Show(NotificationLevel.Info, "This isn't implemented yet. Check back later!");
@@ -209,16 +207,16 @@ namespace Quaver.States.Menu
             {
                 Alignment = Alignment.TopCenter,
                 PosY = singlePlayer.PosY,
-                PosX = competitive.SizeX + competitive.PosX + 15
+                PosX = editor.SizeX + editor.PosX + 15
             };
-            
+
             // Create a new button container with all of the created buttons.
             NavigationButtonContainer = new NavigationButtonContainer(new List<NavigationButton>
             {
-                competitive,
+                editor,
                 singlePlayer,
-                edit,
-                multiplayer,
+                competitive,
+                customGames,
                 news
             }) { Parent = Container };
         }

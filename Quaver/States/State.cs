@@ -7,6 +7,7 @@
     {
         Menu,
         Select,
+        Edit,
         Gameplay,
         Results,
         Loading,

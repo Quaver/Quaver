@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using ManagedBass;
 using ManagedBass.Fx;
 using Microsoft.Xna.Framework.Audio;
+using Quaver.API.Maps;
 using Quaver.Config;
 using Quaver.Main;
 using Quaver.Modifiers;
@@ -36,6 +39,11 @@ namespace Quaver.Audio
         internal double Position => Bass.ChannelBytes2Seconds(Stream, Bass.ChannelGetPosition(Stream)) * 1000;
 
         /// <summary>
+        ///     The position of the audio including frame times.
+        /// </summary>
+        internal double Time { get; private set; }
+        
+        /// <summary>
         ///     If the audio has already previously been played before.
         /// </summary>
         internal bool HasPlayed { get; set; }
@@ -49,6 +57,31 @@ namespace Quaver.Audio
         ///     Returns if the audio stream is currently playing.
         /// </summary>
         internal bool IsPlaying => Bass.ChannelIsActive(Stream) == PlaybackState.Playing;
+
+        /// <summary>
+        ///     Returns if the audio stream is currently paused
+        /// </summary>
+        internal bool IsPaused => Bass.ChannelIsActive(Stream) == PlaybackState.Paused;
+        
+        /// <summary>
+        ///     Returns if the audio stream is currently stopped.
+        /// </summary>
+        internal bool IsStopped => Bass.ChannelIsActive(Stream) == PlaybackState.Stopped;
+
+        /// <summary>
+        ///     Event invoked when the audio has started playing
+        /// </summary>
+        internal EventHandler OnPlayed { get; set; }
+
+        /// <summary>
+        ///     Event invoked when the audio has been paused.
+        /// </summary>
+        internal EventHandler OnPaused { get; set; }
+
+        /// <summary>
+        ///     Event invoked when the audio has been stopped.
+        /// </summary>
+        internal EventHandler OnStopped { get; set; }
 
         /// <summary>
         ///     The master volume of all audio streams
@@ -81,6 +114,21 @@ namespace Quaver.Audio
         ///     The rate at which the audio stream will play at.
         /// </summary>
         internal float PlaybackRate = 1.0f;
+       
+        /// <summary>
+        ///     The percentage of how far the audio track is.
+        /// </summary>
+        internal float ProgressPercentage => (float) (Time / Length) * 100;
+        
+        /// <summary>
+        ///     The audio state in the previous state
+        /// </summary>
+        private PlaybackState PreviousState { get; set; } = PlaybackState.Stopped;
+
+        /// <summary>
+        ///     The current audio state
+        /// </summary>
+        internal PlaybackState State { get; private set; } = PlaybackState.Stopped;
 
         /// <summary>
         ///     Constructor - Intitializes BASS.
@@ -116,6 +164,34 @@ namespace Quaver.Audio
         }
 
         /// <summary>
+        ///     Gets the accurate time of the song including frame times.
+        /// </summary>
+        /// <param name="dt"></param>
+        internal void Update(double dt)
+        {
+            PreviousState = State;
+            State = Bass.ChannelIsActive(Stream);
+            
+            // Emit an event when the audio has been stopped.
+            if (State == PlaybackState.Stopped && (PreviousState == PlaybackState.Playing || PreviousState == PlaybackState.Paused))
+                OnStopped?.Invoke(this, EventArgs.Empty);
+            
+            if (Stream == 0 || Bass.ChannelIsActive(Stream) == PlaybackState.Stopped)
+            {
+                Time = 0;
+                return;
+            }
+                
+            if (!IsPlaying)
+            {
+                Time = Position;
+                return;
+            }
+
+            Time = (GameBase.AudioEngine.Position + (Time + dt * GameBase.AudioEngine.PlaybackRate)) / 2;
+        }
+   
+        /// <summary>
         ///     Plays the loaded audio stream.
         /// </summary>
         /// <param name="pos">The position in the audio to play at.</param>
@@ -130,7 +206,7 @@ namespace Quaver.Audio
                 throw new AudioEngineException("You cannot play an audio stream while one is already playing.");
 
             // Set the song position 
-            ChangeSongPosition(pos);
+            Seek(pos);
 
             // Set the playback rate AND THEN toggle the pitch.
             SetPlaybackRate();
@@ -142,6 +218,8 @@ namespace Quaver.Audio
 
             Bass.ChannelPlay(Stream);
             HasPlayed = true;
+            
+            OnPlayed?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -165,6 +243,8 @@ namespace Quaver.Audio
                 throw new AudioEngineException("You cannot pause an audio stream if one is currently not playing.");
 
             Bass.ChannelPause(Stream);
+            
+            OnPaused?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -220,7 +300,7 @@ namespace Quaver.Audio
         ///     Changes the song position at a given point in milliseconds
         /// </summary>
         /// <param name="pos"></param>
-        internal void ChangeSongPosition(double pos)
+        internal void Seek(double pos)
         {
             if (Stream == 0)
                 throw new AudioEngineException("You cannot change the song's position if one isn't loaded!");
@@ -233,11 +313,48 @@ namespace Quaver.Audio
         }
 
         /// <summary>
+        ///     Seeks to the nearest snap(th) beat in the audio based on the
+        ///     current timing point's snap.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="direction"></param>
+        /// <param name="snap"></param>
+        internal void SeekToNearestSnap(Qua map, SeekDirection direction, int snap)
+        {            
+            // Get the current timing point
+            var point = map.GetTimingPointAt(Time);
+                
+            // Get the amount of milliseconds that each snap takes in the beat.
+            var snapTimePerBeat = 60000 / point.Bpm / snap;
+
+            // The point in the music that we want to snap to pre-rounding.
+            double pointToSnap;
+            
+            switch (direction)
+            {
+                case SeekDirection.Forward:
+                    pointToSnap = Time + snapTimePerBeat;
+                    break;
+                case SeekDirection.Backward:
+                    pointToSnap = Time - snapTimePerBeat;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+            
+            // Snap the value and seek to it.
+            var seekTime = Math.Round((pointToSnap - point.StartTime) / snapTimePerBeat) * snapTimePerBeat + point.StartTime;
+            Seek(seekTime);
+        }
+        
+        /// <summary>
         ///     Sets the playback rate based on the current game's clock.
         /// </summary>
-        internal void SetPlaybackRate()
+        internal void SetPlaybackRate(bool checkInconsistencies = true)
         {
-            ModManager.CheckModInconsistencies();
+            if (checkInconsistencies)
+                ModManager.CheckModInconsistencies();
+            
             Bass.ChannelSetAttribute(Stream, ChannelAttribute.Tempo, PlaybackRate * 100 - 100);
             SetPitch();
         }
@@ -266,7 +383,7 @@ namespace Quaver.Audio
                 }
                 catch (Exception e)
                 {
-                    
+                    // ignored
                 }
             }
                 

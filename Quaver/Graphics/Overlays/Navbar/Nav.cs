@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Ionic.Zip;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Maps;
+using Quaver.API.Maps.Parsers;
 using Quaver.API.Replays;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -15,11 +17,13 @@ using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Overlays.Options;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
+using Quaver.Graphics.UI.Notifications;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Peppy;
 using Quaver.States;
+using Quaver.States.Edit;
 using Quaver.States.Menu;
 using Quaver.States.Options;
 using Quaver.States.Results;
@@ -73,22 +77,20 @@ namespace Quaver.Graphics.Overlays.Navbar
         private bool InAnimation { get; set; }
 
         /// <summary>
-        ///     Class reference to all our of navbar buttons.
-        /// </summary>
-        private NavbarButton Settings { get; set; }
-        private NavbarButton Home { get; set; }
-        private NavbarButton Play { get; set; }
-        private NavbarButton Import { get; set; }
-        private NavbarButton Notifications { get; set; }
-        private NavbarButton Discord { get; set; }
-        private NavbarButton Github { get; set; }
-        private NavbarButton Export { get; set; }
-        private NavbarButton Replay { get; set; }
-
-        /// <summary>
         ///     The options menu attached to this navbar.
         /// </summary>
         internal OptionsOverlay OptionsMenu { get; set; }
+
+        /// <summary>
+        ///     Creates the buttons for the navbar.
+        /// </summary>
+        private Action CreateButtons { get; }
+
+        /// <summary>
+        ///     Ctor
+        /// </summary>
+        /// <param name="createButtons"></param>
+        public Nav(Action createButtons) => CreateButtons = createButtons;
 
         /// <summary>
         ///     Initialize
@@ -120,32 +122,10 @@ namespace Quaver.Graphics.Overlays.Navbar
             // Create the tooltip box.
             TooltipBox = new TooltipBox(Container, NavbarSprite);
 
-#region nav_buttons
-            // Create the actual navbar buttons.
-            // Note: The order in which you create the buttons is important.
-            // When aligning left, the buttons will be ordered from left to right in the order they
-            // were created, and vice versa.
-            // --------
-
-            // Left Side
-            Settings = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Cog, "Settings", "Configure Quaver.", OnSettingsButtonClicked);
-            Home = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Home, "Home", "Go to the main menu.", OnHomeButtonClicked);
-            Play = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.GamePad, "Play", "Smash some keys!", OnPlayButtonClicked);
-            Import = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Copy, "Import Mapsets","Add new songs to play!", OnImportButtonClicked);
-            Export = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Archive, "Export Mapset", "Zip your current mapset to a file.", OnExportButtonClicked);
-            Replay = CreateNavbarButton(NavbarAlignment.Left, FontAwesome.VideoPlay, "Watch Replay", "Load up a replay to watch.", OnReplayButtonClicked);
-
-            // Right Side
-            Notifications = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => { GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick); Logger.LogImportant("This button does nothing. Don't click it.", LogType.Runtime);});
-            Discord = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Discord, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
-            Github = CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
-
-            // Test States.
-            CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Coffee, "Test State", "Go to testing", (sender, args) => GameBase.GameStateManager.ChangeState(new SemiTransparentTestScreen()));
-#endregion
+            CreateButtons();
         }
 
-         /// <summary>
+        /// <summary>
         ///     Unload
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
@@ -192,10 +172,11 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// <param name="name"></param>
         /// <param name="description"></param>
         /// <param name="clickAction"></param>
-        private NavbarButton CreateNavbarButton(NavbarAlignment alignment, Texture2D tex, string name, string description, EventHandler clickAction)
+        internal NavbarButton CreateNavbarButton(NavbarAlignment alignment, Texture2D tex, string name, string description, EventHandler clickAction)
         {
             var button = new NavbarButton(this, tex, alignment, name, description, clickAction) { Parent = Container };
             Buttons[alignment].Add(button);
+
             return button;
         }
 
@@ -243,12 +224,45 @@ namespace Quaver.Graphics.Overlays.Navbar
             Container.PosY = GraphicsHelper.Tween(origPos, Container.PosY, Math.Min(dt / 30, 1));
         }
 
+        internal static Nav CreateGlobalNavbar()
+        {
+            return new Nav(() =>
+            {
+                // Settings
+                GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Cog, "Settings", "Configure Quaver.",
+                    (sender, e) =>
+                    {
+                        var btn = (NavbarButton) sender;
+
+                        // Open up the options overlay.
+                        btn.ParentNav.OptionsMenu.Active = !btn.ParentNav.OptionsMenu.Active;
+
+                        if (btn.ParentNav.OptionsMenu.Active)
+                            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
+                        else
+                            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundBack);
+                    });
+
+                GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Home, "Home", "Go to the main menu.", OnHomeButtonClicked);
+                GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.GamePad, "Play", "Smash some keys!", OnPlayButtonClicked);
+                GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Copy, "Import Mapsets","Add new songs to play!", OnImportButtonClicked);
+                GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Archive, "Export Mapset", "Zip your current mapset to a file.", OnExportButtonClicked);
+                GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.VideoPlay, "Watch Replay", "Load up a replay to watch.", OnReplayButtonClicked);
+                GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Left, FontAwesome.Pencil, "Edit", "Edit the currently selected map", OnEditButtonClicked);
+
+                // Right Side
+                GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Exclamation, "Notifications", "Filler chicken", (sender, args) => { GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick); Logger.LogImportant("This button does nothing. Don't click it.", LogType.Runtime);});
+                GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Discord, "Discord", "https://discord.gg/nJa8VFr", OnDiscordButtonClicked);
+                GameBase.Navbar.CreateNavbarButton(NavbarAlignment.Right, FontAwesome.Github, "GitHub", "Contribute to the project!", OnGithubButtonClicked);
+            });
+        }
+
         /// <summary>
         ///     Called when the home button is clicked.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnHomeButtonClicked(object sender, EventArgs e)
+        private static void OnHomeButtonClicked(object sender, EventArgs e)
         {
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             GameBase.GameStateManager.ChangeState(new MainMenuScreen());
@@ -275,7 +289,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnPlayButtonClicked(object sender, EventArgs e)
+        private static void OnPlayButtonClicked(object sender, EventArgs e)
         {
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             GameBase.GameStateManager.ChangeState(new SongSelectState());
@@ -286,7 +300,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnDiscordButtonClicked(object sender, EventArgs e)
+        private static void OnDiscordButtonClicked(object sender, EventArgs e)
         {
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             System.Diagnostics.Process.Start("https://discord.gg/nJa8VFr");
@@ -297,7 +311,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnGithubButtonClicked(object sender, EventArgs e)
+        private static void OnGithubButtonClicked(object sender, EventArgs e)
         {
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
             System.Diagnostics.Process.Start("https://github.com/Swan/Quaver");
@@ -309,7 +323,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnImportButtonClicked(object sender, EventArgs e)
+        private static void OnImportButtonClicked(object sender, EventArgs e)
         {
             // Create the openFileDialog object.
             var openFileDialog = new OpenFileDialog()
@@ -347,7 +361,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnExportButtonClicked(object sender, EventArgs e)
+        private static void OnExportButtonClicked(object sender, EventArgs e)
         {
             GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundClick);
 
@@ -392,7 +406,7 @@ namespace Quaver.Graphics.Overlays.Navbar
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnReplayButtonClicked(object sender, EventArgs e)
+        private static void OnReplayButtonClicked(object sender, EventArgs e)
         {
             // Create the openFileDialog object.
             var openFileDialog = new OpenFileDialog()
@@ -410,5 +424,13 @@ namespace Quaver.Graphics.Overlays.Navbar
 
             GameBase.GameStateManager.ChangeState(new ResultsScreen(new Replay(openFileDialog.FileName)));
         }
+
+        /// <summary>
+        ///     User chooses to edit the currently selected map.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private static void OnEditButtonClicked(object sender, EventArgs e) => EditorScreen.Go();
     }
 }

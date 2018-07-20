@@ -4,6 +4,7 @@ using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons;
+using Quaver.Graphics.Buttons.Selection;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
@@ -33,7 +34,7 @@ namespace Quaver.States.Tests
         public void Initialize()
         {
             Container = new Container();
-            Nav = new Nav();
+            Nav = Nav.CreateGlobalNavbar();
             Nav.Initialize(this);
             
             var ds4k = new Checkbox(ConfigManager.DownScroll4K, new Vector2(20, 20))

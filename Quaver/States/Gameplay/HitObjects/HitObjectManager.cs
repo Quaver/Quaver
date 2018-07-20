@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.API.Maps.Structures;
 using Quaver.Main;
 
 namespace Quaver.States.Gameplay.HitObjects
@@ -10,7 +11,7 @@ namespace Quaver.States.Gameplay.HitObjects
         /// <summary>
         ///     All of the objects in the pool.
         /// </summary>
-        internal List<HitObject> ObjectPool { get; }
+        internal List<GameplayHitObject> ObjectPool { get; }
 
         /// <summary>
         ///     The object pool size.
@@ -35,16 +36,14 @@ namespace Quaver.States.Gameplay.HitObjects
         internal HitObjectManager(int size)
         {
             PoolSize = size;
-            ObjectPool = new List<HitObject>(PoolSize);
+            ObjectPool = new List<GameplayHitObject>(PoolSize);
         }
         
         /// <summary>
         ///     Plays the correct hitsounds based on the note index of the HitObjectPool.
         /// </summary>
-        internal void PlayObjectHitSounds(int index)
+        internal static void PlayObjectHitSounds(HitObjectInfo hitObject)
         {
-            var hitObject = ObjectPool[index].Info;
-
             // Normal
             if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
                 GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHit);

@@ -1,16 +1,12 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Config;
-using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;
-using AudioEngine = Quaver.Audio.AudioEngine;
 
-namespace Quaver.Graphics.Buttons.Sliders
+namespace Quaver.Graphics.Buttons.Selection
 {
     internal class Slider : Button
     {

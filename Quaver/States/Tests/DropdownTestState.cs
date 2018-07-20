@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
-using Quaver.Graphics.Buttons.Dropdowns;
+using Quaver.Graphics.Buttons.Selection;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;
 using Quaver.Main;
@@ -37,7 +37,7 @@ namespace Quaver.States.Tests
         public void Initialize()
         {
             Container = new Container();
-            Nav = new Nav();
+            Nav = Nav.CreateGlobalNavbar();
             Nav.Initialize(this);
 
             // Get all skins.

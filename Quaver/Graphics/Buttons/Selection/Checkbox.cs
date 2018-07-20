@@ -1,11 +1,10 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Quaver.Config;
-using Quaver.Graphics.Base;
 using Quaver.Helpers;
 using Quaver.Main;
 
-namespace Quaver.Graphics.Buttons
+namespace Quaver.Graphics.Buttons.Selection
 {
     internal class Checkbox : Button
     {
@@ -21,7 +20,7 @@ namespace Quaver.Graphics.Buttons
 
         /// <inheritdoc />
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="bindedValue"></param>
         /// <param name="size"></param>
@@ -32,7 +31,7 @@ namespace Quaver.Graphics.Buttons
 
             Size.X.Offset = CheckboxSize.X;
             Size.Y.Offset = CheckboxSize.Y;
-            
+
             // Hook onto this value.
             BindedValue.OnValueChanged += OnValueChanged;
         }
@@ -53,13 +52,13 @@ namespace Quaver.Graphics.Buttons
 
         /// <inheritdoc />
         /// <summary>
-        ///     When the checkbox is clicked, set the value to its opposite. 
+        ///     When the checkbox is clicked, set the value to its opposite.
         /// </summary>
         protected override void OnClicked()
         {
             BindedValue.Value = !BindedValue.Value;
             GameBase.AudioEngine.PlaySoundEffect(BindedValue.Value ? GameBase.Skin.SoundClick : GameBase.Skin.SoundBack);
-            
+
             base.OnClicked();
         }
 
@@ -71,7 +70,7 @@ namespace Quaver.Graphics.Buttons
             Image = BindedValue.Value ? FontAwesome.CircleClosed : FontAwesome.CircleOpen;
             Tint = BindedValue.Value ? Colors.MainAccent : Colors.MainAccentInactive;
         }
-        
+
         /// <summary>
         ///     EventHandler for the binded value. Updates the UI accordingly.
         /// </summary>
@@ -81,7 +80,7 @@ namespace Quaver.Graphics.Buttons
         {
              SetCheckboxImage();
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         ///     Mouse Out
@@ -109,7 +108,7 @@ namespace Quaver.Graphics.Buttons
             if (IsTrulyHovered)
             {
                 var scale = 1.2f;
-                
+
                 // Increase the size of the checkbox slightly.
                 Size.X.Offset = GraphicsHelper.Tween(CheckboxSize.X * scale, Size.X.Offset, Math.Min(dt / 30, 1));
                 Size.Y.Offset = GraphicsHelper.Tween(CheckboxSize.Y * scale, Size.Y.Offset, Math.Min(dt / 30, 1));
@@ -119,7 +118,7 @@ namespace Quaver.Graphics.Buttons
                 // Set checkbox size back to normal.
                 Size.X.Offset = GraphicsHelper.Tween(CheckboxSize.X, Size.X.Offset, Math.Min(dt / 30, 1));
                 Size.Y.Offset = GraphicsHelper.Tween(CheckboxSize.Y, Size.Y.Offset, Math.Min(dt/ 30, 1));
-            }         
+            }
         }
     }
 }

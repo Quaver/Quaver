@@ -40,6 +40,5 @@ namespace Quaver.Graphics.Buttons
         {
             HoverTargetTween = 0;
         }
-
     }
 }

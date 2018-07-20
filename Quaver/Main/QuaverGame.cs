@@ -137,7 +137,8 @@ namespace Quaver.Main
             GameBase.VolumeController.Initialize(null);
 
             // Set up the navbar
-            GameBase.Navbar = new Nav();
+            GameBase.Navbar = Nav.CreateGlobalNavbar();
+
             GameBase.Navbar.Initialize(null);
 
             // Change to the loading screen state, where we detect if the song
@@ -199,6 +200,9 @@ namespace Quaver.Main
 
             // Update Navbar
             GameBase.Navbar.Update(dt);
+
+            // Update audio time
+            GameBase.AudioEngine.Update(dt);
 
             // Update all notifications.
             NotificationManager.Update(dt);
