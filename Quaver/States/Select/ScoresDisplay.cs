@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Threading;
 using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
@@ -35,8 +36,8 @@ namespace Quaver.States.Select
         /// <param name="scores"></param>
         internal void UpdateDisplay(List<LocalScore> scores)
         {
-            Scores = scores;           
-            
+            Scores = scores;
+
             // Get rid of all other displays.
             Displays.ForEach(x =>
             {
@@ -45,7 +46,7 @@ namespace Quaver.States.Select
             });
 
             Displays = new List<TextButton>();
-            
+
             for (var i = 0; i < scores.Count && i < 8; i++)
             {
                 var display = new TextButton(new Vector2(320, 75), "")
@@ -63,17 +64,17 @@ namespace Quaver.States.Select
                     var localScore = Scores[Displays.IndexOf((TextButton) o)];
                     GameBase.GameStateManager.ChangeState(new ResultsScreen(localScore));
                 };
-                
-                 
+
+
                 // Create avatar
                 var avatar = new Sprite()
                 {
                     Parent = display,
                     Size = new UDim2D(display.SizeY, display.SizeY),
                     Alignment = Alignment.MidLeft,
-                    Image = GameBase.QuaverUserInterface.UnknownAvatar,
+                    Image = UserInterface.UnknownAvatar,
                 };
-            
+
                 // Create username text.
                 var username = new SpriteText()
                 {
@@ -86,7 +87,7 @@ namespace Quaver.States.Select
                 };
 
                 // Set username position.
-                var usernameTextSize = username.Font.MeasureString(username.Text);        
+                var usernameTextSize = username.Font.MeasureString(username.Text);
                 username.PosX = avatar.SizeX + usernameTextSize.X * username.TextScale / 2f + 10;
                 username.PosY = usernameTextSize.Y * username.TextScale / 2f - 2;
 
@@ -99,13 +100,13 @@ namespace Quaver.States.Select
                     Alpha = 1,
                     TextScale = 0.65f
                 };
-                
-                
+
+
                 // Set modsposition.
-                var modsTextSize = mods.Font.MeasureString(mods.Text);        
+                var modsTextSize = mods.Font.MeasureString(mods.Text);
                 mods.PosX = avatar.SizeX + modsTextSize.X * mods.TextScale / 2f + 10;
                 mods.PosY = -modsTextSize.Y * mods.TextScale / 2f - 2;
-                
+
                 // Create score text.
                 var score = new SpriteText()
                 {
@@ -116,11 +117,11 @@ namespace Quaver.States.Select
                     TextScale = 0.78f,
                     Alpha = 1
                 };
-            
+
                 var scoreTextSize = score.Font.MeasureString(score.Text);
                 score.PosX = avatar.SizeX + scoreTextSize.X * score.TextScale / 2f + 12;
                 score.PosY = username.PosY + scoreTextSize.Y * score.TextScale / 2f + 12;
-                
+
                 // Create score text.
                 var acc = new SpriteText()
                 {
@@ -131,11 +132,11 @@ namespace Quaver.States.Select
                     TextScale = 0.65f,
                     Alpha = 1
                 };
-            
+
                 var accTextSize = acc.Font.MeasureString(acc.Text);
                 acc.PosX = avatar.SizeX + accTextSize.X * acc.TextScale / 2f + 12;
                 acc.PosY = acc.PosY -accTextSize.Y * acc.TextScale / 2f - 18;
-                
+
                 // Create score text.
                 var maxCombo = new SpriteText()
                 {
@@ -146,11 +147,11 @@ namespace Quaver.States.Select
                     TextScale = 0.78f,
                     Alpha = 1
                 };
-                
+
                 var comboTextSize = maxCombo.Font.MeasureString(maxCombo.Text);
                 maxCombo.PosX = -comboTextSize.X * maxCombo.TextScale / 2f - 8;
                 maxCombo.PosY = -comboTextSize.Y / 2f;
-                
+
                 // Create score text.
                 var ma = new SpriteText()
                 {
@@ -161,7 +162,7 @@ namespace Quaver.States.Select
                     TextScale = 0.72f,
                     Alpha = 1
                 };
-                
+
                 var maTextSize = ma.Font.MeasureString(ma.Text);
                 ma.PosX = -maTextSize.X * ma.TextScale / 2f - 8;
                 ma.PosY = -maTextSize.Y / 2f + 10;

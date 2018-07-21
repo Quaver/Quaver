@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;

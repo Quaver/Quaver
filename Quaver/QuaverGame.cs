@@ -18,11 +18,13 @@ using Quaver.Resources;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Database.Scores;
 using Quaver.Graphics.UI;
 using Quaver.Graphics.UI.Notifications;
 using Quaver.Helpers;
+using Quaver.Scheduling;
 
 namespace Quaver.Main
 {
@@ -54,7 +56,6 @@ namespace Quaver.Main
                 GraphicsProfile = GraphicsProfile.HiDef,
                 PreferMultiSampling = true
             };
-
 
             // TODO: Make thie configurable.
             TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / 240f);
@@ -101,23 +102,11 @@ namespace Quaver.Main
             GameBase.GraphicsDevice.RasterizerState = new RasterizerState {MultiSampleAntiAlias = true};
             GameBase.GraphicsManager.ApplyChanges();
 
-            //Create new GameStateManager Instance
+            //
             GameBase.Content = Content;
 
-            // Load QuaverUserInterface .xnb elements
-            GameBase.QuaverUserInterface.LoadElementsAsContent();
-
-            // Load all FontAwesome icons
-            FontAwesome.Load();
-
-            // Load all fonts
-            Fonts.Load();
-
-            // Load all titles
-            Titles.Load();
-
-            // Load all non-skinnable sound effects
-            SFX.Load();
+            // Load all game assets.
+            AssetManager.Load();
 
             // Load the Game Skin
             GameBase.Skin = new SkinStore();
@@ -295,7 +284,7 @@ namespace Quaver.Main
             }
 
             // Update Fullscreen
-            if (fullscreen != GameBase.GraphicsManager.IsFullScreen)
+            if (GameBase.GraphicsManager != null && fullscreen != GameBase.GraphicsManager.IsFullScreen)
                 GameBase.GraphicsManager.IsFullScreen = fullscreen;
 
             // Update letter boxing

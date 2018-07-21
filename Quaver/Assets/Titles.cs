@@ -2,7 +2,7 @@
 using Quaver.Helpers;
 using Quaver.Resources;
 
-namespace Quaver.Main
+namespace Quaver.Assets
 {
     public static class Titles
     {

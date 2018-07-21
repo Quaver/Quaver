@@ -7,6 +7,7 @@ using Quaver.Graphics.Sprites;
 using Quaver.Logging;
 using Quaver.Main;
 using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
@@ -144,7 +145,7 @@ namespace Quaver.States.Select
 
                 var newButton = new MapsetSelectButton(GameBase.WindowUIScale, i, curmap)
                 {
-                    Image = GameBase.QuaverUserInterface.BlankBox,
+                    Image = UserInterface.BlankBox,
                     Alignment = Alignment.TopRight,
                     Position = new UDim2D(-5, 0),
                     Parent = Boundary
@@ -376,7 +377,7 @@ namespace Quaver.States.Select
             {
                 var newButton = new MapDifficultySelectButton(GameBase.WindowUIScale, i, mapset.Maps[i])
                 {
-                    Image = GameBase.QuaverUserInterface.BlankBox,
+                    Image = UserInterface.BlankBox,
                     Alignment = Alignment.TopRight,
                     Position = new UDim2D(-5, posOffset + (GameBase.WindowUIScale * MapDifficultySelectButton.BUTTON_OFFSET_PADDING * i)),
                     Parent = Boundary

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Parsers;
+using Quaver.Bindables;
 using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;

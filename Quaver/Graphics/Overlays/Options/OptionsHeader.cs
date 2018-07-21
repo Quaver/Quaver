@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Overlays.Navbar;
 using Quaver.Graphics.Sprites;

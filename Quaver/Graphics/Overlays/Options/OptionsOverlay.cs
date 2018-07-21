@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NAudio.Wave;
+using Quaver.Assets;
+using Quaver.Bindables;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Buttons;

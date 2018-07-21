@@ -61,11 +61,17 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Assets\AssetManager.cs" />
+    <Compile Include="Assets\FontAwesome.cs" />
+    <Compile Include="Assets\Fonts.cs" />
+    <Compile Include="Assets\SFX.cs" />
+    <Compile Include="Assets\Titles.cs" />
+    <Compile Include="Assets\UserInterface.cs" />
     <Compile Include="Audio\SeekDirection.cs" />
-    <Compile Include="Audio\SFX.cs" />
-    <Compile Include="Config\BindedInt.cs" />
-    <Compile Include="Config\BindedValue.cs" />
+    <Compile Include="Bindables\BindedInt.cs" />
+    <Compile Include="Bindables\BindedValue.cs" />
     <Compile Include="Discord\DiscordManager.cs" />
+    <Compile Include="GameBase.cs" />
     <Compile Include="Graphics\Alignment.cs" />
     <Compile Include="Graphics\Base\Container.cs" />
     <Compile Include="Graphics\Buttons\Selection\Checkbox.cs" />
@@ -117,12 +123,17 @@
     <Compile Include="Helpers\RngHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\XnaKeyHelper.cs" />
-    <Compile Include="Main\CommonTaskScheduler.cs" />
-    <Compile Include="Main\FontAwesome.cs" />
-    <Compile Include="Main\Titles.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModAutoplay.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModNoPause.cs" />
+    <Compile Include="Parsers\Etterna\Etterna.cs" />
+    <Compile Include="Parsers\Etterna\EtternaCache.cs" />
+    <Compile Include="Parsers\Etterna\StepManiaConverter.cs" />
+    <Compile Include="Parsers\Osu\Osu.cs" />
+    <Compile Include="Parsers\Osu\OsuSkinConfig.cs" />
+    <Compile Include="Parsers\Osu\QuaverOsuElementMap.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="QuaverGame.cs" />
+    <Compile Include="Scheduling\CommonTaskScheduler.cs" />
     <Compile Include="Skinning\SkinKeys.cs" />
     <Compile Include="Skinning\SkinKeysFolder.cs" />
     <Compile Include="Skinning\SkinStore.cs" />
@@ -209,10 +220,8 @@
     <Compile Include="Graphics\Particles\Particle.cs" />
     <Compile Include="Graphics\UI\BarDisplay.cs" />
     <Compile Include="Graphics\Sprites\BakeableSprite.cs" />
-    <Compile Include="Main\Fonts.cs" />
     <Compile Include="Graphics\Text\SpriteText.cs" />
     <Compile Include="Graphics\Text\TextBoxStyle.cs" />
-    <Compile Include="Main\QuaverUserInterface.cs" />
     <Compile Include="Graphics\UI\BackgroundManager.cs" />
     <Compile Include="Input\SongSelectInputManager.cs" />
     <Compile Include="Logging\Log.cs" />
@@ -227,17 +236,12 @@
     <Compile Include="Input\GlobalInputManager.cs" />
     <Compile Include="Input\IInputManager.cs" />
     <Compile Include="Graphics\UI\Cursor.cs" />
-    <Compile Include="Main\GameBase.cs" />
     <Compile Include="Database\Maps\Map.cs" />
     <Compile Include="Database\Maps\MapsetHelper.cs" />
     <Compile Include="Config\ConfigHelper.cs" />
     <Compile Include="Config\ConfigManager.cs" />
     <Compile Include="Database\Maps\MapCache.cs" />
     <Compile Include="Database\Maps\MapsetImporter.cs" />
-    <Compile Include="Peppy\Osu.cs" />
-    <Compile Include="Peppy\OsuSkinConfig.cs" />
-    <Compile Include="Peppy\QuaverOsuElementMap.cs" />
-    <Compile Include="Main\QuaverGame.cs" />
     <Compile Include="States\GameStateManager.cs" />
     <Compile Include="Modifiers\IGameplayModifier.cs" />
     <Compile Include="Modifiers\ModManager.cs" />
@@ -256,9 +260,6 @@
     <Compile Include="States\Tests\NotificationTestScreen.cs" />
     <Compile Include="States\Tests\SemiTransparentTestScreen.cs" />
     <Compile Include="States\Tests\SliderTestState.cs" />
-    <Compile Include="StepMania\Etterna.cs" />
-    <Compile Include="StepMania\EtternaCache.cs" />
-    <Compile Include="StepMania\StepManiaConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DiscordRPC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

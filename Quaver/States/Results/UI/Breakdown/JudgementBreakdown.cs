@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;

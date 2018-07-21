@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;
@@ -33,7 +34,7 @@ namespace Quaver.Graphics.Overlays.BottomBar
             PosY = 0;
             Alpha = 0f;
             Alignment = Alignment.BotLeft;
-            
+
             TopLine = new Sprite
             {
                 Parent = this,
@@ -67,10 +68,10 @@ namespace Quaver.Graphics.Overlays.BottomBar
                 PosX = -150,
                 Alpha = 0
             };
-                    
+
             Avatar = new Sprite()
             {
-                Image = GameBase.QuaverUserInterface.YouAvatar,
+                Image = UserInterface.YouAvatar,
                 Parent = nameContainer,
                 Alignment = Alignment.TopLeft,
                 Size = new UDim2D(30, 30),
@@ -98,9 +99,9 @@ namespace Quaver.Graphics.Overlays.BottomBar
                 PosX = QuaverButton.PosX + QuaverButton.SizeX + 5,
                 Tint = new Color(0, 172, 237)
             };
-            
+
             TwitterButton.Clicked += (o, e) => Process.Start("https://twitter.com/QuaverGame");
-            
+
             BlogButton = new BasicButton()
             {
                 Image = FontAwesome.Rss,
@@ -110,9 +111,9 @@ namespace Quaver.Graphics.Overlays.BottomBar
                 PosX = TwitterButton.SizeX + TwitterButton.PosX + 20,
                 Tint = new Color(242,101,34)
             };
-            
+
             BlogButton.Clicked += (o, e) => Process.Start("https://blog.quavergame.com");
-            
+
             DiscordButton = new BasicButton()
             {
                 Image = FontAwesome.Discord,
@@ -122,7 +123,7 @@ namespace Quaver.Graphics.Overlays.BottomBar
                 PosX = BlogButton.SizeX + BlogButton.PosX + 15,
                 Tint = new Color(114,137,218)
             };
-            
+
             DiscordButton.Clicked += (o, e) => Process.Start("https://discord.gg/nJa8VFr");
         }
     }

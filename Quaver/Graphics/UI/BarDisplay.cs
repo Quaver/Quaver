@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Assets;
 using Quaver.Graphics.Base;
 using Quaver.Main;
 
@@ -64,7 +65,7 @@ namespace Quaver.Graphics.UI
             // Bar Axis Bot
             BarAxisBotCorner = new Sprites.Sprite()
             {
-                Image = GameBase.QuaverUserInterface.BarCorner,
+                Image = UserInterface.BarCorner,
                 Size = new UDim2D(sscale,sscale),
                 Parent = this
             };
@@ -78,7 +79,7 @@ namespace Quaver.Graphics.UI
 
             BarAxisBotCap = new Sprites.Sprite()
             {
-                Image = GameBase.QuaverUserInterface.BarCap,
+                Image = UserInterface.BarCap,
                 Size = new UDim2D(sscale, sscale),
                 Position = new UDim2D(0, BarAxisBotBox.Size.Y.Offset + sscale),
                 SpriteEffect = SpriteEffects.FlipVertically,
@@ -96,7 +97,7 @@ namespace Quaver.Graphics.UI
             //Bar Axis Topp
             BarAxisTopCorner = new Sprites.Sprite()
             {
-                Image = GameBase.QuaverUserInterface.BarCorner,
+                Image = UserInterface.BarCorner,
                 Rotation = 90,
                 Size = new UDim2D(sscale, sscale),
                 Position = new UDim2D(BarAxisMidBox.Position.X.Offset + BarAxisMidBox.Size.X.Offset, 0),
@@ -112,7 +113,7 @@ namespace Quaver.Graphics.UI
 
             BarAxisTopCap = new Sprites.Sprite()
             {
-                Image = GameBase.QuaverUserInterface.BarCap,
+                Image = UserInterface.BarCap,
                 Position = new UDim2D(BarAxisTopBox.Position.X.Offset, BarAxisTopBox.Size.Y.Offset + sscale),
                 Size = new UDim2D(sscale, sscale),
                 SpriteEffect = SpriteEffects.FlipVertically,
@@ -126,7 +127,7 @@ namespace Quaver.Graphics.UI
 
                 BarSpriteBegin[i] = new Sprites.Sprite()
                 {
-                    Image = GameBase.QuaverUserInterface.BarCap,
+                    Image = UserInterface.BarCap,
                     Rotation = -90,
                     Tint = BarColors[i],
                     Position = new UDim2D(sscale, ((((BarSpacing + BarDefaultSize) * i) + BarDefaultSize) * sScale) + BarSpacing),
@@ -144,7 +145,7 @@ namespace Quaver.Graphics.UI
 
                 BarSpriteEnd[i] = new Sprites.Sprite()
                 {
-                    Image = GameBase.QuaverUserInterface.BarCap,
+                    Image = UserInterface.BarCap,
                     Rotation = 90,
                     Alignment = Alignment.TopRight,
                     Tint = BarColors[i],

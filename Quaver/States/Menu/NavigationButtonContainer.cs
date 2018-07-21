@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
@@ -35,7 +36,7 @@ namespace Quaver.States.Menu
         internal NavigationButtonContainer(List<NavigationButton> buttons)
         {
             Buttons = buttons;
-            
+
             // For every button, add an event handler when it's clicked, so that we are aware of when
             // this event happens.
             Buttons.ForEach(x =>
@@ -53,7 +54,7 @@ namespace Quaver.States.Menu
         {
             if (ClickedButton != null)
                 PerformClickAnimation(dt);
-            
+
             base.Update(dt);
         }
 
@@ -75,12 +76,12 @@ namespace Quaver.States.Menu
                 button.OnClick();
                 return;
             }
-            
+
             OriginalSizes = new Dictionary<NavigationButton, Vector2>();
-            
+
             Buttons.ForEach(x =>
             {
-                x.IsClickable = false;         
+                x.IsClickable = false;
                 OriginalSizes.Add(x, x.AbsoluteSize);
             });
 
@@ -90,7 +91,7 @@ namespace Quaver.States.Menu
             // was set to call its action immediately.
             ClickedButton = button;
             ClickedButton.FooterAlwaysShown = true;
-            
+
             GameBase.AudioEngine.PlaySoundEffect(SFX.Woosh);
         }
 
@@ -106,7 +107,7 @@ namespace Quaver.States.Menu
             // when it is, we'll call the OnClick action that the button
             // has.
             var animationDone = false;
-            
+
             // Perform animations for each button.
             Buttons.ForEach(x =>
             {
@@ -114,7 +115,7 @@ namespace Quaver.States.Menu
                 if (x == ClickedButton)
                 {
                     var targetPosition = new Vector2(0, GameBase.WindowRectangle.Height / 2f - x.SizeY / 2f);
-                    
+
                     x.PosX = GraphicsHelper.Tween(targetPosition.X, x.PosX, Math.Min(dt / 60, 1));
                     x.PosY = GraphicsHelper.Tween(targetPosition.Y, x.PosY, Math.Min(dt / 60, 1));
 
@@ -122,17 +123,17 @@ namespace Quaver.States.Menu
                         animationDone = true;
                 }
                 else
-                {                    
+                {
                     // If the button is on the left side of the screen, then we want to lerp it left.
                     var width = x.AbsolutePosition.X + x.SizeX;
                     var middleScreen = GameBase.WindowRectangle.Width / 2f;
-                    
+
                     // Based on where the button is, we'll want to move it in the horizontal direction closest
                     // to where it can go off-screen.
                     if (width < middleScreen)
                         x.PosX = GraphicsHelper.Tween(-GameBase.WindowRectangle.Width - x.SizeX, x.PosX, Math.Min(dt / 240, 1));
                     else if (width > middleScreen)
-                        x.PosX = GraphicsHelper.Tween(GameBase.WindowRectangle.Width + x.SizeX, x.PosX, Math.Min(dt / 240, 1));               
+                        x.PosX = GraphicsHelper.Tween(GameBase.WindowRectangle.Width + x.SizeX, x.PosX, Math.Min(dt / 240, 1));
                 }
             });
 

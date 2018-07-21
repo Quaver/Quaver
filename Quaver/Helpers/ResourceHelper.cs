@@ -9,6 +9,7 @@ using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Assets;
 using Quaver.Logging;
 using Quaver.Main;
 using Quaver.Resources;
@@ -54,14 +55,14 @@ namespace Quaver.Helpers
             return typeof(QuaverResources).GetProperty(name.Replace("-", "_").Replace("@", "_"))?.GetValue(null, null);
         }
 
-        
+
         /// <summary>
         ///     Loads a shader from a byte[] (embedded resource.)
         /// </summary>
         /// <param name="mgfxo"></param>
         /// <returns></returns>
         internal static Effect LoadShader(byte[] mgfxo) => new Effect(GameBase.GraphicsDevice, mgfxo);
-        
+
         /// <summary>
         ///     Loads a skin's texture from resources.
         /// </summary>
@@ -76,8 +77,8 @@ namespace Quaver.Helpers
             catch (Exception e)
             {
                 Logger.LogError($"Element: {element} was not found in QuaverResources", LogType.Runtime);
-                return GameBase.QuaverUserInterface.BlankBox;
-            }   
+                return UserInterface.BlankBox;
+            }
         }
     }
 }

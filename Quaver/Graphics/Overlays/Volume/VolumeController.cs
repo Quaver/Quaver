@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Buttons.Selection;

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.API.Gameplay;
 using Quaver.API.Maps;
+using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Graphics;
@@ -382,7 +383,7 @@ namespace Quaver.States.Gameplay.UI
             var users = new List<ScoreboardUser>
             {
                 // Add ourself to the list of scoreboard users first.
-                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, GameBase.QuaverUserInterface.YouAvatar)
+                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, UserInterface.YouAvatar)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidLeft
@@ -399,7 +400,7 @@ namespace Quaver.States.Gameplay.UI
                 foreach (var c in GzipHelper.Decompress(Screen.LocalScores[i].JudgementBreakdown))
                     scoreJudgements.Add((Judgement)int.Parse(c.ToString()));
 
-                users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{Screen.LocalScores[i].Name} #{i + 1}", scoreJudgements, GameBase.QuaverUserInterface.UnknownAvatar)
+                users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{Screen.LocalScores[i].Name} #{i + 1}", scoreJudgements, UserInterface.UnknownAvatar)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidLeft
@@ -419,7 +420,7 @@ namespace Quaver.States.Gameplay.UI
                     while (users.Any(x => x.Username.Text.Contains(bot.Name)))
                         bot.Name = Bot.GenerateRandomName();
 
-                    users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, bot.Judgements, GameBase.QuaverUserInterface.UnknownAvatar)
+                    users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, bot.Name, bot.Judgements, UserInterface.UnknownAvatar)
                     {
                         Parent = Container,
                         Alignment = Alignment.MidLeft

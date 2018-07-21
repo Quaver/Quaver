@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps;
+using Quaver.Assets;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Graphics.Buttons;

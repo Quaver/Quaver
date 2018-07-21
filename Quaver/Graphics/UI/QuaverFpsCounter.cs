@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Main;
 
 namespace Quaver.Graphics.UI
@@ -97,7 +98,7 @@ namespace Quaver.Graphics.UI
         public static void Draw()
         {
             // Draw text
-            GameBase.SpriteBatch.Draw(GameBase.QuaverUserInterface.BlankBox, new Rectangle((int)GameBase.WindowRectangle.Width - 80, (int)GameBase.WindowRectangle.Height - 20, 75, 18), Color.Black);
+            GameBase.SpriteBatch.Draw(UserInterface.BlankBox, new Rectangle((int)GameBase.WindowRectangle.Width - 80, (int)GameBase.WindowRectangle.Height - 20, 75, 18), Color.Black);
             GameBase.SpriteBatch.DrawString(Fonts.Medium12, Math.Floor(FpsCurrent) + " FPS", new Vector2(GameBase.WindowRectangle.Width - 80, GameBase.WindowRectangle.Height - 20), Color.White);
 
             // Draw graph and color according to fps.
@@ -105,19 +106,19 @@ namespace Quaver.Graphics.UI
             for (var i = 0; i < 40; i++)
             {
                 if (AverageFpsIntervals[i] < 60)
-                    GameBase.SpriteBatch.Draw(GameBase.QuaverUserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.Red);
+                    GameBase.SpriteBatch.Draw(UserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.Red);
                 else if (AverageFpsIntervals[i] < 144)
-                    GameBase.SpriteBatch.Draw(GameBase.QuaverUserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.DarkOrange);
+                    GameBase.SpriteBatch.Draw(UserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.DarkOrange);
                 else if (AverageFpsIntervals[i] < 240)
-                    GameBase.SpriteBatch.Draw(GameBase.QuaverUserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.Gold);
+                    GameBase.SpriteBatch.Draw(UserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.Gold);
                 else if (AverageFpsIntervals[i] < 500)
-                    GameBase.SpriteBatch.Draw(GameBase.QuaverUserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.LightGreen);
+                    GameBase.SpriteBatch.Draw(UserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.LightGreen);
                 else if (AverageFpsIntervals[i] < 1000)
-                    GameBase.SpriteBatch.Draw(GameBase.QuaverUserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.DeepSkyBlue * 0.5f);
+                    GameBase.SpriteBatch.Draw(UserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.DeepSkyBlue * 0.5f);
                 else if (AverageFpsIntervals[i] < 1500)
-                    GameBase.SpriteBatch.Draw(GameBase.QuaverUserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.LightBlue * 0.35f);
+                    GameBase.SpriteBatch.Draw(UserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.LightBlue * 0.35f);
                 else
-                    GameBase.SpriteBatch.Draw(GameBase.QuaverUserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.Azure * 0.25f);
+                    GameBase.SpriteBatch.Draw(UserInterface.BlankBox, new Rectangle(i * 10, (int)GameBase.WindowRectangle.Height - CurrentBarSize[i], 8, CurrentBarSize[i]), Color.Azure * 0.25f);
             }
         }
     }

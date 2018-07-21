@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Assets;
 using Quaver.Graphics.Base;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -32,17 +33,17 @@ namespace Quaver.Graphics.UI.Notifications
         private static Vector2 InitialPosition { get; } = new Vector2(350, 120);
 
         /// <summary>
-        ///     
+        ///
         /// </summary>
         /// <param name="dt"></param>
         internal static void Update(double dt)
         {
             PerformAnimations(dt);
-            Container.Update(dt);         
+            Container.Update(dt);
         }
 
          /// <summary>
-        /// 
+        ///
         /// </summary>
         internal static void Draw() => Container.Draw();
 
@@ -55,7 +56,7 @@ namespace Quaver.Graphics.UI.Notifications
         internal static void Show(NotificationLevel level, string text, EventHandler onClick = null)
         {
             Color color;
-            var image = GameBase.QuaverUserInterface.UnknownAvatar;
+            var image = UserInterface.UnknownAvatar;
 
             switch (level)
             {
@@ -67,24 +68,24 @@ namespace Quaver.Graphics.UI.Notifications
                     break;
                 case NotificationLevel.Info:
                     color = ColorHelper.HexToColor("#5BC0DE");
-                    image = GameBase.QuaverUserInterface.NotificationInfo;
+                    image = UserInterface.NotificationInfo;
                     break;
                 case NotificationLevel.Error:
                     color = ColorHelper.HexToColor("#D9534F");
-                    image = GameBase.QuaverUserInterface.NotificationError;
+                    image = UserInterface.NotificationError;
                     break;
                 case NotificationLevel.Warning:
                     color = Color.Yellow;
-                    image = GameBase.QuaverUserInterface.NotificationWarning;
+                    image = UserInterface.NotificationWarning;
                     break;
                 case NotificationLevel.Success:
                     color = ColorHelper.HexToColor("#5CB85C");
-                    image = GameBase.QuaverUserInterface.NotificationSuccess;
+                    image = UserInterface.NotificationSuccess;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(level), level, null);
             }
-            
+
             Show(image, color, text, onClick);
         }
 
@@ -103,30 +104,30 @@ namespace Quaver.Graphics.UI.Notifications
                 Alignment = Alignment.TopRight,
                 Position = new UDim2D(InitialPosition.X, InitialPosition.Y),
             };
-            
-            notification.PosX = notification.SizeX;           
+
+            notification.PosX = notification.SizeX;
             Notifications.Add(notification);
         }
 
         /// <summary>
-        ///     Performs all of the animations for 
+        ///     Performs all of the animations for
         /// </summary>
         private static void PerformAnimations(double dt)
         {
             if (Notifications.Count == 0)
                 return;
-            
+
             for (var i = Notifications.Count - 1; i >= 0; i--)
             {
                 var n = Notifications[i];
-                
+
                 // Tween the notification to the left
                 if (Math.Abs(n.PosX - TargetX) > 0.02)
                     n.PosX = GraphicsHelper.Tween(TargetX, n.PosX, Math.Min(dt / 60, 1));
-                
+
                 // Get the current iteration
                 var iteration = Notifications.Count - 1 - i;
-                
+
                 // Calculate the new target y position
                 var targetY = InitialPosition.Y + (Notifications.Last().SizeY + 20) * iteration;
 
@@ -134,10 +135,10 @@ namespace Quaver.Graphics.UI.Notifications
                     n.PosY = GraphicsHelper.Tween(targetY, n.PosY, Math.Min(dt / 60, 1));
                 else
                 {
-                    // Since the notification is now in the correct x position, we can 
+                    // Since the notification is now in the correct x position, we can
                     // begin counting the time it has been shown, so we'll know when to fade it out.
                     n.TimeElapsedSinceShown += dt;
-                    
+
                     // Reset the alpha if the button is hovered over, and it hasn't already been clicked.
                     if (n.IsTrulyHovered && !n.HasBeenClicked)
                     {
@@ -146,8 +147,8 @@ namespace Quaver.Graphics.UI.Notifications
                     }
                     // Begin to fade out and destroy the object after a period of time.
                     else if (Math.Abs(n.Alpha) < 0.02)
-                    {                        
-                        Notifications.Remove(n);                            
+                    {
+                        Notifications.Remove(n);
                         n.Destroy();
                     }
                 }

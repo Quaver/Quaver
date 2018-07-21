@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Quaver.API.Enums;
+using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Audio;
 using Quaver.Helpers;
 
-namespace Quaver.Audio
+namespace Quaver.Assets
 {
     /// <summary>
     ///     All sound effects that aren't skinnable.

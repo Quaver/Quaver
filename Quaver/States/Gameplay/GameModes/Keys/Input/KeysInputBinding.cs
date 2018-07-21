@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
+using Quaver.Bindables;
 using Quaver.Config;
 
 namespace Quaver.States.Gameplay.GameModes.Keys.Input

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;

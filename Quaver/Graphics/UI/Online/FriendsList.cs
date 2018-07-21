@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;

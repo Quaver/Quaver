@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
 using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Main;
 
-namespace Quaver.StepMania
+namespace Quaver.Parsers.Etterna
 {
     internal class StepManiaConverter
     {

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Parsers;
+using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -167,18 +168,10 @@ namespace Quaver.Main
         public static Cursor Cursor { get; set; }
 
         /// <summary>
-        ///     Contains all of the loaded embedded QuaverUserInterface .xnb resources that aren't apart of the
-        ///     default skin
-        /// </summary>
-        public static QuaverUserInterface QuaverUserInterface { get; set; } = new QuaverUserInterface();
-
-        /// <summary>
         ///     Create a Stopwatch object for the game, This'll hold the time since the application
         ///     was started.
         /// </summary>
         public static Stopwatch GameTime { get; set; } = Stopwatch.StartNew();
-
-
 
         /// <summary>
         ///     Reference to the game's audio engine

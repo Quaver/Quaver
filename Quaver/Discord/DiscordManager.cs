@@ -9,6 +9,7 @@ using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Main;
 using LogLevel = DiscordRPC.Logging.LogLevel;
+using Assets = DiscordRPC.Assets;
 
 namespace Quaver.Discord
 {
@@ -20,7 +21,7 @@ namespace Quaver.Discord
 
         internal static RichPresence Presence { get; private set; }
 
-        private static Assets Assets { get; set; }
+        private static DiscordRPC.Assets Assets { get; set; }
 
 
         internal static void Initialize()
@@ -34,23 +35,23 @@ namespace Quaver.Discord
             {
                 Level = LogLevel.Error
             };
-            
+
             Client.Initialize();
 
-            Assets = new Assets
+            Assets = new DiscordRPC.Assets
             {
                 LargeImageKey = "quaver",
                 LargeImageText = ConfigManager.Username.Value,
                 SmallImageKey = "4k"
             };
-            
-            Presence = new RichPresence 
-            { 
+
+            Presence = new RichPresence
+            {
                 State = "In the menus",
                 Assets = Assets,
                 Timestamps = new Timestamps()
             };
-            
+
             Client.SetPresence(Presence);
         }
     }
