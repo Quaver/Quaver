@@ -1,5 +1,6 @@
 ﻿using System;
 using Quaver.API.Enums;
+using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;

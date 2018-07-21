@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
+using Quaver.Bindables;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Discord;

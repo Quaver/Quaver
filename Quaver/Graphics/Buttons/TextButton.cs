@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -27,7 +28,7 @@ namespace Quaver.Graphics.Buttons
             };
             Size.X.Offset = ButtonSize.X;
             Size.Y.Offset = ButtonSize.Y;
-            Image = GameBase.QuaverUserInterface.BlankBox;
+            Image = UserInterface.BlankBox;
             TextSprite.TextColor = Color.Black;
         }
 
@@ -72,7 +73,7 @@ namespace Quaver.Graphics.Buttons
             CurrentTint.G = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
             CurrentTint.B = (byte)(((HoverCurrentTween * 0.25) + 0.75f) * 255);
             Tint = CurrentTint;*/
-            
+
             //QuaverTextSprite.Update(dt);
             base.Update(dt);
         }

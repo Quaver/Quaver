@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
 using Quaver.Logging;
@@ -48,7 +49,7 @@ namespace Quaver.Graphics.Buttons
         private bool TextHighlighted { get; set; }
 
         /// <summary>
-        ///     A function must be passed into QuaverTextInputField upon creation to determine what happens when it 
+        ///     A function must be passed into QuaverTextInputField upon creation to determine what happens when it
         ///     is submitted
         /// </summary>
         internal delegate void TextBoxSubmittedDelegate(string text);
@@ -81,7 +82,7 @@ namespace Quaver.Graphics.Buttons
 
             Size.X.Offset = ButtonSize.X;
             Size.Y.Offset = ButtonSize.Y;
-            Image = GameBase.QuaverUserInterface.BlankBox;
+            Image = UserInterface.BlankBox;
             TextSprite.TextColor = Color.White;
 
             PlaceHolderText = placeHolderText;
@@ -188,11 +189,11 @@ namespace Quaver.Graphics.Buttons
                         case Keys.Back:
                             if (string.IsNullOrEmpty(TextSprite.Text))
                                 return;
-                            
+
                             CurrentTextField.Length--;
                             TextSprite.Text = CurrentTextField.ToString();
                             break;
-                        
+
                         // On Submit
                         case Keys.Enter:
                             if (string.IsNullOrEmpty(TextSprite.Text))
@@ -304,7 +305,7 @@ namespace Quaver.Graphics.Buttons
             // CTRL + V (Paste)
             else if (GameBase.KeyboardState.IsKeyDown(Keys.V))
             {
-                // If the text is highlighted, then we need to replace it 
+                // If the text is highlighted, then we need to replace it
                 if (TextHighlighted)
                 {
                     // Don't do anything if the clip board is empty
@@ -322,7 +323,7 @@ namespace Quaver.Graphics.Buttons
                 var oldText = CurrentTextField.ToString();
 
                 // Append old text + new text
-                CurrentTextField.Length = 0;               
+                CurrentTextField.Length = 0;
                 CurrentTextField.Append(oldText + Clipboard.GetText());
                 TextSprite.Text = CurrentTextField.ToString();
             }

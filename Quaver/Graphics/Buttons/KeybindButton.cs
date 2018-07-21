@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Bindables;
 using Quaver.Config;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;

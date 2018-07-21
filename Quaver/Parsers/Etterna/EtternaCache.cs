@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Quaver.API.Maps.Parsers;
 
-namespace Quaver.StepMania
+namespace Quaver.Parsers.Etterna
 {
     /// <summary>
     ///     Class that 

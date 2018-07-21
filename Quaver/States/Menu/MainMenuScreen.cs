@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Ionic.Zip;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Discord;
 using Quaver.Graphics;
@@ -131,7 +132,7 @@ namespace Quaver.States.Menu
         /// </summary>
         private void CreateInterface()
         {
-            Background = new Background(GameBase.QuaverUserInterface.MenuBackground, 30) { Parent = Container };
+            Background = new Background(UserInterface.MenuBackground, 30) { Parent = Container };
 
             Toolbar = new Toolbar(new List<ToolbarItem>
                 {
@@ -156,7 +157,7 @@ namespace Quaver.States.Menu
         private void CreateNavigationButtons()
         {
             // Editor
-            var editor = new NavigationButton(new Vector2(325, 230), "Editor", GameBase.QuaverUserInterface.MenuCompetitive,
+            var editor = new NavigationButton(new Vector2(325, 230), "Editor", UserInterface.MenuCompetitive,
                 "Create or edit a map to any song you'd like!", EditorScreen.Go)
             {
                 Alignment = Alignment.TopCenter,
@@ -166,7 +167,7 @@ namespace Quaver.States.Menu
 
             // Single Player.
             var singlePlayer = new NavigationButton(new Vector2(325, 230), "Single Player",
-                GameBase.QuaverUserInterface.MenuSinglePlayer, "Play offline and compete for scoreboard ranks!",
+                UserInterface.MenuSinglePlayer, "Play offline and compete for scoreboard ranks!",
                 () => GameBase.GameStateManager.ChangeState(new SongSelectState()))
             {
                 Alignment = Alignment.TopCenter,
@@ -175,7 +176,7 @@ namespace Quaver.States.Menu
             };
 
             // Competitve
-            var competitive = new NavigationButton(new Vector2(325, 230), "Competitive", GameBase.QuaverUserInterface.MenuLock,
+            var competitive = new NavigationButton(new Vector2(325, 230), "Competitive", UserInterface.MenuLock,
                 "Compete against the world and rank up!", () =>
                 {
                     NotificationManager.Show(NotificationLevel.Info, "This isn't implemented yet. Check back later!");
@@ -187,7 +188,7 @@ namespace Quaver.States.Menu
             };
 
             // Multiplayer
-            var customGames = new NavigationButton(new Vector2(325, 230), "Custom Games", GameBase.QuaverUserInterface.MenuLock,
+            var customGames = new NavigationButton(new Vector2(325, 230), "Custom Games", UserInterface.MenuLock,
                 "Play casually with your friends online!", () =>
                 {
                     NotificationManager.Show(NotificationLevel.Info, "This isn't implemented yet. Check back later!");
@@ -200,7 +201,7 @@ namespace Quaver.States.Menu
 
             // News
             var news = new NavigationButton(new Vector2(250, 490), "Latest News",
-                GameBase.QuaverUserInterface.MenuNews, "Keep up-to-date wih Quaver!", () =>
+                UserInterface.MenuNews, "Keep up-to-date wih Quaver!", () =>
                 {
                     NotificationManager.Show(NotificationLevel.Info, "This isn't implemented yet. Check back later!");
                 }, true)

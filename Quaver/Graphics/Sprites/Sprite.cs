@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Assets;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
@@ -10,14 +11,14 @@ namespace Quaver.Graphics.Sprites
 {
     /// <inheritdoc />
     /// <summary>
-    ///     Any drawable object that uses 
+    ///     Any drawable object that uses
     /// </summary>
     internal class Sprite : Drawable
     {
         /// <summary>
         ///     Image Texture of the sprite.
         /// </summary>
-        private Texture2D _image = GameBase.QuaverUserInterface.BlankBox;
+        private Texture2D _image = UserInterface.BlankBox;
         internal Texture2D Image
         {
             get => _image;
@@ -34,7 +35,7 @@ namespace Quaver.Graphics.Sprites
         ///     Angle of the sprite with it's origin in the centre. (TEMPORARILY NOT USED YET)
         /// </summary>
         private float _rotation;
-        internal float Rotation 
+        internal float Rotation
         {
             get => _rotation;
             set => _rotation = MathHelper.ToRadians(value);
@@ -48,7 +49,7 @@ namespace Quaver.Graphics.Sprites
         /// <summary>
         ///     The origin of this object used for rotation.
         /// </summary>
-        private Vector2 _origin = new Vector2(GameBase.QuaverUserInterface.BlankBox.Width/2f, GameBase.QuaverUserInterface.BlankBox.Height/2f); //TODO: bake this value later
+        private Vector2 _origin = new Vector2(UserInterface.BlankBox.Width/2f, UserInterface.BlankBox.Height/2f); //TODO: bake this value later
 
         /// <summary>
         ///     The Rectangle used to render the sprite.
@@ -56,7 +57,7 @@ namespace Quaver.Graphics.Sprites
         private Rectangle _renderRectangle;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private readonly DrawRectangle _originRectangle = new DrawRectangle();
 
@@ -72,7 +73,7 @@ namespace Quaver.Graphics.Sprites
             {
                 _tint = value;
                 _color = _tint * _alpha;
-            } 
+            }
         }
 
         /// <summary>
@@ -88,7 +89,7 @@ namespace Quaver.Graphics.Sprites
 
                 if (!SetChildrenAlpha)
                     return;
-                
+
                 Children.ForEach(x =>
                 {
                     var t = x.GetType();
@@ -104,9 +105,9 @@ namespace Quaver.Graphics.Sprites
                         text.Alpha = value;
                     }
                 });
-            } 
+            }
         }
-        
+
         /// <summary>
         ///     Dictates if we want to set the alpha of the children as well.
         /// </summary>
@@ -128,7 +129,7 @@ namespace Quaver.Graphics.Sprites
             else
                 base.Update(dt);
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         ///     Draws the sprite to the screen.
@@ -166,15 +167,15 @@ namespace Quaver.Graphics.Sprites
         /// <summary>
         ///     Fades out the sprite to a given alpha.
         /// </summary>
-        internal void Fade(double dt, float target, float scale) => Alpha = GraphicsHelper.Tween(target, Alpha, Math.Min(dt / scale, 1)); 
-        
+        internal void Fade(double dt, float target, float scale) => Alpha = GraphicsHelper.Tween(target, Alpha, Math.Min(dt / scale, 1));
+
         /// <summary>
         ///     Completely fades out the object.
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="scale"></param>
-        internal void FadeOut(double dt, float scale) => Alpha = GraphicsHelper.Tween(0, Alpha, Math.Min(dt / scale, 1)); 
-        
+        internal void FadeOut(double dt, float scale) => Alpha = GraphicsHelper.Tween(0, Alpha, Math.Min(dt / scale, 1));
+
         /// <summary>
         ///     Completely fades in the object.
         /// </summary>
@@ -193,7 +194,7 @@ namespace Quaver.Graphics.Sprites
             PosX = GraphicsHelper.Tween(pos.X, PosX, Math.Min(dt / scale, 1));
             PosY = GraphicsHelper.Tween(pos.Y, PosY, Math.Min(dt / scale, 1));
         }
-        
+
         /// <summary>
         ///     Fades the sprite to a given color.
         /// </summary>
@@ -205,7 +206,7 @@ namespace Quaver.Graphics.Sprites
             var r = GraphicsHelper.Tween(color.R, Tint.R, Math.Min(dt / scale, 1));
             var g = GraphicsHelper.Tween(color.G, Tint.G, Math.Min(dt / scale, 1));
             var b = GraphicsHelper.Tween(color.B, Tint.B, Math.Min(dt / scale, 1));
-            
+
             Tint = new Color((int)r, (int)g, (int)b);
         }
 
@@ -219,7 +220,7 @@ namespace Quaver.Graphics.Sprites
         {
             SizeX = GraphicsHelper.Lerp(to, SizeX, Math.Min(dt / by, 1));
             SizeY = GraphicsHelper.Lerp(to, SizeY, Math.Min(dt / by, 1));
-            
+
             Children.ForEach(x =>
             {
                 x.SizeX = GraphicsHelper.Lerp(to, x.SizeX, Math.Min(dt / by, 1));

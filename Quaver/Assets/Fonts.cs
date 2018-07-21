@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using Quaver.Main;
 
-namespace Quaver.Main
+namespace Quaver.Assets
 {
     internal static class Fonts
     {
@@ -8,7 +9,7 @@ namespace Quaver.Main
         public static SpriteFont Medium16 { get; set; }
         public static SpriteFont Medium24 { get; set; }
         public static SpriteFont Medium48 { get; set; }
-        public static SpriteFont Bold12 { get; set; } 
+        public static SpriteFont Bold12 { get; set; }
         public static SpriteFont AssistantLight16 { get; set; }
         public static SpriteFont AssistantRegular16 { get; set; }
         public static SpriteFont RationalInteger16 { get; set; }

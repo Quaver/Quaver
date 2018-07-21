@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Graphics.Sprites;
 using Quaver.Helpers;
 using Quaver.Main;

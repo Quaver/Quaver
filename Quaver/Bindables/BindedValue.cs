@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Quaver.Config
+namespace Quaver.Bindables
 {
     /// <summary>
     ///     Generic class for values that you want to keep track of when they change.

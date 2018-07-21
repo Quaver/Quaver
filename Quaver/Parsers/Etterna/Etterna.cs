@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Quaver.API.Maps.Parsers;
 
-namespace Quaver.StepMania
+namespace Quaver.Parsers.Etterna
 {
     internal static class Etterna
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Quaver.Config
+namespace Quaver.Bindables
 {
     /// <inheritdoc />
     /// <summary>

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Graphing;
 using Quaver.Graphics.Sprites;

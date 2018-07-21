@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;

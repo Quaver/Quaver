@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-
 using Quaver.Config;
 using Quaver.Logging;
 
-namespace Quaver.Peppy
+namespace Quaver.Parsers.Osu
 {
     /// <summary>
     ///     Deserialization class for osu!'s skin.ini

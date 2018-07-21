@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
@@ -44,7 +45,7 @@ namespace Quaver.Graphics.UI.Online
         private Sprite GameMode { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal Playercard()
         {
@@ -53,11 +54,11 @@ namespace Quaver.Graphics.UI.Online
             Tint = Color.Black;
             Alignment = Alignment.TopLeft;
             Alpha = 0.50f;
-            
+
             Avatar = new Sprite()
             {
                 Parent = this,
-                Image = GameBase.QuaverUserInterface.YouAvatar,
+                Image = UserInterface.YouAvatar,
                 Size = new UDim2D(SizeY, SizeY),
                 Alignment = Alignment.TopLeft
             };
@@ -74,7 +75,7 @@ namespace Quaver.Graphics.UI.Online
             TitleBrightness = new Sprite()
             {
                 Parent = this,
-                Image = GameBase.QuaverUserInterface.BlankBox,
+                Image = UserInterface.BlankBox,
                 Tint = Color.Black,
                 Alpha = 0.50f,
                 Size = Title.Size,
@@ -94,7 +95,7 @@ namespace Quaver.Graphics.UI.Online
                 TextColor = Color.White,
                 TextScale = 0.90f
             };
-            
+
             Rating = new SpriteText()
             {
                 Parent = this,

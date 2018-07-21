@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Sprites;
@@ -122,7 +123,7 @@ namespace Quaver.States.Results.UI
         /// <summary>
         ///     Creates the map background.
         /// </summary>
-        private void CreateBackground() => Background = new Background(GameBase.QuaverUserInterface.MenuBackground, 0)
+        private void CreateBackground() => Background = new Background(UserInterface.MenuBackground, 0)
         {
             Parent = Container
         };

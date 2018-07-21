@@ -1,10 +1,8 @@
-﻿using System.Windows.Forms;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using Quaver.Helpers;
 using Quaver.Resources;
-using Quaver.States.Gameplay.UI.Components.Pause;
 
-namespace Quaver.Main
+namespace Quaver.Assets
 {
     internal static class FontAwesome
     {

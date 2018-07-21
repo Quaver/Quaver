@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Buttons;
 using Quaver.Graphics.Sprites;

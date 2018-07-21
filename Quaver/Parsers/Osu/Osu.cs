@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Ionic.Zip;
-using Microsoft.Xna.Framework;
 using NAudio.Wave;
-using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
 using Quaver.Config;
 using Quaver.Logging;
 
-namespace Quaver.Peppy
+namespace Quaver.Parsers.Osu
 {
     internal class Osu
     {

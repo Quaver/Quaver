@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
 using Quaver.Graphics.Overlays.Navbar;
@@ -25,13 +26,13 @@ namespace Quaver.States.Tests
         public void Initialize()
         {
             Container = new Container();
-            TestSprite = new AnimatableSprite(GameBase.QuaverUserInterface.TestSpritesheet)
+            TestSprite = new AnimatableSprite(UserInterface.TestSpritesheet)
             {
                 Parent = Container,
                 Alignment = Alignment.MidRight,
                 Size = new UDim2D(64, 128)
             };
-            
+
             TestSprite.StartLoop(LoopDirection.Backward, 24);
 
             Test = new Sprite()
@@ -39,10 +40,10 @@ namespace Quaver.States.Tests
                 Parent = Container,
                 Alignment = Alignment.MidCenter,
                 Size = new UDim2D(200, 200),
-                Image = GameBase.QuaverUserInterface.JudgementOverlay,
+                Image = UserInterface.JudgementOverlay,
             };
-            
-            
+
+
             Nav = Nav.CreateGlobalNavbar();
             Nav.Initialize(this);
             UpdateReady = true;

@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Main;
@@ -51,7 +52,7 @@ namespace Quaver.Graphics.UI
             {
                 Size = new UDim2D(GameBase.WindowRectangle.Width, GameBase.WindowRectangle.Height),
                 Alignment = Alignment.MidCenter,
-                Image = GameBase.QuaverUserInterface.DiffSelectMask,
+                Image = UserInterface.DiffSelectMask,
                 Tint = Color.Black
             };
 

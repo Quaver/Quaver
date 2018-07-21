@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
+using Quaver.Assets;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
 using Quaver.Helpers;
@@ -46,16 +47,16 @@ namespace Quaver.Graphics.Overlays.Navbar
         ///     Dictates if the tooltip box is currently in an animation.
         /// </summary>
         internal bool InAnimation { get; set; }
-        
+
         /// <summary>
         ///     Dictates if the box is entering the screen. If false, that means it's exiting.
         ///     This allows us to keep track of which way to set the tooltip box to go
         ///     during the animation.
         /// </summary>
         internal bool IsEnteringScreen { get; set; }
-        
+
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="container"></param>
         /// <param name="nav"></param>
@@ -64,7 +65,7 @@ namespace Quaver.Graphics.Overlays.Navbar
             Container = container;
             Nav = nav;
             Parent = Container;
-            
+
             // Create the tooltip box.
             ContainerBox = new Sprite()
             {
@@ -75,22 +76,22 @@ namespace Quaver.Graphics.Overlays.Navbar
                 Parent = Container,
                 Visible = false
             };
-            
+
             // The x and y positions of the top line of the tooltip.
             const int tooltipTopLineX = 10;
             const int tooltipTopLineY = 5;
-            
+
             // Create the icon sprite (displayed to the left of the text.)
             Icon = new Sprite()
             {
-                Image = GameBase.QuaverUserInterface.BlankBox,
+                Image = UserInterface.BlankBox,
                 Position = new UDim2D(tooltipTopLineX, tooltipTopLineY),
                 Parent = ContainerBox
             };
-            
+
             // Set the size of the icon.
             Icon.Size = new UDim2D(Icon.Image.Width, Icon.Image.Height);
-            
+
             // Create Textbox for the name of the button.
             Name = new SpriteText()
             {
@@ -104,7 +105,7 @@ namespace Quaver.Graphics.Overlays.Navbar
                 TextColor = Color.White,
                 Parent = ContainerBox
             };
-            
+
             // Create Textbox for the description of the button.
             Description = new SpriteText()
             {
@@ -117,7 +118,7 @@ namespace Quaver.Graphics.Overlays.Navbar
                 TextBoxStyle = TextBoxStyle.ScaledSingleLine,
                 TextColor = Color.White,
                 Parent = ContainerBox
-            }; 
+            };
         }
 
         ///     Update
@@ -132,46 +133,46 @@ namespace Quaver.Graphics.Overlays.Navbar
                     PerformEnterAnimation(dt);
                 else
                     PerformExitAnimation(dt);
-            }   
-            
+            }
+
             base.Update(dt);
         }
-        
+
         /// <summary>
         ///     Performs an animation for the tooltip when the mouse hovers over the button.
         /// </summary>
         /// <param name="dt"></param>
         private void PerformEnterAnimation(double dt)
-        {             
+        {
             // The original position of the navbar
             const int newPos = 0;
-          
+
             // Don't perform the animation anymore after reaching a certain height.
             if (Math.Abs(ContainerBox.PosX - newPos) < 0.1)
             {
                 InAnimation = false;
                 return;
             }
-            
+
             ContainerBox.PosX = GraphicsHelper.Tween(newPos, ContainerBox.PosX, Math.Min(dt / 60, 1));
         }
-        
+
         /// <summary>
         ///     Performs an animation for the tooltip when the mouse exits the button.
         /// </summary>
         /// <param name="dt"></param>
         private void PerformExitAnimation(double dt)
-        {             
-            // The original position of the 
+        {
+            // The original position of the
             const int origPos = -400;
-          
+
             // Don't perform the animation anymore after reaching a certain height.
             if (Math.Abs(ContainerBox.PosX - origPos) < 0.1)
             {
                 InAnimation = false;
                 return;
             }
-            
+
             ContainerBox.PosX = GraphicsHelper.Tween(origPos, ContainerBox.PosX, Math.Min(dt / 60, 1));
         }
     }

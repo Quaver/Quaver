@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Quaver.Assets;
+using Quaver.Bindables;
 using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Main;

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
+using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Sprites;
 using Quaver.Graphics.Text;
@@ -91,7 +92,7 @@ namespace Quaver.States.Results.UI
                 Size = new UDim2D(BackgroundBorder.SizeX - 2, BackgroundBorder.SizeY - 2),
                 Alignment = Alignment.TopLeft,
                 Position = new UDim2D(1, 1),
-                Image = GameBase.QuaverUserInterface.MenuBackground
+                Image = UserInterface.MenuBackground
             };
 
             Title = new SpriteText

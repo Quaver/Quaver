@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Assets;
 using Quaver.Discord;
 using Quaver.Graphics;
 using Quaver.Graphics.Base;
@@ -51,7 +52,7 @@ namespace Quaver.States.Tests
         private BottomBar BottomBar { get; set; }
 
         /// <inheritdoc />
-        /// <summary>  
+        /// <summary>
         /// </summary>
         public void Initialize()
         {
@@ -92,7 +93,7 @@ namespace Quaver.States.Tests
             GameBase.Navbar.PerformHideAnimation(dt);
             Container.Update(dt);
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         ///     Draw
@@ -101,9 +102,9 @@ namespace Quaver.States.Tests
         {
             GameBase.GraphicsDevice.Clear(Color.Black);
             GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GameBase.GraphicsDevice.RasterizerState);
-            
+
             Container.Draw();
-            
+
             GameBase.SpriteBatch.End();
         }
 
@@ -112,8 +113,8 @@ namespace Quaver.States.Tests
         /// </summary>
         private void CreateInterface()
         {
-            Background = new Background(GameBase.QuaverUserInterface.MenuBackground, 30) { Parent = Container };
-            
+            Background = new Background(UserInterface.MenuBackground, 30) { Parent = Container };
+
             Toolbar = new Toolbar(new List<ToolbarItem>
                 {
                     new ToolbarItem("Home", () => GameBase.GameStateManager.ChangeState(new MainMenuScreen()), true),
@@ -130,12 +131,12 @@ namespace Quaver.States.Tests
                 new List<ToolbarItem>
                 {
                     new ToolbarItem(FontAwesome.PowerOff, QuaverGame.Quit),
-                    new ToolbarItem(FontAwesome.Cog, () => {}), 
+                    new ToolbarItem(FontAwesome.Cog, () => {}),
                 }
             ) { Parent = Container };
 
             BottomBar = new BottomBar { Parent = Container };
-               
+
         }
     }
 }

@@ -11,7 +11,7 @@ using Quaver.API.Maps;
 using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Main;
-using Quaver.StepMania;
+using Quaver.Parsers.Etterna;
 using SQLite;
 using GameMode = Quaver.API.Enums.GameMode;
 
