@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver.Resources", "Quaver.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver.Shaders", "Quaver.Shaders\Quaver.Shaders.csproj", "{07B693C1-B9BC-449E-8639-926118C9B088}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wobble", "Wobble\Wobble\Wobble.csproj", "{DA74528D-B500-4C5A-977E-76A756E65C63}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wobble", "..\Wobble\Wobble\Wobble.csproj", "{DA74528D-B500-4C5A-977E-76A756E65C63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
