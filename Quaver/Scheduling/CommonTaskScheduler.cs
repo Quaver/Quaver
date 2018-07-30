@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Quaver.Config;
-using Quaver.Main;
+using Wobble;
 
 namespace Quaver.Scheduling
 {
@@ -40,8 +40,7 @@ namespace Quaver.Scheduling
         /// </summary>
         internal static void Run()
         {
-            // If we're already running our tasks or there aren't any queued, then don't run.
-            if (IsRunning || QueuedTasks.Count == 0)
+            if (GameBase.Game.TimeRunning - LastRunTime >= 5000 || IsRunning || QueuedTasks.Count == 0)
                 return;
 
             var taskList = new List<Task>();
@@ -60,7 +59,7 @@ namespace Quaver.Scheduling
                 IsRunning = false;
 
                 // Set the last run time.
-                LastRunTime = GameBase.GameTime.ElapsedMilliseconds;
+                LastRunTime = GameBase.Game.TimeRunning;
             });
 
             // Add all common tasks to the queue.

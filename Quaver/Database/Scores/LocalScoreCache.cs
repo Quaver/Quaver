@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Logging;
@@ -9,25 +8,25 @@ using SQLite;
 
 namespace Quaver.Database.Scores
 {
-    internal static class LocalScoreCache
+    public static class LocalScoreCache
     {
-        /// <summary>
+         /// <summary>
         ///     The path of the local scores database
         /// </summary>
-        private static readonly string DatabasePath = $"{ConfigManager.GameDirectory}/scores.db";
+        private static readonly string DatabasePath = $"{ConfigManager.GameDirectory}/quaver.db";
 
         /// <summary>
         ///     Asynchronously creates the scores database
         /// </summary>
         /// <returns></returns>
-        internal static void CreateScoresDatabase()
+        internal static void CreateTable()
         {
             try
             {
                 var conn = new SQLiteConnection(DatabasePath);
                 conn.CreateTable<LocalScore>();
 
-                Logger.LogSuccess($"Local Scores Database has been created.", LogType.Runtime);
+                Logger.LogSuccess("LocalScores SQLite table has been created", LogType.Runtime);
             }
             catch (Exception e)
             {

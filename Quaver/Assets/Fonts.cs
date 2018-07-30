@@ -1,15 +1,17 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Quaver.Main;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
+using Quaver.Resources;
+using Wobble;
+using Wobble.Assets;
 
 namespace Quaver.Assets
 {
-    internal static class Fonts
+    public static class Fonts
     {
-        public static SpriteFont Medium12 { get; set; }
-        public static SpriteFont Medium16 { get; set; }
-        public static SpriteFont Medium24 { get; set; }
-        public static SpriteFont Medium48 { get; set; }
-        public static SpriteFont Bold12 { get; set; }
         public static SpriteFont AssistantLight16 { get; set; }
         public static SpriteFont AssistantRegular16 { get; set; }
         public static SpriteFont RationalInteger16 { get; set; }
@@ -24,19 +26,16 @@ namespace Quaver.Assets
         /// </summary>
         internal static void Load()
         {
-            Medium12 = GameBase.Content.Load<SpriteFont>("Medium12");
-            Medium16 = GameBase.Content.Load<SpriteFont>("Medium16");
-            Medium24 = GameBase.Content.Load<SpriteFont>("Medium24");
-            Medium48 = GameBase.Content.Load<SpriteFont>("Medium48");
-            Bold12 = GameBase.Content.Load<SpriteFont>("Bold12");
-            AssistantLight16 = GameBase.Content.Load<SpriteFont>("assistant_light_16");
-            AssistantRegular16 = GameBase.Content.Load<SpriteFont>("assistant_regular_16");
-            RationalInteger16 = GameBase.Content.Load<SpriteFont>("rational_integer_16");
-            GoodTimes16 = GameBase.Content.Load<SpriteFont>("good_times_16");
-            AllerRegular16 = GameBase.Content.Load<SpriteFont>("aller_regular_16");
-            AllerLight16 = GameBase.Content.Load<SpriteFont>("aller_light_16");
-            AllerBold16 = GameBase.Content.Load<SpriteFont>("aller_bold_16");
-            Exo2Regular24 = GameBase.Content.Load<SpriteFont>("exo2_regular_24");
+            AssistantLight16 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "assistant_light_16")
+                ;
+            AssistantLight16 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "assistant_light_16");
+            AssistantRegular16 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "assistant_regular_16");
+            RationalInteger16 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "rational_integer_16");
+            GoodTimes16 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "good_times_16");
+            AllerRegular16 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "aller_regular_16");
+            AllerLight16 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "aller_light_16");
+            AllerBold16 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "aller_bold_16");
+            Exo2Regular24 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "exo2_regular_24");
         }
     }
 }

@@ -1,86 +1,68 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
-using Quaver.Helpers;
 using Quaver.Resources;
+using Wobble.Assets;
+using Wobble.Graphics;
 
 namespace Quaver.Assets
 {
-    /// <summary>
-    ///     All UI loaded into the game (Non-Skinnable)
-    /// </summary>
-    internal static class UserInterface
+    public static class UserInterface
     {
-        internal static Texture2D DiffSelectMask { get; set; }
-
-        internal static Texture2D SetSelectMask { get; set; }
-
-        internal static Texture2D BlankBox { get; set; }
-
-        internal static Texture2D HollowBox { get; set; }
-
-        internal static Texture2D BarCap { get; set; }
-
-        internal static Texture2D BarCorner { get; set; }
-
-        internal static Texture2D JudgementOverlay { get; set; }
-
-        internal static List<Texture2D> TestSpritesheet { get; set; }
-
-        internal static Texture2D UnknownAvatar { get; set; }
-
-        internal static Texture2D YouAvatar { get; set; }
-
-        internal static Texture2D MenuBackground { get; set; }
-
-        internal static Texture2D QuaverLogoName { get; set; }
-
-        internal static Texture2D SwanLogo { get; set; }
-
-        internal static Texture2D MenuSinglePlayer { get; set; }
-
-        internal static Texture2D MenuMultiplayer { get; set; }
-
-        internal static Texture2D MenuCompetitive { get; set; }
-
-        internal static Texture2D MenuLock { get; set; }
-
-        internal static Texture2D MenuNews { get; set; }
-
-        internal static Texture2D NotificationError { get; set; }
-
-        internal static Texture2D NotificationWarning { get; set; }
-
-        internal static Texture2D NotificationInfo { get; set; }
-
-        internal static Texture2D NotificationSuccess { get; set; }
+        public static Texture2D DiffSelectMask { get; set; }
+        public static Texture2D SetSelectMask { get; set; }
+        public static Texture2D BlankBox { get; set; }
+        public static Texture2D HollowBox { get; set; }
+        public static Texture2D BarCap { get; set; }
+        public static Texture2D BarCorner { get; set; }
+        public static Texture2D JudgementOverlay { get; set; }
+        public static List<Texture2D> TestSpritesheet { get; set; }
+        public static Texture2D UnknownAvatar { get; set; }
+        public static Texture2D YouAvatar { get; set; }
+        public static Texture2D MenuBackground { get; set; }
+        public static Texture2D QuaverLogoName { get; set; }
+        public static Texture2D SwanLogo { get; set; }
+        public static Texture2D MenuSinglePlayer { get; set; }  
+        public static Texture2D MenuMultiplayer { get; set; }
+        public static Texture2D MenuCompetitive { get; set; }
+        public static Texture2D MenuLock { get; set; }
+        public static Texture2D MenuNews { get; set; }
+        public static Texture2D NotificationError { get; set; }
+        public static Texture2D NotificationWarning { get; set; }
+        public static Texture2D NotificationInfo { get; set; }
+        public static Texture2D NotificationSuccess { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
         /// </summary>
-        internal static void Load()
+        public static void Load()
         {
-            DiffSelectMask = ResourceHelper.LoadTexture2DFromPng(QuaverResources.diff_select_mask);
-            SetSelectMask = ResourceHelper.LoadTexture2DFromPng(QuaverResources.set_select_mask);
-            BlankBox = ResourceHelper.LoadTexture2DFromPng(QuaverResources.blank_box);
-            HollowBox = ResourceHelper.LoadTexture2DFromPng(QuaverResources.hollow_box);
-            BarCap = ResourceHelper.LoadTexture2DFromPng(QuaverResources.bar_cap);
-            BarCorner = ResourceHelper.LoadTexture2DFromPng(QuaverResources.bar_corner);
-            JudgementOverlay = ResourceHelper.LoadTexture2DFromPng(QuaverResources.judgement_overlay);
-            TestSpritesheet = GraphicsHelper.LoadSpritesheetFromTexture(ResourceHelper.LoadTexture2DFromPng(QuaverResources.test_spritesheet), 1, 8);
-            UnknownAvatar = ResourceHelper.LoadTexture2DFromPng(QuaverResources.unknown_avatar);
-            YouAvatar = ResourceHelper.LoadTexture2DFromPng(QuaverResources.you_avatar);
-            MenuBackground = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_background);
-            QuaverLogoName = ResourceHelper.LoadTexture2DFromPng(QuaverResources.quaver_logo);
-            SwanLogo = ResourceHelper.LoadTexture2DFromPng(QuaverResources.swan_logo);
-            MenuSinglePlayer = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_single_player);
-            MenuLock = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_lock);
-            MenuMultiplayer = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_multiplayer);
-            MenuCompetitive = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_competitive);
-            MenuNews = ResourceHelper.LoadTexture2DFromPng(QuaverResources.menu_news);
-            NotificationError = ResourceHelper.LoadTexture2DFromPng(QuaverResources.notif_error);
-            NotificationInfo = ResourceHelper.LoadTexture2DFromPng(QuaverResources.notif_info);
-            NotificationSuccess = ResourceHelper.LoadTexture2DFromPng(QuaverResources.notif_success);
-            NotificationWarning = ResourceHelper.LoadTexture2DFromPng(QuaverResources.notif_warning);
+            DiffSelectMask = AssetLoader.LoadTexture2D(QuaverResources.diff_select_mask, ImageFormat.Png);
+            SetSelectMask = AssetLoader.LoadTexture2D(QuaverResources.set_select_mask, ImageFormat.Png);
+            BlankBox = AssetLoader.LoadTexture2D(QuaverResources.blank_box, ImageFormat.Png);
+            HollowBox = AssetLoader.LoadTexture2D(QuaverResources.hollow_box, ImageFormat.Png);
+            BarCap = AssetLoader.LoadTexture2D(QuaverResources.bar_cap, ImageFormat.Png);
+            BarCorner = AssetLoader.LoadTexture2D(QuaverResources.bar_corner, ImageFormat.Png);
+            JudgementOverlay = AssetLoader.LoadTexture2D(QuaverResources.judgement_overlay, ImageFormat.Png);
+            TestSpritesheet = AssetLoader.LoadSpritesheetFromTexture(AssetLoader.LoadTexture2D(QuaverResources.test_spritesheet, ImageFormat.Png), 1, 8);
+            UnknownAvatar = AssetLoader.LoadTexture2D(QuaverResources.unknown_avatar, ImageFormat.Png);
+            YouAvatar = AssetLoader.LoadTexture2D(QuaverResources.you_avatar, ImageFormat.Png);
+            MenuBackground = AssetLoader.LoadTexture2D(QuaverResources.menu_background, ImageFormat.Png);
+            QuaverLogoName = AssetLoader.LoadTexture2D(QuaverResources.quaver_logo, ImageFormat.Png);
+            SwanLogo = AssetLoader.LoadTexture2D(QuaverResources.swan_logo, ImageFormat.Png);
+            MenuSinglePlayer = AssetLoader.LoadTexture2D(QuaverResources.menu_single_player, ImageFormat.Png);
+            MenuLock = AssetLoader.LoadTexture2D(QuaverResources.menu_lock, ImageFormat.Png);
+            MenuMultiplayer = AssetLoader.LoadTexture2D(QuaverResources.menu_multiplayer, ImageFormat.Png);
+            MenuCompetitive = AssetLoader.LoadTexture2D(QuaverResources.menu_competitive, ImageFormat.Png);
+            MenuNews = AssetLoader.LoadTexture2D(QuaverResources.menu_news, ImageFormat.Png);
+            NotificationError = AssetLoader.LoadTexture2D(QuaverResources.notif_error, ImageFormat.Png);
+            NotificationInfo = AssetLoader.LoadTexture2D(QuaverResources.notif_info, ImageFormat.Png);
+            NotificationSuccess = AssetLoader.LoadTexture2D(QuaverResources.notif_success, ImageFormat.Png);
+            NotificationWarning = AssetLoader.LoadTexture2D(QuaverResources.notif_warning, ImageFormat.Png);
         }
     }
 }

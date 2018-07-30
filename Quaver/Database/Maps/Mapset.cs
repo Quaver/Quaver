@@ -2,16 +2,16 @@
 
 namespace Quaver.Database.Maps
 {
-    internal class Mapset
+    public class Mapset
     {
         /// <summary>
         ///     The directory of the mapset.
         /// </summary>
-        internal string Directory { get; set; }
+        public string Directory { get; set; }
 
         /// <summary>
         ///     The list of maps in this mapset.
         /// </summary>
-        internal List<Map> Maps { get; set; }
+        public List<Map> Maps { get; set; }
     }
 }

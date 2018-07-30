@@ -4,12 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using Quaver.Logging;
-using Quaver.Main;
+using Wobble;
 
 namespace Quaver.Database.Maps
 {
-    internal static class MapsetHelper
+    public static class MapsetHelper
     {
         /// <summary>
         ///     Gets the Md5 Checksum of a file, more specifically a .qua file.
@@ -32,7 +31,7 @@ namespace Quaver.Database.Maps
         /// </summary>
         /// <param name="maps"></param>
         /// <returns></returns>
-        internal static List<Mapset> ConvertMapsToMapsets(List<Map> maps)
+        internal static List<Mapset> ConvertMapsToMapsets(IEnumerable<Map> maps)
         {
             // Group maps by directory.
             var groupedMaps = maps
@@ -44,7 +43,11 @@ namespace Quaver.Database.Maps
             var mapsets = new List<Mapset>();
 
             foreach (var mapset in groupedMaps)
-                mapsets.Add(new Mapset() { Directory = mapset.First().Directory, Maps = mapset });
+                mapsets.Add(new Mapset()
+                {
+                    Directory = mapset.First().Directory,
+                    Maps = mapset
+                });
 
             return mapsets;
         }
@@ -54,18 +57,17 @@ namespace Quaver.Database.Maps
         /// </summary>
         /// <param name="mapsets"></param>
         /// <returns></returns>
-        internal static List<Mapset> OrderMapsetsByTitle(List<Mapset> mapsets)
-        {
-            return mapsets.OrderBy(x => x.Directory).ToList();
-        }
+        internal static List<Mapset> OrderMapsetsByTitle(IEnumerable<Mapset> mapsets) =>
+            mapsets.OrderBy(x => x.Directory).ToList();
 
         /// <summary>
         ///     Orders the mapsets by artist, and then by title.
         /// </summary>
         /// <param name="mapsets"></param>
         /// <returns></returns>
-        internal static List<Mapset> OrderMapsetsByArtist(List<Mapset> mapsets)
+        internal static List<Mapset> OrderMapsetsByArtist(IEnumerable<Mapset> mapsets)
         {
+            // ReSharper disable once ArrangeMethodOrOperatorBody
             return mapsets.OrderBy(x => x.Maps[0].Artist).ThenBy(x => x.Maps[0].Title).ToList();
         }
 
@@ -86,15 +88,29 @@ namespace Quaver.Database.Maps
         /// <param name="mapsets"></param>
         /// <param name="term"></param>
         /// <returns></returns>
-        internal static List<Mapset> SearchMapsets(List<Mapset> mapsets, string term)
+        internal static List<Mapset> SearchMapsets(IEnumerable<Mapset> mapsets, string term)
         {
             var sets = new List<Mapset>();
 
             term = term.ToLower();
 
             // All the possible relational operators for the search query
-            var operators = new List<string> {">=", "<=", "==", "!=", "<", ">", "=",};
-            var options = new List<string> {"bpm", "diff", "length"};
+            var operators = new List<string>
+            {
+                ">=",
+                "<=",
+                "==",
+                "!=",
+                "<",
+                ">",
+                "=",
+            };
+            var options = new List<string>
+            {
+                "bpm",
+                "diff",
+                "length"
+            };
 
             // Stores a dictionary of the found pairs in the search query
             // <option, value, operator>
@@ -107,11 +123,19 @@ namespace Quaver.Database.Maps
                     continue;
 
                 // Get the search option alone.
-                var searchOption = term.Substring(0, term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase)).Split(' ').Last();
-                float.TryParse(term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + op.Length).Split(' ').First(), out var val);
+                var searchOption = term.Substring(0, term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase))
+                    .Split(' ').Last();
+                float.TryParse(
+                    term.Substring(term.IndexOf(op, StringComparison.InvariantCultureIgnoreCase) + op.Length).Split(' ')
+                        .First(), out var val);
 
                 if (options.Contains(searchOption))
-                   foundSearchQueries.Add(new SearchQuery() { Operator = op, Option = searchOption, Value = val });
+                    foundSearchQueries.Add(new SearchQuery
+                    {
+                        Operator = op,
+                        Option = searchOption,
+                        Value = val
+                    });
             }
 
             // Create a list of mapsets with the matched mapsets
@@ -150,7 +174,8 @@ namespace Quaver.Database.Maps
                         continue;
 
                     // Find the parts of the original query that aren't operators
-                    term = foundSearchQueries.Aggregate(term, (current, query) => current.Replace(query.Option + query.Operator + query.Value, "")).Trim();
+                    term = foundSearchQueries.Aggregate(term,
+                        (current, query) => current.Replace(query.Option + query.Operator + query.Value, "")).Trim();
 
                     // Check if the term exist in any of the following properties
                     if (!map.Artist.ToLower().Contains(term) && !map.Title.ToLower().Contains(term) &&
@@ -161,7 +186,11 @@ namespace Quaver.Database.Maps
 
                     // Add the set if all the comparisons and queries are correct
                     if (sets.All(x => x.Directory != map.Directory))
-                        sets.Add(new Mapset() { Directory = map.Directory, Maps = new List<Map> { map } });
+                        sets.Add(new Mapset()
+                        {
+                            Directory = map.Directory,
+                            Maps = new List<Map> {map}
+                        });
                     else
                         sets.Find(x => x.Directory == map.Directory).Maps.Add(map);
                 }
@@ -201,51 +230,6 @@ namespace Quaver.Database.Maps
                     return false;
             }
         }
-
-        /// <summary>
-        ///     Used to select a random map from our current list of visible maps.
-        /// </summary>
-        public static void SelectRandomMap()
-        {
-            if (GameBase.Mapsets.Count == 0)
-                return;
-
-            // Find the number of total maps
-            var totalMaps = 0;
-
-            foreach (var mapset in GameBase.Mapsets)
-            {
-                totalMaps += mapset.Maps.Count;
-            }
-
-            var rand = new Random();
-            var randomMap = rand.Next(0, totalMaps);
-
-            // Find the totalMaps'th map
-            var onMap = 0;
-            foreach (var mapset in GameBase.Mapsets)
-            {
-                var foundMap = false;
-
-                foreach (var map in mapset.Maps)
-                {
-                    if (onMap == randomMap)
-                    {
-                        // Switch map and load audio for song and play it.
-                        Map.ChangeSelected(map);
-                        break;
-                    }
-
-                    onMap++;
-                }
-
-                if (foundMap)
-                    break;
-            }
-
-            var log = $"RND MAP: {GameBase.SelectedMap.Artist} - {GameBase.SelectedMap.Title} [{GameBase.SelectedMap.DifficultyName}]";
-            Logger.LogInfo(log, LogType.Runtime);
-        }
     }
 
     /// <summary>
@@ -256,16 +240,16 @@ namespace Quaver.Database.Maps
         /// <summary>
         ///     The search option - bpm, length, etc,
         /// </summary>
-        internal string Option;
+        public string Option;
 
         /// <summary>
         ///     The value the user is searching
         /// </summary>
-        internal float Value;
+        public float Value;
 
         /// <summary>
         ///     The operator the user gave
         /// </summary>
-        internal string Operator;
+        public string Operator;
     }
 }

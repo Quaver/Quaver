@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace Quaver.Logging
 {
-    internal class Log
+    public class Log
     {
         /// <summary>
         /// The name of the Log-Tracking Object

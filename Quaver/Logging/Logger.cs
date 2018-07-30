@@ -1,20 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Config;
-using Quaver.Graphics.Text;
-using Quaver.Main;
+using Wobble;
 
 namespace Quaver.Logging
 {
-    internal class Logger
+    public static class Logger
     {
         /// <summary>
         ///     The list of all of the current logs.
@@ -39,7 +36,7 @@ namespace Quaver.Logging
         /// <summary>
         ///     Creates the log file
         /// </summary>
-        internal static void CreateLogFile()
+        private static void CreateLogFiles()
         {
             RuntimeLogPath = ConfigManager.LogsDirectory + "/runtime.log";
             NetworkLogPath = ConfigManager.LogsDirectory + "/network.log";
@@ -64,7 +61,8 @@ namespace Quaver.Logging
         /// </summary>
         internal static void Initialize()
         {
-            Font = Fonts.Medium12;
+            Font = Fonts.AllerRegular16;
+           CreateLogFiles();
         }
 
         /// <summary>
@@ -73,18 +71,12 @@ namespace Quaver.Logging
         /// <param name="name"></param>
         /// <param name="color"></param>
         [Conditional("DEBUG")]
-        internal static void Add(string name, string value, Color color)
+        internal static void Add(string name, string value, Color color) => Logs.Add(new Log
         {
-            if (GameBase.Content == null)
-                return;
-
-            Logs.Add(new Log()
-            {
-                Name = name,
-                Color = color,
-                Value = value
-            });
-        }
+            Name = name,
+            Color = color,
+            Value = value
+        });
 
         /// <summary>
         ///     Updates a logger's values.
@@ -92,9 +84,6 @@ namespace Quaver.Logging
         [Conditional("DEBUG")]
         internal static void Update(string name, string value)
         {
-            if (GameBase.Content == null)
-                return;
-
             // Find the log with the correct name passed.
             var log = Logs.FirstOrDefault(x => x.Name == name);
 
@@ -107,25 +96,13 @@ namespace Quaver.Logging
         /// </summary>
         /// <param name="name"></param>
         [Conditional("DEBUG")]
-        internal static void Remove(string name)
-        {
-            if (GameBase.Content == null)
-                return;
-
-            Logs.RemoveAll(x => x.Name == name);
-        }
+        internal static void Remove(string name) => Logs.RemoveAll(x => x.Name == name);
 
         /// <summary>
         ///     Clears all of the logs from the list.
         /// </summary>
         [Conditional("DEBUG")]
-        internal static void Clear()
-        {
-            if (GameBase.Content == null)
-                return;
-
-            Logs.Clear();
-        }
+        internal static void Clear() => Logs.Clear();
 
         /// <summary>
         ///     Logs a success message of a give type
@@ -133,10 +110,7 @@ namespace Quaver.Logging
         /// <param name="value"></param>
         /// <param name="type"></param>
         /// <param name="duration"></param>
-        internal static void LogSuccess(string value, LogType type, float duration = 1.5f)
-        {
-            Log(value, LogLevel.Success, type, duration);
-        }
+        internal static void LogSuccess(string value, LogType type, float duration = 1.5f) => Log(value, LogLevel.Success, type, duration);
 
         /// <summary>
         ///     Logs an info message of a give type
@@ -144,10 +118,7 @@ namespace Quaver.Logging
         /// <param name="value"></param>
         /// <param name="type"></param>
         /// <param name="duration"></param>
-        internal static void LogInfo(string value, LogType type, float duration = 1.5f)
-        {
-            Log(value, LogLevel.Info, type, duration);
-        }
+        internal static void LogInfo(string value, LogType type, float duration = 1.5f) => Log(value, LogLevel.Info, type, duration);
 
         /// <summary>
         ///     Logs an important message of a give type
@@ -155,10 +126,7 @@ namespace Quaver.Logging
         /// <param name="value"></param>
         /// <param name="type"></param>
         /// <param name="duration"></param>
-        internal static void LogImportant(string value, LogType type, float duration = 1.5f)
-        {
-            Log(value, LogLevel.Important, type, duration);
-        }
+        internal static void LogImportant(string value, LogType type, float duration = 1.5f) => Log(value, LogLevel.Important, type, duration);
 
         /// <summary>
         ///     Logs a success message of a give type
@@ -166,10 +134,7 @@ namespace Quaver.Logging
         /// <param name="value"></param>
         /// <param name="type"></param>
         /// <param name="duration"></param>
-        internal static void LogWarning(string value, LogType type, float duration = 1.5f)
-        {
-            Log(value, LogLevel.Warning, type, duration);
-        }
+        internal static void LogWarning(string value, LogType type, float duration = 1.5f) => Log(value, LogLevel.Warning, type, duration);
 
         /// <summary>
         ///     Logs an error message of a give type
@@ -177,10 +142,7 @@ namespace Quaver.Logging
         /// <param name="value"></param>
         /// <param name="type"></param>
         /// <param name="duration"></param>
-        internal static void LogError(string value, LogType type, float duration = 1.5f)
-        {
-            Log(value, LogLevel.Error, type, duration);
-        }
+        internal static void LogError(string value, LogType type, float duration = 1.5f) => Log(value, LogLevel.Error, type, duration);
 
         /// <summary>
         ///     Logs an exception error.
@@ -188,10 +150,7 @@ namespace Quaver.Logging
         /// <param name="exception"></param>
         /// <param name="type"></param>
         /// <param name="duration"></param>
-        internal static void LogError(Exception exception, LogType type, float duration = 1.5f)
-        {
-            Log(exception.ToString(), LogLevel.Error, type, duration);
-        }
+        internal static void LogError(Exception exception, LogType type, float duration = 1.5f) => Log(exception.ToString(), LogLevel.Error, type, duration);
 
         /// <summary>
         ///     Logs a message to the screen, console, and runtime log
@@ -247,7 +206,7 @@ namespace Quaver.Logging
             }
 
             // Format the log
-            var log = $"[{DateTime.Now:h:mm:ss}] - {logTypeStr} - {logLevelStr}: {value}";         
+            var log = $"[{DateTime.Now:h:mm:ss}] - {logTypeStr} - {logLevelStr}: {value}";
             Console.WriteLine(log);
 
             // Write to the log file
@@ -266,12 +225,9 @@ namespace Quaver.Logging
             }
 
 #if DEBUG
-            if (GameBase.Content == null)
-                return;
-
             try
             {
-                Logs.Add(new Log()
+                Logs.Add(new Log
                 {
                     Name = "LogMethod",
                     Color = logColor,
@@ -294,15 +250,13 @@ namespace Quaver.Logging
         [Conditional("DEBUG")]
         internal static void Draw(double dt)
         {
-            if (GameBase.Content == null)
-                return;
-
             for (var i = 0; i < Logs.Count; i++)
             {
                 if (Logs[i].Value == null)
                     continue;
 
-                GameBase.SpriteBatch.DrawString(Font, Logs[i].Value, new Vector2(0, i * 20 + 40), Logs[i].Color);
+                // TODO: Use SpriteText
+                GameBase.Game.SpriteBatch.DrawString(Font, Logs[i].Value, new Vector2(0, i * 20 + 40), Logs[i].Color);
 
                 if (Logs[i].NoDuration)
                     continue;
@@ -317,9 +271,6 @@ namespace Quaver.Logging
             }
         }
 
-        public static void LogInfo(string value)
-        {
-            throw new NotImplementedException();
-        }
+        public static void LogInfo(string value) => throw new NotImplementedException();
     }
 }
