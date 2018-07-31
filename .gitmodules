@@ -4,6 +4,3 @@
 [submodule "Quaver.Resources"]
 	path = Quaver.Resources
 	url = https://github.com/Swan/Quaver.Resources
-[submodule "Wobble"]
-	path = Wobble
-	url = https://github.com/Quaver/Wobble.git

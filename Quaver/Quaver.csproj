@@ -176,10 +176,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Wobble\Wobble\Wobble.csproj">
-      <Project>{da74528d-b500-4c5a-977e-76a756e65c63}</Project>
-      <Name>Wobble</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj">
       <Project>{0c6869bd-4e34-4c92-a853-e09f2b320601}</Project>
       <Name>Quaver.API</Name>
