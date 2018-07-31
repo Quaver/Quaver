@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Skinning;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Menu
@@ -16,6 +17,9 @@ namespace Quaver.Screens.Menu
 
         /// <summary>
         /// </summary>
-        public MainMenuScreen() => View = new MainMenuScreenView(this);
+        public MainMenuScreen()
+        {
+            View = new MainMenuScreenView(this);
+        }
     }
 }

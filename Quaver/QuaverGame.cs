@@ -9,6 +9,7 @@ using Quaver.Database.Scores;
 using Quaver.Logging;
 using Quaver.Scheduling;
 using Quaver.Screens.Menu;
+using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Debugging;
@@ -22,6 +23,11 @@ namespace Quaver
     {
         /// <inheritdoc />
         /// <summary>
+        /// </summary>
+        protected override bool IsReadyToUpdate { get; set; }
+
+        /// <inheritdoc />
+        /// <summary>
         ///     Allows the game to perform any initialization it needs to before starting to run.
         ///     This is where it can query for any required services and load any non-graphic
         ///     related content.  Calling base.Initialize will enumerate through any components
@@ -29,23 +35,19 @@ namespace Quaver
         /// </summary>
         protected override void Initialize()
         {
-            base.Initialize();
-
             PerformGameSetup();
 
             WindowManager.ChangeVirtualScreenSize(new Vector2(1366, 768));
             WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
 
             // Unlock the framerate of the game to unlimited.
-            // TODO: Make this an actual setting.
             Graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
             Graphics.ApplyChanges();
 
-            // TODO: Remove. Just for testing.
             Window.AllowUserResizing = true;
 
-            CreateFpsCounter();
+            base.Initialize();
         }
 
          /// <inheritdoc />
@@ -63,9 +65,16 @@ namespace Quaver
             Titles.Load();
             UserInterface.Load();
 
-            // Load the user's skin.
+            // Load the user's skin
+            SkinManager.Load();
 
+            // Initialize the logger now that we have fonts loaded
+            Logger.Initialize();
 
+            // Create the global FPS counter.
+            CreateFpsCounter();
+
+            IsReadyToUpdate = true;
             ScreenManager.ChangeScreen(new MainMenuScreen());
         }
 
@@ -86,6 +95,9 @@ namespace Quaver
         /// </summary>
         protected override void Update(GameTime gameTime)
         {
+            if (!IsReadyToUpdate)
+                return;
+
             base.Update(gameTime);
 
             // Run scheduled background tasks
@@ -98,8 +110,10 @@ namespace Quaver
         /// </summary>
         protected override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
+            if (!IsReadyToUpdate)
+                return;
 
+            base.Draw(gameTime);
             Logger.Draw(gameTime);
         }
 

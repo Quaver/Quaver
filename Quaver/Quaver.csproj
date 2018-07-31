@@ -65,6 +65,7 @@
     <Compile Include="Assets\Fonts.cs" />
     <Compile Include="Assets\Titles.cs" />
     <Compile Include="Assets\UserInterface.cs" />
+    <Compile Include="Config\ConfigHelper.cs" />
     <Compile Include="Config\ConfigManager.cs" />
     <Compile Include="Database\Maps\Map.cs" />
     <Compile Include="Database\Maps\MapCache.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Database\Scores\LocalScore.cs" />
     <Compile Include="Database\Scores\LocalScoreCache.cs" />
     <Compile Include="Helpers\GzipHelper.cs" />
+    <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\Logger.cs" />
@@ -87,6 +89,12 @@
     <Compile Include="Scheduling\CommonTaskScheduler.cs" />
     <Compile Include="Screens\Menu\MainMenuScreen.cs" />
     <Compile Include="Screens\Menu\MainMenuScreenView.cs" />
+    <Compile Include="Skinning\Health\HealthBarKeysAlignment.cs" />
+    <Compile Include="Skinning\Health\HealthBarType.cs" />
+    <Compile Include="Skinning\SkinKeys.cs" />
+    <Compile Include="Skinning\SkinKeysFolder.cs" />
+    <Compile Include="Skinning\SkinManager.cs" />
+    <Compile Include="Skinning\SkinStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
