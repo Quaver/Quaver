@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
@@ -143,6 +144,9 @@ namespace Quaver
 
             // Start watching for mapset changes in the folder.
             MapsetImporter.WatchForChanges();
+
+            if (MapManager.Mapsets.Count != 0)
+                MapManager.Selected = MapManager.Mapsets.First().Maps.First();
         }
 
         /// <summary>

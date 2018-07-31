@@ -65,6 +65,7 @@
     <Compile Include="Assets\Fonts.cs" />
     <Compile Include="Assets\Titles.cs" />
     <Compile Include="Assets\UserInterface.cs" />
+    <Compile Include="Audio\AudioEngine.cs" />
     <Compile Include="Config\ConfigHelper.cs" />
     <Compile Include="Config\ConfigManager.cs" />
     <Compile Include="Database\Maps\Map.cs" />
@@ -90,10 +91,13 @@
     <Compile Include="Parsers\Etterna\Etterna.cs" />
     <Compile Include="Parsers\Etterna\EtternaCache.cs" />
     <Compile Include="Parsers\Etterna\StepManiaConverter.cs" />
+    <Compile Include="Parsers\Osu\Osu.cs" />
     <Compile Include="QuaverGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\CommonTaskScheduler.cs" />
+    <Compile Include="Screens\Loading\MapLoadingScreen.cs" />
+    <Compile Include="Screens\Loading\MapLoadingScreenView.cs" />
     <Compile Include="Screens\Menu\MainMenuScreen.cs" />
     <Compile Include="Screens\Menu\MainMenuScreenView.cs" />
     <Compile Include="Screens\Menu\UI\BottomToolbar\BottomBar.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Quaver.Audio;
 using Quaver.Skinning;
 using Wobble.Screens;
 
@@ -20,6 +21,9 @@ namespace Quaver.Screens.Menu
         public MainMenuScreen()
         {
             View = new MainMenuScreenView(this);
+
+            AudioEngine.LoadCurrentTrack();
+            AudioEngine.Track.Play();
         }
     }
 }
