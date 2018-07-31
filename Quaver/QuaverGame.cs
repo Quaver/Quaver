@@ -6,6 +6,7 @@ using Quaver.Assets;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
+using Quaver.Graphics.Notifications;
 using Quaver.Logging;
 using Quaver.Scheduling;
 using Quaver.Screens.Menu;
@@ -102,6 +103,7 @@ namespace Quaver
 
             // Run scheduled background tasks
             CommonTaskScheduler.Run();
+            NotificationManager.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -114,7 +116,15 @@ namespace Quaver
                 return;
 
             base.Draw(gameTime);
+
+            NotificationManager.Draw(gameTime);
+
+            GameBase.DefaultSpriteBatchOptions.Begin();
             Logger.Draw(gameTime);
+            SpriteBatch.End();
+
+            // Draw the global container last.
+            GlobalUserInterface.Draw(gameTime);
         }
 
         /// <summary>

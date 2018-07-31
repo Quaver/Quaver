@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
+using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -93,6 +94,7 @@ namespace Quaver.Graphics.Overlays.Toolbar
                 Size = new ScalableVector2(Width, 1),
                 Tint = Color.White,
                 Width = IsSelected ? Width : 0,
+                Y = 1
             };
         }
 
@@ -106,39 +108,31 @@ namespace Quaver.Graphics.Overlays.Toolbar
             if (IsHovered)
             {
                 BottomLine.Width = MathHelper.Lerp(BottomLine.Width, Width, (float) Math.Min(GameBase.Game.TimeSinceLastFrame / 60f, 1));
-                Console.WriteLine("hovered");
-            }
-            else if (!IsSelected)
-            {
-                BottomLine.Width = MathHelper.Lerp(BottomLine.Width, 0, (float) Math.Min(GameBase.Game.TimeSinceLastFrame / 60f, 1));
-            }
+                Alpha = 0.05f;
 
+                // Make sure the hover sound only plays one time.
+                if (!HoverSoundPlayed)
+                {
+                    SkinManager.Skin.SoundHover.CreateChannel().Play();
+                    HoverSoundPlayed = true;
+                }
+            }
+            else
+            {
+                HoverSoundPlayed = false;
+
+                if (!IsSelected)
+                {
+                    BottomLine.Width = MathHelper.Lerp(BottomLine.Width, 0, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 60f, 1));
+                    Alpha = 0f;
+                }
+                else
+                {
+                    Alpha = 0.1f;
+                }
+            }
 
             base.Update(gameTime);
         }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /*protected override void MouseOut()
-        {
-            Alpha = IsSelected ? 0.1f : 0;
-            HoverSoundPlayed = false;
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        protected override void MouseOver()
-        {
-            Alpha = 0.05f;
-
-            // Make sure the hover sound only plays one time.
-            if (HoverSoundPlayed)
-                return;
-
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover);
-            HoverSoundPlayed = true;
-        }*/
     }
 }

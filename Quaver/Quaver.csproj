@@ -75,8 +75,13 @@
     <Compile Include="Database\Maps\MapsetImporter.cs" />
     <Compile Include="Database\Scores\LocalScore.cs" />
     <Compile Include="Database\Scores\LocalScoreCache.cs" />
+    <Compile Include="Graphics\Colors.cs" />
+    <Compile Include="Graphics\Notifications\Notification.cs" />
+    <Compile Include="Graphics\Notifications\NotificationLevel.cs" />
+    <Compile Include="Graphics\Notifications\NotificationManager.cs" />
     <Compile Include="Graphics\Overlays\Toolbar\Toolbar.cs" />
     <Compile Include="Graphics\Overlays\Toolbar\ToolbarItem.cs" />
+    <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\GzipHelper.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
@@ -91,6 +96,10 @@
     <Compile Include="Scheduling\CommonTaskScheduler.cs" />
     <Compile Include="Screens\Menu\MainMenuScreen.cs" />
     <Compile Include="Screens\Menu\MainMenuScreenView.cs" />
+    <Compile Include="Screens\Menu\UI\BottomToolbar\BottomBar.cs" />
+    <Compile Include="Screens\Menu\UI\BottomToolbar\LogoButton.cs" />
+    <Compile Include="Screens\Menu\UI\Buttons\Navigation\NavigationButton.cs" />
+    <Compile Include="Screens\Menu\UI\Buttons\Navigation\NavigationButtonContainer.cs" />
     <Compile Include="Skinning\Health\HealthBarKeysAlignment.cs" />
     <Compile Include="Skinning\Health\HealthBarType.cs" />
     <Compile Include="Skinning\SkinKeys.cs" />
