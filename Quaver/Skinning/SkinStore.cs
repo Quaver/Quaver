@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
@@ -11,6 +11,7 @@ using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Logging;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Audio.Samples;
 using Wobble.Graphics;
@@ -187,6 +188,9 @@ namespace Quaver.Skinning
             };
 
             LoadUniversalElements();
+
+            // Change cursor image.
+            GameBase.Game.GlobalUserInterface.Cursor.Image = Cursor;
         }
 
         /// <summary>
