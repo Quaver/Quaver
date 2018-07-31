@@ -75,6 +75,8 @@
     <Compile Include="Database\Maps\MapsetImporter.cs" />
     <Compile Include="Database\Scores\LocalScore.cs" />
     <Compile Include="Database\Scores\LocalScoreCache.cs" />
+    <Compile Include="Graphics\Overlays\Toolbar\Toolbar.cs" />
+    <Compile Include="Graphics\Overlays\Toolbar\ToolbarItem.cs" />
     <Compile Include="Helpers\GzipHelper.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
