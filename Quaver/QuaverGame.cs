@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
 using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Logging;
 using Quaver.Scheduling;
@@ -39,12 +40,15 @@ namespace Quaver
             // TODO: Make this an actual setting.
             Graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
-            Graphics.ApplyChanges();;
+            Graphics.ApplyChanges();
+
+            // TODO: Remove. Just for testing.
+            Window.AllowUserResizing = true;
 
             CreateFpsCounter();
         }
 
-        /// <inheritdoc />
+         /// <inheritdoc />
         /// <summary>
         ///     LoadContent will be called once per game and is the place to load
         ///     all of your content.
@@ -58,6 +62,9 @@ namespace Quaver
             Fonts.Load();
             Titles.Load();
             UserInterface.Load();
+
+            // Load the user's skin.
+
 
             ScreenManager.ChangeScreen(new MainMenuScreen());
         }
@@ -92,6 +99,8 @@ namespace Quaver
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
+
+            Logger.Draw(gameTime);
         }
 
         /// <summary>
@@ -103,6 +112,13 @@ namespace Quaver
             DeleteTemporaryFiles();
 
             LocalScoreCache.CreateTable();
+            MapCache.LoadAndSetMapsets();
+
+            // Force garabge collection.
+            GC.Collect();
+
+            // Start watching for mapset changes in the folder.
+            MapsetImporter.WatchForChanges();
         }
 
         /// <summary>

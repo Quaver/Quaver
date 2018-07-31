@@ -197,7 +197,7 @@ namespace Quaver.Logging
                     break;
                 case LogLevel.Success:
                     logLevelStr = "SUCCESS";
-                    logColor = Color.Green;
+                    logColor = Color.White;
                     break;
                 case LogLevel.Warning:
                     logLevelStr = "WARNING";
@@ -248,16 +248,17 @@ namespace Quaver.Logging
         ///     Draws the logs onto the screen.
         /// </summary>
         [Conditional("DEBUG")]
-        internal static void Draw(double dt)
+        internal static void Draw(GameTime gameTime)
         {
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+
             for (var i = 0; i < Logs.Count; i++)
             {
                 if (Logs[i].Value == null)
                     continue;
 
                 // TODO: Use SpriteText
-                GameBase.Game.SpriteBatch.DrawString(Font, Logs[i].Value, new Vector2(0, i * 20 + 40), Logs[i].Color);
-
+                GameBase.Game.SpriteBatch.DrawString(Font, Logs[i].Value, new Vector2(0, i * 20 + 10), Logs[i].Color, 0, Vector2.Zero,  0.60f, SpriteEffects.None, 0);
                 if (Logs[i].NoDuration)
                     continue;
 

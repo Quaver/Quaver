@@ -1,4 +1,5 @@
-﻿using Quaver.API.Maps.Parsers;
+﻿using System.Collections.Generic;
+using Quaver.API.Maps.Parsers;
 using Quaver.Config;
 
 namespace Quaver.Database.Maps
@@ -9,6 +10,11 @@ namespace Quaver.Database.Maps
         ///     The currently selected map.
         /// </summary>
         public static Map Selected { get; set; }
+
+        /// <summary>
+        ///     The list of mapsets that are currently loaded.
+        /// </summary>
+        public static List<Mapset> Mapsets { get; set; }
 
         /// <summary>
         ///     The osu! Songs folder path
