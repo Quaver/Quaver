@@ -372,7 +372,7 @@ namespace Quaver.Config
             ScrollSpeed7K = ReadInt(@"ScrollSpeed7K", 15, 0, 100, data);
             DownScroll4K = ReadValue(@"DownScroll4K", true, data);
             DownScroll7K = ReadValue(@"DownScroll7K", true, data);
-            GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, 0, byte.MaxValue, data);
+            GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, int.MinValue, int.MaxValue, data);
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Arrow, data);
             Pitched = ReadValue(@"Pitched", false, data);

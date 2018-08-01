@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Quaver.Skinning.Health;
+using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
+using Quaver.Screens.Gameplay.UI.Health;
+using Quaver.Skinning;
 
 namespace Quaver.Config
 {

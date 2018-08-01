@@ -1,4 +1,4 @@
-﻿namespace Quaver.Skinning.Health
+namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Health
 {
     public enum HealthBarKeysAlignment
     {

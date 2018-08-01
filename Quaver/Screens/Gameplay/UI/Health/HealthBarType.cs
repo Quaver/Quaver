@@ -1,4 +1,4 @@
-﻿namespace Quaver.Skinning.Health
+namespace Quaver.Screens.Gameplay.UI.Health
 {
     public enum HealthBarType
     {

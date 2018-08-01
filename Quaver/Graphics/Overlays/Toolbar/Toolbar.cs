@@ -36,7 +36,7 @@ namespace Quaver.Graphics.Overlays.Toolbar
         {
             Buttons = buttons;
             Icons = icons;
-            Size = new ScalableVector2(WindowManager.VirtualScreen.X, 80);
+            Size = new ScalableVector2(WindowManager.Width, 80);
             Tint = Color.Black;
             Y = 0;
             Alpha = 0f;

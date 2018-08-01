@@ -106,7 +106,7 @@ namespace Quaver.Screens.Menu.UI.Buttons.Navigation
                 // Put the clicked button in the middle of the screen.
                 if (btn == ClickedButton)
                 {
-                    var targetPosition = new Vector2(0, WindowManager.VirtualScreen.Y / 2f - btn.Height / 2f);
+                    var targetPosition = new Vector2(0, WindowManager.Height / 2f - btn.Height / 2f);
 
                     btn.X = MathHelper.Lerp(btn.X, targetPosition.X, (float) Math.Min(GameBase.Game.TimeSinceLastFrame / 60, 1));
                     btn.Y = MathHelper.Lerp(btn.Y, targetPosition.Y, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 60, 1));
@@ -118,14 +118,14 @@ namespace Quaver.Screens.Menu.UI.Buttons.Navigation
                 {
                     // If the button is on the left side of the screen, then we want to lerp it left.
                     var width = btn.AbsolutePosition.X + btn.Width;
-                    var middleScreen = WindowManager.VirtualScreen.X / 2f;
+                    var middleScreen = WindowManager.Width / 2f;
 
                     // Based on where the button is, we'll want to move it in the horizontal direction closest
                     // to where it can go off-screen.
                     if (width < middleScreen)
-                        btn.X = MathHelper.Lerp(btn.X, -WindowManager.VirtualScreen.X - btn.Width, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 240, 1));
+                        btn.X = MathHelper.Lerp(btn.X, -WindowManager.Width - btn.Width, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 240, 1));
                     else if (width > middleScreen)
-                        btn.X = MathHelper.Lerp(btn.X, WindowManager.VirtualScreen.X + btn.Width, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 240, 1));
+                        btn.X = MathHelper.Lerp(btn.X, WindowManager.Width + btn.Width, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 240, 1));
                 }
             });
 

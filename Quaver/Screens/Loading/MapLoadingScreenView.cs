@@ -8,7 +8,9 @@ using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
+using Quaver.Database.Scores;
 using Quaver.Logging;
+using Quaver.Screens.Gameplay;
 using Quaver.Screens.Menu;
 using Wobble;
 using Wobble.Audio;
@@ -107,8 +109,7 @@ namespace Quaver.Screens.Loading
                         throw new ArgumentOutOfRangeException();
                 }
 
-                // TODO: Change to gameplay screen
-                ScreenManager.ChangeScreen(new MainMenuScreen());
+                ScreenManager.ChangeScreen(new GameplayScreen(MapManager.Selected.Qua, md5, new List<LocalScore>()));
             }
             catch (Exception e)
             {

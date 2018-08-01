@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -6,7 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
-using Quaver.Skinning.Health;
+using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
+using Quaver.Screens.Gameplay.UI.Health;
 
 namespace Quaver.Skinning
 {

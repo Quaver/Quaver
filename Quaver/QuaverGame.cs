@@ -146,7 +146,7 @@ namespace Quaver
             MapsetImporter.WatchForChanges();
 
             if (MapManager.Mapsets.Count != 0)
-                MapManager.Selected = MapManager.Mapsets.First().Maps.First();
+                MapManager.Selected = MapManager.Mapsets.First().Maps[3];
         }
 
         /// <summary>
