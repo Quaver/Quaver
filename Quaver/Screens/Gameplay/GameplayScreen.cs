@@ -197,8 +197,6 @@ namespace Quaver.Screens.Gameplay
 
             Timing = new GameplayAudioTiming(this);
 
-            SetRuleset();
-
             // Handle autoplay replays.
             if (ModManager.IsActivated(ModIdentifier.Autoplay))
                 LoadedReplay = ReplayHelper.GeneratePerfectReplay(map, MapHash);
@@ -212,6 +210,8 @@ namespace Quaver.Screens.Gameplay
 
             // Create the current replay that will be captured.
             ReplayCapturer = new ReplayCapturer(this);
+
+            SetRuleset();
 
             View = new GameplayScreenView(this);
         }
@@ -569,9 +569,6 @@ namespace Quaver.Screens.Gameplay
                     var inputManager = (KeysInputManager)Ruleset.InputManager;
                     inputManager.ReplayInputManager.HandleSkip();
                 }
-
-                // TODO: Skip to 3 seconds before the notes start
-                //SetRichPresence();
             }
         }
     }
