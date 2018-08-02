@@ -415,15 +415,17 @@ namespace Quaver.Screens.Results
         /// </summary>
         public void Exit(Action onExitScreen)
         {
-            var screenView = (ResultsScreenView) View;
-
-            screenView.ButtonContainer.MakeButtonsUnclickable();
-
             // Make sure this is only set one time in its existence.
             if (IsExiting)
                 return;
 
+            var screenView = (ResultsScreenView)View;
+            screenView.ButtonContainer.MakeButtonsUnclickable();
+
             OnExit += onExitScreen;
+
+            // Fade the 
+            screenView.PerformExitAnimations();
         }
 
         /// <summary>

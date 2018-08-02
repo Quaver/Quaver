@@ -11,6 +11,7 @@ using Quaver.Screens.Results.UI.ScoreResults;
 using Quaver.Screens.Results.UI.Statistics;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
@@ -55,6 +56,11 @@ namespace Quaver.Screens.Results
         /// </summary>
         private ResultsScoreStatistics ScoreStatistics { get; set; }
 
+        /// <summary>
+        ///     Screen transitioner for fade effects.
+        /// </summary>
+        private Sprite ScreenTransitioner { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -68,6 +74,9 @@ namespace Quaver.Screens.Results
             CreateJudgementBreakdown();
             CreateButtonContainer();
             CreateScoreStatistics();
+
+            // Create transitioner last, so any fade animations draw on top.
+            CreateScreenTransitioner();
         }
 
         /// <inheritdoc />
@@ -233,6 +242,55 @@ namespace Quaver.Screens.Results
                                                     ScoreStatistics.Width / 2f + 10, 1200);
 
             ScoreStatistics.Transformations.Add(transformation);
+        }
+
+        /// <summary>
+        ///     Creates the screen transitioner sprite.
+        /// </summary>
+        private void CreateScreenTransitioner() => ScreenTransitioner = new Sprite()
+        {
+            Parent = Container,
+            Alignment = Alignment.TopLeft,
+            Width = WindowManager.Width,
+            Height = WindowManager.Height,
+            Tint = Color.Black,
+            Alpha = 1,
+            Transformations =
+            {
+                new Transformation(TransformationProperty.Alpha, Easing.Linear, 1, 0, 300)
+            }
+        };
+
+        /// <summary>
+        ///     Handles exit screen animations.
+        /// </summary>
+        public void PerformExitAnimations()
+        {
+            ScreenTransitioner.Transformations.Clear();
+            ScreenTransitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 500));
+
+            MapInformation.Transformations.Clear();
+            MapInformation.Transformations.Add(new Transformation(TransformationProperty.Y, Easing.EaseInOutQuad, MapInformation.Y,
+                                                                        -WindowManager.Height, 300));
+
+            ScoreResults.Transformations.Clear();
+            ScoreResults.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseInOutQuad, ScoreResults.X,
+                                                                        -WindowManager.Width, 300));
+
+            OnlineResults.Transformations.Clear();
+            OnlineResults.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseInOutQuad, OnlineResults.X, WindowManager.Width, 300));
+
+            JudgementBreakdown.Transformations.Clear();
+            JudgementBreakdown.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseInOutQuad,
+                                                                        JudgementBreakdown.X, -WindowManager.Width, 300));
+
+            ScoreStatistics.Transformations.Clear();
+            ScoreStatistics.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseInOutQuad,
+                                                                        ScoreStatistics.X, WindowManager.Width, 300));
+
+            ButtonContainer.Transformations.Clear();
+            ButtonContainer.Transformations.Add(new Transformation(TransformationProperty.Y, Easing.EaseInOutQuad, ButtonContainer.Y,
+                                                                        WindowManager.Height, 300));
         }
     }
 }
