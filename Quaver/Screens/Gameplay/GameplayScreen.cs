@@ -23,6 +23,7 @@ using Quaver.Skinning;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Discord;
+using Wobble.Graphics.Transformations;
 using Wobble.Input;
 using Wobble.Screens;
 
@@ -78,7 +79,7 @@ namespace Quaver.Screens.Gameplay
         /// <summary>
         ///     If the game is paused.
         /// </summary>
-        public bool IsPaused { get; private set; }
+        public bool IsPaused { get; set; }
 
         /// <summary>
         ///     The amount of times the user requested to quit.
@@ -129,6 +130,12 @@ namespace Quaver.Screens.Gameplay
         ///     The amount of time the restart key has been held down for.
         /// </summary>
         private double RestartKeyHoldTime { get; set; }
+
+        /// <summary>
+        ///     When the play is either failed or completed, this is a counter that
+        ///     will increase and dictates when to go to the results screen.
+        /// </summary>
+        public double TimeSincePlayEnded { get; set; }
 
         /// <summary>
         ///     If the user is currently on a break in the song.
@@ -328,6 +335,9 @@ namespace Quaver.Screens.Gameplay
                 return;
             }
 
+            // Grab the casted version of the screenview.
+            var screenView = (GameplayScreenView)View;
+
             // Handle pause.
             if (!IsPaused || IsResumeInProgress)
             {
@@ -344,6 +354,13 @@ namespace Quaver.Screens.Gameplay
                     // ignored
                 }
 
+                // Fade in the transitioner.
+                screenView.Transitioner.Transformations.Clear();
+                screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 0.75f, 400));
+
+                // Activate pause menu
+                screenView.PauseScreen.Activate();
+
                 return;
             }
 
@@ -352,7 +369,14 @@ namespace Quaver.Screens.Gameplay
             // When that resume time is past the specific set offset, it'll unpause the game.
             IsResumeInProgress = true;
             ResumeTime = GameBase.Game.TimeRunning;
-            Console.WriteLine(ResumeTime);
+
+            // Fade screen transitioner
+            screenView.Transitioner.Transformations.Clear();
+            var alphaTransformation = new Transformation(TransformationProperty.Alpha, Easing.Linear, 0.75f, 0, 400);
+            screenView.Transitioner.Transformations.Add(alphaTransformation);
+
+            // Deactivate pause screen.
+            screenView.PauseScreen.Deactivate();
         }
 
         /// <summary>
@@ -398,7 +422,10 @@ namespace Quaver.Screens.Gameplay
                 // Resume the game audio stream.
                 try
                 {
-                    AudioEngine.Track.Play();
+                    // If the track already played, then we'll want to continue it.
+                    // this check is necessary if the user paused before the track started.
+                    if (HasStarted)
+                        AudioEngine.Track.Play();
                 }
                 catch (AudioEngineException)
                 {
@@ -442,11 +469,22 @@ namespace Quaver.Screens.Gameplay
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyRestartMap.Value))
                 IsRestartingPlay = true;
 
+            // Grab a reference to the ScreenView.
+            var screenView = (GameplayScreenView)View;
+
             if (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyRestartMap.Value) && IsRestartingPlay)
             {
                 RestartKeyHoldTime += dt;
 
-                // TODO: UI.ScreenTransitioner.FadeIn(dt, 60);
+                // Fade in the transitioner.
+                if (!screenView.FadingOnRestartKeyPress)
+                {
+                    screenView.FadingOnRestartKeyPress = true;
+                    screenView.FadingOnRestartKeyRelease = false;
+
+                    screenView.Transitioner.Transformations.Clear();
+                    screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 100));
+                }
 
                 // Restart the map if the user has held it down for
                 if (RestartKeyHoldTime >= 200)
@@ -464,6 +502,16 @@ namespace Quaver.Screens.Gameplay
 
             RestartKeyHoldTime = 0;
             IsRestartingPlay = false;
+
+            // Set it so that it's not fading in on restart anymore.
+            if (!screenView.FadingOnRestartKeyRelease && screenView.FadingOnRestartKeyPress)
+            {
+                screenView.FadingOnRestartKeyPress = false;
+                screenView.FadingOnRestartKeyRelease = true;
+
+                screenView.Transitioner.Transformations.Clear();
+                screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 1, 0, 200));
+            }
         }
 
         /// <summary>

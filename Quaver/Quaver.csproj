@@ -135,9 +135,11 @@
     <Compile Include="Screens\Gameplay\UI\Counter\JudgementCounter.cs" />
     <Compile Include="Screens\Gameplay\UI\JudgementHitBurst.cs" />
     <Compile Include="Screens\Gameplay\UI\KeysPerSecond.cs" />
+    <Compile Include="Screens\Gameplay\UI\PauseScreen.cs" />
     <Compile Include="Screens\Gameplay\UI\Scoreboard\Scoreboard.cs" />
     <Compile Include="Screens\Gameplay\UI\Scoreboard\ScoreboardUser.cs" />
     <Compile Include="Screens\Gameplay\UI\Scoreboard\ScoreboardUserType.cs" />
+    <Compile Include="Screens\Gameplay\UI\SkipDisplay.cs" />
     <Compile Include="Screens\Gameplay\UI\SongInformation.cs" />
     <Compile Include="Screens\Gameplay\UI\SongTimeProgressBar.cs" />
     <Compile Include="Screens\IGameScreenComponent.cs" />

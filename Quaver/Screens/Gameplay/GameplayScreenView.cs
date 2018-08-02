@@ -8,16 +8,19 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Gameplay;
 using Quaver.Assets;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Helpers;
 using Quaver.Screens.Gameplay.UI;
 using Quaver.Screens.Gameplay.UI.Counter;
 using Quaver.Screens.Gameplay.UI.Scoreboard;
+using Quaver.Screens.Menu;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
 using Wobble.Window;
@@ -82,9 +85,45 @@ namespace Quaver.Screens.Gameplay
         private float GradeDisplayX => AccuracyDisplay.X - 8;
 
         /// <summary>
-        ///     The scoreboard, lol.
+        ///     The scoreboard
         /// </summary>
         public Scoreboard Scoreboard { get; set; }
+
+        /// <summary>
+        ///     The display to skip the map.
+        /// </summary>
+        public SkipDisplay SkipDisplay { get; set; }
+
+        /// <summary>
+        ///     The sprite used solely to fade the screen with transitions.
+        /// </summary>
+        public Sprite Transitioner { get; set; }
+
+        /// <summary>
+        ///     The pause overlay for the screen.
+        /// </summary>
+        public PauseScreen PauseScreen { get; set; }
+
+        /// <summary>
+        ///     Determines if the transitioner is currently fading on play restart.
+        /// </summary>
+        public bool FadingOnRestartKeyPress { get; set; }
+
+        /// <summary>
+        ///     Determines if the transitioner is currently fading on play restart release.
+        ///     When the user presses the release key, but not fully. They let it go.
+        /// </summary>
+        public bool FadingOnRestartKeyRelease { get; set; }
+
+        /// <summary>
+        ///     Determines if the transitioner is currently fading on play completion.
+        /// </summary>
+        public bool FadingOnPlayCompletion { get; set; }
+
+        /// <summary>
+        ///     Determines if when the play has failed, the screen was turned to red.
+        /// </summary>
+        public bool ScreenChangedToRedOnFailure { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -116,6 +155,25 @@ namespace Quaver.Screens.Gameplay
             };
 
             CreateScoreboard();
+
+            SkipDisplay = new SkipDisplay(Screen, SkinManager.Skin.Skip) { Parent = Container };
+
+            // Create screen transitioner to perform any animations.
+            Transitioner = new Sprite()
+            {
+                Parent = Container,
+                Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
+                Tint = Color.Black,
+                Alpha = 1,
+                Transformations =
+                {
+                    // Fade in from black.
+                    new Transformation(TransformationProperty.Alpha, Easing.Linear, 1, 0, 1500)
+                }
+            };
+
+            // Create pause screen last.
+            PauseScreen = new PauseScreen(Screen) { Parent = Container };
         }
 
         /// <inheritdoc />
@@ -126,6 +184,7 @@ namespace Quaver.Screens.Gameplay
         {
             UpdateScoreAndAccuracyDisplays();
             GradeDisplay.X = GradeDisplayX;
+            HandlePlayCompletion(gameTime);
 
             Background.Update(gameTime);
             Screen.Ruleset?.Update(gameTime);
@@ -312,5 +371,71 @@ namespace Quaver.Screens.Gameplay
         ///     Updates the scoreboard for all the current users.
         /// </summary>
         public void UpdateScoreboardUsers() => Scoreboard.CalculateScores();
+
+        /// <summary>
+        ///     Starts the fade out process for the game on play completion.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void HandlePlayCompletion(GameTime gameTime)
+        {
+            if (!Screen.Failed && !Screen.IsPlayComplete)
+                return;
+
+            Screen.TimeSincePlayEnded += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            // If the play was a failure, we want to immediately show
+            // a red screen.
+            if (Screen.Failed && !ScreenChangedToRedOnFailure)
+            {
+                Transitioner.Tint = Color.Red;
+                Transitioner.Alpha = 0.65f;
+
+                ScreenChangedToRedOnFailure = true;
+            }
+
+            if (Screen.TimeSincePlayEnded <= 1200)
+                return;
+
+            // TODO: Fade Out audio
+            /*if (GameBase.AudioEngine.IsPlaying && !VolumeFadedOut)
+            {
+                VolumeFadedOut = true;
+                AudioEngine.Fade(0, 1800);
+            }*/
+
+            // Load the results screen asynchronously, so that we don't run through any freezes.
+            /*if (!ResultsScreenLoadInitiated)
+            {
+                GameStateManager.LoadAsync(() =>
+                    {
+                        FutureResultScreen = new ResultsScreen(Screen);
+                        return FutureResultScreen;
+                    },
+                    () => ClearToExitScreen = true);
+
+                ResultsScreenLoadInitiated = true;
+            }
+
+            if (!ClearToExitScreen)
+                return;
+            */
+
+            // If the play was a failure, immediately start fading to black.
+            if (Screen.Failed)
+                Transitioner.FadeToColor(Color.Black, gameTime.ElapsedGameTime.TotalMilliseconds, 200);
+
+            // Start fading out the screen.
+            if (!FadingOnPlayCompletion)
+            {
+                Transitioner.Transformations.Clear();
+                Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0.65f, 1, 1000));
+                FadingOnPlayCompletion = true;
+            }
+
+            if (Screen.TimeSincePlayEnded >= 3000)
+            {
+                ScreenManager.ChangeScreen(new MainMenuScreen());
+            }
+        }
     }
 }
