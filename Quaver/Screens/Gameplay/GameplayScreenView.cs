@@ -18,6 +18,7 @@ using Quaver.Screens.Gameplay.UI;
 using Quaver.Screens.Gameplay.UI.Counter;
 using Quaver.Screens.Gameplay.UI.Scoreboard;
 using Quaver.Screens.Menu;
+using Quaver.Screens.Results;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -420,7 +421,7 @@ namespace Quaver.Screens.Gameplay
             {
                 ScreenManager.LoadAsync(() =>
                     {
-                        FutureResultsScreen = new MainMenuScreen();
+                        FutureResultsScreen = new ResultsScreen(Screen);
                         return FutureResultsScreen;
                     },
                     () => ClearToExitScreen = true);
