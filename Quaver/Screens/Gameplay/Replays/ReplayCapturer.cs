@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Replays;
 using Quaver.Config;
 using Quaver.Modifiers;
-using Quaver.Screens.Gameplay.Input;
+using Quaver.Screens.Gameplay.Rulesets.Input;
 using Wobble;
 
 namespace Quaver.Screens.Gameplay.Replays

@@ -1,19 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Input;
 using Wobble.Bindables;
 
-namespace Quaver.Screens.Gameplay.Input
+namespace Quaver.Screens.Gameplay.Rulesets.Input
 {
     public class InputBindingKeys
     {
         /// <summary>
         ///     The key that this maps to.
         /// </summary>
-        public Bindable<Keys> Key { get; }
+        public Bindable<Microsoft.Xna.Framework.Input.Keys> Key { get; }
 
         /// <summary>
         ///     If the key is currently pressed.
@@ -24,6 +18,6 @@ namespace Quaver.Screens.Gameplay.Input
         ///     Ctor - 
         /// </summary>
         /// <param name="key"></param>
-        public InputBindingKeys(Bindable<Keys> key) => Key = key;
+        public InputBindingKeys(Bindable<Microsoft.Xna.Framework.Input.Keys> key) => Key = key;
     }
 }

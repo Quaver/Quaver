@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Config;
@@ -13,7 +10,7 @@ using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield;
 using Wobble.Input;
 
-namespace Quaver.Screens.Gameplay.Input
+namespace Quaver.Screens.Gameplay.Rulesets.Input
 {
     internal class KeysInputManager : IGameplayInputManager
     {

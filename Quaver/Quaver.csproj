@@ -110,9 +110,9 @@
     <Compile Include="Scheduling\CommonTaskScheduler.cs" />
     <Compile Include="Screens\Gameplay\GameplayAudioTiming.cs" />
     <Compile Include="Screens\Gameplay\IGameplayInputManager.cs" />
-    <Compile Include="Screens\Gameplay\Input\InputBindingKeys.cs" />
-    <Compile Include="Screens\Gameplay\Input\InputManagerKeys.cs" />
-    <Compile Include="Screens\Gameplay\Input\ReplayInputManagerKeys.cs" />
+    <Compile Include="Screens\Gameplay\Rulesets\Input\InputBindingKeys.cs" />
+    <Compile Include="Screens\Gameplay\Rulesets\Input\InputManagerKeys.cs" />
+    <Compile Include="Screens\Gameplay\Rulesets\Input\ReplayInputManagerKeys.cs" />
     <Compile Include="Screens\Gameplay\Replays\ReplayCapturer.cs" />
     <Compile Include="Screens\Gameplay\Rulesets\GameplayRuleset.cs" />
     <Compile Include="Screens\Gameplay\GameplayScreen.cs" />
