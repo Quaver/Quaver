@@ -18,12 +18,6 @@ namespace Quaver.Screens.Menu
 
         /// <summary>
         /// </summary>
-        public MainMenuScreen()
-        {
-            View = new MainMenuScreenView(this);
-
-            AudioEngine.LoadCurrentTrack();
-            AudioEngine.Track.Play();
-        }
+        public MainMenuScreen() => View = new MainMenuScreenView(this);
     }
 }

@@ -125,6 +125,22 @@ namespace Quaver.Screens.Gameplay
         /// </summary>
         public bool ScreenChangedToRedOnFailure { get; set; }
 
+        /// <summary>
+        ///     When true, the results screen is currently loading asynchronously.
+        /// </summary>
+        private bool ResultsScreenLoadInitiated { get; set; }
+
+        /// <summary>
+        ///     The results screen to be loaded in the future on play completion.
+        /// </summary>
+        private Screen FutureResultsScreen { get; set; }
+
+        /// <summary>
+        ///     When the results screen has successfully loaded, we'll be considered clear
+        ///     to exit and fade out the screen.
+        /// </summary>
+        private bool ClearToExitScreen { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -393,32 +409,22 @@ namespace Quaver.Screens.Gameplay
                 ScreenChangedToRedOnFailure = true;
             }
 
-            if (Screen.TimeSincePlayEnded <= 1200)
-                return;
-
-            // TODO: Fade Out audio
-            /*if (GameBase.AudioEngine.IsPlaying && !VolumeFadedOut)
-            {
-                VolumeFadedOut = true;
-                AudioEngine.Fade(0, 1800);
-            }*/
-
             // Load the results screen asynchronously, so that we don't run through any freezes.
-            /*if (!ResultsScreenLoadInitiated)
+            if (!ResultsScreenLoadInitiated)
             {
-                GameStateManager.LoadAsync(() =>
+                ScreenManager.LoadAsync(() =>
                     {
-                        FutureResultScreen = new ResultsScreen(Screen);
-                        return FutureResultScreen;
+                        FutureResultsScreen = new MainMenuScreen();
+                        return FutureResultsScreen;
                     },
                     () => ClearToExitScreen = true);
 
                 ResultsScreenLoadInitiated = true;
             }
 
-            if (!ClearToExitScreen)
+            // Don't fade unless we're fully clear to do so.
+            if (Screen.TimeSincePlayEnded <= 1200 || !ClearToExitScreen)
                 return;
-            */
 
             // If the play was a failure, immediately start fading to black.
             if (Screen.Failed)
@@ -428,14 +434,17 @@ namespace Quaver.Screens.Gameplay
             if (!FadingOnPlayCompletion)
             {
                 Transitioner.Transformations.Clear();
-                Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0.65f, 1, 1000));
+
+                // Get the initial alpha of the sceen transitioner, because it can be different based
+                // on if the user failed or not, and use this in the transformation
+                var initialAlpha = Screen.Failed ? 0.65f : 0;
+
+                Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, initialAlpha, 1, 1000));
                 FadingOnPlayCompletion = true;
             }
 
             if (Screen.TimeSincePlayEnded >= 3000)
-            {
-                ScreenManager.ChangeScreen(new MainMenuScreen());
-            }
+                ScreenManager.ChangeScreen(FutureResultsScreen);
         }
     }
 }
