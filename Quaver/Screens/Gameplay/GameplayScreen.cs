@@ -5,11 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Replays;
 using Quaver.Audio;
 using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
@@ -262,6 +264,24 @@ namespace Quaver.Screens.Gameplay
 
                 if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeySkipIntro.Value))
                     SkipToNextObject();
+
+                // Only allow offset changes if the map hasn't started or if we're on a break
+                if (Ruleset.Screen.Timing.Time <= 5000 || Ruleset.Screen.OnBreak)
+                {
+                    // Handle offset +
+                    if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
+                    {
+                        MapManager.Selected.LocalOffset += 5;
+                        NotificationManager.Show(NotificationLevel.Info, $"Local map offset is now: {MapManager.Selected.LocalOffset}");
+                    }
+
+                    // Handle offset -
+                    if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
+                    {
+                        MapManager.Selected.LocalOffset -= 5;
+                        NotificationManager.Show(NotificationLevel.Info, $"Local map offset is now: {MapManager.Selected.LocalOffset}");
+                    }
+                }
             }
 
             // Handle input per game mode.

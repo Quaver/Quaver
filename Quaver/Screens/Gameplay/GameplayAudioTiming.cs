@@ -25,14 +25,9 @@ namespace Quaver.Screens.Gameplay
         public static int StartDelay { get; } = 3000;
 
         /// <summary>
-        ///     The current audio time.
+        ///     The time in the audio/play.
         /// </summary>
-        private double _time;
-        public double Time
-        {
-            get => _time;
-            set => _time = value + ConfigManager.GlobalAudioOffset.Value - MapManager.Selected.LocalOffset;
-        }
+        public double Time { get; set; }
 
         /// <summary>
         ///     Ctor
