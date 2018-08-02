@@ -10,7 +10,9 @@ using Quaver.API.Gameplay;
 using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Graphics;
+using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
 using Quaver.Screens.Gameplay.UI;
 using Quaver.Screens.Gameplay.UI.Counter;
@@ -190,6 +192,10 @@ namespace Quaver.Screens.Gameplay
 
             // Create pause screen last.
             PauseScreen = new PauseScreen(Screen) { Parent = Container };
+
+            // Notify the user if their local offset is actually set for this map.
+            if (MapManager.Selected.LocalOffset != 0)
+                NotificationManager.Show(NotificationLevel.Info, $"The local audio offset for this map is: {MapManager.Selected.LocalOffset}ms");
         }
 
         /// <inheritdoc />

@@ -347,11 +347,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 {
                     case GameMode.Keys4:
                         ConfigManager.ScrollSpeed4K.Value--;
-                        NotificationManager.Show(NotificationLevel.Info, $"4K Scroll speed set to: {ConfigManager.ScrollSpeed4K.Value}");
+                        NotificationManager.Show(NotificationLevel.Success, $"4K Scroll speed set to: {ConfigManager.ScrollSpeed4K.Value}");
                         break;
                     case GameMode.Keys7:
                         ConfigManager.ScrollSpeed7K.Value--;
-                        NotificationManager.Show(NotificationLevel.Info, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed7K.Value}");
+                        NotificationManager.Show(NotificationLevel.Success, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed7K.Value}");
                         break;
                 }
             }
@@ -362,11 +362,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 {
                     case GameMode.Keys4:
                         ConfigManager.ScrollSpeed4K.Value++;
-                        NotificationManager.Show(NotificationLevel.Info, $"4K Scroll speed set to: {ConfigManager.ScrollSpeed4K.Value}");
+                        NotificationManager.Show(NotificationLevel.Success, $"4K Scroll speed set to: {ConfigManager.ScrollSpeed4K.Value}");
                         break;
                     case GameMode.Keys7:
                         ConfigManager.ScrollSpeed7K.Value++;
-                        NotificationManager.Show(NotificationLevel.Info, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed7K.Value}");
+                        NotificationManager.Show(NotificationLevel.Success, $"7K Scroll speed set to: {ConfigManager.ScrollSpeed7K.Value}");
                         break;
                 }
             }
