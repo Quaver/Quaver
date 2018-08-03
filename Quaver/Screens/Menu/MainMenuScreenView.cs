@@ -18,10 +18,12 @@ using Quaver.Screens.Edit;
 using Quaver.Screens.Loading;
 using Quaver.Screens.Menu.UI.BottomToolbar;
 using Quaver.Screens.Menu.UI.Buttons.Navigation;
+using Quaver.Screens.Options;
 using Quaver.Screens.Results;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Screens;
 using Screen = Wobble.Screens.Screen;
 
@@ -101,7 +103,7 @@ namespace Quaver.Screens.Menu
                     Multiselect = true
                 };
 
-                // If the dialog couldn't be shown, that's an issue, so we'll return for now.
+                // If the dialogScreen couldn't be shown, that's an issue, so we'll return for now.
                 if (openFileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
@@ -133,7 +135,7 @@ namespace Quaver.Screens.Menu
                     Multiselect = false
                 };
 
-                // If the dialog couldn't be shown, that's an issue, so we'll return for now.
+                // If the dialogScreen couldn't be shown, that's an issue, so we'll return for now.
                 if (openFileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
@@ -142,7 +144,7 @@ namespace Quaver.Screens.Menu
         }, new List<ToolbarItem>
         {
             new ToolbarItem(FontAwesome.PowerOff, GameBase.Game.Exit),
-            new ToolbarItem(FontAwesome.Cog, () => { Console.WriteLine("Settings"); })
+            new ToolbarItem(FontAwesome.Cog, () => DialogManager.Show(new OptionsDialog(0.75f)))
         })
         {
             Parent = Container

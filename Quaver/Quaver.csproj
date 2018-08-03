@@ -167,6 +167,7 @@
     <Compile Include="Screens\Menu\UI\Buttons\Navigation\NavigationButtonContainer.cs" />
     <Compile Include="Screens\Gameplay\Rulesets\Keys\Playfield\Health\HealthBarKeysAlignment.cs" />
     <Compile Include="Screens\Gameplay\UI\Health\HealthBarType.cs" />
+    <Compile Include="Screens\Options\OptionsDialog.cs" />
     <Compile Include="Screens\Results\Input\ResultsInputManager.cs" />
     <Compile Include="Screens\Results\ResultsScreen.cs" />
     <Compile Include="Screens\Results\ResultsScreenType.cs" />
