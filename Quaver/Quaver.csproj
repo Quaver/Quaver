@@ -87,6 +87,7 @@
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\GzipHelper.cs" />
     <Compile Include="Helpers\ModHelper.cs" />
+    <Compile Include="Helpers\ObjectHelper.cs" />
     <Compile Include="Helpers\ReplayHelper.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
@@ -109,6 +110,18 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\CommonTaskScheduler.cs" />
+    <Compile Include="Screens\Edit\EditorScreen.cs" />
+    <Compile Include="Screens\Edit\EditorScreenView.cs" />
+    <Compile Include="Screens\Edit\Input\EditorInputManager.cs" />
+    <Compile Include="Screens\Edit\Rulesets\EditorRuleset.cs" />
+    <Compile Include="Screens\Edit\Rulesets\IEditorPlayfield.cs" />
+    <Compile Include="Screens\Edit\Rulesets\Keys\EditorRulesetKeys.cs" />
+    <Compile Include="Screens\Edit\Rulesets\Keys\Playfield\EditorHitObjectKeys.cs" />
+    <Compile Include="Screens\Edit\Rulesets\Keys\Playfield\EditorPlayfieldKeys.cs" />
+    <Compile Include="Screens\Edit\Rulesets\Keys\Playfield\EditorScrollContainerKeys.cs" />
+    <Compile Include="Screens\Edit\Rulesets\Keys\Playfield\EditorSnapLinesKeys.cs" />
+    <Compile Include="Screens\Edit\UI\EditorSeekBar.cs" />
+    <Compile Include="Screens\Edit\UI\EditorSongTimeDisplay.cs" />
     <Compile Include="Screens\Gameplay\GameplayAudioTiming.cs" />
     <Compile Include="Screens\Gameplay\IGameplayInputManager.cs" />
     <Compile Include="Screens\Gameplay\Rulesets\Input\InputBindingKeys.cs" />

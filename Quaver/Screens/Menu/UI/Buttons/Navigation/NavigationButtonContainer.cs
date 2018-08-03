@@ -24,6 +24,12 @@ namespace Quaver.Screens.Menu.UI.Buttons.Navigation
         /// </summary>
         private NavigationButton ClickedButton { get; set; }
 
+        /// <summary>
+        ///     If the click action has already been called, to
+        ///     prevent it from being called multiple times.
+        /// </summary>
+        private bool ClickActionCalled { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         ///     Ctor -
@@ -130,8 +136,11 @@ namespace Quaver.Screens.Menu.UI.Buttons.Navigation
             });
 
             // Call click action if the animation was completed.
-            if (animationDone)
+            if (animationDone && !ClickActionCalled)
+            {
+                ClickActionCalled = true;
                 ClickedButton.OnClick();
+            }
         }
     }
 }

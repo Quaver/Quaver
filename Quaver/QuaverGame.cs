@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
 using Quaver.Config;
@@ -46,6 +47,13 @@ namespace Quaver
             // Unlock the framerate of the game to unlimited.
             Graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
+
+            // Enable anti-aliasing.
+            // TODO: Fix?
+            Graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            Graphics.PreferMultiSampling = true;
+            GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
+
             Graphics.ApplyChanges();
 
             Window.AllowUserResizing = true;

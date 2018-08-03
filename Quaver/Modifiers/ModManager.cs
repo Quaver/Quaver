@@ -126,10 +126,7 @@ namespace Quaver.Modifiers
         public static void RemoveAllMods()
         {
             CurrentModifiersList.Clear();
-
-            // Reset all GameBase variables to its defaults
-            AudioEngine.Track.Rate = 1.0f;
-            RemoveSpeedMods();
+            CheckModInconsistencies();
         }
 
         /// <summary>
@@ -140,6 +137,7 @@ namespace Quaver.Modifiers
             try
             {
                 CurrentModifiersList.RemoveAll(x => x.Type == ModType.Speed);
+                CheckModInconsistencies();
             }
             catch (Exception e)
             {
@@ -152,7 +150,13 @@ namespace Quaver.Modifiers
         /// </summary>
         public static void CheckModInconsistencies()
         {
+            if (Mods == 0)
+                return;
+
             var mod = CurrentModifiersList.Find(x => x.Type == ModType.Speed);
+
+            if (mod == null)
+                return;
 
             // Re-intialize the correct gameplayModifier.
             var index = CurrentModifiersList.IndexOf(mod);

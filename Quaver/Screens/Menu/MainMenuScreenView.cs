@@ -12,6 +12,7 @@ using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Logging;
 using Quaver.Parsers.Etterna;
 using Quaver.Parsers.Osu;
+using Quaver.Screens.Edit;
 using Quaver.Screens.Loading;
 using Quaver.Screens.Menu.UI.BottomToolbar;
 using Quaver.Screens.Menu.UI.Buttons.Navigation;
@@ -134,7 +135,7 @@ namespace Quaver.Screens.Menu
         {
             // Editor
             var editor = new NavigationButton(new Vector2(325, 230), "Editor", UserInterface.MenuCompetitive,
-                "Create or edit a map to any song you'd like!", () => {})
+                "Create or edit a map to any song you'd like!", EditorScreen.Go)
             {
                 Alignment = Alignment.TopCenter,
                 X = 0,
