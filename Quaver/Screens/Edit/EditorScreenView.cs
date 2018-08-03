@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Graphics;
+using Quaver.Graphics.Notifications;
 using Quaver.Screens.Edit.UI;
 using Wobble;
 using Wobble.Graphics;
@@ -38,6 +39,11 @@ namespace Quaver.Screens.Edit
         /// </summary>
         private HorizontalSelector BeatSnapSelector { get; set; }
 
+        /// <summary>
+        ///     We want to show a notif at the very beginning, this keeps track of if we've already added to the queue
+        /// </summary>
+        private bool NotificationShown { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -61,6 +67,12 @@ namespace Quaver.Screens.Edit
             screen.Ruleset.Update(gameTime);
 
             Container?.Update(gameTime);
+
+            if (!NotificationShown)
+            {
+                NotificationManager.Show(NotificationLevel.Warning, "The editor is experimental and does not work!");
+                NotificationShown = true;
+            }
         }
         /// <inheritdoc />
         /// <summary>
