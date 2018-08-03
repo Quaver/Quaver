@@ -174,7 +174,7 @@ namespace Quaver.Screens.Splash
             var screen = (SplashScreen) Screen;
 
             // Start fading out screen.
-            if ((screen.TimeActive > 5000 || KeyboardManager.IsUniqueKeyPress(Keys.Space)) && !IsFadingOut)
+            if ((screen.TimeActive > 6500 || KeyboardManager.IsUniqueKeyPress(Keys.Space)) && !IsFadingOut)
             {
                 IsFadingOut = true;
                 ScreenTransitioner.Transformations.Clear();

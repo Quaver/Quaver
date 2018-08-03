@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
+using Quaver.API.Replays;
 using Quaver.Assets;
+using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Overlays.Toolbar;
@@ -16,6 +18,7 @@ using Quaver.Screens.Edit;
 using Quaver.Screens.Loading;
 using Quaver.Screens.Menu.UI.BottomToolbar;
 using Quaver.Screens.Menu.UI.Buttons.Navigation;
+using Quaver.Screens.Results;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI;
@@ -117,6 +120,24 @@ namespace Quaver.Screens.Menu
                     }
                     // When all the maps have been converted, select the last imported map and make that the selected one.
                 }).ContinueWith(t => MapsetImporter.AfterImport());
+            }),
+            new ToolbarItem("Watch Replay", () =>
+            {
+                // Create the openFileDialog object.
+                var openFileDialog = new OpenFileDialog()
+                {
+                    InitialDirectory = ConfigManager.GameDirectory.Value,
+                    Filter = "Replay (*.qr)| *.qr;",
+                    FilterIndex = 0,
+                    RestoreDirectory = true,
+                    Multiselect = false
+                };
+
+                // If the dialog couldn't be shown, that's an issue, so we'll return for now.
+                if (openFileDialog.ShowDialog() != DialogResult.OK)
+                    return;
+
+                ScreenManager.ChangeScreen(new ResultsScreen(new Replay(openFileDialog.FileName)));
             })
         }, new List<ToolbarItem>
         {
