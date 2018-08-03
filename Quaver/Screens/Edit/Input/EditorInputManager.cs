@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Audio;
+using Quaver.Screens.Menu;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Input;
+using Wobble.Screens;
 
 namespace Quaver.Screens.Edit.Input
 {
@@ -33,6 +35,7 @@ namespace Quaver.Screens.Edit.Input
             HandlePauseAndResume();
             HandleSeeking();
             HandleMapSaving();
+            HandleExit();
         }
 
         /// <summary>
@@ -79,6 +82,15 @@ namespace Quaver.Screens.Edit.Input
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Right) || scrollDiff < 0)
                 AudioEngine.SeekTrackToNearestSnap(Screen.Map, Direction.Forward, Screen.BeatSnap.Value);
+        }
+
+        /// <summary>
+        ///     Gets out of the screen.
+        /// </summary>
+        private void HandleExit()
+        {
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
+                ScreenManager.ChangeScreen(new MainMenuScreen());
         }
     }
 }
