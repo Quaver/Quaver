@@ -35,6 +35,7 @@ namespace Quaver.Assets
         public static Texture2D NotificationWarning { get; set; }
         public static Texture2D NotificationInfo { get; set; }
         public static Texture2D NotificationSuccess { get; set; }
+        public static Texture2D QuaverLogo { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -63,6 +64,7 @@ namespace Quaver.Assets
             NotificationInfo = AssetLoader.LoadTexture2D(QuaverResources.notif_info, ImageFormat.Png);
             NotificationSuccess = AssetLoader.LoadTexture2D(QuaverResources.notif_success, ImageFormat.Png);
             NotificationWarning = AssetLoader.LoadTexture2D(QuaverResources.notif_warning, ImageFormat.Png);
+            QuaverLogo = AssetLoader.LoadTexture2D(QuaverResources.quaver_logo_only, ImageFormat.Png);
         }
     }
 }
