@@ -11,6 +11,7 @@ using Quaver.Graphics.Notifications;
 using Quaver.Logging;
 using Quaver.Scheduling;
 using Quaver.Screens.Menu;
+using Quaver.Screens.Splash;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -77,7 +78,7 @@ namespace Quaver
             CreateFpsCounter();
 
             IsReadyToUpdate = true;
-            ScreenManager.ChangeScreen(new MainMenuScreen());
+            ScreenManager.ChangeScreen(new SplashScreen());
         }
 
         /// <inheritdoc />
@@ -146,7 +147,7 @@ namespace Quaver
             MapsetImporter.WatchForChanges();
 
             if (MapManager.Mapsets.Count != 0)
-                MapManager.Selected = MapManager.Mapsets.First().Maps[3];
+                MapManager.Selected = MapManager.Mapsets.First().Maps[0];
         }
 
         /// <summary>

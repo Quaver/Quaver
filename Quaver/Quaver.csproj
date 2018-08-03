@@ -168,6 +168,8 @@
     <Compile Include="Screens\Results\UI\Statistics\HitOffsetGraph.cs" />
     <Compile Include="Screens\Results\UI\Statistics\ResultsScoreStatistics.cs" />
     <Compile Include="Screens\Results\UI\Statistics\StatisticContainer.cs" />
+    <Compile Include="Screens\Splash\SplashScreen.cs" />
+    <Compile Include="Screens\Splash\SplashScreenView.cs" />
     <Compile Include="Skinning\SkinKeys.cs" />
     <Compile Include="Skinning\SkinKeysFolder.cs" />
     <Compile Include="Skinning\SkinManager.cs" />
