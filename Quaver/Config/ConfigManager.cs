@@ -434,7 +434,7 @@ namespace Quaver.Config
                     ScrollSpeed4K.ValueChanged += AutoSaveConfiguration;
                     ScrollSpeed7K.ValueChanged += AutoSaveConfiguration;
                     DownScroll4K.ValueChanged += AutoSaveConfiguration;
-                    DownScroll4K.ValueChanged += AutoSaveConfiguration;
+                    DownScroll7K.ValueChanged += AutoSaveConfiguration;
                     GlobalAudioOffset.ValueChanged += AutoSaveConfiguration;
                     Skin.ValueChanged += AutoSaveConfiguration;
                     DefaultSkin.ValueChanged += AutoSaveConfiguration;
@@ -518,8 +518,7 @@ namespace Quaver.Config
         ///     certain way.
         /// </summary>
         /// <returns></returns>
-        private static Bindable<string> ReadSpecialConfigType(SpecialConfigType type, string name, string defaultVal,
-            KeyDataCollection ini)
+        private static Bindable<string> ReadSpecialConfigType(SpecialConfigType type, string name, string defaultVal, KeyDataCollection ini)
         {
             var binded = new Bindable<string>(name, defaultVal);
 
