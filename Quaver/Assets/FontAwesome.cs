@@ -52,6 +52,7 @@ namespace Quaver.Assets
         public static Texture2D Spinner { get; set; }
         public static Texture2D Heart { get; set; }
         public static Texture2D Times { get; set; }
+        public static Texture2D Keyboard { get; set; }
 
         /// <summary>
         ///     Loads all FontAwesome icon textures.
@@ -104,6 +105,7 @@ namespace Quaver.Assets
             Spinner = AssetLoader.LoadTexture2D(QuaverResources.fa_spinner_of_dots, ImageFormat.Png);
             Heart = AssetLoader.LoadTexture2D(QuaverResources.fa_heart_shape_silhouette, ImageFormat.Png);
             Times = AssetLoader.LoadTexture2D(QuaverResources.fa_times, ImageFormat.Png);
+            Keyboard = AssetLoader.LoadTexture2D(QuaverResources.fa_keyboard, ImageFormat.Png);
         }
     }
 }
