@@ -36,6 +36,8 @@ namespace Quaver.Assets
         public static Texture2D NotificationInfo { get; set; }
         public static Texture2D NotificationSuccess { get; set; }
         public static Texture2D QuaverLogo { get; set; }
+        public static Texture2D LeftButtonSquare { get; set; }
+        public static Texture2D RightButtonSquare { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -65,6 +67,8 @@ namespace Quaver.Assets
             NotificationSuccess = AssetLoader.LoadTexture2D(QuaverResources.notif_success, ImageFormat.Png);
             NotificationWarning = AssetLoader.LoadTexture2D(QuaverResources.notif_warning, ImageFormat.Png);
             QuaverLogo = AssetLoader.LoadTexture2D(QuaverResources.quaver_logo_only, ImageFormat.Png);
+            LeftButtonSquare = AssetLoader.LoadTexture2D(QuaverResources.left_button_square, ImageFormat.Png);
+            RightButtonSquare = AssetLoader.LoadTexture2D(QuaverResources.right_button_square, ImageFormat.Png);
         }
     }
 }
