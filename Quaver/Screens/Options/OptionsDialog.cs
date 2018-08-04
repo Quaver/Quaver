@@ -1,18 +1,27 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
+using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Graphics;
+using Quaver.Graphics.Notifications;
+using Quaver.Skinning;
+using Wobble;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Dialogs;
+using Wobble.Graphics.UI.Form;
 using Wobble.Input;
 using Wobble.Window;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Screens.Options
 {
@@ -21,14 +30,14 @@ namespace Quaver.Screens.Options
         /// <summary>
         ///     The background in which the content lives.
         /// </summary>
-        private Sprite ContentContainer { get; set; }
+        public Sprite ContentContainer { get; private set; }
 
-#region HEADER
+        #region HEADER
 
         /// <summary>
         ///     The container for the header of the options menu
         /// </summary>
-        private Sprite HeaderContainer { get; set; }
+        public Sprite HeaderContainer { get; private set; }
 
         /// <summary>
         ///     A flag icon displayed at the left of the header for stylistic purposes
@@ -45,9 +54,9 @@ namespace Quaver.Screens.Options
         /// </summary>
         private ImageButton ExitButton { get; set; }
 
-#endregion
+        #endregion
 
-#region FOOTER
+        #region FOOTER
 
         /// <summary>
         ///     The container for the footer of the options menu.
@@ -64,7 +73,44 @@ namespace Quaver.Screens.Options
         /// </summary>
         private TextButton FooterCancelButton { get; set; }
 
-#endregion
+        #endregion
+
+        #region SECTIONS
+
+        /// <summary>
+        ///     The list of options sections.
+        /// </summary>
+        public List<OptionsSection> Sections { get; private set; }
+
+        /// <summary>
+        ///     The index of the currently selected section.
+        /// </summary>
+        private OptionsSection SelectedSection { get; set; }
+
+        /// <summary>
+        ///     A vertical divider line to separate the section buttons from the actual section.
+        /// </summary>
+        public Sprite DividerLineVertical { get; private set; }
+
+        #endregion
+
+        /// <summary>
+        ///     If not equivalent to the current window's resolution,
+        ///     it will change to this one once the user presses OK.
+        /// </summary>
+        private Point ChangedResolution { get; set; }
+
+        /// <summary>
+        ///     if this is set to something other than the skin the user
+        ///     currently has, it will reload the skin.
+        /// </summary>
+        private string NewSkinToLoad { get; set; }
+
+        /// <summary>
+        ///     If this is set to something other than our current default skin,
+        ///     it'll reload the skin when the user presses OK
+        /// </summary>
+        private DefaultSkins NewDefaultSkinToLoad { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -74,11 +120,38 @@ namespace Quaver.Screens.Options
         {
         }
 
+        /// <summary>
+        ///     Change the selected section.
+        /// </summary>
+        /// <param name="section"></param>
+        public void ChangeSection(OptionsSection section)
+        {
+            var oldSelected = SelectedSection;
+
+            // Make sure the current icon is not selected anymore.
+            oldSelected.Icon.Deselect();
+
+            // Move the container off-screen.
+            oldSelected.Container.X = WindowManager.Width;
+
+            // Change the selected button
+            SelectedSection = section;
+
+            // Make the icon button in a selected state
+            SelectedSection.Icon.Select();
+            SelectedSection.Container.Position = new ScalableVector2(0, 0);
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public override void CreateContent()
         {
+            // Set default values that require an "OK" in order to change.
+            ChangedResolution = new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
+            NewSkinToLoad = ConfigManager.Skin.Value;
+            NewDefaultSkinToLoad = ConfigManager.DefaultSkin.Value;
+
             // Create the container for the entire options menu.
             ContentContainer = new Sprite()
             {
@@ -90,6 +163,17 @@ namespace Quaver.Screens.Options
 
             CreateHeader();
             CreateFooter();
+
+            // Create all of the options sections.
+            Sections = new List<OptionsSection>()
+            {
+                CreateVideoSection(),
+                CreateAudioSection(),
+                CreateGameplaySection(),
+                CreateMiscSection()
+            };
+
+            CreateSections();
         }
 
         /// <inheritdoc />
@@ -155,7 +239,8 @@ namespace Quaver.Screens.Options
                 Y = 1
             };
 
-            FooterOkButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "OK", 0.55f, (sender, args) => DialogManager.Dismiss())
+            FooterOkButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "OK", 0.55f,
+                (sender, args) => ConfirmChanges())
             {
                 Parent = FooterContainer,
                 Alignment = Alignment.MidRight,
@@ -180,6 +265,331 @@ namespace Quaver.Screens.Options
                     TextColor = Color.Black
                 }
             };
+        }
+
+        /// <summary>
+        ///     Creates the options sections.
+        /// </summary>
+        private void CreateSections()
+        {
+            CreateSectionButtons();
+            CreateVerticalDividerLine();
+
+            // Set the selected section.
+            SelectedSection = Sections.First();
+
+            Sections.ForEach(section =>
+            {
+                for (var i = 0; i < section.Items.Count; i++)
+                {
+                    // Set the item's parent to the section container.
+                    section.Items[i].Parent = section.Container;
+
+                    // However keep the parent of the icon as the overall ContentContainer
+                    // so that it still displays on-screen whenever we move the non-selected containers.
+                    section.Icon.Parent = ContentContainer;
+
+                    // Align the items in the container.
+                    if (i > 0)
+                        section.Items[i].Y += i * (section.Items[i].Height + 5);
+                }
+
+                // If the section is't the selected one, then move it off-screen so it isn't visible.
+                if (section != SelectedSection)
+                    section.Container.X = WindowManager.Width;
+            });
+        }
+
+        /// <summary>
+        ///     Creates the options section buttons
+        /// </summary>
+        private void CreateSectionButtons()
+        {
+            for (var i = 0; i < Sections.Count; i++)
+            {
+                var section = Sections[i];
+
+                // Add the section icon to the container.
+                section.Icon.Parent = Sections[i].Container;
+                section.Icon.X = 30;
+                section.Icon.Y = HeaderContainer.Height + 40 + i * ( section.Icon.Height + 10 );
+            }
+        }
+
+        /// <summary>
+        ///     Creates a vertical divider line.
+        /// </summary>
+        private void CreateVerticalDividerLine() => DividerLineVertical = new Sprite()
+        {
+            Parent = ContentContainer,
+            Size = new ScalableVector2(1, ContentContainer.Height - HeaderContainer.Height - FooterContainer.Height - 20),
+            X = Sections[0].Icon.X + Sections[0].Icon.Width + 25,
+            Alignment = Alignment.MidLeft
+        };
+
+        /// <summary>
+        ///     Confirms all the changes that the user wants. For bigger operations so the user doesn't get annoyed.
+        /// </summary>
+        private void ConfirmChanges()
+        {
+            if (ChangedResolution.X != ConfigManager.WindowWidth.Value || ChangedResolution.Y != ConfigManager.WindowHeight.Value)
+            {
+                ConfigManager.WindowWidth.Value = ChangedResolution.X;
+                ConfigManager.WindowHeight.Value = ChangedResolution.Y;
+
+                WindowManager.ChangeScreenResolution(ChangedResolution);
+            }
+
+            // Dictates if the skin needs to reload.
+            var skinNeedsReloading = false;
+
+            // Custom SKin
+            if (NewSkinToLoad != ConfigManager.Skin.Value)
+            {
+                ConfigManager.Skin.Value = NewSkinToLoad;
+                skinNeedsReloading = true;
+            }
+
+            // Default skin selection
+            if (NewDefaultSkinToLoad != ConfigManager.DefaultSkin.Value)
+            {
+                ConfigManager.DefaultSkin.Value = NewDefaultSkinToLoad;
+                skinNeedsReloading = true;
+            }
+
+            // Reload skin if we need to reload.
+            if (skinNeedsReloading)
+                SkinManager.Load();
+        }
+
+        /// <summary>
+        ///     Creates the video section of the options menu
+        /// </summary>
+        /// <returns></returns>
+        private OptionsSection CreateVideoSection()
+        {
+            var currentResolution = $"{ConfigManager.WindowWidth.Value}x{ConfigManager.WindowHeight.Value}";
+
+            // 16:9 resolutions. Quaver looks shit on 4:3 with the reference resolution.
+            var commonResolutions = new List<string>()
+            {
+                "1024x576",
+                "1152x648",
+                "1280x720",
+                "1366x768",
+                "1600x900",
+                "1920x1080",
+                "2560x1440"
+            };
+
+            var resolutionIndex = commonResolutions.FindIndex(x => x == currentResolution);
+
+            // If the resolution isn't there, then we need to add the res to the list
+            // and set the resolution index manually.
+            if (resolutionIndex == -1)
+            {
+                commonResolutions.Add(currentResolution);
+                resolutionIndex = commonResolutions.Count - 1;
+            }
+
+            // Create the option's section
+            return new OptionsSection(this, FontAwesome.Desktop, new List<OptionsItem>
+            {
+                // Window Resolution
+                new OptionsItem(this, "Resolution", new HorizontalSelector(commonResolutions, new ScalableVector2(50, 10),
+                    Fonts.Exo2Regular24, 0.35f, UserInterface.LeftButtonSquare, UserInterface.RightButtonSquare, new ScalableVector2(10, 10),
+                    10, (val, index) =>
+                    {
+                        SkinManager.Skin.SoundClick.CreateChannel().Play();
+
+                        var resolutionSplit = val.Split('x');
+                        ChangedResolution = new Point(int.Parse(resolutionSplit[0]), int.Parse(resolutionSplit[1]));
+                    }, resolutionIndex)
+                ),
+
+                // Full-screen
+                new OptionsItem(this, "Fullscreen", new Checkbox(ConfigManager.WindowFullScreen, new Vector2(20, 20),
+                        FontAwesome.CircleClosed, FontAwesome.CircleOpen, false),
+                    () =>
+                    {
+                        GameBase.Game.Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
+                    }),
+
+                // Display FPS counter.
+                new OptionsItem(this, "Display FPS Counter", new Checkbox(ConfigManager.FpsCounter, new Vector2(20, 20),
+                        FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), () => {}),
+            }, true);
+        }
+
+        /// <summary>
+        ///     Creates the audio section of the options menu.
+        /// </summary>
+        /// <returns></returns>
+        private OptionsSection CreateAudioSection() => new OptionsSection(this, FontAwesome.Volume, new List<OptionsItem>()
+        {
+            // Pitch Audio w/ Rate.
+            new OptionsItem(this, "Pitch Audio With Rate", new Checkbox(ConfigManager.Pitched, new Vector2(20, 20),
+                FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), () => {}),
+        });
+
+        /// <summary>
+        ///     Creates the misc section of the options menu
+        /// </summary>
+        /// <returns></returns>
+        private OptionsSection CreateMiscSection() => new OptionsSection(this, FontAwesome.Question, new List<OptionsItem>()
+        {
+            // Select osu!.db file
+            new OptionsItem(this, "Select peppy!.db file", new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Select", 0.50f,
+            (sender, e) =>
+            {
+                // Create the openFileDialog object.
+                var openFileDialog = new OpenFileDialog()
+                {
+                    InitialDirectory = "c:\\",
+                    Filter = "Osu Database File (*.db)| *.db",
+                    FilterIndex = 0,
+                    RestoreDirectory = true,
+                    Multiselect = false
+                };
+
+                // If the dialog couldn't be shown, that's an issue, so we'll return for now.
+                if (openFileDialog.ShowDialog() != DialogResult.OK)
+                    return;
+
+                ConfigManager.OsuDbPath.Value = openFileDialog.FileName;
+
+                NotificationManager.Show(NotificationLevel.Success, $".db file has been set. You can now \"Load peppy! beatmaps\"");
+            })),
+            // Load osu! beatmaps, although we can't use osu! as actual text because... trademark :thumbsup:
+            new OptionsItem(this, "Load peppy! beatmaps", new Checkbox(ConfigManager.AutoLoadOsuBeatmaps, new Vector2(20, 20),
+                FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), MapCache.LoadAndSetMapsets),
+
+            // Select Etterna Cache Folder
+            new OptionsItem(this, "Select Etterna Cache Folder", new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Select", 0.50f,
+            (sender, e) =>
+            {
+                using(var fbd = new FolderBrowserDialog())
+                {
+                    var result = fbd.ShowDialog();
+
+                    ConfigManager.EtternaCacheFolderPath.Value = fbd.SelectedPath;
+                }
+
+                NotificationManager.Show(NotificationLevel.Success, $"Etterna Cache Folder has been set. You can now \"Load Etterna Charts\"");
+            })),
+
+            // Load charts from etterna.
+            new OptionsItem(this, "Load Etterna Charts", new Checkbox(ConfigManager.AutoLoadEtternaCharts, new Vector2(20, 20),
+                FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), MapCache.LoadAndSetMapsets),
+        });
+
+        /// <summary>
+        ///     Creates the gameplay section of the options menu
+        /// </summary>
+        /// <returns></returns>
+        private OptionsSection CreateGameplaySection() =>
+            // Create section
+            new OptionsSection(this, FontAwesome.GamePad, new List<OptionsItem>()
+            {
+                // Custom skin selection
+                CreateCustomSkinSelectionItem(),
+
+                // Default skin selection
+                CreateDefaultSkinSelection(),
+
+                // Use Default Skin
+                new OptionsItem(this, "Use Default Skin", new Checkbox(new Bindable<bool>(string.IsNullOrEmpty(ConfigManager.Skin.Value),
+                (sender, e) =>
+                {
+                    Console.WriteLine(e.Value);
+
+                    // If set to true, we want to set the skin the user is using to true, 
+                    if (!e.Value)
+                        return;
+
+                    ConfigManager.Skin.Value = "";
+                    SkinManager.Load();
+                }), new Vector2(20, 20), FontAwesome.CircleClosed, FontAwesome.CircleOpen, true)),
+
+                // DownScroll 4K
+                new OptionsItem(this, "Notes Scroll Down - 4K", new Checkbox(ConfigManager.DownScroll4K, new Vector2(20, 20),
+                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+
+                // DownScroll 7K
+                new OptionsItem(this, "Notes Scroll Down - 7K", new Checkbox(ConfigManager.DownScroll7K, new Vector2(20, 20),
+                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+
+                // Song Time Progress
+                new OptionsItem(this, "Display Song Time Progress", new Checkbox(ConfigManager.DisplaySongTimeProgress, new Vector2(20, 20),
+                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+
+                // Anim Judge Counter
+                new OptionsItem(this, "Animate Judgement Counter", new Checkbox(ConfigManager.AnimateJudgementCounter, new Vector2(20, 20),
+                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+            });
+
+        /// <summary>
+        ///     Create custom skin selection.
+        /// </summary>
+        /// <returns></returns>
+        private OptionsItem CreateCustomSkinSelectionItem()
+        {
+            var availableSkins = new DirectoryInfo(ConfigManager.SkinDirectory.Value).GetDirectories().ToList();
+
+            // make a list with all of the available skins.
+            var skinsList = new List<string>();
+            availableSkins.ForEach(x => skinsList.Add(x.Name));
+
+            var selectedSkinIndex = 0;
+
+            if (skinsList.Count == 0 || ConfigManager.Skin.Value == "")
+            {
+                skinsList.Add("Default");
+                selectedSkinIndex = skinsList.Count - 1;
+            }
+            else
+            {
+                selectedSkinIndex = skinsList.FindIndex(x => x == ConfigManager.Skin.Value);
+
+                if (selectedSkinIndex == -1)
+                    selectedSkinIndex = 0;
+            }
+
+            return new OptionsItem(this, "Custom Skin", new HorizontalSelector(skinsList, new ScalableVector2(50, 10),
+                Fonts.Exo2Regular24, 0.35f, UserInterface.LeftButtonSquare, UserInterface.RightButtonSquare, new ScalableVector2(10, 10),
+                10, (val, index) =>
+                {
+                    SkinManager.Skin.SoundClick.CreateChannel().Play();
+
+                    if (val == ConfigManager.Skin.Value)
+                        return;
+
+                    NewSkinToLoad = val == "Default" ? "" : val;
+                }, selectedSkinIndex)
+            );
+        }
+
+        /// <summary>
+        ///     Creates the default skin selection item.
+        /// </summary>
+        private OptionsItem CreateDefaultSkinSelection()
+        {
+            var defaultSkins = Enum.GetNames(typeof(DefaultSkins)).ToList();
+            var selectedIndex = defaultSkins.FindIndex(x => x == ConfigManager.DefaultSkin.ToString());
+
+            // Create Item
+            return new OptionsItem(this, "Default Skin", new HorizontalSelector(defaultSkins, new ScalableVector2(50, 10),
+                                    Fonts.Exo2Regular24, 0.35f, UserInterface.LeftButtonSquare, UserInterface.RightButtonSquare,
+                                    new ScalableVector2(10, 10), 10,
+            (val, index) =>
+            {
+                SkinManager.Skin.SoundClick.CreateChannel().Play();
+
+                if (val == ConfigManager.DefaultSkin.Value.ToString())
+                    return;
+
+                NewDefaultSkinToLoad = ConfigHelper.ReadDefaultSkin(DefaultSkins.Bar, val);
+            }, selectedIndex));
         }
     }
 }
