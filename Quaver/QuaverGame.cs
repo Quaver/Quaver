@@ -54,6 +54,8 @@ namespace Quaver
             Graphics.PreferMultiSampling = true;
             GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
 
+            Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
+
             Graphics.ApplyChanges();
 
             Window.AllowUserResizing = true;
@@ -127,14 +129,13 @@ namespace Quaver
 
             base.Draw(gameTime);
 
-            NotificationManager.Draw(gameTime);
-
             GameBase.DefaultSpriteBatchOptions.Begin();
             Logger.Draw(gameTime);
             SpriteBatch.End();
 
             // Draw the global container last.
             GlobalUserInterface.Draw(gameTime);
+            NotificationManager.Draw(gameTime);
         }
 
         /// <summary>
