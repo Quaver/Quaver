@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -40,7 +40,7 @@ namespace Quaver.Scheduling
         /// </summary>
         internal static void Run()
         {
-            if (GameBase.Game.TimeRunning - LastRunTime >= 5000 || IsRunning || QueuedTasks.Count == 0)
+            if (GameBase.Game.TimeRunning - LastRunTime <= 5000 || IsRunning || QueuedTasks.Count == 0)
                 return;
 
             var taskList = new List<Task>();
