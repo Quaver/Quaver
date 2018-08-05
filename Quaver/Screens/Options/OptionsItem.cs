@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
+using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Skinning;
 using Wobble.Bindables;
@@ -37,6 +38,11 @@ namespace Quaver.Screens.Options
         ///     The text that states the name of the option
         /// </summary>
         private SpriteText NameText { get; set; }
+
+        /// <summary>
+        ///     The text that shows the value of the option. (Used only for some options.)
+        /// </summary>
+        private SpriteText ValueText { get; set; }
 
         /// <summary>
         ///     The callback function that runs when the option is changed.
@@ -102,6 +108,46 @@ namespace Quaver.Screens.Options
             selector.ButtonSelectRight.X += 15;
 
             selector.X -= selector.Width / 4f - 5;
+
+            CreateNameText();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Creates an OptionsItem with a slider.
+        /// </summary>
+        /// <param name="dialog"></param>
+        /// <param name="name"></param>
+        /// <param name="slider"></param>
+        public OptionsItem(OptionsDialog dialog, string name, Slider slider)
+        {
+            Name = name;
+            FormElement = slider ?? throw new ArgumentNullException(nameof(slider));
+            Dialog = dialog;
+
+            // Style the actual container first
+            InitializeContainer();
+
+            slider.Parent = this;
+            slider.Alignment = Alignment.MidRight;
+            slider.Width = 350;
+            slider.Height = 2;
+            slider.X -= 80;
+
+            ValueText = new SpriteText(Fonts.Exo2Regular24, slider.BindedValue.Value.ToString())
+            {
+                Parent = this,
+                Alignment = Alignment.MidRight,
+                TextScale = 0.60f
+            };
+
+            ValueText.X -= ValueText.MeasureString().X / 2f + 20;
+
+            // Set the OnChange function to just update the value of the text.
+            OnChange = () => { ValueText.Text = slider.BindedValue.Value.ToString(); };
+
+            // Subscribe to bindable change event.
+            slider.BindedValue.ValueChanged += OnValueChanged;
 
             CreateNameText();
         }
@@ -178,6 +224,13 @@ namespace Quaver.Screens.Options
                 // ReSharper disable once DelegateSubtraction
                 checkbox.BindedValue.ValueChanged -= PlayCheckboxClickSoundEffect;
             }
+            else if (type == typeof(Slider))
+            {
+                var slider = (Slider) FormElement;
+
+                // ReSharper disable once DelegateSubtraction
+                slider.BindedValue.ValueChanged -= OnValueChanged;
+            }
 
             base.Destroy();
         }
@@ -198,9 +251,9 @@ namespace Quaver.Screens.Options
         private static void PlayCheckboxClickSoundEffect(object sender, BindableValueChangedEventArgs<bool> args)
         {
             if (args.Value)
-                SkinManager.Skin.SoundClick.CreateChannel().Play();
+                SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
             else
-                SkinManager.Skin.SoundBack.CreateChannel().Play();
+                SkinManager.Skin.SoundBack.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
         }
     }
 }

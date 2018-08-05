@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Quaver.Config;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -90,7 +91,7 @@ namespace Quaver.Screens.Gameplay.UI
                 if (!Screen.IsPaused)
                     return;
 
-                SkinManager.Skin.SoundRetry.CreateChannel().Play();
+                SkinManager.Skin.SoundRetry.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
                 ScreenManager.ChangeScreen(new GameplayScreen(Screen.Map, Screen.MapHash, Screen.LocalScores));
             })
             {
@@ -125,7 +126,7 @@ namespace Quaver.Screens.Gameplay.UI
                 Alpha = 1
             };
 
-            Quit.Size = new ScalableVector2(Quit.Image.Width, Quit.Image.Height); 
+            Quit.Size = new ScalableVector2(Quit.Image.Width, Quit.Image.Height);
         }
 
         /// <inheritdoc />

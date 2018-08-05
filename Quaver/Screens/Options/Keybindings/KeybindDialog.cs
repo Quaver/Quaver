@@ -94,8 +94,6 @@ namespace Quaver.Screens.Options
                 if (i == 0)
                     keybindSprite.Selected = true;
 
-                var totalWidth = Keybinds.Count * (KeybindSprites.First().Width + 20);
-
                 keybindSprite.X = i * (keybindSprite.Width + 20);
                 KeybindSprites.Add(keybindSprite);
             }

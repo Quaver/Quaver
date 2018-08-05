@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
+using Quaver.Config;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -55,7 +56,7 @@ namespace Quaver.Screens.Results.UI
             FadeButtons(gameTime.ElapsedGameTime.TotalMilliseconds);
             base.Update(gameTime);
         }
- 
+
         /// <summary>
         ///     Creates a button
         /// </summary>
@@ -82,25 +83,25 @@ namespace Quaver.Screens.Results.UI
                 // Back Button.
                 CreateButton("Back", (sender, args) =>
                 {
-                    SkinManager.Skin.SoundBack.CreateChannel().Play();
+                    SkinManager.Skin.SoundBack.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
                     Screen.Exit(() => Screen.GoBackToMenu());
                 }),
                 // Watch Repaly Button
                 CreateButton("Watch Replay", (sender, args) =>
                 {
-                    SkinManager.Skin.SoundClick.CreateChannel().Play();
+                    SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
                     Screen.Exit(() => Screen.WatchReplay());
                 }),
                 // Export Replay Button
                 CreateButton("Export Replay", (sender, args) =>
                 {
-                    SkinManager.Skin.SoundClick.CreateChannel().Play();
+                    SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
                     Screen.ExportReplay();
                 }),
                 // Retry Button
                 CreateButton("Retry Map", (sender, args) =>
                 {
-                    SkinManager.Skin.SoundClick.CreateChannel().Play();
+                    SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
                     Screen.Exit(() => Screen.RetryMap());
                 })
             };
@@ -163,7 +164,7 @@ namespace Quaver.Screens.Results.UI
             }
 
             if (SelectedButton != prevSelected)
-                SkinManager.Skin.SoundHover.CreateChannel().Play();
+                SkinManager.Skin.SoundHover.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
         }
 
         /// <summary>

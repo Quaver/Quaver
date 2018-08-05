@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
+using Quaver.Config;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -55,7 +56,7 @@ namespace Quaver.Graphics.Overlays.Toolbar
 
         /// <inheritdoc />
         /// <summary>
-        ///     Ctor - Creates toolbar item with an icon. 
+        ///     Ctor - Creates toolbar item with an icon.
         /// </summary>
         /// <param name="icon"></param>
         /// <param name="onClick"></param>
@@ -113,7 +114,7 @@ namespace Quaver.Graphics.Overlays.Toolbar
                 // Make sure the hover sound only plays one time.
                 if (!HoverSoundPlayed)
                 {
-                    SkinManager.Skin.SoundHover.CreateChannel().Play();
+                    SkinManager.Skin.SoundHover.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
                     HoverSoundPlayed = true;
                 }
             }

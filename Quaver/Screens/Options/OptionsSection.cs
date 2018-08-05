@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Config;
 using Quaver.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -28,7 +29,7 @@ namespace Quaver.Screens.Options
         public Container Container { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dialog"></param>
         /// <param name="iconImage"></param>
@@ -44,7 +45,7 @@ namespace Quaver.Screens.Options
                 if (Icon.IsSelected)
                     return;
 
-                SkinManager.Skin.SoundClick.CreateChannel().Play();
+                SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
                 dialog.ChangeSection(this);
             };
 

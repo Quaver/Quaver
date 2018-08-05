@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.API.Maps.Structures;
+using Quaver.Config;
 using Quaver.Skinning;
 using Wobble;
 
@@ -35,7 +36,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         public bool IsComplete => ObjectsLeft == 0;
 
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="size"></param>
         public HitObjectManager(int size)
@@ -51,19 +52,19 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         {
             // Normal
             if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHit.CreateChannel().Play();
+                SkinManager.Skin.SoundHit.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
 
             // Clap
             if ((HitSounds.Clap & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHitClap.CreateChannel().Play();
+                SkinManager.Skin.SoundHitClap.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
 
             // Whistle
             if ((HitSounds.Whistle & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHitWhistle.CreateChannel().Play();
+                SkinManager.Skin.SoundHitWhistle.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
 
             // Finish
             if ((HitSounds.Finish & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHitFinish.CreateChannel().Play();
+                SkinManager.Skin.SoundHitFinish.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
         }
 
         /// <summary>

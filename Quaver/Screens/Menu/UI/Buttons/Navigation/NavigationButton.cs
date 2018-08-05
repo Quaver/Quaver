@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
+using Quaver.Config;
 using Quaver.Graphics;
 using Quaver.Skinning;
 using Wobble;
@@ -154,7 +155,7 @@ namespace Quaver.Screens.Menu.UI.Buttons.Navigation
             {
                 if (!HoverSoundPlayed)
                 {
-                    SkinManager.Skin.SoundHover.CreateChannel().Play();
+                    SkinManager.Skin.SoundHover.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
                     HoverSoundPlayed = true;
                 }
             }
@@ -174,7 +175,7 @@ namespace Quaver.Screens.Menu.UI.Buttons.Navigation
             if (!IsClickable)
                 return;
 
-            SkinManager.Skin.SoundClick.CreateChannel().Play();
+            SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
 
             // If the button doesn't have a container, we'll need to handle its action here.
             if (Parent.GetType() == typeof(NavigationButtonContainer))

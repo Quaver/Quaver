@@ -182,7 +182,7 @@ namespace Quaver.Screens.Gameplay
         public ReplayCapturer ReplayCapturer { get; }
 
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="map"></param>
         /// <param name="md5"></param>
@@ -292,7 +292,7 @@ namespace Quaver.Screens.Gameplay
         ///     Sets the ruleset for this current game mode.
         /// </summary>
         private void SetRuleset()
-        { 
+        {
             switch (Map.Mode)
             {
                 case GameMode.Keys4:
@@ -418,7 +418,7 @@ namespace Quaver.Screens.Gameplay
         private void PlayComboBreakSound()
         {
             if (LastRecordedCombo >= 20 && Ruleset.ScoreProcessor.Combo == 0)
-                SkinManager.Skin.SoundComboBreak.CreateChannel().Play();
+                SkinManager.Skin.SoundComboBreak.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
 
             LastRecordedCombo = Ruleset.ScoreProcessor.Combo;
         }
@@ -475,7 +475,7 @@ namespace Quaver.Screens.Gameplay
             }
 
             // Play failure sound.
-            SkinManager.Skin.SoundFailure.CreateChannel().Play();
+            SkinManager.Skin.SoundFailure.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
 
             FailureHandled = true;
         }
@@ -509,7 +509,7 @@ namespace Quaver.Screens.Gameplay
                 // Restart the map if the user has held it down for
                 if (RestartKeyHoldTime >= 200)
                 {
-                    SkinManager.Skin.SoundRetry.CreateChannel().Play();
+                    SkinManager.Skin.SoundRetry.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
 
                     if (InReplayMode)
                         ScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.API.Maps;
+using Quaver.Config;
 using Quaver.Database.Maps;
 using Wobble.Audio;
 using Wobble.Audio.Tracks;
@@ -30,7 +31,10 @@ namespace Quaver.Audio
             if (!File.Exists(MapManager.CurrentAudioPath))
                 throw new FileNotFoundException($"The audio file at path: {MapManager.CurrentAudioPath} could not be found.");
 
-            Track = new AudioTrack(MapManager.CurrentAudioPath);
+            Track = new AudioTrack(MapManager.CurrentAudioPath)
+            {
+                Volume = ConfigManager.VolumeMusic.Value
+            };
         }
 
         /// <summary>

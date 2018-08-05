@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
@@ -17,6 +18,8 @@ using Quaver.Screens.Splash;
 using Quaver.Shaders;
 using Quaver.Skinning;
 using Wobble;
+using Wobble.Audio.Samples;
+using Wobble.Audio.Tracks;
 using Wobble.Graphics;
 using Wobble.Graphics.Shaders;
 using Wobble.Graphics.UI.Debugging;
@@ -173,6 +176,24 @@ namespace Quaver
 
             // Start watching for mapset changes in the folder.
             MapsetImporter.WatchForChanges();
+
+            // Initially set the global volume.
+            AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value;
+            AudioSample.GlobalVolume = ConfigManager.VolumeGlobal.Value;
+
+            // Change master volume whenever it changes.
+            ConfigManager.VolumeGlobal.ValueChanged += (sender, e) =>
+            {
+                AudioTrack.GlobalVolume = e.Value;
+                AudioSample.GlobalVolume = e.Value;
+            };
+
+            // Change track volume whenever it changed
+            ConfigManager.VolumeMusic.ValueChanged += (sender, e) =>
+            {
+                if (AudioEngine.Track != null)
+                    AudioEngine.Track.Volume = e.Value;
+            };
 
             if (MapManager.Mapsets.Count != 0)
                 MapManager.Selected = MapManager.Mapsets.First().Maps[0];

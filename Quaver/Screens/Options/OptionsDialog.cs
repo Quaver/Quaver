@@ -401,7 +401,7 @@ namespace Quaver.Screens.Options
                     Fonts.Exo2Regular24, 0.35f, UserInterface.LeftButtonSquare, UserInterface.RightButtonSquare, new ScalableVector2(10, 10),
                     10, (val, index) =>
                     {
-                        SkinManager.Skin.SoundClick.CreateChannel().Play();
+                        SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
 
                         var resolutionSplit = val.Split('x');
                         ChangedResolution = new Point(int.Parse(resolutionSplit[0]), int.Parse(resolutionSplit[1]));
@@ -428,6 +428,10 @@ namespace Quaver.Screens.Options
         /// <returns></returns>
         private OptionsSection CreateAudioSection() => new OptionsSection(this, FontAwesome.Volume, new List<OptionsItem>()
         {
+            new OptionsItem(this, "Master Volume", new Slider(ConfigManager.VolumeGlobal, Vector2.One, FontAwesome.CircleClosed)),
+            new OptionsItem(this, "Music Volume", new Slider(ConfigManager.VolumeMusic, Vector2.One, FontAwesome.CircleClosed)),
+            new OptionsItem(this, "Effect Volume", new Slider(ConfigManager.VolumeEffect, Vector2.One, FontAwesome.CircleClosed)),
+
             // Pitch Audio w/ Rate.
             new OptionsItem(this, "Pitch Audio With Rate", new Checkbox(ConfigManager.Pitched, new Vector2(20, 20),
                 FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), () => {}),
@@ -558,7 +562,7 @@ namespace Quaver.Screens.Options
                 Fonts.Exo2Regular24, 0.35f, UserInterface.LeftButtonSquare, UserInterface.RightButtonSquare, new ScalableVector2(10, 10),
                 10, (val, index) =>
                 {
-                    SkinManager.Skin.SoundClick.CreateChannel().Play();
+                    SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
 
                     if (val == ConfigManager.Skin.Value)
                         return;
@@ -582,7 +586,7 @@ namespace Quaver.Screens.Options
                                     new ScalableVector2(10, 10), 10,
             (val, index) =>
             {
-                SkinManager.Skin.SoundClick.CreateChannel().Play();
+                SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
 
                 if (val == ConfigManager.DefaultSkin.Value.ToString())
                     return;

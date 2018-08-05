@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Config;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -37,7 +38,7 @@ namespace Quaver.Screens.Results.Input
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
             {
                 if (!Screen.IsExiting)
-                    SkinManager.Skin.SoundBack.CreateChannel().Play();
+                    SkinManager.Skin.SoundBack.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
 
                 Screen.Exit(() => Screen.GoBackToMenu());
             }
