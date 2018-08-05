@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Skinning;
@@ -38,7 +39,7 @@ namespace Quaver.Screens.Options
         private SpriteText NameText { get; set; }
 
         /// <summary>
-        ///     The callback function that runs when the option is changed. 
+        ///     The callback function that runs when the option is changed.
         /// </summary>
         private Action OnChange { get; }
 
@@ -177,7 +178,7 @@ namespace Quaver.Screens.Options
                 // ReSharper disable once DelegateSubtraction
                 checkbox.BindedValue.ValueChanged -= PlayCheckboxClickSoundEffect;
             }
-           
+
             base.Destroy();
         }
 

@@ -26,7 +26,7 @@ namespace Quaver.Assets
         public static Texture2D MenuBackground { get; set; }
         public static Texture2D QuaverLogoName { get; set; }
         public static Texture2D SwanLogo { get; set; }
-        public static Texture2D MenuSinglePlayer { get; set; }  
+        public static Texture2D MenuSinglePlayer { get; set; }
         public static Texture2D MenuMultiplayer { get; set; }
         public static Texture2D MenuCompetitive { get; set; }
         public static Texture2D MenuLock { get; set; }
@@ -38,6 +38,7 @@ namespace Quaver.Assets
         public static Texture2D QuaverLogo { get; set; }
         public static Texture2D LeftButtonSquare { get; set; }
         public static Texture2D RightButtonSquare { get; set; }
+        public static Texture2D RoundedSquare { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -69,6 +70,7 @@ namespace Quaver.Assets
             QuaverLogo = AssetLoader.LoadTexture2D(QuaverResources.quaver_logo_only, ImageFormat.Png);
             LeftButtonSquare = AssetLoader.LoadTexture2D(QuaverResources.left_button_square, ImageFormat.Png);
             RightButtonSquare = AssetLoader.LoadTexture2D(QuaverResources.right_button_square, ImageFormat.Png);
+            RoundedSquare = AssetLoader.LoadTexture2D(QuaverResources.rounded_square, ImageFormat.Png);
         }
     }
 }

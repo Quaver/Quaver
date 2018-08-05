@@ -11,6 +11,8 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
+using Quaver.Helpers;
+using Quaver.Screens.Options.Keybindings;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Bindables;
@@ -116,9 +118,7 @@ namespace Quaver.Screens.Options
         /// <summary>
         /// </summary>
         /// <param name="backgroundAlpha"></param>
-        public OptionsDialog(float backgroundAlpha) : base(backgroundAlpha)
-        {
-        }
+        public OptionsDialog(float backgroundAlpha) : base(backgroundAlpha) => CreateContent();
 
         /// <summary>
         ///     Change the selected section.
@@ -145,7 +145,7 @@ namespace Quaver.Screens.Options
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override void CreateContent()
+        public sealed override void CreateContent()
         {
             // Set default values that require an "OK" in order to change.
             ChangedResolution = new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value);
@@ -170,6 +170,7 @@ namespace Quaver.Screens.Options
                 CreateVideoSection(),
                 CreateAudioSection(),
                 CreateGameplaySection(),
+                CreateKeybindSection(),
                 CreateMiscSection()
             };
 
@@ -588,6 +589,104 @@ namespace Quaver.Screens.Options
 
                 NewDefaultSkinToLoad = ConfigHelper.ReadDefaultSkin(DefaultSkins.Bar, val);
             }, selectedIndex));
+        }
+
+        /// <summary>
+        ///    Creates the keybinds section of the option's menu.
+        /// </summary>
+        /// <returns></returns>
+        private OptionsSection CreateKeybindSection()
+        {
+            // ReSharper disable once ArrangeMethodOrOperatorBody
+            return new OptionsSection(this, FontAwesome.Keyboard, new List<OptionsItem>
+            {
+                // 4K
+                new OptionsItem(this, "4K Layout", new TextButton(UserInterface.BlankBox,
+                    Fonts.Exo2Regular24, "Change", 0.50f,
+                    (sender, e) =>
+                    {
+                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
+                        {
+                            new KeybindingOptionStore("4K Lane 1", ConfigManager.KeyMania4K1),
+                            new KeybindingOptionStore("4K Lane 2", ConfigManager.KeyMania4K2),
+                            new KeybindingOptionStore("4K Lane 3", ConfigManager.KeyMania4K3),
+                            new KeybindingOptionStore("4K Lane 4", ConfigManager.KeyMania4K4),
+                        }, 0.85f));
+                    })),
+
+                // 7K
+                new OptionsItem(this, "7K Layout", new TextButton(UserInterface.BlankBox,
+                    Fonts.Exo2Regular24, "Change", 0.50f,
+                    (sender, e) =>
+                    {
+                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
+                        {
+                            new KeybindingOptionStore("7K Lane 1", ConfigManager.KeyMania7K1),
+                            new KeybindingOptionStore("7K Lane 2", ConfigManager.KeyMania7K2),
+                            new KeybindingOptionStore("7K Lane 3", ConfigManager.KeyMania7K3),
+                            new KeybindingOptionStore("7K Lane 4", ConfigManager.KeyMania7K4),
+                            new KeybindingOptionStore("7K Lane 5", ConfigManager.KeyMania7K5),
+                            new KeybindingOptionStore("7K Lane 6", ConfigManager.KeyMania7K6),
+                            new KeybindingOptionStore("7K Lane 7", ConfigManager.KeyMania7K7),
+                        }, 0.85f));
+                    })),
+
+                // Change Scroll Speed
+                new OptionsItem(this, "Decrease/Increase Scroll Speed", new TextButton(UserInterface.BlankBox,
+                    Fonts.Exo2Regular24, "Change", 0.50f,
+                    (sender, e) =>
+                    {
+                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
+                        {
+                            new KeybindingOptionStore("Decrease Scroll Speed", ConfigManager.KeyDecreaseScrollSpeed),
+                            new KeybindingOptionStore("Increase Scroll Speed", ConfigManager.KeyIncreaseScrollSpeed)
+                        }, 0.85f));
+                    })),
+
+                // Pause
+                new OptionsItem(this, "Pause", new TextButton(UserInterface.BlankBox,
+                    Fonts.Exo2Regular24, "Change", 0.50f,
+                    (sender, e) =>
+                    {
+                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
+                        {
+                            new KeybindingOptionStore("Pause", ConfigManager.KeyPause),
+                        }, 0.85f));
+                    })),
+
+                // Skip Song Intro
+                new OptionsItem(this, "Skip Song Intro", new TextButton(UserInterface.BlankBox,
+                    Fonts.Exo2Regular24, "Change", 0.50f,
+                    (sender, e) =>
+                    {
+                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
+                        {
+                            new KeybindingOptionStore("Skip Song Intro", ConfigManager.KeySkipIntro),
+                        }, 0.85f));
+                    })),
+
+                // Restart Map
+                new OptionsItem(this, "Quick Restart", new TextButton(UserInterface.BlankBox,
+                    Fonts.Exo2Regular24, "Change", 0.50f,
+                    (sender, e) =>
+                    {
+                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
+                        {
+                            new KeybindingOptionStore("Quick Restart", ConfigManager.KeyRestartMap),
+                        }, 0.85f));
+                    })),
+
+                // Restart Map
+                new OptionsItem(this, "Toggle Scoreboard Display", new TextButton(UserInterface.BlankBox,
+                    Fonts.Exo2Regular24, "Change", 0.50f,
+                    (sender, e) =>
+                    {
+                        DialogManager.Show(new KeybindDialog(new List<KeybindingOptionStore>
+                        {
+                            new KeybindingOptionStore("Toggle Scoreboard Display", ConfigManager.KeyScoreboardVisible),
+                        }, 0.85f));
+                    })),
+            });
         }
     }
 }
