@@ -501,9 +501,7 @@ namespace Quaver.Screens.Options
                 new OptionsItem(this, "Use Default Skin", new Checkbox(new Bindable<bool>(string.IsNullOrEmpty(ConfigManager.Skin.Value),
                 (sender, e) =>
                 {
-                    Console.WriteLine(e.Value);
-
-                    // If set to true, we want to set the skin the user is using to true, 
+                    // If set to true, we want to set the skin the user is using to true,
                     if (!e.Value)
                         return;
 
@@ -540,7 +538,7 @@ namespace Quaver.Screens.Options
             var skinsList = new List<string>();
             availableSkins.ForEach(x => skinsList.Add(x.Name));
 
-            var selectedSkinIndex = 0;
+            int selectedSkinIndex;
 
             if (skinsList.Count == 0 || ConfigManager.Skin.Value == "")
             {

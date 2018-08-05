@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -13,10 +14,13 @@ using Quaver.Logging;
 using Quaver.Scheduling;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Splash;
+using Quaver.Shaders;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Shaders;
 using Wobble.Graphics.UI.Debugging;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Screens;
 using Wobble.Window;
@@ -29,6 +33,21 @@ namespace Quaver
         /// <summary>
         /// </summary>
         protected override bool IsReadyToUpdate { get; set; }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public QuaverGame()
+        {
+            // Anti-Aliasing? (MSAA?)
+            // ReSharper disable once ArrangeConstructorOrDestructorBody
+            Graphics.PreparingDeviceSettings += (sender, args) =>
+            {
+                Graphics.GraphicsProfile = GraphicsProfile.HiDef;
+                Graphics.PreferMultiSampling = true;
+                args.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 8;
+            };
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -48,17 +67,11 @@ namespace Quaver
             Graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
 
-            // Enable anti-aliasing.
-            // TODO: Fix?
-            Graphics.GraphicsProfile = GraphicsProfile.HiDef;
-            Graphics.PreferMultiSampling = true;
-            GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
-
+            // Full-screen
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
 
+            // Apply all graphics changes
             Graphics.ApplyChanges();
-
-            Window.AllowUserResizing = true;
 
             base.Initialize();
         }
@@ -116,6 +129,7 @@ namespace Quaver
             // Run scheduled background tasks
             CommonTaskScheduler.Run();
             NotificationManager.Update(gameTime);
+            DialogManager.Update(gameTime);
         }
 
         /// <inheritdoc />
@@ -133,9 +147,14 @@ namespace Quaver
             Logger.Draw(gameTime);
             SpriteBatch.End();
 
+            NotificationManager.Draw(gameTime);
+
+            // Draw dialogs
+            DialogManager.Draw(gameTime);
+
             // Draw the global container last.
             GlobalUserInterface.Draw(gameTime);
-            NotificationManager.Draw(gameTime);
+
         }
 
         /// <summary>
