@@ -45,7 +45,7 @@ namespace Quaver.Screens.Options
                 if (Icon.IsSelected)
                     return;
 
-                SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                SkinManager.Skin.SoundClick.CreateChannel().Play();
                 dialog.ChangeSection(this);
             };
 

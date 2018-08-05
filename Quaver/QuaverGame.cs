@@ -179,7 +179,7 @@ namespace Quaver
 
             // Initially set the global volume.
             AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value;
-            AudioSample.GlobalVolume = ConfigManager.VolumeGlobal.Value;
+            AudioSample.GlobalVolume = ConfigManager.VolumeEffect.Value;
 
             // Change master volume whenever it changes.
             ConfigManager.VolumeGlobal.ValueChanged += (sender, e) =>
@@ -194,6 +194,8 @@ namespace Quaver
                 if (AudioEngine.Track != null)
                     AudioEngine.Track.Volume = e.Value;
             };
+
+            ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = e.Value;
 
             if (MapManager.Mapsets.Count != 0)
                 MapManager.Selected = MapManager.Mapsets.First().Maps[0];

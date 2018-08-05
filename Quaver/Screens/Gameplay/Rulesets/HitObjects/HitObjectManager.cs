@@ -52,19 +52,19 @@ namespace Quaver.Screens.Gameplay.Rulesets.HitObjects
         {
             // Normal
             if (hitObject.HitSound == 0 || (HitSounds.Normal & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHit.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                SkinManager.Skin.SoundHit.CreateChannel().Play();
 
             // Clap
             if ((HitSounds.Clap & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHitClap.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                SkinManager.Skin.SoundHitClap.CreateChannel().Play();
 
             // Whistle
             if ((HitSounds.Whistle & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHitWhistle.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                SkinManager.Skin.SoundHitWhistle.CreateChannel().Play();
 
             // Finish
             if ((HitSounds.Finish & hitObject.HitSound) != 0)
-                SkinManager.Skin.SoundHitFinish.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                SkinManager.Skin.SoundHitFinish.CreateChannel().Play();
         }
 
         /// <summary>

@@ -401,7 +401,7 @@ namespace Quaver.Screens.Options
                     Fonts.Exo2Regular24, 0.35f, UserInterface.LeftButtonSquare, UserInterface.RightButtonSquare, new ScalableVector2(10, 10),
                     10, (val, index) =>
                     {
-                        SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                        SkinManager.Skin.SoundClick.CreateChannel().Play();
 
                         var resolutionSplit = val.Split('x');
                         ChangedResolution = new Point(int.Parse(resolutionSplit[0]), int.Parse(resolutionSplit[1]));
@@ -562,7 +562,7 @@ namespace Quaver.Screens.Options
                 Fonts.Exo2Regular24, 0.35f, UserInterface.LeftButtonSquare, UserInterface.RightButtonSquare, new ScalableVector2(10, 10),
                 10, (val, index) =>
                 {
-                    SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                    SkinManager.Skin.SoundClick.CreateChannel().Play();
 
                     if (val == ConfigManager.Skin.Value)
                         return;
@@ -586,7 +586,7 @@ namespace Quaver.Screens.Options
                                     new ScalableVector2(10, 10), 10,
             (val, index) =>
             {
-                SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                SkinManager.Skin.SoundClick.CreateChannel().Play();
 
                 if (val == ConfigManager.DefaultSkin.Value.ToString())
                     return;

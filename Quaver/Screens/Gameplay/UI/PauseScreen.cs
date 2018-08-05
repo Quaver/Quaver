@@ -91,7 +91,7 @@ namespace Quaver.Screens.Gameplay.UI
                 if (!Screen.IsPaused)
                     return;
 
-                SkinManager.Skin.SoundRetry.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                SkinManager.Skin.SoundRetry.CreateChannel().Play();
                 ScreenManager.ChangeScreen(new GameplayScreen(Screen.Map, Screen.MapHash, Screen.LocalScores));
             })
             {

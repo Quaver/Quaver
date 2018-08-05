@@ -83,25 +83,25 @@ namespace Quaver.Screens.Results.UI
                 // Back Button.
                 CreateButton("Back", (sender, args) =>
                 {
-                    SkinManager.Skin.SoundBack.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                    SkinManager.Skin.SoundBack.CreateChannel().Play();
                     Screen.Exit(() => Screen.GoBackToMenu());
                 }),
                 // Watch Repaly Button
                 CreateButton("Watch Replay", (sender, args) =>
                 {
-                    SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                    SkinManager.Skin.SoundClick.CreateChannel().Play();
                     Screen.Exit(() => Screen.WatchReplay());
                 }),
                 // Export Replay Button
                 CreateButton("Export Replay", (sender, args) =>
                 {
-                    SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                    SkinManager.Skin.SoundClick.CreateChannel().Play();
                     Screen.ExportReplay();
                 }),
                 // Retry Button
                 CreateButton("Retry Map", (sender, args) =>
                 {
-                    SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                    SkinManager.Skin.SoundClick.CreateChannel().Play();
                     Screen.Exit(() => Screen.RetryMap());
                 })
             };
@@ -164,7 +164,7 @@ namespace Quaver.Screens.Results.UI
             }
 
             if (SelectedButton != prevSelected)
-                SkinManager.Skin.SoundHover.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                SkinManager.Skin.SoundHover.CreateChannel().Play();
         }
 
         /// <summary>

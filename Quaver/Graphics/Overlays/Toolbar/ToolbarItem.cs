@@ -114,7 +114,7 @@ namespace Quaver.Graphics.Overlays.Toolbar
                 // Make sure the hover sound only plays one time.
                 if (!HoverSoundPlayed)
                 {
-                    SkinManager.Skin.SoundHover.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                    SkinManager.Skin.SoundHover.CreateChannel().Play();
                     HoverSoundPlayed = true;
                 }
             }

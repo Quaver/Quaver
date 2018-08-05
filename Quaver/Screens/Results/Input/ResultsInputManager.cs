@@ -38,7 +38,7 @@ namespace Quaver.Screens.Results.Input
             if (KeyboardManager.IsUniqueKeyPress(Keys.Escape))
             {
                 if (!Screen.IsExiting)
-                    SkinManager.Skin.SoundBack.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                    SkinManager.Skin.SoundBack.CreateChannel().Play();
 
                 Screen.Exit(() => Screen.GoBackToMenu());
             }

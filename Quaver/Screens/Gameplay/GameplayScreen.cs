@@ -418,7 +418,7 @@ namespace Quaver.Screens.Gameplay
         private void PlayComboBreakSound()
         {
             if (LastRecordedCombo >= 20 && Ruleset.ScoreProcessor.Combo == 0)
-                SkinManager.Skin.SoundComboBreak.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                SkinManager.Skin.SoundComboBreak.CreateChannel().Play();
 
             LastRecordedCombo = Ruleset.ScoreProcessor.Combo;
         }
@@ -475,7 +475,7 @@ namespace Quaver.Screens.Gameplay
             }
 
             // Play failure sound.
-            SkinManager.Skin.SoundFailure.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+            SkinManager.Skin.SoundFailure.CreateChannel().Play();
 
             FailureHandled = true;
         }
@@ -509,7 +509,7 @@ namespace Quaver.Screens.Gameplay
                 // Restart the map if the user has held it down for
                 if (RestartKeyHoldTime >= 200)
                 {
-                    SkinManager.Skin.SoundRetry.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                    SkinManager.Skin.SoundRetry.CreateChannel().Play();
 
                     if (InReplayMode)
                         ScreenManager.ChangeScreen(new GameplayScreen(Map, MapHash, LocalScores, LoadedReplay));

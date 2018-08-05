@@ -155,7 +155,7 @@ namespace Quaver.Screens.Menu.UI.Buttons.Navigation
             {
                 if (!HoverSoundPlayed)
                 {
-                    SkinManager.Skin.SoundHover.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                    SkinManager.Skin.SoundHover.CreateChannel().Play();
                     HoverSoundPlayed = true;
                 }
             }
@@ -175,7 +175,7 @@ namespace Quaver.Screens.Menu.UI.Buttons.Navigation
             if (!IsClickable)
                 return;
 
-            SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+            SkinManager.Skin.SoundClick.CreateChannel().Play();
 
             // If the button doesn't have a container, we'll need to handle its action here.
             if (Parent.GetType() == typeof(NavigationButtonContainer))

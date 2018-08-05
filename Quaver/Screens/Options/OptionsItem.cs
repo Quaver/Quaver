@@ -251,9 +251,9 @@ namespace Quaver.Screens.Options
         private static void PlayCheckboxClickSoundEffect(object sender, BindableValueChangedEventArgs<bool> args)
         {
             if (args.Value)
-                SkinManager.Skin.SoundClick.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                SkinManager.Skin.SoundClick.CreateChannel().Play();
             else
-                SkinManager.Skin.SoundBack.CreateChannel(ConfigManager.VolumeEffect.Value).Play();
+                SkinManager.Skin.SoundBack.CreateChannel().Play();
         }
     }
 }
