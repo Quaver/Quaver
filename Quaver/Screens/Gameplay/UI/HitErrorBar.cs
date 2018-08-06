@@ -113,7 +113,7 @@ namespace Quaver.Screens.Gameplay.UI
             if (CurrentLinePoolIndex >= PoolSize)
                 CurrentLinePoolIndex = 0;
 
-            LineObjectPool[CurrentLinePoolIndex].Tint = SkinManager.Skin.Keys[MapManager.Selected.Mode].JudgeColors[j];
+            LineObjectPool[CurrentLinePoolIndex].Tint = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].JudgeColors[j];
             LineObjectPool[CurrentLinePoolIndex].X = -(float)hitTime;
             LineObjectPool[CurrentLinePoolIndex].Alpha = 0.5f;
         }

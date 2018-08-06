@@ -55,14 +55,14 @@ namespace Quaver.Screens.Loading
             try
             {
                 // Throw an exception if there is no selected map.
-                if (MapManager.Selected == null)
+                if (MapManager.Selected.Value == null)
                     throw new Exception("No selected map, we should not be on this screen!");
 
-                MapManager.Selected.Qua = MapManager.Selected.LoadQua();
+                MapManager.Selected.Value.Qua = MapManager.Selected.Value.LoadQua();
 
                 // Asynchronously write to a file for livestreamers the difficulty rating
                 using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/difficulty.txt"))
-                    writer.Write($"{Math.Round(MapManager.Selected.Qua.AverageNotesPerSecond(), 2)}");
+                    writer.Write($"{Math.Round(MapManager.Selected.Value.Qua.AverageNotesPerSecond(), 2)}");
             }
             catch (Exception e)
             {
@@ -89,27 +89,27 @@ namespace Quaver.Screens.Loading
                 }
 
                 // Get the MD5 Hash of the played map and change the state.
-                var quaPath = $"{ConfigManager.SongDirectory}/{MapManager.Selected.Directory}/{MapManager.Selected.Path}";
+                var quaPath = $"{ConfigManager.SongDirectory}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}";
 
                 // Get the Md5 of the played map
                 string md5;
-                switch (MapManager.Selected.Game)
+                switch (MapManager.Selected.Value.Game)
                 {
                     case MapGame.Quaver:
                         md5 = MapsetHelper.GetMd5Checksum(quaPath);
                         break;
                     case MapGame.Osu:
-                        md5 = MapsetHelper.GetMd5Checksum($"{MapManager.OsuSongsFolder}/{MapManager.Selected.Directory}/{MapManager.Selected.Path}");
+                        md5 = MapsetHelper.GetMd5Checksum($"{MapManager.OsuSongsFolder}/{MapManager.Selected.Value.Directory}/{MapManager.Selected.Value.Path}");
                         break;
                     case MapGame.Etterna:
                         // Etterna uses some weird ChartKey system, no point in implementing that here.
-                        md5 = MapManager.Selected.Md5Checksum;
+                        md5 = MapManager.Selected.Value.Md5Checksum;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
 
-                ScreenManager.ChangeScreen(new GameplayScreen(MapManager.Selected.Qua, md5, new List<LocalScore>()));
+                ScreenManager.ChangeScreen(new GameplayScreen(MapManager.Selected.Value.Qua, md5, new List<LocalScore>()));
             }
             catch (Exception e)
             {

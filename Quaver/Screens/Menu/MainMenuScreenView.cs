@@ -20,6 +20,7 @@ using Quaver.Screens.Menu.UI.BottomToolbar;
 using Quaver.Screens.Menu.UI.Buttons.Navigation;
 using Quaver.Screens.Options;
 using Quaver.Screens.Results;
+using Quaver.Screens.Select;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI;
@@ -170,7 +171,7 @@ namespace Quaver.Screens.Menu
                 UserInterface.MenuSinglePlayer, "Play offline and compete for scoreboard ranks!",
                 () =>
                 {
-                    ScreenManager.ChangeScreen(new MapLoadingScreen(null));
+                    ScreenManager.ChangeScreen(new SelectScreen());
                 })
             {
                 Alignment = Alignment.TopCenter,

@@ -132,8 +132,8 @@ namespace Quaver.Screens.Results
         /// <param name="score"></param>
         public ResultsScreen(LocalScore score)
         {
-            MapManager.Selected.Qua = MapManager.Selected.LoadQua();
-            Qua = MapManager.Selected.Qua;
+            MapManager.Selected.Value.Qua = MapManager.Selected.Value.LoadQua();
+            Qua = MapManager.Selected.Value.Qua;
 
             var localPath = $"{ConfigManager.DataDirectory.Value}/r/{score.Id}.qr";
 
@@ -283,11 +283,11 @@ namespace Quaver.Screens.Results
 
             // Find the map that actually has the correct hash.
             var map = mapset.Maps.Find(x => x.Md5Checksum == Replay.MapMd5);
-            MapManager.Selected = map;
+            MapManager.Selected.Value = map;
 
             // Load up the .qua file and change the selected map's Qua.
             Qua = map.LoadQua();
-            MapManager.Selected.Qua = Qua;
+            MapManager.Selected.Value.Qua = Qua;
 
             // TODO: Make sure background is loaded.
 
@@ -462,8 +462,8 @@ namespace Quaver.Screens.Results
         /// </summary>
         public void WatchReplay()
         {
-            var scores = LocalScoreCache.FetchMapScores(MapManager.Selected.Md5Checksum);
-            ScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Md5Checksum, scores, Replay));
+            var scores = LocalScoreCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
+            ScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores, Replay));
         }
 
         /// <summary>
@@ -471,8 +471,8 @@ namespace Quaver.Screens.Results
         /// </summary>
         public void RetryMap()
         {
-            var scores = LocalScoreCache.FetchMapScores(MapManager.Selected.Md5Checksum);
-            ScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Md5Checksum, scores));
+            var scores = LocalScoreCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
+            ScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Value.Md5Checksum, scores));
         }
 
         /// <summary>

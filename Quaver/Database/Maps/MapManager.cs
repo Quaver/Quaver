@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Quaver.API.Maps.Parsers;
 using Quaver.Config;
+using Wobble.Bindables;
 
 namespace Quaver.Database.Maps
 {
@@ -9,7 +10,7 @@ namespace Quaver.Database.Maps
         /// <summary>
         ///     The currently selected map.
         /// </summary>
-        public static Map Selected { get; set; }
+        public static Bindable<Map> Selected { get; set; }
 
         /// <summary>
         ///     The list of mapsets that are currently loaded.
@@ -35,14 +36,14 @@ namespace Quaver.Database.Maps
         {
             get
             {
-                switch (Selected.Game)
+                switch (Selected.Value.Game)
                 {
                     case MapGame.Osu:
-                        return OsuSongsFolder + "/" + Selected.Directory + "/" + Selected.AudioPath;
+                        return OsuSongsFolder + "/" + Selected.Value.Directory + "/" + Selected.Value.AudioPath;
                     case MapGame.Quaver:
-                        return ConfigManager.SongDirectory + "/" + Selected.Directory + "/" + Selected.AudioPath;
+                        return ConfigManager.SongDirectory + "/" + Selected.Value.Directory + "/" + Selected.Value.AudioPath;
                     case MapGame.Etterna:
-                        return EtternaFolder + "/" + Selected.Directory + "/" + Selected.AudioPath;
+                        return EtternaFolder + "/" + Selected.Value.Directory + "/" + Selected.Value.AudioPath;
                     default:
                         return "";
                 }
@@ -56,16 +57,16 @@ namespace Quaver.Database.Maps
         {
             get
             {
-                switch (Selected.Game)
+                switch (Selected.Value.Game)
                 {
                     case MapGame.Osu:
                         // Parse the map and get the background
-                        var osu = new OsuBeatmap(OsuSongsFolder + Selected.Directory + "/" + Selected.Path);
-                        return $@"{OsuSongsFolder}/{Selected.Directory}/{osu.Background}";
+                        var osu = new OsuBeatmap(OsuSongsFolder + Selected.Value.Directory + "/" + Selected.Value.Path);
+                        return $@"{OsuSongsFolder}/{Selected.Value.Directory}/{osu.Background}";
                     case MapGame.Quaver:
-                        return ConfigManager.SongDirectory + "/" + Selected.Directory + "/" + Selected.BackgroundPath;
+                        return ConfigManager.SongDirectory + "/" + Selected.Value.Directory + "/" + Selected.Value.BackgroundPath;
                     case MapGame.Etterna:
-                        return EtternaFolder + "/" + Selected.Directory + "/" + Selected.BackgroundPath;
+                        return EtternaFolder + "/" + Selected.Value.Directory + "/" + Selected.Value.BackgroundPath;
                     default:
                         return "";
                 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -215,7 +215,7 @@ namespace Quaver.Database.Maps
         /// </summary>
         public void ChangeSelected()
         {
-            MapManager.Selected = this;
+            MapManager.Selected.Value = this;
 
             Task.Run(async () =>
             {

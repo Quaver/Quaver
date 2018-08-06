@@ -35,7 +35,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public HitLighting() : base(SkinManager.Skin.Keys[MapManager.Selected.Mode].HitLighting) => FinishedLooping += OnLoopCompletion;
+        public HitLighting() : base(SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HitLighting) => FinishedLooping += OnLoopCompletion;
 
         /// <inheritdoc />
         /// <summary>
@@ -55,7 +55,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         public void PerformHitAnimation()
         {
-            var skin = SkinManager.Skin.Keys[MapManager.Selected.Mode];
+            var skin = SkinManager.Skin.Keys[MapManager.Selected.Value.Mode];
 
             // First begin by replacing the frames
             ReplaceFrames(IsHoldingLongNote ? skin.HoldLighting : skin.HitLighting);

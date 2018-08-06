@@ -22,6 +22,7 @@ using Quaver.Skinning;
 using Wobble;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
+using Wobble.Bindables;
 using Wobble.Discord;
 using Wobble.Discord.RPC;
 using Wobble.Graphics;
@@ -218,8 +219,9 @@ namespace Quaver
                 Timestamps = new Timestamps()
             });
 
+            // Create bindable for selected map.
             if (MapManager.Mapsets.Count != 0)
-                MapManager.Selected = MapManager.Mapsets.First().Maps[0];
+                MapManager.Selected = new Bindable<Map>(MapManager.Mapsets.First().Maps.First());
         }
 
         /// <summary>

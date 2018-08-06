@@ -143,7 +143,7 @@ namespace Quaver.Screens.Edit
         /// </summary>
         public void SaveMap()
         {
-            var map = MapManager.Selected;
+            var map = MapManager.Selected.Value;
 
             var path = $"{ConfigManager.SongDirectory}/{map.Directory}/{map.Path}";
             Map.Save(path);
@@ -159,7 +159,7 @@ namespace Quaver.Screens.Edit
         /// </summary>
         public static void Go()
         {
-            var map = MapManager.Selected;
+            var map = MapManager.Selected.Value;
 
             if (map == null)
             {

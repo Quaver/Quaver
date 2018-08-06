@@ -273,15 +273,15 @@ namespace Quaver.Screens.Gameplay
                     // Handle offset +
                     if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
                     {
-                        MapManager.Selected.LocalOffset += 5;
-                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.LocalOffset}ms");
+                        MapManager.Selected.Value.LocalOffset += 5;
+                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset}ms");
                     }
 
                     // Handle offset -
                     if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
                     {
-                        MapManager.Selected.LocalOffset -= 5;
-                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.LocalOffset}ms");
+                        MapManager.Selected.Value.LocalOffset -= 5;
+                        NotificationManager.Show(NotificationLevel.Success, $"Local map offset is now: {MapManager.Selected.Value.LocalOffset}ms");
                     }
                 }
             }

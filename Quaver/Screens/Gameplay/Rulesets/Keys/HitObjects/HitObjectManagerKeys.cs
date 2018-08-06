@@ -41,7 +41,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         {
             get
             {
-                var speed = MapManager.Selected.Qua.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K : ConfigManager.ScrollSpeed7K;
+                var speed = MapManager.Selected.Value.Qua.Mode == GameMode.Keys4 ? ConfigManager.ScrollSpeed4K : ConfigManager.ScrollSpeed7K;
                 return speed.Value / (20f * AudioEngine.Track.Rate);
             }
         }

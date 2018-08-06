@@ -420,12 +420,12 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.Playfield
         /// </summary>
         private void CreateHealthBar()
         {
-            HealthBar = new HealthBar(SkinManager.Skin.Keys[MapManager.Selected.Mode].HealthBarType, Playfield.Ruleset.ScoreProcessor)
+            HealthBar = new HealthBar(SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HealthBarType, Playfield.Ruleset.ScoreProcessor)
             {
                 Parent = Playfield.ForegroundContainer,
             };
 
-            switch (SkinManager.Skin.Keys[MapManager.Selected.Mode].HealthBarKeysAlignment)
+            switch (SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].HealthBarKeysAlignment)
             {
                 case HealthBarKeysAlignment.LeftStage:
                     HealthBar.Parent = StageLeft;

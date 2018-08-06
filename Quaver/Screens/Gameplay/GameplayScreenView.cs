@@ -199,8 +199,8 @@ namespace Quaver.Screens.Gameplay
             PauseScreen = new PauseScreen(Screen) { Parent = Container };
 
             // Notify the user if their local offset is actually set for this map.
-            if (MapManager.Selected.LocalOffset != 0)
-                NotificationManager.Show(NotificationLevel.Info, $"The local audio offset for this map is: {MapManager.Selected.LocalOffset}ms");
+            if (MapManager.Selected.Value.LocalOffset != 0)
+                NotificationManager.Show(NotificationLevel.Info, $"The local audio offset for this map is: {MapManager.Selected.Value.LocalOffset}ms");
         }
 
         /// <inheritdoc />

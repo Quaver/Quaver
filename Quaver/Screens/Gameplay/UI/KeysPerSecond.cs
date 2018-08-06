@@ -44,7 +44,7 @@ namespace Quaver.Screens.Gameplay.UI
 
             CalculateKeysPerSecond();
             Value = Kps.ToString();
-            X = -TotalWidth + SkinManager.Skin.Keys[MapManager.Selected.Mode].KpsDisplayPosX;
+            X = -TotalWidth + SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].KpsDisplayPosX;
 
             base.Update(gameTime);
         }

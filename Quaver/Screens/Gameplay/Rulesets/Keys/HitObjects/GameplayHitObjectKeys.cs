@@ -100,7 +100,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
         ///     The SpriteEffects. Flips the image horizontally if we are using upscroll.
         /// </summary>
         private static SpriteEffects Effects => !ConfigManager.DownScroll4K.Value &&
-                                                SkinManager.Skin.Keys[MapManager.Selected.Mode].FlipNoteImagesOnUpscroll
+                                                SkinManager.Skin.Keys[MapManager.Selected.Value.Mode].FlipNoteImagesOnUpscroll
             ? SpriteEffects.FlipVertically
             : SpriteEffects.None;
 
@@ -222,7 +222,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
             var manager = (HitObjectManagerKeys) Ruleset.HitObjectManager;
 
             var speed = GameplayRulesetKeys.IsDownscroll ? -HitObjectManagerKeys.ScrollSpeed : HitObjectManagerKeys.ScrollSpeed;
-            return (float) (manager.HitPositionOffset + (offset - (Ruleset.Screen.Timing.Time - ConfigManager.GlobalAudioOffset.Value + MapManager.Selected.LocalOffset)) * speed) - HitObjectSprite.Height;
+            return (float) (manager.HitPositionOffset + (offset - (Ruleset.Screen.Timing.Time - ConfigManager.GlobalAudioOffset.Value + MapManager.Selected.Value.LocalOffset)) * speed) - HitObjectSprite.Height;
         }
 
         /// <summary>

@@ -28,7 +28,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys
         {
             get
             {
-                switch (MapManager.Selected.Qua.Mode)
+                switch (MapManager.Selected.Value.Qua.Mode)
                 {
                     case GameMode.Keys4:
                         return ConfigManager.DownScroll4K.Value;
