@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Quaver.Database.Maps
 {
@@ -13,5 +14,10 @@ namespace Quaver.Database.Maps
         ///     The list of maps in this mapset.
         /// </summary>
         public List<Map> Maps { get; set; }
+
+        public string Artist => Maps.First().Artist;
+        public string Title => Maps.First().Title;
+        public string Creator => Maps.First().Creator;
+        public string Background => MapManager.GetBackgroundPath(Maps.First());
     }
 }
