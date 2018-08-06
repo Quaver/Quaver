@@ -53,23 +53,27 @@ namespace Quaver.Database.Maps
         /// <summary>
         ///     The current path of the selected map's background path.
         /// </summary>
-        public static string CurrentBackgroundPath
+        public static string CurrentBackgroundPath => GetBackgroundPath(Selected.Value);
+
+        /// <summary>
+        ///     Gets the background path for a given map.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public static string GetBackgroundPath(Map map)
         {
-            get
+            switch (map.Game)
             {
-                switch (Selected.Value.Game)
-                {
-                    case MapGame.Osu:
-                        // Parse the map and get the background
-                        var osu = new OsuBeatmap(OsuSongsFolder + Selected.Value.Directory + "/" + Selected.Value.Path);
-                        return $@"{OsuSongsFolder}/{Selected.Value.Directory}/{osu.Background}";
-                    case MapGame.Quaver:
-                        return ConfigManager.SongDirectory + "/" + Selected.Value.Directory + "/" + Selected.Value.BackgroundPath;
-                    case MapGame.Etterna:
-                        return EtternaFolder + "/" + Selected.Value.Directory + "/" + Selected.Value.BackgroundPath;
-                    default:
-                        return "";
-                }
+                case MapGame.Osu:
+                    // Parse the map and get the background
+                    var osu = new OsuBeatmap(OsuSongsFolder + map.Directory + "/" + map.Path);
+                    return $@"{OsuSongsFolder}/{map.Directory}/{osu.Background}";
+                case MapGame.Quaver:
+                    return ConfigManager.SongDirectory + "/" + map.Directory + "/" + map.BackgroundPath;
+                case MapGame.Etterna:
+                    return EtternaFolder + "/" + map.Directory + "/" + map.BackgroundPath;
+                default:
+                    return "";
             }
         }
     }
