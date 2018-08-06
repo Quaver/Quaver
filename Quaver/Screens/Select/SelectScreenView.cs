@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Menu.UI.BottomToolbar;
+using Quaver.Screens.Select.UI;
+using Quaver.Screens.Select.UI.Selector;
 using Wobble;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
@@ -28,13 +30,18 @@ namespace Quaver.Screens.Select
         /// </summary>
         private BottomBar BottomToolbar { get; set; }
 
+        /// <summary>
+        ///     The interface to select songs.
+        /// </summary>
+        private SongSelector SongSelector { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="screen"></param>
         public SelectScreenView(Screen screen) : base(screen)
         {
-            Background = new BackgroundImage(UserInterface.MenuBackground, 20) {Parent = Container};
+            Background = new BackgroundImage(UserInterface.MenuBackground, 40) {Parent = Container};
 
             Toolbar = new Toolbar(new List<ToolbarItem>
             {
@@ -45,6 +52,8 @@ namespace Quaver.Screens.Select
             };
 
             BottomToolbar = new BottomBar() {Parent = Container};
+
+            SongSelector = new SongSelector() {Parent = Container};
         }
 
         /// <inheritdoc />
