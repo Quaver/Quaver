@@ -11,6 +11,8 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics.Notifications;
+using Quaver.Graphics.Overlays.Volume;
+using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Scheduling;
 using Quaver.Screens.Menu;
@@ -36,6 +38,11 @@ namespace Quaver
         /// <summary>
         /// </summary>
         protected override bool IsReadyToUpdate { get; set; }
+
+        /// <summary>
+        ///     The volume controller for the game.
+        /// </summary>
+        public VolumeController VolumeController { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -102,6 +109,11 @@ namespace Quaver
 
             // Create the global FPS counter.
             CreateFpsCounter();
+            VolumeController = new VolumeController() {Parent = GlobalUserInterface};
+
+            // Make the cursor appear over the volume controller.
+            ListHelper.Swap(GlobalUserInterface.Children, GlobalUserInterface.Children.IndexOf(GlobalUserInterface.Cursor),
+                                                            GlobalUserInterface.Children.IndexOf(VolumeController));
 
             IsReadyToUpdate = true;
             ScreenManager.ChangeScreen(new SplashScreen());

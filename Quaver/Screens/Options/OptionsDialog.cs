@@ -416,6 +416,9 @@ namespace Quaver.Screens.Options
                         GameBase.Game.Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
                     }),
 
+                // Background Brightness
+                new OptionsItem(this, "Background Brightness", new Slider(ConfigManager.BackgroundBrightness, Vector2.One, FontAwesome.CircleClosed)),
+
                 // Display FPS counter.
                 new OptionsItem(this, "Display FPS Counter", new Checkbox(ConfigManager.FpsCounter, new Vector2(20, 20),
                         FontAwesome.CircleClosed, FontAwesome.CircleOpen, false), () => {}),

@@ -24,10 +24,9 @@ namespace Quaver.Assets
         /// <summary>
         ///     Loads all the fonts for the game.
         /// </summary>
-        internal static void Load()
+        public static void Load()
         {
-            AssistantLight16 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "assistant_light_16")
-                ;
+            AssistantLight16 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "assistant_light_16");
             AssistantLight16 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "assistant_light_16");
             AssistantRegular16 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "assistant_regular_16");
             RationalInteger16 = AssetLoader.LoadFont(QuaverResources.ResourceManager, "rational_integer_16");

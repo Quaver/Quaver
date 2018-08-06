@@ -154,7 +154,11 @@ namespace Quaver.Screens.Gameplay
             BackgroundContainer = new Container();
 
             // Create background on the background container
-            Background = new BackgroundImage(UserInterface.MenuBackground, 70, false) {Parent = BackgroundContainer};
+            Background = new BackgroundImage(UserInterface.MenuBackground, ConfigManager.BackgroundBrightness.Value, false)
+            {
+                Parent = BackgroundContainer
+            };
+
             CreateProgressBar();
             CreateScoreDisplay();
             CreateAccuracyDisplay();

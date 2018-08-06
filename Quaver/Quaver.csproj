@@ -84,8 +84,10 @@
     <Compile Include="Graphics\NumberDisplay.cs" />
     <Compile Include="Graphics\Overlays\Toolbar\Toolbar.cs" />
     <Compile Include="Graphics\Overlays\Toolbar\ToolbarItem.cs" />
+    <Compile Include="Graphics\Overlays\Volume\VolumeController.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\GzipHelper.cs" />
+    <Compile Include="Helpers\ListHelper.cs" />
     <Compile Include="Helpers\ModHelper.cs" />
     <Compile Include="Helpers\ObjectHelper.cs" />
     <Compile Include="Helpers\ReplayHelper.cs" />
