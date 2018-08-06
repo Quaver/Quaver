@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Replays;
@@ -26,6 +27,7 @@ using Quaver.Screens.Menu;
 using Quaver.Screens.Results.Input;
 using Wobble;
 using Wobble.Audio;
+using Wobble.Discord;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Results
@@ -161,7 +163,7 @@ namespace Quaver.Screens.Results
 
             ScoreProcessor = new ScoreProcessorKeys(Replay);
             Type = ResultsScreenType.FromLocalScore;
-      
+
             InitializeScreen();
         }
 
@@ -174,6 +176,7 @@ namespace Quaver.Screens.Results
             {
                 case ResultsScreenType.FromGameplay:
                     InitializeFromGameplay();
+                    ChangeDiscordPresence();
                     break;
                 case ResultsScreenType.FromReplayFile:
                     InitializeFromReplayFile();
@@ -424,7 +427,7 @@ namespace Quaver.Screens.Results
 
             OnExit += onExitScreen;
 
-            // Fade the 
+            // Fade the
             screenView.PerformExitAnimations();
         }
 
@@ -471,5 +474,32 @@ namespace Quaver.Screens.Results
             var scores = LocalScoreCache.FetchMapScores(MapManager.Selected.Md5Checksum);
             ScreenManager.ChangeScreen(new GameplayScreen(Qua, MapManager.Selected.Md5Checksum, scores));
         }
+
+        /// <summary>
+        ///     Changes discord rich presence to show results.
+        /// </summary>
+        private void ChangeDiscordPresence()
+        {
+            DiscordManager.Client.CurrentPresence.Timestamps = null;
+
+            // Don't change if we're loading in from a replay file.
+            if (Type == ResultsScreenType.FromReplayFile || GameplayScreen.InReplayMode)
+            {
+                DiscordManager.Client.CurrentPresence.Details = "Idle";
+                DiscordManager.Client.CurrentPresence.State = "In the menus";
+                DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+                return;
+            }
+
+            var state = GameplayScreen.Failed ? "Fail" : "Pass";
+            var score = $"{ScoreProcessor.Score / 1000}k";
+            var acc = $"{StringHelper.AccuracyToString(ScoreProcessor.Accuracy)}";
+            var grade = GameplayScreen.Failed ? "F" : GradeHelper.GetGradeFromAccuracy(ScoreProcessor.Accuracy).ToString();
+            var combo = $"{ScoreProcessor.MaxCombo}x";
+
+            DiscordManager.Client.CurrentPresence.State = $"{state}: {grade} {score} {acc} {combo}";
+            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+        }
+
     }
 }

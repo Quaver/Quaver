@@ -22,6 +22,8 @@ using Quaver.Skinning;
 using Wobble;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
+using Wobble.Discord;
+using Wobble.Discord.RPC;
 using Wobble.Graphics;
 using Wobble.Graphics.Shaders;
 using Wobble.Graphics.UI.Debugging;
@@ -47,17 +49,12 @@ namespace Quaver
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public QuaverGame()
+        public QuaverGame() => Graphics.PreparingDeviceSettings += (sender, args) =>
         {
-            // Anti-Aliasing? (MSAA?)
-            // ReSharper disable once ArrangeConstructorOrDestructorBody
-            Graphics.PreparingDeviceSettings += (sender, args) =>
-            {
-                Graphics.GraphicsProfile = GraphicsProfile.HiDef;
-                Graphics.PreferMultiSampling = true;
-                args.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 8;
-            };
-        }
+            Graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            Graphics.PreferMultiSampling = true;
+            args.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 8;
+        };
 
         /// <inheritdoc />
         /// <summary>
@@ -208,6 +205,18 @@ namespace Quaver
             };
 
             ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = e.Value;
+
+            DiscordManager.CreateClient("376180410490552320");
+            DiscordManager.Client.SetPresence(new RichPresence()
+            {
+                Assets = new Wobble.Discord.RPC.Assets()
+                {
+                    LargeImageKey = "quaver",
+                    LargeImageText = ConfigManager.Username.Value,
+                    SmallImageKey = "4k"
+                },
+                Timestamps = new Timestamps()
+            });
 
             if (MapManager.Mapsets.Count != 0)
                 MapManager.Selected = MapManager.Mapsets.First().Maps[0];

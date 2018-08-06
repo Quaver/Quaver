@@ -23,6 +23,7 @@ using Quaver.Screens.Menu;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Bindables;
+using Wobble.Discord;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Edit
@@ -60,7 +61,7 @@ namespace Quaver.Screens.Edit
         private EditorInputManager InputManager { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="map"></param>
         public EditorScreen(Qua map)
@@ -84,6 +85,10 @@ namespace Quaver.Screens.Edit
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            DiscordManager.Client.CurrentPresence.State = "Editing Map";
+            DiscordManager.Client.CurrentPresence.Details = Map.ToString();
+            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
 
             View = new EditorScreenView(this);
         }

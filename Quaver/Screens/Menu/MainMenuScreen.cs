@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Quaver.Audio;
 using Quaver.Skinning;
+using Wobble.Discord;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Menu
@@ -18,6 +19,13 @@ namespace Quaver.Screens.Menu
 
         /// <summary>
         /// </summary>
-        public MainMenuScreen() => View = new MainMenuScreenView(this);
+        public MainMenuScreen()
+        {
+            DiscordManager.Client.CurrentPresence.Details = "Idle";
+            DiscordManager.Client.CurrentPresence.State = "In the menus";
+            DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+
+            View = new MainMenuScreenView(this);
+        }
     }
 }

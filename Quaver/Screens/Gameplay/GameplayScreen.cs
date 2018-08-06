@@ -25,6 +25,7 @@ using Quaver.Skinning;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Discord;
+using Wobble.Discord.RPC;
 using Wobble.Graphics.Transformations;
 using Wobble.Input;
 using Wobble.Screens;
@@ -212,6 +213,7 @@ namespace Quaver.Screens.Gameplay
             ReplayCapturer = new ReplayCapturer(this);
 
             SetRuleset();
+            SetRichPresence();
 
             View = new GameplayScreenView(this);
         }
@@ -374,6 +376,10 @@ namespace Quaver.Screens.Gameplay
                     // ignored
                 }
 
+                DiscordManager.Client.CurrentPresence.State = "Paused";
+                DiscordManager.Client.CurrentPresence.Timestamps = null;
+                DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
+
                 // Fade in the transitioner.
                 screenView.Transitioner.Transformations.Clear();
                 screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 0.75f, 400));
@@ -397,6 +403,7 @@ namespace Quaver.Screens.Gameplay
 
             // Deactivate pause screen.
             screenView.PauseScreen.Deactivate();
+            SetRichPresence();
         }
 
         /// <summary>
@@ -570,6 +577,28 @@ namespace Quaver.Screens.Gameplay
                     inputManager.ReplayInputManager.HandleSkip();
                 }
             }
+        }
+
+        /// <summary>
+        ///     Sets rich presence based on which activity we're doing in gameplay.
+        /// </summary>
+        private void SetRichPresence()
+        {
+            var presence = DiscordManager.Client.CurrentPresence;
+
+            presence.Details = Map.ToString();
+
+            if (InReplayMode)
+                presence.State = $"Watching {LoadedReplay.PlayerName}";
+            else
+                presence.State = $"Playing {(ModManager.Mods > 0 ? "+ " + ModHelper.GetModsString(ModManager.Mods) : "")}";
+
+            presence.Timestamps = new Timestamps
+            {
+                End = DateTime.UtcNow.AddMilliseconds((Map.Length - Timing.Time) / AudioEngine.Track.Rate)
+            };
+
+            DiscordManager.Client.SetPresence(presence);
         }
     }
 }
