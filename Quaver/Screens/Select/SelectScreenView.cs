@@ -53,7 +53,7 @@ namespace Quaver.Screens.Select
 
             BottomToolbar = new BottomBar() {Parent = Container};
 
-            SongSelector = new SongSelector() {Parent = Container};
+            SongSelector = new SongSelector((SelectScreen) Screen) {Parent = Container};
         }
 
         /// <inheritdoc />
