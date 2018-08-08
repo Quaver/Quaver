@@ -213,8 +213,7 @@ namespace Quaver
                 Assets = new Wobble.Discord.RPC.Assets()
                 {
                     LargeImageKey = "quaver",
-                    LargeImageText = ConfigManager.Username.Value,
-                    SmallImageKey = "4k"
+                    LargeImageText = ConfigManager.Username.Value
                 },
                 Timestamps = new Timestamps()
             });
