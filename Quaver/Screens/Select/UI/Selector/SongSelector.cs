@@ -115,8 +115,9 @@ namespace Quaver.Screens.Select.UI.Selector
             {
                 var button = new SongSelectorSet(this, i) { Y = i * SetSpacingY + 10 };
 
+                // Fire click handler for this button if it is indeed the initial selected mapset.
                 if (i == SelectedSet)
-                    button.DisplayAsSelected();
+                    button.FireButtonClickEvent();
 
                 AddContainedDrawable(button);
                 MapsetButtonPool.Add(button);
