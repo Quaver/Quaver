@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
 using Quaver.API.Enums;
 using Quaver.Assets;
+using Quaver.Audio;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Skinning;
 using Wobble.Assets;
+using Wobble.Audio;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
@@ -99,7 +104,7 @@ namespace Quaver.Screens.Select.UI.Selector
 
             Alpha = 0;
             Size = new ScalableVector2(Selector.Width , BUTTON_HEIGHT);
-            X = 100;
+            X = 120;
 
             Background = new Sprite()
             {
@@ -226,6 +231,21 @@ namespace Quaver.Screens.Select.UI.Selector
 
             // Change map for now.
             MapManager.Selected.Value = Mapset.Maps.First();
+
+            try
+            {
+                AudioEngine.LoadCurrentTrack();
+                AudioEngine.Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
+                AudioEngine.Track.Play();
+            }
+            catch (FileNotFoundException)
+            {
+                // ignored
+            }
+            catch (AudioEngineException)
+            {
+                // ignored
+            }
         }
 
         /// <summary>
@@ -237,7 +257,7 @@ namespace Quaver.Screens.Select.UI.Selector
             BackgroundDimmer.Alpha = 0.45f;
 
             Transformations.Clear();
-            Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, 100, 0, 600));
+            Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, 120, 0, 600));
         }
 
         /// <summary>
@@ -249,7 +269,7 @@ namespace Quaver.Screens.Select.UI.Selector
             BackgroundDimmer.Alpha = 0.65f;
 
             Transformations.Clear();
-            Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, X, 100, 600));
+            Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, X, 120, 600));
         }
 
         /// <summary>
