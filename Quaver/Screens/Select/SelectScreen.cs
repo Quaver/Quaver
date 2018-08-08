@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using osu_database_reader;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
@@ -46,10 +48,23 @@ namespace Quaver.Screens.Select
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            HandleInput();
+
+            base.Update(gameTime);
+        }
+
+        private void HandleInput()
+        {
+            var screenView = (SelectScreenView) View;
+
             if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 ScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
 
-            base.Update(gameTime);
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Up))
+                screenView.SongSelector.SelectMap(screenView.SongSelector.SelectedSet - 1);
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Down))
+                screenView.SongSelector.SelectMap(screenView.SongSelector.SelectedSet + 1);
         }
     }
 }

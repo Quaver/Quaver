@@ -33,7 +33,7 @@ namespace Quaver.Screens.Select
         /// <summary>
         ///     The interface to select songs.
         /// </summary>
-        private SongSelector SongSelector { get; set; }
+        public SongSelector SongSelector { get; private set; }
 
         /// <inheritdoc />
         /// <summary>

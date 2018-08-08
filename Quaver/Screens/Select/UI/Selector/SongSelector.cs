@@ -7,6 +7,9 @@ using Quaver.Database.Maps;
 using Quaver.Helpers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Transformations;
+using Wobble.Input;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Screens.Select.UI.Selector
 {
@@ -15,7 +18,7 @@ namespace Quaver.Screens.Select.UI.Selector
         /// <summary>
         ///     Reference to the song select screen itself.
         /// </summary>
-        private SelectScreen Screen { get; }
+        public SelectScreen Screen { get; }
 
         /// <summary>
         ///     The amount of maps available in the pool.
@@ -25,7 +28,7 @@ namespace Quaver.Screens.Select.UI.Selector
         /// <summary>
         ///     The amount of space between each mapset.
         /// </summary>
-        public const int SetSpacingY = 60;
+        public const int SetSpacingY = 80;
 
         /// <summary>
         ///     The buttons that are currently in the mapset pool.
@@ -43,10 +46,15 @@ namespace Quaver.Screens.Select.UI.Selector
         /// </summary>
         private float PreviousContentContainerY { get; set; }
 
+        /// <summary>
+        ///     The selected mapset.
+        /// </summary>
+        public int SelectedSet { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public SongSelector(SelectScreen screen) : base(new ScalableVector2(600, 610), new ScalableVector2(600, 610 + SetSpacingY))
+        public SongSelector(SelectScreen screen) : base(new ScalableVector2(550, 610), new ScalableVector2(550, 610 + SetSpacingY))
         {
             Screen = screen;
 
@@ -57,6 +65,14 @@ namespace Quaver.Screens.Select.UI.Selector
 
             Scrollbar.Width = 10;
             Scrollbar.Tint = Color.White;
+
+            ScrollSpeed = 150;
+            EasingType = Easing.EaseOutQuint;
+            TimeToCompleteScroll = 2100;
+
+            // Find the index of the current mapset
+            SelectedSet = 0;
+            MapManager.Selected.Value = MapManager.Mapsets.First().Maps.First();
 
             GenerateSetPool();
         }
@@ -84,7 +100,7 @@ namespace Quaver.Screens.Select.UI.Selector
 
             // Calculate the actual height of the container based on the amount of available sets
             // there are.
-            ContentContainer.Height += 1 + (Screen.AvailableMapsets.Count - 10) * SetSpacingY + SongSelectorSet.BUTTON_HEIGHT / 2f;
+            ContentContainer.Height += 1 + (Screen.AvailableMapsets.Count - 8) * SetSpacingY + SongSelectorSet.BUTTON_HEIGHT / 2f;
 
             // Destroy previous buttons if there are any in the poool.
             if (MapsetButtonPool != null && MapsetButtonPool.Count > 0)
@@ -96,9 +112,11 @@ namespace Quaver.Screens.Select.UI.Selector
             // Create set buttons.
             for (var i = PoolStartingIndex; i < PoolStartingIndex + MapsetPoolSize && i < Screen.AvailableMapsets.Count; i++)
             {
-                var set = Screen.AvailableMapsets[i];
+                var button = new SongSelectorSet(this, i) { Y = i * SetSpacingY + 10 };
 
-                var button = new SongSelectorSet(this, set) { Y = i * SetSpacingY };
+                if (i == SelectedSet)
+                    button.DisplayAsSelected();
+
                 AddContainedDrawable(button);
                 MapsetButtonPool.Add(button);
             }
@@ -143,7 +161,12 @@ namespace Quaver.Screens.Select.UI.Selector
                 btn.Y = (MapsetPoolSize + PoolStartingIndex) * SetSpacingY;
 
                 // Since we're pooling change the associated mapset.
-                btn.ChangeAssociatedMapset(Screen.AvailableMapsets[MapsetPoolSize + PoolStartingIndex]);
+                btn.ChangeAssociatedMapset(MapsetPoolSize + PoolStartingIndex);
+
+                if (btn.MapsetIndex == SelectedSet)
+                    btn.DisplayAsSelected();
+                else
+                    btn.DisplayAsDeselected();
 
                 // Reorganize the buttons in the pool
                 var reorganizedPoolList = new List<SongSelectorSet>();
@@ -188,7 +211,12 @@ namespace Quaver.Screens.Select.UI.Selector
                 btn.Y = newPoolIndex * SetSpacingY;
 
                 // Since we're pooling change the associated mapset.
-                btn.ChangeAssociatedMapset(Screen.AvailableMapsets[newPoolIndex]);
+                btn.ChangeAssociatedMapset(newPoolIndex);
+
+                if (btn.MapsetIndex == SelectedSet)
+                    btn.DisplayAsSelected();
+                else
+                    btn.DisplayAsDeselected();
 
                 // Reorganize the buttons in the pool.
                 var reorganizedPoolList = new List<SongSelectorSet>();
@@ -202,6 +230,32 @@ namespace Quaver.Screens.Select.UI.Selector
                 // Set the new list.
                 MapsetButtonPool = reorganizedPoolList;
                 PoolStartingIndex -= neededButtons;
+            }
+        }
+
+        /// <summary>
+        ///     Selects a map of a given index.
+        /// </summary>
+        /// <param name="index"></param>
+        public void SelectMap(int index)
+        {
+            if (Screen.AvailableMapsets.ElementAtOrDefault(index) == null)
+                return;
+
+            SelectedSet = index;
+
+
+
+            var foundButtonIndex = MapsetButtonPool.FindIndex(x => x.MapsetIndex == SelectedSet);
+
+            if (foundButtonIndex != -1 && foundButtonIndex < 8)
+            {
+                MapsetButtonPool[foundButtonIndex].Select();
+                ScrollTo((-SelectedSet + 3) * SetSpacingY, 2100);
+            }
+            else
+            {
+                ScrollTo((-SelectedSet + 3) * SetSpacingY, 2100);
             }
         }
     }
