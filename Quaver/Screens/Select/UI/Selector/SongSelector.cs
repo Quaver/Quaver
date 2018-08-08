@@ -35,7 +35,13 @@ namespace Quaver.Screens.Select.UI.Selector
         /// <summary>
         ///     The starting index of the mapset button pool.
         /// </summary>
-        private int PoolStartingIndex { get; set; } = 0;
+        private int PoolStartingIndex { get; set; }
+
+        /// <summary>
+        ///     The previous value of the content container, used for
+        ///     scrolling upwards.
+        /// </summary>
+        private float PreviousContentContainerY { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -62,6 +68,7 @@ namespace Quaver.Screens.Select.UI.Selector
         public override void Update(GameTime gameTime)
         {
             ShiftPoolBasedOnScroll();
+            PreviousContentContainerY = ContentContainer.Y;
 
             base.Update(gameTime);
         }
@@ -105,14 +112,26 @@ namespace Quaver.Screens.Select.UI.Selector
             if (MapsetButtonPool == null || MapsetButtonPool.Count == 0)
                 return;
 
-            // Based on the content container's y position, calculate how many buttons are off-screen
+            if (ContentContainer.Y < PreviousContentContainerY)
+                ShiftPoolWhenScrollingDown();
+            else if (ContentContainer.Y > PreviousContentContainerY)
+                ShiftPoolWhenScrollingUp();
+        }
+
+        /// <summary>
+        ///     When scrolling down, this will handle recycling SelectorSet objects from off the top
+        ///     of the screen, to the bottom.
+        /// </summary>
+        private void ShiftPoolWhenScrollingDown()
+        {
+             // Based on the content container's y position, calculate how many buttons are off-screen
             // (on the top of the window)
-            var buttonsScrolledUp = (int) Math.Round(Math.Abs(ContentContainer.Y + SetSpacingY * PoolStartingIndex) / SetSpacingY);
+            var neededButtons = (int) Math.Round(Math.Abs(ContentContainer.Y + SetSpacingY * PoolStartingIndex) / SetSpacingY);
 
             // Here we check for if the amount of buttons scrolled up are greater than 0, it should always either be
             // 1 or 0 just by the nature of the scrolling, since it scrolls one at a time.
             // there should NEVER be a circumstance where we scroll more than 1 in a given frame.
-            if (buttonsScrolledUp > 0)
+            if (neededButtons > 0)
             {
                 if (Screen.AvailableMapsets.ElementAtOrDefault(MapsetPoolSize + PoolStartingIndex) == null)
                     return;
@@ -132,15 +151,57 @@ namespace Quaver.Screens.Select.UI.Selector
                 // Start with index 1. Since we're pooling forwards, the first item becomes the last,
                 // last becomes the second to last, etc. So here we are essentially
                 // creating that portion of the list. (tl;dr, just -1 to each index)
-                for (var j = 1; j < MapsetButtonPool.Count; j++)
-                    reorganizedPoolList.Add(MapsetButtonPool[j]);
+                for (var i = 1; i < MapsetButtonPool.Count; i++)
+                    reorganizedPoolList.Add(MapsetButtonPool[i]);
 
                 // Add the button that was pooled back to the list in the end.
                 reorganizedPoolList.Add(btn);
 
                 // Set the new list.
                 MapsetButtonPool = reorganizedPoolList;
-                PoolStartingIndex += buttonsScrolledUp;
+                PoolStartingIndex += neededButtons;
+            }
+        }
+
+        /// <summary>
+        ///     When scrolling up, this will handle recycling SelectorSet objects and placing the ones
+        ///     from the bottom, back up to the top.
+        /// </summary>
+        private void ShiftPoolWhenScrollingUp()
+        {
+            if (Screen.AvailableMapsets.ElementAtOrDefault(PoolStartingIndex - 1) == null)
+                return;
+
+            // Calculate how many buttons need to be recycled.
+            var neededButtons = (int) Math.Round((ContentContainer.Y + SetSpacingY * PoolStartingIndex) / SetSpacingY);
+
+            if (neededButtons > 0)
+            {
+                // Grab the last button out of the pool, so we can recycle it at the top.
+                var btn = MapsetButtonPool.Last();
+
+                // The new index of the button.
+                // since we're pooling backwards, it'd be 1 less than the current starting index.
+                var newPoolIndex = PoolStartingIndex - 1;
+
+                // Change the y position of the button to 1 before the pool index, (since we're pooling backwards)
+                btn.Y = newPoolIndex * SetSpacingY;
+
+                // Since we're pooling change the associated mapset.
+                btn.ChangeAssociatedMapset(Screen.AvailableMapsets[newPoolIndex]);
+
+                // Reorganize the buttons in the pool.
+                var reorganizedPoolList = new List<SongSelectorSet>();
+
+                // Add the button at the first index, since it's needed at the top.
+                reorganizedPoolList.Add(btn);
+
+                for (var i = 0; i < MapsetButtonPool.Count - 1; i++)
+                    reorganizedPoolList.Add(MapsetButtonPool[i]);
+
+                // Set the new list.
+                MapsetButtonPool = reorganizedPoolList;
+                PoolStartingIndex -= neededButtons;
             }
         }
     }

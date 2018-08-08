@@ -225,7 +225,7 @@ namespace Quaver.Screens.Select.UI.Selector
             Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0.35f, 1, 150));
 
             // Change map for now.
-            MapManager.Selected.Value = Mapset.Maps.First();
+            MapManager.Selected.Value = Mapset.Maps.Last();
         }
 
         public void Deselect()
