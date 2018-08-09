@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
+using Quaver.Database.Maps;
 using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Menu.UI.BottomToolbar;
@@ -33,7 +34,7 @@ namespace Quaver.Screens.Select
         /// <summary>
         ///     The interface to select songs.
         /// </summary>
-        public SongSelector SongSelector { get; private set; }
+        public MapsetSelector MapsetSelector { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -53,7 +54,7 @@ namespace Quaver.Screens.Select
 
             BottomToolbar = new BottomBar() {Parent = Container};
 
-            SongSelector = new SongSelector((SelectScreen) Screen) {Parent = Container};
+            MapsetSelector = new MapsetSelector((SelectScreen) Screen, this) {Parent = Container};
         }
 
         /// <inheritdoc />

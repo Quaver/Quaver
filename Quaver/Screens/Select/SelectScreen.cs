@@ -61,10 +61,10 @@ namespace Quaver.Screens.Select
                 ScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Up))
-                screenView.SongSelector.SelectMap(screenView.SongSelector.SelectedSet - 1);
+                screenView.MapsetSelector.SelectMap(screenView.MapsetSelector.SelectedSet - 1);
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Down))
-                screenView.SongSelector.SelectMap(screenView.SongSelector.SelectedSet + 1);
+                screenView.MapsetSelector.SelectMap(screenView.MapsetSelector.SelectedSet + 1);
         }
     }
 }

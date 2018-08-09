@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Maps.Parsers;
 using Quaver.Config;
 using Wobble.Bindables;
@@ -49,6 +50,11 @@ namespace Quaver.Database.Maps
                 }
             }
         }
+
+        /// <summary>
+        ///     The current background of the map.
+        /// </summary>
+        public static Texture2D CurrentBackground { get; set; }
 
         /// <summary>
         ///     The current path of the selected map's background path.

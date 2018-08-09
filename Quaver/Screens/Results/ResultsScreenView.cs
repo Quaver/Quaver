@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
+using Quaver.Database.Maps;
 using Quaver.Helpers;
 using Quaver.Screens.Results.UI;
 using Quaver.Screens.Results.UI.ScoreResults;
@@ -103,7 +104,7 @@ namespace Quaver.Screens.Results
         /// <summary>
         ///     Ceates the background image sprite.
         /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(UserInterface.MenuBackground)
+        private void CreateBackground() => Background = new BackgroundImage(MapManager.CurrentBackground ?? UserInterface.MenuBackground)
             {Parent = Container};
 
         /// <summary>
@@ -166,7 +167,7 @@ namespace Quaver.Screens.Results
                 Alignment = Alignment.TopCenter,
                 X = WindowManager.Width
             };
-            
+
             var transformation = new Transformation(TransformationProperty.X, Easing.EaseInOutElastic, OnlineResults.X, OnlineResults.Width / 2f + 10, 800);
             OnlineResults.Transformations.Add(transformation);
         }

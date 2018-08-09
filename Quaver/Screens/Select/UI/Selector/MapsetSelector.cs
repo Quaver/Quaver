@@ -2,19 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
+using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Helpers;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Input;
+using Wobble.Window;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Screens.Select.UI.Selector
 {
-    public class SongSelector : ScrollContainer
+    public class MapsetSelector : ScrollContainer
     {
         /// <summary>
         ///     Reference to the song select screen itself.
@@ -22,9 +27,14 @@ namespace Quaver.Screens.Select.UI.Selector
         public SelectScreen Screen { get; }
 
         /// <summary>
+        ///     Reference to the song select screen view.
+        /// </summary>
+        public SelectScreenView ScreenView { get; }
+
+        /// <summary>
         ///     The amount of maps available in the pool.
         /// </summary>
-        public const int MapsetPoolSize = 35;
+        public const int MapsetPoolSize = 15;
 
         /// <summary>
         ///     The amount of space between each mapset.
@@ -34,7 +44,7 @@ namespace Quaver.Screens.Select.UI.Selector
         /// <summary>
         ///     The buttons that are currently in the mapset pool.
         /// </summary>
-        public List<SongSelectorSet> MapsetButtonPool { get; private set; }
+        public List<MapsetSelectorItem> MapsetButtonPool { get; private set; }
 
         /// <summary>
         ///     The starting index of the mapset button pool.
@@ -52,12 +62,19 @@ namespace Quaver.Screens.Select.UI.Selector
         /// </summary>
         public int SelectedSet { get; set; }
 
+        /// <summary>
+        ///     Event that gets invoked whenever a background is loaded.
+        /// </summary>
+        public event EventHandler<BackgroundLoadedEventArgs> BackgroundLoaded;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public SongSelector(SelectScreen screen) : base(new ScalableVector2(550, 610), new ScalableVector2(550, 610 + SetSpacingY))
+        public MapsetSelector(SelectScreen screen, SelectScreenView view)
+            : base(new ScalableVector2(550, WindowManager.Height), new ScalableVector2(550, WindowManager.Height))
         {
             Screen = screen;
+            ScreenView = view;
 
             Alignment = Alignment.MidRight;
             X = 0;
@@ -101,19 +118,19 @@ namespace Quaver.Screens.Select.UI.Selector
 
             // Calculate the actual height of the container based on the amount of available sets
             // there are.
-            ContentContainer.Height += 1 + (Screen.AvailableMapsets.Count - 8) * SetSpacingY + SongSelectorSet.BUTTON_HEIGHT / 2f;
+            ContentContainer.Height += 1 + (Screen.AvailableMapsets.Count - 8) * SetSpacingY + MapsetSelectorItem.BUTTON_HEIGHT / 2f;
 
             // Destroy previous buttons if there are any in the poool.
             if (MapsetButtonPool != null && MapsetButtonPool.Count > 0)
                 MapsetButtonPool.ForEach(x => x.Destroy());
 
             // Create the initial list of buttons for the pool.
-            MapsetButtonPool = new List<SongSelectorSet>();
+            MapsetButtonPool = new List<MapsetSelectorItem>();
 
             // Create set buttons.
             for (var i = PoolStartingIndex; i < PoolStartingIndex + MapsetPoolSize && i < Screen.AvailableMapsets.Count; i++)
             {
-                var button = new SongSelectorSet(this, i) { Y = i * SetSpacingY + 10 };
+                var button = new MapsetSelectorItem(this, i) { Y = i * SetSpacingY + 10 };
 
                 // Fire click handler for this button if it is indeed the initial selected mapset.
                 if (i == SelectedSet)
@@ -171,7 +188,7 @@ namespace Quaver.Screens.Select.UI.Selector
                     btn.DisplayAsDeselected();
 
                 // Reorganize the buttons in the pool
-                var reorganizedPoolList = new List<SongSelectorSet>();
+                var reorganizedPoolList = new List<MapsetSelectorItem>();
 
                 // Start with index 1. Since we're pooling forwards, the first item becomes the last,
                 // last becomes the second to last, etc. So here we are essentially
@@ -221,7 +238,7 @@ namespace Quaver.Screens.Select.UI.Selector
                     btn.DisplayAsDeselected();
 
                 // Reorganize the buttons in the pool.
-                var reorganizedPoolList = new List<SongSelectorSet>();
+                var reorganizedPoolList = new List<MapsetSelectorItem>();
 
                 // Add the button at the first index, since it's needed at the top.
                 reorganizedPoolList.Add(btn);
@@ -246,19 +263,68 @@ namespace Quaver.Screens.Select.UI.Selector
 
             SelectedSet = index;
 
-
-
             var foundButtonIndex = MapsetButtonPool.FindIndex(x => x.MapsetIndex == SelectedSet);
 
             if (foundButtonIndex != -1 && foundButtonIndex < 8)
             {
                 MapsetButtonPool[foundButtonIndex].Select();
-                ScrollTo((-SelectedSet + 3) * SetSpacingY, 2100);
+                ScrollTo((-SelectedSet + 4) * SetSpacingY, 2100);
             }
             else
             {
-                ScrollTo((-SelectedSet + 3) * SetSpacingY, 2100);
+                ScrollTo((-SelectedSet + 4) * SetSpacingY, 2100);
             }
+        }
+
+        /// <summary>
+        ///     Loads a background and fires an event when its done.
+        /// </summary>
+        /// <param name="set"></param>
+        /// <param name="id"></param>
+        public void LoadBackground(Mapset set, int id)
+        {
+            // Fade background brightness all the way to black.
+            ScreenView.Background.BrightnessSprite.Transformations.Clear();
+            ScreenView.Background.BrightnessSprite.Transformations.Add(new Transformation(TransformationProperty.Alpha,
+                                                                 Easing.EaseOutQuint, ScreenView.Background.Alpha, 1, 600));
+
+            // ReSharper disable once ArrangeMethodOrOperatorBody
+            Task.Run(() =>
+            {
+                try
+                {
+                    var bg = AssetLoader.LoadTexture2DFromFile(set.Background);
+                    BackgroundLoaded?.Invoke(this, new BackgroundLoadedEventArgs(set, id, bg));
+
+                    return bg;
+                }
+                catch (Exception)
+                {
+                    // If the background couldn't be loaded.
+                    BackgroundLoaded?.Invoke(this, new BackgroundLoadedEventArgs(set, id, UserInterface.MenuBackground));
+                    return UserInterface.MenuBackground;
+                }
+            }).ContinueWith(t =>
+            {
+                if (SelectedSet != id)
+                    return;
+
+                // Dispose of the previous background.
+                if (ScreenView.Background.Image != UserInterface.MenuBackground)
+                {
+                    ScreenView.Background.Image?.Dispose();
+                    MapManager.CurrentBackground?.Dispose();
+                }
+
+                MapManager.CurrentBackground = t.Result;
+                ScreenView.Background.Image = MapManager.CurrentBackground;
+
+                // Make the background visible again.
+                ScreenView.Background.BrightnessSprite.Transformations.Clear();
+                var alphaChange = new Transformation(TransformationProperty.Alpha, Easing.EaseInQuad,
+                                        ScreenView.Background.BrightnessSprite.Alpha, 0.65f, 500);
+                ScreenView.Background.BrightnessSprite.Transformations.Add(alphaChange);
+            });
         }
     }
 }

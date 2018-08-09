@@ -154,7 +154,8 @@ namespace Quaver.Screens.Gameplay
             BackgroundContainer = new Container();
 
             // Create background on the background container
-            Background = new BackgroundImage(UserInterface.MenuBackground, 100 - ConfigManager.BackgroundBrightness.Value, false)
+            Background = new BackgroundImage(MapManager.CurrentBackground ?? MapManager.CurrentBackground,
+                                                100 - ConfigManager.BackgroundBrightness.Value, false)
             {
                 Parent = BackgroundContainer
             };

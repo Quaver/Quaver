@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 using Quaver.API.Enums;
 using Quaver.Assets;
@@ -24,7 +25,7 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.Screens.Select.UI.Selector
 {
-    public class SongSelectorSet : Button
+    public class MapsetSelectorItem : Button
     {
         /// <summary>
         ///     The mapset this selector refers to.
@@ -39,7 +40,7 @@ namespace Quaver.Screens.Select.UI.Selector
         /// <summary>
         ///     Reference to the parent SongSelector
         /// </summary>
-        private SongSelector Selector { get; }
+        private MapsetSelector Selector { get; }
 
         /// <summary>
         ///     The background of the map.
@@ -97,7 +98,7 @@ namespace Quaver.Screens.Select.UI.Selector
         /// </summary>
         /// <param name="selector"></param>
         /// <param name="index"></param>
-        public SongSelectorSet(SongSelector selector, int index)
+        public MapsetSelectorItem(MapsetSelector selector, int index)
         {
             Selector = selector;
             MapsetIndex = index;
@@ -153,6 +154,8 @@ namespace Quaver.Screens.Select.UI.Selector
                 X = Keys4MapsAvailable.X + Keys4MapsAvailable.Width + 10,
                 Y = Keys4MapsAvailable.Y
             };
+
+            Selector.BackgroundLoaded += OnBackgroundLoad;
 
             // Here we want to change the associated mapset to the one that was passed in
             // so we can actually fully initialize the properties of each sprite.
@@ -246,6 +249,8 @@ namespace Quaver.Screens.Select.UI.Selector
             {
                 // ignored
             }
+
+            Selector.LoadBackground(Mapset, MapsetIndex);
         }
 
         /// <summary>
@@ -270,6 +275,20 @@ namespace Quaver.Screens.Select.UI.Selector
 
             Transformations.Clear();
             Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, X, 120, 600));
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            // Prevent mem leaks
+            if (Background.Image != UserInterface.MenuBackground)
+                Background.Image.Dispose();
+
+            Selector.BackgroundLoaded -= OnBackgroundLoad;
+
+           base.Destroy();
         }
 
         /// <summary>
@@ -305,6 +324,16 @@ namespace Quaver.Screens.Select.UI.Selector
 
             if (MapsetIndex == Selector.SelectedSet)
                 DisplayAsSelected();
+        }
+
+        /// <summary>
+        ///     When a background is loaded, this method will be called.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackgroundLoad(object sender, BackgroundLoadedEventArgs e)
+        {
+
         }
     }
 }
