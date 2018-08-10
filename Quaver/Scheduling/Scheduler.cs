@@ -1,0 +1,41 @@
+﻿using System;
+using Amib.Threading;
+using Quaver.Graphics.Notifications;
+using Quaver.Logging;
+using Action = Amib.Threading.Action;
+
+namespace Quaver.Scheduling
+{
+    public static class Scheduler
+    {
+        /// <summary>
+        ///     Thread pool used to run things in the background.
+        /// </summary>
+        public static readonly SmartThreadPool ThreadPool = new SmartThreadPool(new STPStartInfo
+        {
+            AreThreadsBackground = true,
+            IdleTimeout = 600000,
+            MaxWorkerThreads = 32,
+            MinWorkerThreads = 8
+        });
+
+        /// <summary>
+        ///     Runs in the background.
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public static IWorkItemResult RunThread(Action action) => ThreadPool.QueueWorkItem(delegate
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "Error occurred while running background thread. Please provide" +
+                                                                  "your runtime.log file to a developer.");
+            }
+        });
+    }
+}
