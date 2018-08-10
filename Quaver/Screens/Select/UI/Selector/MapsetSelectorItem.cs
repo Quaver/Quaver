@@ -43,20 +43,24 @@ namespace Quaver.Screens.Select.UI.Selector
         private MapsetSelector Selector { get; }
 
         /// <summary>
-        ///     The background of the map.
-        /// </summary>
-        private Sprite Background { get; }
-        private Sprite BackgroundDimmer { get; }
-
-        /// <summary>
         ///     The text that displays the artist of the map.
         /// </summary>
         public SpriteText Title { get; }
 
         /// <summary>
-        ///     The text that displays the artist and creator.
+        ///     The text that displays the artist
         /// </summary>
-        private SpriteText ArtistAndCreator { get; }
+        private SpriteText Artist { get; }
+
+        /// <summary>
+        ///     The text that displays the creator of the map.
+        /// </summary>
+        private SpriteText Creator { get; }
+
+        /// <summary>
+        ///     The thumbnail for the
+        /// </summary>
+        public Sprite Thumbnail { get; }
 
         /// <summary>
         ///     If the set has a 4k map.
@@ -69,16 +73,6 @@ namespace Quaver.Screens.Select.UI.Selector
         private bool Has7KMaps { get; set; }
 
         /// <summary>
-        ///     Sprite that dictates if there are 4k maps in the set.
-        /// </summary>
-        private Sprite Keys4MapsAvailable { get; set; }
-
-        /// <summary>
-        ///     Sprite that dictates if there are 7k maps in the set.
-        /// </summary>
-        private Sprite Keys7MapsAvailable { get; set; }
-
-        /// <summary>
         ///     Keeps track of if we've already played the hover sound for this object.
         /// </summary>
         private bool HoverSoundPlayed { get; set; }
@@ -86,12 +80,17 @@ namespace Quaver.Screens.Select.UI.Selector
         /// <summary>
         ///     The height of the button itself.
         /// </summary>
-        public static int BUTTON_HEIGHT { get; } = 75;
+        public static int BUTTON_HEIGHT { get; } = 80;
 
         /// <summary>
         ///     If the set is currently selected.
         /// </summary>
         public bool Selected { get; set; }
+
+        /// <summary>
+        ///     If the background has loaded.
+        /// </summary>
+        public bool BackgroundLoaded { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -103,56 +102,42 @@ namespace Quaver.Screens.Select.UI.Selector
             Selector = selector;
             MapsetIndex = index;
 
-            Alpha = 0;
+            Alpha = 1;
             Size = new ScalableVector2(Selector.Width , BUTTON_HEIGHT);
             X = 120;
-
-            Background = new Sprite()
-            {
-                Parent = this,
-                Size = new ScalableVector2(Selector.Width, BUTTON_HEIGHT),
-                Image = UserInterface.MenuBackground
-            };
-
-            BackgroundDimmer = new Sprite()
-            {
-                Parent = this,
-                Size = new ScalableVector2(Selector.Width, BUTTON_HEIGHT),
-                Tint = Color.Black,
-                Alpha = 0.65f
-            };
+            Image = UserInterface.SelectBorder;
 
             Title = new SpriteText(Fonts.Exo2Regular24, "")
             {
                 Parent = this,
                 TextScale = 0.60f,
-                Y = 13
+                Y = 17
             };
 
-            ArtistAndCreator = new SpriteText(Fonts.Exo2Regular24, "")
+            Artist = new SpriteText(Fonts.Exo2Regular24, "")
             {
                 Parent = this,
-                TextScale = 0.40f,
-                TextColor = Color.LightGray,
+                TextScale = 0.45f,
+                TextColor = Color.White,
                 Alpha = 1f
             };
 
-            Keys4MapsAvailable = new Sprite()
+            Creator = new SpriteText(Fonts.Exo2Regular24, "")
             {
                 Parent = this,
-                Alignment = Alignment.BotLeft,
-                Size = new ScalableVector2(18, 18),
-                X = 15,
-                Y = -8,
+                TextScale = 0.40f,
+                TextColor = Color.White,
+                Alpha = 1f
             };
 
-            Keys7MapsAvailable = new Sprite()
+            Thumbnail = new Sprite()
             {
                 Parent = this,
-                Alignment = Alignment.BotLeft,
-                Size = new ScalableVector2(18, 18),
-                X = Keys4MapsAvailable.X + Keys4MapsAvailable.Width + 10,
-                Y = Keys4MapsAvailable.Y
+                X = 10,
+                Size = new ScalableVector2(105, Height * 0.85f),
+                Alignment = Alignment.MidLeft,
+                Image = UserInterface.MenuBackground,
+                Alpha = 0
             };
 
             Selector.BackgroundLoaded += OnBackgroundLoad;
@@ -259,10 +244,34 @@ namespace Quaver.Screens.Select.UI.Selector
         public void DisplayAsSelected()
         {
             Selected = true;
-            BackgroundDimmer.Alpha = 0.45f;
+            Alpha = 1;
 
+            // Push set outwards to make it appear as selected.
             Transformations.Clear();
             Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, 120, 0, 600));
+
+            // Pushes text forward to make room for the background.
+            #region TEXT_ANIMATIONS
+
+            Title.Transformations.Clear();
+            Title.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
+                                            Title.X, 125 + Title.MeasureString().X / 2f, 200));
+            Title.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                                            Title.Alpha, 1, 600));
+
+            Artist.Transformations.Clear();
+            Artist.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
+                                            Artist.X, 125 + Artist.MeasureString().X / 2f, 210));
+            Artist.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                                            Artist.Alpha, 1, 600));
+
+            Creator.Transformations.Clear();
+            Creator.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
+                                            Creator.X, 125 + Creator.MeasureString().X / 2f, 220));
+            Creator.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                                            Creator.Alpha, 1, 600));
+
+            #endregion
         }
 
         /// <summary>
@@ -271,10 +280,38 @@ namespace Quaver.Screens.Select.UI.Selector
         public void DisplayAsDeselected()
         {
             Selected = false;
-            BackgroundDimmer.Alpha = 0.65f;
+            Alpha = 0.45f;
 
+            // Push
             Transformations.Clear();
             Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, X, 120, 600));
+
+            // Pushes text backwards to its original position
+            #region TEXT_ANIMATIONS
+
+            Title.Transformations.Clear();
+            Title.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
+                                            Title.X, 15 + Title.MeasureString().X / 2f, 200));
+            Title.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                                            Title.Alpha, 0.85f, 600));
+
+            Artist.Transformations.Clear();
+            Artist.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
+                                            Artist.X, 15 + Artist.MeasureString().X / 2f, 210));
+            Artist.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                                            Artist.Alpha, 0.85f, 600));
+
+            Creator.Transformations.Clear();
+            Creator.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
+                                            Creator.X, 15 + Creator.MeasureString().X / 2f, 220));
+            Creator.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                                            Creator.Alpha, 0.85f, 600));
+            #endregion
+
+            // Thumbnail alpha change
+            Thumbnail.Transformations.Clear();
+            Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                                            Thumbnail.Alpha, 0, 200));
         }
 
         /// <inheritdoc />
@@ -282,12 +319,7 @@ namespace Quaver.Screens.Select.UI.Selector
         /// </summary>
         public override void Destroy()
         {
-            // Prevent mem leaks
-            if (Background.Image != UserInterface.MenuBackground)
-                Background.Image.Dispose();
-
-            Selector.BackgroundLoaded -= OnBackgroundLoad;
-
+           Selector.BackgroundLoaded -= OnBackgroundLoad;
            base.Destroy();
         }
 
@@ -304,19 +336,22 @@ namespace Quaver.Screens.Select.UI.Selector
             Title.X = 15 + Title.MeasureString().X / 2f;
 
             // Change artist text.
-            ArtistAndCreator.Text = $"{Mapset.Artist} // by: {Mapset.Creator}";
+            Artist.Text = Mapset.Artist;
 
             // Change artist/creator text properties.
-            var artistAndCreatorSize = ArtistAndCreator.MeasureString() / 2f;
-            ArtistAndCreator.Y = artistAndCreatorSize.Y + Title.Y + 15f;
-            ArtistAndCreator.X = 15 + artistAndCreatorSize.X;
+            var artistSize = Artist.MeasureString() / 2f;
+            Artist.Y = artistSize.Y + Title.Y + 15f;
+            Artist.X = 15 + artistSize.X;
+
+            Creator.Text = "By: " + Mapset.Creator;
+
+            // Change artist/creator text properties.
+            var creatorSize = Creator.MeasureString() / 2f;
+            Creator.Y = creatorSize.Y + Artist.Y + 15f;
+            Creator.X = 15 + creatorSize.X;
 
             // Check available game modes.
             CheckModesForSet();
-
-            // Change available map properties.
-            Keys7MapsAvailable.Alpha = Has7KMaps ? 1 : 0.10f;
-            Keys4MapsAvailable.Alpha = Has4KMaps ? 1 : 0.10f;
 
             // Add click handler.
             RemoveClickHandlers();
@@ -333,7 +368,8 @@ namespace Quaver.Screens.Select.UI.Selector
         /// <param name="e"></param>
         private void OnBackgroundLoad(object sender, BackgroundLoadedEventArgs e)
         {
-
+            if (e.Index != MapsetIndex)
+                return;
         }
     }
 }

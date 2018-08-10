@@ -14,6 +14,7 @@ using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
+using Quaver.Scheduling;
 using Quaver.Screens.Gameplay.UI;
 using Quaver.Screens.Gameplay.UI.Counter;
 using Quaver.Screens.Gameplay.UI.Scoreboard;
@@ -424,12 +425,11 @@ namespace Quaver.Screens.Gameplay
             // Load the results screen asynchronously, so that we don't run through any freezes.
             if (!ResultsScreenLoadInitiated)
             {
-                ScreenManager.LoadAsync(() =>
-                    {
-                        FutureResultsScreen = new ResultsScreen(Screen);
-                        return FutureResultsScreen;
-                    },
-                    () => ClearToExitScreen = true);
+                Scheduler.RunThread(() =>
+                {
+                    FutureResultsScreen = new ResultsScreen(Screen);
+                    ClearToExitScreen = true;
+                });
 
                 ResultsScreenLoadInitiated = true;
             }

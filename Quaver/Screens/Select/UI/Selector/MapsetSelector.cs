@@ -5,10 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Quaver.Assets;
 using Quaver.Database.Maps;
+using Quaver.Graphics;
 using Quaver.Helpers;
+using Quaver.Scheduling;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -34,12 +37,12 @@ namespace Quaver.Screens.Select.UI.Selector
         /// <summary>
         ///     The amount of maps available in the pool.
         /// </summary>
-        public const int MapsetPoolSize = 15;
+        public const int MapsetPoolSize = 55;
 
         /// <summary>
         ///     The amount of space between each mapset.
         /// </summary>
-        public const int SetSpacingY = 80;
+        public const int SetSpacingY = 88;
 
         /// <summary>
         ///     The buttons that are currently in the mapset pool.
@@ -134,7 +137,14 @@ namespace Quaver.Screens.Select.UI.Selector
 
                 // Fire click handler for this button if it is indeed the initial selected mapset.
                 if (i == SelectedSet)
+                {
                     button.FireButtonClickEvent();
+                }
+                else
+                {
+                    button.DisplayAsDeselected();
+                }
+
 
                 AddContainedDrawable(button);
                 MapsetButtonPool.Add(button);
@@ -183,7 +193,11 @@ namespace Quaver.Screens.Select.UI.Selector
                 btn.ChangeAssociatedMapset(MapsetPoolSize + PoolStartingIndex);
 
                 if (btn.MapsetIndex == SelectedSet)
+                {
                     btn.DisplayAsSelected();
+                    btn.Thumbnail.Image = MapManager.CurrentBackground;
+                    btn.Thumbnail.Alpha = 1;
+                }
                 else
                     btn.DisplayAsDeselected();
 
@@ -233,7 +247,11 @@ namespace Quaver.Screens.Select.UI.Selector
                 btn.ChangeAssociatedMapset(newPoolIndex);
 
                 if (btn.MapsetIndex == SelectedSet)
+                {
                     btn.DisplayAsSelected();
+                    btn.Thumbnail.Image = MapManager.CurrentBackground;
+                    btn.Thumbnail.Alpha = 1;
+                }
                 else
                     btn.DisplayAsDeselected();
 
@@ -261,18 +279,20 @@ namespace Quaver.Screens.Select.UI.Selector
             if (Screen.AvailableMapsets.ElementAtOrDefault(index) == null)
                 return;
 
-            SelectedSet = index;
+            var foundButtonIndex = MapsetButtonPool.FindIndex(x => x.MapsetIndex == index);
 
-            var foundButtonIndex = MapsetButtonPool.FindIndex(x => x.MapsetIndex == SelectedSet);
-
+            // If the button is already in the pool and is visible, select that button
             if (foundButtonIndex != -1 && foundButtonIndex < 8)
             {
                 MapsetButtonPool[foundButtonIndex].Select();
                 ScrollTo((-SelectedSet + 4) * SetSpacingY, 2100);
             }
+            // If it isn't, that must mean the scroll is too far away to see the next map,
+            // so scroll back to the existing one.
             else
             {
                 ScrollTo((-SelectedSet + 4) * SetSpacingY, 2100);
+                Console.WriteLine("hi");
             }
         }
 
@@ -289,23 +309,22 @@ namespace Quaver.Screens.Select.UI.Selector
                                                                  Easing.EaseOutQuint, ScreenView.Background.Alpha, 1, 600));
 
             // ReSharper disable once ArrangeMethodOrOperatorBody
-            Task.Run(() =>
+            Scheduler.RunThread(() =>
             {
+                Texture2D newBackground;
+
                 try
                 {
-                    var bg = AssetLoader.LoadTexture2DFromFile(set.Background);
-                    BackgroundLoaded?.Invoke(this, new BackgroundLoadedEventArgs(set, id, bg));
-
-                    return bg;
+                    newBackground = AssetLoader.LoadTexture2DFromFile(set.Background);
                 }
                 catch (Exception)
                 {
                     // If the background couldn't be loaded.
-                    BackgroundLoaded?.Invoke(this, new BackgroundLoadedEventArgs(set, id, UserInterface.MenuBackground));
-                    return UserInterface.MenuBackground;
+                    newBackground = UserInterface.MenuBackground;
                 }
-            }).ContinueWith(t =>
-            {
+
+                BackgroundLoaded?.Invoke(this, new BackgroundLoadedEventArgs(set, id, newBackground));
+
                 if (SelectedSet != id)
                     return;
 
@@ -316,14 +335,28 @@ namespace Quaver.Screens.Select.UI.Selector
                     MapManager.CurrentBackground?.Dispose();
                 }
 
-                MapManager.CurrentBackground = t.Result;
+                MapManager.CurrentBackground = newBackground;
                 ScreenView.Background.Image = MapManager.CurrentBackground;
 
                 // Make the background visible again.
                 ScreenView.Background.BrightnessSprite.Transformations.Clear();
+
                 var alphaChange = new Transformation(TransformationProperty.Alpha, Easing.EaseInQuad,
-                                        ScreenView.Background.BrightnessSprite.Alpha, 0.65f, 500);
+                                                          ScreenView.Background.BrightnessSprite.Alpha, 0.35f, 500);
+
                 ScreenView.Background.BrightnessSprite.Transformations.Add(alphaChange);
+
+                // Find the selected button in the pool
+                var selectedButton = MapsetButtonPool.Find(x => SelectedSet == x.MapsetIndex);
+
+                if (selectedButton == null)
+                    return;
+
+                selectedButton.Thumbnail.Image = newBackground;
+
+                selectedButton.Thumbnail.Transformations.Clear();
+                selectedButton.Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                                                                    selectedButton.Thumbnail.Alpha, 1, 600));
             });
         }
     }

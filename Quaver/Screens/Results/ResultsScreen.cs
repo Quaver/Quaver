@@ -20,6 +20,7 @@ using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Modifiers;
+using Quaver.Scheduling;
 using Quaver.Screens.Gameplay;
 using Quaver.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
@@ -222,13 +223,12 @@ namespace Quaver.Screens.Results
             if (GameplayScreen.HasQuit || GameplayScreen.InReplayMode)
                 return;
 
-            // Run all of these tasks inside of a new thread to avoid blocks.
-            Task.Run(() => { SaveLocalScore(); });
+            Scheduler.RunThread(SaveLocalScore);
 
 #if DEBUG
-            Task.Run(() => SaveDebugReplayData());
-            Task.Run(() => SaveHitData());
-            Task.Run(() => SaveHealthData());
+            Scheduler.RunThread(SaveDebugReplayData);
+            Scheduler.RunThread(SaveHitData);
+            Scheduler.RunThread(SaveHealthData);
 #endif
         }
 
