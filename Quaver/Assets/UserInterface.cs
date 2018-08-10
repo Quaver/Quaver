@@ -39,6 +39,7 @@ namespace Quaver.Assets
         public static Texture2D LeftButtonSquare { get; set; }
         public static Texture2D RightButtonSquare { get; set; }
         public static Texture2D RoundedSquare { get; set; }
+        public static Texture2D SelectBorder { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -71,6 +72,7 @@ namespace Quaver.Assets
             LeftButtonSquare = AssetLoader.LoadTexture2D(QuaverResources.left_button_square, ImageFormat.Png);
             RightButtonSquare = AssetLoader.LoadTexture2D(QuaverResources.right_button_square, ImageFormat.Png);
             RoundedSquare = AssetLoader.LoadTexture2D(QuaverResources.rounded_square, ImageFormat.Png);
+            SelectBorder = AssetLoader.LoadTexture2D(QuaverResources.select_border, ImageFormat.Png);
         }
     }
 }
