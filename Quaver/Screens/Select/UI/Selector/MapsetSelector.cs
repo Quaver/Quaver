@@ -1,17 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Quaver.Assets;
 using Quaver.Database.Maps;
-using Quaver.Graphics;
-using Quaver.Helpers;
 using Quaver.Scheduling;
+using Wobble;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -20,7 +15,7 @@ using Wobble.Input;
 using Wobble.Window;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
-namespace Quaver.Screens.Select.UI.Selector
+namespace Quaver.Screens.Select.UI.Selector.Mapsets
 {
     public class MapsetSelector : ScrollContainer
     {
@@ -107,6 +102,19 @@ namespace Quaver.Screens.Select.UI.Selector
             ShiftPoolBasedOnScroll();
             PreviousContentContainerY = ContentContainer.Y;
 
+            var game = (QuaverGame) GameBase.Game;
+
+            // Determine when or not to have the scrolling input active.
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt) || game.VolumeController.IsActive)
+            {
+                InputEnabled = false;
+            }
+            else
+            {
+                InputEnabled = true;
+            }
+
             base.Update(gameTime);
         }
 
@@ -133,18 +141,16 @@ namespace Quaver.Screens.Select.UI.Selector
             // Create set buttons.
             for (var i = PoolStartingIndex; i < PoolStartingIndex + MapsetPoolSize && i < Screen.AvailableMapsets.Count; i++)
             {
-                var button = new MapsetSelectorItem(this, i) { Y = i * SetSpacingY + 10 };
+                var button = new MapsetSelectorItem(this, i)
+                {
+                    Y = i * SetSpacingY + 10,
+                };
 
                 // Fire click handler for this button if it is indeed the initial selected mapset.
                 if (i == SelectedSet)
-                {
                     button.FireButtonClickEvent();
-                }
                 else
-                {
                     button.DisplayAsDeselected();
-                }
-
 
                 AddContainedDrawable(button);
                 MapsetButtonPool.Add(button);
@@ -187,7 +193,7 @@ namespace Quaver.Screens.Select.UI.Selector
                 var btn = MapsetButtonPool.First();
 
                 // Change the y position of the button.
-                btn.Y = (MapsetPoolSize + PoolStartingIndex) * SetSpacingY;
+                btn.Y = 10 + (MapsetPoolSize + PoolStartingIndex) * SetSpacingY;
 
                 // Since we're pooling change the associated mapset.
                 btn.ChangeAssociatedMapset(MapsetPoolSize + PoolStartingIndex);
@@ -241,7 +247,7 @@ namespace Quaver.Screens.Select.UI.Selector
                 var newPoolIndex = PoolStartingIndex - 1;
 
                 // Change the y position of the button to 1 before the pool index, (since we're pooling backwards)
-                btn.Y = newPoolIndex * SetSpacingY;
+                btn.Y = 10 + newPoolIndex * SetSpacingY;
 
                 // Since we're pooling change the associated mapset.
                 btn.ChangeAssociatedMapset(newPoolIndex);

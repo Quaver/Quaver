@@ -1,29 +1,20 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Media;
 using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Database.Maps;
-using Quaver.Graphics;
-using Quaver.Graphics.Notifications;
 using Quaver.Skinning;
-using Wobble.Assets;
 using Wobble.Audio;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
-using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
 using Color = Microsoft.Xna.Framework.Color;
 
-namespace Quaver.Screens.Select.UI.Selector
+namespace Quaver.Screens.Select.UI.Selector.Mapsets
 {
     public class MapsetSelectorItem : Button
     {
@@ -311,7 +302,7 @@ namespace Quaver.Screens.Select.UI.Selector
             // Thumbnail alpha change
             Thumbnail.Transformations.Clear();
             Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
-                                            Thumbnail.Alpha, 0, 200));
+                                            Thumbnail.Alpha, 0, 250));
         }
 
         /// <inheritdoc />
