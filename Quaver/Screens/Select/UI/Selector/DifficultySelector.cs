@@ -123,6 +123,7 @@ namespace Quaver.Screens.Select.UI.Selector
             CalculateScrollContainerHeight(Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value]);
 
             AddContainedDrawable(CurrentContainer);
+            ScrollToSelectedDifficulty(Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value].Maps.FindIndex(x => x == MapManager.Selected.Value));
         }
 
         /// <summary>
@@ -175,14 +176,7 @@ namespace Quaver.Screens.Select.UI.Selector
             // Change the selected map.
             MapManager.Selected.Value = map;
 
-            // Change the y of the container if need-be
-            // There's only 4 (index 3) maps that are able to be shown in this case,
-            // we only want to move up the container if the index of the map is off-screen
-            if (index > 2)
-                ScrollTo((-index + 2) * (DifficultySelectorItem.HEIGHT + 3), 350);
-            //  Scroll back to top.
-            else
-                ScrollTo(DifficultySelectorItem.HEIGHT + 3, 350);
+            ScrollToSelectedDifficulty(index);
 
             // In the event that the difficulties are from the same mapset
             // we need to run some checks on if they have different audio/backgrounds.
@@ -227,6 +221,18 @@ namespace Quaver.Screens.Select.UI.Selector
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
+        }
+
+        private void ScrollToSelectedDifficulty(int mapIndex)
+        {
+            // Change the y of the container if need-be
+            // There's only 4 (index 3) maps that are able to be shown in this case,
+            // we only want to move up the container if the index of the map is off-screen
+            if (mapIndex > 2)
+                ScrollTo((-mapIndex + 2) * (DifficultySelectorItem.HEIGHT + 3), 350);
+            //  Scroll back to top.
+            else
+                ScrollTo(DifficultySelectorItem.HEIGHT + 3, 350);
         }
     }
 }
