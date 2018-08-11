@@ -26,6 +26,7 @@ using Quaver.Screens.Gameplay.Rulesets.HitObjects;
 using Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Results.Input;
+using Quaver.Screens.Select;
 using Wobble;
 using Wobble.Audio;
 using Wobble.Discord;
@@ -455,7 +456,7 @@ namespace Quaver.Screens.Results
         /// <summary>
         ///     Action that goes back to the song select screen.
         /// </summary>
-        public void GoBackToMenu() => ScreenManager.ChangeScreen(new MainMenuScreen());
+        public void GoBackToMenu() => ScreenManager.ChangeScreen(new SelectScreen());
 
         /// <summary>
         ///     Loads up local scores and watches the replay.
