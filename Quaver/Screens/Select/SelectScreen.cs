@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using osu_database_reader;
+using Quaver.Audio;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Screens.Gameplay;
@@ -50,6 +51,7 @@ namespace Quaver.Screens.Select
         public override void Update(GameTime gameTime)
         {
             HandleInput();
+            KeepPlayingAudioTrackAtPreview();
 
             base.Update(gameTime);
         }
@@ -72,6 +74,18 @@ namespace Quaver.Screens.Select
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Down))
                 screenView.MapsetSelector.DifficultySelector.SelectNextDifficulty(Direction.Forward);
+        }
+
+        /// <summary>
+        ///     Plays the audio track at the preview time if it has stopped
+        /// </summary>
+        private static void KeepPlayingAudioTrackAtPreview()
+        {
+            if (AudioEngine.Track == null)
+                return;
+
+            if (AudioEngine.Track.HasPlayed && AudioEngine.Track.IsStopped)
+                AudioEngine.PlaySelectedTrackAtPreview();
         }
     }
 }
