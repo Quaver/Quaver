@@ -195,6 +195,7 @@
     <Compile Include="Screens\Select\SelectScreen.cs" />
     <Compile Include="Screens\Select\SelectScreenView.cs" />
     <Compile Include="Screens\Select\UI\Selector\BackgroundLoadedEventArgs.cs" />
+    <Compile Include="Screens\Select\UI\Selector\DifficultySelectedEventArgs.cs" />
     <Compile Include="Screens\Select\UI\Selector\DifficultySelector.cs" />
     <Compile Include="Screens\Select\UI\Selector\DifficultySelectorContainer.cs" />
     <Compile Include="Screens\Select\UI\Selector\DifficultySelectorItem.cs" />

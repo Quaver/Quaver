@@ -34,12 +34,12 @@ namespace Quaver.Screens.Select.UI.Selector
             Selector = selector;
             Mapset = set;
 
-            Width = Selector.Width - Selector.Scrollbar.Width;
+            Width = Selector.Width;
             Height = Selector.Height;
+            Alpha = 0;
 
             Items = new List<DifficultySelectorItem>();
 
-            Console.WriteLine(Mapset.Maps.Count);
             for (var i = 0; i < Mapset.Maps.Count; i++)
             {
                 Items.Add(new DifficultySelectorItem(this, Mapset.Maps[i])

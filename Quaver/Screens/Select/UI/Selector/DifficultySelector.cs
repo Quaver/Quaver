@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
+using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
+using Quaver.Audio;
 using Quaver.Database.Maps;
+using Wobble.Audio;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -38,12 +43,17 @@ namespace Quaver.Screens.Select.UI.Selector
         /// </summary>
         private DifficultySelectorContainer CurrentContainer { get; set; }
 
+        /// <summary>
+        ///     Invoked when a new difficulty has been selected.
+        /// </summary>
+        public event EventHandler<DifficultySelectedEventArgs> NewDifficultySelected;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="mapsetSelector"></param>
         public DifficultySelector(MapsetSelector mapsetSelector)
-            : base(new ScalableVector2(400, 105), new ScalableVector2(400, 106))
+            : base(new ScalableVector2(500, 145), new ScalableVector2(500, 146))
         {
             MapsetSelector = mapsetSelector;
 
@@ -53,10 +63,10 @@ namespace Quaver.Screens.Select.UI.Selector
             Scrollbar.Tint = Color.White;
             Scrollbar.Width = 8;
 
-            CurrentContainer = new DifficultySelectorContainer(this, MapManager.Mapsets[MapsetSelector.SelectedSet.Value]);
+            CurrentContainer = new DifficultySelectorContainer(this, Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value]);
             CurrentContainer.X = CurrentContainer.Width + 5;
-            CurrentContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce,
-                                                    CurrentContainer.X, 0, 400));
+            CurrentContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, CurrentContainer.X, 0, 400));
+            CalculateScrollContainerHeight(Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value]);
 
             AddContainedDrawable(CurrentContainer);
 
@@ -103,17 +113,16 @@ namespace Quaver.Screens.Select.UI.Selector
             PreviousContainers.Add(previousContainer);
 
             // Create a new container.
-            CurrentContainer = new DifficultySelectorContainer(this, MapManager.Mapsets[e.Value])
+            CurrentContainer = new DifficultySelectorContainer(this, Screen.AvailableMapsets[e.Value])
             {
                 SetChildrenVisibility = true,
                 Visible = true
             };
             CurrentContainer.X = CurrentContainer.Width + 5;
-            CurrentContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce,
-                CurrentContainer.X, 0, 400));
+            CurrentContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, CurrentContainer.X, 0, 400));
+            CalculateScrollContainerHeight(Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value]);
 
             AddContainedDrawable(CurrentContainer);
-            Console.WriteLine($"Mapset from {e.OldValue} to {e.Value} - {MapManager.Mapsets[e.Value].Artist} - {MapManager.Mapsets[e.Value].Title}");
         }
 
         /// <summary>
@@ -134,6 +143,108 @@ namespace Quaver.Screens.Select.UI.Selector
             });
 
             containersToRemove.ForEach(x => PreviousContainers.Remove(x));
+        }
+
+        /// <summary>
+        ///    Calculates the height of the scroll container's height based on how many
+        ///     maps there are in the set.
+        /// </summary>
+        private void CalculateScrollContainerHeight(Mapset mapset)
+        {
+            const int contentContainerBaseHeight = 146;
+            ContentContainer.Height = contentContainerBaseHeight + (DifficultySelectorItem.HEIGHT + 3) * (mapset.Maps.Count - 1);
+        }
+
+        /// <summary>
+        ///    Selects a map difficulty from the set.
+        /// </summary>
+        public void SelectDifficulty(Mapset set, Map map)
+        {
+            var index = set.Maps.FindIndex(x => x == map);
+
+            if (index == -1)
+                throw new ArgumentNullException($"map: {map.MapId} does not exist in mapset: {set.Directory}");
+
+            var oldDifficulty = MapManager.Selected.Value;
+
+            // Don't bother changing if its the same map.
+            // this can occur if the user is using the keyboard to
+            if (oldDifficulty == map)
+                return;
+
+            // Change the selected map.
+            MapManager.Selected.Value = map;
+
+            // Change the y of the container if need-be
+            // There's only 4 (index 3) maps that are able to be shown in this case,
+            // we only want to move up the container if the index of the map is off-screen
+            if (index > 2 )
+            {
+                ScrollTo((-index + 2) * (DifficultySelectorItem.HEIGHT + 3), 350);
+            }
+            else
+            {
+                ScrollTo((0) * (DifficultySelectorItem.HEIGHT + 3), 350);
+            }
+            // In the event that the difficulties are from the same mapset
+            // we need to run some checks on if they have different audio/backgrounds.
+            // so we can load those in accordingly.
+            if (oldDifficulty.Directory == map.Directory)
+            {
+                if (MapManager.GetBackgroundPath(oldDifficulty) != MapManager.GetBackgroundPath(map))
+                {
+                    MapsetSelector.LoadBackground(map);
+                }
+                // Load new audio file if we need to.
+                if (oldDifficulty.AudioPath != map.AudioPath)
+                {
+                    try
+                    {
+                        AudioEngine.LoadCurrentTrack();
+                        AudioEngine.Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
+                        AudioEngine.Track.Play();
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        // ignored
+                    }
+                    catch (AudioEngineException)
+                    {
+                        // ignored
+                    }
+                }
+            }
+
+            NewDifficultySelected?.Invoke(this, new DifficultySelectedEventArgs(set, MapsetSelector.SelectedSet.Value, map, index));
+        }
+
+        /// <summary>
+        ///     Selects the next difficulty in a mapset.
+        /// </summary>
+        /// <param name="direction"></param>
+        public void SelectNextDifficulty(Direction direction)
+        {
+            // Short reference to the current mapset.
+            var mapset = MapsetSelector.Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value];
+
+            // Find the currently selected map in the mapset.
+            var index = mapset.Maps.FindIndex(x => x == MapManager.Selected.Value);
+
+            switch (direction)
+            {
+                case Direction.Forward:
+                    // if the map exists in the set going forward, select the next one
+                    // otherwise select the first map in the set to go backwards.
+                    SelectDifficulty(mapset, index + 1 < mapset.Maps.Count ? mapset.Maps[index + 1] : mapset.Maps[0]);
+                    break;
+                case Direction.Backward:
+                    // if the map exists in the set going backwards, select the previous one
+                    // otherwise select the last map in the set if we reach a bad index.
+                    SelectDifficulty(mapset, index - 1 >= 0 ? mapset.Maps[index - 1] : mapset.Maps.Last());
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
         }
     }
 }

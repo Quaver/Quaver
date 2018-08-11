@@ -8,6 +8,7 @@ using Quaver.Database.Scores;
 using Quaver.Screens.Gameplay;
 using Quaver.Screens.Loading;
 using Wobble.Discord;
+using Wobble.Graphics;
 using Wobble.Input;
 using Wobble.Screens;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
@@ -65,6 +66,12 @@ namespace Quaver.Screens.Select
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
                 screenView.MapsetSelector.SelectMap(screenView.MapsetSelector.SelectedSet.Value + 1);
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Up))
+                screenView.MapsetSelector.DifficultySelector.SelectNextDifficulty(Direction.Backward);
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Down))
+                screenView.MapsetSelector.DifficultySelector.SelectNextDifficulty(Direction.Forward);
         }
     }
 }

@@ -6,13 +6,13 @@ namespace Quaver.Screens.Select.UI.Selector
 {
     public class BackgroundLoadedEventArgs : EventArgs
     {
-        public Mapset Set { get; }
+        public Map Map { get; }
         public int Index { get; }
         public Texture2D Texture { get; }
 
-        public BackgroundLoadedEventArgs(Mapset set, int mapsetIndex, Texture2D tex)
+        public BackgroundLoadedEventArgs(Map map, int mapsetIndex, Texture2D tex)
         {
-            Set = set;
+            Map = map;
             Index = mapsetIndex;
             Texture = tex;
         }

@@ -131,8 +131,6 @@ namespace Quaver.Screens.Select.UI.Selector
                 Alpha = 0
             };
 
-            Selector.BackgroundLoaded += OnBackgroundLoad;
-
             // Here we want to change the associated mapset to the one that was passed in
             // so we can actually fully initialize the properties of each sprite.
             // In the constructor, we ONLY create them, but ChangeAssociatedMapset() further
@@ -208,8 +206,8 @@ namespace Quaver.Screens.Select.UI.Selector
                     x.DisplayAsDeselected();
             });
 
-            // Change map for now.
-            MapManager.Selected.Value = Mapset.Maps.First();
+            // Change selected difficulty
+            Selector.DifficultySelector.SelectDifficulty(Mapset, Mapset.Maps.First());
 
             try
             {
@@ -305,15 +303,6 @@ namespace Quaver.Screens.Select.UI.Selector
                                             Thumbnail.Alpha, 0, 250));
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        public override void Destroy()
-        {
-           Selector.BackgroundLoaded -= OnBackgroundLoad;
-           base.Destroy();
-        }
-
         /// <summary>
         ///     Changes the associated mapset with this button.
         /// </summary>
@@ -350,17 +339,6 @@ namespace Quaver.Screens.Select.UI.Selector
 
             if (MapsetIndex == Selector.SelectedSet.Value)
                 DisplayAsSelected();
-        }
-
-        /// <summary>
-        ///     When a background is loaded, this method will be called.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnBackgroundLoad(object sender, BackgroundLoadedEventArgs e)
-        {
-            if (e.Index != MapsetIndex)
-                return;
         }
     }
 }

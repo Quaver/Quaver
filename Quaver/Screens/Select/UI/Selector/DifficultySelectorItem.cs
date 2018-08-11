@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Database.Maps;
@@ -61,7 +62,7 @@ namespace Quaver.Screens.Select.UI.Selector
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(HEIGHT * 0.75f, HEIGHT * 0.75f),
-                Image = UserInterface.BlankBox,
+                Image = SkinManager.Skin.Grades[Grade.S],
                 X = 8,
                 UsePreviousSpriteBatchOptions = true
             };
@@ -71,7 +72,7 @@ namespace Quaver.Screens.Select.UI.Selector
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(HEIGHT * 0.75f, HEIGHT * 0.75f),
-                Image = Map.HighestRank == Grade.None ? UserInterface.BlankBox : SkinManager.Skin.Grades[Map.HighestRank],
+                Image = Map.HighestRank == Grade.None ? SkinManager.Skin.Grades[Grade.A] : SkinManager.Skin.Grades[Map.HighestRank],
                 X = GameMode.X + GameMode.Width + 8,
                 UsePreviousSpriteBatchOptions = true
             };
@@ -86,14 +87,26 @@ namespace Quaver.Screens.Select.UI.Selector
             };
 
             DifficultyName.X += GradeAchieved.X + GradeAchieved.Width + DifficultyName.MeasureString().X / 2f + 8f;
+            Clicked += (sender, args) => Container.Selector.SelectDifficulty(container.Mapset, map);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            FadeToColor(MapManager.Selected.Value == Map ? Colors.MainAccent : Color.Black, gameTime.ElapsedGameTime.TotalMilliseconds, 90);
+
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public override void Destroy()
+        {
+            base.Destroy();
         }
     }
 }
