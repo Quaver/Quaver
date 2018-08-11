@@ -190,27 +190,11 @@ namespace Quaver.Screens.Select.UI.Selector
             if (oldDifficulty.Directory == map.Directory)
             {
                 if (MapManager.GetBackgroundPath(oldDifficulty) != MapManager.GetBackgroundPath(map))
-                {
                     MapsetSelector.LoadBackground(map);
-                }
+
                 // Load new audio file if we need to.
                 if (oldDifficulty.AudioPath != map.AudioPath)
-                {
-                    try
-                    {
-                        AudioEngine.LoadCurrentTrack();
-                        AudioEngine.Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
-                        AudioEngine.Track.Play();
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        // ignored
-                    }
-                    catch (AudioEngineException)
-                    {
-                        // ignored
-                    }
-                }
+                    AudioEngine.PlaySelectedTrackAtPreview();
             }
 
             NewDifficultySelected?.Invoke(this, new DifficultySelectedEventArgs(set, MapsetSelector.SelectedSet.Value, map, index));

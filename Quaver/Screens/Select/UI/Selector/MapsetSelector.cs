@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
+using Quaver.Audio;
 using Quaver.Database.Maps;
 using Quaver.Scheduling;
 using Quaver.Screens.Edit.UI;
@@ -100,9 +101,15 @@ namespace Quaver.Screens.Select.UI.Selector
                 X = -100
             };
 
-            MapManager.Selected.Value = MapManager.Mapsets.First().Maps.First();
+            if (MapManager.Selected.Value == null)
+                MapManager.Selected.Value = MapManager.Mapsets.First().Maps.First();
 
             GenerateSetPool();
+
+            LoadBackground(MapManager.Selected.Value);
+
+            if (AudioEngine.Track != null && !AudioEngine.Track.IsPlaying)
+                AudioEngine.PlaySelectedTrackAtPreview();
         }
 
         /// <inheritdoc />
@@ -159,7 +166,21 @@ namespace Quaver.Screens.Select.UI.Selector
             // Create the initial list of buttons for the pool.
             MapsetButtonPool = new List<MapsetSelectorItem>();
 
-            // Create set buttons.
+            // Find and set the selected set.
+            SelectedSet.Value = Screen.AvailableMapsets.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
+
+            // Set the map pool starting index
+            if (SelectedSet.Value - 4 > 0)
+                PoolStartingIndex = SelectedSet.Value - 4;
+
+            // Make sure the ContentContainer's y is scrolled to where the mapset is supposed to be
+            // upon loading.
+
+            ContentContainer.Y = (-SelectedSet.Value + 4) * SetSpacingY;
+            TargetY = ContentContainer.Y;
+            PreviousTargetY = ContentContainer.Y;
+
+            // Create the mapset buttons
             for (var i = PoolStartingIndex; i < PoolStartingIndex + MapsetPoolSize && i < Screen.AvailableMapsets.Count; i++)
             {
                 var button = new MapsetSelectorItem(this, i)

@@ -195,10 +195,6 @@ namespace Quaver.Screens.Select.UI.Selector
         /// </summary>
         public void Select()
         {
-            // Don't bother selecting it again if it's already the selected one.
-            if (Selector.SelectedSet.Value == MapsetIndex)
-                return;
-
             Selected = true;
             Selector.SelectedSet.Value = MapsetIndex;
             DisplayAsSelected();
@@ -212,22 +208,7 @@ namespace Quaver.Screens.Select.UI.Selector
 
             // Change selected difficulty
             Selector.DifficultySelector.SelectDifficulty(Mapset, Mapset.Maps.First());
-
-            try
-            {
-                AudioEngine.LoadCurrentTrack();
-                AudioEngine.Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
-                AudioEngine.Track.Play();
-            }
-            catch (FileNotFoundException)
-            {
-                // ignored
-            }
-            catch (AudioEngineException)
-            {
-                // ignored
-            }
-
+            AudioEngine.PlaySelectedTrackAtPreview();
             Selector.LoadBackground(Mapset, MapsetIndex);
         }
 
@@ -339,7 +320,14 @@ namespace Quaver.Screens.Select.UI.Selector
 
             // Add click handler.
             RemoveClickHandlers();
-            Clicked += (sender, args) => Select();
+            Clicked += (sender, args) =>
+            {
+                // Don't bother selecting it again if it's already the selected one.
+                if (Selector.SelectedSet.Value == MapsetIndex)
+                    return;
+
+                Select();
+            };
 
             if (MapsetIndex == Selector.SelectedSet.Value)
                 DisplayAsSelected();
