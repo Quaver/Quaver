@@ -49,7 +49,7 @@ namespace Quaver.Screens.Select
         /// <param name="screen"></param>
         public SelectScreenView(Screen screen) : base(screen)
         {
-            Background = new BackgroundImage(UserInterface.MenuBackground) {Parent = Container};
+            Background = new BackgroundImage(UserInterface.MenuBackground, 100) {Parent = Container};
 
             Toolbar = new Toolbar(new List<ToolbarItem>
             {
