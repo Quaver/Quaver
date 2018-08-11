@@ -9,6 +9,8 @@ using Quaver.Screens.Menu.UI.BottomToolbar;
 using Quaver.Screens.Select.UI;
 using Quaver.Screens.Select.UI.Selector;
 using Wobble;
+using Wobble.Graphics;
+using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI;
 using Wobble.Screens;
 
@@ -32,9 +34,14 @@ namespace Quaver.Screens.Select
         private BottomBar BottomToolbar { get; set; }
 
         /// <summary>
-        ///     The interface to select songs.
+        ///     The interface to select mapsets
         /// </summary>
         public MapsetSelector MapsetSelector { get; private set; }
+
+        /// <summary>
+        ///     The UI to select an individual map in the set.
+        /// </summary>
+        public DifficultySelector DifficultySelector { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -54,7 +61,15 @@ namespace Quaver.Screens.Select
 
             BottomToolbar = new BottomBar() {Parent = Container};
 
-            MapsetSelector = new MapsetSelector((SelectScreen) Screen, this) {Parent = Container};
+            MapsetSelector = new MapsetSelector((SelectScreen) Screen, this)
+            {
+                Parent = Container,
+                X = 200,
+                Transformations =
+                {
+                    new Transformation(TransformationProperty.X, Easing.EaseOutBounce, 200, 0, 1200)
+                }
+            };
         }
 
         /// <inheritdoc />

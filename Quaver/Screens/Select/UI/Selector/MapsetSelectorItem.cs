@@ -14,7 +14,7 @@ using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Buttons;
 using Color = Microsoft.Xna.Framework.Color;
 
-namespace Quaver.Screens.Select.UI.Selector.Mapsets
+namespace Quaver.Screens.Select.UI.Selector
 {
     public class MapsetSelectorItem : Button
     {
@@ -198,7 +198,7 @@ namespace Quaver.Screens.Select.UI.Selector.Mapsets
         public void Select()
         {
             Selected = true;
-            Selector.SelectedSet = MapsetIndex;
+            Selector.SelectedSet.Value = MapsetIndex;
             DisplayAsSelected();
 
             // Display the other map's button as deselected.
@@ -348,7 +348,7 @@ namespace Quaver.Screens.Select.UI.Selector.Mapsets
             RemoveClickHandlers();
             Clicked += (sender, args) => Select();
 
-            if (MapsetIndex == Selector.SelectedSet)
+            if (MapsetIndex == Selector.SelectedSet.Value)
                 DisplayAsSelected();
         }
 

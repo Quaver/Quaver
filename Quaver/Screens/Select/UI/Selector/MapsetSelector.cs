@@ -8,6 +8,7 @@ using Quaver.Database.Maps;
 using Quaver.Scheduling;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
@@ -15,7 +16,7 @@ using Wobble.Input;
 using Wobble.Window;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
-namespace Quaver.Screens.Select.UI.Selector.Mapsets
+namespace Quaver.Screens.Select.UI.Selector
 {
     public class MapsetSelector : ScrollContainer
     {
@@ -28,6 +29,11 @@ namespace Quaver.Screens.Select.UI.Selector.Mapsets
         ///     Reference to the song select screen view.
         /// </summary>
         public SelectScreenView ScreenView { get; }
+
+        /// <summary>
+        ///     Interface to select the difficulties of the map.
+        /// </summary>
+        public DifficultySelector DifficultySelector { get; }
 
         /// <summary>
         ///     The amount of maps available in the pool.
@@ -58,7 +64,7 @@ namespace Quaver.Screens.Select.UI.Selector.Mapsets
         /// <summary>
         ///     The selected mapset.
         /// </summary>
-        public int SelectedSet { get; set; }
+        public BindableInt SelectedSet { get; set; }
 
         /// <summary>
         ///     Event that gets invoked whenever a background is loaded.
@@ -87,7 +93,16 @@ namespace Quaver.Screens.Select.UI.Selector.Mapsets
             TimeToCompleteScroll = 2100;
 
             // Find the index of the current mapset
-            SelectedSet = 0;
+            SelectedSet = new BindableInt(0, -1, int.MaxValue);
+
+            // TODO: Set parent and all that jazz in the map info section.
+            DifficultySelector = new DifficultySelector(this)
+            {
+                Parent = ScreenView.Container,
+                Alignment = Alignment.MidCenter,
+                X = -100
+            };
+
             MapManager.Selected.Value = MapManager.Mapsets.First().Maps.First();
 
             GenerateSetPool();
@@ -116,6 +131,15 @@ namespace Quaver.Screens.Select.UI.Selector.Mapsets
             }
 
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            SelectedSet.UnHookEventHandlers();
+            base.Destroy();
         }
 
         /// <summary>
@@ -147,7 +171,7 @@ namespace Quaver.Screens.Select.UI.Selector.Mapsets
                 };
 
                 // Fire click handler for this button if it is indeed the initial selected mapset.
-                if (i == SelectedSet)
+                if (i == SelectedSet.Value)
                     button.FireButtonClickEvent();
                 else
                     button.DisplayAsDeselected();
@@ -198,7 +222,7 @@ namespace Quaver.Screens.Select.UI.Selector.Mapsets
                 // Since we're pooling change the associated mapset.
                 btn.ChangeAssociatedMapset(MapsetPoolSize + PoolStartingIndex);
 
-                if (btn.MapsetIndex == SelectedSet)
+                if (btn.MapsetIndex == SelectedSet.Value)
                 {
                     btn.DisplayAsSelected();
                     btn.Thumbnail.Image = MapManager.CurrentBackground;
@@ -252,7 +276,7 @@ namespace Quaver.Screens.Select.UI.Selector.Mapsets
                 // Since we're pooling change the associated mapset.
                 btn.ChangeAssociatedMapset(newPoolIndex);
 
-                if (btn.MapsetIndex == SelectedSet)
+                if (btn.MapsetIndex == SelectedSet.Value)
                 {
                     btn.DisplayAsSelected();
                     btn.Thumbnail.Image = MapManager.CurrentBackground;
@@ -291,14 +315,13 @@ namespace Quaver.Screens.Select.UI.Selector.Mapsets
             if (foundButtonIndex != -1 && foundButtonIndex < 8)
             {
                 MapsetButtonPool[foundButtonIndex].Select();
-                ScrollTo((-SelectedSet + 4) * SetSpacingY, 2100);
+                ScrollTo((-SelectedSet.Value + 4) * SetSpacingY, 2100);
             }
             // If it isn't, that must mean the scroll is too far away to see the next map,
             // so scroll back to the existing one.
             else
             {
-                ScrollTo((-SelectedSet + 4) * SetSpacingY, 2100);
-                Console.WriteLine("hi");
+                ScrollTo((-SelectedSet.Value + 4) * SetSpacingY, 2100);
             }
         }
 
@@ -331,7 +354,7 @@ namespace Quaver.Screens.Select.UI.Selector.Mapsets
 
                 BackgroundLoaded?.Invoke(this, new BackgroundLoadedEventArgs(set, id, newBackground));
 
-                if (SelectedSet != id)
+                if (SelectedSet.Value != id)
                     return;
 
                 // Dispose of the previous background.
@@ -353,7 +376,7 @@ namespace Quaver.Screens.Select.UI.Selector.Mapsets
                 ScreenView.Background.BrightnessSprite.Transformations.Add(alphaChange);
 
                 // Find the selected button in the pool
-                var selectedButton = MapsetButtonPool.Find(x => SelectedSet == x.MapsetIndex);
+                var selectedButton = MapsetButtonPool.Find(x => SelectedSet.Value == x.MapsetIndex);
 
                 if (selectedButton == null)
                     return;
