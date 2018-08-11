@@ -123,7 +123,7 @@ namespace Quaver.Screens.Select.UI.Selector
             CalculateScrollContainerHeight(Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value]);
 
             AddContainedDrawable(CurrentContainer);
-            ScrollToSelectedDifficulty(Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value].Maps.FindIndex(x => x == MapManager.Selected.Value));
+            SnapToSelectedDifficulty(Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value].Maps.FindIndex(x => x == MapManager.Selected.Value));
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Quaver.Screens.Select.UI.Selector
             // Change the selected map.
             MapManager.Selected.Value = map;
 
-            ScrollToSelectedDifficulty(index);
+            ScrollToSelectedDifficulty(index, 350);
 
             // In the event that the difficulties are from the same mapset
             // we need to run some checks on if they have different audio/backgrounds.
@@ -223,7 +223,12 @@ namespace Quaver.Screens.Select.UI.Selector
             }
         }
 
-        private void ScrollToSelectedDifficulty(int mapIndex)
+        /// <summary>
+        ///     Scrolls to the selected difficulty
+        /// </summary>
+        /// <param name="mapIndex"></param>
+        /// <param name="time"></param>
+        private void ScrollToSelectedDifficulty(int mapIndex, int time)
         {
             // Change the y of the container if need-be
             // There's only 4 (index 3) maps that are able to be shown in this case,
@@ -232,7 +237,17 @@ namespace Quaver.Screens.Select.UI.Selector
                 ScrollTo((-mapIndex + 2) * (DifficultySelectorItem.HEIGHT + 3), 350);
             //  Scroll back to top.
             else
-                ScrollTo(DifficultySelectorItem.HEIGHT + 3, 350);
+                ScrollTo(DifficultySelectorItem.HEIGHT + 3, time);
+        }
+
+        /// <summary>
+        ///     Snaps to the selected difficulty.
+        /// </summary>
+        private void SnapToSelectedDifficulty(int mapIndex)
+        {
+            ContentContainer.Y = (-mapIndex + 2) * (DifficultySelectorItem.HEIGHT + 3);
+            TargetY = ContentContainer.Y;
+            PreviousTargetY = ContentContainer.Y;
         }
     }
 }
