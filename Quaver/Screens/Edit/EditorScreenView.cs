@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
+using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Screens.Edit.UI;
@@ -50,7 +51,7 @@ namespace Quaver.Screens.Edit
         /// <param name="screen"></param>
         public EditorScreenView(Screen screen) : base(screen)
         {
-            Background = new BackgroundImage(UserInterface.MenuBackground, 60) { Parent = Container };
+            Background = new BackgroundImage(MapManager.CurrentBackground ?? UserInterface.MenuBackground, 60) { Parent = Container };
 
             CreateSongTimeDisplay();
             CreateSeekBar();
@@ -99,7 +100,7 @@ namespace Quaver.Screens.Edit
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private void CreateSongTimeDisplay() => TimeDisplay = new EditorSongTimeDisplay(NumberDisplayType.SongTime, "00:00", new Vector2(0.5f, 0.5f))
         {
