@@ -195,6 +195,10 @@ namespace Quaver.Screens.Select.UI.Selector
         /// </summary>
         public void Select()
         {
+            // Don't bother selecting it again if it's already the selected one.
+            if (Selector.SelectedSet.Value == MapsetIndex)
+                return;
+
             Selected = true;
             Selector.SelectedSet.Value = MapsetIndex;
             DisplayAsSelected();

@@ -178,14 +178,12 @@ namespace Quaver.Screens.Select.UI.Selector
             // Change the y of the container if need-be
             // There's only 4 (index 3) maps that are able to be shown in this case,
             // we only want to move up the container if the index of the map is off-screen
-            if (index > 2 )
-            {
+            if (index > 2)
                 ScrollTo((-index + 2) * (DifficultySelectorItem.HEIGHT + 3), 350);
-            }
+            //  Scroll back to top.
             else
-            {
-                ScrollTo((0) * (DifficultySelectorItem.HEIGHT + 3), 350);
-            }
+                ScrollTo(DifficultySelectorItem.HEIGHT + 3, 350);
+
             // In the event that the difficulties are from the same mapset
             // we need to run some checks on if they have different audio/backgrounds.
             // so we can load those in accordingly.
