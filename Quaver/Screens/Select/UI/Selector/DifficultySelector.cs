@@ -65,7 +65,7 @@ namespace Quaver.Screens.Select.UI.Selector
 
             CurrentContainer = new DifficultySelectorContainer(this, Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value]);
             CurrentContainer.X = CurrentContainer.Width + 5;
-            CurrentContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, CurrentContainer.X, 0, 400));
+            CurrentContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear, CurrentContainer.X, 0, 200));
             CalculateScrollContainerHeight(Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value]);
 
             AddContainedDrawable(CurrentContainer);
@@ -106,9 +106,9 @@ namespace Quaver.Screens.Select.UI.Selector
 
             previousContainer.Transformations.Clear();
             previousContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
-                                                        previousContainer.X, -previousContainer.Width * 2, 200));
+                                                        previousContainer.X, -previousContainer.Width * 2, 1));
             previousContainer.SetChildrenAlpha = true;
-            previousContainer.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 1, 0, 100));
+            previousContainer.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 1, 0, 1));
 
             PreviousContainers.Add(previousContainer);
 
@@ -119,7 +119,7 @@ namespace Quaver.Screens.Select.UI.Selector
                 Visible = true
             };
             CurrentContainer.X = CurrentContainer.Width + 5;
-            CurrentContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, CurrentContainer.X, 0, 400));
+            CurrentContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear, CurrentContainer.X, 0, 200));
             CalculateScrollContainerHeight(Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value]);
 
             AddContainedDrawable(CurrentContainer);
@@ -234,10 +234,20 @@ namespace Quaver.Screens.Select.UI.Selector
             // There's only 4 (index 3) maps that are able to be shown in this case,
             // we only want to move up the container if the index of the map is off-screen
             if (mapIndex > 2)
-                ScrollTo((-mapIndex + 2) * (DifficultySelectorItem.HEIGHT + 3), 350);
-            //  Scroll back to top.
+            {
+                var targetY = (-mapIndex + 2) * (DifficultySelectorItem.HEIGHT + 3);
+
+                if (Math.Abs(ContentContainer.Y - targetY) > 0.05)
+                    ScrollTo(targetY, time);
+            }
+            // Scroll back to top.
             else
-                ScrollTo(DifficultySelectorItem.HEIGHT + 3, time);
+            {
+                var targetY = DifficultySelectorItem.HEIGHT + 3;
+
+                if (Math.Abs(ContentContainer.Y - targetY) > 0.05)
+                    ScrollTo(targetY, time);
+            }
         }
 
         /// <summary>
@@ -245,7 +255,11 @@ namespace Quaver.Screens.Select.UI.Selector
         /// </summary>
         private void SnapToSelectedDifficulty(int mapIndex)
         {
-            ContentContainer.Y = (-mapIndex + 2) * (DifficultySelectorItem.HEIGHT + 3);
+            if (mapIndex > 2)
+                ContentContainer.Y = (-mapIndex + 2 ) * (DifficultySelectorItem.HEIGHT + 3);
+            else
+                ContentContainer.Y = DifficultySelectorItem.HEIGHT + 3;
+
             TargetY = ContentContainer.Y;
             PreviousTargetY = ContentContainer.Y;
         }
