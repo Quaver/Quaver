@@ -40,6 +40,23 @@ namespace Quaver.Audio
         }
 
         /// <summary>
+        ///     Plays the track at its preview time.
+        /// </summary>
+        public static void PlaySelectedTrackAtPreview()
+        {
+            try
+            {
+                LoadCurrentTrack();
+                Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
+                Track.Play();
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+        }
+
+        /// <summary>
         ///     Seeks to the nearest snap(th) beat in the audio based on the
         ///     current timing point's snap.
         /// </summary>
