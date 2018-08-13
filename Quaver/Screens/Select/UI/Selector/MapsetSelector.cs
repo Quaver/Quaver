@@ -7,6 +7,7 @@ using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
+using Quaver.Graphics.Backgrounds;
 using Quaver.Scheduling;
 using Quaver.Screens.Edit.UI;
 using Wobble;
@@ -68,7 +69,6 @@ namespace Quaver.Screens.Select.UI.Selector
         ///     The selected mapset.
         /// </summary>
         public BindableInt SelectedSet { get; set; }
-
 
         /// <inheritdoc />
         /// <summary>

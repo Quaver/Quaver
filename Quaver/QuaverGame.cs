@@ -11,6 +11,7 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
+using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Helpers;

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Database.Maps;
+using Quaver.Graphics;
+using Quaver.Graphics.Backgrounds;
 using Quaver.Helpers;
 using Quaver.Screens.Results.UI;
 using Quaver.Screens.Results.UI.ScoreResults;
@@ -22,11 +24,6 @@ namespace Quaver.Screens.Results
 {
     public class ResultsScreenView : ScreenView
     {
-        /// <summary>
-        ///     The background image sprite.
-        /// </summary>
-        private BackgroundImage Background { get; set; }
-
         /// <summary>
         ///     The sprite that displays the map's information.
         /// </summary>
@@ -68,7 +65,6 @@ namespace Quaver.Screens.Results
         /// <param name="screen"></param>
         public ResultsScreenView(Screen screen) : base(screen)
         {
-            CreateBackground();
             CreateMapInformation();
             CreateScoreResults();
             CreateOnlineResultsInfo();
@@ -93,6 +89,7 @@ namespace Quaver.Screens.Results
         public override void Draw(GameTime gameTime)
         {
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
+            BackgroundManager.Draw(gameTime);
             Container?.Draw(gameTime);
         }
 
@@ -100,12 +97,6 @@ namespace Quaver.Screens.Results
         /// <summary>
         /// </summary>
         public override void Destroy() => Container?.Destroy();
-
-        /// <summary>
-        ///     Ceates the background image sprite.
-        /// </summary>
-        private void CreateBackground() => Background = new BackgroundImage(MapManager.CurrentBackground ?? UserInterface.MenuBackground)
-            {Parent = Container};
 
         /// <summary>
         ///     Creates the map information sprite.

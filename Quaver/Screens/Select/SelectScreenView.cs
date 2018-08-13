@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
+using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Menu.UI.BottomToolbar;
@@ -19,11 +20,6 @@ namespace Quaver.Screens.Select
 {
     public class SelectScreenView : ScreenView
     {
-        /// <summary>
-        ///     The currently selected map's background.
-        /// </summary>
-        public BackgroundImage Background { get; }
-
         /// <summary>
         ///     The top toolbar for this screen.
         /// </summary>
@@ -50,6 +46,8 @@ namespace Quaver.Screens.Select
         /// <param name="screen"></param>
         public SelectScreenView(Screen screen) : base(screen)
         {
+            BackgroundManager.Background.Dim = 0;
+
             Toolbar = new Toolbar(new List<ToolbarItem>
             {
                 new ToolbarItem("Home", () => ScreenManager.ChangeScreen(new MainMenuScreen()))

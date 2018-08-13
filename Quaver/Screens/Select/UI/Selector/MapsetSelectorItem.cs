@@ -7,6 +7,8 @@ using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
+using Quaver.Graphics.Backgrounds;
+using Quaver.Graphics.Notifications;
 using Quaver.Skinning;
 using Wobble.Audio;
 using Wobble.Graphics;
@@ -79,11 +81,6 @@ namespace Quaver.Screens.Select.UI.Selector
         /// </summary>
         public bool Selected { get; set; }
 
-        /// <summary>
-        ///     If the background has loaded.
-        /// </summary>
-        public bool BackgroundLoaded { get; set; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -138,6 +135,7 @@ namespace Quaver.Screens.Select.UI.Selector
             // initializes the mapset. This is to reduce code duplication when we pool the button
             // and change the associated mapset for it.
             ChangeAssociatedMapset(MapsetIndex);
+            BackgroundManager.Loaded += OnBackgroundLoaded;
         }
 
         /// <inheritdoc />
@@ -160,6 +158,16 @@ namespace Quaver.Screens.Select.UI.Selector
             }
 
             base.Update(gameTime);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            BackgroundManager.Loaded -= OnBackgroundLoaded;
+
+            base.Destroy();
         }
 
         /// <summary>
@@ -332,6 +340,24 @@ namespace Quaver.Screens.Select.UI.Selector
 
             if (MapsetIndex == Selector.SelectedSet.Value)
                 DisplayAsSelected();
+        }
+
+        /// <summary>
+        ///     When a background is loaded, it'll change the thumbnail of the map.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackgroundLoaded(object sender, BackgroundLoadedEventArgs e)
+        {
+            // Change if the map is in the mapset's directory.
+            // Easy way to check if the map is in the set.
+            if (e.Map.Directory != Mapset.Directory)
+                return;
+
+            Thumbnail.Image = e.Texture;
+
+            Thumbnail.Transformations.Clear();
+            Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.EaseOutQuad, 0, 1, 500));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Amib.Threading;
 using Quaver.Graphics.Notifications;
 using Quaver.Logging;
@@ -26,6 +27,28 @@ namespace Quaver.Scheduling
         /// <returns></returns>
         public static IWorkItemResult RunThread(Action action) => ThreadPool.QueueWorkItem(delegate
         {
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, LogType.Runtime);
+                NotificationManager.Show(NotificationLevel.Error, "Error occurred while running background thread. Please provide" +
+                                                                  "your runtime.log file to a developer.");
+            }
+        });
+
+        /// <summary>
+        ///     Runs thread after time.
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static IWorkItemResult RunAfter(Action action, int time) => ThreadPool.QueueWorkItem(delegate
+        {
+            Thread.Sleep(time);
+
             try
             {
                 action();

@@ -4,6 +4,7 @@ using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
+using Quaver.Graphics.Backgrounds;
 using Quaver.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;

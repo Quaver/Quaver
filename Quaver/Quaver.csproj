@@ -76,7 +76,8 @@
     <Compile Include="Database\Maps\MapsetImporter.cs" />
     <Compile Include="Database\Scores\LocalScore.cs" />
     <Compile Include="Database\Scores\LocalScoreCache.cs" />
-    <Compile Include="Graphics\BackgroundManager.cs" />
+    <Compile Include="Graphics\Backgrounds\BackgroundLoadedEventArgs.cs" />
+    <Compile Include="Graphics\Backgrounds\BackgroundManager.cs" />
     <Compile Include="Graphics\Colors.cs" />
     <Compile Include="Graphics\Graphing\Graph.cs" />
     <Compile Include="Graphics\Notifications\Notification.cs" />
@@ -195,7 +196,6 @@
     <Compile Include="Screens\Results\UI\Statistics\StatisticContainer.cs" />
     <Compile Include="Screens\Select\SelectScreen.cs" />
     <Compile Include="Screens\Select\SelectScreenView.cs" />
-    <Compile Include="Screens\Select\UI\Selector\BackgroundLoadedEventArgs.cs" />
     <Compile Include="Screens\Select\UI\Selector\DifficultySelectedEventArgs.cs" />
     <Compile Include="Screens\Select\UI\Selector\DifficultySelector.cs" />
     <Compile Include="Screens\Select\UI\Selector\DifficultySelectorContainer.cs" />

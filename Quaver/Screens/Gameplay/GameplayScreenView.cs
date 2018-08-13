@@ -12,6 +12,7 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
+using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
 using Quaver.Scheduling;
@@ -42,11 +43,6 @@ namespace Quaver.Screens.Gameplay
         ///     The container that will be used for displaying objects in the background.
         /// </summary>
         public Container BackgroundContainer { get; }
-
-        /// <summary>
-        ///     The background image of the map.
-        /// </summary>
-        private BackgroundImage Background { get; }
 
         /// <summary>
         ///     The progress bar that displays the current song time.
@@ -154,13 +150,7 @@ namespace Quaver.Screens.Gameplay
             Screen = (GameplayScreen)screen;
             BackgroundContainer = new Container();
 
-            // Create background on the background container
-            Background = new BackgroundImage(MapManager.CurrentBackground ?? MapManager.CurrentBackground,
-                                                100 - ConfigManager.BackgroundBrightness.Value, false)
-            {
-                Parent = BackgroundContainer
-            };
-
+            BackgroundManager.Background.Dim = 100 - ConfigManager.BackgroundBrightness.Value;
             CreateProgressBar();
             CreateScoreDisplay();
             CreateAccuracyDisplay();
@@ -214,8 +204,6 @@ namespace Quaver.Screens.Gameplay
             UpdateScoreAndAccuracyDisplays();
             GradeDisplay.X = GradeDisplayX;
             HandlePlayCompletion(gameTime);
-
-            Background.Update(gameTime);
             Screen.Ruleset?.Update(gameTime);
             Container?.Update(gameTime);
         }
@@ -228,6 +216,7 @@ namespace Quaver.Screens.Gameplay
         {
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
 
+            BackgroundManager.Draw(gameTime);
             BackgroundContainer.Draw(gameTime);
             Screen.Ruleset?.Draw(gameTime);
             Container?.Draw(gameTime);
@@ -456,7 +445,11 @@ namespace Quaver.Screens.Gameplay
             }
 
             if (Screen.TimeSincePlayEnded >= 3000)
+            {
+                // Change background dim before switching screens.
+                BackgroundManager.Background.Dim = 0;
                 ScreenManager.ChangeScreen(FutureResultsScreen);
+            }
         }
     }
 }

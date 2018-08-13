@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
+using Quaver.Graphics.Backgrounds;
 using Wobble.Audio;
 using Wobble.Bindables;
 using Wobble.Graphics;
