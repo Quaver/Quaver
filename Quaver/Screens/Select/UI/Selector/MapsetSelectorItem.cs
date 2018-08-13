@@ -6,6 +6,7 @@ using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Database.Maps;
+using Quaver.Graphics;
 using Quaver.Skinning;
 using Wobble.Audio;
 using Wobble.Graphics;
@@ -209,7 +210,7 @@ namespace Quaver.Screens.Select.UI.Selector
             // Change selected difficulty
             Selector.DifficultySelector.SelectDifficulty(Mapset, Mapset.Maps.First());
             AudioEngine.PlaySelectedTrackAtPreview();
-            Selector.LoadBackground(Mapset, MapsetIndex);
+            BackgroundManager.Load(Mapset);
         }
 
         /// <summary>

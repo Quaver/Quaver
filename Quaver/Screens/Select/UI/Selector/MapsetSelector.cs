@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Database.Maps;
+using Quaver.Graphics;
 using Quaver.Scheduling;
 using Quaver.Screens.Edit.UI;
 using Wobble;
@@ -106,7 +107,7 @@ namespace Quaver.Screens.Select.UI.Selector
 
             GenerateSetPool();
 
-            LoadBackground(MapManager.Selected.Value);
+            BackgroundManager.Load(MapManager.Selected.Value);
 
             if (AudioEngine.Track != null && !AudioEngine.Track.IsPlaying)
                 AudioEngine.PlaySelectedTrackAtPreview();
@@ -341,145 +342,6 @@ namespace Quaver.Screens.Select.UI.Selector
             {
                 ScrollTo((-SelectedSet.Value + 4) * SetSpacingY, 2100);
             }
-        }
-
-        /// <summary>
-        ///     Loads a background and fires an event when its done.
-        /// </summary>
-        /// <param name="set"></param>
-        /// <param name="id"></param>
-        public void LoadBackground(Mapset set, int id)
-        {
-            DimBackground();
-
-            // ReSharper disable once ArrangeMethodOrOperatorBody
-            Scheduler.RunThread(() =>
-            {
-                var newBackground = LoadNewBackground(set.Background);
-
-                if (SelectedSet.Value != id)
-                    return;
-
-                DisposePreviousBackground();
-
-                MapManager.CurrentBackground = newBackground;
-                ScreenView.Background.Image = MapManager.CurrentBackground;
-
-                UnDimBackgound();
-                ChangeThumbnailBackground();
-            });
-        }
-
-        /// <summary>
-        ///     Loads a background for a given map (not mapset.)
-        /// </summary>
-        /// <param name="map"></param>
-        public void LoadBackground(Map map)
-        {
-            DimBackground();
-
-            // Find the selected button in the pool
-            var selectedButton = MapsetButtonPool.Find(x => SelectedSet.Value == x.MapsetIndex);
-
-            // Fade out the thumbnail background.
-            if (selectedButton != null)
-            {
-                selectedButton.Thumbnail.Transformations.Clear();
-                selectedButton.Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
-                    selectedButton.Thumbnail.Alpha, 0, 200));
-            }
-
-            Scheduler.RunThread(() =>
-            {
-                var newBackground = LoadNewBackground(MapManager.GetBackgroundPath(map));
-
-                if (MapManager.Selected.Value != map)
-                    return;
-
-                DisposePreviousBackground();
-
-                MapManager.CurrentBackground = newBackground;
-                ScreenView.Background.Image = MapManager.CurrentBackground;
-
-                UnDimBackgound();
-                ChangeThumbnailBackground();
-            });
-        }
-
-        /// <summary>
-        ///     Dims the background. Used for screen map background changes.
-        /// </summary>
-        private void DimBackground()
-        {
-            // Fade background brightness all the way to black.
-            ScreenView.Background.BrightnessSprite.Transformations.Clear();
-            ScreenView.Background.BrightnessSprite.Transformations.Add(new Transformation(TransformationProperty.Alpha,
-                Easing.EaseOutQuint, ScreenView.Background.Alpha, 1, 600));
-        }
-
-        /// <summary>
-        ///     Undims the background. Used for when a new background is loaded.
-        /// </summary>
-        private void UnDimBackgound()
-        {
-            // Make the background visible again.
-            ScreenView.Background.BrightnessSprite.Transformations.Clear();
-
-            var alphaChange = new Transformation(TransformationProperty.Alpha, Easing.EaseInQuad, ScreenView.Background.BrightnessSprite.Alpha, 0.35f, 500);
-            ScreenView.Background.BrightnessSprite.Transformations.Add(alphaChange);
-        }
-
-        /// <summary>
-        ///     Disposes of the previously loaded background texture.
-        /// </summary>
-        private void DisposePreviousBackground()
-        {
-            // Dispose of the previous background.
-            if (ScreenView.Background.Image == UserInterface.MenuBackground)
-                return;
-
-            ScreenView.Background.Image?.Dispose();
-            MapManager.CurrentBackground?.Dispose();
-        }
-
-        /// <summary>
-        ///     Laods a new background up.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        private static Texture2D LoadNewBackground(string path)
-        {
-            Texture2D newBackground;
-
-            try
-            {
-                newBackground = AssetLoader.LoadTexture2DFromFile(path);
-            }
-            catch (Exception)
-            {
-                // If the background couldn't be loaded.
-                newBackground = UserInterface.MenuBackground;
-            }
-
-            return newBackground;
-        }
-
-        /// <summary>
-        ///     Changes the thumbnail background for the currently selected mapset.
-        /// </summary>
-        private void ChangeThumbnailBackground()
-        {
-            // Find the selected button in the pool
-            var selectedButton = MapsetButtonPool.Find(x => SelectedSet.Value == x.MapsetIndex);
-
-            if (selectedButton == null)
-                return;
-
-            selectedButton.Thumbnail.Image = MapManager.CurrentBackground;
-
-            selectedButton.Thumbnail.Transformations.Clear();
-            selectedButton.Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
-                selectedButton.Thumbnail.Alpha, 1, 600));
         }
     }
 }

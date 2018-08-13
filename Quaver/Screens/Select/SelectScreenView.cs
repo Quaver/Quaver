@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Database.Maps;
+using Quaver.Graphics;
 using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Menu.UI.BottomToolbar;
@@ -49,8 +50,6 @@ namespace Quaver.Screens.Select
         /// <param name="screen"></param>
         public SelectScreenView(Screen screen) : base(screen)
         {
-            Background = new BackgroundImage(UserInterface.MenuBackground, 100) {Parent = Container};
-
             Toolbar = new Toolbar(new List<ToolbarItem>
             {
                 new ToolbarItem("Home", () => ScreenManager.ChangeScreen(new MainMenuScreen()))
@@ -85,6 +84,7 @@ namespace Quaver.Screens.Select
         public override void Draw(GameTime gameTime)
         {
             GameBase.Game.GraphicsDevice.Clear(Color.Black);
+            BackgroundManager.Draw(gameTime);
             Container?.Draw(gameTime);
         }
 

@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Audio;
 using Quaver.Database.Maps;
+using Quaver.Graphics;
 using Wobble.Audio;
 using Wobble.Bindables;
 using Wobble.Graphics;
@@ -184,7 +185,7 @@ namespace Quaver.Screens.Select.UI.Selector
             if (oldDifficulty.Directory == map.Directory)
             {
                 if (MapManager.GetBackgroundPath(oldDifficulty) != MapManager.GetBackgroundPath(map))
-                    MapsetSelector.LoadBackground(map);
+                    BackgroundManager.Load(map);
 
                 // Load new audio file if we need to.
                 if (oldDifficulty.AudioPath != map.AudioPath)

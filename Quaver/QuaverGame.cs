@@ -10,6 +10,7 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
+using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Helpers;
@@ -108,6 +109,7 @@ namespace Quaver
             // Create the global FPS counter.
             CreateFpsCounter();
             VolumeController = new VolumeController() {Parent = GlobalUserInterface};
+            BackgroundManager.Initialize();
 
             // Make the cursor appear over the volume controller.
             ListHelper.Swap(GlobalUserInterface.Children, GlobalUserInterface.Children.IndexOf(GlobalUserInterface.Cursor),
@@ -141,6 +143,7 @@ namespace Quaver
 
             // Run scheduled background tasks
             CommonTaskScheduler.Run();
+            BackgroundManager.Update(gameTime);
             NotificationManager.Update(gameTime);
             DialogManager.Update(gameTime);
         }
