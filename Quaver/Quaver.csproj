@@ -200,6 +200,7 @@
     <Compile Include="Screens\Select\UI\Selector\DifficultySelector.cs" />
     <Compile Include="Screens\Select\UI\Selector\DifficultySelectorContainer.cs" />
     <Compile Include="Screens\Select\UI\Selector\DifficultySelectorItem.cs" />
+    <Compile Include="Screens\Select\UI\Selector\MapAssetsToLoad.cs" />
     <Compile Include="Screens\Select\UI\Selector\MapsetSelector.cs" />
     <Compile Include="Screens\Select\UI\Selector\MapsetSelectorItem.cs" />
     <Compile Include="Screens\Splash\SplashScreen.cs" />

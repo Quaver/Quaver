@@ -139,28 +139,6 @@ namespace Quaver.Screens.Select.UI.Selector
         }
 
         /// <inheritdoc />
-        ///  <summary>
-        ///  </summary>
-        ///  <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
-        {
-            if (IsHovered)
-            {
-                if (!HoverSoundPlayed)
-                {
-                    SkinManager.Skin.SoundHover.CreateChannel().Play();
-                    HoverSoundPlayed = true;
-                }
-            }
-            else
-            {
-                HoverSoundPlayed = false;
-            }
-
-            base.Update(gameTime);
-        }
-
-        /// <inheritdoc />
         /// <summary>
         /// </summary>
         public override void Destroy()
@@ -205,20 +183,16 @@ namespace Quaver.Screens.Select.UI.Selector
         public void Select()
         {
             Selected = true;
+            var oldVal = Selector.SelectedSet.Value;
             Selector.SelectedSet.Value = MapsetIndex;
             DisplayAsSelected();
 
             // Display the other map's button as deselected.
-            Selector.MapsetButtonPool.ForEach(x =>
-            {
-                if (x.Mapset != Mapset)
-                    x.DisplayAsDeselected();
-            });
+            Selector.MapsetButtons[oldVal].DisplayAsDeselected();
 
             // Change selected difficulty
             Selector.DifficultySelector.SelectDifficulty(Mapset, Mapset.Maps.First());
-            AudioEngine.PlaySelectedTrackAtPreview();
-            BackgroundManager.Load(Mapset);
+            Selector.StartLoadingMapAssets(MapAssetsToLoad.Audio | MapAssetsToLoad.Background);
         }
 
         /// <summary>
@@ -226,12 +200,15 @@ namespace Quaver.Screens.Select.UI.Selector
         /// </summary>
         public void DisplayAsSelected()
         {
+            SkinManager.Skin.SoundHover.CreateChannel().Play();
+            HoverSoundPlayed = true;
+
             Selected = true;
             Alpha = 1;
 
             // Push set outwards to make it appear as selected.
             Transformations.Clear();
-            Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, 120, 0, 600));
+            Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear, 120, 0, 100));
 
             // Pushes text forward to make room for the background.
             #region TEXT_ANIMATIONS
@@ -240,19 +217,19 @@ namespace Quaver.Screens.Select.UI.Selector
             Title.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
                                             Title.X, 125 + Title.MeasureString().X / 2f, 200));
             Title.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
-                                            Title.Alpha, 1, 600));
+                                            Title.Alpha, 1, 100));
 
             Artist.Transformations.Clear();
             Artist.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
                                             Artist.X, 125 + Artist.MeasureString().X / 2f, 210));
             Artist.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
-                                            Artist.Alpha, 1, 600));
+                                            Artist.Alpha, 1, 100));
 
             Creator.Transformations.Clear();
             Creator.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
                                             Creator.X, 125 + Creator.MeasureString().X / 2f, 220));
             Creator.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
-                                            Creator.Alpha, 1, 600));
+                                            Creator.Alpha, 1, 100));
 
             #endregion
         }
@@ -267,7 +244,7 @@ namespace Quaver.Screens.Select.UI.Selector
 
             // Push
             Transformations.Clear();
-            Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, X, 120, 600));
+            Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear, X, 120, 100));
 
             // Pushes text backwards to its original position
             #region TEXT_ANIMATIONS
@@ -276,19 +253,19 @@ namespace Quaver.Screens.Select.UI.Selector
             Title.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
                                             Title.X, 15 + Title.MeasureString().X / 2f, 200));
             Title.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
-                                            Title.Alpha, 0.85f, 600));
+                                            Title.Alpha, 0.85f, 100));
 
             Artist.Transformations.Clear();
             Artist.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
                                             Artist.X, 15 + Artist.MeasureString().X / 2f, 210));
             Artist.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
-                                            Artist.Alpha, 0.85f, 600));
+                                            Artist.Alpha, 0.85f, 100));
 
             Creator.Transformations.Clear();
             Creator.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
                                             Creator.X, 15 + Creator.MeasureString().X / 2f, 220));
             Creator.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
-                                            Creator.Alpha, 0.85f, 600));
+                                            Creator.Alpha, 0.85f, 100));
             #endregion
 
             // Thumbnail alpha change

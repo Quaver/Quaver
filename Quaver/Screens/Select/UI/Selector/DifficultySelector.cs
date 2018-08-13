@@ -105,13 +105,7 @@ namespace Quaver.Screens.Select.UI.Selector
         private void OnMapsetChanged(object sender, BindableValueChangedEventArgs<int> e)
         {
             var previousContainer = CurrentContainer;
-
-            previousContainer.Transformations.Clear();
-            previousContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
-                                                        previousContainer.X, -previousContainer.Width * 2, 1));
-            previousContainer.SetChildrenAlpha = true;
-            previousContainer.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 1, 0, 1));
-
+            previousContainer.X = -previousContainer.Width * 2;
             PreviousContainers.Add(previousContainer);
 
             // Create a new container.
@@ -120,12 +114,10 @@ namespace Quaver.Screens.Select.UI.Selector
                 SetChildrenVisibility = true,
                 Visible = true
             };
-            CurrentContainer.X = CurrentContainer.Width + 5;
-            CurrentContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear, CurrentContainer.X, 0, 200));
-            CalculateScrollContainerHeight(Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value]);
 
-            AddContainedDrawable(CurrentContainer);
+            CalculateScrollContainerHeight(Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value]);
             SnapToSelectedDifficulty(Screen.AvailableMapsets[MapsetSelector.SelectedSet.Value].Maps.FindIndex(x => x == MapManager.Selected.Value));
+            AddContainedDrawable(CurrentContainer);
         }
 
         /// <summary>
@@ -185,12 +177,16 @@ namespace Quaver.Screens.Select.UI.Selector
             // so we can load those in accordingly.
             if (oldDifficulty.Directory == map.Directory)
             {
-                if (MapManager.GetBackgroundPath(oldDifficulty) != MapManager.GetBackgroundPath(map))
-                    BackgroundManager.Load(map);
+                MapAssetsToLoad assetsToLoad = 0;
 
-                // Load new audio file if we need to.
+                if (MapManager.GetBackgroundPath(oldDifficulty) != MapManager.GetBackgroundPath(map))
+                    assetsToLoad |= MapAssetsToLoad.Background;
+
                 if (oldDifficulty.AudioPath != map.AudioPath)
-                    AudioEngine.PlaySelectedTrackAtPreview();
+                    assetsToLoad |= MapAssetsToLoad.Audio;
+
+                if (assetsToLoad != 0)
+                    MapsetSelector.StartLoadingMapAssets(assetsToLoad);
             }
 
             NewDifficultySelected?.Invoke(this, new DifficultySelectedEventArgs(set, MapsetSelector.SelectedSet.Value, map, index));

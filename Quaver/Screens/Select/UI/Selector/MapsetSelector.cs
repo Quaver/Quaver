@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Audio;
+using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
@@ -12,6 +14,7 @@ using Quaver.Scheduling;
 using Quaver.Screens.Edit.UI;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Audio.Tracks;
 using Wobble.Bindables;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -42,7 +45,7 @@ namespace Quaver.Screens.Select.UI.Selector
         /// <summary>
         ///     The amount of maps available in the pool.
         /// </summary>
-        public const int MapsetPoolSize = 55;
+        public const int MapsetPoolSize = 24;
 
         /// <summary>
         ///     The amount of space between each mapset.
@@ -52,7 +55,7 @@ namespace Quaver.Screens.Select.UI.Selector
         /// <summary>
         ///     The buttons that are currently in the mapset pool.
         /// </summary>
-        public List<MapsetSelectorItem> MapsetButtonPool { get; private set; }
+        public List<MapsetSelectorItem> MapsetButtons { get; private set; }
 
         /// <summary>
         ///     The starting index of the mapset button pool.
@@ -70,6 +73,22 @@ namespace Quaver.Screens.Select.UI.Selector
         /// </summary>
         public BindableInt SelectedSet { get; set; }
 
+        /// <summary>
+        ///     Time since the map was selected.
+        /// </summary>
+        private double TimeSinceMapSelected { get; set; }
+
+        /// <summary>
+        ///     Keeps track of if we've already initiated to load the background.
+        /// </summary>
+        private bool MapAssetLoadInitiated { get; set; }
+
+        /// <summary>
+        ///     The current map assets to load when selecting new map
+        ///     Bitwise combination enum.
+        /// </summary>
+        private MapAssetsToLoad AssetsToLoad { get; set; } = 0;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -83,6 +102,9 @@ namespace Quaver.Screens.Select.UI.Selector
             X = 0;
             Alpha = 0f;
             Tint = Color.Black;
+
+            // Stop default input.
+            InputEnabled = false;
 
             Scrollbar.Width = 10;
             Scrollbar.Tint = Color.White;
@@ -105,12 +127,11 @@ namespace Quaver.Screens.Select.UI.Selector
             if (MapManager.Selected.Value == null)
                 MapManager.Selected.Value = MapManager.Mapsets.First().Maps.First();
 
+            // Make the background fully black.
+            BackgroundManager.Background.BrightnessSprite.Alpha = 1;
+            StartLoadingMapAssets(MapAssetsToLoad.Audio | MapAssetsToLoad.Background);
+
             GenerateSetPool();
-
-            BackgroundManager.Load(MapManager.Selected.Value);
-
-            if (AudioEngine.Track != null && !AudioEngine.Track.IsPlaying)
-                AudioEngine.PlaySelectedTrackAtPreview();
         }
 
         /// <inheritdoc />
@@ -119,7 +140,7 @@ namespace Quaver.Screens.Select.UI.Selector
         ///  <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            ShiftPoolBasedOnScroll();
+            ShiftPoolWhenScrolling();
             PreviousContentContainerY = ContentContainer.Y;
 
             var game = (QuaverGame) GameBase.Game;
@@ -128,11 +149,44 @@ namespace Quaver.Screens.Select.UI.Selector
             if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) ||
                 KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt) || game.VolumeController.IsActive)
             {
-                InputEnabled = false;
             }
             else
             {
-                InputEnabled = true;
+                // Handle input here.
+                if (MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue)
+                    SelectMap(SelectedSet.Value + 1);
+
+                if (MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue)
+                    SelectMap(SelectedSet.Value - 1);
+            }
+
+            // Start counting up time to load the new background and song.
+            // User has to be on the selected map for a period of 500 seconds.
+            TimeSinceMapSelected += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (TimeSinceMapSelected >= 300 && !MapAssetLoadInitiated)
+            {
+                MapAssetLoadInitiated = true;
+
+                if (AssetsToLoad.HasFlag(MapAssetsToLoad.Background))
+                    BackgroundManager.Load(MapManager.Selected.Value);
+
+                // Load new track, go to preview time, and start fading it in.
+
+                if (AssetsToLoad.HasFlag(MapAssetsToLoad.Audio))
+                {
+                    try
+                    {
+                        AudioEngine.LoadCurrentTrack();
+                        AudioEngine.Track.Seek(MapManager.Selected.Value.AudioPreviewTime);
+                        AudioEngine.Track.Volume = 0;
+                        AudioEngine.Track.Play();
+                        AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 300);
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
+                }
             }
 
             base.Update(gameTime);
@@ -144,6 +198,7 @@ namespace Quaver.Screens.Select.UI.Selector
         public override void Destroy()
         {
             SelectedSet.UnHookEventHandlers();
+            MapsetButtons.ForEach(x => x.Destroy());
             base.Destroy();
         }
 
@@ -153,40 +208,33 @@ namespace Quaver.Screens.Select.UI.Selector
         /// </summary>
         private void GenerateSetPool()
         {
-            // Reset the ContentContainer size to dynamically add onto the size later.
             ContentContainer.Size = Size;
-
-            // Calculate the actual height of the container based on the amount of available sets
-            // there are.
-            ContentContainer.Height += 1 + (Screen.AvailableMapsets.Count - 8) * SetSpacingY + MapsetSelectorItem.BUTTON_HEIGHT / 2f;
+            ContentContainer.Height += 1 + (Screen.AvailableMapsets.Count - 8) * SetSpacingY + MapsetSelectorItem.BUTTON_HEIGHT / 2f + 200;
 
             // Destroy previous buttons if there are any in the poool.
-            if (MapsetButtonPool != null && MapsetButtonPool.Count > 0)
-                MapsetButtonPool.ForEach(x => x.Destroy());
-
-            // Create the initial list of buttons for the pool.
-            MapsetButtonPool = new List<MapsetSelectorItem>();
+            if (MapsetButtons != null && MapsetButtons.Count > 0)
+                MapsetButtons.ForEach(x => x.Destroy());
 
             // Find and set the selected set.
             SelectedSet.Value = Screen.AvailableMapsets.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
 
             // Set the map pool starting index
-            if (SelectedSet.Value - 4 > 0)
-                PoolStartingIndex = SelectedSet.Value - 4;
+            if (SelectedSet.Value - MapsetPoolSize / 2 > 0)
+                PoolStartingIndex = SelectedSet.Value - MapsetPoolSize / 2;
 
-            // Make sure the ContentContainer's y is scrolled to where the mapset is supposed to be
-            // upon loading.
-
-            ContentContainer.Y = (-SelectedSet.Value + 4) * SetSpacingY;
+            // Make sure container is at the Y of the selected mapset.
+            ContentContainer.Y = (-SelectedSet.Value + 2) * SetSpacingY;
             TargetY = ContentContainer.Y;
             PreviousTargetY = ContentContainer.Y;
 
-            // Create the mapset buttons
-            for (var i = PoolStartingIndex; i < PoolStartingIndex + MapsetPoolSize && i < Screen.AvailableMapsets.Count; i++)
+            MapsetButtons = new List<MapsetSelectorItem>();
+
+            for (var i = 0; i < Screen.AvailableMapsets.Count; i++)
             {
                 var button = new MapsetSelectorItem(this, i)
                 {
-                    Y = i * SetSpacingY + 10,
+                    Y = i * SetSpacingY + 200,
+                    DestroyIfParentIsNull = false
                 };
 
                 // Fire click handler for this button if it is indeed the initial selected mapset.
@@ -195,127 +243,11 @@ namespace Quaver.Screens.Select.UI.Selector
                 else
                     button.DisplayAsDeselected();
 
-                AddContainedDrawable(button);
-                MapsetButtonPool.Add(button);
-            }
-        }
+                // Only add a certain amount of objects as contained and displayed drawables
+                if (Math.Abs(i - PoolStartingIndex) <= MapsetPoolSize)
+                    AddContainedDrawable(button);
 
-        /// <summary>
-        ///     Shifts the pool of buttons based on the the amount of scrolling the user has done.
-        /// </summary>
-        private void ShiftPoolBasedOnScroll()
-        {
-            if (MapsetButtonPool == null || MapsetButtonPool.Count == 0)
-                return;
-
-            if (ContentContainer.Y < PreviousContentContainerY)
-                ShiftPoolWhenScrollingDown();
-            else if (ContentContainer.Y > PreviousContentContainerY)
-                ShiftPoolWhenScrollingUp();
-        }
-
-        /// <summary>
-        ///     When scrolling down, this will handle recycling SelectorSet objects from off the top
-        ///     of the screen, to the bottom.
-        /// </summary>
-        private void ShiftPoolWhenScrollingDown()
-        {
-             // Based on the content container's y position, calculate how many buttons are off-screen
-            // (on the top of the window)
-            var neededButtons = (int) Math.Round(Math.Abs(ContentContainer.Y + SetSpacingY * PoolStartingIndex) / SetSpacingY);
-
-            // Here we check for if the amount of buttons scrolled up are greater than 0, it should always either be
-            // 1 or 0 just by the nature of the scrolling, since it scrolls one at a time.
-            // there should NEVER be a circumstance where we scroll more than 1 in a given frame.
-            if (neededButtons > 0)
-            {
-                if (Screen.AvailableMapsets.ElementAtOrDefault(MapsetPoolSize + PoolStartingIndex) == null)
-                    return;
-
-                // Grab the button that had went off-screen
-                var btn = MapsetButtonPool.First();
-
-                // Change the y position of the button.
-                btn.Y = 10 + (MapsetPoolSize + PoolStartingIndex) * SetSpacingY;
-
-                // Since we're pooling change the associated mapset.
-                btn.ChangeAssociatedMapset(MapsetPoolSize + PoolStartingIndex);
-
-                if (btn.MapsetIndex == SelectedSet.Value)
-                {
-                    btn.DisplayAsSelected();
-                    btn.Thumbnail.Image = MapManager.CurrentBackground;
-                    btn.Thumbnail.Alpha = 1;
-                }
-                else
-                    btn.DisplayAsDeselected();
-
-                // Reorganize the buttons in the pool
-                var reorganizedPoolList = new List<MapsetSelectorItem>();
-
-                // Start with index 1. Since we're pooling forwards, the first item becomes the last,
-                // last becomes the second to last, etc. So here we are essentially
-                // creating that portion of the list. (tl;dr, just -1 to each index)
-                for (var i = 1; i < MapsetButtonPool.Count; i++)
-                    reorganizedPoolList.Add(MapsetButtonPool[i]);
-
-                // Add the button that was pooled back to the list in the end.
-                reorganizedPoolList.Add(btn);
-
-                // Set the new list.
-                MapsetButtonPool = reorganizedPoolList;
-                PoolStartingIndex += neededButtons;
-            }
-        }
-
-        /// <summary>
-        ///     When scrolling up, this will handle recycling SelectorSet objects and placing the ones
-        ///     from the bottom, back up to the top.
-        /// </summary>
-        private void ShiftPoolWhenScrollingUp()
-        {
-            if (Screen.AvailableMapsets.ElementAtOrDefault(PoolStartingIndex - 1) == null)
-                return;
-
-            // Calculate how many buttons need to be recycled.
-            var neededButtons = (int) Math.Round((ContentContainer.Y + SetSpacingY * PoolStartingIndex) / SetSpacingY);
-
-            if (neededButtons > 0)
-            {
-                // Grab the last button out of the pool, so we can recycle it at the top.
-                var btn = MapsetButtonPool.Last();
-
-                // The new index of the button.
-                // since we're pooling backwards, it'd be 1 less than the current starting index.
-                var newPoolIndex = PoolStartingIndex - 1;
-
-                // Change the y position of the button to 1 before the pool index, (since we're pooling backwards)
-                btn.Y = 10 + newPoolIndex * SetSpacingY;
-
-                // Since we're pooling change the associated mapset.
-                btn.ChangeAssociatedMapset(newPoolIndex);
-
-                if (btn.MapsetIndex == SelectedSet.Value)
-                {
-                    btn.DisplayAsSelected();
-                    btn.Thumbnail.Image = MapManager.CurrentBackground;
-                    btn.Thumbnail.Alpha = 1;
-                }
-                else
-                    btn.DisplayAsDeselected();
-
-                // Reorganize the buttons in the pool.
-                var reorganizedPoolList = new List<MapsetSelectorItem>();
-
-                // Add the button at the first index, since it's needed at the top.
-                reorganizedPoolList.Add(btn);
-
-                for (var i = 0; i < MapsetButtonPool.Count - 1; i++)
-                    reorganizedPoolList.Add(MapsetButtonPool[i]);
-
-                // Set the new list.
-                MapsetButtonPool = reorganizedPoolList;
-                PoolStartingIndex -= neededButtons;
+                MapsetButtons.Add(button);
             }
         }
 
@@ -328,20 +260,101 @@ namespace Quaver.Screens.Select.UI.Selector
             if (Screen.AvailableMapsets.ElementAtOrDefault(index) == null)
                 return;
 
-            var foundButtonIndex = MapsetButtonPool.FindIndex(x => x.MapsetIndex == index);
+            var foundButtonIndex = MapsetButtons.FindIndex(x => x.MapsetIndex == index);
 
             // If the button is already in the pool and is visible, select that button
-            if (foundButtonIndex != -1 && foundButtonIndex < 8)
+            if (foundButtonIndex == -1)
+                return;
+
+            MapsetButtons[foundButtonIndex].Select();
+            ScrollTo((-SelectedSet.Value + 2) * SetSpacingY, 300);
+        }
+
+        /// <summary>
+        ///     Shifts the amount of mapset buttons that are displayed based on how far
+        ///     we've scrolled
+        /// </summary>
+        public void ShiftPoolWhenScrolling()
+        {
+            if (MapsetButtons == null || MapsetButtons.Count == 0)
+                return;
+
+            if (ContentContainer.Y < PreviousContentContainerY)
+                ShiftPoolWhenScrollingDown();
+            else if (ContentContainer.Y > PreviousContentContainerY)
+                ShiftPoolWhenScrollingUp();
+        }
+
+        /// <summary>
+        ///     Shifts the mapset pool when we're scrolling down.
+        /// </summary>
+        private void ShiftPoolWhenScrollingDown()
+        {
+             // Based on the content container's y position, calculate how many buttons are off-screen
+            // (on the top of the window)
+            var neededButtons = (int) Math.Round(Math.Abs(ContentContainer.Y + 600 + SetSpacingY * PoolStartingIndex) / SetSpacingY);
+
+            if (neededButtons <= 0)
+                return;
+
+            if (Screen.AvailableMapsets.ElementAtOrDefault(MapsetPoolSize + PoolStartingIndex + neededButtons) == null)
+                return;
+
+            for (var i = 0; i < neededButtons; i++)
             {
-                MapsetButtonPool[foundButtonIndex].Select();
-                ScrollTo((-SelectedSet.Value + 4) * SetSpacingY, 2100);
+                // Add the next buttons as a contained drawable.
+                AddContainedDrawable(MapsetButtons[PoolStartingIndex + MapsetPoolSize + i]);
+
+                if (PoolStartingIndex - i < 0)
+                    break;
+
+                // Remove old contained drawables.
+                RemoveContainedDrawable(MapsetButtons[PoolStartingIndex - i]);
             }
-            // If it isn't, that must mean the scroll is too far away to see the next map,
-            // so scroll back to the existing one.
-            else
+
+            PoolStartingIndex += neededButtons;
+        }
+
+        /// <summary>
+        ///     Shifts the button pool when scrolling upwards.
+        /// </summary>
+        private void ShiftPoolWhenScrollingUp()
+        {
+            // Calculate how many buttons need to be recycled.
+            var neededButtons = (int) Math.Round((ContentContainer.Y + 600 + SetSpacingY * PoolStartingIndex) / SetSpacingY);
+
+            if (neededButtons <= 0)
+                return;
+
+            for (var i = 0; i < neededButtons; i++)
             {
-                ScrollTo((-SelectedSet.Value + 4) * SetSpacingY, 2100);
+                RemoveContainedDrawable(MapsetButtons[PoolStartingIndex + MapsetPoolSize + i]);
+
+                if (PoolStartingIndex - i < 0)
+                    break;
+
+                // Add the next buttons as a contained drawable.
+                AddContainedDrawable(MapsetButtons[PoolStartingIndex - i]);
             }
+
+            PoolStartingIndex -= neededButtons;
+        }
+
+        /// <summary>
+        ///     Starts the background/audio load process.
+        /// </summary>
+        public void StartLoadingMapAssets(MapAssetsToLoad assets)
+        {
+            AssetsToLoad = assets;
+
+            if (assets.HasFlag(MapAssetsToLoad.Audio))
+                AudioEngine.Track?.Fade(0, 100);
+
+            if (assets.HasFlag(MapAssetsToLoad.Background))
+                BackgroundManager.FadeOut();
+
+            TimeSinceMapSelected = 0;
+            MapAssetLoadInitiated = false;
         }
     }
 }

@@ -9,14 +9,13 @@ using Quaver.Database.Maps;
 using Quaver.Scheduling;
 using Wobble;
 using Wobble.Assets;
+using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI;
 
 namespace Quaver.Graphics.Backgrounds
 {
     public static class BackgroundManager
     {
-        public static BackgroundImage PreviousBackground { get; private set; }
-
         /// <summary>
         ///     The background image sprite to use.
         /// </summary>
@@ -50,34 +49,19 @@ namespace Quaver.Graphics.Backgrounds
         public static void Initialize()
         {
             Background = new BackgroundImage(UserInterface.MenuBackground);
-            PreviousBackground = new BackgroundImage(UserInterface.MenuBackground);
         }
 
         /// <summary>
         ///     Updates the background sprite.
         /// </summary>
         /// <param name="gameTime"></param>
-        public static void Update(GameTime gameTime)
-        {
-            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            Background.Alpha = MathHelper.Lerp(Background.Alpha, 1, (float) Math.Min(dt / 480, 1));
-            PreviousBackground.Alpha = MathHelper.Lerp(PreviousBackground.Alpha, 0, (float) Math.Min(dt / 480, 1));
-
-
-            Background?.Update(gameTime);
-            PreviousBackground?.Update(gameTime);
-        }
+        public static void Update(GameTime gameTime) => Background?.Update(gameTime);
 
         /// <summary>
         ///     Draws the background sprite.
         /// </summary>
         /// <param name="gameTime"></param>
-        public static void Draw(GameTime gameTime)
-        {
-            Background?.Draw(gameTime);
-            PreviousBackground?.Draw(gameTime);
-        }
+        public static void Draw(GameTime gameTime) => Background?.Draw(gameTime);
 
         /// <summary>
         ///     Loads a background for an individual mapset.
@@ -99,14 +83,15 @@ namespace Quaver.Graphics.Backgrounds
             {
                 var tex = LoadTexture(set.Background);
 
-                PreviousBackground = Background;
-
-                Background = new BackgroundImage(tex) {Alpha = 0};
+                Background.Image = tex;
 
                 if (MapManager.Selected.Value == set.Maps.First())
+                {
                     Loaded?.Invoke(typeof(BackgroundManager), new BackgroundLoadedEventArgs(set.Maps.First(), tex));
+                    FadeIn();
+                }
                 else if (tex != UserInterface.MenuBackground)
-                        Scheduler.RunAfter(() => tex.Dispose(), 5000);
+                    Scheduler.RunAfter(() =>  tex.Dispose(), 5000);
             });
         }
 
@@ -129,15 +114,39 @@ namespace Quaver.Graphics.Backgrounds
             {
                 var tex = LoadTexture(MapManager.GetBackgroundPath(map));
 
-                PreviousBackground = Background;
-
-                Background = new BackgroundImage(tex) {Alpha = 0};
+                Background.Image = tex;
 
                 if (MapManager.Selected.Value == map)
+                {
                     Loaded?.Invoke(typeof(BackgroundManager), new BackgroundLoadedEventArgs(map, tex));
+                    FadeIn();
+                }
                 else if (tex != UserInterface.MenuBackground)
-                        Scheduler.RunAfter(() => tex.Dispose(), 5000);
+                    Scheduler.RunAfter(() =>  tex.Dispose(), 5000);
+
             });
+        }
+
+        /// <summary>
+        ///     Fades out BG to black.
+        /// </summary>
+        public static void FadeOut()
+        {
+            Background.BrightnessSprite.Transformations.Clear();
+
+            var t = new Transformation(TransformationProperty.Alpha, Easing.EaseOutQuad, Background.BrightnessSprite.Alpha, 1, 300);
+            Background.BrightnessSprite.Transformations.Add(t);
+        }
+
+        /// <summary>
+        ///     Fades in the BG from black.
+        /// </summary>
+        public static void FadeIn()
+        {
+            Background.BrightnessSprite.Transformations.Clear();
+
+            var t = new Transformation(TransformationProperty.Alpha, Easing.EaseInQuad, Background.BrightnessSprite.Alpha, 0, 300);
+            Background.BrightnessSprite.Transformations.Add(t);
         }
 
         /// <summary>
