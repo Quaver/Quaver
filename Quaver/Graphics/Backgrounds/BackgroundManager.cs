@@ -105,8 +105,8 @@ namespace Quaver.Graphics.Backgrounds
 
                 if (MapManager.Selected.Value == set.Maps.First())
                     Loaded?.Invoke(typeof(BackgroundManager), new BackgroundLoadedEventArgs(set.Maps.First(), tex));
-                else
-                    Scheduler.RunAfter(() =>  PreviousBackground.Image.Dispose(), 5000);
+                else if (tex != UserInterface.MenuBackground)
+                        Scheduler.RunAfter(() => tex.Dispose(), 5000);
             });
         }
 
@@ -135,8 +135,8 @@ namespace Quaver.Graphics.Backgrounds
 
                 if (MapManager.Selected.Value == map)
                     Loaded?.Invoke(typeof(BackgroundManager), new BackgroundLoadedEventArgs(map, tex));
-                else
-                    Scheduler.RunAfter(() =>  PreviousBackground.Image.Dispose(), 5000);
+                else if (tex != UserInterface.MenuBackground)
+                        Scheduler.RunAfter(() => tex.Dispose(), 5000);
             });
         }
 
