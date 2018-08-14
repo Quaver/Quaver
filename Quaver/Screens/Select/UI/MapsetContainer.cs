@@ -4,10 +4,13 @@ using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
+using Quaver.Audio;
+using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Screens.Menu;
+using Wobble.Audio;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
@@ -100,8 +103,14 @@ namespace Quaver.Screens.Select.UI
             if (MapManager.Selected.Value == null)
                 MapManager.Selected.Value = MapManager.Mapsets.First().Maps.First();
 
+            // BG all the way
+            BackgroundManager.Background.BrightnessSprite.Alpha = 1;
+
+            // Permit backgrounds to fade in now.
             BackgroundManager.PermittedToFadeIn = true;
+
             InitializeMapsetButtons();
+            SelectMap(SelectedMapsetIndex, Screen.AvailableMapsets[SelectedMapsetIndex].Maps[SelectedMapIndex]);
         }
 
         /// <inheritdoc />
@@ -293,6 +302,22 @@ namespace Quaver.Screens.Select.UI
             // Scroll to the new mapset.
             ScrollTo((-SelectedMapsetIndex + 1) * (MapsetButton.BUTTON_HEIGHT + MapsetButton.BUTTON_Y_SPACING), 2100);
             BackgroundManager.Load(map);
+
+            if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
+                AudioEngine.Track.Fade(0, 200);
+
+            try
+            {
+                AudioEngine.LoadCurrentTrack();
+                AudioEngine.Track.Seek(map.AudioPreviewTime);
+                AudioEngine.Track.Volume = 0;
+                AudioEngine.Track.Play();
+                AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 800);
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
         }
     }
 }

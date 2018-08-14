@@ -102,7 +102,8 @@ namespace Quaver.Graphics.Backgrounds
                 if (PermittedToFadeIn)
                     FadeIn();
 
-                oldTexture.Dispose();
+                if (oldTexture != UserInterface.MenuBackground)
+                    oldTexture.Dispose();
             });
         }
 
@@ -143,7 +144,6 @@ namespace Quaver.Graphics.Backgrounds
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 // If the background couldn't be loaded.
                 newBackground = UserInterface.MenuBackground;
             }
