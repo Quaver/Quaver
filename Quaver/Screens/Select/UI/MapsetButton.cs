@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Database.Maps;
+using Quaver.Graphics.Backgrounds;
 using Quaver.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -123,6 +124,16 @@ namespace Quaver.Screens.Select.UI
             };
 
             Clicked += Select;
+            BackgroundManager.Loaded += OnBackgroundLoaded;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        public override void Destroy()
+        {
+            BackgroundManager.Loaded -= OnBackgroundLoaded;
+            base.Destroy();
         }
 
         /// <summary>
@@ -209,6 +220,23 @@ namespace Quaver.Screens.Select.UI
         {
             if (Container.SelectedMapsetIndex != MapsetIndex)
                 Container.SelectMap(MapsetIndex, Mapset.Maps.First());
+        }
+
+        /// <summary>
+        ///     When the map's background is loaded, we'll want to change the thunbnail.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackgroundLoaded(object sender, BackgroundLoadedEventArgs e)
+        {
+            if (e.Map.Mapset != Mapset)
+                return;
+
+            Thumbnail.Image = e.Texture;
+
+            Thumbnail.Transformations.Clear();
+            Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                Thumbnail.Alpha, 1, 250));
         }
     }
 }
