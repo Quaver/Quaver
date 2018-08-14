@@ -123,7 +123,6 @@ namespace Quaver.Graphics.Backgrounds
                 }
                 else if (tex != UserInterface.MenuBackground)
                     Scheduler.RunAfter(() =>  tex.Dispose(), 5000);
-
             });
         }
 

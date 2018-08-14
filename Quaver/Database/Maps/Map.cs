@@ -145,6 +145,12 @@ namespace Quaver.Database.Maps
         public Qua Qua { get; set; }
 
         /// <summary>
+        ///     The mapset the map belongs to.
+        /// </summary>
+        [Ignore]
+        public Mapset Mapset { get; set; }
+
+        /// <summary>
         ///     Responsible for converting a Qua object, to a Map object
         ///     a Map object is one that is stored in the db.
         /// </summary>

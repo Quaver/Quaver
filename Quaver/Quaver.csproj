@@ -196,13 +196,8 @@
     <Compile Include="Screens\Results\UI\Statistics\StatisticContainer.cs" />
     <Compile Include="Screens\Select\SelectScreen.cs" />
     <Compile Include="Screens\Select\SelectScreenView.cs" />
-    <Compile Include="Screens\Select\UI\Selector\DifficultySelectedEventArgs.cs" />
-    <Compile Include="Screens\Select\UI\Selector\DifficultySelector.cs" />
-    <Compile Include="Screens\Select\UI\Selector\DifficultySelectorContainer.cs" />
-    <Compile Include="Screens\Select\UI\Selector\DifficultySelectorItem.cs" />
-    <Compile Include="Screens\Select\UI\Selector\MapAssetsToLoad.cs" />
-    <Compile Include="Screens\Select\UI\Selector\MapsetSelector.cs" />
-    <Compile Include="Screens\Select\UI\Selector\MapsetSelectorItem.cs" />
+    <Compile Include="Screens\Select\UI\MapsetButton.cs" />
+    <Compile Include="Screens\Select\UI\MapsetContainer.cs" />
     <Compile Include="Screens\Splash\SplashScreen.cs" />
     <Compile Include="Screens\Splash\SplashScreenView.cs" />
     <Compile Include="Skinning\SkinKeys.cs" />

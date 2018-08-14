@@ -62,18 +62,6 @@ namespace Quaver.Screens.Select
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 ScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
-                screenView.MapsetSelector.SelectMap(screenView.MapsetSelector.SelectedSet.Value - 1);
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
-                screenView.MapsetSelector.SelectMap(screenView.MapsetSelector.SelectedSet.Value + 1);
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Up))
-                screenView.MapsetSelector.DifficultySelector.SelectNextDifficulty(Direction.Backward);
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Down))
-                screenView.MapsetSelector.DifficultySelector.SelectNextDifficulty(Direction.Forward);
         }
 
         /// <summary>

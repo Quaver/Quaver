@@ -9,7 +9,6 @@ using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Menu.UI.BottomToolbar;
 using Quaver.Screens.Select.UI;
-using Quaver.Screens.Select.UI.Selector;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Transformations;
@@ -26,19 +25,9 @@ namespace Quaver.Screens.Select
         private Toolbar Toolbar { get; set;  }
 
         /// <summary>
-        ///     The bottom toolbar for this screen.
+        ///     The scroll container for the mapsets.
         /// </summary>
-        private BottomBar BottomToolbar { get; set; }
-
-        /// <summary>
-        ///     The interface to select mapsets
-        /// </summary>
-        public MapsetSelector MapsetSelector { get; private set; }
-
-        /// <summary>
-        ///     The UI to select an individual map in the set.
-        /// </summary>
-        public DifficultySelector DifficultySelector { get; }
+        private MapsetContainer MapsetContainer { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -56,17 +45,7 @@ namespace Quaver.Screens.Select
                 Parent = Container
             };
 
-            BottomToolbar = new BottomBar() {Parent = Container};
-
-            MapsetSelector = new MapsetSelector((SelectScreen) Screen, this)
-            {
-                Parent = Container,
-                X = 200,
-                Transformations =
-                {
-                    new Transformation(TransformationProperty.X, Easing.EaseOutBounce, 200, 0, 1200)
-                }
-            };
+            MapsetContainer = new MapsetContainer((SelectScreen) Screen, this) {Parent = Container};
         }
 
         /// <inheritdoc />

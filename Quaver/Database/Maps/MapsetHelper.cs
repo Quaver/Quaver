@@ -43,11 +43,16 @@ namespace Quaver.Database.Maps
             var mapsets = new List<Mapset>();
 
             foreach (var mapset in groupedMaps)
-                mapsets.Add(new Mapset()
+            {
+                var set = new Mapset()
                 {
                     Directory = mapset.First().Directory,
                     Maps = mapset
-                });
+                };
+
+                set.Maps.ForEach(x => x.Mapset = set);
+                mapsets.Add(set);
+            }
 
             return mapsets;
         }
