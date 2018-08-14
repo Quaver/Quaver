@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Database.Maps;
+using Quaver.Graphics.Backgrounds;
+using Quaver.Graphics.Notifications;
+using Quaver.Screens.Menu;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Input;
+using Wobble.Screens;
 using Wobble.Window;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Screens.Select.UI
 {
@@ -93,6 +100,7 @@ namespace Quaver.Screens.Select.UI
             if (MapManager.Selected.Value == null)
                 MapManager.Selected.Value = MapManager.Mapsets.First().Maps.First();
 
+            BackgroundManager.PermittedToFadeIn = true;
             InitializeMapsetButtons();
         }
 
@@ -110,6 +118,19 @@ namespace Quaver.Screens.Select.UI
 
             // Update the previous y, AFTER checking and handling the pool shifting.
             PreviousContentContainerY = ContentContainer.Y;
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
+            {
+                if (MapsetButtons.ElementAtOrDefault(SelectedMapsetIndex + 1) != null)
+                    MapsetButtons[SelectedMapsetIndex + 1].FireButtonClickEvent();
+            }
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
+            {
+                if (MapsetButtons.ElementAtOrDefault(SelectedMapsetIndex - 1) != null)
+                    MapsetButtons[SelectedMapsetIndex - 1].FireButtonClickEvent();
+            }
+
             base.Update(gameTime);
         }
 
@@ -162,6 +183,13 @@ namespace Quaver.Screens.Select.UI
                     Y = i * (MapsetButton.BUTTON_HEIGHT + MapsetButton.BUTTON_Y_SPACING) + FIRST_BUTTON_Y
                 };
 
+                // Make sure the correct mapset is shown as selected
+                if (i == SelectedMapsetIndex)
+                    button.DisplayAsSelected();
+                else
+                    button.DisplayAsDeselected();
+
+                // Add the button as a contained drawable to the container if it is in range of the shifted pool.
                 if (i >= PoolStartingIndex && i < PoolStartingIndex + BUTTON_POOL_SIZE)
                     AddContainedDrawable(button);
 
@@ -172,7 +200,7 @@ namespace Quaver.Screens.Select.UI
             // Make sure container is at the Y of the selected mapset.
             // 1 = a couple mapsets afterwards to center the set.
             ContentContainer.Y = (-SelectedMapsetIndex + 1) * (MapsetButton.BUTTON_HEIGHT + MapsetButton.BUTTON_Y_SPACING);
-            PreviousContentContainerY = ContentContainer.Y;
+            PreviousContentContainerY = ContentContainer.Y - 90;
             TargetY = PreviousContentContainerY;
             PreviousTargetY = PreviousContentContainerY;
             ContentContainer.Transformations.Clear();
@@ -201,9 +229,6 @@ namespace Quaver.Screens.Select.UI
                     // so we'll just return here if we don't actually need buttons.
                     if (neededFwdButtons > 0)
                         return;
-
-                    // Now we have the actual correct number of needed buttons.
-                    neededFwdButtons = Math.Abs(neededFwdButtons);
 
                     // Since we're shifting forward, we can safely remove the button that has gone off-screen.
                     RemoveContainedDrawable(MapsetButtons[PoolStartingIndex]);
@@ -237,6 +262,37 @@ namespace Quaver.Screens.Select.UI
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
+        }
+
+        /// <summary>
+        ///     Selects a map from a given mapset.
+        /// </summary>
+        public void SelectMap(int mapsetIndex, Map map)
+        {
+            // If we're changing mapsets, display the old one as deselected.
+            // and the new one as selected.
+            if (mapsetIndex != SelectedMapsetIndex)
+            {
+                MapsetButtons[SelectedMapsetIndex].DisplayAsDeselected();
+                MapsetButtons[mapsetIndex].DisplayAsSelected();
+            }
+
+            SelectedMapsetIndex = mapsetIndex;
+            SelectedMapIndex = Screen.AvailableMapsets[SelectedMapsetIndex].Maps.FindIndex(x => x == map);
+
+            // Something must've really messed up. Shouldn't ever get this.
+            if (SelectedMapIndex == -1)
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Something went extremely wrong when selecting that map.");
+                ScreenManager.ChangeScreen(new MainMenuScreen());
+            }
+
+            // Change the actual map.
+            MapManager.Selected.Value = map;
+
+            // Scroll to the new mapset.
+            ScrollTo((-SelectedMapsetIndex + 1) * (MapsetButton.BUTTON_HEIGHT + MapsetButton.BUTTON_Y_SPACING), 2100);
+            BackgroundManager.Load(map);
         }
     }
 }

@@ -45,7 +45,15 @@ namespace Quaver.Screens.Select
                 Parent = Container
             };
 
-            MapsetContainer = new MapsetContainer((SelectScreen) Screen, this) {Parent = Container};
+            MapsetContainer = new MapsetContainer((SelectScreen) Screen, this)
+            {
+                Parent = Container,
+                X = 200,
+                Transformations =
+                {
+                    new Transformation(TransformationProperty.X, Easing.EaseOutBounce, 200, 0, 1200)
+                }
+            };
         }
 
         /// <inheritdoc />

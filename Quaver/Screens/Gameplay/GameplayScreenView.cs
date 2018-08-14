@@ -150,7 +150,10 @@ namespace Quaver.Screens.Gameplay
             Screen = (GameplayScreen)screen;
             BackgroundContainer = new Container();
 
-            BackgroundManager.Background.Dim = 100 - ConfigManager.BackgroundBrightness.Value;
+            BackgroundManager.PermittedToFadeIn = false;
+            FadeBackgroundToDim();
+            BackgroundManager.Loaded += OnBackgroundLoaded;
+
             CreateProgressBar();
             CreateScoreDisplay();
             CreateAccuracyDisplay();
@@ -230,6 +233,7 @@ namespace Quaver.Screens.Gameplay
             BackgroundContainer.Destroy();
             Screen.Ruleset?.Destroy();
             Container?.Destroy();
+            BackgroundManager.Loaded -= OnBackgroundLoaded;
         }
 
         /// <summary>
@@ -450,6 +454,30 @@ namespace Quaver.Screens.Gameplay
                 BackgroundManager.Background.Dim = 0;
                 ScreenManager.ChangeScreen(FutureResultsScreen);
             }
+        }
+
+        /// <summary>
+        ///     When a background is loaded in the gameplay screen (because multi-threading....),
+        ///     we'll want to fade it in to the user's set dim.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackgroundLoaded(object sender, BackgroundLoadedEventArgs e)
+        {
+            if (e.Map != MapManager.Selected.Value)
+                return;
+
+            FadeBackgroundToDim();
+        }
+
+        private void FadeBackgroundToDim()
+        {
+            BackgroundManager.Background.BrightnessSprite.Transformations.Clear();
+
+            var t = new Transformation(TransformationProperty.Alpha, Easing.Linear, BackgroundManager.Background.BrightnessSprite.Alpha,
+                (100 - ConfigManager.BackgroundBrightness.Value) / 100f, 300);
+
+            BackgroundManager.Background.BrightnessSprite.Transformations.Add(t);
         }
     }
 }

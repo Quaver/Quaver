@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Database.Maps;
+using Quaver.Graphics.Notifications;
 using Quaver.Scheduling;
 using Wobble;
 using Wobble.Assets;
@@ -22,26 +23,21 @@ namespace Quaver.Graphics.Backgrounds
         public static BackgroundImage Background { get; private set; }
 
         /// <summary>
-        ///     The current thread pool worker thread.
-        /// </summary>
-        private static IWorkItemResult CurrentWorkerThread { get; set; }
-
-        /// <summary>
-        ///     Thread pool used to load backgrounds.
-        /// </summary>
-        private static readonly SmartThreadPool LoadingThread = new SmartThreadPool(new STPStartInfo
-        {
-            AreThreadsBackground = true,
-            IdleTimeout = 600000,
-            MaxWorkerThreads = 1,
-            MinWorkerThreads = 1
-        });
-
-        /// <summary>
         ///     When a background is loaded, this'll be emitted, this is mainly for
         ///     song select thumbnails to know when they should fade back in.
         /// </summary>
         public static event EventHandler<BackgroundLoadedEventArgs> Loaded;
+
+        /// <summary>
+        ///     The amount of times a load request was made, used to prevent multi-threading
+        ///     race conditions.
+        /// </summary>
+        private static int LoadRequestCount { get; set; }
+
+        /// <summary>
+        ///     If the background is permitted to fade in.
+        /// </summary>
+        public static bool PermittedToFadeIn { get; set; }
 
         /// <summary>
         ///     Initializes the background sprite.
@@ -55,7 +51,13 @@ namespace Quaver.Graphics.Backgrounds
         ///     Updates the background sprite.
         /// </summary>
         /// <param name="gameTime"></param>
-        public static void Update(GameTime gameTime) => Background?.Update(gameTime);
+        public static void Update(GameTime gameTime)
+        {
+            if (!PermittedToFadeIn && Background.Transformations.Count > 0)
+                Background.BrightnessSprite.Transformations.Clear();
+
+            Background.Update(gameTime);
+        }
 
         /// <summary>
         ///     Draws the background sprite.
@@ -64,65 +66,43 @@ namespace Quaver.Graphics.Backgrounds
         public static void Draw(GameTime gameTime) => Background?.Draw(gameTime);
 
         /// <summary>
-        ///     Loads a background for an individual mapset.
-        /// </summary>
-        /// <param name="set"></param>
-        public static void Load(Mapset set)
-        {
-            // Dispose previous background.
-            if (Background.Image != UserInterface.MenuBackground)
-            {
-                var bgImage = Background.Image;
-                Scheduler.RunAfter(() =>  bgImage.Dispose(), 5000);
-            }
-
-            if (CurrentWorkerThread != null && (!CurrentWorkerThread.IsCanceled || !CurrentWorkerThread.IsCompleted))
-                CurrentWorkerThread.Cancel();
-
-            CurrentWorkerThread = LoadingThread.QueueWorkItem(delegate
-            {
-                var tex = LoadTexture(set.Background);
-
-                Background.Image = tex;
-
-                if (MapManager.Selected.Value == set.Maps.First())
-                {
-                    Loaded?.Invoke(typeof(BackgroundManager), new BackgroundLoadedEventArgs(set.Maps.First(), tex));
-                    FadeIn();
-                }
-                else if (tex != UserInterface.MenuBackground)
-                    Scheduler.RunAfter(() =>  tex.Dispose(), 5000);
-            });
-        }
-
-        /// <summary>
         ///     Loads a background for an individual map.
         /// </summary>
         public static void Load(Map map)
         {
-            // Dispose previous background.
-            if (Background.Image != UserInterface.MenuBackground)
-            {
-                var bgImage = Background.Image;
-                Scheduler.RunAfter(() =>  bgImage.Dispose(), 5000);
-            }
+            FadeOut();
+            LoadRequestCount++;
+            var requestCount = LoadRequestCount;
 
-            if (CurrentWorkerThread != null && (!CurrentWorkerThread.IsCanceled || !CurrentWorkerThread.IsCompleted))
-                CurrentWorkerThread.Cancel();
+            var oldTexture = Background.Image;
 
-            CurrentWorkerThread = LoadingThread.QueueWorkItem(delegate
+            Scheduler.RunThread(delegate
             {
+                if (requestCount != LoadRequestCount)
+                {
+                    if (oldTexture != UserInterface.MenuBackground)
+                        oldTexture.Dispose();
+
+                    return;
+                }
+
                 var tex = LoadTexture(MapManager.GetBackgroundPath(map));
 
-                Background.Image = tex;
-
-                if (MapManager.Selected.Value == map)
+                if (requestCount != LoadRequestCount)
                 {
-                    Loaded?.Invoke(typeof(BackgroundManager), new BackgroundLoadedEventArgs(map, tex));
-                    FadeIn();
+                    if (oldTexture != UserInterface.MenuBackground)
+                        oldTexture.Dispose();
+
+                    return;
                 }
-                else if (tex != UserInterface.MenuBackground)
-                    Scheduler.RunAfter(() =>  tex.Dispose(), 5000);
+
+                Background.Image = tex;
+                Loaded?.Invoke(typeof(BackgroundManager), new BackgroundLoadedEventArgs(map, tex));
+
+                if (PermittedToFadeIn)
+                    FadeIn();
+
+                oldTexture.Dispose();
             });
         }
 
@@ -161,8 +141,9 @@ namespace Quaver.Graphics.Backgrounds
             {
                 newBackground = AssetLoader.LoadTexture2DFromFile(path);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 // If the background couldn't be loaded.
                 newBackground = UserInterface.MenuBackground;
             }

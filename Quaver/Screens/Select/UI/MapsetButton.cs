@@ -3,8 +3,10 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Database.Maps;
+using Quaver.Skinning;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Screens.Select.UI
@@ -120,11 +122,93 @@ namespace Quaver.Screens.Select.UI
                 Alpha = 0
             };
 
-            Clicked += (sender, args) =>
-            {
-                MapManager.Selected.Value = Mapset.Maps.First();
-                Console.WriteLine("Clicked");
-            };
+            Clicked += Select;
+        }
+
+        /// <summary>
+        ///     Makes the map displayed as if it is selected.
+        /// </summary>
+        public void DisplayAsSelected()
+        {
+            SkinManager.Skin.SoundHover.CreateChannel().Play();
+            Alpha = 1;
+
+            // Push set outwards to make it appear as selected.
+            Transformations.Clear();
+            Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, 120, 0, 800));
+
+            // Pushes text forward to make room for the background.
+            #region TEXT_ANIMATIONS
+
+            Title.Transformations.Clear();
+            Title.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
+                Title.X, 125 + Title.MeasureString().X / 2f, 200));
+            Title.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                Title.Alpha, 1, 100));
+
+            Artist.Transformations.Clear();
+            Artist.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
+                Artist.X, 125 + Artist.MeasureString().X / 2f, 210));
+            Artist.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                Artist.Alpha, 1, 100));
+
+            Creator.Transformations.Clear();
+            Creator.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
+                Creator.X, 125 + Creator.MeasureString().X / 2f, 220));
+            Creator.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                Creator.Alpha, 1, 100));
+
+            #endregion
+        }
+
+        /// <summary>
+        ///     Displays the map as if it were deselected.
+        /// </summary>
+        public void DisplayAsDeselected()
+        {
+            Alpha = 0.45f;
+
+            // Push
+            Transformations.Clear();
+            Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint, X, 120, 800));
+
+            // Pushes text backwards to its original position
+            #region TEXT_ANIMATIONS
+
+            Title.Transformations.Clear();
+            Title.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
+                Title.X, 15 + Title.MeasureString().X / 2f, 300));
+            Title.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                Title.Alpha, 0.85f, 300));
+
+            Artist.Transformations.Clear();
+            Artist.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
+                Artist.X, 15 + Artist.MeasureString().X / 2f, 300));
+            Artist.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                Artist.Alpha, 0.85f, 300));
+
+            Creator.Transformations.Clear();
+            Creator.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear,
+                Creator.X, 15 + Creator.MeasureString().X / 2f, 300));
+            Creator.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                Creator.Alpha, 0.85f, 300));
+            #endregion
+
+            // Thumbnail alpha change
+            Thumbnail.Transformations.Clear();
+            Thumbnail.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                Thumbnail.Alpha, 0, 250));
+        }
+
+        /// <summary>
+        ///     Selects the mapset itself.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Select(object sender, EventArgs e)
+        {
+            if (Container.SelectedMapsetIndex != MapsetIndex)
+                Container.SelectMap(MapsetIndex, Mapset.Maps.First());
         }
     }
 }
