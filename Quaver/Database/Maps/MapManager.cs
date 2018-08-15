@@ -33,23 +33,7 @@ namespace Quaver.Database.Maps
         /// <summary>
         ///     The current path of the selected map's audio file
         /// </summary>
-        public static string CurrentAudioPath
-        {
-            get
-            {
-                switch (Selected.Value.Game)
-                {
-                    case MapGame.Osu:
-                        return OsuSongsFolder + "/" + Selected.Value.Directory + "/" + Selected.Value.AudioPath;
-                    case MapGame.Quaver:
-                        return ConfigManager.SongDirectory + "/" + Selected.Value.Directory + "/" + Selected.Value.AudioPath;
-                    case MapGame.Etterna:
-                        return EtternaFolder + "/" + Selected.Value.Directory + "/" + Selected.Value.AudioPath;
-                    default:
-                        return "";
-                }
-            }
-        }
+        public static string CurrentAudioPath => GetAudioPath(Selected.Value);
 
         /// <summary>
         ///     The current background of the map.
@@ -78,6 +62,26 @@ namespace Quaver.Database.Maps
                     return ConfigManager.SongDirectory + "/" + map.Directory + "/" + map.BackgroundPath;
                 case MapGame.Etterna:
                     return EtternaFolder + "/" + map.Directory + "/" + map.BackgroundPath;
+                default:
+                    return "";
+            }
+        }
+
+        /// <summary>
+        ///     Gets a map's audio path taking into account the game.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public static string GetAudioPath(Map map)
+        {
+            switch (map.Game)
+            {
+                case MapGame.Osu:
+                    return OsuSongsFolder + "/" + map.Directory + "/" + map.AudioPath;
+                case MapGame.Quaver:
+                    return ConfigManager.SongDirectory + "/" + map.Directory + "/" + map.AudioPath;
+                case MapGame.Etterna:
+                    return EtternaFolder + "/" + map.Directory + "/" + map.AudioPath;
                 default:
                     return "";
             }
