@@ -61,7 +61,9 @@ namespace Quaver.Screens.Select.UI
             CurrentContainer = new DifficultyButtonContainer(this, Screen.AvailableMapsets[MapsetContainer.SelectedMapsetIndex]);
             CurrentContainer.X = CurrentContainer.Width + 5;
             CurrentContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear, CurrentContainer.X, 0, 200));
+            
             CalculateScrollContainerHeight(Screen.AvailableMapsets[MapsetContainer.SelectedMapsetIndex]);
+            SnapToSelectedDifficulty(MapsetContainer.SelectedMapIndex);
 
             AddContainedDrawable(CurrentContainer);
 
@@ -214,7 +216,7 @@ namespace Quaver.Screens.Select.UI
         private void SnapToSelectedDifficulty(int mapIndex)
         {
             if (mapIndex > 2)
-                ContentContainer.Y = (-mapIndex + 2 ) * (DifficultyButton.HEIGHT + 3);
+                ContentContainer.Y = (-mapIndex + 2) * (DifficultyButton.HEIGHT + 3);
             else
                 ContentContainer.Y = DifficultyButton.HEIGHT + 3;
 
