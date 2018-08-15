@@ -27,17 +27,22 @@ namespace Quaver.Screens.Select.UI
         /// <summary>
         ///     Reference to the screen itself.
         /// </summary>
-        private SelectScreen Screen { get; }
+        public SelectScreen Screen { get; }
 
         /// <summary>
         ///     Reference to the SelectScreenView
         /// </summary>
-        private SelectScreenView View { get; }
+        public SelectScreenView View { get; }
 
         /// <summary>
         ///     The buttons for each mapset.
         /// </summary>
         private List<MapsetButton> MapsetButtons { get; set; }
+
+        /// <summary>
+        ///     Interface to select the difficulties of the map.
+        /// </summary>
+        public DifficultySelector DifficultySelector { get; }
 
         /// <summary>
         ///     The original size of the mapset container.
@@ -102,6 +107,14 @@ namespace Quaver.Screens.Select.UI
             // Select the first map of the first mapset for now.
             if (MapManager.Selected.Value == null)
                 MapManager.Selected.Value = MapManager.Mapsets.First().Maps.First();
+
+            // TODO: Set parent and all that jazz in the map info section.
+            DifficultySelector = new DifficultySelector(this)
+            {
+                Parent = View.Container,
+                Alignment = Alignment.MidCenter,
+                X = -100
+            };
 
             // BG all the way
             BackgroundManager.Background.BrightnessSprite.Alpha = 1;
