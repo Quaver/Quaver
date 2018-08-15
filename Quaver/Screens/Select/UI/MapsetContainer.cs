@@ -48,7 +48,7 @@ namespace Quaver.Screens.Select.UI
         /// <summary>
         ///     The original size of the mapset container.
         /// </summary>
-        private static ScalableVector2 OriginalSize => new ScalableVector2(550, WindowManager.Height);
+        private static ScalableVector2 OriginalSize => new ScalableVector2(550, WindowManager.Height / 1.25f - 7);
 
         /// <summary>
         ///     The y of the first button.
@@ -94,7 +94,7 @@ namespace Quaver.Screens.Select.UI
             View = view;
 
             InputEnabled = true;
-            Alignment = Alignment.TopRight;
+            Alignment = Alignment.MidRight;
             Tint = Color.Black;
             Alpha = 0;
 

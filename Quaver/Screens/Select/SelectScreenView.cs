@@ -24,6 +24,8 @@ namespace Quaver.Screens.Select
         /// </summary>
         private Toolbar Toolbar { get; set;  }
 
+        private BottomBar BottomBar { get; set; }
+
         /// <summary>
         ///     The scroll container for the mapsets.
         /// </summary>
@@ -45,6 +47,7 @@ namespace Quaver.Screens.Select
                 Parent = Container
             };
 
+            BottomBar = new BottomBar() {Parent = Container};
             MapsetContainer = new MapsetContainer((SelectScreen) Screen, this)
             {
                 Parent = Container,
