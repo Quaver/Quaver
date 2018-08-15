@@ -24,6 +24,7 @@ using Quaver.Screens.Gameplay.Rulesets.Keys;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Audio;
+using Wobble.Audio.Tracks;
 using Wobble.Discord;
 using Wobble.Discord.RPC;
 using Wobble.Graphics.Transformations;
@@ -215,6 +216,7 @@ namespace Quaver.Screens.Gameplay
             SetRuleset();
             SetRichPresence();
 
+            AudioTrack.AllowPlayback = true;
             View = new GameplayScreenView(this);
         }
 

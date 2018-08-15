@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.Database.Scores;
+using Wobble.Audio.Tracks;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Loading
@@ -26,6 +27,7 @@ namespace Quaver.Screens.Loading
         {
             Scores = scores;
             View = new MapLoadingScreenView(this);
+            AudioTrack.AllowPlayback = false;
         }
     }
 }
