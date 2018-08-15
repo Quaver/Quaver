@@ -89,7 +89,7 @@ namespace Quaver.Screens.Select.UI
             DifficultyName.X += GradeAchieved.X + GradeAchieved.Width + DifficultyName.MeasureString().X / 2f + 8f;
             Clicked += (sender, args) =>
             {
-                Console.WriteLine("clicked");
+                buttonContainer.Selector.SelectDifficulty(map.Mapset, map);
             };
         }
 

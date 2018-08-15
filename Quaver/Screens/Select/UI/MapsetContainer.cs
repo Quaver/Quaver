@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Config;
@@ -108,14 +109,6 @@ namespace Quaver.Screens.Select.UI
             if (MapManager.Selected.Value == null)
                 MapManager.Selected.Value = MapManager.Mapsets.First().Maps.First();
 
-            // TODO: Set parent and all that jazz in the map info section.
-            DifficultySelector = new DifficultySelector(this)
-            {
-                Parent = View.Container,
-                Alignment = Alignment.MidCenter,
-                X = -100
-            };
-
             // BG all the way
             BackgroundManager.Background.BrightnessSprite.Alpha = 1;
 
@@ -123,7 +116,15 @@ namespace Quaver.Screens.Select.UI
             BackgroundManager.PermittedToFadeIn = true;
 
             InitializeMapsetButtons();
-            SelectMap(SelectedMapsetIndex, Screen.AvailableMapsets[SelectedMapsetIndex].Maps[SelectedMapIndex]);
+            SelectMap(SelectedMapsetIndex, Screen.AvailableMapsets[SelectedMapsetIndex].Maps[SelectedMapIndex], true);
+
+            // TODO: Set parent and all that jazz in the map info section.
+            DifficultySelector = new DifficultySelector(this)
+            {
+                Parent = View.Container,
+                Alignment = Alignment.MidCenter,
+                X = -100
+            };
         }
 
         /// <inheritdoc />
@@ -152,6 +153,12 @@ namespace Quaver.Screens.Select.UI
                 if (MapsetButtons.ElementAtOrDefault(SelectedMapsetIndex - 1) != null)
                     MapsetButtons[SelectedMapsetIndex - 1].FireButtonClickEvent();
             }
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Up))
+                DifficultySelector.SelectNextDifficulty(Direction.Backward);
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Down))
+                DifficultySelector.SelectNextDifficulty(Direction.Forward);
 
             base.Update(gameTime);
         }
@@ -184,6 +191,17 @@ namespace Quaver.Screens.Select.UI
             // Find the index of the selected mapset and map.
             SelectedMapsetIndex = Screen.AvailableMapsets.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
             SelectedMapIndex = MapManager.Selected.Value.Mapset.Maps.FindIndex(x => x == MapManager.Selected.Value);
+
+            // If the mapset can't be found for some reason, default it to the first one.
+            if (SelectedMapsetIndex == -1)
+            {
+                SelectedMapsetIndex = 0;
+                SelectedMapIndex = 0;
+            }
+
+            // If the map can't be found, then default it to the first one.
+            if (SelectedMapIndex == -1)
+                SelectedMapIndex = 0;
 
             // Based on the currently selected mapset, calculate starting index of which to update and draw
             // the mapset buttons in the container.
@@ -289,16 +307,25 @@ namespace Quaver.Screens.Select.UI
         /// <summary>
         ///     Selects a map from a given mapset.
         /// </summary>
-        public void SelectMap(int mapsetIndex, Map map)
+        public void SelectMap(int mapsetIndex, Map map, bool forceAssetLoad = false)
         {
+            // Grab the previous mapset & map indexes.
+            var previousMapsetIndex = SelectedMapsetIndex;
+            var previousMapIndex = SelectedMapIndex;
+
+            // Grab the previous mapset and map for quick reference.
+            var previousMapset = Screen.AvailableMapsets[previousMapsetIndex];
+            var previousMap = Screen.AvailableMapsets[previousMapsetIndex].Maps[previousMapIndex];
+
             // If we're changing mapsets, display the old one as deselected.
             // and the new one as selected.
-            if (mapsetIndex != SelectedMapsetIndex)
+            if (mapsetIndex != previousMapsetIndex)
             {
-                MapsetButtons[SelectedMapsetIndex].DisplayAsDeselected();
+                MapsetButtons[previousMapsetIndex].DisplayAsDeselected();
                 MapsetButtons[mapsetIndex].DisplayAsSelected();
             }
 
+            // Change the selected indexes.
             SelectedMapsetIndex = mapsetIndex;
             SelectedMapIndex = Screen.AvailableMapsets[SelectedMapsetIndex].Maps.FindIndex(x => x == map);
 
@@ -306,7 +333,8 @@ namespace Quaver.Screens.Select.UI
             if (SelectedMapIndex == -1)
             {
                 NotificationManager.Show(NotificationLevel.Error, "Something went extremely wrong when selecting that map.");
-                ScreenManager.ChangeScreen(new MainMenuScreen());
+                ScreenManager.ChangeScreen(new SelectScreen());
+                return;
             }
 
             // Change the actual map.
@@ -314,22 +342,39 @@ namespace Quaver.Screens.Select.UI
 
             // Scroll to the new mapset.
             ScrollTo((-SelectedMapsetIndex + 1) * (MapsetButton.BUTTON_HEIGHT + MapsetButton.BUTTON_Y_SPACING), 2100);
-            BackgroundManager.Load(map);
 
-            if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
-                AudioEngine.Track.Fade(0, 200);
+            // If necessary, change the associated mapset with the difficulty selector.
+            // Only necessary if we're changing mapsets and not maps.
+            if (previousMapset != MapManager.Selected.Value.Mapset)
+                DifficultySelector.ChangeAssociatedMapsetMapset(MapManager.Selected.Value.Mapset);
 
-            try
+            // Load background if it doesn't have the same path, or if we're forcing it.
+            if (MapManager.GetBackgroundPath(previousMap) != MapManager.GetBackgroundPath(MapManager.Selected.Value) || forceAssetLoad)
+                BackgroundManager.Load(map);
+
+            // Load auto track if it doesn't have the same path, or if we're forcing the load.
+            // ReSharper disable once InvertIf
+            if (MapManager.GetAudioPath(previousMap) != MapManager.GetAudioPath(MapManager.Selected.Value) || forceAssetLoad)
             {
-                AudioEngine.LoadCurrentTrack();
-                AudioEngine.Track.Seek(map.AudioPreviewTime);
-                AudioEngine.Track.Volume = 0;
-                AudioEngine.Track.Play();
-                AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 800);
-            }
-            catch (Exception e)
-            {
-                // ignored
+                if (AudioEngine.Track != null && AudioEngine.Track.IsPlaying)
+                    AudioEngine.Track.Fade(0, 200);
+
+                try
+                {
+                    AudioEngine.LoadCurrentTrack();
+
+                    if (AudioEngine.Track == null)
+                        return;
+
+                    AudioEngine.Track.Seek(map.AudioPreviewTime);
+                    AudioEngine.Track.Volume = 0;
+                    AudioEngine.Track.Play();
+                    AudioEngine.Track.Fade(ConfigManager.VolumeMusic.Value, 800);
+                }
+                catch (Exception)
+                {
+                    // ignored. We simply don't care if it can't be played in this case.
+                }
             }
         }
     }
