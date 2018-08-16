@@ -20,7 +20,7 @@ namespace Quaver.Graphics.Backgrounds
         /// <summary>
         ///     The background image sprite to use.
         /// </summary>
-        public static BackgroundImage Background { get; private set; }
+        public static BlurredBackgroundImage Background { get; private set; }
 
         /// <summary>
         ///     When a background is loaded, this'll be emitted, this is mainly for
@@ -42,10 +42,7 @@ namespace Quaver.Graphics.Backgrounds
         /// <summary>
         ///     Initializes the background sprite.
         /// </summary>
-        public static void Initialize()
-        {
-            Background = new BackgroundImage(UserInterface.MenuBackground);
-        }
+        public static void Initialize() => Background = new BlurredBackgroundImage(UserInterface.MenuBackground);
 
         /// <summary>
         ///     Updates the background sprite.
@@ -54,7 +51,7 @@ namespace Quaver.Graphics.Backgrounds
         public static void Update(GameTime gameTime)
         {
             if (!PermittedToFadeIn && Background.Transformations.Count > 0)
-                Background.BrightnessSprite.Transformations.Clear();
+                Background.Sprite.BrightnessSprite.Transformations.Clear();
 
             Background.Update(gameTime);
         }
@@ -68,13 +65,13 @@ namespace Quaver.Graphics.Backgrounds
         /// <summary>
         ///     Loads a background for an individual map.
         /// </summary>
-        public static void Load(Map map)
+        public static void Load(Map map, int dim = 0)
         {
             FadeOut();
             LoadRequestCount++;
             var requestCount = LoadRequestCount;
 
-            var oldTexture = Background.Image;
+            var oldTexture = Background.Sprite.Image;
 
             Scheduler.RunThread(delegate
             {
@@ -96,11 +93,11 @@ namespace Quaver.Graphics.Backgrounds
                     return;
                 }
 
-                Background.Image = tex;
+                Background.Sprite.Image = tex;
                 Loaded?.Invoke(typeof(BackgroundManager), new BackgroundLoadedEventArgs(map, tex));
 
                 if (PermittedToFadeIn)
-                    FadeIn();
+                    FadeIn(dim);
 
                 if (oldTexture != UserInterface.MenuBackground)
                     oldTexture.Dispose();
@@ -112,21 +109,21 @@ namespace Quaver.Graphics.Backgrounds
         /// </summary>
         public static void FadeOut()
         {
-            Background.BrightnessSprite.Transformations.Clear();
+            Background.Sprite.BrightnessSprite.Transformations.Clear();
 
-            var t = new Transformation(TransformationProperty.Alpha, Easing.EaseOutQuad, Background.BrightnessSprite.Alpha, 1, 300);
-            Background.BrightnessSprite.Transformations.Add(t);
+            var t = new Transformation(TransformationProperty.Alpha, Easing.EaseOutQuad, Background.Sprite.BrightnessSprite.Alpha, 1, 300);
+            Background.Sprite.BrightnessSprite.Transformations.Add(t);
         }
 
         /// <summary>
         ///     Fades in the BG from black.
         /// </summary>
-        public static void FadeIn()
+        public static void FadeIn(int dim)
         {
-            Background.BrightnessSprite.Transformations.Clear();
+            Background.Sprite.BrightnessSprite.Transformations.Clear();
 
-            var t = new Transformation(TransformationProperty.Alpha, Easing.EaseInQuad, Background.BrightnessSprite.Alpha, 0, 300);
-            Background.BrightnessSprite.Transformations.Add(t);
+            var t = new Transformation(TransformationProperty.Alpha, Easing.EaseInQuad, Background.Sprite.BrightnessSprite.Alpha, dim / 100f, 300);
+            Background.Sprite.BrightnessSprite.Transformations.Add(t);
         }
 
         /// <summary>
@@ -142,7 +139,7 @@ namespace Quaver.Graphics.Backgrounds
             {
                 newBackground = AssetLoader.LoadTexture2DFromFile(path);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // If the background couldn't be loaded.
                 newBackground = UserInterface.MenuBackground;
