@@ -65,7 +65,7 @@ namespace Quaver.Screens.Results
         /// <param name="screen"></param>
         public ResultsScreenView(Screen screen) : base(screen)
         {
-            BackgroundManager.Background.Strength = 15;
+            BackgroundManager.Background.Strength = 10;
 
             CreateMapInformation();
             CreateScoreResults();

@@ -38,7 +38,7 @@ namespace Quaver.Screens.Select
         public SelectScreenView(Screen screen) : base(screen)
         {
             BackgroundManager.Background.Dim = 0;
-            BackgroundManager.Background.Strength = 15;
+            BackgroundManager.Background.Strength = 10;
 
             Toolbar = new Toolbar(new List<ToolbarItem>
             {
