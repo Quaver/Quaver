@@ -95,6 +95,11 @@ namespace Quaver.Config
         internal static BindableInt BackgroundBrightness { get; private set; }
 
         /// <summary>
+        ///     The background blur strength during gameplay
+        /// </summary>
+        internal static BindableInt BackgroundBlur { get; private set; }
+
+        /// <summary>
         ///     The height of the window.
         /// </summary>
         internal static BindableInt WindowHeight { get; private set; }
@@ -358,7 +363,8 @@ namespace Quaver.Config
             VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
-            BackgroundBrightness = ReadInt(@"BackgroundBrightness", 30, 0, 100, data);
+            BackgroundBrightness = ReadInt(@"BackgroundBrightness", 15, 0, 100, data);
+            BackgroundBlur = ReadInt(@"BackgroundBlur", 20, 0, 100, data);
             WindowHeight = ReadInt(@"WindowHeight", 768, 600, short.MaxValue, data);
             WindowWidth = ReadInt(@"WindowWidth", 1366, 800, short.MaxValue, data);
             HealthBarPositionTop = ReadValue(@"HealthBarPositionTop", false, data);
@@ -422,6 +428,7 @@ namespace Quaver.Config
                     VolumeEffect.ValueChanged += AutoSaveConfiguration;
                     VolumeMusic.ValueChanged += AutoSaveConfiguration;
                     BackgroundBrightness.ValueChanged += AutoSaveConfiguration;
+                    BackgroundBlur.ValueChanged += AutoSaveConfiguration;
                     WindowHeight.ValueChanged += AutoSaveConfiguration;
                     WindowWidth.ValueChanged += AutoSaveConfiguration;
                     HealthBarPositionTop.ValueChanged += AutoSaveConfiguration;
