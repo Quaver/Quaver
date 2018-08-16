@@ -478,6 +478,9 @@ namespace Quaver.Screens.Gameplay
                 (100 - ConfigManager.BackgroundBrightness.Value) / 100f, 300);
 
             BackgroundManager.Background.Sprite.BrightnessSprite.Transformations.Add(t);
+
+            // Blur background strength
+            BackgroundManager.Background.Strength = ConfigManager.BackgroundBlur.Value;
         }
     }
 }
