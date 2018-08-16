@@ -363,8 +363,8 @@ namespace Quaver.Config
             VolumeGlobal = ReadInt(@"VolumeGlobal", 50, 0, 100, data);
             VolumeEffect = ReadInt(@"VolumeEffect", 20, 0, 100, data);
             VolumeMusic = ReadInt(@"VolumeMusic", 50, 0, 100, data);
-            BackgroundBrightness = ReadInt(@"BackgroundBrightness", 70, 0, 100, data);
-            BackgroundBlur = ReadInt(@"BackgroundBlur", 20, 0, 100, data);
+            BackgroundBrightness = ReadInt(@"BackgroundBrightness", 50, 0, 100, data);
+            BackgroundBlur = ReadInt(@"BackgroundBlur", 8, 0, 100, data);
             WindowHeight = ReadInt(@"WindowHeight", 768, 600, short.MaxValue, data);
             WindowWidth = ReadInt(@"WindowWidth", 1366, 800, short.MaxValue, data);
             HealthBarPositionTop = ReadValue(@"HealthBarPositionTop", false, data);

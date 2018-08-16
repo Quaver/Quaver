@@ -350,7 +350,7 @@ namespace Quaver.Screens.Select.UI
 
             // Load background if it doesn't have the same path, or if we're forcing it.
             if (MapManager.GetBackgroundPath(previousMap) != MapManager.GetBackgroundPath(MapManager.Selected.Value) || forceAssetLoad)
-                BackgroundManager.Load(map, 30);
+                BackgroundManager.Load(map, 50);
 
             // Load auto track if it doesn't have the same path, or if we're forcing the load.
             // ReSharper disable once InvertIf
