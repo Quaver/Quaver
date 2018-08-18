@@ -52,12 +52,19 @@ namespace Quaver
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public QuaverGame() => Graphics.PreparingDeviceSettings += (sender, args) =>
+        public QuaverGame()
         {
-            Graphics.GraphicsProfile = GraphicsProfile.HiDef;
-            Graphics.PreferMultiSampling = true;
-            args.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 8;
-        };
+            IsFixedTimeStep = false;
+            Graphics.SynchronizeWithVerticalRetrace = false;
+            Graphics.ApplyChanges();
+
+            Graphics.PreparingDeviceSettings += (sender, args) =>
+            {
+                Graphics.GraphicsProfile = GraphicsProfile.HiDef;
+                Graphics.PreferMultiSampling = true;
+                args.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 8;
+            };
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -72,10 +79,6 @@ namespace Quaver
 
             WindowManager.ChangeVirtualScreenSize(new Vector2(1366, 768));
             WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
-
-            // Unlock the framerate of the game to unlimited.
-            Graphics.SynchronizeWithVerticalRetrace = false;
-            IsFixedTimeStep = false;
 
             // Full-screen
             Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
