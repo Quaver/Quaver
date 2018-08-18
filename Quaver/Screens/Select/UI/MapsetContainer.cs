@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -190,7 +190,6 @@ namespace Quaver.Screens.Select.UI
 
             // Find the index of the selected mapset and map.
             SelectedMapsetIndex = Screen.AvailableMapsets.FindIndex(x => x.Maps.Contains(MapManager.Selected.Value));
-            SelectedMapIndex = MapManager.Selected.Value.Mapset.Maps.FindIndex(x => x == MapManager.Selected.Value);
 
             // If the mapset can't be found for some reason, default it to the first one.
             if (SelectedMapsetIndex == -1)
@@ -198,6 +197,8 @@ namespace Quaver.Screens.Select.UI
                 SelectedMapsetIndex = 0;
                 SelectedMapIndex = 0;
             }
+
+            SelectedMapIndex = Screen.AvailableMapsets[SelectedMapsetIndex].Maps.FindIndex(x => x == MapManager.Selected.Value);
 
             // If the map can't be found, then default it to the first one.
             if (SelectedMapIndex == -1)
