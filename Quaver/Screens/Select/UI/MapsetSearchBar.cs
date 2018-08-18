@@ -1,9 +1,11 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
+using Quaver.Helpers;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -82,26 +84,14 @@ namespace Quaver.Screens.Select.UI
                     // Update previous search term
                     SelectScreen.PreviousSearchTerm = text;
 
+                    // Search for new mapsets.
                     var sets = !string.IsNullOrEmpty(text) ? MapsetHelper.SearchMapsets(MapManager.Mapsets, text) : MapManager.Mapsets;
 
-                    // Change SetsAvailableText
+                    ReadjustSetsAvailableText(sets);
+
+                    // Don't continue if there aren't any mapsets.
                     if (sets.Count == 0)
-                    {
-                        SetsAvailableText.TextColor = Color.White;
-                        SetsAvailableText.Text = "No mapsets found :(";
-                        ReadjustSetsAvailableTextPosition();
-
-                        SetsAvailableText.Transformations.Clear();
-                        SetsAvailableText.Transformations.Add(new Transformation(Easing.Linear, Color.White, Colors.Negative, 500));
                         return;
-                    }
-
-                    SetsAvailableText.TextColor = Color.White;
-                    SetsAvailableText.Text = $"Found {sets.Count} mapsets.";
-                    ReadjustSetsAvailableTextPosition();
-                    SetsAvailableText.Transformations.Clear();
-                    SetsAvailableText.Transformations.Add(new Transformation(Easing.Linear, Color.White, Colors.MainAccent, 500));
-
 
                     // Set the new available sets, and reinitialize the mapset buttons.
                     Screen.AvailableMapsets = sets;
@@ -114,29 +104,14 @@ namespace Quaver.Screens.Select.UI
                     if (foundMapset != -1)
                     {
                         ScreenView.MapsetContainer.SelectMap(foundMapset, MapManager.Selected.Value, false, true);
-
-                        // Make sure thumbnail is up to date.
-                        // TODO: Make this code more DRY
-                        var thumbnail = ScreenView.MapsetContainer.MapsetButtons[ScreenView.MapsetContainer.SelectedMapsetIndex].Thumbnail;
-
-                        thumbnail.Image = BackgroundManager.Background.Sprite.Image;
-                        thumbnail.Transformations.Clear();
-                        var t = new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 250);
-                        thumbnail.Transformations.Add(t);
+                        ChangeMapsetButtonThumbnail();
                     }
                     // Select the first map in the first mapset, if it's a completely new mapset.
                     else if (MapManager.Selected.Value != Screen.AvailableMapsets.First().Maps.First())
                         ScreenView.MapsetContainer.SelectMap(0, Screen.AvailableMapsets.First().Maps.First(), true, true);
+                    // Otherwise just make sure the mapset thumbnail is up to date anyway.
                     else
-                    {
-                        // TODO: Make this code more DRY
-                        var thumbnail = ScreenView.MapsetContainer.MapsetButtons[ScreenView.MapsetContainer.SelectedMapsetIndex].Thumbnail;
-
-                        thumbnail.Image = BackgroundManager.Background.Sprite.Image;
-                        thumbnail.Transformations.Clear();
-                        var t = new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 250);
-                        thumbnail.Transformations.Add(t);
-                    }
+                        ChangeMapsetButtonThumbnail();
                 })
             {
                 Parent = this,
@@ -147,7 +122,6 @@ namespace Quaver.Screens.Select.UI
                 AlwaysFocused = true,
                 StoppedTypingActionCalltime = 300
             };
-
         }
 
         /// <summary>
@@ -195,17 +169,51 @@ namespace Quaver.Screens.Select.UI
                 }
             };
 
-            ReadjustSetsAvailableTextPosition();
+            ReadjustSetsAvailableText(Screen.AvailableMapsets);
         }
 
         /// <summary>
         ///    Adjusts the sets available text
         /// </summary>
-        private void ReadjustSetsAvailableTextPosition()
+        private void ReadjustSetsAvailableText(IReadOnlyCollection<Mapset> sets)
         {
+            // Initially change color to white.
+            SetsAvailableText.TextColor = Color.White;
+
+            Color newColor;
+
+            if (sets.Count > 0)
+            {
+                SetsAvailableText.Text = $"Found {sets.Count} mapsets";
+                newColor = Colors.MainAccent;
+            }
+            else
+            {
+                SetsAvailableText.Text = "No mapsets found :(";
+                newColor = Colors.Negative;
+            }
+
+            // Readjust position.
             var size = SetsAvailableText.MeasureString() / 2f;
             SetsAvailableText.X = size.X;
             SetsAvailableText.Y = DividerLine.Height + 3 + size.Y;
+
+            // Fade to the new color.
+            SetsAvailableText.Transformations.Clear();
+            SetsAvailableText.Transformations.Add(new Transformation(Easing.Linear, Color.White, newColor, 500));
+        }
+
+        /// <summary>
+        ///     Makes sure the mapset button's thumbnail is up to date with the newly selected map.
+        /// </summary>
+        private void ChangeMapsetButtonThumbnail()
+        {
+            var thumbnail = ScreenView.MapsetContainer.MapsetButtons[ScreenView.MapsetContainer.SelectedMapsetIndex].Thumbnail;
+
+            thumbnail.Image = BackgroundManager.Background.Sprite.Image;
+            thumbnail.Transformations.Clear();
+            var t = new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 250);
+            thumbnail.Transformations.Add(t);
         }
     }
 }
