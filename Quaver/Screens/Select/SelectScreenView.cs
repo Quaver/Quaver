@@ -24,14 +24,19 @@ namespace Quaver.Screens.Select
         /// <summary>
         ///     The top toolbar for this screen.
         /// </summary>
-        private Toolbar Toolbar { get; set;  }
+        public Toolbar Toolbar { get; }
 
         private BottomBar BottomBar { get; set; }
 
         /// <summary>
         ///     The scroll container for the mapsets.
         /// </summary>
-        private MapsetContainer MapsetContainer { get; set; }
+        public MapsetContainer MapsetContainer { get; }
+
+        /// <summary>
+        ///     Mapset search interface.
+        /// </summary>
+        private MapsetSearchBar SearchBar { get; }
 
         /// <summary>
         ///     Searches for mapsets.
@@ -66,64 +71,7 @@ namespace Quaver.Screens.Select
                 }
             };
 
-            MapsetSearchBar = new Textbox(TextboxStyle.SingleLine, new ScalableVector2(500, 30),
-                Fonts.Exo2Regular24, SelectScreen.PreviousSearchTerm, "Type to search", 0.60f, null,
-                text =>
-                {
-                    // Update previous search term
-                    SelectScreen.PreviousSearchTerm = text;
-
-                    var selectScreen = (SelectScreen) Screen;
-
-                    var sets = !string.IsNullOrEmpty(text) ? MapsetHelper.SearchMapsets(MapManager.Mapsets, text) : MapManager.Mapsets;
-
-                    if (sets.Count <= 0)
-                        return;
-
-                    // Set the new available sets, and reinitialize the mapset buttons.
-                    selectScreen.AvailableMapsets = sets;
-                    MapsetContainer.InitializeMapsetButtons();
-
-                    // Check to see if the current mapset is already in the new search.
-                    var foundMapset = sets.FindIndex(x => x == MapManager.Selected.Value.Mapset);
-
-                    // If the new map is in the search, go straight to it.
-                    if (foundMapset != -1)
-                    {
-                        MapsetContainer.SelectMap(foundMapset, MapManager.Selected.Value, false, true);
-
-                        // Make sure thumbnail is up to date.
-                        // TODO: Make this code more DRY
-                        var thumbnail = MapsetContainer.MapsetButtons[MapsetContainer.SelectedMapsetIndex].Thumbnail;
-
-                        thumbnail.Image = BackgroundManager.Background.Sprite.Image;
-                        thumbnail.Transformations.Clear();
-                        var t = new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 250);
-                        thumbnail.Transformations.Add(t);
-                    }
-                    // Select the first map in the first mapset, if it's a completely new mapset.
-                    else if (MapManager.Selected.Value != selectScreen.AvailableMapsets.First().Maps.First())
-                        MapsetContainer.SelectMap(0, selectScreen.AvailableMapsets.First().Maps.First(), true, true);
-                    else
-                    {
-                        // Make sure thumbnail is up to date.
-                        // TODO: Make this code more DRY!
-                        var thumbnail = MapsetContainer.MapsetButtons[MapsetContainer.SelectedMapsetIndex].Thumbnail;
-
-                        thumbnail.Image = BackgroundManager.Background.Sprite.Image;
-                        thumbnail.Transformations.Clear();
-                        var t = new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 250);
-                        thumbnail.Transformations.Add(t);
-                    }
-                })
-            {
-                Parent = Container,
-                Alignment = Alignment.TopLeft,
-                Y = 10,
-                X = 10,
-                Tint = Color.Black,
-                AlwaysFocused = true
-            };
+            SearchBar = new MapsetSearchBar((SelectScreen) Screen, this) {Parent = Container};
         }
 
         /// <inheritdoc />
