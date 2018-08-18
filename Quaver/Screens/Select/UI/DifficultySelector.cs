@@ -135,7 +135,7 @@ namespace Quaver.Screens.Select.UI
         ///     new mapset is asscoiated with the selector.
         ///  </summary>
         /// <param name="set"></param>
-        public void ChangeAssociatedMapsetMapset(Mapset set)
+        public void ChangeAssociatedMapset(Mapset set)
         {
             var previousContainer = CurrentContainer;
             previousContainer.X = -previousContainer.Width * 2;

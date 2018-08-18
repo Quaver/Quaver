@@ -38,7 +38,7 @@ namespace Quaver.Screens.Select.UI
         /// <summary>
         ///     The buttons for each mapset.
         /// </summary>
-        private List<MapsetButton> MapsetButtons { get; set; }
+        public List<MapsetButton> MapsetButtons { get; private set; }
 
         /// <summary>
         ///     Interface to select the difficulties of the map.
@@ -177,7 +177,7 @@ namespace Quaver.Screens.Select.UI
         ///     Initializes all of the mapset buttons and determines which ones
         ///     to display.
         /// </summary>
-        private void InitializeMapsetButtons()
+        public void InitializeMapsetButtons()
         {
             ContentContainer.Size = Size;
 
@@ -307,7 +307,7 @@ namespace Quaver.Screens.Select.UI
         /// <summary>
         ///     Selects a map from a given mapset.
         /// </summary>
-        public void SelectMap(int mapsetIndex, Map map, bool forceAssetLoad = false)
+        public void SelectMap(int mapsetIndex, Map map, bool forceAssetLoad = false, bool forceDifficultySelectorUpdate = false)
         {
             // Grab the previous mapset & map indexes.
             var previousMapsetIndex = SelectedMapsetIndex;
@@ -345,8 +345,8 @@ namespace Quaver.Screens.Select.UI
 
             // If necessary, change the associated mapset with the difficulty selector.
             // Only necessary if we're changing mapsets and not maps.
-            if (previousMapset != MapManager.Selected.Value.Mapset)
-                DifficultySelector.ChangeAssociatedMapsetMapset(MapManager.Selected.Value.Mapset);
+            if (previousMapset != MapManager.Selected.Value.Mapset || forceDifficultySelectorUpdate)
+                DifficultySelector.ChangeAssociatedMapset(Screen.AvailableMapsets[SelectedMapsetIndex]);
 
             // Load background if it doesn't have the same path, or if we're forcing it.
             if (MapManager.GetBackgroundPath(previousMap) != MapManager.GetBackgroundPath(MapManager.Selected.Value) || forceAssetLoad)

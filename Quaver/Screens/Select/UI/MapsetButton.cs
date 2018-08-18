@@ -229,7 +229,7 @@ namespace Quaver.Screens.Select.UI
         /// <param name="e"></param>
         private void OnBackgroundLoaded(object sender, BackgroundLoadedEventArgs e)
         {
-            if (e.Map.Mapset != Mapset)
+            if (e.Map.Mapset.Directory != Mapset.Directory)
                 return;
 
             Thumbnail.Image = e.Texture;
