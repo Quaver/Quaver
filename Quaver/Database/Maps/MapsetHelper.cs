@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using Quaver.API.Enums;
 using Wobble;
 
 namespace Quaver.Database.Maps
@@ -114,7 +115,8 @@ namespace Quaver.Database.Maps
             {
                 "bpm",
                 "diff",
-                "length"
+                "length",
+                "keys"
             };
 
             // Stores a dictionary of the found pairs in the search query
@@ -166,6 +168,21 @@ namespace Quaver.Database.Maps
                             case "length":
                                 if (!CompareValues(map.SongLength, searchQuery.Value, searchQuery.Operator))
                                     exitLoop = true;
+                                break;
+                            case "keys":
+                                switch (map.Mode)
+                                {
+                                    case GameMode.Keys4:
+                                        if (!CompareValues(4, searchQuery.Value, searchQuery.Operator))
+                                            exitLoop = true;
+                                        break;
+                                    case GameMode.Keys7:
+                                        if (!CompareValues(7, searchQuery.Value, searchQuery.Operator))
+                                            exitLoop = true;
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
                                 break;
                             default:
                                 break;
