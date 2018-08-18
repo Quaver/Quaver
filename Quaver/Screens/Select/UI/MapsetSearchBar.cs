@@ -4,6 +4,7 @@ using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
@@ -142,10 +143,11 @@ namespace Quaver.Screens.Select.UI
                 Alignment = Alignment.TopRight,
                 Y = 10,
                 X = -20,
-                Tint = Colors.DarkGray,
+                Image = UserInterface.SearchBar,
                 AlwaysFocused = true,
                 StoppedTypingActionCalltime = 300
             };
+
         }
 
         /// <summary>
@@ -168,17 +170,14 @@ namespace Quaver.Screens.Select.UI
         /// <summary>
         ///     Creates the divider line sprite under the search box.
         /// </summary>
-        private void CreateDividerLine()
+        private void CreateDividerLine() => DividerLine = new Sprite
         {
-            DividerLine = new Sprite()
-            {
-                Parent = SearchBox,
-                Size = new ScalableVector2(SearchBox.Width, 1),
-                Tint = Color.White,
-                Alignment = Alignment.TopCenter,
-                Y = SearchBox.Height + SearchBox.Y + 2
-            };
-        }
+            Parent = SearchBox,
+            Size = new ScalableVector2(SearchBox.Width, 1),
+            Tint = Color.White,
+            Alignment = Alignment.TopCenter,
+            Y = SearchBox.Height + SearchBox.Y + 2
+        };
 
         /// <summary>
         ///     Creates the sets available text.
@@ -205,7 +204,6 @@ namespace Quaver.Screens.Select.UI
         private void ReadjustSetsAvailableTextPosition()
         {
             var size = SetsAvailableText.MeasureString() / 2f;
-
             SetsAvailableText.X = size.X;
             SetsAvailableText.Y = DividerLine.Height + 3 + size.Y;
         }
