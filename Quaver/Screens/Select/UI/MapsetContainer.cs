@@ -346,7 +346,7 @@ namespace Quaver.Screens.Select.UI
             // If necessary, change the associated mapset with the difficulty selector.
             // Only necessary if we're changing mapsets and not maps.
             if (previousMapset != MapManager.Selected.Value.Mapset || forceDifficultySelectorUpdate)
-                DifficultySelector.ChangeAssociatedMapset(Screen.AvailableMapsets[SelectedMapsetIndex]);
+                DifficultySelector?.ChangeAssociatedMapset(Screen.AvailableMapsets[SelectedMapsetIndex]);
 
             // Load background if it doesn't have the same path, or if we're forcing it.
             if (MapManager.GetBackgroundPath(previousMap) != MapManager.GetBackgroundPath(MapManager.Selected.Value) || forceAssetLoad)

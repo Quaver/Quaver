@@ -67,12 +67,14 @@ namespace Quaver.Screens.Select
             };
 
             MapsetSearchBar = new Textbox(TextboxStyle.SingleLine, new ScalableVector2(500, 30),
-                Fonts.Exo2Regular24, "", "Type to search", 0.60f, null,
+                Fonts.Exo2Regular24, SelectScreen.PreviousSearchTerm, "Type to search", 0.60f, null,
                 text =>
                 {
+                    // Update previous search term
+                    SelectScreen.PreviousSearchTerm = text;
+
                     var selectScreen = (SelectScreen) Screen;
 
-                    var oldSets = selectScreen.AvailableMapsets;
                     var sets = !string.IsNullOrEmpty(text) ? MapsetHelper.SearchMapsets(MapManager.Mapsets, text) : MapManager.Mapsets;
 
                     if (sets.Count <= 0)

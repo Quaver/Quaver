@@ -30,12 +30,21 @@ namespace Quaver.Screens.Select
         public List<Mapset> AvailableMapsets { get; set; }
 
         /// <summary>
+        ///     The previous search term the user searched for.
+        ///     Used to persist through screen changes.
+        /// </summary>
+        public static string PreviousSearchTerm { get; set; } = "";
+
+        /// <summary>
         /// </summary>
         public SelectScreen()
         {
-            // Default the available mapsets to all of them since the user
-            // hasn't searched or filtered by anything.
-            AvailableMapsets = MapManager.Mapsets;
+            // Grab the mapsets available to the user according to their previous search term.
+            AvailableMapsets = MapsetHelper.SearchMapsets(MapManager.Mapsets, PreviousSearchTerm);
+
+            // If no mapsets were found, just default to all of them.
+            if (AvailableMapsets.Count == 0)
+                AvailableMapsets = MapManager.Mapsets;
 
             DiscordManager.Client.CurrentPresence.Details = "Selecting a song";
             DiscordManager.Client.CurrentPresence.State = "In the menus";
