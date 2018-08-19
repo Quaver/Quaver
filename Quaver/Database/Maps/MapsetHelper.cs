@@ -5,6 +5,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Quaver.API.Enums;
+using Quaver.Config;
+using Quaver.Screens.Select.UI.Search;
 using Wobble;
 
 namespace Quaver.Database.Maps
@@ -59,14 +61,6 @@ namespace Quaver.Database.Maps
         }
 
         /// <summary>
-        ///     Orders the mapsets by title
-        /// </summary>
-        /// <param name="mapsets"></param>
-        /// <returns></returns>
-        internal static List<Mapset> OrderMapsetsByTitle(IEnumerable<Mapset> mapsets) =>
-            mapsets.OrderBy(x => x.Directory).ToList();
-
-        /// <summary>
         ///     Orders the mapsets by artist, and then by title.
         /// </summary>
         /// <param name="mapsets"></param>
@@ -75,6 +69,44 @@ namespace Quaver.Database.Maps
         {
             // ReSharper disable once ArrangeMethodOrOperatorBody
             return mapsets.OrderBy(x => x.Maps[0].Artist).ThenBy(x => x.Maps[0].Title).ToList();
+        }
+
+        /// <summary>
+        ///     Orders mapsets by title.
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        internal static List<Mapset> OrderMapsetsByTitle(IEnumerable<Mapset> mapsets) => mapsets.OrderBy(x => x.Maps[0].Title).ToList();
+
+        /// <summary>
+        ///     Orders mapsets by creator.
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        internal static List<Mapset> OrderMapsetsByCreator(IEnumerable<Mapset> mapsets)
+        {
+            return mapsets.OrderBy(x => x.Maps[0].Creator).ThenBy(x => x.Maps[0].Artist).ThenBy(x => x.Maps[0].Title).ToList();
+        }
+
+        /// <summary>
+        ///     Orders the mapsets based on the set config value.
+        /// </summary>
+        /// <param name="mapsets"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        internal static List<Mapset> OrderMapsetByConfigValue(IEnumerable<Mapset> mapsets)
+        {
+            switch (ConfigManager.SelectOrderMapsetsBy.Value)
+            {
+                case OrderMapsetsBy.Artist:
+                    return OrderMapsetsByArtist(mapsets);
+                case OrderMapsetsBy.Title:
+                    return OrderMapsetsByTitle(mapsets);
+                case OrderMapsetsBy.Creator:
+                    return OrderMapsetsByCreator(mapsets);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>

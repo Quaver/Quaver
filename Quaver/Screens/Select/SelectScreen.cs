@@ -46,6 +46,8 @@ namespace Quaver.Screens.Select
             if (AvailableMapsets.Count == 0)
                 AvailableMapsets = MapManager.Mapsets;
 
+            AvailableMapsets = MapsetHelper.OrderMapsetByConfigValue(AvailableMapsets);
+
             DiscordManager.Client.CurrentPresence.Details = "Selecting a song";
             DiscordManager.Client.CurrentPresence.State = "In the menus";
             DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);

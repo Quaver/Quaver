@@ -26,6 +26,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Screens;
+using Wobble.Window;
 using Screen = Wobble.Screens.Screen;
 
 namespace Quaver.Screens.Menu
@@ -146,7 +147,7 @@ namespace Quaver.Screens.Menu
         {
             new ToolbarItem(FontAwesome.PowerOff, GameBase.Game.Exit),
             new ToolbarItem(FontAwesome.Cog, () => DialogManager.Show(new OptionsDialog(0.75f)))
-        })
+        }, new ScalableVector2(WindowManager.Width, 80))
         {
             Parent = Container
         };

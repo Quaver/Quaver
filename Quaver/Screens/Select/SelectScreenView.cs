@@ -10,12 +10,14 @@ using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Menu.UI.BottomToolbar;
 using Quaver.Screens.Select.UI;
+using Quaver.Screens.Select.UI.Search;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Form;
 using Wobble.Screens;
+using Wobble.Window;
 
 namespace Quaver.Screens.Select
 {
@@ -55,7 +57,7 @@ namespace Quaver.Screens.Select
             Toolbar = new Toolbar(new List<ToolbarItem>
             {
                 new ToolbarItem("Home", () => ScreenManager.ChangeScreen(new MainMenuScreen()))
-            }, new List<ToolbarItem>())
+            }, new List<ToolbarItem>(), new ScalableVector2(WindowManager.Width, 80))
             {
                 Parent = Container
             };

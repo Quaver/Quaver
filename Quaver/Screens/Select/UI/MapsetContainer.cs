@@ -107,7 +107,7 @@ namespace Quaver.Screens.Select.UI
 
             // Select the first map of the first mapset for now.
             if (MapManager.Selected.Value == null)
-                MapManager.Selected.Value = MapManager.Mapsets.First().Maps.First();
+                MapManager.Selected.Value = Screen.AvailableMapsets.First().Maps.First();
 
             // BG all the way
             BackgroundManager.Background.Sprite.BrightnessSprite.Alpha = 1;
@@ -377,6 +377,46 @@ namespace Quaver.Screens.Select.UI
                     // ignored. We simply don't care if it can't be played in this case.
                 }
             }
+        }
+
+        public void ReInitializeMapsetButtonsWithNewSets(List<Mapset> sets)
+        {
+            // Don't continue if there aren't any mapsets.
+            if (sets.Count == 0)
+                return;
+
+            // Set the new available sets, and reinitialize the mapset buttons.
+            Screen.AvailableMapsets = sets;
+            InitializeMapsetButtons();
+
+            // Check to see if the current mapset is already in the new search.
+            var foundMapset = sets.FindIndex(x => x.Directory == MapManager.Selected.Value.Mapset.Directory);
+
+            // If the new map is in the search, go straight to it.
+            if (foundMapset != -1)
+            {
+                SelectMap(foundMapset, MapManager.Selected.Value, false, true);
+                ChangeMapsetButtonThumbnail();
+            }
+            // Select the first map in the first mapset, if it's a completely new mapset.
+            else if (MapManager.Selected.Value != Screen.AvailableMapsets.First().Maps.First())
+                SelectMap(0, Screen.AvailableMapsets.First().Maps.First(), true, true);
+            // Otherwise just make sure the mapset thumbnail is up to date anyway.
+            else
+                ChangeMapsetButtonThumbnail();
+        }
+
+        /// <summary>
+        ///     Makes sure the mapset button's thumbnail is up to date with the newly selected map.
+        /// </summary>
+        private void ChangeMapsetButtonThumbnail()
+        {
+            var thumbnail = MapsetButtons[SelectedMapsetIndex].Thumbnail;
+
+            thumbnail.Image = BackgroundManager.Background.Sprite.Image;
+            thumbnail.Transformations.Clear();
+            var t = new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 250);
+            thumbnail.Transformations.Add(t);
         }
     }
 }

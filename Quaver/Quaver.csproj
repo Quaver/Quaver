@@ -201,7 +201,9 @@
     <Compile Include="Screens\Select\UI\DifficultySelector.cs" />
     <Compile Include="Screens\Select\UI\MapsetButton.cs" />
     <Compile Include="Screens\Select\UI\MapsetContainer.cs" />
-    <Compile Include="Screens\Select\UI\MapsetSearchBar.cs" />
+    <Compile Include="Screens\Select\UI\Search\MapsetSearchBar.cs" />
+    <Compile Include="Screens\Select\UI\Search\MapsetSearchOrderer.cs" />
+    <Compile Include="Screens\Select\UI\Search\OrderMapsetsBy.cs" />
     <Compile Include="Screens\Splash\SplashScreen.cs" />
     <Compile Include="Screens\Splash\SplashScreenView.cs" />
     <Compile Include="Skinning\SkinKeys.cs" />

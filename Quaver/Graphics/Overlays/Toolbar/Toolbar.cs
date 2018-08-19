@@ -32,11 +32,12 @@ namespace Quaver.Graphics.Overlays.Toolbar
         /// </summary>
         /// <param name="buttons"></param>
         /// <param name="icons"></param>
-        internal Toolbar(List<ToolbarItem> buttons, List<ToolbarItem> icons)
+        /// <param name="size"></param>
+        internal Toolbar(List<ToolbarItem> buttons, List<ToolbarItem> icons, ScalableVector2 size)
         {
             Buttons = buttons;
             Icons = icons;
-            Size = new ScalableVector2(WindowManager.Width, 80);
+            Size = size;
             Tint = Color.Black;
             Y = 0;
             Alpha = 0f;
@@ -51,7 +52,7 @@ namespace Quaver.Graphics.Overlays.Toolbar
                 Alpha = 0.3f,
                 Y = Height
             };
-            
+
             InitializeToolbarItems();
             InitializeIcons();
         }
@@ -67,7 +68,7 @@ namespace Quaver.Graphics.Overlays.Toolbar
 
                 button.Parent = BottomLine;
                 button.Y = -button.Height;
-                
+
                 if (i != 0)
                     button.X = Buttons[i - 1].Width * i;
             }

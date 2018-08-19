@@ -10,6 +10,7 @@ using IniParser.Model;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Logging;
 using Quaver.Scheduling;
+using Quaver.Screens.Select.UI.Search;
 using Wobble;
 using Wobble.Bindables;
 
@@ -222,6 +223,11 @@ namespace Quaver.Config
         internal static Bindable<bool> BackgroundParallax { get; private set; }
 
         /// <summary>
+        ///     Dictates how to order the mapsets during song select.
+        /// </summary>
+        internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -387,6 +393,7 @@ namespace Quaver.Config
             BotCount = ReadInt(@"BotCount", 4, 1, 6, data);
             AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);
             BackgroundParallax = ReadValue(@"BackgroundParallax", true, data);
+            SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
@@ -469,6 +476,7 @@ namespace Quaver.Config
                     BotsEnabled.ValueChanged += AutoSaveConfiguration;
                     AnimateJudgementCounter.ValueChanged += AutoSaveConfiguration;
                     BackgroundParallax.ValueChanged += AutoSaveConfiguration;
+                    SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
