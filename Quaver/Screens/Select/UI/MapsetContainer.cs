@@ -379,6 +379,11 @@ namespace Quaver.Screens.Select.UI
             }
         }
 
+        /// <summary>
+        ///     Initializes the mapset buttons again with new mapsets. Used for searching
+        ///     and ordering maps.
+        /// </summary>
+        /// <param name="sets"></param>
         public void ReInitializeMapsetButtonsWithNewSets(List<Mapset> sets)
         {
             // Don't continue if there aren't any mapsets.
