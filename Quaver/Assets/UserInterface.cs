@@ -42,6 +42,7 @@ namespace Quaver.Assets
         public static Texture2D SelectBorder { get; set; }
         public static Texture2D DiffSelectButton { get; set; }
         public static Texture2D SearchBar { get; set; }
+        public static Texture2D SelectSearchBackground { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -77,6 +78,7 @@ namespace Quaver.Assets
             SelectBorder = AssetLoader.LoadTexture2D(QuaverResources.select_border, ImageFormat.Png);
             DiffSelectButton = AssetLoader.LoadTexture2D(QuaverResources.diff_select_button, ImageFormat.Png);
             SearchBar = AssetLoader.LoadTexture2D(QuaverResources.search_bar, ImageFormat.Png);
+            SelectSearchBackground = AssetLoader.LoadTexture2D(QuaverResources.select_search_background, ImageFormat.Png);
         }
     }
 }

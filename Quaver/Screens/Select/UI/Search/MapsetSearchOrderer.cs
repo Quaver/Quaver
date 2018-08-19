@@ -52,7 +52,14 @@ namespace Quaver.Screens.Select.UI.Search
         /// </summary>
         private void CreateOrderByText()
         {
+            TextOrderBy = new SpriteText(Fonts.Exo2Regular24, "Order By:", 0.45f)
+            {
+                Parent = this,
+                TextColor = Colors.MainAccent
+            };
 
+            TextOrderBy.Y += TextOrderBy.MeasureString().Y + 1;
+            TextOrderBy.X = FilterButtons[OrderMapsetsBy.Artist].X - TextOrderBy.MeasureString().X / 2f - 10;
         }
 
         private void CreateFilterButtons()
@@ -72,15 +79,16 @@ namespace Quaver.Screens.Select.UI.Search
                     Alpha = 0,
                     Text =
                     {
-                        TextColor = (OrderMapsetsBy) i == ConfigManager.SelectOrderMapsetsBy.Value ? Color.White : ColorHelper.HexToColor("#75e475")
+                        TextColor = (OrderMapsetsBy) i == ConfigManager.SelectOrderMapsetsBy.Value ? Colors.SecondaryAccent : Color.White
                     }
                 };
 
                 var textSize = button.Text.MeasureString();
-                button.Size = new ScalableVector2(textSize.X, textSize.Y);
+                const int extraButtonHeight = 5;
+                button.Size = new ScalableVector2(textSize.X, textSize.Y + extraButtonHeight);
 
                 button.X = SearchBar.SearchBox.X + SearchBar.SearchBox.Width - textSize.X / 2f;
-                button.Y += textSize.Y / 2f;
+                button.Y += (textSize.Y - extraButtonHeight) / 2f;
 
                 // When the button is clicked
                 var option = (OrderMapsetsBy) i;
@@ -102,15 +110,19 @@ namespace Quaver.Screens.Select.UI.Search
         }
 
         /// <summary>
-        ///     When
+        ///     When a filter button is clicked, it'll show the button as clicked and reorder the mapsets.
         /// </summary>
         /// <param name="button"></param>
         /// <param name="orderMapsetsBy"></param>
         private void OnFilterButtonClicked(TextButton button, OrderMapsetsBy orderMapsetsBy)
         {
+            // Don't bother executing if the user clicked the same order option as is already selected.
+            if (orderMapsetsBy == ConfigManager.SelectOrderMapsetsBy.Value)
+                return;
+
             // Change the color of the button.
             button.Text.Transformations.Clear();
-            button.Text.Transformations.Add(new Transformation(Easing.Linear, button.Text.TextColor, Color.White, 200));
+            button.Text.Transformations.Add(new Transformation(Easing.Linear, button.Text.TextColor, Colors.SecondaryAccent, 200));
 
             // Change the color of the other buttons.
             foreach (var item in FilterButtons)
@@ -120,7 +132,7 @@ namespace Quaver.Screens.Select.UI.Search
 
                 item.Value.Text.Transformations.Clear();
                 item.Value.Text.Transformations.Add(new Transformation(Easing.Linear, button.Text.TextColor,
-                                                        ColorHelper.HexToColor("#75e475"), 200));
+                                                        Color.White, 200));
             }
 
             ConfigManager.SelectOrderMapsetsBy.Value = orderMapsetsBy;

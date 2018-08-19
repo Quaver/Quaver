@@ -4,6 +4,7 @@ using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
@@ -57,10 +58,10 @@ namespace Quaver.Screens.Select.UI.Search
 
             Size = new ScalableVector2(585, 70);
             Alignment = Alignment.TopRight;
-            Y = ScreenView.Toolbar.Y + ScreenView.Toolbar.Height + 1;
+            Y = ScreenView.Toolbar.Y + ScreenView.Toolbar.Height;
             X = 1;
-            Tint = Color.Black;
-            Alpha = 0.45f;
+            Alpha = 1f;
+            Image = UserInterface.SelectSearchBackground;
 
             CreateSearchBox();
             CreateSearchIcon();
