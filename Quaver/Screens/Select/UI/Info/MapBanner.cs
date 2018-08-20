@@ -4,10 +4,12 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.API.Helpers;
 using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
+using Quaver.Helpers;
 using Quaver.Shaders;
 using Wobble.Assets;
 using Wobble.Graphics;
@@ -71,6 +73,11 @@ namespace Quaver.Screens.Select.UI.Info
         public RankedStatusFlag RankedStatusFlag { get; private set; }
 
         /// <summary>
+        ///     The background shape that serves as a background behind the metadata.
+        /// </summary>
+        public Sprite MetadataContainerBackground { get; private set; }
+
+        /// <summary>
         ///     Metadata container that says the bpm.
         /// </summary>
         public MetadataContainer Bpm { get; private set; }
@@ -84,6 +91,11 @@ namespace Quaver.Screens.Select.UI.Info
         ///     Metadata container that has the difficulty rating.
         /// </summary>
         public MetadataContainer Difficulty { get; private set; }
+
+        /// <summary>
+        ///     Metadata container for the map's game mode.
+        /// </summary>
+        public MetadataContainer Mode { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -238,22 +250,22 @@ namespace Quaver.Screens.Select.UI.Info
         /// </summary>
         private void CreateMetadataContainers()
         {
-            // Create container for difficulty
-            Difficulty = new MetadataContainer("DIFFICULTY", $"{MapManager.Selected.Value.DifficultyRating:0.##}")
+            MetadataContainerBackground = new Sprite()
             {
                 Parent = Brightness,
-                Alignment = Alignment.BotRight,
-                X = -RankedStatusFlag.Width - 15,
-                Y = -3
+                Alignment = Alignment.BotLeft,
+                Image = UserInterface.MetadataContainer,
+                Size = new ScalableVector2(480, 25),
+                Tint = ColorHelper.HexToColor("#4477b2"),
+                Y = 1
             };
 
-            // Create container for song length
-            Length = new MetadataContainer("LENGTH", TimeSpan.FromMilliseconds(MapManager.Selected.Value.SongLength).ToString(@"mm\:ss"))
+            Mode = new MetadataContainer("MODE", ModeHelper.ToShortHand(MapManager.Selected.Value.Mode))
             {
                 Parent = Brightness,
-                Alignment = Alignment.BotRight,
-                Y = Difficulty.Y,
-                X = Difficulty.X - Difficulty.Width - 15
+                Alignment = Alignment.BotLeft,
+                Y = -3,
+                X = 15
             };
 
             // Create container for BPM
@@ -261,9 +273,27 @@ namespace Quaver.Screens.Select.UI.Info
             Bpm = new MetadataContainer("BPM", bpm.ToString(CultureInfo.InvariantCulture))
             {
                 Parent = Brightness,
-                Alignment = Alignment.BotRight,
-                Y = Difficulty.Y,
-                X = Length.X - Length.Width - 15
+                Alignment = Alignment.BotLeft,
+                Y = Mode.Y,
+                X = Mode.X + Mode.Width + 15
+            };
+
+            // Create container for song length
+            Length = new MetadataContainer("LENGTH", TimeSpan.FromMilliseconds(MapManager.Selected.Value.SongLength).ToString(@"mm\:ss"))
+            {
+                Parent = Brightness,
+                Alignment = Alignment.BotLeft,
+                Y = Mode.Y,
+                X = Bpm.X + Bpm.Width + 15
+            };
+
+            // Create container for difficulty
+            Difficulty = new MetadataContainer("DIFFICULTY", $"{MapManager.Selected.Value.DifficultyRating:0.##}")
+            {
+                Parent = Brightness,
+                Alignment = Alignment.BotLeft,
+                X = Length.X + Length.Width + 15,
+                Y = Mode.Y
             };
         }
 
@@ -294,6 +324,7 @@ namespace Quaver.Screens.Select.UI.Info
             var bpm = (int) MapManager.Selected.Value.Bpm;
             Bpm.UpdateValue(bpm.ToString());
 
+            Mode.UpdateValue(ModeHelper.ToShortHand(MapManager.Selected.Value.Mode));
             AlignMetadataContainers();
 
             // Update the ranked status banner.
@@ -323,9 +354,9 @@ namespace Quaver.Screens.Select.UI.Info
         /// </summary>
         private void AlignMetadataContainers()
         {
-            Difficulty.X = -RankedStatusFlag.Width - 15;
-            Length.X = Difficulty.X - Difficulty.Width - 15;
-            Bpm.X = Length.X - Length.Width - 15;
+            Bpm.X = Mode.X + Mode.Width + 15;
+            Length.X = Bpm.X + Bpm.Width + 15;
+            Difficulty.X = Length.X + Length.Width + 15;
         }
     }
 }

@@ -27,6 +27,7 @@ namespace Quaver.Screens.Select.UI.Info
             Size = new ScalableVector2(125, 25);
             Position = new ScalableVector2(0.5f, 0.5f);
             Image = UserInterface.RankedStatusFlag;
+            Y = 1;
 
             CreateTextStatus();
             ChangeColorAndText();
@@ -37,7 +38,7 @@ namespace Quaver.Screens.Select.UI.Info
             Parent = this,
             TextScale = 0.40f,
             Alignment = Alignment.MidCenter,
-            X = 10
+            X = 10,
         };
 
         /// <summary>
