@@ -41,7 +41,7 @@ namespace Quaver.Screens.Select.UI
         /// <summary>
         ///     The base size of the container.
         /// </summary>
-        private static ScalableVector2 CONTAINER_SIZE { get; } = new ScalableVector2(500, 145);
+        private static ScalableVector2 CONTAINER_SIZE { get; } = new ScalableVector2(550, 145);
 
         /// <inheritdoc />
         /// <summary>
@@ -56,7 +56,7 @@ namespace Quaver.Screens.Select.UI
             Alpha = 0.45f;
             InputEnabled = false;
             Scrollbar.Tint = Color.White;
-            Scrollbar.Width = 8;
+            Scrollbar.Width = 0;
 
             CurrentContainer = new DifficultyButtonContainer(this, Screen.AvailableMapsets[MapsetContainer.SelectedMapsetIndex]);
             CurrentContainer.X = CurrentContainer.Width + 5;
@@ -190,9 +190,6 @@ namespace Quaver.Screens.Select.UI
         /// <param name="time"></param>
         private void ScrollToSelectedDifficulty(int mapIndex, int time)
         {
-            // Change the y of the container if need-be
-            // There's only 4 (index 3) maps that are able to be shown in this case,
-            // we only want to move up the container if the index of the map is off-screen
             if (mapIndex > 2)
             {
                 var targetY = (-mapIndex + 2) * (DifficultyButton.HEIGHT + 3);

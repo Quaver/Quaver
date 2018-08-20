@@ -121,9 +121,7 @@ namespace Quaver.Screens.Select.UI
             // TODO: Set parent and all that jazz in the map info section.
             DifficultySelector = new DifficultySelector(this)
             {
-                Parent = View.Container,
-                Alignment = Alignment.MidCenter,
-                X = -100
+                // Parent = View.Container,
             };
         }
 
@@ -204,10 +202,10 @@ namespace Quaver.Screens.Select.UI
             if (SelectedMapIndex == -1)
                 SelectedMapIndex = 0;
 
+            // Console.WriteLine($"Set: {SelectedMapsetIndex}, Index: {SelectedMapIndex} - {MapManager.Selected.Value.Title}");
+
             // Based on the currently selected mapset, calculate starting index of which to update and draw
             // the mapset buttons in the container.
-            Console.WriteLine($"Set: {SelectedMapsetIndex}, Index: {SelectedMapIndex} - {MapManager.Selected.Value.Title}");
-
             if (SelectedMapsetIndex < BUTTON_POOL_SIZE / 2)
                 PoolStartingIndex = 0;
             else if (SelectedMapsetIndex + BUTTON_POOL_SIZE > Screen.AvailableMapsets.Count)
@@ -346,12 +344,24 @@ namespace Quaver.Screens.Select.UI
 
             // If necessary, change the associated mapset with the difficulty selector.
             // Only necessary if we're changing mapsets and not maps.
-            if (previousMapset != MapManager.Selected.Value.Mapset || forceDifficultySelectorUpdate)
+            if (previousMapset != Screen.AvailableMapsets[SelectedMapsetIndex]|| forceDifficultySelectorUpdate)
                 DifficultySelector?.ChangeAssociatedMapset(Screen.AvailableMapsets[SelectedMapsetIndex]);
 
             // Load background if it doesn't have the same path, or if we're forcing it.
-            if (MapManager.GetBackgroundPath(previousMap) != MapManager.GetBackgroundPath(MapManager.Selected.Value) || forceAssetLoad)
-                BackgroundManager.Load(map, 50);
+            if (MapManager.GetBackgroundPath(previousMap) != MapManager.GetBackgroundPath(MapManager.Selected.Value) ||
+                forceAssetLoad)
+            {
+                BackgroundManager.Load(map, 35);
+
+                // Update the banner.
+                View.MapInfoContainer?.Banner?.UpdateSelectedMap(true);
+            }
+            else
+            {
+                // Update the banner.
+                View.MapInfoContainer?.Banner?.UpdateSelectedMap(false);
+            }
+
 
             // Load auto track if it doesn't have the same path, or if we're forcing the load.
             // ReSharper disable once InvertIf

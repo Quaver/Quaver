@@ -10,9 +10,11 @@ using Quaver.Graphics.Overlays.Toolbar;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Menu.UI.BottomToolbar;
 using Quaver.Screens.Select.UI;
+using Quaver.Screens.Select.UI.Info;
 using Quaver.Screens.Select.UI.Search;
 using Wobble;
 using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Form;
@@ -28,6 +30,9 @@ namespace Quaver.Screens.Select
         /// </summary>
         public Toolbar Toolbar { get; }
 
+        /// <summary>
+        ///     Bottom toolbar.
+        /// </summary>
         private BottomBar BottomBar { get; set; }
 
         /// <summary>
@@ -41,9 +46,9 @@ namespace Quaver.Screens.Select
         private MapsetSearchBar SearchBar { get; }
 
         /// <summary>
-        ///     Searches for mapsets.
+        ///     The map information container.
         /// </summary>
-        private Textbox MapsetSearchBar { get; set; }
+        public MapInfoContainer MapInfoContainer { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -75,6 +80,7 @@ namespace Quaver.Screens.Select
             };
 
             SearchBar = new MapsetSearchBar((SelectScreen) Screen, this) {Parent = Container};
+            MapInfoContainer = new MapInfoContainer((SelectScreen) Screen, this) {Parent = Container };
         }
 
         /// <inheritdoc />

@@ -44,7 +44,7 @@ namespace Quaver.Screens.Select.UI.Search
             Y = SearchBar.SearchBox.Height + 5;
 
             CreateFilterButtons();
-            CreateOrderByText();
+            // CreateOrderByText();
         }
 
         /// <summary>

@@ -60,7 +60,7 @@ namespace Quaver.Screens.Select.UI.Search
             Alignment = Alignment.TopRight;
             Y = ScreenView.Toolbar.Y + ScreenView.Toolbar.Height;
             X = 1;
-            Alpha = 1f;
+            Alpha = 0.90f;
             Image = UserInterface.SelectSearchBackground;
 
             CreateSearchBox();

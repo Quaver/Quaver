@@ -199,6 +199,10 @@
     <Compile Include="Screens\Select\UI\DifficultyButton.cs" />
     <Compile Include="Screens\Select\UI\DifficultyButtonContainer.cs" />
     <Compile Include="Screens\Select\UI\DifficultySelector.cs" />
+    <Compile Include="Screens\Select\UI\Info\MetadataContainer.cs" />
+    <Compile Include="Screens\Select\UI\Info\RankedStatusFlag.cs" />
+    <Compile Include="Screens\Select\UI\Info\MapBanner.cs" />
+    <Compile Include="Screens\Select\UI\Info\MapInfoContainer.cs" />
     <Compile Include="Screens\Select\UI\MapsetButton.cs" />
     <Compile Include="Screens\Select\UI\MapsetContainer.cs" />
     <Compile Include="Screens\Select\UI\Search\MapsetSearchBar.cs" />
