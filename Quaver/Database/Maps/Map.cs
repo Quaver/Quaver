@@ -65,7 +65,7 @@ namespace Quaver.Database.Maps
         /// <summary>
         ///     The ranked status of the map.
         /// </summary>
-        public int RankedStatus { get; set; }
+        public RankedStatus RankedStatus { get; set; }
 
         /// <summary>
         ///     The last time the user has played the map.
