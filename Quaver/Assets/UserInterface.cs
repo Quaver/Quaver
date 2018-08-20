@@ -43,6 +43,8 @@ namespace Quaver.Assets
         public static Texture2D DiffSelectButton { get; set; }
         public static Texture2D SearchBar { get; set; }
         public static Texture2D SelectSearchBackground { get; set; }
+        public static Texture2D SelectInfoBackground { get; set; }
+        public static Texture2D RankedStatusFlag { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -79,6 +81,8 @@ namespace Quaver.Assets
             DiffSelectButton = AssetLoader.LoadTexture2D(QuaverResources.diff_select_button, ImageFormat.Png);
             SearchBar = AssetLoader.LoadTexture2D(QuaverResources.search_bar, ImageFormat.Png);
             SelectSearchBackground = AssetLoader.LoadTexture2D(QuaverResources.select_search_background, ImageFormat.Png);
+            SelectInfoBackground = AssetLoader.LoadTexture2D(QuaverResources.select_info_background, ImageFormat.Png);
+            RankedStatusFlag = AssetLoader.LoadTexture2D(QuaverResources.ranked_status_flag, ImageFormat.Png);
         }
     }
 }
