@@ -8,7 +8,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 
-namespace Quaver.Screens.Select.UI.DifficultySelection
+namespace Quaver.Screens.Select.UI.MapInfo.DifficultySelection
 {
     public class DifficultySelector : ScrollContainer
     {

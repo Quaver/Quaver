@@ -45,7 +45,10 @@ namespace Quaver.Database.Scores
             try
             {
                 var conn = new SQLiteConnection(DatabasePath);
-                var scores = conn.Table<LocalScore>().Where(x => x.MapMd5 == md5).ToList();
+                var sql = $"SELECT * FROM 'LocalScore' WHERE MapMd5=? ORDER BY Score DESC LIMIT 50";
+
+                var scores = conn.Query<LocalScore>(sql, md5);
+                conn.Close();
 
                 return scores.OrderBy(x => x.Grade == Grade.F).ThenByDescending(x => x.Score).ToList();
             }

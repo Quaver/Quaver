@@ -1,10 +1,9 @@
-﻿using System.Drawing;
-using Quaver.Assets;
+﻿using Quaver.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Color = Microsoft.Xna.Framework.Color;
 
-namespace Quaver.Screens.Select.UI.Info
+namespace Quaver.Screens.Select.UI.MapInfo.Banner
 {
     public class MetadataContainer : Sprite
     {

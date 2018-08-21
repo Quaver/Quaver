@@ -7,7 +7,7 @@ using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
-using Quaver.Screens.Select.UI.DifficultySelection;
+using Quaver.Screens.Select.UI.MapInfo.DifficultySelection;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
@@ -113,11 +113,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             InitializeMapsetButtons();
             SelectMap(SelectedMapsetIndex, Screen.AvailableMapsets[SelectedMapsetIndex].Maps[SelectedMapIndex], true);
 
-            // TODO: Set parent and all that jazz in the map info section.
-            DifficultySelector = new DifficultySelector(this)
-            {
-                // Parent = View.Container,
-            };
+            DifficultySelector = new DifficultySelector(this);
         }
 
         /// <inheritdoc />

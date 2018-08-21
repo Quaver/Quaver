@@ -1,16 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Skinning;
-using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 
-namespace Quaver.Screens.Select.UI.DifficultySelection
+namespace Quaver.Screens.Select.UI.MapInfo.DifficultySelection
 {
     public class DifficultyButton : Button
     {

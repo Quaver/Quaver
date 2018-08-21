@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
 using Quaver.Graphics;
-using Quaver.Helpers;
 using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
-namespace Quaver.Screens.Select.UI.DifficultySelection
+namespace Quaver.Screens.Select.UI.MapInfo.DifficultySelection
 {
     public class DifficultySelectorContainer : HeaderedContainer
     {
@@ -57,7 +55,7 @@ namespace Quaver.Screens.Select.UI.DifficultySelection
             // Make the actual DifficultySelector a parent of this.
             // It is originally created in MapsetContainer, so that it can be used to select the first difficulty
             var diffSelector = View.MapsetContainer.DifficultySelector;
-            diffSelector.Parent = content;
+            // diffSelector.Parent = content;
 
             return content;
         }

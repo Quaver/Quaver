@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Drawing;
 using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Database.Maps;
-using Quaver.Graphics;
 using Quaver.Helpers;
-using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
-using Color = Microsoft.Xna.Framework.Color;
 
-namespace Quaver.Screens.Select.UI.Info
+namespace Quaver.Screens.Select.UI.MapInfo.Banner
 {
     public class RankedStatusFlag : Sprite
     {
@@ -27,7 +23,7 @@ namespace Quaver.Screens.Select.UI.Info
             Size = new ScalableVector2(125, 25);
             Position = new ScalableVector2(0.5f, 0.5f);
             Image = UserInterface.RankedStatusFlag;
-            Y = 1;
+            Y = 2;
 
             CreateTextStatus();
             ChangeColorAndText();

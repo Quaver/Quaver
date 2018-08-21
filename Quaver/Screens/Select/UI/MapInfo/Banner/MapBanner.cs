@@ -1,24 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
 using Quaver.Assets;
 using Quaver.Database.Maps;
-using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Helpers;
-using Quaver.Shaders;
-using Wobble.Assets;
 using Wobble.Graphics;
-using Wobble.Graphics.Shaders;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Window;
 
-namespace Quaver.Screens.Select.UI.Info
+namespace Quaver.Screens.Select.UI.MapInfo.Banner
 {
     public class MapBanner : Sprite
     {
@@ -255,7 +248,7 @@ namespace Quaver.Screens.Select.UI.Info
                 Image = UserInterface.MetadataContainer,
                 Size = new ScalableVector2(510, 25),
                 Tint = ColorHelper.HexToColor("#2a6fdb"),
-                Y = 1
+                Y = 2
             };
 
             Mode = new MetadataContainer("MODE", ModeHelper.ToShortHand(MapManager.Selected.Value.Mode))

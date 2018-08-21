@@ -10,6 +10,7 @@ using IniParser.Model;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Logging;
 using Quaver.Scheduling;
+using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Quaver.Screens.Select.UI.Search;
 using Wobble;
 using Wobble.Bindables;
@@ -228,6 +229,11 @@ namespace Quaver.Config
         internal static Bindable<OrderMapsetsBy> SelectOrderMapsetsBy { get; private set; }
 
         /// <summary>
+        ///     The selected leaderboard section.
+        /// </summary>
+        internal static Bindable<LeaderboardRankingSection> SelectLeaderboardSection { get; private set; }
+
+        /// <summary>
         ///     Keybindings for 4K
         /// </summary>
         internal static Bindable<Keys> KeyMania4K1 { get; private set; }
@@ -394,6 +400,7 @@ namespace Quaver.Config
             AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);
             BackgroundParallax = ReadValue(@"BackgroundParallax", true, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
+            SelectLeaderboardSection = ReadValue(@"SelectedLeaderboardSection", LeaderboardRankingSection.Local, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);
@@ -477,6 +484,7 @@ namespace Quaver.Config
                     AnimateJudgementCounter.ValueChanged += AutoSaveConfiguration;
                     BackgroundParallax.ValueChanged += AutoSaveConfiguration;
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
+                    SelectLeaderboardSection.ValueChanged += AutoSaveConfiguration;
                 });
         }
 
