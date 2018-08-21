@@ -51,12 +51,12 @@ namespace Quaver.Screens.Edit.UI
                 Alignment = Alignment.MidLeft
             };
 
-            TextProgressPercent = new SpriteText(Fonts.AssistantRegular16, "")
+            TextProgressPercent = new SpriteText(Fonts.Exo2Regular24, "")
             {
                 TextColor = Color.White,
                 Parent = Progress,
                 TextAlignment = Alignment.MidCenter,
-                TextScale = 0.85f
+                TextScale = 0.65f
             };
 
             switch (Axis)

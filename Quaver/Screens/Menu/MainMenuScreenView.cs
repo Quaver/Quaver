@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.API.Replays;
 using Quaver.Assets;
+using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Notifications;

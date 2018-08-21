@@ -69,7 +69,7 @@ namespace Quaver.Screens.Gameplay.UI.Counter
 
         /// <inheritdoc />
         /// <summary>
-        ///     Ctor - 
+        ///     Ctor -
         /// </summary>
         /// <param name="parentDisplay"></param>
         /// <param name="j"></param>
@@ -82,12 +82,12 @@ namespace Quaver.Screens.Gameplay.UI.Counter
 
             Size = new ScalableVector2(size.X, size.Y);
 
-            SpriteText = new SpriteText(Fonts.AssistantRegular16, JudgementHelper.JudgementToShortName(j))
+            SpriteText = new SpriteText(Fonts.Exo2Regular24, JudgementHelper.JudgementToShortName(j))
             {
                 Alignment = Alignment.MidCenter,
                 Parent = this,
                 TextColor = Color.Black,
-                TextScale = 0.75f,
+                TextScale = 0.45f,
                 X = 0,
             };
 
@@ -102,7 +102,7 @@ namespace Quaver.Screens.Gameplay.UI.Counter
         {
             // Make sure the color is always tweening down back to its inactive one.
             FadeToColor(InactiveColor, gameTime.ElapsedGameTime.TotalMilliseconds, 360);
-        
+
             base.Update(gameTime);
         }
     }

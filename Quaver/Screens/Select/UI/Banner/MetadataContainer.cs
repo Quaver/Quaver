@@ -27,7 +27,7 @@ namespace Quaver.Screens.Select.UI.Info
         {
             Tint = Color.Black;
             Alpha = 0;
-            KeyText = new SpriteText(Fonts.CorbertRegular24, key.ToUpper() + ":")
+            KeyText = new SpriteText(Fonts.Exo2Regular24, key.ToUpper() + ":")
             {
                 Parent = this,
                 TextScale = 0.45f,
@@ -35,11 +35,12 @@ namespace Quaver.Screens.Select.UI.Info
                 Y = 1
             };
 
-            ValueText = new SpriteText(Fonts.Exo2Bold24, value.ToUpper())
+            ValueText = new SpriteText(Fonts.Exo2BoldItalic24, value.ToUpper())
             {
                 Parent = this,
                 TextScale = 0.45f,
-                Alignment = Alignment.MidLeft
+                Alignment = Alignment.MidLeft,
+                Y = 1
             };
 
             AlignText();

@@ -155,7 +155,6 @@ namespace Quaver.Screens.Select.UI.Info
 
             Background = new Sprite
             {
-                Image = UserInterface.MenuBackground,
                 Size = new ScalableVector2(WindowManager.Width / 2f, WindowManager.Height / 2f),
                 Alignment = Alignment.TopCenter,
                 Y = -100
@@ -174,7 +173,6 @@ namespace Quaver.Screens.Select.UI.Info
             Alignment = Mask.Alignment,
             Position = Mask.Position,
             Tint = Color.Black,
-            Alpha = 0.50f
         };
 
         /// <summary>
@@ -256,7 +254,7 @@ namespace Quaver.Screens.Select.UI.Info
                 Alignment = Alignment.BotLeft,
                 Image = UserInterface.MetadataContainer,
                 Size = new ScalableVector2(480, 25),
-                Tint = ColorHelper.HexToColor("#4477b2"),
+                Tint = ColorHelper.HexToColor("#2a6fdb"),
                 Y = 1
             };
 

@@ -110,8 +110,8 @@ namespace Quaver.Screens.Results.UI.Statistics
                 StatsContainers[i].Content.SetChildrenAlpha = true;
 
                 // Create Tab Button
-                StatsContainers[i].Button = new TextButton(UserInterface.BlankBox, Fonts.AssistantRegular16,
-                                                            StatsContainers[i].Name.ToUpper(), 0.75f)
+                StatsContainers[i].Button = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24,
+                                                            StatsContainers[i].Name.ToUpper(), 0.45f)
                 {
                     Parent = buttonContainer,
                     Alignment = Alignment.MidLeft,

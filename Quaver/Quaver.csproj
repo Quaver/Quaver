@@ -66,6 +66,7 @@
     <Compile Include="Assets\Titles.cs" />
     <Compile Include="Assets\UserInterface.cs" />
     <Compile Include="Audio\AudioEngine.cs" />
+    <Compile Include="Audio\Visualizer.cs" />
     <Compile Include="Config\ConfigHelper.cs" />
     <Compile Include="Config\ConfigManager.cs" />
     <Compile Include="Database\Maps\Map.cs" />
@@ -199,10 +200,10 @@
     <Compile Include="Screens\Select\UI\DifficultyButton.cs" />
     <Compile Include="Screens\Select\UI\DifficultyButtonContainer.cs" />
     <Compile Include="Screens\Select\UI\DifficultySelector.cs" />
-    <Compile Include="Screens\Select\UI\Info\MetadataContainer.cs" />
-    <Compile Include="Screens\Select\UI\Info\RankedStatusFlag.cs" />
-    <Compile Include="Screens\Select\UI\Info\MapBanner.cs" />
-    <Compile Include="Screens\Select\UI\Info\MapInfoContainer.cs" />
+    <Compile Include="Screens\Select\UI\Banner\MetadataContainer.cs" />
+    <Compile Include="Screens\Select\UI\Banner\RankedStatusFlag.cs" />
+    <Compile Include="Screens\Select\UI\Banner\MapBanner.cs" />
+    <Compile Include="Screens\Select\UI\Banner\MapInfoContainer.cs" />
     <Compile Include="Screens\Select\UI\MapsetButton.cs" />
     <Compile Include="Screens\Select\UI\MapsetContainer.cs" />
     <Compile Include="Screens\Select\UI\Search\MapsetSearchBar.cs" />
@@ -221,6 +222,10 @@
     </Reference>
     <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c">
       <HintPath>INIFileParser.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedBass, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\ManagedBass.2.0.4\lib\net45\ManagedBass.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
