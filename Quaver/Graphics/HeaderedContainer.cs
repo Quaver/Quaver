@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
-namespace Quaver.Screens.Results.UI
+namespace Quaver.Graphics
 {
     public abstract class HeaderedContainer : Sprite
     {

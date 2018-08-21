@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Database.Maps;
+using Quaver.Screens.Select.UI.MapsetSelection;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
-using Wobble.Screens;
 
-namespace Quaver.Screens.Select.UI
+namespace Quaver.Screens.Select.UI.DifficultySelection
 {
     public class DifficultySelector : ScrollContainer
     {
@@ -27,7 +27,6 @@ namespace Quaver.Screens.Select.UI
         /// </summary>
         public SelectScreenView ScreenView => MapsetContainer.View;
 
-
         /// <summary>
         ///     The container that holds the currently selected mapset's difficulties.
         /// </summary>
@@ -41,7 +40,7 @@ namespace Quaver.Screens.Select.UI
         /// <summary>
         ///     The base size of the container.
         /// </summary>
-        private static ScalableVector2 CONTAINER_SIZE { get; } = new ScalableVector2(550, 145);
+        private static ScalableVector2 CONTAINER_SIZE { get; } = new ScalableVector2(565, 145);
 
         /// <inheritdoc />
         /// <summary>
@@ -53,10 +52,9 @@ namespace Quaver.Screens.Select.UI
             MapsetContainer = container;
 
             Tint = Color.Black;
-            Alpha = 0.45f;
+            Alpha = 0f;
             InputEnabled = false;
             Scrollbar.Tint = Color.White;
-            Scrollbar.Width = 0;
 
             CurrentContainer = new DifficultyButtonContainer(this, Screen.AvailableMapsets[MapsetContainer.SelectedMapsetIndex]);
             CurrentContainer.X = CurrentContainer.Width + 5;
@@ -65,6 +63,7 @@ namespace Quaver.Screens.Select.UI
             CalculateScrollContainerHeight(Screen.AvailableMapsets[MapsetContainer.SelectedMapsetIndex]);
             SnapToSelectedDifficulty(MapsetContainer.SelectedMapIndex);
 
+            Scrollbar.Width = Screen.AvailableMapsets[MapsetContainer.SelectedMapsetIndex].Maps.Count > 3 ? 3 : 0;
             AddContainedDrawable(CurrentContainer);
 
             PreviousContainers = new List<DifficultyButtonContainer>();
@@ -148,8 +147,9 @@ namespace Quaver.Screens.Select.UI
                 Visible = true
             };
 
+            Scrollbar.Width = set.Maps.Count > 3 ? 3 : 0;
+
             CalculateScrollContainerHeight(set);
-            SnapToSelectedDifficulty(set.Maps.FindIndex(x => x == MapManager.Selected.Value));
             AddContainedDrawable(CurrentContainer);
         }
 

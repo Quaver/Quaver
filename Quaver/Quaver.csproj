@@ -81,6 +81,7 @@
     <Compile Include="Graphics\Backgrounds\BackgroundManager.cs" />
     <Compile Include="Graphics\Colors.cs" />
     <Compile Include="Graphics\Graphing\Graph.cs" />
+    <Compile Include="Graphics\HeaderedContainer.cs" />
     <Compile Include="Graphics\Notifications\Notification.cs" />
     <Compile Include="Graphics\Notifications\NotificationLevel.cs" />
     <Compile Include="Graphics\Notifications\NotificationManager.cs" />
@@ -185,7 +186,6 @@
     <Compile Include="Screens\Results\ResultsScreen.cs" />
     <Compile Include="Screens\Results\ResultsScreenType.cs" />
     <Compile Include="Screens\Results\ResultsScreenView.cs" />
-    <Compile Include="Screens\Results\UI\HeaderedContainer.cs" />
     <Compile Include="Screens\Results\UI\JudgementBreakdown.cs" />
     <Compile Include="Screens\Results\UI\MapInformation.cs" />
     <Compile Include="Screens\Results\UI\ResultsButtonContainer.cs" />
@@ -197,15 +197,16 @@
     <Compile Include="Screens\Results\UI\Statistics\StatisticContainer.cs" />
     <Compile Include="Screens\Select\SelectScreen.cs" />
     <Compile Include="Screens\Select\SelectScreenView.cs" />
-    <Compile Include="Screens\Select\UI\DifficultyButton.cs" />
-    <Compile Include="Screens\Select\UI\DifficultyButtonContainer.cs" />
-    <Compile Include="Screens\Select\UI\DifficultySelector.cs" />
     <Compile Include="Screens\Select\UI\Banner\MetadataContainer.cs" />
     <Compile Include="Screens\Select\UI\Banner\RankedStatusFlag.cs" />
     <Compile Include="Screens\Select\UI\Banner\MapBanner.cs" />
     <Compile Include="Screens\Select\UI\Banner\MapInfoContainer.cs" />
-    <Compile Include="Screens\Select\UI\MapsetButton.cs" />
-    <Compile Include="Screens\Select\UI\MapsetContainer.cs" />
+    <Compile Include="Screens\Select\UI\DifficultySelection\DifficultyButton.cs" />
+    <Compile Include="Screens\Select\UI\DifficultySelection\DifficultyButtonContainer.cs" />
+    <Compile Include="Screens\Select\UI\DifficultySelection\DifficultySelector.cs" />
+    <Compile Include="Screens\Select\UI\DifficultySelection\DifficultySelectorContainer.cs" />
+    <Compile Include="Screens\Select\UI\MapsetSelection\MapsetButton.cs" />
+    <Compile Include="Screens\Select\UI\MapsetSelection\MapsetContainer.cs" />
     <Compile Include="Screens\Select\UI\Search\MapsetSearchBar.cs" />
     <Compile Include="Screens\Select\UI\Search\MapsetSearchOrderer.cs" />
     <Compile Include="Screens\Select\UI\Search\OrderMapsetsBy.cs" />

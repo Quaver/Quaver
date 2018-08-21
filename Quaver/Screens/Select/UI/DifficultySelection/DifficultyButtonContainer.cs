@@ -2,7 +2,7 @@
 using Quaver.Database.Maps;
 using Wobble.Graphics.Sprites;
 
-namespace Quaver.Screens.Select.UI
+namespace Quaver.Screens.Select.UI.DifficultySelection
 {
     public class DifficultyButtonContainer : Sprite
     {

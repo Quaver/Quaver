@@ -1,15 +1,16 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Skinning;
+using Wobble.Assets;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 
-namespace Quaver.Screens.Select.UI
+namespace Quaver.Screens.Select.UI.DifficultySelection
 {
     public class DifficultyButton : Button
     {
@@ -26,12 +27,7 @@ namespace Quaver.Screens.Select.UI
         /// <summary>
         ///     The height of the difficulty selection item.
         /// </summary>
-        public static int HEIGHT = 33;
-
-        /// <summary>
-        ///     The game mode the map is for
-        /// </summary>
-        public Sprite GameMode { get; }
+        public static int HEIGHT = 34;
 
         /// <summary>
         ///     The grade achieved on the map.
@@ -55,17 +51,8 @@ namespace Quaver.Screens.Select.UI
 
             Parent = buttonContainer;
             Size = new ScalableVector2(ButtonContainer.Width, HEIGHT);
-            Tint = Color.Black;
-
-            GameMode = new Sprite()
-            {
-                Parent = this,
-                Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(HEIGHT * 0.75f, HEIGHT * 0.75f),
-                Image = SkinManager.Skin.Grades[Grade.S],
-                X = 8,
-                UsePreviousSpriteBatchOptions = true
-            };
+            Tint = Colors.MainAccent;
+            Image = UserInterface.DiffButtonInactive;
 
             GradeAchieved = new Sprite()
             {
@@ -73,7 +60,7 @@ namespace Quaver.Screens.Select.UI
                 Alignment = Alignment.MidLeft,
                 Size = new ScalableVector2(HEIGHT * 0.75f, HEIGHT * 0.75f),
                 Image = Map.HighestRank == Grade.None ? SkinManager.Skin.Grades[Grade.A] : SkinManager.Skin.Grades[Map.HighestRank],
-                X = GameMode.X + GameMode.Width + 8,
+                X = 8,
                 UsePreviousSpriteBatchOptions = true
             };
 
@@ -99,7 +86,7 @@ namespace Quaver.Screens.Select.UI
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            FadeToColor(MapManager.Selected.Value == Map ? Colors.MainAccent : Color.Black, gameTime.ElapsedGameTime.TotalMilliseconds, 90);
+            Image = MapManager.Selected.Value == Map ? UserInterface.DiffButton : UserInterface.DiffButtonInactive;
             base.Update(gameTime);
         }
     }

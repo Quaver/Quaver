@@ -108,11 +108,11 @@ namespace Quaver.Screens.Select.UI.Info
             Alignment = Alignment.TopCenter;
 
             // All of this serves as a border for now.
-            Size = new ScalableVector2(585, 150);
+            Size = new ScalableVector2(610, 150);
             Y = 10;
             Image = UserInterface.BlankBox;
-            Tint = Color.White;
-            Alpha = 0.75f;
+            Tint = Color.Black;
+            Alpha = 1f;
 
             CreateMask();
             CreateBrightnessSprite();
@@ -146,7 +146,7 @@ namespace Quaver.Screens.Select.UI.Info
             Mask = new SpriteMaskContainer
             {
                 Parent = this,
-                Size = new ScalableVector2(581, 146),
+                Size = new ScalableVector2(606, 146),
                 Image = UserInterface.BlankBox,
                 Alignment = Alignment.MidCenter,
                 X = 0,
@@ -169,7 +169,7 @@ namespace Quaver.Screens.Select.UI.Info
         private void CreateBrightnessSprite() => Brightness = new Sprite
         {
             Parent = this,
-            Size =  new ScalableVector2(Mask.Width + 1, Mask.Height),
+            Size =  new ScalableVector2(Mask.Width + 2, Mask.Height),
             Alignment = Mask.Alignment,
             Position = Mask.Position,
             Tint = Color.Black,
@@ -253,7 +253,7 @@ namespace Quaver.Screens.Select.UI.Info
                 Parent = Brightness,
                 Alignment = Alignment.BotLeft,
                 Image = UserInterface.MetadataContainer,
-                Size = new ScalableVector2(480, 25),
+                Size = new ScalableVector2(510, 25),
                 Tint = ColorHelper.HexToColor("#2a6fdb"),
                 Y = 1
             };
@@ -343,7 +343,7 @@ namespace Quaver.Screens.Select.UI.Info
 
             // Undim the background.
             Brightness.Transformations.Clear();
-            var brightnessTf = new Transformation(TransformationProperty.Alpha, Easing.Linear, Brightness.Alpha, 0.50f, 300);
+            var brightnessTf = new Transformation(TransformationProperty.Alpha, Easing.Linear, Brightness.Alpha, 0.40f, 300);
             Brightness.Transformations.Add(brightnessTf);
         }
 

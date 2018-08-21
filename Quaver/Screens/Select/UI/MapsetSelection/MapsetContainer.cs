@@ -1,28 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using Quaver.Assets;
 using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
-using Quaver.Screens.Menu;
 using Quaver.Screens.Select.UI.DifficultySelection;
-using Wobble.Audio;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
-using Wobble.Graphics.UI.Buttons;
 using Wobble.Input;
 using Wobble.Screens;
 using Wobble.Window;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
-namespace Quaver.Screens.Select.UI
+namespace Quaver.Screens.Select.UI.MapsetSelection
 {
     public class MapsetContainer : ScrollContainer
     {
@@ -352,7 +346,7 @@ namespace Quaver.Screens.Select.UI
             if (MapManager.GetBackgroundPath(previousMap) != MapManager.GetBackgroundPath(MapManager.Selected.Value) ||
                 forceAssetLoad)
             {
-                BackgroundManager.Load(map, 35);
+                BackgroundManager.Load(map, 60);
 
                 // Update the banner.
                 View.MapInfoContainer?.Banner?.UpdateSelectedMap(true);

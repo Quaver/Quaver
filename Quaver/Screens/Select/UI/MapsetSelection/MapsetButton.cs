@@ -10,7 +10,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Buttons;
 
-namespace Quaver.Screens.Select.UI
+namespace Quaver.Screens.Select.UI.MapsetSelection
 {
     public class MapsetButton : Button
     {
