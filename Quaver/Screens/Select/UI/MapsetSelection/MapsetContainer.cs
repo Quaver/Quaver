@@ -11,6 +11,7 @@ using Quaver.Database.Maps;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Screens.Menu;
+using Quaver.Screens.Select.UI.DifficultySelection;
 using Wobble.Audio;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
