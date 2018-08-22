@@ -93,29 +93,29 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
 
                     LeaderboardScores.Add(score);
                 }
+            }
 
-                // Calculate how large the scroll container should be, based on the amount of objects.
-                if (LeaderboardScores.Count <= 5)
-                {
-                    // In the event that there aren't that main scores, just set the content size to the same as
-                    // the overall container (No need for scrolling)
-                    ScrollContainer.ContentContainer.Size = ScrollContainer.Size;
+            // Snap all the way up to the top of the scroll container.
+            ScrollContainer.ScrollTo(0, 1);
 
-                    ScrollContainer.Scrollbar.Visible = false;
-                }
-                else
-                {
-                    ScrollContainer.Scrollbar.Visible = true;
-
-                    ScrollContainer.ContentContainer.Height = scores.Count * (LeaderboardScores.First().Height + 5);
-                    ScrollContainer.ScrollTo(0, 1);
-                }
-
+            // If there are more than 5 scores (only 5 can be displayed at a time),
+            // Then calculate the actual size of the scroll container.
+            if (LeaderboardScores.Count > 5)
+            {
+                ScrollContainer.Scrollbar.Visible = true;
+                ScrollContainer.ContentContainer.Height = scores.Count * (LeaderboardScores.First().Height + 5);
                 return;
             }
 
-            // If there aren't any scores available, display text stating that.
-            CreateNoScoresAvailableText();
+            // In the event that there aren't more than 5 scores, we don't need scrolling,
+            // So to reset it, set the ContentContainer's side back to the original.
+            // the overall container (No need for scrolling)
+            ScrollContainer.ContentContainer.Size = ScrollContainer.Size;
+            ScrollContainer.Scrollbar.Visible = false;
+
+            // Display text stating that there are no scores available.
+            if (LeaderboardScores.Count == 0)
+                CreateNoScoresAvailableText();
         }
 
         /// <summary>
