@@ -8,6 +8,7 @@ using Quaver.Database.Maps;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Screens.Select.UI.MapInfo.DifficultySelection;
+using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
@@ -325,6 +326,22 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
                 NotificationManager.Show(NotificationLevel.Error, "Something went extremely wrong when selecting that map.");
                 ScreenManager.ChangeScreen(new SelectScreen());
                 return;
+            }
+
+            // Handle the clearing of scores.
+            switch (ConfigManager.SelectLeaderboardSection.Value)
+            {
+                // Always clear scores if we're on local.
+                case LeaderboardRankingSection.Local:
+                    if (MapManager.Selected.Value != map)
+                        MapManager.Selected.Value?.ClearScores();
+                    break;
+                // TODO: If we're on global, we'll want to cache scores to reduce the amount
+                // of requests made.
+                case LeaderboardRankingSection.Global:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             // Change the actual map.

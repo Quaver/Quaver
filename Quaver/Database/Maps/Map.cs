@@ -10,6 +10,7 @@ using Quaver.Config;
 using Quaver.Database.Scores;
 using SQLite;
 using Wobble;
+using Wobble.Bindables;
 
 namespace Quaver.Database.Maps
 {
@@ -153,6 +154,12 @@ namespace Quaver.Database.Maps
         public Mapset Mapset { get; set; }
 
         /// <summary>
+        ///     The scores for this map.
+        /// </summary>
+        [Ignore]
+        public Bindable<List<LocalScore>> Scores { get; } = new Bindable<List<LocalScore>>(null);
+
+        /// <summary>
         ///     Responsible for converting a Qua object, to a Map object
         ///     a Map object is one that is stored in the db.
         /// </summary>
@@ -232,6 +239,15 @@ namespace Quaver.Database.Maps
                     await writer.WriteAsync($"{Artist} - {Title} [{DifficultyName}]");
                 }
             });
+        }
+
+        /// <summary>
+        ///     Unhooks all of the event handlers and clears the scores.
+        /// </summary>
+        public void ClearScores()
+        {
+            Scores.UnHookEventHandlers();
+            Scores.Value?.Clear();
         }
     }
 
