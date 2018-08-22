@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading;
+using Microsoft.Xna.Framework;
+using Quaver.Assets;
+using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
+using Quaver.Graphics;
 using Quaver.Scheduling;
+using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
 {
@@ -13,7 +21,17 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         /// <summary>
         ///     The current leaderboard scores displayed.
         /// </summary>
-        public List<LeaderboardScore> LeaderboardScores { get; private set; }
+        public List<LeaderboardScore> LeaderboardScores { get; }
+
+        /// <summary>
+        ///     If there are no scores available on the map.
+        /// </summary>
+        private SpriteText NoScoresSubmittedText { get; set; }
+
+        /// <summary>
+        ///     The direction we're animating the no scores text.
+        /// </summary>
+        private Direction NoScoresSubmittedAnimationDirection { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -21,8 +39,8 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         /// <param name="rankingSection"></param>
         /// <param name="leaderboard"></param>
         /// <param name="name"></param>
-        protected LeaderboardSectionScores(LeaderboardRankingSection rankingSection, Leaderboard leaderboard,
-            string name) : base(rankingSection, leaderboard, name)
+        protected LeaderboardSectionScores(LeaderboardRankingSection rankingSection, Leaderboard leaderboard, string name)
+            : base(rankingSection, leaderboard, name)
         // ReSharper disable once ArrangeConstructorOrDestructorBody
         {
             // ReSharper disable once ArrangeConstructorOrDestructorBody
@@ -35,24 +53,43 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         /// <returns></returns>
         protected abstract List<LocalScore> FetchScores();
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Updates the section
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            if (NoScoresSubmittedText != null)
+                AnimateNoScoresSubmittedText(gameTime);
+        }
+
         /// <summary>
         ///     Creates the drawables for leaderboard scores.
         /// </summary>
         /// <returns></returns>
         private void CreateLeaderboardScores(IReadOnlyList<LocalScore> scores)
         {
-            for (var i = 0; i < scores.Count; i++)
+            if (scores.Count > 0)
             {
-                var score = new LeaderboardScore(this, scores[i], i + 1);
-                score.Y = i * score.Height + i * 5;
+                for (var i = 0; i < scores.Count; i++)
+                {
+                    var score = new LeaderboardScore(this, scores[i], i + 1);
+                    score.Y = i * score.Height + i * 5;
 
-                score.X = -score.Width;
+                    score.X = -score.Width;
 
-                var t = new Transformation(TransformationProperty.X, Easing.EaseOutQuint, score.X, 0, 600 + 90 * i);
-                score.Transformations.Add(t);
+                    var t = new Transformation(TransformationProperty.X, Easing.EaseOutQuint, score.X, 0, 600 + 90 * i);
+                    score.Transformations.Add(t);
 
-                LeaderboardScores.Add(score);
+                    LeaderboardScores.Add(score);
+                }
+
+                return;
             }
+
+            // If there aren't any scores available, display text stating that.
+            CreateNoScoresAvailableText();
         }
 
         /// <summary>
@@ -60,6 +97,8 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         /// </summary>
         private void ClearLeaderboard()
         {
+            NoScoresSubmittedText?.Destroy();
+            NoScoresSubmittedText = null;
             LeaderboardScores.ForEach(x => x.Destroy());
             LeaderboardScores.Clear();
         }
@@ -89,6 +128,66 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
                 if (MapManager.Selected.Value == mapBeforeFetching)
                     CreateLeaderboardScores(mapBeforeFetching.Scores.Value);
             });
+        }
+
+        /// <summary>
+        ///     Creates the text that displays if there are no scores available.
+        /// </summary>
+        private void CreateNoScoresAvailableText()
+        {
+            string text;
+
+            switch (ConfigManager.SelectLeaderboardSection.Value)
+            {
+                case LeaderboardRankingSection.Local:
+                    text = "No local scores available for this map. Start playing!";
+                    break;
+                case LeaderboardRankingSection.Global:
+                    text = "No global scores submitted for this map. Be the first one!";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            NoScoresSubmittedText = new SpriteText(Fonts.Exo2Regular24, text, 0.50f)
+            {
+                TextColor = Color.White,
+                Alignment = Alignment.MidCenter,
+                Visible = false,
+            };
+
+            NoScoresSubmittedAnimationDirection = Direction.Forward;
+            ContentContainer.AddContainedDrawable(NoScoresSubmittedText);
+        }
+
+        /// <summary>
+        ///     Adds a "pulsing" animation to the no scores submitted text.
+        /// </summary>
+        private void AnimateNoScoresSubmittedText(GameTime gameTime)
+        {
+            NoScoresSubmittedText.Visible = true;
+
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            switch (NoScoresSubmittedAnimationDirection)
+            {
+                case Direction.Forward:
+                    NoScoresSubmittedText.TextScale = MathHelper.Lerp(NoScoresSubmittedText.TextScale, 0.55f, (float) Math.Min(dt / 240, 1));
+
+                    if (Math.Abs(NoScoresSubmittedText.TextScale - 0.55f) < 0.01)
+                        NoScoresSubmittedAnimationDirection = Direction.Backward;
+                    break;
+                case Direction.Backward:
+                    NoScoresSubmittedText.TextScale = MathHelper.Lerp(NoScoresSubmittedText.TextScale, 0.50f, (float) Math.Min(dt / 240, 1));
+
+                    if (Math.Abs(NoScoresSubmittedText.TextScale - 0.50f) < 0.01)
+                        NoScoresSubmittedAnimationDirection = Direction.Forward;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            NoScoresSubmittedText.Y = NoScoresSubmittedText.MeasureString().Y / 2f;
         }
     }
 }

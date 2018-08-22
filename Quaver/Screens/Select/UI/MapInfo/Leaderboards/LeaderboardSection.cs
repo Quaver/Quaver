@@ -1,4 +1,5 @@
-﻿using Wobble.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
@@ -47,6 +48,14 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
                 Y = Leaderboard.DividerLine.Y + 5,
                 Alpha = 0
             };
+        }
+
+        /// <summary>
+        ///     Updates the section itself.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public virtual void Update(GameTime gameTime)
+        {
         }
     }
 }

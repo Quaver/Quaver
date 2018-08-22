@@ -55,6 +55,16 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
             CreateSections();
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            Sections[ConfigManager.SelectLeaderboardSection.Value].Update(gameTime);
+            base.Update(gameTime);
+        }
+
         /// <summary>
         ///     The divider line for the leaderboard container.
         /// </summary>

@@ -225,6 +225,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
                 Container.Screen.AvailableMapsets[Container.SelectedMapsetIndex].PreferredMap = MapManager.Selected.Value;
 
                 // If there is a preferred map, switch to it, otherwise choose the first map in the set.
+                // TODO: Handle recommended difficulties here and give preferred more priority over recommended.
                 var newMap = Mapset.PreferredMap ?? Mapset.Maps.First();
                 Container.SelectMap(MapsetIndex, newMap);
             }
