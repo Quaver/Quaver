@@ -171,7 +171,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
                 Parent = this,
                 Alignment = Alignment.BotRight,
                 TextScale = 0.50f,
-                X = -5,
+                X = -10,
                 Y = -5
             };
 
@@ -190,7 +190,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
                 Parent = this,
                 Alignment = Alignment.TopRight,
                 TextScale = 0.50f,
-                X = -5,
+                X = -10,
                 Y = 5
             };
 
