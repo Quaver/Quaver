@@ -9,6 +9,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Screens;
 
 namespace Quaver.Screens.Select.UI.MapsetSelection
 {
@@ -219,7 +220,14 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
         private void Select(object sender, EventArgs e)
         {
             if (Container.SelectedMapsetIndex != MapsetIndex)
-                Container.SelectMap(MapsetIndex, Mapset.Maps.First());
+            {
+                // Set the preferred map in this current set.
+                Container.Screen.AvailableMapsets[Container.SelectedMapsetIndex].PreferredMap = MapManager.Selected.Value;
+
+                // If there is a preferred map, switch to it, otherwise choose the first map in the set.
+                var newMap = Mapset.PreferredMap ?? Mapset.Maps.First();
+                Container.SelectMap(MapsetIndex, newMap);
+            }
         }
 
         /// <summary>

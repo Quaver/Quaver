@@ -15,6 +15,11 @@ namespace Quaver.Database.Maps
         /// </summary>
         public List<Map> Maps { get; set; }
 
+        /// <summary>
+        ///     The last selected/preferred map in this set
+        /// </summary>
+        public Map PreferredMap { get; set; }
+
         public string Artist => Maps.First().Artist;
         public string Title => Maps.First().Title;
         public string Creator => Maps.First().Creator;
