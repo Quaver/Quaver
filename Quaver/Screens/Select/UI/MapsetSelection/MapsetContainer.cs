@@ -333,6 +333,9 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             // Scroll to the new mapset.
             ScrollTo((-SelectedMapsetIndex + 1) * (MapsetButton.BUTTON_HEIGHT + MapsetButton.BUTTON_Y_SPACING), 2100);
 
+            // Update the leaderboard with the new map.
+            View.MapInfoContainer?.Leaderboard?.UpdateLeaderboard();
+
             // If necessary, change the associated mapset with the difficulty selector.
             // Only necessary if we're changing mapsets and not maps.
             if (previousMapset != Screen.AvailableMapsets[SelectedMapsetIndex]|| forceDifficultySelectorUpdate)

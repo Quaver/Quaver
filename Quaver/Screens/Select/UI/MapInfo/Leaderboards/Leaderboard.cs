@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Quaver.Config;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -85,6 +87,25 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
                     var previousSection = Sections[(LeaderboardRankingSection) i - 1];
                     section.Button.X = previousSection.Button.X + previousSection.Button.Width + 10;
                 }
+            }
+        }
+
+        /// <summary>
+        ///     Updates the leaderboard section.
+        /// </summary>
+        public void UpdateLeaderboard()
+        {
+            switch (ConfigManager.SelectLeaderboardSection.Value)
+            {
+                case LeaderboardRankingSection.Local:
+                    var localLeaderboard = (LeaderboardSectionLocal) Sections[LeaderboardRankingSection.Local];
+                    localLeaderboard.FetchAndUpdateLeaderboards();
+                    break;
+                // Ignore.
+                case LeaderboardRankingSection.Global:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

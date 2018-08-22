@@ -35,16 +35,27 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         ///     Creates the drawables for leaderboard scores.
         /// </summary>
         /// <returns></returns>
-        protected void CreateLeaderboardScores(List<LocalScore> scores)
+        private void CreateLeaderboardScores(IReadOnlyList<LocalScore> scores)
         {
             LeaderboardScores.ForEach(x => x.Destroy());
-            LeaderboardScores = new List<LeaderboardScore>();
+            LeaderboardScores.Clear();
 
             for (var i = 0; i < scores.Count; i++)
             {
                 var score = new LeaderboardScore(this, scores[i], i + 1);
                 score.Y = i * score.Height + i * 5;
+
+                LeaderboardScores.Add(score);
             }
+        }
+
+        /// <summary>
+        ///     Fetches the scores and updates the leaderboards.
+        /// </summary>
+        public void FetchAndUpdateLeaderboards()
+        {
+            var scores = FetchScores();
+            CreateLeaderboardScores(scores);
         }
     }
 }
