@@ -318,12 +318,12 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
 
             // Change the selected indexes.
             SelectedMapsetIndex = mapsetIndex;
-            SelectedMapIndex = Screen.AvailableMapsets[SelectedMapsetIndex].Maps.FindIndex(x => x == map);
+            SelectedMapIndex = Screen.AvailableMapsets[SelectedMapsetIndex].Maps.FindIndex(x => x.Md5Checksum == map.Md5Checksum);
 
-            // Something must've really messed up. Shouldn't ever get this.
+            // Happens when a user searches for a map that's already in the selected set.
+            // TODO: Fix this.
             if (SelectedMapIndex == -1)
             {
-                NotificationManager.Show(NotificationLevel.Error, "Something went extremely wrong when selecting that map.");
                 ScreenManager.ChangeScreen(new SelectScreen());
                 return;
             }
