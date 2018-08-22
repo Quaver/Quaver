@@ -4,6 +4,7 @@ using System.Threading;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 using Quaver.Scheduling;
+using Wobble.Graphics.Transformations;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
 {
@@ -44,6 +45,11 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             {
                 var score = new LeaderboardScore(this, scores[i], i + 1);
                 score.Y = i * score.Height + i * 5;
+
+                score.X = -score.Width;
+
+                var t = new Transformation(TransformationProperty.X, Easing.EaseOutQuint, score.X, 0, 600 + 90 * i);
+                score.Transformations.Add(t);
 
                 LeaderboardScores.Add(score);
             }
