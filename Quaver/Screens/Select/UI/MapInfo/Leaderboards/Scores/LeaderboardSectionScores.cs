@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
@@ -12,6 +13,7 @@ using Quaver.Scheduling;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
+using Wobble.Input;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
@@ -45,6 +47,11 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         {
             // ReSharper disable once ArrangeConstructorOrDestructorBody
             LeaderboardScores = new List<LeaderboardScore>();
+
+            ScrollContainer.EasingType = Easing.EaseOutQuint;
+            ScrollContainer.TimeToCompleteScroll = 1500;
+            ScrollContainer.Scrollbar.Tint = Color.White;
+            ScrollContainer.Scrollbar.Width = 3;
         }
 
         /// <summary>
@@ -62,6 +69,8 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         {
             if (NoScoresSubmittedText != null)
                 AnimateNoScoresSubmittedText(gameTime);
+
+            HandleInput();
         }
 
         /// <summary>
@@ -83,6 +92,23 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
                     score.Transformations.Add(t);
 
                     LeaderboardScores.Add(score);
+                }
+
+                // Calculate how large the scroll container should be, based on the amount of objects.
+                if (LeaderboardScores.Count <= 5)
+                {
+                    // In the event that there aren't that main scores, just set the content size to the same as
+                    // the overall container (No need for scrolling)
+                    ScrollContainer.ContentContainer.Size = ScrollContainer.Size;
+
+                    ScrollContainer.Scrollbar.Visible = false;
+                }
+                else
+                {
+                    ScrollContainer.Scrollbar.Visible = true;
+
+                    ScrollContainer.ContentContainer.Height = scores.Count * (LeaderboardScores.First().Height + 5);
+                    ScrollContainer.ScrollTo(0, 1);
                 }
 
                 return;
@@ -143,7 +169,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
                     text = "No local scores available for this map. Start playing!";
                     break;
                 case LeaderboardRankingSection.Global:
-                    text = "No global scores submitted for this map. Be the first one!";
+                    text = "Not implemented yet, check back later. Sorry!";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -157,7 +183,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             };
 
             NoScoresSubmittedAnimationDirection = Direction.Forward;
-            ContentContainer.AddContainedDrawable(NoScoresSubmittedText);
+            ScrollContainer.AddContainedDrawable(NoScoresSubmittedText);
         }
 
         /// <summary>
@@ -188,6 +214,28 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             }
 
             NoScoresSubmittedText.Y = NoScoresSubmittedText.MeasureString().Y / 2f;
+        }
+
+        /// <summary>
+        ///     Handles scrolling input for the container.
+        /// </summary>
+        private void HandleInput()
+        {
+            var selectScreenView = (SelectScreenView) Leaderboard.Screen.View;
+
+            // If the mouse is in the bounds of the scroll container, then
+            // allow that to scroll, and turn off mapset scrolling.
+            if (GraphicsHelper.RectangleContains(ScrollContainer.ScreenRectangle, MouseManager.CurrentState.Position))
+            {
+                ScrollContainer.InputEnabled = true;
+                selectScreenView.MapsetContainer.InputEnabled = false;
+            }
+            // If the mouse is outside the bounds of the scroll container, then turn mapset scrolling back on.
+            else
+            {
+                ScrollContainer.InputEnabled = false;
+                selectScreenView.MapsetContainer.InputEnabled = true;
+            }
         }
     }
 }

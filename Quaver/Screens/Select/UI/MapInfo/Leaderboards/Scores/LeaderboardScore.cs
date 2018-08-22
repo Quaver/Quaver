@@ -70,7 +70,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             Section = section;
             Score = score;
 
-            Size = new ScalableVector2(section.ContentContainer.Width, 56);
+            Size = new ScalableVector2(section.ScrollContainer.Width, 56);
             Tint = Colors.DarkGray;
             Alpha = 0.65f;
 
@@ -82,7 +82,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             CreateAccuracyText();
             CreateModsText();
 
-            section.ContentContainer.AddContainedDrawable(this);
+            section.ScrollContainer.AddContainedDrawable(this);
         }
 
         /// <summary>

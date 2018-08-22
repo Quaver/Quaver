@@ -24,7 +24,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         /// <summary>
         ///     Holds the content of the leaderboard section.
         /// </summary>
-        public ScrollContainer ContentContainer { get; }
+        public ScrollContainer ScrollContainer { get; }
 
         ///  <summary>
         ///
@@ -41,7 +41,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
             var size = new ScalableVector2(Leaderboard.Width,
                 Leaderboard.Height - Leaderboard.DividerLine.Y + Leaderboard.DividerLine.Height);
 
-            ContentContainer = new ScrollContainer(size, size)
+            ScrollContainer = new ScrollContainer(size, size)
             {
                 Parent = Leaderboard,
                 Size = size,
