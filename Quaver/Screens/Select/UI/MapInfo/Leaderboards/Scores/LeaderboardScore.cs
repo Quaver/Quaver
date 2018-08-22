@@ -70,7 +70,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             Section = section;
             Score = score;
 
-            Size = new ScalableVector2(section.ContentContainer.Width, 50);
+            Size = new ScalableVector2(section.ContentContainer.Width, 56);
             Tint = Colors.DarkGray;
             Alpha = 0.65f;
 
@@ -115,7 +115,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                X = 15,
+                X = 18,
                 TextScale = 0.65f
             };
 
@@ -133,7 +133,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
                 Parent = this,
                 TextScale = 0.50f,
                 X = GradeAchieved.X + GradeAchieved.Width + 10,
-                Y = 3
+                Y = 5
             };
 
             var size = Username.MeasureString() / 2f;
@@ -152,7 +152,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
                 Parent = this,
                 TextScale = 0.50f,
                 X = GradeAchieved.X + GradeAchieved.Width + 10,
-                Y = Height - 3
+                Y = Height - 5
             };
 
             var size = ScoreText.MeasureString() / 2f;
@@ -172,7 +172,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
                 Alignment = Alignment.BotRight,
                 TextScale = 0.50f,
                 X = -5,
-                Y = -3
+                Y = -5
             };
 
             var size = Accuracy.MeasureString() / 2f;
@@ -191,7 +191,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
                 Alignment = Alignment.TopRight,
                 TextScale = 0.50f,
                 X = -5,
-                Y = 3
+                Y = 5
             };
 
             var size = Mods.MeasureString() / 2f;

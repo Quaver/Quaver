@@ -19,7 +19,9 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         /// <param name="name"></param>
         protected LeaderboardSectionScores(LeaderboardRankingSection rankingSection, Leaderboard leaderboard,
             string name) : base(rankingSection, leaderboard, name)
+        // ReSharper disable once ArrangeConstructorOrDestructorBody
         {
+            // ReSharper disable once ArrangeConstructorOrDestructorBody
             LeaderboardScores = new List<LeaderboardScore>();
         }
 

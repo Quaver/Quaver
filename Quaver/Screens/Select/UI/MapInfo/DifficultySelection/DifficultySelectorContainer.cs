@@ -29,7 +29,6 @@ namespace Quaver.Screens.Select.UI.MapInfo.DifficultySelection
             View = view;
 
             X = 8;
-            Header.Image = AssetLoader.LoadTexture2DFromFile(@"C:\users\admin\desktop\diff-selector-header.png");
             Header.Tint = Colors.DarkGray;
 
             CreateContent();
