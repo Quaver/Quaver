@@ -535,6 +535,10 @@ namespace Quaver.Screens.Options
                 // Anim Judge Counter
                 new OptionsItem(this, "Animate Judgement Counter", new Checkbox(ConfigManager.AnimateJudgementCounter, new Vector2(20, 20),
                     FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
+
+                // Bots Enabled
+                new OptionsItem(this, "Bots Enabled", new Checkbox(ConfigManager.BotsEnabled, new Vector2(20, 20),
+                    FontAwesome.CircleClosed, FontAwesome.CircleOpen, false)),
             });
 
         /// <summary>
