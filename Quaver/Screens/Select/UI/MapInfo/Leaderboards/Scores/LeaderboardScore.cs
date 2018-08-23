@@ -5,14 +5,17 @@ using Quaver.Config;
 using Quaver.Database.Scores;
 using Quaver.Graphics;
 using Quaver.Helpers;
+using Quaver.Screens.Results;
 using Quaver.Skinning;
 using Wobble.Discord.RPC;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Buttons;
+using Wobble.Screens;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
 {
-    public class LeaderboardScore : Sprite
+    public class LeaderboardScore : Button
     {
         /// <summary>
         ///     The parent leaderboard section.
@@ -83,6 +86,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             CreateModsText();
 
             section.ScrollContainer.AddContainedDrawable(this);
+            Clicked += (sender, args) => ScreenManager.ChangeScreen(new ResultsScreen(Score));
         }
 
         /// <summary>
