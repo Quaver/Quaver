@@ -89,6 +89,16 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             Clicked += (sender, args) => ScreenManager.ChangeScreen(new ResultsScreen(Score));
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            PerformHoverAnimations(gameTime);
+            base.Update(gameTime);
+        }
+
         /// <summary>
         ///     Creates the user's avatar.
         /// </summary>
@@ -101,6 +111,9 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             X = 50
         };
 
+        /// <summary>
+        ///     Creates the grade achieved sprite.
+        /// </summary>
         private void CreateGradeAchieved() => GradeAchieved = new Sprite()
         {
             Parent = this,
@@ -201,6 +214,16 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             var size = Mods.MeasureString() / 2f;
             Mods.X -= size.X;
             Mods.Y += size.Y;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void PerformHoverAnimations(GameTime gameTime)
+        {
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+            FadeToColor(IsHovered ? Color.LightBlue : Colors.DarkGray, dt, 120);
         }
     }
 }
