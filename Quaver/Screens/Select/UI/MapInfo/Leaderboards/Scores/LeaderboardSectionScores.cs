@@ -100,7 +100,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
 
             // If there are more than 7 scores (only 7 can be displayed at a time),
             // Then calculate the actual size of the scroll container.
-            if (LeaderboardScores.Count > 7)
+            if (LeaderboardScores.Count > 6)
             {
                 ScrollContainer.Scrollbar.Visible = true;
                 ScrollContainer.ContentContainer.Height = scores.Count * (LeaderboardScores.First().Height + 5);

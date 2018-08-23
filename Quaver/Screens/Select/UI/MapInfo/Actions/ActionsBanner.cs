@@ -48,7 +48,17 @@ namespace Quaver.Screens.Select.UI.MapInfo.Actions
             InitializeButtons();
         }
 
-                ///  <summary>
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            FadeButtons(gameTime.ElapsedGameTime.TotalMilliseconds);
+            base.Update(gameTime);
+        }
+
+        ///  <summary>
         ///  </summary>
         ///  <returns></returns>
         private void InitializeButtons()
@@ -82,6 +92,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Actions
                 btn.Size = new ScalableVector2(200, Height * 0.60f);
                 btn.Alignment = Alignment.MidLeft;
                 btn.Alpha = 1f;
+                btn.Tint = Colors.DarkGray;
 
                 var sizePer = Width / Buttons.Count;
                 btn.X = sizePer * i + sizePer / 2f - btn.Width / 2f;
@@ -102,6 +113,19 @@ namespace Quaver.Screens.Select.UI.MapInfo.Actions
             };
 
             return btn;
+        }
+
+        /// <summary>
+        ///    Makes sure only hovered of selected buttons are faded to the correct colors.
+        /// </summary>
+        /// <param name="dt"></param>
+        private void FadeButtons(double dt)
+        {
+            for (var i = 0; i < Buttons.Count; i++)
+            {
+                var btn = Buttons[i];
+                btn.FadeToColor(btn.IsHovered ? Color.White : Colors.DarkGray, dt, 60);
+            }
         }
     }
 }
