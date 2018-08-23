@@ -402,7 +402,7 @@ namespace Quaver.Screens.Gameplay
                 };
 
                 // Make sure the user's score is updated with the current user.
-                for (var j = 0; j < Screen.Ruleset.ScoreProcessor.TotalJudgementCount; j++)
+                for (var j = 0; j < Screen.Ruleset.ScoreProcessor.TotalJudgementCount && i < user.UserJudgements.Count; j++)
                     user.Processor.CalculateScore(user.UserJudgements[j]);
 
                 Scoreboard.Users.Add(user);
