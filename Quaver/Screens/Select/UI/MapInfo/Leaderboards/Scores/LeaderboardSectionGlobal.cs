@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Quaver.API.Enums;
+﻿using System.Collections.Generic;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
 {
-    public class LeaderboardSectionLocal : LeaderboardSectionScores
+    public class LeaderboardSectionGlobal : LeaderboardSectionScores
     {
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="leaderboard"></param>
-        public LeaderboardSectionLocal(Leaderboard leaderboard) : base(LeaderboardRankingSection.Local, leaderboard, "Local Rankings")
+        public LeaderboardSectionGlobal(Leaderboard leaderboard) : base(LeaderboardRankingSection.Global, leaderboard, "Global Rankings")
         {
             ScrollContainer.Alpha = 0;
             FetchAndUpdateLeaderboards();
@@ -24,6 +21,6 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        protected sealed override List<LocalScore> FetchScores() => LocalScoreCache.FetchMapScores(MapManager.Selected.Value.Md5Checksum);
+        protected sealed override List<LocalScore> FetchScores() => new List<LocalScore>();
     }
 }

@@ -62,6 +62,22 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         public override void Update(GameTime gameTime)
         {
             Sections[ConfigManager.SelectLeaderboardSection.Value].Update(gameTime);
+
+
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            foreach (var section in Sections)
+            {
+                if (section.Key != ConfigManager.SelectLeaderboardSection.Value)
+                {
+                    section.Value.ScrollContainer.X = MathHelper.Lerp(section.Value.ScrollContainer.X, -section.Value.ScrollContainer.Width - 100, (float) Math.Min(dt / 60, 1));
+                }
+                else
+                {
+                    section.Value.ScrollContainer.X = MathHelper.Lerp(section.Value.ScrollContainer.X, 0, (float) Math.Min(dt / 60, 1));
+                }
+            }
+
             base.Update(gameTime);
         }
 
@@ -84,7 +100,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
             Sections = new Dictionary<LeaderboardRankingSection, LeaderboardSection>
             {
                 [LeaderboardRankingSection.Local] = new LeaderboardSectionLocal(this),
-                [LeaderboardRankingSection.Global] = new LeaderboardSection(LeaderboardRankingSection.Global, this, "Global")
+                [LeaderboardRankingSection.Global] = new LeaderboardSectionGlobal(this)
             };
 
             for (var i = 0; i < Sections.Count; i++)
@@ -113,6 +129,8 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
                     break;
                 // Ignore.
                 case LeaderboardRankingSection.Global:
+                    var globalLeaderboard = (LeaderboardSectionGlobal) Sections[LeaderboardRankingSection.Global];
+                    globalLeaderboard.FetchAndUpdateLeaderboards();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

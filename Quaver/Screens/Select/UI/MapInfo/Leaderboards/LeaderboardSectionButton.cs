@@ -49,7 +49,10 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
 
             Text.X = 1;
 
-            Clicked += (o, e) => ConfigManager.SelectLeaderboardSection.Value = Section.RankingSection;
+            Clicked += (o, e) =>
+            {
+                ConfigManager.SelectLeaderboardSection.Value = Section.RankingSection;
+            };
         }
 
         /// <inheritdoc />

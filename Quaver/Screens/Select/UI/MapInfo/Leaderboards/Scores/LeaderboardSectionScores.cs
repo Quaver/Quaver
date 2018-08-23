@@ -165,7 +165,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         {
             string text;
 
-            switch (ConfigManager.SelectLeaderboardSection.Value)
+            switch (RankingSection)
             {
                 case LeaderboardRankingSection.Local:
                     text = "No local scores available for this map. Start playing!";
