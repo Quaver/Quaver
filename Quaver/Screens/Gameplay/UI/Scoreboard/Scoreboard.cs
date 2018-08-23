@@ -14,7 +14,7 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
         /// <summary>
         ///     The list of users on the scoreboard.
         /// </summary>
-        private List<ScoreboardUser> Users { get; }
+        public List<ScoreboardUser> Users { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -66,7 +66,7 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
         ///     Sets the target y positions (where the scoreboard should move to)
         ///     Based on their rank.
         /// </summary>
-        private void SetTargetYPositions()
+        public void SetTargetYPositions()
         {
             var users = Users.OrderBy(x => x.Processor.Health <= 0).ThenByDescending(x => x.Processor.Score).ToList();
 

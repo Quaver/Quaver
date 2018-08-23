@@ -204,6 +204,7 @@ namespace Quaver.Screens.Gameplay
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            CheckIfNewScoreboardUsers();
             UpdateScoreAndAccuracyDisplays();
             GradeDisplay.X = GradeDisplayX;
             HandlePlayCompletion(gameTime);
@@ -345,26 +346,6 @@ namespace Quaver.Screens.Gameplay
                 }
             };
 
-            // Add local scores.
-            if (Screen.LocalScores != null)
-            {
-                for (var i = 0; i < Screen.LocalScores.Count && i < 5; i++)
-                {
-                    // Decompress score
-                    var scoreJudgements = new List<Judgement>();
-
-                    // Decompress the local score and add all the judgements to the list
-                    foreach (var c in GzipHelper.Decompress(Screen.LocalScores[i].JudgementBreakdown))
-                        scoreJudgements.Add((Judgement)int.Parse(c.ToString()));
-
-                    users.Add(new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{Screen.LocalScores[i].Name} #{i + 1}", scoreJudgements, UserInterface.UnknownAvatar)
-                    {
-                        Parent = Container,
-                        Alignment = Alignment.MidLeft
-                    });
-                }
-            }
-
             // Create bots on the scoreboard.
             if (ConfigManager.BotsEnabled.Value)
             {
@@ -393,6 +374,47 @@ namespace Quaver.Screens.Gameplay
         ///     Updates the scoreboard for all the current users.
         /// </summary>
         public void UpdateScoreboardUsers() => Scoreboard.CalculateScores();
+
+        /// <summary>
+        ///     Checks if there are new scoreboard users.
+        /// </summary>
+        private void CheckIfNewScoreboardUsers()
+        {
+            var mapScores = MapManager.Selected.Value.Scores.Value;
+
+            if (ConfigManager.BotsEnabled.Value || mapScores == null || mapScores.Count <= 0 || Scoreboard.Users.Count != 1)
+                return;
+
+            for (var i = 0; i < 5 && i < mapScores.Count; i++)
+            {
+                // Decompress score
+                var scoreJudgements = new List<Judgement>();
+
+                // Decompress the local score and add all the judgements to the list
+                foreach (var c in GzipHelper.Decompress(mapScores[i].JudgementBreakdown))
+                    scoreJudgements.Add((Judgement)int.Parse(c.ToString()));
+
+                var user = new ScoreboardUser(Screen, ScoreboardUserType.Other, $"{mapScores[i].Name} #{i + 1}",
+                    scoreJudgements, UserInterface.UnknownAvatar)
+                {
+                    Parent = Container,
+                    Alignment = Alignment.MidLeft
+                };
+
+                // Make sure the user's score is updated with the current user.
+                for (var j = 0; j < Screen.Ruleset.ScoreProcessor.TotalJudgementCount; j++)
+                    user.Processor.CalculateScore(user.UserJudgements[j]);
+
+                Scoreboard.Users.Add(user);
+            }
+
+            Scoreboard.SetTargetYPositions();
+
+            // Re-change the transitioner and pause screen's parent so that they appear on top of the scoreboard
+            // again.
+            Transitioner.Parent = Container;
+            PauseScreen.Parent = Container;
+        }
 
         /// <summary>
         ///     Starts the fade out process for the game on play completion.

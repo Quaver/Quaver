@@ -44,7 +44,7 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
         ///     The list of order judgements the user has gotten, so we can calculate their score
         ///     as the user plays the map.
         /// </summary>
-        private List<Judgement> UserJudgements { get; }
+        public List<Judgement> UserJudgements { get; }
 
         /// <summary>
         ///     The avatar for the user.
@@ -215,6 +215,7 @@ namespace Quaver.Screens.Gameplay.UI.Scoreboard
             if (UserJudgements.Count - 1 < CurrentJudgement)
                 return;
 
+            // Check how many judgements
             Processor.CalculateScore(UserJudgements[CurrentJudgement]);
             HitBurst.PerformJudgementAnimation(UserJudgements[CurrentJudgement]);
             SetTextColorBasedOnHealth();

@@ -153,6 +153,8 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
                 // If the map is still the same after fetching, we'll want to create leaderboard scores.
                 if (MapManager.Selected.Value == mapBeforeFetching)
                     CreateLeaderboardScores(mapBeforeFetching.Scores.Value);
+                else
+                    mapBeforeFetching.ClearScores();
             });
         }
 
