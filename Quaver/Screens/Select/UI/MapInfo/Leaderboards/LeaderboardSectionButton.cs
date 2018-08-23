@@ -52,6 +52,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
             Clicked += (o, e) =>
             {
                 ConfigManager.SelectLeaderboardSection.Value = Section.RankingSection;
+                Section.Leaderboard.UpdateLeaderboard();
             };
         }
 

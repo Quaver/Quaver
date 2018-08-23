@@ -132,7 +132,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         /// <summary>
         ///     Fetches the scores and updates the leaderboards.
         /// </summary>
-        public void FetchAndUpdateLeaderboards()
+        public void FetchAndUpdateLeaderboards(List<LocalScore> scores)
         {
             ClearLeaderboard();
 
@@ -140,9 +140,9 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             Scheduler.RunThread(() =>
             {
                 // If we already have scores cached, then use them.
-                if (MapManager.Selected.Value.Scores.Value != null && MapManager.Selected.Value.Scores?.Value?.Count != 0)
+                if (scores != null && scores.Count != 0)
                 {
-                    CreateLeaderboardScores(MapManager.Selected.Value.Scores.Value);
+                    CreateLeaderboardScores(scores);
                     return;
                 }
 

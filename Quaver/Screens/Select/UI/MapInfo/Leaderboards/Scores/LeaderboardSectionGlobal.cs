@@ -14,7 +14,9 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         public LeaderboardSectionGlobal(Leaderboard leaderboard) : base(LeaderboardRankingSection.Global, leaderboard, "Global Rankings")
         {
             ScrollContainer.Alpha = 0;
-            FetchAndUpdateLeaderboards();
+
+            // TOOD: REPLACE WITH ONLINE SCORES
+            FetchAndUpdateLeaderboards(null);
         }
 
         /// <inheritdoc />

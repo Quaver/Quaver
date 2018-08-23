@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -125,12 +126,14 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
             {
                 case LeaderboardRankingSection.Local:
                     var localLeaderboard = (LeaderboardSectionLocal) Sections[LeaderboardRankingSection.Local];
-                    localLeaderboard.FetchAndUpdateLeaderboards();
+                    localLeaderboard.FetchAndUpdateLeaderboards(MapManager.Selected.Value.Scores.Value);
                     break;
                 // Ignore.
                 case LeaderboardRankingSection.Global:
                     var globalLeaderboard = (LeaderboardSectionGlobal) Sections[LeaderboardRankingSection.Global];
-                    globalLeaderboard.FetchAndUpdateLeaderboards();
+
+                    // TODO: REPLACE WITH ONLINE SCORES
+                    globalLeaderboard.FetchAndUpdateLeaderboards(null);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
