@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Helpers;
 using Quaver.Assets;
+using Quaver.Graphics.Backgrounds;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -86,13 +87,13 @@ namespace Quaver.Screens.Results.UI
                 Tint = Color.White
             };
 
-            Background = new Sprite
+            Background = new Sprite()
             {
                 Parent = BackgroundBorder,
                 Size = new ScalableVector2(BackgroundBorder.Width - 2, BackgroundBorder.Height - 2),
                 Alignment = Alignment.TopLeft,
                 Position = new ScalableVector2(1, 1),
-                Image = UserInterface.MenuBackground
+                Image = BackgroundManager.Background.Image
             };
 
             Title = new SpriteText(Fonts.AllerRegular16, Screen.SongTitle)
