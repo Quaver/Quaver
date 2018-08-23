@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
 using Quaver.Assets;
 using Quaver.Database.Maps;
+using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Helpers;
 using Wobble.Graphics;
@@ -101,11 +102,11 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             Alignment = Alignment.TopCenter;
 
             // All of this serves as a border for now.
-            Size = new ScalableVector2(610, 150);
-            Y = 10;
+            Size = new ScalableVector2(778, 175);
+            Y = 0;
             Image = UserInterface.BlankBox;
-            Tint = Color.Black;
-            Alpha = 1f;
+            Tint = Colors.MainAccent;
+            Alpha = 0f;
 
             CreateMask();
             CreateBrightnessSprite();
@@ -139,7 +140,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             Mask = new SpriteMaskContainer
             {
                 Parent = this,
-                Size = new ScalableVector2(606, 146),
+                Size = new ScalableVector2(772, 171),
                 Image = UserInterface.BlankBox,
                 Alignment = Alignment.MidCenter,
                 X = 0,
@@ -148,9 +149,9 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
 
             Background = new Sprite
             {
-                Size = new ScalableVector2(WindowManager.Width / 2f, WindowManager.Height / 2f),
+                Size = new ScalableVector2(WindowManager.Width / 1.6f, WindowManager.Height / 1.6f),
                 Alignment = Alignment.TopCenter,
-                Y = -100
+                Y = -50
             };
 
             Mask.AddContainedSprite(Background);
@@ -162,7 +163,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         private void CreateBrightnessSprite() => Brightness = new Sprite
         {
             Parent = this,
-            Size =  new ScalableVector2(Mask.Width + 2, Mask.Height),
+            Size =  new ScalableVector2(Mask.Width + 2, Mask.Height + 1),
             Alignment = Mask.Alignment,
             Position = Mask.Position,
             Tint = Color.Black,
@@ -171,7 +172,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         /// <summary>
         ///     Creates the Artist Text.
         /// </summary>
-        private void CreateArtistText() => TextArtist = new SpriteText(Fonts.Exo2Regular24, MapManager.Selected.Value.Artist,  0.60f)
+        private void CreateArtistText() => TextArtist = new SpriteText(Fonts.Exo2Regular24, MapManager.Selected.Value.Artist,  0.65f)
         {
             Parent = Brightness,
             Alignment = Alignment.TopLeft,
@@ -181,7 +182,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         /// <summary>
         ///     Creates the song title text.
         /// </summary>
-        private void CreateTitleText() => TextTitle = new SpriteText(Fonts.Exo2Regular24, MapManager.Selected.Value.Title,  0.55f)
+        private void CreateTitleText() => TextTitle = new SpriteText(Fonts.Exo2Regular24, MapManager.Selected.Value.Title,  0.60f)
         {
             Parent = Brightness,
             Alignment = Alignment.TopLeft,
@@ -191,7 +192,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         ///     Creates the Difficulty text
         /// </summary>
         private void CreateDifficultyText() => TextDifficulty = new SpriteText(Fonts.Exo2BoldItalic24,
-            MapManager.Selected.Value.DifficultyName,  0.45f)
+            MapManager.Selected.Value.DifficultyName,  0.50f)
         {
             Parent = Brightness,
             Alignment = Alignment.TopLeft,
@@ -201,7 +202,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         ///     Creates the Creator text.
         /// </summary>
         private void CreateCreatorText() => TextCreator = new SpriteText(Fonts.Exo2Regular24,
-            $"- By: {MapManager.Selected.Value.Creator}",  0.40f)
+            $"- By: {MapManager.Selected.Value.Creator}",  0.45f)
         {
             Parent = Brightness,
             Alignment = Alignment.TopLeft,
@@ -215,7 +216,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             const int leftSideSpacing = 15;
 
             var textArtistSize = TextArtist.MeasureString() / 2f;
-            TextArtist.Position = new ScalableVector2(textArtistSize.X + leftSideSpacing, textArtistSize.Y + 15);
+            TextArtist.Position = new ScalableVector2(textArtistSize.X + leftSideSpacing, textArtistSize.Y + 35);
 
             var textTitleSize = TextTitle.MeasureString() / 2f;
             TextTitle.Position = new ScalableVector2(textTitleSize.X + leftSideSpacing, TextArtist.Y + textArtistSize.Y + 15);

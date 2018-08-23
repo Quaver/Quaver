@@ -43,7 +43,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
             View = view;
 
             var banner = container.Banner;
-            Size = new ScalableVector2(banner.Width - 2, 325);
+            Size = new ScalableVector2(banner.Width - 2, 372);
             Tint = Color.Black;
             Alpha = 0;
 

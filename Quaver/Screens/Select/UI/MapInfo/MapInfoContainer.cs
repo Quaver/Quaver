@@ -1,4 +1,5 @@
-﻿using Quaver.Screens.Select.UI.MapInfo.Banner;
+﻿using Quaver.Screens.Select.UI.MapInfo.Actions;
+using Quaver.Screens.Select.UI.MapInfo.Banner;
 using Quaver.Screens.Select.UI.MapInfo.DifficultySelection;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Wobble.Graphics;
@@ -30,6 +31,11 @@ namespace Quaver.Screens.Select.UI.MapInfo
         public Leaderboard Leaderboard { get; }
 
         /// <summary>
+        ///     Banner that just displays "Actions"
+        /// </summary>
+        public ActionsBanner ActionsBanner { get; }
+
+        /// <summary>
         ///     The container for difficulty selection.
         /// </summary>
         public DifficultySelectorContainer DifficultySelectorContainer { get; }
@@ -38,19 +44,21 @@ namespace Quaver.Screens.Select.UI.MapInfo
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public MapInfoContainer (SelectScreen screen, SelectScreenView view)
+        public MapInfoContainer(SelectScreen screen, SelectScreenView view)
         {
             Screen = screen;
             View = view;
 
             Alignment = Alignment.MidLeft;
-            Size = new ScalableVector2(625, 575);
-            X = 80;
+            Size = new ScalableVector2(780, 608);
             Tint = Color.Black;
             Alpha = 0f;
+            Y = 1;
+            X = 5;
 
             Banner = new MapBanner(Screen, View) {Parent = this};
             Leaderboard = new Leaderboard(Screen, View, this) {Parent = this};
+            ActionsBanner = new ActionsBanner(Screen, View, this) {Parent = this};
 
             DifficultySelectorContainer = new DifficultySelectorContainer(Screen, View)
             {

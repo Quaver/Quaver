@@ -75,7 +75,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             Section = section;
             Score = score;
 
-            Size = new ScalableVector2(section.ScrollContainer.Width, 56);
+            Size = new ScalableVector2(section.ScrollContainer.Width, 45);
             Tint = Colors.DarkGray;
             Alpha = 0.65f;
 
@@ -135,7 +135,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 X = 18,
-                TextScale = 0.65f
+                TextScale = 0.55f
             };
 
             var rankSize = Rank.MeasureString() / 2f;
@@ -150,7 +150,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             Username = new SpriteText(Fonts.Exo2BoldItalic24, Score.Name)
             {
                 Parent = this,
-                TextScale = 0.50f,
+                TextScale = 0.40f,
                 X = GradeAchieved.X + GradeAchieved.Width + 10,
                 Y = 5
             };
@@ -169,7 +169,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             ScoreText = new SpriteText(Fonts.Exo2Regular24, $"{value} / {Score.MaxCombo}x")
             {
                 Parent = this,
-                TextScale = 0.50f,
+                TextScale = 0.40f,
                 X = GradeAchieved.X + GradeAchieved.Width + 10,
                 Y = Height - 5
             };
@@ -189,7 +189,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             {
                 Parent = this,
                 Alignment = Alignment.BotRight,
-                TextScale = 0.50f,
+                TextScale = 0.40f,
                 X = -10,
                 Y = -5
             };
@@ -208,7 +208,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             {
                 Parent = this,
                 Alignment = Alignment.TopRight,
-                TextScale = 0.50f,
+                TextScale = 0.40f,
                 X = -10,
                 Y = 5
             };

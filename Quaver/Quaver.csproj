@@ -197,6 +197,7 @@
     <Compile Include="Screens\Results\UI\Statistics\StatisticContainer.cs" />
     <Compile Include="Screens\Select\SelectScreen.cs" />
     <Compile Include="Screens\Select\SelectScreenView.cs" />
+    <Compile Include="Screens\Select\UI\MapInfo\Actions\ActionsBanner.cs" />
     <Compile Include="Screens\Select\UI\MapInfo\Banner\MapBanner.cs" />
     <Compile Include="Screens\Select\UI\MapInfo\Banner\MetadataContainer.cs" />
     <Compile Include="Screens\Select\UI\MapInfo\Banner\RankedStatusFlag.cs" />
