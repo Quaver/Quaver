@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Quaver.API.Helpers;
 using Quaver.Assets;
 using Quaver.Config;
@@ -11,6 +12,7 @@ using Wobble.Discord.RPC;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Input;
 using Wobble.Screens;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
@@ -224,6 +226,17 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
             FadeToColor(IsHovered ? Color.LightBlue : Colors.DarkGray, dt, 120);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     In this case, we only want buttons to be clickable if they're in the bounds of the scroll container.
+        /// </summary>
+        /// <returns></returns>
+        protected override bool IsMouseInClickArea()
+        {
+            var newRect = Rectangle.Intersect(ScreenRectangle.ToRectangle(), Section.ScrollContainer.ScreenRectangle.ToRectangle());
+            return GraphicsHelper.RectangleContains(newRect, MouseManager.CurrentState.Position);
         }
     }
 }
