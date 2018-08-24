@@ -82,10 +82,10 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
         /// </summary>
         private void CreateDifficultyName()
         {
-            DifficultyName = new SpriteText(Fonts.AllerRegular16, Map.DifficultyName)
+            DifficultyName = new SpriteText(Fonts.Exo2Regular24, Map.DifficultyName)
             {
                 Parent = this,
-                TextScale = 0.65f,
+                TextScale = 0.46f,
                 TextColor = Color.White,
                 Alignment = Alignment.MidLeft,
             };
