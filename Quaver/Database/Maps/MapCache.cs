@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using osu.Shared;
 using osu_database_reader.BinaryFiles;
-using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Parsers.Etterna;
 using SQLite;
 using Wobble;
+using GameMode = Quaver.API.Enums.GameMode;
 
 namespace Quaver.Database.Maps
 {
@@ -398,6 +399,7 @@ namespace Quaver.Database.Maps
                 MapManager.OsuSongsFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath.Value) + "/Songs/";
 
                 var mapsFound = db.Beatmaps.Where(x => x.GameMode == osu.Shared.GameMode.Mania && (x.CircleSize == 4 || x.CircleSize == 7)).ToList();
+                mapsFound = mapsFound.OrderBy(x => x.DiffStarRatingMania.ContainsKey(Mods.None) ? x.DiffStarRatingMania[Mods.None] : 0).ToList();
 
                 var maps = new List<Map>();
 
