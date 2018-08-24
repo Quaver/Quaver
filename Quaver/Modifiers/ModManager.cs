@@ -40,10 +40,15 @@ namespace Quaver.Modifiers
         }
 
         /// <summary>
-    ///     Adds a gameplayModifier to our list, getting rid of any incompatible mods that are currently in there.
-    ///     Also, specifying a speed, if need-be. That is only "required" if passing in ModIdentifier.ManiaModSpeed
-    /// </summary>
-    public static void AddMod(ModIdentifier modIdentifier)
+        ///     Event emitted when mods have changed.
+        /// </summary>
+        public static event EventHandler<ModsChangedEventArgs> ModsChanged;
+
+         /// <summary>
+        ///     Adds a gameplayModifier to our list, getting rid of any incompatible mods that are currently in there.
+        ///     Also, specifying a speed, if need-be. That is only "required" if passing in ModIdentifier.ManiaModSpeed
+        /// </summary>
+        public static void AddMod(ModIdentifier modIdentifier)
         {
             IGameplayModifier gameplayModifier;
 
@@ -93,6 +98,8 @@ namespace Quaver.Modifiers
             // Add The Mod
             CurrentModifiersList.Add(gameplayModifier);
             gameplayModifier.InitializeMod();
+
+            ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
         }
 
         /// <summary>
@@ -107,6 +114,8 @@ namespace Quaver.Modifiers
 
                 // Remove the Mod
                 CurrentModifiersList.Remove(removedMod);
+
+                ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
             }
             catch (Exception e)
             {
@@ -128,6 +137,8 @@ namespace Quaver.Modifiers
         {
             CurrentModifiersList.Clear();
             CheckModInconsistencies();
+
+            ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
         }
 
         /// <summary>
@@ -161,6 +172,8 @@ namespace Quaver.Modifiers
                 CurrentModifiersList.RemoveAll(x => x.Type == ModType.Speed);
                 AudioEngine.Track.Rate = ModHelper.GetRateFromMods(Mods);
                 CheckModInconsistencies();
+
+                ModsChanged?.Invoke(typeof(ModManager), new ModsChangedEventArgs(Mods));
             }
             catch (Exception e)
             {

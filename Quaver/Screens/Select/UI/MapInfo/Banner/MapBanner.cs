@@ -128,6 +128,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             CreateMetadataContainers();
 
             BackgroundManager.Loaded += OnBackgroundLoaded;
+            ModManager.ModsChanged += OnModsChanged;
         }
 
         /// <inheritdoc />
@@ -136,6 +137,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         public override void Destroy()
         {
             BackgroundManager.Loaded -= OnBackgroundLoaded;
+            ModManager.ModsChanged -= OnModsChanged;
             base.Destroy();
         }
 
@@ -247,6 +249,17 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
 
             var textCreatorSize = TextCreator.MeasureString() / 2f;
             TextCreator.Position = new ScalableVector2(textCreatorSize.X + leftSideSpacing, TextDifficulty.Y + textDifficultySize.Y + 15);
+        }
+
+        /// <summary>
+        ///     Whenever game modifiers changed, update the text of it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnModsChanged(object sender, ModsChangedEventArgs e)
+        {
+            TextMods.Text = "Mods: " + ModHelper.GetModsString(e.Mods);
+            AlignModsText();
         }
 
         /// <summary>

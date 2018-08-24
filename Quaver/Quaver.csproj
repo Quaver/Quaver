@@ -101,6 +101,7 @@
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Modifiers\IGameplayModifier.cs" />
     <Compile Include="Modifiers\ModManager.cs" />
+    <Compile Include="Modifiers\ModsChangedEventArgs.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModAutoplay.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModChill.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModNoPause.cs" />
