@@ -76,7 +76,7 @@ namespace Quaver.Modifiers.Mods.Mania
         public ManiaModSpeed(ModIdentifier modIdentifier)
         {
             ModIdentifier = modIdentifier;
-            AudioEngine.Track.Rate = ModHelper.GetAudioRate(modIdentifier);
+            AudioEngine.Track.Rate = ModHelper.GetRateFromMods(modIdentifier);
 
             // Remove the incoming mod from the list of incompatible ones.
             var im = IncompatibleMods.ToList();
