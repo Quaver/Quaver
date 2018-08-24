@@ -64,19 +64,20 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         {
             Sections[ConfigManager.SelectLeaderboardSection.Value].Update(gameTime);
 
-
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            foreach (var section in Sections)
+            try
             {
-                if (section.Key != ConfigManager.SelectLeaderboardSection.Value)
+                foreach (var section in Sections)
                 {
-                    section.Value.ScrollContainer.X = MathHelper.Lerp(section.Value.ScrollContainer.X, -section.Value.ScrollContainer.Width - 100, (float) Math.Min(dt / 60, 1));
+                    section.Value.ScrollContainer.X = section.Key != ConfigManager.SelectLeaderboardSection.Value
+                        ? MathHelper.Lerp(section.Value.ScrollContainer.X, -section.Value.ScrollContainer.Width - 100, (float) Math.Min(dt / 60, 1))
+                        : MathHelper.Lerp(section.Value.ScrollContainer.X, 0, (float) Math.Min(dt / 60, 1));
                 }
-                else
-                {
-                    section.Value.ScrollContainer.X = MathHelper.Lerp(section.Value.ScrollContainer.X, 0, (float) Math.Min(dt / 60, 1));
-                }
+            }
+            catch (InvalidOperationException)
+            {
+                // ignored
             }
 
             base.Update(gameTime);
