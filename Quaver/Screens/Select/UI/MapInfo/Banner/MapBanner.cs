@@ -7,6 +7,7 @@ using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Helpers;
+using Quaver.Modifiers;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
@@ -62,6 +63,11 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         public SpriteText TextCreator { get; private set; }
 
         /// <summary>
+        ///     Text that displays the activated mods.
+        /// </summary>
+        public SpriteText TextMods { get; private set; }
+
+        /// <summary>
         ///     Flag that displays the ranked status of the map.
         /// </summary>
         public RankedStatusFlag RankedStatusFlag { get; private set; }
@@ -115,6 +121,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             CreateTitleText();
             CreateDifficultyText();
             CreateCreatorText();
+            CreateModsText();
             RealignSongInformationText();
 
             CreateRankedStatusFlag();
@@ -209,6 +216,20 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
         };
 
         /// <summary>
+        ///     Creates the mods text.
+        /// </summary>
+        private void CreateModsText()
+        {
+            TextMods = new SpriteText(Fonts.Exo2Italic24, "Mods: " + ModHelper.GetModsString(ModManager.Mods), 0.45f)
+            {
+                Parent = Brightness,
+                Alignment = Alignment.TopRight,
+            };
+
+            AlignModsText();
+        }
+
+        /// <summary>
         ///     Realigns all of the text in the container.
         /// </summary>
         private void RealignSongInformationText()
@@ -216,7 +237,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
             const int leftSideSpacing = 15;
 
             var textArtistSize = TextArtist.MeasureString() / 2f;
-            TextArtist.Position = new ScalableVector2(textArtistSize.X + leftSideSpacing, textArtistSize.Y + 35);
+            TextArtist.Position = new ScalableVector2(textArtistSize.X + leftSideSpacing, textArtistSize.Y + 25);
 
             var textTitleSize = TextTitle.MeasureString() / 2f;
             TextTitle.Position = new ScalableVector2(textTitleSize.X + leftSideSpacing, TextArtist.Y + textArtistSize.Y + 15);
@@ -226,6 +247,16 @@ namespace Quaver.Screens.Select.UI.MapInfo.Banner
 
             var textCreatorSize = TextCreator.MeasureString() / 2f;
             TextCreator.Position = new ScalableVector2(textCreatorSize.X + leftSideSpacing, TextDifficulty.Y + textDifficultySize.Y + 15);
+        }
+
+        /// <summary>
+        ///     Aligns the text for mods. This is separated because it needs to be updated as the mods change
+        ///     Slightly reduces overhead of realigning all of them.
+        /// </summary>
+        private void AlignModsText()
+        {
+            var modsTextSize = TextMods.MeasureString() / 2f;
+            TextMods.Position = new ScalableVector2(-modsTextSize.X - 15, 15);
         }
 
         /// <summary>
