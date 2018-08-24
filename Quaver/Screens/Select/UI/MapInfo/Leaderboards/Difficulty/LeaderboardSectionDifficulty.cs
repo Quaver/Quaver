@@ -37,6 +37,8 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
             ScrollContainer.TimeToCompleteScroll = 1500;
             ScrollContainer.Scrollbar.Tint = Color.White;
             ScrollContainer.Scrollbar.Width = 3;
+
+            UpdateAsscoiatedMapset(Leaderboard.Screen.AvailableMapsets[Leaderboard.View.MapsetContainer.SelectedMapsetIndex]);
         }
 
         /// <inheritdoc />
