@@ -251,7 +251,8 @@ namespace Quaver.Screens.Gameplay
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (!Failed && !IsPlayComplete && KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value))
+            if (!Failed && !IsPlayComplete && (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value)
+                                               || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
                 Pause();
 
             // Show/hide scoreboard.
