@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
+using osu_database_reader;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
 using Wobble.Screens;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
 {
@@ -64,7 +69,18 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         public override void Update(GameTime gameTime)
         {
             Sections[ConfigManager.SelectLeaderboardSection.Value].Update(gameTime);
+            AnimateSections(gameTime);
+            HandleInput();
 
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        ///     Animates each section and makes sure they're positioned correctly.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void AnimateSections(GameTime gameTime)
+        {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
             // Move active section in and inactive sections out.
@@ -81,8 +97,20 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
             {
                 // ignored
             }
+        }
 
-            base.Update(gameTime);
+        private void HandleInput()
+        {
+            if (DialogManager.Dialogs.Count != 0)
+                return;
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Tab))
+            {
+                if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+                    SwitchTabs(Direction.Backward);
+                else
+                    SwitchTabs(Direction.Forward);
+            }
         }
 
         /// <summary>
@@ -139,8 +167,6 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
                     // TODO: REPLACE WITH ONLINE SCORES
                     globalLeaderboard.FetchAndUpdateLeaderboards(null);
                     break;
-                default:
-                    break;
             }
         }
 
@@ -152,6 +178,32 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         {
             var difficultySection = (LeaderboardSectionDifficulty) Sections[LeaderboardSectionType.DifficultySelection];
             difficultySection.UpdateAsscoiatedMapset(set);
+        }
+
+        /// <summary>
+        ///     Switches to another leaderboard tab.
+        /// </summary>
+        private void SwitchTabs(Direction direction)
+        {
+            var index = (int) ConfigManager.SelectLeaderboardSection.Value;
+
+            switch (direction)
+            {
+                case Direction.Forward:
+                    if (index + 1 < Sections.Count)
+                        ConfigManager.SelectLeaderboardSection.Value = (LeaderboardSectionType) index + 1;
+                    else
+                        ConfigManager.SelectLeaderboardSection.Value = Sections.First().Key;
+                    break;
+                case Direction.Backward:
+                    if (index - 1 >= 0)
+                        ConfigManager.SelectLeaderboardSection.Value = (LeaderboardSectionType) index - 1;
+                    else
+                        ConfigManager.SelectLeaderboardSection.Value = Sections.Last().Key;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
         }
     }
 }
