@@ -38,14 +38,12 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <param name="rankingSection"></param>
+        /// <param name="sectionType"></param>
         /// <param name="leaderboard"></param>
         /// <param name="name"></param>
-        protected LeaderboardSectionScores(LeaderboardRankingSection rankingSection, Leaderboard leaderboard, string name)
-            : base(rankingSection, leaderboard, name)
-        // ReSharper disable once ArrangeConstructorOrDestructorBody
+        protected LeaderboardSectionScores(LeaderboardSectionType sectionType, Leaderboard leaderboard, string name)
+            : base(sectionType, leaderboard, name)
         {
-            // ReSharper disable once ArrangeConstructorOrDestructorBody
             LeaderboardScores = new List<LeaderboardScore>();
 
             ScrollContainer.EasingType = Easing.EaseOutQuint;
@@ -70,7 +68,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             if (NoScoresSubmittedText != null)
                 AnimateNoScoresSubmittedText(gameTime);
 
-            HandleInput();
+            HandleScrollingInput();
         }
 
         /// <summary>
@@ -107,7 +105,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
                 return;
             }
 
-            // In the event that there aren't more than 5 scores, we don't need scrolling,
+            // In the event that there aren't more than 7 scores, we don't need scrolling,
             // So to reset it, set the ContentContainer's side back to the original.
             // the overall container (No need for scrolling)
             ScrollContainer.ContentContainer.Size = ScrollContainer.Size;
@@ -165,16 +163,17 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         {
             string text;
 
-            switch (RankingSection)
+            switch (SectionType)
             {
-                case LeaderboardRankingSection.Local:
+                case LeaderboardSectionType.Local:
                     text = "No local scores available for this map. Start playing!";
                     break;
-                case LeaderboardRankingSection.Global:
+                case LeaderboardSectionType.Global:
                     text = "Not implemented yet, check back later. Sorry!";
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    text = "";
+                    break;
             }
 
             NoScoresSubmittedText = new SpriteText(Fonts.Exo2Regular24, text, 0.50f)
@@ -218,26 +217,6 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             NoScoresSubmittedText.Y = NoScoresSubmittedText.MeasureString().Y / 2f;
         }
 
-        /// <summary>
-        ///     Handles scrolling input for the container.
-        /// </summary>
-        private void HandleInput()
-        {
-            var selectScreenView = (SelectScreenView) Leaderboard.Screen.View;
 
-            // If the mouse is in the bounds of the scroll container, then
-            // allow that to scroll, and turn off mapset scrolling.
-            if (GraphicsHelper.RectangleContains(ScrollContainer.ScreenRectangle, MouseManager.CurrentState.Position))
-            {
-                ScrollContainer.InputEnabled = true;
-                selectScreenView.MapsetContainer.InputEnabled = false;
-            }
-            // If the mouse is outside the bounds of the scroll container, then turn mapset scrolling back on.
-            else
-            {
-                ScrollContainer.InputEnabled = false;
-                selectScreenView.MapsetContainer.InputEnabled = true;
-            }
-        }
     }
 }

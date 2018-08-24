@@ -11,7 +11,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         /// <summary>
         /// </summary>
         /// <param name="leaderboard"></param>
-        public LeaderboardSectionGlobal(Leaderboard leaderboard) : base(LeaderboardRankingSection.Global, leaderboard, "Global Rankings")
+        public LeaderboardSectionGlobal(Leaderboard leaderboard) : base(LeaderboardSectionType.Global, leaderboard, "Global")
         {
             ScrollContainer.Alpha = 0;
 

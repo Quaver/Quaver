@@ -51,8 +51,21 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
 
             Clicked += (o, e) =>
             {
-                ConfigManager.SelectLeaderboardSection.Value = Section.RankingSection;
-                Section.Leaderboard.UpdateLeaderboard();
+                ConfigManager.SelectLeaderboardSection.Value = Section.SectionType;
+
+                switch (ConfigManager.SelectLeaderboardSection.Value)
+                {
+                    case LeaderboardSectionType.DifficultySelection:
+                        var selectScreen = (SelectScreen) Section.Leaderboard.View.Screen;
+                        Section.Leaderboard.UpdateLeaderboard(selectScreen.AvailableMapsets[Section.Leaderboard.View.MapsetContainer.SelectedMapsetIndex]);
+                        break;
+                    case LeaderboardSectionType.Local:
+                    case LeaderboardSectionType.Global:
+                        Section.Leaderboard.UpdateLeaderboard();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             };
         }
 
@@ -64,7 +77,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (IsHovered || Section.RankingSection == ConfigManager.SelectLeaderboardSection.Value)
+            if (IsHovered || Section.SectionType == ConfigManager.SelectLeaderboardSection.Value)
             {
                 HighlightLine.Width = MathHelper.Lerp(HighlightLine.Width, Width, (float) Math.Min(dt / 60, 1));
                 Text.FadeToColor(Color.White, dt, 60);

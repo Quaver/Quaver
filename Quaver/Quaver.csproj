@@ -205,8 +205,10 @@
     <Compile Include="Screens\Select\UI\MapInfo\DifficultySelection\DifficultyButtonContainer.cs" />
     <Compile Include="Screens\Select\UI\MapInfo\DifficultySelection\DifficultySelector.cs" />
     <Compile Include="Screens\Select\UI\MapInfo\DifficultySelection\DifficultySelectorContainer.cs" />
+    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\Difficulty\LeaderboardDifficultyButton.cs" />
+    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\Difficulty\LeaderboardSectionDifficulty.cs" />
     <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\Leaderboard.cs" />
-    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\LeaderboardRankingSection.cs" />
+    <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\LeaderboardSectionType.cs" />
     <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\LeaderboardSection.cs" />
     <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\LeaderboardSectionButton.cs" />
     <Compile Include="Screens\Select\UI\MapInfo\Leaderboards\Scores\LeaderboardScore.cs" />

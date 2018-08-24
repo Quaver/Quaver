@@ -35,11 +35,6 @@ namespace Quaver.Screens.Select.UI.MapInfo
         /// </summary>
         public ActionsBanner ActionsBanner { get; }
 
-        /// <summary>
-        ///     The container for difficulty selection.
-        /// </summary>
-        public DifficultySelectorContainer DifficultySelectorContainer { get; }
-
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -59,13 +54,6 @@ namespace Quaver.Screens.Select.UI.MapInfo
             Banner = new MapBanner(Screen, View) {Parent = this};
             Leaderboard = new Leaderboard(Screen, View, this) {Parent = this};
             ActionsBanner = new ActionsBanner(Screen, View, this) {Parent = this};
-
-            DifficultySelectorContainer = new DifficultySelectorContainer(Screen, View)
-            {
-                // Parent = this,
-                Alignment = Alignment.TopLeft,
-                Y = Banner.Y + Banner.Height - 3
-            };
         }
     }
 }

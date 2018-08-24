@@ -14,7 +14,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
         /// <summary>
         /// </summary>
         /// <param name="leaderboard"></param>
-        public LeaderboardSectionLocal(Leaderboard leaderboard) : base(LeaderboardRankingSection.Local, leaderboard, "Local Rankings")
+        public LeaderboardSectionLocal(Leaderboard leaderboard) : base(LeaderboardSectionType.Local, leaderboard, "Local")
         {
             ScrollContainer.Alpha = 0;
             FetchAndUpdateLeaderboards(MapManager.Selected.Value.Scores.Value);

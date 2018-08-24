@@ -231,7 +231,7 @@ namespace Quaver.Config
         /// <summary>
         ///     The selected leaderboard section.
         /// </summary>
-        internal static Bindable<LeaderboardRankingSection> SelectLeaderboardSection { get; private set; }
+        internal static Bindable<LeaderboardSectionType> SelectLeaderboardSection { get; private set; }
 
         /// <summary>
         ///     Keybindings for 4K
@@ -400,7 +400,7 @@ namespace Quaver.Config
             AnimateJudgementCounter = ReadValue(@"AnimateJudgementCounter", true, data);
             BackgroundParallax = ReadValue(@"BackgroundParallax", true, data);
             SelectOrderMapsetsBy = ReadValue(@"SelectOrderMapsetsBy", OrderMapsetsBy.Artist, data);
-            SelectLeaderboardSection = ReadValue(@"SelectedLeaderboardSection", LeaderboardRankingSection.Local, data);
+            SelectLeaderboardSection = ReadValue(@"SelectedLeaderboardSection", LeaderboardSectionType.Local, data);
             KeyMania4K1 = ReadValue(@"KeyMania4K1", Keys.A, data);
             KeyMania4K2 = ReadValue(@"KeyMania4K2", Keys.S, data);
             KeyMania4K3 = ReadValue(@"KeyMania4K3", Keys.K, data);

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Input;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
 {
@@ -9,7 +10,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         /// <summary>
         ///     The section (in enum form)
         /// </summary>
-        public LeaderboardRankingSection RankingSection { get; }
+        public LeaderboardSectionType SectionType { get; }
 
         /// <summary>
         ///     Reference to the parent leaderboard.
@@ -29,12 +30,12 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         ///  <summary>
         ///
         ///  </summary>
-        /// <param name="rankingSection"></param>
+        /// <param name="sectionType"></param>
         /// <param name="leaderboard"></param>
         ///  <param name="name"></param>
-        public LeaderboardSection(LeaderboardRankingSection rankingSection, Leaderboard leaderboard, string name)
+        public LeaderboardSection(LeaderboardSectionType sectionType, Leaderboard leaderboard, string name)
         {
-            RankingSection = rankingSection;
+            SectionType = sectionType;
             Leaderboard = leaderboard;
             Button = new LeaderboardSectionButton(this, name) {Parent = Leaderboard};
 
@@ -56,6 +57,28 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         /// <param name="gameTime"></param>
         public virtual void Update(GameTime gameTime)
         {
+        }
+
+        /// <summary>
+        ///     Handles scrolling input for the container.
+        /// </summary>
+        protected void HandleScrollingInput()
+        {
+            var selectScreenView = (SelectScreenView) Leaderboard.Screen.View;
+
+            // If the mouse is in the bounds of the scroll container, then
+            // allow that to scroll, and turn off mapset scrolling.
+            if (GraphicsHelper.RectangleContains(ScrollContainer.ScreenRectangle, MouseManager.CurrentState.Position))
+            {
+                ScrollContainer.InputEnabled = true;
+                selectScreenView.MapsetContainer.InputEnabled = false;
+            }
+            // If the mouse is outside the bounds of the scroll container, then turn mapset scrolling back on.
+            else
+            {
+                ScrollContainer.InputEnabled = false;
+                selectScreenView.MapsetContainer.InputEnabled = true;
+            }
         }
     }
 }

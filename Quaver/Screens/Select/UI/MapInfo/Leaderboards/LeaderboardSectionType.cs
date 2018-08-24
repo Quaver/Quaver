@@ -1,8 +1,9 @@
 ﻿namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
 {
-    public enum LeaderboardRankingSection
+    public enum LeaderboardSectionType
     {
+        DifficultySelection,
         Local,
-        Global
+        Global,
     }
 }

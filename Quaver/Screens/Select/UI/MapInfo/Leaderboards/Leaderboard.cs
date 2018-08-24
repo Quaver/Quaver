@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Quaver.Config;
 using Quaver.Database.Maps;
+using Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -30,7 +31,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         /// <summary>
         ///     The list of leaderboard sections.
         /// </summary>
-        public Dictionary<LeaderboardRankingSection, LeaderboardSection> Sections { get; private set; }
+        public Dictionary<LeaderboardSectionType, LeaderboardSection> Sections { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -66,6 +67,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
 
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
+            // Move active section in and inactive sections out.
             try
             {
                 foreach (var section in Sections)
@@ -99,20 +101,21 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         /// </summary>
         private void CreateSections()
         {
-            Sections = new Dictionary<LeaderboardRankingSection, LeaderboardSection>
+            Sections = new Dictionary<LeaderboardSectionType, LeaderboardSection>
             {
-                [LeaderboardRankingSection.Local] = new LeaderboardSectionLocal(this),
-                [LeaderboardRankingSection.Global] = new LeaderboardSectionGlobal(this)
+                [LeaderboardSectionType.DifficultySelection] = new LeaderboardSectionDifficulty(this),
+                [LeaderboardSectionType.Local] = new LeaderboardSectionLocal(this),
+                [LeaderboardSectionType.Global] = new LeaderboardSectionGlobal(this)
             };
 
             for (var i = 0; i < Sections.Count; i++)
             {
-                var rankingSection = (LeaderboardRankingSection) i;
+                var rankingSection = (LeaderboardSectionType) i;
                 var section = Sections[rankingSection];
 
                 if (i > 0)
                 {
-                    var previousSection = Sections[(LeaderboardRankingSection) i - 1];
+                    var previousSection = Sections[(LeaderboardSectionType) i - 1];
                     section.Button.X = previousSection.Button.X + previousSection.Button.Width + 10;
                 }
             }
@@ -125,20 +128,30 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         {
             switch (ConfigManager.SelectLeaderboardSection.Value)
             {
-                case LeaderboardRankingSection.Local:
-                    var localLeaderboard = (LeaderboardSectionLocal) Sections[LeaderboardRankingSection.Local];
+                case LeaderboardSectionType.Local:
+                    var localLeaderboard = (LeaderboardSectionLocal) Sections[LeaderboardSectionType.Local];
                     localLeaderboard.FetchAndUpdateLeaderboards(MapManager.Selected.Value.Scores.Value);
                     break;
                 // Ignore.
-                case LeaderboardRankingSection.Global:
-                    var globalLeaderboard = (LeaderboardSectionGlobal) Sections[LeaderboardRankingSection.Global];
+                case LeaderboardSectionType.Global:
+                    var globalLeaderboard = (LeaderboardSectionGlobal) Sections[LeaderboardSectionType.Global];
 
                     // TODO: REPLACE WITH ONLINE SCORES
                     globalLeaderboard.FetchAndUpdateLeaderboards(null);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
+        }
+
+        /// <summary>
+        ///     Updates the leaderboard section with a given mapset. (For LeaderboardSectionDifficulty)
+        /// </summary>
+        /// <param name="set"></param>
+        public void UpdateLeaderboard(Mapset set)
+        {
+            var difficultySection = (LeaderboardSectionDifficulty) Sections[LeaderboardSectionType.DifficultySelection];
+            difficultySection.UpdateAsscoiatedMapset(set);
         }
     }
 }

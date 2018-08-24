@@ -113,8 +113,6 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
 
             InitializeMapsetButtons();
             SelectMap(SelectedMapsetIndex, Screen.AvailableMapsets[SelectedMapsetIndex].Maps[SelectedMapIndex], true);
-
-            DifficultySelector = new DifficultySelector(this);
         }
 
         /// <inheritdoc />
@@ -144,11 +142,11 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
                     MapsetButtons[SelectedMapsetIndex - 1].FireButtonClickEvent();
             }
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Up))
-                DifficultySelector.SelectNextDifficulty(Direction.Backward);
+            //if (KeyboardManager.IsUniqueKeyPress(Keys.Up))
+            //    DifficultySelector.SelectNextDifficulty(Direction.Backward);
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.Down))
-                DifficultySelector.SelectNextDifficulty(Direction.Forward);
+            //if (KeyboardManager.IsUniqueKeyPress(Keys.Down))
+             //   DifficultySelector.SelectNextDifficulty(Direction.Forward);
 
             base.Update(gameTime);
         }
@@ -159,7 +157,6 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
         public override void Destroy()
         {
             MapsetButtons.ForEach(x => x.Destroy());
-
             base.Destroy();
         }
 
@@ -167,7 +164,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
         ///     Initializes all of the mapset buttons and determines which ones
         ///     to display.
         /// </summary>
-        public void InitializeMapsetButtons()
+        private void InitializeMapsetButtons()
         {
             ContentContainer.Size = Size;
 
@@ -332,16 +329,16 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             switch (ConfigManager.SelectLeaderboardSection.Value)
             {
                 // Always clear scores if we're on local.
-                case LeaderboardRankingSection.Local:
+                case LeaderboardSectionType.Local:
                     if (MapManager.Selected.Value != map)
                         MapManager.Selected.Value?.ClearScores();
                     break;
                 // TODO: If we're on global, we'll want to cache scores to reduce the amount
                 // of requests made.
-                case LeaderboardRankingSection.Global:
+                case LeaderboardSectionType.Global:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
 
             // Change the actual map.
@@ -353,10 +350,10 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             // Update the leaderboard with the new map.
             View.MapInfoContainer?.Leaderboard?.UpdateLeaderboard();
 
-            // If necessary, change the associated mapset with the difficulty selector.
+            // If necessary, change the associated mapset with the difficulty leaderboard section.
             // Only necessary if we're changing mapsets and not maps.
             if (previousMapset != Screen.AvailableMapsets[SelectedMapsetIndex]|| forceDifficultySelectorUpdate)
-                DifficultySelector?.ChangeAssociatedMapset(Screen.AvailableMapsets[SelectedMapsetIndex]);
+                View.MapInfoContainer?.Leaderboard?.UpdateLeaderboard(Screen.AvailableMapsets[SelectedMapsetIndex]);
 
             // Load background if it doesn't have the same path, or if we're forcing it.
             if (MapManager.GetBackgroundPath(previousMap) != MapManager.GetBackgroundPath(MapManager.Selected.Value) ||
