@@ -213,6 +213,7 @@ namespace Quaver
             };
 
             ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = e.Value;
+            ConfigManager.Pitched.ValueChanged += (sender, e) => AudioEngine.Track.ToggleRatePitching(e.Value);
 
             DiscordManager.CreateClient("376180410490552320");
             DiscordManager.Client.SetPresence(new RichPresence()
