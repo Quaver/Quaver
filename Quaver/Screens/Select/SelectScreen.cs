@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using osu_database_reader;
+using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Audio;
 using Quaver.Database.Maps;
 using Quaver.Database.Scores;
+using Quaver.Graphics.Notifications;
+using Quaver.Modifiers;
 using Quaver.Screens.Gameplay;
 using Quaver.Screens.Loading;
 using Wobble.Discord;
@@ -73,6 +78,14 @@ namespace Quaver.Screens.Select
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 ScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
+
+            // Increase rate.
+            if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
+                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate + 0.1f, 1));
+
+            // Decrease Rate
+            if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
+                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate - 0.1f, 1));
         }
 
         /// <summary>
