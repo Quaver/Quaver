@@ -1,11 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 
 namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
 {
-    public class LeaderboardSection
+    public abstract class LeaderboardSection
     {
         /// <summary>
         ///     The section (in enum form)
@@ -57,7 +58,14 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
         /// <param name="gameTime"></param>
         public virtual void Update(GameTime gameTime)
         {
+            if (DialogManager.Dialogs.Count == 0)
+                HandleInput();
         }
+
+        /// <summary>
+        ///     Handles input for the section.
+        /// </summary>
+        protected abstract void HandleInput();
 
         /// <summary>
         ///     Handles scrolling input for the container.

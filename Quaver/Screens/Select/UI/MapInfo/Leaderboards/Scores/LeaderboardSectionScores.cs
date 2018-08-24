@@ -13,6 +13,7 @@ using Quaver.Scheduling;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Color = Microsoft.Xna.Framework.Color;
 
@@ -68,7 +69,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             if (NoScoresSubmittedText != null)
                 AnimateNoScoresSubmittedText(gameTime);
 
-            HandleScrollingInput();
+            base.Update(gameTime);
         }
 
         /// <summary>
@@ -217,6 +218,9 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Scores
             NoScoresSubmittedText.Y = NoScoresSubmittedText.MeasureString().Y / 2f;
         }
 
-
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        protected override void HandleInput() => HandleScrollingInput();
     }
 }

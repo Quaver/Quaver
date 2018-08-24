@@ -10,6 +10,7 @@ using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Screens;
 using Wobble.Window;
@@ -114,6 +115,14 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            // Don't handle if there are any dialogs up.
+            if (DialogManager.Dialogs.Count != 0)
+            {
+                InputEnabled = false;
+                base.Update(gameTime);
+                return;
+            }
+
             // Handle pool shifting when scrolling up or down.
             if (ContentContainer.Y < PreviousContentContainerY)
                 HandlePoolShifting(Direction.Forward);
@@ -123,23 +132,19 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             // Update the previous y, AFTER checking and handling the pool shifting.
             PreviousContentContainerY = ContentContainer.Y;
 
+            // Select next mapset.
             if (KeyboardManager.IsUniqueKeyPress(Keys.Right))
             {
                 if (MapsetButtons.ElementAtOrDefault(SelectedMapsetIndex + 1) != null)
                     MapsetButtons[SelectedMapsetIndex + 1].FireButtonClickEvent();
             }
 
+            // Select previous mapset.
             if (KeyboardManager.IsUniqueKeyPress(Keys.Left))
             {
                 if (MapsetButtons.ElementAtOrDefault(SelectedMapsetIndex - 1) != null)
-                    MapsetButtons[SelectedMapsetIndex - 1].FireButtonClickEvent();
+                    MapsetButtons[SelectedMapsetIndex - 1]?.FireButtonClickEvent();
             }
-
-            //if (KeyboardManager.IsUniqueKeyPress(Keys.Up))
-            //    DifficultySelector.SelectNextDifficulty(Direction.Backward);
-
-            //if (KeyboardManager.IsUniqueKeyPress(Keys.Down))
-             //   DifficultySelector.SelectNextDifficulty(Direction.Forward);
 
             base.Update(gameTime);
         }

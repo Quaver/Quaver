@@ -41,16 +41,6 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
             UpdateAsscoiatedMapset(Leaderboard.Screen.AvailableMapsets[Leaderboard.View.MapsetContainer.SelectedMapsetIndex]);
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public override void Update(GameTime gameTime)
-        {
-            HandleInput();
-            base.Update(gameTime);
-        }
-
         /// <summary>
         ///     Updates the associated mapset with the leaderboard section.
         /// </summary>
@@ -219,10 +209,11 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
             ScrollContainer.PreviousTargetY = ScrollContainer.ContentContainer.Y;
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Handles the input for the container.
         /// </summary>
-        private void HandleInput()
+        protected override void HandleInput()
         {
             HandleScrollingInput();
 
