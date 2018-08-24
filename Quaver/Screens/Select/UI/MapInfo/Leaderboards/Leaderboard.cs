@@ -114,6 +114,19 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
                     SwitchTabs(Direction.Backward);
                 else
                     SwitchTabs(Direction.Forward);
+
+                switch (ConfigManager.SelectLeaderboardSection.Value)
+                {
+                    case LeaderboardSectionType.DifficultySelection:
+                        UpdateLeaderboard(Screen.AvailableMapsets[View.MapsetContainer.SelectedMapsetIndex]);
+                        break;
+                    case LeaderboardSectionType.Local:
+                    case LeaderboardSectionType.Global:
+                        UpdateLeaderboard();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
 

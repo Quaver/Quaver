@@ -72,7 +72,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards.Difficulty
         {
             Parent = this,
             Alignment = Alignment.MidLeft,
-            Size = new ScalableVector2(Height * 0.75f, Height * 0.75f),
+            Size = new ScalableVector2(Height, Height),
             Image = Map.HighestRank == Grade.None ? SkinManager.Skin.Grades[Grade.A] : SkinManager.Skin.Grades[Map.HighestRank],
             X = 8,
         };
