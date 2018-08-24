@@ -2,10 +2,11 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.Audio;
 using Quaver.Logging;
 
-namespace Quaver.Modifiers.Mods.Mania 
+namespace Quaver.Modifiers.Mods.Mania
 {
     internal class ManiaModSpeed : IGameplayModifier
     {
@@ -75,58 +76,8 @@ namespace Quaver.Modifiers.Mods.Mania
         public ManiaModSpeed(ModIdentifier modIdentifier)
         {
             ModIdentifier = modIdentifier;
+            AudioEngine.Track.Rate = ModHelper.GetAudioRate(modIdentifier);
 
-            switch (modIdentifier)
-            {
-                case ModIdentifier.Speed05X:
-                    AudioEngine.Track.Rate = 0.5f;
-                    break;
-                case ModIdentifier.Speed06X:
-                    AudioEngine.Track.Rate = 0.6f;
-                    break;
-                case ModIdentifier.Speed07X:
-                    AudioEngine.Track.Rate = 0.7f;
-                    break;
-                case ModIdentifier.Speed08X:
-                    AudioEngine.Track.Rate = 0.8f;
-                    break;
-                case ModIdentifier.Speed09X:
-                    AudioEngine.Track.Rate = 0.9f;
-                    break;
-                case ModIdentifier.Speed11X:
-                    AudioEngine.Track.Rate = 1.1f;
-                    break;
-                case ModIdentifier.Speed12X:
-                    AudioEngine.Track.Rate = 1.2f;
-                    break;
-                case ModIdentifier.Speed13X:
-                    AudioEngine.Track.Rate = 1.3f;
-                    break;
-                case ModIdentifier.Speed14X:
-                    AudioEngine.Track.Rate = 1.4f;
-                    break;
-                case ModIdentifier.Speed15X:
-                    AudioEngine.Track.Rate = 1.5f;
-                    break;
-                case ModIdentifier.Speed16X:
-                    AudioEngine.Track.Rate = 1.6f;
-                    break;
-                case ModIdentifier.Speed17X:
-                    AudioEngine.Track.Rate = 1.7f;
-                    break;
-                case ModIdentifier.Speed18X:
-                    AudioEngine.Track.Rate = 1.8f;
-                    break;
-                case ModIdentifier.Speed19X:
-                    AudioEngine.Track.Rate = 1.9f;
-                    break;
-                case ModIdentifier.Speed20X:
-                    AudioEngine.Track.Rate = 2.0f;
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException();
-            }
-            
             // Remove the incoming mod from the list of incompatible ones.
             var im = IncompatibleMods.ToList();
             im.Remove(modIdentifier);

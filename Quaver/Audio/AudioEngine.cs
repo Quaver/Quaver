@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
 using Quaver.API.Maps;
 using Quaver.Config;
 using Quaver.Database.Maps;
@@ -35,7 +36,8 @@ namespace Quaver.Audio
 
             Track = new AudioTrack(MapManager.CurrentAudioPath)
             {
-                Volume = ConfigManager.VolumeMusic.Value
+                Volume = ConfigManager.VolumeMusic.Value,
+                Rate = ModHelper.GetAudioRate(ModManager.Mods)
             };
         }
 

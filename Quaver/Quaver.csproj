@@ -92,7 +92,6 @@
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\GzipHelper.cs" />
     <Compile Include="Helpers\ListHelper.cs" />
-    <Compile Include="Helpers\ModHelper.cs" />
     <Compile Include="Helpers\ObjectHelper.cs" />
     <Compile Include="Helpers\ReplayHelper.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
