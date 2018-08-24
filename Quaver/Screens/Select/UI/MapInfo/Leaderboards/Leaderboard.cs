@@ -99,11 +99,15 @@ namespace Quaver.Screens.Select.UI.MapInfo.Leaderboards
             }
         }
 
+        /// <summary>
+        ///     Handles general input for the entire leaderboard
+        /// </summary>
         private void HandleInput()
         {
             if (DialogManager.Dialogs.Count != 0)
                 return;
 
+            // Add quick tab switching.
             if (KeyboardManager.IsUniqueKeyPress(Keys.Tab))
             {
                 if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
