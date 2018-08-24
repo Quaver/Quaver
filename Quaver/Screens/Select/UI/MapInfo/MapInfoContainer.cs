@@ -1,6 +1,5 @@
 ﻿using Quaver.Screens.Select.UI.MapInfo.Actions;
 using Quaver.Screens.Select.UI.MapInfo.Banner;
-using Quaver.Screens.Select.UI.MapInfo.DifficultySelection;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;

@@ -6,8 +6,6 @@ using Quaver.Audio;
 using Quaver.Config;
 using Quaver.Database.Maps;
 using Quaver.Graphics.Backgrounds;
-using Quaver.Graphics.Notifications;
-using Quaver.Screens.Select.UI.MapInfo.DifficultySelection;
 using Quaver.Screens.Select.UI.MapInfo.Leaderboards;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -35,11 +33,6 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
         ///     The buttons for each mapset.
         /// </summary>
         public List<MapsetButton> MapsetButtons { get; private set; }
-
-        /// <summary>
-        ///     Interface to select the difficulties of the map.
-        /// </summary>
-        public DifficultySelector DifficultySelector { get; }
 
         /// <summary>
         ///     The original size of the mapset container.
