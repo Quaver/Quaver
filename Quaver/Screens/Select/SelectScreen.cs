@@ -72,6 +72,9 @@ namespace Quaver.Screens.Select
             base.Update(gameTime);
         }
 
+        /// <summary>
+        ///     Handles input for the select screen.
+        /// </summary>
         private void HandleInput()
         {
             var screenView = (SelectScreenView) View;
@@ -79,13 +82,17 @@ namespace Quaver.Screens.Select
             if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 ScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
 
-            // Increase rate.
-            if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
-                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate + 0.1f, 1));
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
+                KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
+            {
+                // Increase rate.
+                if (KeyboardManager.IsUniqueKeyPress(Keys.OemPlus))
+                    ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate + 0.1f, 1));
 
-            // Decrease Rate
-            if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
-                ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate - 0.1f, 1));
+                // Decrease Rate
+                if (KeyboardManager.IsUniqueKeyPress(Keys.OemMinus))
+                    ModManager.AddSpeedMods((float) Math.Round(AudioEngine.Track.Rate - 0.1f, 1));
+            }
         }
 
         /// <summary>
