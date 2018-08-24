@@ -393,7 +393,7 @@ namespace Quaver.Config
             GlobalAudioOffset = ReadInt(@"GlobalAudioOffset", 0, int.MinValue, int.MaxValue, data);
             Skin = ReadSpecialConfigType(SpecialConfigType.Skin, @"Skin", "", data);
             DefaultSkin = ReadValue(@"DefaultSkin", DefaultSkins.Arrow, data);
-            Pitched = ReadValue(@"Pitched", false, data);
+            Pitched = ReadValue(@"Pitched", true, data);
             ScoreboardVisible = ReadValue(@"ScoreboardVisible", true, data);
             BotsEnabled = ReadValue(@"BotsEnabled", false, data);
             BotCount = ReadInt(@"BotCount", 4, 1, 6, data);
