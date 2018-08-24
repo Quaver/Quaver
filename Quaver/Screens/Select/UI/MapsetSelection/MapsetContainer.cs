@@ -335,8 +335,6 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
                 // of requests made.
                 case LeaderboardSectionType.Global:
                     break;
-                default:
-                    break;
             }
 
             // Change the actual map.
@@ -346,6 +344,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
             ScrollTo((-SelectedMapsetIndex + 1) * (MapsetButton.BUTTON_HEIGHT + MapsetButton.BUTTON_Y_SPACING), 2100);
 
             // Update the leaderboard with the new map.
+            ConfigManager.SelectLeaderboardSection.Value = LeaderboardSectionType.DifficultySelection;
             View.MapInfoContainer?.Leaderboard?.UpdateLeaderboard();
 
             // If necessary, change the associated mapset with the difficulty leaderboard section.
