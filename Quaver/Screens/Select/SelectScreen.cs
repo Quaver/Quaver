@@ -13,6 +13,7 @@ using Quaver.Graphics.Notifications;
 using Quaver.Modifiers;
 using Quaver.Screens.Gameplay;
 using Quaver.Screens.Loading;
+using Quaver.Screens.Select.UI.Mods;
 using Wobble.Discord;
 using Wobble.Graphics;
 using Wobble.Graphics.UI.Dialogs;
@@ -86,6 +87,9 @@ namespace Quaver.Screens.Select
             if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 ScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
 
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
+                DialogManager.Show(new ModsDialog());
+            
             if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
                 KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
             {
