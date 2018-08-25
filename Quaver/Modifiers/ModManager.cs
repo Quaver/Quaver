@@ -186,9 +186,6 @@ namespace Quaver.Modifiers
         /// </summary>
         public static void CheckModInconsistencies()
         {
-            if (Mods == 0)
-                return;
-
             AudioEngine.Track.Rate = ModHelper.GetRateFromMods(Mods);
 
             // TODO: Check invalid mod combinations.

@@ -6,6 +6,7 @@ using Quaver.Database.Maps;
 using Quaver.Graphics;
 using Quaver.Screens.Edit;
 using Quaver.Screens.Options;
+using Quaver.Screens.Select.UI.Mods;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
@@ -75,6 +76,7 @@ namespace Quaver.Screens.Select.UI.MapInfo.Actions
                 // Watch Repaly Button
                 CreateButton("Mods", (sender, args) =>
                 {
+                    DialogManager.Show(new ModsDialog());
                 }),
                 // Export Replay Button
                 CreateButton("Edit Map", (sender, args) =>

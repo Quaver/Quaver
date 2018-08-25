@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Database.Maps;
 using Quaver.Graphics;
@@ -9,6 +10,7 @@ using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Graphics.UI.Form;
 using Color = Microsoft.Xna.Framework.Color;
 
@@ -67,6 +69,16 @@ namespace Quaver.Screens.Select.UI.Search
             CreateSearchIcon();
             CreateSetsAvailableText();
             Orderer = new MapsetSearchOrderer(this) { Parent = this };
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            SearchBox.AlwaysFocused = DialogManager.Dialogs.Count == 0;
+            base.Update(gameTime);
         }
 
         /// <summary>

@@ -15,6 +15,7 @@ using Quaver.Screens.Gameplay;
 using Quaver.Screens.Loading;
 using Wobble.Discord;
 using Wobble.Graphics;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Screens;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
@@ -78,6 +79,9 @@ namespace Quaver.Screens.Select
         private void HandleInput()
         {
             var screenView = (SelectScreenView) View;
+
+            if (DialogManager.Dialogs.Count > 0)
+                return;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.Enter))
                 ScreenManager.ChangeScreen(new MapLoadingScreen(new List<LocalScore>()));
