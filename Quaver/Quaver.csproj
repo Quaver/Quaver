@@ -215,7 +215,9 @@
     <Compile Include="Screens\Select\UI\MapsetSelection\MapsetButton.cs" />
     <Compile Include="Screens\Select\UI\MapsetSelection\MapsetContainer.cs" />
     <Compile Include="Screens\Select\UI\Mods\ModsDialog.cs" />
-    <Compile Include="Screens\Select\UI\Mods\ModsDialogSection.cs" />
+    <Compile Include="Screens\Select\UI\Mods\ModsDialogModifier.cs" />
+    <Compile Include="Screens\Select\UI\Mods\ModsDialogModifierBool.cs" />
+    <Compile Include="Screens\Select\UI\Mods\ModsDialogOption.cs" />
     <Compile Include="Screens\Select\UI\Search\MapsetSearchBar.cs" />
     <Compile Include="Screens\Select\UI\Search\MapsetSearchOrderer.cs" />
     <Compile Include="Screens\Select\UI\Search\OrderMapsetsBy.cs" />

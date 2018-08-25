@@ -73,21 +73,20 @@ namespace Quaver.Modifiers.Mods.Mania
         ///     Ctor - Set speed
         /// </summary>
         /// <param name="modIdentifier"></param>
-        public ManiaModSpeed(ModIdentifier modIdentifier)
-        {
-            ModIdentifier = modIdentifier;
-            AudioEngine.Track.Rate = ModHelper.GetRateFromMods(modIdentifier);
-
-            // Remove the incoming mod from the list of incompatible ones.
-            var im = IncompatibleMods.ToList();
-            im.Remove(modIdentifier);
-            IncompatibleMods = im.ToArray();
-        }
+        public ManiaModSpeed(ModIdentifier modIdentifier) => ModIdentifier = modIdentifier;
 
         /// <inheritdoc />
         /// <summary>
         ///     Initialize
         /// </summary>
-        public void InitializeMod() { }
+        public void InitializeMod()
+        {
+            AudioEngine.Track.Rate = ModHelper.GetRateFromMods(ModIdentifier);
+
+            // Remove the incoming mod from the list of incompatible ones.
+            var im = IncompatibleMods.ToList();
+            im.Remove(ModIdentifier);
+            IncompatibleMods = im.ToArray();
+        }
     }
 }

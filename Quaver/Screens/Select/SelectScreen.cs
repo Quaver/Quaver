@@ -89,7 +89,7 @@ namespace Quaver.Screens.Select
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.F1))
                 DialogManager.Show(new ModsDialog());
-            
+
             if (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftControl) ||
                 KeyboardManager.CurrentState.IsKeyDown(Keys.RightControl))
             {

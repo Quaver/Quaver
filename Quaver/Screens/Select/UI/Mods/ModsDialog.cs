@@ -1,10 +1,12 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
 using Quaver.Modifiers;
+using Quaver.Modifiers.Mods.Mania;
 using Quaver.Scheduling;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -33,6 +35,11 @@ namespace Quaver.Screens.Select.UI.Mods
         ///     Border line above the header.
         /// </summary>
         public Sprite SceneHeaderBorderLineTop { get; private set; }
+
+        /// <summary>
+        ///     Border line below the header.
+        /// </summary>
+        public Sprite SceneHeaderBorderLineBottom { get; private set; }
 
         /// <summary>
         ///     Header icon.
@@ -69,6 +76,11 @@ namespace Quaver.Screens.Select.UI.Mods
         /// </summary>
         private TextButton RemoveAllModsButton { get; set; }
 
+        /// <summary>
+        ///     The list of modifiers that are in the dialog.
+        /// </summary>
+        private List<ModsDialogModifier> Modifiers { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -82,6 +94,7 @@ namespace Quaver.Screens.Select.UI.Mods
             CreateBackground();
             CreateHeader();
             CreateFooter();
+            CreateModifierOptions();
         }
 
         /// <inheritdoc />
@@ -128,6 +141,14 @@ namespace Quaver.Screens.Select.UI.Mods
                 Parent = SceneHeaderBackground,
                 Size =  new ScalableVector2(WindowManager.Width, 1),
                 Alignment = Alignment.TopLeft,
+                Tint = Colors.SecondaryAccent
+            };
+
+            SceneHeaderBorderLineBottom = new Sprite()
+            {
+                Parent = SceneHeaderBackground,
+                Size =  new ScalableVector2(WindowManager.Width, 1),
+                Alignment = Alignment.BotLeft,
                 Tint = Colors.SecondaryAccent
             };
 
@@ -201,6 +222,36 @@ namespace Quaver.Screens.Select.UI.Mods
                 Alignment = Alignment.MidLeft,
                 Tint = Color.Black
             };
+        }
+
+        /// <summary>
+        ///     Creates all of the modifier options.
+        /// </summary>
+        private void CreateModifierOptions()
+        {
+            Modifiers = new List<ModsDialogModifier>
+            {
+                // Autoplay
+                new ModsDialogModifierBool(this, new ManiaModAutoplay())
+                {
+                    Parent = SceneBackground,
+                    Alignment = Alignment.TopLeft,
+                    Y = SceneHeaderBackground.Y + SceneHeaderBackground.Height + 90
+                },
+
+                // No Pause
+                new ModsDialogModifierBool(this, new ManiaModNoPause())
+                {
+                    Parent = SceneBackground,
+                    Alignment = Alignment.TopLeft,
+                    Y = SceneHeaderBackground.Y + SceneHeaderBackground.Height + 20
+                }
+            };
+
+            for (var i = 0; i < Modifiers.Count; i++)
+            {
+                Modifiers[i].Y = SceneHeaderBackground.Y + SceneHeaderBackground.Height + i * Modifiers[0].Height + i * 5;
+            }
         }
 
         /// <summary>

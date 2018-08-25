@@ -10,14 +10,18 @@ namespace Quaver.Modifiers.Mods.Mania
 
         public ModType Type { get; set; } = ModType.Special;
 
-        public string Description { get; set; } = "Pausing is cheating.";
+        public string Description { get; set; } = "A wise man once said, \"Pausing is cheating.\"";
 
         public bool Ranked { get; set; } = true;
 
         public float ScoreMultiplierAddition { get; set; } = 1.0f;
 
-        public ModIdentifier[] IncompatibleMods { get; set; } = { };
-        
+        public ModIdentifier[] IncompatibleMods { get; set; } =
+        {
+            ModIdentifier.Autoplay,
+
+        };
+
         public void InitializeMod()
         {
         }

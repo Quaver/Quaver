@@ -95,6 +95,11 @@ namespace Quaver.Modifiers
             var incompatibleMods = CurrentModifiersList.FindAll(x => x.IncompatibleMods.Contains(gameplayModifier.ModIdentifier));
             incompatibleMods.ForEach(x => RemoveMod(x.ModIdentifier));
 
+            // Remove the mod if it's already on.
+            var alreadyOnMod = CurrentModifiersList.Find(x => x.ModIdentifier == gameplayModifier.ModIdentifier);
+            if (alreadyOnMod != null)
+                CurrentModifiersList.Remove(alreadyOnMod);
+
             // Add The Mod
             CurrentModifiersList.Add(gameplayModifier);
             gameplayModifier.InitializeMod();
