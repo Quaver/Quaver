@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +7,7 @@ using Quaver.API.Enums;
 
 namespace Quaver.Modifiers
 {
-    internal interface IGameplayModifier
+    public interface IGameplayModifier
     {
         /// <summary>
         ///     The name of the Mod

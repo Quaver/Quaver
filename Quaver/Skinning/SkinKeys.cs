@@ -1,22 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
-using Quaver.Helpers;
-using Quaver.States.Gameplay.GameModes.Keys.Playfield.Health;
-using Quaver.States.Gameplay.UI.Components.Health;
+using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
+using Quaver.Screens.Gameplay.UI.Health;
 
 namespace Quaver.Skinning
 {
-    internal class SkinKeys
+    public class SkinKeys
     {
-        /// <summary>
+                /// <summary>
         ///     Reference to the
         /// </summary>
         private SkinStore Store { get; }

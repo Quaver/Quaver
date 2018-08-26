@@ -1,17 +1,22 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Helpers;
+using Wobble.Assets;
 using Color = System.Drawing.Color;
-using Point = Microsoft.Xna.Framework.Point;
+using Point = System.Drawing.Point;
 using Rectangle = System.Drawing.Rectangle;
 
 namespace Quaver.Graphics.Graphing
 {
-    internal static class Graph
+    public static class Graph
     {
         /// <summary>
         ///     Creates a scatter plot from a list of points and returns a
@@ -26,13 +31,13 @@ namespace Quaver.Graphics.Graphing
         /// <param name="customLines"></param>
         /// <param name="customDotColorRange"></param>
         /// <returns></returns>
-        internal static Texture2D CreateStaticScatterPlot(List<Point> points, Vector2 size, Color bgColor,
+        public static Texture2D CreateStaticScatterPlot(List<Point> points, Vector2 size, Color bgColor,
             int dotWidth, Dictionary<int, Color> customLines = null, Dictionary<int, Color> customDotColorRange = null)
         {
             // Create the graphics of the chart.
             var chart = new Chart
             {
-                Size = new Size((int) size.X, (int) size.Y),
+                Size = new Size((int)size.X, (int)size.Y),
                 ChartAreas =
                 {
                     new ChartArea
@@ -114,22 +119,22 @@ namespace Quaver.Graphics.Graphing
             // Draw
             chart.Invalidate();
 
-            var bm = new Bitmap((int) size.X - 1, (int) size.Y - 1);
-            chart.DrawToBitmap(bm, new Rectangle(0, 0, (int) size.X, (int) size.Y));
+            var bm = new Bitmap((int)size.X - 1, (int)size.Y - 1);
+            chart.DrawToBitmap(bm, new Rectangle(0, 0, (int)size.X, (int)size.Y));
 
-            return ResourceHelper.LoadTexture2DFromPng(bm);
+            return AssetLoader.LoadTexture2D(bm, ImageFormat.Png);
         }
 
         /// <summary>
         ///     Creates a line graph with a set of points.
         /// </summary>
         /// <returns></returns>
-        internal static Texture2D CreateStaticLine(List<Point> points, Vector2 size, int lineWidth)
+        public static Texture2D CreateStaticLine(List<Point> points, Vector2 size, int lineWidth)
         {
             // Create the graphics of the chart.
             var chart = new Chart
             {
-                Size = new Size((int) size.X, (int) size.Y),
+                Size = new Size((int)size.X, (int)size.Y),
                 ChartAreas =
                 {
                     new ChartArea
@@ -183,10 +188,10 @@ namespace Quaver.Graphics.Graphing
             chart.Invalidate();
 
             // Draw chart to a bitmap.
-            var bm = new Bitmap((int) size.X - 1, (int) size.Y - 1);
-            chart.DrawToBitmap(bm, new Rectangle(0, 0, (int) size.X, (int) size.Y));
+            var bm = new Bitmap((int)size.X - 1, (int)size.Y - 1);
+            chart.DrawToBitmap(bm, new Rectangle(0, 0, (int)size.X, (int)size.Y));
 
-            return ResourceHelper.LoadTexture2DFromPng(bm);
+            return AssetLoader.LoadTexture2D(bm, ImageFormat.Png);
         }
     }
 }

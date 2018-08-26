@@ -1,9 +1,14 @@
-﻿using System.Globalization;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
 namespace Quaver.Helpers
 {
-    internal static class ColorHelper
+    public static class ColorHelper
     {
         /// <summary>
         ///     Converts a difficulty rating to a color.
@@ -21,7 +26,7 @@ namespace Quaver.Helpers
             // Hard
             return new Color(255, 0, 0);
         }
-        
+
         /// <summary>
         ///     Converts a hex color code into an XNA color.
         /// </summary>
@@ -32,11 +37,11 @@ namespace Quaver.Helpers
             //Remove # if present
             if (hexColor.IndexOf('#') != -1)
                 hexColor = hexColor.Replace("#", "");
- 
+
             var red = 0;
             var green = 0;
             var blue = 0;
- 
+
             switch (hexColor.Length)
             {
                 case 6:
@@ -52,7 +57,7 @@ namespace Quaver.Helpers
                     blue = int.Parse(hexColor[2].ToString() + hexColor[2], NumberStyles.AllowHexSpecifier);
                     break;
             }
- 
+
             return new Color(red, green, blue);
         }
     }

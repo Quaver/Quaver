@@ -1,16 +1,21 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
-using Quaver.Graphics.Buttons;
-using Quaver.Graphics.Sprites;
-using Quaver.Graphics.Text;
-using Quaver.Helpers;
-using Quaver.Main;
+using Quaver.Config;
+using Quaver.Skinning;
+using Wobble;
+using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Buttons;
 
 namespace Quaver.Graphics.Overlays.Toolbar
 {
-    internal class ToolbarItem : Button
+    public class ToolbarItem : Button
     {
         /// <summary>
         ///     The bottom line sprite, used to visually show if it's highlighted.
@@ -36,42 +41,40 @@ namespace Quaver.Graphics.Overlays.Toolbar
         /// <param name="selected"></param>
         internal ToolbarItem(string name, Action onClick, bool selected = false)
         {
-            Size = new UDim2D(165, 45);
+            Size = new ScalableVector2(165, 45);
             Initialize(onClick, selected);
 
             // Create the text in the middle of the button.
-            new SpriteText
+            var text = new SpriteText(Fonts.Exo2Regular24, name)
             {
                 Parent = this,
-                Text = name,
                 Alignment = Alignment.MidCenter,
                 TextAlignment = Alignment.MidCenter,
-                Font = Fonts.Exo2Regular24,
                 TextScale = 0.50f
             };
         }
 
         /// <inheritdoc />
         /// <summary>
-        ///     Ctor - Creates toolbar item with an icon. 
+        ///     Ctor - Creates toolbar item with an icon.
         /// </summary>
         /// <param name="icon"></param>
         /// <param name="onClick"></param>
         /// <param name="selected"></param>
         internal ToolbarItem(Texture2D icon, Action onClick, bool selected = false)
         {
-            Size = new UDim2D(70, 45);
+            Size = new ScalableVector2(70, 45);
             Initialize(onClick, selected);
 
-            new Sprite
+            var iconSprite = new Sprite
             {
                 Parent = this,
                 Image = icon,
-                Size = new UDim2D(20, 20),
+                Size = new ScalableVector2(20, 20),
                 Alignment = Alignment.MidCenter
             };
         }
-        
+
         /// <summary>
         ///     Initializes the toolbar item, used in the constructors.
         /// </summary>
@@ -81,57 +84,56 @@ namespace Quaver.Graphics.Overlays.Toolbar
         {
             Clicked += (o, e) => onClick();
             IsSelected = selected;
-            
+
             Tint = Color.Black;
             Alpha = IsSelected ? 0.1f : 0;
-            
+
             BottomLine = new Sprite
             {
                 Parent = this,
                 Alignment = Alignment.BotCenter,
-                Size = new UDim2D(SizeX, 1),
+                Size = new ScalableVector2(Width, 1),
                 Tint = Color.White,
-                SizeX = IsSelected ? SizeX : 0,
+                Width = IsSelected ? Width : 0,
+                Y = 1
             };
         }
-                
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        /// <param name="dt"></param>
-        internal override void Update(double dt)
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
         {
             // Change the size of the line based on if it's hovered/already selected.
-            if (IsTrulyHovered)
-                BottomLine.SizeX = GraphicsHelper.Lerp(SizeX, BottomLine.SizeX, Math.Min(dt / 60f, 1));
-            else if (!IsSelected)
-                BottomLine.SizeX = GraphicsHelper.Lerp(0, BottomLine.SizeX, Math.Min(dt / 60f, 1));
-            
-            base.Update(dt);
-        }
+            if (IsHovered)
+            {
+                BottomLine.Width = MathHelper.Lerp(BottomLine.Width, Width, (float) Math.Min(GameBase.Game.TimeSinceLastFrame / 60f, 1));
+                Alpha = 0.05f;
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        protected override void MouseOut()
-        {
-            Alpha = IsSelected ? 0.1f : 0;
-            HoverSoundPlayed = false;
-        }
+                // Make sure the hover sound only plays one time.
+                if (!HoverSoundPlayed)
+                {
+                    SkinManager.Skin.SoundHover.CreateChannel().Play();
+                    HoverSoundPlayed = true;
+                }
+            }
+            else
+            {
+                HoverSoundPlayed = false;
 
-        /// <inheritdoc />
-        /// <summary>
-        /// </summary>
-        protected override void MouseOver()
-        {
-            Alpha = 0.05f;
+                if (!IsSelected)
+                {
+                    BottomLine.Width = MathHelper.Lerp(BottomLine.Width, 0, (float)Math.Min(GameBase.Game.TimeSinceLastFrame / 60f, 1));
+                    Alpha = 0f;
+                }
+                else
+                {
+                    Alpha = 0.1f;
+                }
+            }
 
-            // Make sure the hover sound only plays one time.
-            if (HoverSoundPlayed) 
-                return;
-            
-            GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover);
-            HoverSoundPlayed = true;
+            base.Update(gameTime);
         }
     }
 }

@@ -1,5 +1,10 @@
-﻿using System.IO;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Quaver.Helpers
 {
@@ -19,7 +24,7 @@ namespace Quaver.Helpers
                 formatter.Serialize(ms, obj);
                 ms.Position = 0;
 
-                return (T) formatter.Deserialize(ms);
+                return (T)formatter.Deserialize(ms);
             }
         }
     }

@@ -4,7 +4,7 @@ using Quaver.API.Maps.Parsers;
 namespace Quaver.Parsers.Etterna
 {
     /// <summary>
-    ///     Class that 
+    ///     Class that
     /// </summary>
     internal class EtternaCache
     {
@@ -54,7 +54,7 @@ namespace Quaver.Parsers.Etterna
         internal string Music { get; set; }
 
         /// <summary>
-        ///     The time the audio plays 
+        ///     The time the audio plays
         /// </summary>
         internal float SampleStart { get; set; }
 

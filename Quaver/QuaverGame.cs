@@ -1,322 +1,238 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Quaver.API.Enums;
-using Quaver.Config;
-using Quaver.Database.Maps;
-using Quaver.Discord;
-using Quaver.Graphics;
-using Quaver.Graphics.Base;
-using Quaver.Graphics.Overlays.Navbar;
-using Quaver.Graphics.Overlays.Volume;
-using Quaver.Logging;
-using Quaver.Skinning;
-using Quaver.States.Menu;
-using Quaver.Resources;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
 using Quaver.Audio;
+using Quaver.Config;
+using Quaver.Database.Maps;
 using Quaver.Database.Scores;
-using Quaver.Graphics.UI;
-using Quaver.Graphics.UI.Notifications;
+using Quaver.Graphics;
+using Quaver.Graphics.Backgrounds;
+using Quaver.Graphics.Notifications;
+using Quaver.Graphics.Overlays.Volume;
 using Quaver.Helpers;
+using Quaver.Logging;
 using Quaver.Scheduling;
+using Quaver.Screens.Menu;
+using Quaver.Screens.Splash;
+using Quaver.Shaders;
+using Quaver.Skinning;
+using Wobble;
+using Wobble.Audio.Samples;
+using Wobble.Audio.Tracks;
+using Wobble.Bindables;
+using Wobble.Discord;
+using Wobble.Discord.RPC;
+using Wobble.Graphics;
+using Wobble.Graphics.Shaders;
+using Wobble.Graphics.UI.Debugging;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
+using Wobble.Screens;
+using Wobble.Window;
 
-namespace Quaver.Main
+namespace Quaver
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
-    public class QuaverGame : Game
+    public class QuaverGame : WobbleGame
     {
+        /// <inheritdoc />
         /// <summary>
-        ///     Static reference to the current game
         /// </summary>
-        public static QuaverGame Game;
+        protected override bool IsReadyToUpdate { get; set; }
 
         /// <summary>
-        ///     Ctor -
+        ///     The volume controller for the game.
+        /// </summary>
+        public VolumeController VolumeController { get; private set; }
+
+        /// <inheritdoc />
+        /// <summary>
         /// </summary>
         public QuaverGame()
         {
-            SetupGame();
-            Game = this;
+            IsFixedTimeStep = false;
+            Graphics.SynchronizeWithVerticalRetrace = false;
+            Graphics.ApplyChanges();
 
-            // Set the global graphics device manager & set Window width & height.
-            GameBase.GraphicsManager = new GraphicsDeviceManager(this)
+            Graphics.PreparingDeviceSettings += (sender, args) =>
             {
-                PreferredBackBufferWidth = ConfigManager.WindowWidth.Value,
-                PreferredBackBufferHeight = ConfigManager.WindowHeight.Value,
-                IsFullScreen = ConfigManager.WindowFullScreen.Value,
-                SynchronizeWithVerticalRetrace = false,
-                GraphicsProfile = GraphicsProfile.HiDef,
-                PreferMultiSampling = true
+                Graphics.GraphicsProfile = GraphicsProfile.HiDef;
+                Graphics.PreferMultiSampling = true;
+                args.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 8;
             };
-
-            // TODO: Make thie configurable.
-            TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / 240f);
-            IsFixedTimeStep = true;
-
-            // Use Content in Resources folder (Don't touch this please)
-            var resxContent = new ResourceContentManager(Services, QuaverResources.ResourceManager);
-            Content = resxContent;
-
-            // Make a reference to the Window on GameBase
-            GameBase.GameWindow = Window;
-
-            // Start watching for directory changes.
-            MapsetImporter.WatchForChanges();
         }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
+        ///     Allows the game to perform any initialization it needs to before starting to run.
+        ///     This is where it can query for any required services and load any non-graphic
+        ///     related content.  Calling base.Initialize will enumerate through any components
+        ///     and initialize them as well.
         /// </summary>
         protected override void Initialize()
         {
-            DiscordManager.Initialize();
+            PerformGameSetup();
 
-            // TODO: Add your initialization logic here
+            WindowManager.ChangeVirtualScreenSize(new Vector2(1366, 768));
+            WindowManager.ChangeScreenResolution(new Point(ConfigManager.WindowWidth.Value, ConfigManager.WindowHeight.Value));
+
+            // Full-screen
+            Graphics.IsFullScreen = ConfigManager.WindowFullScreen.Value;
+
+            // Apply all graphics changes
+            Graphics.ApplyChanges();
+
             base.Initialize();
         }
 
+         /// <inheritdoc />
         /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
+        ///     LoadContent will be called once per game and is the place to load
+        ///     all of your content.
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            GameBase.SpriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // Set the global Graphics Device.
-            GameBase.GraphicsDevice = GraphicsDevice;
-            GameBase.GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
-            GameBase.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
-            GameBase.GraphicsDevice.RasterizerState = new RasterizerState {MultiSampleAntiAlias = true};
-            GameBase.GraphicsManager.ApplyChanges();
-
-            //
-            GameBase.Content = Content;
+            base.LoadContent();
 
             // Load all game assets.
-            AssetManager.Load();
+            FontAwesome.Load();
+            Fonts.Load();
+            Titles.Load();
+            UserInterface.Load();
 
-            // Load the Game Skin
-            GameBase.Skin = new SkinStore();
+            // Load the user's skin
+            SkinManager.Load();
 
-            // Load cursor after skin.
-            GameBase.Cursor = new Cursor();
-
-            // Initialze the logger
+            // Initialize the logger now that we have fonts loaded
             Logger.Initialize();
 
-            //Initialize Background Manager. Use after Load QuaverUserInterface.
+            // Create the global FPS counter.
+            CreateFpsCounter();
+            VolumeController = new VolumeController() {Parent = GlobalUserInterface};
             BackgroundManager.Initialize();
 
-            // Set Render Target
-            GameBase.GraphicsDevice.SetRenderTarget(GameBase.MainRenderTarget);
+            // Make the cursor appear over the volume controller.
+            ListHelper.Swap(GlobalUserInterface.Children, GlobalUserInterface.Children.IndexOf(GlobalUserInterface.Cursor),
+                                                            GlobalUserInterface.Children.IndexOf(VolumeController));
 
-            // Set up volume controller
-            GameBase.VolumeController = new VolumeController();
-            GameBase.VolumeController.Initialize(null);
-
-            // Set up the navbar
-            GameBase.Navbar = Nav.CreateGlobalNavbar();
-
-            GameBase.Navbar.Initialize(null);
-
-            // Change to the loading screen state, where we detect if the song
-            // is actually able to be loaded.
-            GameBase.GameStateManager.ChangeState(new MainMenuScreen());
+            IsReadyToUpdate = true;
+            ScreenManager.ChangeScreen(new SplashScreen());
         }
 
+        /// <inheritdoc />
         /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
+        ///     UnloadContent will be called once per game and is the place to unload
+        ///     game-specific content.
         /// </summary>
         protected override void UnloadContent()
         {
-            GameBase.VolumeController.UnloadContent();
-            BackgroundManager.UnloadContent();
-            GameBase.GameStateManager.ClearStates();
-            GameBase.Navbar.UnloadContent();
-            UnloadLibraries();
+            base.UnloadContent();
         }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
+        ///     Allows the game to run logic such as updating the world,
+        ///     checking for collisions, gathering input, and playing audio.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of delta time values.</param>
         protected override void Update(GameTime gameTime)
         {
-            GameBase.Clock += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            // Needs to be called periodically to dequeue messages according to the lib.
-            DiscordManager.Client.Invoke();
-
-            // Check Global Input
-            GameBase.GlobalInputManager.CheckInput();
-
-            // Update Keyboard States
-            GameBase.PreviousKeyboardState = GameBase.KeyboardState;
-            GameBase.PreviousMouseState = GameBase.MouseState;
-            GameBase.KeyboardState = Keyboard.GetState();
-            GameBase.MouseState = Mouse.GetState();
-
-            // Update FpsCounter
-            if (ConfigManager.FpsCounter.Value)
-                QuaverFpsCounter.Count(dt);
-
-            // Update Background from Background Manager
-            BackgroundManager.Update(dt);
-
-            // Update all game states.
-            GameBase.GameStateManager.Update(dt);
-
-            // Update Mouse QuaverCursor
-            GameBase.Cursor.Update(dt);
-
-            // Update volume controller
-            GameBase.VolumeController.Update(dt);
-
-            // Update Navbar
-            GameBase.Navbar.Update(dt);
-
-            // Update audio time
-            GameBase.AudioEngine.Update(dt);
-
-            // Update all notifications.
-            NotificationManager.Update(dt);
-
-            // Run scheduled background tasks
-            if (GameBase.GameTime.ElapsedMilliseconds - CommonTaskScheduler.LastRunTime >= 5000)
-                CommonTaskScheduler.Run();
+            if (!IsReadyToUpdate)
+                return;
 
             base.Update(gameTime);
+
+            // Run scheduled background tasks
+            CommonTaskScheduler.Run();
+            BackgroundManager.Update(gameTime);
+            NotificationManager.Update(gameTime);
+            DialogManager.Update(gameTime);
         }
 
+        /// <inheritdoc />
         /// <summary>
-        /// This is called when the game should draw itself.
+        ///     This is called when the game should draw itself.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (!IsReadyToUpdate)
+                return;
 
-            // Clear Background so it doesnt render everything from previous frame
-            GameBase.GraphicsDevice.Clear(Color.Black);
+            base.Draw(gameTime);
 
-            // Reset the total amount of objects drawn.
-            Drawable.TotalObjectsDrawn = 0;
+            GameBase.DefaultSpriteBatchOptions.Begin();
+            Logger.Draw(gameTime);
+            SpriteBatch.End();
 
-            // Draw from Game State Manager
-            GameBase.GameStateManager.Draw();
+            NotificationManager.Draw(gameTime);
 
-            // Draw QuaverCursor, Logging, and FPS Counter
-            GameBase.SpriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, GraphicsDevice.RasterizerState);
-            GameBase.VolumeController.Draw();
-            GameBase.Navbar.Draw();
+            // Draw dialogs
+            DialogManager.Draw(gameTime);
 
-            Logger.Draw(dt);
+            // Draw the global container last.
+            GlobalUserInterface.Draw(gameTime);
 
-            if (ConfigManager.FpsCounter.Value)
-                QuaverFpsCounter.Draw();
-
-            NotificationManager.Draw();
-
-            GameBase.Cursor.Draw();
-            GameBase.SpriteBatch.End();
-
-            // Draw Base
-            // base.Draw(gameTime);
         }
 
         /// <summary>
-        ///     Quits the game
+        ///     Performs any initial setup the game needs to run.
         /// </summary>
-        internal static void Quit()
+        private static void PerformGameSetup()
         {
-            UnloadLibraries();
-            Game.Exit();
-        }
-
-        /// <summary>
-        ///     Unloads all third-party libraries such as BASS, Discord RPC, and Steam
-        /// </summary>
-        internal static void UnloadLibraries()
-        {
-            try
-            {
-                GameBase.AudioEngine.Free();
-                DiscordManager.Client.Dispose();
-            }
-            catch (Exception e)
-            {
-            }
-        }
-
-        /// <summary>
-        ///     This method changes the window to match configuration settings
-        /// </summary>
-        /// <param name="resolution"></param>
-        /// <param name="fullscreen"></param>
-        /// <param name="letterbox"></param>
-        public static void ChangeWindow(bool fullscreen, bool letterbox, Point? resolution = null)
-        {
-            // Change Resolution
-            if (resolution != null)
-            {
-                ConfigManager.WindowWidth.Value = resolution.Value.X;
-                ConfigManager.WindowHeight.Value = resolution.Value.Y;
-                GameBase.GraphicsManager.PreferredBackBufferWidth = resolution.Value.X;
-                GameBase.GraphicsManager.PreferredBackBufferHeight = resolution.Value.Y;
-                GameBase.WindowRectangle = new DrawRectangle(0, 0, resolution.Value.X, resolution.Value.Y);
-            }
-
-            // Update Fullscreen
-            if (GameBase.GraphicsManager != null && fullscreen != GameBase.GraphicsManager.IsFullScreen)
-                GameBase.GraphicsManager.IsFullScreen = fullscreen;
-
-            // Update letter boxing
-            if (letterbox)
-            {
-                //do stuff
-            }
-
-            // Apply changes to graphics manager
-            GameBase.GraphicsManager.ApplyChanges();
-
-            // Log this event
-            Logger.LogImportant("Window Settings Changed!", LogType.Runtime);
-            Logger.LogImportant($"Res: {GameBase.GraphicsManager.PreferredBackBufferWidth}x {GameBase.GraphicsManager.PreferredBackBufferHeight}", LogType.Runtime);
-            Logger.LogImportant($"Letterboxing: {letterbox}", LogType.Runtime);
-            Logger.LogImportant($"FullScreen: {GameBase.GraphicsManager.IsFullScreen}", LogType.Runtime);
-        }
-
-        private void SetupGame()
-        {
-            // Initialize Config
-            ConfigManager.InitializeConfig();
-
-            // Delete Temp Files
+            ConfigManager.Initialize();
             DeleteTemporaryFiles();
 
-            // Set up the game
-            Setup();
+            LocalScoreCache.CreateTable();
+            MapCache.LoadAndSetMapsets();
+
+            // Force garabge collection.
+            GC.Collect();
+
+            // Start watching for mapset changes in the folder.
+            MapsetImporter.WatchForChanges();
+
+            // Initially set the global volume.
+            AudioTrack.GlobalVolume = ConfigManager.VolumeGlobal.Value;
+            AudioSample.GlobalVolume = ConfigManager.VolumeEffect.Value;
+
+            // Change master volume whenever it changes.
+            ConfigManager.VolumeGlobal.ValueChanged += (sender, e) =>
+            {
+                AudioTrack.GlobalVolume = e.Value;
+                AudioSample.GlobalVolume = e.Value;
+            };
+
+            // Change track volume whenever it changed
+            ConfigManager.VolumeMusic.ValueChanged += (sender, e) =>
+            {
+                if (AudioEngine.Track != null)
+                    AudioEngine.Track.Volume = e.Value;
+            };
+
+            ConfigManager.VolumeEffect.ValueChanged += (sender, e) => AudioSample.GlobalVolume = e.Value;
+            ConfigManager.Pitched.ValueChanged += (sender, e) => AudioEngine.Track.ToggleRatePitching(e.Value);
+
+            DiscordManager.CreateClient("376180410490552320");
+            DiscordManager.Client.SetPresence(new RichPresence()
+            {
+                Assets = new Wobble.Discord.RPC.Assets()
+                {
+                    LargeImageKey = "quaver",
+                    LargeImageText = ConfigManager.Username.Value
+                },
+                Timestamps = new Timestamps()
+            });
+
+            // Create bindable for selected map.
+            if (MapManager.Mapsets.Count != 0)
+                MapManager.Selected = new Bindable<Map>(MapManager.Mapsets.First().Maps.First());
         }
 
         /// <summary>
-        ///     Deletes all temporary files if there are any.
+        ///     Deletes all of the temporary files for the game if they exist.
         /// </summary>
         private static void DeleteTemporaryFiles()
         {
@@ -328,40 +244,41 @@ namespace Quaver.Main
                 foreach (var dir in new DirectoryInfo(ConfigManager.DataDirectory + "/temp/").GetDirectories("*", SearchOption.AllDirectories))
                     dir.Delete(true);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Logger.LogError(e, LogType.Runtime);
+                // ignored
             }
+
+            // Create a directory that displays the "Now playing" song.
+            Directory.CreateDirectory($"{ConfigManager.DataDirectory}/temp/Now Playing");
         }
 
         /// <summary>
-        ///     Responsible for initializing and setting the map database and setting the loaded maps
+        ///     Creates the FPS counter to display on a global state.
         /// </summary>
-        private static void Setup()
+        private void CreateFpsCounter()
         {
-            // Create now playing folder
-            Directory.CreateDirectory(ConfigManager.DataDirectory + "/temp/Now Playing/");
-
-            // Create the local scores database if it doesn't already exist
-            LocalScoreCache.CreateScoresDatabase();
-
-            // Load all mapsets.
-            MapCache.LoadAndSetMapsets();
-            GC.Collect();
-
-            if (GameBase.Mapsets.Count > 0)
+            var fpsCounter = new FpsCounter(Fonts.AllerBold16, 0.80f)
             {
-                GameBase.SelectedMap = GameBase.Mapsets.Last().Maps.Last();
+                Parent = GlobalUserInterface,
+                Alignment = Alignment.BotRight,
+                Size = new ScalableVector2(70, 30),
+                TextFps =
+                {
+                    TextColor = Color.LimeGreen
+                },
+                X = -10,
+                Y = -10,
+                Alpha = 0
+            };
 
-                try
-                {
-                    BackgroundManager.LoadBackground();
-                    BackgroundManager.Readjust();
-                }
-                catch (Exception e)
-                {
-                }
-            }
+            ShowFpsCounter(fpsCounter);
+            ConfigManager.FpsCounter.ValueChanged += (o, e) => ShowFpsCounter(fpsCounter);
         }
+
+        /// <summary>
+        ///     Shows the FPs counter based on the current config variable.
+        /// </summary>
+        private static void ShowFpsCounter(FpsCounter counter) => counter.TextFps.Alpha = ConfigManager.FpsCounter.Value ? 1 : 0;
     }
 }

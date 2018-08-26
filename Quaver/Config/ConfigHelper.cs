@@ -1,22 +1,15 @@
-﻿using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Logging;
-using Quaver.States.Gameplay.GameModes.Keys.Playfield.Health;
-using Quaver.States.Gameplay.UI.Components.Health;
+using Microsoft.Xna.Framework.Input;
+using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
+using Quaver.Screens.Gameplay.UI.Health;
+using Quaver.Screens.Select.UI.Search;
+using Quaver.Skinning;
 
 namespace Quaver.Config
 {
-    /// <summary>
-    /// Helper class for any methods that are used for reading config files.
-    /// </summary>
-    internal static class ConfigHelper
+    public static class ConfigHelper
     {
         /// <summary>
         ///     Reads a string and checks if it's a valid directory.
@@ -205,10 +198,7 @@ namespace Quaver.Config
         /// <param name="defaultKey"></param>
         /// <param name="newVal"></param>
         /// <returns></returns>
-        internal static Keys ReadKeys(Keys defaultKey, string newVal)
-        {
-            return Enum.TryParse(newVal, out Keys newKey) ? newKey : defaultKey;
-        }
+        internal static Keys ReadKeys(Keys defaultKey, string newVal) => Enum.TryParse(newVal, out Keys newKey) ? newKey : defaultKey;
 
         /// <summary>
         ///     Reads an XNA Color value from a string
@@ -223,7 +213,7 @@ namespace Quaver.Config
                 var colorSplit = newVal.Split(',');
                 return new Color(byte.Parse(colorSplit[0]), byte.Parse(colorSplit[1]), byte.Parse(colorSplit[2]));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return defaultColor;
             }

@@ -1,23 +1,21 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using osu.Shared;
 using osu_database_reader.BinaryFiles;
-using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.Config;
 using Quaver.Logging;
-using Quaver.Main;
 using Quaver.Parsers.Etterna;
 using SQLite;
+using Wobble;
 using GameMode = Quaver.API.Enums.GameMode;
 
 namespace Quaver.Database.Maps
 {
-    internal static class MapCache
+    public static class MapCache
     {
         /// <summary>
         ///     The name of the module - for logging purposes.
@@ -34,8 +32,8 @@ namespace Quaver.Database.Maps
         /// </summary>
         public static void LoadAndSetMapsets()
         {
-            GameBase.Mapsets = MapsetHelper.OrderMapsetsByDifficulty(MapsetHelper.OrderMapsetsByArtist(LoadMapDatabase()));
-            GameBase.VisibleMapsets = GameBase.Mapsets;
+            var loadedMaps = LoadMapDatabase();
+            MapManager.Mapsets = MapsetHelper.OrderMapsetsByDifficulty(MapsetHelper.OrderMapsetsByArtist(loadedMaps));
         }
 
         /// <summary>
@@ -99,7 +97,7 @@ namespace Quaver.Database.Maps
         private static void SyncMapDatabase()
         {
             // Find all the.qua files in the directory.
-            var maps     = Directory.GetFiles(ConfigManager.SongDirectory.Value, "*.qua", SearchOption.AllDirectories);
+            var maps = Directory.GetFiles(ConfigManager.SongDirectory.Value, "*.qua", SearchOption.AllDirectories);
             Logger.LogInfo($"Found: {maps.Length} .qua files in the /songs/ directory.", LogType.Runtime);
 
             CacheByFileCount(maps);
@@ -141,13 +139,14 @@ namespace Quaver.Database.Maps
             foreach (var file in maps)
             {
                 // Run a check to see if the map path already exists in the database.
-                if (mapInDb.Any(map => ConfigManager.SongDirectory.Value.Replace("\\", "/") + "/" + map.Directory + "/" + map.Path.Replace("\\", "/") == file.Replace("\\", "/"))) continue;
+                if (mapInDb.Any(map => ConfigManager.SongDirectory.Value.Replace("\\", "/") + "/" + map.Directory + "/" + map.Path.Replace("\\", "/") == file.Replace("\\", "/")))
+                    continue;
 
                 // Try to parse the file and check if it is a legitimate .qua file.
                 var qua = Qua.Parse(file);
 
                 // Convert the Qua into a Map object and add it to our list of maps we want to cache.
-                var newMap = new Map().ConvertQuaToMap(qua, file);
+                var newMap = Map.FromQua(qua, file);
                 newMap.Path = Path.GetFileName(newMap.Path.Replace("\\", "/"));
                 mapsToCache.Add(newMap);
             }
@@ -191,7 +190,7 @@ namespace Quaver.Database.Maps
                     continue;
 
                 // Parse the map again and add it to the list of maps to be added to the database.
-                reprocessedMaps.Add(new Map().ConvertQuaToMap(Qua.Parse(map.Path), map.Path));
+                reprocessedMaps.Add(Map.FromQua(Qua.Parse(map.Path), map.Path));
             }
 
             var finalList = RemoveDuplicates(reprocessedMaps);
@@ -392,14 +391,15 @@ namespace Quaver.Database.Maps
         /// <summary>
         ///     Loads all osu! maps from the osu!.db file
         /// </summary>
-        private static List<Map> LoadMapsFromOsuDb()
+        private static IEnumerable<Map> LoadMapsFromOsuDb()
         {
             try
             {
                 var db = OsuDb.Read(ConfigManager.OsuDbPath.Value);
-                GameBase.OsuSongsFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath.Value) + "/Songs/";
+                MapManager.OsuSongsFolder = Path.GetDirectoryName(ConfigManager.OsuDbPath.Value) + "/Songs/";
 
                 var mapsFound = db.Beatmaps.Where(x => x.GameMode == osu.Shared.GameMode.Mania && (x.CircleSize == 4 || x.CircleSize == 7)).ToList();
+                mapsFound = mapsFound.OrderBy(x => x.DiffStarRatingMania.ContainsKey(Mods.None) ? x.DiffStarRatingMania[Mods.None] : 0).ToList();
 
                 var maps = new List<Map>();
 
@@ -423,7 +423,7 @@ namespace Quaver.Database.Maps
                         Description = $"This map is a Quaver converted version of {Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(map.Creator))}'s map",
                         Source = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(map.SongSource)),
                         Tags = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(map.SongTags)),
-                        Mode = (map.CircleSize == 4) ? GameMode.Keys4 : GameMode.Keys7,
+                        Mode = map.CircleSize == 4 ? GameMode.Keys4 : GameMode.Keys7,
                         SongLength = map.TotalTime,
                         Game = MapGame.Osu,
                         BackgroundPath = "",
@@ -471,7 +471,7 @@ namespace Quaver.Database.Maps
                     return maps;
 
                 // Should give us the etterna base folder
-                GameBase.EtternaFolder = Path.GetFullPath(Path.Combine(ConfigManager.EtternaCacheFolderPath.Value, @"..\..\"));
+                MapManager.EtternaFolder = Path.GetFullPath(Path.Combine(ConfigManager.EtternaCacheFolderPath.Value, @"..\..\"));
 
                 // Read all the files in them
                 foreach (var cacheFile in files)
@@ -507,10 +507,9 @@ namespace Quaver.Database.Maps
                             });
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         // Couldn't parse, so just continue
-                        continue;
                     }
                 }
             }

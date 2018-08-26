@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -6,14 +7,14 @@ using Quaver.API.Enums;
 using Quaver.API.Maps;
 using Quaver.API.Maps.Parsers;
 using Quaver.Config;
-using Quaver.Logging;
-using Quaver.Main;
-using Quaver.States.Select;
+using Quaver.Database.Scores;
 using SQLite;
+using Wobble;
+using Wobble.Bindables;
 
 namespace Quaver.Database.Maps
 {
-    internal class Map
+    public class Map
     {
         [PrimaryKey]
         [AutoIncrement]
@@ -67,12 +68,12 @@ namespace Quaver.Database.Maps
         /// <summary>
         ///     The ranked status of the map.
         /// </summary>
-        public int RankedStatus { get; set; }
+        public RankedStatus RankedStatus { get; set; }
 
         /// <summary>
         ///     The last time the user has played the map.
         /// </summary>
-        public string LastPlayed { get; set; } = new DateTime(0001, 1, 1, 00, 00, 00).ToString("yyyy-MM-dd HH:mm:ss"); // 01/01/0001 00:00:00 - If never played
+        public string LastPlayed { get; set; } = new DateTime(0001, 1, 1, 00, 00, 00).ToString("yyyy-MM-dd HH:mm:ss");
 
         /// <summary>
         ///     The difficulty rating of the map.
@@ -147,41 +148,51 @@ namespace Quaver.Database.Maps
         public Qua Qua { get; set; }
 
         /// <summary>
+        ///     The mapset the map belongs to.
+        /// </summary>
+        [Ignore]
+        public Mapset Mapset { get; set; }
+
+        /// <summary>
+        ///     The scores for this map.
+        /// </summary>
+        [Ignore]
+        public Bindable<List<LocalScore>> Scores { get; } = new Bindable<List<LocalScore>>(null);
+
+        /// <summary>
         ///     Responsible for converting a Qua object, to a Map object
         ///     a Map object is one that is stored in the db.
         /// </summary>
         /// <param name="qua"></param>
         /// <param name="path"></param>
         /// <returns></returns>
-        internal Map ConvertQuaToMap(Qua qua, string path)
+        public static Map FromQua(Qua qua, string path) => new Map
         {
-            return new Map
-            {
-                Md5Checksum = MapsetHelper.GetMd5Checksum(path),
-                Directory = new DirectoryInfo(System.IO.Path.GetDirectoryName(path)).Name.Replace("\\", "/"),
-                Path = System.IO.Path.GetFileName(path).Replace("\\", "/"),
-                Artist = qua.Artist,
-                Title = qua.Title,
-                HighestRank = Grade.None,
-                AudioPath = qua.AudioFile,
-                AudioPreviewTime = qua.SongPreviewTime,
-                BackgroundPath = qua.BackgroundFile,
-                Description = qua.Description,
-                MapId = qua.MapId,
-                MapSetId = qua.MapSetId,
-                Bpm = qua.GetCommonBpm(),
-                Creator = qua.Creator,
-                DifficultyName = qua.DifficultyName,
-                Source = qua.Source,
-                Tags = qua.Tags,
-                SongLength =  qua.Length,
-                Mode = qua.Mode,
-                DifficultyRating = qua.AverageNotesPerSecond()
-            };
-        }
+            Md5Checksum = MapsetHelper.GetMd5Checksum(path),
+            Directory = new DirectoryInfo(System.IO.Path.GetDirectoryName(path) ?? throw new InvalidOperationException()).Name.Replace("\\", "/"),
+            Path = System.IO.Path.GetFileName(path)?.Replace("\\", "/"),
+            Artist = qua.Artist,
+            Title = qua.Title,
+            HighestRank = Grade.None,
+            AudioPath = qua.AudioFile,
+            AudioPreviewTime = qua.SongPreviewTime,
+            BackgroundPath = qua.BackgroundFile,
+            Description = qua.Description,
+            MapId = qua.MapId,
+            MapSetId = qua.MapSetId,
+            Bpm = qua.GetCommonBpm(),
+            Creator = qua.Creator,
+            DifficultyName = qua.DifficultyName,
+            Source = qua.Source,
+            Tags = qua.Tags,
+            SongLength =  qua.Length,
+            Mode = qua.Mode,
+            DifficultyRating = qua.AverageNotesPerSecond()
+        };
 
         /// <summary>
-        ///     
+        ///     Loads the .qua, .osu or .sm file for a map.
+        ///
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
@@ -198,36 +209,45 @@ namespace Quaver.Database.Maps
                     qua = Qua.Parse(quaPath);
                     break;
                 case MapGame.Osu:
-                    var osu = new OsuBeatmap(GameBase.OsuSongsFolder + Directory + "/" + Path);
+                    var osu = new OsuBeatmap(MapManager.OsuSongsFolder + Directory + "/" + Path);
                     qua = osu.ToQua();
                     break;
                 case MapGame.Etterna:
                     // In short, find the chart with the same DifficultyName. There's literally no other way for us to check
                     // other than through this means.
-                    var sm = StepManiaFile.Parse(GameBase.EtternaFolder + Directory + "/" + Path).ToQua();
+                    var sm = StepManiaFile.Parse(MapManager.EtternaFolder + Directory + "/" + Path).ToQua();
                     qua = sm.Find(x => x.DifficultyName == DifficultyName);
                     break;
                 default:
                     throw new InvalidEnumArgumentException();
             }
-            
+
             return qua;
         }
-        
+
         /// <summary>
         ///     Changes selected map
         /// </summary>
-        public static void ChangeSelected(Map map)
+        public void ChangeSelected()
         {
-            GameBase.SelectedMap = map;
+            MapManager.Selected.Value = this;
 
             Task.Run(async () =>
             {
                 using (var writer = File.CreateText(ConfigManager.DataDirectory + "/temp/Now Playing/map.txt"))
                 {
-                    await writer.WriteAsync($"{map.Artist} - {map.Title} [{map.DifficultyName}]");
+                    await writer.WriteAsync($"{Artist} - {Title} [{DifficultyName}]");
                 }
             });
+        }
+
+        /// <summary>
+        ///     Unhooks all of the event handlers and clears the scores.
+        /// </summary>
+        public void ClearScores()
+        {
+            Scores.UnHookEventHandlers();
+            Scores.Value?.Clear();
         }
     }
 

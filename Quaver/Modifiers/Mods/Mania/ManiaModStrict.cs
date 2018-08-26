@@ -1,5 +1,4 @@
-﻿using Quaver.API.Enums;
-using Quaver.Main;
+using Quaver.API.Enums;
 
 namespace Quaver.Modifiers.Mods.Mania
 {
@@ -55,7 +54,6 @@ namespace Quaver.Modifiers.Mods.Mania
         /// </summary>
         public void InitializeMod()
         {
-            GameBase.ScoreMultiplier += ScoreMultiplierAddition;
         }
     }
 }

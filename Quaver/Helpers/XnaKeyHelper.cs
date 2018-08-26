@@ -2,9 +2,9 @@
 
 namespace Quaver.Helpers
 {
-    internal static class XnaKeyHelper
+    public static class XnaKeyHelper
     {
-        /// <summary>
+         /// <summary>
         ///     Gets a key from a given string.
         /// </summary>
         /// <param name="keyStr"></param>
@@ -297,7 +297,7 @@ namespace Quaver.Helpers
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        internal static string GetStringFromKey(Keys key)
+        public static string GetStringFromKey(Keys key)
         {
             var keyStr = "?";
 
@@ -424,10 +424,10 @@ namespace Quaver.Helpers
                     keyStr = "F12";
                     return keyStr;
                 case Keys.PrintScreen:
-                    keyStr = "PRINTSCR";
+                    keyStr = "PRTSCR";
                     return keyStr;
                 case Keys.Scroll:
-                    keyStr = "SCROLLLOCK";
+                    keyStr = "SCRLK";
                     return keyStr;
                 case Keys.Pause:
                     keyStr = "PAUSE";
@@ -486,7 +486,7 @@ namespace Quaver.Helpers
                     keyStr = "PGUP";
                     return keyStr;
                 case Keys.NumLock:
-                    keyStr = "NUMLOCK";
+                    keyStr = "NMLK";
                     return keyStr;
                 case Keys.OemPipe: // <- NEED TO VERIFY
                     keyStr = "/";
@@ -498,25 +498,25 @@ namespace Quaver.Helpers
                     keyStr = "TAB";
                     return keyStr;
                 case Keys.Enter:
-                    keyStr = "ENTER";
+                    keyStr = "ENT";
                     return keyStr;
                 case Keys.Delete:
-                    keyStr = "DELETE";
+                    keyStr = "DEL";
                     return keyStr;
                 case Keys.End:
                     keyStr = "END";
                     return keyStr;
                 case Keys.PageDown:
-                    keyStr = "PGDN";
+                    keyStr = "PD";
                     return keyStr;
                 case Keys.CapsLock:
                     keyStr = "CAPS";
                     return keyStr;
                 case Keys.LeftShift:
-                    keyStr = "LSHIFT";
+                    keyStr = "LSHFT";
                     return keyStr;
                 case Keys.RightShift:
-                    keyStr = "RSHIFT";
+                    keyStr = "RSHFT";
                     return keyStr;
                 case Keys.LeftControl:
                     keyStr = "LCTRL";

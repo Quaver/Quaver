@@ -1,35 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
 namespace Quaver.Helpers
 {
-    internal static class StringHelper
+    public static class StringHelper
     {
         /// <summary>
         /// Converts score to string (1234567) format
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
-        internal static string ScoreToString(int score)
-        {
-            return score.ToString("0000000");
-        }
+        internal static string ScoreToString(int score) => score.ToString("0000000");
 
         /// <summary>
         ///     Converts an accuracy percentage into a string.
         /// </summary>
         /// <param name="accuracy"></param>
         /// <returns></returns>
-        internal static string AccuracyToString(float accuracy)
-        {
-            return accuracy >= 100 ? "100.00%" : $"{accuracy:00.00}%";
-        }
-        
+        internal static string AccuracyToString(float accuracy) => accuracy >= 100 ? "100.00%" : $"{accuracy:00.00}%";
+
         /// <summary>
         ///     Makes a string safe to be written as a file name.
         /// </summary>
@@ -46,11 +36,8 @@ namespace Quaver.Helpers
         /// </summary>
         /// <param name="color"></param>
         /// <returns></returns>
-        internal static string ColorToString(Color color)
-        {
-            return $"{color.R},{color.G},{color.G},{color.A}";
-        }
-        
+        internal static string ColorToString(Color color) => $"{color.R},{color.G},{color.G},{color.A}";
+
         /// <summary>
         ///     Adds an ordinal to a string.
         /// </summary>

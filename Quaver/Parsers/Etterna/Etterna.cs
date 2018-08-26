@@ -7,9 +7,9 @@ using Quaver.API.Maps.Parsers;
 
 namespace Quaver.Parsers.Etterna
 {
-    internal static class Etterna
+    public static class Etterna
     {
-        /// <summary>
+            /// <summary>
         ///     Read and serializes an Etterna cache file
         /// </summary>
         internal static EtternaCache ReadCacheFile(string path)
@@ -80,8 +80,6 @@ namespace Quaver.Parsers.Etterna
                         break;
                     case "#CHARTKEY":
                         ec.ChartData.Last().ChartKey = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(value));
-                        break;
-                    default:
                         break;
                 }
             }

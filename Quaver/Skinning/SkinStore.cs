@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text.RegularExpressions;
 using IniParser;
@@ -10,13 +11,16 @@ using Quaver.API.Enums;
 using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Logging;
-using Quaver.Main;
+using Wobble;
+using Wobble.Assets;
+using Wobble.Audio.Samples;
+using Wobble.Graphics;
 
 namespace Quaver.Skinning
 {
-    internal class SkinStore
+    public class SkinStore
     {
-        /// <summary>
+         /// <summary>
         ///     The directory of the skin.
         /// </summary>
         internal static string Dir => $"{ConfigManager.SkinDirectory.Value}/{ConfigManager.Skin.Value}/";
@@ -156,18 +160,18 @@ namespace Quaver.Skinning
         /// <summary>
         ///     Sound effect elements.
         /// </summary>
-        internal SoundEffect SoundHit { get; private set; }
-        internal SoundEffect SoundHitClap { get; private set; }
-        internal SoundEffect SoundHitWhistle { get; private set; }
-        internal SoundEffect SoundHitFinish { get; private set; }
-        internal SoundEffect SoundComboBreak { get; private set; }
-        internal SoundEffect SoundApplause { get; private set; }
-        internal SoundEffect SoundScreenshot { get; private set; }
-        internal SoundEffect SoundClick { get; private set; }
-        internal SoundEffect SoundBack { get; private set; }
-        internal SoundEffect SoundHover { get; private set; }
-        internal SoundEffect SoundFailure { get; private set; }
-        internal SoundEffect SoundRetry { get; private set; }
+        internal AudioSample SoundHit { get; private set; }
+        internal AudioSample SoundHitClap { get; private set; }
+        internal AudioSample SoundHitWhistle { get; private set; }
+        internal AudioSample SoundHitFinish { get; private set; }
+        internal AudioSample SoundComboBreak { get; private set; }
+        internal AudioSample SoundApplause { get; private set; }
+        internal AudioSample SoundScreenshot { get; private set; }
+        internal AudioSample SoundClick { get; private set; }
+        internal AudioSample SoundBack { get; private set; }
+        internal AudioSample SoundHover { get; private set; }
+        internal AudioSample SoundFailure { get; private set; }
+        internal AudioSample SoundRetry { get; private set; }
 
         /// <summary>
         ///     Ctor - Loads up a skin from a given directory.
@@ -184,6 +188,9 @@ namespace Quaver.Skinning
             };
 
             LoadUniversalElements();
+
+            // Change cursor image.
+            GameBase.Game.GlobalUserInterface.Cursor.Image = Cursor;
         }
 
         /// <summary>
@@ -231,7 +238,7 @@ namespace Quaver.Skinning
         internal static Texture2D LoadSingleTexture(string path, string resource, string extension = ".png")
         {
             path += extension;
-            return File.Exists(path) ? GraphicsHelper.LoadTexture2DFromFile(path) : ResourceHelper.LoadTexture(resource);
+            return File.Exists(path) ? AssetLoader.LoadTexture2DFromFile(path) : ResourceHelper.LoadTextureByName(resource, ImageFormat.Png);
         }
 
         /// <summary>
@@ -261,14 +268,14 @@ namespace Quaver.Skinning
                     if (match.Success)
                     {
                         // Load it up if so.
-                        var texture = GraphicsHelper.LoadTexture2DFromFile(f);
-                        return GraphicsHelper.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+                        var texture = AssetLoader.LoadTexture2DFromFile(f);
+                        return AssetLoader.LoadSpritesheetFromTexture(texture, int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
                     }
 
                     // Otherwise check to see if that base element (without animations) actually exists.
                     // if so, load it singularly into a list.
                     if (Path.GetFileNameWithoutExtension(f) == element)
-                        return new List<Texture2D> { GraphicsHelper.LoadTexture2DFromFile(f) };
+                        return new List<Texture2D> { AssetLoader.LoadTexture2DFromFile(f) };
                 }
             }
 
@@ -277,7 +284,7 @@ namespace Quaver.Skinning
             if (rows == 0 && columns == 0)
                 return new List<Texture2D> { LoadSingleTexture($"{dir}/{element}", resource)};
 
-            return GraphicsHelper.LoadSpritesheetFromTexture(ResourceHelper.LoadTexture($"{resource}_{rows}x{columns}"), rows, columns);
+            return AssetLoader.LoadSpritesheetFromTexture(ResourceHelper.LoadTextureByName($"{resource}_{rows}x{columns}", ImageFormat.Png), rows, columns);
         }
 
         /// <summary>
@@ -286,7 +293,7 @@ namespace Quaver.Skinning
         /// <param name="path"></param>
         /// <param name="element"></param>
         /// <returns></returns>
-        private SoundEffect LoadSoundEffect(string path, string element)
+        private static AudioSample LoadSoundEffect(string path, string element)
         {
             path += ".wav";
 
@@ -294,7 +301,7 @@ namespace Quaver.Skinning
             try
             {
                 if (File.Exists(path))
-                    return SoundEffect.FromStream(new FileStream(path, FileMode.Open));
+                    return new AudioSample(path);
             }
             catch (Exception e)
             {
@@ -302,7 +309,7 @@ namespace Quaver.Skinning
             }
 
             // Load the default if the path doesn't exist
-            return SoundEffect.FromStream((UnmanagedMemoryStream)ResourceHelper.GetProperty(element));
+            return new AudioSample((UnmanagedMemoryStream)ResourceHelper.GetProperty(element));
         }
 
         /// <summary>

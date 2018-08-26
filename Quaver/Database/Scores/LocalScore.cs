@@ -1,7 +1,6 @@
 ﻿using Quaver.API.Enums;
 using Quaver.API.Helpers;
 using Quaver.API.Maps.Processors.Scoring;
-using Quaver.Config;
 using Quaver.Helpers;
 using SQLite;
 

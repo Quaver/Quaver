@@ -1,38 +1,38 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
 using Quaver.Config;
-using Quaver.Graphics.Base;
-using Quaver.Graphics.Buttons.Selection;
-using Quaver.Graphics.Sprites;
-using Quaver.Helpers;
-using Quaver.Main;
-using Quaver.States;
-using SQLite;
+using Quaver.Skinning;
+using Wobble;
+using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
+using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Form;
+using Wobble.Input;
 
 namespace Quaver.Graphics.Overlays.Volume
 {
-    internal class VolumeController : IGameStateComponent
+    public class VolumeController : Container
     {
-        /// <summary>
+         /// <summary>
         ///     If the volume controller is currently active.
         ///     (It's considered active if the box is visible and the user is holding down either alt key.)
         /// </summary>
-        internal bool IsActive => SurroundingBox.Visible && (GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) || GameBase.KeyboardState.IsKeyDown(Keys.RightAlt));
-
-        /// <summary>
-        ///     The container for the volume controller.
-        /// </summary>
-        private Container Container { get; set; }
+        public bool IsActive => SurroundingBox.Visible && (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt)
+                                                             || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt));
 
         /// <summary>
         ///     The surrounding box of the volume controller.
         /// </summary>
         private Sprite SurroundingBox { get; set; }
+
+        /// <summary>
+        ///     The border for the surrounding box.
+        /// </summary>
+        private Sprite SurroundingBoxBorder { get; set; }
 
         /// <summary>
         ///     The slider that controls the master volume.
@@ -102,44 +102,56 @@ namespace Quaver.Graphics.Overlays.Volume
         /// <summary>
         ///     Ctor -
         /// </summary>
-        internal VolumeController()
+        public VolumeController()
         {
-            SliderSize = new Vector2(300, 3);
+            SliderSize = new Vector2(350, 3);
             Sliders = new List<Slider>();
             SliderIcons = new List<Sprite>();
+
+            Initialize();
         }
 
         /// <summary>
         ///     Initialize
         /// </summary>
-        /// <param name="state"></param>
-        public void Initialize(IGameState state)
+        public void Initialize()
         {
-            Container = new Container();
+            SurroundingBoxBorder = new Sprite()
+            {
+                Parent = this,
+                Size = new ScalableVector2(302, 153, 0.1f),
+                Alignment = Alignment.TopRight,
+                Y = 110,
+                X = -50,
+                Tint = Colors.MainAccent,
+                Alpha = 0,
+                SetChildrenVisibility = true,
+                SetChildrenAlpha = false
+            };
 
             // Create the surrounding box that will house the sliders.
             SurroundingBox = new Sprite()
             {
-                Size = new UDim2D(250, 150, 0.1f, 0),
+                Parent = this,
+                Size = new ScalableVector2(297, 147, 0.1f),
                 Alignment = Alignment.TopRight,
-                PosY = 60,
-                PosX =  -25,
-                Tint = new Color(0f, 0f, 0f, 0f),
-                Parent = Container,
-                // Set alpha to 0 upon creation as it'll be faded in.
-                Alpha = 0 ,
-                SetChildrenVisibility = true
+                Y = 113,
+                X =  -52,
+                Tint = new Color(0f, 0f, 0f, 0.85f),
+                Alpha = 0,
+                SetChildrenVisibility = true,
+                SetChildrenAlpha = false
             };
 
             #region masterVolumeSlider
 
             // Create master volume slider.
-            MasterVolumeSlider = new Slider(ConfigManager.VolumeGlobal, SliderSize)
+            MasterVolumeSlider = new Slider(ConfigManager.VolumeGlobal, SliderSize, FontAwesome.CircleClosed)
             {
                 Parent = SurroundingBox,
                 Alignment = Alignment.TopLeft,
-                PosY = 30,
-                PosX = 50
+                Y = 30,
+                X = 50
             };
 
             // Create the icon next to the slider.
@@ -148,9 +160,9 @@ namespace Quaver.Graphics.Overlays.Volume
                 Parent = SurroundingBox,
                 Image = FontAwesome.Volume,
                 Alignment = Alignment.TopLeft,
-                Size = new UDim2D(25, 25),
-                PosY = MasterVolumeSlider.PosY - 10,
-                PosX = 10
+                Size = new ScalableVector2(25, 25),
+                Y = MasterVolumeSlider.Y - 10,
+                X = 10
             };
 
             Sliders.Add(MasterVolumeSlider);
@@ -161,12 +173,12 @@ namespace Quaver.Graphics.Overlays.Volume
             #region musicVolumeSlider
 
             // Create music volume slider.
-            MusicVolumeSlider = new Slider(ConfigManager.VolumeMusic, SliderSize)
+            MusicVolumeSlider = new Slider(ConfigManager.VolumeMusic, SliderSize, FontAwesome.CircleClosed)
             {
                 Parent = SurroundingBox,
                 Alignment = Alignment.MidLeft,
-                PosY = 0,
-                PosX = 50
+                Y = 0,
+                X = 50
             };
 
             // Create the icon next to the music slider.
@@ -175,9 +187,9 @@ namespace Quaver.Graphics.Overlays.Volume
                 Parent = SurroundingBox,
                 Image = FontAwesome.Music,
                 Alignment = Alignment.MidLeft,
-                Size = new UDim2D(25, 25),
-                PosY = MusicVolumeSlider.PosY,
-                PosX = 10
+                Size = new ScalableVector2(25, 25),
+                Y = MusicVolumeSlider.Y,
+                X = 10
             };
 
             Sliders.Add(MusicVolumeSlider);
@@ -188,12 +200,12 @@ namespace Quaver.Graphics.Overlays.Volume
             #region effectVolumeSlider
 
             // Create master volume slider.
-            EffectVolumeSlider = new Slider(ConfigManager.VolumeEffect, SliderSize)
+            EffectVolumeSlider = new Slider(ConfigManager.VolumeEffect, SliderSize, FontAwesome.CircleClosed)
             {
                 Parent = SurroundingBox,
                 Alignment = Alignment.BotLeft,
-                PosY = -30,
-                PosX = 50
+                Y = -30,
+                X = 50
             };
 
             // Create the icon that's next to the effect volume slider.
@@ -202,9 +214,9 @@ namespace Quaver.Graphics.Overlays.Volume
                 Parent = SurroundingBox,
                 Image = FontAwesome.Headphones,
                 Alignment = Alignment.BotLeft,
-                Size = new UDim2D(25, 25),
-                PosY = EffectVolumeSlider.PosY + 10,
-                PosX = 10
+                Size = new ScalableVector2(25, 25),
+                Y = EffectVolumeSlider.Y + 10,
+                X = 10
             };
 
             Sliders.Add(EffectVolumeSlider);
@@ -216,20 +228,15 @@ namespace Quaver.Graphics.Overlays.Volume
             FocusedSlider = MasterVolumeSlider;
         }
 
-        /// <summary>
-        ///     Unload
-        /// </summary>
-        public void UnloadContent()
-        {
-            Container.Destroy();
-        }
-
+        /// <inheritdoc />
         /// <summary>
         ///     Update
         /// </summary>
-        /// <param name="dt"></param>
-        public void Update(double dt)
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
         {
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+
             // Handle all needed input.
             HandleInput();
 
@@ -244,16 +251,7 @@ namespace Quaver.Graphics.Overlays.Volume
             HandleFadeIn(dt);
             HandleInactiveFadeOut(dt);
 
-            // Update the container as normla.
-            Container.Update(dt);
-        }
-
-        /// <summary>
-        ///     Draw
-        /// </summary>
-        public void Draw()
-        {
-            Container.Draw();
+            base.Update(gameTime);
         }
 
         /// <summary>
@@ -266,13 +264,13 @@ namespace Quaver.Graphics.Overlays.Volume
             ChangeFocusedSliderColor();
 
             // Require either alt key to be pressed when changing volume.
-            if (!GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) && !GameBase.KeyboardState.IsKeyDown(Keys.RightAlt))
+            if (!KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) && !KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt))
                 return;
 
             // Activate the volume control box.
-            if (InputHelper.IsUniqueKeyPress(Keys.Up)|| InputHelper.IsUniqueKeyPress(Keys.Down) ||
-                InputHelper.IsUniqueKeyPress(Keys.Left) || InputHelper.IsUniqueKeyPress(Keys.Right)
-                || GameBase.MouseState.ScrollWheelValue != GameBase.PreviousMouseState.ScrollWheelValue)
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Up)|| KeyboardManager.IsUniqueKeyPress(Keys.Down) ||
+                KeyboardManager.IsUniqueKeyPress(Keys.Left) || KeyboardManager.IsUniqueKeyPress(Keys.Right)
+                || MouseManager.CurrentState.ScrollWheelValue != MouseManager.PreviousState.ScrollWheelValue)
             {
                 // Fade in the volume controller box when we want it to become active again.
                 IsFadingIn = true;
@@ -280,24 +278,24 @@ namespace Quaver.Graphics.Overlays.Volume
             }
 
             // Mouse wheel input.
-            if (GameBase.MouseState.ScrollWheelValue > GameBase.PreviousMouseState.ScrollWheelValue)
+            if (MouseManager.CurrentState.ScrollWheelValue > MouseManager.PreviousState.ScrollWheelValue)
             {
                 if (TimeElapsedSinceLastVolumeChange >= 50)
                     UpdateVolume(10);
             }
-            else if (GameBase.MouseState.ScrollWheelValue < GameBase.PreviousMouseState.ScrollWheelValue)
+            else if (MouseManager.CurrentState.ScrollWheelValue < MouseManager.PreviousState.ScrollWheelValue)
             {
                 if (TimeElapsedSinceLastVolumeChange >= 50)
                     UpdateVolume(-10);
             }
 
             // Keyboard input.
-            if (GameBase.KeyboardState.IsKeyDown(Keys.Right))
+            if (KeyboardManager.CurrentState.IsKeyDown(Keys.Right))
             {
                 if (TimeElapsedSinceLastVolumeChange >= 50)
                     UpdateVolume(5);
             }
-            else if (GameBase.KeyboardState.IsKeyDown(Keys.Left))
+            else if (KeyboardManager.CurrentState.IsKeyDown(Keys.Left))
             {
                 if (TimeElapsedSinceLastVolumeChange >= 50)
                     UpdateVolume(-5);
@@ -312,7 +310,7 @@ namespace Quaver.Graphics.Overlays.Volume
         {
             // A slider with the mouse currently hovered over it takes precedence over
             // any other action. That is automatically the focused slider.
-            var focused = Sliders.Find(x => x.MouseInHoldSequence) ?? Sliders.Find(x => x.IsTrulyHovered);
+            var focused = Sliders.Find(x => x.MouseInHoldSequence) ?? Sliders.Find(x => x.IsHovered);
             if (focused != null)
             {
                 FocusedSlider = focused;
@@ -321,10 +319,10 @@ namespace Quaver.Graphics.Overlays.Volume
 
             // If the user pressed the up key when determine the focused slider,
             // it becomes the one above. (If first in the list, it becomes the last.)
-            if (InputHelper.IsUniqueKeyPress(Keys.Up) && (GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) || GameBase.KeyboardState.IsKeyDown(Keys.RightAlt)))
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Up) && (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt)))
             {
                 // Play hover sound effect
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover);
+                SkinManager.Skin.SoundHover.CreateChannel().Play();
 
                 // Reset inactive timer.
                 TimeInactive = 0;
@@ -343,10 +341,10 @@ namespace Quaver.Graphics.Overlays.Volume
             }
 
             // If the user presses the down key, we switch the focused slider to the
-            if (InputHelper.IsUniqueKeyPress(Keys.Down) && (GameBase.KeyboardState.IsKeyDown(Keys.LeftAlt) || GameBase.KeyboardState.IsKeyDown(Keys.RightAlt)))
+            if (KeyboardManager.IsUniqueKeyPress(Keys.Down) && (KeyboardManager.CurrentState.IsKeyDown(Keys.LeftAlt) || KeyboardManager.CurrentState.IsKeyDown(Keys.RightAlt)))
             {
                 // Play hover sound effect
-                GameBase.AudioEngine.PlaySoundEffect(GameBase.Skin.SoundHover);
+                SkinManager.Skin.SoundHover.CreateChannel().Play();
 
                 // Reset inactive timer.
                 TimeInactive = 0;
@@ -381,30 +379,10 @@ namespace Quaver.Graphics.Overlays.Volume
         {
             // Change unfocused sliders
             foreach (var slider in Sliders.FindAll(x => x != FocusedSlider).ToList())
-                slider.ChangeColor(Colors.MainAccentInactive);
+                slider.ChangeColor(Color.Gray);
 
             // Change focused sliders.
-            FocusedSlider.ChangeColor(Colors.MainAccent);
-
-            /*
-            // Change tint of master vol icon - Not sure how I like this.
-            if (FocusedSlider == MasterVolumeSlider)
-                MasterVolumeSliderIcon.Tint = QuaverColors.MainAccent;
-            else
-                MasterVolumeSliderIcon.Tint = QuaverColors.MainAccentInactive;
-
-            // Change tint of music vol icon
-            if (FocusedSlider == MusicVolumeSlider)
-                MusicVolumeSliderIcon.Tint = QuaverColors.MainAccent;
-            else
-                MusicVolumeSliderIcon.Tint = QuaverColors.MainAccentInactive;
-
-            // Change tint of effect vol icon
-            if (FocusedSlider == EffectVolumeSlider)
-                EffectVolumeSliderIcon.Tint = QuaverColors.MainAccent;
-            else
-                EffectVolumeSliderIcon.Tint = QuaverColors.MainAccentInactive;
-            */
+            FocusedSlider.ChangeColor(Color.White);
         }
 
         /// <summary>
@@ -416,21 +394,21 @@ namespace Quaver.Graphics.Overlays.Volume
             if (TimeInactive >= 1500)
             {
                 // Fade out all of the sliders
-                // TODO: We should only have to do this on the parent...
-                SurroundingBox.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
+                SurroundingBox.Alpha = MathHelper.Lerp(SurroundingBox.Alpha, 0, (float) Math.Min(dt / 30, 1));
+                SurroundingBoxBorder.Alpha = MathHelper.Lerp(SurroundingBoxBorder.Alpha, 0, (float) Math.Min(dt / 30, 1));
 
                 // Change slider alpha
                 foreach (var slider in Sliders)
                 {
-                    slider.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
-                    slider.ProgressBall.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
+                    slider.Alpha = MathHelper.Lerp(slider.Alpha, 0, (float) Math.Min(dt / 30, 1));
+                    slider.ProgressBall.Alpha = MathHelper.Lerp(slider.ProgressBall.Alpha, 0, (float) Math.Min(dt / 30, 1));
                 }
 
                 // Change slider icon alpha.
                 foreach (var icon in SliderIcons)
-                    icon.Alpha = GraphicsHelper.Tween(0, SurroundingBox.Alpha, Math.Min(dt / 30, 1));
+                    icon.Alpha = MathHelper.Lerp(icon.Alpha, 0, (float) Math.Min(dt / 30, 1));
 
-                if (SurroundingBox.Alpha >= 0.01f)
+                if (SurroundingBoxBorder.Alpha >= 0.01f)
                     return;
 
                 SurroundingBox.Visible = false;
@@ -451,22 +429,23 @@ namespace Quaver.Graphics.Overlays.Volume
             SurroundingBox.Visible = true;
 
             // Begin tweening to fade in the box and all of the sliders.
-            // TODO: We should only have to do this on the parent...
-            SurroundingBox.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
+            // Fade out all of the sliders
+            SurroundingBox.Alpha = MathHelper.Lerp(SurroundingBox.Alpha, 1f, (float)Math.Min(dt / 30, 1));
+            SurroundingBoxBorder.Alpha = MathHelper.Lerp(SurroundingBox.Alpha, 1f, (float) Math.Min(dt / 30, 1));
 
             // Change slider alpha
             foreach (var slider in Sliders)
             {
-                slider.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
-                slider.ProgressBall.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
+                slider.Alpha = MathHelper.Lerp(slider.Alpha, 1, (float)Math.Min(dt / 30, 1));
+                slider.ProgressBall.Alpha = MathHelper.Lerp(slider.ProgressBall.Alpha, 1, (float)Math.Min(dt / 30, 1));
             }
 
             // Change slider icon alpha.
             foreach (var icon in SliderIcons)
-                icon.Alpha = GraphicsHelper.Tween(1, SurroundingBox.Alpha, Math.Min(dt / 60, 1));
+                icon.Alpha = MathHelper.Lerp(icon.Alpha, 1, (float)Math.Min(dt / 30, 1));
 
             // When the box is fully apparent, then we can stop the fade effect.
-            if (SurroundingBox.Alpha >= 0.98)
+            if (SurroundingBoxBorder.Alpha >= 0.98)
                 IsFadingIn = false;
         }
     }

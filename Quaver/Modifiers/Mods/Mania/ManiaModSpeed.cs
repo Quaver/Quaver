@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using Quaver.API.Enums;
+using Quaver.API.Helpers;
+using Quaver.Audio;
 using Quaver.Logging;
-using Quaver.Main;
 
-namespace Quaver.Modifiers.Mods.Mania 
+namespace Quaver.Modifiers.Mods.Mania
 {
     internal class ManiaModSpeed : IGameplayModifier
     {
@@ -72,71 +73,20 @@ namespace Quaver.Modifiers.Mods.Mania
         ///     Ctor - Set speed
         /// </summary>
         /// <param name="modIdentifier"></param>
-        public ManiaModSpeed(ModIdentifier modIdentifier)
-        {
-            ModIdentifier = modIdentifier;
-
-            switch (modIdentifier)
-            {
-                case ModIdentifier.Speed05X:
-                    GameBase.AudioEngine.PlaybackRate = 0.5f;
-                    break;
-                case ModIdentifier.Speed06X:
-                    GameBase.AudioEngine.PlaybackRate = 0.6f;
-                    break;
-                case ModIdentifier.Speed07X:
-                    GameBase.AudioEngine.PlaybackRate = 0.7f;
-                    break;
-                case ModIdentifier.Speed08X:
-                    GameBase.AudioEngine.PlaybackRate = 0.8f;
-                    break;
-                case ModIdentifier.Speed09X:
-                    GameBase.AudioEngine.PlaybackRate = 0.9f;
-                    break;
-                case ModIdentifier.Speed11X:
-                    GameBase.AudioEngine.PlaybackRate = 1.1f;
-                    break;
-                case ModIdentifier.Speed12X:
-                    GameBase.AudioEngine.PlaybackRate = 1.2f;
-                    break;
-                case ModIdentifier.Speed13X:
-                    GameBase.AudioEngine.PlaybackRate = 1.3f;
-                    break;
-                case ModIdentifier.Speed14X:
-                    GameBase.AudioEngine.PlaybackRate = 1.4f;
-                    break;
-                case ModIdentifier.Speed15X:
-                    GameBase.AudioEngine.PlaybackRate = 1.5f;
-                    break;
-                case ModIdentifier.Speed16X:
-                    GameBase.AudioEngine.PlaybackRate = 1.6f;
-                    break;
-                case ModIdentifier.Speed17X:
-                    GameBase.AudioEngine.PlaybackRate = 1.7f;
-                    break;
-                case ModIdentifier.Speed18X:
-                    GameBase.AudioEngine.PlaybackRate = 1.8f;
-                    break;
-                case ModIdentifier.Speed19X:
-                    GameBase.AudioEngine.PlaybackRate = 1.9f;
-                    break;
-                case ModIdentifier.Speed20X:
-                    GameBase.AudioEngine.PlaybackRate = 2.0f;
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException();
-            }
-            
-            // Remove the incoming mod from the list of incompatible ones.
-            var im = IncompatibleMods.ToList();
-            im.Remove(modIdentifier);
-            IncompatibleMods = im.ToArray();
-        }
+        public ManiaModSpeed(ModIdentifier modIdentifier) => ModIdentifier = modIdentifier;
 
         /// <inheritdoc />
         /// <summary>
         ///     Initialize
         /// </summary>
-        public void InitializeMod() => GameBase.AudioEngine.SetPlaybackRate();
+        public void InitializeMod()
+        {
+            AudioEngine.Track.Rate = ModHelper.GetRateFromMods(ModIdentifier);
+
+            // Remove the incoming mod from the list of incompatible ones.
+            var im = IncompatibleMods.ToList();
+            im.Remove(ModIdentifier);
+            IncompatibleMods = im.ToArray();
+        }
     }
 }

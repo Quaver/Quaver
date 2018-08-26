@@ -1,13 +1,18 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Quaver.Graphics.Sprites;
-using Quaver.Main;
+using Wobble.Graphics;
+using Wobble.Graphics.Sprites;
+using Wobble.Window;
 
 namespace Quaver.Graphics.Overlays.Toolbar
 {
-    internal class Toolbar : Sprite
+    public class Toolbar : Sprite
     {
-        /// <summary>
+                /// <summary>
         ///     The line at the bottom of the toolbar.
         /// </summary>
         internal Sprite BottomLine { get; }
@@ -22,18 +27,19 @@ namespace Quaver.Graphics.Overlays.Toolbar
         /// </summary>
         private List<ToolbarItem> Icons { get; }
 
+        /// <inheritdoc />
         /// <summary>
-        ///     
         /// </summary>
         /// <param name="buttons"></param>
         /// <param name="icons"></param>
-        internal Toolbar(List<ToolbarItem> buttons, List<ToolbarItem> icons)
+        /// <param name="size"></param>
+        internal Toolbar(List<ToolbarItem> buttons, List<ToolbarItem> icons, ScalableVector2 size)
         {
             Buttons = buttons;
             Icons = icons;
-            Size = new UDim2D(GameBase.WindowRectangle.Width, 80);
+            Size = size;
             Tint = Color.Black;
-            PosY = 0;
+            Y = 0;
             Alpha = 0f;
 
             BottomLine = new Sprite
@@ -41,12 +47,12 @@ namespace Quaver.Graphics.Overlays.Toolbar
                 Parent = this,
                 Alignment = Alignment.TopCenter,
                 Tint = Color.White,
-                SizeX = SizeX - 160,
-                SizeY = 1,
+                Width = Width - 160,
+                Height = 1,
                 Alpha = 0.3f,
-                PosY = SizeY
+                Y = Height
             };
-            
+
             InitializeToolbarItems();
             InitializeIcons();
         }
@@ -61,10 +67,10 @@ namespace Quaver.Graphics.Overlays.Toolbar
                 var button = Buttons[i];
 
                 button.Parent = BottomLine;
-                button.PosY = -button.SizeY;
-                
+                button.Y = -button.Height;
+
                 if (i != 0)
-                    button.PosX = Buttons[i - 1].SizeX * i;
+                    button.X = Buttons[i - 1].Width * i;
             }
         }
 
@@ -78,9 +84,9 @@ namespace Quaver.Graphics.Overlays.Toolbar
                 var icon = Icons[i];
 
                 icon.Parent = BottomLine;
-                icon.PosY = -icon.SizeY;
+                icon.Y = -icon.Height;
 
-                icon.PosX = BottomLine.SizeX - icon.SizeX * i - icon.SizeX;
+                icon.X = BottomLine.Width - icon.Width * i - icon.Width;
             }
         }
     }

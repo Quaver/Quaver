@@ -4,11 +4,11 @@ using Quaver.API.Maps.Parsers;
 using Quaver.Config;
 using Quaver.Helpers;
 using Quaver.Logging;
-using Quaver.Main;
+using Wobble;
 
 namespace Quaver.Parsers.Etterna
 {
-    internal class StepManiaConverter
+    public static class StepManiaConverter
     {
         /// <summary>
         ///     Converts a .sm file to Quaver's format.
@@ -21,7 +21,7 @@ namespace Quaver.Parsers.Etterna
                 var quaverMaps = StepManiaFile.Parse(path).ToQua();
 
                 // Create a new directory in the songs folder
-                var quaverDir = $"{ConfigManager.SongDirectory}/StepMania - {new DirectoryInfo(path).Name} - {GameBase.GameTime.ElapsedMilliseconds}/";
+                var quaverDir = $"{ConfigManager.SongDirectory}/StepMania - {new DirectoryInfo(path).Name} - {GameBase.Game.TimeRunning}/";
                 Directory.CreateDirectory(quaverDir);
 
                 foreach (var map in quaverMaps)
