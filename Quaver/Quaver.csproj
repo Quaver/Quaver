@@ -40,25 +40,26 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Optimize>false</Optimize>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE;LINUX</DefineConstants>
+    <Optimize>true</Optimize>
     <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Optimize>true</Optimize>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\FontAwesome.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Modifiers\Mods\Mania\ManiaModSpeed.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModStrict.cs" />
     <Compile Include="Modifiers\ModType.cs" />
+    <Compile Include="Online\OnlineManager.cs" />
     <Compile Include="Online\SteamManager.cs" />
     <Compile Include="Parsers\Etterna\Etterna.cs" />
     <Compile Include="Parsers\Etterna\EtternaCache.cs" />
@@ -273,25 +275,8 @@
     <Reference Include="SQLitePCLRaw.provider.e_sqlite3, Version=1.1.11.121, Culture=neutral, PublicKeyToken=9c301db686d0bd12, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCLRaw.provider.e_sqlite3.net45.1.1.11\lib\net45\SQLitePCLRaw.provider.e_sqlite3.dll</HintPath>
     </Reference>
-    <Reference Include="SteamworksSharp, Version=1.0.8.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\SteamworksSharp.1.0.8\lib\net452\SteamworksSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SteamworksSharp.Native, Version=1.0.8.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\SteamworksSharp.Native.1.0.8\lib\net452\SteamworksSharp.Native.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SteamworksSharp.Native.Linux_x86, Version=1.0.8.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\SteamworksSharp.Native.Linux_x86.1.0.8\lib\net452\SteamworksSharp.Native.Linux_x86.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SteamworksSharp.Native.Osx_x86, Version=1.0.8.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\SteamworksSharp.Native.Osx_x86.1.0.8\lib\net452\SteamworksSharp.Native.Osx_x86.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SteamworksSharp.Native.Windows_x86, Version=1.0.8.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\SteamworksSharp.Native.Windows_x86.1.0.8\lib\net452\SteamworksSharp.Native.Windows_x86.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Steamworks.NET, Version=11.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>Steamworks.NET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System" />
@@ -318,6 +303,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Steamworks.NET.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="steam_api64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Icon.bmp" />
     <EmbeddedResource Include="Icon.ico" />
     <Content Include="INIFileParser.dll">
@@ -335,6 +326,10 @@
     <ProjectReference Include="..\Quaver.API\Quaver.API\Quaver.API.csproj">
       <Project>{0c6869bd-4e34-4c92-a853-e09f2b320601}</Project>
       <Name>Quaver.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Quaver.Net\Quaver.Net\Quaver.Net.csproj">
+      <Project>{d2098895-63ab-47d0-ad85-ade6cfe5ae66}</Project>
+      <Name>Quaver.Net</Name>
     </ProjectReference>
     <ProjectReference Include="..\Quaver.Resources\Quaver.Resources\Quaver.Resources.csproj">
       <Project>{511cd203-9c5f-4dab-9556-437a00796cbb}</Project>

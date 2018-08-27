@@ -16,11 +16,13 @@ using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Overlays.Volume;
 using Quaver.Helpers;
 using Quaver.Logging;
+using Quaver.Online;
 using Quaver.Scheduling;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Splash;
 using Quaver.Shaders;
 using Quaver.Skinning;
+using Steamworks;
 using Wobble;
 using Wobble.Audio.Samples;
 using Wobble.Audio.Tracks;
@@ -145,6 +147,9 @@ namespace Quaver
 
             base.Update(gameTime);
 
+            if (SteamManager.IsInitialized)
+                SteamAPI.RunCallbacks();
+            
             // Run scheduled background tasks
             CommonTaskScheduler.Run();
             BackgroundManager.Update(gameTime);
