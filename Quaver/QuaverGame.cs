@@ -182,7 +182,6 @@ namespace Quaver
         /// </summary>
         private static void PerformGameSetup()
         {
-            ConfigManager.Initialize();
             DeleteTemporaryFiles();
 
             LocalScoreCache.CreateTable();

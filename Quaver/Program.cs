@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Quaver.Config;
 using Quaver.Logging;
 using Quaver.Online;
 using SteamworksSharp;
@@ -21,6 +22,8 @@ namespace Quaver
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
+            ConfigManager.Initialize();
+
             SteamNative.Initialize();
             SteamApi.RestartAppIfNecessary((uint) SteamManager.ApplicationId);
 
@@ -28,6 +31,9 @@ namespace Quaver
             {
                 if (SteamApi.Initialize(SteamManager.ApplicationId))
                 {
+                    Logger.LogSuccess($"Steam has successfully been iniitialized for user: {SteamApi.SteamFriends.GetPersonaName()} " +
+                                      $"<{SteamApi.SteamUser.GetSteamID()}>", LogType.Network);
+
                     using (var game = new QuaverGame())
                     {
                         game.Run();
@@ -35,7 +41,7 @@ namespace Quaver
                 }
                 else
                 {
-                    Logger.LogError($"SteamAPI failed to initialize!", LogType.Runtime);
+                    Logger.LogError($"SteamAPI failed to initialize!", LogType.Network);
                 }
             }
             else
