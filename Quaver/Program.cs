@@ -5,6 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Quaver.Logging;
+using Quaver.Online;
+using SteamworksSharp;
+using SteamworksSharp.Native;
 
 namespace Quaver
 {
@@ -17,9 +21,26 @@ namespace Quaver
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
-            using (var game = new QuaverGame())
+            SteamNative.Initialize();
+            SteamApi.RestartAppIfNecessary((uint) SteamManager.ApplicationId);
+
+            if (SteamApi.IsSteamRunning())
             {
-                game.Run();
+                if (SteamApi.Initialize(SteamManager.ApplicationId))
+                {
+                    using (var game = new QuaverGame())
+                    {
+                        game.Run();
+                    }
+                }
+                else
+                {
+                    Logger.LogError($"SteamAPI failed to initialize!", LogType.Runtime);
+                }
+            }
+            else
+            {
+                Logger.LogError($"Game started but Steam is not running", LogType.Runtime);
             }
         }
     }

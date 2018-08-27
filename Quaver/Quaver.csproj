@@ -109,6 +109,7 @@
     <Compile Include="Modifiers\Mods\Mania\ManiaModSpeed.cs" />
     <Compile Include="Modifiers\Mods\Mania\ManiaModStrict.cs" />
     <Compile Include="Modifiers\ModType.cs" />
+    <Compile Include="Online\SteamManager.cs" />
     <Compile Include="Parsers\Etterna\Etterna.cs" />
     <Compile Include="Parsers\Etterna\EtternaCache.cs" />
     <Compile Include="Parsers\Etterna\StepManiaConverter.cs" />
@@ -272,11 +273,35 @@
     <Reference Include="SQLitePCLRaw.provider.e_sqlite3, Version=1.1.11.121, Culture=neutral, PublicKeyToken=9c301db686d0bd12, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCLRaw.provider.e_sqlite3.net45.1.1.11\lib\net45\SQLitePCLRaw.provider.e_sqlite3.dll</HintPath>
     </Reference>
+    <Reference Include="SteamworksSharp, Version=1.0.8.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\SteamworksSharp.1.0.8\lib\net452\SteamworksSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SteamworksSharp.Native, Version=1.0.8.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\SteamworksSharp.Native.1.0.8\lib\net452\SteamworksSharp.Native.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SteamworksSharp.Native.Linux_x86, Version=1.0.8.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\SteamworksSharp.Native.Linux_x86.1.0.8\lib\net452\SteamworksSharp.Native.Linux_x86.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SteamworksSharp.Native.Osx_x86, Version=1.0.8.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\SteamworksSharp.Native.Osx_x86.1.0.8\lib\net452\SteamworksSharp.Native.Osx_x86.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SteamworksSharp.Native.Windows_x86, Version=1.0.8.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\SteamworksSharp.Native.Windows_x86.1.0.8\lib\net452\SteamworksSharp.Native.Windows_x86.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Windows.Forms.DataVisualization.Design" />
