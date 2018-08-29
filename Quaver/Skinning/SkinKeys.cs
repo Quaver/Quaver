@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quaver.API.Enums;
 using Quaver.Config;
+using Quaver.Graphics;
 using Quaver.Screens.Gameplay.Rulesets.Keys.Playfield.Health;
 using Quaver.Screens.Gameplay.UI.Health;
 
@@ -334,22 +335,22 @@ namespace Quaver.Skinning
             {
                 case DefaultSkins.Bar:
                     BgMaskPadding = 0;
-                    HitPosOffsetY= 0;
+                    HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.5f;
-                    ColumnSize = 100;
-                    ReceptorPosOffsetY = -110;
+                    ColumnSize = 110;
+                    ReceptorPosOffsetY = 0;
                     ColumnAlignment = 50;
                     ColorObjectsBySnapDistance = false;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = true;
                     ColumnColors = new List<Color>()
                     {
-                        new Color(255, 138, 234),
-                        new Color(126, 233, 129),
-                        new Color(126, 233, 129),
-                        new Color(255, 138, 234)
+                        Color.DarkGray,
+                        Colors.MainAccentInactive,
+                        Colors.MainAccentInactive,
+                        Color.DarkGray
                     };
                     BgMaskAlpha = 1f;
                     FlipNoteImagesOnUpscroll = true;
@@ -362,8 +363,8 @@ namespace Quaver.Skinning
                     AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
                     KpsDisplayPosY = 10;
-                    ComboPosY = 0;
-                    JudgementBurstPosY = 105;
+                    ComboPosY = -40;
+                    JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
                     break;
@@ -416,25 +417,25 @@ namespace Quaver.Skinning
             {
                 case DefaultSkins.Bar:
                     BgMaskPadding = 0;
-                    HitPosOffsetY = 0;
+                    HitPosOffsetY = 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.5f;
                     ColumnSize = 75;
-                    ReceptorPosOffsetY = -110;
+                    ReceptorPosOffsetY = 0;
                     ColumnAlignment = 50;
                     ColorObjectsBySnapDistance = false;
                     JudgementHitBurstScale = 150;
                     ReceptorsOverHitObjects = true;
                     ColumnColors = new List<Color>
                     {
-                        new Color(255, 138, 234),
-                        new Color(126, 233, 129),
-                        new Color(255, 138, 234),
-                        new Color(255, 251, 138),
-                        new Color(255, 138, 234),
-                        new Color(126, 233, 129),
-                        new Color(255, 138, 234)
+                        Color.DarkGray,
+                        Colors.MainAccentInactive,
+                        Color.DarkGray,
+                        Colors.SecondaryAccentInactive,
+                        Color.DarkGray,
+                        Colors.MainAccentInactive,
+                        Color.DarkGray,
                     };
                     BgMaskAlpha = 1f;
                     FlipNoteImagesOnUpscroll = true;
@@ -447,8 +448,8 @@ namespace Quaver.Skinning
                     AccuracyDisplayPosY = 5;
                     KpsDisplayPosX = -10;
                     KpsDisplayPosY = 10;
-                    ComboPosY = 0;
-                    JudgementBurstPosY = 105;
+                    ComboPosY = -40;
+                    JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
                     break;
