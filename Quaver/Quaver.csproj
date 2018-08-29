@@ -331,6 +331,14 @@
       <Project>{511cd203-9c5f-4dab-9556-437a00796cbb}</Project>
       <Name>Quaver.Resources</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj">
+      <Project>{0fac1785-7b84-4fb9-aefc-f8ead89b5d6e}</Project>
+      <Name>Quaver.Server.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj">
+      <Project>{880b9bdb-f9fd-4845-adba-efdbe3ab6cef}</Project>
+      <Name>Quaver.Server.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Quaver.Shaders\Quaver.Shaders.csproj">
       <Project>{07b693c1-b9bc-449e-8639-926118c9b088}</Project>
       <Name>Quaver.Shaders</Name>
