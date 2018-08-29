@@ -36,5 +36,7 @@ The following is an alphabetized list of Quaver's contributors and what they hav
   - Difficulty Calculation
 * [**barrysir**](https://github.com/barrysir)
   - Difficulty Calculation
+* [**IR0HA**](https://github.com/IR0HAA)
+  - Default Skin Creation
 * [**Vortex-**](https://github.com/VortexCoyote)
   - Shader Development
