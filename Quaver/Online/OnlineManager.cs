@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using Quaver.Logging;
-using Quaver.Net.Client;
 using Steamworks;
 
 namespace Quaver.Online
@@ -20,7 +19,7 @@ namespace Quaver.Online
                 throw new Exception("Failed to login");
             }
 
-            OnlineClient.Login(SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(), SteamManager.PTicket, SteamManager.PcbTicket);
+
         }
     }
 }
