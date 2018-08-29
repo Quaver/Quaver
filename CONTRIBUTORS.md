@@ -1,6 +1,6 @@
 # Contributors
 
-This is the official list of the Quaver project contributors. These people all in some way have contributed to the development of Quaver, whether it be through code contributing their ideas, or play testng. We appreciate everyone who has taken time to support the growing project.
+This is the official list of the Quaver project contributors. These people all in some way have contributed to the development of Quaver, whether it be through code, contributing their ideas, or play testng. We appreciate and value everyone who has taken time to support the growing project.
 
 ### Creators ###
 
