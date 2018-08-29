@@ -334,12 +334,12 @@ namespace Quaver.Skinning
             {
                 case DefaultSkins.Bar:
                     BgMaskPadding = 0;
-                    HitPosOffsetY= 0;
+                    HitPosOffsetY= 15;
                     NotePadding = 0;
                     TimingBarPixelSize = 2;
                     ColumnLightingScale = 1.5f;
-                    ColumnSize = 100;
-                    ReceptorPosOffsetY = -110;
+                    ColumnSize = 110;
+                    ReceptorPosOffsetY = 0;
                     ColumnAlignment = 50;
                     ColorObjectsBySnapDistance = false;
                     JudgementHitBurstScale = 150;
@@ -363,7 +363,7 @@ namespace Quaver.Skinning
                     KpsDisplayPosX = -10;
                     KpsDisplayPosY = 10;
                     ComboPosY = 0;
-                    JudgementBurstPosY = 105;
+                    JudgementBurstPosY = 108;
                     HealthBarType = HealthBarType.Vertical;
                     HealthBarKeysAlignment = HealthBarKeysAlignment.RightStage;
                     break;
