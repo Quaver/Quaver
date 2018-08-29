@@ -44,11 +44,6 @@ namespace Quaver.Screens.Gameplay.UI
         /// </summary>
         private ImageButton Quit { get; }
 
-        /// <summary>
-        ///     The X position of where the buttons are hidden off-screen.
-        /// </summary>
-        private int ButtonInactivePosX { get; } = -500;
-
         /// <inheritdoc />
         /// <summary>
         ///     Ctor
@@ -79,7 +74,7 @@ namespace Quaver.Screens.Gameplay.UI
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Y = -150,
-                X = ButtonInactivePosX,
+                X = -SkinManager.Skin.PauseContinue.Width,
                 Alpha = 1
             };
 
@@ -98,7 +93,7 @@ namespace Quaver.Screens.Gameplay.UI
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Y = 20,
-                X = ButtonInactivePosX,
+                X = -SkinManager.Skin.PauseRetry.Width,
                 Alpha = 1
             };
 
@@ -122,7 +117,7 @@ namespace Quaver.Screens.Gameplay.UI
                 Parent = this,
                 Alignment = Alignment.MidLeft,
                 Y = 190,
-                X = ButtonInactivePosX,
+                X = -SkinManager.Skin.PauseBack.Width,
                 Alpha = 1
             };
 
@@ -138,9 +133,6 @@ namespace Quaver.Screens.Gameplay.UI
             if (Screen.Failed)
                 Visible = false;
 
-           // if (Continue.Transformations.Count > 0)
-                //Console.WriteLine(Continue.Transformations[0].Properties);
-
             base.Update(gameTime);
         }
 
@@ -152,9 +144,9 @@ namespace Quaver.Screens.Gameplay.UI
             ClearTransformations();
 
             Background.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 400));
-            Continue.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, ButtonInactivePosX, GetActivePosX(Continue),  400));
-            Retry.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, ButtonInactivePosX, GetActivePosX(Retry), 400));
-            Quit.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, ButtonInactivePosX, GetActivePosX(Quit), 400));
+            Continue.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, -Continue.Width, GetActivePosX(Continue),  400));
+            Retry.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, -Retry.Width, GetActivePosX(Retry), 400));
+            Quit.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, -Quit.Width, GetActivePosX(Quit), 400));
         }
 
         /// <summary>
@@ -165,9 +157,9 @@ namespace Quaver.Screens.Gameplay.UI
             ClearTransformations();
 
             Background.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 1, 0, 400));
-            Continue.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, GetActivePosX(Continue), ButtonInactivePosX, 800));
-            Retry.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, GetActivePosX(Retry), ButtonInactivePosX, 800));
-            Quit.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, GetActivePosX(Quit), ButtonInactivePosX, 800));
+            Continue.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, GetActivePosX(Continue), -Continue.Width, 800));
+            Retry.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, GetActivePosX(Retry), -Retry.Width, 800));
+            Quit.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutExpo, GetActivePosX(Quit), -Quit.Width, 800));
         }
 
         /// <summary>
