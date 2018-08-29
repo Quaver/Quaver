@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver.Shaders", "Quaver.Sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wobble", "Wobble\Wobble\Wobble.csproj", "{DA74528D-B500-4C5A-977E-76A756E65C63}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver.Server.Common", "Quaver.Server.Common\Quaver.Server.Common\Quaver.Server.Common.csproj", "{880B9BDB-F9FD-4845-ADBA-EFDBE3AB6CEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quaver.Server.Client", "Quaver.Server.Client\Quaver.Server.Client\Quaver.Server.Client.csproj", "{0FAC1785-7B84-4FB9-AEFC-F8EAD89B5D6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -39,6 +43,14 @@ Global
 		{DA74528D-B500-4C5A-977E-76A756E65C63}.Debug|x64.Build.0 = Debug|Any CPU
 		{DA74528D-B500-4C5A-977E-76A756E65C63}.Release|x64.ActiveCfg = Release|Any CPU
 		{DA74528D-B500-4C5A-977E-76A756E65C63}.Release|x64.Build.0 = Release|Any CPU
+		{880B9BDB-F9FD-4845-ADBA-EFDBE3AB6CEF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{880B9BDB-F9FD-4845-ADBA-EFDBE3AB6CEF}.Debug|x64.Build.0 = Debug|Any CPU
+		{880B9BDB-F9FD-4845-ADBA-EFDBE3AB6CEF}.Release|x64.ActiveCfg = Release|Any CPU
+		{880B9BDB-F9FD-4845-ADBA-EFDBE3AB6CEF}.Release|x64.Build.0 = Release|Any CPU
+		{0FAC1785-7B84-4FB9-AEFC-F8EAD89B5D6E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0FAC1785-7B84-4FB9-AEFC-F8EAD89B5D6E}.Debug|x64.Build.0 = Debug|Any CPU
+		{0FAC1785-7B84-4FB9-AEFC-F8EAD89B5D6E}.Release|x64.ActiveCfg = Release|Any CPU
+		{0FAC1785-7B84-4FB9-AEFC-F8EAD89B5D6E}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
