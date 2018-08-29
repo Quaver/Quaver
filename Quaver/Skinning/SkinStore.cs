@@ -340,31 +340,35 @@ namespace Quaver.Skinning
             {
                 var element = $"judge-{j.ToString().ToLower()}";
 
+                /*
                 switch (j)
                 {
-                    case Judgement.Marv:
-                        Judgements[j] = LoadSpritesheet(folder, element, element, 1, 15);
+                    case Judgement.Marv:                     
+                       //Judgements[j] = LoadSpritesheet(folder, element, element, 1, 15);
                         break;
                     case Judgement.Perf:
-                        Judgements[j] = LoadSpritesheet(folder, element, element, 1, 12);
+                        //Judgements[j] = LoadSpritesheet(folder, element, element, 1, 12);
                         break;
                     case Judgement.Great:
-                        Judgements[j] = LoadSpritesheet(folder, element, element, 1, 7);
+                        //Judgements[j] = LoadSpritesheet(folder, element, element, 1, 7);
                         break;
                     case Judgement.Good:
-                        Judgements[j] = LoadSpritesheet(folder, element, element, 1, 8);
+                        //Judgements[j] = LoadSpritesheet(folder, element, element, 1, 8);
                         break;
                     case Judgement.Okay:
-                        Judgements[j] = LoadSpritesheet(folder, element, element, 1, 9);
+                        //Judgements[j] = LoadSpritesheet(folder, element, element, 1, 9);
                         break;
                     case Judgement.Miss:
-                        Judgements[j] = LoadSpritesheet(folder, element, element, 1, 16);
+                        //Judgements[j] = LoadSpritesheet(folder, element, element, 1, 16);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }
+                */
 
+               Judgements[j] = new List<Texture2D>() { LoadSingleTexture($"{Dir}/{folder}/{element}", element) };
+            }
+            
             // Load judgement overlay
             const string judgementOverlay = "judgement-overlay";
             JudgementOverlay = LoadSingleTexture($"{Dir}/{folder}/{judgementOverlay}", judgementOverlay);

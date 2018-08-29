@@ -1,6 +1,6 @@
 # Contributors
 
-This is the official list of the Quaver project contributors. These people all in some way have contributed to the development of Quaver, whether it be through code contributing their ideas, or play testng. We appreciate everyone who has taken time to support the growing project.
+This is the official list of the Quaver project contributors. These people all in some way have contributed to the development of Quaver, whether it be through code, contributing their ideas, or play testng. We appreciate and value everyone who has taken time to support the growing project.
 
 ### Creators ###
 
@@ -36,5 +36,7 @@ The following is an alphabetized list of Quaver's contributors and what they hav
   - Difficulty Calculation
 * [**barrysir**](https://github.com/barrysir)
   - Difficulty Calculation
+* [**IR0HA**](https://github.com/IR0HAA)
+  - Default Skin Creation
 * [**Vortex-**](https://github.com/VortexCoyote)
   - Shader Development
