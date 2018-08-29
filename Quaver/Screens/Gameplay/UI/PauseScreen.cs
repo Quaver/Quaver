@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Quaver.Config;
 using Quaver.Skinning;
 using Wobble;
@@ -59,7 +60,11 @@ namespace Quaver.Screens.Gameplay.UI
                 Parent = this,
                 Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
                 Alpha = 0,
-                Image = SkinManager.Skin.PauseBackground
+                Image = SkinManager.Skin.PauseBackground,
+                SpriteBatchOptions = new SpriteBatchOptions()
+                {
+                    BlendState = BlendState.NonPremultiplied
+                }
             };
 
             // Continue Button
@@ -75,7 +80,8 @@ namespace Quaver.Screens.Gameplay.UI
                 Alignment = Alignment.MidLeft,
                 Y = -150,
                 X = -SkinManager.Skin.PauseContinue.Width,
-                Alpha = 1
+                Alpha = 1,
+                UsePreviousSpriteBatchOptions = true
             };
 
             Continue.Size = new ScalableVector2(Continue.Image.Width, Continue.Image.Height);
@@ -94,7 +100,8 @@ namespace Quaver.Screens.Gameplay.UI
                 Alignment = Alignment.MidLeft,
                 Y = 20,
                 X = -SkinManager.Skin.PauseRetry.Width,
-                Alpha = 1
+                Alpha = 1,
+                UsePreviousSpriteBatchOptions = true
             };
 
             Retry.Size = new ScalableVector2(Retry.Image.Width, Retry.Image.Height);
@@ -110,7 +117,7 @@ namespace Quaver.Screens.Gameplay.UI
                 Screen.HasQuit = true;
 
                 // Make sure the screen transitioner isn't faded out at all
-                var screenView = (GameplayScreenView) Screen.View;
+                var screenView = (GameplayScreenView)Screen.View;
                 screenView.Transitioner.Alpha = 0;
             })
             {
@@ -118,7 +125,8 @@ namespace Quaver.Screens.Gameplay.UI
                 Alignment = Alignment.MidLeft,
                 Y = 190,
                 X = -SkinManager.Skin.PauseBack.Width,
-                Alpha = 1
+                Alpha = 1,
+                UsePreviousSpriteBatchOptions = true
             };
 
             Quit.Size = new ScalableVector2(Quit.Image.Width, Quit.Image.Height);
