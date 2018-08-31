@@ -40,11 +40,12 @@ namespace Quaver.Online
                 Client = new OnlineClient();
             else
             {
-                if (Client.IsConnected)
-                    return;
+                /*if (Client.IsConnected)
+                    return;*/
             }
 
-            Client.ConnectToServer(SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(), SteamManager.PTicket, SteamManager.PcbTicket);
+            // SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(), SteamManager.PTicket, SteamManager.PcbTicket
+            Client.Connect();
         }
     }
 }
