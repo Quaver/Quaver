@@ -132,6 +132,7 @@ namespace Quaver
         /// </summary>
         protected override void UnloadContent()
         {
+            OnlineManager.Client?.Disconnect();
             base.UnloadContent();
         }
 
@@ -149,7 +150,7 @@ namespace Quaver
 
             if (SteamManager.IsInitialized)
                 SteamAPI.RunCallbacks();
-            
+
             // Run scheduled background tasks
             CommonTaskScheduler.Run();
             BackgroundManager.Update(gameTime);
