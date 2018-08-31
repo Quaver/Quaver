@@ -1,5 +1,7 @@
 using System;
+using Amib.Threading;
 using Quaver.Logging;
+using Quaver.Scheduling;
 using Quaver.Server.Client;
 using Steamworks;
 
@@ -24,6 +26,11 @@ namespace Quaver.Online
         }
 
         /// <summary>
+        ///     The thread that online actions will take place on.
+        /// </summary>
+        private static SmartThreadPool Thread { get; } = new SmartThreadPool();
+
+        /// <summary>
         ///     Logs into the Quaver server.
         /// </summary>
         public static void Login()
@@ -45,7 +52,7 @@ namespace Quaver.Online
             }
 
             // SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(), SteamManager.PTicket, SteamManager.PcbTicket
-            Client.Connect();
+            Thread.QueueWorkItem(() => Client.Connect());
         }
     }
 }
