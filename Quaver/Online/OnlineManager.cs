@@ -51,8 +51,8 @@ namespace Quaver.Online
                     return;*/
             }
 
-            // SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(), SteamManager.PTicket, SteamManager.PcbTicket
-            Thread.QueueWorkItem(() => Client.Connect());
+            // Initiate the connection to the game server.
+            Thread.QueueWorkItem(() => Client.Connect(SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(), SteamManager.PTicket, SteamManager.PcbTicket));
         }
     }
 }
