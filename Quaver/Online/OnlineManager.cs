@@ -1,11 +1,16 @@
 using System;
 using Amib.Threading;
+using Quaver.Config;
 using Quaver.Graphics.Notifications;
 using Quaver.Logging;
 using Quaver.Scheduling;
 using Quaver.Server.Client;
+using Quaver.Server.Client.Events.Disconnnection;
 using Quaver.Server.Client.Events.Login;
+using Quaver.Server.Client.Handlers;
 using Steamworks;
+using WebSocketSharp;
+using Logger = Quaver.Logging.Logger;
 
 namespace Quaver.Online
 {
@@ -63,6 +68,8 @@ namespace Quaver.Online
             Client.OnLoginFailed += OnLoginFailed;
             Client.OnChooseUsername += OnChooseAUsername;
             Client.OnChooseUsernameResponse += OnChooseAUsernameResponse;
+            Client.OnDisconnection += OnDisconnection;
+            Client.OnLoginSuccess += OnLoginSuccess;
         }
 
         /// <summary>
@@ -140,6 +147,47 @@ namespace Quaver.Online
                     NotificationManager.Show(NotificationLevel.Error, "No response from the server.");
                     break;
             }
+        }
+
+        /// <summary>
+        ///     When the client disconnects from the server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnDisconnection(object sender, DisconnectedEventArgs e)
+        {
+            Client = null;
+
+            Logger.LogImportant($"Disconnected from the server for reason: {e.CloseEventArgs.Reason} with code: {e.CloseEventArgs.Code}", LogType.Network);
+
+            // If the user can't initially connect to the server (server is down.)
+            switch (e.CloseEventArgs.Code)
+            {
+                // Error ocurred while connecting.
+                case 1006:
+                    NotificationManager.Show(NotificationLevel.Error, "Unable to connect to the server");
+                    return;
+                // Authentication Failed
+                case 1002:
+                    NotificationManager.Show(NotificationLevel.Error, "Failed to authenticate user to the server.");
+                    return;
+            }
+
+            NotificationManager.Show(NotificationLevel.Info, "Disconnected from the server.");
+        }
+
+        /// <summary>
+        ///     When the client successfully logs into the server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnLoginSuccess(object sender, LoginReplyEventArgs e)
+        {
+            var user = e.Self;
+            NotificationManager.Show(NotificationLevel.Success, $"Successfully logged in as: {user.Username}");
+
+            // Make sure the config username is changed.
+            ConfigManager.Username.Value = user.Username;
         }
     }
 }
