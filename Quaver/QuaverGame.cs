@@ -17,6 +17,7 @@ using Quaver.Graphics.Overlays.Volume;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Scheduling;
+using Quaver.Screens.Connecting;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Splash;
 using Quaver.Shaders;

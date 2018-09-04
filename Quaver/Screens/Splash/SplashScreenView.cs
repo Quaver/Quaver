@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Assets;
+using Quaver.Screens.Connecting;
 using Quaver.Screens.Menu;
 using Wobble;
 using Wobble.Graphics;
@@ -187,7 +188,7 @@ namespace Quaver.Screens.Splash
 
             // Change screens after fading for a bit.
             if (TimeSinceFadingOut > 700)
-                ScreenManager.ChangeScreen(new MainMenuScreen());
+                ScreenManager.ChangeScreen(new ConnectingScreen());
 
             Container?.Update(gameTime);
         }
