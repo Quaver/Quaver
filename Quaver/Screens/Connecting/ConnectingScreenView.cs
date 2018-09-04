@@ -106,6 +106,8 @@ namespace Quaver.Screens.Connecting
             CreateRetryButton();
             CreatePlayOfflineButton();
             CreateScreenTransitioner();
+
+            OnFailure();
         }
 
         /// <inheritdoc />
@@ -121,13 +123,6 @@ namespace Quaver.Screens.Connecting
             AnimateLoadingWheel(gameTime);
             AnimateRetryAndQuitButtons(gameTime);
             HandleScreenExiting(gameTime);
-
-            // Obviously don't keep these keybindings around. This is just for testing purposes.
-            if (KeyboardManager.IsUniqueKeyPress(Keys.D1))
-                OnConnected();
-
-            if (KeyboardManager.IsUniqueKeyPress(Keys.D2))
-                OnFailure();
 
             Container?.Update(gameTime);
         }
