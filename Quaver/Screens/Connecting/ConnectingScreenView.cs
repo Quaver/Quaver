@@ -7,6 +7,7 @@ using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Screens.Menu;
+using Quaver.Screens.Username;
 using Quaver.Skinning;
 using Wobble;
 using Wobble.Graphics;
@@ -87,6 +88,11 @@ namespace Quaver.Screens.Connecting
         /// </summary>
         private double TimeElapsedSinceExitInitiated { get; set; }
 
+        /// <summary>
+        ///     Whenever the screen needs to exit,this will be called (usually to switch screens.)
+        /// </summary>
+        private Action OnExitScreen { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -140,7 +146,11 @@ namespace Quaver.Screens.Connecting
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override void Destroy() => Container?.Destroy();
+        public override void Destroy()
+        {
+            Container?.Destroy();
+            OnExitScreen = null;
+        }
 
         /// <summary>
         ///     Creates the background image for the screen.
@@ -308,17 +318,23 @@ namespace Quaver.Screens.Connecting
         private void Connect()
         {
             NotificationManager.Show(NotificationLevel.Warning, "Connecting to the server is only available in the Steam branch, sorry.");
+
+            // For debugging purposes.
+            ExitToScreen(new UsernameSelectionScreen());
         }
 
         /// <summary>
-        ///     Exits the screen to the main menu.
+        ///     Exits to a specified screen whenever OnExitScreen is called.
         /// </summary>
-        private void ExitToMainMenu()
+        /// <param name="screen"></param>
+        private void ExitToScreen(Screen screen)
         {
             IsExitingScreen = true;
 
             ScreenTransitioner.Transformations.Clear();
             ScreenTransitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, ScreenTransitioner.Alpha, 1, 600));
+
+            OnExitScreen += () => ScreenManager.ChangeScreen(screen);
         }
 
         /// <summary>
@@ -340,7 +356,7 @@ namespace Quaver.Screens.Connecting
                 PlayOfflineButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, PlayOfflineButton.X,
                     WindowManager.Width + RetryButton.Width + 5, 750));
 
-                ExitToMainMenu();
+                ExitToScreen(new MainMenuScreen());
             })
             {
                 Parent = Container,
@@ -389,7 +405,7 @@ namespace Quaver.Screens.Connecting
             TimeElapsedSinceExitInitiated += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             if (TimeElapsedSinceExitInitiated > 1200)
-                ScreenManager.ChangeScreen(new MainMenuScreen());
+                OnExitScreen?.Invoke();
         }
 
         /// <summary>
