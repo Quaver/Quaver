@@ -93,7 +93,7 @@ namespace Quaver.Screens.Connecting
             CreateQuitButton();
             CreateScreenTransitioner();
 
-            OnConnected();
+            OnFailure();
         }
 
         /// <inheritdoc />
@@ -215,7 +215,6 @@ namespace Quaver.Screens.Connecting
         private void OnConnected()
         {
             ConnectingContainer.OnConnected();
-            DialogManager.Show(new UsernameSelectionDialog(0.65f));
         }
 
         /// <summary>
@@ -228,7 +227,7 @@ namespace Quaver.Screens.Connecting
         /// </summary>
         public void Connect()
         {
-            NotificationManager.Show(NotificationLevel.Warning, "Connecting to the server is only available in the Steam branch, sorry.");
+            NotificationManager.Show(NotificationLevel.Warning, "Connecting to the server is only available in official releases.");
         }
 
         /// <summary>
