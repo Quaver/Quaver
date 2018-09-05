@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Amib.Threading;
 using Quaver.Config;
 using Quaver.Graphics.Notifications;
@@ -8,6 +9,7 @@ using Quaver.Server.Client;
 using Quaver.Server.Client.Events.Disconnnection;
 using Quaver.Server.Client.Events.Login;
 using Quaver.Server.Client.Handlers;
+using Quaver.Server.Client.Structures;
 using Steamworks;
 using WebSocketSharp;
 using Logger = Quaver.Logging.Logger;
@@ -25,10 +27,23 @@ namespace Quaver.Online
             get => _client;
             private set
             {
+                Self = null;
+                OnlineUsers = new Dictionary<int, User>();
+
                 _client?.Disconnect();
                 _client = value;
             }
         }
+
+        /// <summary>
+        ///     The user client for self (the current client.)
+        /// </summary>
+        public static User Self { get; private set; }
+
+        /// <summary>
+        ///     Dictionary containing all of the currently online users.
+        /// </summary>
+        public static Dictionary<int, User> OnlineUsers { get; private set; }
 
         /// <summary>
         ///     The thread that online actions will take place on.
@@ -162,11 +177,23 @@ namespace Quaver.Online
         /// <param name="e"></param>
         private static void OnLoginSuccess(object sender, LoginReplyEventArgs e)
         {
-            var user = e.Self;
-            NotificationManager.Show(NotificationLevel.Success, $"Successfully logged in as: {user.Username}");
+            Self = e.Self;
+            NotificationManager.Show(NotificationLevel.Success, $"Successfully logged in as: {Self.Username}");
 
             // Make sure the config username is changed.
-            ConfigManager.Username.Value = user.Username;
+            ConfigManager.Username.Value = Self.Username;
+
+            // For every online user, we'll make a new "User" object for them. It won't contain any data for now,
+            // other than their user id. We'll only grab the rest of their data if the client needs it.
+            foreach (var id in e.OnlineUsers)
+            {
+                if (id == e.Self.Id)
+                    OnlineUsers[id] = e.Self;
+                else
+                    OnlineUsers[id] = new User { Id = id };
+            }
+
+            Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
     }
 }
