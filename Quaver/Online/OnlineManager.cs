@@ -85,6 +85,7 @@ namespace Quaver.Online
             Client.OnDisconnection += OnDisconnection;
             Client.OnLoginSuccess += OnLoginSuccess;
             Client.OnUserDisconnected += OnUserDisconnected;
+            Client.OnUserConnected += OnUserConnected;
         }
 
         /// <summary>
@@ -198,6 +199,22 @@ namespace Quaver.Online
         }
 
         /// <summary>
+        ///     Called when a user connects to the server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnUserConnected(object sender, UserConnectedEventArgs e)
+        {
+            if (OnlineUsers.ContainsKey(e.UserId))
+                return;
+
+            OnlineUsers.Add(e.UserId, new User { Id = e.UserId });
+
+            Console.WriteLine($"User: ${e.UserId} has connected to the server.");
+            Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
+        }
+
+        /// <summary>
         ///     Called when a user disconnects from the server.
         /// </summary>
         /// <param name="sender"></param>
@@ -207,7 +224,8 @@ namespace Quaver.Online
             if (OnlineUsers.ContainsKey(e.UserId))
                 OnlineUsers.Remove(e.UserId);
 
-            Console.WriteLine($"User: {e.UserId} has disconnected from the server.");
+            Console.WriteLine($"User: #{e.UserId} has disconnected from the server.");
+            Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
     }
 }
