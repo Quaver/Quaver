@@ -25,6 +25,7 @@ namespace Quaver.Screens.Connecting.UI
             InputText.Y = 5;
             Cursor.Y = 6;
             AlwaysFocused = true;
+            MaxCharacters = 15;
 
             SubmitButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Submit", 0.55f, (o, e) => OnBoxSubmitted(RawText))
             {
