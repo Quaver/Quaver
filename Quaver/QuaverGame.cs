@@ -18,6 +18,7 @@ using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Online;
 using Quaver.Scheduling;
+using Quaver.Screens.Connecting;
 using Quaver.Screens.Menu;
 using Quaver.Screens.Splash;
 using Quaver.Shaders;

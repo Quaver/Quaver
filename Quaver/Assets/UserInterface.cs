@@ -48,6 +48,13 @@ namespace Quaver.Assets
         public static Texture2D MetadataContainer { get; set; }
         public static Texture2D DiffButton { get; set; }
         public static Texture2D DiffButtonInactive { get; set; }
+        public static Texture2D ConnectingBackground { get; set; }
+        public static Texture2D LoadingWheel { get; set; }
+        public static Texture2D QuaverLogoFull { get; set; }
+        public static Texture2D QuaverLogoStylish { get; set; }
+        public static Texture2D UsernameSelectionBackground { get; set; }
+        public static Texture2D UsernameSelectionTextbox { get; set; }
+        public static Texture2D UsernameSelectionTextboxOverlay { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -89,6 +96,13 @@ namespace Quaver.Assets
             MetadataContainer = AssetLoader.LoadTexture2D(QuaverResources.metadata_container, ImageFormat.Png);
             DiffButton = AssetLoader.LoadTexture2D(QuaverResources.diff_button, ImageFormat.Png);
             DiffButtonInactive = AssetLoader.LoadTexture2D(QuaverResources.diff_button_inactive, ImageFormat.Png);
+            ConnectingBackground = AssetLoader.LoadTexture2D(QuaverResources.connecting_background, ImageFormat.Jpeg);
+            LoadingWheel = AssetLoader.LoadTexture2D(QuaverResources.loading_wheel, ImageFormat.Png);
+            QuaverLogoFull = AssetLoader.LoadTexture2D(QuaverResources.quaver_logo_full, ImageFormat.Png);
+            QuaverLogoStylish = AssetLoader.LoadTexture2D(QuaverResources.quaver_logo_stylish, ImageFormat.Png);
+            UsernameSelectionBackground = AssetLoader.LoadTexture2D(QuaverResources.username_selection_background, ImageFormat.Jpeg);
+            UsernameSelectionTextbox = AssetLoader.LoadTexture2D(QuaverResources.username_selection_textbox, ImageFormat.Png);
+            UsernameSelectionTextboxOverlay = AssetLoader.LoadTexture2D(QuaverResources.username_selection_textbox_overlay, ImageFormat.Png);
         }
     }
 }

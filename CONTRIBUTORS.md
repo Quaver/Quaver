@@ -38,5 +38,7 @@ The following is an alphabetized list of Quaver's contributors and what they hav
   - Difficulty Calculation
 * [**IR0HA**](https://github.com/IR0HAA)
   - Default Skin Creation
+* [**shounen**](https://twitter.com/saucictb)
+  - UI Design
 * [**Vortex-**](https://github.com/VortexCoyote)
   - Shader Development
