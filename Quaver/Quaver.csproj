@@ -120,6 +120,9 @@
     <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Screens\Connecting\ConnectingScreen.cs" />
     <Compile Include="Screens\Connecting\ConnectingScreenView.cs" />
+    <Compile Include="Screens\Connecting\UI\ConnectingContainer.cs" />
+    <Compile Include="Screens\Connecting\UI\UsernameSelectionDialog.cs" />
+    <Compile Include="Screens\Connecting\UI\UsernameSelectionTextbox.cs" />
     <Compile Include="Screens\Edit\EditorScreen.cs" />
     <Compile Include="Screens\Edit\EditorScreenView.cs" />
     <Compile Include="Screens\Edit\Input\EditorInputManager.cs" />
@@ -225,9 +228,6 @@
     <Compile Include="Screens\Select\UI\Search\OrderMapsetsBy.cs" />
     <Compile Include="Screens\Splash\SplashScreen.cs" />
     <Compile Include="Screens\Splash\SplashScreenView.cs" />
-    <Compile Include="Screens\Username\UI\UsernameSelectionTextbox.cs" />
-    <Compile Include="Screens\Username\UsernameSelectionScreen.cs" />
-    <Compile Include="Screens\Username\UsernameSelectionScreenView.cs" />
     <Compile Include="Skinning\SkinKeys.cs" />
     <Compile Include="Skinning\SkinKeysFolder.cs" />
     <Compile Include="Skinning\SkinManager.cs" />

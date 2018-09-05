@@ -1,21 +1,23 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Quaver.Assets;
+using Quaver.Graphics;
 using Wobble.Graphics;
-using Wobble.Graphics.Sprites;
 using Wobble.Graphics.UI.Buttons;
 using Wobble.Graphics.UI.Form;
 
-namespace Quaver.Screens.Username.UI
+namespace Quaver.Screens.Connecting.UI
 {
     public class UsernameSelectionTextbox : Textbox
     {
         /// <summary>
         ///     The overlay for the textbox.
         /// </summary>
-        public TextButton SubmitButton { get; }
+        private TextButton SubmitButton { get; }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
         public UsernameSelectionTextbox()
             : base(TextboxStyle.SingleLine, new ScalableVector2(360, 40), Fonts.Exo2Regular24, "", "Enter Username", 0.60f)
         {
@@ -28,9 +30,9 @@ namespace Quaver.Screens.Username.UI
             {
                 Parent = this,
                 Alignment = Alignment.MidLeft,
-                Size = new ScalableVector2(100, Height - 2),
+                Size = new ScalableVector2(100, Height),
                 X = 360,
-                Tint = Color.Black,
+                Tint = Colors.MainAccent,
                 Alpha = 0.65f
             };
 
