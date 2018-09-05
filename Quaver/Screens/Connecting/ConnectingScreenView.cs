@@ -6,6 +6,7 @@ using osu_database_reader;
 using Quaver.Assets;
 using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
+using Quaver.Screens.Connecting.UI;
 using Quaver.Screens.Menu;
 using Quaver.Skinning;
 using Wobble;
@@ -14,6 +15,7 @@ using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI;
 using Wobble.Graphics.UI.Buttons;
+using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Wobble.Screens;
 using Wobble.Window;
@@ -32,15 +34,6 @@ namespace Quaver.Screens.Connecting
         ///     The huge Quaver logo in the middle of the screen.
         /// </summary>
         private Sprite QuaverLogo { get; set; }
-        /// <summary>
-        ///     Text that displays that we're currently connecting to the server.
-        /// </summary>
-        private SpriteText TextConnectingToServer { get; set; }
-
-        /// <summary>
-        ///     The wheel that makes it look like we're loading.
-        /// </summary>
-        private Sprite LoadingWheel { get; set; }
 
         /// <summary>
         ///     The Sprite that gives a background for the footer.
@@ -53,29 +46,19 @@ namespace Quaver.Screens.Connecting
         private SpriteText PoweredBy { get; set; }
 
         /// <summary>
-        ///     The time since the connecting to server text was last changed.
-        /// </summary>
-        private double TimeSinceLastTextConnectingToServerChange { get; set; }
-
-        /// <summary>
         ///     The button to quit the game during connecting.
         /// </summary>
         private ImageButton QuitButton { get; set; }
 
         /// <summary>
-        ///     The button to retry the connection.
-        /// </summary>
-        private TextButton RetryButton { get; set; }
-
-        /// <summary>
-        ///     The button to play offline.
-        /// </summary>
-        private TextButton PlayOfflineButton { get; set; }
-
-        /// <summary>
         ///     Sprite that lays ontop of the screen to provide fade transitions.
         /// </summary>
         private Sprite ScreenTransitioner { get; set; }
+
+        /// <summary>
+        ///     Container specifically for handling UI related to server connection.
+        /// </summary>
+        private ConnectingContainer ConnectingContainer { get; }
 
         /// <summary>
         ///     If we're curerntly exiting the screen.
@@ -87,6 +70,11 @@ namespace Quaver.Screens.Connecting
         /// </summary>
         private double TimeElapsedSinceExitInitiated { get; set; }
 
+        /// <summary>
+        ///     Whenever the screen needs to exit,this will be called (usually to switch screens.)
+        /// </summary>
+        private Action OnExitScreen { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -95,16 +83,14 @@ namespace Quaver.Screens.Connecting
         {
             CreateBackground();
             CreateQuaverLogo();
-            CreateConnectingToServerText();
-            CreateLoadingWheel();
+
+            ConnectingContainer = new ConnectingContainer(this) {Parent = Container};
 
             // Not sure if these should be added on this screen specifically, but included anyway.
             //CreateFooterBackground();
             //CreatePoweredByText();
 
             CreateQuitButton();
-            CreateRetryButton();
-            CreatePlayOfflineButton();
             CreateScreenTransitioner();
 
             OnFailure();
@@ -120,8 +106,6 @@ namespace Quaver.Screens.Connecting
             // AnimateConnectingToServerText(gameTime);
 
             AnimateQuitButton(gameTime);
-            AnimateLoadingWheel(gameTime);
-            AnimateRetryAndQuitButtons(gameTime);
             HandleScreenExiting(gameTime);
 
             Container?.Update(gameTime);
@@ -140,7 +124,11 @@ namespace Quaver.Screens.Connecting
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public override void Destroy() => Container?.Destroy();
+        public override void Destroy()
+        {
+            Container?.Destroy();
+            OnExitScreen = null;
+        }
 
         /// <summary>
         ///     Creates the background image for the screen.
@@ -162,60 +150,6 @@ namespace Quaver.Screens.Connecting
             Image = UserInterface.QuaverLogoStylish,
             Y = -100
         };
-
-        /// <summary>
-        ///     Creates the text that displays we're connecting to the server.
-        /// </summary>
-        private void CreateConnectingToServerText() => TextConnectingToServer = new SpriteText(Fonts.Exo2Regular24, "Connecting to the server. Please wait...", 0.70f)
-        {
-            Parent = Container,
-            Alignment = Alignment.MidCenter,
-            Y = 25
-        };
-
-        /// <summary>
-        ///     Performs a "." ".." "..." animation for the connecting to server text.
-        /// </summary>
-        /// <param name="gameTime"></param>
-        private void AnimateConnectingToServerText(GameTime gameTime)
-        {
-            TimeSinceLastTextConnectingToServerChange += gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            if (TimeSinceLastTextConnectingToServerChange < 600)
-                return;
-
-            var count = TextConnectingToServer.Text.Count(f => f == '.');
-
-            if (count < 3)
-                TextConnectingToServer.Text += ".";
-            else
-                TextConnectingToServer.Text = "Connecting to the server. Please wait";
-
-            TimeSinceLastTextConnectingToServerChange = 0;
-        }
-
-        /// <summary>
-        ///     Creates the loading wheel sprite.
-        /// </summary>
-        private void CreateLoadingWheel() => LoadingWheel = new Sprite
-        {
-            Parent = Container,
-            Alignment = Alignment.MidCenter,
-            Image = UserInterface.LoadingWheel,
-            Size = new ScalableVector2(75, 75),
-            Y = TextConnectingToServer.Y + TextConnectingToServer.MeasureString().Y / 2f + 55,
-            SpriteBatchOptions = new SpriteBatchOptions { BlendState = BlendState.NonPremultiplied }
-        };
-
-        /// <summary>
-        ///     Animates the loading wheel sprite.
-        /// </summary>
-        /// <param name="gameTime"></param>
-        private void AnimateLoadingWheel(GameTime gameTime)
-        {
-            var deltaTime = gameTime.ElapsedGameTime.TotalMilliseconds;
-            LoadingWheel.Rotation = (float)(MathHelper.ToDegrees(LoadingWheel.Rotation) + 8 * deltaTime / 30f);
-        }
 
         /// <summary>
         ///     Creates the background of the footer.
@@ -280,101 +214,34 @@ namespace Quaver.Screens.Connecting
         /// </summary>
         private void OnConnected()
         {
-            TextConnectingToServer.Text = "Connected! Waiting for a response...";
+            ConnectingContainer.OnConnected();
         }
 
         /// <summary>
         ///     When the connection to the server was a failure.
         /// </summary>
-        private void OnFailure()
-        {
-            TextConnectingToServer.Text = "Failed to connect to the server.";
-            LoadingWheel.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.EaseInQuint, 1, 0, 400));
-
-            // Retry button animation
-            RetryButton.Transformations.Clear();
-            RetryButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, RetryButton.X,
-                WindowManager.Width / 2f - 15 - RetryButton.Width, 500));
-
-            // Play offline button animation.
-            PlayOfflineButton.Transformations.Clear();
-            PlayOfflineButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, PlayOfflineButton.X,
-                -WindowManager.Width / 2f + 15 + RetryButton.Width, 500));
-        }
+        private void OnFailure() => ConnectingContainer.OnConnectionFailure();
 
         /// <summary>
         ///     Handles connecting to the server.
         /// </summary>
-        private void Connect()
+        public void Connect()
         {
-            NotificationManager.Show(NotificationLevel.Warning, "Connecting to the server is only available in the Steam branch, sorry.");
+            NotificationManager.Show(NotificationLevel.Warning, "Connecting to the server is only available in official releases.");
         }
 
         /// <summary>
-        ///     Exits the screen to the main menu.
+        ///     Exits to a specified screen whenever OnExitScreen is called.
         /// </summary>
-        private void ExitToMainMenu()
+        /// <param name="screen"></param>
+        public void ExitToScreen(Screen screen)
         {
             IsExitingScreen = true;
 
             ScreenTransitioner.Transformations.Clear();
             ScreenTransitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, ScreenTransitioner.Alpha, 1, 600));
-        }
 
-        /// <summary>
-        ///     Creates the button to go play offline.
-        /// </summary>
-        private void CreatePlayOfflineButton()
-        {
-            PlayOfflineButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "PLAY OFFLINE", 0.50f, (o, e) =>
-            {
-                SkinManager.Skin.SoundClick.CreateChannel()?.Play();
-
-                // Retry button animation
-                RetryButton.Transformations.Clear();
-                RetryButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, RetryButton.X,
-                    -WindowManager.Width - RetryButton.Width - 5, 750));
-
-                // Play offline button animation.
-                PlayOfflineButton.Transformations.Clear();
-                PlayOfflineButton.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutBounce, PlayOfflineButton.X,
-                    WindowManager.Width + RetryButton.Width + 5, 750));
-
-                ExitToMainMenu();
-            })
-            {
-                Parent = Container,
-                Size = new ScalableVector2(175, 50),
-                Alignment = Alignment.MidRight,
-                Tint = Color.Black,
-                Alpha = 0.65f,
-                Y = TextConnectingToServer.Y + TextConnectingToServer.MeasureString().Y / 2f + 55,
-            };
-
-            PlayOfflineButton.X = PlayOfflineButton.Width + 5;
-        }
-
-        /// <summary>
-        ///     Creates the button to retry the connection.
-        /// </summary>
-        private void CreateRetryButton()
-        {
-            // Add buttons to retry the connection
-            RetryButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "RETRY", 0.50f, (o, e) =>
-            {
-                SkinManager.Skin.SoundClick.CreateChannel()?.Play();
-                Connect();
-            })
-            {
-                Parent = Container,
-                Size = new ScalableVector2(175, 50),
-                Alignment = Alignment.MidLeft,
-                Tint = Color.Black,
-                Alpha = 0.65f,
-                Y = TextConnectingToServer.Y + TextConnectingToServer.MeasureString().Y / 2f + 55,
-            };
-
-            RetryButton.X = -RetryButton.Width - 5;
+            OnExitScreen += () => ScreenManager.ChangeScreen(screen);
         }
 
         /// <summary>
@@ -389,19 +256,7 @@ namespace Quaver.Screens.Connecting
             TimeElapsedSinceExitInitiated += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             if (TimeElapsedSinceExitInitiated > 1200)
-                ScreenManager.ChangeScreen(new MainMenuScreen());
-        }
-
-        /// <summary>
-        ///     Animates the retry and quit buttons with their hover animations.
-        /// </summary>
-        /// <param name="gameTime"></param>
-        private void AnimateRetryAndQuitButtons(GameTime gameTime)
-        {
-            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            RetryButton.FadeToColor(RetryButton.IsHovered ? Colors.MainAccent : Color.Black, dt, 60);
-            PlayOfflineButton.FadeToColor(PlayOfflineButton.IsHovered ? Colors.MainAccent : Color.Black, dt, 60);
+                OnExitScreen?.Invoke();
         }
     }
 }
