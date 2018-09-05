@@ -66,7 +66,6 @@ namespace Quaver.Online
                 throw new InvalidOperationException("Cannot subscribe to events if there is no OnlineClient.");
 
             Client.OnLoginFailed += OnLoginFailed;
-            Client.OnChooseUsername += OnChooseAUsername;
             Client.OnChooseUsernameResponse += OnChooseAUsernameResponse;
             Client.OnDisconnection += OnDisconnection;
             Client.OnLoginSuccess += OnLoginSuccess;
@@ -93,26 +92,6 @@ namespace Quaver.Online
             }
 
             Logger.LogError(e.Error, LogType.Network);
-        }
-
-        /// <summary>
-        ///     The client is new to the server, so they need to choose a username to use.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private static void OnChooseAUsername(object sender, ChooseAUsernameEventArgs e)
-        {
-            if (Client == null)
-                throw new InvalidOperationException("Cannot choose a username if there is no OnlineClient.");
-
-            // TODO: Replace with an actual screen to do this.
-            Logger.LogSuccess($"Choose a username to use", LogType.Runtime);
-            var username = Console.ReadLine();
-
-            Thread.QueueWorkItem(() =>
-            {
-                Client.ChooseUsername(username, SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName(), SteamManager.PTicket, SteamManager.PcbTicket);
-            });
         }
 
         /// <summary>

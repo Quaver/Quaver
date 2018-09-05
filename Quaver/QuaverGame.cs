@@ -174,14 +174,13 @@ namespace Quaver
             Logger.Draw(gameTime);
             SpriteBatch.End();
 
-            NotificationManager.Draw(gameTime);
-
             // Draw dialogs
             DialogManager.Draw(gameTime);
 
+            NotificationManager.Draw(gameTime);
+
             // Draw the global container last.
             GlobalUserInterface.Draw(gameTime);
-
         }
 
         /// <summary>

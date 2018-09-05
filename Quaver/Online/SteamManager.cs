@@ -123,7 +123,6 @@ namespace Quaver.Online
                 // Send the login request to Flamingo.
                 case EResult.k_EResultOK:
                     AuthSessionTicketValidated = true;
-                    OnlineManager.Login();
                     break;
                 // All error cases returned from Steam
                 default:
