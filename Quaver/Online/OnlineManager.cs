@@ -10,6 +10,7 @@ using Quaver.Server.Client.Events.Disconnnection;
 using Quaver.Server.Client.Events.Login;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
 using Steamworks;
 using WebSocketSharp;
 using Logger = Quaver.Logging.Logger;
@@ -87,6 +88,7 @@ namespace Quaver.Online
             Client.OnUserDisconnected += OnUserDisconnected;
             Client.OnUserConnected += OnUserConnected;
             Client.OnAvailableChatChannel += OnAvailableChatChannel;
+            Client.OnJoinedChatChannel += OnJoinedChatChannel;
         }
 
         /// <summary>
@@ -238,6 +240,35 @@ namespace Quaver.Online
         {
             ChatManager.AvailableChatChannels.Add(e.Channel);
             Logger.LogImportant($"Received new available chat channel: {e.Channel.Name} | {e.Channel.Description}", LogType.Network);
+        }
+
+        /// <summary>
+        ///     Called when we have joined a new chat channel.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnJoinedChatChannel(object sender, JoinedChatChannelEventArgs e)
+        {
+            // Find an existing channel with the same name
+            var channel = ChatManager.AvailableChatChannels.Find(x => x.Name == e.Channel);
+
+            // If the channel doesn't actually exist in our available ones, that must mean the server is placing
+            // us in one that we don't know about, so we'll have to create a new chat channel object.
+            if (channel == null)
+            {
+                var newChannel = new ChatChannel
+                {
+                    Name = e.Channel,
+                    Description = "No Description",
+                    AllowedUserGroups = UserGroups.Normal
+                };
+
+                ChatManager.JoinedChatChannels.Add(newChannel);
+                Logger.LogImportant($"Joined ChatChannel: {e.Channel} which was previously unknown", LogType.Network);
+            }
+
+            ChatManager.JoinedChatChannels.Add(channel);
+            Logger.LogImportant($"Joined chat channel: {e.Channel}", LogType.Network);
         }
     }
 }
