@@ -22,6 +22,7 @@ using Quaver.Screens.Menu.UI.Buttons.Navigation;
 using Quaver.Screens.Options;
 using Quaver.Screens.Results;
 using Quaver.Screens.Select;
+using Quaver.Screens.Test.Chat;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.UI;
@@ -143,7 +144,8 @@ namespace Quaver.Screens.Menu
                     return;
 
                 ScreenManager.ChangeScreen(new ResultsScreen(new Replay(openFileDialog.FileName)));
-            })
+            }),
+            new ToolbarItem("Chat Testing", () => ScreenManager.ChangeScreen(new TestChatScreen()))
         }, new List<ToolbarItem>
         {
             new ToolbarItem(FontAwesome.PowerOff, GameBase.Game.Exit),

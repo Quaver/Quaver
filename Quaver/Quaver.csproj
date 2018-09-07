@@ -232,6 +232,8 @@
     <Compile Include="Screens\Select\UI\Search\OrderMapsetsBy.cs" />
     <Compile Include="Screens\Splash\SplashScreen.cs" />
     <Compile Include="Screens\Splash\SplashScreenView.cs" />
+    <Compile Include="Screens\Test\Chat\TestChatScreen.cs" />
+    <Compile Include="Screens\Test\Chat\TestChatScreenView.cs" />
     <Compile Include="Skinning\SkinKeys.cs" />
     <Compile Include="Skinning\SkinKeysFolder.cs" />
     <Compile Include="Skinning\SkinManager.cs" />
