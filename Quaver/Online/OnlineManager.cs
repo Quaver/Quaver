@@ -89,6 +89,7 @@ namespace Quaver.Online
             Client.OnUserConnected += OnUserConnected;
             Client.OnAvailableChatChannel += OnAvailableChatChannel;
             Client.OnJoinedChatChannel += OnJoinedChatChannel;
+            Client.OnChatMessageReceived += ChatManager.OnChatMessageReceived;
         }
 
         /// <summary>
