@@ -86,6 +86,7 @@ namespace Quaver.Online
             Client.OnLoginSuccess += OnLoginSuccess;
             Client.OnUserDisconnected += OnUserDisconnected;
             Client.OnUserConnected += OnUserConnected;
+            Client.OnAvailableChatChannel += OnAvailableChatChannel;
         }
 
         /// <summary>
@@ -226,6 +227,17 @@ namespace Quaver.Online
 
             Console.WriteLine($"User: #{e.UserId} has disconnected from the server.");
             Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
+        }
+
+        /// <summary>
+        ///     Called when we received an available chat channel.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnAvailableChatChannel(object sender, AvailableChatChannelEventArgs e)
+        {
+            ChatManager.AvailableChatChannels.Add(e.Channel);
+            Logger.LogImportant($"Received new available chat channel: {e.Channel.Name} | {e.Channel.Description}", LogType.Network);
         }
     }
 }
