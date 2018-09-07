@@ -24,7 +24,14 @@ namespace Quaver.Online
         /// <param name="e"></param>
         public static void OnChatMessageReceived(object sender, ChatMessageEventArgs e)
         {
+            // Find the channel the message is for.
+            var channel = JoinedChatChannels.Find(x => x.Name == e.Message.Channel);
+
+            // Add the message to the appropriate channel.
+            channel.Messages.Add(e.Message);
+
             Console.WriteLine($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender} | {e.Message.Message}");
+            Console.WriteLine($"There are now: {channel.Messages.Count} messages in channel: {channel.Name}");
         }
     }
 }
