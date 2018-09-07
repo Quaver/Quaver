@@ -18,6 +18,22 @@ namespace Quaver.Online
         public static List<ChatChannel> JoinedChatChannels { get; } = new List<ChatChannel>();
 
         /// <summary>
+        ///     Sends a chat message to the server.
+        /// </summary>
+        public static void SendMessage(ChatChannel chan, ChatMessage message)
+        {
+            // Add the message to the chat channel.
+            // Find the channel the message is for.
+            var channel = JoinedChatChannels.Find(x => x.Name == chan.Name);
+
+            // Add the message to the appropriate channel.
+            channel.Messages.Add(message);
+
+            // Send the message to the server.
+            OnlineManager.Client.SendMessage(chan.Name, message.Message);
+        }
+
+        /// <summary>
         ///     Called whenever we receive new chat messages.
         /// </summary>
         /// <param name="sender"></param>
