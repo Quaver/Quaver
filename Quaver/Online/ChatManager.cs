@@ -47,7 +47,7 @@ namespace Quaver.Online
             // In the event that the chat channel doesn't already exist, we'll want to add a new one in.
             if (channel == null)
             {
-                channel = new ChatChannel()
+                channel = new ChatChannel
                 {
                     Name = e.Message.Channel
                 };
