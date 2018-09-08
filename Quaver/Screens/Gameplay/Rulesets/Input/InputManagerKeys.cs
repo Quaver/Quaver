@@ -191,7 +191,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 var judgement = (Judgement)j;
 
                 // Update the user's score
-                Ruleset.ScoreProcessor.CalculateScore(judgement);
+                Ruleset.ScoreProcessor.CalculateScore(judgement, hitDifference);
 
                 // Add new hit stat data.
                 var stat = new HitStat(HitStatType.Hit, hitObject.Info, time, judgement, hitDifference,
