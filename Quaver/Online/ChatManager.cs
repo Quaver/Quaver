@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Quaver.Logging;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 
@@ -43,11 +44,22 @@ namespace Quaver.Online
             // Find the channel the message is for.
             var channel = JoinedChatChannels.Find(x => x.Name == e.Message.Channel);
 
+            // In the event that the chat channel doesn't already exist, we'll want to add a new one in.
+            if (channel == null)
+            {
+                channel = new ChatChannel()
+                {
+                    Name = e.Message.Channel
+                };
+
+                JoinedChatChannels.Add(channel);
+                Logger.LogImportant($"Added ChatChannel: {channel.Name}, as we have received a message and it did not exist", LogType.Network);
+            }
+
             // Add the message to the appropriate channel.
             channel.Messages.Add(e.Message);
 
-            Console.WriteLine($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender} | {e.Message.Message}");
-            Console.WriteLine($"There are now: {channel.Messages.Count} messages in channel: {channel.Name}");
+            Logger.LogInfo($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender} | {e.Message.Message}", LogType.Network);
         }
     }
 }
