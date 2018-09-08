@@ -38,10 +38,7 @@ namespace Quaver.Screens.Test.Chat
 
             var button = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Send", 0.65f, (o, e) =>
             {
-                var chatChannel = ChatManager.JoinedChatChannels.Find(x => x.Name == channel.RawText.ToLower());
-
-                if (chatChannel != null)
-                    ChatManager.SendMessage(chatChannel, new ChatMessage(chatChannel.Name, message.RawText));
+                OnlineManager.Client.SendMessage(channel.RawText, message.RawText);
             })
             {
                 Parent = Container,
