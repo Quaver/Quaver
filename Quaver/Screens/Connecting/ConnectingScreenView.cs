@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -132,11 +132,14 @@ namespace Quaver.Screens.Connecting
             Container?.Destroy();
             OnExitScreen = null;
 
-            OnlineManager.Client.OnLoginSuccess -= OnLoginSuccess;
-            OnlineManager.Client.OnLoginFailed -= OnLoginFailed;
-            OnlineManager.Client.OnChooseUsername -= OnChooseUsername;
-            OnlineManager.Client.OnChooseUsernameResponse -= OnChooseUsernameResponse;
-            OnlineManager.Client.OnDisconnection -= OnDisconnection;
+            if (OnlineManager.Client != null)
+            {
+                OnlineManager.Client.OnLoginSuccess -= OnLoginSuccess;
+                OnlineManager.Client.OnLoginFailed -= OnLoginFailed;
+                OnlineManager.Client.OnChooseUsername -= OnChooseUsername;
+                OnlineManager.Client.OnChooseUsernameResponse -= OnChooseUsernameResponse;
+                OnlineManager.Client.OnDisconnection -= OnDisconnection;
+            }
         }
 
         /// <summary>
