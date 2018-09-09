@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Quaver.Graphics.Overlays.Chat;
+using Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable;
 using Quaver.Logging;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
@@ -8,6 +10,11 @@ namespace Quaver.Online
 {
     public static class ChatManager
     {
+        /// <summary>
+        ///     The overlay for the chat.
+        /// </summary>
+        public static ChatOverlay Dialog { get; } = new ChatOverlay();
+
         /// <summary>
         ///     The list of available public chat channels.
         /// </summary>
@@ -53,12 +60,14 @@ namespace Quaver.Online
                 };
 
                 JoinedChatChannels.Add(channel);
+                Dialog.ChatChannelList.InitializeChannel(channel);
                 Logger.LogImportant($"Added ChatChannel: {channel.Name}, as we have received a message and it did not exist", LogType.Network);
             }
 
             // Add the message to the appropriate channel.
             channel.Messages.Add(e.Message);
 
+            Dialog.ChannelMessageContainers[channel].AddContainedDrawable(new DrawableChatMessage(e.Message));
             Logger.LogInfo($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender} | {e.Message.Message}", LogType.Network);
         }
     }

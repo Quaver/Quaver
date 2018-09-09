@@ -80,6 +80,7 @@
     <Compile Include="Database\Scores\LocalScoreCache.cs" />
     <Compile Include="Graphics\Backgrounds\BackgroundLoadedEventArgs.cs" />
     <Compile Include="Graphics\Backgrounds\BackgroundManager.cs" />
+    <Compile Include="Graphics\CircleAvatar.cs" />
     <Compile Include="Graphics\Colors.cs" />
     <Compile Include="Graphics\Graphing\Graph.cs" />
     <Compile Include="Graphics\HeaderedContainer.cs" />
@@ -87,6 +88,14 @@
     <Compile Include="Graphics\Notifications\NotificationLevel.cs" />
     <Compile Include="Graphics\Notifications\NotificationManager.cs" />
     <Compile Include="Graphics\NumberDisplay.cs" />
+    <Compile Include="Graphics\Overlays\Chat\ChatOverlay.cs" />
+    <Compile Include="Graphics\Overlays\Chat\Components\ChannelHeader.cs" />
+    <Compile Include="Graphics\Overlays\Chat\Components\Channels\ChatChannelList.cs" />
+    <Compile Include="Graphics\Overlays\Chat\Components\Channels\ChatChannelListButton.cs" />
+    <Compile Include="Graphics\Overlays\Chat\Components\ChatTextbox.cs" />
+    <Compile Include="Graphics\Overlays\Chat\Components\Messages\ChatMessageContainer.cs" />
+    <Compile Include="Graphics\Overlays\Chat\Components\Messages\Drawable\DrawableChatMessage.cs" />
+    <Compile Include="Graphics\Overlays\Chat\Components\Topic\CurrentTopic.cs" />
     <Compile Include="Graphics\Overlays\Toolbar\Toolbar.cs" />
     <Compile Include="Graphics\Overlays\Toolbar\ToolbarItem.cs" />
     <Compile Include="Graphics\Overlays\Volume\VolumeController.cs" />
@@ -362,9 +371,6 @@
       <Project>{da74528d-b500-4c5a-977e-76a756e65c63}</Project>
       <Name>Wobble</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Graphics\Overlays\Chat" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
