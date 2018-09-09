@@ -191,13 +191,13 @@ namespace Quaver.Online
 
             // For every online user, we'll make a new "User" object for them. It won't contain any data for now,
             // other than their user id. We'll only grab the rest of their data if the client needs it.
-            foreach (var id in e.OnlineUsers)
+            /*foreach (var id in e.OnlineUsers)
             {
                 if (id == e.Self.Id)
                     OnlineUsers[id] = e.Self;
                 else
                     OnlineUsers[id] = new User { Id = id };
-            }
+            }*/
 
             Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
@@ -209,12 +209,15 @@ namespace Quaver.Online
         /// <param name="e"></param>
         private static void OnUserConnected(object sender, UserConnectedEventArgs e)
         {
-            if (OnlineUsers.ContainsKey(e.UserId))
+            if (OnlineUsers.ContainsKey(e.User.Id))
+            {
+                OnlineUsers[e.User.Id] = e.User;
                 return;
+            }
 
-            OnlineUsers.Add(e.UserId, new User { Id = e.UserId });
+            OnlineUsers.Add(e.User.Id, e.User);
 
-            Console.WriteLine($"User: ${e.UserId} has connected to the server.");
+            Console.WriteLine($"User: {e.User.Username} [{e.User.SteamId}] (#{e.User.Id}) has connected to the server.");
             Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
 
@@ -266,9 +269,13 @@ namespace Quaver.Online
 
                 ChatManager.JoinedChatChannels.Add(newChannel);
                 Logger.LogImportant($"Joined ChatChannel: {e.Channel} which was previously unknown", LogType.Network);
+
+                ChatManager.Dialog.ChatChannelList.InitializeChannel(newChannel);
+                return;
             }
 
             ChatManager.JoinedChatChannels.Add(channel);
+            ChatManager.Dialog.ChatChannelList.InitializeChannel(channel);
             Logger.LogImportant($"Joined chat channel: {e.Channel}", LogType.Network);
         }
     }
