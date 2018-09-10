@@ -73,7 +73,7 @@ namespace Quaver.Online
             // Add the message to the appropriate channel.
             channel.Messages.Add(e.Message);
 
-            Dialog.ChannelMessageContainers[channel].AddContainedDrawable(new DrawableChatMessage(e.Message));
+            Dialog.ChannelMessageContainers[channel].AddContainedDrawable(new DrawableChatMessage(Dialog.ChannelMessageContainers[channel], e.Message));
             Logger.LogInfo($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender.Username} | {e.Message.SenderId} | {e.Message.Message}", LogType.Network);
         }
     }
