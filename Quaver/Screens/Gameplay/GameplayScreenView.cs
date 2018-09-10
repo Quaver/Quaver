@@ -15,6 +15,7 @@ using Quaver.Graphics;
 using Quaver.Graphics.Backgrounds;
 using Quaver.Graphics.Notifications;
 using Quaver.Helpers;
+using Quaver.Online;
 using Quaver.Scheduling;
 using Quaver.Screens.Gameplay.UI;
 using Quaver.Screens.Gameplay.UI.Counter;
@@ -339,7 +340,7 @@ namespace Quaver.Screens.Gameplay
             var users = new List<ScoreboardUser>
             {
                 // Add ourself to the list of scoreboard users first.
-                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, UserInterface.YouAvatar)
+                new ScoreboardUser(Screen, ScoreboardUserType.Self, scoreboardName, null, SteamManager.UserAvatar)
                 {
                     Parent = Container,
                     Alignment = Alignment.MidLeft

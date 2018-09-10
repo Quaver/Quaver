@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Config;
+using Quaver.Online;
 using Wobble;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -75,7 +76,7 @@ namespace Quaver.Screens.Menu.UI.BottomToolbar
 
             Avatar = new Sprite()
             {
-                Image = UserInterface.YouAvatar,
+                Image = SteamManager.UserAvatar,
                 Parent = nameContainer,
                 Alignment = Alignment.TopLeft,
                 Size = new ScalableVector2(30, 30),
