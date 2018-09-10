@@ -1,11 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Quaver.Assets;
 using Quaver.Graphics.Notifications;
 using Quaver.Online;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
+using Wobble.Graphics.BitmapFonts;
 using Wobble.Graphics.Sprites;
+using Wobble.Graphics.Transformations;
+using Wobble.Window;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
@@ -30,12 +34,17 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <summary>
         ///     The username of the person that wrote the message.
         /// </summary>
-        public SpriteText TextUsername { get; private set; }
+        public SpriteTextBitmap TextUsername { get; private set; }
 
         /// <summary>
         ///     The actual content of the message.
         /// </summary>
-        public SpriteText TextMessageContent { get; private set; }
+        public SpriteTextBitmap TextMessageContent { get; private set; }
+
+        /// <summary>
+        ///     The amount of y space between the content and time sent.
+        /// </summary>
+        private int Padding { get; } = 10;
 
         /// <inheritdoc />
         /// <summary>
@@ -50,15 +59,19 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             Avatar = new Sprite
             {
                 Parent = this,
-                X = 15,
-                Size = new ScalableVector2(40, 40),
-                Image = UserInterface.YouAvatar
+                X = 10,
+                Size = new ScalableVector2(45, 45),
+                Image = UserInterface.YouAvatar,
+                Y = Padding,
             };
 
-            Y = 100;
+            X = -Container.Width;
+            Width = Container.Width - 5;
+            Alpha = 0;
 
             CreateUsernameText();
             CreateMessageContentText();
+            RecalculateHeight();
         }
 
         /// <summary>
@@ -66,33 +79,44 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// </summary>
         private void CreateUsernameText()
         {
-            TextUsername = new SpriteText(Fonts.Exo2BoldItalic24, Message.Sender.Username, 0.55f)
+            var timespan = TimeSpan.FromMilliseconds(Message.Time);
+            var date = (new DateTime(1970, 1, 1) + timespan).ToLocalTime();
+
+            TextUsername = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, $"[{date.ToShortTimeString()}] {Message.Sender.Username}",
+                14, Colors.GetUserChatColor(Message.Sender), Alignment.MidLeft, (int) WindowManager.Width)
             {
                 Parent = this,
-                TextColor = Colors.GetUserChatColor(Message.Sender)
+                X = Avatar.Width + Avatar.X + 5,
+                Y = Avatar.Y - 3,
             };
-
-            TextUsername.X = TextUsername.MeasureString().X / 2f + Avatar.Width + Avatar.X + 12;
-            TextUsername.Y = TextUsername.MeasureString().Y / 2f - 3;
         }
 
         /// <summary>
-        ///
+        ///    Creates the text that holds the message content.
         /// </summary>
-        private void CreateMessageContentText()
+        private void CreateMessageContentText() => TextMessageContent = new SpriteTextBitmap(BitmapFonts.Exo2Medium, Message.Message, 14,
+            Color.White, Alignment.MidLeft, (int)(Container.Width - Avatar.Width - Avatar.X - 5))
         {
-            TextMessageContent = new SpriteText(Fonts.Exo2Regular24, Message.Message,
-                new ScalableVector2(Container.Width - Avatar.Width - 40, 1), 0.55f)
-            {
-                Parent = this,
-                Style = TextStyle.WordwrapMultiLine,
-                X = Avatar.X + Avatar.Width + 12,
-                TextAlignment = Alignment.TopLeft
-            };
+            Parent = this,
+            X = TextUsername.X,
+            Y = TextUsername.Y + TextUsername.Height - 1,
+        };
 
-            TextMessageContent.Y = TextMessageContent.MeasureString().Y / 2f + 8;
-            Console.WriteLine(TextMessageContent.Alignment + " " + TextMessageContent.TextAlignment + " " + TextMessageContent.Y);
-            Console.WriteLine(TextMessageContent.Text);
+        /// <summary>
+        ///     Calculates the height of the message.
+        /// </summary>
+        private void RecalculateHeight()
+        {
+            Height = 0;
+            var maxHeight = Math.Max(Avatar.Height, TextMessageContent.Height);
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (maxHeight == Avatar.Height)
+                Height = Avatar.Height;
+            else
+                Height = TextUsername.Height + maxHeight;
+
+            Height += Padding * 2;
         }
     }
 }

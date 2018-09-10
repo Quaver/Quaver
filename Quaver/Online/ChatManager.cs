@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Quaver.Graphics.Overlays.Chat;
 using Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable;
 using Quaver.Logging;
@@ -73,7 +74,9 @@ namespace Quaver.Online
             // Add the message to the appropriate channel.
             channel.Messages.Add(e.Message);
 
-            Dialog.ChannelMessageContainers[channel].AddContainedDrawable(new DrawableChatMessage(Dialog.ChannelMessageContainers[channel], e.Message));
+
+            // Get the last message in the channel
+            Dialog.ChannelMessageContainers[channel].AddMessage(channel, e.Message);
             Logger.LogInfo($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender.Username} | {e.Message.SenderId} | {e.Message.Message}", LogType.Network);
         }
     }
