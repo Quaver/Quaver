@@ -62,6 +62,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Assets\BitmapFonts.cs" />
     <Compile Include="Assets\FontAwesome.cs" />
     <Compile Include="Assets\Fonts.cs" />
     <Compile Include="Assets\Titles.cs" />
