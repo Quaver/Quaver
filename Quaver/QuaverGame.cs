@@ -108,6 +108,9 @@ namespace Quaver
             Titles.Load();
             UserInterface.Load();
 
+            // Load steam avatar
+            SteamManager.UserAvatar = SteamManager.GetAvatar(SteamUser.GetSteamID().m_SteamID);
+
             // Load the user's skin
             SkinManager.Load();
 
