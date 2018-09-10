@@ -1,4 +1,5 @@
-﻿using Quaver.Assets;
+using Quaver.Assets;
+using Quaver.Online;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;

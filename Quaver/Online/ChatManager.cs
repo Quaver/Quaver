@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Quaver.Graphics.Overlays.Chat;
 using Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable;
@@ -48,6 +48,12 @@ namespace Quaver.Online
         /// <param name="e"></param>
         public static void OnChatMessageReceived(object sender, ChatMessageEventArgs e)
         {
+            // Don't handle messages from non-online users. We should never get this since the packets are in order.
+            if (!OnlineManager.OnlineUsers.ContainsKey(e.Message.SenderId))
+                return;
+
+            e.Message.Sender = OnlineManager.OnlineUsers[e.Message.SenderId];
+
             // Find the channel the message is for.
             var channel = JoinedChatChannels.Find(x => x.Name == e.Message.Channel);
 
@@ -68,7 +74,7 @@ namespace Quaver.Online
             channel.Messages.Add(e.Message);
 
             Dialog.ChannelMessageContainers[channel].AddContainedDrawable(new DrawableChatMessage(e.Message));
-            Logger.LogInfo($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender} | {e.Message.Message}", LogType.Network);
+            Logger.LogInfo($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender.Username} | {e.Message.SenderId} | {e.Message.Message}", LogType.Network);
         }
     }
 }
