@@ -51,6 +51,9 @@ namespace Quaver.Online
         {
             TimeSinceLastActivated += gameTime.ElapsedGameTime.TotalMilliseconds;
 
+            // Only allow the box to be typed into if the overlay is active.
+            Dialog.ChatTextbox.Textbox.AlwaysFocused = ChatOverlay.IsActive;
+            Dialog.ChatTextbox.Textbox.Focused = ChatOverlay.IsActive;
 
             if (KeyboardManager.IsUniqueKeyPress(Keys.F8) && TimeSinceLastActivated >= 450)
             {

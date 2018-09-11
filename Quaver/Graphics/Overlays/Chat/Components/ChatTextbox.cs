@@ -50,10 +50,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            // Only allow the box to be typed into if the overlay is active.
-            Textbox.AlwaysFocused = ChatOverlay.IsActive;
-            Textbox.Focused = ChatOverlay.IsActive;
-
             base.Update(gameTime);
         }
 

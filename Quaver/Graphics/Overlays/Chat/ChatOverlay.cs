@@ -119,12 +119,12 @@ namespace Quaver.Graphics.Overlays.Chat
         {
         }
 
-        /// <summary>
-        ///     This is a hack to prevent the chat dialog from being completely destroyed so, it can be
-        ///     reused.
-        ///
-        ///     TODO: Fix this in Wobble.
-        /// </summary>
+        /// <inheritdoc />
+        ///  <summary>
+        ///      This is a hack to prevent the chat dialog from being completely destroyed so, it can be
+        ///      reused.
+        ///      TODO: Fix this in Wobble.
+        ///  </summary>
         public override void Destroy()
         {
         }

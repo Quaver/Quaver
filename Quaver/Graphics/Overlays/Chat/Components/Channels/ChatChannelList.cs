@@ -43,7 +43,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
 
             Tint = Color.Black;
             Alpha = 0.85f;
-            Console.WriteLine("hi");
         }
 
         /// <summary>
