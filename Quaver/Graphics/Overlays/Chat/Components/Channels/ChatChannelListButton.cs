@@ -106,7 +106,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
                 chatMessageContainer.Value.Visible = chatMessageContainer.Key == Channel;
 
             ChannelList.Overlay.CurrentTopic.UpdateTopicText(Channel);
-            Console.WriteLine($"New active chanel: {ChannelList.Overlay.ActiveChannel.Name}");
         }
 
         /// <summary>

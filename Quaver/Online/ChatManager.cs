@@ -92,6 +92,13 @@ namespace Quaver.Online
             // Make sure the sender is actual valid.
             message.Sender = OnlineManager.Self;
 
+            // Handle forward slash commands (client sided) and not send to the server.
+            if (message.Message.StartsWith("/"))
+            {
+                HandleClientSideCommands(message);
+                return;
+            }
+
             // Add the message to the appropriate channel.
             channel.Messages.Add(message);
 
@@ -145,6 +152,68 @@ namespace Quaver.Online
             }
 
             Logger.LogInfo($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender.Username} | {e.Message.SenderId} | {e.Message.Message}", LogType.Network);
+        }
+
+        /// <summary>
+        ///     Handles all client sided commands (Messages that start with "/")
+        /// </summary>
+        /// <param name="message"></param>
+        private static void HandleClientSideCommands(ChatMessage message)
+        {
+            // The args for the message.
+            var args = message.Message.Split(' ');
+
+            var command = "";
+
+            var commandSplit = args[0].Split('/');
+
+            if (commandSplit.Length > 1)
+                command = commandSplit[1];
+
+            if (string.IsNullOrEmpty(command))
+                return;
+
+            switch (command)
+            {
+                // Send help commands.
+                case "help":
+                    SendQuaverBotMessage(Dialog.ActiveChannel, "Hey there, I'm Quaver - a bot that's here to help!\n\n" +
+                                                               "Here are some client-side commands you can use:\n" +
+                                                               "/help - Display this message\n" +
+                                                               "/online - Display all online users.");
+                    break;
+                // Get online users.
+                case "online":
+                    var userStr = "";
+
+                    foreach (var user in OnlineManager.OnlineUsers)
+                        userStr += user.Value.Username + ", ";
+
+                    SendQuaverBotMessage(Dialog.ActiveChannel, $"There are {OnlineManager.OnlineUsers.Count} users online.\n\n" +
+                                                               $"{userStr}");
+                    break;
+            }
+        }
+
+        /// <summary>
+        ///     Sends a QuaverBot message to a specified channel.
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static void SendQuaverBotMessage(ChatChannel channel, string message)
+        {
+            var chatMessage = new ChatMessage(channel.Name, message)
+            {
+                // QuaverBot is ID = 0;
+                SenderId = 0,
+                Sender = OnlineManager.OnlineUsers[0]
+            };
+
+            // Add the message to the appropriate channel.
+            channel.Messages.Add(chatMessage);
+
+            Dialog.ChannelMessageContainers[channel].AddMessage(channel, chatMessage);
         }
     }
 }

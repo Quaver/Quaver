@@ -61,6 +61,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             Container = container;
             Message = message;
 
+
             Avatar = new Sprite
             {
                 Parent = this,
