@@ -61,13 +61,15 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             Container = container;
             Message = message;
 
+            // The avatar used for the chat message
+            var userAvatar = message.Sender.Username == OnlineManager.Self.Username ? SteamManager.UserAvatar : UserInterface.UnknownAvatar;
 
             Avatar = new Sprite
             {
                 Parent = this,
                 X = 10,
                 Size = new ScalableVector2(45, 45),
-                Image = UserInterface.YouAvatar,
+                Image = userAvatar,
                 Y = Padding,
             };
 
