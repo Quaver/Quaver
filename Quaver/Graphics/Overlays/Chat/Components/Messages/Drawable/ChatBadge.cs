@@ -47,7 +47,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
                 X = 10
             };
 
-            TextUserGroup = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, "Admin", 24, Color.White, Alignment.TopLeft, (int) WindowManager.Width)
+            TextUserGroup = new SpriteTextBitmap(BitmapFonts.Exo2BoldItalic, GetUserGroupName(UserGroups), 24,
+                Color.White, Alignment.TopLeft, (int) WindowManager.Width)
             {
                 Parent = this,
                 UsePreviousSpriteBatchOptions = true,
@@ -71,9 +72,31 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <returns></returns>
         public static Texture2D GetIcon(UserGroups groups)
         {
+            // Bot
+            if (groups.HasFlag(UserGroups.Bot))
+                return FontAwesome.Wrench;
+
             // Admin
             if (groups.HasFlag(UserGroups.Admin))
                 return FontAwesome.Gavel;
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Returns the user group's name stringified.
+        /// </summary>
+        /// <param name="groups"></param>
+        /// <returns></returns>
+        public static string GetUserGroupName(UserGroups groups)
+        {
+            // Bot
+            if (groups.HasFlag(UserGroups.Bot))
+                return "Bot";
+
+            // Admin
+            if (groups.HasFlag(UserGroups.Admin))
+                return "Admin";
 
             return null;
         }
