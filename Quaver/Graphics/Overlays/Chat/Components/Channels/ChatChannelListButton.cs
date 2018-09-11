@@ -18,12 +18,17 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
         /// <summary>
         ///     The channel that this button references.
         /// </summary>
-        private ChatChannel Channel { get; }
+        public ChatChannel Channel { get; }
 
         /// <summary>
         ///     Determines if this button is actually selected.
         /// </summary>
         public bool IsSelected { get; private set; }
+
+        /// <summary>
+        ///     If the chat has messages in it that are unread.
+        /// </summary>
+        public bool IsUnread { get; set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -66,6 +71,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
                 Alpha = 0.05f;
                 Tint = Color.White;
             }
+            else if (IsUnread)
+            {
+                Text.TextColor = Color.White;
+                Alpha = 0;
+            }
             else
             {
                 Text.TextColor = Color.DarkGray;
@@ -84,6 +94,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
                 return;
 
             IsSelected = true;
+            IsUnread = false;
             ChannelList.SelectedButton = this;
             ChannelList.Overlay.ActiveChannel = Channel;
 

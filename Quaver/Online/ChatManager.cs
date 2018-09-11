@@ -74,9 +74,16 @@ namespace Quaver.Online
             // Add the message to the appropriate channel.
             channel.Messages.Add(e.Message);
 
-
-            // Get the last message in the channel
+            // Add the message to the container.
             Dialog.ChannelMessageContainers[channel].AddMessage(channel, e.Message);
+
+            // Determine if the channel is unread.
+            foreach (var channelButton in Dialog.ChatChannelList.Buttons)
+            {
+                if (channelButton.Channel == channel && Dialog.ActiveChannel != channel)
+                    channelButton.IsUnread = true;
+            }
+
             Logger.LogInfo($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender.Username} | {e.Message.SenderId} | {e.Message.Message}", LogType.Network);
         }
     }
