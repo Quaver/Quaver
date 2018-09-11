@@ -1,11 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using osu_database_reader;
 using Quaver.Graphics.Overlays.Chat;
 using Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable;
 using Quaver.Logging;
+using Quaver.Scheduling;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
+using Wobble.Graphics.Transformations;
+using Wobble.Graphics.UI.Dialogs;
+using Wobble.Input;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Online
 {
@@ -25,6 +32,50 @@ namespace Quaver.Online
         ///     The list of chat channels the user is currently in.
         /// </summary>
         public static List<ChatChannel> JoinedChatChannels { get; } = new List<ChatChannel>();
+
+        /// <summary>
+        ///    Determines if the chat overlay is active or not.
+        /// </summary>
+        public static bool IsActive { get; private set; }
+
+        /// <summary>
+        ///     The amount of time that has passed since the overlay was last activated.
+        /// </summary>
+        private static double TimeSinceLastActivated { get; set; }
+
+        /// <summary>
+        ///     Handles global input for the chat overlay
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public static void HandleInput(GameTime gameTime)
+        {
+            TimeSinceLastActivated += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+
+            if (KeyboardManager.IsUniqueKeyPress(Keys.F8) && TimeSinceLastActivated >= 450)
+            {
+                TimeSinceLastActivated = 0;
+                IsActive = !IsActive;
+
+                var targetX = IsActive ?  0 : -Dialog.DialogContainer.Width;
+
+                Dialog.DialogContainer.Transformations.Clear();
+
+                Dialog.DialogContainer.Transformations.Add(new Transformation(TransformationProperty.X, Easing.EaseOutQuint,
+                    Dialog.DialogContainer.X, targetX, 600));
+
+                if (!IsActive)
+                {
+                    Dialog.IsClickable = false;
+                    Scheduler.RunAfter(() => { DialogManager.Dismiss(Dialog); }, 450);
+                }
+                else
+                {
+                    Dialog.IsClickable = true;
+                    DialogManager.Show(Dialog);
+                }
+            }
+        }
 
         /// <summary>
         ///     Sends a chat message to the server.

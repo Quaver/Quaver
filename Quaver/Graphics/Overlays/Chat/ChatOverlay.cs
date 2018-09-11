@@ -6,6 +6,7 @@ using Quaver.Graphics.Overlays.Chat.Components.Channels;
 using Quaver.Graphics.Overlays.Chat.Components.Messages;
 using Quaver.Graphics.Overlays.Chat.Components.Topic;
 using Quaver.Helpers;
+using Quaver.Online;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -76,10 +77,15 @@ namespace Quaver.Graphics.Overlays.Chat
         /// </summary>
         public Dictionary<ChatChannel, ChatMessageContainer> ChannelMessageContainers { get; }
 
+        /// <summary>
+        ///     If the overlay is actually active.
+        /// </summary>
+        public static bool IsActive => ChatManager.IsActive;
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
-        public ChatOverlay() : base(0)
+        public ChatOverlay() : base(0f)
         {
             CreateContent();
             ChannelMessageContainers = new Dictionary<ChatChannel, ChatMessageContainer>();
@@ -101,6 +107,8 @@ namespace Quaver.Graphics.Overlays.Chat
             ChatTextbox = new ChatTextbox(this);
             ChatChannelList = new ChatChannelList(this);
             CurrentTopic = new CurrentTopic(this);
+
+            DialogContainer.X = -DialogContainer.Width;
         }
 
         /// <inheritdoc />
@@ -108,6 +116,16 @@ namespace Quaver.Graphics.Overlays.Chat
         /// </summary>
         /// <param name="gameTime"></param>
         public override void HandleInput(GameTime gameTime)
+        {
+        }
+
+        /// <summary>
+        ///     This is a hack to prevent the chat dialog from being completely destroyed so, it can be
+        ///     reused.
+        ///
+        ///     TODO: Fix this in Wobble.
+        /// </summary>
+        public override void Destroy()
         {
         }
 
@@ -120,6 +138,7 @@ namespace Quaver.Graphics.Overlays.Chat
             Size = new ScalableVector2(949, WindowManager.Height),
             Alignment = Alignment.MidLeft,
             Tint = ColorHelper.HexToColor($"#080A0D"),
+            Alpha = 0
         };
 
         /// <summary>
@@ -129,7 +148,8 @@ namespace Quaver.Graphics.Overlays.Chat
         {
             Parent = DialogContainer,
             Size = new ScalableVector2(230, DialogContainer.Height - 60),
-            Tint = Color.Red
+            Tint = Color.Red,
+            Alpha = 0
         };
 
         /// <summary>
@@ -140,7 +160,8 @@ namespace Quaver.Graphics.Overlays.Chat
             Parent = DialogContainer,
             Size = new ScalableVector2(DialogContainer.Width - ChannelContainer.Width - 1, ChannelContainer.Height),
             Tint = Color.LimeGreen,
-            X = ChannelContainer.Width
+            X = ChannelContainer.Width,
+            Alpha = 0
         };
 
         /// <summary>
@@ -149,9 +170,10 @@ namespace Quaver.Graphics.Overlays.Chat
         private void CreateTextboxContainer() => TextboxContainer = new Sprite()
         {
             Parent = DialogContainer,
-            Size = new ScalableVector2(DialogContainer.Width, DialogContainer.Height - ChannelContainer.Height),
+            Size = new ScalableVector2(DialogContainer.Width - 1, DialogContainer.Height - ChannelContainer.Height + 2),
             Y = ChannelContainer.Height,
-            Tint = Color.Magenta
+            Tint = Color.Magenta,
+            Alpha = 0
         };
 
         /// <summary>
@@ -160,8 +182,9 @@ namespace Quaver.Graphics.Overlays.Chat
         private void CreateChannelHeaderContainer() => ChannelHeaderContainner = new Sprite()
         {
             Parent = ChannelContainer,
-            Size = new ScalableVector2(ChannelContainer.Width, 50),
-            Tint = Color.Cyan
+            Size = new ScalableVector2(ChannelContainer.Width, 60),
+            Tint = Color.Cyan,
+            Alpha = 0
         };
 
         /// <summary>
@@ -171,7 +194,8 @@ namespace Quaver.Graphics.Overlays.Chat
         {
             Parent = MessageContainer,
             Size = new ScalableVector2(MessageContainer.Width, ChannelHeaderContainner.Height),
-            Tint = Color.Yellow
+            Tint = Color.Yellow,
+            Alpha = 0
         };
     }
 }

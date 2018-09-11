@@ -50,6 +50,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
             SetChildrenVisibility = true;
             Y = Overlay.CurrentTopicContainer.Height;
             Tint = Color.Black;
+            Alpha = 0.85f;
 
             Scrollbar.Tint = Color.White;
             Scrollbar.Width = 8;
