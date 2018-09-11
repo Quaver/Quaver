@@ -59,13 +59,13 @@ namespace Quaver.Graphics
         /// <summary>
         ///     Gets the chat color of a given user
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="userGroups"></param>
         /// <returns></returns>
-        public static Color GetUserChatColor(User user)
+        public static Color GetUserChatColor(UserGroups userGroups)
         {
-            if (user.UserGroups.HasFlag(UserGroups.Admin))
+            if (userGroups.HasFlag(UserGroups.Admin))
                 return MainAccent;
-            if (user.UserGroups.HasFlag(UserGroups.Normal))
+            if (userGroups.HasFlag(UserGroups.Normal))
                 return Color.White;
 
             return Color.White;

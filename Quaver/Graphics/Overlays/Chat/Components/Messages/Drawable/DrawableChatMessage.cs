@@ -37,6 +37,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         public SpriteTextBitmap TextUsername { get; private set; }
 
         /// <summary>
+        ///     A chat badge (if the user has one)
+        /// </summary>
+        public ChatBadge ChatBadge { get; private set; }
+
+        /// <summary>
         ///     The actual content of the message.
         /// </summary>
         public SpriteTextBitmap TextMessageContent { get; private set; }
@@ -70,6 +75,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             Alpha = 0;
 
             CreateUsernameText();
+            CreateChatBadge();
             CreateMessageContentText();
             RecalculateHeight();
         }
@@ -83,7 +89,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             var date = (new DateTime(1970, 1, 1) + timespan).ToLocalTime();
 
             TextUsername = new SpriteTextBitmap(BitmapFonts.Exo2SemiBold, $"[{date.ToShortTimeString()}] {Message.Sender.Username}",
-                14, Colors.GetUserChatColor(Message.Sender), Alignment.MidLeft, (int) WindowManager.Width)
+                14, Colors.GetUserChatColor(Message.Sender.UserGroups), Alignment.MidLeft, (int) WindowManager.Width)
             {
                 Parent = this,
                 X = Avatar.Width + Avatar.X + 5,
@@ -101,6 +107,22 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
             X = TextUsername.X,
             Y = TextUsername.Y + TextUsername.Height - 1,
         };
+
+        /// <summary>
+        ///     Create the chat badge for the user if they are eligible to have one.
+        /// </summary>
+        private void CreateChatBadge()
+        {
+            if (!Message.Sender.IsSpecial)
+                return;
+
+            ChatBadge = new ChatBadge(Message.Sender.UserGroups)
+            {
+                Parent = this,
+                X = TextUsername.X + TextUsername.Width + 5,
+                Y = TextUsername.Y + 3
+            };
+        }
 
         /// <summary>
         ///     Calculates the height of the message.

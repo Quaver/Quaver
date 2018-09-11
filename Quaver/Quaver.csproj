@@ -95,6 +95,7 @@
     <Compile Include="Graphics\Overlays\Chat\Components\Channels\ChatChannelListButton.cs" />
     <Compile Include="Graphics\Overlays\Chat\Components\ChatTextbox.cs" />
     <Compile Include="Graphics\Overlays\Chat\Components\Messages\ChatMessageContainer.cs" />
+    <Compile Include="Graphics\Overlays\Chat\Components\Messages\Drawable\ChatBadge.cs" />
     <Compile Include="Graphics\Overlays\Chat\Components\Messages\Drawable\DrawableChatMessage.cs" />
     <Compile Include="Graphics\Overlays\Chat\Components\Topic\CurrentTopic.cs" />
     <Compile Include="Graphics\Overlays\Toolbar\Toolbar.cs" />

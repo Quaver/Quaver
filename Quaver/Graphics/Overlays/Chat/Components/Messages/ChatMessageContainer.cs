@@ -108,7 +108,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
             if (scrollDiff < 220)
                 ScrollTo(-ContentContainer.Height, 800);
 
-            msg.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear, msg.X, 0, 150));
+            msg.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear, msg.X, 0, 200));
         }
     }
 }
