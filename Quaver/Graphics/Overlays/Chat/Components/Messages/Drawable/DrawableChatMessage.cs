@@ -94,7 +94,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable
         /// <summary>
         ///    Creates the text that holds the message content.
         /// </summary>
-        private void CreateMessageContentText() => TextMessageContent = new SpriteTextBitmap(BitmapFonts.Exo2Medium, Message.Message, 14,
+        private void CreateMessageContentText() => TextMessageContent = new SpriteTextBitmap(BitmapFonts.Exo2Regular, Message.Message, 14,
             Color.White, Alignment.MidLeft, (int)(Container.Width - Avatar.Width - Avatar.X - 5))
         {
             Parent = this,
