@@ -35,8 +35,14 @@ namespace Quaver.Online
             // Find the channel the message is for.
             var channel = JoinedChatChannels.Find(x => x.Name == chan.Name);
 
+            // Make sure the sender is actual valid.
+            message.Sender = OnlineManager.Self;
+
             // Add the message to the appropriate channel.
             channel.Messages.Add(message);
+
+            // Add the message to the container.
+            Dialog.ChannelMessageContainers[channel].AddMessage(channel, message);
 
             // Send the message to the server.
             OnlineManager.Client.SendMessage(chan.Name, message.Message);
