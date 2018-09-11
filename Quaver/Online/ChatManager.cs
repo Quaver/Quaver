@@ -55,7 +55,7 @@ namespace Quaver.Online
             Dialog.ChatTextbox.Textbox.AlwaysFocused = ChatOverlay.IsActive;
             Dialog.ChatTextbox.Textbox.Focused = ChatOverlay.IsActive;
 
-            if (KeyboardManager.IsUniqueKeyPress(Keys.F8) && TimeSinceLastActivated >= 450)
+            if (OnlineManager.Connected && KeyboardManager.IsUniqueKeyPress(Keys.F8) && TimeSinceLastActivated >= 450)
             {
                 TimeSinceLastActivated = 0;
                 IsActive = !IsActive;

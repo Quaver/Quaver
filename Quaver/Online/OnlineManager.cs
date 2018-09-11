@@ -37,6 +37,11 @@ namespace Quaver.Online
         }
 
         /// <summary>
+        ///     If we're currently connected to the server.
+        /// </summary>
+        public static bool Connected => Client?.Socket != null && Client.Socket.IsAlive;
+
+        /// <summary>
         ///     The user client for self (the current client.)
         /// </summary>
         public static User Self { get; private set; }
