@@ -145,7 +145,6 @@ namespace Quaver.Screens.Menu
 
                 ScreenManager.ChangeScreen(new ResultsScreen(new Replay(openFileDialog.FileName)));
             }),
-            new ToolbarItem("Chat Testing", () => ScreenManager.ChangeScreen(new TestChatScreen()))
         }, new List<ToolbarItem>
         {
             new ToolbarItem(FontAwesome.PowerOff, GameBase.Game.Exit),
