@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
@@ -28,12 +29,17 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
         /// </summary>
         private List<DrawableChatMessage> DrawableChatMessages { get; }
 
+        /// <summary>
+        ///     Stores the height of all of the messages combined.
+        /// </summary>
+        private float TotalMessageHeight { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         public ChatMessageContainer(ChatOverlay overlay, ChatChannel channel)
             : base(new ScalableVector2(overlay.MessageContainer.Width, overlay.MessageContainer.Height - overlay.CurrentTopicContainer.Height),
-                new ScalableVector2(overlay.MessageContainer.Width, overlay.MessageContainer.Height - overlay.CurrentTopicContainer.Height + 1))
+                new ScalableVector2(overlay.MessageContainer.Width, overlay.MessageContainer.Height - overlay.CurrentTopicContainer.Height))
         {
             Overlay = overlay;
             Channel = channel;
@@ -50,6 +56,22 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
             Scrollbar.X -= 1;
 
             SpriteBatchOptions.BlendState = BlendState.NonPremultiplied;
+
+            ScrollSpeed = 150;
+            EasingType = Easing.EaseOutQuint;
+            TimeToCompleteScroll = 1500;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            // Make sure that only the selected channel
+           InputEnabled = Overlay.ActiveChannel == Channel;
+
+            base.Update(gameTime);
         }
 
         /// <summary>
@@ -59,29 +81,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
         /// <param name="message"></param>
         public void AddMessage(ChatChannel channel, ChatMessage message)
         {
-            // Check the last message in the channel.
-            /*if (DrawableChatMessages.Count > 0)
-            {
-                var lastMessage = DrawableChatMessages.Last();
-
-                // If the last message in the channel is by the same user, we'll want to just add onto their
-                // previous message.
-                if (lastMessage != null && lastMessage.Message.SenderId == message.SenderId)
-                {
-                    var currTime = DateTime.Now.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
-
-                    if (currTime - lastMessage.Message.Time < 5000)
-                    {
-                        lastMessage.TextMessageContent.Text += "\n" + message.Message;
-                        lastMessage.RecalculateHeight();
-
-                        // Change the last message's current time to now, so that later messages can receive the same effect.
-                        lastMessage.Message.Time = currTime;
-                        return;
-                    }
-                }
-            }*/
-
             // In the event that we need to add a new drawable, add one.
             var msg = new DrawableChatMessage(Overlay.ChannelMessageContainers[channel], message);
 
@@ -93,7 +92,21 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
             }
 
             DrawableChatMessages.Add(msg);
+
+            // Recalculate the height of the content container.
+            TotalMessageHeight += msg.Height;
+
+            if (TotalMessageHeight > Overlay.MessageContainer.Height - Overlay.CurrentTopicContainer.Height)
+                ContentContainer.Height = TotalMessageHeight;
+
             AddContainedDrawable(msg);
+
+            // Get how far we're scrolled down.
+            var scrollDiff = ContentContainer.Height - Height - Math.Abs(ContentContainer.Y);
+
+            // Depending on how scrolled up the user is, we'll want to snap back down to the bottom
+            if (scrollDiff < 220)
+                ScrollTo(-ContentContainer.Height, 800);
 
             msg.Transformations.Add(new Transformation(TransformationProperty.X, Easing.Linear, msg.X, 0, 150));
         }
