@@ -9,6 +9,7 @@ using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
 using Wobble.Graphics.Transformations;
+using Wobble.Input;
 
 namespace Quaver.Graphics.Overlays.Chat.Components.Messages
 {
@@ -53,7 +54,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
             Alpha = 0.85f;
 
             Scrollbar.Tint = Color.White;
-            Scrollbar.Width = 8;
+            Scrollbar.Width = 5;
             Scrollbar.X -= 1;
 
             SpriteBatchOptions.BlendState = BlendState.NonPremultiplied;
@@ -69,8 +70,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            // Make sure that only the selected channel
-           InputEnabled = Overlay.ActiveChannel == Channel;
+            // Only allow the container to be scrollable if the mouse is actually on top of the area.
+            InputEnabled = GraphicsHelper.RectangleContains(ScreenRectangle, MouseManager.CurrentState.Position) && Overlay.ActiveChannel == Channel;
 
             base.Update(gameTime);
         }

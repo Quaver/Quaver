@@ -5,6 +5,7 @@ using System.Windows.Forms.VisualStyles;
 using Quaver.Config;
 using Quaver.Graphics.Notifications;
 using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
 
 namespace Quaver.Online
 {
@@ -64,14 +65,14 @@ namespace Quaver.Online
             if (username.StartsWith("#"))
                 return;
 
-            // Check to see if that player is actually online.
+            // Check to see if that player is actually online
+            // var foundUser = new User(OnlineManager.OnlineUsers.Count + 1, -1, username, UserGroups.Normal); - Test Users.
             var foundUser = OnlineManager.OnlineUsers.Values.ToList().Find(x => string.Equals(x.Username,
                                     username, StringComparison.CurrentCultureIgnoreCase));
 
+            // User is online, so we'll need to join/switch to that chat channel.
             if (foundUser != null)
             {
-                Console.WriteLine($"User: {foundUser.Username} is online!");
-
                 // Check to see if the chat already is open, in that case just open it.
                 var joinedChannel = ChatManager.JoinedChatChannels.Find(x => string.Equals(x.Name, foundUser.Username,
                                         StringComparison.CurrentCultureIgnoreCase));
