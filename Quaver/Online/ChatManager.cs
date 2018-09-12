@@ -122,15 +122,22 @@ namespace Quaver.Online
 
             e.Message.Sender = OnlineManager.OnlineUsers[e.Message.SenderId];
 
-            // Find the channel the message is for.
-            var channel = JoinedChatChannels.Find(x => x.Name == e.Message.Channel);
+            // Determine if the channel is a private chat or not.
+            var isPrivate = !e.Message.Channel.StartsWith("#");
+
+            // If the channel is private, then we want to use the sender's username,
+            // otherwise we should use the channel's name.
+            var channel = isPrivate ? JoinedChatChannels.Find(x => x.Name == e.Message.Sender.Username)
+                                        : JoinedChatChannels.Find(x => x.Name == e.Message.Channel);
 
             // In the event that the chat channel doesn't already exist, we'll want to add a new one in.
+            // (This is for private messages)
             if (channel == null)
             {
                 channel = new ChatChannel
                 {
-                    Name = e.Message.Channel
+                    Name = e.Message.Sender.Username,
+                    Description = isPrivate ? "Private Message" : "No Description"
                 };
 
                 JoinedChatChannels.Add(channel);
