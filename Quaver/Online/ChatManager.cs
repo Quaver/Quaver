@@ -141,7 +141,7 @@ namespace Quaver.Online
                 };
 
                 JoinedChatChannels.Add(channel);
-                Dialog.ChatChannelList.InitializeChannel(channel);
+                Dialog.ChatChannelList.InitializeChannel(channel, false);
                 Logger.LogImportant($"Added ChatChannel: {channel.Name}, as we have received a message and it did not exist", LogType.Network);
             }
 

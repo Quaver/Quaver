@@ -48,7 +48,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
         /// <summary>
         ///     Initializes the chat channels.
         /// </summary>
-        public void InitializeChannel(ChatChannel channel)
+        public void InitializeChannel(ChatChannel channel, bool autoSelectChannel = true)
         {
             var button = new ChatChannelListButton(this, channel);
 
@@ -57,7 +57,14 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
 
             // Automatically select the first channel that comes in.
             Overlay.ChannelMessageContainers.Add(channel, new ChatMessageContainer(Overlay, channel));
-            button.SelectChatChannel();
+
+            if (autoSelectChannel)
+                button.SelectChatChannel();
+            else
+            {
+                // Reslect the current channel
+                Overlay.ChannelMessageContainers[channel].Visible = false;
+            }
 
             Buttons.Add(button);
             AddContainedDrawable(button);
