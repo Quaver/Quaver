@@ -136,7 +136,7 @@ namespace Quaver.Online
             {
                 channel = new ChatChannel
                 {
-                    Name = e.Message.Sender.Username,
+                    Name = isPrivate ? e.Message.Sender.Username : e.Message.Channel,
                     Description = isPrivate ? "Private Message" : "No Description"
                 };
 
