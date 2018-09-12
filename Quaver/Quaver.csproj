@@ -123,6 +123,7 @@
     <Compile Include="Modifiers\ModType.cs" />
     <Compile Include="Online\ChatManager.cs" />
     <Compile Include="Online\OnlineManager.cs" />
+    <Compile Include="Online\QuaverBot.cs" />
     <Compile Include="Online\SteamManager.cs" />
     <Compile Include="Parsers\Etterna\Etterna.cs" />
     <Compile Include="Parsers\Etterna\EtternaCache.cs" />

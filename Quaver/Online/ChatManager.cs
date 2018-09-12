@@ -151,7 +151,8 @@ namespace Quaver.Online
                     channelButton.IsUnread = true;
             }
 
-            Logger.LogInfo($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender.Username} | {e.Message.SenderId} | {e.Message.Message}", LogType.Network);
+            Logger.LogInfo($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender.Username} " +
+                           $"| {e.Message.SenderId} | {e.Message.Message}", LogType.Network);
         }
 
         /// <summary>
@@ -177,43 +178,17 @@ namespace Quaver.Online
             {
                 // Send help commands.
                 case "help":
-                    SendQuaverBotMessage(Dialog.ActiveChannel, "Hey there, I'm Quaver - a bot that's here to help!\n\n" +
-                                                               "Here are some client-side commands you can use:\n" +
-                                                               "/help - Display this message\n" +
-                                                               "/online - Display all online users.");
+                    QuaverBot.ExecuteHelpCommand();
                     break;
                 // Get online users.
                 case "online":
-                    var userStr = "";
-
-                    foreach (var user in OnlineManager.OnlineUsers)
-                        userStr += user.Value.Username + ", ";
-
-                    SendQuaverBotMessage(Dialog.ActiveChannel, $"There are {OnlineManager.OnlineUsers.Count} users online.\n\n" +
-                                                               $"{userStr}");
+                    QuaverBot.ExecuteOnlineCommand();
+                    break;
+                // open up a private chat for a user
+                case "chat":
+                    QuaverBot.ExecuteChatCommand(args);
                     break;
             }
-        }
-
-        /// <summary>
-        ///     Sends a QuaverBot message to a specified channel.
-        /// </summary>
-        /// <param name="channel"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public static void SendQuaverBotMessage(ChatChannel channel, string message)
-        {
-            var chatMessage = new ChatMessage(channel.Name, message)
-            {
-                // QuaverBot is ID = 0;
-                SenderId = 0,
-                Sender = OnlineManager.OnlineUsers[0]
-            };
-
-            // Add the message to the appropriate channel.
-            channel.Messages.Add(chatMessage);
-
-            Dialog.ChannelMessageContainers[channel].AddMessage(channel, chatMessage);
         }
     }
 }
