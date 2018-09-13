@@ -41,7 +41,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
             ChannelList = channelList;
             Channel = channel;
 
-            Size = new ScalableVector2(channelList.ContentContainer.Width, 50);
+            Size = new ScalableVector2(channelList.ContentContainer.Width - 2, 50);
 
             Alpha = 0;
 
@@ -106,6 +106,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
                 chatMessageContainer.Value.Visible = chatMessageContainer.Key == Channel;
 
             ChannelList.Overlay.CurrentTopic.UpdateTopicText(Channel);
+            ChannelList.Overlay.ReparentDividerLines();
         }
 
         /// <summary>

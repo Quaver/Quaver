@@ -35,6 +35,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
         /// </summary>
         private float TotalMessageHeight { get; set; }
 
+        /// <summary>
+        ///     The divider line for this container.
+        /// </summary>
+        private Sprite DividerLine { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -50,7 +55,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
             Parent = overlay.MessageContainer;
             SetChildrenVisibility = true;
             Y = Overlay.CurrentTopicContainer.Height;
-            Tint = Color.Black;
+            Tint = Colors.DarkGray;
             Alpha = 0.85f;
 
             Scrollbar.Tint = Color.White;
@@ -62,6 +67,15 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Messages
             ScrollSpeed = 150;
             EasingType = Easing.EaseOutQuint;
             TimeToCompleteScroll = 1500;
+
+            DividerLine = new Sprite()
+            {
+                Parent = this,
+                Alignment = Alignment.TopLeft,
+                Size = new ScalableVector2(Width, 2),
+                Y = -2,
+                Alpha = 0.35f
+            };
         }
 
         /// <inheritdoc />

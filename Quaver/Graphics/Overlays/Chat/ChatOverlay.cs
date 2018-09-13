@@ -82,6 +82,21 @@ namespace Quaver.Graphics.Overlays.Chat
         /// </summary>
         public static bool IsActive => ChatManager.IsActive;
 
+        /// <summary>
+        ///     The top divider line for the dialog.
+        /// </summary>
+        private Sprite TopDividerLine { get; set; }
+
+        /// <summary>
+        ///     The bottom divider line for the dialog.
+        /// </summary>
+        private Sprite BottomDividerLine { get; set; }
+
+        /// <summary>
+        ///     The left side divider line for the dialog.
+        /// </summary>
+        private Sprite LeftDividerLine { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -107,6 +122,8 @@ namespace Quaver.Graphics.Overlays.Chat
             ChatTextbox = new ChatTextbox(this);
             ChatChannelList = new ChatChannelList(this);
             CurrentTopic = new CurrentTopic(this);
+
+            CreateDividerLines();
 
             DialogContainer.X = -DialogContainer.Width;
         }
@@ -135,7 +152,7 @@ namespace Quaver.Graphics.Overlays.Chat
         private void CreateDialogContainer() => DialogContainer = new Sprite
         {
             Parent = Container,
-            Size = new ScalableVector2(949, WindowManager.Height),
+            Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
             Alignment = Alignment.MidLeft,
             Tint = ColorHelper.HexToColor($"#080A0D"),
             Alpha = 0
@@ -197,5 +214,44 @@ namespace Quaver.Graphics.Overlays.Chat
             Tint = Color.Yellow,
             Alpha = 0
         };
+
+        /// <summary>
+        ///     Creates all of the divider lines for the interface.
+        /// </summary>
+        private void CreateDividerLines()
+        {
+            TopDividerLine = new Sprite()
+            {
+                Parent = ChannelHeader,
+                Alignment = Alignment.BotLeft,
+                Size = new ScalableVector2(ChannelHeader.Width - 2, 2),
+                Alpha = 0.35f
+            };
+
+            BottomDividerLine = new Sprite()
+            {
+                Parent = TextboxContainer,
+                Alignment = Alignment.TopLeft,
+                Size = new ScalableVector2(DialogContainer.Width, 2),
+                Alpha = 0.35f
+            };
+
+            LeftDividerLine = new Sprite()
+            {
+                Parent = ChannelHeader,
+                Alignment = Alignment.TopRight,
+                Size = new ScalableVector2(2, ChatChannelList.Height + ChannelHeader.Height),
+                Alpha = 0.35f
+            };
+        }
+
+        /// <summary>
+        ///     Resets the parents of the divider lines to make them appear on top.
+        /// </summary>
+        public void ReparentDividerLines()
+        {
+            ChannelHeader.Parent = ChannelContainer;
+            CurrentTopic.Parent = CurrentTopicContainer;
+        }
     }
 }

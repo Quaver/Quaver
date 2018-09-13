@@ -33,7 +33,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
             Parent = overlay.CurrentTopicContainer;
             Size = overlay.CurrentTopicContainer.Size;
 
-            Tint = Color.Black;
+            Tint = Colors.DarkGray;
             Alpha = 0.85f;
 
             ChannelName = new SpriteText(Fonts.Exo2BoldItalic24, "", 0.60f)

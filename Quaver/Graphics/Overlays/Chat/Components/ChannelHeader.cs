@@ -28,7 +28,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components
 
             Parent = overlay.ChannelContainer;
             Size = overlay.ChannelHeaderContainner.Size;
-            Tint = Color.Black;
+            Tint = Colors.DarkGray;
             Alpha = 0.85f;
 
             CreateChannelsText();

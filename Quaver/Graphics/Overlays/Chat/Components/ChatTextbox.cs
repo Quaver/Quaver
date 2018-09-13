@@ -37,7 +37,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components
 
             Parent = Overlay.TextboxContainer;
             Size = Overlay.TextboxContainer.Size;
-            Tint = Color.Black;
+            Tint = Colors.DarkGray;
             Alpha = 0.85f;
 
             CreateTextbox();
@@ -58,7 +58,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// </summary>
         private void CreateTextbox()
         {
-            Textbox = new Textbox(TextboxStyle.SingleLine, new ScalableVector2(600, Height * 0.60f),
+            Textbox = new Textbox(TextboxStyle.SingleLine, new ScalableVector2(1100, Height * 0.60f),
                 Fonts.Exo2Regular24,
                 "", "Type to send a message", 0.60f, OnTextboxSubmit)
             {
@@ -105,7 +105,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components
             Alignment = Alignment.MidLeft,
             Size = new ScalableVector2(Width - Textbox.Width - 30, Textbox.Height),
             X = Textbox.Width + 20,
-            Tint = Color.Red
+            Tint = Colors.MainAccent
         };
     }
 }

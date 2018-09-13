@@ -34,7 +34,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
         /// <summary>
         /// </summary>
         /// <param name="overlay"></param>
-        public ChatChannelList(ChatOverlay overlay) : base(new ScalableVector2(overlay.ChannelContainer.Width,
+        public ChatChannelList(ChatOverlay overlay) : base(new ScalableVector2(overlay.ChannelContainer.Width + 1,
                 overlay.ChannelContainer.Height - overlay.ChannelHeader.Height),
             new ScalableVector2(overlay.ChannelContainer.Width, overlay.ChannelContainer.Height - overlay.ChannelHeader.Height))
         {
@@ -44,7 +44,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
             Parent = Overlay.ChannelContainer;
             Y = Overlay.ChannelHeaderContainner.Height;
 
-            Tint = Color.Black;
+            Tint = Colors.DarkGray;
             Alpha = 0.85f;
 
             // Scrolling Options.
