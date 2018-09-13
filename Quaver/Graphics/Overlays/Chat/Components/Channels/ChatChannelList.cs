@@ -49,8 +49,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
 
             // Scrolling Options.
             Scrollbar.Tint = Color.White;
-            Scrollbar.Width = 5;
-            Scrollbar.X -= 1;
+            Scrollbar.Width = 3;
+            Scrollbar.X -= 3;
             ScrollSpeed = 150;
             EasingType = Easing.EaseOutQuint;
             TimeToCompleteScroll = 1500;

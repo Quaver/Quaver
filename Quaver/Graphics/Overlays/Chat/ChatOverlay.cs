@@ -152,7 +152,7 @@ namespace Quaver.Graphics.Overlays.Chat
         private void CreateDialogContainer() => DialogContainer = new Sprite
         {
             Parent = Container,
-            Size = new ScalableVector2(WindowManager.Width, WindowManager.Height),
+            Size = new ScalableVector2(WindowManager.Width + 1, WindowManager.Height),
             Alignment = Alignment.MidLeft,
             Tint = ColorHelper.HexToColor($"#080A0D"),
             Alpha = 0
