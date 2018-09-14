@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Online;
+using Quaver.Online.Chat;
 using Quaver.Server.Client.Structures;
 using Wobble;
 using Wobble.Graphics;

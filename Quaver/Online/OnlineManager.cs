@@ -4,6 +4,7 @@ using Amib.Threading;
 using Quaver.Config;
 using Quaver.Graphics.Notifications;
 using Quaver.Logging;
+using Quaver.Online.Chat;
 using Quaver.Scheduling;
 using Quaver.Server.Client;
 using Quaver.Server.Client.Events.Disconnnection;

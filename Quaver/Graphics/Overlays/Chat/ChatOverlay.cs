@@ -7,6 +7,7 @@ using Quaver.Graphics.Overlays.Chat.Components.Messages;
 using Quaver.Graphics.Overlays.Chat.Components.Topic;
 using Quaver.Helpers;
 using Quaver.Online;
+using Quaver.Online.Chat;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;

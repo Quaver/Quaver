@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms.VisualStyles;
-using Quaver.Config;
-using Quaver.Graphics.Notifications;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 
-namespace Quaver.Online
+namespace Quaver.Online.Chat
 {
     public static class QuaverBot
     {
@@ -66,7 +63,7 @@ namespace Quaver.Online
                 return;
 
             // Check to see if that player is actually online
-            // var foundUser = new User(OnlineManager.OnlineUsers.Count + 1, -1, username, UserGroups.Normal);
+            //var foundUser = new User(OnlineManager.OnlineUsers.Count + 1, -1, username, UserGroups.Normal);
             var foundUser = OnlineManager.OnlineUsers.Values.ToList().Find(x => string.Equals(x.Username,
                                    username, StringComparison.CurrentCultureIgnoreCase));
 

@@ -17,6 +17,7 @@ using Quaver.Graphics.Overlays.Volume;
 using Quaver.Helpers;
 using Quaver.Logging;
 using Quaver.Online;
+using Quaver.Online.Chat;
 using Quaver.Scheduling;
 using Quaver.Screens.Connecting;
 using Quaver.Screens.Menu;

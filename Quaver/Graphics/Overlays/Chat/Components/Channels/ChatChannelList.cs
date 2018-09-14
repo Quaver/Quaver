@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Graphics.Overlays.Chat.Components.Messages;
 using Quaver.Online;
+using Quaver.Online.Chat;
 using Quaver.Server.Client.Structures;
 using Wobble.Graphics;
 using Wobble.Graphics.Sprites;
@@ -92,7 +94,30 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
             Buttons.Add(button);
             AddContainedDrawable(button);
 
-            var totalHeight = button.Height * Buttons.Count;
+            CalculateContainerHeight();
+        }
+
+        /// <summary>
+        ///     Used to realign the chat channel list buttons (when closing chat channels.)
+        /// </summary>
+        public void RealignButtons()
+        {
+            for (var i = 0; i < Buttons.Count; i++)
+            {
+                var button = Buttons[i];
+
+                button.Y = button.Height * i;
+            }
+
+            CalculateContainerHeight();
+        }
+
+        /// <summary>
+        ///     Calculates the height of the container for proper scrolling.
+        /// </summary>
+        private void CalculateContainerHeight()
+        {
+            var totalHeight = Buttons.First().Height * Buttons.Count;
 
             // Calculate the new height of the container based on how many channels there are.
             if (totalHeight > ContentContainer.Height)

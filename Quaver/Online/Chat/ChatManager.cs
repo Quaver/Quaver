@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using osu_database_reader;
 using Quaver.Graphics.Overlays.Chat;
-using Quaver.Graphics.Overlays.Chat.Components.Messages.Drawable;
 using Quaver.Logging;
 using Quaver.Scheduling;
 using Quaver.Server.Client.Handlers;
@@ -14,7 +10,7 @@ using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
-namespace Quaver.Online
+namespace Quaver.Online.Chat
 {
     public static class ChatManager
     {
