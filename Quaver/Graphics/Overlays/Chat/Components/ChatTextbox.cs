@@ -26,7 +26,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// <summary>
         ///     The button used to alternatively send the message.
         /// </summary>
-        public TextButton SendButton { get; private set; }
+        public ImageButton SendButton { get; private set; }
 
         /// <inheritdoc />
         /// <summary>
@@ -51,6 +51,19 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            float targetSendButtonAlpha;
+
+            if (string.IsNullOrEmpty(Textbox.RawText))
+                targetSendButtonAlpha = 0.45f;
+            else if (SendButton.IsHovered)
+                targetSendButtonAlpha = 1f;
+            else
+                targetSendButtonAlpha = 0.85f;
+
+            SendButton.Alpha = MathHelper.Lerp(SendButton.Alpha, targetSendButtonAlpha, (float) Math.Min(dt / 60f, 1));
+
             base.Update(gameTime);
         }
 
@@ -91,7 +104,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// <summary>
         ///     Creates the button to send messages.
         /// </summary>
-        private void CreateSendButton() => SendButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Send", 0.65f,
+        private void CreateSendButton() => SendButton = new ImageButton(UserInterface.SendMessageButton,
             (o, e) =>
             {
                 if (string.IsNullOrEmpty(Textbox.RawText))
@@ -106,7 +119,6 @@ namespace Quaver.Graphics.Overlays.Chat.Components
             Alignment = Alignment.MidLeft,
             Size = new ScalableVector2(Width - Textbox.Width - 30, Textbox.Height),
             X = Textbox.Width + 20,
-            Tint = Colors.MainAccent
         };
     }
 }

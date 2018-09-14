@@ -33,7 +33,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
         /// <summary>
         ///     The button to close the chat channel.
         /// </summary>
-        public TextButton CloseChannelButton { get; }
+        public ImageButton CloseChannelButton { get; }
 
         /// <inheritdoc />
         /// <summary>
@@ -62,16 +62,28 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
                 Y = 10
             };
 
-            CloseChannelButton = new TextButton(UserInterface.BlankBox, Fonts.Exo2Regular24, "Close Channel", 0.55f)
+            CloseChannelButton = new ImageButton(UserInterface.CloseChannelButton, (sender, args) => CloseActiveChatChannel())
             {
                 Parent = this,
                 Alignment = Alignment.MidRight,
                 Size = new ScalableVector2(150, 40),
                 X = -15,
-                Tint = Color.Red
+                Alpha = 0.75f
             };
+        }
 
-            CloseChannelButton.Clicked += (sender, args) => CloseActiveChatChannel();
+        /// <inheritdoc />
+        ///  <summary>
+        ///  </summary>
+        ///  <param name="gameTime"></param>
+        public override void Update(GameTime gameTime)
+        {
+            var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            var targetCloseChanelButtonAlpha = CloseChannelButton.IsHovered ? 1 : 0.75f;
+            CloseChannelButton.Alpha = MathHelper.Lerp(CloseChannelButton.Alpha, targetCloseChanelButtonAlpha, (float) Math.Min(dt / 60f, 1));
+
+            base.Update(gameTime);
         }
 
         /// <summary>

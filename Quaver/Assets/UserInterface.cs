@@ -55,6 +55,8 @@ namespace Quaver.Assets
         public static Texture2D UsernameSelectionBackground { get; set; }
         public static Texture2D UsernameSelectionTextbox { get; set; }
         public static Texture2D UsernameSelectionTextboxOverlay { get; set; }
+        public static Texture2D CloseChannelButton { get; set; }
+        public static Texture2D SendMessageButton { get; set; }
 
         /// <summary>
         ///     Loads all the ui elements into content
@@ -103,6 +105,8 @@ namespace Quaver.Assets
             UsernameSelectionBackground = AssetLoader.LoadTexture2D(QuaverResources.username_selection_background, ImageFormat.Jpeg);
             UsernameSelectionTextbox = AssetLoader.LoadTexture2D(QuaverResources.username_selection_textbox, ImageFormat.Png);
             UsernameSelectionTextboxOverlay = AssetLoader.LoadTexture2D(QuaverResources.username_selection_textbox_overlay, ImageFormat.Png);
+            CloseChannelButton = AssetLoader.LoadTexture2D(QuaverResources.close_channel_button, ImageFormat.Png);
+            SendMessageButton = AssetLoader.LoadTexture2D(QuaverResources.send_message_button, ImageFormat.Png);
         }
     }
 }
