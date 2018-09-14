@@ -63,9 +63,9 @@ namespace Quaver.Online.Chat
                 return;
 
             // Check to see if that player is actually online
-            //var foundUser = new User(OnlineManager.OnlineUsers.Count + 1, -1, username, UserGroups.Normal);
+            // var foundUser = new User(OnlineManager.OnlineUsers.Count + 1, -1, username, UserGroups.Normal);
             var foundUser = OnlineManager.OnlineUsers.Values.ToList().Find(x => string.Equals(x.Username,
-                                   username, StringComparison.CurrentCultureIgnoreCase));
+                                    username, StringComparison.CurrentCultureIgnoreCase));
 
             // User is online, so we'll need to join/switch to that chat channel.
             if (foundUser != null)
