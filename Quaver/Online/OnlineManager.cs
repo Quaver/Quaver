@@ -40,7 +40,7 @@ namespace Quaver.Online
         /// <summary>
         ///     If we're currently connected to the server.
         /// </summary>
-        public static bool Connected => Client?.Socket != null && Client.Socket.IsAlive;
+        public static bool Connected => Client?.Socket != null;
 
         /// <summary>
         ///     The user client for self (the current client.)
@@ -194,16 +194,6 @@ namespace Quaver.Online
 
             // Make sure the config username is changed.
             ConfigManager.Username.Value = Self.Username;
-
-            // For every online user, we'll make a new "User" object for them. It won't contain any data for now,
-            // other than their user id. We'll only grab the rest of their data if the client needs it.
-            /*foreach (var id in e.OnlineUsers)
-            {
-                if (id == e.Self.Id)
-                    OnlineUsers[id] = e.Self;
-                else
-                    OnlineUsers[id] = new User { Id = id };
-            }*/
 
             Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
         }
