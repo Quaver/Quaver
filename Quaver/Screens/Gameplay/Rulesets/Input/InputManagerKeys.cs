@@ -178,6 +178,19 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             // Play the HitSounds for this object.
             HitObjectManager.PlayObjectHitSounds(manager.ObjectPool[objectIndex].Info);
 
+            //NEW
+            var time = Ruleset.Screen.Timing.Time;
+            var hitDifference = hitObject.TrueStartTime - time;
+            var judgement = Ruleset.ScoreProcessor.CalculateScore(hitDifference);
+
+            // Ignore Ghost Taps
+            if (judgement == Judgement.Ghost)
+                return;
+
+
+
+            //OLD
+            /*
             // Check which hit window this object's timing is in
             for (var j = 0; j < Ruleset.ScoreProcessor.JudgementWindow.Count; j++)
             {
@@ -191,7 +204,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 var judgement = (Judgement)j;
 
                 // Update the user's score
-                Ruleset.ScoreProcessor.CalculateScore(judgement, hitDifference);
+                Ruleset.ScoreProcessor.CalculateScore(hitDifference);
 
                 // Add new hit stat data.
                 var stat = new HitStat(HitStatType.Hit, hitObject.Info, time, judgement, hitDifference,
@@ -245,6 +258,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 playfield.Stage.HitLightingObjects[laneIndex].PerformHitAnimation();
                 break;
             }
+            */
         }
 
         /// <summary>
