@@ -354,8 +354,11 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             // If LN has been released early
             else
             {
+                // Judgement for when the player releases too early
+                const Judgement missedJudgement = Judgement.Miss;
+
                 // Count it as a miss if it was released early and kill the hold.
-                Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+                Ruleset.ScoreProcessor.CalculateScore(missedJudgement);
 
                 // Add new hit stat data.
                 var stat = new HitStat(HitStatType.Hit, manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.Time,

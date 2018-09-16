@@ -202,7 +202,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Keys.HitObjects
                 // If the LN's release was missed. (Counts as an okay instead of a miss.)
                 if (Ruleset.Screen.Timing.Time > hitObject.TrueEndTime + window)
                 {
-                    // The judgement that is given when a user completely misses the release.
+                    // The judgement that is given when a user completely fails to release.
                     const Judgement missedJudgement = Judgement.Okay;
 
                     // Calc new score.
