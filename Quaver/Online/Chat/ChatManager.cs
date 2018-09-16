@@ -132,12 +132,17 @@ namespace Quaver.Online.Chat
             {
                 channel = new ChatChannel
                 {
-                    Name = isPrivate ? e.Message.Sender.Username : e.Message.Channel,
-                    Description = isPrivate ? "Private Message" : "No Description"
+                    Name = e.Message.Sender.Username,
+                    Description = "Private Message"
                 };
+
+                // Don't add non-private channels here.
+                if (!channel.IsPrivate)
+                    return;
 
                 JoinedChatChannels.Add(channel);
                 Dialog.ChatChannelList.InitializeChannel(channel, false);
+
                 Logger.LogImportant($"Added ChatChannel: {channel.Name}, as we have received a message and it did not exist", LogType.Network);
             }
 
