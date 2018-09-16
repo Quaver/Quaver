@@ -94,6 +94,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// <param name="text"></param>
         private void OnTextboxSubmit(string text)
         {
+
             var chatMessage = new ChatMessage(Overlay.ActiveChannel.Name, text);
             ChatManager.SendMessage(Overlay.ActiveChannel, chatMessage);
 

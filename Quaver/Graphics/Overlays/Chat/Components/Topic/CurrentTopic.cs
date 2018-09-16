@@ -166,6 +166,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
             // No channels exist anymore.
             else
             {
+                Overlay.ChatChannelList.SelectedButton = null;
+                Overlay.ActiveChannel = null;
+
                 UpdateTopicText();
                 Overlay.NoChannelMessageContainer.Visible = true;
             }
