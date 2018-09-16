@@ -80,7 +80,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components
                 Alignment = Alignment.MidLeft,
                 X = 10,
                 Image = UserInterface.UsernameSelectionTextbox,
-                AlwaysFocused = true
+                AlwaysFocused = true,
+                MaxCharacters = 2000
             };
 
             Textbox.InputText.Y = 8;
