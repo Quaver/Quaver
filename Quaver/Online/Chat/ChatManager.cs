@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Overlays.Chat;
 using Quaver.Logging;
 using Quaver.Scheduling;
@@ -238,6 +239,17 @@ namespace Quaver.Online.Chat
 
             Logger.LogInfo($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender.Username} " +
                            $"| {e.Message.SenderId} | {e.Message.Message}", LogType.Network);
+        }
+
+        /// <summary>
+        ///     Called when the user fails to join a chat channel.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public static void OnFailedToJoinChatChannel(object sender, FailedToJoinChatChannelEventArgs e)
+        {
+            // ReSharper disable once ArrangeMethodOrOperatorBody
+            NotificationManager.Show(NotificationLevel.Error, $"Failed to join channel: {e.Channel}");
         }
 
         /// <summary>
