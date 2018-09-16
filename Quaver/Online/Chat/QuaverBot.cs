@@ -134,11 +134,11 @@ namespace Quaver.Online.Chat
             }
 
             // The channel has to be available in order to be able join join it.
-            /*if (ChatManager.AvailableChatChannels.All(x => x.Name != channel))
+            if (ChatManager.AvailableChatChannels.All(x => x.Name != channel))
             {
                 NotificationManager.Show(NotificationLevel.Error, "That channel is unavailable to join.");
                 return;
-            }*/
+            }
 
             NotificationManager.Show(NotificationLevel.Info, $"Joining: {channel}...");
             OnlineManager.Client.JoinChatChannel(channel);
