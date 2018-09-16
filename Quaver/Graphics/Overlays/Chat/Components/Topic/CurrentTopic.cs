@@ -112,7 +112,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
             ChannelName.Text = "No channels available";
             ChannelName.X = ChannelName.MeasureString().X / 2f + 15;
 
-            ChannelDescription.Text = "Join a chat channel to start chatting!";
+            ChannelDescription.Text = "Join a channel to start chatting!";
             ChannelDescription.X = ChannelDescription.MeasureString().X / 2f + 15;
 
             // Make the close channel button neither visible or clickable since there aren't any channels.
