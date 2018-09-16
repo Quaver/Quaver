@@ -55,7 +55,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components
 
             float targetSendButtonAlpha;
 
-            if (string.IsNullOrEmpty(Textbox.RawText))
+            if (Overlay.ActiveChannel == null)
+                targetSendButtonAlpha = 0.85f;
+            else if (string.IsNullOrEmpty(Textbox.RawText))
                 targetSendButtonAlpha = 0.45f;
             else if (SendButton.IsHovered)
                 targetSendButtonAlpha = 1f;
@@ -94,6 +96,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// <param name="text"></param>
         private void OnTextboxSubmit(string text)
         {
+            if (Overlay.ActiveChannel == null)
+                return;
 
             var chatMessage = new ChatMessage(Overlay.ActiveChannel.Name, text);
             ChatManager.SendMessage(Overlay.ActiveChannel, chatMessage);
