@@ -187,8 +187,57 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             if (judgement == Judgement.Ghost)
                 return;
 
+            var stat = new HitStat(HitStatType.Hit, hitObject.Info, time, judgement, hitDifference,
+                                        Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+            Ruleset.ScoreProcessor.Stats.Add(stat);
 
+            var screenView = (GameplayScreenView)Ruleset.Screen.View;
+            screenView.UpdateScoreboardUsers();
 
+            switch (judgement)
+            {
+                // Handle early miss cases here.
+                case Judgement.Miss when hitObject.IsLongNote:
+                    manager.KillPoolObject(objectIndex);
+                    break;
+                // Handle non-miss cases.
+                case Judgement.Miss:
+                    manager.RecyclePoolObject(objectIndex);
+                    break;
+                default:
+                    if (hitObject.IsLongNote)
+                        manager.ChangePoolObjectStatusToHeld(objectIndex);
+                    // If the object is not an LN, recycle it.
+                    else
+                        manager.RecyclePoolObject(objectIndex);
+                    break;
+            }
+
+            // Make the combo display visible since it is now changing.
+            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
+            playfield.Stage.ComboDisplay.MakeVisible();
+
+            // Also add a judgement to the hit error.
+            playfield.Stage.HitError.AddJudgement(judgement, hitObject.TrueStartTime - Ruleset.Screen.Timing.Time);
+
+            // Perform hit burst animation
+            playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+
+            // Don't execute any further if the user early missed, as these
+            // are things pertaining to animations when the user actually hits the note.
+            if (judgement == Judgement.Miss)
+                return;
+
+            // Perform hit lighting animation
+            var laneIndex = hitObject.Info.Lane - 1;
+
+            // If the object is a long note, let the hitlighting actually know about it.
+            if (hitObject.IsLongNote)
+                playfield.Stage.HitLightingObjects[laneIndex].IsHoldingLongNote = true;
+
+            playfield.Stage.HitLightingObjects[laneIndex].PerformHitAnimation();
+
+            #region Old HandleKeyPress
             //OLD
             /*
             // Check which hit window this object's timing is in
@@ -259,6 +308,7 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
                 break;
             }
             */
+            #endregion
         }
 
         /// <summary>
@@ -266,6 +316,65 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
         /// </summary>
         private void HandleKeyRelease(HitObjectManagerKeys manager, int noteIndex)
         {
+            // Don't bother executing if there aren't any long notes.
+            if (manager.HeldLongNotes.Count == 0)
+                return;
+
+            var playfield = (GameplayPlayfieldKeys)Ruleset.Playfield;
+            playfield.Stage.ComboDisplay.MakeVisible();
+
+            // Stop looping hit lighting.
+            playfield.Stage.HitLightingObjects[manager.HeldLongNotes[noteIndex].Info.Lane - 1].StopHolding();
+
+            // Calculate Score + Get Judgement.
+            var hitDifference = manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.Timing.Time;
+            var judgement = Ruleset.ScoreProcessor.CalculateScore(hitDifference, true);
+
+            // If LN has been released during a window
+            if (judgement != Judgement.Ghost)
+            {
+
+                // Add new hit stat data.
+                var stat = new HitStat(HitStatType.Hit, manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.Time,
+                                            judgement, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+                Ruleset.ScoreProcessor.Stats.Add(stat);
+
+                var screenView = (GameplayScreenView)Ruleset.Screen.View;
+                screenView.UpdateScoreboardUsers();
+
+                // Also add a judgement to the hit error.
+                playfield.Stage.HitError.AddJudgement(judgement, manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.Timing.Time);
+
+                // Perform hit burst animation
+                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(judgement);
+
+                // Lastly kill the object.
+                manager.KillHoldPoolObject(noteIndex, true);
+            }
+            // If LN has been released early
+            else
+            {
+                // Count it as a miss if it was released early and kill the hold.
+                Ruleset.ScoreProcessor.CalculateScore(Judgement.Miss);
+
+                // Add new hit stat data.
+                var stat = new HitStat(HitStatType.Hit, manager.HeldLongNotes[noteIndex].Info, Ruleset.Screen.Timing.Time,
+                                            Judgement.Miss, hitDifference, Ruleset.ScoreProcessor.Accuracy, Ruleset.ScoreProcessor.Health);
+                Ruleset.ScoreProcessor.Stats.Add(stat);
+
+                var screenView = (GameplayScreenView)Ruleset.Screen.View;
+                screenView.UpdateScoreboardUsers();
+
+                // Perform hit burst animation
+                playfield.Stage.JudgementHitBurst.PerformJudgementAnimation(Judgement.Miss);
+
+                manager.KillHoldPoolObject(noteIndex);
+            }
+
+            #region Old HandleKeyRelease
+            // OLD
+            /*
+
             // Don't bother executing if there aren't any long notes.
             if (manager.HeldLongNotes.Count == 0)
                 return;
@@ -343,6 +452,8 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
 
                 manager.KillHoldPoolObject(noteIndex);
             }
+            */
+            #endregion
         }
 
         /// <summary>
