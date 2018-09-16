@@ -117,6 +117,9 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
         /// </summary>
         private void CalculateContainerHeight()
         {
+            if (Buttons.Count == 0)
+                return;
+
             var totalHeight = Buttons.First().Height * Buttons.Count;
 
             // Calculate the new height of the container based on how many channels there are.

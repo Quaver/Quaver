@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Quaver.Assets;
 using Quaver.Logging;
@@ -98,9 +99,25 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
             ChannelDescription.Text = channel.Description;
             ChannelDescription.X = ChannelDescription.MeasureString().X / 2f + 15;
 
-            // Only display the close channel button on private channels.
-            CloseChannelButton.Visible = channel.IsPrivate;
-            CloseChannelButton.IsClickable = channel.IsPrivate;
+            // Make the close channel button both visible and clickable.
+            CloseChannelButton.Visible = true;
+            CloseChannelButton.IsClickable = true;
+        }
+
+        /// <summary>
+        ///     Updates the topic text if there are no more channels left.
+        /// </summary>
+        private void UpdateTopicText()
+        {
+            ChannelName.Text = "No channels available";
+            ChannelName.X = ChannelName.MeasureString().X / 2f + 15;
+
+            ChannelDescription.Text = "Join a chat channel to start chatting!";
+            ChannelDescription.X = ChannelDescription.MeasureString().X / 2f + 15;
+
+            // Make the close channel button neither visible or clickable since there aren't any channels.
+            CloseChannelButton.Visible = false;
+            CloseChannelButton.IsClickable = false;
         }
 
         /// <summary>
@@ -108,11 +125,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
         /// </summary>
         private void CloseActiveChatChannel()
         {
-            // Only allow private channels to be close for now.
-            if (!Overlay.ActiveChannel.IsPrivate)
-                return;
-
             var channelButton = Overlay.ChatChannelList.SelectedButton;
+
+            // For public channels, request to leave the chat channel.
+            if (!Overlay.ActiveChannel.IsPrivate)
+                OnlineManager.Client.LeaveChatChannel(Overlay.ActiveChannel);
 
             var tfX = new Transformation(TransformationProperty.X, Easing.Linear, channelButton.X, -(channelButton.Width + 5), 100);
             channelButton.Transformations.Add(tfX);
@@ -120,36 +137,40 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
             // Check to see if there is another button before this one.
             var buttonIndex = Overlay.ChatChannelList.Buttons.FindIndex(x => x == channelButton);
 
-            // If there ends up being a button, then we'll want to go through with the removal process and selecting the
-            // previous chat channel.
+            // Remove the button from the list of chat channel buttons.
+            Overlay.ChatChannelList.Buttons.Remove(channelButton);
+
+            // Remove the channel from the joined chat channels.
+            ChatManager.JoinedChatChannels.Remove(Overlay.ActiveChannel);
+
+            // Remove the chat channel container
+            var messageContainer = Overlay.ChannelMessageContainers[Overlay.ActiveChannel];
+            Overlay.ChannelMessageContainers.Remove(Overlay.ActiveChannel);
+
+            // Destroy the container instantly.
+            messageContainer.Destroy();
+
+            // Make sure the buttons are realigned properly after closing this channel.
+            Overlay.ChatChannelList.RealignButtons();
+
+            // Destroy the button after it finishes its transformation.
+            Scheduler.RunAfter(() => channelButton.Destroy(), 150);
+
+            // Automatically select the button behind it. if it exists.
             if (buttonIndex != -1 && buttonIndex - 1 >= 0)
+                Overlay.ChatChannelList.Buttons[buttonIndex - 1].SelectChatChannel();
+            // If theres still more buttons ahead, then we want to switch to the first one.
+            // This is to handle the case of if the user closes the first channel in the list.
+            else if (Overlay.ChatChannelList.Buttons.Count > 0)
+                Overlay.ChatChannelList.Buttons.First().SelectChatChannel();
+            // No channels exist anymore.
+            else
             {
-                // Remove the button from the list of chat channel buttons.
-                Overlay.ChatChannelList.Buttons.Remove(channelButton);
-
-                // Remove the channel from the joined chat channels.
-                ChatManager.JoinedChatChannels.Remove(Overlay.ActiveChannel);
-
-                // Remove the chat channel container
-                var messageContainer = Overlay.ChannelMessageContainers[Overlay.ActiveChannel];
-                Overlay.ChannelMessageContainers.Remove(Overlay.ActiveChannel);
-
-                // Destroy the container instantly.
-                messageContainer.Destroy();
-
-                // Make sure the buttons are realigned properly after closing this channel.
-                Overlay.ChatChannelList.RealignButtons();
-
-                // Destroy the button after it finishes its transformation.
-                Scheduler.RunAfter(() => channelButton.Destroy(), 150);
-
-                var newSelectedButton = Overlay.ChatChannelList.Buttons[buttonIndex - 1];
-                newSelectedButton.SelectChatChannel();
-
-                Logger.LogInfo($"Closed chat channel: `{channelButton.Channel.Name}`", LogType.Runtime);
+                UpdateTopicText();
+                Overlay.NoChannelMessageContainer.Visible = true;
             }
 
-            // TODO: Handle this for public chats.
+            Logger.LogInfo($"Closed chat channel: `{channelButton.Channel.Name}`", LogType.Runtime);
         }
     }
 }

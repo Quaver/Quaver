@@ -39,6 +39,11 @@ namespace Quaver.Graphics.Overlays.Chat
         public Sprite MessageContainer { get; private set; }
 
         /// <summary>
+        ///     When no channels are available, this message container will be displayed.
+        /// </summary>
+        public Sprite NoChannelMessageContainer { get; private set; }
+
+        /// <summary>
         ///     The container for the chat textbox.
         /// </summary>
         public Sprite TextboxContainer { get; private set; }
@@ -118,6 +123,7 @@ namespace Quaver.Graphics.Overlays.Chat
             CreateTextboxContainer();
             CreateChannelHeaderContainer();
             CreateCurrentTopicContainer();
+            CreateNoChannelMessageContainer();
 
             ChannelHeader = new ChannelHeader(this);
             ChatTextbox = new ChatTextbox(this);
@@ -177,10 +183,38 @@ namespace Quaver.Graphics.Overlays.Chat
         {
             Parent = DialogContainer,
             Size = new ScalableVector2(DialogContainer.Width - ChannelContainer.Width - 1, ChannelContainer.Height),
-            Tint = Color.LimeGreen,
+            Tint = Colors.DarkGray,
             X = ChannelContainer.Width,
-            Alpha = 0
+            Alpha = 0f,
+            Visible = true
         };
+
+        /// <summary>
+        ///     Creates the message container for when there are no more chat message containers.
+        /// </summary>
+        private void CreateNoChannelMessageContainer()
+        {
+            NoChannelMessageContainer = new Sprite()
+            {
+                Parent = DialogContainer,
+                Size = new ScalableVector2(DialogContainer.Width - ChannelContainer.Width - 1, ChannelContainer.Height - CurrentTopicContainer.Height),
+                Tint = Colors.DarkGray,
+                X = ChannelContainer.Width,
+                Alpha = 0.85f,
+                Y = CurrentTopicContainer.Height,
+                SetChildrenVisibility = true
+            };
+
+            var dividerLine = new Sprite()
+            {
+                Parent = NoChannelMessageContainer,
+                Size = new ScalableVector2(NoChannelMessageContainer.Width, 2),
+                Alpha = 0.35f,
+                Y = -2
+            };
+
+            NoChannelMessageContainer.Visible = false;
+        }
 
         /// <summary>
         ///     Creates the container for the textbox.

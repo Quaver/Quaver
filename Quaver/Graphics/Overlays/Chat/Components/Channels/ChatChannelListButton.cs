@@ -107,6 +107,8 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
 
             ChannelList.Overlay.CurrentTopic.UpdateTopicText(Channel);
             ChannelList.Overlay.ReparentDividerLines();
+
+            ChannelList.Overlay.NoChannelMessageContainer.Visible = false;
         }
 
         /// <summary>
