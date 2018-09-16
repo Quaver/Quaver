@@ -123,7 +123,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Topic
         /// <summary>
         ///     Closes the chat channel.
         /// </summary>
-        private void CloseActiveChatChannel()
+        public void CloseActiveChatChannel()
         {
             var channelButton = Overlay.ChatChannelList.SelectedButton;
 

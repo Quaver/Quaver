@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Overlays.Chat;
 using Quaver.Logging;
 using Quaver.Scheduling;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
+using Quaver.Server.Common.Enums;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
-using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Quaver.Online.Chat
 {
@@ -105,6 +106,81 @@ namespace Quaver.Online.Chat
             OnlineManager.Client.SendMessage(chan.Name, message.Message);
         }
 
+         /// <summary>
+        ///     Called when we received an available chat channel.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public static void OnAvailableChatChannel(object sender, AvailableChatChannelEventArgs e)
+        {
+            AvailableChatChannels.Add(e.Channel);
+            Logger.LogImportant($"Received new available chat channel: {e.Channel.Name} | {e.Channel.Description}", LogType.Network);
+        }
+
+        /// <summary>
+        ///     Called when we have joined a new chat channel.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public static void OnJoinedChatChannel(object sender, JoinedChatChannelEventArgs e)
+        {
+            // Find an existing channel with the same name
+            var channel = AvailableChatChannels.Find(x => x.Name == e.Channel);
+
+            // If the channel doesn't actually exist in our available ones, that must mean the server is placing
+            // us in one that we don't know about, so we'll have to create a new chat channel object.
+            if (channel == null)
+            {
+                var newChannel = new ChatChannel
+                {
+                    Name = e.Channel,
+                    Description = "No Description",
+                    AllowedUserGroups = UserGroups.Normal
+                };
+
+                JoinedChatChannels.Add(newChannel);
+                Logger.LogImportant($"Joined ChatChannel: {e.Channel} which was previously unknown", LogType.Network);
+
+                Dialog.ChatChannelList.InitializeChannel(newChannel);
+                return;
+            }
+
+            JoinedChatChannels.Add(channel);
+            Dialog.ChatChannelList.InitializeChannel(channel);
+            Logger.LogImportant($"Joined chat channel: {e.Channel}", LogType.Network);
+        }
+
+        /// <summary>
+        ///     Called when the server reports that the client has left a chat channel.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public static void OnLeftChatChannel(object sender, LeftChatChannelEventArgs e)
+        {
+            var channel = JoinedChatChannels.Find(x => x.Name == e.ChannelName);
+
+            // If the channel no longer exists in the joined chat channels, then don't do anything with it.
+            if (channel == null)
+                return;
+
+            // The previous selected button.
+            var oldSelected = Dialog.ChatChannelList.SelectedButton;
+
+            // The channel exists, so we have to kick them out in the overlay.
+            var channelButton = Dialog.ChatChannelList.Buttons.Find(x => x.Channel == channel);
+
+            // Make sure the channel is selected temporarily.
+            if (channelButton != oldSelected)
+                channelButton.SelectChatChannel();
+
+            // Leave the channel
+            Dialog.CurrentTopic.CloseActiveChatChannel();
+
+            // Select the old channel that was originally there.
+            if (channelButton != oldSelected)
+                oldSelected.SelectChatChannel();
+        }
+
         /// <summary>
         ///     Called whenever we receive new chat messages.
         /// </summary>
@@ -198,5 +274,7 @@ namespace Quaver.Online.Chat
                     break;
             }
         }
+
+
     }
 }

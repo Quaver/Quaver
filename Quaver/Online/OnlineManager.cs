@@ -93,9 +93,10 @@ namespace Quaver.Online
             Client.OnLoginSuccess += OnLoginSuccess;
             Client.OnUserDisconnected += OnUserDisconnected;
             Client.OnUserConnected += OnUserConnected;
-            Client.OnAvailableChatChannel += OnAvailableChatChannel;
-            Client.OnJoinedChatChannel += OnJoinedChatChannel;
+            Client.OnAvailableChatChannel += ChatManager.OnAvailableChatChannel;
+            Client.OnJoinedChatChannel += ChatManager.OnJoinedChatChannel;
             Client.OnChatMessageReceived += ChatManager.OnChatMessageReceived;
+            Client.OnLeftChatChannel += ChatManager.OnLeftChatChannel;
         }
 
         /// <summary>
@@ -229,50 +230,6 @@ namespace Quaver.Online
 
             Console.WriteLine($"User: #{e.UserId} has disconnected from the server.");
             Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
-        }
-
-        /// <summary>
-        ///     Called when we received an available chat channel.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private static void OnAvailableChatChannel(object sender, AvailableChatChannelEventArgs e)
-        {
-            ChatManager.AvailableChatChannels.Add(e.Channel);
-            Logger.LogImportant($"Received new available chat channel: {e.Channel.Name} | {e.Channel.Description}", LogType.Network);
-        }
-
-        /// <summary>
-        ///     Called when we have joined a new chat channel.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private static void OnJoinedChatChannel(object sender, JoinedChatChannelEventArgs e)
-        {
-            // Find an existing channel with the same name
-            var channel = ChatManager.AvailableChatChannels.Find(x => x.Name == e.Channel);
-
-            // If the channel doesn't actually exist in our available ones, that must mean the server is placing
-            // us in one that we don't know about, so we'll have to create a new chat channel object.
-            if (channel == null)
-            {
-                var newChannel = new ChatChannel
-                {
-                    Name = e.Channel,
-                    Description = "No Description",
-                    AllowedUserGroups = UserGroups.Normal
-                };
-
-                ChatManager.JoinedChatChannels.Add(newChannel);
-                Logger.LogImportant($"Joined ChatChannel: {e.Channel} which was previously unknown", LogType.Network);
-
-                ChatManager.Dialog.ChatChannelList.InitializeChannel(newChannel);
-                return;
-            }
-
-            ChatManager.JoinedChatChannels.Add(channel);
-            ChatManager.Dialog.ChatChannelList.InitializeChannel(channel);
-            Logger.LogImportant($"Joined chat channel: {e.Channel}", LogType.Network);
         }
     }
 }
