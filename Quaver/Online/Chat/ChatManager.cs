@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Quaver.Graphics.Overlays.Chat;
@@ -272,9 +273,11 @@ namespace Quaver.Online.Chat
                 case "chat":
                     QuaverBot.ExecuteChatCommand(args);
                     break;
+                // User wants to join a chat cnalle.
+                case "join":
+                    QuaverBot.ExecuteJoinCommand(args.ToList());
+                    break;
             }
         }
-
-
     }
 }

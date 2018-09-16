@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Quaver.Graphics.Notifications;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 
@@ -22,7 +23,8 @@ namespace Quaver.Online.Chat
                 "Here are some client-side commands you can use:\n" +
                 "/help - Display this message\n" +
                 "/online - Display all online users\n" +
-                "/chat <username> - Open a private chat with a user");
+                "/chat <username> - Open a private chat with a user\n" +
+                "/join <channel name> - Request to join a chat channel.");
         }
 
         /// <summary>
@@ -98,6 +100,47 @@ namespace Quaver.Online.Chat
             {
                 SendMessage(ChatManager.Dialog.ActiveChannel, $"Cannot open a chat with \"{username}\" because they are offline.");
             }
+        }
+
+        /// <summary>
+        ///     Executes the '/join' command
+        /// </summary>
+        public static void ExecuteJoinCommand(IEnumerable<string> args)
+        {
+            var argsList = new List<string>(args);
+            argsList.RemoveAt(0);
+
+            if (argsList.Count == 0)
+                return;
+
+            // Get the name of the channel the user wishes to join
+            var channel = argsList[0];
+
+            // Only allow valid channel names to be joinable.
+            if (!channel.StartsWith("#"))
+            {
+                NotificationManager.Show(NotificationLevel.Error, "Chat channel names must start with a #");
+                return;
+            }
+
+            // Find if we're already in this given channel.
+            var alreadyJoinedChannel = ChatManager.JoinedChatChannels.Find(x => x.Name == channel);
+
+            // If we are in the channel, then simply change to it.
+            if (alreadyJoinedChannel != null)
+            {
+                ChatManager.Dialog.ChatChannelList.Buttons.Find(x => x.Channel == alreadyJoinedChannel)?.SelectChatChannel();
+                return;
+            }
+
+            // The channel has to be available in order to be able join join it.
+            if (ChatManager.AvailableChatChannels.All(x => x.Name != channel))
+            {
+                NotificationManager.Show(NotificationLevel.Error, "That channel is unavailable to join.");
+                return;
+            }
+
+            OnlineManager.Client.JoinChatChannel(channel);
         }
 
         /// <summary>
