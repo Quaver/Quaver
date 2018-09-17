@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Quaver.API.Enums;
+using Quaver.API.Maps.Processors.Scoring;
 using Quaver.API.Maps.Processors.Scoring.Data;
 using Quaver.Config;
 using Quaver.Graphics.Notifications;
@@ -180,8 +181,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
 
             //NEW
             var time = Ruleset.Screen.Timing.Time;
-            var hitDifference = hitObject.TrueStartTime - time;
-            var judgement = Ruleset.ScoreProcessor.CalculateScore(hitDifference);
+            var hitDifference = hitObject.TrueStartTime - (float)time;
+            var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
+            var judgement = processor.CalculateScore(hitDifference);
 
             // Ignore Ghost Taps
             if (judgement == Judgement.Ghost)
@@ -327,8 +329,9 @@ namespace Quaver.Screens.Gameplay.Rulesets.Input
             playfield.Stage.HitLightingObjects[manager.HeldLongNotes[noteIndex].Info.Lane - 1].StopHolding();
 
             // Calculate Score + Get Judgement.
-            var hitDifference = manager.HeldLongNotes[noteIndex].TrueEndTime - Ruleset.Screen.Timing.Time;
-            var judgement = Ruleset.ScoreProcessor.CalculateScore(hitDifference, true);
+            var hitDifference = manager.HeldLongNotes[noteIndex].TrueEndTime - (float)Ruleset.Screen.Timing.Time;
+            var processor = (ScoreProcessorKeys)Ruleset.ScoreProcessor;
+            var judgement = processor.CalculateScore(hitDifference, true);
 
             // If LN has been released during a window
             if (judgement != Judgement.Ghost)
