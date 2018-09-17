@@ -98,6 +98,7 @@ namespace Quaver.Online
             Client.OnChatMessageReceived += ChatManager.OnChatMessageReceived;
             Client.OnLeftChatChannel += ChatManager.OnLeftChatChannel;
             Client.OnFailedToJoinChatChannel += ChatManager.OnFailedToJoinChatChannel;
+            Client.OnMuteEndTimeReceived += ChatManager.OnMuteEndTimeReceived;
         }
 
         /// <summary>
@@ -192,6 +193,7 @@ namespace Quaver.Online
         private static void OnLoginSuccess(object sender, LoginReplyEventArgs e)
         {
             Self = e.Self;
+            OnlineUsers.Add(e.Self.Id, e.Self);
             NotificationManager.Show(NotificationLevel.Success, $"Successfully logged in as: {Self.Username}");
 
             // Make sure the config username is changed.
@@ -208,10 +210,7 @@ namespace Quaver.Online
         private static void OnUserConnected(object sender, UserConnectedEventArgs e)
         {
             if (OnlineUsers.ContainsKey(e.User.Id))
-            {
-                OnlineUsers[e.User.Id] = e.User;
                 return;
-            }
 
             OnlineUsers.Add(e.User.Id, e.User);
 

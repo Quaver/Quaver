@@ -318,5 +318,21 @@ namespace Quaver.Online.Chat
                     break;
             }
         }
+
+        /// <summary>
+        ///    Called when the server tells us someone has been muted.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public static void OnMuteEndTimeReceived(object sender, MuteEndTimeEventArgs e)
+        {
+            if (!OnlineManager.OnlineUsers.ContainsKey(e.UserId))
+                return;
+
+            Console.WriteLine(e.UserId + " " + e.EndTime);
+            OnlineManager.OnlineUsers[e.UserId].MuteTimeEnd = e.EndTime;
+            Console.WriteLine(OnlineManager.Self.MuteTimeEnd + " " + OnlineManager.Self.IsMuted);
+        }
     }
 }
