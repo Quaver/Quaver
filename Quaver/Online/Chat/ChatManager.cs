@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -98,6 +99,14 @@ namespace Quaver.Online.Chat
                 return;
             }
 
+            // Check if the sender is muted.
+            if (OnlineManager.Self.IsMuted)
+            {
+                QuaverBot.SendMessage(chan, $"Whoa there! Unfortunately you're muted for another: {OnlineManager.Self.GetMuteTimeLeftString()}.\n" +
+                                            $"You won't be able to speak 'till then. Check your profile for more details.");
+                return;
+            }
+
             // Add the message to the appropriate channel.
             channel.Messages.Add(message);
 
@@ -106,6 +115,24 @@ namespace Quaver.Online.Chat
 
             // Send the message to the server.
             OnlineManager.Client.SendMessage(chan.Name, message.Message);
+
+            // If the channel is private, check if the message receiver is muted.
+            if (!chan.IsPrivate)
+                return;
+
+            // Get the user if they're online.
+            var receiver = OnlineManager.OnlineUsers.Values.ToList().Find(x => x.Username == chan.Name);
+
+            // Don't bother sending the message if they're not online.
+            if (receiver == null)
+            {
+                QuaverBot.SendMessage(chan, "This user is not online.");
+                return;
+            }
+
+            // If the user is muted, then let the user know this.
+            if (receiver.IsMuted)
+                QuaverBot.SendMessage(chan, $"Oops! {receiver.Username} is muted for another: {receiver.GetMuteTimeLeftString()}.");
         }
 
          /// <summary>
