@@ -10,6 +10,7 @@ using Quaver.Scheduling;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Helpers;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -44,16 +45,24 @@ namespace Quaver.Online.Chat
         private static double TimeSinceLastActivated { get; set; }
 
         /// <summary>
+        ///     The amount of time left for the user's mute (if they are muted.)
+        /// </summary>
+        public static long MuteTimeLeft { get; set; }
+
+        /// <summary>
         ///     Handles global input for the chat overlay
         /// </summary>
         /// <param name="gameTime"></param>
-        public static void HandleInput(GameTime gameTime)
+        public static void Update(GameTime gameTime)
         {
             TimeSinceLastActivated += gameTime.ElapsedGameTime.TotalMilliseconds;
 
+            if (MuteTimeLeft > 0)
+                MuteTimeLeft -= (long) gameTime.ElapsedGameTime.TotalMilliseconds;
+
             // Only allow the box to be typed into if the overlay is active.
-            Dialog.ChatTextbox.Textbox.AlwaysFocused = ChatOverlay.IsActive;
-            Dialog.ChatTextbox.Textbox.Focused = ChatOverlay.IsActive;
+            Dialog.ChatTextbox.Textbox.AlwaysFocused = ChatOverlay.IsActive && MuteTimeLeft <= 0;
+            Dialog.ChatTextbox.Textbox.Focused = ChatOverlay.IsActive && MuteTimeLeft <= 0;
 
             if (OnlineManager.Connected && KeyboardManager.IsUniqueKeyPress(Keys.F8) && TimeSinceLastActivated >= 450)
             {
@@ -102,8 +111,7 @@ namespace Quaver.Online.Chat
             // Check if the sender is muted.
             if (OnlineManager.Self.IsMuted)
             {
-                QuaverBot.SendMessage(chan, $"Whoa there! Unfortunately you're muted for another: {OnlineManager.Self.GetMuteTimeLeftString()}.\n" +
-                                            $"You won't be able to speak 'till then. Check your profile for more details.");
+                QuaverBot.SendMutedMessage();
                 return;
             }
 
@@ -330,9 +338,14 @@ namespace Quaver.Online.Chat
             if (!OnlineManager.OnlineUsers.ContainsKey(e.UserId))
                 return;
 
-            Console.WriteLine(e.UserId + " " + e.EndTime);
             OnlineManager.OnlineUsers[e.UserId].MuteTimeEnd = e.EndTime;
-            Console.WriteLine(OnlineManager.Self.MuteTimeEnd + " " + OnlineManager.Self.IsMuted);
+
+            // If the mute is for the current user, then display a message in chat.
+            if (e.UserId != OnlineManager.Self.Id || Dialog.ActiveChannel == null)
+                return;
+
+            QuaverBot.SendMutedMessage();
+            MuteTimeLeft = e.EndTime - (long) TimeHelper.GetUnixTimestampMilliseconds();
         }
     }
 }

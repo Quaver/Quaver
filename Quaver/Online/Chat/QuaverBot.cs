@@ -164,5 +164,18 @@ namespace Quaver.Online.Chat
 
             ChatManager.Dialog.ChannelMessageContainers[channel].AddMessage(channel, chatMessage);
         }
+
+        /// <summary>
+        ///     Sends a message to the user in chat letting them know they're muted.
+        /// </summary>
+        public static void SendMutedMessage()
+        {
+            if (ChatManager.Dialog.ActiveChannel == null)
+                return;
+
+            SendMessage(ChatManager.Dialog.ActiveChannel, $"Whoa there! Unfortunately you're muted for another: " +
+                                             $"{OnlineManager.Self.GetMuteTimeLeftString()}.\n" +
+                                            $"You won't be able to speak 'till then. Check your profile for more details.");
+        }
     }
 }

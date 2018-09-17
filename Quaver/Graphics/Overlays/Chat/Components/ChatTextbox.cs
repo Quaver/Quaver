@@ -28,6 +28,11 @@ namespace Quaver.Graphics.Overlays.Chat.Components
         /// </summary>
         public ImageButton SendButton { get; private set; }
 
+        /// <summary>
+        ///     Determines if the mute has been initated in the textbox.
+        /// </summary>
+        private bool MuteInitiatedInTextbox { get; set; }
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
@@ -63,6 +68,21 @@ namespace Quaver.Graphics.Overlays.Chat.Components
                 targetSendButtonAlpha = 1f;
             else
                 targetSendButtonAlpha = 0.85f;
+
+            // Change the textbox's text based on
+            if (!Textbox.Focused && ChatManager.MuteTimeLeft > 0)
+            {
+                var t = TimeSpan.FromMilliseconds(ChatManager.MuteTimeLeft);
+                Textbox.InputText.Text = $"You are currently muted for another {t.Days} days {t.Hours} hours {t.Minutes} minutes and {t.Seconds} seconds.";
+                Textbox.InputText.TextColor = Color.OrangeRed;
+                MuteInitiatedInTextbox = true;
+            }
+            else if (MuteInitiatedInTextbox)
+            {
+                Textbox.InputText.TextColor = Color.White;
+                Textbox.InputText.Text = "Type to send a message";
+                MuteInitiatedInTextbox = false;
+            }
 
             SendButton.Alpha = MathHelper.Lerp(SendButton.Alpha, targetSendButtonAlpha, (float) Math.Min(dt / 60f, 1));
 

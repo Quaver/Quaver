@@ -161,7 +161,7 @@ namespace Quaver
             CommonTaskScheduler.Run();
             BackgroundManager.Update(gameTime);
             NotificationManager.Update(gameTime);
-            ChatManager.HandleInput(gameTime);
+            ChatManager.Update(gameTime);
             DialogManager.Update(gameTime);
         }
 

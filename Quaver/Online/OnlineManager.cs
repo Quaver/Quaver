@@ -12,6 +12,7 @@ using Quaver.Server.Client.Events.Login;
 using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
+using Quaver.Server.Common.Helpers;
 using Steamworks;
 using WebSocketSharp;
 using Logger = Quaver.Logging.Logger;
@@ -193,6 +194,8 @@ namespace Quaver.Online
         private static void OnLoginSuccess(object sender, LoginReplyEventArgs e)
         {
             Self = e.Self;
+            ChatManager.MuteTimeLeft = Self.MuteTimeEnd - (long) TimeHelper.GetUnixTimestampMilliseconds();
+
             OnlineUsers.Add(e.Self.Id, e.Self);
             NotificationManager.Show(NotificationLevel.Success, $"Successfully logged in as: {Self.Username}");
 
