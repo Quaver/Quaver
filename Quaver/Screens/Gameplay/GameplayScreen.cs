@@ -364,13 +364,18 @@ namespace Quaver.Screens.Gameplay
             // User has the `No Pause` mod on, and they're requesting to exit.
             if (ModManager.IsActivated(ModIdentifier.NoPause) &&
                 (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
+            {
                 HandleNoPauseExit();
+            }
             // `No Pause` isn't activated, so handle pausing normally.
-            else if (!IsPaused && !ModManager.IsActivated(ModIdentifier.NoPause) && KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value))
+            else if (!IsPaused && !ModManager.IsActivated(ModIdentifier.NoPause) &&
+                     (KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value) || KeyboardManager.CurrentState.IsKeyDown(Keys.Escape)))
+            {
                 Pause(gameTime);
+            }
             // The user wants to resume their play.
-            else if (IsPaused && !ModManager.IsActivated(ModIdentifier.NoPause) && (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value)
-                || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
+            else if (IsPaused && !ModManager.IsActivated(ModIdentifier.NoPause) &&
+                     (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
             {
                 Pause();
                 TimePauseKeyHeld = 0;
@@ -502,7 +507,7 @@ namespace Quaver.Screens.Gameplay
             switch (TimesRequestedToPause)
             {
                 case 1:
-                    NotificationManager.Show(NotificationLevel.Warning, "Press the pause button one more time to exit.");
+                    NotificationManager.Show(NotificationLevel.Warning, "Press the exit button once more to quit.");
                     break;
                 default:
                     ForceFail = true;
