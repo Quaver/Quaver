@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Quaver.Assets;
+using Quaver.Graphics;
 using Quaver.Graphics.Notifications;
 using Quaver.Graphics.Overlays.Chat;
 using Quaver.Logging;
@@ -11,6 +13,7 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
+using Quaver.Skinning;
 using Wobble.Graphics.Transformations;
 using Wobble.Graphics.UI.Dialogs;
 using Wobble.Input;
@@ -64,7 +67,15 @@ namespace Quaver.Online.Chat
             Dialog.ChatTextbox.Textbox.AlwaysFocused = ChatOverlay.IsActive && MuteTimeLeft <= 0;
             Dialog.ChatTextbox.Textbox.Focused = ChatOverlay.IsActive && MuteTimeLeft <= 0;
 
-            if (OnlineManager.Connected && KeyboardManager.IsUniqueKeyPress(Keys.F8) && TimeSinceLastActivated >= 450)
+            ToggleChatOverlay();
+        }
+
+        /// <summary>
+        ///     Toggles the chat overlay on/off.
+        /// </summary>
+        private static void ToggleChatOverlay(bool forceOpen = false)
+        {
+            if (OnlineManager.Connected && (KeyboardManager.IsUniqueKeyPress(Keys.F8) || forceOpen) && TimeSinceLastActivated >= 450)
             {
                 TimeSinceLastActivated = 0;
                 IsActive = !IsActive;
@@ -88,7 +99,6 @@ namespace Quaver.Online.Chat
                 }
             }
         }
-
         /// <summary>
         ///     Sends a chat message to the server.
         /// </summary>
@@ -272,8 +282,28 @@ namespace Quaver.Online.Chat
                     channelButton.IsUnread = true;
             }
 
-            Logger.LogInfo($"Received a chat message: [{e.Message.Time}] {e.Message.Channel} | {e.Message.Sender.Username} " +
-                           $"| {e.Message.SenderId} | {e.Message.Message}", LogType.Network);
+            // Private message notification.
+            if (channel.IsPrivate)
+            {
+                var avatar = e.Message.Sender.Username == OnlineManager.Self.Username ? SteamManager.UserAvatar : UserInterface.UnknownAvatar;
+
+                // Only show notification if the chat window isn't open.
+                if (!IsActive)
+                {
+                    // Play sound when reciving private message.
+                    // TODO: Add better sound for this.
+                    SkinManager.Skin.SoundClick.CreateChannel()?.Play();
+
+                    NotificationManager.Show(avatar, Colors.Swan, $"{e.Message.Sender.Username} has sent you a message. Click here to read it.",
+                        (o, args) =>
+                        {
+                            while (!IsActive)
+                                ToggleChatOverlay(true);
+
+                            Dialog.ChatChannelList.Buttons.Find(x => x.Channel == channel)?.SelectChatChannel();
+                        });
+                }
+            }
         }
 
         /// <summary>
