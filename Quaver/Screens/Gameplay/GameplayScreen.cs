@@ -362,8 +362,11 @@ namespace Quaver.Screens.Gameplay
         private void HandlePauseInput(GameTime gameTime)
         {
             // User has the `No Pause` mod on, and they're requesting to exit.
+            // OR
+            // they have pressed the QuickExit key.
             if (ModManager.IsActivated(ModIdentifier.NoPause) &&
-                (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
+                (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)) ||
+                KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyQuickExit.Value))
             {
                 HandleNoPauseExit();
             }
