@@ -73,7 +73,7 @@ namespace Quaver.Graphics.Overlays.Chat.Components.Channels
             }
             else if (IsUnread)
             {
-                Text.TextColor = Color.White;
+                Text.TextColor = Color.Yellow;
                 Alpha = 0;
             }
             else
