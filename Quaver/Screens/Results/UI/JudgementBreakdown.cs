@@ -57,6 +57,9 @@ namespace Quaver.Screens.Results.UI
             var i = 0;
             foreach (Judgement j in Enum.GetValues(typeof(Judgement)))
             {
+                if (j == Judgement.Ghost)
+                    break;
+
                 var name = new SpriteText(Fonts.Exo2Regular24, j.ToString().ToUpper())
                 {
                     Parent = content,
