@@ -151,7 +151,6 @@ namespace Quaver.Screens.Menu
                     Logger.LogError(e, LogType.Runtime);
                     NotificationManager.Show(NotificationLevel.Error, "Error reading replay file.");
                 }
-
             })
         }, new List<ToolbarItem>
         {

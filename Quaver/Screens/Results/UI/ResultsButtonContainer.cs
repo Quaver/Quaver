@@ -129,7 +129,6 @@ namespace Quaver.Screens.Results.UI
                     throw new ArgumentOutOfRangeException();
             }
 
-
             // Go through each button and initialize the sprite further.
             for (var i = 0; i < Buttons.Count; i++)
             {

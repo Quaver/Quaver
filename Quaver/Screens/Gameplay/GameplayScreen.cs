@@ -423,7 +423,7 @@ namespace Quaver.Screens.Gameplay
                         Ruleset.ScoreProcessor.Mods |= ModIdentifier.Paused;
                     }
                 }
-;
+
                 try
                 {
                     AudioEngine.Track.Pause();
