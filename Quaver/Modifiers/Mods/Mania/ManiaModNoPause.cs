@@ -19,7 +19,7 @@ namespace Quaver.Modifiers.Mods.Mania
         public ModIdentifier[] IncompatibleMods { get; set; } =
         {
             ModIdentifier.Autoplay,
-
+            ModIdentifier.Paused
         };
 
         public void InitializeMod()

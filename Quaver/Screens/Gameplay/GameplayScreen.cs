@@ -205,6 +205,10 @@ namespace Quaver.Screens.Gameplay
 
             Timing = new GameplayAudioTiming(this);
 
+            // Remove paused modifier if enabled.
+            if (ModManager.IsActivated(ModIdentifier.Paused))
+                ModManager.RemoveMod(ModIdentifier.Paused);
+
             // Handle autoplay replays.
             if (ModManager.IsActivated(ModIdentifier.Autoplay))
                 LoadedReplay = ReplayHelper.GeneratePerfectReplay(map, MapHash);
@@ -399,9 +403,20 @@ namespace Quaver.Screens.Gameplay
                 IsResumeInProgress = false;
                 PauseCounter++;
 
-                // Show notification to the user that their score is invalid.
-                NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing during gameplay!");
+                if (!InReplayMode)
+                {
+                    // Show notification to the user that their score is invalid.
+                    NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing during gameplay!");
 
+                    // Add the pause mod to their score.
+                    if (!ModManager.IsActivated(ModIdentifier.Paused))
+                    {
+                        ModManager.AddMod(ModIdentifier.Paused);
+                        ReplayCapturer.Replay.Mods |= ModIdentifier.Paused;
+                        Ruleset.ScoreProcessor.Mods |= ModIdentifier.Paused;
+                    }
+                }
+;
                 try
                 {
                     AudioEngine.Track.Pause();

@@ -260,11 +260,13 @@ namespace Quaver.Screens.Results
                 Replay = GameplayScreen.ReplayCapturer.Replay;
                 ScoreProcessor = GameplayScreen.Ruleset.ScoreProcessor;
 
-                Replay.FromScoreProcessor(ScoreProcessor);
-            }
 
-            // TODO: Rich Presence
-            //ChangeDiscordPresence();
+                Replay.FromScoreProcessor(ScoreProcessor);
+
+                // Remove paused modifier if enabled.
+                if (ModManager.IsActivated(ModIdentifier.Paused))
+                    ModManager.RemoveMod(ModIdentifier.Paused);
+            }
 
             // Submit score
             SubmitScore();
