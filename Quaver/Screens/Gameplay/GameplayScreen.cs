@@ -97,6 +97,11 @@ namespace Quaver.Screens.Gameplay
         public double TimePauseKeyHeld { get; private set; }
 
         /// <summary>
+        ///     The amount of time it takes to hold the pause button in order to pause.
+        /// </summary>
+        public int TimeToHoldPause { get; } = 500;
+
+        /// <summary>
         ///     The time the user resumed the game.
         /// </summary>
         private long ResumeTime { get; set; }
@@ -371,7 +376,21 @@ namespace Quaver.Screens.Gameplay
                 TimePauseKeyHeld = 0;
             }
             else
+            {
                 TimePauseKeyHeld = 0;
+
+                var screenView = (GameplayScreenView) View;
+
+                if (Failed || IsPlayComplete || IsPaused)
+                    return;
+
+                // Properly fade in now.
+                if (!screenView.FadingOnRestartKeyPress)
+                {
+                    screenView.Transitioner.Alpha = MathHelper.Lerp(screenView.Transitioner.Alpha, 0,
+                        (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / 120, 1));
+                }
+            }
         }
 
         /// <summary>
@@ -402,8 +421,11 @@ namespace Quaver.Screens.Gameplay
                 // Increase the time the pause key has been held.
                 TimePauseKeyHeld += gameTime.ElapsedGameTime.TotalMilliseconds;
 
+                screenView.Transitioner.Alpha = MathHelper.Lerp(screenView.Transitioner.Alpha, 1,
+                    (float) Math.Min(gameTime.ElapsedGameTime.TotalMilliseconds / TimeToHoldPause, 1));
+
                 // Make the user hold the pause key down before pausing.
-                if (TimePauseKeyHeld < 500)
+                if (TimePauseKeyHeld < TimeToHoldPause)
                     return;
 
                 IsPaused = true;
@@ -439,13 +461,13 @@ namespace Quaver.Screens.Gameplay
 
                 // Fade in the transitioner.
                 screenView.Transitioner.Transformations.Clear();
-                screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 0.75f, 400));
+                screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, screenView.Transitioner.Alpha, 0.75f, 400));
 
                 // Activate pause menu
                 screenView.PauseScreen.Activate();
-
                 return;
             }
+
 
             if (IsResumeInProgress)
                 return;
@@ -583,7 +605,8 @@ namespace Quaver.Screens.Gameplay
                     screenView.FadingOnRestartKeyRelease = false;
 
                     screenView.Transitioner.Transformations.Clear();
-                    screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 100));
+                    screenView.Transitioner.Transformations.Add(new Transformation(TransformationProperty.Alpha, Easing.Linear,
+                        screenView.Transitioner.Alpha, 1, 100));
                 }
 
                 // Restart the map if the user has held it down for
