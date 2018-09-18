@@ -20,7 +20,7 @@ namespace Quaver.Graphics.Backgrounds
         /// <summary>
         ///     The background image sprite to use.
         /// </summary>
-        public static BlurredBackgroundImage Background { get; private set; }
+        public static BackgroundImage Background { get; private set; }
 
         /// <summary>
         ///     When a background is loaded, this'll be emitted, this is mainly for
@@ -42,7 +42,7 @@ namespace Quaver.Graphics.Backgrounds
         /// <summary>
         ///     Initializes the background sprite.
         /// </summary>
-        public static void Initialize() => Background = new BlurredBackgroundImage(UserInterface.MenuBackground);
+        public static void Initialize() => Background = new BackgroundImage(UserInterface.MenuBackground);
 
         /// <summary>
         ///     Updates the background sprite.
@@ -51,7 +51,7 @@ namespace Quaver.Graphics.Backgrounds
         public static void Update(GameTime gameTime)
         {
             if (!PermittedToFadeIn && Background.Transformations.Count > 0)
-                Background.Sprite.BrightnessSprite.Transformations.Clear();
+                Background.BrightnessSprite.Transformations.Clear();
 
             Background.Update(gameTime);
         }
@@ -71,7 +71,7 @@ namespace Quaver.Graphics.Backgrounds
             LoadRequestCount++;
             var requestCount = LoadRequestCount;
 
-            var oldTexture = Background.Sprite.Image;
+            var oldTexture = Background.Image;
 
             Scheduler.RunThread(delegate
             {
@@ -93,7 +93,7 @@ namespace Quaver.Graphics.Backgrounds
                     return;
                 }
 
-                Background.Sprite.Image = tex;
+                Background.Image = tex;
                 Loaded?.Invoke(typeof(BackgroundManager), new BackgroundLoadedEventArgs(map, tex));
 
                 if (PermittedToFadeIn)
@@ -109,10 +109,10 @@ namespace Quaver.Graphics.Backgrounds
         /// </summary>
         public static void FadeOut()
         {
-            Background.Sprite.BrightnessSprite.Transformations.Clear();
+            Background.BrightnessSprite.Transformations.Clear();
 
-            var t = new Transformation(TransformationProperty.Alpha, Easing.EaseOutQuad, Background.Sprite.BrightnessSprite.Alpha, 1, 300);
-            Background.Sprite.BrightnessSprite.Transformations.Add(t);
+            var t = new Transformation(TransformationProperty.Alpha, Easing.EaseOutQuad, Background.BrightnessSprite.Alpha, 1, 300);
+            Background.BrightnessSprite.Transformations.Add(t);
         }
 
         /// <summary>
@@ -120,10 +120,10 @@ namespace Quaver.Graphics.Backgrounds
         /// </summary>
         public static void FadeIn(int dim)
         {
-            Background.Sprite.BrightnessSprite.Transformations.Clear();
+            Background.BrightnessSprite.Transformations.Clear();
 
-            var t = new Transformation(TransformationProperty.Alpha, Easing.EaseInQuad, Background.Sprite.BrightnessSprite.Alpha, dim / 100f, 300);
-            Background.Sprite.BrightnessSprite.Transformations.Add(t);
+            var t = new Transformation(TransformationProperty.Alpha, Easing.EaseInQuad, Background.BrightnessSprite.Alpha, dim / 100f, 300);
+            Background.BrightnessSprite.Transformations.Add(t);
         }
 
         /// <summary>

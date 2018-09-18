@@ -494,15 +494,15 @@ namespace Quaver.Screens.Gameplay
 
         private void FadeBackgroundToDim()
         {
-            BackgroundManager.Background.Sprite.BrightnessSprite.Transformations.Clear();
+            BackgroundManager.Background.BrightnessSprite.Transformations.Clear();
 
-            var t = new Transformation(TransformationProperty.Alpha, Easing.Linear, BackgroundManager.Background.Sprite.BrightnessSprite.Alpha,
+            var t = new Transformation(TransformationProperty.Alpha, Easing.Linear, BackgroundManager.Background.BrightnessSprite.Alpha,
                 (100 - ConfigManager.BackgroundBrightness.Value) / 100f, 300);
 
-            BackgroundManager.Background.Sprite.BrightnessSprite.Transformations.Add(t);
+            BackgroundManager.Background.BrightnessSprite.Transformations.Add(t);
 
             // Blur background strength
-            BackgroundManager.Background.Strength = ConfigManager.BackgroundBlur.Value;
+            // BackgroundManager.Background.Strength = ConfigManager.BackgroundBlur.Value;
         }
     }
 }

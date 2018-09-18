@@ -100,7 +100,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
                 MapManager.Selected.Value = Screen.AvailableMapsets.First().Maps.First();
 
             // BG all the way
-            BackgroundManager.Background.Sprite.BrightnessSprite.Alpha = 1;
+            BackgroundManager.Background.BrightnessSprite.Alpha = 1;
 
             // Permit backgrounds to fade in now.
             BackgroundManager.PermittedToFadeIn = true;
@@ -433,7 +433,7 @@ namespace Quaver.Screens.Select.UI.MapsetSelection
         {
             var thumbnail = MapsetButtons[SelectedMapsetIndex].Thumbnail;
 
-            thumbnail.Image = BackgroundManager.Background.Sprite.Image;
+            thumbnail.Image = BackgroundManager.Background.Image;
             thumbnail.Transformations.Clear();
             var t = new Transformation(TransformationProperty.Alpha, Easing.Linear, 0, 1, 250);
             thumbnail.Transformations.Add(t);
