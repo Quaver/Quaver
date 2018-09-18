@@ -45,14 +45,17 @@ namespace Quaver.Screens.Gameplay.Replays
             var name = Screen.InReplayMode && Screen.LoadedReplay != null ? Screen.LoadedReplay.PlayerName : ConfigManager.Username.Value;
             var mods = Screen.InReplayMode && Screen.LoadedReplay != null ? Screen.LoadedReplay.Mods : ModManager.Mods;
 
-            Replay = new Replay(Screen.Map.Mode, name, mods, Screen.MapHash);
+            Replay = new Replay(Screen.Map.Mode, name, mods, Screen.MapHash)
+            {
+                TimePlayed = Screen.TimePlayed
+            };
 
             // Add sample first frame.
             Replay.AddFrame(-10000, 0);
         }
 
         ///  <summary>
-        /// 
+        ///
         ///      Important frames are also taken into account here.
         ///          - KeyPressState Changes.
         ///          - Combo is different than the previous frame.

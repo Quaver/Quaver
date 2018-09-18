@@ -190,6 +190,11 @@ namespace Quaver.Screens.Gameplay
         public ReplayCapturer ReplayCapturer { get; }
 
         /// <summary>
+        ///     The time the score began.
+        /// </summary>
+        public long TimePlayed { get; }
+
+        /// <summary>
         ///     Ctor -
         /// </summary>
         /// <param name="map"></param>
@@ -198,6 +203,8 @@ namespace Quaver.Screens.Gameplay
         /// <param name="replay"></param>
         public GameplayScreen(Qua map, string md5, List<LocalScore> scores, Replay replay = null)
         {
+            TimePlayed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
             Map = map;
             LocalScores = scores;
             MapHash = md5;
