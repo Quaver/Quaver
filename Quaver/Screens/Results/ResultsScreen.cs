@@ -392,6 +392,18 @@ namespace Quaver.Screens.Results
         {
             NotificationManager.Show(NotificationLevel.Info, "One moment, we're exporting your replay.");
 
+            if (Type == ResultsScreenType.FromLocalScore)
+            {
+                try
+                {
+                    Replay = new Replay(LocalReplayPath);
+                }
+                catch (Exception e)
+                {
+                    // ignored.
+                }
+            }
+
             if (!Replay.HasData)
             {
                 NotificationManager.Show(NotificationLevel.Error, "This replay doesn't have any data!");
@@ -400,7 +412,7 @@ namespace Quaver.Screens.Results
 
             if (Replay.Mods.HasFlag(ModIdentifier.Autoplay))
             {
-                NotificationManager.Show(NotificationLevel.Error, "Exporting autoplay replays is disabled."); ;
+                NotificationManager.Show(NotificationLevel.Error, "Exporting autoplay replays is disabled.");
                 return;
             }
 
