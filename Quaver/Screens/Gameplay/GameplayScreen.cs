@@ -433,7 +433,7 @@ namespace Quaver.Screens.Gameplay
                     // ignored
                 }
 
-                DiscordManager.Client.CurrentPresence.State = "Paused";
+                DiscordManager.Client.CurrentPresence.State = $"Paused for the {StringHelper.AddOrdinal(PauseCount)} time.";
                 DiscordManager.Client.CurrentPresence.Timestamps = null;
                 DiscordManager.Client.SetPresence(DiscordManager.Client.CurrentPresence);
 
