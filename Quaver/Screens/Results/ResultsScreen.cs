@@ -123,6 +123,7 @@ namespace Quaver.Screens.Results
         {
             Replay = replay;
             ScoreProcessor = new ScoreProcessorKeys(replay);
+            Console.WriteLine(Replay.Mods + " | "  + ScoreProcessor.Mods + " | " + Replay.PauseCount);
             Type = ResultsScreenType.FromReplayFile;
 
             InitializeScreen();
@@ -258,9 +259,9 @@ namespace Quaver.Screens.Results
             {
                 // Populate the replay with values from the score processor.
                 Replay = GameplayScreen.ReplayCapturer.Replay;
+                Replay.PauseCount = GameplayScreen.PauseCount;
+
                 ScoreProcessor = GameplayScreen.Ruleset.ScoreProcessor;
-
-
                 Replay.FromScoreProcessor(ScoreProcessor);
 
                 // Remove paused modifier if enabled.
@@ -317,7 +318,9 @@ namespace Quaver.Screens.Results
             var scoreId = 0;
             try
             {
-                var localScore = LocalScore.FromScoreProcessor(ScoreProcessor, GameplayScreen.MapHash, ConfigManager.Username.Value, ScrollSpeed);
+                var localScore = LocalScore.FromScoreProcessor(ScoreProcessor, GameplayScreen.MapHash, ConfigManager.Username.Value, ScrollSpeed,
+                    GameplayScreen.PauseCount);
+
                 scoreId = LocalScoreCache.InsertScoreIntoDatabase(localScore);
             }
             catch (Exception e)

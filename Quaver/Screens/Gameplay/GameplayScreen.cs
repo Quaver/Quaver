@@ -177,7 +177,7 @@ namespace Quaver.Screens.Gameplay
         /// <summary>
         ///     The amount of times the user has paused.
         /// </summary>
-        private int PauseCounter { get; set; }
+        public int PauseCount { get; private set; }
 
         /// <summary>
         ///     The last recorded combo. We use this value for combo breaking.
@@ -401,7 +401,7 @@ namespace Quaver.Screens.Gameplay
 
                 IsPaused = true;
                 IsResumeInProgress = false;
-                PauseCounter++;
+                PauseCount++;
 
                 if (!InReplayMode)
                 {
