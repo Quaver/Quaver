@@ -471,7 +471,7 @@ namespace Quaver.Screens.Gameplay
         /// </summary>
         private void HandleNoPauseExit()
         {
-            if (InReplayMode)
+            if (InReplayMode && !Failed && !IsPlayComplete)
                 return;
 
             TimesRequestedToPause++;
@@ -485,6 +485,9 @@ namespace Quaver.Screens.Gameplay
                 default:
                     ForceFail = true;
                     HasQuit = true;
+
+                    var view = (GameplayScreenView) View;
+                    view.Transitioner.Transformations.Clear();
                     break;
             }
         }
