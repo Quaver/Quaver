@@ -455,7 +455,7 @@ namespace Quaver.Screens.Gameplay
 
             // If the play was a failure, immediately start fading to black.
             if (Screen.Failed)
-                Transitioner.FadeToColor(Color.Black, gameTime.ElapsedGameTime.TotalMilliseconds, 200);
+                Transitioner.FadeToColor(Color.Black, gameTime.ElapsedGameTime.TotalMilliseconds, 150);
 
             // Start fading out the screen.
             if (!FadingOnPlayCompletion)
