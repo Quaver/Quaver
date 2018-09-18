@@ -92,6 +92,11 @@ namespace Quaver.Screens.Gameplay
         private int TimesRequestedToPause { get; set; }
 
         /// <summary>
+        ///     The amount of time the pause key has been held.
+        /// </summary>
+        public double TimePauseKeyHeld { get; private set; }
+
+        /// <summary>
         ///     The time the user resumed the game.
         /// </summary>
         private long ResumeTime { get; set; }
@@ -233,7 +238,6 @@ namespace Quaver.Screens.Gameplay
             if (!Failed && !IsPlayComplete)
             {
                 HandleResuming();
-                PauseIfWindowInactive();
                 PlayComboBreakSound();
             }
 
@@ -252,14 +256,15 @@ namespace Quaver.Screens.Gameplay
         {
             var dt = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (!Failed && !IsPlayComplete && (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value)
-                                               || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
-                Pause();
+            // Handle pausing
+            if (!Failed && !IsPlayComplete)
+                HandlePauseInput(gameTime);
 
             // Show/hide scoreboard.
             if (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyScoreboardVisible.Value))
                 ConfigManager.ScoreboardVisible.Value = !ConfigManager.ScoreboardVisible.Value;
 
+            // Everything after this point is applicable to gameplay ONLY.
             if (IsPaused || Failed)
                 return;
 
@@ -335,41 +340,67 @@ namespace Quaver.Screens.Gameplay
         }
 
         /// <summary>
+        ///     Handles the input for all pause input.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void HandlePauseInput(GameTime gameTime)
+        {
+            // User has the `No Pause` mod on, and they're requesting to exit.
+            if (ModManager.IsActivated(ModIdentifier.NoPause) &&
+                (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value) || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
+                HandleNoPauseExit();
+            // `No Pause` isn't activated, so handle pausing normally.
+            else if (!IsPaused && !ModManager.IsActivated(ModIdentifier.NoPause) && KeyboardManager.CurrentState.IsKeyDown(ConfigManager.KeyPause.Value))
+                Pause(gameTime);
+            // The user wants to resume their play.
+            else if (IsPaused && !ModManager.IsActivated(ModIdentifier.NoPause) && (KeyboardManager.IsUniqueKeyPress(ConfigManager.KeyPause.Value)
+                || KeyboardManager.IsUniqueKeyPress(Keys.Escape)))
+            {
+                Pause();
+                TimePauseKeyHeld = 0;
+            }
+            else
+                TimePauseKeyHeld = 0;
+        }
+
+        /// <summary>
         ///     Pauses the game.
         /// </summary>
-        internal void Pause()
+        internal void Pause(GameTime gameTime = null)
         {
-            // Don't allow any sort of pausing if the play is already finished.
+            // Don't allow pausing if the play is already finished.
             if (IsPlayComplete)
                 return;
-
-            if (ModManager.IsActivated(ModIdentifier.NoPause) && !InReplayMode)
-            {
-                TimesRequestedToPause++;
-
-                // Force fail the user if they request to quit more than once.
-                switch (TimesRequestedToPause)
-                {
-                    case 1:
-                        NotificationManager.Show(NotificationLevel.Info, "Press the pause button one more time to exit");
-                        break;
-                    default:
-                        ForceFail = true;
-                        HasQuit = true;
-                        break;
-                }
-                return;
-            }
 
             // Grab the casted version of the screenview.
             var screenView = (GameplayScreenView)View;
 
             // Handle pause.
-            if (!IsPaused || IsResumeInProgress)
+            if (!IsPaused)
             {
+                // Handle cases where someone (a developer) calls pause but there is not GameTime.
+                // shouldn't ever happen though.
+                if (gameTime == null)
+                {
+                    const string log = "Cannot pause if GameTime is null";
+                    Logger.LogError(log, LogType.Runtime);
+
+                    throw new InvalidOperationException(log);
+                }
+
+                // Increase the time the pause key has been held.
+                TimePauseKeyHeld += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                // Make the user hold the pause key down before pausing.
+                if (TimePauseKeyHeld < 500)
+                    return;
+
                 IsPaused = true;
                 IsResumeInProgress = false;
                 PauseCounter++;
+
+                // Show notification to the user that their score is invalid.
+                NotificationManager.Show(NotificationLevel.Warning, "WARNING! Your score will not be submitted due to pausing during gameplay!");
 
                 try
                 {
@@ -394,6 +425,9 @@ namespace Quaver.Screens.Gameplay
                 return;
             }
 
+            if (IsResumeInProgress)
+                return;
+
             // Setting the resume time in this case allows us to give the user time to react
             // with a delay before starting the audio track again.
             // When that resume time is past the specific set offset, it'll unpause the game.
@@ -411,16 +445,26 @@ namespace Quaver.Screens.Gameplay
         }
 
         /// <summary>
-        ///     Checks if the window is currently active and pauses the game if it isn't.
+        ///     Handles exiting the screen if the user has no pause on.
         /// </summary>
-        private void PauseIfWindowInactive()
+        private void HandleNoPauseExit()
         {
-            if (IsPaused || InReplayMode)
+            if (InReplayMode)
                 return;
 
-            // Pause the game
-            if (!GameBase.Game.IsActive && !ModManager.IsActivated(ModIdentifier.NoPause))
-                Pause();
+            TimesRequestedToPause++;
+
+            // Force fail the user if they request to quit more than once.
+            switch (TimesRequestedToPause)
+            {
+                case 1:
+                    NotificationManager.Show(NotificationLevel.Warning, "Press the pause button one more time to exit.");
+                    break;
+                default:
+                    ForceFail = true;
+                    HasQuit = true;
+                    break;
+            }
         }
 
         /// <summary>
