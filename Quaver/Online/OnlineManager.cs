@@ -13,6 +13,7 @@ using Quaver.Server.Client.Handlers;
 using Quaver.Server.Client.Structures;
 using Quaver.Server.Common.Enums;
 using Quaver.Server.Common.Helpers;
+using Quaver.Server.Common.Packets.Server;
 using Steamworks;
 using WebSocketSharp;
 using Logger = Quaver.Logging.Logger;
@@ -100,6 +101,7 @@ namespace Quaver.Online
             Client.OnLeftChatChannel += ChatManager.OnLeftChatChannel;
             Client.OnFailedToJoinChatChannel += ChatManager.OnFailedToJoinChatChannel;
             Client.OnMuteEndTimeReceived += ChatManager.OnMuteEndTimeReceived;
+            Client.OnNotificationReceived += OnNotificationReceived;
         }
 
         /// <summary>
@@ -233,6 +235,34 @@ namespace Quaver.Online
 
             Console.WriteLine($"User: #{e.UserId} has disconnected from the server.");
             Console.WriteLine($"There are currently: {OnlineUsers.Count} users online.");
+        }
+
+        /// <summary>
+        ///     Called when the user receives a notification from the server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnNotificationReceived(object sender, NotificationEventArgs e)
+        {
+            NotificationLevel level;
+
+            switch (e.Type)
+            {
+                case ServerNotificationType.Error:
+                    level = NotificationLevel.Error;
+                    break;
+                case ServerNotificationType.Success:
+                    level = NotificationLevel.Success;
+                    break;
+                case ServerNotificationType.Info:
+                    level = NotificationLevel.Info;
+                    break;
+                default:
+                    level = NotificationLevel.Default;
+                    break;
+            }
+
+            NotificationManager.Show(level, e.Content);
         }
     }
 }
