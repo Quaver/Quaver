@@ -374,8 +374,12 @@ namespace Quaver.Online.Chat
             if (e.UserId != OnlineManager.Self.Id || Dialog.ActiveChannel == null)
                 return;
 
-            QuaverBot.SendMutedMessage();
             MuteTimeLeft = e.EndTime - (long) TimeHelper.GetUnixTimestampMilliseconds();
+
+            if (TimeHelper.GetUnixTimestampMilliseconds() > e.EndTime)
+                return;
+
+            QuaverBot.SendMutedMessage();
         }
     }
 }
