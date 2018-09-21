@@ -338,12 +338,15 @@ namespace Quaver.Skinning
             // Load Judgements
             foreach (Judgement j in Enum.GetValues(typeof(Judgement)))
             {
+                if (j == Judgement.Ghost)
+                    return;
+                
                 var element = $"judge-{j.ToString().ToLower()}";
 
                 /*
                 switch (j)
                 {
-                    case Judgement.Marv:                     
+                    case Judgement.Marv:
                        //Judgements[j] = LoadSpritesheet(folder, element, element, 1, 15);
                         break;
                     case Judgement.Perf:
@@ -368,7 +371,7 @@ namespace Quaver.Skinning
 
                Judgements[j] = new List<Texture2D>() { LoadSingleTexture($"{Dir}/{folder}/{element}", element) };
             }
-            
+
             // Load judgement overlay
             const string judgementOverlay = "judgement-overlay";
             JudgementOverlay = LoadSingleTexture($"{Dir}/{folder}/{judgementOverlay}", judgementOverlay);
