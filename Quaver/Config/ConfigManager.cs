@@ -291,6 +291,11 @@ namespace Quaver.Config
         internal static Bindable<Keys> KeyScoreboardVisible { get; private set; }
 
         /// <summary>
+        ///     The key to quickly exit the map.
+        /// </summary>
+        internal static Bindable<Keys> KeyQuickExit { get; private set; }
+
+        /// <summary>
         ///     Dictates whether or not this is the first write of the file for the current game session.
         ///     (Not saved in Config)
         /// </summary>
@@ -420,6 +425,7 @@ namespace Quaver.Config
             KeyDecreaseScrollSpeed = ReadValue(@"KeyDecreaseScrollSpeed", Keys.F3, data);
             KeyIncreaseScrollSpeed = ReadValue(@"KeyIncreaseScrollSpeed", Keys.F4, data);
             KeyScoreboardVisible = ReadValue(@"KeyHideScoreboard", Keys.Tab, data);
+            KeyQuickExit = ReadValue(@"KeyQuickExit", Keys.F1, data);
 
             // Write the config file with all of the changed/invalidated data.
             Task.Run(async () => await WriteConfigFileAsync())
@@ -485,6 +491,7 @@ namespace Quaver.Config
                     BackgroundParallax.ValueChanged += AutoSaveConfiguration;
                     SelectOrderMapsetsBy.ValueChanged += AutoSaveConfiguration;
                     SelectLeaderboardSection.ValueChanged += AutoSaveConfiguration;
+                    KeyQuickExit.ValueChanged += AutoSaveConfiguration;
                 });
         }
 

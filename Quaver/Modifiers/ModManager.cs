@@ -87,6 +87,9 @@ namespace Quaver.Modifiers
                 case ModIdentifier.Autoplay:
                     gameplayModifier = new ManiaModAutoplay();
                     break;
+                case ModIdentifier.Paused:
+                    gameplayModifier = new ManiaModPaused();
+                    break;
                 default:
                     return;
             }
@@ -189,11 +192,17 @@ namespace Quaver.Modifiers
         /// <summary>
         ///     Makes sure that the speed gameplayModifier selected matches up with the game clock and sets the correct one.
         /// </summary>
-        public static void CheckModInconsistencies()
+        private static void CheckModInconsistencies()
         {
-            AudioEngine.Track.Rate = ModHelper.GetRateFromMods(Mods);
-
-            // TODO: Check invalid mod combinations.
+            try
+            {
+                if (!AudioEngine.Track.IsDisposed)
+                    AudioEngine.Track.Rate = ModHelper.GetRateFromMods(Mods);
+            }
+            catch (Exception e)
+            {
+                // ignored.
+            }
         }
     }
 }
